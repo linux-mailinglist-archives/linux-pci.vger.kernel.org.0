@@ -2,105 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C84D23D2C7D
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 21:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0693D2CD8
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 21:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbhGVSbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 14:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        id S230243AbhGVSy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 14:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229710AbhGVSbY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 14:31:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DF60760C41;
-        Thu, 22 Jul 2021 19:11:58 +0000 (UTC)
+        id S229710AbhGVSy4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 14:54:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 76DC460EB2;
+        Thu, 22 Jul 2021 19:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626981119;
-        bh=H1Amf3Wt5H/tD1y9rG2gSJon3EGCNhg8wr0x+VoiY30=;
+        s=k20201202; t=1626982530;
+        bh=mc5Uo9yzRZneZyeHTHaPHC6UUh7w7hrfqWVSlfsgB0I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b90CVSWOhHnYK74gLS7R2H+0DjT2CRmtz2zeBmKGAQhna8Mn+wrZak2dGbSYW63bn
-         WVoPLo0VKyOmMnVSgTgMQGM8VDdB/BiVelxG6glUPvUGIJE1JWnIpdFrTUQA6f3pLW
-         BGCVu8l6Gpq/ArGo6XTroMYtJY7PmpqOudxIYONT/wwIGykr3fcyLs4T0x5WR3Zyvn
-         XBrb2RV1WowLCi0sQ6LfzEUjWefj0XD32S6UI8AxKcdnd01ObJSvrVLCUOSvS0XqTi
-         99+9tTcFPfmnRLbL060oAHESBe+bp1REQBshnsIN14TFVrmIcjOOalBbrXPrc5CXWD
-         sr178h6xqe7Pw==
-Date:   Thu, 22 Jul 2021 14:11:57 -0500
+        b=Vv84SXIYu//qgfmjl1PzrrDYbl+MVAdnE/4zK80D5iwjLFRcAz3gKhrD9oK1n1nFj
+         vfoGnIRJdhkAuERWbyCXy9ckqS5pwontH5vcQUUqzq+BMk7vEQ7SVC/2KV/5jViBBY
+         Aiz/nyEHXuzR5JtccPqHgVi8kmjfqnHnNi33Y4tLrkgGVaVs24Etb67DDcU3vuH7bY
+         vMoaD/5NJqVyslSsao+xHsEr/ea3YWTMQS5IIh+lyfSIRNYazadzAPwLXmcdNPes/9
+         kBohXkZjpBFxW/8fh1HttGaPshshHzDk8Wujcgy0Qg5gtRmQZUkcyf+Cj1Fpg/oZu/
+         kNLH3/oI5u0gg==
+Date:   Thu, 22 Jul 2021 14:35:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: vmd: Trigger secondary bus reset
-Message-ID: <20210722191157.GA328153@bjorn-Precision-5520>
+To:     kernel test robot <lkp@intel.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [pci:review/vga] BUILD SUCCESS WITH WARNING
+ b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44
+Message-ID: <20210722193529.GA333109@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210721085026.aue5snnynlqw6r46@pali>
+In-Reply-To: <60f90adb.rxbx86YHocAbz6Dy%lkp@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 10:50:26AM +0200, Pali Rohár wrote:
-> On Tuesday 20 July 2021 13:50:08 Nirmal Patel wrote:
-> > During VT-d passthrough repetitive reboot tests, it was determined that the VMD
-> > domain needed to be reset in order to allow downstream devices to reinitialize
-> > properly. This is done using a secondary bus reset at each of the VMD root
-> > ports and any bridges in the domain.
-> > 
-> > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> > Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-> > ---
-> >  drivers/pci/controller/vmd.c | 46 ++++++++++++++++++++++++++++++++++++
-
-> > +static void vmd_domain_sbr(struct vmd_dev *vmd)
-> > +{
-> > +	char __iomem *base;
-> > +	u16 ctl;
-> > +	int dev_seq;
-> > +	int max_devs = resource_size(&vmd->resources[0]) * 32;
-> > +
-> > +	/*
-> > +	* Subdevice config space may or many not be mapped linearly using 4k config
-> > +	* space.
-> > +	*/
-> > +	for (dev_seq = 0; dev_seq < max_devs; dev_seq++) {
-> > +		base = VMD_DEVICE_BASE(vmd, dev_seq);
-> > +		if (readw(base + PCI_VENDOR_ID) != PCI_VENDOR_ID_INTEL)
-> > +			continue;
-> > +
-> > +		if ((readb(base + PCI_HEADER_TYPE) & PCI_HEADER_TYPE_MASK) !=
-> > +		    PCI_HEADER_TYPE_BRIDGE)
-> > +			continue;
-> > +
-> > +		if (readw(base + PCI_CLASS_DEVICE) != PCI_CLASS_BRIDGE_PCI)
-> > +			continue;
-> > +
-> > +		/* pci_reset_secondary_bus() */
-> > +		ctl = readw(base + PCI_BRIDGE_CONTROL);
-> > +		ctl |= PCI_BRIDGE_CTL_BUS_RESET;
-> > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> > +		readw(base + PCI_BRIDGE_CONTROL);
-> > +		msleep(2);
-> > +
-> > +		ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
-> > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> > +		readw(base + PCI_BRIDGE_CONTROL);
+On Thu, Jul 22, 2021 at 02:06:19PM +0800, kernel test robot wrote:
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git review/vga
+> branch HEAD: b6f0a577c4fbcc4f1e7eaf0e9a30bcfd20002b44  FIXME PCI/VGA: Rework default VGA device selection
 > 
-> You cannot unconditionally call secondary bus reset for arbitrary PCIe
-> Bridge. Calling it breaks more PCIe devices behind bridge and
-> pci_reset_secondary_bus() already handles it and skip reset if reset is
-> causing issues.
+> possible Warning in current branch:
 > 
-> I would suggest to use pci_reset_secondary_bus() and extend it
-> so you can call it also from your driver.
+> drivers/pci/vgaarb.c:1045:8: warning: %d in format string (no. 6) requires 'int' but the argument type is 'unsigned int'. [invalidPrintfArgType_sint]
 
-Are you referring to PCI_DEV_FLAGS_NO_BUS_RESET?  That's handled in
-pci_parent_bus_reset(), not pci_reset_secondary_bus().
+At b6f0a577c4fb ("FIXME PCI/VGA: Rework default VGA device
+selection"), line 1045 in vgaarb.c does not contain a format string:
 
-I would probably agree that PCI_DEV_FLAGS_NO_BUS_RESET *should* be
-checked in pci_reset_secondary_bus(), since there are several paths to
-get there without going through pci_parent_bus_reset().
+  1042  #define PCI_INVALID_CARD       ((struct pci_dev *)-1UL)
+  1043
+  1044  /*
+  1045   * Each user has an array of these, tracking which cards have locks
+  1046   */
+  1047  struct vga_arb_user_card {
+  1048          struct pci_dev *pdev;
 
-> > +	}
-> > +	ssleep(1);
-> > +}
+Where's the info so I can reproduce this?  Compiler version and
+options, .config file, etc?
+
+> Warning ids grouped by kconfigs:
+> 
+> gcc_recent_errors
+> `-- arm-randconfig-p001-20210720
+>     `-- drivers-pci-vgaarb.c:warning:d-in-format-string-(no.-)-requires-int-but-the-argument-type-is-unsigned-int-.-invalidPrintfArgType_sint
