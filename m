@@ -2,82 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D283D2F4E
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 23:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C62B3D2F53
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 23:45:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231799AbhGVVDS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 17:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        id S231797AbhGVVFO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 17:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231607AbhGVVDR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 17:03:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2995760C41;
-        Thu, 22 Jul 2021 21:43:52 +0000 (UTC)
+        id S231336AbhGVVFO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 17:05:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 746F360C41;
+        Thu, 22 Jul 2021 21:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626990232;
-        bh=2kvR1xHEV7E/jIz++TVbdoqI/mjjjq/kQh4TSnyo864=;
+        s=k20201202; t=1626990348;
+        bh=EBmOSwSOsL3dJPBqFWHFUv5cMpQ2pBwuY5c9bJ/ux4I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BBzT1S1REZ4FbZ3eSY6GK7KAKUw5CgpyHRHnmZDbsFy9Bu8FAlhXeqVfFwxvSUUi2
-         BOsaqw97Lr34o1zzsQSinyvy039PWWG/S65dXZS/zgAdVN6E0BJr4K9fwvUz5W5ZHW
-         pPNNnS+4v9+8BJRyosHEpXmvmTqdr+B8g5DoFUvdiDq23QZw62Nc8j8uJNQ3k5jODp
-         QDP59EzOJb5xm3DEpF/SiFFExtYSKMCiZU3/+HwB3MI/ar5L9wiXc/wEVq+zh6titg
-         HraKC7XtrqcrDPo2QdlrhNyDjSFX2F6NywoSTipBT09c7s6nmCqtE9RIKu+U27zmBh
-         gb3arNT9R1rFQ==
-Date:   Thu, 22 Jul 2021 16:43:50 -0500
+        b=IWtDdSYpkGTExyIa3TYGQqEeXaspfAqi/QKkHY90XlK811zSw6By669LoSy0k1zh5
+         cZbwCuwoTTKjoXxXNv7v+wyZfiTIU1PMMGOxT6Um177wUU1KTYaKfoYTLOmA/wGaYb
+         hDWJkOfjAgzHH757hxY8rF/poqmgSCg/e/SITySDXeuBclYVxPk9my0IwQ0iNzijSM
+         MV2zYU0LoINEUIbc+9cIidJtZW9v5cZ7+Zgna/3CQit1ct/trn27G3obb4YlFsNkV8
+         4WAr2L2KXOxOVleNzYUaThAc/H2PtMpUm9TezfP5HFtlAqHKyXr4bkxX/95alSA6+f
+         nQ+Ol4Tq2EmAw==
+Date:   Thu, 22 Jul 2021 16:45:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         "Raj, Ashok" <ashok.raj@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
         Kevin Tian <kevin.tian@intel.com>,
         Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         x86@kernel.org
-Subject: Re: [patch 0/8] PCI/MSI, x86: Cure a couple of inconsistencies
-Message-ID: <20210722214350.GA349746@bjorn-Precision-5520>
+Subject: Re: [patch 2/8] PCI/MSI: Mask all unused MSI-X entries
+Message-ID: <20210722214547.GA349909@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210721191126.274946280@linutronix.de>
+In-Reply-To: <20210721192650.268814107@linutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 09:11:26PM +0200, Thomas Gleixner wrote:
-> A recent discussion about the PCI/MSI management for virtio unearthed a
-> violation of the MSI-X specification vs. writing the MSI-X message: under
-> certain circumstances the entry is written without being masked.
+On Wed, Jul 21, 2021 at 09:11:28PM +0200, Thomas Gleixner wrote:
+> When MSI-X is enabled the ordering of calls is:
 > 
-> While looking at that and the related violation of the x86 non-remapped
-> interrupt affinity mechanism a few other issues were discovered by
-> inspection.
+>   msix_map_region();
+>   msix_setup_entries();
+>   pci_msi_setup_msi_irqs();
+>   msix_program_entries();
 > 
-> The following series addresses these.
+> This has a few interesting issues:
 > 
-> Note this does not fix the virtio issue, but while staring at the above
-> problems I came up with a plan to address this. I'm still trying to
-> convince myself that I can get away without sprinkling locking all over the
-> place, so don't hold your breath that this will materialize tomorrow.
-> 
-> The series is also available from git:
-> 
->     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/msi
-> 
-> Thanks,
-> 
-> 	tglx
-> ---
->  arch/x86/kernel/apic/io_apic.c |    6 +-
->  arch/x86/kernel/apic/msi.c     |   11 +++-
->  arch/x86/kernel/hpet.c         |    2 
->  drivers/pci/msi.c              |   98 +++++++++++++++++++++++++++--------------
->  include/linux/irq.h            |    2 
->  kernel/irq/chip.c              |    5 +-
->  6 files changed, 85 insertions(+), 39 deletions(-)
+>  1) msix_setup_entries() allocates the msi descriptors and initializes them
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com> for the PCI pieces.
+s/msi/MSI/ (one or two more below)
 
-I'm happy to take the whole series via PCI, given an x86 ack.  Or you
-can merge with my ack.
+>     except for the msi_desc:masked member which is left zero initialized.
+> 
+>  2) pci_msi_setup_msi_irqs() allocates the interrupt descriptors and sets
+>     up the MSI interrupts which ends up in pci_write_msi_msg() unless the
+>     interrupt chip provides it's own irq_write_msi_msg() function.
 
+s/it's/its/
+
+>  3) msix_program_entries() does not do what the name suggests. It solely
+>     updates the entries array (if not NULL) and initializes the masked
+>     member for each msi descriptor by reading the hardware state and then
+>     masks the entry.
