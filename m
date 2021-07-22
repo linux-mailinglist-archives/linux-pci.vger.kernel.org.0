@@ -2,61 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6385B3D2BFF
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 20:39:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D12823D2C11
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 20:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbhGVR6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 13:58:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:65239 "EHLO mga17.intel.com"
+        id S229969AbhGVSDa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 14:03:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:2646 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229502AbhGVR6n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 13:58:43 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10053"; a="191989104"
+        id S229510AbhGVSDa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 14:03:30 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10053"; a="208603651"
 X-IronPort-AV: E=Sophos;i="5.84,261,1620716400"; 
-   d="scan'208";a="191989104"
+   d="scan'208";a="208603651"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 11:39:17 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 11:44:05 -0700
 X-IronPort-AV: E=Sophos;i="5.84,261,1620716400"; 
-   d="scan'208";a="470757802"
+   d="scan'208";a="470759505"
 Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.213.166.173]) ([10.213.166.173])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 11:39:17 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 11:44:04 -0700
 Subject: Re: [PATCH v2 1/2] PCI: vmd: Trigger secondary bus reset
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
 Cc:     Jon Derrick <jonathan.derrick@intel.com>, linux-pci@vger.kernel.org
-References: <20210720223318.GA135757@bjorn-Precision-5520>
+References: <20210720205009.111806-1-nirmal.patel@linux.intel.com>
+ <20210720205009.111806-2-nirmal.patel@linux.intel.com>
+ <20210721085026.aue5snnynlqw6r46@pali>
 From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Message-ID: <2b3fc9ac-7b6e-82cd-4b0a-67b4aeadd527@linux.intel.com>
-Date:   Thu, 22 Jul 2021 11:39:11 -0700
+Message-ID: <052f4ccc-c4ac-3c50-54f5-e915cfc45057@linux.intel.com>
+Date:   Thu, 22 Jul 2021 11:44:03 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210720223318.GA135757@bjorn-Precision-5520>
+In-Reply-To: <20210721085026.aue5snnynlqw6r46@pali>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/20/2021 3:33 PM, Bjorn Helgaas wrote:
-> On Tue, Jul 20, 2021 at 01:50:08PM -0700, Nirmal Patel wrote:
+On 7/21/2021 1:50 AM, Pali Rohár wrote:
+> On Tuesday 20 July 2021 13:50:08 Nirmal Patel wrote:
 >> During VT-d passthrough repetitive reboot tests, it was determined that the VMD
 >> domain needed to be reset in order to allow downstream devices to reinitialize
 >> properly. This is done using a secondary bus reset at each of the VMD root
 >> ports and any bridges in the domain.
-> I don't understand the "any bridges in the domain" part.  Clearly you
-> only reset Intel bridges, and only those on a single "bus".  So can
-> there be both VMD root ports and another kind of bridge on the same
-> bus?
->
-> Rewrap this to fit in 75 columns or so, so it doesn't overflow 80
-> column lines when git log indents it by 4.
-
-You are right on resetting only Intel bridges. I think I can reword the message
-like "This is done using setting secondary bus reset bit of each of the VMD
-root port and will propagate reset through downstream bridges."
-
->
+>>
 >> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 >> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
 >> ---
@@ -80,24 +70,10 @@ root port and will propagate reset through downstream bridges."
 >>  };
 >>  
 >> +#define PCI_HEADER_TYPE_MASK 0x7f
-> Already defined in include/uapi/linux/pci_regs.h.
-
-I will make the changes.
-
->
 >> +#define PCI_CLASS_BRIDGE_PCI 0x0604
-> Already defined in include/linux/pci_ids.h.  What am I missing?  Seems
-> like you should see duplicate definition warnings.
-
-I will make the changes.
-
->
 >> +#define DEVICE_SPACE (8 * 4096)
 >> +#define VMD_DEVICE_BASE(vmd, device) ((vmd)->cfgbar + (device) * DEVICE_SPACE)
 >> +#define VMD_FUNCTION_BASE(vmd, device, fn) ((vmd)->cfgbar + (device) * (DEVICE_SPACE + (fn*4096)))
-> Add blank line here.
-Sure.
->
 >> +static void vmd_domain_sbr(struct vmd_dev *vmd)
 >> +{
 >> +	char __iomem *base;
@@ -108,17 +84,6 @@ Sure.
 >> +	/*
 >> +	* Subdevice config space may or many not be mapped linearly using 4k config
 >> +	* space.
-> Fix comment indentation.
->
-> s/many/may/
->
-> I don't really understand the comment anyway.  Is the point that
-> subdevice config space may not be physically contiguous?  Certainly
-> VMD_DEVICE_BASE() computes virtual addresses that are linear.
-
-I will remove this confusing comment for the sack of simplicity.
-
->
 >> +	*/
 >> +	for (dev_seq = 0; dev_seq < max_devs; dev_seq++) {
 >> +		base = VMD_DEVICE_BASE(vmd, dev_seq);
@@ -138,13 +103,22 @@ I will remove this confusing comment for the sack of simplicity.
 >> +		writew(ctl, base + PCI_BRIDGE_CONTROL);
 >> +		readw(base + PCI_BRIDGE_CONTROL);
 >> +		msleep(2);
-> It's a shame we can't do this with pci_reset_secondary_bus().  Makes
-> me wonder if there's an opportunity for special pci_ops.
->
+>> +
 >> +		ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
 >> +		writew(ctl, base + PCI_BRIDGE_CONTROL);
 >> +		readw(base + PCI_BRIDGE_CONTROL);
->> +
+> Hello!
+>
+> You cannot unconditionally call secondary bus reset for arbitrary PCIe
+> Bridge. Calling it breaks more PCIe devices behind bridge and
+> pci_reset_secondary_bus() already handles it and skip reset if reset is
+> causing issues.
+>
+> I would suggest to use pci_reset_secondary_bus() and extend it
+> so you can call it also from your driver.
+Secondary bus reset is only performed on Intel VMD root ports prior to the
+VMD domain PCI enumerations.
+>
 >> +	}
 >> +	ssleep(1);
 >> +}
