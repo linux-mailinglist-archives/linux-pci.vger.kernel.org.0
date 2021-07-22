@@ -2,244 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 644603D2F2E
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 23:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9AB23D2F44
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 23:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231403AbhGVUtL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 16:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231336AbhGVUtL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 16:49:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC55660E8F;
-        Thu, 22 Jul 2021 21:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626989386;
-        bh=DBFGdtf/Y0RQscrMiQqVmzQYk7VU6kgtFbhfE0dmbe0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oB5ivAIL6i7OG7Vjlo/Pwa/F7XRs3t4iKASXXzOoKETkvWhwRASCts65oNuUjVZYM
-         ASMYjNqoWHHhwvxuDjyXGG/ST41bIYrYzU0FFq82CZ+Fsk7rtl41CB9sHqafZu6R1h
-         2hnVZP5S2DNvVpUL2OCHrrJvA0CcdNCVX1qD/WqtyWfNwv4Fz+q8BaK+lLxvIYCTgX
-         UAjTPnwyl+QYBvvDs1QcXrAU5j9Xx0gGXskIqakQm+vLJidqzxIXXLEi22MqKZVwwn
-         HC853tL71UxE3Yc20Gd5Me04yvTO90k2mbP8IgJELqxdtsFLGcrES3NeJvR8NABzUH
-         aonnQ/Hccg/ZA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
+        id S231403AbhGVU6N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 16:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231336AbhGVU6N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jul 2021 16:58:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39174C061575
+        for <linux-pci@vger.kernel.org>; Thu, 22 Jul 2021 14:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=cqz9dZ4QLPxSn0JRt9eoqOLqstyCwONQpjDJJM2IK7g=; b=WxUAqH3G6MItpcb9wkt2/UBvxY
+        Ns7Iux9KJGGf4mDkQ/nCQIjR3v2HjQUBpIaMIf5uTcoGxcXQBbKlty2GvTCpTz8vUjcEd4zSFmdzX
+        Esd6WuImOXalk0p9njzgzac+JnswgRe/mZ2KBm0A9GhFXHaJSQRljMm7L+ZCblTgOzc6wH5HJZVoV
+        coc6oG3VVvhSPrsiK685WvF3Pz/P3ktn3iOVQgR/bUH6PCJX+x+8LBJKNPFNirvZ536vKggLrwmVA
+        p1ZhS4rR4n/13f1mOAe8u/fRcsZ7talwFTs6dGsNc0Y4rZQbwktWs07MjTjfXBaa3cEzJM/wD4RDv
+        sED4myRQ==;
+Received: from [2601:1c0:6280:3f0:7629:afff:fe72:e49d]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m6gP0-002ovH-Bs; Thu, 22 Jul 2021 21:38:46 +0000
+Subject: Re: [PATCH v2 1/9] PCI/VGA: Move vgaarb to drivers/pci
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Xuefeng Li <lixuefeng@loongson.cn>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-Subject: [PATCH v2 9/9] PCI/VGA: Rework default VGA device selection
-Date:   Thu, 22 Jul 2021 16:29:20 -0500
-Message-Id: <20210722212920.347118-10-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210722212920.347118-1-helgaas@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
 References: <20210722212920.347118-1-helgaas@kernel.org>
+ <20210722212920.347118-2-helgaas@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7ae9d6b3-dce4-82f8-a315-56a0ecf657c0@infradead.org>
+Date:   Thu, 22 Jul 2021 14:38:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210722212920.347118-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+On 7/22/21 2:29 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> The VGA arbiter is really PCI-specific and doesn't depend on any GPU
+> things.  Move it to the PCI subsystem.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/gpu/vga/Kconfig           | 19 -------------------
+>  drivers/gpu/vga/Makefile          |  1 -
+>  drivers/pci/Kconfig               | 19 +++++++++++++++++++
+>  drivers/pci/Makefile              |  1 +
+>  drivers/{gpu/vga => pci}/vgaarb.c |  0
+>  5 files changed, 20 insertions(+), 20 deletions(-)
+>  rename drivers/{gpu/vga => pci}/vgaarb.c (100%)
+> 
 
-Needs a better subject and a commit log.
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 0c473d75e625..7c9e56d7b857 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -252,6 +252,25 @@ config PCIE_BUS_PEER2PEER
+>  
+>  endchoice
+>  
+> +config VGA_ARB
+> +	bool "VGA Arbitration" if EXPERT
+> +	default y
+> +	depends on (PCI && !S390)
 
-Link: https://lore.kernel.org/r/20210705100503.1120643-1-chenhuacai@loongson.cn
----
- drivers/pci/vgaarb.c | 158 ++++++++++++++++++-------------------------
- 1 file changed, 66 insertions(+), 92 deletions(-)
+You can drop the PCI part above.
 
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index dd07b1c3205f..0b059a2fc749 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -580,16 +580,79 @@ static bool vga_arb_integrated_gpu(struct device *dev)
- static void vga_arb_update_default_device(struct vga_device *vgadev)
- {
- 	struct pci_dev *pdev = vgadev->pdev;
-+	struct device *dev = &pdev->dev;
-+	struct vga_device *vgadev_default;
-+#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-+	int i;
-+	unsigned long flags;
-+	u64 base = screen_info.lfb_base;
-+	u64 size = screen_info.lfb_size;
-+	u64 limit;
-+	resource_size_t start, end;
-+#endif
- 
- 	/*
- 	 * If we don't have a default VGA device yet, and this device owns
- 	 * the legacy VGA resources, make it the default.
- 	 */
--	if (!vga_default_device() &&
--	    ((vgadev->owns & VGA_RSRC_LEGACY_MASK) == VGA_RSRC_LEGACY_MASK)) {
--		vgaarb_info(&pdev->dev, "setting as boot VGA device\n");
-+	if (!vga_default_device()) {
-+		if ((vgadev->owns & VGA_RSRC_LEGACY_MASK) == VGA_RSRC_LEGACY_MASK)
-+			vgaarb_info(dev, "setting as boot VGA device\n");
-+		else
-+			vgaarb_info(dev, "setting as boot device (VGA legacy resources not available)\n");
- 		vga_set_default_device(pdev);
- 	}
-+
-+	vgadev_default = vgadev_find(vga_default);
-+
-+	/* Overridden by a better device */
-+	if (vgadev_default && ((vgadev_default->owns & VGA_RSRC_LEGACY_MASK) == 0)
-+		&& ((vgadev->owns & VGA_RSRC_LEGACY_MASK) == VGA_RSRC_LEGACY_MASK)) {
-+		vgaarb_info(dev, "overriding boot VGA device\n");
-+		vga_set_default_device(pdev);
-+	}
-+
-+	if (vga_arb_integrated_gpu(dev)) {
-+		vgaarb_info(dev, "overriding boot VGA device\n");
-+		vga_set_default_device(pdev);
-+	}
-+
-+#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-+	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-+		base |= (u64)screen_info.ext_lfb_base << 32;
-+
-+	limit = base + size;
-+
-+	/*
-+	 * Override vga_arbiter_add_pci_device()'s I/O based detection
-+	 * as it may take the wrong device (e.g. on Apple system under
-+	 * EFI).
-+	 *
-+	 * Select the device owning the boot framebuffer if there is
-+	 * one.
-+	 */
-+
-+	/* Does firmware framebuffer belong to us? */
-+	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-+		flags = pci_resource_flags(vgadev->pdev, i);
-+
-+		if ((flags & IORESOURCE_MEM) == 0)
-+			continue;
-+
-+		start = pci_resource_start(vgadev->pdev, i);
-+		end  = pci_resource_end(vgadev->pdev, i);
-+
-+		if (!start || !end)
-+			continue;
-+
-+		if (base < start || limit >= end)
-+			continue;
-+
-+		if (vgadev->pdev != vga_default_device())
-+			vgaarb_info(dev, "overriding boot device\n");
-+		vga_set_default_device(vgadev->pdev);
-+	}
-+#endif
- }
- 
- /*
-@@ -1444,92 +1507,6 @@ static struct miscdevice vga_arb_device = {
- 	MISC_DYNAMIC_MINOR, "vga_arbiter", &vga_arb_device_fops
- };
- 
--static void __init vga_arb_select_default_device(void)
--{
--	struct pci_dev *pdev, *found = NULL;
--	struct vga_device *vgadev;
--
--#if defined(CONFIG_X86) || defined(CONFIG_IA64)
--	u64 base = screen_info.lfb_base;
--	u64 size = screen_info.lfb_size;
--	u64 limit;
--	resource_size_t start, end;
--	unsigned long flags;
--	int i;
--
--	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
--		base |= (u64)screen_info.ext_lfb_base << 32;
--
--	limit = base + size;
--
--	list_for_each_entry(vgadev, &vga_list, list) {
--		struct device *dev = &vgadev->pdev->dev;
--		/*
--		 * Override vga_arbiter_add_pci_device()'s I/O based detection
--		 * as it may take the wrong device (e.g. on Apple system under
--		 * EFI).
--		 *
--		 * Select the device owning the boot framebuffer if there is
--		 * one.
--		 */
--
--		/* Does firmware framebuffer belong to us? */
--		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
--			flags = pci_resource_flags(vgadev->pdev, i);
--
--			if ((flags & IORESOURCE_MEM) == 0)
--				continue;
--
--			start = pci_resource_start(vgadev->pdev, i);
--			end  = pci_resource_end(vgadev->pdev, i);
--
--			if (!start || !end)
--				continue;
--
--			if (base < start || limit >= end)
--				continue;
--
--			if (!vga_default_device())
--				vgaarb_info(dev, "setting as boot device\n");
--			else if (vgadev->pdev != vga_default_device())
--				vgaarb_info(dev, "overriding boot device\n");
--			vga_set_default_device(vgadev->pdev);
--		}
--	}
--#endif
--
--	if (!vga_default_device()) {
--		list_for_each_entry_reverse(vgadev, &vga_list, list) {
--			struct device *dev = &vgadev->pdev->dev;
--			u16 cmd;
--
--			pdev = vgadev->pdev;
--			pci_read_config_word(pdev, PCI_COMMAND, &cmd);
--			if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
--				found = pdev;
--				if (vga_arb_integrated_gpu(dev))
--					break;
--			}
--		}
--	}
--
--	if (found) {
--		vgaarb_info(&found->dev, "setting as boot device (VGA legacy resources not available)\n");
--		vga_set_default_device(found);
--		return;
--	}
--
--	if (!vga_default_device()) {
--		vgadev = list_first_entry_or_null(&vga_list,
--						  struct vga_device, list);
--		if (vgadev) {
--			struct device *dev = &vgadev->pdev->dev;
--			vgaarb_info(dev, "setting as boot device (VGA legacy resources not available)\n");
--			vga_set_default_device(vgadev->pdev);
--		}
--	}
--}
--
- static int __init vga_arb_device_init(void)
- {
- 	int rc;
-@@ -1549,9 +1526,6 @@ static int __init vga_arb_device_init(void)
- 			       PCI_ANY_ID, pdev)) != NULL)
- 		vga_arbiter_add_pci_device(pdev);
- 
--	vga_arb_select_default_device();
--
--	pr_info("loaded\n");
- 	return rc;
- }
- subsys_initcall(vga_arb_device_init);
+> +	help
+> +	  Some "legacy" VGA devices implemented on PCI typically have the same
+> +	  hard-decoded addresses as they did on ISA. When multiple PCI devices
+> +	  are accessed at same time they need some kind of coordination. Please
+> +	  see Documentation/gpu/vgaarbiter.rst for more details. Select this to
+
+Move that Doc file also...
+
+> +	  enable VGA arbiter.
+> +
+
+
 -- 
-2.25.1
+~Randy
 
