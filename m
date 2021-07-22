@@ -2,95 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7F83D2A89
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 19:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF2D3D2AA7
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 19:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234563AbhGVQM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 12:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
+        id S234204AbhGVQQm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 12:16:42 -0400
+Received: from mx.socionext.com ([202.248.49.38]:14382 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234736AbhGVQLv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 12:11:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 562A360BD3;
-        Thu, 22 Jul 2021 16:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626972746;
-        bh=J9XUqkHyCFHYUlF+hyMqP3YjBrb5lfe/9jZQ/WIkq40=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NHLQKWeg/m1huryAeDdU6PcoQfY62Zf1Jj2DFApViHg94iwOVVmc6wshyGVOfZiT4
-         nzQ8TV7+HTqUEy8ldMvtmpskQMTz29XSTJNmHpx80cNosLQQzS0h9NxPt4dt0z3Uws
-         cuDIokKjsd4pnl4NiKU3C2TVQ/pnDTAA74HAQ/aCgnRDA+VXFj02nll6P+ZOPxfEKi
-         C6+3slvSWzLjS1n1eEMzyMeRyIZSMTnBw3/JdaDzKPvmJ5qGWkR7diPPR/KamsmLaT
-         R8tRB2GldWjSEz576qoyBAy0CseRiKybza6F4NTaRw71P/dr2ak1KvYAksg+s26ewm
-         6Fjm/QWcZxOYw==
-Date:   Thu, 22 Jul 2021 11:52:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Cai Huoqing <caihuoqing@baidu.com>
-Cc:     bhelgaas@google.com, jonathan.derrick@intel.com, kw@linux.com,
-        onathan.derrick@intel.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: Make use of PCI_DEVICE_XXX() helper function
-Message-ID: <20210722165225.GA316118@bjorn-Precision-5520>
+        id S234879AbhGVQNe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 12:13:34 -0400
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 23 Jul 2021 01:54:08 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id CFA342083C46;
+        Fri, 23 Jul 2021 01:54:08 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 23 Jul 2021 01:54:08 +0900
+Received: from yuzu2.css.socionext.com (yuzu2 [172.31.9.57])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 4F4DEB631E;
+        Fri, 23 Jul 2021 01:54:08 +0900 (JST)
+Received: from [10.212.30.202] (unknown [10.212.30.202])
+        by yuzu2.css.socionext.com (Postfix) with ESMTP id 8CBCEB1D52;
+        Fri, 23 Jul 2021 01:54:07 +0900 (JST)
+Subject: Re: [PATCH v11 3/3] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+References: <1619111097-10232-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1619111097-10232-4-git-send-email-hayashi.kunihiko@socionext.com>
+ <20210718002614.3l74hlondwgthuby@pali>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <464b94bd-b848-ecca-be5a-6b2c667cf0ea@socionext.com>
+Date:   Fri, 23 Jul 2021 01:54:07 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210722111903.432-1-caihuoqing@baidu.com>
+In-Reply-To: <20210718002614.3l74hlondwgthuby@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 07:19:01PM +0800, Cai Huoqing wrote:
-> Could make use of PCI_DEVICE_XXX() helper function
-> 
-> Cai Huoqing (2):
->   PCI: Make use of PCI_DEVICE_SUB/_CLASS() helper function
->   PCI: vmd: Make use of PCI_DEVICE_DATA() helper function
-> 
->  drivers/pci/controller/vmd.c      | 38 +++++++++++++++----------------
->  drivers/pci/hotplug/cpqphp_core.c | 13 ++---------
->  drivers/pci/search.c              | 14 ++----------
->  include/linux/pci_ids.h           |  2 ++
->  4 files changed, 25 insertions(+), 42 deletions(-)
+Hi Pali,
 
-When you fix the problem below, also:
+Thank you for considering about my patch.
 
-s/Make use of/Use/
+On 2021/07/18 9:26, Pali Rohar wrote:
 
-Update commit log to say what the patch does.  See
-https://chris.beams.io/posts/git-commit/ for hints.
-Add period at end of sentences.
+ > Hello Kunihiko!
+ >
+ > On Friday 23 April 2021 02:04:57 Kunihiko Hayashi wrote:
+ > > This patch adds misc interrupt handler to detect and invoke PME/AER event.
+ > >
+ > > In UniPhier PCIe controller, PME/AER signals are assigned to the same
+ > > signal as MSI by the internal logic. These signals should be detected by
+ > > the internal register, however, DWC MSI handler can't handle these signals.
+ > >
+ > > DWC MSI handler calls .msi_host_isr() callback function, that detects
+ > > PME/AER signals using the internal register and invokes the interrupt
+ > > with PME/AER IRQ numbers.
+ > >
+ > > These IRQ numbers is obtained by uniphier_pcie_port_get_irq() function,
+ > > that finds the device that matches PME/AER from the devices associated
+ > > with Root Port, and returns its IRQ number.
+ >
+ > If I understood this issue correctly, it means that your PCIe controller
+ > does not issue regular MSI interrupt for PME and AER events, but rather
+ > it issue controller specific interrupt and you need to figure out what
+ > kind of controller-specific event happened (e.g. PME or AER or something
+ > else).
 
-I don't see exactly what's wrong, but this series doesn't apply
-cleanly.  I'm using b4 to fetch the series.  b4 is from
-https://git.kernel.org/pub/scm/utils/b4/b4.git
+Your view is almost correct.
+This controller consists of Synopsys DWC and the glue logic, and regular
+MSI interrupt is handled in dw_pcie_msi_isr() for DWC.
 
-  11:47:04 ~/linux (main)$ git checkout -b wip/cai v5.14-rc1
-  Switched to a new branch 'wip/cai'
-  11:47:17 ~/linux (wip/cai)$ b4 am -om/ 20210722111903.432-1-caihuoqing@baidu.com
-  Looking up https://lore.kernel.org/r/20210722111903.432-1-caihuoqing%40baidu.com
-  Grabbing thread from lore.kernel.org/linux-pci
-  Analyzing 3 messages in the thread
-  ---
-  Writing m/20210722_caihuoqing_pci_make_use_of_pci_device_xxx_helper_function.mbx
-    [PATCH 1/2] PCI: Make use of PCI_DEVICE_SUB/_CLASS() helper function
-    [PATCH 2/2] PCI: vmd: Make use of PCI_DEVICE_DATA() helper function
-  ---
-  Total patches: 2
-  ---
-  Cover: m/20210722_caihuoqing_pci_make_use_of_pci_device_xxx_helper_function.cover
-   Link: https://lore.kernel.org/r/20210722111903.432-1-caihuoqing@baidu.com
-   Base: not found (applies clean to current tree)
-	 git am m/20210722_caihuoqing_pci_make_use_of_pci_device_xxx_helper_function.mbx
-  11:47:45 ~/linux (wip/cai)$ git am m/20210722_caihuoqing_pci_make_use_of_pci_device_xxx_helper_function.mbx
-  Applying: PCI: Make use of PCI_DEVICE_SUB/_CLASS() helper function
-  error: patch failed: drivers/pci/hotplug/cpqphp_core.c:1357
-  error: drivers/pci/hotplug/cpqphp_core.c: patch does not apply
-  error: patch failed: drivers/pci/search.c:303
-  error: drivers/pci/search.c: patch does not apply
-  Patch failed at 0001 PCI: Make use of PCI_DEVICE_SUB/_CLASS() helper function
-  hint: Use 'git am --show-current-patch' to see the failed patch
-  When you have resolved this problem, run "git am --continue".
-  If you prefer to skip this patch, run "git am --skip" instead.
-  To restore the original branch and stop patching, run "git am --abort".
+The interrupt for PME/AER event is issued to CPU as the same interrupt
+as MSI, though, PME/AER event is detected by the glue logic instead of DWC.
+So the regular MSI handler can't handle the interrupt for PME/AER event
+directly.
 
+
+ > But if your controller supports PME or AER then it expose in its PCIe
+ > Root Port capabilities register MSI number for these PME and AER events.
+ > Kernel PCIe PME and AER drivers read from capabilities register these
+ > numbers and register irq functions to be called when interrupt happens.
+
+Yes, the controller also has the MSI number for PME/AER in Root Port
+capability register (defined as PCI_ERR_ROOT_AER_IRQ and PCI_EXP_FLAGS_IRQ).
+
+These interrupts are registered with these capability values in
+pcie_port_enable_irq_vec().
+
+
+ > So it means that you do not need to implement uniphier_pcie_port_get_irq
+ > function via this "ugly" foreach and call pcie_port_service_get_irq. But
+ > you can read this MSI interrupt number directly from your controller in
+ > this pcie-uniphier.c driver and then use irq_find_mapping() to convert
+ > hw MSI number to kernel's virq (used in generic_handle_irq()).
+ >
+ > Because currently you use in pcie-uniphier.c call to function
+ > pcie_port_service_get_irq() which returns cached interrupt number value
+ > which was read from PCIe Root Port capability register by PCI subsystem
+ > callbacked back to the pcie-uniphier.c driver.
+ >
+ > For me this looks like "ugly" if you need to do something in
+ > "complicated" way and add dependency e.g. on compile options like
+ > "if (!IS_ENABLED(CONFIG_PCIEAER) && !IS_ENABLED(CONFIG_PCIE_PME))" if it
+ > can be easily avoided.
+ >
+ > I'm writing this because I was solving exactly same problem for aardvark
+ > PCIe controller with PME, AER and HP interrupts (patches are on ML). So
+ > I think that this pcie-uniphier.c implementation can be simplified
+ > without need to use checks for CONFIG_* options and calling
+ > pcie_port_service_get_irq() in list_for_each_entry loop.
+
+The interrupt for PME/AER event is detected by the glue logic.
+
+When the handler needs to read the status register for PME/AER in the glue
+logic and issue the correspond MSI interrupt using generic_handle_irq().
+
+If the driver gets the MSI interrupt number directly like
+pcie_message_numbers() function, I think this complicated method is
+no longer necessary, too.
+
+
+ > Could you please post output of 'lspci -nn -vv'? In my opinion MSI
+ > numbers for AER and PME in Root Port could be constant so it may
+ > simplify implementation even more. (Just to note that in my case
+ > aardvark returns zero as MSI number and it is also documented in spec).
+
+I already posted the lspci output[1].
+
+[1] 
+https://lore.kernel.org/linux-pci/1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com/T/#e1145dab891debed1eadcddbf2b9f5fabb357f8b0
+
+According to the spec, the initial MSI number for PME/AER is zero.
+And this series up to v5 used fixed zero as the MSI number for PME/AER.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
