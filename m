@@ -2,96 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F06993D2B13
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 19:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1AF63D2B70
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jul 2021 19:52:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbhGVQpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 12:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229809AbhGVQpz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 12:45:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C645261358;
-        Thu, 22 Jul 2021 17:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626974789;
-        bh=4IqU9Z+o6ET0kK08k5QR9PdfMOnEz4ti7H4G7+Yim0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/8MEsGya6dK4aOoSlnwj+dO6eiagMt6rDAgYrQjX8anfzcLCYQIcyZO5VlNH4/yF
-         1xRzwMm0mu60EM4T7FuTVOl3OvTCTDadkk2u6M1+yaaBerxVpz65IEUBv9SRdeaCBR
-         NhzKPRi8ZzP/BS9veRpCaEvgqxVTs+G0hn8KACF0q6qOjJtKk1I1S3LLLq+qL6ciem
-         i23BGDWvWx4gIK8KhrNp+R4BnysfiyXArasgHC3ciBPPT5cTRb5WCYB5abulGb0f3b
-         xhplA5OyTAXdVUg+Z1FLyjQRUXPWqiRXdpN46Sh1OLMLSUiJJG082b2ecfHlKohkeE
-         O07XBLpyxG+ow==
-Received: by pali.im (Postfix)
-        id 620D5805; Thu, 22 Jul 2021 19:26:27 +0200 (CEST)
-Date:   Thu, 22 Jul 2021 19:26:27 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 3/3] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-Message-ID: <20210722172627.i4n65lrz3j7pduiz@pali>
-References: <1603848703-21099-4-git-send-email-hayashi.kunihiko@socionext.com>
- <20201124232037.GA595463@bjorn-Precision-5520>
- <20201125102328.GA31700@e121166-lin.cambridge.arm.com>
- <f49a236d-c5f8-c445-f74e-7aa4eea70c3a@socionext.com>
- <20210718005109.6xwe3z7gxhuop5xc@pali>
- <2dfa5ec9-2a33-ae72-3904-999d8b8a2f71@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2dfa5ec9-2a33-ae72-3904-999d8b8a2f71@socionext.com>
-User-Agent: NeoMutt/20180716
+        id S229719AbhGVRLj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 13:11:39 -0400
+Received: from vps.alavip.com.br ([209.217.239.109]:35346 "EHLO
+        vps.alavip.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229697AbhGVRLj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jul 2021 13:11:39 -0400
+X-Greylist: delayed 2157 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Jul 2021 13:11:39 EDT
+Received: from ernastur by vps.alavip.com.br with local (Exim 4.80)
+        (envelope-from <ernastur@vps.alavip.com.br>)
+        id 1m6cHy-00083V-28
+        for linux-pci@vger.kernel.org; Thu, 22 Jul 2021 14:15:14 -0300
+To:     linux-pci@vger.kernel.org
+Subject: Erna's TUR - Indicado por um amigo
+De:     
+Message-Id: <E1m6cHy-00083V-28@vps.alavip.com.br>
+From:   ernastur@vps.alavip.com.br
+Date:   Thu, 22 Jul 2021 14:15:14 -0300
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vps.alavip.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [504 32002] / [47 12]
+X-AntiAbuse: Sender Address Domain - vps.alavip.com.br
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 23 July 2021 01:54:10 Kunihiko Hayashi wrote:
-> On 2021/07/18 9:51, Pali Rohar wrote:
-> > > > IMO this should be modelled with a separate IRQ domain and chip for
-> > > > the root port (yes this implies describing the root port in the dts
-> > > > file with a separate msi-parent).
-> > > >
-> > > > This series as it stands is a kludge.
-> > >
-> > > I see. However I need some time to consider the way to separate IRQ domain.
-> > > Is there any idea or example to handle PME/AER with IRQ domain?
-> >
-> > Seems that you are dealing with very similar issues as me with aardvark
-> > driver.
-> >
-> > As an inspiration look at my aardvark patch which setup separate IRQ
-> > domain for PME, AER and HP interrupts:
-> > https://lore.kernel.org/linux-pci/20210506153153.30454-32-pali@kernel.org/
-> >
-> > Thanks to custom driver map_irq function, it is not needed to describe
-> > root port with separate msi-parent in DTS.
-> 
-> I need to understand your solution, though, this might be the same situation as my driver.
 
-I think it is very very similar as aardvark also returns zero as hw irq
-number (and it is not possible to change it).
 
-So simple solution for you is also to register separate IRQ domain for
-Root Port Bridge and then re-trigger interrupt with number 0 (which you
-wrote that is default) as:
+¿Î³ÌÖ÷Ìâ£ºÏúÊÛÇşµÀ½¨ÉèÓë¹ÜÀí,
 
-    virq = irq_find_mapping(priv->irq_domain, 0);
-    generic_handle_irq(virq);
+MyName indicou a Erna's TUR para você!
 
-in your uniphier_pcie_misc_isr() function.
+Mensagem:
+¿Î³ÌÖ÷Ìâ£ºÏúÊÛÇşµÀ½¨ÉèÓë¹ÜÀí
+Sales channel construction and management
+  ¡¾ÉîÛÚ¡¿2021Äê08ÔÂ26-27ÈÕ ¡¾ÉÏº£¡¿2021Äê09ÔÂ09-10ÈÕ  
+¡¾±±¾©¡¿2021Äê10ÔÂ21-22ÈÕ ¡¾³É¶¼¡¿2021Äê11ÔÂ25-26ÈÕ  
+¡¾¹ãÖİ¡¿2021Äê12ÔÂ16-17ÈÕ
 
-There is no need to modify DTS. And also no need to use complicated
-logic for finding registered virq number via pcie_port_service_get_irq()
-and uniphier_pcie_port_get_irq() functions.
+4980Ôª/ÈË
+
+¿Î ³Ì ÊÕ Òæ Benefits
+
+ÇşµÀÄ£Ê½ÏúÊÛµÄ×ÔÎÒ×¼±¸
+Ä¿±êÇşµÀ¿ìËÙ·¢ÏÖ£¬·¢Õ¹µÄÊÖ¶Î
+ÓëÇ±ÔÚÇşµÀÑ¸ËÙ¹µÍ¨µÄ·½·¨¼°ÒşĞÎĞèÇóµÄÍÚ¾ò
+ÏúÊÛÇşµÀµÄÁ¼ºÃ²¼¾Ö·½·¨¼°Ó¦¶ÔÏû³ı¾ºÕù¶ÔÊÖµÄÍşĞ²
+¾­ÏúÉÌ¶ÓÎéµÄÓÅÊ¤ÁÓÌ­
+ÇşµÀÏúÊÛÄ£Ê½ÊÇºÃÄ£Ê½£¬µ«ÊÇÈÎºÎºÃµÄÄ£Ê½¶¼ĞèÒªÓĞºÃµÄ²ßÂÔºÍ·½·¨£¬ÓĞÄÜÁ¦µÄÈËÈ¥¹á³¹Ö´ĞĞ¶ø²úÉúÓ¦¸ÃÓĞµÄĞ§¹û£¬Òò´ËÑ§Ï°ÏúÊÛÇşµÀµÄ½¨Éè¹ÜÀí·½Ê½ÊÇ¼«ÆäÖØÒªµÄ
+ 
+¿Î ³Ì ´ó ¸Ù Outline
+
+µÚÒ»ÕÂ 
+Ê¤±øÏÈÊ¤¶øºóÇóÕ½£¬°Ü±øÏÈÕ½¶øºóÇóÊ¤----×ÔÎÒ×¼±¸µÄÖØÒªĞÔ
+Ğ¡×éÌÖÂÛ1£ºÎÒÃÇÎªºÎ»á²»ÈçÄ³Ğ©ÎÒÃÇµÄ¾ºÕù¶ÔÊÖ£¿
+´òÌúÏÈĞè×ÔÉíÓ²
+ÇşµÀÏúÊÛÄ£Ê½µÄ³É¹¦»ù´¡ÊÇÔË×÷ÕßĞèÒªÊÇÓĞ×ã¹»ÄÜÁ¦
+ÇşµÀÏúÊÛÔö³¤µÄÈıÔ­Ôò
+Ë¼Â·µÄ×ª±ä²ÅÊÇÏúÊÛ×ª±äµÄ¿ªÊ¼
+°¸Àı1£ºÃ¤Ä¿ÒªÇóÈ«¹úÃ¿¸öÊ¡²¼¾ÖÇşµÀ½á¹û±¯¾çÁË
+°¸Àı2£ºÎªºÎÁ½ÄêÇ°È°ËµËû²»Òª×ö¾­ÏúÉÌ£¬Á½ÄêºóÈ°ËµËû×ö¾­ÏúÉÌ
+
+µÚ¶şÕÂ
+·¢ÏÖÇşµÀµÄ¸ßĞ§ÊÖ¶Î¡ª¡ªÈ«¾Ö»¯Ë¼Î¬
+Ğ¡×éÌÖÂÛ2£ºÎÒÃÇÄ¿Ç°Ñ°ÕÒĞÂµÄÇşµÀµÄ·½·¨ÓĞÄÄĞ©£¿
+È«¾Ö»¯Ë¼Î¬¹¤¾ßÒ»--APNCÔ­Ôò
+È«¾Ö»¯Ë¼Î¬¹¤¾ß¶ş--ÅÁÀÛÍĞ·¨Ôò
+È«¾Ö»¯Ë¼Î¬¹¤¾ßÈı--5W2H
+È«¾Ö»¯Ë¼Î¬¹¤¾ßËÄ--SWOT
+È«¾Ö»¯Ë¼Î¬¹¤¾ßÎå--Ë¼Î¬µ¼Í¼
+ÉÏÊö¹¤¾ßÔÚÑ°ÕÒĞÂÇşµÀÊµ¼Ê¹¤×÷µÄÖğÒ»¶ÔÓ¦ÂäµØ
+°¸Àı3£ºÄ±¶¨¶øºó¶¯£¬¿ªÍØĞÂĞĞÒµ»ñµÃ¾Ş´ó»Ø±¨µÄÂ·ÏßÍ¼»Ø¹Ë
+°¸Àı4£º¸ßĞ§·¢ÏÖÇşµÀµÄÈı¸öµäĞÍ·½Ê½
+
+µÚÈıÕÂ 
+½Ó´¥Ç±ÔÚÇşµÀµÄ×î¼ÑÊÖ¶Î¡ª¡ª¹ËÎÊÊ½ÏúÊÛ
+Ğ¡×éÌÖÂÛ3£ºÈçºÎÄÜÊ¹Ä¿±êÇşµÀºÍÄãÌ¹³Ï½»Á÷£¬ÖªÎŞ²»ÑÔÑÔÎŞ²»¾¡£¿
+ºÎÎª¹ËÎÊÊ½ÏúÊÛ£¿
+ÏúÊÛÇşµÀ²É¹ºµÄÒòËØ¼°ÎÒÃÇµÄ½ÇÉ«
+½Ó´¥°İ·ÃÇ°µÄËÄ´ó×¼±¸¹¤×÷
+ÎÒÃÇÒªÓëÎÒÃÇµÄÇşµÀ¼ç²¢¼ç£¬¶ø²»ÊÇÃæ¶ÔÃæ
+¹ËÎÊÊ½ÏúÊÛµÄÈı¸ö½ÇÉ«
+¹ËÎÊÊ½ÏúÊÛµÄÁù´ó×ª±ä
+°¸Àı5£ºÈçºÎÔÚÒ»¸öĞ¡Ê±µÄ³õ´Î½Ó´¥ÖĞÊ¹Ç±ÔÚÇşµÀµÄÀÏ°å³ÉÎªÄãµÄÃÔµÜ
+°¸Àı6£º´¨ÖĞÍõµ®Éú¼Ç
+
+µÚËÄÕÂ 
+Ñ¸ËÙÕÒµ½ºÏ×÷µÄ»ù´¡¡ª¡ªÒş²ØĞèÇóµÄÍÚ¾ò
+Ğ¡×éÌÖÂÛ4£ºÏúÊÛÇşµÀÈçºÎ¶ÔÄãµÄ²úÆ·²úÉúĞèÒª£¿
+ÏúÊÛÇşµÀÊÇ·ñÖªµÀ×Ô¼ºµÄĞèÒª
+ÈçºÎ·¢ÏÖÏúÊÛÇşµÀµÄÒş²ØĞÔĞèÇó
+ÈçºÎ½«Òıµ¼Æä×Ô¼º·¢ÏÖÒş²ØĞÔĞèÇóµÄÆÈÇĞĞÔ
+¿Í»§¹ºÂòµÄ¶¯»ú·ÖÎö
+¸ã¶¨ËùÓĞµÄ¸ÉÏµÈËµÄ·½·¨
+ÈÃÆä×Ô¼º×ö¾ö¶¨£¬Ñ¸ËÙµÄ×ö¾ö¶¨
+°¸Àı7£ºÏúÊÛ¼Û¸ñ°º¹ó²úÆ·µÄ×ª»»ÊÖ·¨Ê¹ÓÃ»§Ñ¸ËÙ²úÉúĞèÇó
+°¸Àı8£º×ĞÏ¸×¼±¸µÄĞÂ²úÆ··¢²¼ÅàÑµ»î¶¯´øÀ´µÄ»ğ±¬ÏúÊÛ
+
+µÚÎåÕÂ ¶¥¼¶ÏúÊÛ¹µÍ¨¼¼ÇÉ¡ª¡ªSPIN¼°FAB·¨
+ÏÈÎÊºóÌıÔÙÍÆ½é
+¶¥¼¶ÏúÊÛµÄ¹µÍ¨ÄÜÁ¦ÔÚÓÚÎÊ¼°Ìı
+ñöÌıµÄÊ®´ó¼¼ÇÉ
+SPINÏúÊÛ·½·¨µÄ¾«Ëè
+FAB²úÆ·ÍÆ¼öµÄÌ×Â·
+×îÖÕÊ¹½«ÄãÕâ¸öÈËÏúÊÛ³öÈ¥£¬¶¥¼¶ÏúÊÛ¿ÉÒÔ×öºÃÈÎºÎ²úÆ·µÄÏúÊÛ
+°¸Àı9£ºÈ°Ëµ¾­ÏúÉÌµ÷ÕûÏúÊÛÁ¦Á¿£¬ÔÚÃ»ÓĞÔö¼ÓÈËÔ±µÄÇé¿öÏÂÏúÊÛÒµ¼¨·­±¶
+°¸Àı10£ºÂíÉÏÒıÆğ¿Í»§ĞËÈ¤µÄFAB²úÆ·ÍÆ¼ö·¨µÄ³É¹¦°¸Àı
+
+µÚÁùÕÂ 
+ÏúÊÛÇşµÀµÄ²¼¾Ö¡ª¡ª¸ßĞ§¸²¸ÇÊĞ³¡µÄÖØÒªÊÖ¶Î
+²¼¾ÖÊ×ÏÈÊÇ¶ÔÊĞ³¡µÄ³ä·ÖÁË½â
+Á¼ĞÔµÄ¾ºÕùÊ¹²¼¾ÖµÄ»ù´¡
+ÓĞÄ¿µÄĞÔµÄÒıµ¼ÊÇÊÖ¶Î
+ÓĞºÚ°µÇ°¾°µÄ°µÊ¾ÊÇÍşÉå
+ÆÀ¹ÀÏúÊÛÇşµÀ½¨Á¢µÄÊ±»ú
+ÏúÊÛÇşµÀ²¼¾ÖµÄ¸ù±¾Ô­Ôò
+°¸Àı11£ºÃ»ÓĞ¾ºÕùµÄÊĞ³¡µ¼ÖÂ¿Í´óÆÛµêµÄ½á¹û
+°¸Àı12£º¿´µ½ÌØ¶¨µÄÊĞ³¡Ç÷ÊÆ£¬Òıµ¼¾­ÏúÉÌ¸Ä±ä²úÆ··½Ïò¼°²ßÂÔµÄ½á¹û
+
+µÚÆßÕÂ 
+ÇşµÀµÄÖÒ³Ï¶È¹ÜÀí¡ª¡ªÈçºÎÓ¦¶Ô¾ºÕù¶ÔÊÖµÄ³å»÷
+¾ºÕù¶ÔÊÖµÄÇĞÈëµã·ÖÎö
+¾ºÕùÊÇ³£Ì¬£¬ĞÄÌ¬ÒªÆ½ºÍ
+Ïû³ı¾ºÕùµÄÓĞĞ§ÊÖ¶Î
+±ØÒªÊ±ÔÊĞí¾ºÕù¶ÔÊÖµÄ¹²´æ
+½â¾ö¾ºÕù¶ÔÊÖµÄ×î¼Ñ·½·¨
+°¸Àı13£ºÓûÇÜ¹Ê×İ£¬ÏÈ·Å¾ºÕù¶ÔÊÖµÄÈõÊÆ²úÆ·½øÀ´µ¼ÖÂ²»Á¼ÌåÑé
+°¸Àı14£º¶ÔÊĞ³¡¼°Ó¦ÓÃµÄ³ä·ÖÁË½â£¬Ñ¸ËÙËµ·ş´úÀíÉÌ·ÅÆú¾ºÕù¶ÔÊÖ
+
+µÚ°ËÕÂ 
+¾­ÏúÇşµÀ¹ÜÀíÖ®µÀ¡ª¡ª¼¼ÊõÓëÒÕÊõµÄ½áºÏ
+Ğ¡×éÌÖÂÛ5£ºÏúÊÛÇşµÀÏµÍ³»áÓĞÄÄĞ©Ç±ÔÚµÄÎÊÌâ¶øÓ°ÏìÒµ¼¨³ÖĞø³É³¤£¿
+Ã»ÓĞ¹æ¾Ø²»³É·½Ô²
+ÓĞ¾ºÕù²ÅÓĞ·¢Õ¹
+ÓÅÊ¤ÁÓÌ­»áÊ¹Õû¸öÌåÏµ¸ü¼ÓÇ¿´ó
+È¦×ÓµÄÖØÒªĞÔ--¶ö»¢Ò²ÅÂÈºÀÇ
+±ØĞëÖ÷¶¯½øĞĞÓÅÊ¤ÁÓÌ­
+²»¶ÏÓÅ»¯ÏúÊÛÇşµÀ²ÅÄÜÌá¸ßĞ§ÂÊ
+ÓÅÊ¤ÁÓÌ­Ä£Ê½µÄ¾ßÌå²Ù×÷·½·¨
+°¸Àı·ÖÏí15£ºÄ³ÉÏÊĞÆóÒµÔÚ2011Äê¼õÔ±30%µÄÇé¿öÏÂµÚ¶şÄêÒµ¼¨Ôö³¤50% µÄÉî²ãÔ­Òò
+°¸Àı·ÖÏí16£º¸ÒÓÚÆğËß×î´ó¾­ÏúÉÌµÄ±³ºóÒòËØ
+ 
+½² Ê¦ ¼ò ½é Speaker
+×¯ÀÏÊ¦                                     
+×¨×¢ÓÚÇşµÀÈ«ÅÌ¹ÜÀí
+¹¤ÒµÆ·ÇşµÀÏúÊÛ×¨¼Ò
+21ÄêÇşµÀÏúÊÛ¹ÜÀí¾­Ñé
+¹úÄÚ¶¥¼âÇşµÀÓªÏú/ÓªÏú¹ÜÀí´óÊ¦
+93ÄêÀúÊ·ÃÀ×Ê¼¯ÍÅ14ÄêÇşµÀÏúÊÛ¾­Ñé
+´ÓÒ»Ïß×öÆğ£¬Ä¿Ç°Îª´óÖĞ¹úÇøÏúÊÛ×Ü¼à
+±±¾©¿Æ¼¼´óÑ§»úĞµÉè¼ÆÓëÖÆÔì±¾¿Æ±ÏÒµ
+±±¾©¶ÔÍâ¾­¼ÃÓëÃ³Ò×´óÑ§ÉÌÎñÓ¢Óï×¨Òµ
+Ä¿Ç°Îª´óÖĞ¹úÇøÏúÊÛ×Ü¼à
+¹¤ÒµÆ·ÇşµÀÏúÊÛ×¨¼Ò£¬21ÄêÇşµÀÏúÊÛ¾­Ñé£¬¹úÄÚ¶¥¼âÇşµÀÓªÏú/ÓªÏú¹ÜÀí´óÊ¦
+±±¾©¿Æ¼¼´óÑ§»úĞµÉè¼ÆÓëÖÆÔì×¨Òµ£¬±±¾©¶ÔÍâ¾­¼ÃÓëÃ³Ò×´óÑ§ÉÌÎñÓ¢Óï×¨Òµ£¬¿ÉÓ¢ÎÄÊÚ¿Î
+1994-1998 
+
+www.ernastur.com.br
+Erna's TUR - ALTO VALE TURISMO
+O mundo ao seu alcance!
+
+ 
