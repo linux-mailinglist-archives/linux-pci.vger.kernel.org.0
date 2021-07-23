@@ -2,174 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E879C3D3BAD
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 16:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADEFD3D3BB5
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 16:13:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233610AbhGWNbf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 09:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36614 "EHLO mail.kernel.org"
+        id S235422AbhGWNdP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 09:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235406AbhGWNbe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 09:31:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 64315608FE;
-        Fri, 23 Jul 2021 14:12:07 +0000 (UTC)
+        id S235351AbhGWNdO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Jul 2021 09:33:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9CFE260EB4;
+        Fri, 23 Jul 2021 14:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627049527;
-        bh=z8iwka6cD/ub4QPaKx1T+2Ci+JoRGiOg0c2+AO3hLLA=;
+        s=k20201202; t=1627049628;
+        bh=QgLmm2XRufothnct/WX05Q/Y83SO/A7cPrA4WDrlc8k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fR7C7SGPOXmA16T2hOT+Q4z2ze+23eKNZRL6dvewF3z4NGjjemfvP+MZaGfImVJRn
-         gYrXzISLEljQr+tta7CJwTitlaJnjg0ewLq9cE5qnAtOrl6OFwS+3su3nIuRj4GHBS
-         9nTFMdV/dIy0ahfFGykLwueIDPaBMPjoOjJ4+wWI1nQFyDZpdVvdhYTnmZxIlouXT5
-         riWc+/qEKQ1rfiQJVgyf8rgpRtggYApBEKCiUuyYR45gEZ1Co4D3OXk6ifizUnI53L
-         XH3iKUdYdi4hFFw0TGPaWhY5oD+P+AJIxiuWE7tqGnmgKX37y/peOUdvFFv0QW+IYD
-         yWij0uJzbUfrA==
-Received: by pali.im (Postfix)
-        id 033E510D1; Fri, 23 Jul 2021 16:12:04 +0200 (CEST)
-Date:   Fri, 23 Jul 2021 16:12:04 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
- space
-Message-ID: <20210723141204.waiipazikhzzloj7@pali>
-References: <20210624215546.4015-1-pali@kernel.org>
- <20210624215546.4015-3-pali@kernel.org>
- <87pmv919bq.fsf@BL-laptop>
+        b=gkDLA6Cvk6Ikx41NWvbc+zbdWRVBk8VvLFaBXxyiWbeU6V+W/u51mmoaZyiylAOtt
+         xvJgGQxYOvLwgl5hg/pmU2EYO713wnpWPPc7ArAh+f7NUvjvYsnyEX5/o1feoq2sJk
+         mi8ERMg/A8VEI90ErG68hSRqAWyWYor9NxXkEVzPRpIFQJkdoM39jOvkaHRVTqh84g
+         YwKFz71FrlZI/kSFBCJnx39SCt1GV8eTCdU5u2MFXi5WozjI3F0xP5jmBqtjPEIQpE
+         DIk9jukwFtXmTkclIWzaOF0hbFmdJ9j+NvxgJ+m3o3XJpcqQGqi5hPpKcA6/+PWS9Z
+         v7DMl5rYwyzfA==
+Date:   Fri, 23 Jul 2021 17:13:44 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        corbet@lwn.net, alex.williamson@redhat.com,
+        diana.craciun@oss.nxp.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, masahiroy@kernel.org,
+        michal.lkml@markovi.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        jgg@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH 12/12] vfio/pci: Introduce vfio_pci_core.ko
+Message-ID: <YPrOmLs9dZaEe7Th@unreal>
+References: <20210721161609.68223-1-yishaih@nvidia.com>
+ <20210721161609.68223-13-yishaih@nvidia.com>
+ <YPhb6o06fX+/FiTY@unreal>
+ <0b8db422-749d-9d93-6b3b-957259f3d0cb@nvidia.com>
+ <b7c19435-5abb-c5fd-383c-d0ebad11db31@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pmv919bq.fsf@BL-laptop>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <b7c19435-5abb-c5fd-383c-d0ebad11db31@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 23 July 2021 14:52:25 Gregory CLEMENT wrote:
-> Hello Pali,
+On Thu, Jul 22, 2021 at 12:22:05PM +0300, Max Gurtovoy wrote:
 > 
-> > Current PCIe MEM space of size 16 MB is not enough for some combination
-> > of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
-> > Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
-> > so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
-> > allocate more PCIe BARs for more PCIe cards.
-> >
-> > Without this change some combination of PCIe cards cannot be used and
-> > kernel show error messages in dmesg during initialization:
-> >
-> >     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
-> >     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
-> >     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
-> >     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
-> >     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
-> >     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
-> >     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
-> >     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
-> >     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
-> >     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
-> >     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
-> >
-> > Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
-> > kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
-> > crashes during loading of kernel DTB file. This bug is present only in
-> > U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
-> > affected by this bug. Bug is fixed in U-Boot version 2021.07.
-> >
-> > To not break booting new kernels on existing versions of U-Boot on Turris
-> > Mox, use first 16 MB range for IO and second range with rest of PCIe window
-> > for MEM.
+> On 7/22/2021 12:06 PM, Yishai Hadas wrote:
+> > On 7/21/2021 8:39 PM, Leon Romanovsky wrote:
+> > > On Wed, Jul 21, 2021 at 07:16:09PM +0300, Yishai Hadas wrote:
+> > > > From: Max Gurtovoy <mgurtovoy@nvidia.com>
+> > > > 
+> > > > Now that vfio_pci has been split into two source modules, one focusing
+> > > > on the "struct pci_driver" (vfio_pci.c) and a toolbox library of code
+> > > > (vfio_pci_core.c), complete the split and move them into two different
+> > > > kernel modules.
+> > > > 
+> > > > As before vfio_pci.ko continues to present the same interface under
+> > > > sysfs and this change will have no functional impact.
+> > > > 
+> > > > Splitting into another module and adding exports allows creating new HW
+> > > > specific VFIO PCI drivers that can implement device specific
+> > > > functionality, such as VFIO migration interfaces or specialized device
+> > > > requirements.
+> > > > 
+> > > > Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
+> > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> > > > ---
+> > > > † drivers/vfio/pci/Kconfig††††††††††††††††††††† | 30 ++++++++------
+> > > > † drivers/vfio/pci/Makefile†††††††††††††††††††† |† 8 ++--
+> > > > † drivers/vfio/pci/vfio_pci.c†††††††††††††††††† | 14 ++-----
+> > > > † drivers/vfio/pci/vfio_pci_config.c††††††††††† |† 2 +-
+> > > > † drivers/vfio/pci/vfio_pci_core.c††††††††††††† | 41
+> > > > ++++++++++++++++---
+> > > > † drivers/vfio/pci/vfio_pci_igd.c†††††††††††††† |† 2 +-
+> > > > † drivers/vfio/pci/vfio_pci_intrs.c†††††††††††† |† 2 +-
+> > > > † drivers/vfio/pci/vfio_pci_rdwr.c††††††††††††† |† 2 +-
+> > > > † drivers/vfio/pci/vfio_pci_zdev.c††††††††††††† |† 2 +-
+> > > > † .../pci => include/linux}/vfio_pci_core.h†††† |† 2 -
+> > > > † 10 files changed, 66 insertions(+), 39 deletions(-)
+> > > > † rename {drivers/vfio/pci => include/linux}/vfio_pci_core.h (99%)
+> > > <...>
+> > > 
+> > > > -#include "vfio_pci_core.h"
+> > > > +#include <linux/vfio_pci_core.h>
+> > > > +
+> > > > +#define DRIVER_VERSION† "0.2"
+> > > <...>
+> > > 
+> > > > +MODULE_VERSION(DRIVER_VERSION);
+> > > Please don't add driver versions to the upstream kernel, they useless.
+> > > 
+> > > Thanks
+> > 
+> > This just preserves the code for driver/module version that was in
+> > vfio_pci.ko before the split.
+> > 
+> > However,† this can be removed in V2 if we may need to have.
 > 
-> Is there any depencey with the firs patch of this series ?
-> 
-> What happend if this patch is applied without the other ?
+> Right, we already agreed to preserve vfio_pci versioning scheme and we'll
+> not add it to new mlx5_vfio_pci or future drivers.
 
-First patch is fixing reading and setting ranges configuration from DTS.
-Without first patch memory windows stays as they were in bootloader or
-in its default configuration. Which is that all 128 MB are transparently
-mapped to PCIe MEM space.
+There is nothing to preserve, instead of keeping this useless code, just
+delete it.
 
-Therefore this second DTS patch does not fixes issue with IO space
-(kernel still crashes when accessing it). But allows to use all PCIe MEM
-space (due to bootloader / default configuration) and therefore allows
-to use more PCIe cards (which needs more PCIe MEM space).
+https://lore.kernel.org/ksummit-discuss/CA+55aFx9A=5cc0QZ7CySC4F2K7eYaEfzkdYEc9JaNgCcV25=rg@mail.gmail.com/
 
-> Could you test it to see if any regression occure ?
+Thanks
+
 > 
-> Thanks,
 > 
-> Gr√©gory
-> 
-> >
-> > Signed-off-by: Pali Roh√°r <pali@kernel.org>
-> > Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
-> > ---
-> >  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
-> >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
-> >  2 files changed, 26 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > index 53e817c5f6f3..86b3025f174b 100644
-> > --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > @@ -134,6 +134,23 @@
-> >  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-> >  	status = "okay";
-> >  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-> > +	/*
-> > +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
-> > +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
-> > +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
-> > +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
-> > +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
-> > +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
-> > +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
-> > +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
-> > +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
-> > +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
-> > +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
-> > +	 */
-> > +	#address-cells = <3>;
-> > +	#size-cells = <2>;
-> > +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
-> > +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
-> >  
-> >  	/* enabled by U-Boot if PCIe module is present */
-> >  	status = "disabled";
-> > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > index 7a2df148c6a3..dac3007f2ac1 100644
-> > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > @@ -488,8 +488,15 @@
-> >  			#interrupt-cells = <1>;
-> >  			msi-parent = <&pcie0>;
-> >  			msi-controller;
-> > -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
-> > -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
-> > +			/*
-> > +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
-> > +			 * dedicated for PCIe and can be assigned to 8 windows
-> > +			 * with size a power of two. Use one 64 KiB window for
-> > +			 * IO at the end and the remaining seven windows
-> > +			 * (totaling 127 MiB) for MEM.
-> > +			 */
-> > +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
-> > +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
-> >  			interrupt-map-mask = <0 0 0 7>;
-> >  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> >  					<0 0 0 2 &pcie_intc 1>,
-> > -- 
-> > 2.20.1
-> >
-> 
-> -- 
-> Gregory Clement, Bootlin
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
+> > 
+> > Yishai
+> > 
