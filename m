@@ -2,73 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F69D3D41FA
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 23:09:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B38B23D429F
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 00:05:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231633AbhGWU3V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 16:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229461AbhGWU3V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 16:29:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E84F060F23;
-        Fri, 23 Jul 2021 21:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627074594;
-        bh=S1RyrhXdrAJLHGDiVIMsUz+rt8tFgWcQL/m10hYrsUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oYQHD/nzWUvyhydsxnXQU6BFh3kD8PGkXNyavmuRPi31TBZLvUmkxWSjBfELnIRMX
-         AqAUdSwdfEIdwfrk3p37KlC3U/mseazwl5+g3Q1XLxwZtJg9ZdMCRLkd4Y5q9JnajD
-         jc+R/ClrGGr5oHBytuXHPUtmz31LHrZOe96m7gX7jjB/n+KVfwe53jNIS2t/VQlmvc
-         ck8IHtxoU8dXvLhSOYSiRcunLSCjfYlpbDN0RfQDaVAM4LjPUh7Ls8UlzalS3STzvZ
-         6obQNdffUGNFa3P8DBda7jlZ1YXfP0LHE+iQ3NpRcmbcTy7eZZseVlzoll8DpDB2AE
-         t83/7tVTFy8TA==
-Date:   Fri, 23 Jul 2021 16:09:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Rahul Tanwar <rtanwar@maxlinear.com>, bhelgaas@google.com,
-        robh@kernel.org, kw@linux.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ckim@maxlinear.com,
-        qwu@maxlinear.com, rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH] PCI: dwc/intel-gw: Update MAINTAINERS file
-Message-ID: <20210723210952.GA440386@bjorn-Precision-5520>
+        id S231724AbhGWVYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 17:24:44 -0400
+Received: from so254-9.mailgun.net ([198.61.254.9]:57802 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232370AbhGWVYo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 17:24:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1627077917; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=gJtuPTfqxC4kdihjJ9vxNkLwv1ZJHsY2IZL4on1Wp5E=;
+ b=Bz44tuGFZMemOGYkjcSNRnXqU2701ZLvUJsUO55N20zipldPag/r1Py1VL+5PyOaSL3RWAKn
+ oWjWyVsZOWfKseTTE8JRRmNvkxEB9haPRbZ9TW1gCqP6SYDtjqb4XIg95DgKE59EH3tbpDYN
+ PCU4biVHfjAHub7KnQFqF9MbePU=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 60fb3d06b653fbdadd32fe55 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 23 Jul 2021 22:04:54
+ GMT
+Sender: hemantk=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CCEA3C4360C; Fri, 23 Jul 2021 22:04:53 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97651C433D3;
+        Fri, 23 Jul 2021 22:04:52 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210723152805.GA4103@lpieralisi>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 23 Jul 2021 15:04:52 -0700
+From:   hemantk@codeaurora.org
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+        bjorn.andersson@linaro.org, linux-pci@vger.kernel.org
+Subject: Re: Query on ASPM driver design
+In-Reply-To: <20210723203206.GA436727@bjorn-Precision-5520>
+References: <20210723203206.GA436727@bjorn-Precision-5520>
+Message-ID: <7c3c904bc19850f667e2249ccdee0b37@codeaurora.org>
+X-Sender: hemantk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 04:28:05PM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Jul 06, 2021 at 04:20:59PM +0800, Rahul Tanwar wrote:
-> > Add maintainer for PCIe RC controller driver for Intel LGM gateway SoC.
-> > 
-> > Signed-off-by: Rahul Tanwar <rtanwar@maxlinear.com>
-> > ---
-> >  MAINTAINERS | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3298f4592ce7..61c1cfcc453b 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14392,6 +14392,13 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> >  F:	drivers/pci/controller/dwc/pcie-histb.c
-> >  
-> > +PCIE DRIVER FOR INTEL LGM GW SOC
-> > +M:	Rahul Tanwar <rtanwar@maxlinear.com>
-> > +L:	linux-pci@vger.kernel.org
-> > +S:	Maintained
-> > +F:	Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> > +F:	drivers/pci/controller/dwc/pcie-intel-gw.c
-> > +
+Hi Bjorn,
+On 2021-07-23 13:32, Bjorn Helgaas wrote:
+> On Fri, Jul 23, 2021 at 01:11:18PM -0700, hemantk@codeaurora.org wrote:
+>> Hi Bjorn,
 > 
-> Hi Bjorn,
+> It's best if you can cc: linux-pci@vger.kernel.org so others can
+> contribute and benefit.
+Good idea. Added now.
 > 
-> do you think we can merge this patch as a fix in one of the upcoming
-> -rcX ?
+>> I have a question regarding PCIe ASPM driver in upstream. Looks like
+>> current ASPM driver is going to enable ASPM L1 and L1SS based on
+>> EP's config space capability register read. Why ASPM driver is
+>> enabling L1SS based on capability, instead of that can ASPM honor
+>> default control register value (in EP config space) and let pci
+>> device driver probe (or later after probe) to make the decision if
+>> ASPM needs to be enabled or not.
+> 
+> Are you asking why the PCI core makes the decision about enabling ASPM
+> instead of having each device driver decide?
+Yes.
+> 
+> If you want each driver to decide, what benefit would that have?
+Basically if PCI EP has capability to support ASPM L1 and L1SS but
+power on default control reg values are meant to enumerate with ASPM 
+disabled.
+Which means EP wants to keep ASPM disabled right from the enumeration, 
+and at some
+point of time later EP wants to enable the ASPM. Main benefit is to give 
+control
+to EP to enumerate with what ever its control reg's power on default 
+value is. EP
+does not want to enable ASPM during its boot up and after entering to 
+mission
+mode use case it would enable the ASPM.
 
-Applied to for-linus for v5.14, thanks!
+> 
+> Obviously ASPM involves a power vs performance tradeoff, but
+> functionally, ASPM is designed so drivers don't need to be aware of
+> it.
+> 
+>> As far as i know there is an option to update quirk.c for a given
+>> device id and vendor id to disable L0s/L1/L1SS but that sounds like
+>> adding a software workaround to a device specific HW bug.
+> 
+> Yes.  It is common practice to use software quirks to work around
+> hardware defects.
+> 
+>> Also, i know 5.5 kernel added a patch to control aspm using sysfs
+>> per link basis:-
+> 
+>> https://patchwork.kernel.org/project/linux-pci/patch/b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com/
+> 
+> Yes.  This is intended for use by tools like powertop to tune the
+> power vs performance tradeoff.
+> 
+>> Basically point is: it is possible to honor what device control reg
+>> reflects power on default and let the pci ep driver running on host
+>> to make the decision when to enable/disable the aspm in kernel space
+>> pci driver.
+> 
+> There is a pci_disable_link_state() interface that drivers can use to
+> disable certain link states.  Some drivers use this to work around
+> hardware defects, but it would be better to use quirks in that
+> situation.
+Thanks for pointing this API, which quirk also uses. But we just have
+disable ver which EP driver can call only after enumeration is done. i 
+was
+thinking of the other way round where EP enumerates and then calls 
+enable
+API at some point of time. Also, if it decides to again disable and then 
+enable.
+
+> 
+>> Sorry if this was already well thought/discussed argument in the
+>> design of ASPM driver, i would appreciate, if you can shed some
+>> light on the reason for not taking that approach.
+> 
+> I don't know the history of that decision, but in general we try to do
+> things in the core instead of endpoint drivers whenever possible
+> because it reduces the complexity of drivers.
+> 
+> Bjorn
+
+Thanks for taking your time to respond very promptly Bjorn!
+
+-Hemant
+
+---
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
