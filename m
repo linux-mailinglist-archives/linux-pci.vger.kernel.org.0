@@ -2,69 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC573D3C6C
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 17:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4743D3CD7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 17:52:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235606AbhGWOsf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 10:48:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:47444 "EHLO foss.arm.com"
+        id S235669AbhGWPMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 11:12:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48208 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235575AbhGWOrp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 10:47:45 -0400
+        id S235470AbhGWPMS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Jul 2021 11:12:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EEAA139F;
-        Fri, 23 Jul 2021 08:28:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7067F11B3;
+        Fri, 23 Jul 2021 08:52:51 -0700 (PDT)
 Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A64B73F73D;
-        Fri, 23 Jul 2021 08:28:10 -0700 (PDT)
-Date:   Fri, 23 Jul 2021 16:28:05 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA76C3F73D;
+        Fri, 23 Jul 2021 08:52:49 -0700 (PDT)
+Date:   Fri, 23 Jul 2021 16:52:47 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rahul Tanwar <rtanwar@maxlinear.com>, bhelgaas@google.com
-Cc:     robh@kernel.org, kw@linux.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ckim@maxlinear.com,
-        qwu@maxlinear.com, rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH] PCI: dwc/intel-gw: Update MAINTAINERS file
-Message-ID: <20210723152805.GA4103@lpieralisi>
-References: <b3249e08155e04ac08d820be3b8da29a913c472a.1625559158.git.rtanwar@maxlinear.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>, robh@kernel.org
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
+ space
+Message-ID: <20210723155247.GB4103@lpieralisi>
+References: <20210624215546.4015-1-pali@kernel.org>
+ <20210624215546.4015-3-pali@kernel.org>
+ <87pmv919bq.fsf@BL-laptop>
+ <20210723141204.waiipazikhzzloj7@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <b3249e08155e04ac08d820be3b8da29a913c472a.1625559158.git.rtanwar@maxlinear.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210723141204.waiipazikhzzloj7@pali>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 04:20:59PM +0800, Rahul Tanwar wrote:
-> Add maintainer for PCIe RC controller driver for Intel LGM gateway SoC.
+On Fri, Jul 23, 2021 at 04:12:04PM +0200, Pali Rohár wrote:
+> On Friday 23 July 2021 14:52:25 Gregory CLEMENT wrote:
+> > Hello Pali,
+> > 
+> > > Current PCIe MEM space of size 16 MB is not enough for some combination
+> > > of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
+> > > Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
+> > > so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
+> > > allocate more PCIe BARs for more PCIe cards.
+> > >
+> > > Without this change some combination of PCIe cards cannot be used and
+> > > kernel show error messages in dmesg during initialization:
+> > >
+> > >     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
+> > >     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > >     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
+> > >     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
+> > >     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > >     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
+> > >     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
+> > >     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
+> > >     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
+> > >     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
+> > >     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
+> > >
+> > > Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
+> > > kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
+> > > crashes during loading of kernel DTB file. This bug is present only in
+> > > U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
+> > > affected by this bug. Bug is fixed in U-Boot version 2021.07.
+> > >
+> > > To not break booting new kernels on existing versions of U-Boot on Turris
+> > > Mox, use first 16 MB range for IO and second range with rest of PCIe window
+> > > for MEM.
+> > 
+> > Is there any depencey with the firs patch of this series ?
+> > 
+> > What happend if this patch is applied without the other ?
 > 
-> Signed-off-by: Rahul Tanwar <rtanwar@maxlinear.com>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
+> First patch is fixing reading and setting ranges configuration from DTS.
+> Without first patch memory windows stays as they were in bootloader or
+> in its default configuration. Which is that all 128 MB are transparently
+> mapped to PCIe MEM space.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3298f4592ce7..61c1cfcc453b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14392,6 +14392,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
->  F:	drivers/pci/controller/dwc/pcie-histb.c
->  
-> +PCIE DRIVER FOR INTEL LGM GW SOC
-> +M:	Rahul Tanwar <rtanwar@maxlinear.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> +F:	drivers/pci/controller/dwc/pcie-intel-gw.c
-> +
+> Therefore this second DTS patch does not fixes issue with IO space
+> (kernel still crashes when accessing it). But allows to use all PCIe MEM
+> space (due to bootloader / default configuration) and therefore allows
+> to use more PCIe cards (which needs more PCIe MEM space).
 
-Hi Bjorn,
+So, the two patches are decoupled then ? We are not taking dts changes
+through the PCI tree.
 
-do you think we can merge this patch as a fix in one of the upcoming
--rcX ?
-
-Please let me know, thanks.
+Besides: these dts patches are a nightmare for backward compatibility,
+hopefully Rob can shed some light on whether what you are doing here
+is advisable and how to sync the changes with kernel changes.
 
 Lorenzo
+
+> > Could you test it to see if any regression occure ?
+> > 
+> > Thanks,
+> > 
+> > Grégory
+> > 
+> > >
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
+> > > ---
+> > >  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
+> > >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
+> > >  2 files changed, 26 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > index 53e817c5f6f3..86b3025f174b 100644
+> > > --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > @@ -134,6 +134,23 @@
+> > >  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+> > >  	status = "okay";
+> > >  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> > > +	/*
+> > > +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
+> > > +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
+> > > +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
+> > > +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
+> > > +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
+> > > +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
+> > > +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
+> > > +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
+> > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
+> > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
+> > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
+> > > +	 */
+> > > +	#address-cells = <3>;
+> > > +	#size-cells = <2>;
+> > > +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
+> > > +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
+> > >  
+> > >  	/* enabled by U-Boot if PCIe module is present */
+> > >  	status = "disabled";
+> > > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > index 7a2df148c6a3..dac3007f2ac1 100644
+> > > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > @@ -488,8 +488,15 @@
+> > >  			#interrupt-cells = <1>;
+> > >  			msi-parent = <&pcie0>;
+> > >  			msi-controller;
+> > > -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
+> > > -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
+> > > +			/*
+> > > +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
+> > > +			 * dedicated for PCIe and can be assigned to 8 windows
+> > > +			 * with size a power of two. Use one 64 KiB window for
+> > > +			 * IO at the end and the remaining seven windows
+> > > +			 * (totaling 127 MiB) for MEM.
+> > > +			 */
+> > > +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
+> > > +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
+> > >  			interrupt-map-mask = <0 0 0 7>;
+> > >  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
+> > >  					<0 0 0 2 &pcie_intc 1>,
+> > > -- 
+> > > 2.20.1
+> > >
+> > 
+> > -- 
+> > Gregory Clement, Bootlin
+> > Embedded Linux and Kernel engineering
+> > http://bootlin.com
