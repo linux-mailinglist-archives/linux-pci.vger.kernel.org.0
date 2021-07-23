@@ -2,85 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C26C3D398C
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 13:33:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 905253D3AAF
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 14:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234424AbhGWKw1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 06:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234255AbhGWKw1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 06:52:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D9F8E608FE;
-        Fri, 23 Jul 2021 11:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627039980;
-        bh=E12Fd6tOLIFaPm0JI7r7SizcNQfxlTR9E3+Kw2yKqlo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ffd9dTE9bW+IqGdXzw4oAaC3o2Tmzmp2Djhlph+vr15VQgZeCFyAOW6lBaC4OJfMp
-         aq/Y9YjO79OjzJgMzA4S7MJUSP+LeABQZvGeOIiGTAsjRoqos8NWsaxo1a0XpJjzql
-         0hlxZ41tqIjX5a7EC8uMlZmvSWe6FzVmsGmtsa2DqGqYNsPAmlOpGPgo+3C21GE3zp
-         wTBJre4ZjwHIbTao930P8JF3kDxrZfVG+hSxj1B8hKb8QTZeYzQy6jpTZDCk4nMZ+9
-         3a6bQ0A4sdRCgq0JO1CNJAH9iJssPdugMN0EKjhisiOfVY+8746XXW/H3TrYGvYYIX
-         Kobd5U/hrqhPQ==
-Date:   Fri, 23 Jul 2021 14:32:56 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     helgaas@kernel.org, hch@infradead.org, kw@linux.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V6 7/8] PCI: Add "pci=disable_10bit_tag=" parameter for
- peer-to-peer support
-Message-ID: <YPqo6M0AKWLupvNU@unreal>
-References: <1627038402-114183-1-git-send-email-liudongdong3@huawei.com>
- <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
+        id S235105AbhGWMP3 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 23 Jul 2021 08:15:29 -0400
+Received: from mslow1.mail.gandi.net ([217.70.178.240]:46861 "EHLO
+        mslow1.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234909AbhGWMP3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 08:15:29 -0400
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 93C02CA3D7
+        for <linux-pci@vger.kernel.org>; Fri, 23 Jul 2021 12:52:48 +0000 (UTC)
+Received: (Authenticated sender: gregory.clement@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id ADC99C0010;
+        Fri, 23 Jul 2021 12:52:25 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
+ space
+In-Reply-To: <20210624215546.4015-3-pali@kernel.org>
+References: <20210624215546.4015-1-pali@kernel.org>
+ <20210624215546.4015-3-pali@kernel.org>
+Date:   Fri, 23 Jul 2021 14:52:25 +0200
+Message-ID: <87pmv919bq.fsf@BL-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 07:06:41PM +0800, Dongdong Liu wrote:
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
-> sending Requests to other Endpoints (as opposed to host memory), the
-> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
-> unless an implementation-specific mechanism determines that the Endpoint
-> supports 10-Bit Tag Completer capability. Add "pci=disable_10bit_tag="
-> parameter to disable 10-Bit Tag Requester if the peer device does not
-> support the 10-Bit Tag Completer. This will make P2P traffic safe.
-> 
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Hello Pali,
+
+> Current PCIe MEM space of size 16 MB is not enough for some combination
+> of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
+> Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
+> so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
+> allocate more PCIe BARs for more PCIe cards.
+>
+> Without this change some combination of PCIe cards cannot be used and
+> kernel show error messages in dmesg during initialization:
+>
+>     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
+>     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
+>     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
+>     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
+>     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
+>     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
+>     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
+>     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
+>     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
+>     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
+>     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
+>
+> Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
+> kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
+> crashes during loading of kernel DTB file. This bug is present only in
+> U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
+> affected by this bug. Bug is fixed in U-Boot version 2021.07.
+>
+> To not break booting new kernels on existing versions of U-Boot on Turris
+> Mox, use first 16 MB range for IO and second range with rest of PCIe window
+> for MEM.
+
+Is there any depencey with the firs patch of this series ?
+
+What happend if this patch is applied without the other ?
+Could you test it to see if any regression occure ?
+
+Thanks,
+
+Grégory
+
+>
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
 > ---
->  Documentation/admin-guide/kernel-parameters.txt |  7 ++++
->  drivers/pci/pci.c                               | 56 +++++++++++++++++++++++++
->  drivers/pci/pci.h                               |  1 +
->  drivers/pci/pcie/portdrv_pci.c                  | 13 +++---
->  drivers/pci/probe.c                             |  9 ++--
->  5 files changed, 78 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index bdb2200..c2c4585 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4019,6 +4019,13 @@
->  				bridges without forcing it upstream. Note:
->  				this removes isolation between devices and
->  				may put more devices in an IOMMU group.
-> +		disable_10bit_tag=<pci_dev>[; ...]
-> +				  Specify one or more PCI devices (in the format
-> +				  specified above) separated by semicolons.
-> +				  Disable 10-Bit Tag Requester if the peer
-> +				  device does not support the 10-Bit Tag
-> +				  Completer.This will make P2P traffic safe.
+>  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
+>  2 files changed, 26 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> index 53e817c5f6f3..86b3025f174b 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> @@ -134,6 +134,23 @@
+>  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+>  	status = "okay";
+>  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> +	/*
+> +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
+> +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
+> +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
+> +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
+> +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
+> +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
+> +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
+> +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
+> +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
+> +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
+> +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
+> +	 */
+> +	#address-cells = <3>;
+> +	#size-cells = <2>;
+> +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
+> +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
+>  
+>  	/* enabled by U-Boot if PCIe module is present */
+>  	status = "disabled";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> index 7a2df148c6a3..dac3007f2ac1 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> @@ -488,8 +488,15 @@
+>  			#interrupt-cells = <1>;
+>  			msi-parent = <&pcie0>;
+>  			msi-controller;
+> -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
+> -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
+> +			/*
+> +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
+> +			 * dedicated for PCIe and can be assigned to 8 windows
+> +			 * with size a power of two. Use one 64 KiB window for
+> +			 * IO at the end and the remaining seven windows
+> +			 * (totaling 127 MiB) for MEM.
+> +			 */
+> +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
+> +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
+>  			interrupt-map-mask = <0 0 0 7>;
+>  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
+>  					<0 0 0 2 &pcie_intc 1>,
+> -- 
+> 2.20.1
+>
 
-I can't imagine more awkward user experience than such kernel parameter.
-
-As a user, I will need to boot the system, hope for the best that system
-works, write down all PCI device numbers, guess which one doesn't work
-properly, update grub with new command line argument and reboot the
-system. Any HW change and this dance should be repeated.
-
-Thanks
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
