@@ -2,116 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A623C3D316F
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 03:56:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C4763D317A
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 04:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233152AbhGWBPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 21:15:43 -0400
-Received: from mx20.baidu.com ([111.202.115.85]:58518 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233145AbhGWBPm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 21:15:42 -0400
-Received: from BC-Mail-Ex18.internal.baidu.com (unknown [172.31.51.12])
-        by Forcepoint Email with ESMTPS id 9308CA6D2D1DB7AC8B15;
-        Fri, 23 Jul 2021 09:56:14 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BC-Mail-Ex18.internal.baidu.com (172.31.51.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2242.12; Fri, 23 Jul 2021 09:56:14 +0800
-Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Fri, 23 Jul 2021 09:56:13 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     <bhelgaas@google.com>, <jonathan.derrick@intel.com>,
-        <kw@linux.com>, <lorenzo.pieralisi@arm.com>, <robh@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Cai Huoqing <caihuoqing@baidu.com>
-Subject: [PATCH v2 2/2] PCI: vmd: Make use of PCI_DEVICE_DATA() helper function
-Date:   Fri, 23 Jul 2021 09:55:59 +0800
-Message-ID: <20210723015559.695-3-caihuoqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210723015559.695-1-caihuoqing@baidu.com>
-References: <20210723015559.695-1-caihuoqing@baidu.com>
+        id S233116AbhGWBTn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 21:19:43 -0400
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:39610 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233050AbhGWBTm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jul 2021 21:19:42 -0400
+Received: by mail-wm1-f50.google.com with SMTP id o3-20020a05600c5103b029024c0f9e1a5fso2349095wms.4;
+        Thu, 22 Jul 2021 19:00:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wqNvNl7Y9I+Lc0bDPRY2qK0RJphn3sKkuEuDxwoy3ro=;
+        b=CrAIV5S8Id5z9sfYuOBpvLXiagAlg41kohLPRcNjWGA7MLVgrBrzQh6/9RrTYHUobb
+         gjrcZs1JJCGXO0hPukMDFmjd10v4iEvdNFVzuzPSbywUQx3hn6H8EqHj6kFc28lKIkBh
+         p844a5kLg+aOFVbxRvvBABtVZq09U46adHUnRcqn2Hbng5YmsPaHoWCamiB98ABoAQxq
+         u7S8cRyF/iXtSc131xTJvE7kvEzHo27wW/O04TVCAWk7/jQ4IdyaKtj1sFAcvA3I6TqZ
+         0OomFqdIeJD2tGxYOeiF78adcUYulrz/luOuIBrmZmKKR3OM5MlNPuv8Y81DJwFCMJgp
+         VPgQ==
+X-Gm-Message-State: AOAM531IFPYhoMZMjEyABndkaBff9g4lC10Wa73NSZOpcEGuKV6OVQ4R
+        mRFRifoXrOQnxFeliSAmuR0L2jgsrPxEz97c
+X-Google-Smtp-Source: ABdhPJxHcH9H+rY/nRSOPjZVi/EOVXfDrri03O4YuxnL/vddt147+tHPnc93ILllYE3BRn/tcJ/XCA==
+X-Received: by 2002:a05:600c:1ca3:: with SMTP id k35mr11536840wms.174.1627005615058;
+        Thu, 22 Jul 2021 19:00:15 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id l22sm3804431wmp.41.2021.07.22.19.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jul 2021 19:00:14 -0700 (PDT)
+Date:   Fri, 23 Jul 2021 04:00:13 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     "Cai,Huoqing" <caihuoqing@baidu.com>
+Cc:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI: vmd: Make use of PCI_DEVICE_DATA() helper
+ function
+Message-ID: <20210723020013.GA2170028@rocinante>
+References: <20210722112954.477-1-caihuoqing@baidu.com>
+ <20210722112954.477-3-caihuoqing@baidu.com>
+ <f2aeb584-6293-78ce-e5aa-4bde34045a86@intel.com>
+ <e44664317c2949e794497dc5f903f2a8@baidu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BJHW-Mail-Ex16.internal.baidu.com (10.127.64.39) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e44664317c2949e794497dc5f903f2a8@baidu.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We could make use of PCI_DEVICE_DATA() helper function
+Hi,
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
----
- drivers/pci/controller/vmd.c | 38 ++++++++++++++++++------------------
- include/linux/pci_ids.h      |  2 ++
- 2 files changed, 21 insertions(+), 19 deletions(-)
+Thank you for sending the patch over!
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index e3fcdfec58b3..565681ed00a1 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -859,25 +859,25 @@ static int vmd_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(vmd_dev_pm_ops, vmd_suspend, vmd_resume);
- 
- static const struct pci_device_id vmd_ids[] = {
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{0,}
-+	{ PCI_DEVICE_DATA(INTEL, VMD_201D,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_28C0,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_CAN_BYPASS_MSI_REMAP) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_467F,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_4C3D,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_9A0B,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ },
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
- 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 4bac1831de80..d25552b5ae3e 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2954,6 +2954,8 @@
- #define PCI_DEVICE_ID_INTEL_SBRIDGE_BR		0x3cf5	/* 13.6 */
- #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD1	0x3cf6	/* 12.7 */
- #define PCI_DEVICE_ID_INTEL_IOAT_SNB	0x402f
-+#define PCI_DEVICE_ID_INTEL_VMD_467F	0x467f
-+#define PCI_DEVICE_ID_INTEL_VMD_4C3D	0x4c3d
- #define PCI_DEVICE_ID_INTEL_5100_16	0x65f0
- #define PCI_DEVICE_ID_INTEL_5100_19	0x65f3
- #define PCI_DEVICE_ID_INTEL_5100_21	0x65f5
--- 
-2.25.1
+> 	PATCH[2/2] has some extra indentation, please don't apply it , 
 
+You might know this already, but just in case make sure to run the
+"checkpatch.pl" script over the patch before submission.
+
+> I'll send PATCH V2.
+
+You mean v3?  Make sure to include a changelog, if possible.
+
+A small nitpick: the PCI_DEVICE_DATA() is technically a macro rather
+than a function, so you could update both the subject line and the
+commit message accordingly, if you want.
+
+Also, since you are about to send another version, add period at the end
+of the sentence in the commit message.
+
+Aside of the above, it's a nice refactor, thank you!
+
+	Krzysztof
