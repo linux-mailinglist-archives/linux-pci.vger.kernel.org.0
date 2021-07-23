@@ -2,19 +2,19 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B953D41F0
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 23:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 002DD3D41EF
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 23:06:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231934AbhGWU0X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 16:26:23 -0400
-Received: from finn.gateworks.com ([108.161.129.64]:57822 "EHLO
+        id S229461AbhGWU0W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 16:26:22 -0400
+Received: from finn.gateworks.com ([108.161.129.64]:57820 "EHLO
         finn.localdomain" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231754AbhGWU0X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 16:26:23 -0400
+        with ESMTP id S231940AbhGWU0W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 16:26:22 -0400
 Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
         by finn.localdomain with esmtp (Exim 4.93)
         (envelope-from <tharvey@gateworks.com>)
-        id 1m727R-0057Vc-KE; Fri, 23 Jul 2021 20:50:05 +0000
+        id 1m727S-0057Vc-QT; Fri, 23 Jul 2021 20:50:06 +0000
 From:   Tim Harvey <tharvey@gateworks.com>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -30,9 +30,9 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH 4/6] reset: imx7: add resets for PCIe
-Date:   Fri, 23 Jul 2021 13:49:56 -0700
-Message-Id: <20210723204958.7186-5-tharvey@gateworks.com>
+Subject: [PATCH 5/6] arm64: dts: imx8mm: add PCIe support
+Date:   Fri, 23 Jul 2021 13:49:57 -0700
+Message-Id: <20210723204958.7186-6-tharvey@gateworks.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210723204958.7186-1-tharvey@gateworks.com>
 References: <20210723204958.7186-1-tharvey@gateworks.com>
@@ -40,35 +40,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add reset for PCIe clock and PHY.
+Add PCIe node for PCIe support.
 
 Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 ---
- drivers/reset/reset-imx7.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 185a333df66c..423707e1fd59 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -191,6 +191,7 @@ static const struct imx7_src_signal imx8mq_src_signals[IMX8MQ_RESET_NUM] = {
- 	[IMX8MQ_RESET_PCIEPHY]			= { SRC_PCIEPHY_RCR,
- 						    BIT(2) | BIT(1) },
- 	[IMX8MQ_RESET_PCIEPHY_PERST]		= { SRC_PCIEPHY_RCR, BIT(3) },
-+	[IMX8MQ_RESET_PCIE_CTRL_APPS_CLK_REQ]	= { SRC_PCIEPHY_RCR, BIT(4) },
- 	[IMX8MQ_RESET_PCIE_CTRL_APPS_EN]	= { SRC_PCIEPHY_RCR, BIT(6) },
- 	[IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF]	= { SRC_PCIEPHY_RCR, BIT(11) },
- 	[IMX8MQ_RESET_HDMI_PHY_APB_RESET]	= { SRC_HDMI_RCR, BIT(0) },
-@@ -234,7 +235,9 @@ static int imx8mq_reset_set(struct reset_controller_dev *rcdev,
- 			udelay(10);
- 		break;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 3bec6b8d52a0..45017f50a11b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -1134,6 +1134,10 @@
+ 				reg = <0x32e50200 0x200>;
+ 			};
  
-+	case IMX8MQ_RESET_PCIEPHY_PERST:
- 	case IMX8MQ_RESET_PCIE_CTRL_APPS_EN:
-+	case IMX8MQ_RESET_PCIE_CTRL_APPS_CLK_REQ:
- 	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:
- 	case IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N:
- 	case IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N:
++			pcie_phy: pcie-phy@32f00000 {
++				  compatible = "fsl,imx7d-pcie-phy";
++				  reg = <0x32f00000 0x10000>;
++			};
+ 		};
+ 
+ 		dma_apbh: dma-controller@33000000 {
+@@ -1233,5 +1237,37 @@
+ 			reg = <0x3d800000 0x400000>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
++
++		pcie0: pcie@33800000 {
++			compatible = "fsl,imx8mm-pcie";
++			reg = <0x33800000 0x400000>,
++			      <0x1ff00000 0x80000>;
++			reg-names = "dbi", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			bus-range = <0x00 0xff>;
++			ranges = <0x81000000 0 0x00000000 0x1ff80000 0 0x00010000 /* downstream I/O 64KB */
++				 0x82000000 0 0x18000000 0x18000000 0 0x07f00000>; /* non-prefetchable memory */
++			num-lanes = <1>;
++			num-viewport = <4>;
++			interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &gic GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &gic GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie>;
++			resets = <&src IMX8MQ_RESET_PCIEPHY>,
++				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_EN>,
++				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_CLK_REQ>,
++				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "clkreq", "turnoff";
++			fsl,imx7d-pcie-phy = <&pcie_phy>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 2.17.1
 
