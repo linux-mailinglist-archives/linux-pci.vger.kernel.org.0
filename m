@@ -2,250 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BFD33D2FCC
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 00:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1663D3150
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 03:31:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231536AbhGVVnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 17:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231320AbhGVVnS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 17:43:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3513260EB1;
-        Thu, 22 Jul 2021 22:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626992632;
-        bh=KweSwaLbhjPsHWnbE36IThydrkfovxRJ8o9A5OxnuNU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N8C3IV6/7SFoMb0TY7JRYES0pjqk0tCaHYT017TBqfb9k7kaIMvojvhKokdtacg0z
-         u9I/n2iFN6muXrMmi3dymmdnsbXI75rwldlumIFhMOht8w2Xt1nYBlmwUCDnsCdiJn
-         vbMkQ/H7FZ/EaMOE9YDw8fBi/fCGOFoJ8GcnahCqVxihfSCwuCwztjhibxvcOs6iZA
-         UbT7sJ0yhD9Zb+jiRl8efxtn2C3dZQhmVM7lBydpPsV2qrVLinALbLQ/b57CF+/s4i
-         vc40EwR84vgutE8Df9oKwxvGtyE3Fg1Q1s7kYP+8DqgotAsyJMlog5UBOZNRxYxOQ8
-         HmOtHTn7UypiQ==
-Date:   Thu, 22 Jul 2021 17:23:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
-Message-ID: <20210722222351.GA354095@bjorn-Precision-5520>
+        id S233039AbhGWAuz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jul 2021 20:50:55 -0400
+Received: from mx21.baidu.com ([220.181.3.85]:34170 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232992AbhGWAuz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Jul 2021 20:50:55 -0400
+Received: from BC-Mail-Ex27.internal.baidu.com (unknown [172.31.51.21])
+        by Forcepoint Email with ESMTPS id CAD2866F9C9FEE926CA;
+        Fri, 23 Jul 2021 09:30:57 +0800 (CST)
+Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
+ BC-Mail-Ex27.internal.baidu.com (172.31.51.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 23 Jul 2021 09:30:57 +0800
+Received: from BJHW-MAIL-EX27.internal.baidu.com ([169.254.58.247]) by
+ BJHW-MAIL-EX27.internal.baidu.com ([169.254.58.247]) with mapi id
+ 15.01.2308.014; Fri, 23 Jul 2021 09:30:57 +0800
+From:   "Cai,Huoqing" <caihuoqing@baidu.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathan.derrick@intel.com" <jonathan.derrick@intel.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/2] PCI: Make use of PCI_DEVICE_XXX() helper function
+Thread-Topic: [PATCH 0/2] PCI: Make use of PCI_DEVICE_XXX() helper function
+Thread-Index: AQHXfutlH33bL9BhfEO2Qe6OtAUea6tOr/GAgAEQVdA=
+Date:   Fri, 23 Jul 2021 01:30:57 +0000
+Message-ID: <e31495411e8b41f785dd619f51c0f5cc@baidu.com>
+References: <20210722111903.432-1-caihuoqing@baidu.com>
+ <20210722165225.GA316118@bjorn-Precision-5520>
+In-Reply-To: <20210722165225.GA316118@bjorn-Precision-5520>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.18.18.94]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p6VN0ejKHcTRgj8mZ_iApR=KogpVZ-HkvdoZbJ=Yue98g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 05, 2021 at 11:17:32PM +0800, Kai-Heng Feng wrote:
-> On Fri, Feb 5, 2021 at 7:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Alex]
-> >
-> > On Thu, Jan 28, 2021 at 12:09:37PM +0800, Kai-Heng Feng wrote:
-> > > On Thu, Jan 28, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, Jan 28, 2021 at 01:31:00AM +0800, Kai-Heng Feng wrote:
-> > > > > Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
-> > > > > hint") enables ACS, and some platforms lose its NVMe after resume from
-> > > > > firmware:
-> > > > > [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
-> > > > > [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
-> > > > > [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> > > > > [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
-> > > > > [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
-> > > > > [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
-> > > > > [   50.947843] nvme nvme0: frozen state error detected, reset controller
-> > > > >
-> > > > > It happens right after ACS gets enabled during resume.
-> > > > >
-> > > > > To prevent that from happening, disable AER interrupt and enable it on
-> > > > > system suspend and resume, respectively.
-> > > >
-> > > > Lots of questions here.  Maybe this is what we'll end up doing, but I
-> > > > am curious about why the error is reported in the first place.
-> > > >
-> > > > Is this a consequence of the link going down and back up?
-> > >
-> > > Could be. From the observations, it only happens when firmware suspend
-> > > (S3) is used.
-> > > Maybe it happens when it's gets powered up, but I don't have equipment
-> > > to debug at hardware level.
-> > >
-> > > If we use non-firmware suspend method, enabling ACS after resume won't
-> > > trip AER and DPC.
-> > >
-> > > > Is it consequence of the device doing a DMA when it shouldn't?
-> > >
-> > > If it's doing DMA while suspending, the same error should also happen
-> > > after NVMe is suspended and before PCIe port suspending.
-> > > Furthermore, if non-firmware suspend method is used, there's so such
-> > > issue, so less likely to be any DMA operation.
-> > >
-> > > > Are we doing something in the wrong order during suspend?  Or maybe
-> > > > resume, since I assume the error is reported during resume?
-> > >
-> > > Yes the error is reported during resume. The suspend/resume order
-> > > seems fine as non-firmware suspend doesn't have this issue.
-> >
-> > I really feel like we need a better understanding of what's going on
-> > here.  Disabling the AER interrupt is like closing our eyes and
-> > pretending that because we don't see it, it didn't happen.
-> >
-> > An ACS error is triggered by a DMA, right?  I'm assuming an MMIO
-> > access from the CPU wouldn't trigger this error.  And it sounds like
-> > the error is triggered before we even start running the driver after
-> > resume.
-> >
-> > If we're powering up an NVMe device from D3cold and it DMAs before the
-> > driver touches it, something would be seriously broken.  I doubt
-> > that's what's happening.  Maybe a device could resume some previously
-> > programmed DMA after powering up from D3hot.
-> 
-> I am not that familiar with PCIe ACS/AER/DPC, so I can't really answer
-> questions you raised.
-> PCIe spec doesn't say the suspend/resume order is also not helping here.
-> 
-> However, I really think it's a system firmware issue.
-> I've seen some suspend-to-idle platforms with NVMe can reach D3cold,
-> those are unaffected.
-
-Marking both of these as "not applicable" for now because I don't
-think we really understand what's going on.
-
-Apparently a DMA occurs during suspend or resume and triggers an ACS
-violation.  I don't think think such a DMA should occur in the first
-place.
-
-Or maybe, since you say the problem happens right after ACS is enabled
-during resume, we're doing the ACS enable incorrectly?  Although I
-would think we should not be doing DMA at the same time we're enabling
-ACS, either.
-
-If this really is a system firmware issue, both HP and Dell should
-have the knowledge and equipment to figure out what's going on.
-
-> > Or maybe the error occurred on suspend, like if the device wasn't
-> > quiesced or something, but we didn't notice it until resume?  The
-> > AER error status bits are RW1CS, which means they can be preserved
-> > across hot/warm/cold resets.
-> >
-> > Can you instrument the code to see whether the AER error status bit is
-> > set before enabling ACS?  I'm not sure that merely enabling ACS (I
-> > assume you mean pci_std_enable_acs(), where we write PCI_ACS_CTRL)
-> > should cause an interrupt for a previously-logged error.  I suspect
-> > that could happen when enabling *AER*, but I wouldn't think it would
-> > happen when enabling *ACS*.
-> 
-> Diff to print AER status:
-> https://bugzilla.kernel.org/show_bug.cgi?id=209149#c11
-> 
-> And dmesg:
-> https://bugzilla.kernel.org/show_bug.cgi?id=209149#c12
-> 
-> Looks like the read before suspend and after resume are both fine.
-> 
-> >
-> > Does this error happen on multiple machines from different vendors?
-> > Wondering if it could be a BIOS issue, e.g., BIOS not cleaning up
-> > after it did something to cause an error.
-> 
-> AFAIK, systems from both HP and Dell are affected.
-> I was told that the reference platform from Intel is using
-> suspend-to-idle, but vendors changed the sleep method to S3 to have
-> lower power consumption to pass regulation.
-> 
-> Kai-Heng
-> 
-> >
-> > > > If we *do* take the error, why doesn't DPC recovery work?
-> > >
-> > > It works for the root port, but not for the NVMe drive:
-> > > [   50.947816] pcieport 0000:00:1b.0: DPC: containment event,
-> > > status:0x1f01 source:0x0000
-> > > [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
-> > > [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error:
-> > > severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver
-> > > ID)
-> > > [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error
-> > > status/mask=00200000/00010000
-> > > [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
-> > > [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
-> > > [   50.947843] nvme nvme0: frozen state error detected, reset controller
-> > > [   50.948400] ACPI: EC: event unblocked
-> > > [   50.948432] xhci_hcd 0000:00:14.0: PME# disabled
-> > > [   50.948444] xhci_hcd 0000:00:14.0: enabling bus mastering
-> > > [   50.949056] pcieport 0000:00:1b.0: PME# disabled
-> > > [   50.949068] pcieport 0000:00:1c.0: PME# disabled
-> > > [   50.949416] e1000e 0000:00:1f.6: PME# disabled
-> > > [   50.949463] e1000e 0000:00:1f.6: enabling bus mastering
-> > > [   50.951606] sd 0:0:0:0: [sda] Starting disk
-> > > [   50.951610] nvme 0000:01:00.0: can't change power state from D3hot
-> > > to D0 (config space inaccessible)
-> > > [   50.951730] nvme nvme0: Removing after probe failure status: -19
-> > > [   50.952360] nvme nvme0: failed to set APST feature (-19)
-> > > [   50.971136] snd_hda_intel 0000:00:1f.3: PME# disabled
-> > > [   51.089330] pcieport 0000:00:1b.0: AER: broadcast resume message
-> > > [   51.089345] pcieport 0000:00:1b.0: AER: device recovery successful
-> > >
-> > > But I think why recovery doesn't work for NVMe is for another discussion...
-> > >
-> > > Kai-Heng
-> > >
-> > > >
-> > > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-> > > > > Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
-> > > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > > ---
-> > > > >  drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
-> > > > >  1 file changed, 18 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > > > index 77b0f2c45bc0..0e9a85530ae6 100644
-> > > > > --- a/drivers/pci/pcie/aer.c
-> > > > > +++ b/drivers/pci/pcie/aer.c
-> > > > > @@ -1365,6 +1365,22 @@ static int aer_probe(struct pcie_device *dev)
-> > > > >       return 0;
-> > > > >  }
-> > > > >
-> > > > > +static int aer_suspend(struct pcie_device *dev)
-> > > > > +{
-> > > > > +     struct aer_rpc *rpc = get_service_data(dev);
-> > > > > +
-> > > > > +     aer_disable_rootport(rpc);
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int aer_resume(struct pcie_device *dev)
-> > > > > +{
-> > > > > +     struct aer_rpc *rpc = get_service_data(dev);
-> > > > > +
-> > > > > +     aer_enable_rootport(rpc);
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
-> > > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
-> > > > > @@ -1437,6 +1453,8 @@ static struct pcie_port_service_driver aerdriver = {
-> > > > >       .service        = PCIE_PORT_SERVICE_AER,
-> > > > >
-> > > > >       .probe          = aer_probe,
-> > > > > +     .suspend        = aer_suspend,
-> > > > > +     .resume         = aer_resume,
-> > > > >       .remove         = aer_remove,
-> > > > >  };
-> > > > >
-> > > > > --
-> > > > > 2.29.2
-> > > > >
+SGVsbG8NCglJIGdldCBpdCBhbmQgd2lsbCBzZW5kIHBhdGNoIFBBVENIIGFnYWluLg0KDQpUSFgN
+Cg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEJqb3JuIEhlbGdhYXMgPGhlbGdh
+YXNAa2VybmVsLm9yZz4gDQpTZW50OiAyMDIxxOo31MIyM8jVIDA6NTINClRvOiBDYWksSHVvcWlu
+ZyA8Y2FpaHVvcWluZ0BiYWlkdS5jb20+DQpDYzogYmhlbGdhYXNAZ29vZ2xlLmNvbTsgam9uYXRo
+YW4uZGVycmlja0BpbnRlbC5jb207IGt3QGxpbnV4LmNvbTsgb25hdGhhbi5kZXJyaWNrQGludGVs
+LmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgcm9iaEBrZXJuZWwub3JnOyBsaW51eC1w
+Y2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0
+OiBSZTogW1BBVENIIDAvMl0gUENJOiBNYWtlIHVzZSBvZiBQQ0lfREVWSUNFX1hYWCgpIGhlbHBl
+ciBmdW5jdGlvbg0KDQpPbiBUaHUsIEp1bCAyMiwgMjAyMSBhdCAwNzoxOTowMVBNICswODAwLCBD
+YWkgSHVvcWluZyB3cm90ZToNCj4gQ291bGQgbWFrZSB1c2Ugb2YgUENJX0RFVklDRV9YWFgoKSBo
+ZWxwZXIgZnVuY3Rpb24NCj4gDQo+IENhaSBIdW9xaW5nICgyKToNCj4gICBQQ0k6IE1ha2UgdXNl
+IG9mIFBDSV9ERVZJQ0VfU1VCL19DTEFTUygpIGhlbHBlciBmdW5jdGlvbg0KPiAgIFBDSTogdm1k
+OiBNYWtlIHVzZSBvZiBQQ0lfREVWSUNFX0RBVEEoKSBoZWxwZXIgZnVuY3Rpb24NCj4gDQo+ICBk
+cml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jICAgICAgfCAzOCArKysrKysrKysrKysrKystLS0t
+LS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL3BjaS9ob3RwbHVnL2NwcXBocF9jb3JlLmMgfCAxMyAr
+Ky0tLS0tLS0tLQ0KPiAgZHJpdmVycy9wY2kvc2VhcmNoLmMgICAgICAgICAgICAgIHwgMTQgKyst
+LS0tLS0tLS0tDQo+ICBpbmNsdWRlL2xpbnV4L3BjaV9pZHMuaCAgICAgICAgICAgfCAgMiArKw0K
+PiAgNCBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCA0MiBkZWxldGlvbnMoLSkNCg0K
+V2hlbiB5b3UgZml4IHRoZSBwcm9ibGVtIGJlbG93LCBhbHNvOg0KDQpzL01ha2UgdXNlIG9mL1Vz
+ZS8NCg0KVXBkYXRlIGNvbW1pdCBsb2cgdG8gc2F5IHdoYXQgdGhlIHBhdGNoIGRvZXMuICBTZWUg
+aHR0cHM6Ly9jaHJpcy5iZWFtcy5pby9wb3N0cy9naXQtY29tbWl0LyBmb3IgaGludHMuDQpBZGQg
+cGVyaW9kIGF0IGVuZCBvZiBzZW50ZW5jZXMuDQoNCkkgZG9uJ3Qgc2VlIGV4YWN0bHkgd2hhdCdz
+IHdyb25nLCBidXQgdGhpcyBzZXJpZXMgZG9lc24ndCBhcHBseSBjbGVhbmx5LiAgSSdtIHVzaW5n
+IGI0IHRvIGZldGNoIHRoZSBzZXJpZXMuICBiNCBpcyBmcm9tIGh0dHBzOi8vZ2l0Lmtlcm5lbC5v
+cmcvcHViL3NjbS91dGlscy9iNC9iNC5naXQNCg0KICAxMTo0NzowNCB+L2xpbnV4IChtYWluKSQg
+Z2l0IGNoZWNrb3V0IC1iIHdpcC9jYWkgdjUuMTQtcmMxDQogIFN3aXRjaGVkIHRvIGEgbmV3IGJy
+YW5jaCAnd2lwL2NhaScNCiAgMTE6NDc6MTcgfi9saW51eCAod2lwL2NhaSkkIGI0IGFtIC1vbS8g
+MjAyMTA3MjIxMTE5MDMuNDMyLTEtY2FpaHVvcWluZ0BiYWlkdS5jb20NCiAgTG9va2luZyB1cCBo
+dHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjEwNzIyMTExOTAzLjQzMi0xLWNhaWh1b3Fpbmcl
+NDBiYWlkdS5jb20NCiAgR3JhYmJpbmcgdGhyZWFkIGZyb20gbG9yZS5rZXJuZWwub3JnL2xpbnV4
+LXBjaQ0KICBBbmFseXppbmcgMyBtZXNzYWdlcyBpbiB0aGUgdGhyZWFkDQogIC0tLQ0KICBXcml0
+aW5nIG0vMjAyMTA3MjJfY2FpaHVvcWluZ19wY2lfbWFrZV91c2Vfb2ZfcGNpX2RldmljZV94eHhf
+aGVscGVyX2Z1bmN0aW9uLm1ieA0KICAgIFtQQVRDSCAxLzJdIFBDSTogTWFrZSB1c2Ugb2YgUENJ
+X0RFVklDRV9TVUIvX0NMQVNTKCkgaGVscGVyIGZ1bmN0aW9uDQogICAgW1BBVENIIDIvMl0gUENJ
+OiB2bWQ6IE1ha2UgdXNlIG9mIFBDSV9ERVZJQ0VfREFUQSgpIGhlbHBlciBmdW5jdGlvbg0KICAt
+LS0NCiAgVG90YWwgcGF0Y2hlczogMg0KICAtLS0NCiAgQ292ZXI6IG0vMjAyMTA3MjJfY2FpaHVv
+cWluZ19wY2lfbWFrZV91c2Vfb2ZfcGNpX2RldmljZV94eHhfaGVscGVyX2Z1bmN0aW9uLmNvdmVy
+DQogICBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjEwNzIyMTExOTAzLjQzMi0x
+LWNhaWh1b3FpbmdAYmFpZHUuY29tDQogICBCYXNlOiBub3QgZm91bmQgKGFwcGxpZXMgY2xlYW4g
+dG8gY3VycmVudCB0cmVlKQ0KCSBnaXQgYW0gbS8yMDIxMDcyMl9jYWlodW9xaW5nX3BjaV9tYWtl
+X3VzZV9vZl9wY2lfZGV2aWNlX3h4eF9oZWxwZXJfZnVuY3Rpb24ubWJ4DQogIDExOjQ3OjQ1IH4v
+bGludXggKHdpcC9jYWkpJCBnaXQgYW0gbS8yMDIxMDcyMl9jYWlodW9xaW5nX3BjaV9tYWtlX3Vz
+ZV9vZl9wY2lfZGV2aWNlX3h4eF9oZWxwZXJfZnVuY3Rpb24ubWJ4DQogIEFwcGx5aW5nOiBQQ0k6
+IE1ha2UgdXNlIG9mIFBDSV9ERVZJQ0VfU1VCL19DTEFTUygpIGhlbHBlciBmdW5jdGlvbg0KICBl
+cnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3BjaS9ob3RwbHVnL2NwcXBocF9jb3JlLmM6MTM1
+Nw0KICBlcnJvcjogZHJpdmVycy9wY2kvaG90cGx1Zy9jcHFwaHBfY29yZS5jOiBwYXRjaCBkb2Vz
+IG5vdCBhcHBseQ0KICBlcnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3BjaS9zZWFyY2guYzoz
+MDMNCiAgZXJyb3I6IGRyaXZlcnMvcGNpL3NlYXJjaC5jOiBwYXRjaCBkb2VzIG5vdCBhcHBseQ0K
+ICBQYXRjaCBmYWlsZWQgYXQgMDAwMSBQQ0k6IE1ha2UgdXNlIG9mIFBDSV9ERVZJQ0VfU1VCL19D
+TEFTUygpIGhlbHBlciBmdW5jdGlvbg0KICBoaW50OiBVc2UgJ2dpdCBhbSAtLXNob3ctY3VycmVu
+dC1wYXRjaCcgdG8gc2VlIHRoZSBmYWlsZWQgcGF0Y2gNCiAgV2hlbiB5b3UgaGF2ZSByZXNvbHZl
+ZCB0aGlzIHByb2JsZW0sIHJ1biAiZ2l0IGFtIC0tY29udGludWUiLg0KICBJZiB5b3UgcHJlZmVy
+IHRvIHNraXAgdGhpcyBwYXRjaCwgcnVuICJnaXQgYW0gLS1za2lwIiBpbnN0ZWFkLg0KICBUbyBy
+ZXN0b3JlIHRoZSBvcmlnaW5hbCBicmFuY2ggYW5kIHN0b3AgcGF0Y2hpbmcsIHJ1biAiZ2l0IGFt
+IC0tYWJvcnQiLg0KDQo=
