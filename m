@@ -2,113 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 567EC3D3505
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 09:05:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F193D351F
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 09:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234089AbhGWGZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 02:25:04 -0400
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:54212
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234253AbhGWGY6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 02:24:58 -0400
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPS id CDED83F342
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jul 2021 07:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1627023926;
-        bh=nfkPx7NC5zaeXceVlyVGlTHRL5ArI5NO9jvFKmnisTY=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=uvrH6AvZOq1wRvT1Bd8/SfOxzDlUfB1BHR1wawlqi/NdJeikPUd7XLty6QwnQUU/Q
-         KmPDnkxPkGWG8o7m7YVSZ9yov8oVMmMbaMxqMDdPRtUxWxHler3Dg0QtiyFPZs9t2I
-         KYDfwoC/KWiYJBeTQEqPndVz1lU3p8GiHIOFquUtupJn6wznZccBqT3HenWSRlEtb+
-         uG2Mq+Sm4zb+GHhs+XCC+p9gqWZywaj9V2jL3uhGvvTtNCA/XnMQRlw7XifC4NwTb0
-         bcVXU4j//wcTgoOMtvRwINl1NGUaKvUxSWvfdaGDmyI7pPaa/5jMgcklFVGrmjTIcQ
-         HQZzr8iCv7dWw==
-Received: by mail-ej1-f71.google.com with SMTP id hb18-20020a1709071612b029052883e9de3eso296096ejc.19
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jul 2021 00:05:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nfkPx7NC5zaeXceVlyVGlTHRL5ArI5NO9jvFKmnisTY=;
-        b=XSboy6UVfT6jDFRLFOaJBNFaC/etHSWFkCrVuA67JGB4Z5OhJmKzqomLnwoXnsu1H8
-         nLmLL+WTjIta9rDT+RSp0FPzAQjYHqKmKMGw4xwkEV3ldEuid0PU4e/DNSBbHX+KlD6K
-         k5rXmp4BqEpmOMEjXYjJ70FoPkQFzza5N2tF98fSw1CcaFYX0vJuAknsg3Di3m1xmmSY
-         UajwdI5UoVmCwfyMcOM9blxv93d1IZhZxs+/Y1pTpVHHp2LJ+GFJ7NAjnx5jkeTpwdUm
-         rARlzl9SD2PNqZA3Y5ZOKEetKAKYVTHjF2EKC+XSMdH2JR4BcCb4MxN/4KYF1puyWHA6
-         Rq1w==
-X-Gm-Message-State: AOAM531NFOnXC2T/rKar9DEsWO9kq3hYjEGEzCzS163k25+XDh/WbpMd
-        s63+T2zmRXXJio0n9UH2CDO2TpjicH/htPLSbSlFag8qVNii5g35qN1idU/sERynJNl4pMucrB2
-        6ag5ARP0OipYB+lHsTTieOoJOMXYHgnsprRCAB7Q3FmtilYdIGFZIPA==
-X-Received: by 2002:a17:906:f0d8:: with SMTP id dk24mr3430024ejb.432.1627023926310;
-        Fri, 23 Jul 2021 00:05:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwnwrE3fibwAyd5puLQhhkBI3cJ/iZwBYnuPqRykg2M2+jR/0WQUB0/5z1/f5dPMa0hH/lPTm/THgVMa/6SzKQ=
-X-Received: by 2002:a17:906:f0d8:: with SMTP id dk24mr3430007ejb.432.1627023926038;
- Fri, 23 Jul 2021 00:05:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAd53p6VN0ejKHcTRgj8mZ_iApR=KogpVZ-HkvdoZbJ=Yue98g@mail.gmail.com>
- <20210722222351.GA354095@bjorn-Precision-5520> <YPpShrTa448OpGjA@infradead.org>
-In-Reply-To: <YPpShrTa448OpGjA@infradead.org>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 23 Jul 2021 15:05:12 +0800
-Message-ID: <CAAd53p75d=ibfFRCLmYOMvfrn7XbDajby1shKdWQWW=DOrX3uw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
+        id S229616AbhGWGg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 02:36:57 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:47380 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229560AbhGWGg5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 02:36:57 -0400
+X-UUID: 75498d81aefb4632a4746dbb27fda214-20210723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=prDrh7DxvcudMBmuQ1JSmdMeIVoEkDXcOOdpbvc2mFA=;
+        b=QI6jc+ZVluBVkxEG3ZV3sBFIUZDM97gmELDiXF/AEQI7ajf4sXdARMqMiH4kcznjq+GCXDI1lpw2gaCJXuYd6IMGyM8llAodIzi1B9TAzvMr1XrdtAnMmdKF15rtlebhqXtxSUP9oknFJ6wmBAReIxBMzfQ9XwfQ9tlDR+Rc4Qw=;
+X-UUID: 75498d81aefb4632a4746dbb27fda214-20210723
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 288064018; Fri, 23 Jul 2021 15:17:28 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 23 Jul 2021 15:17:27 +0800
+Received: from [10.17.3.153] (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 23 Jul 2021 15:17:26 +0800
+Message-ID: <1627024646.19956.2.camel@mhfsdcap03>
+Subject: Re: [PATCH v11 1/4] dt-bindings: PCI: mediatek: Update the Device
+ tree bindings
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        <devicetree@vger.kernel.org>, Yong Wu <yong.wu@mediatek.com>
+Date:   Fri, 23 Jul 2021 15:17:26 +0800
+In-Reply-To: <CAL_JsqJXN1b5Tq7uAngXfDmpTJoPvDmSzMedK3kr6efvuCgQ=w@mail.gmail.com>
+References: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
+         <20210719073456.28666-2-chuanjia.liu@mediatek.com>
+         <20210719224718.GA2766057@robh.at.kernel.org>
+         <1626746843.2466.10.camel@mhfsdcap03>
+         <CAL_JsqJXN1b5Tq7uAngXfDmpTJoPvDmSzMedK3kr6efvuCgQ=w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 1:24 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Jul 22, 2021 at 05:23:51PM -0500, Bjorn Helgaas wrote:
-> > Marking both of these as "not applicable" for now because I don't
-> > think we really understand what's going on.
-> >
-> > Apparently a DMA occurs during suspend or resume and triggers an ACS
-> > violation.  I don't think think such a DMA should occur in the first
-> > place.
-> >
-> > Or maybe, since you say the problem happens right after ACS is enabled
-> > during resume, we're doing the ACS enable incorrectly?  Although I
-> > would think we should not be doing DMA at the same time we're enabling
-> > ACS, either.
-> >
-> > If this really is a system firmware issue, both HP and Dell should
-> > have the knowledge and equipment to figure out what's going on.
->
-> DMA on resume sounds really odd.  OTOH the below mentioned case of
-> a DMA during suspend seems very like in some setup.  NVMe has the
-> concept of a host memory buffer (HMB) that allows the PCIe device
-> to use arbitrary host memory for internal purposes.  Combine this
-> with the "Storage D3" misfeature in modern x86 platforms that force
-> a slot into d3cold without consulting the driver first and you'd see
-> symptoms like this.  Another case would be the NVMe equivalent of the
-> AER which could lead to a completion without host activity.
+T24gVHVlLCAyMDIxLTA3LTIwIGF0IDEwOjI2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gTW9uLCBKdWwgMTksIDIwMjEgYXQgODowNyBQTSBDaHVhbmppYSBMaXUgPGNodWFuamlhLmxp
+dUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gT24gTW9uLCAyMDIxLTA3LTE5IGF0IDE2
+OjQ3IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IE9uIE1vbiwgMTkgSnVsIDIwMjEg
+MTU6MzQ6NTMgKzA4MDAsIENodWFuamlhIExpdSB3cm90ZToNCj4gPiA+ID4gVGhlcmUgYXJlIHR3
+byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMiBhbmQgTVQ3NjIyDQo+ID4g
+PiA+IHBsYXRmb3JtLiBFYWNoIG9mIHRoZW0gc2hvdWxkIGNvbnRhaW4gYW4gaW5kZXBlbmRlbnQg
+TVNJIGRvbWFpbi4NCj4gPiA+ID4NCj4gPiA+ID4gSW4gb2xkIGR0cyBhcmNoaXRlY3R1cmUsIE1T
+SSBkb21haW4gd2lsbCBiZSBpbmhlcml0ZWQgZnJvbSB0aGUgcm9vdA0KPiA+ID4gPiBicmlkZ2Us
+IGFuZCBhbGwgb2YgdGhlIGRldmljZXMgd2lsbCBzaGFyZSB0aGUgc2FtZSBNU0kgZG9tYWluLg0K
+PiA+ID4gPiBIZW5jZSB0aGF0LCB0aGUgUENJZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVy
+bHkgaWYgdGhlIGlycSBudW1iZXINCj4gPiA+ID4gd2hpY2ggcmVxdWlyZWQgaXMgbW9yZSB0aGFu
+IDMyLg0KPiA+ID4gPg0KPiA+ID4gPiBTcGxpdCB0aGUgUENJZSBub2RlIGZvciBNVDI3MTIgYW5k
+IE1UNzYyMiBwbGF0Zm9ybSB0byBjb21wbHkgd2l0aA0KPiA+ID4gPiB0aGUgaGFyZHdhcmUgZGVz
+aWduIGFuZCBmaXggTVNJIGlzc3VlLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBD
+aHVhbmppYSBMaXUgPGNodWFuamlhLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gPiA+IEFja2VkLWJ5
+OiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4g
+PiAgLi4uL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWNmZy55YW1sICAgICAgIHwgIDM5ICsr
+KysNCj4gPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4
+dCB8IDIwNiArKysrKysrKysrLS0tLS0tLS0NCj4gPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTUw
+IGluc2VydGlvbnMoKyksIDk1IGRlbGV0aW9ucygtKQ0KPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1j
+ZmcueWFtbA0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBQbGVhc2UgYWRkIEFja2VkLWJ5
+L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4g
+PiA+IHRoZXJlJ3Mgbm8gbmVlZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0
+YWdzLiBUaGUgdXBzdHJlYW0NCj4gPiA+IG1haW50YWluZXIgd2lsbCBkbyB0aGF0IGZvciBhY2tz
+IHJlY2VpdmVkIG9uIHRoZSB2ZXJzaW9uIHRoZXkgYXBwbHkuDQo+ID4gPg0KPiA+ID4gSWYgYSB0
+YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNo
+YW5nZWQuDQo+ID4gPg0KPiA+IEhpLFJvYg0KPiA+IEkgaGF2ZSBkZXNjcmliZWQgaW4gdGhlIGNv
+dmVyIGxldHRlcjoNCj4gPiB2MTE6UmViYXNlIGZvciA1LjE0LXJjMSBhbmQgYWRkICJpbnRlcnJ1
+cHQtbmFtZXMiLCAibGludXgscGNpLWRvbWFpbiINCj4gPiAgICAgZGVzY3JpcHRpb24gaW4gYmlu
+ZGluZyBmaWxlLiBObyBjb2RlIGNoYW5nZS4NCj4gPiBpZiB5b3Ugc3RpbGwgb2sgZm9yIHRoaXMs
+IEkgd2lsbCBhZGQgUi1iIGluIG5leHQgdmVyc2lvbi4NCj4gDQo+IFllcywgaXQncyBmaW5lLg0K
+PiANCj4gSW4gdGhlIGZ1dHVyZSwgcHV0IHRoZSBjaGFuZ2Vsb2cgZm9yIGEgcGF0Y2ggaW4gdGhl
+IHBhdGNoLg0KSGksIFJvYg0KIFRoYW5rcyBmb3IgeW91IHN1Z2dlc3Rpb24sIEkgd2lsbCBkbyB0
+aGlzIGluIGZ1dHVyZSB2ZXJzaW9ucy4NCkJlc3QgcmVnYXJkcw0KDQoNCg==
 
-The issue can also be observed on non-HMB NVMe.
-
->
-> We now have quirks in the ACPI layer and NVMe to fully shut down the
-> NVMe controllers on these messed up systems with the "Storage D3"
-> misfeature which should avoid such "spurious" DMAs at the cost of
-> wearning out the device much faster.
-
-Since the issue is on S3, I think the NVMe always fully shuts down.
-
-Kai-Heng
