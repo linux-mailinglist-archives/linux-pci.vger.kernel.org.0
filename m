@@ -2,99 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C308B3D42E0
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 00:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 259623D4308
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 00:43:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231954AbhGWVs1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 17:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41226 "EHLO mail.kernel.org"
+        id S232550AbhGWWDE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 18:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231742AbhGWVs1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 17:48:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E06B860EB4;
-        Fri, 23 Jul 2021 22:28:59 +0000 (UTC)
+        id S231954AbhGWWDE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Jul 2021 18:03:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E68B60E92;
+        Fri, 23 Jul 2021 22:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627079340;
-        bh=T7Le/8CCLm9Icc27UxNa+tMvL3/7QQcqd6czZheXD9I=;
+        s=k20201202; t=1627080216;
+        bh=6EN36z09hEeXoO/5efY7I2rKYLkgTb0P2gte2sdaLGk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O32nx+kgSaWm0NVRWGEBVKc1qXhRdDUB22Aj5vWxFuPuvbl1oFGkA/S+G5ywN96fl
-         oR9estkX01Y9hXgoZH6XykVHsHoL1Pjo4qPF5tlakfdPBuhm7POmVj/jJHGTk+7cJ9
-         kaA66sQZIqsMD1FIP/4zv+pgMCucCFJ1ydodn0nWm8ZNvA2b4ea6/226oMHHX4PVE2
-         Z1pU5cHCYjdX2HwfZMB+zcr5nGh40xEL/44iZo6d5fpHEIpbrdAH+/PWY473PKXc9w
-         Ryv5baA6E8mzO8e0roA5j6j8PIccUazTgZ8HkjBiqc76j8CsZbc5AHZfLRZH+ybhpg
-         KYJayioD7LxCQ==
-Date:   Fri, 23 Jul 2021 17:28:58 -0500
+        b=a2U97qiMngddptFL6b9JS1yxtny8DN+6PSvGW+PkQo0WqghRdTI6A4T9fH71Jw05M
+         L8jIfJpo1HCUicXTVJboCuck6BtgAEe8hgPPoMnF0mUM9eH0N3EgaYLCyDAa6FFQ2/
+         e2gkHv3Xwt9D1mE/ZbrDswxLBz1mr1JGxMJD1aEMelvL6g1p/Nrh0aWatzUdICCPZ0
+         FbsZRPo+StAgJ8VpdrsOVzQCt9vMBKnKr92Lfx53dbqqst0d8scMW++LzShHEQbbzb
+         zkT8tvjtBalB6g80ZOvpCJtdsGrNIR8BjMv+KEWQsHcHI+ybquXwPWlcHSdK6DDCPT
+         aNkE89IKQGIGw==
+Date:   Fri, 23 Jul 2021 17:43:35 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     hemantk@codeaurora.org
-Cc:     bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
-        bjorn.andersson@linaro.org, linux-pci@vger.kernel.org
-Subject: Re: Query on ASPM driver design
-Message-ID: <20210723222858.GA445474@bjorn-Precision-5520>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        David Airlie <airlied@linux.ie>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
+Message-ID: <20210723224335.GA446523@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7c3c904bc19850f667e2249ccdee0b37@codeaurora.org>
+In-Reply-To: <YPp9XCa+1kS/s3wK@phenom.ffwll.local>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 03:04:52PM -0700, hemantk@codeaurora.org wrote:
-> On 2021-07-23 13:32, Bjorn Helgaas wrote:
-> > On Fri, Jul 23, 2021 at 01:11:18PM -0700, hemantk@codeaurora.org wrote:
-> > > I have a question regarding PCIe ASPM driver in upstream. Looks like
-> > > current ASPM driver is going to enable ASPM L1 and L1SS based on
-> > > EP's config space capability register read. Why ASPM driver is
-> > > enabling L1SS based on capability, instead of that can ASPM honor
-> > > default control register value (in EP config space) and let pci
-> > > device driver probe (or later after probe) to make the decision if
-> > > ASPM needs to be enabled or not.
+On Fri, Jul 23, 2021 at 10:27:08AM +0200, Daniel Vetter wrote:
+> On Fri, Jul 23, 2021 at 06:51:59AM +0100, Christoph Hellwig wrote:
+> > On Thu, Jul 22, 2021 at 04:29:11PM -0500, Bjorn Helgaas wrote:
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > This is a little bit of rework and extension of Huacai's nice work at [1].
+> > > 
+> > > It moves the VGA arbiter to the PCI subsystem, fixes a few nits, and breaks
+> > > a few pieces off Huacai's patch to make the main patch a little smaller.
+> > > 
+> > > That last patch is still not very small, and it needs a commit log, as I
+> > > mentioned at [2].
 > > 
-> > Are you asking why the PCI core makes the decision about enabling ASPM
-> > instead of having each device driver decide?
->
-> Yes.
->
-> > If you want each driver to decide, what benefit would that have?
->
-> Basically if PCI EP has capability to support ASPM L1 and L1SS but
-> power on default control reg values are meant to enumerate with ASPM
-> disabled.  Which means EP wants to keep ASPM disabled right from the
-> enumeration, and at some point of time later EP wants to enable the
-> ASPM. Main benefit is to give control to EP to enumerate with what
-> ever its control reg's power on default value is. EP does not want
-> to enable ASPM during its boot up and after entering to mission mode
-> use case it would enable the ASPM.
+> > FYI, I have a bunch of changes to this code that the drm maintainers
+> > picked up.  They should show up in the next linux-next I think.
+> 
+> Yeah I think for merging I think there'll be two options:
+> 
+> - We also merge this series through drm-misc-next to avoid conflicts, but
+>   anything after that will (i.e. from 5.16-rc1 onwards) will go in through
+>   the pci tree.
+> 
+> - You also merge Christoph's series, and we tell Linus to ignore the
+>   vgaarb changes that also come in through drm-next pull.
+> 
+> It's a non-rebasing tree so taking them out isn't an option, and reverting
+> feels silly. Either of the above is fine with me.
 
-The power-on default value for the "ASPM Control" field in the Link
-Control register is 00b, which means ASPM is disabled.  The current
-Linux behavior is that when we enumerate the device, we evaluate the
-L0s and L1 exit latencies and enable ASPM if the device can tolerate
-them.
+Seems easiest/cleanest if I just fix this up so it applies on top of
+drm-misc-next, e.g., on top of this:
 
-It sounds like you want to prevent ASPM from being enabled until the
-driver explicitly enables it.  Why?  The device should not be active
-until a driver claims it, so it should not be a problem to have ASPM
-enabled.
+  474596fc749c ("dt-bindings: display: simple-bridge: Add corpro,gm7123 compatible")
 
-> > > Basically point is: it is possible to honor what device control reg
-> > > reflects power on default and let the pci ep driver running on host
-> > > to make the decision when to enable/disable the aspm in kernel space
-> > > pci driver.
-> > 
-> > There is a pci_disable_link_state() interface that drivers can use to
-> > disable certain link states.  Some drivers use this to work around
-> > hardware defects, but it would be better to use quirks in that
-> > situation.
->
-> Thanks for pointing this API, which quirk also uses. But we just
-> have disable ver which EP driver can call only after enumeration is
-> done. i was thinking of the other way round where EP enumerates and
-> then calls enable API at some point of time. Also, if it decides to
-> again disable and then enable.
-
-There is currently no pci_enable_link_state() because nobody has
-needed it and implemented it.  I would push back a little bit on
-adding this because I don't want to encourage drivers to mess with
-ASPM.
+I'll post a v3 after that rebase and working on the commit log from
+Huacai.
 
 Bjorn
