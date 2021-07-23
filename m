@@ -2,125 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E552C3D3246
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 05:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C0023D3402
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jul 2021 07:24:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233612AbhGWCz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jul 2021 22:55:56 -0400
-Received: from mx21.baidu.com ([220.181.3.85]:37746 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233621AbhGWCzz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Jul 2021 22:55:55 -0400
-Received: from BJHW-Mail-Ex06.internal.baidu.com (unknown [10.127.64.16])
-        by Forcepoint Email with ESMTPS id 63F56DD505479884EB6D;
-        Fri, 23 Jul 2021 11:36:27 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BJHW-Mail-Ex06.internal.baidu.com (10.127.64.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Fri, 23 Jul 2021 11:36:27 +0800
-Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Fri, 23 Jul 2021 11:36:26 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     <kw@linux.com>, <bhelgaas@google.com>,
-        <jonathan.derrick@intel.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Cai Huoqing <caihuoqing@baidu.com>
-Subject: [PATCH v3 2/2] PCI: vmd: Make use of PCI_DEVICE_DATA() helper macro
-Date:   Fri, 23 Jul 2021 11:36:18 +0800
-Message-ID: <20210723033618.1025-3-caihuoqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210723033618.1025-1-caihuoqing@baidu.com>
-References: <20210723033618.1025-1-caihuoqing@baidu.com>
+        id S231151AbhGWEoK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 00:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231134AbhGWEoK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jul 2021 00:44:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D10C061575;
+        Thu, 22 Jul 2021 22:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Xptyi13HccZ4R8P+AijEDP2b7CXavc6mEvvmsOqoBkY=; b=DJcUAYLk0+dpd/8f5g9HghlA3p
+        EeZr7LTFHZmDPgmsgccuMllN8saglU98K+LzeI94X0be9lqlsEPVr/7iAdl5BonTxc0zCc4mQCaU/
+        0XS+8rP7eJINp0fVuc4beaxfm32S8rHcaj8NPOZvGL08pLLZQv1cTZgC80Ly2DfcuRWJXGFoiIABb
+        VsygBF0zhSBU1IUbpYEnbCV1lbWyvuZiq5uM8z0aocWQeLQIBRN3HYYObC/sX1W3TDAZCehN+t/xD
+        l8WwHz5ZdXguLSoAcOt6tdlh3NGabF9wtFkidWDFN08ja2VULxLzDcnQJdYtbuO8u1wcZ8V0Zc6G1
+        og1TAruw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m6nfa-00B1E8-GY; Fri, 23 Jul 2021 05:24:27 +0000
+Date:   Fri, 23 Jul 2021 06:24:22 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
+Message-ID: <YPpShrTa448OpGjA@infradead.org>
+References: <CAAd53p6VN0ejKHcTRgj8mZ_iApR=KogpVZ-HkvdoZbJ=Yue98g@mail.gmail.com>
+ <20210722222351.GA354095@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BJHW-Mail-Ex03.internal.baidu.com (10.127.64.13) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
-X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex06_2021-07-23 11:36:27:404
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210722222351.GA354095@bjorn-Precision-5520>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We could make use of PCI_DEVICE_DATA() helper macro
+On Thu, Jul 22, 2021 at 05:23:51PM -0500, Bjorn Helgaas wrote:
+> Marking both of these as "not applicable" for now because I don't
+> think we really understand what's going on.
+> 
+> Apparently a DMA occurs during suspend or resume and triggers an ACS
+> violation.  I don't think think such a DMA should occur in the first
+> place.
+> 
+> Or maybe, since you say the problem happens right after ACS is enabled
+> during resume, we're doing the ACS enable incorrectly?  Although I
+> would think we should not be doing DMA at the same time we're enabling
+> ACS, either.
+> 
+> If this really is a system firmware issue, both HP and Dell should
+> have the knowledge and equipment to figure out what's going on.
 
-v1->v2: *fix extra indent which for git-apply failure
+DMA on resume sounds really odd.  OTOH the below mentioned case of
+a DMA during suspend seems very like in some setup.  NVMe has the
+concept of a host memory buffer (HMB) that allows the PCIe device
+to use arbitrary host memory for internal purposes.  Combine this
+with the "Storage D3" misfeature in modern x86 platforms that force
+a slot into d3cold without consulting the driver first and you'd see
+symptoms like this.  Another case would be the NVMe equivalent of the
+AER which could lead to a completion without host activity.
 
-v2->v3: *update the subject line from "function" to "macro"
-	*add changelog to commit message
-
-commit date: 7-23-2021 11:00
-
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
----
- drivers/pci/controller/vmd.c | 38 ++++++++++++++++++------------------
- include/linux/pci_ids.h      |  2 ++
- 2 files changed, 21 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index e3fcdfec58b3..565681ed00a1 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -859,25 +859,25 @@ static int vmd_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(vmd_dev_pm_ops, vmd_suspend, vmd_resume);
- 
- static const struct pci_device_id vmd_ids[] = {
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_CAN_BYPASS_MSI_REMAP,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
--		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
--				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
--	{0,}
-+	{ PCI_DEVICE_DATA(INTEL, VMD_201D,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_28C0,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_CAN_BYPASS_MSI_REMAP) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_467F,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_4C3D,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ PCI_DEVICE_DATA(INTEL, VMD_9A0B,
-+			  VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
-+			  VMD_FEAT_HAS_BUS_RESTRICTIONS |
-+			  VMD_FEAT_OFFSET_FIRST_VECTOR) },
-+	{ },
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
- 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 4bac1831de80..d25552b5ae3e 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2954,6 +2954,8 @@
- #define PCI_DEVICE_ID_INTEL_SBRIDGE_BR		0x3cf5	/* 13.6 */
- #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD1	0x3cf6	/* 12.7 */
- #define PCI_DEVICE_ID_INTEL_IOAT_SNB	0x402f
-+#define PCI_DEVICE_ID_INTEL_VMD_467F	0x467f
-+#define PCI_DEVICE_ID_INTEL_VMD_4C3D	0x4c3d
- #define PCI_DEVICE_ID_INTEL_5100_16	0x65f0
- #define PCI_DEVICE_ID_INTEL_5100_19	0x65f3
- #define PCI_DEVICE_ID_INTEL_5100_21	0x65f5
--- 
-2.25.1
-
+We now have quirks in the ACPI layer and NVMe to fully shut down the
+NVMe controllers on these messed up systems with the "Storage D3"
+misfeature which should avoid such "spurious" DMAs at the cost of
+wearning out the device much faster.
