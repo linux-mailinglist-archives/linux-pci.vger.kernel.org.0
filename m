@@ -2,185 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD65A3D46AC
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 11:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3332E3D4729
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 12:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234845AbhGXItt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jul 2021 04:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234748AbhGXIts (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 24 Jul 2021 04:49:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F2E4860F26
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 09:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627119015;
-        bh=0pC2f1bQw0PhuKgCJN/JFhsnFebQTVcjP2SzL2MQ2Nw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qu474qJfyLXEK6BnDvYthCJ35HeiLt6TaZLcLxIbntKBI8MYcFgvedUv+rH1rl8Xu
-         QSdNqrtPEB3muSV4wkysZ84z31WahLBe5I1d4xHqa4PQ9fp/mSR6+MfkjAw9EyoeZ9
-         SYgAtg9aI1SxVfCXQr2K7mN4BL4o2ZZudhj7chwHKgCb84LZjnxgi2QvnxjFbQ5j/6
-         QUM4+GyPciKJntisMY1XSGE+kuMJGWxPoIANFQGeA4WWw5YkzZgb26vgcAPtwVe1uA
-         9JH1f81n/iwLF7R864xLK7l8x3/WRsBC3BBGKm34HH01E9KazktUHxDIYTJ4e8IXyI
-         RmK4XgF87aduQ==
-Received: by mail-il1-f171.google.com with SMTP id h18so3820355ilc.5
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 02:30:14 -0700 (PDT)
-X-Gm-Message-State: AOAM530bmQPXKpPwiKZWbKF3gQaKiI99nZewEBgtPQsKbx9i5GcajurE
-        sOp7hyBEyOmPK4NLFfo814ltU0+fwwem6FMEIRU=
-X-Google-Smtp-Source: ABdhPJygbCpp/bQ/dSHW0yNaliKjK6wR3059caHP1N5r6aqBla0YiHamuDxcKMt2kkCIwWybLKDz/hfLRfDmHyz9JNA=
-X-Received: by 2002:a92:cb52:: with SMTP id f18mr6236678ilq.97.1627119014324;
- Sat, 24 Jul 2021 02:30:14 -0700 (PDT)
+        id S235360AbhGXJyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jul 2021 05:54:40 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:15065 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235259AbhGXJyj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jul 2021 05:54:39 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GX2YD1KWYzZsKR;
+        Sat, 24 Jul 2021 18:31:44 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 24 Jul 2021 18:35:09 +0800
+Subject: Re: [PATCH V6 7/8] PCI: Add "pci=disable_10bit_tag=" parameter for
+ peer-to-peer support
+To:     kernel test robot <lkp@intel.com>, <helgaas@kernel.org>,
+        <hch@infradead.org>, <kw@linux.com>, <logang@deltatee.com>,
+        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
+        <hverkuil-cisco@xs4all.nl>
+References: <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
+ <202107240055.m4UVeYyu-lkp@intel.com>
+CC:     <clang-built-linux@googlegroups.com>, <kbuild-all@lists.01.org>,
+        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <dac094c5-24ce-43bc-55be-30230e20e08f@huawei.com>
+Date:   Sat, 24 Jul 2021 18:35:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <CAAhV-H52feAf0Qf7xHa2uyv1veX+dBgDr3QKXjOZzpd=wcUr3Q@mail.gmail.com>
- <20210724001043.GA448782@bjorn-Precision-5520>
-In-Reply-To: <20210724001043.GA448782@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Sat, 24 Jul 2021 17:30:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7pYbht=N7C8xpytYnn=MefyRfLDRPsY-56ObpBbJUuzA@mail.gmail.com>
-Message-ID: <CAAhV-H7pYbht=N7C8xpytYnn=MefyRfLDRPsY-56ObpBbJUuzA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202107240055.m4UVeYyu-lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
 
-On Sat, Jul 24, 2021 at 8:10 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jul 23, 2021 at 05:53:36PM +0800, Huacai Chen wrote:
-> > Hi, Bjorn,
-> >
-> > On Fri, Jul 23, 2021 at 5:29 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > This is a little bit of rework and extension of Huacai's nice work at [1].
-> > >
-> > > It moves the VGA arbiter to the PCI subsystem, fixes a few nits, and breaks
-> > > a few pieces off Huacai's patch to make the main patch a little smaller.
-> > >
-> > > That last patch is still not very small, and it needs a commit log, as I
-> > > mentioned at [2].
-> > >
-> > > All comments welcome!
-> > >
-> > > [1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
-> > > [2] https://lore.kernel.org/r/20210720221923.GA43331@bjorn-Precision-5520
-> > Thank you for your splitting. Your two questions are answered in the following.
-> >
-> > (1) explain why your initcall ordering is unusual.
-> > The original problem happens on MIPS. vga_arb_device_init() and
-> > pcibios_init() are both wrapped by subsys_initcall(). The order of
-> > functions in the same level depends on the Makefile.
-> >
-> > TOP level Makefile:
-> > drivers-y       := drivers/ sound/
-> > ....
-> > include arch/$(SRCARCH)/Makefile
-> >
-> > drivers/Makefile:
-> > obj-$(CONFIG_ACPI)              += acpi/
-> > ....
-> > obj-y                           += gpu/
-> >
-> > arch/mips/Makefile:
-> > drivers-$(CONFIG_PCI)           += arch/mips/pci/
-> >
-> > This makes pcibios_init() in arch/mips/pci/ placed after
-> > vga_arb_device_init() in drivers/gpu. ACPI-based systems have no
-> > problems because acpi_init() in drivers/acpi is placed before
-> > vga_arb_device_init().
->
-> Thanks for the above; that was helpful.  To summarize:
->
->   - On your system, the AST2500 bridge [1a03:1150] does not implement
->     PCI_BRIDGE_CTL_VGA [1].  This is perfectly legal but means the
->     legacy VGA resources won't reach downstream devices unless they're
->     included in the usual bridge windows.
->
->   - vga_arb_select_default_device() will set a device below such a
->     bridge as the default VGA device as long as it has PCI_COMMAND_IO
->     and PCI_COMMAND_MEMORY enabled.
->
->   - vga_arbiter_add_pci_device() is called for every VGA device,
->     either at boot-time or at hot-add time, and it will also set the
->     device as the default VGA device, but ONLY if all bridges leading
->     to it implement PCI_BRIDGE_CTL_VGA.
->
->   - This difference between vga_arb_select_default_device() and
->     vga_arbiter_add_pci_device() means that a device below an AST2500
->     or similar bridge can only be set as the default if it is
->     enumerated before vga_arb_device_init().
->
->   - On ACPI-based systems, PCI devices are enumerated by acpi_init(),
->     which runs before vga_arb_device_init().
->
->   - On non-ACPI systems, like your MIPS system, they are enumerated by
->     pcibios_init(), which typically runs *after*
->     vga_arb_device_init().
->
-> So I think the critical change is actually that you made
-> vga_arb_update_default_device(), which you call from
-> vga_arbiter_add_pci_device(), set the default device even if it does
-> not own the VGA resources because an upstream bridge doesn't implement
-> PCI_BRIDGE_CTL_VGA, i.e.,
->
->   (vgadev->owns & VGA_RSRC_LEGACY_MASK) != VGA_RSRC_LEGACY_MASK
->
-> Does that seem right?
-Yes, that's right.
 
-Huacai
+On 2021/7/24 0:58, kernel test robot wrote:
+> Hi Dongdong,
 >
-> [1] https://lore.kernel.org/r/CAAhV-H4pn53XC7qVvwM792ppkQRnjWpPDwmrhBv8twgQu0eabQ@mail.gmail.com
+> Thank you for the patch! Perhaps something to improve:
 >
-> > (2) explain the approach, which IIUC is basically to add the
-> > vga_arb_select_default_device() functionality to
-> > vga_arbiter_add_pci_device().
-> > vga_arb_select_default_device() has only one chance to be called, we
-> > want to make it be called every time a new vga device is added. So
-> > rename it to vga_arb_update_default_device() and move the callsite to
-> > vga_arbiter_add_pci_device().
-> >
-> > I think you know all the information which you need now. And you can
-> > reorganize the commit message based on the existing one. As English is
-> > not my first language, the updated commit message written by me may
-> > still not be as good as you want.:)
-> >
-> > Huacai
-> >
-> > > Bjorn Helgaas (4):
-> > >   PCI/VGA: Move vgaarb to drivers/pci
-> > >   PCI/VGA: Replace full MIT license text with SPDX identifier
-> > >   PCI/VGA: Use unsigned format string to print lock counts
-> > >   PCI/VGA: Remove empty vga_arb_device_card_gone()
-> > >
-> > > Huacai Chen (5):
-> > >   PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
-> > >   PCI/VGA: Prefer vga_default_device()
-> > >   PCI/VGA: Split out vga_arb_update_default_device()
-> > >   PCI/VGA: Log bridge control messages when adding devices
-> > >   PCI/VGA: Rework default VGA device selection
-> > >
-> > >  drivers/gpu/vga/Kconfig           |  19 ---
-> > >  drivers/gpu/vga/Makefile          |   1 -
-> > >  drivers/pci/Kconfig               |  19 +++
-> > >  drivers/pci/Makefile              |   1 +
-> > >  drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
-> > >  5 files changed, 126 insertions(+), 183 deletions(-)
-> > >  rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
-> > >
-> > > --
-> > > 2.25.1
-> > >
+> [auto build test WARNING on pci/next]
+> [also build test WARNING on linuxtv-media/master linus/master v5.14-rc2 next-20210723]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210723-190930
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> config: x86_64-randconfig-b001-20210723 (attached as .config)
+> compiler: clang version 13.0.0 (https://github.com/llvm/llvm-project 9625ca5b602616b2f5584e8a49ba93c52c141e40)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         # https://github.com/0day-ci/linux/commit/2ff0b803971a3df5815c96c5c4874f4eef64fa2f
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Dongdong-Liu/PCI-Enable-10-Bit-tag-support-for-PCIe-devices/20210723-190930
+>         git checkout 2ff0b803971a3df5815c96c5c4874f4eef64fa2f
+>         # save the attached .config to linux build tree
+>         mkdir build_dir
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pci/
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>):
+>
+>    drivers/pci/pci.c:6618:34: error: expected identifier
+>            pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
+>                                            ^
+>    include/uapi/linux/pci_regs.h:657:26: note: expanded from macro 'PCI_EXP_DEVCTL2'
+>    #define PCI_EXP_DEVCTL2         40      /* Device Control 2 */
+>                                    ^
+>>> drivers/pci/pci.c:6618:2: warning: declaration specifier missing, defaulting to 'int'
+>            pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
+>            ^
+>            int
+>    drivers/pci/pci.c:6618:28: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+>            pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
+>                                      ^
+>    drivers/pci/pci.c:6618:2: error: conflicting types for 'pcie_capability_clear_word'
+>            pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
+>            ^
+>    include/linux/pci.h:1161:19: note: previous definition is here
+>    static inline int pcie_capability_clear_word(struct pci_dev *dev, int pos,
+>                      ^
+>    drivers/pci/pci.c:6621:2: error: expected parameter declarator
+>            pci_info(dev, "disabled 10-Bit Tag Requester\n");
+>            ^
+>    include/linux/pci.h:2472:46: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                                     ^
+>    drivers/pci/pci.c:6621:2: error: expected ')'
+>    include/linux/pci.h:2472:46: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                                     ^
+>    drivers/pci/pci.c:6621:2: note: to match this '('
+>    include/linux/pci.h:2472:37: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                            ^
+>    include/linux/dev_printk.h:118:11: note: expanded from macro 'dev_info'
+>            _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>                     ^
+>    drivers/pci/pci.c:6621:2: warning: declaration specifier missing, defaulting to 'int'
+>            pci_info(dev, "disabled 10-Bit Tag Requester\n");
+>            ^
+>            int
+>    include/linux/pci.h:2472:37: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                            ^
+>    include/linux/dev_printk.h:118:2: note: expanded from macro 'dev_info'
+>            _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>            ^
+>    drivers/pci/pci.c:6621:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+>    include/linux/pci.h:2472:37: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                            ^
+>    include/linux/dev_printk.h:118:11: note: expanded from macro 'dev_info'
+>            _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>                     ^
+>    drivers/pci/pci.c:6621:2: error: conflicting types for '_dev_info'
+>    include/linux/pci.h:2472:37: note: expanded from macro 'pci_info'
+>    #define pci_info(pdev, fmt, arg...)     dev_info(&(pdev)->dev, fmt, ##arg)
+>                                            ^
+>    include/linux/dev_printk.h:118:2: note: expanded from macro 'dev_info'
+>            _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
+>            ^
+>    include/linux/dev_printk.h:56:6: note: previous declaration is here
+>    void _dev_info(const struct device *dev, const char *fmt, ...);
+>         ^
+>    drivers/pci/pci.c:6622:1: error: extraneous closing brace ('}')
+>    }
+>    ^
+>    2 warnings and 8 errors generated.
+>
+>
+> vim +/int +6618 drivers/pci/pci.c
+>
+>   6580	
+>   6581		if (!disable_10bit_tag_param)
+>   6582			return;
+>   6583	
+>   6584		p = disable_10bit_tag_param;
+>   6585		while (*p) {
+>   6586			ret = pci_dev_str_match(dev, p, &p);
+>   6587			if (ret < 0) {
+>   6588				pr_info_once("PCI: Can't parse disable_10bit_tag parameter: %s\n",
+>   6589					     disable_10bit_tag_param);
+>   6590	
+>   6591				break;
+>   6592			} else if (ret == 1) {
+>   6593				/* Found a match */
+>   6594				break;
+>   6595			}
+>   6596	
+>   6597			if (*p != ';' && *p != ',') {
+>   6598				/* End of param or invalid format */
+>   6599				break;
+>   6600			}
+>   6601			p++;
+>   6602		}
+>   6603	
+>   6604		if (ret != 1)
+>   6605			return;
+>   6606	
+>   6607	#ifdef CONFIG_PCI_IOV
+>   6608		if (dev->is_virtfn) {
+>   6609			iov = dev->physfn->sriov;
+>   6610			iov->ctrl &= ~PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN;
+>   6611			pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL,
+>   6612					      iov->ctrl);
+>   6613			pci_info(dev, "disabled PF SRIOV 10-Bit Tag Requester\n");
+>   6614			return;
+>   6615	#endif
+>   6616		}
+I made a mistake here, will fix.
+
+Thanks,
+Dongdong
+>   6617	
+>> 6618		pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
+>   6619					   PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+>   6620	
+>   6621		pci_info(dev, "disabled 10-Bit Tag Requester\n");
+>   6622	}
+>   6623	
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
