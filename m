@@ -2,135 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 277773D472E
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 12:36:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD4C3D4732
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 12:39:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235084AbhGXJzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jul 2021 05:55:39 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:15066 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235253AbhGXJzj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jul 2021 05:55:39 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GX2ZM2ZkrzZrsp;
-        Sat, 24 Jul 2021 18:32:43 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Sat, 24 Jul 2021 18:36:08 +0800
-Subject: Re: [PATCH V6 8/8] PCI/P2PDMA: Add a 10-bit tag check in P2PDMA
-To:     Logan Gunthorpe <logang@deltatee.com>, <helgaas@kernel.org>,
-        <hch@infradead.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>
-References: <1627038402-114183-1-git-send-email-liudongdong3@huawei.com>
- <1627038402-114183-9-git-send-email-liudongdong3@huawei.com>
- <24bc5deb-1fa3-8e81-2d9d-18836dc3aec9@deltatee.com>
-CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <5d05dcaa-db5c-3cb0-e2a7-6ac87786dbd2@huawei.com>
-Date:   Sat, 24 Jul 2021 18:36:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S234219AbhGXJ6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jul 2021 05:58:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45067 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235237AbhGXJ6h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 24 Jul 2021 05:58:37 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="297582953"
+X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
+   d="scan'208";a="297582953"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2021 03:39:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
+   d="scan'208";a="578617067"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jul 2021 03:39:07 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1m7F3j-0003Em-9V; Sat, 24 Jul 2021 10:39:07 +0000
+Date:   Sat, 24 Jul 2021 18:38:46 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ e2f55370b42205bda2f8b02c5933b9df2456bd53
+Message-ID: <60fbedb6.A0rQHhUZ0gpDQFiK%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <24bc5deb-1fa3-8e81-2d9d-18836dc3aec9@deltatee.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Logan
-Many thanks for your review.
-On 2021/7/24 0:25, Logan Gunthorpe wrote:
->
->
->
-> On 2021-07-23 5:06 a.m., Dongdong Liu wrote:
->> Add a 10-Bit Tag check in the P2PDMA code to ensure that a device with
->> 10-Bit Tag Requester doesn't interact with a device that does not
->> support 10-BIT tag Completer. Before that happens, the kernel should
->> emit a warning saying to enable a ”pci=disable_10bit_tag=“ kernel
->> parameter.
->>
->> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
->> ---
->>  drivers/pci/p2pdma.c | 38 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index 50cdde3..bd93840 100644
->> --- a/drivers/pci/p2pdma.c
->> +++ b/drivers/pci/p2pdma.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/random.h>
->>  #include <linux/seq_buf.h>
->>  #include <linux/xarray.h>
->> +#include "pci.h"
->>
->>  enum pci_p2pdma_map_type {
->>  	PCI_P2PDMA_MAP_UNKNOWN = 0,
->> @@ -541,6 +542,39 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->>  	return map_type;
->>  }
->>
->> +
->> +static bool check_10bit_tags_vaild(struct pci_dev *a, struct pci_dev *b,
->> +				   bool verbose)
->> +{
->> +	bool req;
->> +	bool comp;
->> +	u16 ctl2;
->> +
->> +	if (a->is_virtfn) {
->> +#ifdef CONFIG_PCI_IOV
->> +		req = !!(a->physfn->sriov->ctrl &
->> +			 PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN);
->> +#endif
->> +	} else {
->> +		pcie_capability_read_word(a, PCI_EXP_DEVCTL2, &ctl2);
->> +		req = !!(ctl2 & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
->> +	}
->> +
->> +	comp = !!(b->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP);
->> +	if (req && (!comp)) {
->> +		if (verbose) {
->> +			pci_warn(a, "cannot be used for peer-to-peer DMA as 10-Bit Tag Requester enable is set in device (%s), but peer device (%s) does not support the 10-Bit Tag Completer\n",
->> +				 pci_name(a), pci_name(b));
->> +
->> +			pci_warn(a, "to disable 10-Bit Tag Requester for this device, add the kernel parameter: pci=disable_10bit_tag=%s\n",
->> +				 pci_name(a));
->> +		}
->> +		return false;
->> +	}
->> +
->> +	return true;
->> +}
->> +
->>  /**
->>   * pci_p2pdma_distance_many - Determine the cumulative distance between
->>   *	a p2pdma provider and the clients in use.
->> @@ -579,6 +613,10 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
->>  			return -1;
->>  		}
->>
->> +		if (!check_10bit_tags_vaild(pci_client, provider, verbose) ||
->> +		    !check_10bit_tags_vaild(provider, pci_client, verbose))
->> +			not_supported = true;
->> +
->
-> This check needs to be done in calc_map_type_and_dist(). The mapping
-> type needs to be correctly stored in the xarray cache as other functions
-> rely on the cached value (and upcoming work will be calling
-> calc_map_type_and_dist() without pci_p2pdma_distance_many()).
->
-Will fix.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: e2f55370b42205bda2f8b02c5933b9df2456bd53  MAINTAINERS: Add Rahul Tanwar as Intel LGM Gateway PCIe maintainer
 
-Thanks,
-Dongdong
-> Logan
-> .
->
+elapsed time: 781m
+
+configs tested: 137
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210723
+i386                 randconfig-c001-20210724
+nios2                               defconfig
+arc                              allyesconfig
+m68k                          sun3x_defconfig
+arm                          collie_defconfig
+powerpc                      makalu_defconfig
+powerpc                 mpc834x_itx_defconfig
+mips                         bigsur_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                      bamboo_defconfig
+arm                           tegra_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                           se7750_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                       imx_v6_v7_defconfig
+mips                           ip22_defconfig
+powerpc                     redwood_defconfig
+mips                      bmips_stb_defconfig
+arc                           tb10x_defconfig
+powerpc                   motionpro_defconfig
+sh                             sh03_defconfig
+sh                           se7712_defconfig
+s390                             alldefconfig
+powerpc                         ps3_defconfig
+m68k                       m5208evb_defconfig
+sh                         microdev_defconfig
+powerpc                      cm5200_defconfig
+arm                          pxa910_defconfig
+arc                      axs103_smp_defconfig
+arm                         lpc32xx_defconfig
+arm                        trizeps4_defconfig
+arm                          imote2_defconfig
+openrisc                  or1klitex_defconfig
+sh                          r7785rp_defconfig
+h8300                            alldefconfig
+powerpc                 mpc85xx_cds_defconfig
+parisc                generic-64bit_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                     sequoia_defconfig
+m68k                       m5275evb_defconfig
+h8300                       h8s-sim_defconfig
+sh                           se7722_defconfig
+powerpc                   bluestone_defconfig
+arm                     am200epdkit_defconfig
+mips                      maltasmvp_defconfig
+powerpc                      walnut_defconfig
+sh                           se7619_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+x86_64                            allnoconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20210724
+i386                 randconfig-a003-20210724
+i386                 randconfig-a004-20210724
+i386                 randconfig-a002-20210724
+i386                 randconfig-a001-20210724
+i386                 randconfig-a006-20210724
+i386                 randconfig-a005-20210723
+i386                 randconfig-a003-20210723
+i386                 randconfig-a004-20210723
+i386                 randconfig-a002-20210723
+i386                 randconfig-a001-20210723
+i386                 randconfig-a006-20210723
+x86_64               randconfig-a011-20210723
+x86_64               randconfig-a016-20210723
+x86_64               randconfig-a013-20210723
+x86_64               randconfig-a014-20210723
+x86_64               randconfig-a012-20210723
+x86_64               randconfig-a015-20210723
+i386                 randconfig-a016-20210723
+i386                 randconfig-a013-20210723
+i386                 randconfig-a012-20210723
+i386                 randconfig-a011-20210723
+i386                 randconfig-a014-20210723
+i386                 randconfig-a015-20210723
+x86_64               randconfig-a003-20210724
+x86_64               randconfig-a006-20210724
+x86_64               randconfig-a001-20210724
+x86_64               randconfig-a005-20210724
+x86_64               randconfig-a004-20210724
+x86_64               randconfig-a002-20210724
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-c001-20210723
+x86_64               randconfig-c001-20210724
+x86_64               randconfig-b001-20210723
+x86_64               randconfig-a003-20210723
+x86_64               randconfig-a006-20210723
+x86_64               randconfig-a001-20210723
+x86_64               randconfig-a005-20210723
+x86_64               randconfig-a004-20210723
+x86_64               randconfig-a002-20210723
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
