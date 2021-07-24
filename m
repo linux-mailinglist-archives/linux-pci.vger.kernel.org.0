@@ -2,167 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09DE63D4392
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 02:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBB773D44A4
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 05:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233064AbhGWXaM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jul 2021 19:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41918 "EHLO mail.kernel.org"
+        id S233851AbhGXDHb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jul 2021 23:07:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39329 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233059AbhGWXaM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Jul 2021 19:30:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A70DE60E9C;
-        Sat, 24 Jul 2021 00:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627085445;
-        bh=nmR91NX8dtR/WS09amQLZqUt+/m8Wb7iJ02RfzJAtFc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JsJj+8wel8HfmmDGkGH3fpGS/8TfmHsYFyw54/ryOZjI80oygMYExuOLRwbEftaPq
-         QREazNjDblLVnX5fQNEJ/lB8PpkKuOZB3DjXAtPlssbtBsmHQ78NtUr0X5/JhR/8h2
-         jBlwVf0+EMncCVIiol3MXWLSkOMghkjHVkP35MOdYKQY0bcOyy/UrpbvMRaJBQfr3K
-         KK2MRIY+386tVRBwrupXgB7LCNQC0VxTn1V042gIVe+LvKOutZpZnTM1AEINYgqh7k
-         akCDg0bD9ClRn5Jws5KIaZCLPAbLm3SIBaOAjUgWD+mOI558RKbOMfi8eGUQCd19WL
-         kNbTCddP5djdg==
-Date:   Fri, 23 Jul 2021 19:10:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
-Message-ID: <20210724001043.GA448782@bjorn-Precision-5520>
+        id S233850AbhGXDHb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 23 Jul 2021 23:07:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="208872706"
+X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
+   d="scan'208";a="208872706"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 20:48:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,265,1620716400"; 
+   d="scan'208";a="578268433"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Jul 2021 20:48:02 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1m78du-0002sb-A5; Sat, 24 Jul 2021 03:48:02 +0000
+Date:   Sat, 24 Jul 2021 11:47:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:review/vga] BUILD SUCCESS
+ d3ff98e99536cd76e77696889600ee06fe5253b2
+Message-ID: <60fb8d50.QCxbgaeuRCQ0HnWL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H52feAf0Qf7xHa2uyv1veX+dBgDr3QKXjOZzpd=wcUr3Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 23, 2021 at 05:53:36PM +0800, Huacai Chen wrote:
-> Hi, Bjorn,
-> 
-> On Fri, Jul 23, 2021 at 5:29 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > This is a little bit of rework and extension of Huacai's nice work at [1].
-> >
-> > It moves the VGA arbiter to the PCI subsystem, fixes a few nits, and breaks
-> > a few pieces off Huacai's patch to make the main patch a little smaller.
-> >
-> > That last patch is still not very small, and it needs a commit log, as I
-> > mentioned at [2].
-> >
-> > All comments welcome!
-> >
-> > [1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
-> > [2] https://lore.kernel.org/r/20210720221923.GA43331@bjorn-Precision-5520
-> Thank you for your splitting. Your two questions are answered in the following.
-> 
-> (1) explain why your initcall ordering is unusual.
-> The original problem happens on MIPS. vga_arb_device_init() and
-> pcibios_init() are both wrapped by subsys_initcall(). The order of
-> functions in the same level depends on the Makefile.
-> 
-> TOP level Makefile:
-> drivers-y       := drivers/ sound/
-> ....
-> include arch/$(SRCARCH)/Makefile
-> 
-> drivers/Makefile:
-> obj-$(CONFIG_ACPI)              += acpi/
-> ....
-> obj-y                           += gpu/
-> 
-> arch/mips/Makefile:
-> drivers-$(CONFIG_PCI)           += arch/mips/pci/
-> 
-> This makes pcibios_init() in arch/mips/pci/ placed after
-> vga_arb_device_init() in drivers/gpu. ACPI-based systems have no
-> problems because acpi_init() in drivers/acpi is placed before
-> vga_arb_device_init().
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git review/vga
+branch HEAD: d3ff98e99536cd76e77696889600ee06fe5253b2  PCI/VGA: Rework default VGA device selection
 
-Thanks for the above; that was helpful.  To summarize:
+elapsed time: 1787m
 
-  - On your system, the AST2500 bridge [1a03:1150] does not implement
-    PCI_BRIDGE_CTL_VGA [1].  This is perfectly legal but means the
-    legacy VGA resources won't reach downstream devices unless they're
-    included in the usual bridge windows.
+configs tested: 136
+configs skipped: 4
 
-  - vga_arb_select_default_device() will set a device below such a
-    bridge as the default VGA device as long as it has PCI_COMMAND_IO
-    and PCI_COMMAND_MEMORY enabled.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  - vga_arbiter_add_pci_device() is called for every VGA device,
-    either at boot-time or at hot-add time, and it will also set the
-    device as the default VGA device, but ONLY if all bridges leading
-    to it implement PCI_BRIDGE_CTL_VGA.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210723
+i386                 randconfig-c001-20210722
+powerpc                      ep88xc_defconfig
+powerpc                    mvme5100_defconfig
+arm                     am200epdkit_defconfig
+powerpc                   currituck_defconfig
+mips                          ath79_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                     redwood_defconfig
+mips                      bmips_stb_defconfig
+arc                           tb10x_defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                 mpc8540_ads_defconfig
+sh                               j2_defconfig
+powerpc                mpc7448_hpc2_defconfig
+arm                          ixp4xx_defconfig
+h8300                            allyesconfig
+arm                          gemini_defconfig
+microblaze                          defconfig
+arm                         axm55xx_defconfig
+mips                     loongson2k_defconfig
+sh                          sdk7780_defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                            xcep_defconfig
+ia64                            zx1_defconfig
+openrisc                  or1klitex_defconfig
+sh                          r7785rp_defconfig
+h8300                            alldefconfig
+powerpc                 mpc85xx_cds_defconfig
+arc                          axs101_defconfig
+powerpc                     pseries_defconfig
+powerpc                     tqm8555_defconfig
+arm                       versatile_defconfig
+powerpc                 mpc834x_mds_defconfig
+sh                        sh7757lcr_defconfig
+nds32                               defconfig
+arm                            hisi_defconfig
+arm                         orion5x_defconfig
+mips                           ci20_defconfig
+mips                             allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                   microwatt_defconfig
+m68k                        mvme147_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20210722
+x86_64               randconfig-a006-20210722
+x86_64               randconfig-a001-20210722
+x86_64               randconfig-a005-20210722
+x86_64               randconfig-a004-20210722
+x86_64               randconfig-a002-20210722
+i386                 randconfig-a005-20210723
+i386                 randconfig-a003-20210723
+i386                 randconfig-a004-20210723
+i386                 randconfig-a002-20210723
+i386                 randconfig-a001-20210723
+i386                 randconfig-a006-20210723
+i386                 randconfig-a005-20210722
+i386                 randconfig-a003-20210722
+i386                 randconfig-a004-20210722
+i386                 randconfig-a002-20210722
+i386                 randconfig-a001-20210722
+i386                 randconfig-a006-20210722
+x86_64               randconfig-a011-20210723
+x86_64               randconfig-a016-20210723
+x86_64               randconfig-a013-20210723
+x86_64               randconfig-a014-20210723
+x86_64               randconfig-a012-20210723
+x86_64               randconfig-a015-20210723
+i386                 randconfig-a016-20210723
+i386                 randconfig-a013-20210723
+i386                 randconfig-a012-20210723
+i386                 randconfig-a011-20210723
+i386                 randconfig-a014-20210723
+i386                 randconfig-a015-20210723
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-  - This difference between vga_arb_select_default_device() and
-    vga_arbiter_add_pci_device() means that a device below an AST2500
-    or similar bridge can only be set as the default if it is
-    enumerated before vga_arb_device_init().
+clang tested configs:
+x86_64               randconfig-c001-20210723
+x86_64               randconfig-b001-20210723
+x86_64               randconfig-a003-20210723
+x86_64               randconfig-a006-20210723
+x86_64               randconfig-a001-20210723
+x86_64               randconfig-a005-20210723
+x86_64               randconfig-a004-20210723
+x86_64               randconfig-a002-20210723
+x86_64               randconfig-a011-20210722
+x86_64               randconfig-a016-20210722
+x86_64               randconfig-a013-20210722
+x86_64               randconfig-a014-20210722
+x86_64               randconfig-a012-20210722
+x86_64               randconfig-a015-20210722
 
-  - On ACPI-based systems, PCI devices are enumerated by acpi_init(),
-    which runs before vga_arb_device_init().
-
-  - On non-ACPI systems, like your MIPS system, they are enumerated by
-    pcibios_init(), which typically runs *after*
-    vga_arb_device_init().
-
-So I think the critical change is actually that you made
-vga_arb_update_default_device(), which you call from
-vga_arbiter_add_pci_device(), set the default device even if it does
-not own the VGA resources because an upstream bridge doesn't implement
-PCI_BRIDGE_CTL_VGA, i.e.,
-
-  (vgadev->owns & VGA_RSRC_LEGACY_MASK) != VGA_RSRC_LEGACY_MASK
-
-Does that seem right?
-
-[1] https://lore.kernel.org/r/CAAhV-H4pn53XC7qVvwM792ppkQRnjWpPDwmrhBv8twgQu0eabQ@mail.gmail.com
-
-> (2) explain the approach, which IIUC is basically to add the
-> vga_arb_select_default_device() functionality to
-> vga_arbiter_add_pci_device().
-> vga_arb_select_default_device() has only one chance to be called, we
-> want to make it be called every time a new vga device is added. So
-> rename it to vga_arb_update_default_device() and move the callsite to
-> vga_arbiter_add_pci_device().
-> 
-> I think you know all the information which you need now. And you can
-> reorganize the commit message based on the existing one. As English is
-> not my first language, the updated commit message written by me may
-> still not be as good as you want.:)
-> 
-> Huacai
-> 
-> > Bjorn Helgaas (4):
-> >   PCI/VGA: Move vgaarb to drivers/pci
-> >   PCI/VGA: Replace full MIT license text with SPDX identifier
-> >   PCI/VGA: Use unsigned format string to print lock counts
-> >   PCI/VGA: Remove empty vga_arb_device_card_gone()
-> >
-> > Huacai Chen (5):
-> >   PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
-> >   PCI/VGA: Prefer vga_default_device()
-> >   PCI/VGA: Split out vga_arb_update_default_device()
-> >   PCI/VGA: Log bridge control messages when adding devices
-> >   PCI/VGA: Rework default VGA device selection
-> >
-> >  drivers/gpu/vga/Kconfig           |  19 ---
-> >  drivers/gpu/vga/Makefile          |   1 -
-> >  drivers/pci/Kconfig               |  19 +++
-> >  drivers/pci/Makefile              |   1 +
-> >  drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
-> >  5 files changed, 126 insertions(+), 183 deletions(-)
-> >  rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
-> >
-> > --
-> > 2.25.1
-> >
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
