@@ -2,195 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AD4C3D4732
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 12:39:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 493353D474B
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 13:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbhGXJ6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jul 2021 05:58:37 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45067 "EHLO mga05.intel.com"
+        id S230094AbhGXKeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jul 2021 06:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235237AbhGXJ6h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 24 Jul 2021 05:58:37 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="297582953"
-X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
-   d="scan'208";a="297582953"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2021 03:39:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,266,1620716400"; 
-   d="scan'208";a="578617067"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jul 2021 03:39:07 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m7F3j-0003Em-9V; Sat, 24 Jul 2021 10:39:07 +0000
-Date:   Sat, 24 Jul 2021 18:38:46 +0800
-From:   kernel test robot <lkp@intel.com>
+        id S229586AbhGXKeC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 24 Jul 2021 06:34:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6265160BD3;
+        Sat, 24 Jul 2021 11:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627125274;
+        bh=HyvcDyeDxtILEinI/b0l+BtcGGQCTrMgGW5qMF7qAfg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gs3tAakSvwFUbaZk6VH3a4EGR7TCnUDFX6QrLd+X7IpvSwupxqbixhDmvZDIPQr+c
+         V81ZJ/cD8i80PB6s8wYMN3Kff1SdPNzduSrOsjAjH2NrxEEuUCjAzPfCVlaXkLaq5c
+         rer9WTIQlUCN0JmiXGX9PyKQbPjME9BACbPIasI5GmNfd/LK3XYDIr+Slthz5v45D9
+         ntfAstGbA+ygR7BCywQr804mXnl9tbDda3ta4fuuqqWOsqW+tnvva0WPMHA+qW020m
+         nZ/cwhvr377CZwqiTd0nG1cOkL48K8M6xIL1cDegWKxrqdOrubJdqV47SBXUcdV7Ba
+         jsm91fsWXl4tA==
+Received: by pali.im (Postfix)
+        id AC301EDF; Sat, 24 Jul 2021 13:14:31 +0200 (CEST)
+Date:   Sat, 24 Jul 2021 13:14:31 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- e2f55370b42205bda2f8b02c5933b9df2456bd53
-Message-ID: <60fbedb6.A0rQHhUZ0gpDQFiK%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     linux-pci@vger.kernel.org,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        =?utf-8?B?UsO2dHRp?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>,
+        Zachary Zhang <zhangzg@marvell.com>
+Subject: Re: [PATCH 2/2] PCI: Add Max Payload Size quirk for ASMedia ASM1062
+ SATA controller
+Message-ID: <20210724111431.wlr7uf6ymhe7gi6u@pali>
+References: <20210624171418.27194-1-kabel@kernel.org>
+ <20210624171418.27194-2-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210624171418.27194-2-kabel@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: e2f55370b42205bda2f8b02c5933b9df2456bd53  MAINTAINERS: Add Rahul Tanwar as Intel LGM Gateway PCIe maintainer
+On Thursday 24 June 2021 19:14:18 Marek Behún wrote:
+> The ASMedia ASM1062 SATA controller advertises
+> Max_Payload_Size_Supported of 512, but in fact it cannot handle TLPs
+> with payload size of 512.
+> 
+> We discovered this issue on PCIe controllers capable of MPS = 512
+> (Aardvark and DesignWare), where the issue presents itself as an
+> External Abort. Bjorn Helgaas says:
+>   Probably ASM1062 reports a Malformed TLP error when it receives a data
+>   payload of 512 bytes, and Aardvark, DesignWare, etc convert this to an
+>   arm64 External Abort.
+> 
+> Limiting Max Payload Size to 256 bytes solves this problem.
 
-elapsed time: 781m
+Hello Bjorn! Is there anything else needed for merging this patch?
 
-configs tested: 137
-configs skipped: 3
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212695
+> Reported-by: Rötti <espressobinboardarmbiantempmailaddress@posteo.de>
+> Cc: Pali Rohár <pali@kernel.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210723
-i386                 randconfig-c001-20210724
-nios2                               defconfig
-arc                              allyesconfig
-m68k                          sun3x_defconfig
-arm                          collie_defconfig
-powerpc                      makalu_defconfig
-powerpc                 mpc834x_itx_defconfig
-mips                         bigsur_defconfig
-sh                ecovec24-romimage_defconfig
-powerpc                      bamboo_defconfig
-arm                           tegra_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                           se7750_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                       imx_v6_v7_defconfig
-mips                           ip22_defconfig
-powerpc                     redwood_defconfig
-mips                      bmips_stb_defconfig
-arc                           tb10x_defconfig
-powerpc                   motionpro_defconfig
-sh                             sh03_defconfig
-sh                           se7712_defconfig
-s390                             alldefconfig
-powerpc                         ps3_defconfig
-m68k                       m5208evb_defconfig
-sh                         microdev_defconfig
-powerpc                      cm5200_defconfig
-arm                          pxa910_defconfig
-arc                      axs103_smp_defconfig
-arm                         lpc32xx_defconfig
-arm                        trizeps4_defconfig
-arm                          imote2_defconfig
-openrisc                  or1klitex_defconfig
-sh                          r7785rp_defconfig
-h8300                            alldefconfig
-powerpc                 mpc85xx_cds_defconfig
-parisc                generic-64bit_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                     sequoia_defconfig
-m68k                       m5275evb_defconfig
-h8300                       h8s-sim_defconfig
-sh                           se7722_defconfig
-powerpc                   bluestone_defconfig
-arm                     am200epdkit_defconfig
-mips                      maltasmvp_defconfig
-powerpc                      walnut_defconfig
-sh                           se7619_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-x86_64                            allnoconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20210724
-i386                 randconfig-a003-20210724
-i386                 randconfig-a004-20210724
-i386                 randconfig-a002-20210724
-i386                 randconfig-a001-20210724
-i386                 randconfig-a006-20210724
-i386                 randconfig-a005-20210723
-i386                 randconfig-a003-20210723
-i386                 randconfig-a004-20210723
-i386                 randconfig-a002-20210723
-i386                 randconfig-a001-20210723
-i386                 randconfig-a006-20210723
-x86_64               randconfig-a011-20210723
-x86_64               randconfig-a016-20210723
-x86_64               randconfig-a013-20210723
-x86_64               randconfig-a014-20210723
-x86_64               randconfig-a012-20210723
-x86_64               randconfig-a015-20210723
-i386                 randconfig-a016-20210723
-i386                 randconfig-a013-20210723
-i386                 randconfig-a012-20210723
-i386                 randconfig-a011-20210723
-i386                 randconfig-a014-20210723
-i386                 randconfig-a015-20210723
-x86_64               randconfig-a003-20210724
-x86_64               randconfig-a006-20210724
-x86_64               randconfig-a001-20210724
-x86_64               randconfig-a005-20210724
-x86_64               randconfig-a004-20210724
-x86_64               randconfig-a002-20210724
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c001-20210723
-x86_64               randconfig-c001-20210724
-x86_64               randconfig-b001-20210723
-x86_64               randconfig-a003-20210723
-x86_64               randconfig-a006-20210723
-x86_64               randconfig-a001-20210723
-x86_64               randconfig-a005-20210723
-x86_64               randconfig-a004-20210723
-x86_64               randconfig-a002-20210723
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/quirks.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 4d9b9d8fbc43..a4ba3e3b3c5e 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3239,6 +3239,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+>  			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+>  			PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ASMEDIA, 0x0612, fixup_mpss_256);
+>  
+>  /*
+>   * Intel 5000 and 5100 Memory controllers have an erratum with read completion
+> -- 
+> 2.31.1
+> 
