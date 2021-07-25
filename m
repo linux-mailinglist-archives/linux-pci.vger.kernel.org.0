@@ -2,123 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A23C3D4B49
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Jul 2021 06:02:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A09333D4C6F
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Jul 2021 08:40:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbhGYDWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jul 2021 23:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbhGYDV7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jul 2021 23:21:59 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE961C06175F
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id h63-20020a9d14450000b02904ce97efee36so6410202oth.7
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=orrTlR1e5ArvDErw47DwuFZ1ar2lNFZjVJ9JvZPgiW8=;
-        b=kopwAIC3KiN5sXTVUjiHSr0li0+n7LFh+IXMJE69HuHuEUlNZRM6gDyIFhbh7Y1wG1
-         Al4V5iAYMPmr8ocizfYqNh/9C9ylTr2QL0O2mf9Uq/AnwrgRrVCF6Jn5cE2acBw6rt2i
-         hwv94VNhy6HH2IJvPV3a31oztBcj26bnjTx7BIINt8XkXut3I304FlQ1rpXCuWytn2RU
-         +sDLI/CJjZNWZqB3t7U7JtnmU2E5W6qL7LThj45Ne/jlTqTouC6UbixdW0DA2SIJF/Oj
-         Pfo7MP1/fzg3Rgu9tMm2Bc7PzIuzwuEg/OePzj+N/Ep+9wpHnUiZolhYF99syQ+7mHqP
-         TD5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=orrTlR1e5ArvDErw47DwuFZ1ar2lNFZjVJ9JvZPgiW8=;
-        b=ir5j2wGeXKeZfScRAQUyUwOg+3JWo8KPGpOjlGQr0SS7iUda32+0gNKvmJEKzQ4wWr
-         bwkPgWLWikTHgnksFXIXi743WJnOrVhX8icpVDtWunQRtDFwEiBV56Ap1ozIuVyDKbRJ
-         QZ02Ajj5u6bAladhNspvIZSTk/TznpY4c8M6/97QOuGruuNhPPS7PQIXh8/QEy+V/QPz
-         vsDvVTZCiB+0RhSe1PxkYtuCQOVEl6mZGGsBgTDAm3HRv6nk7knLqyYXAoovAGm0WVku
-         J6H+vCEr1Xqe3oZ0LSZS/4cNtNfSpRs9wXvuMmSfIHepc/mUKYIq3U5Zx+kK4xMhCcbW
-         WzyA==
-X-Gm-Message-State: AOAM531UsgFCoi7PNnRwl+xD/TcqUNe94mA48qmARrw7/uIQGlA4Xzlk
-        biYZIxTGkXx1gNNNutSBqZZhPw==
-X-Google-Smtp-Source: ABdhPJwqjFvCZTbT7aln3g5NxlKjHCP2fTz/s4KxT7O4V4+3AH2dGm+KOGUYA0tuEmp3a+bwQarPOg==
-X-Received: by 2002:a9d:6848:: with SMTP id c8mr7881086oto.364.1627185748341;
-        Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
-Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id q20sm872910otv.50.2021.07.24.21.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jul 2021 21:02:27 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] PCI: qcom: Add sc8180x compatible
-Date:   Sat, 24 Jul 2021 21:00:38 -0700
-Message-Id: <20210725040038.3966348-4-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210725040038.3966348-1-bjorn.andersson@linaro.org>
-References: <20210725040038.3966348-1-bjorn.andersson@linaro.org>
+        id S230203AbhGYF71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 25 Jul 2021 01:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229460AbhGYF70 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 25 Jul 2021 01:59:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0338860F26;
+        Sun, 25 Jul 2021 06:39:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627195197;
+        bh=N4Dbqhu4Ia9k/4TthHh5Es4Nq6D+VIxU8smJ2eoEAUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l3Ex1puXfIt1tSo/Q6IG0C9csxgo3ON2RdU7kcTcXELD07qSk96MIDB86afAMMjMR
+         6j2qUDX0KlMTBdKbov2v0yT4/+F5STT4mqeJA7We2+ZgD7I7pGc17kflWdjGTQNaEj
+         Tw2DnD0C8D+I4+KjdsUvRtpsavxZKWRoUsU/lWyLXISIHQKAZnmfEgFbY4GnFbqblm
+         jmr3wrZmLBhJR9HrkiGLeXsnAvOGPnI3RL9OeYZQAaZwOa7iLjcStk3sKlD4Mpd3k6
+         ZDstlTZkWMHAoDh824DpMl6/l7y06AHbq7thtpShFkTzvhmz7bMMsxWL7QUGrTCK+2
+         hu/wr8h23Koew==
+Date:   Sun, 25 Jul 2021 09:39:53 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Dongdong Liu <liudongdong3@huawei.com>, helgaas@kernel.org,
+        hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
+        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH V6 7/8] PCI: Add "pci=disable_10bit_tag=" parameter for
+ peer-to-peer support
+Message-ID: <YP0HOf7kE1aOkqjV@unreal>
+References: <1627038402-114183-1-git-send-email-liudongdong3@huawei.com>
+ <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
+ <YPqo6M0AKWLupvNU@unreal>
+ <a8a8ffee-67e8-c899-3d04-1e28fb72560a@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8a8ffee-67e8-c899-3d04-1e28fb72560a@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The SC8180x platform comes with 4 PCIe controllers, typically used for
-things such as NVME storage or connecting a SDX55 5G modem. Add a
-compatible for this, that just reuses the 1.9.0 ops.
+On Fri, Jul 23, 2021 at 10:20:50AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> 
+> On 2021-07-23 5:32 a.m., Leon Romanovsky wrote:
+> > On Fri, Jul 23, 2021 at 07:06:41PM +0800, Dongdong Liu wrote:
+> >> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
+> >> sending Requests to other Endpoints (as opposed to host memory), the
+> >> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
+> >> unless an implementation-specific mechanism determines that the Endpoint
+> >> supports 10-Bit Tag Completer capability. Add "pci=disable_10bit_tag="
+> >> parameter to disable 10-Bit Tag Requester if the peer device does not
+> >> support the 10-Bit Tag Completer. This will make P2P traffic safe.
+> >>
+> >> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> >> ---
+> >>  Documentation/admin-guide/kernel-parameters.txt |  7 ++++
+> >>  drivers/pci/pci.c                               | 56 +++++++++++++++++++++++++
+> >>  drivers/pci/pci.h                               |  1 +
+> >>  drivers/pci/pcie/portdrv_pci.c                  | 13 +++---
+> >>  drivers/pci/probe.c                             |  9 ++--
+> >>  5 files changed, 78 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> >> index bdb2200..c2c4585 100644
+> >> --- a/Documentation/admin-guide/kernel-parameters.txt
+> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> >> @@ -4019,6 +4019,13 @@
+> >>  				bridges without forcing it upstream. Note:
+> >>  				this removes isolation between devices and
+> >>  				may put more devices in an IOMMU group.
+> >> +		disable_10bit_tag=<pci_dev>[; ...]
+> >> +				  Specify one or more PCI devices (in the format
+> >> +				  specified above) separated by semicolons.
+> >> +				  Disable 10-Bit Tag Requester if the peer
+> >> +				  device does not support the 10-Bit Tag
+> >> +				  Completer.This will make P2P traffic safe.
+> > 
+> > I can't imagine more awkward user experience than such kernel parameter.
+> > 
+> > As a user, I will need to boot the system, hope for the best that system
+> > works, write down all PCI device numbers, guess which one doesn't work
+> > properly, update grub with new command line argument and reboot the
+> > system. Any HW change and this dance should be repeated.
+> 
+> There are already two such PCI parameters with this pattern and they are
+> not that awkward. pci_dev may be specified with either vendor/device IDS
+> or with a path of BDFs (which protects against renumbering).
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++--
- drivers/pci/controller/dwc/pcie-qcom.c              | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Unfortunately, in the real world, BDF is not so stable. It changes with
+addition of new hardware, BIOS upgrades and even broken servers.
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 3f646875f8c2..a0ae024c2d0c 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -12,6 +12,7 @@
- 			- "qcom,pcie-ipq4019" for ipq4019
- 			- "qcom,pcie-ipq8074" for ipq8074
- 			- "qcom,pcie-qcs404" for qcs404
-+			- "qcom,pcie-sc8180x" for sc8180x
- 			- "qcom,pcie-sdm845" for sdm845
- 			- "qcom,pcie-sm8250" for sm8250
- 			- "qcom,pcie-ipq6018" for ipq6018
-@@ -156,7 +157,7 @@
- 			- "pipe"	PIPE clock
- 
- - clock-names:
--	Usage: required for sm8250
-+	Usage: required for sc8180x and sm8250
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries
- 			- "aux"		Auxiliary clock
-@@ -245,7 +246,7 @@
- 			- "ahb"			AHB reset
- 
- - reset-names:
--	Usage: required for sdm845 and sm8250
-+	Usage: required for sc8180x, sdm845 and sm8250
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries
- 			- "pci"			PCIe core reset
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 8adcbb718832..3906e975d6db 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1597,6 +1597,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
- 	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
-+	{ .compatible = "qcom,pcie-sc8180x", .data = &ops_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8250", .data = &ops_1_9_0 },
- 	{ }
- };
--- 
-2.29.2
+Vendor/device IDs doesn't work if you have multiple devices of same
+vendor in the system.
 
+> 
+> This flag is only useful in P2PDMA traffic, and if the user attempts
+> such a transfer, it prints a warning (see the next patch) with the exact
+> parameter that needs to be added to the command line.
+
+Dongdong citied PCI spec and it was very clear - don't enable this
+feature unless you clearly know that it is safe to enable. This is
+completely opposite to the proposal here - always enable and disable
+if something is printed to the dmesg.
+
+> 
+> This has worked well for disable_acs_redir and was used for
+> resource_alignment before that for quite some time. So save a better
+> suggestion I think this is more than acceptable.
+
+I don't know about other parameters and their history, but we are not in
+90s anymore and addition of modules parameters (for the PCI it is kernel
+cmdline arguments) are better to be changed to some configuration tool/sysfs.
+
+Even FW upgrade with such kernel parameter can be problematic.
+
+Thanks
+
+> 
+> Logan
