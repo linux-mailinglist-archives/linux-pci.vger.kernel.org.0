@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D38EE3D4B4B
+	by mail.lfdr.de (Postfix) with ESMTP id 3A23C3D4B49
 	for <lists+linux-pci@lfdr.de>; Sun, 25 Jul 2021 06:02:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbhGYDWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S230264AbhGYDWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 24 Jul 2021 23:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51956 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbhGYDV7 (ORCPT
+        with ESMTP id S230149AbhGYDV7 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jul 2021 23:21:59 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E03DC061796
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE961C06175F
         for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id x15so6837520oic.9
+Received: by mail-ot1-x32b.google.com with SMTP id h63-20020a9d14450000b02904ce97efee36so6410202oth.7
         for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fJd/jugeN2YjgUvOBixRk7jqpX0of5iUQEXFzXCzPhs=;
-        b=B4QCSkS/3XujHlHjUdtVPxFCSmVQO8G5YjMdMPuRNTnWiMywbaU3uKskrYy2ZZrFsR
-         4VLbUak5CnlEiexnGvgxfBvfM/aZ4fFAFaIGIHRfWtvLkG8iaigdThd+pl8TJY9EWsdI
-         IaUt8tn6TapTa/CIs1Z/nJqdCl6HT0TKe5rfQBM1Fj4wF/CeDLeZIaIr+eYU/tJ2/PLV
-         BkaBPO5w5AbtZrjw/1xF62BCoc2oVwJsvAMXA259XrPkQssO9f5x3kztQ9xgI/F4/yRq
-         7Ugu9Vj7LBujNombnQN710uRx7It5DQcXy14705lK2gpLzn7gLyGvi8aWcF1KiozGhPI
-         HqpA==
+        bh=orrTlR1e5ArvDErw47DwuFZ1ar2lNFZjVJ9JvZPgiW8=;
+        b=kopwAIC3KiN5sXTVUjiHSr0li0+n7LFh+IXMJE69HuHuEUlNZRM6gDyIFhbh7Y1wG1
+         Al4V5iAYMPmr8ocizfYqNh/9C9ylTr2QL0O2mf9Uq/AnwrgRrVCF6Jn5cE2acBw6rt2i
+         hwv94VNhy6HH2IJvPV3a31oztBcj26bnjTx7BIINt8XkXut3I304FlQ1rpXCuWytn2RU
+         +sDLI/CJjZNWZqB3t7U7JtnmU2E5W6qL7LThj45Ne/jlTqTouC6UbixdW0DA2SIJF/Oj
+         Pfo7MP1/fzg3Rgu9tMm2Bc7PzIuzwuEg/OePzj+N/Ep+9wpHnUiZolhYF99syQ+7mHqP
+         TD5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fJd/jugeN2YjgUvOBixRk7jqpX0of5iUQEXFzXCzPhs=;
-        b=Sc6pkQXTnt8Dzh/pdmuBil/zfIBNKgl0afP/ROLEXaisQW8kCE8/7Y7HcauEVbrz9Q
-         3NoUO9xTyPrReJH6iUXl7IVvWzJBfgOhrFS9BcR4byg5BbzpNK3wgE0oLRkt43NrGYzm
-         7AsSyEJy1rgZfmcqN7sheohmyVE3VZBmmD+dAeXuWzs7YDfbLY6sBXxGnCGCIMMplEzf
-         EYYV/ovQuChJPZ1oefpscY5F3gAe1C9W6qRszk1pO8OkjS+PM0+XC6J+hFirgaLHIeAU
-         RRDSo9lpQMN3MXxOKbWXYiXjvv01NN1yXFL5Fs+TH4zQdyg18N9dD5bnuWCAsvz3RB5i
-         7C0w==
-X-Gm-Message-State: AOAM531rTXR3OxP29mfRs8epCBFEHtlBcAs/TJtbLS4vpvsoJZBpx+Tv
-        veDNvOqV7fRs+jOM+l4NbFH4mkl3Wybo6Q==
-X-Google-Smtp-Source: ABdhPJyJ5mXGrUKX4FgCbfR/6UxKLXQZuB9R36iswQ9T71dP85NJ4RP/gPM9CokS7jOKNtPPD08a/w==
-X-Received: by 2002:aca:5a04:: with SMTP id o4mr7357553oib.33.1627185747406;
-        Sat, 24 Jul 2021 21:02:27 -0700 (PDT)
+        bh=orrTlR1e5ArvDErw47DwuFZ1ar2lNFZjVJ9JvZPgiW8=;
+        b=ir5j2wGeXKeZfScRAQUyUwOg+3JWo8KPGpOjlGQr0SS7iUda32+0gNKvmJEKzQ4wWr
+         bwkPgWLWikTHgnksFXIXi743WJnOrVhX8icpVDtWunQRtDFwEiBV56Ap1ozIuVyDKbRJ
+         QZ02Ajj5u6bAladhNspvIZSTk/TznpY4c8M6/97QOuGruuNhPPS7PQIXh8/QEy+V/QPz
+         vsDvVTZCiB+0RhSe1PxkYtuCQOVEl6mZGGsBgTDAm3HRv6nk7knLqyYXAoovAGm0WVku
+         J6H+vCEr1Xqe3oZ0LSZS/4cNtNfSpRs9wXvuMmSfIHepc/mUKYIq3U5Zx+kK4xMhCcbW
+         WzyA==
+X-Gm-Message-State: AOAM531UsgFCoi7PNnRwl+xD/TcqUNe94mA48qmARrw7/uIQGlA4Xzlk
+        biYZIxTGkXx1gNNNutSBqZZhPw==
+X-Google-Smtp-Source: ABdhPJwqjFvCZTbT7aln3g5NxlKjHCP2fTz/s4KxT7O4V4+3AH2dGm+KOGUYA0tuEmp3a+bwQarPOg==
+X-Received: by 2002:a9d:6848:: with SMTP id c8mr7881086oto.364.1627185748341;
+        Sat, 24 Jul 2021 21:02:28 -0700 (PDT)
 Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id q20sm872910otv.50.2021.07.24.21.02.26
+        by smtp.gmail.com with ESMTPSA id q20sm872910otv.50.2021.07.24.21.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jul 2021 21:02:26 -0700 (PDT)
+        Sat, 24 Jul 2021 21:02:27 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -55,9 +55,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] PCI: qcom: Split init and enable for 1.9.0 and 2.7.0
-Date:   Sat, 24 Jul 2021 21:00:37 -0700
-Message-Id: <20210725040038.3966348-3-bjorn.andersson@linaro.org>
+Subject: [PATCH 3/3] PCI: qcom: Add sc8180x compatible
+Date:   Sat, 24 Jul 2021 21:00:38 -0700
+Message-Id: <20210725040038.3966348-4-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210725040038.3966348-1-bjorn.andersson@linaro.org>
 References: <20210725040038.3966348-1-bjorn.andersson@linaro.org>
@@ -67,97 +67,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On the sc8180x platform the "msi" interrupt often fires before init has
-a chance to enable the clocks that are necessary for the interrupt
-handler to access the hardware.
-
-Split out the resource enablement and disablement into the newly
-introduce enable/disable resource operations, to ensure that the
-necessary resources are enabled when needed.
+The SC8180x platform comes with 4 PCIe controllers, typically used for
+things such as NVME storage or connecting a SDX55 5G modem. Add a
+compatible for this, that just reuses the 1.9.0 ops.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 31 +++++++++++++++++---------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++--
+ drivers/pci/controller/dwc/pcie-qcom.c              | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 3f646875f8c2..a0ae024c2d0c 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -12,6 +12,7 @@
+ 			- "qcom,pcie-ipq4019" for ipq4019
+ 			- "qcom,pcie-ipq8074" for ipq8074
+ 			- "qcom,pcie-qcs404" for qcs404
++			- "qcom,pcie-sc8180x" for sc8180x
+ 			- "qcom,pcie-sdm845" for sdm845
+ 			- "qcom,pcie-sm8250" for sm8250
+ 			- "qcom,pcie-ipq6018" for ipq6018
+@@ -156,7 +157,7 @@
+ 			- "pipe"	PIPE clock
+ 
+ - clock-names:
+-	Usage: required for sm8250
++	Usage: required for sc8180x and sm8250
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries
+ 			- "aux"		Auxiliary clock
+@@ -245,7 +246,7 @@
+ 			- "ahb"			AHB reset
+ 
+ - reset-names:
+-	Usage: required for sdm845 and sm8250
++	Usage: required for sc8180x, sdm845 and sm8250
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries
+ 			- "pci"			PCIe core reset
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 8a64a126de2b..8adcbb718832 100644
+index 8adcbb718832..3906e975d6db 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1173,12 +1173,11 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	return PTR_ERR_OR_ZERO(res->pipe_clk);
- }
- 
--static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-+static int qcom_pcie_enable_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	u32 val;
- 	int ret;
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-@@ -1211,6 +1210,20 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 		goto err_disable_clocks;
- 	}
- 
-+	return 0;
-+
-+err_disable_clocks:
-+	clk_bulk_disable_unprepare(res->num_clks, res->clks);
-+err_disable_regulators:
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	u32 val;
-+
- 	/* configure PCIe to RC mode */
- 	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
- 
-@@ -1238,15 +1251,9 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	}
- 
- 	return 0;
--err_disable_clocks:
--	clk_bulk_disable_unprepare(res->num_clks, res->clks);
--err_disable_regulators:
--	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
--
--	return ret;
- }
- 
--static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
-+static void qcom_pcie_disable_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 
-@@ -1465,8 +1472,9 @@ static const struct qcom_pcie_ops ops_2_3_3 = {
- /* Qcom IP rev.: 2.7.0	Synopsys IP rev.: 4.30a */
- static const struct qcom_pcie_ops ops_2_7_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
-+	.enable_resources = qcom_pcie_enable_2_7_0,
- 	.init = qcom_pcie_init_2_7_0,
--	.deinit = qcom_pcie_deinit_2_7_0,
-+	.disable_resources = qcom_pcie_disable_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- 	.post_init = qcom_pcie_post_init_2_7_0,
- 	.post_deinit = qcom_pcie_post_deinit_2_7_0,
-@@ -1475,8 +1483,9 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
- /* Qcom IP rev.: 1.9.0 */
- static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
-+	.enable_resources = qcom_pcie_enable_2_7_0,
- 	.init = qcom_pcie_init_2_7_0,
--	.deinit = qcom_pcie_deinit_2_7_0,
-+	.disable_resources = qcom_pcie_disable_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- 	.post_init = qcom_pcie_post_init_2_7_0,
- 	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+@@ -1597,6 +1597,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
+ 	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
+ 	{ .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
++	{ .compatible = "qcom,pcie-sc8180x", .data = &ops_1_9_0 },
+ 	{ .compatible = "qcom,pcie-sm8250", .data = &ops_1_9_0 },
+ 	{ }
+ };
 -- 
 2.29.2
 
