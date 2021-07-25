@@ -2,92 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 493353D474B
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jul 2021 13:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BE8E3D4B42
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Jul 2021 06:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbhGXKeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jul 2021 06:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229586AbhGXKeC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 24 Jul 2021 06:34:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6265160BD3;
-        Sat, 24 Jul 2021 11:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627125274;
-        bh=HyvcDyeDxtILEinI/b0l+BtcGGQCTrMgGW5qMF7qAfg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gs3tAakSvwFUbaZk6VH3a4EGR7TCnUDFX6QrLd+X7IpvSwupxqbixhDmvZDIPQr+c
-         V81ZJ/cD8i80PB6s8wYMN3Kff1SdPNzduSrOsjAjH2NrxEEuUCjAzPfCVlaXkLaq5c
-         rer9WTIQlUCN0JmiXGX9PyKQbPjME9BACbPIasI5GmNfd/LK3XYDIr+Slthz5v45D9
-         ntfAstGbA+ygR7BCywQr804mXnl9tbDda3ta4fuuqqWOsqW+tnvva0WPMHA+qW020m
-         nZ/cwhvr377CZwqiTd0nG1cOkL48K8M6xIL1cDegWKxrqdOrubJdqV47SBXUcdV7Ba
-         jsm91fsWXl4tA==
-Received: by pali.im (Postfix)
-        id AC301EDF; Sat, 24 Jul 2021 13:14:31 +0200 (CEST)
-Date:   Sat, 24 Jul 2021 13:14:31 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        =?utf-8?B?UsO2dHRp?= 
-        <espressobinboardarmbiantempmailaddress@posteo.de>,
-        Zachary Zhang <zhangzg@marvell.com>
-Subject: Re: [PATCH 2/2] PCI: Add Max Payload Size quirk for ASMedia ASM1062
- SATA controller
-Message-ID: <20210724111431.wlr7uf6ymhe7gi6u@pali>
-References: <20210624171418.27194-1-kabel@kernel.org>
- <20210624171418.27194-2-kabel@kernel.org>
+        id S230193AbhGYDWB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jul 2021 23:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229609AbhGYDV4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jul 2021 23:21:56 -0400
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3BCAC06175F
+        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:25 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id y16-20020a4ad6500000b0290258a7ff4058so1416797oos.10
+        for <linux-pci@vger.kernel.org>; Sat, 24 Jul 2021 21:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TSKQIS1eXHkXAAiSsxbJmy25M4G9M0+9BKL+NlEs6yQ=;
+        b=lOGiCRJZFY30dtNS9yNCiGC76kgyvvX87Vw5dUDuXbXEGqlhJiOC5fYFX5QMxV0YLR
+         Hn6ZNfB8hRF5ePLZc3lueHbwVAT19MKi1Hxhkv0guSLTa17V9t48BwDoKuIXuYwkOBN1
+         k8DzhYI1YnUW8LbXV17+be/uzL0mKLF6SID9kr3G4o6PjVNCLOC0ag2yRvcArbxFaIwS
+         BLh1YE2LvBs/Pi7R9cbWz9zFero8TsPYqEaUYUvT9XPbuhe7TmIrrIiAoG0MRFAuI8FH
+         kBktGgfmJpcERrk/Gaqz/IpsuY+78jZzhNnS4ZGtMFLxve9ZPpF0HXG0lRRG/vp9R7LO
+         s96g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TSKQIS1eXHkXAAiSsxbJmy25M4G9M0+9BKL+NlEs6yQ=;
+        b=dSmRnrgQZJgyi/1EmkC8k6O8xgj0MPmsgJI0fnIJbXWL6Ey+ocpsLlVYyOW/y3/XWv
+         WZcBbWqBjMqc9yUkaLVw2MBQdvfZWYKkT2sKWCAq0xHsfaiT0Ge6wfl5PAJvDDV9wbfJ
+         6+uoZLNeNEpZYmIHss3zCk3eB8fuVXHvl5PwNy9aTY5Ioy/jueOS8cIN5avKmCE2s6d/
+         uGJz5tvrSp72rXKvQzsZGoo5pfRvtizVXt0d7dgLDZKuEzN5g6RSbwPGlVIRI/cQPESW
+         4i0g97BuhtZ1nsTkP8MQCDrHQajJjpLY48JNjNkdu96eHTupHag61g9py6ZZsJYf1Qs2
+         Hd8Q==
+X-Gm-Message-State: AOAM533P2YxdQ1j5vsLus3QlwaySeQLuVXsSzjxAeAAFJSi9AJEKPMxV
+        8ZCyyv4OIygP+b3yBCHbB2h9nQ==
+X-Google-Smtp-Source: ABdhPJx2HUDLQrOLavGF/TIF+2KoSRtMvzbA6aYnA7qBQVSfe8FqWCX6VIgTP2MBPBOZBPTxPMKqbw==
+X-Received: by 2002:a4a:4fca:: with SMTP id c193mr6882870oob.33.1627185745129;
+        Sat, 24 Jul 2021 21:02:25 -0700 (PDT)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id q20sm872910otv.50.2021.07.24.21.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Jul 2021 21:02:24 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] PCI: qcom: Add sc8180x support
+Date:   Sat, 24 Jul 2021 21:00:35 -0700
+Message-Id: <20210725040038.3966348-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210624171418.27194-2-kabel@kernel.org>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 24 June 2021 19:14:18 Marek Behún wrote:
-> The ASMedia ASM1062 SATA controller advertises
-> Max_Payload_Size_Supported of 512, but in fact it cannot handle TLPs
-> with payload size of 512.
-> 
-> We discovered this issue on PCIe controllers capable of MPS = 512
-> (Aardvark and DesignWare), where the issue presents itself as an
-> External Abort. Bjorn Helgaas says:
->   Probably ASM1062 reports a Malformed TLP error when it receives a data
->   payload of 512 bytes, and Aardvark, DesignWare, etc convert this to an
->   arm64 External Abort.
-> 
-> Limiting Max Payload Size to 256 bytes solves this problem.
+The SC8180x (8cx) platform is used primarily in Windows laptops, the platform
+comes with 4 PCIe controllers so far seen being used for NVME storage and SDX55
+5G modem. With the PHY already landed in the QMP driver, this adds the
+controller support.
 
-Hello Bjorn! Is there anything else needed for merging this patch?
+Bjorn Andersson (3):
+  PCI: qcom: Introduce enable/disable resource ops
+  PCI: qcom: Split init and enable for 1.9.0 and 2.7.0
+  PCI: qcom: Add sc8180x compatible
 
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212695
-> Reported-by: Rötti <espressobinboardarmbiantempmailaddress@posteo.de>
-> Cc: Pali Rohár <pali@kernel.org>
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  5 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 74 +++++++++++++++----
+ 2 files changed, 62 insertions(+), 17 deletions(-)
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+-- 
+2.29.2
 
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/pci/quirks.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 4d9b9d8fbc43..a4ba3e3b3c5e 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3239,6 +3239,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
->  			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
->  			PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ASMEDIA, 0x0612, fixup_mpss_256);
->  
->  /*
->   * Intel 5000 and 5100 Memory controllers have an erratum with read completion
-> -- 
-> 2.31.1
-> 
