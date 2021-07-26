@@ -2,168 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC4983D6603
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 19:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E0BE3D665F
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 20:07:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbhGZRI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 13:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229680AbhGZRI6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Jul 2021 13:08:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D44260F6B;
-        Mon, 26 Jul 2021 17:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627321766;
-        bh=nwK1ATvhZ0brOfjn20QH7d7aZdI0DmJLCiKJsQRN6l4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BpSMme7cl0O24QNj9gwfaCYZ6fmuIjbVWjNc1bRe3lJ4RBkeiWIecK9LlhLgaauUw
-         WBUZ1+Qz5M2oWm/6l6ZQlsO0stm//X5JKYQChXToW5bI2Cc8M/mmhc73iEgfeaChdB
-         QKIjaTXKRVxaDI3i5vZkPENVsx+g0r7cteKbIiIPzxbUQMi6KQAF21RxKxrzVu+hyb
-         TK+fDUBo7eoU0JJrsFoDdY83VqA0Yo9S1ZHSUYqqWf9+EPRcqmdS4kf8oJFS+LBdDA
-         Qy42UK6QmbBHmDLX/zctSQzdD70uGBKsEN6+/WsqZ9F485fCmmMgH6xCy2mQ3RaYgm
-         3oJ5tv2cMIfzA==
-Date:   Mon, 26 Jul 2021 12:49:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20210726174925.GA624246@bjorn-Precision-5520>
+        id S231754AbhGZR0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jul 2021 13:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231248AbhGZR0y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jul 2021 13:26:54 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497D5C061757;
+        Mon, 26 Jul 2021 11:07:23 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id u7so6594230ilj.8;
+        Mon, 26 Jul 2021 11:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K5lFoMgyXkemiYngT6HomI4alStah0h/A9+JLDPEl1A=;
+        b=TmKs095aDXGT+gwqQrAmUCutNKy0QaDyqxdbmnS/5SCQxvwn/QKhqFsyAL9aoZiyY+
+         5ImE6Jt5EPwKUUKcVDeNWEIUsNyDNzH+Pkyl6fqgTy2ml/ch+IXmgMvKxOOZC6l/8dGj
+         gB9MiZkP2XATavcuGtm3tnpCn3INnDnxSvI8crsP6EQw6D9FgpGdu+OXEAfxzoDwfHn3
+         8dGba8WrzUnoZIw26ytZws2gBVDtnMqlXuy9imTzQocri0qasBdc05vc4/cJge8AlJem
+         oeil6AQwI+X0FjTp4k0LMVaENFeZYtNpLxkRU91lfv8qsSoG7SkUWK7kQiqb0kNetwoG
+         UkCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K5lFoMgyXkemiYngT6HomI4alStah0h/A9+JLDPEl1A=;
+        b=NrU7rJo2W8AqZl0CzDcCZYvJD5XiS8e3GwJxfztXe2TW+61v5UCjG5fiemVSD9JMrn
+         hvZoOZtvABCwjm3XyQSfIpsbHr7wk2PuFHohJrpDx2BcIkl7+7iXZnaJXunuATFIDkSw
+         LejkJU8fNbp1eI096pfByH85udPexLp9sFATCmONw6Cd21Ss7jDZkVgmZaJGBgQCx4K8
+         6NYmeXfLEOfOhr7QpWZN8/yvHXDdO8lPi7iRKFXrBwye9Q/eOTtUWkN9GHYap6Fku8Ot
+         ZTmBcAO+DaVibR2VnZcsZOkgSGCI0wEDHW8eIxNy8MIxFVwDflpZ9PQRy2gP5L+Gp+/w
+         7WIg==
+X-Gm-Message-State: AOAM531hl3BwkzBIHDpb51sQITKVS46ThxQq41uwzIpxRlwxofr/0m0H
+        sK3TlrhbwzT0kzFz3i2MbKM=
+X-Google-Smtp-Source: ABdhPJzOerlWOLVjwwhv9n1/8RjuUNM7aAXhzZH25e1iZayaqLrXVJ53diW7Q58BP+trWts/FoXwrw==
+X-Received: by 2002:a92:d990:: with SMTP id r16mr14424299iln.204.1627322842266;
+        Mon, 26 Jul 2021 11:07:22 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id a11sm220697ilf.79.2021.07.26.11.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jul 2021 11:07:21 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailauth.nyi.internal (Postfix) with ESMTP id A727C27C0066;
+        Mon, 26 Jul 2021 14:07:20 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 26 Jul 2021 14:07:20 -0400
+X-ME-Sender: <xms:1_n-YG8Sq534SnJFNZRNmPECGjQZyhh47uoNyPa5_NBF3DWzLl_qtw>
+    <xme:1_n-YGuvsFxqjWisD7jL1z_KXLzW7TpvV_--Rxia-chJOfcyoPQkzNo9MxCjWFEYG
+    N6pYkEzBpw35U1mVA>
+X-ME-Received: <xmr:1_n-YMAq2ayWUBWfzwMNjHczZOa4ZDHd73MT9NPh-rhYeFJ5_cmFm7Rvl0U>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrgeehgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepieeuveejleehudetfeevfeelgfejteefhedvkedukefggedugefhudfhteevjedu
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghr
+    shhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvg
+    hngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:1_n-YOcfw-JniADNfl6SO5_kYQELdlCrk_SjcPvWGLzVQuPziCpK1w>
+    <xmx:1_n-YLPj9dK0KOTZJXlNXLxbm4wPQ-dc_YvhaonhUUfhaH4mh_FphA>
+    <xmx:1_n-YIlhL2FQ1_4Voux5e_Gco98YrGqwCWNcsUbJJPk8IKva8FwVsA>
+    <xmx:2Pn-YGGxK5knOkkkc60FlIfu76lQtCSkcBLosIjJsQ4tf3BSIP00H-uemJk>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 26 Jul 2021 14:07:19 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH v6 0/8] PCI: hv: Support host bridge probing on ARM64
+Date:   Tue, 27 Jul 2021 02:06:49 +0800
+Message-Id: <20210726180657.142727-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWFeTP81pfsX0YG=qouGH8+d-0GDCw68MmamhSHjQdM_A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 04:47:54PM +0200, Geert Uytterhoeven wrote:
-> Hi Bjorn,
-> 
-> On Sat, Jul 17, 2021 at 7:33 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, May 14, 2021 at 10:05:49PM +0200, marek.vasut@gmail.com wrote:
-> > > From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > >
-> > > The R-Car PCIe controller is capable of handling L0s/L1 link states.
-> > > While the controller can enter and exit L0s link state, and exit L1
-> > > link state, without any additional action from the driver, to enter
-> > > L1 link state, the driver must complete the link state transition by
-> > > issuing additional commands to the controller.
-> > >
-> > > The problem is, this transition is not atomic. The controller sets
-> > > PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-> > > the PCIe card, but then the controller enters some sort of inbetween
-> > > state. The driver must detect this condition and complete the link
-> > > state transition, by setting L1IATN bit in PMCTLR and waiting for
-> > > the link state transition to complete.
-> > >
-> > > If a PCIe access happens inside this window, where the controller
-> > > is between L0 and L1 link states, the access generates a fault and
-> > > the ARM 'imprecise external abort' handler is invoked.
-> > >
-> > > Just like other PCI controller drivers, here we hook the fault handler,
-> > > perform the fixup to help the controller enter L1 link state, and then
-> > > restart the instruction which triggered the fault. Since the controller
-> > > is in L1 link state now, the link can exit from L1 link state to L0 and
-> > > successfully complete the access.
-> > >
-> > > While it was suggested to disable L1 link state support completely on
-> > > the controller level, this would not prevent the L1 link state entry
-> > > initiated by the link partner. This happens e.g. in case a PCIe card
-> > > enters D3Hot state, which could be initiated from pci_set_power_state()
-> > > if the card indicates D3Hot support, which in turn means link must enter
-> > > L1 state. So instead, fix up the L1 link state after all.
-> > >
-> > > Note that this fixup is applicable only to Aarch32 R-Car controllers,
-> > > the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-> > > 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-> > > [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
-> >
-> > This patch is horribly ugly but it's working around a horrible
-> > hardware problem, and I don't have any better suggestions, so I guess
-> > we don't really have much choice.
-> >
-> > I do think the commit log is a bit glib:
-> >
-> >   - "The R-Car PCIe controller is capable of handling L0s/L1 link
-> >     states."  AFAICT every PCIe device is required to handle L0 and L1
-> >     without software assistance.  So saying R-Car is "capable" puts a
-> >     better face on this than seems warranted.
-> >
-> >     L0s doesn't seem relevant at all; at least it doesn't seem to play
-> >     a role in the patch.  There's no such thing as "returning to L0s"
-> >     as mentioned in the comment below; L0s is only reachable from L0.
-> >     Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
-> >
-> >   - "The problem is, this transition is not atomic."  I think the
-> >     *problem* is the hardware is broken in the first place.  This
-> >     transition is supposed to be invisible to software.
-> >
-> >   - "Just like other PCI controller drivers ..." suggests that this is
-> >     an ordinary situation that we shouldn't be concerned about.  This
-> >     patch may be the best we can do to work around a bad hardware
-> >     defect, but it's definitely not ordinary.
-> >
-> >     I think the other hook_fault_code() uses are for reporting
-> >     legitimate PCIe errors, which most controllers log and turn
-> >     into ~0 data responses without generating an abort or machine
-> >     check, not things caused by hardware defects, so they're not
-> >     really comparable.
-> >
-> > Has Renesas documented this as an erratum?  Will future devices
-> > require additions to rcar_pcie_abort_handler_of_match[]?
-> >
-> > It'd be nice if the commit log mentioned the user-visible effect of
-> > this problem.  I guess it does mention external aborts -- I assume you
-> > see those when downstream devices go to D3hot or when ASPM puts the
-> > link in L1?  And the abort results in a reboot?
-> >
-> > To be clear, I'm not objecting to the patch.  It's a hardware problem
-> > and we should work around it as best we can.
-> 
-> Cool! So what's missing for this patch, which we have been polishing
-> for almost one year, to be applied, so innocent people can no longer
-> lock up an R-Car system just by inserting an ubiquitous Intel Ethernet
-> card, and suspending the system?
+Hi,
 
-Nothing missing from my point of view, so if Lorenzo is OK with it,
-he'll apply it.  If I were applying it, I would make the commit log
-something like this:
+This is the v6 for the preparation of virtual PCI support on Hyper-V
+ARM64, Previous versions:
 
-  When the link is in L1, hardware should return it to L0
-  automatically whenever a transaction targets a component on the
-  other end of the link (PCIe r5.0, sec 5.2).
+v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
+v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
+v5:	https://lore.kernel.org/lkml/20210720134429.511541-1-boqun.feng@gmail.com/
 
-  The R-Car PCIe controller doesn't handle this transition correctly.
-  If the link is not in L0, an MMIO transaction targeting a downstream
-  device fails, and the controller reports an ARM imprecise external
-  abort.
+Changes since last version:
 
-  Work around this by hooking the abort handler so the driver can
-  detect this situation and help the hardware complete the link state
-  transition.
+*	Rebase to 5.14-rc3
 
-  When the R-Car controller receives a PM_ENTER_L1 DLLP from the
-  downstream component, it sets PMEL1RX bit in PMSR register, but then
-  the controller enters some sort of in-between state.  A subsequent
-  MMIO transaction will fail, resulting in the external abort.  The
-  abort handler detects this condition and completes the link state
-  transition by setting the L1IATN bit in PMCTLR and waiting for the
-  link state transition to complete.
+*	Comment fixes as suggested by Bjorn.
 
-I assume that on the PCIe side, there must be an error like
-Unsupported Request or Malformed TLP, and the R-Car controller is
-logging that and turning it into the ARM external abort?
+The basic problem we need to resolve is that ARM64 is an arch with
+PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
+Hyper-V PCI provides a paravirtualized PCI interface, so there is no
+actual pci_config_window for a PCI host bridge, so no information can be
+retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
+there is no corresponding ACPI device for the Hyper-V PCI root bridge,
+which introduces a special case when trying to find the ACPI device from
+the sysdata (see patch #3).
 
-I didn't see a clear response to Pali's question about what happens if
-there's no MMIO access, e.g., what if the downstream device initiates
-a DMA or MSI transaction?
+With this patchset, we could enable the virtual PCI on Hyper-V ARM64
+guest with other code under development.
 
-Bjorn
+Comments and suggestions are welcome.
+
+Regards,
+Boqun
+
+Arnd Bergmann (1):
+  PCI: hv: Generify PCI probing
+
+Boqun Feng (7):
+  PCI: Introduce domain_nr in pci_host_bridge
+  PCI: Support populating MSI domains of root buses via bridges
+  arm64: PCI: Restructure pcibios_root_bridge_prepare()
+  arm64: PCI: Support root bridge preparation for Hyper-V
+  PCI: hv: Set ->domain_nr of pci_host_bridge at probing time
+  PCI: hv: Set up MSI domain at bridge probing time
+  PCI: hv: Turn on the host bridge probing on ARM64
+
+ arch/arm64/kernel/pci.c             | 29 +++++++---
+ drivers/pci/controller/pci-hyperv.c | 86 +++++++++++++++++------------
+ drivers/pci/probe.c                 | 12 +++-
+ include/linux/pci.h                 | 11 ++++
+ 4 files changed, 93 insertions(+), 45 deletions(-)
+
+-- 
+2.32.0
+
