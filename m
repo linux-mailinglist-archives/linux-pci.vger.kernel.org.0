@@ -2,147 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D32CD3D6675
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 20:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36E933D6879
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 23:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233331AbhGZR1M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 13:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233213AbhGZR1J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jul 2021 13:27:09 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40016C061798;
-        Mon, 26 Jul 2021 11:07:33 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id k3so9836602ilu.2;
-        Mon, 26 Jul 2021 11:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1ExxtPk3m7cD/MyVHcJHisgBq5NdaixHar/yvts63oY=;
-        b=lu6ztsDonsig5sCIETowNoTKgft3OXEsGkWrfkw8He3KqD/0JU/DK9nSpf258sg0Bz
-         i9CfwO0MFWfyclZTqiF/nY+UPtRMwrN26ANS2zqMruPGcvbZGskxaB+8QglMK2oq2+E9
-         d+gHrJ+HZLU7yMxzU9WjOL7oluVtm0ZLGtISL9vMNMWIySFEh9LzdRBDSNoFmKc5qEx/
-         Tq9YpvdpkkpR5WucSZPhHUJog0DGKCcL9OnvqS94uUV0cEaCaUkNOBtC11zkbFVWFVO1
-         s3aeZ7oHB/DX7pFnT9+WCcvGTsySvYYyGQnt4YkvAkLqd8pSSGQ8qgFJXetJNYCsaDIW
-         iLRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1ExxtPk3m7cD/MyVHcJHisgBq5NdaixHar/yvts63oY=;
-        b=nyiQedo3i04eUelhplaVnwX+E7u+prCppBubf4n3VK2nKqiybdY8BhgKGvzE2teRBE
-         8R74wXxk2GI9Di5BpSGo4wLET35pcra6E+UvRb5RzkJgy3uxfOXyfmS8YG0KT/3rf/1y
-         ceMaslPT6Xx3lL9yHx7oIY1djhGM4ADhr0L9pVj+hwy7E/qS47HJHuzbZYcPUrbuqInR
-         Ymnuom6nVK768Od0rtZYt+173kffzWeTlre+INip9dO4vMOTYsNSSO5o8xwbYH5pzghI
-         AKcV8QaGO74hp3ji65Jf5HzeiQ+7ZIC3ko1MNDN/89sOAzDQdHiNBdNftqoVvWvZ6GKX
-         q12Q==
-X-Gm-Message-State: AOAM532nswhd555C/viGp7VWu9vzNEeGWiLlcgFLLxhsfXnV6b9tJYYK
-        FJUdEJbs61mWZRAlhYYHtHg=
-X-Google-Smtp-Source: ABdhPJwjo+fF9BZyZ1BakHMFl5O/MdShV0ZbSl+l/TnHSzCFG+swYnuCtJh3DE0ifq0bZhyUxaJHcg==
-X-Received: by 2002:a92:260f:: with SMTP id n15mr13843918ile.143.1627322852708;
-        Mon, 26 Jul 2021 11:07:32 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id t2sm269781ilq.27.2021.07.26.11.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 11:07:32 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E2BD227C0068;
-        Mon, 26 Jul 2021 14:07:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 26 Jul 2021 14:07:30 -0400
-X-ME-Sender: <xms:4vn-YFIjPVrX3C1_ocxwjJBa5NCRtSAeoVxZyiJujjVVcEeeGU3F8Q>
-    <xme:4vn-YBLSUU37kuuJ-iDMn6qQzoW5wzFHR2zjYiEtEYJ2k83VXWbNqTkynKZXjpFoo
-    9QCFQpoUA6jwKKt1Q>
-X-ME-Received: <xmr:4vn-YNv1iqoyaUa3OFLUBcm_wwh3f6DnxU4EzZZoyGnFDtqaKNvGLNt7AiI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrgeehgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
-    ueelnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:4vn-YGbc1Ep22IZL8CsUSBhg_Af3l62yNyF-DbwFcMwCv4PImNwnag>
-    <xmx:4vn-YMY_8fiC7FduD1Et-GTeQVwNDd9RcQ3oVSWT1RYdQ5O6IGjPrw>
-    <xmx:4vn-YKCncr3lz1IAqs31OS6Buzei8GE770tmVaDMvEDQBWi_SEHHHQ>
-    <xmx:4vn-YJQfXwm48OQQq4BKhbqTHblNgvIWQ4YJOWhhchE-RKEJyvnjKCa6vtQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 26 Jul 2021 14:07:30 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v6 8/8] PCI: hv: Turn on the host bridge probing on ARM64
-Date:   Tue, 27 Jul 2021 02:06:57 +0800
-Message-Id: <20210726180657.142727-9-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210726180657.142727-1-boqun.feng@gmail.com>
-References: <20210726180657.142727-1-boqun.feng@gmail.com>
+        id S232977AbhGZUdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jul 2021 16:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232922AbhGZUdK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Jul 2021 16:33:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AEABD60F5D;
+        Mon, 26 Jul 2021 21:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627334018;
+        bh=lzeqMw1augM9jIjp6DS7Z86oMsklA1uPRFTN6gP4N/4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FCO2Of0F2qwRKsvCg49INNYLrWobJGDirVTcYzmc6av8P+fhSkRCyMzvDEA9SQHLD
+         EAQ/PaJxGZbXtIYOuPYvSq8HV4ADqNuCgEFE4tPeRfbKrq34OA/+sqnHMcglfUW2EN
+         GxOAED+kDhVNAci/OfK41Qp0InZjiFXccu0DvvN6MvpJbZTR+LQBejd8V5jAg4oSS/
+         sFA+HJ1aTwmVLilpa0sH/vLCCFDATwxlqP2LrF4ptIvSEYmyI+76QTww/6wuevD9Wg
+         dSKG6hI1JygymWkCwRM8ZHgnjuphd6HatRjCnk6k/D2I39Ay8FJypmAQDycOAQMMOS
+         94Dm/vrb/PnAw==
+Received: by pali.im (Postfix)
+        id 1A8528A2; Mon, 26 Jul 2021 23:13:36 +0200 (CEST)
+Date:   Mon, 26 Jul 2021 23:13:35 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org,
+        =?utf-8?B?UsO2dHRp?= 
+        <espressobinboardarmbiantempmailaddress@posteo.de>,
+        Zachary Zhang <zhangzg@marvell.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: Add Max Payload Size quirk for ASMedia ASM1062
+ SATA controller
+Message-ID: <20210726211335.2hkjrjpe2xavlyxd@pali>
+References: <20210624171418.27194-2-kabel@kernel.org>
+ <20210726172403.GA623272@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210726172403.GA623272@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now we have everything we need, just provide a proper sysdata type for
-the bus to use on ARM64 and everything else works.
+On Monday 26 July 2021 12:24:03 Bjorn Helgaas wrote:
+> On Thu, Jun 24, 2021 at 07:14:18PM +0200, Marek Behún wrote:
+> > The ASMedia ASM1062 SATA controller advertises
+> > Max_Payload_Size_Supported of 512, but in fact it cannot handle TLPs
+> > with payload size of 512.
+> > 
+> > We discovered this issue on PCIe controllers capable of MPS = 512
+> > (Aardvark and DesignWare), where the issue presents itself as an
+> > External Abort. Bjorn Helgaas says:
+> >   Probably ASM1062 reports a Malformed TLP error when it receives a data
+> >   payload of 512 bytes, and Aardvark, DesignWare, etc convert this to an
+> >   arm64 External Abort.
+> > 
+> > Limiting Max Payload Size to 256 bytes solves this problem.
+> > 
+> > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212695
+> > Reported-by: Rötti <espressobinboardarmbiantempmailaddress@posteo.de>
+> > Cc: Pali Rohár <pali@kernel.org>
+> > Cc: stable@vger.kernel.org
+> 
+> Applied both to pci/enumeration for v5.15, thanks!
+> 
+> Were you able to confirm that a Malformed TLP error was logged?  The
+> lspci in the bugzilla is from a system with no AER support,
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hello Bjorn! That is because patch for AER support for pci-aardvark.c
+driver was not reviewed / commented / merged yet:
+https://lore.kernel.org/linux-pci/20210506153153.30454-43-pali@kernel.org/
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index e6276aaa4659..62dbe98d1fe1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -40,6 +40,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/delay.h>
- #include <linux/semaphore.h>
- #include <linux/irqdomain.h>
-@@ -448,7 +449,11 @@ enum hv_pcibus_state {
- };
- 
- struct hv_pcibus_device {
-+#ifdef CONFIG_X86
- 	struct pci_sysdata sysdata;
-+#elif defined(CONFIG_ARM64)
-+	struct pci_config_window sysdata;
-+#endif
- 	struct pci_host_bridge *bridge;
- 	struct fwnode_handle *fwnode;
- 	/* Protocol version negotiated with the host */
-@@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			 dom_req, dom);
- 
- 	hbus->bridge->domain_nr = dom;
-+#ifdef CONFIG_X86
- 	hbus->sysdata.domain = dom;
-+#endif
- 
- 	hbus->hdev = hdev;
- 	INIT_LIST_HEAD(&hbus->children);
--- 
-2.32.0
+Anyway, this arm64 external abort is currently sent to arm64 EL3 level
+(implemented in trusted firmware) and not to kernel. And EL3 hook after
+receiving this abort resets CPU, so we / kernel do not have opportunity
+to look what is in AER registers.
 
+So dumping AER registers in this stage from aardvark is quite harder.
+
+Maybe it could be easier with DesignWare PCIe controller.
+
+> so no
+> information from that one.  I don't know if any of the PCIe
+> controllers you tested support both AER and MPS=512.
+> 
+> > ---
+> >  drivers/pci/quirks.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 4d9b9d8fbc43..a4ba3e3b3c5e 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -3239,6 +3239,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+> >  			PCI_DEVICE_ID_SOLARFLARE_SFC4000A_1, fixup_mpss_256);
+> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLARFLARE,
+> >  			PCI_DEVICE_ID_SOLARFLARE_SFC4000B, fixup_mpss_256);
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_ASMEDIA, 0x0612, fixup_mpss_256);
+> >  
+> >  /*
+> >   * Intel 5000 and 5100 Memory controllers have an erratum with read completion
+> > -- 
+> > 2.31.1
+> > 
