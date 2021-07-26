@@ -2,501 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFC713D5326
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 08:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 972D53D5384
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 09:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231582AbhGZFuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 01:50:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:33155 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229658AbhGZFua (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Jul 2021 01:50:30 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10056"; a="199410019"
-X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
-   d="scan'208";a="199410019"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2021 23:30:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
-   d="scan'208";a="579264304"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Jul 2021 23:30:58 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Sun, 25 Jul 2021 23:30:57 -0700
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Sun, 25 Jul 2021 23:30:57 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10 via Frontend Transport; Sun, 25 Jul 2021 23:30:57 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.175)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.10; Sun, 25 Jul 2021 23:30:56 -0700
+        id S232031AbhGZGVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jul 2021 02:21:34 -0400
+Received: from mail-dm6nam12on2068.outbound.protection.outlook.com ([40.107.243.68]:19904
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232064AbhGZGVE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Jul 2021 02:21:04 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxyN/llkWTJsWaC8w2R5b66A0Xl5fuvaAxKbclvsVtqUI0a/iSy7qDTIL/lnnfIVR1XR103A6jzQsuwPVI/x+CGDdiL2bYctXveH73MIBwrykTWsmoyMkDMKaE/JuDSi3Qcr2Qesni6Cx/ilxhuMVwa+No/Qp7vNvIC9A3rWDGW+HqNQILyRZZOyWQfdX+IbYrDzxyfja1mu1RZ02SY/LfBncbpN8mQxIIVErWfkHDLElJalphSnVjqv9S4kugiSIwJY7X9OlRpS6x2I9aPnHePenlqRDRj7UMsJd3S2oLRY7nQvxhh1GV5J+yIWYRxlAg3s5wAWO6tJr7glSLrAuA==
+ b=Hrd/UxWIh5CfLuytJN3IGzhtiaA+v6WUWLa5MI62XHFV5/NmBP7flypFWKJQVjm9k00yuEw0/XlyV9SDNfEbNNAx0VRdK9ccbV1Ucj6qy1hrQ+AisHXUo07hri75mzZ+tRy5OTIq9lH5v5lwMPamHMEdOIK//U30mkAv44+JjQFM8BwQluWqqAW9jyGGzyTuz0KxSJct8V2VRfh6sdNlAEebOPFGU0cvZ/VcXbkFUTsJ3YEMMf6omRW5A8zrMRMu3uimmdodqMOois78VuYY/8hC5WeeDb5RUGQq9QjuKoKrfwuDs6MYlZRhNqgjpSp7xx1HMv2rAp5YWpPGw/7Gtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LbMfe+Y8Jxcu0T7Ge7xiVpVb/Kj9sJTu3M6yF7HFOSE=;
- b=h57FZj0QiZgeA96kOKvvdph2yk9Pg44nqkr2lbzAjAux92nRwCr6GEVXo2dtFMWVe0nnz/z6Uba/lNP/1tguhOfFXNiJz0P78WTOnIL5sJ70XFhz6Hr8IUvLb9jPcOBEuiRn+dVfFuSDtesV5PqTs5j5IlNIiceL2PIuJqg+iVhYYYPyJAw8PxtH+KHyhxrijuWZtsoai1s+8EsDjyOo9duG1qwSG0rIoo/MRqF3MamdTBCEN5w6fe3RCfeaiMiV8AgFPSvLM0GDqt+bY8JdFdr7GyVUEUdaMs3FqJjqCGuF5rAgK2QqopdHm21WlA7PkquGWjm92mUdoVwJ8DTJJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
+ bh=ixmw96qEhMyFbWV8BuzLBtqw32Wy6l5DgFsF3MQi0SQ=;
+ b=KpfAGpH+5a0N68bcEtouKMJ2UX9/ESH+F72W6OXMKI+SNYTHMcql2LlvC7ULAFkvJp8MAeaA1GQan08oBzBX3aTzQ5A6KESNN0UI266BuN0bn/23CKpyzmYlreLj8Gnd43RXBxhAQaMbkjKG1jziH2wE3YgedZffNCHrYYA6wK8W7cXseo2h/TbMtWpMIwipQQJKyy6EjSKMU1QN82j9bzLOOhrK3AzcydEw/SFqogHae1ApQ0MipIADZ55heuLyEc1F230zQZb18JUyjfH41LSAFv0dA5vUP2Ws4r8mIi4GPJmkJ9k3CvHeMVD8mNCVvRiuYTnkjVnaOk8w61R55Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LbMfe+Y8Jxcu0T7Ge7xiVpVb/Kj9sJTu3M6yF7HFOSE=;
- b=lLBa7K8EbwkqMnC9xieAzlq31ndNh+llVUU35Aw/u+kW85gPggyuj8nnDVxF9N9D4l/6zZFbaHxq/SGap3933gN+A3qc+AjDN3ERBZMSfbXoHaElweEV9tX2YgL5IeR1J/ROxd/w7WH9IcecvAq6MSzs4EFzcMAvtaTyJdsrJ0k=
-Received: from PH0PR11MB5595.namprd11.prod.outlook.com (2603:10b6:510:e5::16)
- by PH0PR11MB5628.namprd11.prod.outlook.com (2603:10b6:510:d4::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.26; Mon, 26 Jul
- 2021 06:30:55 +0000
-Received: from PH0PR11MB5595.namprd11.prod.outlook.com
- ([fe80::947f:429f:312b:c530]) by PH0PR11MB5595.namprd11.prod.outlook.com
- ([fe80::947f:429f:312b:c530%4]) with mapi id 15.20.4352.031; Mon, 26 Jul 2021
- 06:30:55 +0000
-From:   "Thokala, Srikanth" <srikanth.thokala@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>,
-        "Sangannavar, Mallikarjunappa" 
-        <mallikarjunappa.sangannavar@intel.com>,
-        "kw@linux.com" <kw@linux.com>
-Subject: RE: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem Bay
-Thread-Topic: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem Bay
-Thread-Index: AQHXW3FV4CKL56K+SEOKbFusTp+FKasexPQAgASQnFCAEpouoIAfKJyA
-Date:   Mon, 26 Jul 2021 06:30:55 +0000
-Message-ID: <PH0PR11MB5595DD61534273C151718D0E85E89@PH0PR11MB5595.namprd11.prod.outlook.com>
-References: <20210607154044.26074-1-srikanth.thokala@intel.com>
- <20210607154044.26074-3-srikanth.thokala@intel.com>
- <20210621162506.GA31511@lpieralisi>
- <PH0PR11MB559558D60263F29C168E6C5185069@PH0PR11MB5595.namprd11.prod.outlook.com>
- <PH0PR11MB55950B723B19DDE38E408380851A9@PH0PR11MB5595.namprd11.prod.outlook.com>
-In-Reply-To: <PH0PR11MB55950B723B19DDE38E408380851A9@PH0PR11MB5595.namprd11.prod.outlook.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 074c32b9-8929-4d71-5b16-08d94ffeec8f
-x-ms-traffictypediagnostic: PH0PR11MB5628:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PH0PR11MB56286B6D0AC9EF48B5A13D0285E89@PH0PR11MB5628.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WFWE/n9pBgDQvg3GbdMYIMzfl8i/nBFOumNwDVFIza1xG12vCUS8lKA+35dQx0uYAbeoEWq+kqbyUGrGWfL32MkJNtN8t7C7vZl/R6tWuwHBLRjIhdgSXCF2sYZ9AIGcr0FtJ11VhIIHat1dAWgRhX4lsNk6951xAp4tEHQLMA4G6EHwulAS8TcSJ4ZI1pg6B6did/pRQnUQ3yObmwJo1yJSl4UEXSTxZwvzb7R9ywQC3eG0/FKIKJ+y+VW6adHgdVFI8TV+aEB3TfDV/aN62bLnVriFYV2ARhOxDV25aM33kmpTZ3JadIpgrljSipiBoTYMEeiQ8GSpZkHxR9AYmZp75MvgP9ROlYXMWVBJTIRG1EuYyURp/c4QGwvyW+HJBfsHTlcH//qNUmZT/fTTApa7Mw8LLKKFhjXW6papsoC7SzsitCHNehczYPXNSR+fOHkNHnKUrHtNZETjSsJhVpAeox98GZNMleT4bjJeXVxe46ChnIXJ1N4jvftDNwJ90J0eGasBZ7y39rklhwcf0aEYlY5pjOWh5e9WugljKtMysi/EA9fwjk9KyLWqyH/VaCVYvgVLGi+Uu8zVvXJjEhKpJg1+OXayxxvmc877VDONEUiFPoPtgC/kLSGIDKZO/rZf4TaY02WKpcBUi7Mq2V4o/FsVnJtcUTJiO7Y+ti0VvJqAR7p/WRLOB/0AuAplIwp7YnOe1kcU/71ZTr/P+Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5595.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(7696005)(478600001)(30864003)(6506007)(53546011)(66946007)(122000001)(38100700002)(186003)(9686003)(8936002)(2906002)(76116006)(26005)(8676002)(86362001)(110136005)(54906003)(71200400001)(5660300002)(4326008)(64756008)(66556008)(66446008)(66476007)(55016002)(33656002)(52536014)(83380400001)(316002)(38070700004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OfrTlGW0XPDiAyZqoqMK8CnVvtjbJ9Ik55gU3g7evXu8JzrDgor2weYLBtBm?=
- =?us-ascii?Q?EVsTNBAWbwFiz0+bPOWwx1ZSZvtTYi9GhsA5Ont+ZFn171NAanzcYKBtF00R?=
- =?us-ascii?Q?CqF5aZ/+CC1WlTlmVsa8CqYzJrHklQXgCyKrLlTW3B0UhvFmntvAammcjmwz?=
- =?us-ascii?Q?kx9tYSSFjbFzvbEY+KEE4Q3hadvipdFbBUbAWrW+3nEwMT5NBRD21ZMKtVMi?=
- =?us-ascii?Q?gEdPY4Z/SYVnp55a4wlEeS5GTUE361adTqGqs03PqmKd2d98h1A8j7iQNAkU?=
- =?us-ascii?Q?8zQhHiXAtmxjC2q6/YZ0wMuRdcUc4gkoHRIVNNpi5oaDsT4rp5UdLALt2WSK?=
- =?us-ascii?Q?TLVjD24oxnR94SUfcN1h0QQg9ysTUS5v+w/eG79G929kV21u9PrI8IM6u9LS?=
- =?us-ascii?Q?tRQta8e/2osL5KTkCGd5Inv9jAU1j+6rZoADFun1Q/SyXKoCoggqcZe3nmY1?=
- =?us-ascii?Q?8+bKe1o0FAGEGqOlbiAV6Q7RWbHcTobTvMIb92W3yhoy8DiNFQ/x1kfA5iaw?=
- =?us-ascii?Q?b00j/3Pqt7KHMHS50SDmtN+muuZi+yzeWt1yQIbp52x1ZjlbREBazS5mv95x?=
- =?us-ascii?Q?F+G3SkRIVSFUyZHXpnbouCx2xjFGW/LepHLxaVdjS9cY0CkNuiSijZ7IyT9x?=
- =?us-ascii?Q?sSVD38W7F9LrHd+3cXTmppVrWvLHIwuDSLZMtw4gvKK+J5CVwnHZMcSBd60n?=
- =?us-ascii?Q?65oy3uTGnb5dIbXqOOzaHDrmbxNZJO3uVbyimZnvU9j1W/ln+IuAFHg2VZhV?=
- =?us-ascii?Q?j3rO14bMdAoJTcl9r1iVa0SMlj7WvdG8P3xacvmIvZjJtggz5Jx/StymiPKW?=
- =?us-ascii?Q?YoB3ABwrcFm8UFvkOMZn527OqwmaH5+o0wGyLZdvq9bJzPw2WpSMp3ZCSHGF?=
- =?us-ascii?Q?TN4CM8bpOCavnQ5XayLeK5FuKGWF+fSnGl+QNw+95f1zK2GulzT+wawDLmDz?=
- =?us-ascii?Q?DxKrNIjvYA5PgWf3ypl6oT3CT7f3yUo9SVqSfph3xHlc+2S0bjD6v8CV/4VW?=
- =?us-ascii?Q?pC1z/SQa50/fiNoW5VU1f6hqf+KEP1C6BoUpsPHiuwt4O8lNEuJ35Z6vr1xe?=
- =?us-ascii?Q?XFx7F3KcADlesyMURouMQDoBoQDaqtO9fi3TfV+Aqs/F7WK9HT9iEdrHdYsJ?=
- =?us-ascii?Q?JPg+lVJPlLXIZNuO8lRiucHYXhK/UAd4XlSKC3dTMoubqvWHVU54j23IQksp?=
- =?us-ascii?Q?Qjp8SRa5D58ErJAGKwRCEZOrG0rwm1siO/lrsi4tCTeWlt59XDpTrHN6HCvR?=
- =?us-ascii?Q?0bBt7xgS0AosyYpa3j9hLu3lD9KiQiy7krfrtGce5oYQ/QemkaDpV4X1YtR5?=
- =?us-ascii?Q?jiF6yOKsMRVTX9WkjAvQ6pB3?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=ixmw96qEhMyFbWV8BuzLBtqw32Wy6l5DgFsF3MQi0SQ=;
+ b=ZpP5FsI5TfHmfSlY8sFAi9BilNigeoYXrNiizV0oCiz8ZK0wDxwotINP/eZdw5cbdZTywAvy5PSztrDZlklYniiBkouEKyNFeL83iND+r6JtprkVEcHzr9eqoHrMSRhLLViebUrR/2IVozVWFn4ByUApcqu4NolAxhkAk99txdhjzjHn9me6i3CljuIUKQ3vI3b0HjLeTsWFaHy17CLZgTlMlY8JAfwBp6aFYxgJY1cMlLLjof4oWABn1kqltda6SC33NFPd/bQ4jXq9T1i8nxX0n+8cWPmogYEu/a82s7Jm5QJSptENRX59VjS9KY/D88FkNNhGyNxgFVVMxQztvQ==
+Received: from DM3PR11CA0003.namprd11.prod.outlook.com (2603:10b6:0:54::13) by
+ DM6PR12MB4105.namprd12.prod.outlook.com (2603:10b6:5:217::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4352.29; Mon, 26 Jul 2021 07:01:31 +0000
+Received: from DM6NAM11FT056.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:54:cafe::ea) by DM3PR11CA0003.outlook.office365.com
+ (2603:10b6:0:54::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.26 via Frontend
+ Transport; Mon, 26 Jul 2021 07:01:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT056.mail.protection.outlook.com (10.13.173.99) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4352.24 via Frontend Transport; Mon, 26 Jul 2021 07:01:31 +0000
+Received: from [10.40.204.200] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 26 Jul
+ 2021 07:01:26 +0000
+Subject: Re: [PATCH V3 0/5] Update pcie-tegra194 driver
+To:     <kw@linux.com>, <helgaas@kernel.org>, <vidyas@nvidia.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <20210623100525.19944-1-omp@nvidia.com>
+From:   Om Prakash Singh <omp@nvidia.com>
+Message-ID: <3e20a33f-fe8a-c3e5-8571-05b671b95e78@nvidia.com>
+Date:   Mon, 26 Jul 2021 12:31:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5595.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 074c32b9-8929-4d71-5b16-08d94ffeec8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2021 06:30:55.7217
+In-Reply-To: <20210623100525.19944-1-omp@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1a6b62aa-b7b4-43b8-baba-08d950033299
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4105:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4105996F59E871EBBF67C936DAE89@DM6PR12MB4105.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1417;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tGPS8OtNZShqxNLUZQZzK8zJAKKI6gw16XeDgsMg3YtNw+DuEH+QLHizaMJe3fh5qd+lO3I8ttB0Rm9TXJWWz1ByNzbBVH+NHM9JFD7FvM4F+g+lvC99dRpu/hyt+WNoBCCd5FqgrBvRxRzYkSv6M+AHQGPm68lAf3uZAy4PY+FAIOJdyrOnqVtf4CyXnURDyDl1nILiNPPf/LtUXjoa5g1bWOJ0EIfOr1kF4tgPz+QnVliM/sVCtuNjHImuzYFDrgr0zKKJU4r/F4ykkHDPb01AJiEL5W38OHUoTaIVD81rE1f97YT3sjin5WtaMGhGOCpt8vP2O1WxuSEPudWJeq/RddNC4F0vvlVdOZqiqqdlJnGgbpKcWwDM5mw5mXbObNE26ZfQr5ezULNIj0X3n8KlfzR9u+Blu1Drld8t5DbDxlPNPe9zSaJlA1DnwXRLcxFP67ozHzkIBKwxQx3NM3WzG0r0e+4XIaC6Prn6BHWeov34lI5bv4Vc/Og+fealCYc8mnkJWnEiCDK4IbFPFm6lu/apzDZNsd2SphZCm3yVcDIlCP7239LwQvcvWjTonsocCdOZP5uSUc5xoiZHs5AK3CqYXDrCZ4hQiVsOkZ184ogj9Hx3mArQFjphKX4ghbABfo5IuKGskBNhyM2Y3VpmpKsU5RIO2gbgOw2lTqhQ2DmJRDkPGUx6NSCT4GlwrLJghoMnUV9JvraiIj0t8i1pMB0crbs4JB4rvGXfQAwDY7vI2Gb3ycmktzEAH4xRwB/nq4rjCVZM2+Qyar+sA+IqcQEAs1KHL2Tbt2qANKkuc5ewUKIBf6Z57YpQnz+t5lOwPsl0/nFvFIREyDwiboF2uxKhPjf3AY4rP3Rp/sQ=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(36840700001)(46966006)(36906005)(5660300002)(70586007)(8936002)(82740400003)(53546011)(47076005)(70206006)(31686004)(54906003)(6666004)(16576012)(4326008)(478600001)(186003)(2616005)(6636002)(966005)(8676002)(86362001)(7636003)(336012)(107886003)(426003)(36860700001)(36756003)(316002)(31696002)(110136005)(15650500001)(356005)(82310400003)(26005)(2906002)(83380400001)(16526019)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2021 07:01:31.2536
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: el+S7oAdwn1HwobFefUmzWgZsht1YZJ6LP1+qqpvHlyzz+QjhrqGZDXX8QTW9CtyEAj/NP6nAi+DPIw9lr1sKgq/Po5WFeYPsz7erzbP128=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5628
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a6b62aa-b7b4-43b8-baba-08d950033299
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT056.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4105
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo and Marc,
+Hi Lorenzo,
+Please consider these patches to review.
 
-> -----Original Message-----
-> From: Thokala, Srikanth
-> Sent: Wednesday, July 7, 2021 5:25 PM
-> To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; maz@kernel.org
-> Cc: robh+dt@kernel.org; linux-pci@vger.kernel.org;
-> devicetree@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> mgross@linux.intel.com; Raja Subramanian, Lakshmi Bai
-> <lakshmi.bai.raja.subramanian@intel.com>; Sangannavar, Mallikarjunappa
-> <mallikarjunappa.sangannavar@intel.com>; kw@linux.com
-> Subject: RE: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem
-> Bay
->=20
-> Hi Lorenzo and Marc,
->=20
-> > -----Original Message-----
-> > From: Thokala, Srikanth
-> > Sent: Friday, June 25, 2021 8:54 AM
-> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; maz@kernel.org
-> > Cc: robh+dt@kernel.org; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> > mgross@linux.intel.com; Raja Subramanian, Lakshmi Bai
-> > <lakshmi.bai.raja.subramanian@intel.com>; Sangannavar,
-> Mallikarjunappa
-> > <mallikarjunappa.sangannavar@intel.com>; kw@linux.com
-> > Subject: RE: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem
-> > Bay
-> >
-> > Hi Lorenzo,
-> >
-> > > -----Original Message-----
-> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Sent: Monday, June 21, 2021 10:23 PM
-> > > To: Thokala, Srikanth <srikanth.thokala@intel.com>; maz@kernel.org
-> > > Cc: robh+dt@kernel.org; linux-pci@vger.kernel.org;
-> > > devicetree@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> > > mgross@linux.intel.com; Raja Subramanian, Lakshmi Bai
-> > > <lakshmi.bai.raja.subramanian@intel.com>; Sangannavar,
-> > Mallikarjunappa
-> > > <mallikarjunappa.sangannavar@intel.com>; kw@linux.com
-> > > Subject: Re: [PATCH v10 2/2] PCI: keembay: Add support for Intel
-> Keem
-> > Bay
-> > >
-> > > [+Marc]
-> > >
-> > > On Mon, Jun 07, 2021 at 09:10:44PM +0530,
-> srikanth.thokala@intel.com
-> > > wrote:
-> > > [...]
-> > >
-> > > > +static void keembay_pcie_msi_irq_handler(struct irq_desc *desc)
-> > > > +{
-> > > > +	struct keembay_pcie *pcie =3D
-> irq_desc_get_handler_data(desc);
-> > > > +	struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> > > > +	u32 val, mask, status;
-> > > > +	struct pcie_port *pp;
-> > > > +
-> > > > +	chained_irq_enter(chip, desc);
-> > > > +
-> > > > +	pp =3D &pcie->pci.pp;
-> > > > +	val =3D readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
-> > > > +	mask =3D readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-> > > > +
-> > > > +	status =3D val & mask;
-> > > > +
-> > > > +	if (status & MSI_CTRL_INT) {
-> > > > +		dw_handle_msi_irq(pp);
-> > > > +		writel(status, pcie->apb_base +
-> > PCIE_REGS_INTERRUPT_STATUS);
-> > > > +	}
-> > > > +
-> > > > +	chained_irq_exit(chip, desc);
-> > > > +}
-> > > > +
-> > > > +static int keembay_pcie_setup_msi_irq(struct keembay_pcie *pcie)
-> > > > +{
-> > > > +	struct dw_pcie *pci =3D &pcie->pci;
-> > > > +	struct device *dev =3D pci->dev;
-> > > > +	struct platform_device *pdev =3D to_platform_device(dev);
-> > > > +	int irq;
-> > > > +
-> > > > +	irq =3D platform_get_irq_byname(pdev, "pcie");
-> > > > +	if (irq < 0)
-> > > > +		return irq;
-> > > > +
-> > > > +	irq_set_chained_handler_and_data(irq,
-> > keembay_pcie_msi_irq_handler,
-> > > > +					 pcie);
-> > > > +
-> > >
-> > > Ok this is yet another DWC MSI incantation and given that Marc
-> worked
-> > > hard consolidating them let's have a look before we merge it.
-> > >
-> > > IIUC - this IP relies on the DWC logic to handle MSIs + custom
-> > > registers to detect a pending MSI IRQ because the logic in
-> > > dw_chained_msi_irq() is *not* enough so you have to register
-> > > a driver specific chained handler. This looks similar to the dra7xx
-> > > driver MSI handling but I am not entirely convinced it is needed.
-> > >
-> > > I assume this code in keembay_pcie_msi_irq_handler() is required
-> > > owing to additional IP logic on top of the standard DWC IP, in
-> > > particular the PCIE_REGS_INTERRUPT_STATUS write to "clear" the
-> > > IRQ.
-> > >
-> > > We need more insights before merging it so please provide them.
-> > >
-> > > pp =3D &pcie->pci.pp;
-> > > val =3D readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
-> > > mask =3D readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-> > >
-> > > status =3D val & mask;
-> > >
-> > > if (status & MSI_CTRL_INT) {
-> > > 	dw_handle_msi_irq(pp);
-> > > 	writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
-> > > }
-> >
-> > Yes, your understanding is correct.
-> >
-> > Additional registers PCIE_REGS_INTERRUPT_ENABLE/_STATUS are provided
-> > by IP to control the interrupts.
-> >
-> > To receive MSI interrupts, SW must enable bit '8' of _ENABLE
-> register.
-> > And once a MSI is raised by the End point, bit '8' of _STATUS
-> register
-> > will be set and it needs to be cleared after servicing the interrupt.
->=20
-> Hope I have provided all the necessary information.
-> Kindly feedback.
+Thanks,
+Om
 
-Kindly feedback.
 
-Thanks!
-Srikanth
-
->=20
-> Thanks!
-> Srikanth
->=20
-> >
-> > Thanks!
-> > Srikanth
-> >
-> > >
-> > > Thanks,
-> > > Lorenzo
-> > >
-> > > > +static void keembay_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > > +{
-> > > > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
-> > > > +	struct keembay_pcie *pcie =3D dev_get_drvdata(pci->dev);
-> > > > +
-> > > > +	writel(EDMA_INT_EN, pcie->apb_base +
-> PCIE_REGS_INTERRUPT_ENABLE);
-> > > > +}
-> > > > +
-> > > > +static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8
-> > func_no,
-> > > > +				     enum pci_epc_irq_type type,
-> > > > +				     u16 interrupt_num)
-> > > > +{
-> > > > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
-> > > > +
-> > > > +	switch (type) {
-> > > > +	case PCI_EPC_IRQ_LEGACY:
-> > > > +		/* Legacy interrupts are not supported in Keem Bay */
-> > > > +		dev_err(pci->dev, "Legacy IRQ is not supported\n");
-> > > > +		return -EINVAL;
-> > > > +	case PCI_EPC_IRQ_MSI:
-> > > > +		return dw_pcie_ep_raise_msi_irq(ep, func_no,
-> > interrupt_num);
-> > > > +	case PCI_EPC_IRQ_MSIX:
-> > > > +		return dw_pcie_ep_raise_msix_irq(ep, func_no,
-> > interrupt_num);
-> > > > +	default:
-> > > > +		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > +static const struct pci_epc_features keembay_pcie_epc_features =3D
-> {
-> > > > +	.linkup_notifier	=3D false,
-> > > > +	.msi_capable		=3D true,
-> > > > +	.msix_capable		=3D true,
-> > > > +	.reserved_bar		=3D BIT(BAR_1) | BIT(BAR_3) |
-> BIT(BAR_5),
-> > > > +	.bar_fixed_64bit	=3D BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
-> > > > +	.align			=3D SZ_16K,
-> > > > +};
-> > > > +
-> > > > +static const struct pci_epc_features *
-> > > > +keembay_pcie_get_features(struct dw_pcie_ep *ep)
-> > > > +{
-> > > > +	return &keembay_pcie_epc_features;
-> > > > +}
-> > > > +
-> > > > +static const struct dw_pcie_ep_ops keembay_pcie_ep_ops =3D {
-> > > > +	.ep_init	=3D keembay_pcie_ep_init,
-> > > > +	.raise_irq	=3D keembay_pcie_ep_raise_irq,
-> > > > +	.get_features	=3D keembay_pcie_get_features,
-> > > > +};
-> > > > +
-> > > > +static const struct dw_pcie_host_ops keembay_pcie_host_ops =3D {
-> > > > +};
-> > > > +
-> > > > +static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
-> > > > +				      struct platform_device *pdev)
-> > > > +{
-> > > > +	struct dw_pcie *pci =3D &pcie->pci;
-> > > > +	struct pcie_port *pp =3D &pci->pp;
-> > > > +	struct device *dev =3D &pdev->dev;
-> > > > +	u32 val;
-> > > > +	int ret;
-> > > > +
-> > > > +	pp->ops =3D &keembay_pcie_host_ops;
-> > > > +	pp->msi_irq =3D -ENODEV;
-> > > > +
-> > > > +	ret =3D keembay_pcie_setup_msi_irq(pcie);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	pcie->reset =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> > > > +	if (IS_ERR(pcie->reset))
-> > > > +		return PTR_ERR(pcie->reset);
-> > > > +
-> > > > +	ret =3D keembay_pcie_probe_clocks(pcie);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	val =3D readl(pcie->apb_base + PCIE_REGS_PCIE_PHY_CNTL);
-> > > > +	val |=3D PHY0_SRAM_BYPASS;
-> > > > +	writel(val, pcie->apb_base + PCIE_REGS_PCIE_PHY_CNTL);
-> > > > +
-> > > > +	writel(PCIE_DEVICE_TYPE, pcie->apb_base +
-> PCIE_REGS_PCIE_CFG);
-> > > > +
-> > > > +	ret =3D keembay_pcie_pll_init(pcie);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	val =3D readl(pcie->apb_base + PCIE_REGS_PCIE_CFG);
-> > > > +	writel(val | PCIE_RSTN, pcie->apb_base +
-> PCIE_REGS_PCIE_CFG);
-> > > > +	keembay_ep_reset_deassert(pcie);
-> > > > +
-> > > > +	ret =3D dw_pcie_host_init(pp);
-> > > > +	if (ret) {
-> > > > +		keembay_ep_reset_assert(pcie);
-> > > > +		dev_err(dev, "Failed to initialize host: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	val =3D readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-> > > > +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> > > > +		val |=3D MSI_CTRL_INT_EN;
-> > > > +	writel(val, pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int keembay_pcie_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	const struct keembay_pcie_of_data *data;
-> > > > +	struct device *dev =3D &pdev->dev;
-> > > > +	struct keembay_pcie *pcie;
-> > > > +	struct dw_pcie *pci;
-> > > > +	enum dw_pcie_device_mode mode;
-> > > > +
-> > > > +	data =3D device_get_match_data(dev);
-> > > > +	if (!data)
-> > > > +		return -ENODEV;
-> > > > +
-> > > > +	mode =3D (enum dw_pcie_device_mode)data->mode;
-> > > > +
-> > > > +	pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > > > +	if (!pcie)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	pci =3D &pcie->pci;
-> > > > +	pci->dev =3D dev;
-> > > > +	pci->ops =3D &keembay_pcie_ops;
-> > > > +
-> > > > +	pcie->mode =3D mode;
-> > > > +
-> > > > +	pcie->apb_base =3D
-> devm_platform_ioremap_resource_byname(pdev,
-> > "apb");
-> > > > +	if (IS_ERR(pcie->apb_base))
-> > > > +		return PTR_ERR(pcie->apb_base);
-> > > > +
-> > > > +	platform_set_drvdata(pdev, pcie);
-> > > > +
-> > > > +	switch (pcie->mode) {
-> > > > +	case DW_PCIE_RC_TYPE:
-> > > > +		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_HOST))
-> > > > +			return -ENODEV;
-> > > > +
-> > > > +		return keembay_pcie_add_pcie_port(pcie, pdev);
-> > > > +	case DW_PCIE_EP_TYPE:
-> > > > +		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_EP))
-> > > > +			return -ENODEV;
-> > > > +
-> > > > +		pci->ep.ops =3D &keembay_pcie_ep_ops;
-> > > > +		return dw_pcie_ep_init(&pci->ep);
-> > > > +	default:
-> > > > +		dev_err(dev, "Invalid device type %d\n", pcie->mode);
-> > > > +		return -ENODEV;
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > +static const struct keembay_pcie_of_data keembay_pcie_rc_of_data
-> =3D
-> > {
-> > > > +	.mode =3D DW_PCIE_RC_TYPE,
-> > > > +};
-> > > > +
-> > > > +static const struct keembay_pcie_of_data keembay_pcie_ep_of_data
-> =3D
-> > {
-> > > > +	.mode =3D DW_PCIE_EP_TYPE,
-> > > > +};
-> > > > +
-> > > > +static const struct of_device_id keembay_pcie_of_match[] =3D {
-> > > > +	{
-> > > > +		.compatible =3D "intel,keembay-pcie",
-> > > > +		.data =3D &keembay_pcie_rc_of_data,
-> > > > +	},
-> > > > +	{
-> > > > +		.compatible =3D "intel,keembay-pcie-ep",
-> > > > +		.data =3D &keembay_pcie_ep_of_data,
-> > > > +	},
-> > > > +	{}
-> > > > +};
-> > > > +
-> > > > +static struct platform_driver keembay_pcie_driver =3D {
-> > > > +	.driver =3D {
-> > > > +		.name =3D "keembay-pcie",
-> > > > +		.of_match_table =3D keembay_pcie_of_match,
-> > > > +		.suppress_bind_attrs =3D true,
-> > > > +	},
-> > > > +	.probe  =3D keembay_pcie_probe,
-> > > > +};
-> > > > +builtin_platform_driver(keembay_pcie_driver);
-> > > > --
-> > > > 2.17.1
-> > > >
+On 6/23/2021 3:35 PM, Om Prakash Singh wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> Update pcie-tegra194 driver with bug fixing and cleanup
+> 
+> Changes from V2->V3
+>    Updated subject line from "PCI: tegra:" to  "PCI: tegra194:"
+> 
+> Changes from V1->V2
+>    PCI: tegra: Fix handling BME_CHGED event
+>          - Update variable naming
+>    PCI: tegra: Fix MSI-X programming
+>          - No change
+>    PCI: tegra: Disable interrupts before entering L2
+>          - Rephrase the commit message
+>    PCI: tegra: Don't allow suspend when Tegra PCIe is in EP mode
+>          - Update return value to -ENOTSUPP.
+>    PCI: tegra: Cleanup unused code
+>          - No Change
+> 
+> V1:
+> http://patchwork.ozlabs.org/project/linux-pci/cover/20210527115246.20509-1-omp@nvidia.com/
+> V2:
+> http://patchwork.ozlabs.org/project/linux-pci/cover/20210606082204.14222-1-omp@nvidia.com/
+> 
+> Om Prakash Singh (5):
+>    PCI: tegra: Fix handling BME_CHGED event
+>    PCI: tegra: Fix MSI-X programming
+>    PCI: tegra: Disable interrupts before entering L2
+>    PCI: tegra: Don't allow suspend when Tegra PCIe is in EP mode
+>    PCI: tegra: Cleanup unused code
+> 
+>   drivers/pci/controller/dwc/pcie-tegra194.c | 36 +++++++++++++---------
+>   1 file changed, 22 insertions(+), 14 deletions(-)
+> 
+> --
+> 2.17.1
+> 
