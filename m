@@ -2,161 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E30E3D54C2
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 10:02:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A8D3D55BD
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jul 2021 10:39:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232812AbhGZHTy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 03:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232684AbhGZHTy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Jul 2021 03:19:54 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 890BF60F0F;
-        Mon, 26 Jul 2021 08:00:23 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1m7vXB-000ySI-KO; Mon, 26 Jul 2021 09:00:21 +0100
+        id S231791AbhGZH7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jul 2021 03:59:14 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:50795 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231728AbhGZH7O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jul 2021 03:59:14 -0400
+X-Greylist: delayed 431 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Jul 2021 03:59:13 EDT
+Received: from copland.sibelius.xs4all.nl ([83.163.83.176])
+        by smtp-cloud9.xs4all.net with ESMTP
+        id 7w2DmOzH54Jsb7w2EmW9Mp; Mon, 26 Jul 2021 10:32:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
+        t=1627288350; bh=aj0DzTZBIxsexmhMpHw/owBjAQ/ySL4SOuHiY/ftDuQ=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
+        b=nLK+JyAPuW8TLciSMMU18MR4Dviz2di0rbveBUZTOX56W6zCXdjLBtrVDlGxtlyBL
+         CH6MWD/KWITle4r2lS8oQ2dsKE/JnvpkkkmVznwD2BFYstl+3V0pmVBZkx2W2ElJIN
+         7QgQsLxZvsZm7U8o+tMSOFH0KsjO+q6yJ41DfvFqQRB2yUr85Qv0aZ6pf5Nw+J4OpM
+         LcqR6LZ3r25AtyFEXyju4Ll8Uzh9R9UiO6k8kf3A4Magsx0BU6w0/Nx93SU8lLoE7T
+         xXmbJB6wHOl7mnrVQ8iWfkr1wzNwM3WATYYwhhUPawgb/GZuPsub4VkSTL7M8NkIlH
+         4zcvTqcrYl4vw==
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     devicetree@vger.kernel.org
+Cc:     maz@kernel.org, robin.murphy@arm.com, sven@svenpeter.dev,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Apple M1 PCIe DT bindings
+Date:   Mon, 26 Jul 2021 10:31:59 +0200
+Message-Id: <20210726083204.93196-1-mark.kettenis@xs4all.nl>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Date:   Mon, 26 Jul 2021 09:00:21 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Thokala, Srikanth" <srikanth.thokala@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, robh+dt@kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>,
-        "Sangannavar, Mallikarjunappa" 
-        <mallikarjunappa.sangannavar@intel.com>, kw@linux.com
-Subject: Re: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem Bay
-In-Reply-To: <PH0PR11MB559558D60263F29C168E6C5185069@PH0PR11MB5595.namprd11.prod.outlook.com>
-References: <20210607154044.26074-1-srikanth.thokala@intel.com>
- <20210607154044.26074-3-srikanth.thokala@intel.com>
- <20210621162506.GA31511@lpieralisi>
- <PH0PR11MB559558D60263F29C168E6C5185069@PH0PR11MB5595.namprd11.prod.outlook.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <2e4554241c532f03cce30beaf7b9921f@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: srikanth.thokala@intel.com, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@linux.intel.com, mgross@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com, mallikarjunappa.sangannavar@intel.com, kw@linux.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfC5rqQSex9y1nQvPdjLYz3X7h5Q4DGif9oeHclh8nCZpGIdTg9koclwDAVwJ6j3uJUo13ZHnXuCUisnTHy7XVsOoBHL39lwjg4fh33ZdBx7WgcnguKyS
+ fyMdN7n7uLsOMB7Do5VLRkEJujzA7SyCC9msk7K4DcTTgARf0DSiTekPkjehPe2rZm66+rcKB9csifgZu/ExdWXeLNNxUnkDGmIlcM+3H8nnkXUslvdj26i6
+ EshCJF+ZBEXyCvHz5Rco4raq8PE5+mpkiYkCwzq8ystAbzjQeIPHNL5nshgQoFQKQqKdxYEmU36A2bQ6i/B1d3xjirq+wiGOPU7gazf7YLhwKoNO49APTm29
+ ph19JG43no1SEv2IstkRGgs4YW+t22CUKTcn7+ml/SsX1WB63Q8MOlKwlBoV6fAhkEdnBgcnKROljEx9GDoGZAcex1Rtl4DKoEJoOLsMmei+hl9WXwBdSQdm
+ ce95TfdKDgF8P6pnfdEBQKXsvC6UBhYqmQ+MRWd1mGfzjL2oAXGNe8OBq4SfcSDtQtahdn9iKJObo4SRg3T2UnM0PyTDbIHodmxLRQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-06-25 04:23, Thokala, Srikanth wrote:
-> Hi Lorenzo,
-> 
->> -----Original Message-----
->> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Sent: Monday, June 21, 2021 10:23 PM
->> To: Thokala, Srikanth <srikanth.thokala@intel.com>; maz@kernel.org
->> Cc: robh+dt@kernel.org; linux-pci@vger.kernel.org;
->> devicetree@vger.kernel.org; andriy.shevchenko@linux.intel.com;
->> mgross@linux.intel.com; Raja Subramanian, Lakshmi Bai
->> <lakshmi.bai.raja.subramanian@intel.com>; Sangannavar, Mallikarjunappa
->> <mallikarjunappa.sangannavar@intel.com>; kw@linux.com
->> Subject: Re: [PATCH v10 2/2] PCI: keembay: Add support for Intel Keem 
->> Bay
->> 
->> [+Marc]
->> 
->> On Mon, Jun 07, 2021 at 09:10:44PM +0530, srikanth.thokala@intel.com
->> wrote:
->> [...]
->> 
->> > +static void keembay_pcie_msi_irq_handler(struct irq_desc *desc)
->> > +{
->> > +	struct keembay_pcie *pcie = irq_desc_get_handler_data(desc);
->> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> > +	u32 val, mask, status;
->> > +	struct pcie_port *pp;
->> > +
->> > +	chained_irq_enter(chip, desc);
->> > +
->> > +	pp = &pcie->pci.pp;
->> > +	val = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
->> > +	mask = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
->> > +
->> > +	status = val & mask;
->> > +
->> > +	if (status & MSI_CTRL_INT) {
->> > +		dw_handle_msi_irq(pp);
->> > +		writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
->> > +	}
->> > +
->> > +	chained_irq_exit(chip, desc);
->> > +}
->> > +
->> > +static int keembay_pcie_setup_msi_irq(struct keembay_pcie *pcie)
->> > +{
->> > +	struct dw_pcie *pci = &pcie->pci;
->> > +	struct device *dev = pci->dev;
->> > +	struct platform_device *pdev = to_platform_device(dev);
->> > +	int irq;
->> > +
->> > +	irq = platform_get_irq_byname(pdev, "pcie");
->> > +	if (irq < 0)
->> > +		return irq;
->> > +
->> > +	irq_set_chained_handler_and_data(irq, keembay_pcie_msi_irq_handler,
->> > +					 pcie);
->> > +
->> 
->> Ok this is yet another DWC MSI incantation and given that Marc worked
->> hard consolidating them let's have a look before we merge it.
->> 
->> IIUC - this IP relies on the DWC logic to handle MSIs + custom
->> registers to detect a pending MSI IRQ because the logic in
->> dw_chained_msi_irq() is *not* enough so you have to register
->> a driver specific chained handler. This looks similar to the dra7xx
->> driver MSI handling but I am not entirely convinced it is needed.
->> 
->> I assume this code in keembay_pcie_msi_irq_handler() is required
->> owing to additional IP logic on top of the standard DWC IP, in
->> particular the PCIE_REGS_INTERRUPT_STATUS write to "clear" the
->> IRQ.
->> 
->> We need more insights before merging it so please provide them.
->> 
->> pp = &pcie->pci.pp;
->> val = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
->> mask = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
->> 
->> status = val & mask;
->> 
->> if (status & MSI_CTRL_INT) {
->> 	dw_handle_msi_irq(pp);
->> 	writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
->> }
-> 
-> Yes, your understanding is correct.
-> 
-> Additional registers PCIE_REGS_INTERRUPT_ENABLE/_STATUS are provided
-> by IP to control the interrupts.
-> 
-> To receive MSI interrupts, SW must enable bit '8' of _ENABLE register.
-> And once a MSI is raised by the End point, bit '8' of _STATUS register
-> will be set and it needs to be cleared after servicing the interrupt.
+From: Mark Kettenis <kettenis@openbsd.org>
 
-What isn't clear here is whether the other bits that are written back
-are significant and have a side effect. If only bit 8 is required,
-shouldn't you *only* write this bit back?
+This small series adds bindings for the PCIe controller found on the
+Apple M1 SoC.
 
-Only you can know the answer to this, but it would be good if you
-could actually document this deviation from the already wonky
-DWC infrastructure.
+At this point, the primary consumer for these bindings is U-Boot.
+With these bindings U-Boot can bring up the links for the root ports
+of the PCIe root complex.  A simple OS driver can then provide
+standard ECAM access and manage MSI interrupts to provide access
+to the built-in Ethernet and XHCI controllers of the Mac mini.
 
-Thanks,
+The Apple controller incorporates Synopsys Designware PCIe logic
+to implement its root port.  But unlike other hardware currently
+supported by U-Boot and the Linux kernel the Apple hardware
+integrates multiple root ports.  As such the existing bindings
+for the DWC PCIe interface can't be used.  There is a single ECAM
+space for all root space, but separate GPIOs to take the PCI devices
+on those ports out of reset.  Therefore the standard "reset-gpio" and
+"max-link-speed" properties appear on the child nodes representing
+the PCI devices that correspond to the individual root ports.
 
-         M.
+MSIs are handled by the PCIe controller and translated into "regular
+interrupts".  A range of 32 MSIs is provided.  These 32 MSIs can be
+distributed over the root ports as the OS sees fit by programming the
+PCIe controller port registers.
+
+I still hope to hear from Marc Zyngier on the way MSIs are represented
+in this binding.
+
+Patch 2/2 of this series depends on the pinctrl series I sent earlier
+and will probably go through Hector Martin's Apple M1 SoC tree.
+
+
+Changelog:
+
+v3: - Remove unneeded include in example
+
+v2: - Adjust name for ECAM in "reg-names"
+    - Drop "phy" registers
+    - Expand description
+    - Add description for "interrupts"
+    - Fix incorrect minItems for "interrupts"
+    - Fix incorrect MaxItems for "reg-names"
+    - Document the use of "msi-controller", "msi-parent", "iommu-map" and
+      "iommu-map-mask"
+    - Fix "bus-range" and "iommu-map" properties in the example
+
+Mark Kettenis (2):
+  dt-bindings: pci: Add DT bindings for apple,pcie
+  arm64: apple: Add PCIe node
+
+ .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/apple/t8103.dtsi          |  63 +++++++
+ 3 files changed, 230 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+
 -- 
-Jazz is not dead. It just smells funny...
+2.32.0
+
