@@ -2,180 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3433D7400
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 13:05:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8553D74BA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 14:07:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236227AbhG0LFF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 07:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236169AbhG0LFE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 07:05:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6022861155;
-        Tue, 27 Jul 2021 11:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627383905;
-        bh=5SBHAZy4xMUUJxLdLDMTEIAek/OnB7IyEwmcjvW9+tU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=alyqxZr+rkuagz7VNuuVnMe7lsj/D4NEWLNXZPU1SvEOQiQKTVMcXPr8wojFhZPDY
-         uoiAUAR2NtNpZYzRwXbc6iGc8pxIQxjzZo8pxpaO7FC7HsnY/+6WADJZIucJPCGw9p
-         YILF8lfsyJcQMsDwTMab0a6gPdOeSoBXeK4qVRIuUqvbXWDcpaebWG00Ivd0+yFcn2
-         rJK+1OPpi2B7XJDFDeNrlb69YVFflMm0LsNGk5B4xTh6Ixnog1FqBjocbj9l8IcJzG
-         q+PdCmkCuwGsH3jW69EZ9jYNGgrqGRMfbKFYTMuAgxnFeejIjarKDY5VdzSzYVXi09
-         hncNya0gl1AbA==
-Date:   Tue, 27 Jul 2021 14:05:00 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Dongdong Liu <liudongdong3@huawei.com>, helgaas@kernel.org,
-        hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
-        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH V6 7/8] PCI: Add "pci=disable_10bit_tag=" parameter for
- peer-to-peer support
-Message-ID: <YP/oXP7ZZ1D5kd+A@unreal>
-References: <1627038402-114183-1-git-send-email-liudongdong3@huawei.com>
- <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
- <YPqo6M0AKWLupvNU@unreal>
- <a8a8ffee-67e8-c899-3d04-1e28fb72560a@deltatee.com>
- <YP0HOf7kE1aOkqjV@unreal>
- <bc9b7b00-40eb-7d4e-f3b3-1d4174f10be5@deltatee.com>
+        id S231868AbhG0MH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 08:07:27 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3501 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231886AbhG0MH1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 08:07:27 -0400
+Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GYwGW1C17z6L9JT;
+        Tue, 27 Jul 2021 19:55:31 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 27 Jul 2021 14:07:20 +0200
+Received: from localhost (10.47.8.150) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 27 Jul
+ 2021 13:07:19 +0100
+Date:   Tue, 27 Jul 2021 13:06:53 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>
+CC:     Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>
+Subject: RFC: Plumbers microconf topic: PCI DOE and related.
+Message-ID: <20210727130653.00006a0a@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc9b7b00-40eb-7d4e-f3b3-1d4174f10be5@deltatee.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.8.150]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 09:48:57AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2021-07-25 12:39 a.m., Leon Romanovsky wrote:
-> > On Fri, Jul 23, 2021 at 10:20:50AM -0600, Logan Gunthorpe wrote:
-> >>
-> >>
-> >>
-> >> On 2021-07-23 5:32 a.m., Leon Romanovsky wrote:
-> >>> On Fri, Jul 23, 2021 at 07:06:41PM +0800, Dongdong Liu wrote:
-> >>>> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
-> >>>> sending Requests to other Endpoints (as opposed to host memory), the
-> >>>> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
-> >>>> unless an implementation-specific mechanism determines that the Endpoint
-> >>>> supports 10-Bit Tag Completer capability. Add "pci=disable_10bit_tag="
-> >>>> parameter to disable 10-Bit Tag Requester if the peer device does not
-> >>>> support the 10-Bit Tag Completer. This will make P2P traffic safe.
-> >>>>
-> >>>> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-> >>>> ---
-> >>>>  Documentation/admin-guide/kernel-parameters.txt |  7 ++++
-> >>>>  drivers/pci/pci.c                               | 56 +++++++++++++++++++++++++
-> >>>>  drivers/pci/pci.h                               |  1 +
-> >>>>  drivers/pci/pcie/portdrv_pci.c                  | 13 +++---
-> >>>>  drivers/pci/probe.c                             |  9 ++--
-> >>>>  5 files changed, 78 insertions(+), 8 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >>>> index bdb2200..c2c4585 100644
-> >>>> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >>>> @@ -4019,6 +4019,13 @@
-> >>>>  				bridges without forcing it upstream. Note:
-> >>>>  				this removes isolation between devices and
-> >>>>  				may put more devices in an IOMMU group.
-> >>>> +		disable_10bit_tag=<pci_dev>[; ...]
-> >>>> +				  Specify one or more PCI devices (in the format
-> >>>> +				  specified above) separated by semicolons.
-> >>>> +				  Disable 10-Bit Tag Requester if the peer
-> >>>> +				  device does not support the 10-Bit Tag
-> >>>> +				  Completer.This will make P2P traffic safe.
-> >>>
-> >>> I can't imagine more awkward user experience than such kernel parameter.
-> >>>
-> >>> As a user, I will need to boot the system, hope for the best that system
-> >>> works, write down all PCI device numbers, guess which one doesn't work
-> >>> properly, update grub with new command line argument and reboot the
-> >>> system. Any HW change and this dance should be repeated.
-> >>
-> >> There are already two such PCI parameters with this pattern and they are
-> >> not that awkward. pci_dev may be specified with either vendor/device IDS
-> >> or with a path of BDFs (which protects against renumbering).
-> > 
-> > Unfortunately, in the real world, BDF is not so stable. It changes with
-> > addition of new hardware, BIOS upgrades and even broken servers.
-> 
-> That's why it supports using a *path* of BDFs which tends not to catch
-> the wrong device if the topology changes.
-> 
-> > Vendor/device IDs doesn't work if you have multiple devices of same
-> > vendor in the system.
-> 
-> Yes, but it's fine for some use cases. That's why there's a range of
-> options.
+Hi All,
 
-The thing is that you are adding PCI parameter that is applicable to everyone.
+There have been several mentions already of discussing some of the topics
+around DOE mailboxes and the various things they enable at the upcoming
+Plumbers VFIO/IOMMU/PCI microconf.
 
-We probably see different usage models for this feature. In my world, users
-have thousands of servers that runs 24x7, with VMs on top, some of them perform
-FW upgrades without stopping anything. The idea that you can reboot such server
-any time, simply doesn't exist.
+A few references:
+https://lore.kernel.org/linux-pci/CAPcyv4i2ukD4ZQ_KfTaKXLyMakpSk=Y3_QJGV2P_PLHHVkPwFw@mail.gmail.com/
+https://lore.kernel.org/linux-pci/20210520092205.000044ee@Huawei.com/
 
-So if I need to enable/disable this feature for one of the VFs, I will be stuck.
+The intent of this email thread is to consolidate those suggestions into
+a reasonable list of things to talk about (that I can then put into the
+CFP system). Obviously Plumbers is still some time away and we will
+"hopefully" resolve some of this stuff on this list before then. Also
+open is who will lead this session if accepted.
+(Perhaps Dan Williams + myself?)
 
-> 
-> >>
-> >> This flag is only useful in P2PDMA traffic, and if the user attempts
-> >> such a transfer, it prints a warning (see the next patch) with the exact
-> >> parameter that needs to be added to the command line.
-> > 
-> > Dongdong citied PCI spec and it was very clear - don't enable this
-> > feature unless you clearly know that it is safe to enable. This is
-> > completely opposite to the proposal here - always enable and disable
-> > if something is printed to the dmesg.
-> 
-> Quoting from patch 4:
-> 
-> "For platforms where the RC supports 10-Bit Tag Completer capability,
-> it is highly recommended for platform firmware or operating software
-> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-> bit automatically in Endpoints with 10-Bit Tag Requester capability.
-> This enables the important class of 10-Bit Tag capable adapters that
-> send Memory Read Requests only to host memory."
-> 
-> Notice the last sentence. It's saying that devices who only talk to host
-> memory should have 10-bit tags enabled. In the kernel we call devices
-> that talk to things besides host memory "P2PDMA". So the spec is saying
-> not to enable 10bit tags for devices participating in P2PDMA. The kernel
-> needs a way to allow users to do that. The kernel parameter only stops
-> the feature from being enabled for a specific device, and the only
-> use-case is P2PDMA which is not that common and requires the user to be
-> aware of their topology. So I really don't think this is that big a problem.
+Note this may be full of inaccuracies and (whilst I've tried not to) some
+of my own opinions, so please do poke holes in it!
 
-I'm not question the feature and the need of configuration. My concern
-is just *how* this feature is configured.
+The latter parts are about CMA / SPDM for which a kernel RFC should be public
+shortly (subject to summer holidays etc).
 
-> 
-> >>
-> >> This has worked well for disable_acs_redir and was used for
-> >> resource_alignment before that for quite some time. So save a better
-> >> suggestion I think this is more than acceptable.
-> > 
-> > I don't know about other parameters and their history, but we are not in
-> > 90s anymore and addition of modules parameters (for the PCI it is kernel
-> > cmdline arguments) are better to be changed to some configuration tool/sysfs.
-> 
-> The problem was that the ACS bits had to be set before the kernel
-> enumerated the devices. The IOMMU code simply was not able to support
-> dynamic adjustments to its groups. I assume changing 10bit tags
-> dynamically is similarly tricky -- but if it's not then, yes a sysfs
-> interface in addition to the kernel parameter would be a good idea.
+Quick background:
 
-I think that it is doable with combination of drivers_autoprobe disable
-and some sysfs knob to enable/disable this feature before driver bind.
+The elephant in the room for this topic is that there is on going related
+specification work that we cannot discuss due to various confidentiality
+rules. Everything in this email is based on published specs / public
+discussions on the mailing lists.
+Having said that there is plenty to talk about today, we just might
+need a round 2 next year :)
 
-It should be very similar to that we did for the dynamic MSI-X, see
-/sys/bus/pci/devices/.../sriov_vf_msix_count
+Terms:
 
-Thanks
+DOE - Data Object Exchange (PCI ECN) https://pcisig.com
+ * A mailbox in PCI config space.
+ 
+CDAT - Coherent Device Attribute table (UEFI hosted separate public spec)
+ * Uses DOE mailbox to retrieve info on (CXL) EP such as bandwidth and
+   latency of access to memory. 
 
-> 
-> Logan
+CMA - Component Measurement and Authentication (PCI ECN) https://pcisig.com
+ * Uses DMTF SPDM 1.1 based exchanges over DOE to authenticate EPs and
+   carry out runtime measurements (kind of IMA for devices).
+
+IDE - Integrity and Data Encryption (PCI ECN) https://pcisig.com
+ * Link and selective (through switches) encryption.  Uses DOE / SPDM 1.1
+   and builds on top of CMA.
+
+Open Questions / Problems:
+1. Control which software entity uses DOE.
+   It does not appear to be safe (as in not going to disrupt each other rather
+   than security) for multiple software entities (Userspace, Kernel, TEE,
+   Firmware) to access an individual DOE instance on a device without
+   mediation.  Some DOE protocols have clear reasons for Linux kernel
+   access (e.g. CDAT) others are more debatable.
+   Even running the discovery protocol could disrupt other users. Hardening
+   against such disruption is probably best effort only (no guarantees).
+   Question is: How to prevent this?
+    a) Userspace vs Kernel. Are there valid reasons for userspace to access
+       a DOE? If so do how do we enable that? Does a per protocol approach
+       make sense? Potential vendor defined protocols? Do we need to lock
+       out 'developer' tools such as setpci - or do we let developers shoot
+       themselves in the foot?
+    b) OS vs lower levels / TEE. Do we need to propose a means of telling the OS
+       to keep its hands off a DOE?  How to do it?
+
+2. CMA support.
+   Usecases for in kernel CMA support and whether strong enough to support
+   native access. (e.g. authentication of VF from a VM, or systems not running
+   any suitable lower level software / TEE)
+   Key / Certificate management. This is somewhat like IMA, but we probably
+   need to manage the certificate chain separately for each CMA/SPDM instance. 
+   Understanding provisioning models would be useful to guide this work.
+
+3. IDE support
+   Is native kernel support worthwhile? Perhaps good to discuss
+   potential usecases + get some idea on priority for this feature.
+
+4. Potential blockers on merging emulation support in QEMU. (I'm less sure
+   on this one, but perhaps worth briefly touching on or a separate
+   session on emulation if people are interested? Ben, do you think this
+   would be worthwhile?)
+
+There are other minor questions we might slip into the discussion, time
+allowing such as need for async support handling in the kernel DOE code.
+
+For all these features, we have multiple layers on top of underlying PCI
+so discussion of 'how' to support this might be useful.
+1) Service model - detected at PCI subsystem level, services to drivers.
+2) Driver initiated mode - library code, but per driver instantiation etc.
+
+That's what have come up with this morning, so please poke holes in it and
+point out what I've forgotten about.
+
+Note for an actual CFP proposal, I'll probably split this into at least two.
+Topic 1: DOE only.  Topic 2: CMA / IDE. As there is a lot here, for some
+topics we may be looking at introduce the topic + questions rather than
+resolving everything on the day.
+
+Thanks,
+
+Jonathan
+
+p.s. Perhaps it is a little unusual to have this level of 'planning' discussion
+explicitly on list, but we are working under some unusual constraints
+and inclusiveness and openness always good anyway!
+
