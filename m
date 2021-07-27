@@ -2,110 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A26123D7AB8
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041303D7AC7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:17:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbhG0QOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 12:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229537AbhG0QOd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 12:14:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC4E661B7C;
-        Tue, 27 Jul 2021 16:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627402473;
-        bh=QtgOoB9l9cTt54Ke4pcqbiOYoSYZ30ZDlwTKxMdh9Bk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WsMICcmPMJy6ahbt4KsB7HzhNmWBjuOD49tW3sLQ7zYca6ihf+3Wp7hktwgcWEz2X
-         thbQLoSKabk4c9MoD5A4S+YePzfIgdEPNzCDekr6EmOOlE7DhFMNH7XYtTqq5+J5j0
-         Ex9Ut0AAJvdLmYmRmND/VYktwF5cjXsfqarzi+AHifVa7O7Fn0Wj2K02Ej1iAFEiYR
-         SLwj9iOgsq4BazOb3J23e+whmvKjrPR4aVywvVyySSKbRn3rEohI9ncLYrhNzYT2x1
-         tJYLn2xlEugdiWg9DqsJWhVxBKRllp/zC1XykcU1ThRw6UroY5z9re/tStBB5XUydx
-         CiOq/V459Nnpg==
-Date:   Tue, 27 Jul 2021 11:14:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v6 2/8] PCI: Support populating MSI domains of root buses
- via bridges
-Message-ID: <20210727161431.GA718548@bjorn-Precision-5520>
+        id S229537AbhG0QRO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 27 Jul 2021 12:17:14 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:36459 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229596AbhG0QQm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 12:16:42 -0400
+Received: by mail-vs1-f54.google.com with SMTP id o12so7446467vst.3;
+        Tue, 27 Jul 2021 09:16:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=C62vkBRXfKMHmJDrbvlLPPOVMw/4BA4JZ56KgoHRNys=;
+        b=lGE2+BoL7+wO3pls151IJJEsL0zdwVy0tgU0AX7SHLnQwCZV5Tv6DfyT++77+1+8UH
+         wb11jR3ibbWYgKBJtNUUW2XV9AL53rPFZnsO75lZKPpCG1/NNXkkr+6A0ZP3i6IcFnyf
+         eHmirmbHShnjpPsjs50yBCP+loUddrmzywL0gWOEQoWjS7AiZszIHk7+cGpM5CCWZxaz
+         8ItClFvkArxDpgmyn3ADZb/w05G1RIOHcekh6MSY2X6RtGpjh3sOcdxR8Z/geNIyHnQy
+         QH67TSmhqKJJpmUsLIwSkl6buw4p8Yk7BTIkxVs2n49iIWKYAgW7XBE9hp2P2O504DJV
+         WL7Q==
+X-Gm-Message-State: AOAM532AB53CrkOSXEID5o7QLxuiYpVgjk86e6x2i3YY+3E9ExxyFkig
+        A5pZ0lFTQmtFwwUf2ueQtohkHbKtXhKyZsQs26M=
+X-Google-Smtp-Source: ABdhPJz8gW155+zW2Q9zCQCOcuhsEFepAhj2gFCuQdLgUtH5Tryp4o5aPtb1KtTGdtoKe44A9Ss42u03u7YGezy2Nfw=
+X-Received: by 2002:a05:6102:2450:: with SMTP id g16mr2020867vss.3.1627402601183;
+ Tue, 27 Jul 2021 09:16:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210726180657.142727-3-boqun.feng@gmail.com>
+References: <20210514200549.431275-1-marek.vasut@gmail.com>
+ <20210717173334.GA2232818@bjorn-Precision-5520> <20210719085953.GA17481@lpieralisi>
+ <20210719172340.vvtnddbli2vgxndi@pali> <20210727161142.GA15814@lpieralisi>
+In-Reply-To: <20210727161142.GA15814@lpieralisi>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 27 Jul 2021 18:16:29 +0200
+Message-ID: <CAMuHMdVxBCe2TKNkAHCNtmGFs5ozvx2gouxr4JErrdVZOi-8EQ@mail.gmail.com>
+Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 02:06:51AM +0800, Boqun Feng wrote:
-> Currently, at probing time, the MSI domains of root buses are populated
-> if either the information of MSI domain is available from firmware (DT
-> or ACPI), or arch-specific sysdata is used to pass the fwnode of the MSI
-> domain. These two conditions don't cover all, e.g. Hyper-V virtual PCI
-> on ARM64, which doesn't have the MSI information in the firmware and
-> couldn't use arch-specific sysdata because running on an architecture
-> with PCI_DOMAINS_GENERIC=y.
-> 
-> To support populating MSI domains of the root buses at the probing when
-> neither of the above condition is true, the ->msi_domain of the
-> corresponding bridge device is used: in pci_host_bridge_msi_domain(),
-> which should return the MSI domain of the root bus, the ->msi_domain of
-> the corresponding bridge is fetched first as a potential value of the
-> MSI domain of the root bus.
-> 
-> In order to use the approach to populate MSI domains, the driver needs
-> to dev_set_msi_domain() on the bridge before calling
-> pci_register_host_bridge(), and makes sure GENERIC_MSI_IRQ_DOMAIN=y.
-> 
-> Another advantage of this new approach is providing an arch-independent
-> way to populate MSI domains, which allows sharing the driver code as
-> much as possible between architectures.
-> 
-> Originally-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Hi Lorenzo,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Jul 27, 2021 at 6:11 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> On Mon, Jul 19, 2021 at 07:23:40PM +0200, Pali Rohár wrote:
+>
+> [...]
+>
+> > > > > +#ifdef CONFIG_ARM
+> > > > > +static DEFINE_SPINLOCK(pmsr_lock);
+> > > > > +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+> > > > > +               unsigned int fsr, struct pt_regs *regs)
+> > > > > +{
+> > > > > +       unsigned long flags;
+> > > > > +       int ret = 0;
+> > > > > +       u32 pmsr;
+> > > > > +
+> > > > > +       spin_lock_irqsave(&pmsr_lock, flags);
+> > > > > +
+> > > > > +       if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
+> > > > > +               ret = 1;
+> > > > > +               goto unlock_exit;
+> > > > > +       }
+> > > > > +
+> > > > > +       pmsr = readl(pcie_base + PMSR);
+> > > > > +
+> > > > > +       /*
+> > > > > +        * Test if the PCIe controller received PM_ENTER_L1 DLLP and
+> > > > > +        * the PCIe controller is not in L1 link state. If true, apply
+> > > > > +        * fix, which will put the controller into L1 link state, from
+> > > > > +        * which it can return to L0s/L0 on its own.
+> > > > > +        */
+> > > > > +       if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
+> > > > > +               writel(L1IATN, pcie_base + PMCTLR);
+> > > > > +               while (!(readl(pcie_base + PMSR) & L1FAEG))
+> > > > > +                       ;
+> >
+> > Infinite loop in abort handler is not a good idea. If this software
+> > workaround is not able to fix HW in broken state then it is better to
+> > let kernel finish abort handler and reboot machine (or whatever is
+> > default action for particular abort handler).
 
-> ---
->  drivers/pci/probe.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 60c50d4f156f..ea7f2a57e2f5 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -829,11 +829,15 @@ static struct irq_domain *pci_host_bridge_msi_domain(struct pci_bus *bus)
->  {
->  	struct irq_domain *d;
->  
-> +	/* If the host bridge driver sets a MSI domain of the bridge, use it */
-> +	d = dev_get_msi_domain(bus->bridge);
-> +
->  	/*
->  	 * Any firmware interface that can resolve the msi_domain
->  	 * should be called from here.
->  	 */
-> -	d = pci_host_bridge_of_msi_domain(bus);
-> +	if (!d)
-> +		d = pci_host_bridge_of_msi_domain(bus);
->  	if (!d)
->  		d = pci_host_bridge_acpi_msi_domain(bus);
->  
-> -- 
-> 2.32.0
-> 
+The default action is to crash with an imprecise external abort.
+
+> Probably worth adding a timeout, I can do it before merging it.
+
+Indeed, better to lock up with a message than without ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
