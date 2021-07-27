@@ -2,154 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 475E73D8230
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 23:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D5613D8253
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 00:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232821AbhG0Vyq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 17:54:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29777 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231135AbhG0Vyp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 17:54:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627422884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yvQTTkfcrLZXncADcYnW+DivOnY4gH65JuSHhZAqY0g=;
-        b=PmvpKcbuTVo2muCBKzE98eYpyc9a14nD0jfH7CqJxsdTpXd98fPhnwLVTZ7D4nf2Q95NhQ
-        Nc2lqrldlAq9BMGDUxivQm//HMagSt/DfUJZgx3qtz6sin5sXcJ7RNSSwkoKgAnHspftm2
-        jF8B9BZ4AvINlqaOmKPTa9wrxLa4ulg=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-OFNE1hC2Nuq-qVFdvyxK6Q-1; Tue, 27 Jul 2021 17:54:43 -0400
-X-MC-Unique: OFNE1hC2Nuq-qVFdvyxK6Q-1
-Received: by mail-oo1-f71.google.com with SMTP id g3-20020a4ab0430000b02902677ea337a5so272312oon.6
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jul 2021 14:54:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=yvQTTkfcrLZXncADcYnW+DivOnY4gH65JuSHhZAqY0g=;
-        b=g7T4xDMMUK4nf6vhudhKmbufVEqTdlEZvM72YA16SEgFCpHH8lmjPdE+UVySlTYZcU
-         TL+jfyXG8Rjd1fY1f1s6Tfwbr0J9Hgf/KvwstVvEDZBqNwecs9fHCoP+SV7xfq+E3gFI
-         LW9GgSDMuqvVL+4DatehQzQ2wkmYCx4xY39YGyBzXSiA8mGFL/JgMR+omkubaxQhNady
-         jPXOr/baufbns2OkWnSS00g5dGgwimDGbHBjvN9aDsNBqsfh42kCzcKZUjAHTkzeUhc3
-         3xF11Cs6Vfj35f81v79UHoPgJFidX9Sw6pv47gLAP9XXKjj4zS02kb0hsdPBvhobPKgF
-         rb0w==
-X-Gm-Message-State: AOAM530lZlyWpSmPGoUN7LfBo8XJ3NS0HhzHGJSluLGOTWGx3AmqHVKk
-        yE2/VaxdV9Uzv52ANF45YvPlQM8jWni6fneFTajd4fUY3kEypKsgVnjHJJmVQz8DSyJKp3qsUXC
-        EYH9YsvZCCdmBqBeCg9++
-X-Received: by 2002:a54:4895:: with SMTP id r21mr16001763oic.30.1627422882834;
-        Tue, 27 Jul 2021 14:54:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynpzSiqfgKibVjl4PLtaAutE2wTvwDVL90lKptkcJX811Umoi4U6iHgANFR9Wxyyt55EglfQ==
-X-Received: by 2002:a54:4895:: with SMTP id r21mr16001747oic.30.1627422882560;
-        Tue, 27 Jul 2021 14:54:42 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id m19sm731736otp.55.2021.07.27.14.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jul 2021 14:54:42 -0700 (PDT)
-Date:   Tue, 27 Jul 2021 15:54:40 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     <bhelgaas@google.com>, <corbet@lwn.net>,
-        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
-        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <mgurtovoy@nvidia.com>, <jgg@nvidia.com>, <maorg@nvidia.com>,
-        <leonro@nvidia.com>
-Subject: Re: [PATCH 12/12] vfio/pci: Introduce vfio_pci_core.ko
-Message-ID: <20210727155440.680ee22e.alex.williamson@redhat.com>
-In-Reply-To: <20210721161609.68223-13-yishaih@nvidia.com>
-References: <20210721161609.68223-1-yishaih@nvidia.com>
-        <20210721161609.68223-13-yishaih@nvidia.com>
-Organization: Red Hat
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S232359AbhG0WMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 18:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232544AbhG0WMb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Jul 2021 18:12:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F12D660F91;
+        Tue, 27 Jul 2021 22:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627423951;
+        bh=JmlO7NqEbIM/TL0jd6rOqhVW4sfGZez92xGKe85sQVw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TPppmHPF3T4i72EyZIxEWd5zLWm6L8yy7b8BDO4L8eZEcTIcQyB1ZIPmJve8+oPhI
+         CtNiuSvqUUvUQT1dHyx1t0XXpJOoKhXWnLdjigHU6g3zfT2CZ/Khm0mDgyBNZUEm7I
+         pCvehKX8lKgxibVBjYIGFgBZWWAQQraxUxZ3nVhuI+7RFdgtcaXPkkr/v5Hx6U85n8
+         /K7s3DniClWi5XZt9tAe71MWd5dJrBoUV0BhgPudYb0F7o9KKj1IiMmxF/YDj1qrzF
+         /9PiF7WqRVgsL5pscNHSuudaDBwUqCfUJSk2l/pwc1vUVonYTbnUdf6sq6k1blhKIR
+         geLZcFXNun/3w==
+Date:   Tue, 27 Jul 2021 17:12:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v10 1/8] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210727221229.GA750669@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210709123813.8700-2-ameynarkhede03@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 21 Jul 2021 19:16:09 +0300
-Yishai Hadas <yishaih@nvidia.com> wrote:
-
-> From: Max Gurtovoy <mgurtovoy@nvidia.com>
+On Fri, Jul 09, 2021 at 06:08:06PM +0530, Amey Narkhede wrote:
+> Add has_pcie_flr bitfield in struct pci_dev to indicate support for PCIe
+> FLR to avoid reading PCI_EXP_DEVCAP multiple times.
 > 
-> Now that vfio_pci has been split into two source modules, one focusing
-> on the "struct pci_driver" (vfio_pci.c) and a toolbox library of code
-> (vfio_pci_core.c), complete the split and move them into two different
-> kernel modules.
+> Currently there is separate function pcie_has_flr() to probe if PCIe FLR
+> is supported by the device which does not match the calling convention
+> followed by reset methods which use second function argument to decide
+> whether to probe or not. Add new function pcie_reset_flr() that follows
+> the calling convention of reset methods.
 > 
-> As before vfio_pci.ko continues to present the same interface under
-> sysfs and this change will have no functional impact.
-> 
-> Splitting into another module and adding exports allows creating new HW
-> specific VFIO PCI drivers that can implement device specific
-> functionality, such as VFIO migration interfaces or specialized device
-> requirements.
-> 
-> Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
 > ---
->  drivers/vfio/pci/Kconfig                      | 30 ++++++++------
->  drivers/vfio/pci/Makefile                     |  8 ++--
->  drivers/vfio/pci/vfio_pci.c                   | 14 ++-----
->  drivers/vfio/pci/vfio_pci_config.c            |  2 +-
->  drivers/vfio/pci/vfio_pci_core.c              | 41 ++++++++++++++++---
->  drivers/vfio/pci/vfio_pci_igd.c               |  2 +-
->  drivers/vfio/pci/vfio_pci_intrs.c             |  2 +-
->  drivers/vfio/pci/vfio_pci_rdwr.c              |  2 +-
->  drivers/vfio/pci/vfio_pci_zdev.c              |  2 +-
->  .../pci => include/linux}/vfio_pci_core.h     |  2 -
->  10 files changed, 66 insertions(+), 39 deletions(-)
->  rename {drivers/vfio/pci => include/linux}/vfio_pci_core.h (99%)
+>  drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +-
+>  drivers/pci/pci.c                          | 59 +++++++++++-----------
+>  drivers/pci/pcie/aer.c                     | 12 ++---
+>  drivers/pci/probe.c                        |  6 ++-
+>  drivers/pci/quirks.c                       |  9 ++--
+>  include/linux/pci.h                        |  3 +-
+>  6 files changed, 45 insertions(+), 48 deletions(-)
 > 
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index afdab7d71e98..18898ae49919 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -1,19 +1,31 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -config VFIO_PCI
-> +config VFIO_PCI_CORE
->  	tristate "VFIO support for PCI devices"
->  	depends on PCI
->  	depends on MMU
->  	select VFIO_VIRQFD
->  	select IRQ_BYPASS_MANAGER
->  	help
-> -	  Support for the PCI VFIO bus driver.  This is required to make
-> -	  use of PCI drivers using the VFIO framework.
-> +	  Support for using PCI devices with VFIO.
-> +
-> +if VFIO_PCI_CORE
-> +config VFIO_PCI_MMAP
-> +	def_bool y if !S390
-> +
-> +config VFIO_PCI_INTX
-> +	def_bool y if !S390
-> +
-> +config VFIO_PCI
-> +	tristate "Generic VFIO support for any PCI device"
-> +	help
-> +	  Support for the generic PCI VFIO bus driver which can connect any
-> +	  PCI device to the VFIO framework.
+> diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> index facc8e6bc..15d6c8452 100644
+> --- a/drivers/crypto/cavium/nitrox/nitrox_main.c
+> +++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> @@ -306,9 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
+>  		return -ENOMEM;
+>  	}
 >  
->  	  If you don't know what to do here, say N.
+> -	/* check flr support */
+> -	if (pcie_has_flr(pdev))
+> -		pcie_flr(pdev);
+> +	pcie_reset_flr(pdev, 0);
+
+I'm not really a fan of exposing the "probe" argument outside
+drivers/pci/.  I think this would be the only occurrence.  Is there a
+way to avoid that?
+
+Can we just make pcie_flr() do the equivalent of pcie_has_flr()
+internally?
+
+>  static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+>  {
+> -	if (!pcie_has_flr(dev))
+> -		return -ENOTTY;
+> +	int ret = pcie_reset_flr(dev, probe);
 >  
+>  	if (probe)
+> -		return 0;
+> -
+> -	pcie_flr(dev);
+> +		return ret;
+>  
+>  	msleep(250);
 
-I'm still not happy with how this is likely to break users and even
-downstreams when upgrading to a Kconfig with this change.  A previously
-selected VFIO_PCI comes out disabled unless the user is keen enough to
-enable VFIO_PCI_CORE.  I think I'd prefer to sacrifice the purity of
-the menus to pull VFIO_PCI out of the if block and have it select
-VFIO_PCI_CORE.  Thanks,
+Can we structure this like the following?  I think it's easier to
+understand.
 
-Alex
+  if (probe)
+    return pcie_reset_flr(dev, 1);
 
+  pcie_reset_flr(dev, 0);
+  msleep(250);
+  return 0;
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e59..d432428fd 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -337,6 +337,7 @@ struct pci_dev {
+>  	u8		msi_cap;	/* MSI capability offset */
+>  	u8		msix_cap;	/* MSI-X capability offset */
+>  	u8		pcie_mpss:3;	/* PCIe Max Payload Size Supported */
+> +	u8		has_pcie_flr:1; /* PCIe FLR supported */
+
+Let's add a devcap member instead.  Then we can use it for some
+ASPM-related things as well.  We *could* use it to replace pcie_mpss,
+since that comes from PCI_EXP_DEVCAP, too, but for now I think it's
+easier to just keep it because it's encoded, and some drivers and
+quirks use it so it would be a fair amount of work to change that.
+Example patch below that could become the first in the series.
+
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index aacf575c15cf..5a99061ea53a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4635,8 +4635,7 @@ bool pcie_has_flr(struct pci_dev *dev)
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+ 		return false;
+ 
+-	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+-	return cap & PCI_EXP_DEVCAP_FLR;
++	return dev->devcap & PCI_EXP_DEVCAP_FLR;
+ }
+ EXPORT_SYMBOL_GPL(pcie_has_flr);
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 79177ac37880..52ae26bcc68c 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1498,8 +1498,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pdev->pcie_cap = pos;
+ 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+ 	pdev->pcie_flags_reg = reg16;
+-	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+-	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
++	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
++	pdev->pcie_mpss = pdev->devcap & PCI_EXP_DEVCAP_PAYLOAD;
+ 
+ 	parent = pci_upstream_bridge(pdev);
+ 	if (!parent)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 540b377ca8f6..294d1c857a57 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -334,6 +334,7 @@ struct pci_dev {
+ 	struct pci_dev  *rcec;          /* Associated RCEC device */
+ #endif
+ 	u8		pcie_cap;	/* PCIe capability offset */
++	u32		devcap;		/* PCIe Device Capabilities */
+ 	u8		msi_cap;	/* MSI capability offset */
+ 	u8		msix_cap;	/* MSI-X capability offset */
+ 	u8		pcie_mpss:3;	/* PCIe Max Payload Size Supported */
