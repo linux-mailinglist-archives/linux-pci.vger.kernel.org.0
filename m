@@ -2,485 +2,296 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD463D6CED
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 05:37:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF573D6D36
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 06:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235205AbhG0C44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 22:56:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45177 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235202AbhG0C4z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Jul 2021 22:56:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="191955846"
-X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
-   d="scan'208";a="191955846"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 20:37:22 -0700
-X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
-   d="scan'208";a="474230317"
-Received: from nmanikan-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.209.99.32])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 20:37:21 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     intel-wired-lan@lists.osuosl.org
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        sasha.neftin@intel.com, anthony.l.nguyen@intel.com,
-        linux-pci@vger.kernel.org, bhelgaas@google.com,
-        netdev@vger.kernel.org, mlichvar@redhat.com,
-        richardcochran@gmail.com, hch@infradead.org, helgaas@kernel.org,
-        pmenzel@molgen.mpg.de
-Subject: [PATCH next-queue v6 4/4] igc: Add support for PTP getcrosststamp()
-Date:   Mon, 26 Jul 2021 20:36:57 -0700
-Message-Id: <20210727033657.39885-5-vinicius.gomes@intel.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210727033657.39885-1-vinicius.gomes@intel.com>
-References: <20210727033657.39885-1-vinicius.gomes@intel.com>
+        id S234513AbhG0EWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 00:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229487AbhG0EWW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 00:22:22 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB51C061757
+        for <linux-pci@vger.kernel.org>; Mon, 26 Jul 2021 21:22:23 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id jm13so6309321qvb.5
+        for <linux-pci@vger.kernel.org>; Mon, 26 Jul 2021 21:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9AVwkuxwKlxrOpms+sYf+/hkBMbSWaTD9WxhGgOFevs=;
+        b=YZkNdVRF+Klj+xTN5oMveyNqHDip5QVmzfSKTv1vw2PJ9zCFXpV+mDjN2saHBkT/tJ
+         c3GW2D6Sqn2m6SUyk1ZCmSavohHIzbMEgea0y0s4+vgdtiLGrUQ9otmHFTO7gx1R8vm4
+         0Yl/kC7cPm/x1WQVLeyjjHxUVKEVw5UP+D222Dh5GKc9S8dL6kYG6zF3TNYkkCua+48K
+         L9BN+6d+Nn2zFtZi3cUNM+9TuWBdcuTMR1zkoQuhdmZdw32xG20AFw9/iHAXuJQRxjbQ
+         0uTTgh4XMSeeU1RvngXKkNKnyOf3ZHFVLzi7tQTWkPxHpS3rA57w5LFaHKeZozShboFW
+         J3Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:to:cc:references:from:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9AVwkuxwKlxrOpms+sYf+/hkBMbSWaTD9WxhGgOFevs=;
+        b=Z2XgflztmiM24amQqVNGNTcWZIEKOaEvDePeQGUyIuziomslKv65/509bZBy5KkjBw
+         8MhOtUtB1T7Pj5MBWSEVno/xKx6pad4/dz4g6/SdWmxnJGwmj6UCLowoWWSayUA7LXE1
+         2Kr9js1lrH/yOw44c1qOc5w+TL7lUcTsqgIWllokicNINtg5Dk8++G6vtgo/yfw2gpw1
+         UPVqvFFLZ4lCg5qwxji73XrkVAPOjouYkaUuVjIvt5fifGN5GZ5+sDpqPcqiaW7EMTXj
+         nj8NBsIaQ8AjIxVinSL+4L/NC94UaYos+niiwQlJZr94uXearWIQ7vttXj4R91cXVjBm
+         h+7A==
+X-Gm-Message-State: AOAM531HFj1Z8zdyJaKN0gGsQ6Ne1RY7SPsg7KCb1ud1p6VTZnh+4V1n
+        lFCWc3wBx8yy0XWLk7VbX++CWj4lsp4=
+X-Google-Smtp-Source: ABdhPJyh0+dRZ3X/mZc3BXbgU/d7BvPNVpesgb8wvDkJzoI/mUjFK4wfEKlmfOrvJ4KFeVVq/xIiNg==
+X-Received: by 2002:ad4:46ed:: with SMTP id h13mr4731557qvw.56.1627359742106;
+        Mon, 26 Jul 2021 21:22:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x7sm1108872qki.102.2021.07.26.21.22.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jul 2021 21:22:21 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jiahui Cen <cenjiahui@huawei.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Ard Biesheuvel <ardb+tianocore@kernel.org>,
+        qemu-devel@nongnu.org, Igor Mammedov <imammedo@redhat.com>,
+        linux-pci@vger.kernel.org
+References: <20210726213156.GA645321@bjorn-Precision-5520>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: aarch64 efi boot failures with qemu 6.0+
+Message-ID: <c72652af-ef72-f5fa-04a2-1f30b1705b0e@roeck-us.net>
+Date:   Mon, 26 Jul 2021 21:22:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <20210726213156.GA645321@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-i225 supports PCIe Precision Time Measurement (PTM), allowing us to
-support the PTP_SYS_OFFSET_PRECISE ioctl() in the driver via the
-getcrosststamp() function.
+On 7/26/21 2:31 PM, Bjorn Helgaas wrote:
+> [+cc linux-pci]
+> 
+> On Mon, Jul 26, 2021 at 04:16:29PM -0500, Bjorn Helgaas wrote:
+>> On Mon, Jul 26, 2021 at 06:00:57PM +0200, Ard Biesheuvel wrote:
+>>> On Mon, 26 Jul 2021 at 11:08, Philippe Mathieu-Daudé <philmd@redhat.com> wrote:
+>>>> On 7/26/21 12:56 AM, Guenter Roeck wrote:
+>>>>> On 7/25/21 3:14 PM, Michael S. Tsirkin wrote:
+>>>>>> On Sat, Jul 24, 2021 at 11:52:34AM -0700, Guenter Roeck wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> starting with qemu v6.0, some of my aarch64 efi boot tests no longer
+>>>>>>> work. Analysis shows that PCI devices with IO ports do not instantiate
+>>>>>>> in qemu v6.0 (or v6.1-rc0) when booting through efi. The problem affects
+>>>>>>> (at least) ne2k_pci, tulip, dc390, and am53c974. The problem only
+>>>>>>> affects
+>>>>>>> aarch64, not x86/x86_64.
+>>>>>>>
+>>>>>>> I bisected the problem to commit 0cf8882fd0 ("acpi/gpex: Inform os to
+>>>>>>> keep firmware resource map"). Since this commit, PCI device BAR
+>>>>>>> allocation has changed. Taking tulip as example, the kernel reports
+>>>>>>> the following PCI bar assignments when running qemu v5.2.
+>>>>>>>
+>>>>>>> [    3.921801] pci 0000:00:01.0: [1011:0019] type 00 class 0x020000
+>>>>>>> [    3.922207] pci 0000:00:01.0: reg 0x10: [io  0x0000-0x007f]
+>>>>>>> [    3.922505] pci 0000:00:01.0: reg 0x14: [mem 0x10000000-0x1000007f]
+>>>
+>>> IIUC, these lines are read back from the BARs
+>>>
+>>>>>>> [    3.927111] pci 0000:00:01.0: BAR 0: assigned [io  0x1000-0x107f]
+>>>>>>> [    3.927455] pci 0000:00:01.0: BAR 1: assigned [mem
+>>>>>>> 0x10000000-0x1000007f]
+>>>>>>>
+>>>
+>>> ... and this is the assignment created by the kernel.
+>>>
+>>>>>>> With qemu v6.0, the assignment is reported as follows.
+>>>>>>>
+>>>>>>> [    3.922887] pci 0000:00:01.0: [1011:0019] type 00 class 0x020000
+>>>>>>> [    3.923278] pci 0000:00:01.0: reg 0x10: [io  0x0000-0x007f]
+>>>>>>> [    3.923451] pci 0000:00:01.0: reg 0x14: [mem 0x10000000-0x1000007f]
+>>>
+>>> The problem here is that Linux, for legacy reasons, does not support
+>>> I/O ports <= 0x1000 on PCI, so the I/O assignment created by EFI is
+>>> rejected.
+>>>
+>>> This might make sense on x86, where legacy I/O ports may exist, but on
+>>> other architectures, this makes no sense.
+>>
+>> I guess this is the "#define PCIBIOS_MIN_IO 0x1000" in
+>> arm64/include/asm/pci.h.  From a PCI point of view, I'm not opposed to
+>> changing that to 0, as it is on csky, riscv, sh, sparc, um.  But it's
+>> really an arch question, so the arm64 folks would have to weigh in.
+>>
+>> But I don't think that would fix this.  PCIBIOS_MIN_IO is mainly used
+>> when we assign or reassign resources to a BAR, and if firmware tells
+>> us to preserve the assignments done by firmware, Linux shouldn't be
+>> doing any assignment or reassignment.
+>>
+>> Linux received 00:01.0 BAR 0 as [io 0x0000-0x007f], and Guenter didn't
+>> report any reassignment, so I assume Linux saw the
+>> DSM_PCI_PRESERVE_BOOT_CONFIG [1] and didn't change anything.
+>>
+>> Could this be due to drivers assuming that an I/O BAR of 0 is invalid?
+>> I see that at least ne2k_pci_init_one() [2] seems to assume that.  And
 
-The easiest way to expose the PTM registers would be to configure the PTM
-dialogs to run periodically, but the PTP_SYS_OFFSET_PRECISE ioctl()
-semantics are more aligned to using a kind of "one-shot" way of retrieving
-the PTM timestamps. But this causes a bit more code to be written: the
-trigger registers for the PTM dialogs are not cleared automatically.
+Correct, and ne2k_pci is known to already fail on architectures where the
+IO address range starts at 0, such as riscv. Not that it helps to fix the
+code - doing so only results in a crash elsewhere when running a riscv
+emulation (when executing outsl, suggesting that there may be a problem
+with that emulation or its use). But that is a different problem.
 
-i225 can be configured to send "fake" packets with the PTM
-information, adding support for handling these types of packets is
-left for the future.
+>> tulip_init_one() [3] and pci_esp_probe_one() (am53c974.c, [4]) use
+>> pci_iomap() [5], which fails if the resource starts at 0.
+>>
+>> So pci_iomap() is probably already broken on the arches above that
+>> allow I/O BARs to be zero.  Maybe pci_iomap() should only fail on
+>> "!start" for *memory* BARs, e.g.,
+>>
+>> diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+>> index 2d3eb1cb73b8..77455e702a3e 100644
+>> --- a/lib/pci_iomap.c
+>> +++ b/lib/pci_iomap.c
+>> @@ -34,7 +34,9 @@ void __iomem *pci_iomap_range(struct pci_dev *dev,
+>>   	resource_size_t len = pci_resource_len(dev, bar);
+>>   	unsigned long flags = pci_resource_flags(dev, bar);
+>>   
+>> -	if (len <= offset || !start)
+>> +	if (flags & IORESOURCE_MEM && !start)
+>> +		return NULL;
 
-PTM improves the accuracy of time synchronization, for example, using
-phc2sys, while a simple application is sending packets as fast as
-possible. First, without .getcrosststamp():
+I am far out of my league here, but what is the purpose of the !start
+check given the PCIBIOS_MIN_MEM define which can also be 0 ? Shouldn't
+the check be against PCIBIOS_MIN_MEM and PCIBIOS_MIN_IO ?
 
-phc2sys[191.382]: enp4s0 sys offset      -959 s2 freq    -454 delay   4492
-phc2sys[191.482]: enp4s0 sys offset       798 s2 freq   +1015 delay   4069
-phc2sys[191.583]: enp4s0 sys offset       962 s2 freq   +1418 delay   3849
-phc2sys[191.683]: enp4s0 sys offset       924 s2 freq   +1669 delay   3753
-phc2sys[191.783]: enp4s0 sys offset       664 s2 freq   +1686 delay   3349
-phc2sys[191.883]: enp4s0 sys offset       218 s2 freq   +1439 delay   2585
-phc2sys[191.983]: enp4s0 sys offset       761 s2 freq   +2048 delay   3750
-phc2sys[192.083]: enp4s0 sys offset       756 s2 freq   +2271 delay   4061
-phc2sys[192.183]: enp4s0 sys offset       809 s2 freq   +2551 delay   4384
-phc2sys[192.283]: enp4s0 sys offset      -108 s2 freq   +1877 delay   2480
-phc2sys[192.383]: enp4s0 sys offset     -1145 s2 freq    +807 delay   4438
-phc2sys[192.484]: enp4s0 sys offset       571 s2 freq   +2180 delay   3849
-phc2sys[192.584]: enp4s0 sys offset       241 s2 freq   +2021 delay   3389
-phc2sys[192.684]: enp4s0 sys offset       405 s2 freq   +2257 delay   3829
-phc2sys[192.784]: enp4s0 sys offset        17 s2 freq   +1991 delay   3273
-phc2sys[192.884]: enp4s0 sys offset       152 s2 freq   +2131 delay   3948
-phc2sys[192.984]: enp4s0 sys offset      -187 s2 freq   +1837 delay   3162
-phc2sys[193.084]: enp4s0 sys offset     -1595 s2 freq    +373 delay   4557
-phc2sys[193.184]: enp4s0 sys offset       107 s2 freq   +1597 delay   3740
-phc2sys[193.284]: enp4s0 sys offset       199 s2 freq   +1721 delay   4010
-phc2sys[193.385]: enp4s0 sys offset      -169 s2 freq   +1413 delay   3701
-phc2sys[193.485]: enp4s0 sys offset       -47 s2 freq   +1484 delay   3581
-phc2sys[193.585]: enp4s0 sys offset       -65 s2 freq   +1452 delay   3778
-phc2sys[193.685]: enp4s0 sys offset        95 s2 freq   +1592 delay   3888
-phc2sys[193.785]: enp4s0 sys offset       206 s2 freq   +1732 delay   4445
-phc2sys[193.885]: enp4s0 sys offset      -652 s2 freq    +936 delay   2521
-phc2sys[193.985]: enp4s0 sys offset      -203 s2 freq   +1189 delay   3391
-phc2sys[194.085]: enp4s0 sys offset      -376 s2 freq    +955 delay   2951
-phc2sys[194.185]: enp4s0 sys offset      -134 s2 freq   +1084 delay   3330
-phc2sys[194.285]: enp4s0 sys offset       -22 s2 freq   +1156 delay   3479
-phc2sys[194.386]: enp4s0 sys offset        32 s2 freq   +1204 delay   3602
-phc2sys[194.486]: enp4s0 sys offset       122 s2 freq   +1303 delay   3731
+But, anyway, the above change fixes the problem for 'tulip', though
+obviously not for 'ne2k_pci'. 'ne2k_pci' starts working if I remove
+the "!ioaddr" check in ne2k_pci_init_one().
 
-Statistics for this run (total of 2179 lines), in nanoseconds:
-  average: -1.12
-  stdev: 634.80
-  max: 1551
-  min: -2215
+Thanks,
+Guenter
 
-With .getcrosststamp() via PCIe PTM:
-
-phc2sys[367.859]: enp4s0 sys offset         6 s2 freq   +1727 delay      0
-phc2sys[367.959]: enp4s0 sys offset        -2 s2 freq   +1721 delay      0
-phc2sys[368.059]: enp4s0 sys offset         5 s2 freq   +1727 delay      0
-phc2sys[368.160]: enp4s0 sys offset        -1 s2 freq   +1723 delay      0
-phc2sys[368.260]: enp4s0 sys offset        -4 s2 freq   +1719 delay      0
-phc2sys[368.360]: enp4s0 sys offset        -5 s2 freq   +1717 delay      0
-phc2sys[368.460]: enp4s0 sys offset         1 s2 freq   +1722 delay      0
-phc2sys[368.560]: enp4s0 sys offset        -3 s2 freq   +1718 delay      0
-phc2sys[368.660]: enp4s0 sys offset         5 s2 freq   +1725 delay      0
-phc2sys[368.760]: enp4s0 sys offset        -1 s2 freq   +1721 delay      0
-phc2sys[368.860]: enp4s0 sys offset         0 s2 freq   +1721 delay      0
-phc2sys[368.960]: enp4s0 sys offset         0 s2 freq   +1721 delay      0
-phc2sys[369.061]: enp4s0 sys offset         4 s2 freq   +1725 delay      0
-phc2sys[369.161]: enp4s0 sys offset         1 s2 freq   +1724 delay      0
-phc2sys[369.261]: enp4s0 sys offset         4 s2 freq   +1727 delay      0
-phc2sys[369.361]: enp4s0 sys offset         8 s2 freq   +1732 delay      0
-phc2sys[369.461]: enp4s0 sys offset         7 s2 freq   +1733 delay      0
-phc2sys[369.561]: enp4s0 sys offset         4 s2 freq   +1733 delay      0
-phc2sys[369.661]: enp4s0 sys offset         1 s2 freq   +1731 delay      0
-phc2sys[369.761]: enp4s0 sys offset         1 s2 freq   +1731 delay      0
-phc2sys[369.861]: enp4s0 sys offset        -5 s2 freq   +1725 delay      0
-phc2sys[369.961]: enp4s0 sys offset        -4 s2 freq   +1725 delay      0
-phc2sys[370.062]: enp4s0 sys offset         2 s2 freq   +1730 delay      0
-phc2sys[370.162]: enp4s0 sys offset        -7 s2 freq   +1721 delay      0
-phc2sys[370.262]: enp4s0 sys offset        -3 s2 freq   +1723 delay      0
-phc2sys[370.362]: enp4s0 sys offset         1 s2 freq   +1726 delay      0
-phc2sys[370.462]: enp4s0 sys offset        -3 s2 freq   +1723 delay      0
-phc2sys[370.562]: enp4s0 sys offset        -1 s2 freq   +1724 delay      0
-phc2sys[370.662]: enp4s0 sys offset        -4 s2 freq   +1720 delay      0
-phc2sys[370.762]: enp4s0 sys offset        -7 s2 freq   +1716 delay      0
-phc2sys[370.862]: enp4s0 sys offset        -2 s2 freq   +1719 delay      0
-
-Statistics for this run (total of 2179 lines), in nanoseconds:
-  average: 0.14
-  stdev: 5.03
-  max: 48
-  min: -27
-
-For reference, the statistics for runs without PCIe congestion show
-that the improvements from enabling PTM are less dramatic. For two
-runs of 16466 entries:
-  without PTM: avg -0.04 stdev 10.57 max 39 min -42
-  with PTM: avg 0.01 stdev 4.20 max 19 min -16
-
-One possible explanation is that when PTM is not enabled, and there's a lot
-of traffic in the PCIe fabric, some register reads will take more time
-than the others because of congestion on the PCIe fabric.
-
-When PTM is enabled, even if the PTM dialogs take more time to
-complete under heavy traffic, the time measurements do not depend on
-the time to read the registers.
-
-This was implemented following the i225 EAS version 0.993.
-
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
----
- drivers/net/ethernet/intel/igc/igc.h         |   1 +
- drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
- drivers/net/ethernet/intel/igc/igc_ptp.c     | 179 +++++++++++++++++++
- drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
- 4 files changed, 234 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-index a0ecfe5a4078..2d17a6da63cf 100644
---- a/drivers/net/ethernet/intel/igc/igc.h
-+++ b/drivers/net/ethernet/intel/igc/igc.h
-@@ -227,6 +227,7 @@ struct igc_adapter {
- 	struct timecounter tc;
- 	struct timespec64 prev_ptp_time; /* Pre-reset PTP clock */
- 	ktime_t ptp_reset_start; /* Reset time in clock mono */
-+	struct system_time_snapshot snapshot;
- 
- 	char fw_version[32];
- 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index 136108687f35..33e5d89d17a3 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -523,6 +523,37 @@
- #define IGC_RXCSUM_CRCOFL	0x00000800   /* CRC32 offload enable */
- #define IGC_RXCSUM_PCSD		0x00002000   /* packet checksum disabled */
- 
-+/* PCIe PTM Control */
-+#define IGC_PTM_CTRL_START_NOW	BIT(29) /* Start PTM Now */
-+#define IGC_PTM_CTRL_EN		BIT(30) /* Enable PTM */
-+#define IGC_PTM_CTRL_TRIG	BIT(31) /* PTM Cycle trigger */
-+#define IGC_PTM_CTRL_SHRT_CYC(usec)	(((usec) & 0x2f) << 2)
-+#define IGC_PTM_CTRL_PTM_TO(usec)	(((usec) & 0xff) << 8)
-+
-+#define IGC_PTM_SHORT_CYC_DEFAULT	10  /* Default Short/interrupted cycle interval */
-+#define IGC_PTM_CYC_TIME_DEFAULT	5   /* Default PTM cycle time */
-+#define IGC_PTM_TIMEOUT_DEFAULT		255 /* Default timeout for PTM errors */
-+
-+/* PCIe Digital Delay */
-+#define IGC_PCIE_DIG_DELAY_DEFAULT	0x01440000
-+
-+/* PCIe PHY Delay */
-+#define IGC_PCIE_PHY_DELAY_DEFAULT	0x40900000
-+
-+#define IGC_TIMADJ_ADJUST_METH		0x40000000
-+
-+/* PCIe PTM Status */
-+#define IGC_PTM_STAT_VALID		BIT(0) /* PTM Status */
-+#define IGC_PTM_STAT_RET_ERR		BIT(1) /* Root port timeout */
-+#define IGC_PTM_STAT_BAD_PTM_RES	BIT(2) /* PTM Response msg instead of PTM Response Data */
-+#define IGC_PTM_STAT_T4M1_OVFL		BIT(3) /* T4 minus T1 overflow */
-+#define IGC_PTM_STAT_ADJUST_1ST		BIT(4) /* 1588 timer adjusted during 1st PTM cycle */
-+#define IGC_PTM_STAT_ADJUST_CYC		BIT(5) /* 1588 timer adjusted during non-1st PTM cycle */
-+
-+/* PCIe PTM Cycle Control */
-+#define IGC_PTM_CYCLE_CTRL_CYC_TIME(msec)	((msec) & 0x3ff) /* PTM Cycle Time (msec) */
-+#define IGC_PTM_CYCLE_CTRL_AUTO_CYC_EN		BIT(31) /* PTM Cycle Control */
-+
- /* GPY211 - I225 defines */
- #define GPY_MMD_MASK		0xFFFF0000
- #define GPY_MMD_SHIFT		16
-diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-index 4ae19c6a3247..ca1b728f1d97 100644
---- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-@@ -9,6 +9,8 @@
- #include <linux/ptp_classify.h>
- #include <linux/clocksource.h>
- #include <linux/ktime.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
- 
- #define INCVALUE_MASK		0x7fffffff
- #define ISGN			0x80000000
-@@ -16,6 +18,9 @@
- #define IGC_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
- #define IGC_PTP_TX_TIMEOUT		(HZ * 15)
- 
-+#define IGC_PTM_STAT_SLEEP		2
-+#define IGC_PTM_STAT_TIMEOUT		100
-+
- /* SYSTIM read access for I225 */
- void igc_ptp_read(struct igc_adapter *adapter, struct timespec64 *ts)
- {
-@@ -752,6 +757,147 @@ int igc_ptp_get_ts_config(struct net_device *netdev, struct ifreq *ifr)
- 		-EFAULT : 0;
- }
- 
-+/* The two conditions below must be met for cross timestamping via
-+ * PCIe PTM:
-+ *
-+ * 1. We have an way to convert the timestamps in the PTM messages
-+ *    to something related to the system clocks (right now, only
-+ *    X86 systems with support for the Always Running Timer allow that);
-+ *
-+ * 2. We have PTM enabled in the path from the device to the PCIe root port.
-+ */
-+static bool igc_is_crosststamp_supported(struct igc_adapter *adapter)
-+{
-+	return IS_ENABLED(CONFIG_X86_TSC) ? pcie_ptm_enabled(adapter->pdev) : false;
-+}
-+
-+static struct system_counterval_t igc_device_tstamp_to_system(u64 tstamp)
-+{
-+#if IS_ENABLED(CONFIG_X86_TSC)
-+	return convert_art_ns_to_tsc(tstamp);
-+#else
-+	return (struct system_counterval_t) { };
-+#endif
-+}
-+
-+static void igc_ptm_log_error(struct igc_adapter *adapter, u32 ptm_stat)
-+{
-+	struct net_device *netdev = adapter->netdev;
-+
-+	switch (ptm_stat) {
-+	case IGC_PTM_STAT_RET_ERR:
-+		netdev_err(netdev, "PTM Error: Root port timeout\n");
-+		break;
-+	case IGC_PTM_STAT_BAD_PTM_RES:
-+		netdev_err(netdev, "PTM Error: Bad response, PTM Response Data expected\n");
-+		break;
-+	case IGC_PTM_STAT_T4M1_OVFL:
-+		netdev_err(netdev, "PTM Error: T4 minus T1 overflow\n");
-+		break;
-+	case IGC_PTM_STAT_ADJUST_1ST:
-+		netdev_err(netdev, "PTM Error: 1588 timer adjusted during first PTM cycle\n");
-+		break;
-+	case IGC_PTM_STAT_ADJUST_CYC:
-+		netdev_err(netdev, "PTM Error: 1588 timer adjusted during non-first PTM cycle\n");
-+		break;
-+	default:
-+		netdev_err(netdev, "PTM Error: Unknown error (%#x)\n", ptm_stat);
-+		break;
-+	}
-+}
-+
-+static int igc_phc_get_syncdevicetime(ktime_t *device,
-+				      struct system_counterval_t *system,
-+				      void *ctx)
-+{
-+	struct igc_adapter *adapter = ctx;
-+	struct igc_hw *hw = &adapter->hw;
-+	u32 stat, t2_curr_h, t2_curr_l, ctrl;
-+	int err, count = 100;
-+	ktime_t t1, t2_curr;
-+
-+	/* Get a snapshot of system clocks to use as historic value. */
-+	ktime_get_snapshot(&adapter->snapshot);
-+
-+	do {
-+		/* Doing this in a loop because in the event of a
-+		 * badly timed (ha!) system clock adjustment, we may
-+		 * get PTM errors from the PCI root, but these errors
-+		 * are transitory. Repeating the process returns valid
-+		 * data eventually.
-+		 */
-+
-+		/* To "manually" start the PTM cycle we need to clear and
-+		 * then set again the TRIG bit.
-+		 */
-+		ctrl = rd32(IGC_PTM_CTRL);
-+		ctrl &= ~IGC_PTM_CTRL_TRIG;
-+		wr32(IGC_PTM_CTRL, ctrl);
-+		ctrl |= IGC_PTM_CTRL_TRIG;
-+		wr32(IGC_PTM_CTRL, ctrl);
-+
-+		/* The cycle only starts "for real" when software notifies
-+		 * that it has read the registers, this is done by setting
-+		 * VALID bit.
-+		 */
-+		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
-+
-+		err = readx_poll_timeout(rd32, IGC_PTM_STAT, stat,
-+					 stat, IGC_PTM_STAT_SLEEP,
-+					 IGC_PTM_STAT_TIMEOUT);
-+		if (err < 0) {
-+			netdev_err(adapter->netdev, "Timeout reading IGC_PTM_STAT register\n");
-+			return err;
-+		}
-+
-+		if ((stat & IGC_PTM_STAT_VALID) == IGC_PTM_STAT_VALID)
-+			break;
-+
-+		if (stat & ~IGC_PTM_STAT_VALID) {
-+			/* An error occurred, log it. */
-+			igc_ptm_log_error(adapter, stat);
-+			/* The STAT register is write-1-to-clear (W1C),
-+			 * so write the previous error status to clear it.
-+			 */
-+			wr32(IGC_PTM_STAT, stat);
-+			continue;
-+		}
-+	} while (--count);
-+
-+	if (!count) {
-+		netdev_err(adapter->netdev, "Exceeded number of tries for PTM cycle\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	t1 = ktime_set(rd32(IGC_PTM_T1_TIM0_H), rd32(IGC_PTM_T1_TIM0_L));
-+
-+	t2_curr_l = rd32(IGC_PTM_CURR_T2_L);
-+	t2_curr_h = rd32(IGC_PTM_CURR_T2_H);
-+
-+	/* FIXME: When the register that tells the endianness of the
-+	 * PTM registers are implemented, check them here and add the
-+	 * appropriate conversion.
-+	 */
-+	t2_curr_h = swab32(t2_curr_h);
-+
-+	t2_curr = ((s64)t2_curr_h << 32 | t2_curr_l);
-+
-+	*device = t1;
-+	*system = igc_device_tstamp_to_system(t2_curr);
-+
-+	return 0;
-+}
-+
-+static int igc_ptp_getcrosststamp(struct ptp_clock_info *ptp,
-+				  struct system_device_crosststamp *cts)
-+{
-+	struct igc_adapter *adapter = container_of(ptp, struct igc_adapter,
-+						   ptp_caps);
-+
-+	return get_device_system_crosststamp(igc_phc_get_syncdevicetime,
-+					     adapter, &adapter->snapshot, cts);
-+}
-+
- /**
-  * igc_ptp_init - Initialize PTP functionality
-  * @adapter: Board private structure
-@@ -788,6 +934,11 @@ void igc_ptp_init(struct igc_adapter *adapter)
- 		adapter->ptp_caps.n_per_out = IGC_N_PEROUT;
- 		adapter->ptp_caps.n_pins = IGC_N_SDP;
- 		adapter->ptp_caps.verify = igc_ptp_verify_pin;
-+
-+		if (!igc_is_crosststamp_supported(adapter))
-+			break;
-+
-+		adapter->ptp_caps.getcrosststamp = igc_ptp_getcrosststamp;
- 		break;
- 	default:
- 		adapter->ptp_clock = NULL;
-@@ -879,7 +1030,9 @@ void igc_ptp_stop(struct igc_adapter *adapter)
- void igc_ptp_reset(struct igc_adapter *adapter)
- {
- 	struct igc_hw *hw = &adapter->hw;
-+	u32 cycle_ctrl, ctrl;
- 	unsigned long flags;
-+	u32 timadj;
- 
- 	/* reset the tstamp_config */
- 	igc_ptp_set_timestamp_mode(adapter, &adapter->tstamp_config);
-@@ -888,12 +1041,38 @@ void igc_ptp_reset(struct igc_adapter *adapter)
- 
- 	switch (adapter->hw.mac.type) {
- 	case igc_i225:
-+		timadj = rd32(IGC_TIMADJ);
-+		timadj |= IGC_TIMADJ_ADJUST_METH;
-+		wr32(IGC_TIMADJ, timadj);
-+
- 		wr32(IGC_TSAUXC, 0x0);
- 		wr32(IGC_TSSDP, 0x0);
- 		wr32(IGC_TSIM,
- 		     IGC_TSICR_INTERRUPTS |
- 		     (adapter->pps_sys_wrap_on ? IGC_TSICR_SYS_WRAP : 0));
- 		wr32(IGC_IMS, IGC_IMS_TS);
-+
-+		if (!igc_is_crosststamp_supported(adapter))
-+			break;
-+
-+		wr32(IGC_PCIE_DIG_DELAY, IGC_PCIE_DIG_DELAY_DEFAULT);
-+		wr32(IGC_PCIE_PHY_DELAY, IGC_PCIE_PHY_DELAY_DEFAULT);
-+
-+		cycle_ctrl = IGC_PTM_CYCLE_CTRL_CYC_TIME(IGC_PTM_CYC_TIME_DEFAULT);
-+
-+		wr32(IGC_PTM_CYCLE_CTRL, cycle_ctrl);
-+
-+		ctrl = IGC_PTM_CTRL_EN |
-+			IGC_PTM_CTRL_START_NOW |
-+			IGC_PTM_CTRL_SHRT_CYC(IGC_PTM_SHORT_CYC_DEFAULT) |
-+			IGC_PTM_CTRL_PTM_TO(IGC_PTM_TIMEOUT_DEFAULT) |
-+			IGC_PTM_CTRL_TRIG;
-+
-+		wr32(IGC_PTM_CTRL, ctrl);
-+
-+		/* Force the first cycle to run. */
-+		wr32(IGC_PTM_STAT, IGC_PTM_STAT_VALID);
-+
- 		break;
- 	default:
- 		/* No work to do. */
-diff --git a/drivers/net/ethernet/intel/igc/igc_regs.h b/drivers/net/ethernet/intel/igc/igc_regs.h
-index 828c3501c448..dbba2eb2a247 100644
---- a/drivers/net/ethernet/intel/igc/igc_regs.h
-+++ b/drivers/net/ethernet/intel/igc/igc_regs.h
-@@ -245,6 +245,29 @@
- #define IGC_TXSTMPL	0x0B618  /* Tx timestamp value Low - RO */
- #define IGC_TXSTMPH	0x0B61C  /* Tx timestamp value High - RO */
- 
-+#define IGC_TIMADJ	0x0B60C  /* Time Adjustment Offset Register */
-+
-+/* PCIe Registers */
-+#define IGC_PTM_CTRL		0x12540  /* PTM Control */
-+#define IGC_PTM_STAT		0x12544  /* PTM Status */
-+#define IGC_PTM_CYCLE_CTRL	0x1254C  /* PTM Cycle Control */
-+
-+/* PTM Time registers */
-+#define IGC_PTM_T1_TIM0_L	0x12558  /* T1 on Timer 0 Low */
-+#define IGC_PTM_T1_TIM0_H	0x1255C  /* T1 on Timer 0 High */
-+
-+#define IGC_PTM_CURR_T2_L	0x1258C  /* Current T2 Low */
-+#define IGC_PTM_CURR_T2_H	0x12590  /* Current T2 High */
-+#define IGC_PTM_PREV_T2_L	0x12584  /* Previous T2 Low */
-+#define IGC_PTM_PREV_T2_H	0x12588  /* Previous T2 High */
-+#define IGC_PTM_PREV_T4M1	0x12578  /* T4 Minus T1 on previous PTM Cycle */
-+#define IGC_PTM_CURR_T4M1	0x1257C  /* T4 Minus T1 on this PTM Cycle */
-+#define IGC_PTM_PREV_T3M2	0x12580  /* T3 Minus T2 on previous PTM Cycle */
-+#define IGC_PTM_TDELAY		0x12594  /* PTM PCIe Link Delay */
-+
-+#define IGC_PCIE_DIG_DELAY	0x12550  /* PCIe Digital Delay */
-+#define IGC_PCIE_PHY_DELAY	0x12554  /* PCIe PHY Delay */
-+
- /* Management registers */
- #define IGC_MANC	0x05820  /* Management Control - RW */
- 
--- 
-2.32.0
+>> +	if (len <= offset)
+>>   		return NULL;
+>>   	len -= offset;
+>>   	start += offset;
+>>
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/pci_root.c?id=v5.13#n915
+>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/8390/ne2k-pci.c?id=v5.13#n247
+>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/dec/tulip/tulip_core.c?id=v5.13#n1418
+>> [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/am53c974.c?id=v5.13#n431
+>> [5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib/pci_iomap.c?id=v5.13#n37
+>>
+>>>>>>> and the controller does not instantiate. The problem disapears after
+>>>>>>> reverting commit 0cf8882fd0.
+>>>>>>>
+>>>>>>> Attached is a summary of test runs with various devices and qemu v5.2
+>>>>>>> as well as qemu v6.0, and the command line I use for efi boots.
+>>>>>>>
+>>>>>>> Did commit 0cf8882fd0 introduce a bug, do I now need need some different
+>>>>>>> command line to instantiate PCI devices with io ports, or are such
+>>>>>>> devices
+>>>>>>> simply no longer supported if the system is booted with efi support ?
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Guenter
+>>>>>>
+>>>>>>
+>>>>>> So that commit basically just says don't ignore what efi did.
+>>>>>>
+>>>>>> The issue's thus likely efi.
+>>>>>>
+>>>>>
+>>>>> I don't see the problem with efi boots on x86 and x86_64.
+>>>>> Any idea why that might be the case ?
+>>>>>
+>>>>> Thanks,
+>>>>> Guenter
+>>>>>
+>>>>>> Cc the maintainer. Philippe can you comment pls?
+>>>>
+>>>> I'll have a look. Cc'ing Ard for EDK2/Aarch64.
+>>>
+>>> So a potential workaround would be to use a different I/O resource
+>>> window for ArmVirtPkg, that starts at 0x1000. But I would prefer to
+>>> fix Linux instead.
+>>>
+>>>
+>>>>>>
+>>>>>>> ---
+>>>>>>> Command line (tulip network interface):
+>>>>>>>
+>>>>>>> CMDLINE="root=/dev/vda console=ttyAMA0"
+>>>>>>> ROOTFS="rootfs.ext2"
+>>>>>>>
+>>>>>>> qemu-system-aarch64 -M virt -kernel arch/arm64/boot/Image -no-reboot \
+>>>>>>>           -m 512 -cpu cortex-a57 -no-reboot \
+>>>>>>>           -device tulip,netdev=net0 -netdev user,id=net0 \
+>>>>>>>           -bios QEMU_EFI-aarch64.fd \
+>>>>>>>           -snapshot \
+>>>>>>>           -device virtio-blk-device,drive=d0 \
+>>>>>>>           -drive file=${ROOTFS},if=none,id=d0,format=raw \
+>>>>>>>           -nographic -serial stdio -monitor none \
+>>>>>>>           --append "${CMDLINE}"
+>>>>>>>
+>>>>>>> ---
+>>>>>>> Boot tests with various devices known to work in qemu v5.2.
+>>>>>>>
+>>>>>>>          v5.2    v6.0    v6.0
+>>>>>>>          efi    non-efi    efi
+>>>>>>> e1000        pass    pass    pass
+>>>>>>> e1000-82544gc    pass    pass    pass
+>>>>>>> e1000-82545em    pass    pass    pass
+>>>>>>> e1000e        pass    pass    pass
+>>>>>>> i82550        pass    pass    pass
+>>>>>>> i82557a        pass    pass    pass
+>>>>>>> i82557b        pass    pass    pass
+>>>>>>> i82557c        pass    pass    pass
+>>>>>>> i82558a        pass    pass    pass
+>>>>>>> i82559b        pass    pass    pass
+>>>>>>> i82559c        pass    pass    pass
+>>>>>>> i82559er    pass    pass    pass
+>>>>>>> i82562        pass    pass    pass
+>>>>>>> i82801        pass    pass    pass
+>>>>>>> ne2k_pci    pass    pass    fail    <--
+>>>>>>> pcnet        pass    pass    pass
+>>>>>>> rtl8139        pass    pass    pass
+>>>>>>> tulip        pass    pass    fail    <--
+>>>>>>> usb-net        pass    pass    pass
+>>>>>>> virtio-net-device
+>>>>>>>          pass    pass    pass
+>>>>>>> virtio-net-pci    pass    pass    pass
+>>>>>>> virtio-net-pci-non-transitional
+>>>>>>>          pass    pass    pass
+>>>>>>>
+>>>>>>> usb-xhci    pass    pass    pass
+>>>>>>> usb-ehci    pass    pass    pass
+>>>>>>> usb-ohci    pass    pass    pass
+>>>>>>> usb-uas-xhci    pass    pass    pass
+>>>>>>> virtio        pass    pass    pass
+>>>>>>> virtio-blk-pci    pass    pass    pass
+>>>>>>> virtio-blk-device
+>>>>>>>          pass    pass    pass
+>>>>>>> nvme        pass    pass    pass
+>>>>>>> sdhci        pass    pass    pass
+>>>>>>> dc390        pass    pass    fail    <--
+>>>>>>> am53c974    pass    pass    fail    <--
+>>>>>>> lsi53c895ai    pass    pass    pass
+>>>>>>> mptsas1068    pass    pass    pass
+>>>>>>> lsi53c810    pass    pass    pass
+>>>>>>> megasas        pass    pass    pass
+>>>>>>> megasas-gen2    pass    pass    pass
+>>>>>>> virtio-scsi-device
+>>>>>>>          pass    pass    pass
+>>>>>>> virtio-scsi-pci    pass    pass    pass
+>>>>>>
+>>>>>
+>>>>
+>>>
 
