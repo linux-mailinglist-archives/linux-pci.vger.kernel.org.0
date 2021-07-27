@@ -2,213 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D12B3D7B5E
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E9243D7BDF
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 19:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbhG0QuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 12:50:09 -0400
-Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:26721
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229658AbhG0QuI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 12:50:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=izauKpT9vp4n2gn5hBTl4QgKQkct5caTHvcG1rWTLpulJMnR1jW/tdXXT6/niFdDjMyfTpeqNKw0ucDffg+i7sjjW5ufSFllaXsp5UJ+jJGyFh0MBDL4AXZ9oFhB5R7OFA5xVOsua/DKbHLMcUpxG/+oVgl0GMvliFyuKpUw7ubfWsCyg4RInxaIsU96zz+nTzz6NxyzCJ1xmjSr0mEfTyr8gouebPNvj7+67K6ei5CwNLWRs//8AnSxhtL0fo5nmYAcggzUvhcKarl/lkd8FfvUaILqWZusnHm1b9406l0oUWt0cERtKkajZAlbHFG9+kYg1whAZs7h6PTcKQyVkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ILQGD6TQDZmlrwRLOAe5gqh7sag+7QRXBOHt9pc2ycc=;
- b=Vh003TK6fZH6tw8ZZ/Ov7Zw+TmB9HzfpH+sf94f/BQG0A6Ss3wSvCPstO6Xd9njUUIsETO1FLxrMuYQfsTJbwRHx/FOIS46n6gOqzf1R1RV5G5HRn1+C1+Zl2fSi1eTKvx626gR9U0aCFOPj6I4Zusrz9PoAINBROWo6C3xKKIaeV6g+MBX6qjRKL1IvFmmiLrlriyCib+8GHa3UKJY5IDm6OBt9EWSVSFE7Bq/L+iWTDbZMEys6khP4Bppaqj1FF0kpgaPFcRIYH4TZcWUG6ii6AIKLO3gHBIFRh3Vy9byPucQMfZ4L3+TCo5BdgTl3NnV1kG41C4BdWpSvQ+u7XA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ILQGD6TQDZmlrwRLOAe5gqh7sag+7QRXBOHt9pc2ycc=;
- b=iyXc6zQMces/5QreYMfJSJOQOvcfZMU7ICB/1IMhS29qgeTlSdeMXO0MIELq3hnKlKRMUrjPQs1rkTkdono9X01xjW0aCRRwtZVjQShydR/Z76RxBo0u0EChq0JKycGr+ZSQES/rSh/lr8QNrjRa6cFy9QgY8PxZO9RsRvLha8e5t1SNXjCgQT9c+4aFt1CcFZY6JJFyO9+Rf0eyGEnMOm4CjbPXDdUvo7kdRbeCw01m4f8+6Amt90Acxf37NGvj0nB9i6OBMrL/Jc8RHCbS14GIMguywT1sf+0Bwb1H/DxqJ2GD5WS95sW5JMfhhuzv7vAcGxCD5A5hBTdcJwBrNA==
-Received: from BL0PR12MB2532.namprd12.prod.outlook.com (2603:10b6:207:4a::20)
- by MN2PR12MB3711.namprd12.prod.outlook.com (2603:10b6:208:161::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.29; Tue, 27 Jul
- 2021 16:50:06 +0000
-Received: from BL0PR12MB2532.namprd12.prod.outlook.com
- ([fe80::c8f5:7b13:4f70:e4b]) by BL0PR12MB2532.namprd12.prod.outlook.com
- ([fe80::c8f5:7b13:4f70:e4b%3]) with mapi id 15.20.4352.032; Tue, 27 Jul 2021
- 16:50:06 +0000
-From:   Vikram Sethi <vsethi@nvidia.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        id S229666AbhG0RJO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 13:09:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229815AbhG0RJN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 13:09:13 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F04C061757;
+        Tue, 27 Jul 2021 10:09:12 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id e19so23156297ejs.9;
+        Tue, 27 Jul 2021 10:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u6wMsy8+y8oQrtqNJJtbV1/vSxSFUv+XxeMD016+Vw0=;
+        b=IoLhVfnPP71L5X+lowoj4eQjg7VxjSMdb4NupC1xLD49iATF3NfmzVPUSIN7J1xi5a
+         nEAPqPJHiPXBvyVHfku0mWpQ8847aRQLbs7NG0CHLoHqM6bhEa2GDGPVa42iP+gUFTIh
+         04st3PRftfIF+fEVqOd4/U/T/7FppvqRyU+zLfW+XzsVp/WWRQt83Fz2BEtC0KcILO0o
+         MzzhCe4Im2xcaStWiLkhzI0J5LdUGfrcM5A/XJOw7zHMTDERkxEdDqmIQ3jTw1v71Ffu
+         sgB2CALLX8ta6t64Zw9GOlf9jalTrIQstpHO2A0QwCwsThSdLhruDGXwvI5FLNP7yy1r
+         fg6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u6wMsy8+y8oQrtqNJJtbV1/vSxSFUv+XxeMD016+Vw0=;
+        b=bhkTbOTileZWZEnEeKsEolCfHfH4HYcBMHsLFyBEnNYaohKlWsA9vE18ODoQvH7GPT
+         +mfYlwDk6MvE6JzCM+vje2uDgdUFQrjZRvrZrmsTSG26wq92mB/PWKMMQOmWW1bigbOc
+         Zj53zG3AHjOqXKZq1DViiU/omIoiPj8ASSrq0zHsNXvL4nt+dWIYNPmhuQmgEoMcK+n2
+         VJzxwtdMjz2jDpA2bkOw1MMHNNhDiV16+bEsRGyQA5fxH0ArD78mrobkNtoQjLRdhm5I
+         JdtgFch78+I6a/A2v+X82aP/czzlQnQzUcgjJSw9VJcOTn0MOy4uoQ5iFOGNSBlI7f8j
+         rOjw==
+X-Gm-Message-State: AOAM5336o2MdZ6eWK1uujjyU8Xw8tZECM3DZUcsv83eq7QaqKpjQCH1I
+        hIw5KTd1214WEg0lLd1BiAujfhgNW9Y=
+X-Google-Smtp-Source: ABdhPJz3LMJ3OyOT/s3HqviWh0gvPjrsrZQYi0NyweiOFXLp78tL1CF+bTVqLUqzScJEPVS39ue+LQ==
+X-Received: by 2002:a17:906:8602:: with SMTP id o2mr5090290ejx.162.1627405751337;
+        Tue, 27 Jul 2021 10:09:11 -0700 (PDT)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id d19sm1431558eds.54.2021.07.27.10.09.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Jul 2021 10:09:10 -0700 (PDT)
+Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>
-CC:     =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        Fangjian <f.fangjian@huawei.com>,
-        "Natu, Mahesh" <mahesh.natu@intel.com>,
-        Varun Sampath <varuns@nvidia.com>
-Subject: RE: RFC: Plumbers microconf topic: PCI DOE and related.
-Thread-Topic: RFC: Plumbers microconf topic: PCI DOE and related.
-Thread-Index: AQHXgt/5GkPV9zbXrESKrMS9y8kzYatXByUw
-Date:   Tue, 27 Jul 2021 16:50:05 +0000
-Message-ID: <BL0PR12MB2532CC3B64CAB199051D5AA4BDE99@BL0PR12MB2532.namprd12.prod.outlook.com>
-References: <20210727130653.00006a0a@Huawei.com>
-In-Reply-To: <20210727130653.00006a0a@Huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: Huawei.com; dkim=none (message not signed)
- header.d=none;Huawei.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2aa4fefb-1e8f-4bf6-b9e6-08d9511e9637
-x-ms-traffictypediagnostic: MN2PR12MB3711:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB37119E1F73D9168BFC8976A8BDE99@MN2PR12MB3711.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bEzNZuVz4PG3jmCeK29jGuf5Zt33aXocK0xlGjRdwB49ZMjwYEk88KfujovILVxQ4g5LQ5LCod9cKraMgNp8hGqAr045knfYUCNy4DuxwPCMGyEpY7omXa+EMWwFeRYtlmtfsIMTEUtwMXWnGa1efEl6kRXWR0ohXzrKe/gvOwL5fqYxyXY/nZOmWPj8DTZi+C8MgRH9AOL0J9ZToWG6/CGkbYlWTxTaDY0xl2UK2xuk4TLasrnCIrYKxGTzDte9NoT1ghX+McTPHT+hj9/PMGzIDbLRHkkwvtlD5ZXiBX0QskWZ6kD235TYxDLZeR4n1RpkxDGEv89+uuXplKbOMgC5araREJFjfLpzHP2cUqGfCW2/BHJid8N5j1nD4k0Bs47ca8PSU7pAm5CEOlbGxDT+A/Mup6guN7vhoea+nodDbqxbAoQxGkLH3R1UqgJ9vxPaDubPlwLQ0BwaWOfwSWhxkPac+3MpI3pQIWfVH/Gm1yjbcNJQwlAGfqgRj5Q8rpV7QICAtzy4wA1stQTITRVZQjxvQD+3fv276ux/RpmosBsEm5D2N0oUJ1OojHQuMwxi8bAmP7F2jdyKN/GplNpdRZeAI0fwIDjUMng/UGdblyorFbGD6VCS37g6aCrrZnKAexG09kiRtpPC7pNh1/d4P8OHXyO84ct1vEmRFWOjEkIRfYkds1JJkZORhsXpjI5qSop/0DGta5ctdxkSZA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2532.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(33656002)(8936002)(55016002)(7416002)(186003)(107886003)(4326008)(122000001)(76116006)(478600001)(8676002)(66446008)(86362001)(316002)(71200400001)(64756008)(66556008)(7696005)(66476007)(38100700002)(52536014)(6506007)(66946007)(83380400001)(110136005)(5660300002)(2906002)(9686003)(54906003)(26005)(38070700004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?nGheadBUDxfZXSN7+YgQUw5AIf/6GIH2LdYn8h/BR6f4HsF3Ftp/8O/sMG?=
- =?iso-8859-2?Q?pYgJqQiqmSTeLR/ZghQS/GCvYfpZLt/ZVewbR2raLaX8X0iwf0B/sOVrpP?=
- =?iso-8859-2?Q?2BjeiLWWzVU5BiBzNWBh78whzIKjt/zoN0/qi3DXXH0sHNl7SPS/5Coo9p?=
- =?iso-8859-2?Q?2ifO7PbWYuq+TEw4sw4ePzpViTiPjf3oXlxqln6ATIbtWlQXXaMXFufz3f?=
- =?iso-8859-2?Q?L4h/FeakU1uJtFYvW1d23Hfd1GWN98KOW4QTuNPFd2CnWIRjx9KP+3uYgb?=
- =?iso-8859-2?Q?U0wvF5kdlv2ecT6z95UyR4d4z4Akzs5L7feRb8UVctJgyZvdZFYdisg0PT?=
- =?iso-8859-2?Q?fRlQSHu8AVoLsVAj7dl+T5ZZ59nCZ7cHJoN1aMxcryLpjENd4AjIqUQJeX?=
- =?iso-8859-2?Q?aSPELrgweINNg9DMVl7h7C96QJpQrDDF2fujFrnTjAGmqfLzeyueLm1Wbz?=
- =?iso-8859-2?Q?pAN9T8p3k6nWPCPrLg9AmV81UWKtbjZ8RBSrsn6qiJirSvsnkGi8eGM5MJ?=
- =?iso-8859-2?Q?b022eULpHymkpNuXfS5XrT3Ki/sQ3xwrDC6YcAMgSlr2i7pSPC3+E2T35/?=
- =?iso-8859-2?Q?8yQ+BTCmVkB3eTY+uQU/SEhNuhgIrjdEBzAz4Q2xqcYcy+EXHtw8HG6+6h?=
- =?iso-8859-2?Q?zBDTcEPGtbOL2ofrg7DGcwJayQiMbIHzSva69IYdG5g/UGHee4Ci3jB+5F?=
- =?iso-8859-2?Q?Tqa/Sc884s6xBXDSFPE8VA4qCyt8up8cZYrBn3qjvkuVlOv9MmXe3MTmUI?=
- =?iso-8859-2?Q?zK3dmKaHa/ELnwhFzydDjkHrucwBj7OpGvjKi6JiDURzBE/I96rhMszRgF?=
- =?iso-8859-2?Q?uqZqR0PdXis0m1o4059pg8FuBwTLmWic6hV1Nx7Sme2qlG6M3jxuFbXJDa?=
- =?iso-8859-2?Q?zFY2HYkOaTcyLQL6J6SDKrCzQiaoERrgFQeeE7n8DrvqXuuyiBuq/C7ZeP?=
- =?iso-8859-2?Q?ixiAstjtZt+d1IiHELJrnsF5PUyzIAm7GB1sFzGgzuKrCwD9zM1+Y3QR5X?=
- =?iso-8859-2?Q?iSj3ReJsmLZDYct3Jh8nI2PbDHDJ1pTqMImNESLPFucIZDN56B3et5gCQd?=
- =?iso-8859-2?Q?jr+YPGx2i0CMCC//exPTA6nLIWPv/fjmTwgu61HP4GGbWOxNto5i3fvvmV?=
- =?iso-8859-2?Q?JABHooo9WWi5t9S/pZmac/7RiGXYK9j0lQmsEVugUKpqv+859VVm9QKYgF?=
- =?iso-8859-2?Q?3bboxdUqRUWcFUFcwGO0u36PbTwbJPTin1iNEvThchYEKj/+EYtQyIUda0?=
- =?iso-8859-2?Q?NkjASRtmduu8g6nvoK3FSEj3DP/XQ7yH0wa6NEI5etULhcUJoWDpwRemi2?=
- =?iso-8859-2?Q?/apt3wF+XtOzTxvT74NlRDahfJNyUJBL0qQ6PdaSX8e0tb6FSr4ebAvA3i?=
- =?iso-8859-2?Q?/0UOpjPAGw?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20210726174925.GA624246@bjorn-Precision-5520>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <88b82ef7-3e6e-fd3c-4d18-d497f7c1998c@gmail.com>
+Date:   Tue, 27 Jul 2021 19:08:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2532.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aa4fefb-1e8f-4bf6-b9e6-08d9511e9637
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2021 16:50:05.9799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +MsDieQZs9DiGmESICz7nJNhUL67gms+npSMY6Eg30HalGGztuK1QLs1h+Iy4YI/RG/RMCz53i3+IqLi4gZx4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3711
+In-Reply-To: <20210726174925.GA624246@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jonathan,=20
+On 7/26/21 7:49 PM, Bjorn Helgaas wrote:
+> On Mon, Jul 26, 2021 at 04:47:54PM +0200, Geert Uytterhoeven wrote:
+[...]
+>>>> The R-Car PCIe controller is capable of handling L0s/L1 link states.
+>>>> While the controller can enter and exit L0s link state, and exit L1
+>>>> link state, without any additional action from the driver, to enter
+>>>> L1 link state, the driver must complete the link state transition by
+>>>> issuing additional commands to the controller.
+>>>>
+>>>> The problem is, this transition is not atomic. The controller sets
+>>>> PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
+>>>> the PCIe card, but then the controller enters some sort of inbetween
+>>>> state. The driver must detect this condition and complete the link
+>>>> state transition, by setting L1IATN bit in PMCTLR and waiting for
+>>>> the link state transition to complete.
+>>>>
+>>>> If a PCIe access happens inside this window, where the controller
+>>>> is between L0 and L1 link states, the access generates a fault and
+>>>> the ARM 'imprecise external abort' handler is invoked.
+>>>>
+>>>> Just like other PCI controller drivers, here we hook the fault handler,
+>>>> perform the fixup to help the controller enter L1 link state, and then
+>>>> restart the instruction which triggered the fault. Since the controller
+>>>> is in L1 link state now, the link can exit from L1 link state to L0 and
+>>>> successfully complete the access.
+>>>>
+>>>> While it was suggested to disable L1 link state support completely on
+>>>> the controller level, this would not prevent the L1 link state entry
+>>>> initiated by the link partner. This happens e.g. in case a PCIe card
+>>>> enters D3Hot state, which could be initiated from pci_set_power_state()
+>>>> if the card indicates D3Hot support, which in turn means link must enter
+>>>> L1 state. So instead, fix up the L1 link state after all.
+>>>>
+>>>> Note that this fixup is applicable only to Aarch32 R-Car controllers,
+>>>> the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
+>>>> 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
+>>>> [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
+>>>
+>>> This patch is horribly ugly but it's working around a horrible
+>>> hardware problem, and I don't have any better suggestions, so I guess
+>>> we don't really have much choice.
+>>>
+>>> I do think the commit log is a bit glib:
+>>>
+>>>    - "The R-Car PCIe controller is capable of handling L0s/L1 link
+>>>      states."  AFAICT every PCIe device is required to handle L0 and L1
+>>>      without software assistance.  So saying R-Car is "capable" puts a
+>>>      better face on this than seems warranted.
+>>>
+>>>      L0s doesn't seem relevant at all; at least it doesn't seem to play
+>>>      a role in the patch.  There's no such thing as "returning to L0s"
+>>>      as mentioned in the comment below; L0s is only reachable from L0.
+>>>      Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
+>>>
+>>>    - "The problem is, this transition is not atomic."  I think the
+>>>      *problem* is the hardware is broken in the first place.  This
+>>>      transition is supposed to be invisible to software.
+>>>
+>>>    - "Just like other PCI controller drivers ..." suggests that this is
+>>>      an ordinary situation that we shouldn't be concerned about.  This
+>>>      patch may be the best we can do to work around a bad hardware
+>>>      defect, but it's definitely not ordinary.
+>>>
+>>>      I think the other hook_fault_code() uses are for reporting
+>>>      legitimate PCIe errors, which most controllers log and turn
+>>>      into ~0 data responses without generating an abort or machine
+>>>      check, not things caused by hardware defects, so they're not
+>>>      really comparable.
+>>>
+>>> Has Renesas documented this as an erratum?  Will future devices
+>>> require additions to rcar_pcie_abort_handler_of_match[]?
+>>>
+>>> It'd be nice if the commit log mentioned the user-visible effect of
+>>> this problem.  I guess it does mention external aborts -- I assume you
+>>> see those when downstream devices go to D3hot or when ASPM puts the
+>>> link in L1?  And the abort results in a reboot?
+>>>
+>>> To be clear, I'm not objecting to the patch.  It's a hardware problem
+>>> and we should work around it as best we can.
+>>
+>> Cool! So what's missing for this patch, which we have been polishing
+>> for almost one year, to be applied, so innocent people can no longer
+>> lock up an R-Car system just by inserting an ubiquitous Intel Ethernet
+>> card, and suspending the system?
+> 
+> Nothing missing from my point of view, so if Lorenzo is OK with it,
+> he'll apply it.  If I were applying it, I would make the commit log
+> something like this:
+> 
+>    When the link is in L1, hardware should return it to L0
+>    automatically whenever a transaction targets a component on the
+>    other end of the link (PCIe r5.0, sec 5.2).
+> 
+>    The R-Car PCIe controller doesn't handle this transition correctly.
+>    If the link is not in L0, an MMIO transaction targeting a downstream
+>    device fails, and the controller reports an ARM imprecise external
+>    abort.
+> 
+>    Work around this by hooking the abort handler so the driver can
+>    detect this situation and help the hardware complete the link state
+>    transition.
+> 
+>    When the R-Car controller receives a PM_ENTER_L1 DLLP from the
+>    downstream component, it sets PMEL1RX bit in PMSR register, but then
+>    the controller enters some sort of in-between state.  A subsequent
+>    MMIO transaction will fail, resulting in the external abort.  The
+>    abort handler detects this condition and completes the link state
+>    transition by setting the L1IATN bit in PMCTLR and waiting for the
+>    link state transition to complete.
 
-> -----Original Message-----
-> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+OK, should I submit V7 and just copy-paste this commit message in, or 
+wait for Lorenzo to provide clear direction ?
 
+> I assume that on the PCIe side, there must be an error like
+> Unsupported Request or Malformed TLP, and the R-Car controller is
+> logging that and turning it into the ARM external abort?
+> 
+> I didn't see a clear response to Pali's question about what happens if
+> there's no MMIO access, e.g., what if the downstream device initiates
+> a DMA or MSI transaction?
 
-> Open Questions / Problems:
-> 1. Control which software entity uses DOE.
->    It does not appear to be safe (as in not going to disrupt each other r=
-ather
->    than security) for multiple software entities (Userspace, Kernel, TEE,
->    Firmware) to access an individual DOE instance on a device without
->    mediation.  Some DOE protocols have clear reasons for Linux kernel
->    access (e.g. CDAT) others are more debatable.
->    Even running the discovery protocol could disrupt other users. Hardeni=
-ng
->    against such disruption is probably best effort only (no guarantees).
->    Question is: How to prevent this?
->     a) Userspace vs Kernel. Are there valid reasons for userspace to acce=
-ss
->        a DOE? If so do how do we enable that? Does a per protocol approac=
-h
->        make sense? Potential vendor defined protocols? Do we need to lock
->        out 'developer' tools such as setpci - or do we let developers sho=
-ot
->        themselves in the foot?
->     b) OS vs lower levels / TEE. Do we need to propose a means of telling=
- the
-> OS
->        to keep its hands off a DOE?  How to do it?
->=20
-> 2. CMA support.
->    Usecases for in kernel CMA support and whether strong enough to suppor=
-t
->    native access. (e.g. authentication of VF from a VM, or systems not ru=
-nning
->    any suitable lower level software / TEE)
-
-Any time the device is reset, you'd want to measure again. I'd think every =
-kernel
-PF FLR/SBR/CXL reset needs to be followed by a measurement of the device
-In kernel. Of course needs bigger discussion on the plumbing/infrastructure
-to report the measurement and attest that the measurements post reset are v=
-alid.
-Instead of native access, could it be mediated via ACPI or UEFI runtime ser=
-vice?
-Not clear that ACPI/UEFI would be the appropriate mediator in all cases.=20
-
->    Key / Certificate management. This is somewhat like IMA, but we probab=
-ly
->    need to manage the certificate chain separately for each CMA/SPDM
-> instance.
->    Understanding provisioning models would be useful to guide this work.
->=20
-> 3. IDE support
->    Is native kernel support worthwhile? Perhaps good to discuss
->    potential usecases + get some idea on priority for this feature.
->=20
-> 4. Potential blockers on merging emulation support in QEMU. (I'm less sur=
-e
->    on this one, but perhaps worth briefly touching on or a separate
->    session on emulation if people are interested? Ben, do you think this
->    would be worthwhile?)
->=20
-> There are other minor questions we might slip into the discussion, time
-> allowing such as need for async support handling in the kernel DOE code.
->=20
-> For all these features, we have multiple layers on top of underlying PCI =
-so
-> discussion of 'how' to support this might be useful.
-> 1) Service model - detected at PCI subsystem level, services to drivers.
-> 2) Driver initiated mode - library code, but per driver instantiation etc=
-.
->=20
-> That's what have come up with this morning, so please poke holes in it an=
-d
-> point out what I've forgotten about.
->=20
-> Note for an actual CFP proposal, I'll probably split this into at least t=
-wo.
-> Topic 1: DOE only.  Topic 2: CMA / IDE. As there is a lot here, for some =
-topics
-> we may be looking at introduce the topic + questions rather than resolvin=
-g
-> everything on the day.
->=20
-> Thanks,
->=20
-> Jonathan
->=20
-> p.s. Perhaps it is a little unusual to have this level of 'planning' disc=
-ussion
-> explicitly on list, but we are working under some unusual constraints and
-> inclusiveness and openness always good anyway!
-
+If the link is in this state, the packet won't reach the root complex, 
+so nothing happens. And I don't see a good way to fix that option.
