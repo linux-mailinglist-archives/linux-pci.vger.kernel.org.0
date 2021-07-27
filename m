@@ -2,90 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7026A3D6F9F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 08:47:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D5E3D7210
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 11:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234349AbhG0Grl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 02:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
+        id S236049AbhG0Jcr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 05:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235236AbhG0Grl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 02:47:41 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B47C6C061757
-        for <linux-pci@vger.kernel.org>; Mon, 26 Jul 2021 23:47:41 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id m10-20020a17090a34cab0290176b52c60ddso3522904pjf.4
-        for <linux-pci@vger.kernel.org>; Mon, 26 Jul 2021 23:47:41 -0700 (PDT)
+        with ESMTP id S235978AbhG0Jcr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 05:32:47 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDB1C061757
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jul 2021 02:32:47 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id e25-20020a05600c4b99b0290253418ba0fbso1861500wmp.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jul 2021 02:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=65KIbsnpzYM5mfPE0TJvCN9EOvry3vUT+u5Kpu/73IQ=;
-        b=ehrjQ0FZwr1OclBYEjPGrrj+AX19htMeLZGrqcS4cMQUfWKN/jtvBldUThYlOM56o8
-         EGwGgwztsKeheznf/n2YGbMhfMbSmsaJSDxhQuHvyv0gx8FgoeYc4UHoKECVQbIMwiAQ
-         mImR9vEMZJuQc8Ak6v/z4OtlhXLj5bBUBtNOFtQcysJpQwB7qUzvT0p1T8wzanrSb0oA
-         t0RViL780nR0PB4bwsbMNtPaxIBHLd72cH67BES0hpP0i2Vd0IiJg71ZWyogM4v0C/tU
-         63xKwHqDYHTo6n0Wy2LuQXbvPKGMEds68I51sIJqWsZwaHLTAf9URb7XtshDvAzJwCcv
-         SfEQ==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7V1+oT8Gnfx8nQS+XIebppNw7U7+KNMB6DIEoXLsFSc=;
+        b=HNkifKAimGeeuW8h4B8qIDheTCDpoh7lH3CzG2PXYzqjBzqixlZ1nAFlvGIxhLPt+/
+         dcES1eEmo3ScGVT8qnSaWeK8ZixeUqpeRvnX55lbVHIypQG5Pbj3IOrUPKQJSOcU52Yg
+         1bwbT2HEkmm/HhcXeh5FwHpIdFX6K5ZmnA3uI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=65KIbsnpzYM5mfPE0TJvCN9EOvry3vUT+u5Kpu/73IQ=;
-        b=fXAj0g4nGtmt4MIevuGJ075J8AVE3FmMVObsnv3r03j+kduior9QrPBjPvEzIHsYpZ
-         z6ek6/Beqm4de7//FF8SKpgVK382sQr3uyBEQRd0yJXQn0hAcFnEQlwjMSi50P3gnn7R
-         5eDh+xleVPxk/HNfUQaKlJKbsHlxsholXrd0BVhpnNl7LF8QuFbv7V7PnpY8gqsTNc6G
-         JqrAhaCB0BNQWHaAr91Bjt3JZNNIXE49B2oJ1FuN5f4rLntgELpiec+GjuaCLNZLkp1X
-         agU2egHn6C4nEYH9QlKuUDiK/AK1KC1AICwupBJSTcxcOmfeLhsjWXvYtR54iW+YosDI
-         NEsw==
-X-Gm-Message-State: AOAM532R3bu0n9MmBKEkc07uCSdsAzMiC44d2+pj6ui+L2XyGyN9acEb
-        1U25iV/gHBHiJL85Mzj+j3M/Zg==
-X-Google-Smtp-Source: ABdhPJx2NgTnKjWvVaPBpx8p56jc+dx3eBcjIThy5Nd30T+2v0KiLSAlChhqo/PBOXXsDbVnTVWkpQ==
-X-Received: by 2002:a17:90a:d486:: with SMTP id s6mr21513447pju.142.1627368461272;
-        Mon, 26 Jul 2021 23:47:41 -0700 (PDT)
-Received: from [10.193.0.222] ([45.135.186.130])
-        by smtp.gmail.com with ESMTPSA id q14sm2311937pfn.73.2021.07.26.23.47.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jul 2021 23:47:40 -0700 (PDT)
-Subject: Re: [PATCH v5 0/3] PCI: Add a quirk to enable SVA for HiSilicon chip
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        jean-philippe <jean-philippe@linaro.org>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1626144876-11352-1-git-send-email-zhangfei.gao@linaro.org>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <1796ac2a-b068-467e-804e-163f9e1f3c41@linaro.org>
-Date:   Tue, 27 Jul 2021 14:47:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7V1+oT8Gnfx8nQS+XIebppNw7U7+KNMB6DIEoXLsFSc=;
+        b=QbDSo5fVfBfU/Nqq1TGHXIIJHZ3TBjOX2YMMfTwNLYmxf+rCU5BqxfPwTXwegiili1
+         sfc3XlXEFrFCR4i//dD2EMMNU2sZwSH5OiFfuPYed7+GRPoIJMyjIDn3S7ddJJOB68Bs
+         9vqjZjaMMdXq6LmwRlXRhfWSTl9J4MHYYjv0bxB0WALUoAYSNesfvlZWnEZf+Mc6Pvmp
+         JUTe4LHGRk0oQonFLLXzsMUkCG/+uDb8762B7HU/zrdndU8vpmUfS+pIjHPr/DGdaA0F
+         ZJ0rWf/tG6A4pBLrq0vWQ5xM5wRnqnWGkx6bnOpBnYjD0z4wybOtNNap/ghK9NAPJo97
+         3a3Q==
+X-Gm-Message-State: AOAM532babuJWsqUsYjsHGmpspWZx3XYXkINYkGq2ANhfkuj0x+KNuBh
+        xFQhJpB4J46PkjuFuiqpDnkAxQ==
+X-Google-Smtp-Source: ABdhPJyg+MHd7+8t3ROjosQmL6/+KEXfTM+SXpVk39LMkdOMlevMi36n0sxQDh7p4O1o9tLS3hHhvg==
+X-Received: by 2002:a05:600c:3b9b:: with SMTP id n27mr3152796wms.188.1627378366177;
+        Tue, 27 Jul 2021 02:32:46 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id c16sm2533347wru.82.2021.07.27.02.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 02:32:45 -0700 (PDT)
+Date:   Tue, 27 Jul 2021 11:32:43 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Christoph Hellwig <hch@infradead.org>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        David Airlie <airlied@linux.ie>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
+Message-ID: <YP/SuzIY9VRReufC@phenom.ffwll.local>
+References: <YPp9XCa+1kS/s3wK@phenom.ffwll.local>
+ <20210723224335.GA446523@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <1626144876-11352-1-git-send-email-zhangfei.gao@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210723224335.GA446523@bjorn-Precision-5520>
+X-Operating-System: Linux phenom 5.10.0-7-amd64 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn
+On Fri, Jul 23, 2021 at 05:43:35PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jul 23, 2021 at 10:27:08AM +0200, Daniel Vetter wrote:
+> > On Fri, Jul 23, 2021 at 06:51:59AM +0100, Christoph Hellwig wrote:
+> > > On Thu, Jul 22, 2021 at 04:29:11PM -0500, Bjorn Helgaas wrote:
+> > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > 
+> > > > This is a little bit of rework and extension of Huacai's nice work at [1].
+> > > > 
+> > > > It moves the VGA arbiter to the PCI subsystem, fixes a few nits, and breaks
+> > > > a few pieces off Huacai's patch to make the main patch a little smaller.
+> > > > 
+> > > > That last patch is still not very small, and it needs a commit log, as I
+> > > > mentioned at [2].
+> > > 
+> > > FYI, I have a bunch of changes to this code that the drm maintainers
+> > > picked up.  They should show up in the next linux-next I think.
+> > 
+> > Yeah I think for merging I think there'll be two options:
+> > 
+> > - We also merge this series through drm-misc-next to avoid conflicts, but
+> >   anything after that will (i.e. from 5.16-rc1 onwards) will go in through
+> >   the pci tree.
 
-On 2021/7/13 上午10:54, Zhangfei Gao wrote:
-> HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-> actually on the AMBA bus. These fake PCI devices have PASID capability
-> though not supporting TLP.
->
-> Add a quirk to set pasid_no_tlp and dma-can-stall for these devices.
->
-> v5:
-> no change, base on 5.14-rc1
+I meant 5.15-rc1 here ofc. Living a bit too much in the future :-)
 
-Would you mind take a look at this patchset.
-We need the quirk to enable sva feature of devices on HiSilicon 
-KunPeng920 and KunPeng930.
+> > - You also merge Christoph's series, and we tell Linus to ignore the
+> >   vgaarb changes that also come in through drm-next pull.
+> > 
+> > It's a non-rebasing tree so taking them out isn't an option, and reverting
+> > feels silly. Either of the above is fine with me.
+> 
+> Seems easiest/cleanest if I just fix this up so it applies on top of
+> drm-misc-next, e.g., on top of this:
+> 
+>   474596fc749c ("dt-bindings: display: simple-bridge: Add corpro,gm7123 compatible")
+> 
+> I'll post a v3 after that rebase and working on the commit log from
+> Huacai.
 
-Thanks
-
+Thanks, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
