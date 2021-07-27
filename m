@@ -2,142 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD5113D7A9D
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:11:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8DF3D7AA4
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:13:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbhG0QLu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 12:11:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:40818 "EHLO foss.arm.com"
+        id S229596AbhG0QNB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 12:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229540AbhG0QLu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 12:11:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A0C931B;
-        Tue, 27 Jul 2021 09:11:49 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01B953F70D;
-        Tue, 27 Jul 2021 09:11:47 -0700 (PDT)
-Date:   Tue, 27 Jul 2021 17:11:42 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, marek.vasut@gmail.com,
-        linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20210727161142.GA15814@lpieralisi>
-References: <20210514200549.431275-1-marek.vasut@gmail.com>
- <20210717173334.GA2232818@bjorn-Precision-5520>
- <20210719085953.GA17481@lpieralisi>
- <20210719172340.vvtnddbli2vgxndi@pali>
+        id S229441AbhG0QNB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Jul 2021 12:13:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF12461B73;
+        Tue, 27 Jul 2021 16:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627402381;
+        bh=BsgalBQRjr9OM3p/5B+TnVmcmwuTiffeQ0hoAgpA37w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Kg9kn2d/XfVub6+9LSxjDfeaF9gciX+7s07+9Hf9uD3ebG0YGhO3Yjdf1guU+WVpA
+         4LTydNtpzlAC/r3SaLAbwTkYqJ7Q4iwjOpwq6QQsYfH96K4tN/2eW9Es1qpTluLMcp
+         o/z+7jOEhMMa1qLB5SVnhJyNYsM84/H5ARvPTRPTyMm+ZWj2AkUx+QxfQKBAGtnQQ2
+         U+jX3KWLYYDWsAWuwr9kPODXAPFPlGOnT5mmoY6GQmSGTyHo/TIV0pq+PybNHeOwEn
+         5z0aNJiz/84RGJQt9aVXIFKjCEmr6ZjyY+XituzebZQ57vgsE1rc4sCkVvbUB3QbfI
+         HKmbP1y85Y1nA==
+Date:   Tue, 27 Jul 2021 11:12:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 0/8] PCI: hv: Support host bridge probing on ARM64
+Message-ID: <20210727161259.GA718226@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210719172340.vvtnddbli2vgxndi@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210726180657.142727-1-boqun.feng@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 07:23:40PM +0200, Pali Rohár wrote:
-
-[...]
-
-> > > > +#ifdef CONFIG_ARM
-> > > > +static DEFINE_SPINLOCK(pmsr_lock);
-> > > > +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-> > > > +		unsigned int fsr, struct pt_regs *regs)
-> > > > +{
-> > > > +	unsigned long flags;
-> > > > +	int ret = 0;
-> > > > +	u32 pmsr;
-> > > > +
-> > > > +	spin_lock_irqsave(&pmsr_lock, flags);
-> > > > +
-> > > > +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
-> > > > +		ret = 1;
-> > > > +		goto unlock_exit;
-> > > > +	}
-> > > > +
-> > > > +	pmsr = readl(pcie_base + PMSR);
-> > > > +
-> > > > +	/*
-> > > > +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-> > > > +	 * the PCIe controller is not in L1 link state. If true, apply
-> > > > +	 * fix, which will put the controller into L1 link state, from
-> > > > +	 * which it can return to L0s/L0 on its own.
-> > > > +	 */
-> > > > +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-> > > > +		writel(L1IATN, pcie_base + PMCTLR);
-> > > > +		while (!(readl(pcie_base + PMSR) & L1FAEG))
-> > > > +			;
+On Tue, Jul 27, 2021 at 02:06:49AM +0800, Boqun Feng wrote:
+> Hi,
 > 
-> Infinite loop in abort handler is not a good idea. If this software
-> workaround is not able to fix HW in broken state then it is better to
-> let kernel finish abort handler and reboot machine (or whatever is
-> default action for particular abort handler).
+> This is the v6 for the preparation of virtual PCI support on Hyper-V
+> ARM64, Previous versions:
+> 
+> v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+> v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+> v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
+> v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
+> v5:	https://lore.kernel.org/lkml/20210720134429.511541-1-boqun.feng@gmail.com/
 
-Probably worth adding a timeout, I can do it before merging it.
+Thanks for these; they're very handy for archaeology later.
 
-Lorenzo
+> Changes since last version:
+> 
+> *	Rebase to 5.14-rc3
 
-> > > > +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-> > > > +	}
-> > > > +
-> > > > +unlock_exit:
-> > > > +	spin_unlock_irqrestore(&pmsr_lock, flags);
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-> > > > +	{ .compatible = "renesas,pcie-r8a7779" },
-> > > > +	{ .compatible = "renesas,pcie-r8a7790" },
-> > > > +	{ .compatible = "renesas,pcie-r8a7791" },
-> > > > +	{ .compatible = "renesas,pcie-rcar-gen2" },
-> > > > +	{},
-> > > > +};
-> > > > +
-> > > > +static int __init rcar_pcie_init(void)
-> > > > +{
-> > > > +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-> > > > +#ifdef CONFIG_ARM_LPAE
-> > > > +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > +				"asynchronous external abort");
-> > > > +#else
-> > > > +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > +				"imprecise external abort");
-> > > > +#endif
-> > > > +	}
-> > > > +
-> > > > +	return platform_driver_register(&rcar_pcie_driver);
-> > > > +}
-> > > > +device_initcall(rcar_pcie_init);
-> > > > +#else
-> > > >  builtin_platform_driver(rcar_pcie_driver);
-> > > > +#endif
-> > > > diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-> > > > index d4c698b5f821..9bb125db85c6 100644
-> > > > --- a/drivers/pci/controller/pcie-rcar.h
-> > > > +++ b/drivers/pci/controller/pcie-rcar.h
-> > > > @@ -85,6 +85,13 @@
-> > > >  #define  LTSMDIS		BIT(31)
-> > > >  #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
-> > > >  #define PMSR			0x01105c
-> > > > +#define  L1FAEG			BIT(31)
-> > > > +#define  PMEL1RX		BIT(23)
-> > > > +#define  PMSTATE		GENMASK(18, 16)
-> > > > +#define  PMSTATE_L1		(3 << 16)
-> > > > +#define PMCTLR			0x011060
-> > > > +#define  L1IATN			BIT(31)
-> > > > +
-> > > >  #define MACS2R			0x011078
-> > > >  #define MACCGSPSETR		0x011084
-> > > >  #define  SPCNGRSN		BIT(31)
-> > > > -- 
-> > > > 2.30.2
-> > > > 
+Just FYI, it's not a problem that you rebased, but it's not necessary.
+These will be applied to a topic branch from v5.14-rc1 anyway.
