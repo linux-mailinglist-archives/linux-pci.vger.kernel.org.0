@@ -2,190 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE2163D75BF
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 15:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EA8F3D77B6
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 16:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236660AbhG0NS2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 09:18:28 -0400
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:40838 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236666AbhG0NS1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 09:18:27 -0400
-Received: by mail-oi1-f177.google.com with SMTP id q6so15032902oiw.7;
-        Tue, 27 Jul 2021 06:18:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ExJ0LotWxubbVajAcl3wn20A9whrV9bAX/MLYMrbYEY=;
-        b=Z3BA/FsBiYydtwiti9poWiSpsPjUD0gaePeMdVJFo39x/kMvK3YaHIoXIOgWeujmF8
-         Gi4jz2KvPcQArWw2axxDVKJm97vgJMBGwM1GZaScHOYCj2XoVjVjBR8g3sHIMDI1llnn
-         MJ7r5MoZdEzDjch2o7iryKSpA6n4xsv5YvSLMSqNi0I1DpRh9+VsRoDnXa9jTtfQgVIl
-         tV4BjmZQLmIMFjMKvJnwgPS7MQL8HIteSA6nWBKnKkDjkDDykzcDF6++YISwIF6H4sXI
-         26BmnHsqokDgO5YgUUuAsvC1WkyK/IRbBM4IbtLykzurYNDk1D6PH9Y2BtmbO+lLVQiz
-         tlBw==
-X-Gm-Message-State: AOAM531mABr6LY8C+HhFsJPrgh2RJPj8FwnfVdxV9xzsOz7OKmXQPUQM
-        l1aZJuuAFYVz/NsKFZppkDOdnWfS8Hawy+vyfM8=
-X-Google-Smtp-Source: ABdhPJxE8sKaO2HwcBrn71zWq3IU3UGLmu2YNIssb+e4f4lsapoxT2OBK4hKrWgUvtOOepvu5el4eoBG2jZgPLZuKu4=
-X-Received: by 2002:aca:4f57:: with SMTP id d84mr15104627oib.71.1627391906449;
- Tue, 27 Jul 2021 06:18:26 -0700 (PDT)
+        id S232340AbhG0OAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 10:00:40 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:7069 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230500AbhG0OAi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 10:00:38 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GYyw04w68zYdMH;
+        Tue, 27 Jul 2021 21:54:40 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 27 Jul 2021 22:00:35 +0800
+Subject: Re: [PATCH V6 7/8] PCI: Add "pci=disable_10bit_tag=" parameter for
+ peer-to-peer support
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Leon Romanovsky <leon@kernel.org>
+References: <1627038402-114183-1-git-send-email-liudongdong3@huawei.com>
+ <1627038402-114183-8-git-send-email-liudongdong3@huawei.com>
+ <YPqo6M0AKWLupvNU@unreal> <a8a8ffee-67e8-c899-3d04-1e28fb72560a@deltatee.com>
+ <YP0HOf7kE1aOkqjV@unreal> <bc9b7b00-40eb-7d4e-f3b3-1d4174f10be5@deltatee.com>
+CC:     <helgaas@kernel.org>, <hch@infradead.org>, <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
+        <hverkuil-cisco@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <12c7f276-6869-a432-a138-4fce88da87e3@huawei.com>
+Date:   Tue, 27 Jul 2021 22:00:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <5475468.DvuYhMxLoT@kreacher> <YP/mN6kSwMPWW+Mn@lahna>
-In-Reply-To: <YP/mN6kSwMPWW+Mn@lahna>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 27 Jul 2021 15:18:15 +0200
-Message-ID: <CAJZ5v0iFiax87oWaz+SjZdcaL4fPAH-4Du=eXx-kWTH6RK2DbQ@mail.gmail.com>
-Subject: Re: [RFT][PATCH] PCI: PM: Add special case handling for PCIe device wakeup
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bc9b7b00-40eb-7d4e-f3b3-1d4174f10be5@deltatee.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 12:56 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+
+
+On 2021/7/26 23:48, Logan Gunthorpe wrote:
 >
-> Hi Rafael,
 >
-> On Mon, Jul 12, 2021 at 07:06:47PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Some PCIe devices only support PME (Power Management Event) from
-> > D3cold.  One example is the ASMedia xHCI controller:
-> >
-> >  11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
-> >    ...
-> >    Capabilities: [78] Power Management version 3
-> >            Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
-> >            Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> >
-> > In those cases, if the device is expected to generate wakeup events
-> > from its final power state, pci_target_state() returns D0, which
-> > prevents the PCIe port the device is connected to from entering any
-> > low-power states too.  However, if the device were allowed to go into
-> > D3hot, its parent PCIe port would also be able to go into D3 and if
-> > it goes into D3cold, it would cause the endpoint device to end up in
-> > D3cold too (as per the PCI PM spec v1.2, Table 6-1), in which case
-> > the endpoint would be able to signal PME.  This means that the system
-> > could be put into a lower-power configuration without sacrificing the
-> > the given device's ability to generate PME.
-> >
-> > In order to avoid missing that opportunity, extend pci_pme_capable()
-> > to check the device's parent in the special case when the target
-> > state is D3hot and the device can only signal PME from D3cold and
-> > update pci_target_state() to return the current target state if
-> > pci_pme_capable() returns 'true' for it.
+> On 2021-07-25 12:39 a.m., Leon Romanovsky wrote:
+>> On Fri, Jul 23, 2021 at 10:20:50AM -0600, Logan Gunthorpe wrote:
+>>>
+>>>
+>>>
+>>> On 2021-07-23 5:32 a.m., Leon Romanovsky wrote:
+>>>> On Fri, Jul 23, 2021 at 07:06:41PM +0800, Dongdong Liu wrote:
+>>>>> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
+>>>>> sending Requests to other Endpoints (as opposed to host memory), the
+>>>>> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
+>>>>> unless an implementation-specific mechanism determines that the Endpoint
+>>>>> supports 10-Bit Tag Completer capability. Add "pci=disable_10bit_tag="
+>>>>> parameter to disable 10-Bit Tag Requester if the peer device does not
+>>>>> support the 10-Bit Tag Completer. This will make P2P traffic safe.
+>>>>>
+>>>>> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+>>>>> ---
+>>>>>  Documentation/admin-guide/kernel-parameters.txt |  7 ++++
+>>>>>  drivers/pci/pci.c                               | 56 +++++++++++++++++++++++++
+>>>>>  drivers/pci/pci.h                               |  1 +
+>>>>>  drivers/pci/pcie/portdrv_pci.c                  | 13 +++---
+>>>>>  drivers/pci/probe.c                             |  9 ++--
+>>>>>  5 files changed, 78 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>>>>> index bdb2200..c2c4585 100644
+>>>>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>>>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>>>>> @@ -4019,6 +4019,13 @@
+>>>>>  				bridges without forcing it upstream. Note:
+>>>>>  				this removes isolation between devices and
+>>>>>  				may put more devices in an IOMMU group.
+>>>>> +		disable_10bit_tag=<pci_dev>[; ...]
+>>>>> +				  Specify one or more PCI devices (in the format
+>>>>> +				  specified above) separated by semicolons.
+>>>>> +				  Disable 10-Bit Tag Requester if the peer
+>>>>> +				  device does not support the 10-Bit Tag
+>>>>> +				  Completer.This will make P2P traffic safe.
+>>>>
+>>>> I can't imagine more awkward user experience than such kernel parameter.
+>>>>
+>>>> As a user, I will need to boot the system, hope for the best that system
+>>>> works, write down all PCI device numbers, guess which one doesn't work
+>>>> properly, update grub with new command line argument and reboot the
+>>>> system. Any HW change and this dance should be repeated.
+>>>
+>>> There are already two such PCI parameters with this pattern and they are
+>>> not that awkward. pci_dev may be specified with either vendor/device IDS
+>>> or with a path of BDFs (which protects against renumbering).
+>>
+>> Unfortunately, in the real world, BDF is not so stable. It changes with
+>> addition of new hardware, BIOS upgrades and even broken servers.
 >
-> Thanks a lot for this!
+> That's why it supports using a *path* of BDFs which tends not to catch
+> the wrong device if the topology changes.
 >
-> I tried the patch and unfortunately it does not solve the issue but I
-> think I know what the problem is, see below.
-
-OK, it's good that you can access a system having this issue.
-
-> > Link: https://lore.kernel.org/linux-pm/20210617123653.58640-1-mika.westerberg@linux.intel.com
-> > Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-> > Reported-by: Koba Ko <koba.ko@canonical.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Hi,
-> >
-> > Anyone who can reproduce the problem described in the changelog,
-> > please test the patch and let me know the result.
-> >
-> > Thanks!
-> >
-> > ---
-> >  drivers/pci/pci.c |   38 ++++++++++++++++++++++++++------------
-> >  1 file changed, 26 insertions(+), 12 deletions(-)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -2298,10 +2298,29 @@ void pci_pme_wakeup_bus(struct pci_bus *
-> >   */
-> >  bool pci_pme_capable(struct pci_dev *dev, pci_power_t state)
-> >  {
-> > +     struct pci_dev *parent;
-> > +
-> >       if (!dev->pm_cap)
-> >               return false;
-> >
-> > -     return !!(dev->pme_support & (1 << state));
-> > +     if (dev->pme_support & (1 << state))
-> > +             return true;
-> > +
-> > +     /*
-> > +      * Special case: The target state is D3hot and the device only supports
-> > +      * signaling PME from D3cold, but it is a PCIe device whose parent port
-> > +      * can go into D3cold.  In that case, if the device is allowed to go
-> > +      * into D3hot, the parent port can go into D3cold which will cause the
-> > +      * device to end up in D3cold, so it will be able to signal PME from the
-> > +      * final state.
-> > +      */
-> > +     if (state != PCI_D3hot || !(dev->pme_support & (1 << PCI_D3cold)))
-> > +             return false;
-> > +
-> > +     parent = dev->bus->self;
-> > +     return pci_bridge_d3_possible(parent) &&
-> > +             platform_pci_power_manageable(parent) &&
+>> Vendor/device IDs doesn't work if you have multiple devices of same
+>> vendor in the system.
 >
-> Here. We cannot assume that the parent has ACPI node either.
+> Yes, but it's fine for some use cases. That's why there's a range of
+> options.
+>
+>>>
+>>> This flag is only useful in P2PDMA traffic, and if the user attempts
+>>> such a transfer, it prints a warning (see the next patch) with the exact
+>>> parameter that needs to be added to the command line.
+>>
+>> Dongdong citied PCI spec and it was very clear - don't enable this
+>> feature unless you clearly know that it is safe to enable. This is
+>> completely opposite to the proposal here - always enable and disable
+>> if something is printed to the dmesg.
+>
+> Quoting from patch 4:
+>
+> "For platforms where the RC supports 10-Bit Tag Completer capability,
+> it is highly recommended for platform firmware or operating software
+> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
+> bit automatically in Endpoints with 10-Bit Tag Requester capability.
+> This enables the important class of 10-Bit Tag capable adapters that
+> send Memory Read Requests only to host memory."
+>
+> Notice the last sentence. It's saying that devices who only talk to host
+> memory should have 10-bit tags enabled. In the kernel we call devices
+> that talk to things besides host memory "P2PDMA". So the spec is saying
+> not to enable 10bit tags for devices participating in P2PDMA. The kernel
+> needs a way to allow users to do that. The kernel parameter only stops
+> the feature from being enabled for a specific device, and the only
+> use-case is P2PDMA which is not that common and requires the user to be
+> aware of their topology. So I really don't think this is that big a problem.
+>
+>>>
+>>> This has worked well for disable_acs_redir and was used for
+>>> resource_alignment before that for quite some time. So save a better
+>>> suggestion I think this is more than acceptable.
+>>
+>> I don't know about other parameters and their history, but we are not in
+>> 90s anymore and addition of modules parameters (for the PCI it is kernel
+>> cmdline arguments) are better to be changed to some configuration tool/sysfs.
+>
+> The problem was that the ACS bits had to be set before the kernel
+> enumerated the devices. The IOMMU code simply was not able to support
+> dynamic adjustments to its groups. I assume changing 10bit tags
+> dynamically is similarly tricky -- but if it's not then, yes a sysfs
+> interface in addition to the kernel parameter would be a good idea.
+PCIe spec 5.0 section 7.5.3.16 Device Control 2 Register
+10-Bit Tag Requester Enable says that
+If software changes the value of this bit while the Function
+has outstanding Non-Posted Requests, the result is undefined.
 
-I see.  Obviously, I assumed that this was the case.
+So 10-Bit Tag Requester Enable should be set before probe the device 
+driver.
 
-> For instance when PCIe is tunneled over TBT/USB4 there can be several PCIe
-> switches between the problem endpoint and the root port (which has the
-> ACPI node of course). I think the safe assumption is to check for the
-> root port and whether platform_pci_power_manageable() returns true for
-> it but I may be missing something.
-
-Well, if any of the ports on the path between the target endpoint and
-the root complex can be put into D3cold via ACPI, the endpoint will
-end up in D3cold effectively, so I think that all of them need to be
-checked.
-
-Let me change the patch to do that.
-
-> > +             platform_pci_choose_state(parent) == PCI_D3cold;
-> >  }
-> >  EXPORT_SYMBOL(pci_pme_capable);
-> >
-> > @@ -2595,17 +2614,12 @@ static pci_power_t pci_target_state(stru
-> >       if (dev->current_state == PCI_D3cold)
-> >               target_state = PCI_D3cold;
-> >
-> > -     if (wakeup) {
-> > -             /*
-> > -              * Find the deepest state from which the device can generate
-> > -              * PME#.
-> > -              */
-> > -             if (dev->pme_support) {
-> > -                     while (target_state
-> > -                           && !(dev->pme_support & (1 << target_state)))
-> > -                             target_state--;
-> > -             }
-> > -     }
-> > +     if (!wakeup || !dev->pme_support || pci_pme_capable(dev, target_state))
-> > +             return target_state;
-> > +
-> > +     /* Find the deepest state from which the device can generate PME#. */
-> > +     while (target_state && !(dev->pme_support & (1 << target_state)))
-> > +             target_state--;
-> >
-> >       return target_state;
-> >  }
-> >
-> >
+Thanks,
+Dongdong
+>
+> Logan
+> .
+>
