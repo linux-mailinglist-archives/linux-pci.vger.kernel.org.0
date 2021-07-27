@@ -2,137 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92CB53D6BF5
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 04:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF5383D6CE5
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 05:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234271AbhG0Btr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jul 2021 21:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233727AbhG0Btr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jul 2021 21:49:47 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D44FC061757;
-        Mon, 26 Jul 2021 19:30:14 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id b1-20020a17090a8001b029017700de3903so1638652pjn.1;
-        Mon, 26 Jul 2021 19:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+lClEageFRMCE8DUCewTHpIp65fpquDBhSKpdSUstzo=;
-        b=bg/xZcytHhyJAAAM+Y6wTFw75X9e3K/l4J7WSxzajW9Xf1t9oLSe2DdtbNvzrrX9ZK
-         L5Zv38zXyHQ+v1bQhhRtvwX1v4LRlKxTl5AfUX+kokKSsj4tsRqCSX7vVmQg4kL/3EjJ
-         NGWSzi10GGBGfGEFoh8v90GahoGiOFGetABXggcAGBkZu3UIafEWqQD6pvVhuzXPyxG2
-         Nd8gsM/yy4ototik7+u8kXUf5B3x+1ECTEoWecXrQiI1XuI58XpO9ffaD9GxW/8a3Fsa
-         b0AvQdigSlYWyv3xGkVcKeSxzVkMoAyfpevjAj5Hmyw56shyKiiHwbp21OynbI+i54WX
-         SJGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+lClEageFRMCE8DUCewTHpIp65fpquDBhSKpdSUstzo=;
-        b=Bfho4AqcWqbMxs59g83/DcrDXxGDi1AlHNKCpx1veud7L0ewaK6eW3aTdUQF4AeiY2
-         Dsqu/2PVQRe36rTRxuWnL2FxzxLJiR3MyldgyQVWKHwPfLblMNb4+YxvLeihy7dBAMCo
-         sF6u81a1S5pYVS8GyOs85BOVkweYDpRZTqwWzgkB3PyNC7iGRPsMfw36kkm/PojzyheR
-         3HHGcXIAfWE8By8mvlj8sU9LwuGbnc6udLcXkdodrVPXTd+W40AyfL2sUQjbP0oxwY0/
-         eYUACI8vQWPTG8T4E3ynC5bajrKaZPTwPEHjSVT5OOwTuOuqrebXm8xHYreF+6BRmOl+
-         kMIQ==
-X-Gm-Message-State: AOAM532ydjyWsb9gY/c6V71Mh931Ouvi10vySGSw88LSs5fQfKQoF1ks
-        y/fubBgSaf/6HEvuJ5YqbVU=
-X-Google-Smtp-Source: ABdhPJzMeiVSuP/fXcXTTi1mHCsB1uniJXVmTS2VzGmikhuzE9YBcg5doqw1QtwWm6hxSBF4VJtR+A==
-X-Received: by 2002:aa7:8b4c:0:b029:314:5619:d317 with SMTP id i12-20020aa78b4c0000b02903145619d317mr20941089pfd.60.1627353013642;
-        Mon, 26 Jul 2021 19:30:13 -0700 (PDT)
-Received: from localhost.localdomain (104.194.74.249.16clouds.com. [104.194.74.249])
-        by smtp.gmail.com with ESMTPSA id r29sm1414076pfq.102.2021.07.26.19.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 19:30:13 -0700 (PDT)
-From:   Artem Lapkin <email2tema@gmail.com>
-X-Google-Original-From: Artem Lapkin <art@khadas.com>
-To:     narmstrong@baylibre.com
-Cc:     yue.wang@Amlogic.com, khilman@baylibre.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        jbrunet@baylibre.com, christianshewitt@gmail.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        art@khadas.com, nick@khadas.com, gouwa@khadas.com
-Subject: [PATCH v2] PCI: DWC: meson: add 256 bytes MRRS quirk
-Date:   Tue, 27 Jul 2021 10:30:00 +0800
-Message-Id: <20210727023000.1030525-1-art@khadas.com>
-X-Mailer: git-send-email 2.25.1
+        id S235038AbhG0C4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jul 2021 22:56:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45171 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234990AbhG0C4u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Jul 2021 22:56:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="191955827"
+X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
+   d="scan'208";a="191955827"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 20:37:18 -0700
+X-IronPort-AV: E=Sophos;i="5.84,272,1620716400"; 
+   d="scan'208";a="474230278"
+Received: from nmanikan-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.209.99.32])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 20:37:17 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     intel-wired-lan@lists.osuosl.org
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        sasha.neftin@intel.com, anthony.l.nguyen@intel.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        netdev@vger.kernel.org, mlichvar@redhat.com,
+        richardcochran@gmail.com, hch@infradead.org, helgaas@kernel.org,
+        pmenzel@molgen.mpg.de
+Subject: [PATCH next-queue v6 0/4] igc: Add support for PCIe PTM
+Date:   Mon, 26 Jul 2021 20:36:53 -0700
+Message-Id: <20210727033657.39885-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-256 bytes maximum read request size. They can't handle
-anything larger than this. So force this limit on
-any devices attached under these ports.
+Hi,
 
-Come-from: https://lkml.org/lkml/2021/6/18/160
-Come-from: https://lkml.org/lkml/2021/6/19/19
+Changes from v5:
+  - Improved commit messages (Paul Menzel);
+  - Clearer loop for PCIe PTM timestamps retrieval (Paul Menzel);
 
-It only affects PCIe in P2P, in non-P2P is will certainly affect
-transfers on the internal SoC/Processor/Chip internal bus/fabric.
+Changes from v4:
+  - Improved commit messages (Bjorn Helgaas);
 
-These quirks are currently implemented in the
-controller driver and only applies when the controller has been probed
-and to each endpoint detected on this particular controller.
+Changes from v3:
+  - More descriptive commit messages and comments (Bjorn Helgaas);
+  - Added a pcie_ptm_enabled() helper (Bjorn Helgaas);
 
-Continue having separate quirks for each controller if the core
-isn't the right place to handle MPS/MRRS.
+Changes from v2:
+  - Now the PTM timestamps are retrieved synchronously with the
+    ioctl();
+  - Fixed some typos in constants;
+  - The IGC_PTM_STAT register is write-1-to-clear, document this more
+    clearly;
 
->> Neil
+Changes from v1:
+  - This now should cross compile better, convert_art_ns_to_tsc() will
+    only be used if CONFIG_X86_TSC is enabled;
+  - PCIe PTM errors reported by the NIC are logged and PTM cycles are
+    restarted in case an error is detected;
 
-Signed-off-by: Artem Lapkin <art@khadas.com>
----
- drivers/pci/controller/dwc/pci-meson.c | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Original cover letter (lightly edited):
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 686ded034..1498950de 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -466,6 +466,37 @@ static int meson_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static void meson_mrrs_limit_quirk(struct pci_dev *dev)
-+{
-+	struct pci_bus *bus = dev->bus;
-+	int mrrs, mrrs_limit = 256;
-+	static const struct pci_device_id bridge_devids[] = {
-+		{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3) },
-+		{ 0, },
-+	};
-+
-+	/* look for the matching bridge */
-+	while (!pci_is_root_bus(bus)) {
-+		/*
-+		 * 256 bytes maximum read request size. They can't handle
-+		 * anything larger than this. So force this limit on
-+		 * any devices attached under these ports.
-+		 */
-+		if (!pci_match_id(bridge_devids, bus->self)) {
-+			bus = bus->parent;
-+			continue;
-+		}
-+
-+		mrrs = pcie_get_readrq(dev);
-+		if (mrrs > mrrs_limit) {
-+			pci_info(dev, "limiting MRRS %d to %d\n", mrrs, mrrs_limit);
-+			pcie_set_readrq(dev, mrrs_limit);
-+		}
-+		break;
-+	}
-+}
-+DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, meson_mrrs_limit_quirk);
-+
- static const struct of_device_id meson_pcie_of_match[] = {
- 	{
- 		.compatible = "amlogic,axg-pcie",
+This adds support for PCIe PTM (Precision Time Measurement) to the igc
+driver. PCIe PTM allows the NIC and Host clocks to be compared more
+precisely, improving the clock synchronization accuracy.
+
+Patch 1/4 reverts a commit that made pci_enable_ptm() private to the
+PCI subsystem, reverting makes it possible for it to be called from
+the drivers.
+
+Patch 2/4 adds the pcie_ptm_enabled() helper.
+
+Patch 3/4 calls pci_enable_ptm() from the igc driver.
+
+Patch 4/4 implements the PCIe PTM support. Exposing it via the
+.getcrosststamp() API implies that the time measurements are made
+synchronously with the ioctl(). The hardware was implemented so the
+most convenient way to retrieve that information would be
+asynchronously. So, to follow the expectations of the ioctl() we have
+to use less convenient ways, triggering an PCIe PTM dialog every time
+a ioctl() is received.
+
+Some questions are raised (also pointed out in the commit message):
+
+1. Using convert_art_ns_to_tsc() is too x86 specific, there should be
+   a common way to create a 'system_counterval_t' from a timestamp.
+
+2. convert_art_ns_to_tsc() says that it should only be used when
+   X86_FEATURE_TSC_KNOWN_FREQ is true, but during tests it works even
+   when it returns false. Should that check be done?
+
+Cheers,
+
+
+Vinicius Costa Gomes (4):
+  Revert "PCI: Make pci_enable_ptm() private"
+  PCI: Add pcie_ptm_enabled()
+  igc: Enable PCIe PTM
+  igc: Add support for PTP getcrosststamp()
+
+ drivers/net/ethernet/intel/igc/igc.h         |   1 +
+ drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
+ drivers/net/ethernet/intel/igc/igc_main.c    |   6 +
+ drivers/net/ethernet/intel/igc/igc_ptp.c     | 179 +++++++++++++++++++
+ drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
+ drivers/pci/pci.h                            |   3 -
+ drivers/pci/pcie/ptm.c                       |   9 +
+ include/linux/pci.h                          |  10 ++
+ 8 files changed, 259 insertions(+), 3 deletions(-)
+
 -- 
-2.25.1
+2.32.0
 
