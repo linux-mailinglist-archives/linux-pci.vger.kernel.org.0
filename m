@@ -2,308 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54AA73D838F
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 00:59:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A12133D839C
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 01:02:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232827AbhG0W7y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 18:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232314AbhG0W7y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 18:59:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 44B4E60EB2;
-        Tue, 27 Jul 2021 22:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627426793;
-        bh=f4DcOByZBXuJoost9Zw01aMhLfuIaKhd4rP2fFlb1FE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EZUXR0ULwxaGuuxD5+MMnbLrwcsd0rtGtSO9A86k4phLTMXH2gTs8XOP8DZY6JK4m
-         mtzhHhxWGLSCW4ke2ObS1eyqqVMhdMWgisZuVTPZU/X9ZgE2PsiKApBDAgmbep2Q/q
-         CKkyX6f2kifPMjViqJ0gZHVnsr7EilC82WJgXiSTsZGNSCixgKmotvNMMb9QtUdEAV
-         XeY73nJ1+P5LfINTjKWuW80HuqeEFW0mcBjlpFpiABupnLvZZ0T1QinebhrdRbh2ys
-         YsVr8iHsiveKsLJiS14a51pYBdFHLAdkxRm8nHRjyEhW+ukdlTS0pXYXNMDrEdDOmB
-         zYaMFPBBnSPyQ==
-Date:   Tue, 27 Jul 2021 17:59:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 2/8] PCI: Add new array for keeping track of ordering
- of reset methods
-Message-ID: <20210727225951.GA752728@bjorn-Precision-5520>
+        id S232336AbhG0XCI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 19:02:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40832 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232559AbhG0XCI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 19:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627426927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M7rRt0unqfhunbDmTgW3PBE42K+S2cwzyUSoewJP8a0=;
+        b=f7LWC/sOhnLrsUjap6/6+Uu9H3BfLffoxA+vfOvs/cykQ4lCQxuXbh6Se0UbALNQba513n
+        HsFDQfwqKFdp+3znS+WQBB4wCOmVXaSbblbjntqafFCfOXSySH0KTVVgGkUe8XaizOeZDO
+        o+J36suNO3gBcS1aoFsuhvenCH9eIDE=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-UdPG3ttjMoCciwEjmhVkZQ-1; Tue, 27 Jul 2021 19:02:05 -0400
+X-MC-Unique: UdPG3ttjMoCciwEjmhVkZQ-1
+Received: by mail-oi1-f200.google.com with SMTP id r12-20020a056808210cb029025af6d05d99so449380oiw.10
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jul 2021 16:02:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=M7rRt0unqfhunbDmTgW3PBE42K+S2cwzyUSoewJP8a0=;
+        b=r5kEc/PMz9qPlZHSFF9+L0GjfMm7TctNopht2w8q8nToW8QSIFXKgWPNv2d2Y3ZlMf
+         8uWo1fOg3jkVQfvpKGM8FaZBPEA3Y8QLysUk9QLOOL/KBt9MxqO6vbyTzLLOOrCiKPbW
+         QQabauDdxb087OIPBo2WuM9ObnTwwvLgahmjqb68D3MJMeiu1SL3E1gSkrfE3j8plu3B
+         Chb/bdJvA07ZzHrK53sQxxKVqoSTH80H9iS+pXCQfRq692IlXEObtaYa0Nxf6Ri+xaWR
+         7+3Z75lOkkZfLxd7I8VVMFiCPpMki7VUh8S6D5sScUmNUv+SFAl02Gly81RP/VTv9fTr
+         Q+8A==
+X-Gm-Message-State: AOAM5333tXmWHJW91aGFgXNeH5qJeJSDBZeoI7XEpGj1QMiETGB1NTDY
+        V0ECC33lY+zCdhYXQ1paKr5IWig84U2uBDjwPmpRO9P4uOc+8aliNl2UdaEfSaYWPVrKZW6WUQO
+        9AXs8LjpWBTFTKKrz1f7W
+X-Received: by 2002:aca:cf85:: with SMTP id f127mr13882757oig.87.1627426925195;
+        Tue, 27 Jul 2021 16:02:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwMkktFGHDX9ExEF99ePaP2wQQCdjtqn0R0onP29wuHIONSDEOphCmXRcshirz/1uyx4zB8tA==
+X-Received: by 2002:aca:cf85:: with SMTP id f127mr13882731oig.87.1627426924981;
+        Tue, 27 Jul 2021 16:02:04 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id y19sm833987oia.22.2021.07.27.16.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 16:02:04 -0700 (PDT)
+Date:   Tue, 27 Jul 2021 17:02:02 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        corbet@lwn.net, diana.craciun@oss.nxp.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, masahiroy@kernel.org,
+        michal.lkml@markovi.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        mgurtovoy@nvidia.com, maorg@nvidia.com, leonro@nvidia.com
+Subject: Re: [PATCH 09/12] PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to
+ struct pci_device_id
+Message-ID: <20210727170202.45c72da0.alex.williamson@redhat.com>
+In-Reply-To: <20210727171458.GE1721383@nvidia.com>
+References: <20210721161609.68223-1-yishaih@nvidia.com>
+        <20210721161609.68223-10-yishaih@nvidia.com>
+        <20210727103418.2d059863.alex.williamson@redhat.com>
+        <20210727171458.GE1721383@nvidia.com>
+Organization: Red Hat
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210709123813.8700-3-ameynarkhede03@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 06:08:07PM +0530, Amey Narkhede wrote:
-> Introduce a new array reset_methods in struct pci_dev to keep track of
-> reset mechanisms supported by the device and their ordering.
+On Tue, 27 Jul 2021 14:14:58 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Tue, Jul 27, 2021 at 10:34:18AM -0600, Alex Williamson wrote:
+> > On Wed, 21 Jul 2021 19:16:06 +0300
+> > Yishai Hadas <yishaih@nvidia.com> wrote:
+> >   
+> > > From: Max Gurtovoy <mgurtovoy@nvidia.com>
+> > > 
+> > > The new flag field is be used to allow PCI drivers to signal the core code
+> > > during driver matching and when generating the modules.alias information.
+> > > 
+> > > The first use will be to define a VFIO flag that indicates the PCI driver
+> > > is a VFIO driver.
+> > > 
+> > > VFIO drivers have a few special properties compared to normal PCI drivers:
+> > >  - They do not automatically bind. VFIO drivers are used to swap out the
+> > >    normal driver for a device and convert the PCI device to the VFIO
+> > >    subsystem.
+> > > 
+> > >    The admin must make this choice and following the current uAPI this is
+> > >    usually done by using the driver_override sysfs.
+> > > 
+> > >  - The modules.alias includes the IDs of the VFIO PCI drivers, prefixing
+> > >    them with 'vfio_pci:' instead of the normal 'pci:'.
+> > > 
+> > >    This allows the userspace machinery that switches devices to VFIO to
+> > >    know what kernel drivers support what devices and allows it to trigger
+> > >    the proper device_override.
+> > > 
+> > > As existing tools do not recognize the "vfio_pci:" mod-alias prefix this
+> > > keeps todays behavior the same. VFIO remains on the side, is never
+> > > autoloaded and can only be activated by direct admin action.
+> > > 
+> > > This patch is the infrastructure to provide the information in the
+> > > modules.alias to userspace and enable the only PCI VFIO driver. Later
+> > > series introduce additional HW specific VFIO PCI drivers.  
+> > 
+> > I don't really understand why we're combining the above "special
+> > properties" into a single flag.   
 > 
-> Also refactor probing and reset functions to take advantage of calling
-> convention of reset functions.
+> Currently I can't think of any reason to have two flags. We always
+> need both behaviors together. It is trivial for someone to change down
+> the road, so I prefer to keep the flag bit usage to a minimum.
 > 
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> ---
->  drivers/pci/pci.c   | 92 ++++++++++++++++++++++++++-------------------
->  drivers/pci/pci.h   |  9 ++++-
->  drivers/pci/probe.c |  5 +--
->  include/linux/pci.h |  7 ++++
->  4 files changed, 70 insertions(+), 43 deletions(-)
+> > For instance, why wouldn't we create a flag that just indicates a
+> > match entry is only for driver override?  
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index fefa6d7b3..42440cb10 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -72,6 +72,14 @@ static void pci_dev_d3_sleep(struct pci_dev *dev)
->  		msleep(delay);
->  }
->  
-> +int pci_reset_supported(struct pci_dev *dev)
-> +{
-> +	u8 null_reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
-> +
-> +	return memcmp(null_reset_methods,
-> +		      dev->reset_methods, sizeof(null_reset_methods));
-
-I think "return dev->reset_methods[0] != 0;" is sufficient, isn't it?
-
-> +}
-> +
->  #ifdef CONFIG_PCI_DOMAINS
->  int pci_domains_supported = 1;
->  #endif
-> @@ -5104,6 +5112,15 @@ static void pci_dev_restore(struct pci_dev *dev)
->  		err_handler->reset_done(dev);
->  }
->  
-> +const struct pci_reset_fn_method pci_reset_fn_methods[] = {
-> +	{ },
-> +	{ &pci_dev_specific_reset, .name = "device_specific" },
-> +	{ &pcie_reset_flr, .name = "flr" },
-> +	{ &pci_af_flr, .name = "af_flr" },
-> +	{ &pci_pm_reset, .name = "pm" },
-> +	{ &pci_reset_bus_function, .name = "bus" },
-> +};
-
-No need for "&" before the function names.
-
-This should be static until it's needed outside this file.  You can
-remove the "static" in the patch that adds the use in another file.
-
-Looks like the only use is in pci-sysfs.c.  I think it might be better
-to move the pci_dev_reset_method_attr_group and related stuff here to
-pci.c and add an extern for it, as is done for aspm_ctrl_attr_group.
-
-I know there's some trick that relies on the first element being
-empty, and it's probably worth a one-line comment there to point it
-out.  Maybe something like this?
-
-  /* dev->reset_methods[] is a 0-terminated list of indices into this */
-
->  /**
->   * __pci_reset_function_locked - reset a PCI device function while holding
->   * the @dev mutex lock.
-> @@ -5126,65 +5143,62 @@ static void pci_dev_restore(struct pci_dev *dev)
->   */
->  int __pci_reset_function_locked(struct pci_dev *dev)
->  {
-> -	int rc;
-> +	int i, m, rc = -ENOTTY;
->  
->  	might_sleep();
->  
->  	/*
-> -	 * A reset method returns -ENOTTY if it doesn't support this device
-> -	 * and we should try the next method.
-> +	 * A reset method returns -ENOTTY if it doesn't support this device and
-> +	 * we should try the next method.
->  	 *
-> -	 * If it returns 0 (success), we're finished.  If it returns any
-> -	 * other error, we're also finished: this indicates that further
-> -	 * reset mechanisms might be broken on the device.
-> +	 * If it returns 0 (success), we're finished.  If it returns any other
-> +	 * error, we're also finished: this indicates that further reset
-> +	 * mechanisms might be broken on the device.
->  	 */
-> -	rc = pci_dev_specific_reset(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pcie_reset_flr(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_af_flr(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_pm_reset(dev, 0);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	return pci_reset_bus_function(dev, 0);
-> +	for (i = 0; i <  PCI_NUM_RESET_METHODS && (m = dev->reset_methods[i]); i++) {
-
-I'm not a huge fan of using assignments as a loop condition because
-it's a little subtle.  Is there a way to restructure this, e.g.,
-
-  for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
-    m = dev->reset_methods[i];
-    if (!m)
-      return -ENOTTY;
-
-    rc = pci_reset_fn_methods[m].reset_fn(dev, 0);
-
-> +		rc = pci_reset_fn_methods[m].reset_fn(dev, 0);
-> +		if (!rc)
-> +			return 0;
-> +		if (rc != -ENOTTY)
-> +			return rc;
-> +	}
-> +
-> +	return -ENOTTY;
->  }
->  EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
->  
->  /**
-> - * pci_probe_reset_function - check whether the device can be safely reset
-> - * @dev: PCI device to reset
-> + * pci_init_reset_methods - check whether device can be safely reset
-> + * and store supported reset mechanisms.
-> + * @dev: PCI device to check for reset mechanisms
->   *
->   * Some devices allow an individual function to be reset without affecting
->   * other functions in the same device.  The PCI device must be responsive
-> - * to PCI config space in order to use this function.
-> + * to reads and writes to its PCI config space in order to use this function.
-
-Since you're reworking this comment anyway, maybe update the "must be
-responsive to PCI config space" comment to explicitly say the device
-must be in D0-D3hot.
-
-> - * Returns 0 if the device function can be reset or negative if the
-> - * device doesn't support resetting a single function.
-> + * Stores reset mechanisms supported by device in reset_methods byte array
-> + * which is a member of struct pci_dev.
->   */
-> -int pci_probe_reset_function(struct pci_dev *dev)
-> +void pci_init_reset_methods(struct pci_dev *dev)
->  {
-> -	int rc;
-> +	int i, n, rc;
-> +	u8 reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
-> +
-> +	n = 0;
-
-Move this init down to just before the loop that uses it.
-
-> +	BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_NUM_RESET_METHODS);
->  
->  	might_sleep();
->  
-> -	rc = pci_dev_specific_reset(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pcie_reset_flr(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_af_flr(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> -	rc = pci_pm_reset(dev, 1);
-> -	if (rc != -ENOTTY)
-> -		return rc;
-> +	for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
-> +		rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
-> +		if (!rc)
-> +			reset_methods[n++] = i;
-
-Why do we need this local reset_methods[] array?  Can we just fill
-in dev->reset_methods[] directly and skip the memcpy() below?
-
-> +		else if (rc != -ENOTTY)
-> +			break;
-> +	}
->  
-> -	return pci_reset_bus_function(dev, 1);
-> +	memcpy(dev->reset_methods, reset_methods, sizeof(reset_methods));
->  }
->  
->  /**
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 37c913bbc..db1ad94e7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -33,7 +33,8 @@ enum pci_mmap_api {
->  int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
->  		  enum pci_mmap_api mmap_api);
->  
-> -int pci_probe_reset_function(struct pci_dev *dev);
-> +int pci_reset_supported(struct pci_dev *dev);
-> +void pci_init_reset_methods(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
->  
-> @@ -606,6 +607,12 @@ struct pci_dev_reset_methods {
->  	int (*reset)(struct pci_dev *dev, int probe);
->  };
->  
-> +struct pci_reset_fn_method {
-> +	int (*reset_fn)(struct pci_dev *pdev, int probe);
-> +	char *name;
-> +};
-> +
-> +extern const struct pci_reset_fn_method pci_reset_fn_methods[];
->  #ifdef CONFIG_PCI_QUIRKS
->  int pci_dev_specific_reset(struct pci_dev *dev, int probe);
->  #else
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 072a3d4dc..bc4af914a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2406,9 +2406,8 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  	pci_rcec_init(dev);		/* Root Complex Event Collector */
->  
->  	pcie_report_downtraining(dev);
-> -
-> -	if (pci_probe_reset_function(dev) == 0)
-> -		dev->reset_fn = 1;
-> +	pci_init_reset_methods(dev);
-> +	dev->reset_fn = pci_reset_supported(dev);
->  }
->  
->  /*
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d432428fd..9f3e85f33 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -49,6 +49,9 @@
->  			       PCI_STATUS_SIG_TARGET_ABORT | \
->  			       PCI_STATUS_PARITY)
->  
-> +/* Number of reset methods used in pci_reset_fn_methods array in pci.c */
-> +#define PCI_NUM_RESET_METHODS 6
-> +
->  /*
->   * The PCI interface treats multi-function devices as independent
->   * devices.  The slot/function address of each device is encoded
-> @@ -506,6 +509,10 @@ struct pci_dev {
->  	char		*driver_override; /* Driver name to force a match */
->  
->  	unsigned long	priv_flags;	/* Private flags for the PCI driver */
-> +	/*
-> +	 * See pci_reset_fn_methods array in pci.c for ordering.
-> +	 */
-> +	u8 reset_methods[PCI_NUM_RESET_METHODS];	/* Reset methods ordered by priority */
->  };
->  
->  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-> -- 
-> 2.32.0
+> We still need to signal the generation of vfio_pci: string in the
+> modules.alias.
 > 
+> > Or if we're only using this for full wildcard matches, we could
+> > detect that even without a flag.  
+> 
+> The mlx/hns/etc drivers will not use wildcard matches. This series is
+> the prep and the only driver we have right at this point is the
+> wildcard vfio_pci generic driver.
+> 
+> > Then, how does the "vfio_pci:" alias extend to other drivers?    
+> 
+> After the HW drivers are merged we have a list of things in the
+> modules.alias file. Eg we might have something like:
+> 
+> alias vfio_pci:v000015B3d00001011sv*sd*bc*sc*i* mlx5_vfio_pci
+> alias vfio_pci:v0000abc1d0000abcdsv*sd*bc*sc*i* hns_vfio_pci
+> alias vfio_pci:v*d*sv*sd*bc*sc*i* vfio_pci
+> 
+> This flag, and the vfio_pci string, is only for the VFIO subsystem. If
+> someday another subsystem wants to use driver_override then it will
+> provide its own subsystem name here instead.
+> 
+> This is solving the problem you had at the start - that userspace must
+> be able to self identify the drivers.  Starting with a PCI BDF
+> userspace can match the modules.alias for vfio_pci: prefixes and
+> determine which string to put into the driver_override sysfs. This is
+> instead of having userspace hardwire vfio_pci.
+> 
+> > Is this expected to be the only driver that would use an alias ever
+> > or would other drivers use new bits of the flag?  
+> 
+> Not sure what you mean by "only driver"? As above every driver
+> implementing VFIO on top of PCI will use this flag. If another
+> subsystem wants to use driver_override it will define its own flag,
+> and it's userspace will look for othersubsytem_pci: tags in
+> modules.alias when it wants to change a PCI device over.
+> 
+> > Seems some documentation is necessary; the comment on
+> > PCI_DRIVER_OVERRIDE_DEVICE_VFIO doesn't really help, "This macro is
+> > used to create a struct pci_device_id that matches a specific
+> > device", then we proceed to use it with PCI_ANY_ID.  
+> 
+> Fair enough, this is ment in the broader context, the generic vfio_pci
+> is just special.
+> 
+> > vfio-pci has always tried (as much as possible) to be "just another
+> > PCI" driver to avoid all the nasty issues that used to exist with
+> > legacy KVM device assignment, so I cringe at seeing these vfio specific
+> > hooks in PCI-core.  Thanks,  
+> 
+> It is has always had very special behavior - a PCI driver without a
+> match table is is not "just another PCI" driver.
+> 
+> While this is not entirely elegant, considering where we have ended up
+> and the historical ABI that has to be preserved, it is the best idea
+> so far anyone has presented.
+
+In general I think my confusion is lack of documentation and examples.
+There's good information here and in the cover letter, but reviewing
+the patch itself I'm not sure if vfio_pci: is meant to indicate the
+vfio_pci driver or the vfio_pci device api or as I've finally decided,
+just prepending "vfio_" to the modalias for a device to indicate the
+class of stuff, ie. no automatic binding but discoverable by userspace
+as a "vfio" driver suitable for this device.
+
+I think we need libvirt folks onboard and maybe a clearer idea what
+userspace helpers might be available.  For example would driverctl have
+an option to choose a vfio class driver for a device?
+
+I can also imagine that if the flag only covered the
+matching/driver_override aspect and pci_device_id further included an
+optional modalias prefix, we could do this without littering pci-core
+with vfio eccentricities.  I'll be interest to see Bjorn's thoughts on
+this.  Thanks,
+
+Alex
+
