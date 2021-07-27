@@ -2,183 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 236C43D7AF4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3A33D7B0A
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jul 2021 18:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbhG0QcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 12:32:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:41070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229441AbhG0QcR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 12:32:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79C5731B;
-        Tue, 27 Jul 2021 09:32:16 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A09D3F70D;
-        Tue, 27 Jul 2021 09:32:14 -0700 (PDT)
-Date:   Tue, 27 Jul 2021 17:32:12 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH V6] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20210727163212.GB15814@lpieralisi>
-References: <CAMuHMdWFeTP81pfsX0YG=qouGH8+d-0GDCw68MmamhSHjQdM_A@mail.gmail.com>
- <20210726174925.GA624246@bjorn-Precision-5520>
+        id S230031AbhG0QeZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 12:34:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28667 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229815AbhG0QeZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jul 2021 12:34:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627403664;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eSN3zUa+aSMFbTfiTDoY4ts+MsujN4ZIL3irtZSd5cc=;
+        b=D1XjgNSvzxja2cmLdIWKgjEofGAQfrKLNKIy/L3f9rrWrXHN6gah7WYIEt19O0MV/YRxnf
+        Euuf81S6uwP7b6A7YObKSmaffMsBbdsR31INQ9PM3IA7pQQpOHHkmNDz2nZEsuM5f56T/T
+        3eVJ5Xwjxi2NpWxX2EX11veVItHBLtQ=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-tQT6eONoN06ggtJOPe1wlQ-1; Tue, 27 Jul 2021 12:34:23 -0400
+X-MC-Unique: tQT6eONoN06ggtJOPe1wlQ-1
+Received: by mail-il1-f198.google.com with SMTP id l14-20020a056e0205ceb02901f2f7ba704aso7057583ils.20
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jul 2021 09:34:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=eSN3zUa+aSMFbTfiTDoY4ts+MsujN4ZIL3irtZSd5cc=;
+        b=YBWFbwL0Xm0BHZLYH3HwmZ3Q5a9eyKrnL2BjxSP9Su2wCbKI0FJWLnAmwH4bvf/gwy
+         SsgpwKvqnuUGdpR7NwffrGv6kFcgjrTlZQev+/HTRW3zj2aFjFnZigabVzK/L/n8UYqY
+         78LKp9+KPJfGcMocHLXs1c5a6QWFuGCATa8evKd6n9zj2t/qIodXE58f7nvczzwYB9M5
+         +wElkbijl6bBTGuGkAkEqtB22P7CdidQZzeboYHnWRpwcKfm5lWJsI8ggDyOWpg6cYl7
+         9IneWBZCRagWJ4+cNaJT3t7D7HbsHoyQDrqbec3dRU4x+df4hgyxAe0JOCZHUVlInZup
+         Kwag==
+X-Gm-Message-State: AOAM532bT5vkeMr01cLY2YS6XEqeRC3vrxpVTO8AtADKGm+OjD2kFUX7
+        P4dUHspkDg1nF+0xIEi53cm/khzcRNfjbZjZpZSbxdkPzHz1lOgIlg37meHjn/WbQZ6zeliZM3H
+        rkzMw27hYg0qpGCDiTnRH
+X-Received: by 2002:a5d:878d:: with SMTP id f13mr5846917ion.83.1627403662576;
+        Tue, 27 Jul 2021 09:34:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyNDLuiJUlkwcG5wDeSXc83uop3QQ8klnj9cewIBJA3vjAmH06hqKaz8ZuEyt2S7VEnZ31d5w==
+X-Received: by 2002:a5d:878d:: with SMTP id f13mr5846896ion.83.1627403662311;
+        Tue, 27 Jul 2021 09:34:22 -0700 (PDT)
+Received: from redhat.com ([198.49.6.230])
+        by smtp.gmail.com with ESMTPSA id f7sm2156386ils.42.2021.07.27.09.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jul 2021 09:34:21 -0700 (PDT)
+Date:   Tue, 27 Jul 2021 10:34:18 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <corbet@lwn.net>,
+        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
+        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <mgurtovoy@nvidia.com>, <jgg@nvidia.com>, <maorg@nvidia.com>,
+        <leonro@nvidia.com>
+Subject: Re: [PATCH 09/12] PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to
+ struct pci_device_id
+Message-ID: <20210727103418.2d059863.alex.williamson@redhat.com>
+In-Reply-To: <20210721161609.68223-10-yishaih@nvidia.com>
+References: <20210721161609.68223-1-yishaih@nvidia.com>
+        <20210721161609.68223-10-yishaih@nvidia.com>
+Organization: Red Hat
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210726174925.GA624246@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 12:49:25PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jul 26, 2021 at 04:47:54PM +0200, Geert Uytterhoeven wrote:
-> > Hi Bjorn,
-> > 
-> > On Sat, Jul 17, 2021 at 7:33 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, May 14, 2021 at 10:05:49PM +0200, marek.vasut@gmail.com wrote:
-> > > > From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > >
-> > > > The R-Car PCIe controller is capable of handling L0s/L1 link states.
-> > > > While the controller can enter and exit L0s link state, and exit L1
-> > > > link state, without any additional action from the driver, to enter
-> > > > L1 link state, the driver must complete the link state transition by
-> > > > issuing additional commands to the controller.
-> > > >
-> > > > The problem is, this transition is not atomic. The controller sets
-> > > > PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
-> > > > the PCIe card, but then the controller enters some sort of inbetween
-> > > > state. The driver must detect this condition and complete the link
-> > > > state transition, by setting L1IATN bit in PMCTLR and waiting for
-> > > > the link state transition to complete.
-> > > >
-> > > > If a PCIe access happens inside this window, where the controller
-> > > > is between L0 and L1 link states, the access generates a fault and
-> > > > the ARM 'imprecise external abort' handler is invoked.
-> > > >
-> > > > Just like other PCI controller drivers, here we hook the fault handler,
-> > > > perform the fixup to help the controller enter L1 link state, and then
-> > > > restart the instruction which triggered the fault. Since the controller
-> > > > is in L1 link state now, the link can exit from L1 link state to L0 and
-> > > > successfully complete the access.
-> > > >
-> > > > While it was suggested to disable L1 link state support completely on
-> > > > the controller level, this would not prevent the L1 link state entry
-> > > > initiated by the link partner. This happens e.g. in case a PCIe card
-> > > > enters D3Hot state, which could be initiated from pci_set_power_state()
-> > > > if the card indicates D3Hot support, which in turn means link must enter
-> > > > L1 state. So instead, fix up the L1 link state after all.
-> > > >
-> > > > Note that this fixup is applicable only to Aarch32 R-Car controllers,
-> > > > the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
-> > > > 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
-> > > > [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
-> > >
-> > > This patch is horribly ugly but it's working around a horrible
-> > > hardware problem, and I don't have any better suggestions, so I guess
-> > > we don't really have much choice.
-> > >
-> > > I do think the commit log is a bit glib:
-> > >
-> > >   - "The R-Car PCIe controller is capable of handling L0s/L1 link
-> > >     states."  AFAICT every PCIe device is required to handle L0 and L1
-> > >     without software assistance.  So saying R-Car is "capable" puts a
-> > >     better face on this than seems warranted.
-> > >
-> > >     L0s doesn't seem relevant at all; at least it doesn't seem to play
-> > >     a role in the patch.  There's no such thing as "returning to L0s"
-> > >     as mentioned in the comment below; L0s is only reachable from L0.
-> > >     Returns from L1 only go to L0 (PCIe r5.0, fig 5-1).
-> > >
-> > >   - "The problem is, this transition is not atomic."  I think the
-> > >     *problem* is the hardware is broken in the first place.  This
-> > >     transition is supposed to be invisible to software.
-> > >
-> > >   - "Just like other PCI controller drivers ..." suggests that this is
-> > >     an ordinary situation that we shouldn't be concerned about.  This
-> > >     patch may be the best we can do to work around a bad hardware
-> > >     defect, but it's definitely not ordinary.
-> > >
-> > >     I think the other hook_fault_code() uses are for reporting
-> > >     legitimate PCIe errors, which most controllers log and turn
-> > >     into ~0 data responses without generating an abort or machine
-> > >     check, not things caused by hardware defects, so they're not
-> > >     really comparable.
-> > >
-> > > Has Renesas documented this as an erratum?  Will future devices
-> > > require additions to rcar_pcie_abort_handler_of_match[]?
-> > >
-> > > It'd be nice if the commit log mentioned the user-visible effect of
-> > > this problem.  I guess it does mention external aborts -- I assume you
-> > > see those when downstream devices go to D3hot or when ASPM puts the
-> > > link in L1?  And the abort results in a reboot?
-> > >
-> > > To be clear, I'm not objecting to the patch.  It's a hardware problem
-> > > and we should work around it as best we can.
-> > 
-> > Cool! So what's missing for this patch, which we have been polishing
-> > for almost one year, to be applied, so innocent people can no longer
-> > lock up an R-Car system just by inserting an ubiquitous Intel Ethernet
-> > card, and suspending the system?
+On Wed, 21 Jul 2021 19:16:06 +0300
+Yishai Hadas <yishaih@nvidia.com> wrote:
+
+> From: Max Gurtovoy <mgurtovoy@nvidia.com>
 > 
-> Nothing missing from my point of view, so if Lorenzo is OK with it,
-> he'll apply it.
-
-I will apply it at some point for v5.15 - there is still some details I
-would like to investigate (disclaimer: I am not picking on this
-particular patch - it is just a really thorny issue and I want to
-understand what's the best way forward); I will update the patch and log
-accordingly, no need for a v7 (which I can post myself publicly so that
-you can have a look before I merge it).
-
-> If I were applying it, I would make the commit log
-> something like this:
-
-I will do it myself, see above.
-
->   When the link is in L1, hardware should return it to L0
->   automatically whenever a transaction targets a component on the
->   other end of the link (PCIe r5.0, sec 5.2).
+> The new flag field is be used to allow PCI drivers to signal the core code
+> during driver matching and when generating the modules.alias information.
 > 
->   The R-Car PCIe controller doesn't handle this transition correctly.
->   If the link is not in L0, an MMIO transaction targeting a downstream
->   device fails, and the controller reports an ARM imprecise external
->   abort.
+> The first use will be to define a VFIO flag that indicates the PCI driver
+> is a VFIO driver.
 > 
->   Work around this by hooking the abort handler so the driver can
->   detect this situation and help the hardware complete the link state
->   transition.
+> VFIO drivers have a few special properties compared to normal PCI drivers:
+>  - They do not automatically bind. VFIO drivers are used to swap out the
+>    normal driver for a device and convert the PCI device to the VFIO
+>    subsystem.
 > 
->   When the R-Car controller receives a PM_ENTER_L1 DLLP from the
->   downstream component, it sets PMEL1RX bit in PMSR register, but then
->   the controller enters some sort of in-between state.  A subsequent
->   MMIO transaction will fail, resulting in the external abort.  The
->   abort handler detects this condition and completes the link state
->   transition by setting the L1IATN bit in PMCTLR and waiting for the
->   link state transition to complete.
+>    The admin must make this choice and following the current uAPI this is
+>    usually done by using the driver_override sysfs.
 > 
-> I assume that on the PCIe side, there must be an error like
-> Unsupported Request or Malformed TLP, and the R-Car controller is
-> logging that and turning it into the ARM external abort?
+>  - The modules.alias includes the IDs of the VFIO PCI drivers, prefixing
+>    them with 'vfio_pci:' instead of the normal 'pci:'.
 > 
-> I didn't see a clear response to Pali's question about what happens if
-> there's no MMIO access, e.g., what if the downstream device initiates
-> a DMA or MSI transaction?
+>    This allows the userspace machinery that switches devices to VFIO to
+>    know what kernel drivers support what devices and allows it to trigger
+>    the proper device_override.
+> 
+> As existing tools do not recognize the "vfio_pci:" mod-alias prefix this
+> keeps todays behavior the same. VFIO remains on the side, is never
+> autoloaded and can only be activated by direct admin action.
+> 
+> This patch is the infrastructure to provide the information in the
+> modules.alias to userspace and enable the only PCI VFIO driver. Later
+> series introduce additional HW specific VFIO PCI drivers.
 
-It'd be great if I could update the log with these questions answered -
-along with others Pali asked [1] and that are very relevant.
+I don't really understand why we're combining the above "special
+properties" into a single flag.  For instance, why wouldn't we create a
+flag that just indicates a match entry is only for driver override?  Or
+if we're only using this for full wildcard matches, we could detect
+that even without a flag.
 
-Thanks,
-Lorenzo
+Then, how does the "vfio_pci:" alias extend to other drivers?  Is this
+expected to be the only driver that would use an alias ever or would
+other drivers use new bits of the flag?  Seems some documentation is
+necessary; the comment on PCI_DRIVER_OVERRIDE_DEVICE_VFIO doesn't
+really help, "This macro is used to create a struct pci_device_id that
+matches a specific device", then we proceed to use it with PCI_ANY_ID.
 
-[1] https://lore.kernel.org/linux-pci/20210719172340.vvtnddbli2vgxndi@pali
+vfio-pci has always tried (as much as possible) to be "just another
+PCI" driver to avoid all the nasty issues that used to exist with
+legacy KVM device assignment, so I cringe at seeing these vfio specific
+hooks in PCI-core.  Thanks,
+
+Alex
+
