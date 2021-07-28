@@ -2,53 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E2F73D945D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 19:35:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F93F3D9481
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 19:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbhG1RfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 13:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54524 "EHLO
+        id S229591AbhG1Rp2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 13:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbhG1RfW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 13:35:22 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C44C061757;
-        Wed, 28 Jul 2021 10:35:19 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id ca5so6214428pjb.5;
-        Wed, 28 Jul 2021 10:35:19 -0700 (PDT)
+        with ESMTP id S229556AbhG1Rp0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 13:45:26 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8552C061757;
+        Wed, 28 Jul 2021 10:45:23 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id m10-20020a17090a34cab0290176b52c60ddso5177167pjf.4;
+        Wed, 28 Jul 2021 10:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3PzlsUS0qKWXyNmKIehGk56GXadOKQkGPpY5nA01M/I=;
-        b=UwXvtSjRMoZIbi3eoNKm/tPsmFZ+JpRfMx5b+4rKRH4Ia2lLUf8wHGodjcMziHB+3g
-         lEnzwX4Ndn0Ywzg4RVBd1PuH0fc0VQ3gLXt1UfYdRt1JV0YkVziGRS5/cS3AYrTX6Cls
-         3Gdda5h+6rsdjMwnuytW3VCJMKNC4vnMnbS9ChrB7qfbuRf73PX6HNcDSfVc7E5c1zQF
-         9uhIcHwBvfCEwDSj676Gl0Xoujvaq1UTNNXtl993bViGjYpP8rkcdqxhh/C7j2JsBdmv
-         4fTLMp9U9eNTdiS6hqDjhgeevGdWeEnORPP4s1qZ7DMErEg8htSOW94RcFTpco8MITu+
-         Rjyg==
+         :content-disposition:in-reply-to;
+        bh=lHno4MBHdbeNB3Xoyjpjs0nK+RqfS/5Vq8ywuXowvEo=;
+        b=oPiCpJ0+KE12qvrF6DoO9oTW6F5QrtH88Gvsjk1WkOVoTfB+s3UvVnNk1PxIpPLwYS
+         Qs6dEEVi2kJT0MgSwO6Q1IZ5749gDmqn5d3B+RmdhFTK/Azhchv397ITdgAgiIsfw89n
+         y4FCmAa6NydTbXzkQijaXo4jE4aQatxI3M61tqtayiHeLAYGynu+C6j+vQHBE2VUsYzb
+         ABFyX61Q9Tdy0XXLLg5jp95aMw9nrDZaenaVo3dgcbBUnz378LuzLYjnlxuXLQQJDiMq
+         5q92s3UFE6vgt9u5IO83JjDWVrUvDa9ErF8MkWKJTS9p4bQt336/0HRNw/uYJlUZIXVH
+         OO1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3PzlsUS0qKWXyNmKIehGk56GXadOKQkGPpY5nA01M/I=;
-        b=RffxUnVdLPmtv5MV1xrC+ofqvbeX834hzNuHUbllYhL18zseZGLc3vPUYGqFfWH4AI
-         Oa/wzVLAOb1rwZ/4SMGbygZVXhkHWS8Y4TueMfKk5jx6W6h7A3TjeFTWK0ywn3EhQp/t
-         MxTKkPJWzpiICMiT/fDhNHW+iEc7DZ4dgq2oMzBh9lxDJ6Eskr1WlI9XtDSDgvhnzZeQ
-         jrrzRnBHpwj8TbkJXisLJrRdhvC6N7Hu/2JBTHHopr1AH8kXJGfTiGj8O+mNIOfK3I2v
-         7u4VgVuKnwi22INwtng1Q8952HT/UL+dm8dIfmQopt6PE1DLk31yg2PygSr3vZZvASjl
-         x30Q==
-X-Gm-Message-State: AOAM530oQ3dBcCmEMhQug9G5+zEClGs+nIWNLRPZtHQjHD73yM02zLCV
-        Ec+PwWjEfo0YelZcc5OppjI=
-X-Google-Smtp-Source: ABdhPJxOEwT+loZNOJgRL23B6PkDaDEGYi2cDA47+4M+bsFE6K5S4GZj5+TYsC60xeAwTPRRQVnu7g==
-X-Received: by 2002:a17:90b:1896:: with SMTP id mn22mr840485pjb.148.1627493718316;
-        Wed, 28 Jul 2021 10:35:18 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=lHno4MBHdbeNB3Xoyjpjs0nK+RqfS/5Vq8ywuXowvEo=;
+        b=LFkrNuYzcopufv5Ao7cvZDQQzLNX3n9+5Q8Of/45t9tlEDts2/qyJzbuslLb0LNTFU
+         Qllhn+DdgnexiWBDEVdnEeWsQbd78Zk8B2ByGhi77thPXg4zl13/6FujltW3drFuxFYj
+         HFv7t/YwCcxX6zkTSXULil+3LUfTkYTkfOFCaQQsUOsIIxatyCGyqhRai3t26f20BHNr
+         KgFjMCONann8Eisr+pIoqZfiW2Fk0psoB1eDqTAkYIyfxS+WKuHGy8Qzr+Jmps7nTLaa
+         EDoEzAVcDQAYqHfRnBMCwRTsWTtTOILqMDnMxLiGPozUevkFQv4Z4JQ5CuG3a35BrtPE
+         Zt/A==
+X-Gm-Message-State: AOAM533699Oepe80omzcMKA/mriamPfb2Rdvgcb431TxsOxfFDlAFKEO
+        H4AxGp51MVxJIMtR4udu9dI=
+X-Google-Smtp-Source: ABdhPJywg3BdJt2bL95wX4f1jtyhZgV7P75wKzntseU8CT642veM14oRIeQth7wFiibhrrJB8vkOPw==
+X-Received: by 2002:a17:90b:215:: with SMTP id fy21mr862166pjb.203.1627494323096;
+        Wed, 28 Jul 2021 10:45:23 -0700 (PDT)
 Received: from localhost ([49.32.196.184])
-        by smtp.gmail.com with ESMTPSA id p17sm6649958pjz.16.2021.07.28.10.35.17
+        by smtp.gmail.com with ESMTPSA id f24sm1492735pjj.45.2021.07.28.10.45.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 10:35:17 -0700 (PDT)
-Date:   Wed, 28 Jul 2021 23:05:14 +0530
+        Wed, 28 Jul 2021 10:45:22 -0700 (PDT)
+Date:   Wed, 28 Jul 2021 23:15:19 +0530
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     alex.williamson@redhat.com,
@@ -56,70 +55,78 @@ Cc:     alex.williamson@redhat.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 8/8] PCI: Change the type of probe argument in reset
- functions
-Message-ID: <20210728173514.77yiv2vjvjpf6ao5@archlinux>
-References: <20210709123813.8700-9-ameynarkhede03@gmail.com>
- <20210727222255.GA751984@bjorn-Precision-5520>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v10 2/8] PCI: Add new array for keeping track of ordering
+ of reset methods
+Message-ID: <20210728174519.has5xvy6rksbukup@archlinux>
+References: <20210709123813.8700-3-ameynarkhede03@gmail.com>
+ <20210727225951.GA752728@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210727222255.GA751984@bjorn-Precision-5520>
+In-Reply-To: <20210727225951.GA752728@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/07/27 05:22PM, Bjorn Helgaas wrote:
-> On Fri, Jul 09, 2021 at 06:08:13PM +0530, Amey Narkhede wrote:
-> > Introduce a new enum pci_reset_mode_t to make the context of probe argument
-> > in reset functions clear and the code easier to read.  Change the type of
-> > probe argument in functions which implement reset methods from int to
-> > pci_reset_mode_t to make the intent clear.
+On 21/07/27 05:59PM, Bjorn Helgaas wrote:
+> On Fri, Jul 09, 2021 at 06:08:07PM +0530, Amey Narkhede wrote:
+> > Introduce a new array reset_methods in struct pci_dev to keep track of
+> > reset mechanisms supported by the device and their ordering.
+> >
+> > Also refactor probing and reset functions to take advantage of calling
+> > convention of reset functions.
+> >
+> > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > ---
+> >  drivers/pci/pci.c   | 92 ++++++++++++++++++++++++++-------------------
+> >  drivers/pci/pci.h   |  9 ++++-
+> >  drivers/pci/probe.c |  5 +--
+> >  include/linux/pci.h |  7 ++++
+> >  4 files changed, 70 insertions(+), 43 deletions(-)
+> >
 >
-> Not sure adding an enum and a PCI_RESET_MODE_MAX seems worth it to me.
-> It's really a boolean parameter, and I'd be happy to change it to a
-> bool.  But I don't think it's worth checking against
-> PCI_RESET_MODE_MAX unless we need more than two options.
+[...]
+> > +	BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_NUM_RESET_METHODS);
+> >
+> >  	might_sleep();
+> >
+> > -	rc = pci_dev_specific_reset(dev, 1);
+> > -	if (rc != -ENOTTY)
+> > -		return rc;
+> > -	rc = pcie_reset_flr(dev, 1);
+> > -	if (rc != -ENOTTY)
+> > -		return rc;
+> > -	rc = pci_af_flr(dev, 1);
+> > -	if (rc != -ENOTTY)
+> > -		return rc;
+> > -	rc = pci_pm_reset(dev, 1);
+> > -	if (rc != -ENOTTY)
+> > -		return rc;
+> > +	for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
+> > +		rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
+> > +		if (!rc)
+> > +			reset_methods[n++] = i;
 >
-Is it okay to use PCI_RESET_PROBE and PCI_RESET_DO_RESET as bool.
-That would be less confusing than directly using true/false.
+> Why do we need this local reset_methods[] array?  Can we just fill
+> in dev->reset_methods[] directly and skip the memcpy() below?
+>
+This is for avoiding caching of previously supported reset methods.
+Is it okay if I use memset(dev->reset_methods, 0,
+sizeof(dev->reset_methods)) instead to clear the values in
+dev->reset_methods?
 
 Thanks,
 Amey
-
-> > Add a new line in return statement of pci_reset_bus_function().
->
-> Drop this line, since I don't think it's correct and there's no need
-> to describe whitespace changes anyway.
->
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Suggested-by: Krzysztof Wilczyński <kw@linux.com>
-> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
->
-> > @@ -306,7 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
-> >  		return -ENOMEM;
-> >  	}
+> > +		else if (rc != -ENOTTY)
+> > +			break;
+> > +	}
 > >
-> > -	pcie_reset_flr(pdev, 0);
-> > +	pcie_reset_flr(pdev, PCI_RESET_DO_RESET);
+> > -	return pci_reset_bus_function(dev, 1);
+> > +	memcpy(dev->reset_methods, reset_methods, sizeof(reset_methods));
+> >  }
 > >
-> >  	pci_restore_state(pdev);
-> >
->
-> > @@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
-> >  			oct->irq_name_storage = NULL;
-> >  		}
-> >  		/* Soft reset the octeon device before exiting */
-> > -		if (!pcie_reset_flr(oct->pci_dev, 1))
-> > +		if (!pcie_reset_flr(oct->pci_dev, PCI_RESET_PROBE))
-> >  			octeon_pci_flr(oct);
-> >  		else
-> >  			cn23xx_vf_ask_pf_to_do_flr(oct);
->
-> > +typedef enum pci_reset_mode {
-> > +	PCI_RESET_DO_RESET,
-> > +	PCI_RESET_PROBE,
-> > +	PCI_RESET_MODE_MAX,
-> > +} pci_reset_mode_t;
+> >  /**
+[...]
