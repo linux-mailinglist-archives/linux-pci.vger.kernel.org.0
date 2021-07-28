@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0539B3D8598
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 03:46:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F993D85C6
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 04:05:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233170AbhG1BqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jul 2021 21:46:12 -0400
-Received: from mail-co1nam11on2050.outbound.protection.outlook.com ([40.107.220.50]:38172
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S234133AbhG1CFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jul 2021 22:05:45 -0400
+Received: from mail-sn1anam02on2048.outbound.protection.outlook.com ([40.107.96.48]:28636
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233149AbhG1BqL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Jul 2021 21:46:11 -0400
+        id S234187AbhG1CFn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 27 Jul 2021 22:05:43 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KZ3wZ0b++OReqNhsiQQp1UFkfN1xV0R+/upb0wxq0GVBSmQzMB7SopYrJXN2vDYnabqugFXcMb8a9UNLHs/gJGdJB+iXtWsjp5eYoRAK0YG1UOEQWhwGYKjLfYj24ijrTElVI2bsls1KPVJIPUnVbLX61JIWq/ZHL/2+yZxS9KV30qPUZyKW1yHT9z7uFD7WzYHHcAK4R+/gdFzTBypgyj+RBWD0Jq4CnQiOPtOO/si1U0gz+IKUuo9hKpsceuE4d1ch3Cuwtp+sACgi/ltDM56VjXvUTUx/q6j6a1PKALnva0PlkmRsoeLOr/2781Gy5TADlGcn0+ktb0yyaeYCig==
+ b=iqHnOzkzjj4enT4Dh2IjCCcVSgpATdcYOPDjjOYTeMzZQf1M6h0lYpP/546Qu7L7bxnYRfI0UN3t6v47zy6gxL6Vln5wfgII9c8dfpgFmvbv6/YxHxl3rwBEbnKDjYW+fSYggRJ9D/M4nag11RQwOaqZENHR7zc2fb1OB4VvJOUs0pdXXbyJ3ljUAwIOowcG5bn6ICWY8Y1lxzbRmZp5PqZF8RGo2hZ70sd3hjCv1K58jfd/AdU2ND9UYBa9eGRITSP72vVYjrV8FZOPhtmFvNXdbyuJDB5MwjNoHRi/ROeMWPHwk19Sr/ruXNaJMl7Lnwupa2PBhZ/jwBJakmovXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WLOHiIinSj8lX+0M5fbo/+L7apxYN1ikmzMKZkE8NVw=;
- b=DX1PzUFGNVwcdgr5DcG5AC5OIkzHs6kXJMVHcE9HKCLwkDhwpBPbsZO9mQeTlFWv2NlVS/7Pn12gli4sPbxsUimzXihPUxLWGsg357o8wYalb3Jr/UyiRaL66rwleA0tcWa8csP09hNwf13wYqISFgYzX2mmJWy3rqTQEZHav47VZifapCH//B8DqbHWhCwb/FS+ky2hZjIz50fk2VvqLSvOW+ACmKmDRxkROVxxwLzq5lSD2vHZommb1xCtEJ6EqnE0waq6qCI9RJjkUOtiNphYT9AUQMTJR6iNE3K2Q3acvGB/+omt2+7CMP92wl5Smkwt78YIW0oFr4Pu1DuW4A==
+ bh=0Ej9oFiKGyXNI/rMgICYfI9ewpqgenwLL9yuwY14ZcM=;
+ b=WYbHu8MxWQy7GSj/WKxwXVKvbFz0b4EAGdUEiIiif8XHWj833M1LkNnHybA9DSyBtQdk3hy0MLrBfqaTCk3Iyica0xzMhGR0f7NzzdCnSR/0xMYtaEiF1/n+KkrB8VldNFBIarry3QZgHQKGMMpgxLE+mg70egFg90P51uq41n3Ggg39dXkqZGNVQBNX45kFZu0w370Q1oDBr7CMxcOrJXAoVJjqVSkMdmxAxeaPxkIYwIGdWx9QZHMm8LoodpnpjyvF896YESKMTbjma7bqpW0UziDtGJPCgOhHoR2BR9O5HjNKVeveBUQLuIUD1v46a7AUcrbf/0+R2/liH8LD9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.112.34) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
@@ -26,18 +26,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WLOHiIinSj8lX+0M5fbo/+L7apxYN1ikmzMKZkE8NVw=;
- b=SCYisUUY+sDCt8Nkr/Y8ZodB1VejHodM6UwIAPKw/TiQ/CBES9CLna44jNQTjQU10lSPYQtL7y+JKnAojJJB+3j3gysSdb/jC9rvDw1ktQWOybLNstMYU0FrBb9ure0nzp1QrmocmeNRVurGAiRafwwk/pT/0igetR3lF/75Ggi9+5GQE91/unXp9dDIn2OlHne98cKA6e/vebCCdJ2uOyQgEle5+hS5kaiavUbJbCmWKOoaZLTAjGehhhQt+hw+AIymW0ZZpSH6l9EK4o7dC5QIQvv7KrQuzFUbIN+J+HHUHDPnLl3OcebjSu+G7mBl7k+NKElOnu2JOs8bIQ6PFQ==
-Received: from BN6PR17CA0012.namprd17.prod.outlook.com (2603:10b6:404:65::22)
- by BN8PR12MB3427.namprd12.prod.outlook.com (2603:10b6:408:62::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.29; Wed, 28 Jul
- 2021 01:46:08 +0000
-Received: from BN8NAM11FT058.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:65:cafe::db) by BN6PR17CA0012.outlook.office365.com
- (2603:10b6:404:65::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend
- Transport; Wed, 28 Jul 2021 01:46:08 +0000
+ bh=0Ej9oFiKGyXNI/rMgICYfI9ewpqgenwLL9yuwY14ZcM=;
+ b=pNR+8XeaGKlW5HZtVw/eYm831eXc1vLnkz7uRyRofcHYvr6Q5+RoJhYJaW/hm4uwVVyWDDQmG0x+AumXupcwN8RFWtXnGtpqUL27RxW1PRyNV3UddW0wlCil7liW1YF3p1HH+j7WnXZ42vi5pi/lcMG/9MNaJp2pyA4ajws4LW0admSArzF+q6Ow4bTP9e8sjU5qiypbnsAOiUrQNdSiFM/yS4QwxpYzQggxrdp1vffr2a1vEf612nfOxubml59lW6fSVsF9keXksmWVJHXGi1+ML8mNWPa2Rh7M2aXbateZG+AFcPfYhvOi5rOleaUsyffBpOYY6NUw+c4YIN4Ltg==
+Received: from MWHPR01CA0046.prod.exchangelabs.com (2603:10b6:300:101::32) by
+ BY5PR12MB5013.namprd12.prod.outlook.com (2603:10b6:a03:1dc::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4373.18; Wed, 28 Jul 2021 02:05:41 +0000
+Received: from CO1NAM11FT065.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:101:cafe::fc) by MWHPR01CA0046.outlook.office365.com
+ (2603:10b6:300:101::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.29 via Frontend
+ Transport; Wed, 28 Jul 2021 02:05:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
  smtp.mailfrom=nvidia.com; arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=pass action=none header.from=nvidia.com;
@@ -45,14 +44,14 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.112.34 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.112.34; helo=mail.nvidia.com;
 Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT058.mail.protection.outlook.com (10.13.177.58) with Microsoft SMTP
+ CO1NAM11FT065.mail.protection.outlook.com (10.13.174.62) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4352.24 via Frontend Transport; Wed, 28 Jul 2021 01:46:07 +0000
-Received: from [10.40.204.204] (172.20.187.5) by HQMAIL107.nvidia.com
+ 15.20.4373.18 via Frontend Transport; Wed, 28 Jul 2021 02:05:40 +0000
+Received: from [10.40.204.204] (172.20.187.6) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 28 Jul
- 2021 01:46:01 +0000
-Subject: Re: [PATCH 2/2] PCI: designware-ep: Fix the access to DBI/iATU
- registers before enabling controller
+ 2021 02:05:35 +0000
+Subject: Re: [PATCH 1/2] PCI: endpoint: pci-epf-test: register notifier if
+ only core_init_notifier is enabled
 To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Jingoo Han <jingoohan1@gmail.com>,
@@ -62,44 +61,43 @@ To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <1627429537-4554-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1627429537-4554-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <1627429537-4554-2-git-send-email-hayashi.kunihiko@socionext.com>
 From:   Om Prakash Singh <omp@nvidia.com>
-Message-ID: <2cccd427-cd00-146a-7268-0014a9e3e099@nvidia.com>
-Date:   Wed, 28 Jul 2021 07:15:57 +0530
+Message-ID: <ca4291c9-d80a-1c31-797b-2a977199af84@nvidia.com>
+Date:   Wed, 28 Jul 2021 07:35:31 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <1627429537-4554-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1627429537-4554-2-git-send-email-hayashi.kunihiko@socionext.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.187.5]
+X-Originating-IP: [172.20.187.6]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ddc0ac9c-b6c2-4721-e8ca-08d951697844
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3427:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB34276B615DCBD97F4BF58348DAEA9@BN8PR12MB3427.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-MS-Office365-Filtering-Correlation-Id: e67e3e72-0c15-49ac-2f58-08d9516c3368
+X-MS-TrafficTypeDiagnostic: BY5PR12MB5013:
+X-Microsoft-Antispam-PRVS: <BY5PR12MB5013A8412DD14D64F26CA375DAEA9@BY5PR12MB5013.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:148;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: phzuKZQZodBEtqQ2NQV4lEwlvxjYQxO+RSQue1eyRsS1KK8Ssk6IREUTwiE0E4poibOpBVVphbNpsl7WsPHhDq2BAPxhVr4ngzsZPDGM+XMSnJH6jaS3TGNzlLFh6u9tD8rlNRk+Pk6rvjsJP9YL7ba2Jn5tL3SxbFE4EisZ6qPRXS63W/n/InQ21eARaIAN3OWCvhu7b4b3+3n2GbM0GaofDdel8wtiQ7dUspBgjdzhi3cVpZHZ/cfRUgn/No9fIsnhYuN9awqax1npwekZ2IJblgzN1RIEhe/hhhnbh6o6TzNR/M7eBaUojaG7jYLMCMgrlqsAiMNiH3gOvxRl2txWNP34S2D0CDR0FKHN0tFIlNoa3WSqLKq9CENpwmMkbuScPjyLADORWeMEqoiumvb+yolYGSmE4mqHw3heeVOY5WBG7MVdWS+onFLwn5H9WSxBUdkSpVwUyPRwEFisUYvRLrwAmcvtIuSm2znmRhemQMohvsR4z/som3mZfSUmRWpYLmua+Y/NGvDlT3YsiWCgYiLhHMCiGZT3OS1A8gkCV1IKc9xN8/aEudgTCHCbu2snp31nl17l6olULE3NkkNHgqA2c1d3t/f0R6Qkfkgzww9N/1V+pxNrXMGQT2MMyKN2UN0/LfC95gbSSWQmkIpbW9aJzF+udS4mNs77jZVJt0TADo5Sgvb2fVCUOgxz2GHBNbZwk7hVms3E6qBrtAJIamExGcC+a420iFyFRnY=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(396003)(376002)(46966006)(36840700001)(36906005)(70206006)(83380400001)(82310400003)(54906003)(36860700001)(336012)(70586007)(8676002)(426003)(110136005)(316002)(6666004)(16526019)(47076005)(186003)(26005)(86362001)(2906002)(356005)(478600001)(16576012)(31686004)(5660300002)(7416002)(31696002)(2616005)(53546011)(7636003)(4326008)(36756003)(8936002)(82740400003)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 8eeC7m/ghq9y4cGP053ERb1kjXxJj40DAaESGMZHggIVGKYh+HJbRIV29gp62fqS0aYpdle/T2RPm/zFyS8zEstlFXyKYiDNeZqW4hZ7e8h4JgqCFbNXRPdOYQ50kCTfEHvD5RdWjSymG1kY6Mj5MmgdWd3TW+L5j7LmqeTGqObp0zBCYUx+Izo1wEWePK86u6wHsw4RbEUy4y2eFSgkPKe96c7EX1zNwdmsvm5qMr9C/K9Kp4V+SrKMwdQqwsiOwY7HCATrJOQZUiqLctJRAio3ebiEWV/LJoNGlSaVUVZ0jdLjO2gyQtMTIwiYG39KHPtz+a5+wiMJ3kA0faxRoy4bgWVC0/Q7ml/eu09eMzXlVpSnVlqeVKtJFlkOjtDZHJutNHSfWlreCvhOatGJ2Z0VQxQWCQJEObrcWFxIubUyuUGDqn4OJMPuP2k8UbwBAenhHHzW4rZov744Ktoqeg/s9++flSzKc16iU+ZiH9WWddfiL/+1K0B+Kienz31MonvQlTiYV3b3bxojWiAYGa5UfsaOeylkm48Z/1PtD82ynz47M77/D2+XeWgbLxgaqnqkDqMObbMSMq/Ivotw7ziMom/L9+igr1y0pEHxyX6erLo90K+mrSFHL8qg403mu9WkUJZ4iUHQlHDO4a+0MfY+wgH2YkS7KxWzsA4xOctHcEYXz/Rxa/m3Jz9xIPO8MjjQ78OEvirkTak4JoqzkHoonezxnPDx97X/PyYJsRE=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(36840700001)(46966006)(70586007)(5660300002)(82740400003)(16576012)(54906003)(53546011)(36756003)(31686004)(426003)(16526019)(83380400001)(36906005)(110136005)(316002)(4326008)(31696002)(86362001)(70206006)(2616005)(8676002)(4744005)(2906002)(82310400003)(478600001)(7416002)(6666004)(26005)(356005)(47076005)(8936002)(336012)(7636003)(186003)(36860700001)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2021 01:46:07.9084
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2021 02:05:40.9260
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddc0ac9c-b6c2-4721-e8ca-08d951697844
+X-MS-Exchange-CrossTenant-Network-Message-Id: e67e3e72-0c15-49ac-2f58-08d9516c3368
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT058.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT065.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3427
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5013
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -112,180 +110,27 @@ On 7/28/2021 5:15 AM, Kunihiko Hayashi wrote:
 > External email: Use caution opening links or attachments
 > 
 > 
-> The driver using core_init_notifier, e.g. pcie-tegra194.c, runs according
-> to the following sequence:
+> Need to register pci_epf_test_notifier function even if only
+> core_init_notifier is enabled.
 > 
->      probe()
->          dw_pcie_ep_init()
-> 
->      bind()
->          dw_pcie_ep_start()
->              enable_irq()
-> 
->      (interrupt occurred)
->      handler()
->          [enable controller]
->          dw_pcie_ep_init_complete()
->          dw_pcie_ep_init_notify()
-> 
-> After receiving an interrupt from RC, the handler enables the controller
-> and the controller registers can be accessed.
-> So accessing the registers should do in dw_pcie_ep_init_complete().
-> 
-> Currently dw_pcie_ep_init() has functions dw_iatu_detect() and
-> dw_pcie_ep_find_capability() that include accesses to DWC registers.
-> As a result, accessing the registers before enabling the controller,
-> the access will fail.
-> 
-> The function dw_pcie_ep_init() shouldn't have any access to DWC registers
-> if the controller is enabled after calling bind(). This moves access codes
-> to DBI/iATU registers and depending variables from dw_pcie_ep_init() to
-> dw_pcie_ep_init_complete().
-> 
-> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Fixes: 6bfc9c3a2c70 ("PCI: designware-ep: Move the function of getting MSI capability forward")
 > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->   drivers/pci/controller/dwc/pcie-designware-ep.c | 81 +++++++++++++------------
->   1 file changed, 41 insertions(+), 40 deletions(-)
+>   drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 8d028a8..f0c93d7 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -636,16 +636,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->   {
->          struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +       struct dw_pcie_ep_func *ep_func;
-> +       struct device *dev = pci->dev;
->          unsigned int offset;
->          unsigned int nbars;
->          u8 hdr_type;
-> +       u8 func_no;
-> +       void *addr;
->          u32 reg;
->          int i;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index d2708ca..73833a4 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -864,7 +864,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>          if (ret)
+>                  epf_test->dma_supported = false;
 > 
-> +       dw_pcie_iatu_detect(pci);
-> +
-> +       ep->ib_window_map = devm_kcalloc(dev,
-> +                                        BITS_TO_LONGS(pci->num_ib_windows),
-> +                                        sizeof(long),
-> +                                        GFP_KERNEL);
-> +       if (!ep->ib_window_map)
-> +               return -ENOMEM;
-> +
-> +       ep->ob_window_map = devm_kcalloc(dev,
-> +                                        BITS_TO_LONGS(pci->num_ob_windows),
-> +                                        sizeof(long),
-> +                                        GFP_KERNEL);
-> +       if (!ep->ob_window_map)
-> +               return -ENOMEM;
-> +
-> +       addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-> +                           GFP_KERNEL);
-> +       if (!addr)
-> +               return -ENOMEM;
-> +       ep->outbound_addr = addr;
-> +
-> +       for (func_no = 0; func_no < ep->epc->max_functions; func_no++) {
-> +               ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-> +               if (!ep_func)
-> +                       return -ENOMEM;
-> +
-> +               ep_func->func_no = func_no;
-> +               ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-> +                                                             PCI_CAP_ID_MSI);
-> +               ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-> +                                                              PCI_CAP_ID_MSIX);
-> +
-> +               list_add_tail(&ep_func->list, &ep->func_list);
-> +       }
-> +
->          hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
->                     PCI_HEADER_TYPE_MASK;
->          if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> -               dev_err(pci->dev,
-> +               dev_err(dev,
->                          "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
->                          hdr_type);
->                  return -EIO;
-> @@ -674,8 +714,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
->   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->   {
->          int ret;
-> -       void *addr;
-> -       u8 func_no;
->          struct resource *res;
->          struct pci_epc *epc;
->          struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> @@ -683,7 +721,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->          struct platform_device *pdev = to_platform_device(dev);
->          struct device_node *np = dev->of_node;
->          const struct pci_epc_features *epc_features;
-> -       struct dw_pcie_ep_func *ep_func;
-> 
->          INIT_LIST_HEAD(&ep->func_list);
-> 
-> @@ -705,8 +742,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->                  }
->          }
-> 
-> -       dw_pcie_iatu_detect(pci);
-> -
->          res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->          if (!res)
->                  return -EINVAL;
-> @@ -714,26 +749,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->          ep->phys_base = res->start;
->          ep->addr_size = resource_size(res);
-> 
-> -       ep->ib_window_map = devm_kcalloc(dev,
-> -                                        BITS_TO_LONGS(pci->num_ib_windows),
-> -                                        sizeof(long),
-> -                                        GFP_KERNEL);
-> -       if (!ep->ib_window_map)
-> -               return -ENOMEM;
-> -
-> -       ep->ob_window_map = devm_kcalloc(dev,
-> -                                        BITS_TO_LONGS(pci->num_ob_windows),
-> -                                        sizeof(long),
-> -                                        GFP_KERNEL);
-> -       if (!ep->ob_window_map)
-> -               return -ENOMEM;
-> -
-> -       addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-> -                           GFP_KERNEL);
-> -       if (!addr)
-> -               return -ENOMEM;
-> -       ep->outbound_addr = addr;
-> -
->          if (pci->link_gen < 1)
->                  pci->link_gen = of_pci_get_max_link_speed(np);
-> 
-> @@ -750,20 +765,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->          if (ret < 0)
->                  epc->max_functions = 1;
-> 
-> -       for (func_no = 0; func_no < epc->max_functions; func_no++) {
-> -               ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-> -               if (!ep_func)
-> -                       return -ENOMEM;
-> -
-> -               ep_func->func_no = func_no;
-> -               ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-> -                                                             PCI_CAP_ID_MSI);
-> -               ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-> -                                                              PCI_CAP_ID_MSIX);
-> -
-> -               list_add_tail(&ep_func->list, &ep->func_list);
-> -       }
-> -
->          if (ep->ops->ep_init)
->                  ep->ops->ep_init(ep);
-> 
+> -       if (linkup_notifier) {
+> +       if (linkup_notifier || core_init_notifier) {
+>                  epf->nb.notifier_call = pci_epf_test_notifier;
+>                  pci_epc_register_notifier(epc, &epf->nb);
+>          } else {
 > --
 > 2.7.4
 > 
