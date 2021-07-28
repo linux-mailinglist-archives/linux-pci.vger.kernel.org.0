@@ -2,1105 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7CC3D8986
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 10:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6AC3D8A1C
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 10:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235012AbhG1ILh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 04:11:37 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:7759 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234622AbhG1ILf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 04:11:35 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GZR6m1r0MzYhS5;
-        Wed, 28 Jul 2021 16:05:36 +0800 (CST)
-Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Wed, 28 Jul 2021 16:11:30 +0800
-Received: from localhost.localdomain (10.67.165.2) by
- dggema757-chm.china.huawei.com (10.1.198.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Wed, 28 Jul 2021 16:11:30 +0800
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <zhangshaokun@hisilicon.com>
-Subject: [PATCH v8 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
-Date:   Wed, 28 Jul 2021 16:09:32 +0800
-Message-ID: <20210728080932.72515-3-liuqi115@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210728080932.72515-1-liuqi115@huawei.com>
-References: <20210728080932.72515-1-liuqi115@huawei.com>
+        id S232290AbhG1I5b convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 28 Jul 2021 04:57:31 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3509 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229574AbhG1I5a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 04:57:30 -0400
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GZRx96H8Lz6BBQT;
+        Wed, 28 Jul 2021 16:42:21 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 28 Jul 2021 10:57:27 +0200
+Received: from localhost (10.210.165.224) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 28 Jul
+ 2021 09:57:25 +0100
+Date:   Wed, 28 Jul 2021 09:56:58 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Vikram Sethi <vsethi@nvidia.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Krzysztof =?iso-8859-2?Q?Wilczy=F1ski?= <kw@linux.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        Fangjian <f.fangjian@huawei.com>,
+        "Natu, Mahesh" <mahesh.natu@intel.com>,
+        "Varun Sampath" <varuns@nvidia.com>
+Subject: Re: RFC: Plumbers microconf topic: PCI DOE and related.
+Message-ID: <20210728095658.00002def@Huawei.com>
+In-Reply-To: <BL0PR12MB2532CC3B64CAB199051D5AA4BDE99@BL0PR12MB2532.namprd12.prod.outlook.com>
+References: <20210727130653.00006a0a@Huawei.com>
+        <BL0PR12MB2532CC3B64CAB199051D5AA4BDE99@BL0PR12MB2532.namprd12.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.2]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggema757-chm.china.huawei.com (10.1.198.199)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.210.165.224]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
-to sample bandwidth, latency, buffer occupation etc.
+On Tue, 27 Jul 2021 16:50:05 +0000
+Vikram Sethi <vsethi@nvidia.com> wrote:
 
-Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
-registered as a PMU in /sys/bus/event_source/devices, so users can
-select target PMU, and use filter to do further sets.
+> Hi Jonathan, 
+> 
+> > -----Original Message-----
+> > From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>  
+> 
+> 
+> > Open Questions / Problems:
+> > 1. Control which software entity uses DOE.
+> >    It does not appear to be safe (as in not going to disrupt each other rather
+> >    than security) for multiple software entities (Userspace, Kernel, TEE,
+> >    Firmware) to access an individual DOE instance on a device without
+> >    mediation.  Some DOE protocols have clear reasons for Linux kernel
+> >    access (e.g. CDAT) others are more debatable.
+> >    Even running the discovery protocol could disrupt other users. Hardening
+> >    against such disruption is probably best effort only (no guarantees).
+> >    Question is: How to prevent this?
+> >     a) Userspace vs Kernel. Are there valid reasons for userspace to access
+> >        a DOE? If so do how do we enable that? Does a per protocol approach
+> >        make sense? Potential vendor defined protocols? Do we need to lock
+> >        out 'developer' tools such as setpci - or do we let developers shoot
+> >        themselves in the foot?
+> >     b) OS vs lower levels / TEE. Do we need to propose a means of telling the
+> > OS
+> >        to keep its hands off a DOE?  How to do it?
+> > 
+> > 2. CMA support.
+> >    Usecases for in kernel CMA support and whether strong enough to support
+> >    native access. (e.g. authentication of VF from a VM, or systems not running
+> >    any suitable lower level software / TEE)  
+> 
+> Any time the device is reset, you'd want to measure again. I'd think every kernel
+> PF FLR/SBR/CXL reset needs to be followed by a measurement of the device
+> In kernel. Of course needs bigger discussion on the plumbing/infrastructure
+> to report the measurement and attest that the measurements post reset are valid.
+> Instead of native access, could it be mediated via ACPI or UEFI runtime service?
+> Not clear that ACPI/UEFI would be the appropriate mediator in all cases. 
 
-Filtering options contains:
-event        - select the event.
-subevent     - select the subevent.
-port         - select target Root Ports. Information of Root Ports
-               are shown under sysfs.
-bdf          - select requester_id of target EP device.
-trig_len     - set trigger condition for starting event statistics.
-trigger_mode - set trigger mode. 0 means starting to statistic when
-               bigger than trigger condition, and 1 means smaller.
-thr_len      - set threshold for statistics.
-thr_mode     - set threshold mode. 0 means count when bigger than
-               threshold, and 1 means smaller.
+Absolutely agree that checking on reset.  There will be cases where it has
+to be mediated by firmware of some type, as same DOE can be in use for IDE
+which may well be controlled by an entity other than the kernel.  However,
+there are other cases where the kernel will probably want to do it directly
+- particularly as CMA can exist for VFs. From the ECN:
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
----
- MAINTAINERS                            |   2 +
- drivers/perf/hisilicon/Kconfig         |   9 +
- drivers/perf/hisilicon/Makefile        |   2 +
- drivers/perf/hisilicon/hisi_pcie_pmu.c | 966 +++++++++++++++++++++++++
- include/linux/cpuhotplug.h             |   1 +
- 5 files changed, 980 insertions(+)
- create mode 100644 drivers/perf/hisilicon/hisi_pcie_pmu.c
+"In other use cases it may be desirable to evaluate individual Functions.
+ For example, when a Function is directly assigned to a Virtual Machine
+ (VM) that VM can use CMA via DOE to confirm that the hardware element
+ assigned to it meets the VM’s requirements. For such use cases, the
+ security exchange with the individual Function is not required to match
+ identically the results received from other Functions."
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 81e1edeceae4..8639c1c469d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8228,8 +8228,10 @@ F:	Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
- 
- HISILICON PMU DRIVER
- M:	Shaokun Zhang <zhangshaokun@hisilicon.com>
-+M:	Qi Liu <liuqi115@huawei.com>
- S:	Supported
- W:	http://www.hisilicon.com
-+F:	Documentation/admin-guide/perf/hisi-pcie-pmu.rst
- F:	Documentation/admin-guide/perf/hisi-pmu.rst
- F:	drivers/perf/hisilicon
- 
-diff --git a/drivers/perf/hisilicon/Kconfig b/drivers/perf/hisilicon/Kconfig
-index c5d1b7019fff..5546218b5598 100644
---- a/drivers/perf/hisilicon/Kconfig
-+++ b/drivers/perf/hisilicon/Kconfig
-@@ -5,3 +5,12 @@ config HISI_PMU
- 	  help
- 	  Support for HiSilicon SoC L3 Cache performance monitor, Hydra Home
- 	  Agent performance monitor and DDR Controller performance monitor.
-+
-+config HISI_PCIE_PMU
-+	tristate "HiSilicon PCIE PERF PMU"
-+	depends on PCI && ARM64
-+	help
-+	  Provide support for HiSilicon PCIe performance monitoring unit (PMU)
-+	  RCiEP devices.
-+	  Adds the PCIe PMU into perf events system for monitoring latency,
-+	  bandwidth etc.
-diff --git a/drivers/perf/hisilicon/Makefile b/drivers/perf/hisilicon/Makefile
-index 7643c9f93e36..506ed39e3266 100644
---- a/drivers/perf/hisilicon/Makefile
-+++ b/drivers/perf/hisilicon/Makefile
-@@ -2,3 +2,5 @@
- obj-$(CONFIG_HISI_PMU) += hisi_uncore_pmu.o hisi_uncore_l3c_pmu.o \
- 			  hisi_uncore_hha_pmu.o hisi_uncore_ddrc_pmu.o hisi_uncore_sllc_pmu.o \
- 			  hisi_uncore_pa_pmu.o
-+
-+obj-$(CONFIG_HISI_PCIE_PMU) += hisi_pcie_pmu.o
-diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-new file mode 100644
-index 000000000000..b7b566abbcd8
---- /dev/null
-+++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -0,0 +1,966 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * This driver adds support for PCIe PMU RCiEP device. Related
-+ * perf events are bandwidth, bandwidth utilization, latency
-+ * etc.
-+ *
-+ * Copyright (C) 2021 HiSilicon Limited
-+ * Author: Qi Liu <liuqi115@huawei.com>
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/bitmap.h>
-+#include <linux/bug.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/perf_event.h>
-+
-+/* Define registers */
-+#define HISI_PCIE_GLOBAL_CTRL		0x00
-+#define HISI_PCIE_EVENT_CTRL		0x010
-+#define HISI_PCIE_CNT			0x090
-+#define HISI_PCIE_EXT_CNT		0x110
-+#define HISI_PCIE_INT_STAT		0x150
-+#define HISI_PCIE_INT_MASK		0x154
-+#define HISI_PCIE_REG_BDF		0xfe0
-+#define HISI_PCIE_REG_VERSION		0xfe4
-+#define HISI_PCIE_REG_INFO		0xfe8
-+
-+/* Define PCIE CTRL CMD */
-+#define HISI_PCIE_GLOBAL_EN		0x01
-+#define HISI_PCIE_GLOBAL_NONE		0
-+#define HISI_PCIE_EVENT_EN		BIT_ULL(20)
-+#define HISI_PCIE_RESET_CNT		BIT_ULL(22)
-+#define HISI_PCIE_DEFAULT_SET		BIT_ULL(34)
-+#define HISI_PCIE_THR_EN		BIT_ULL(26)
-+#define HISI_PCIE_TARGET_EN		BIT_ULL(32)
-+#define HISI_PCIE_TRIG_EN		BIT_ULL(52)
-+
-+/* Define offsets in event ctrl regesiter */
-+#define HISI_PCIE_EVENT_M		GENMASK_ULL(7, 0)
-+#define HISI_PCIE_SUBEVENT_M		GENMASK_ULL(15, 8)
-+#define HISI_PCIE_THR_MODE_M		GENMASK_ULL(27, 27)
-+#define HISI_PCIE_THR_M			GENMASK_ULL(31, 28)
-+#define HISI_PCIE_TARGET_M		GENMASK_ULL(52, 36)
-+#define HISI_PCIE_TRIG_MODE_M		GENMASK_ULL(53, 53)
-+#define HISI_PCIE_TRIG_M		GENMASK_ULL(59, 56)
-+
-+#define HISI_PCIE_MAX_COUNTERS		8
-+#define HISI_PCIE_REG_STEP		8
-+#define HISI_PCIE_EVENT_MAX		0xa2
-+#define HISI_PCIE_SUBEVENT_MAX		0x20
-+#define HISI_PCIE_THR_MAX_VAL		10
-+#define HISI_PCIE_TRIG_MAX_VAL		10
-+#define HISI_PCIE_MAX_PERIOD		(GENMASK_ULL(63, 0))
-+#define HISI_PCIE_DEFAULT_VALUE		BIT_ULL(63)
-+
-+struct hisi_pcie_pmu {
-+	struct perf_event *hw_events[HISI_PCIE_MAX_COUNTERS];
-+	struct hlist_node node;
-+	struct pci_dev *pdev;
-+	struct pmu pmu;
-+	void __iomem *base;
-+	int irq;
-+	u32 identifier;
-+	/* Minimum and maximum bdf of root ports monitored by PMU */
-+	u16 bdf_min;
-+	u16 bdf_max;
-+	int on_cpu;
-+};
-+
-+struct hisi_pcie_reg_pair {
-+	u16 lo;
-+	u16 hi;
-+};
-+
-+#define to_pcie_pmu(p)  (container_of((p), struct hisi_pcie_pmu, pmu))
-+#define GET_PCI_DEVFN(bdf)  ((bdf) & 0xff)
-+#define EXT_COUNTER_IS_USED(idx)		((idx) & GENMASK(15, 8))
-+
-+#define HISI_PCIE_PMU_FILTER_ATTR(_name, _config, _hi, _lo)		  \
-+	static u64 hisi_pcie_get_##_name(struct perf_event *event)	  \
-+	{								  \
-+		return FIELD_GET(GENMASK(_hi, _lo), event->attr._config); \
-+	}								  \
-+
-+HISI_PCIE_PMU_FILTER_ATTR(event, config, 15, 0);
-+HISI_PCIE_PMU_FILTER_ATTR(subevent, config, 23, 16);
-+HISI_PCIE_PMU_FILTER_ATTR(thr_len, config1, 3, 0);
-+HISI_PCIE_PMU_FILTER_ATTR(thr_mode, config1, 4, 4);
-+HISI_PCIE_PMU_FILTER_ATTR(trig_len, config1, 8, 5);
-+HISI_PCIE_PMU_FILTER_ATTR(trig_mode, config1, 9, 9);
-+HISI_PCIE_PMU_FILTER_ATTR(port, config2, 15, 0);
-+HISI_PCIE_PMU_FILTER_ATTR(bdf, config2, 31, 16);
-+
-+static ssize_t hisi_pcie_format_sysfs_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct dev_ext_attribute *eattr;
-+
-+	eattr = container_of(attr, struct dev_ext_attribute, attr);
-+
-+	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
-+}
-+
-+static ssize_t hisi_pcie_event_sysfs_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct perf_pmu_events_attr *pmu_attr =
-+		container_of(attr, struct perf_pmu_events_attr, attr);
-+
-+	return sysfs_emit(buf, "config=0x%llx\n", pmu_attr->id);
-+}
-+
-+#define HISI_PCIE_PMU_FORMAT_ATTR(_name, _format)                              \
-+	(&((struct dev_ext_attribute[]){                                       \
-+		{ .attr = __ATTR(_name, 0444, hisi_pcie_format_sysfs_show,     \
-+				 NULL),                                        \
-+		  .var = (void *)_format }                                     \
-+	})[0].attr.attr)
-+
-+#define HISI_PCIE_PMU_EVENT_ATTR(_name, _id)			\
-+	PMU_EVENT_ATTR_ID(_name, hisi_pcie_event_sysfs_show, _id)
-+
-+static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(dev_get_drvdata(dev));
-+
-+	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pcie_pmu->on_cpu));
-+}
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static ssize_t identifier_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(dev_get_drvdata(dev));
-+
-+	return sysfs_emit(buf, "%#x\n", pcie_pmu->identifier);
-+}
-+static DEVICE_ATTR_RO(identifier);
-+
-+static ssize_t bus_show(struct device *dev, struct device_attribute *attr,
-+			char *buf)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(dev_get_drvdata(dev));
-+
-+	return sysfs_emit(buf, "%#04x\n", PCI_BUS_NUM(pcie_pmu->bdf_min));
-+}
-+static DEVICE_ATTR_RO(bus);
-+
-+static struct hisi_pcie_reg_pair
-+hisi_pcie_parse_reg_value(struct hisi_pcie_pmu *pcie_pmu, u32 reg_off)
-+{
-+	u32 val = readl_relaxed(pcie_pmu->base + reg_off);
-+	struct hisi_pcie_reg_pair regs = {
-+		.lo = val,
-+		.hi = val >> 16,
-+	};
-+
-+	return regs;
-+}
-+
-+/*
-+ * Hardware counter and ext_counter work together for bandwidth, latency,
-+ * bus utilization and buffer occupancy events. For example, for latency
-+ * events(idx = 0x10), counter counts total delay cycles and ext_counter
-+ * counts PCIe packets number.
-+ *
-+ * As we don't want PMU driver to process these two data, "delay cycles"
-+ * can be treated as an event(id = 0x10), "packets number" as another event
-+ * (id = 0x10 << 8), and driver could export these data separately. So in
-+ * this function, the "real" event idx is get to set HISI_PCIE_EVENT_CTRL.
-+ */
-+static u32 hisi_pcie_pmu_get_real_idx(struct perf_event *event)
-+{
-+	u32 event_idx = hisi_pcie_get_event(event);
-+
-+	if (!EXT_COUNTER_IS_USED(event_idx))
-+		return event_idx;
-+
-+	return FIELD_GET(GENMASK(15, 8), event_idx);
-+}
-+
-+static u32 hisi_pcie_pmu_get_offset(u32 offset, u32 idx)
-+{
-+	return offset + HISI_PCIE_REG_STEP * idx;
-+}
-+
-+static u32 hisi_pcie_pmu_readl(struct hisi_pcie_pmu *pcie_pmu, u32 reg_offset,
-+			       u32 idx)
-+{
-+	u32 offset = hisi_pcie_pmu_get_offset(reg_offset, idx);
-+
-+	return readl_relaxed(pcie_pmu->base + offset);
-+}
-+
-+static void hisi_pcie_pmu_writel(struct hisi_pcie_pmu *pcie_pmu, u32 reg_offset,
-+				 u32 idx, u32 val)
-+{
-+	u32 offset = hisi_pcie_pmu_get_offset(reg_offset, idx);
-+
-+	writel_relaxed(val, pcie_pmu->base + offset);
-+}
-+
-+static u64 hisi_pcie_pmu_readq(struct hisi_pcie_pmu *pcie_pmu, u32 reg_offset,
-+			       u32 idx)
-+{
-+	u32 offset = hisi_pcie_pmu_get_offset(reg_offset, idx);
-+
-+	return readq_relaxed(pcie_pmu->base + offset);
-+}
-+
-+static void hisi_pcie_pmu_writeq(struct hisi_pcie_pmu *pcie_pmu, u32 reg_offset,
-+				 u32 idx, u64 val)
-+{
-+	u32 offset = hisi_pcie_pmu_get_offset(reg_offset, idx);
-+
-+	writeq_relaxed(val, pcie_pmu->base + offset);
-+}
-+
-+static void hisi_pcie_pmu_config_filter(struct perf_event *event)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	u32 event_idx = hisi_pcie_pmu_get_real_idx(event);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 reg = HISI_PCIE_DEFAULT_SET;
-+	u64 port, trig_len, thr_len;
-+	u32 idx = hwc->idx;
-+
-+	/* Config HISI_PCIE_EVENT_CTRL according to event and subevent. */
-+	reg |= FIELD_PREP(HISI_PCIE_EVENT_M, event_idx) |
-+	       FIELD_PREP(HISI_PCIE_SUBEVENT_M, hisi_pcie_get_subevent(event));
-+
-+	/* Config HISI_PCIE_EVENT_CTRL according to ROOT PORT or EP device. */
-+	port = hisi_pcie_get_port(event);
-+	if (port)
-+		reg |= FIELD_PREP(HISI_PCIE_TARGET_M, port);
-+	else
-+		reg |= HISI_PCIE_TARGET_EN |
-+		       FIELD_PREP(HISI_PCIE_TARGET_M, hisi_pcie_get_bdf(event));
-+
-+	/* Config HISI_PCIE_EVENT_CTRL according to trigger condition. */
-+	trig_len = hisi_pcie_get_trig_len(event);
-+	if (trig_len) {
-+		reg |= FIELD_PREP(HISI_PCIE_TRIG_M, trig_len);
-+		reg |= FIELD_PREP(HISI_PCIE_TRIG_MODE_M,
-+				  hisi_pcie_get_trig_mode(event));
-+		reg |= HISI_PCIE_TRIG_EN;
-+	}
-+
-+	/* Config HISI_PCIE_EVENT_CTRL according to threshold condition. */
-+	thr_len = hisi_pcie_get_thr_len(event);
-+	if (thr_len) {
-+		reg |= FIELD_PREP(HISI_PCIE_THR_M, thr_len);
-+		reg |= FIELD_PREP(HISI_PCIE_THR_MODE_M,
-+		       hisi_pcie_get_thr_mode(event));
-+		reg |= HISI_PCIE_THR_EN;
-+	}
-+
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx, reg);
-+}
-+
-+static void hisi_pcie_pmu_clear_filter(struct perf_event *event)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, hwc->idx,
-+			     HISI_PCIE_DEFAULT_SET);
-+}
-+
-+static bool hisi_pcie_pmu_valid_port(struct hisi_pcie_pmu *pcie_pmu, u16 rp_bdf)
-+{
-+	return rp_bdf >= pcie_pmu->bdf_min && rp_bdf <= pcie_pmu->bdf_max;
-+}
-+
-+static bool hisi_pcie_pmu_valid_requester_id(struct hisi_pcie_pmu *pcie_pmu,
-+					     u32 bdf)
-+{
-+	struct pci_dev *root_port, *pdev;
-+
-+	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pcie_pmu->pdev->bus),
-+					   PCI_BUS_NUM(bdf),
-+					   GET_PCI_DEVFN(bdf));
-+	if (!pdev)
-+		return false;
-+
-+	root_port = pcie_find_root_port(pdev);
-+	if (!root_port)
-+		return false;
-+
-+	pci_dev_put(pdev);
-+	return hisi_pcie_pmu_valid_port(pcie_pmu, pci_dev_id(root_port));
-+}
-+
-+static bool hisi_pcie_pmu_valid_filter(struct perf_event *event,
-+				       struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	u32 event_idx = hisi_pcie_pmu_get_real_idx(event);
-+	u32 subev_idx = hisi_pcie_get_subevent(event);
-+	u32 requester_id = hisi_pcie_get_bdf(event);
-+
-+	if (subev_idx > HISI_PCIE_SUBEVENT_MAX ||
-+	    event_idx > HISI_PCIE_EVENT_MAX)
-+		return false;
-+
-+	if (hisi_pcie_get_thr_len(event) > HISI_PCIE_THR_MAX_VAL)
-+		return false;
-+
-+	if (hisi_pcie_get_trig_len(event) > HISI_PCIE_TRIG_MAX_VAL)
-+		return false;
-+
-+	if (requester_id) {
-+		if (!hisi_pcie_pmu_valid_requester_id(pcie_pmu, requester_id))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
-+{
-+	struct perf_event *sibling, *leader = event->group_leader;
-+	int counters = 1;
-+
-+	if (!is_software_event(leader)) {
-+		if (leader->pmu != event->pmu)
-+			return false;
-+
-+		if (leader != event)
-+			counters++;
-+	}
-+
-+	for_each_sibling_event(sibling, event->group_leader) {
-+		if (is_software_event(sibling))
-+			continue;
-+
-+		if (sibling->pmu != event->pmu)
-+			return false;
-+
-+		counters++;
-+	}
-+
-+	return counters <= HISI_PCIE_MAX_COUNTERS;
-+}
-+
-+static int hisi_pcie_pmu_event_init(struct perf_event *event)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+
-+	event->cpu = pcie_pmu->on_cpu;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	/* Sampling is not supported. */
-+	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
-+		return -EOPNOTSUPP;
-+
-+	if (!hisi_pcie_pmu_valid_filter(event, pcie_pmu)) {
-+		pci_err(pcie_pmu->pdev, "Invalid filter!\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!hisi_pcie_pmu_validate_event_group(event))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static u64 hisi_pcie_pmu_read_counter(struct perf_event *event)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	u32 event_idx = hisi_pcie_get_event(event);
-+	u32 idx = event->hw.idx;
-+
-+	if (EXT_COUNTER_IS_USED(event_idx))
-+		return hisi_pcie_pmu_readq(pcie_pmu, HISI_PCIE_EXT_CNT, idx);
-+
-+	return hisi_pcie_pmu_readq(pcie_pmu, HISI_PCIE_CNT, idx);
-+}
-+
-+static void hisi_pcie_pmu_write_counter(struct perf_event *event, u64 val)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	u32 event_idx = hisi_pcie_get_event(event);
-+	u32 idx = event->hw.idx;
-+
-+	if (EXT_COUNTER_IS_USED(event_idx))
-+		hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EXT_CNT, idx, val);
-+	else
-+		hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_CNT, idx, val);
-+}
-+
-+static int hisi_pcie_pmu_get_event_idx(struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	int idx;
-+
-+	for (idx = 0; idx < HISI_PCIE_MAX_COUNTERS; idx++) {
-+		if (!pcie_pmu->hw_events[idx])
-+			return idx;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static void hisi_pcie_pmu_event_update(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 new_cnt, prev_cnt, delta;
-+
-+	do {
-+		prev_cnt = local64_read(&hwc->prev_count);
-+		new_cnt = hisi_pcie_pmu_read_counter(event);
-+	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt,
-+				 new_cnt) != prev_cnt);
-+
-+	delta = (new_cnt - prev_cnt) & HISI_PCIE_MAX_PERIOD;
-+	local64_add(delta, &event->count);
-+}
-+
-+static void hisi_pcie_pmu_read(struct perf_event *event)
-+{
-+	hisi_pcie_pmu_event_update(event);
-+}
-+
-+static void hisi_pcie_pmu_set_period(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	local64_set(&hwc->prev_count, HISI_PCIE_DEFAULT_VALUE);
-+	hisi_pcie_pmu_write_counter(event, HISI_PCIE_DEFAULT_VALUE);
-+}
-+
-+static void hisi_pcie_pmu_enable_counter(struct hisi_pcie_pmu *pcie_pmu,
-+					 struct hw_perf_event *hwc)
-+{
-+	u32 idx = hwc->idx;
-+	u64 val;
-+
-+	val = hisi_pcie_pmu_readq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx);
-+	val |= HISI_PCIE_EVENT_EN;
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx, val);
-+}
-+
-+static void hisi_pcie_pmu_disable_counter(struct hisi_pcie_pmu *pcie_pmu,
-+					  struct hw_perf_event *hwc)
-+{
-+	u32 idx = hwc->idx;
-+	u64 val;
-+
-+	val = hisi_pcie_pmu_readq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx);
-+	val &= ~HISI_PCIE_EVENT_EN;
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx, val);
-+}
-+
-+static void hisi_pcie_pmu_enable_int(struct hisi_pcie_pmu *pcie_pmu,
-+				     struct hw_perf_event *hwc)
-+{
-+	u32 idx = hwc->idx;
-+
-+	hisi_pcie_pmu_writel(pcie_pmu, HISI_PCIE_INT_MASK, idx, 0);
-+}
-+
-+static void hisi_pcie_pmu_disable_int(struct hisi_pcie_pmu *pcie_pmu,
-+				      struct hw_perf_event *hwc)
-+{
-+	u32 idx = hwc->idx;
-+
-+	hisi_pcie_pmu_writel(pcie_pmu, HISI_PCIE_INT_MASK, idx, 1);
-+}
-+
-+static void hisi_pcie_pmu_reset_counter(struct hisi_pcie_pmu *pcie_pmu,
-+					struct hw_perf_event *hwc)
-+{
-+	u32 idx = hwc->idx;
-+
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx,
-+			     HISI_PCIE_RESET_CNT);
-+	hisi_pcie_pmu_writeq(pcie_pmu, HISI_PCIE_EVENT_CTRL, idx,
-+			     HISI_PCIE_DEFAULT_SET);
-+}
-+
-+static void hisi_pcie_pmu_start(struct perf_event *event, int flags)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 prev_cnt;
-+
-+	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
-+		return;
-+
-+	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
-+	hwc->state = 0;
-+
-+	hisi_pcie_pmu_config_filter(event);
-+	hisi_pcie_pmu_enable_counter(pcie_pmu, hwc);
-+	hisi_pcie_pmu_enable_int(pcie_pmu, hwc);
-+	hisi_pcie_pmu_set_period(event);
-+
-+	if (flags & PERF_EF_RELOAD) {
-+		prev_cnt = local64_read(&hwc->prev_count);
-+		hisi_pcie_pmu_write_counter(event, prev_cnt);
-+	}
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+static void hisi_pcie_pmu_stop(struct perf_event *event, int flags)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	hisi_pcie_pmu_event_update(event);
-+	hisi_pcie_pmu_disable_int(pcie_pmu, hwc);
-+	hisi_pcie_pmu_disable_counter(pcie_pmu, hwc);
-+	hisi_pcie_pmu_clear_filter(event);
-+	WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
-+	hwc->state |= PERF_HES_STOPPED;
-+
-+	if (hwc->state & PERF_HES_UPTODATE)
-+		return;
-+
-+	hwc->state |= PERF_HES_UPTODATE;
-+}
-+
-+static int hisi_pcie_pmu_add(struct perf_event *event, int flags)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx;
-+
-+	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-+	idx = hisi_pcie_pmu_get_event_idx(pcie_pmu);
-+	if (idx < 0)
-+		return idx;
-+
-+	hwc->idx = idx;
-+	pcie_pmu->hw_events[idx] = event;
-+
-+	/* Reset Counter to avoid interference caused by previous statistic. */
-+	hisi_pcie_pmu_reset_counter(pcie_pmu, hwc);
-+
-+	if (flags & PERF_EF_START)
-+		hisi_pcie_pmu_start(event, PERF_EF_RELOAD);
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_pmu_del(struct perf_event *event, int flags)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	hisi_pcie_pmu_stop(event, PERF_EF_UPDATE);
-+	pcie_pmu->hw_events[hwc->idx] = NULL;
-+	perf_event_update_userpage(event);
-+}
-+
-+static void hisi_pcie_pmu_enable(struct pmu *pmu)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(pmu);
-+	int num;
-+
-+	for (num = 0; num < HISI_PCIE_MAX_COUNTERS; num++) {
-+		if (pcie_pmu->hw_events[num])
-+			break;
-+	}
-+
-+	if (num == HISI_PCIE_MAX_COUNTERS)
-+		return;
-+
-+	writel(HISI_PCIE_GLOBAL_EN, pcie_pmu->base + HISI_PCIE_GLOBAL_CTRL);
-+}
-+
-+static void hisi_pcie_pmu_disable(struct pmu *pmu)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(pmu);
-+
-+	writel(HISI_PCIE_GLOBAL_NONE, pcie_pmu->base + HISI_PCIE_GLOBAL_CTRL);
-+}
-+
-+static irqreturn_t hisi_pcie_pmu_irq(int irq, void *data)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = data;
-+	irqreturn_t ret = IRQ_NONE;
-+	struct perf_event *event;
-+	u32 overflown;
-+	int idx;
-+
-+	for (idx = 0; idx < HISI_PCIE_MAX_COUNTERS; idx++) {
-+		overflown = hisi_pcie_pmu_readl(pcie_pmu, HISI_PCIE_INT_STAT,
-+						idx);
-+		if (!overflown)
-+			continue;
-+
-+		/* Clear status of interrupt. */
-+		hisi_pcie_pmu_writel(pcie_pmu, HISI_PCIE_INT_STAT, idx, 1);
-+		event = pcie_pmu->hw_events[idx];
-+		if (!event)
-+			continue;
-+
-+		hisi_pcie_pmu_event_update(event);
-+		hisi_pcie_pmu_set_period(event);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	return ret;
-+}
-+
-+static int hisi_pcie_pmu_irq_register(struct pci_dev *pdev,
-+				      struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	int irq, ret;
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
-+	if (ret < 0) {
-+		pci_err(pdev, "Failed to enable MSI vectors: %d!\n", ret);
-+		return ret;
-+	}
-+
-+	irq = pci_irq_vector(pdev, 0);
-+	ret = request_irq(irq, hisi_pcie_pmu_irq,
-+			  IRQF_NOBALANCING | IRQF_NO_THREAD, "hisi_pcie_pmu",
-+			  pcie_pmu);
-+	if (ret) {
-+		pci_err(pdev, "Failed to register IRQ: %d!\n", ret);
-+		pci_free_irq_vectors(pdev);
-+		return ret;
-+	}
-+
-+	pcie_pmu->irq = irq;
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_pmu_irq_unregister(struct pci_dev *pdev,
-+					 struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	free_irq(pcie_pmu->irq, pcie_pmu);
-+	pci_free_irq_vectors(pdev);
-+}
-+
-+static int hisi_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = hlist_entry_safe(node,
-+					 struct hisi_pcie_pmu, node);
-+
-+	if (pcie_pmu->on_cpu == -1) {
-+		pcie_pmu->on_cpu = cpu;
-+		WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(cpu)));
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = hlist_entry_safe(node,
-+					 struct hisi_pcie_pmu, node);
-+	unsigned int target;
-+
-+	/* Nothing to do if this CPU doesn't own the PMU */
-+	if (pcie_pmu->on_cpu != cpu)
-+		return 0;
-+
-+	pcie_pmu->on_cpu = -1;
-+	/* Choose a new CPU from all online cpus. */
-+	target = cpumask_first(cpu_online_mask);
-+	if (target >= nr_cpu_ids) {
-+		pci_err(pcie_pmu->pdev, "There is no CPU to set!\n");
-+		return 0;
-+	}
-+
-+	perf_pmu_migrate_context(&pcie_pmu->pmu, cpu, target);
-+	/* Use this CPU for event counting */
-+	pcie_pmu->on_cpu = target;
-+	WARN_ON(irq_set_affinity(pcie_pmu->irq, cpumask_of(target)));
-+
-+	return 0;
-+}
-+
-+/*
-+ * Events with the "dl" suffix in their names count performance in DL layer,
-+ * otherswise, events count performance in TL layer.
-+ */
-+static struct attribute *hisi_pcie_pmu_events_attr[] = {
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_rx_mwr, 0x010004),
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_rx_mrd, 0x100005),
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_tx_mwr, 0x010005),
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_tx_mrd, 0x200004),
-+	HISI_PCIE_PMU_EVENT_ATTR(delay_rx_mwr, 0x000010),
-+	HISI_PCIE_PMU_EVENT_ATTR(delay_rx_mrd, 0x020010),
-+	HISI_PCIE_PMU_EVENT_ATTR(delay_tx_mrd, 0x000011),
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_rx_dl, 0x010084),
-+	HISI_PCIE_PMU_EVENT_ATTR(flux_tx_dl, 0x030084),
-+	NULL
-+};
-+
-+static struct attribute_group hisi_pcie_pmu_events_group = {
-+	.name = "events",
-+	.attrs = hisi_pcie_pmu_events_attr,
-+};
-+
-+static struct attribute *hisi_pcie_pmu_format_attr[] = {
-+	HISI_PCIE_PMU_FORMAT_ATTR(event, "config:0-15"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(subevent, "config:16-23"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(thr_len, "config1:0-3"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(thr_mode, "config1:4"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(trig_len, "config1:5-8"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(trig_mode, "config1:9"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(port, "config2:0-15"),
-+	HISI_PCIE_PMU_FORMAT_ATTR(bdf, "config2:16-31"),
-+	NULL
-+};
-+
-+static const struct attribute_group hisi_pcie_pmu_format_group = {
-+	.name = "format",
-+	.attrs = hisi_pcie_pmu_format_attr,
-+};
-+
-+static struct attribute *hisi_pcie_pmu_bus_attrs[] = {
-+	&dev_attr_bus.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group hisi_pcie_pmu_bus_attr_group = {
-+	.attrs = hisi_pcie_pmu_bus_attrs,
-+};
-+
-+static struct attribute *hisi_pcie_pmu_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group hisi_pcie_pmu_cpumask_attr_group = {
-+	.attrs = hisi_pcie_pmu_cpumask_attrs,
-+};
-+
-+static struct attribute *hisi_pcie_pmu_identifier_attrs[] = {
-+	&dev_attr_identifier.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group hisi_pcie_pmu_identifier_attr_group = {
-+	.attrs = hisi_pcie_pmu_identifier_attrs,
-+};
-+
-+static const struct attribute_group *hisi_pcie_pmu_attr_groups[] = {
-+	&hisi_pcie_pmu_events_group,
-+	&hisi_pcie_pmu_format_group,
-+	&hisi_pcie_pmu_bus_attr_group,
-+	&hisi_pcie_pmu_cpumask_attr_group,
-+	&hisi_pcie_pmu_identifier_attr_group,
-+	NULL
-+};
-+
-+static int hisi_pcie_alloc_pmu(struct pci_dev *pdev,
-+			       struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	struct hisi_pcie_reg_pair regs;
-+	u16 sicl_id, device_id;
-+	char *name;
-+
-+	regs = hisi_pcie_parse_reg_value(pcie_pmu, HISI_PCIE_REG_BDF);
-+	pcie_pmu->bdf_min = regs.lo;
-+	pcie_pmu->bdf_max = regs.hi;
-+
-+	regs = hisi_pcie_parse_reg_value(pcie_pmu, HISI_PCIE_REG_INFO);
-+	sicl_id = regs.hi;
-+	device_id = regs.lo;
-+
-+	name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+			      "hisi_pcie%u_%u", sicl_id, device_id);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	pcie_pmu->pdev = pdev;
-+	pcie_pmu->on_cpu = -1;
-+	pcie_pmu->identifier = readl(pcie_pmu->base + HISI_PCIE_REG_VERSION);
-+	pcie_pmu->pmu = (struct pmu) {
-+		.name		= name,
-+		.module		= THIS_MODULE,
-+		.event_init	= hisi_pcie_pmu_event_init,
-+		.pmu_enable	= hisi_pcie_pmu_enable,
-+		.pmu_disable	= hisi_pcie_pmu_disable,
-+		.add		= hisi_pcie_pmu_add,
-+		.del		= hisi_pcie_pmu_del,
-+		.start		= hisi_pcie_pmu_start,
-+		.stop		= hisi_pcie_pmu_stop,
-+		.read		= hisi_pcie_pmu_read,
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hisi_pcie_pmu_attr_groups,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	};
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_init_pmu(struct pci_dev *pdev,
-+			      struct hisi_pcie_pmu *pcie_pmu)
-+{
-+	int ret;
-+
-+	pcie_pmu->base = pci_ioremap_bar(pdev, 2);
-+	if (!pcie_pmu->base) {
-+		pci_err(pdev, "Ioremap failed for pcie_pmu resource.\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = hisi_pcie_alloc_pmu(pdev, pcie_pmu);
-+	if (ret)
-+		return ret;
-+
-+	ret = hisi_pcie_pmu_irq_register(pdev, pcie_pmu);
-+	if (ret)
-+		goto err_set_pmu_fail;
-+
-+	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
-+				       &pcie_pmu->node);
-+	if (ret) {
-+		pci_err(pdev, "Failed to register hotplug: %d.\n", ret);
-+		goto err_irq_unregister;
-+	}
-+
-+	ret = perf_pmu_register(&pcie_pmu->pmu, pcie_pmu->pmu.name, -1);
-+	if (ret) {
-+		pci_err(pdev, "Failed to register PCIe PMU: %d.\n", ret);
-+		goto err_hotplug_unregister;
-+	}
-+
-+	return ret;
-+
-+err_hotplug_unregister:
-+	cpuhp_state_remove_instance_nocalls(
-+		CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE, &pcie_pmu->node);
-+
-+err_irq_unregister:
-+	hisi_pcie_pmu_irq_unregister(pdev, pcie_pmu);
-+
-+err_set_pmu_fail:
-+	iounmap(pcie_pmu->base);
-+
-+	return ret;
-+}
-+
-+static void hisi_pcie_uninit_pmu(struct pci_dev *pdev)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu = pci_get_drvdata(pdev);
-+
-+	perf_pmu_unregister(&pcie_pmu->pmu);
-+	cpuhp_state_remove_instance_nocalls(
-+		CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE, &pcie_pmu->node);
-+	hisi_pcie_pmu_irq_unregister(pdev, pcie_pmu);
-+	iounmap(pcie_pmu->base);
-+}
-+
-+static int hisi_pcie_init_dev(struct pci_dev *pdev)
-+{
-+	int ret;
-+
-+	ret = pci_enable_device(pdev);
-+	if (ret) {
-+		pci_err(pdev, "Failed to enable PCI device: %d.\n", ret);
-+		return ret;
-+	}
-+
-+	ret = pci_request_mem_regions(pdev, "hisi_pcie_pmu");
-+	if (ret < 0) {
-+		pci_err(pdev, "Failed to request PCI mem regions: %d.\n", ret);
-+		pci_disable_device(pdev);
-+		return ret;
-+	}
-+
-+	pci_set_master(pdev);
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_uninit_dev(struct pci_dev *pdev)
-+{
-+	pci_clear_master(pdev);
-+	pci_release_mem_regions(pdev);
-+	pci_disable_device(pdev);
-+}
-+
-+static int hisi_pcie_pmu_probe(struct pci_dev *pdev,
-+			       const struct pci_device_id *id)
-+{
-+	struct hisi_pcie_pmu *pcie_pmu;
-+	int ret;
-+
-+	pcie_pmu = devm_kzalloc(&pdev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
-+	if (!pcie_pmu)
-+		return -ENOMEM;
-+
-+	ret = hisi_pcie_init_dev(pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = hisi_pcie_init_pmu(pdev, pcie_pmu);
-+	if (ret)
-+		hisi_pcie_uninit_dev(pdev);
-+
-+	pci_set_drvdata(pdev, pcie_pmu);
-+
-+	return ret;
-+}
-+
-+static void hisi_pcie_pmu_remove(struct pci_dev *pdev)
-+{
-+	hisi_pcie_uninit_pmu(pdev);
-+	hisi_pcie_uninit_dev(pdev);
-+	pci_set_drvdata(pdev, NULL);
-+}
-+
-+static const struct pci_device_id hisi_pcie_pmu_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, 0xa12d) },
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(pci, hisi_pcie_pmu_ids);
-+
-+static struct pci_driver hisi_pcie_pmu_driver = {
-+	.name = "hisi_pcie_pmu",
-+	.id_table = hisi_pcie_pmu_ids,
-+	.probe = hisi_pcie_pmu_probe,
-+	.remove = hisi_pcie_pmu_remove,
-+};
-+
-+static int __init hisi_pcie_module_init(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
-+				      "AP_PERF_ARM_HISI_PCIE_PMU_ONLINE",
-+				      hisi_pcie_pmu_online_cpu,
-+				      hisi_pcie_pmu_offline_cpu);
-+	if (ret) {
-+		pr_err("Failed to setup PCIe PMU hotplug, ret = %d.\n", ret);
-+		return ret;
-+	}
-+
-+	ret = pci_register_driver(&hisi_pcie_pmu_driver);
-+	if (ret)
-+		cpuhp_remove_multi_state(
-+				CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE);
-+
-+	return ret;
-+}
-+module_init(hisi_pcie_module_init);
-+
-+static void __exit hisi_pcie_module_exit(void)
-+{
-+	pci_unregister_driver(&hisi_pcie_pmu_driver);
-+	cpuhp_remove_multi_state(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE);
-+}
-+module_exit(hisi_pcie_module_exit);
-+
-+MODULE_DESCRIPTION("HiSilicon PCIe PMU driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Qi Liu <liuqi115@huawei.com>");
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 4a62b3980642..a9776a2f955b 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -180,6 +180,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_ARM_HISI_L3_ONLINE,
- 	CPUHP_AP_PERF_ARM_HISI_PA_ONLINE,
- 	CPUHP_AP_PERF_ARM_HISI_SLLC_ONLINE,
-+	CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
- 	CPUHP_AP_PERF_ARM_L2X0_ONLINE,
- 	CPUHP_AP_PERF_ARM_QCOM_L2_ONLINE,
- 	CPUHP_AP_PERF_ARM_QCOM_L3_ONLINE,
--- 
-2.17.1
+You also raise the question of measurement management which is still very
+much on the todo list. I'll add that to the cfp proposal as possible
+discussion topic.  My assumption so far is it will look very much like IMA
+but I've not gotten down to the details.
+
+> 
+> >    Key / Certificate management. This is somewhat like IMA, but we probably
+> >    need to manage the certificate chain separately for each CMA/SPDM
+> > instance.
+> >    Understanding provisioning models would be useful to guide this work.
+> > 
+> > 3. IDE support
+> >    Is native kernel support worthwhile? Perhaps good to discuss
+> >    potential usecases + get some idea on priority for this feature.
+> > 
+> > 4. Potential blockers on merging emulation support in QEMU. (I'm less sure
+> >    on this one, but perhaps worth briefly touching on or a separate
+> >    session on emulation if people are interested? Ben, do you think this
+> >    would be worthwhile?)
+> > 
+> > There are other minor questions we might slip into the discussion, time
+> > allowing such as need for async support handling in the kernel DOE code.
+> > 
+> > For all these features, we have multiple layers on top of underlying PCI so
+> > discussion of 'how' to support this might be useful.
+> > 1) Service model - detected at PCI subsystem level, services to drivers.
+> > 2) Driver initiated mode - library code, but per driver instantiation etc.
+> > 
+> > That's what have come up with this morning, so please poke holes in it and
+> > point out what I've forgotten about.
+> > 
+> > Note for an actual CFP proposal, I'll probably split this into at least two.
+> > Topic 1: DOE only.  Topic 2: CMA / IDE. As there is a lot here, for some topics
+> > we may be looking at introduce the topic + questions rather than resolving
+> > everything on the day.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> > p.s. Perhaps it is a little unusual to have this level of 'planning' discussion
+> > explicitly on list, but we are working under some unusual constraints and
+> > inclusiveness and openness always good anyway!  
+> 
 
