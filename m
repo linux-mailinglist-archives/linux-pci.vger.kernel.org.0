@@ -2,91 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E19FE3D8C0C
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 12:40:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD873D8C4D
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 12:56:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbhG1Kk1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 06:40:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59440 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235961AbhG1KkU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 06:40:20 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1627468818;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QBLeATcwfqfAwWH6WlqEnrh3DtrFeH7LmMiAWPWZmCM=;
-        b=LFAHo3tV8SwgQqBtpNGPxPYN7viHLKmKxVFgLXSQy2Eb8RB+D3MEEoTpgSUxfhE/2fUhIq
-        sovrG4qU/PL6cdA1DFNS72fDZ6J+v3NAtUdPsoVBQf4puYtbrVp33WbosKxokJYvGRQfMM
-        qmIipeRgJaSQ0QYwWKX7RHE7aE2rrnCHSCE1Dp7QQkSZxIVKadfAvmc1Q4RD8fVQ476Pz3
-        frjiEfg2iqf/kRE/pR6jnWhZHG+3vVai8Pgev9yoi2LIerVNrEZrNQxu9dR+KCI/VVXkJQ
-        0352TmcK+2VyC4+ggBCfFhoh84x9SPjpGTq4ONrxtTGIjWdIinq/D3Q1s7wREw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1627468818;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QBLeATcwfqfAwWH6WlqEnrh3DtrFeH7LmMiAWPWZmCM=;
-        b=S4XYjdut749SYDj3weoZDeeCZhriPTKyQFEaZHyx6jwTbquNIHtOUlJPYnQRHtPgJ6Db1x
-        q4Oy+4MybuBUHVAQ==
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Raj\, Ashok" <ashok.raj@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>, x86@kernel.org
-Subject: Re: [patch 6/8] genirq: Provide IRQCHIP_AFFINITY_PRE_STARTUP
-In-Reply-To: <871r7q2xik.wl-maz@kernel.org>
-References: <20210721191126.274946280@linutronix.de> <20210721192650.687529735@linutronix.de> <871r7q2xik.wl-maz@kernel.org>
-Date:   Wed, 28 Jul 2021 12:40:18 +0200
-Message-ID: <87bl6m3enh.ffs@nanos.tec.linutronix.de>
+        id S235817AbhG1K4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 06:56:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51552 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236134AbhG1Kzw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 06:55:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10058"; a="212365218"
+X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
+   d="scan'208";a="212365218"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 03:55:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
+   d="scan'208";a="417728466"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 28 Jul 2021 03:55:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 28C0DD7; Wed, 28 Jul 2021 13:56:01 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] PCI: keystone: Use device_get_match_data()
+Date:   Wed, 28 Jul 2021 13:55:58 +0300
+Message-Id: <20210728105558.23871-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 22 2021 at 16:12, Marc Zyngier wrote:
-> On Wed, 21 Jul 2021 20:11:32 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->>  #include <linux/irqdesc.h>
->> --- a/kernel/irq/chip.c
->> +++ b/kernel/irq/chip.c
->> @@ -265,8 +265,11 @@ int irq_startup(struct irq_desc *desc, b
->>  	} else {
->>  		switch (__irq_startup_managed(desc, aff, force)) {
->>  		case IRQ_STARTUP_NORMAL:
->> +			if (d->chip->flags & IRQCHIP_AFFINITY_PRE_STARTUP)
->> +				irq_setup_affinity(desc);
->
-> How about moving this to activate instead? We already special-case the
-> activation of MSIs for PCI (MSI_FLAG_ACTIVATE_EARLY), and this
-> wouldn't look completely out of place. The startup mode could be an
-> issue though...
+Instead of manipulations with OF APIs, use device_get_match_data().
 
-Yes, I thought about that, but the ordering here is:
+While at it, drop of_match_ptr() completely and make compiler happy,
+otherwise it complains:
 
-setup()
-  early_activate()
+  pci-keystone.c:1069:34: warning: ‘ks_pcie_of_match’ defined but not used [-Wunused-const-variable=]
 
-early activation just needs to program a valid message. Now later we
-have request_irq() invoking:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-     activate()
-     startup()
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index bde3b2824e89..f36ea618a248 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_pci.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/resource.h>
+ #include <linux/signal.h>
+@@ -1091,7 +1092,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	const struct ks_pcie_of_data *data;
+-	const struct of_device_id *match;
+ 	enum dw_pcie_device_mode mode;
+ 	struct dw_pcie *pci;
+ 	struct keystone_pcie *ks_pcie;
+@@ -1108,8 +1108,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int i;
+ 
+-	match = of_match_device(of_match_ptr(ks_pcie_of_match), dev);
+-	data = (struct ks_pcie_of_data *)match->data;
++	data = device_get_match_data(dev);
+ 	if (!data)
+ 		return -EINVAL;
+ 
+@@ -1309,7 +1308,7 @@ static struct platform_driver ks_pcie_driver __refdata = {
+ 	.remove = __exit_p(ks_pcie_remove),
+ 	.driver = {
+ 		.name	= "keystone-pcie",
+-		.of_match_table = of_match_ptr(ks_pcie_of_match),
++		.of_match_table = ks_pcie_of_match,
+ 	},
+ };
+ builtin_platform_driver(ks_pcie_driver);
+-- 
+2.30.2
 
-So, yes. We could do that in activate, but then we still have the post
-startup variant in irq_startup() which makes the code hard to follow.
-
-There is another practical issue. Assume the irq is requested with
-IRQF_NOAUTOEN, then irq_startup() will be invoked when the driver calls
-enable_irq(), which might be way later and then the affinity setting
-might be completely different already. So I rather keep it there.
-
-Thanks,
-
-        tglx
