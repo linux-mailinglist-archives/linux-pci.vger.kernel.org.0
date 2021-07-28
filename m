@@ -2,202 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81F043D9988
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 01:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DDFE3D99AB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 01:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbhG1XhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 19:37:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:20729 "EHLO mga03.intel.com"
+        id S232471AbhG1Xmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 19:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232116AbhG1XhQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jul 2021 19:37:16 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="212800162"
-X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="212800162"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 16:37:13 -0700
-X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="581036047"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.43.33]) ([10.212.43.33])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 16:37:13 -0700
-Subject: Re: [PATCH v3] PCI: vmd: Issue secondary bus reset and vmd domain
- window reset
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20210728214639.7204-1-nirmal.patel@linux.intel.com>
- <6833bc78-b935-95bf-6cea-03e9f0ca5004@intel.com>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Message-ID: <c52ec6e3-9707-f245-3504-95ce8213a27f@linux.intel.com>
-Date:   Wed, 28 Jul 2021 16:37:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S232384AbhG1Xmt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 19:42:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D348A61039;
+        Wed, 28 Jul 2021 23:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627515767;
+        bh=5v/dtdMsfS4+iw/3NHJSpTvoghPXApVRUb3IyCvWP1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jz5nvf1H6v/BOPf7LFFtiAUMu28v0MwpvRxRYC+G7Q/LM/P9o6D9l1sx8nGPOv896
+         wrYVW7K8X+ih0p7F73XeQ41za13M36tW1tkkLTen2xJ/nwHpWu0VxUmgC9Lx7yrZdI
+         HFMX0kHeSfhui3ONJ9kbgqQmaqxZou6M9yTDeskT+7bJqemZ/k0wf+FOkIf1PiCHMy
+         dSMdCGnYO6sgzImPMtZe4sQqCxGn845C0BlnzIvTQy8k4MDieZmKpx09rfpIOkT6gO
+         b1f8xkGrPh4pthOKVs1BLqu6zQfkplWhl1rrTmdEtSVZMYU+OSGQ37+zHAZyvoUP2A
+         oads0L618XBmw==
+Date:   Wed, 28 Jul 2021 18:42:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Hannes Reinecke <hare@suse.de>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 3/5] PCI/VPD: Consolidate missing EEPROM checks
+Message-ID: <20210728234245.GA868725@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <6833bc78-b935-95bf-6cea-03e9f0ca5004@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77979cb8-776b-3bd3-3552-593ea6ebad92@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/28/2021 4:21 PM, Derrick, Jonathan wrote:
-> Hey Nirmal
->
-> On 7/28/2021 3:46 PM, Nirmal Patel wrote:
->> In order to properly re-initialize the VMD domain during repetitive driver
->> attachment or reboot tests, ensure that the VMD root ports are
->> re-initialized to a blank state that can be re-enumerated appropriately
->> by the PCI core. This is performed by re-initializing all of the bridge
->> windows to ensure that PCI core enumeration does not detect potentially
->> invalid bridge windows and misinterpret them as firmware-assigned windows,
->> when they simply may be invalid bridge window information from a previous
->> boot.
->>
->> During VT-d passthrough repetitive reboot tests, it was determined that
->> the VMD domain needed to be reset in order to allow downstream devices
->> to reinitialize properly. This is done using setting secondary bus
->> reset bit of each of the VMD root port and will propagate reset through
->> downstream bridges.
-> Can we better combine these two paragraphs?
-I will try to create better summary.
->
->
->> v2->v3: Combining two functions into one, Remove redundant definations
->>         and Formatting fixes
-> Below the dashes please
-Ack
->
->> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-> Not yet :)
-Sorry about that. will fix it.
->
->> ---
->>  drivers/pci/controller/vmd.c | 63 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 63 insertions(+)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index e3fcdfec58b3..e2c0de700e61 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -15,6 +15,9 @@
->>  #include <linux/srcu.h>
->>  #include <linux/rculist.h>
->>  #include <linux/rcupdate.h>
->> +#include <linux/delay.h>
->> +#include <linux/pci_regs.h>
->> +#include <linux/pci_ids.h>
-> Do you need to include pci_regs.h and pci_ids.h?
-Works without including header files too.
->
->
->>  
->>  #include <asm/irqdomain.h>
->>  #include <asm/device.h>
->> @@ -447,6 +450,64 @@ static struct pci_ops vmd_ops = {
->>  	.write		= vmd_pci_write,
->>  };
->>  
->> +static void vmd_domain_reset(struct vmd_dev *vmd)
->> +{
->> +	char __iomem *base;
->> +	char __iomem *addr;
->> +	u16 ctl;
->> +	int dev_seq;
->> +	int max_devs = 32;
->> +	int max_buses = resource_size(&vmd->resources[0]);
->> +	int bus_seq;
->> +	u8 functions;
->> +	u8 fn_seq;
->> +	u8 hdr_type;
->> +
->> +	for(bus_seq = 0; bus_seq < max_buses; bus_seq++) {
->> +		for (dev_seq = 0; dev_seq < max_devs; dev_seq++) {
-> No need for max_devs - just open-code '32'
-Ack.
->
->
->> +			base = vmd->cfgbar
->> +					+ PCIE_ECAM_OFFSET(bus_seq,
->> +					   PCI_DEVFN(dev_seq, 0), PCI_VENDOR_ID);
-> How about:
-> 			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus_seq,
-> 				 PCI_DEVFN(dev_seq, 0), PCI_VENDOR_ID);
-Ack.
->
->
->> +
->> +			if (readw(base) != PCI_VENDOR_ID_INTEL)
->> +				continue;
-> Now that it's iterating all of the bridges in all of the buses, should
-> it be limited to Intel devices?
-Ack. I will remove it. It shouldn't have significant performance hit.
->
->
->> +
->> +			hdr_type = readb(base + PCI_HEADER_TYPE) & PCI_HEADER_TYPE_MASK;
->> +			if (hdr_type != PCI_HEADER_TYPE_BRIDGE)
->> +				continue;
->> +
->> +			functions = !!(hdr_type & 0x80) ? 8 : 1;
->> +			for (fn_seq = 0; fn_seq < functions; fn_seq++)
->> +			{
->> +				addr = vmd->cfgbar
->> +						+ PCIE_ECAM_OFFSET(0x0,
->> +						   PCI_DEVFN(dev_seq, fn_seq), PCI_VENDOR_ID);
-> Can you do the same as above here? Putting PCIE_ECAM_OFFSET on the same
-> line as vmd->cfgbar? Also could you change bus from 0x0 to 0?
-Yes.
->
->
->> +				if (readw(addr) != PCI_VENDOR_ID_INTEL)
->> +					continue;
-> Is this necessary?
-Ack.
->
->
->> +
->> +				memset_io((vmd->cfgbar +
->> +				 PCIE_ECAM_OFFSET(0x0,PCI_DEVFN(dev_seq, fn_seq),PCI_IO_BASE)),
-> Needs a space after the commas, and please use 0 instead of 0x0.
-Ack.
->
->
->> +				 0, PCI_ROM_ADDRESS1 - PCI_IO_BASE);
->> +			}
->> +
->> +			if (readw(base + PCI_CLASS_DEVICE) != PCI_CLASS_BRIDGE_PCI)
->> +				continue;
->> +
->> +			/* pci_reset_secondary_bus() */
->> +			ctl = readw(base + PCI_BRIDGE_CONTROL);
->> +			ctl |= PCI_BRIDGE_CTL_BUS_RESET;
->> +			writew(ctl, base + PCI_BRIDGE_CONTROL);
->> +			readw(base + PCI_BRIDGE_CONTROL);
->> +			msleep(2);
->> +
->> +			ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
->> +			writew(ctl, base + PCI_BRIDGE_CONTROL);
->> +			readw(base + PCI_BRIDGE_CONTROL);
->> +		}
->> +	}
->> +	ssleep(1);
->> +}
->> +
->>  static void vmd_attach_resources(struct vmd_dev *vmd)
->>  {
->>  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
->> @@ -747,6 +808,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>  	if (vmd->irq_domain)
->>  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
->>  
->> +	vmd_domain_reset(vmd);
->> +
-> I'd remove this blank line
-Ack.
->
->>  	pci_scan_child_bus(vmd->bus);
->>  	pci_assign_unassigned_bus_resources(vmd->bus);
->>  
->>
+On Fri, Jul 16, 2021 at 12:16:55AM +0200, Heiner Kallweit wrote:
+> On 15.07.2021 23:59, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > A missing VPD EEPROM typically reads as either all 0xff or all zeroes.
+> > Both cases lead to invalid VPD resource items.  A 0xff tag would be a Large
+> > Resource with length 0xffff (65535).  That's invalid because VPD can only
+> > be 32768 bytes, limited by the size of the address register in the VPD
+> > Capability.
+> > 
+> > A VPD that reads as all zeroes is also invalid because a 0x00 tag is a
+> > Small Resource with length 0, which would result in an item of length 1.
+> > This isn't explicitly illegal in PCIe r5.0, sec 6.28, but the format is
+> > derived from PNP ISA, which *does* say "a small resource data type may be
+> > 2-8 bytes in size" (Plug and Play ISA v1.0a, sec 6.2.2.
+> > 
+> > Check for these invalid tags and return VPD size of zero if we find them.
+> > If they occur at the beginning of VPD, assume it's the result of a missing
+> > EEPROM.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  drivers/pci/vpd.c | 36 +++++++++++++++++++++++++++---------
+> >  1 file changed, 27 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > index 9b54dd95e42c..9c2744d79b53 100644
+> > --- a/drivers/pci/vpd.c
+> > +++ b/drivers/pci/vpd.c
+> > @@ -77,11 +77,7 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+> >  
+> >  	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
+> >  		unsigned char tag;
+> > -
+> > -		if (!header[0] && !off) {
+> > -			pci_info(dev, "Invalid VPD tag 00, assume missing optional VPD EPROM\n");
+> > -			return 0;
+> > -		}
+> > +		size_t size;
+> >  
+> >  		if (header[0] & PCI_VPD_LRDT) {
+> >  			/* Large Resource Data Type Tag */
+> > @@ -96,8 +92,16 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+> >  						 off + 1);
+> >  					return 0;
+> >  				}
+> > -				off += PCI_VPD_LRDT_TAG_SIZE +
+> > -					pci_vpd_lrdt_size(header);
+> > +				size = pci_vpd_lrdt_size(header);
+> > +
+> > +				/*
+> > +				 * Missing EEPROM may read as 0xff.
+> > +				 * Length of 0xffff (65535) cannot be valid
+> > +				 * because VPD can't be that large.
+> > +				 */
+> 
+> I'm not fully convinced. Instead of checking for a "no VPD EPROM" read (00/ff)
+> directly, we now do it indirectly based on the internal tag structure.
+> We have pci_vpd_lrdt_size() et al to encapsulate the internal structure.
+> IMO the code is harder to understand now.
 
+I don't quite follow.  Previously we checked for 0x00 data
+("if (!header[0] && !off)"), but we didn't check directly for 0xff.
+
+If we read 0xff, we took the PCI_VPD_LRDT case, but it wouldn't match
+ID_STRING, RO_DATA, or RW_DATA, so we'd fall out and check again
+against ID_STRING, RO_DATA, and RW_DATA, and take the "invalid
+%s VPD tag" error path because it doesn't match any.
+
+This results in failure for any large resource except ID_STRING,
+RO_DATA, and RW_DATA, regardless of the size.
+
+My proposed code catches a different set of invalid things.
+"size > PCI_VPD_MAX_SIZE" will catch any large resource headers with
+length 0x8001 through 0xffff.
+
+Possibly it should actually check for "off + size > PCI_VPD_MAX_SIZE"
+so e.g., it would catch a 0x20 byte resource starting at 0x7ff0.
+
+> > +				if (size > PCI_VPD_MAX_SIZE)
+> > +					goto error;
+> > +				off += PCI_VPD_LRDT_TAG_SIZE + size;
+> >  			} else {
+> >  				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
+> >  					 tag, off);
+> > @@ -105,14 +109,28 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+> >  			}
+> >  		} else {
+> >  			/* Short Resource Data Type Tag */
+> > -			off += PCI_VPD_SRDT_TAG_SIZE +
+> > -				pci_vpd_srdt_size(header);
+> >  			tag = pci_vpd_srdt_tag(header);
+> > +			size = pci_vpd_srdt_size(header);
+> > +
+> > +			/*
+> > +			 * Missing EEPROM may read as 0x00.  A small item
+> > +			 * must be at least 2 bytes.
+> > +			 */
+> > +			if (size == 0)
+> > +				goto error;
+> > +
+> > +			off += PCI_VPD_SRDT_TAG_SIZE + size;
+> >  			if (tag == PCI_VPD_STIN_END)	/* End tag descriptor */
+> >  				return off;
+> >  		}
+> >  	}
+> >  	return 0;
+> > +
+> > +error:
+> > +	pci_info(dev, "invalid VPD tag %#04x at offset %zu%s\n",
+> > +		 header[0], off, off == 0 ?
+> > +		 "; assume missing optional EEPROM" : "");
+> > +	return 0;
+> >  }
+> >  
+> >  /*
+> > 
+> 
