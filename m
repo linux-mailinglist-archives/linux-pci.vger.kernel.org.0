@@ -2,142 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40C133D94CC
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 19:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5523A3D9503
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 20:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbhG1R75 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 13:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbhG1R75 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 13:59:57 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12E9C061757;
-        Wed, 28 Jul 2021 10:59:54 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id g23-20020a17090a5797b02901765d605e14so5245942pji.5;
-        Wed, 28 Jul 2021 10:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KklQJMU2Fgefevf9VpkrECZdIoTO7jzAXK1VIukHwu8=;
-        b=L1nZGZ2+3K2hafMuqZUgd9pui3wAkl7iK6MiSms5oPEBe0UCuzAFUrxzbtmMfImK8t
-         +9Bv/V0iJL0KzghVUji8cRZfaiL1NfRpcFzqMLa4lwUJqMBwKn3aSQT6kPXvoztWRmNt
-         8LG31tC58P3EmzVzKfnBxbvY4Ws1XdA22FJJp1PiuvZprV2yNJlmqa6oBWjb62j2/0uh
-         GMKFcblwcIOnycE5NFafVAkLENmhicjubA50LHdd9uva/VO2hs9/VJ092o3GHYeN5Je0
-         0WIBm3/Uq3CgKbLK1lh9weqcWo6jIDDrVCXSUzlUYRUG+ivG1x1okYMNxXgWeuwd2CWf
-         MsCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KklQJMU2Fgefevf9VpkrECZdIoTO7jzAXK1VIukHwu8=;
-        b=WDknvmqT6vxcVf1q1OqEPMOPjOnZ6E3KbQ0sDTN/DSHC14+ITWoIoVYR52wQ6c4BNx
-         xNv3kVYG2dF6wuJCOl+cm0CyYWKMq59I9EIuFECff/OytctN68dfwhCtWUGj4DaeyEAy
-         dOtGKl/9k1OBI2oRoPY0qi2p9SaSIPsiimeFkdOalpS7evQMUv4gb4AIpVvlT+VSu1H2
-         InFxAGQmUQwalCow/n1ErNlWu+bOebBgYCCjHAWY/EliLto5hhtlit99KwQa6FU0CL3K
-         E0FDaZi+x+tcqJFylruqG0k3NzWb+NHwe2BuwKnU5Q+2QjZAU2HfgU/9nAi3/493dlcB
-         55nQ==
-X-Gm-Message-State: AOAM533vi2DpPvRw2z+xDe2woMRQ3Y5VBFZudbWc///oTbkoVmJIqEN/
-        yUCOWBs29KDCCP6XL86XKHw=
-X-Google-Smtp-Source: ABdhPJwvj2PGbfi3GzICBrSRhi0mCLdBpmHzIBdpfoA+rKu4q7f5T8RCu24ii8Rcy0/HDvQtfY25og==
-X-Received: by 2002:a17:902:f68f:b029:12c:228a:5226 with SMTP id l15-20020a170902f68fb029012c228a5226mr878072plg.61.1627495194359;
-        Wed, 28 Jul 2021 10:59:54 -0700 (PDT)
-Received: from localhost ([49.32.197.231])
-        by smtp.gmail.com with ESMTPSA id a35sm466501pgm.66.2021.07.28.10.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 10:59:54 -0700 (PDT)
-Date:   Wed, 28 Jul 2021 23:29:50 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     alex.williamson@redhat.com,
+        id S231152AbhG1SIo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 14:08:44 -0400
+Received: from mail-bn1nam07on2053.outbound.protection.outlook.com ([40.107.212.53]:13958
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229542AbhG1SIo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 14:08:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ULAwQiTaXVFzyIhAQPk+lnVBMBWZaxyrqDd6C/N0nr7mydQfyIoyfoZEsw1oGxxh6PxsyYj34q24vBoyWPFfVJ8nfI/EJXsrYHZ7cm3/WKjM6kjrX1JG2wQRWzlfhXE2IRwvSq/zn7Uraqe/ZHxEkT/tDQXIJbaFWJoiy6Iwdp8R/SW7tCrg2D9Quiu9klVkMwAreQrw5dLf7hU9pQs8t1JDqc89dEQi2bRSRQUtAWXTdD9DsDFtSKPM8L9/n7fXMhDc8ZfYp07frUoaHU6RFJUVnQpDXY1Tl7zC7nXOuVmpwds04v1ERBcvo1pqfyH27D2FysrEzUJcNdQmDSADHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yutGl2JXoYQtPHIKC00dK9B+HtCnkecdQEfEWl1u5T8=;
+ b=YUVKCAz48wJlShav71bk1dfvKJ8IIHSA+CS9FKSw33SaH/MLn04YaNWe31tO8DKHxZ1JPNbcxLzEFG/PjAy1jRApia951ccusgXzhhRKtNtcNU5v+/OmMvmfId4SHigxv8LfUc1xi8Q/Ui4jY/+Co5CPnRX4VMOAdYeKIQKbmsomzTY2jCePX3DqUOW57PdHBu5B1LGH/2R5ohStj6xPfrWGiEFjszHf9TBxyo/HpXLSKuk7oxQxmupQV3S5CuSXdQUTKH15yX86XTzqZJxaRlq0gyV8LQc3npzq5u1owxm3v7bG7M6kmqAPUaAb10veGMMFgvIIPTpyPYtOzeewvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=nutanix.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yutGl2JXoYQtPHIKC00dK9B+HtCnkecdQEfEWl1u5T8=;
+ b=I3RZYxeaELdWfGcpCWYxid/NKcy9k/P4MIpLnDHJegGxcV/WhhzFXohC9ydi5GBDzNLNfAHHMjedEFP6YRbw9L1P8BQBhlU2yjBjZje+elDzFlzH12DkUwv3HhwWvjp/RhfjFR69lJnITfCYsFNOJtqo0xRAQoFjFkyo+bm1tn4a4EqtJewgRBjIQqAMhNT5KJKq7d3lLON6afrndvU7S7YRzZ4mi9NExiG47X1motq1AwJ/kjwHsIshDaRLFjEFox7QKVPEfYb+D55AePQfsp9rHO+9nZ0gkOKdxHpfERw6UsxIhKybCeuMNaczzaLmDxxbjb4/Y8214An77M3vGg==
+Received: from DM6PR06CA0006.namprd06.prod.outlook.com (2603:10b6:5:120::19)
+ by DM5PR1201MB2473.namprd12.prod.outlook.com (2603:10b6:3:e2::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.29; Wed, 28 Jul
+ 2021 18:08:41 +0000
+Received: from DM6NAM11FT020.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:120:cafe::82) by DM6PR06CA0006.outlook.office365.com
+ (2603:10b6:5:120::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.20 via Frontend
+ Transport; Wed, 28 Jul 2021 18:08:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; nutanix.com; dkim=none (message not signed)
+ header.d=none;nutanix.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT020.mail.protection.outlook.com (10.13.172.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4373.18 via Frontend Transport; Wed, 28 Jul 2021 18:08:40 +0000
+Received: from [10.20.23.47] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 28 Jul
+ 2021 18:08:38 +0000
+Subject: Re: [PATCH v10 2/8] PCI: Add new array for keeping track of ordering
+ of reset methods
+To:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <alex.williamson@redhat.com>,
         Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 4/8] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Message-ID: <20210728175950.q75qcrfas5mcjych@archlinux>
-References: <20210709123813.8700-5-ameynarkhede03@gmail.com>
- <20210727232808.GA754831@bjorn-Precision-5520>
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20210709123813.8700-3-ameynarkhede03@gmail.com>
+ <20210727225951.GA752728@bjorn-Precision-5520>
+ <20210728174519.has5xvy6rksbukup@archlinux>
+From:   Shanker R Donthineni <sdonthineni@nvidia.com>
+Message-ID: <e8ad2686-22e8-7d75-f0f4-82c0c57fc65e@nvidia.com>
+Date:   Wed, 28 Jul 2021 13:08:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210727232808.GA754831@bjorn-Precision-5520>
+In-Reply-To: <20210728174519.has5xvy6rksbukup@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 320faaf6-f7aa-4906-0780-08d951f2baf3
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB2473:
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB2473DC31F6D48F9D2237FB44C7EA9@DM5PR1201MB2473.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fpA+JC4ly3JXxA7Z3cyAWGgsUH3zu8LcBaqJvDzpOmK82/QFNTJkXd2mhYNEDk9TOTYoFUaAkBhz03Un1I1v3z0fCVCcL+FYMDzE2+Zgzy61KLzJvBcRWi+H0O9ZFByi8n0Ui5PUmxKgyX+r6GE7uOhiNmZ/cFc0AQpM6Vwloxu8Z2ljjEv23fPmEHKTJTynVI1wR+MHi/ODAL3eF9XfjYXaTAgfW3PM3H1YeZKwsiNe/peh0S2Tu3eLbuG1tgxbZu9pLep6I1vPanHQC5Vcvhh0ZhT+IK1jfs7IBQHFTg3Ce8iDSgwKvjHQEzcmhgNdDhsTfhIM0boNrhOvZhKj9Xojs07IsYEl1Z06CixNRVEtg6M2XbRJXXLFCP8BTzigs8dosK5LLItCyNf3vHN9EOG3reeK16n0T1XHgli1i2xVr/4L9vPg8Pbd+P84TasTJBiG0QoZOj2q0I+fc4UJZ1J0elG3tdF5wIVmTB+cY94whDBfFxn+OmDGyoeyxjKJxuEDhq9GwImhh7SqYJLQ9h0o+i0OepoAtns/tKOE9VLQpok5Mr1xSENrkH4E86HWDo26sCY2XVXU4cXGR4thO4gZ1hLsHO8gVE7xIHWabv/Wtn1gLbcIwI570k9BltUfgWrKd4vplIPGh4L8T4fVevrqPd1YZWoSNI3LSDY20vDV1U5cUAY0B+O2UPPK8Qz97TAuIlIS9ufASuPZVzJd3CxOD38l1pBUYWbDj9qkOCI=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(82310400003)(7416002)(47076005)(16526019)(36756003)(186003)(53546011)(86362001)(36906005)(2906002)(31696002)(70586007)(26005)(316002)(8676002)(8936002)(36860700001)(426003)(336012)(2616005)(70206006)(356005)(508600001)(5660300002)(4326008)(7636003)(296002)(54906003)(110136005)(31686004)(16576012)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2021 18:08:40.8901
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 320faaf6-f7aa-4906-0780-08d951f2baf3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT020.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB2473
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/07/27 06:28PM, Bjorn Helgaas wrote:
-> On Fri, Jul 09, 2021 at 06:08:09PM +0530, Amey Narkhede wrote:
-> > Add reset_method sysfs attribute to enable user to query and set user
-> > preferred device reset methods and their ordering.
-> >
-> > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
-> >  drivers/pci/pci-sysfs.c                 | 103 ++++++++++++++++++++++++
-> >  2 files changed, 122 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > index ef00fada2..43f4e33c7 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -121,6 +121,25 @@ Description:
-> >  		child buses, and re-discover devices removed earlier
-> >  		from this part of the device tree.
-> >
-> > +What:		/sys/bus/pci/devices/.../reset_method
-> > +Date:		March 2021
-> > +Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-> > +Description:
-> > +		Some devices allow an individual function to be reset
-> > +		without affecting other functions in the same slot.
-> > +
-> > +		For devices that have this support, a file named
-> > +		reset_method will be present in sysfs. Initially reading
-> > +		this file will give names of the device supported reset
-> > +		methods and their ordering. After write, this file will
-> > +		give names and ordering of currently enabled reset methods.
-> > +		Writing the name or comma separated list of names of any of
-> > +		the device supported reset methods to this file will set
-> > +		the reset methods and their ordering to be used when
-> > +		resetting the device. Writing empty string to this file
-> > +		will disable ability to reset the device and writing
-> > +		"default" will return to the original value.
-> > +
-> >  What:		/sys/bus/pci/devices/.../reset
-> >  Date:		July 2009
-> >  Contact:	Michael S. Tsirkin <mst@redhat.com>
->
-[...]
+Hi Amey,
 
-> > +		int i;
-> > +
-> > +		if (sysfs_streq(name, ""))
-> > +			continue;
-> > +
-> > +		name = strim(name);
-> > +
-> > +		for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
-> > +			if (sysfs_streq(name, pci_reset_fn_methods[i].name) &&
-> > +			    !pci_reset_fn_methods[i].reset_fn(pdev, 1)) {
-> > +				reset_methods[n++] = i;
->
-> Can we build this directly in pdev->reset_methods[] so we don't need
-> the memcpy() below?
->
-This is to avoid writing partial values directly to dev->reset_methods.
-So for example if user writes flr,unsupported_value then
-dev->reset_methods should not be modified even though flr is valid reset
-method in this example to avoid partial writes. Either operation(in this
-case writing supported reset methods to reset_method attr) succeeds
-completely or it fails othewise.
+On 7/28/21 12:45 PM, Amey Narkhede wrote:
+>>> +   BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_NUM_RESET_METHODS);
+>>>
+>>>     might_sleep();
+>>>
+>>> -   rc = pci_dev_specific_reset(dev, 1);
+>>> -   if (rc != -ENOTTY)
+>>> -           return rc;
+>>> -   rc = pcie_reset_flr(dev, 1);
+>>> -   if (rc != -ENOTTY)
+>>> -           return rc;
+>>> -   rc = pci_af_flr(dev, 1);
+>>> -   if (rc != -ENOTTY)
+>>> -           return rc;
+>>> -   rc = pci_pm_reset(dev, 1);
+>>> -   if (rc != -ENOTTY)
+>>> -           return rc;
+>>> +   for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
+>>> +           rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
+>>> +           if (!rc)
+>>> +                   reset_methods[n++] = i;
+>> Why do we need this local reset_methods[] array?  Can we just fill
+>> in dev->reset_methods[] directly and skip the memcpy() below?
+>>
+> This is for avoiding caching of previously supported reset methods.
+> Is it okay if I use memset(dev->reset_methods, 0,
+> sizeof(dev->reset_methods)) instead to clear the values in
+> dev->reset_methods?
 
-Thanks,
-Amey
+Clearing the array before the loop might a better option, we can get rid of a local variable.
 
-[...]
+void pci_init_reset_methods(struct pci_dev *dev)
+{
+        int i, n, rc;
+
+        BUILD_BUG_ON(ARRAY_SIZE(pci_reset_fn_methods) != PCI_NUM_RESET_METHODS);
+
+        might_sleep();
+
+        memset(dev->reset_methods, 0x0, sizeof(reset_methods));
+
+        n = 0;
+        for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
+                rc = pci_reset_fn_methods[i].reset_fn(dev, 1);
+                if (!rc)
+                        dev->reset_methods[n++] = i;
+                else if (rc != -ENOTTY)
+                        break;
+        }
+}
+
+
