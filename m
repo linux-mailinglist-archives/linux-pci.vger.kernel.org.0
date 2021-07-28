@@ -2,116 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D12E3D9254
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 17:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52FC63D92AC
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 18:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235710AbhG1Puk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 11:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
+        id S230144AbhG1QBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 12:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237163AbhG1Puh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jul 2021 11:50:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BA21C6101B;
-        Wed, 28 Jul 2021 15:50:03 +0000 (UTC)
+        id S235688AbhG1QBn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 12:01:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C41DD6069E;
+        Wed, 28 Jul 2021 16:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627487404;
-        bh=Ay0Yvd7KQlvZfhdRdxA0T07GbvNQffMW7YmqzubhdxM=;
+        s=k20201202; t=1627488102;
+        bh=QSUVnR2YLmegozBX4nvkQAaQOr41MNxZ+SpTU9xgWlw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MLdxG8zRMgtQdukhEjI9JeorYv5vj6yHNkFePINDNBwEIiYgg7IwpGCQ0IWbzefAl
-         qvMB4w8q16p6QkiEJDO5y/UuLJhnHwIGdKVG63HZEkp96ACL2lnuigYdwETPrnxYoY
-         bO7LhtLMfgJHP0SeiJ/VEh2i3iXD7+5Yw8gUlsPI+ZdphD/EEldilIr07R/HHSaC4O
-         h5tznyEpDBC4C0q0EWH/w0iBzHA9NAypdNElE6pZFWMP6LFJL6y6Ci/l2M4bDMpiTM
-         +9l5gUoQMnQ5l+X0AJMva2l+GHSL7hZ0xgC+/x74IBefidx+7kMs0Ftd+7adOBE+8I
-         KvkbMesD6YdnQ==
-Date:   Wed, 28 Jul 2021 10:50:02 -0500
+        b=gB06TPBlj01rLTyvjFRKHWUxEUzZ4z001cXhKreQ1Hj8+vgiJBqurtKKsVQDaCfwZ
+         64otTlWLD4c4/TuP8KZcFbzWRQoAUCL2OmNVZcrhF0MTofzlx8yFdIH+V1eofCpa/I
+         mLbfZC0m+pfZFY9nj095PceyiyCUgm6bDP9IrVHKd4tmCQ4WyBQaulUBXNbDNcwNx5
+         e+MISN4+bNXERhyjsJiG1Z85cC/5Pq0mQQ/HQeeTttf8SwKJHvpR1IggvxgecX2eBk
+         OzHiTNCiwDHw7ymndof/o0i/6dvgrk7tICPc6lB/1Xxuq+hsnJnzDNyxX4/9WWcKUJ
+         BJ93EKN9K3tpg==
+Date:   Wed, 28 Jul 2021 11:01:40 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 1/1] PCI: keystone: Use device_get_match_data()
-Message-ID: <20210728155002.GA822338@bjorn-Precision-5520>
+To:     Om Prakash Singh <omp@nvidia.com>
+Cc:     hemantk@codeaurora.org, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
+        linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: Query on ASPM driver design
+Message-ID: <20210728160140.GA823046@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210728105558.23871-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <3bfac041-9559-40a2-fc97-1dbe9c5295b1@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 01:55:58PM +0300, Andy Shevchenko wrote:
-> Instead of manipulations with OF APIs, use device_get_match_data().
+[+cc Rafael, driver-specific vs generic PM at very end]
+
+On Wed, Jul 28, 2021 at 06:48:50AM +0530, Om Prakash Singh wrote:
+> On 7/27/2021 8:48 PM, Bjorn Helgaas wrote:
+> > On Tue, Jul 27, 2021 at 07:51:37AM +0530, Om Prakash Singh wrote:
+> > > Hi Bjorn,
+> > > I think it makes sense to have the scope of keeping default ASPM
+> > > policy disable and API pci_enable_link_state() to selectively enable
+> > > by EP Driver.
+> > > 
+> > > sysfs interface for ASPM also does not allow enabling ASPM for a
+> > > device if the default policy (policy_to_aspm_state()) does not allow
+> > > it.
+> > 
+> > The ASPM policy implementation may require changes.  I think the
+> > current setup where a policy is compiled into the kernel via Kconfig
+> > options is seriously flawed.
+> > 
+> > We need a fail-safe kernel parameter, i.e., "pcie_aspm=off", for cases
+> > where devices don't work at all with ASPM.  We need quirks to work
+> > around devices known to be broken, e.g., those that advertise ASPM
+> > support that doesn't actually work, or those that advertise incorrect
+> > exit latencies.  I think most other configuration should be done via
+> > sysfs.
+> > 
+> > > Consider a situation, for a platform one wants to utilize ASPM
+> > > capability of an onboard PCIe device because it is well evaluated,
+> > > at the same time they want to keep ASPM disabled for other PCIe
+> > > devices that can be connected on open PCIe slot to avoid possible
+> > > performance issue.
+> > > 
+> > > I see ASPM is broken on many devices, though the device shows ASPM
+> > > capabilities but has performance issues when it is enabled.
+> > 
+> > I'll wait to see your proposal and use case before commenting on this.
 > 
-> While at it, drop of_match_ptr() completely and make compiler happy,
-> otherwise it complains:
+> few suggestions:
 > 
->   pci-keystone.c:1069:34: warning: ‘ks_pcie_of_match’ defined but not used [-Wunused-const-variable=]
+> 1. We can have a device-tree property to disable ASPM capabilities of a Root
+> port. Corresponding to my example, the device-tree can use be use to enable
+> ASPM capabilities of Root ports that have known/good/onboard PCIe device,
+> and keep ASPM disabled for opens slots
 
-These are two separate things and I'd prefer two separate patches.
+ASPM can only be enabled for links between two devices.  For empty
+slots, there's an upstream device (Root Port or Switch Downstream
+Port) but no downstream device, so ASPM won't be enabled anyway.
 
-I have a to-do item on my list to replace of_match_device(), as you
-did here.  I originally suggested replacing with
-device_get_match_data(), but I think Rob prefers
-of_device_get_match_data() because there's really no benefit to the
-extra indirection of device_get_match_data().  These are not drivers
-that may potentially be used with either ACPI or OF; they're just OF.
+> 2. sysfs should allow overriding default ASPM policy.
+>    With below change system can boot with default policy ASPM disabled
+> (performance). But sysfs will still allow to enable ASPM capability of
+> selective device
 
-Either way, I'd like to see a patch that does this for all drivers in
-drivers/pci/controller/ at the same time so they get slightly more
-consistent.
+This sounds like a good idea.  If we could get rid of the Kconfig ASPM
+policy selection, we'd likely make PCIEASPM_POWER_SUPERSAVE the
+default.  Then userspace could use sysfs to disable ASPM states
+selective as necessary for performance.
 
-Same for the .of_match_table update; a good change that I'd like to
-apply universally.  It looks like pcie-spear13xx.c, pcie-armada8k.c,
-pci-ftpci100.c, pci-v3-semi.c, pci-xgene.c, pcie-iproc-platform.c also
-have the same issue.
+Even before removing the Kconfig policy selection (or if we can't do
+that), I think it make sense to allow sysfs to override it.
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a08e7d6..268c2c5 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1278,7 +1278,7 @@
+>  		link->aspm_disable |= state;
+>  	}
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index bde3b2824e89..f36ea618a248 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of_pci.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
-> @@ -1091,7 +1092,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = dev->of_node;
->  	const struct ks_pcie_of_data *data;
-> -	const struct of_device_id *match;
->  	enum dw_pcie_device_mode mode;
->  	struct dw_pcie *pci;
->  	struct keystone_pcie *ks_pcie;
-> @@ -1108,8 +1108,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	int irq;
->  	int i;
->  
-> -	match = of_match_device(of_match_ptr(ks_pcie_of_match), dev);
-> -	data = (struct ks_pcie_of_data *)match->data;
-> +	data = device_get_match_data(dev);
->  	if (!data)
->  		return -EINVAL;
->  
-> @@ -1309,7 +1308,7 @@ static struct platform_driver ks_pcie_driver __refdata = {
->  	.remove = __exit_p(ks_pcie_remove),
->  	.driver = {
->  		.name	= "keystone-pcie",
-> -		.of_match_table = of_match_ptr(ks_pcie_of_match),
-> +		.of_match_table = ks_pcie_of_match,
->  	},
->  };
->  builtin_platform_driver(ks_pcie_driver);
-> -- 
-> 2.30.2
+> -	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> +	pcie_config_aspm_link(link, state);
 > 
+>  	mutex_unlock(&aspm_lock);
+>  	up_read(&pci_bus_sem);
+> 
+> 3. Add API pci_enable_link_state()
+>    This will give control to driver to change ASPM at runtime depending on
+> user selected performance mode. For example Android has different
+> performance modes for Wifi chip, for sleep and active state. We are using
+> similar API to overcome some performance issue related to wifi on our
+> internal platform.
+
+I'd prefer to keep performance modes out of the drivers as much as
+possible because that's not really a scalable approach.  I'm not a
+power management expert, but I suspect the most maintainable approach
+is to do this in the generic PM core, with selectable overrides via
+sysfs as necessary.  I cc'd Rafael in case he wants to chime in.
+
+Maybe there's a place for drivers to tweak ASPM at runtime, but I'm
+not convinced yet.  I think the intent of ASPM is that devices
+advertise exit latencies that correspond with their internal
+buffering, so the L0s and L1 states can be used with no significant
+performance impact.  But without more specifics, we can talk about
+this all day without getting anywhere.
+
+Bjorn
