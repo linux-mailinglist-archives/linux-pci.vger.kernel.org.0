@@ -2,178 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0ADE3D943B
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 19:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68FF23D9449
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 19:26:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbhG1RZL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 13:25:11 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53084 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbhG1RZK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 13:25:10 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id d053bcc70460610a; Wed, 28 Jul 2021 19:25:06 +0200
-Received: from kreacher.localnet (89-64-80-148.dynamic.chello.pl [89.64.80.148])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 5E854669F32;
-        Wed, 28 Jul 2021 19:25:05 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>
-Subject: [PATCH v2] PCI: PM: Add special case handling for PCIe device wakeup
-Date:   Wed, 28 Jul 2021 19:25:04 +0200
-Message-ID: <3149540.aeNJFYEL58@kreacher>
+        id S229727AbhG1R0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 13:26:45 -0400
+Received: from mail-bn8nam12on2076.outbound.protection.outlook.com ([40.107.237.76]:4257
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229537AbhG1R0n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 13:26:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kCvfZtscXcH2ezyVyFbEW+lx5scr6OzesMlmCTa3m/QLUS3m+3Lbzo66UYRzvn0r3GTTuyKsP77Q3HPeCXwnhT/6nZU1o6cSJJT3DPpAotlMwHFIhmMoaX8wj4kYdnab6iH+mJZM8SDk/uDaqtn0zRX2MzryK6Z6dUjNJizld+zcu1BpPKd0OD0SzprOJClLiAHhCp/eorPOKO8xGuy88cyjhX83R7XaOQBKw2ba90SHoo/8AD0Y2DVZ1JgbGFGEsCVjxlk2mFtIghb2p66ZNq6X/qlN3Fu5AAAcfi0UfEwZ8JBRQVoZtYi+6hYgJ/ba1MktbQSdh3O2u01V2QFhCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nUFOQQBzRUmvGKWGBwjeaGuoU2Q6Y4pzBGisPq4o/pA=;
+ b=nyROIgHPRtbBzfPOKC760U+nWosolAt00xdGQwLDRbuBiXw7dJGtOgUahetkV5O5I9zS1TuyNyWQfV9+EdSNzvqs6x6kZSayER6Zh0OmIGcfP0sSNT7raxVsbwzl4HA9mlsJboQMOa60XaAn5R4gV58dU4ICQ+hhfkTT1zQrLHuVY6Q3mStaiCYMkMCPIiqcuT06Pm21K0RZzcHL11W589CZpdmSm2dcnS6lOVoaOTEIjgVyxRPTklPzk07ho9To8lNUH8ajmueDKi9/J/TdneDuFojtBqfDNUX2IgZ2kk16gOusrJxRD2bViyjPORUD7z3oAbLMuD4O964W8CJMoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nUFOQQBzRUmvGKWGBwjeaGuoU2Q6Y4pzBGisPq4o/pA=;
+ b=i9h7LXdYL6m5lx6HbYgYqlrSDYM3KaTPQokTg/XCYkRP0dnfnd1UkiYPEg3U3wwZqq1fwNkZAOb6wHouTRpvd2jkGlE15/nh8fzITZ3UNk+0BrWaB4IGysy1xsV+DrErWYGaVJtu1Owy0OkwdgIJHf2NmsTO9Z6EXyiV4BhiWHnXiqCnXYSxvmTmMgY4yBs4ylYkd1KRB+CiS4CqwsVCt0JI1A2cSK0ea9+bya6FtpcTttry0sV3vQpcbuo7biAEqDbJ7iPuYdSsrnnglTqoEXs5nqRqKhkNKOvYXxW9f46XTLOmnAIfIuZ6emCE2E/MQR945oDwiXF4u7ngQSMmQA==
+Authentication-Results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5270.namprd12.prod.outlook.com (2603:10b6:208:31e::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.28; Wed, 28 Jul
+ 2021 17:26:40 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d017:af2f:7049:5482]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d017:af2f:7049:5482%5]) with mapi id 15.20.4373.019; Wed, 28 Jul 2021
+ 17:26:40 +0000
+Date:   Wed, 28 Jul 2021 14:26:37 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, diana.craciun@oss.nxp.com,
+        kwankhede@nvidia.com, Eric Auger <eric.auger@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        mgurtovoy@nvidia.com, maorg@nvidia.com, leonro@nvidia.com
+Subject: Re: [PATCH 12/12] vfio/pci: Introduce vfio_pci_core.ko
+Message-ID: <20210728172637.GT1721383@nvidia.com>
+References: <20210721161609.68223-1-yishaih@nvidia.com>
+ <20210721161609.68223-13-yishaih@nvidia.com>
+ <20210727155440.680ee22e.alex.williamson@redhat.com>
+ <20210727230941.GL1721383@nvidia.com>
+ <20210728054306.GA3421@lst.de>
+ <20210728120326.GQ1721383@nvidia.com>
+ <20210728122956.GA27111@lst.de>
+ <20210728124755.GR1721383@nvidia.com>
+ <CAK8P3a21ah=+x29jycWZBoTGA1RzfYz4qar9usvCa_hU85k=7g@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a21ah=+x29jycWZBoTGA1RzfYz4qar9usvCa_hU85k=7g@mail.gmail.com>
+X-ClientProxiedBy: YT1PR01CA0130.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::9) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 89.64.80.148
-X-CLIENT-HOSTNAME: 89-64-80-148.dynamic.chello.pl
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrgeelgdelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdevgfetueetheekudeuvdduteelvefftdfftdejjeeukeffteeikefgiefghedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeelrdeigedrkedtrddugeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepkeelrdeigedrkedtrddugeekpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhg
- pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrihdrhhgvnhhgrdhfvghnghestggrnhhonhhitggrlhdrtghomhdprhgtphhtthhopehuthhkrghrshhhrdhhrdhprghtvghlsehinhhtvghlrdgtohhmpdhrtghpthhtohepkhhosggrrdhkohestggrnhhonhhitggrlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0130.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19 via Frontend Transport; Wed, 28 Jul 2021 17:26:39 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1m8nKH-009iyn-VE; Wed, 28 Jul 2021 14:26:37 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 09cf0864-57ca-4131-a3ed-08d951ecdc25
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5270:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5270AE89680A240722A5014AC2EA9@BL1PR12MB5270.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /1FaHFg1A+dQ4Vd4mcHuvZhB/6GZDOXFsp3+NqfexaOFhF28TEiEKhoP55kRw2sTfURb4oNb1BfmlIQGCGVthqexnYbOxzjOwlwQBOCUlsdHRihbhCa1+EewhAr3DNEpzOt7klBsKUMC42TPvHg2JkQ42Yo7PYgRyLXoVCsWPBJrFeMbSs/iYX4Ke20MD0IIJ98acHGGCU+1ZtgyKi+isM5i/16CreBPiHiwVzqHCy7bjENKgVXwS4j+7dpT6EiFuwD8H+afWbIUZblF5EYAeV3QYdCF/BVwEGnwDVUiyNOxvIx8WPThkQTELS/iqWAFcQk1cb4ws3JhwrWSYvu2cvGSD8hgXwjU00/E06zDAvuP7v0u40po6s6xZumsXU/pAhbWeUdz8V5I5BKU4/oslgnoUhWMlKM9bRORSXHv1Rp4ldnNfRzwtfTPtjrOiYqi8UuPY6RiuX1VHSyQO8390yLXYzRKLmv3nScV2qnCOIENlbQtaI5kKzk2I4xQ7XKXPChzNTrLMBUa7cI/MF7lCVZgr6F6ZAo/kx7zwyzw9E3AT1aXScj5Qc2E9FuN19Fnb6rKty4sRvqEAL5fk0fqg6uPToX8Tv/P4k1RagrrlV1V8EhANQvc66mzrc3lmeMIBFYShH3Xj0+aGntm3ofeaQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(376002)(396003)(136003)(66476007)(66946007)(8936002)(8676002)(9786002)(36756003)(5660300002)(186003)(316002)(26005)(86362001)(83380400001)(4326008)(107886003)(9746002)(33656002)(66556008)(2906002)(54906003)(6916009)(478600001)(38100700002)(426003)(2616005)(1076003)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?K/7UYEms//fvlaD6Pili/pstKU8lRNXmgzb6jdTUhUWezd67ApMjPAFESLgh?=
+ =?us-ascii?Q?OhQLlSREiO1HE+hPUT+vg9NNFzru65RWI/adVNqwr/UvSz+BY9o4nyPxqgqV?=
+ =?us-ascii?Q?Nl0oEOaqWc5NYOvHDQPMc3NPQauMrJB8EfWKM/NY5teyviL0GxGrhP0h0VqX?=
+ =?us-ascii?Q?wPXmaapf6diVgkJPH10eX9YQXc+70HuiK7sT/dy0MT07LgnxseRq9Gn2/lbk?=
+ =?us-ascii?Q?jG5OvgZSZwOKteCEZzeb2pxXsYxJuKntPMxagHeG9i0HfzgfV+XLLBfPFKw4?=
+ =?us-ascii?Q?dnuB9lhNevjp2a+lk+4cowDz1OHHiDHvy3OlpWESBk+WjupXuY18dNTK30hi?=
+ =?us-ascii?Q?wqS0ZW75q8I79ABHY1Lvd/8TXRCVQhNY5hS7W9NbGoHXHxznzQzNsqwT5jqC?=
+ =?us-ascii?Q?HTbFzLoTv44LL2WQZPw+1iN+IUZknOTtagZBRjDPZWuFTb2uTK6SxD+cp4Iv?=
+ =?us-ascii?Q?sypbtU1P8p1PfuqE7FnmjyDVbEqCAtx2TRiMIgB0Uu0720BK6HNLiCyFqrvq?=
+ =?us-ascii?Q?sgVhbT5948Ll0eRhluLhOVroR51edyZze8RZmdvKiWh2/QSazJr6w8A/uTww?=
+ =?us-ascii?Q?dPg3yVkkNZDvY5En44qGVorrpi80MlrducFQrIf/3QlXxWOhw1G2zFcgxLxc?=
+ =?us-ascii?Q?QaAlizs6xlsbDVVw9DApoNAjlNc1r9grfLP2y+NKYP57P1hABm8kCpSDomx7?=
+ =?us-ascii?Q?LyM48a9CnVdD/Qp6XH9NTh4LOGjl0zz/w6uCHO9bup2zqaX54T18U4doXE4V?=
+ =?us-ascii?Q?48q8dVK7RViK+ohvZBXSn3pyXbcglB4o6nS/gTna7zkUjUx16vGKL+Skmawz?=
+ =?us-ascii?Q?cUlzktG8zlmDrRnZosB5MYZ+PixP3xMfbMI2Ax8ZeyJluIsmXbKwjLxreKrD?=
+ =?us-ascii?Q?3jdYYzqrRY/hFElPy8cbqBh1PRuTJLlfOmOrH8yCREzxgA/19gOpuP5fWfUs?=
+ =?us-ascii?Q?kDrO7k9ZtTB/vFxypzUX4zdRrhA9RgPTkv6EjjKvsAjXMuYe+bUFeYUX62sI?=
+ =?us-ascii?Q?gQvp0a3pMqT7cIffonKlCw3QPDMKUEb7K6nuBucOK7F4uEtMbmPiJ8W/gQZu?=
+ =?us-ascii?Q?Py4zgDDYkx8CqHROL0QKRho03tWiOqOGN+afZZ5BPp0iT8PkOZNxiskFPqZm?=
+ =?us-ascii?Q?sTyUuf22xZOb1+A12277efr1eGiGqlfHCiLpW7v3GU2nnzK+6ETDUqw2xGqk?=
+ =?us-ascii?Q?EZxhbYtlhrajjAofqxVpVNZd4ntnBQ/DEDktuu3ensQBQR1ZRM4il7/wOVbn?=
+ =?us-ascii?Q?G8wDCS2wjZvBs6WLcvHYXtdt3xk8BKLGI8FvwVmXRaen2/JZsmKxok/KBK00?=
+ =?us-ascii?Q?tjnteatW8Xs+ViLwQr2c2YOE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09cf0864-57ca-4131-a3ed-08d951ecdc25
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2021 17:26:39.9601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zEs+O5SjbCW3OvW2mltPLqtjUenQIvqEBnZEvGUdpC3FOHK6+naMjDRL2EoGfmdp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5270
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Jul 28, 2021 at 03:08:08PM +0200, Arnd Bergmann wrote:
 
-Some PCIe devices only support PME (Power Management Event) from
-D3cold.  One example is the ASMedia xHCI controller:
+> > @@ -17,6 +15,7 @@ config VFIO_PCI_INTX
+> >
+> >  config VFIO_PCI
+> >         tristate "Generic VFIO support for any PCI device"
+> > +       select VFIO_PCI_CORE
+> >         help
+> >           Support for the generic PCI VFIO bus driver which can connect any
+> >           PCI device to the VFIO framework.
+> > @@ -50,6 +49,7 @@ endif
+> >  config MLX5_VFIO_PCI
+> >         tristate "VFIO support for MLX5 PCI devices"
+> >         depends on MLX5_CORE
+> > +       select VFIO_PCI_CORE
+> >         help
+>
+> These two now have to get a 'depends on MMU' if they don't already inherit
+> that from elsewhere.
 
- 11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
-   ...
-   Capabilities: [78] Power Management version 3
-       Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
-       Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+Just so I understand this remark properly, I added this at the top of
+the file:
 
-In those cases, if the device is expected to generate wakeup events
-from its final power state, pci_target_state() returns D0, which
-prevents the PCIe hierarchy above the device from entering any
-low-power states too, but the device cannot signal PME from D0
-either.  However, if the device were allowed to go into D3hot, its
-parent PCIe port and its ancestors would also be able to go into D3
-and if any of them goes into D3cold, the device would end up in
-D3cold too (as per the PCI PM spec v1.2, Table 6-1), in which case
-it would be able to signal PME.
+if PCI && MMU
 
-This means that the system could be put into a lower-power
-configuration while meeting the requirement to enable the device to
-generate PME from the final state (which is not the case if the
-device stays in D0 along with the entire hierarchy above it).
+And when I check CONFIG_MLX5_VFIO_PCI I see:
 
-In order to avoid missing that opportunity, extend pci_pme_capable()
-to return 'true' in the special case when the target state is D3hot
-and the device can only signal PME from D3cold and update
-pci_target_state() to return the current target state if
-pci_pme_capable() returns 'true' for it.
+ Defined at drivers/vfio/pci/Kconfig:51
+   Prompt: VFIO support for MLX5 PCI devices
+   Depends on: VFIO [=y] && PCI [=y] && MMU [=y] && MLX5_CORE [=y]
 
-This change can be regarded as a pci_target_state() fix, because that
-function should ignore its 'wakeup' argument if signaling PME from
-any power states shallower than the current candidate one (including
-D0) is not supported.
+So this is doing what you mean, right?
 
-Link: https://lore.kernel.org/linux-pm/20210617123653.58640-1-mika.westerberg@linux.intel.com
-Fixes: 666ff6f83e1d ("PCI/PM: Avoid using device_may_wakeup() for runtime PM")
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Reported-by: Koba Ko <koba.ko@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+I've attached the whole thing below just for clarity
 
-Hi Mika,
+Thanks,
+Jason
 
-IMO it is better to address the case in which the device cannot signal PME from
-D0 (as well as from any power states shallower than D3cold), which appears to be
-the one at hand, to start with and then, if need be, take care of the case in
-which signaling PME from both D0 and D3cold is supported separately.
+# SPDX-License-Identifier: GPL-2.0-only
+if PCI && MMU
+config VFIO_PCI_CORE
+	tristate
+	select VFIO_VIRQFD
+	select IRQ_BYPASS_MANAGER
+	help
+	  Support for using PCI devices with VFIO.
 
-If the device cannot signal PME from D0, then there is no point returning D0
-from pci_target_state() just because 'wakeup' is set, so this is a bug, and
-then enabling PME in case the device ends up in D3cold can be regarded as "best
-effort" (we cannot guarantee that this will always happen, but then it is the
-only way to enable it to signal wakeup anyway).
+config VFIO_PCI_MMAP
+	def_bool y if !S390
 
-The case when signaling PME from D0 and D3cold (if we need to worry about it at
-all) is more controversial, because in that case leaving the device in D0 really
-allows it to signal wakeup, while putting it into D3hot in hope that it will end
-up in D3cold may not work.
+config VFIO_PCI_INTX
+	def_bool y if !S390
 
-Cheers!
+menu "VFIO PCI Drivers"
 
--> v2:
-   * Instead of checking the direct parent of the device in question, which
-     doesn't work, check if the device can signal PME from any power states
-     shallower than D3cold, including D0.  If not, return 'true' from
-     pci_pme_capable() for D3hot as a way to indicate that the device should
-     be able to signal wakeup from the final state conditional on getting
-     one of its ancestors into D3cold.
+config VFIO_PCI
+	tristate "Generic VFIO support for any PCI device"
+	select VFIO_PCI_CORE
+	help
+	  Support for the generic PCI VFIO bus driver which can connect any
+	  PCI device to the VFIO framework.
 
----
- drivers/pci/pci.c |   34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+	  If you don't know what to do here, say N.
 
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -2301,7 +2300,21 @@ bool pci_pme_capable(struct pci_dev *dev
- 	if (!dev->pm_cap)
- 		return false;
- 
--	return !!(dev->pme_support & (1 << state));
-+	if (dev->pme_support & (1 << state))
-+		return true;
-+
-+	/*
-+	 * Special case: The target state is D3hot and the device (which is a
-+	 * PCIe one) only supports signaling PME from D3cold.  In that case, if
-+	 * the device is allowed to go into D3hot, its ancestor PCIe port may go
-+	 * into D3cold which will cause the device to end up in D3cold too
-+	 * (along the lines of the PCI PM spec v1.2, Table 6-1), so it will be
-+	 * able to signal PME from the final state.  It will not be able to
-+	 * signal PME if left in D0, however.
-+	 */
-+	return state == PCI_D3hot && pci_is_pcie(dev) &&
-+		(dev->pme_support & (1 << PCI_D3cold)) &&
-+		!(dev->pme_support ^ (1 << PCI_D3cold));
- }
- EXPORT_SYMBOL(pci_pme_capable);
- 
-@@ -2595,17 +2608,12 @@ static pci_power_t pci_target_state(stru
- 	if (dev->current_state == PCI_D3cold)
- 		target_state = PCI_D3cold;
- 
--	if (wakeup) {
--		/*
--		 * Find the deepest state from which the device can generate
--		 * PME#.
--		 */
--		if (dev->pme_support) {
--			while (target_state
--			      && !(dev->pme_support & (1 << target_state)))
--				target_state--;
--		}
--	}
-+	if (!wakeup || !dev->pme_support || pci_pme_capable(dev, target_state))
-+		return target_state;
-+
-+	/* Find the deepest state from which the device can generate PME#. */
-+	while (target_state && !(dev->pme_support & (1 << target_state)))
-+		target_state--;
- 
- 	return target_state;
- }
+if VFIO_PCI
+config VFIO_PCI_VGA
+	bool "Generic VFIO PCI support for VGA devices"
+	depends on X86 && VGA_ARB
+	help
+	  Support for VGA extension to VFIO PCI.  This exposes an additional
+	  region on VGA devices for accessing legacy VGA addresses used by
+	  BIOS and generic video drivers.
 
+	  If you don't know what to do here, say N.
 
+config VFIO_PCI_IGD
+	bool "Generic VFIO PCI extensions for Intel graphics (GVT-d)"
+	depends on X86
+	default y
+	help
+	  Support for Intel IGD specific extensions to enable direct
+	  assignment to virtual machines.  This includes exposing an IGD
+	  specific firmware table and read-only copies of the host bridge
+	  and LPC bridge config space.
 
+	  To enable Intel IGD assignment through vfio-pci, say Y.
+endif
+
+config MLX5_VFIO_PCI
+	tristate "VFIO support for MLX5 PCI devices"
+	depends on MLX5_CORE
+	select VFIO_PCI_CORE
+	help
+	  This provides a PCI support for MLX5 devices using the VFIO
+	  framework. The device specific driver supports suspend/resume
+	  of the MLX5 device.
+
+	  If you don't know what to do here, say N.
+endmenu
+endif
