@@ -2,132 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D743D967D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 22:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FD723D96A4
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jul 2021 22:23:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbhG1USe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 16:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
+        id S231126AbhG1UXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 16:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231268AbhG1USe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jul 2021 16:18:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F313861038;
-        Wed, 28 Jul 2021 20:18:31 +0000 (UTC)
+        id S229878AbhG1UXG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 16:23:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8945860F5E;
+        Wed, 28 Jul 2021 20:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627503512;
-        bh=1ED6y3YxJU324Y8RqrYP/nxRNq8UxmVvZM4iuBgaSLI=;
+        s=k20201202; t=1627503784;
+        bh=IZKviyNvA8qCDPgEtTdBEe4q653tjvzIedoyZEITG0I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bPREx7m+u/T4ac4EuoTvz1nb41tmh306+KQdf3t+gZoHlv1w/mCy7D4hrcYrZt8d2
-         4glsA6/h4hdpiMZqVAiGGsCGvkK3QC4dWhOJ9xChnX0kASfV8qMnmdla8YXqabe7I/
-         Ayw85LCahi1p3ZKQOqXO0AtA+VEJRXbM1ZvHSUv6kkLftLgaKqDP5OuZ6tkPiY4LmY
-         Gz0lrufbMBb+0TShlvThxKoWm/XTr5p6vzL3Rit6mOz8JiU49EZ86LySe7B5dOx+sj
-         hzzUpA2nv1EBEHrJ9hr1ZGfvyxCRL++RbagfKOZ3HYHz1MKluv5Ib/Alp1ZTR+5U6R
-         rqoRsJYPC8vsQ==
-Date:   Wed, 28 Jul 2021 15:18:30 -0500
+        b=qEJWSFuS/tFFj7gwilRIyS2qb1vlIZvZk15+A5ndtBGJMWx6M8Bwz1eQpH5btfj0K
+         oepk9btELOpBnq3D4Fp3te7rwyBLqKR4kZYSxk3CoZAlMAmfpIDLwiFV+PmvXLKxah
+         AaBnkcFL+2GWV+9p6oeENJ84biTnQRFaKZNbl4cBydaIhIMyHImnIy9ULm7bZPLa6M
+         Hu0Ak9ALx7treaU5G105Fq3AqSmCQVcUu2o5WpFdfi9FbHLjeXLIdSc6DgOrkAEGaA
+         wRVKmy2VNJs3ADBsmLJts1Zp49atR0L0EK58rb5muTx667Zc38bPywLviuItqkwUV8
+         u0FJiupqWW4gg==
+Date:   Wed, 28 Jul 2021 15:23:03 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     alex.williamson@redhat.com,
+To:     Shanker R Donthineni <sdonthineni@nvidia.com>
+Cc:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        alex.williamson@redhat.com,
         Raphael Norwitz <raphael.norwitz@nutanix.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v10 4/8] PCI/sysfs: Allow userspace to query and set
- device reset mechanism
-Message-ID: <20210728201830.GA845737@bjorn-Precision-5520>
+        kw@linux.com, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v10 1/8] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210728202303.GA847802@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210728185831.isdqa5t5oxxjfhnv@archlinux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <709c80db-3420-917d-31de-a5161aaf30ac@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 12:28:31AM +0530, Amey Narkhede wrote:
-> On 21/07/28 01:13PM, Bjorn Helgaas wrote:
-> > On Wed, Jul 28, 2021 at 11:29:50PM +0530, Amey Narkhede wrote:
-> > > On 21/07/27 06:28PM, Bjorn Helgaas wrote:
-> > > > On Fri, Jul 09, 2021 at 06:08:09PM +0530, Amey Narkhede wrote:
-> > > > > Add reset_method sysfs attribute to enable user to query and set user
-> > > > > preferred device reset methods and their ordering.
-> > > > >
-> > > > > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > > > > ---
-> > > > >  Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
-> > > > >  drivers/pci/pci-sysfs.c                 | 103 ++++++++++++++++++++++++
-> > > > >  2 files changed, 122 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > > > > index ef00fada2..43f4e33c7 100644
-> > > > > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > > > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > > > > @@ -121,6 +121,25 @@ Description:
-> > > > >  		child buses, and re-discover devices removed earlier
-> > > > >  		from this part of the device tree.
-> > > > >
-> > > > > +What:		/sys/bus/pci/devices/.../reset_method
-> > > > > +Date:		March 2021
-> > > > > +Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-> > > > > +Description:
-> > > > > +		Some devices allow an individual function to be reset
-> > > > > +		without affecting other functions in the same slot.
-> > > > > +
-> > > > > +		For devices that have this support, a file named
-> > > > > +		reset_method will be present in sysfs. Initially reading
-> > > > > +		this file will give names of the device supported reset
-> > > > > +		methods and their ordering. After write, this file will
-> > > > > +		give names and ordering of currently enabled reset methods.
-> > > > > +		Writing the name or comma separated list of names of any of
-> > > > > +		the device supported reset methods to this file will set
-> > > > > +		the reset methods and their ordering to be used when
-> > > > > +		resetting the device. Writing empty string to this file
-> > > > > +		will disable ability to reset the device and writing
-> > > > > +		"default" will return to the original value.
-> > > > > +
-> > > > >  What:		/sys/bus/pci/devices/.../reset
-> > > > >  Date:		July 2009
-> > > > >  Contact:	Michael S. Tsirkin <mst@redhat.com>
-> > > >
-> > > [...]
-> > >
-> > > > > +		int i;
-> > > > > +
-> > > > > +		if (sysfs_streq(name, ""))
-> > > > > +			continue;
-> > > > > +
-> > > > > +		name = strim(name);
-> > > > > +
-> > > > > +		for (i = 1; i < PCI_NUM_RESET_METHODS; i++) {
-> > > > > +			if (sysfs_streq(name, pci_reset_fn_methods[i].name) &&
-> > > > > +			    !pci_reset_fn_methods[i].reset_fn(pdev, 1)) {
-> > > > > +				reset_methods[n++] = i;
-> > > >
-> > > > Can we build this directly in pdev->reset_methods[] so we don't need
-> > > > the memcpy() below?
-> > > >
-> > > This is to avoid writing partial values directly to dev->reset_methods.
-> > > So for example if user writes flr,unsupported_value then
-> > > dev->reset_methods should not be modified even though flr is valid reset
-> > > method in this example to avoid partial writes. Either operation(in this
-> > > case writing supported reset methods to reset_method attr) succeeds
-> > > completely or it fails othewise.
+On Wed, Jul 28, 2021 at 01:54:16PM -0500, Shanker R Donthineni wrote:
+> On 7/27/21 5:12 PM, Bjorn Helgaas wrote:
+> > On Fri, Jul 09, 2021 at 06:08:06PM +0530, Amey Narkhede wrote:
+> >> Add has_pcie_flr bitfield in struct pci_dev to indicate support for PCIe
+> >> FLR to avoid reading PCI_EXP_DEVCAP multiple times.
+> >>
+> >> Currently there is separate function pcie_has_flr() to probe if PCIe FLR
+> >> is supported by the device which does not match the calling convention
+> >> followed by reset methods which use second function argument to decide
+> >> whether to probe or not. Add new function pcie_reset_flr() that follows
+> >> the calling convention of reset methods.
+> >>
+> >> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> >> ---
+> >>  drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +-
+> >>  drivers/pci/pci.c                          | 59 +++++++++++-----------
+> >>  drivers/pci/pcie/aer.c                     | 12 ++---
+> >>  drivers/pci/probe.c                        |  6 ++-
+> >>  drivers/pci/quirks.c                       |  9 ++--
+> >>  include/linux/pci.h                        |  3 +-
+> >>  6 files changed, 45 insertions(+), 48 deletions(-)
+> >>
+> >> diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> >> index facc8e6bc..15d6c8452 100644
+> >> --- a/drivers/crypto/cavium/nitrox/nitrox_main.c
+> >> +++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+> >> @@ -306,9 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
+> >>               return -ENOMEM;
+> >>       }
+> >>
+> >> -     /* check flr support */
+> >> -     if (pcie_has_flr(pdev))
+> >> -             pcie_flr(pdev);
+> >> +     pcie_reset_flr(pdev, 0);
+> > I'm not really a fan of exposing the "probe" argument outside
+> > drivers/pci/.  I think this would be the only occurrence.  Is there a
+> > way to avoid that?
 > >
-> > I guess the question is, if somebody writes
+> > Can we just make pcie_flr() do the equivalent of pcie_has_flr()
+> > internally?
 > >
-> >   flr junk bus
-> >
-> > and we set the supported methods to "flr bus", is that OK?  It seems
-> > OK to me; obviously we have to protect ourselves from attack, but
-> > over-zealous checking can make things unnecessarily complicated.
->
-> The problem is once we encounter "junk" we return -EINVAL so in your
-> example we only set flr.
+> I like your suggestion don't change the existing definition of
+> pcie_has_flr()/pcie_flr() and define a new function pcie_reset_flr()
+> to fit into the reset framework. This way no need to modify
+> logic/drivers outside of driver/pci/xxx.
+> 
+> int pcie_reset_flr(struct pci_dev *dev, int probe)
+> {
+>         if (!pcie_has_flr(dev))
+>                 return -ENOTTY;
+> 
+>         if (probe)
+>                 return 0;
+> 
+>         return pcie_flr(dev);
+> }
 
-We're still talking about whether we need the memcpy().  We can decide
-whether it's the right thing to return -EINVAL if we encounter "junk".
+Can't remember the whole context of this in the series, but I assume
+this would be static?
 
-Maybe it's OK if we set it to "flr" and ignore everything after
-"junk"?  Or maybe it's OK to ignore unsupported values and set it to
-"flr bus"?
+> And add a new patch to begging of the series for caching 'devcap' in
+> pci_dev structure.
+> 
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -333,6 +333,7 @@ struct pci_dev {
+>         struct rcec_ea  *rcec_ea;       /* RCEC cached endpoint association */
+>         struct pci_dev  *rcec;          /* Associated RCEC device */
+>  #endif
+> +       u32             devcap;         /* Cached PCIe device capabilities */
+>         u8              pcie_cap;       /* PCIe capability offset */
+>         u8              msi_cap;        /* MSI capability offset */
+>         u8              msix_cap;       /* MSI-X capability offset */
+> 
+> 
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <asm/dma.h>
+>  #include <linux/aer.h>
+> +#include <linux/bitfield.h>
+>  #include "pci.h"
+> 
+>  DEFINE_MUTEX(pci_slot_mutex);
+> @@ -4630,13 +4631,10 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+>   */
+>  bool pcie_has_flr(struct pci_dev *dev)
+>  {
+> -       u32 cap;
+> -
+>         if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>                 return false;
+> 
+> -       pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> -       return cap & PCI_EXP_DEVCAP_FLR;
+> +       return !!FIELD_GET(PCI_EXP_DEVCAP_FLR, dev->devcap);
+
+Nice, thanks for reminding me of FIELD_GET().  I like how that works
+without having to #define *_SHIFT values.  I personally don't care for
+"!!" and would probably write something like:
+
+  return FIELD_GET(PCI_EXP_DEVCAP_FLR, dev->devcap) == 1;
+
+>  }
+> 
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/hypervisor.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/bitfield.h>
+>  #include "pci.h"
+> 
+>  #define CARDBUS_LATENCY_TIMER  176     /* secondary latency timer */
+> @@ -1498,8 +1499,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>         pdev->pcie_cap = pos;
+>         pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+>         pdev->pcie_flags_reg = reg16;
+> -       pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+> -       pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
+> +       pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+> +       pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
+> 
