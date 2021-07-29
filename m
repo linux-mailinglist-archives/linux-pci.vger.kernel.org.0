@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95CD33DAB23
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 20:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A90A3DAB26
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 20:42:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbhG2Smu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 14:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        id S231599AbhG2Smv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 14:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230503AbhG2Smt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Jul 2021 14:42:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 208EC60F5E;
-        Thu, 29 Jul 2021 18:42:46 +0000 (UTC)
+        id S231504AbhG2Smv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Jul 2021 14:42:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B091860FE7;
+        Thu, 29 Jul 2021 18:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627584166;
-        bh=3ungDbb3OMklU9ftRu0d0idMhHW/9diicRxu5L/gMP4=;
+        s=k20201202; t=1627584168;
+        bh=wgMnDar7z06DT1D6H2XVzvIVMOM4sIg6YdnekTrArWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xb/R8y/LV3KbeKUpHOXgH4OSKwUxqdO+hhtXZay8z48EIMTbV6XUlzdYvea2rQNaS
-         mJCBdrUgEkLZuVocjfz9adoexgVXccFkuLHKO5nMhzypM92XuWyokF6NkUQElvLlhi
-         Zrz5VHFP9TFBJSjvBUJnlYHXc6pGkKz9NLV4lmaftvqrA/Wz7VMrFd9JkzCY6QU/d1
-         Z7vUrXUl3fPAto7+LrnkhyCI3q62nn3Rmg1r2mG9yrQ+khhmVDIqkaZATeJAopx1be
-         f4DbZROTS/CPfj8nA6vbq858xoLYPhh+980+mBM96tL55okHTKZXbqInVn5m1uzhO+
-         ngA6ODpDwhMnQ==
+        b=cVUCzByFOF/La8Y95HYMTqkFXqpdkv6fkPkcVUfrpZFl5PJtWgiTozXJGH5t5QHqr
+         +7utPzpHsPa6AqyXOH19LUbFl+5avFwMboLtgPEC6VwaonBcO1WFtvlQgX4vY8N59m
+         TDiThUFJJfXFWiZOcXwm81loyycdN3uniPj0kPJEKeN0t1sRJk7liVWreLSt+vJiXh
+         Cd2T7jvZOxWw0sNy1OxaxNY7cPJmOdwWQDvZDfpDazcInLQ7UAOjXMJfu+4TNMowgR
+         C+r/603peCWoVwR4dwGu11EkLvnMXsHvfGPrCXhdp5RHB7fzoXXCSd42UAKOb3r4ig
+         wv9IvgYjOLqAg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     Hannes Reinecke <hare@suse.de>, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 4/6] PCI/VPD: Reject resource tags with invalid size
-Date:   Thu, 29 Jul 2021 13:42:32 -0500
-Message-Id: <20210729184234.976924-5-helgaas@kernel.org>
+Subject: [PATCH v2 5/6] PCI/VPD: Don't check Large Resource Item Names for validity
+Date:   Thu, 29 Jul 2021 13:42:33 -0500
+Message-Id: <20210729184234.976924-6-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210729184234.976924-1-helgaas@kernel.org>
 References: <20210729184234.976924-1-helgaas@kernel.org>
@@ -41,57 +41,55 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-VPD is limited in size by the 15-bit VPD Address field in the VPD
-Capability.  Each resource tag includes a length that determines the
-overall size of the resource.  Reject any resources that would extend past
-the maximum VPD size.
+VPD consists of a series of Small and Large Resources.  Computing the size
+of VPD requires only the length of each, which is specified in the generic
+tag of each resource.  We only expect to see ID_STRING, RO_DATA, and
+RW_DATA in VPD, but it's not a problem if it contains other resource types
+because all we care about is the size.
+
+Drop the validity checking of Large Resource items.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/pci/vpd.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/pci/vpd.c | 23 ++++-------------------
+ 1 file changed, 4 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 66703de2cf2b..e52382050e3e 100644
+index e52382050e3e..6fa09e969d6e 100644
 --- a/drivers/pci/vpd.c
 +++ b/drivers/pci/vpd.c
-@@ -77,6 +77,7 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+@@ -85,26 +85,11 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+ 		if (header[0] & PCI_VPD_LRDT) {
+ 			/* Large Resource Data Type Tag */
+ 			tag = pci_vpd_lrdt_tag(header);
+-			/* Only read length from known tag items */
+-			if ((tag == PCI_VPD_LTIN_ID_STRING) ||
+-			    (tag == PCI_VPD_LTIN_RO_DATA) ||
+-			    (tag == PCI_VPD_LTIN_RW_DATA)) {
+-				if (pci_read_vpd(dev, off+1, 2,
+-						 &header[1]) != 2) {
+-					pci_warn(dev, "failed VPD read at offset %zu",
+-						 off + 1);
+-					return 0;
+-				}
+-				size = pci_vpd_lrdt_size(header);
+-				if (off + size > PCI_VPD_MAX_SIZE)
+-					goto error;
++			size = pci_vpd_lrdt_size(header);
++			if (off + size > PCI_VPD_MAX_SIZE)
++				goto error;
  
- 	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
- 		unsigned char tag;
-+		size_t size;
- 
- 		if (off == 0 && (header[0] == 0x00 || header[0] == 0xff))
- 			goto error;
-@@ -94,8 +95,11 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
- 						 off + 1);
- 					return 0;
- 				}
--				off += PCI_VPD_LRDT_TAG_SIZE +
--					pci_vpd_lrdt_size(header);
-+				size = pci_vpd_lrdt_size(header);
-+				if (off + size > PCI_VPD_MAX_SIZE)
-+					goto error;
-+
-+				off += PCI_VPD_LRDT_TAG_SIZE + size;
- 			} else {
- 				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
- 					 tag, off);
-@@ -103,9 +107,12 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
- 			}
+-				off += PCI_VPD_LRDT_TAG_SIZE + size;
+-			} else {
+-				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
+-					 tag, off);
+-				return 0;
+-			}
++			off += PCI_VPD_LRDT_TAG_SIZE + size;
  		} else {
  			/* Short Resource Data Type Tag */
--			off += PCI_VPD_SRDT_TAG_SIZE +
--				pci_vpd_srdt_size(header);
  			tag = pci_vpd_srdt_tag(header);
-+			size = pci_vpd_srdt_size(header);
-+			if (size == 0 || off + size > PCI_VPD_MAX_SIZE)
-+				goto error;
-+
-+			off += PCI_VPD_SRDT_TAG_SIZE + size;
- 			if (tag == PCI_VPD_STIN_END)	/* End tag descriptor */
- 				return off;
- 		}
 -- 
 2.25.1
 
