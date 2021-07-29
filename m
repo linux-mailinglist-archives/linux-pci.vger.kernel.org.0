@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 109A23DAF1C
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 00:35:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CFA63DAF1A
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 00:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235028AbhG2Wf1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 18:35:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49282 "EHLO
+        id S234733AbhG2WfX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 18:35:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49294 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234607AbhG2WfH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 18:35:07 -0400
-Message-ID: <20210729222543.098828720@linutronix.de>
+        with ESMTP id S234650AbhG2WfI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 18:35:08 -0400
+Message-ID: <20210729222543.151522318@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1627598102;
+        s=2020; t=1627598103;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=6Hlz9b+gfajEt7fjlrTSAgtd7anX3wLVI1HqGJ1v/ZE=;
-        b=1eQY5WI6T8vk8Is8/rdugbsg8/M8i3OlzgWpApUVPOHK27VqtdHGXq2SSSiN/s/Kj+too8
-        M/a6E0SE+dLKoqmbbqjGnv8sh1QDnXmGolpfP6aiTeOOwHUztPotFqDkWXOsfrYT+imhX8
-        AwU3SGZmh4XC0v+/4ne5DkDSakDCQxAkN+/vwuLg8RLFDgbIFUaUvBS0Z5jMmrCHDe/UYA
-        oWwdPYUtK7imf28U7zxUGCQp2AXuVtqvP9R2w9HjMZbk8hIKZRjX02UU60c4bRtL/Y+V93
-        qapxcwjK0QrPPRfQ1BJHyMbnapDJliNWMhXKd+ep/cjA60W3u/JPIF6Haw6oHA==
+        bh=4d6jpf7VvfSCC5wDxxTlQqDwmyplaLXi1z26YEo5c+g=;
+        b=k6cqmo7oDAI9dn6SAtLHM3xOJ7YfIzaMmn0zYmaLHw8+p+JOOHFdrCAr6dsrZHxEA1JlJX
+        sbJYdL2Uarh0flzsFzbUZB/4/VnJ8zAiY579QdYjtC+9mxCKr7QCbrQzvd7FUr85XHQMld
+        /xHqtjAm9EFpYv6MizgR7Kk12Q9N1XWQH+AYSQSJdUPv8KTTRk+j1P2hylaYrpuquAroVF
+        oBkcEq1m8m05yWIvLjcgYAMHMA3aWVVlMyLbfXs+VaOX8nMau77j/mI97WP5lJ5lNCwNOe
+        DoJjfS/7jdplfOJ3rAFwF/FoLMcqV0Ac1qLStBZy2h1LkSiA9EINHchL02tS3A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1627598102;
+        s=2020e; t=1627598103;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=6Hlz9b+gfajEt7fjlrTSAgtd7anX3wLVI1HqGJ1v/ZE=;
-        b=ar5xjcPRfN+qCCD6kJ6f+TNGmtzFvu534AEiUL76KoIvLBzo2LbIsjg3LUwcB9kmk719en
-        cUpUbk6Lzzyp7JBA==
-Date:   Thu, 29 Jul 2021 23:51:54 +0200
+        bh=4d6jpf7VvfSCC5wDxxTlQqDwmyplaLXi1z26YEo5c+g=;
+        b=qlyKSNm+nB2ii1MzIVL8ZeVE1LmzcDswofdWBSGQHuwVaSpjYrZgbOWS9UizJCyT5ohuVH
+        7cFjIru2/Z4UjLBQ==
+Date:   Thu, 29 Jul 2021 23:51:55 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Alex Williamson <alex.williamson@redhat.com>,
@@ -45,7 +45,7 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [patch V2 15/19] PCI/MSI: Consolidate error handling in msi_capability_init()
+Subject: [patch V2 16/19] PCI/MSI: Deobfuscate virtual MSI-X
 References: <20210729215139.889204656@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,59 +54,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Three error exits doing exactly the same ask for a common error exit point.
+Handling of virtual MSI-X is obfuscated by letting pci_msix_desc_addr()
+return NULL and checking the pointer.
+
+Just use msi_desc::msi_attrib.is_virtual at the call sites and get rid of
+that pointer check.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
 V2: New patch
 ---
- drivers/pci/msi.c |   26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ drivers/pci/msi.c |   25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
 --- a/drivers/pci/msi.c
 +++ b/drivers/pci/msi.c
-@@ -659,25 +659,16 @@ static int msi_capability_init(struct pc
+@@ -166,11 +166,7 @@ static void msi_mask_irq(struct msi_desc
  
- 	/* Configure MSI capability structure */
- 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSI);
--	if (ret) {
--		msi_mask_irq(entry, mask, 0);
--		free_msi_irqs(dev);
--		return ret;
--	}
-+	if (ret)
-+		goto err;
- 
- 	ret = msi_verify_entries(dev);
--	if (ret) {
--		msi_mask_irq(entry, mask, 0);
--		free_msi_irqs(dev);
--		return ret;
--	}
-+	if (ret)
-+		goto err;
- 
- 	ret = populate_msi_sysfs(dev);
--	if (ret) {
--		msi_mask_irq(entry, mask, 0);
--		free_msi_irqs(dev);
--		return ret;
--	}
-+	if (ret)
-+		goto err;
- 
- 	/* Set MSI enabled bits	*/
- 	pci_intx_for_msi(dev, 0);
-@@ -687,6 +678,11 @@ static int msi_capability_init(struct pc
- 	pcibios_free_irq(dev);
- 	dev->irq = entry->irq;
- 	return 0;
-+
-+err:
-+	msi_mask_irq(entry, mask, 0);
-+	free_msi_irqs(dev);
-+	return ret;
+ static void __iomem *pci_msix_desc_addr(struct msi_desc *desc)
+ {
+-	if (desc->msi_attrib.is_virtual)
+-		return NULL;
+-
+-	return desc->mask_base +
+-		desc->msi_attrib.entry_nr * PCI_MSIX_ENTRY_SIZE;
++	return desc->mask_base + desc->msi_attrib.entry_nr * PCI_MSIX_ENTRY_SIZE;
  }
  
- static void __iomem *msix_map_region(struct pci_dev *dev, unsigned nr_entries)
+ /*
+@@ -182,14 +178,10 @@ static void __iomem *pci_msix_desc_addr(
+  */
+ static u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
+ {
++	void __iomem *desc_addr = pci_msix_desc_addr(desc);
+ 	u32 ctrl = desc->msix_ctrl;
+-	void __iomem *desc_addr;
+-
+-	if (pci_msi_ignore_mask)
+-		return 0;
+ 
+-	desc_addr = pci_msix_desc_addr(desc);
+-	if (!desc_addr)
++	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
+ 		return 0;
+ 
+ 	ctrl &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
+@@ -256,10 +248,8 @@ void __pci_read_msi_msg(struct msi_desc
+ 	if (entry->msi_attrib.is_msix) {
+ 		void __iomem *base = pci_msix_desc_addr(entry);
+ 
+-		if (!base) {
+-			WARN_ON(1);
++		if (WARN_ON_ONCE(entry->msi_attrib.is_virtual))
+ 			return;
+-		}
+ 
+ 		msg->address_lo = readl(base + PCI_MSIX_ENTRY_LOWER_ADDR);
+ 		msg->address_hi = readl(base + PCI_MSIX_ENTRY_UPPER_ADDR);
+@@ -292,7 +282,7 @@ void __pci_write_msi_msg(struct msi_desc
+ 		void __iomem *base = pci_msix_desc_addr(entry);
+ 		bool unmasked = !(entry->msix_ctrl & PCI_MSIX_ENTRY_CTRL_MASKBIT);
+ 
+-		if (!base)
++		if (entry->msi_attrib.is_virtual)
+ 			goto skip;
+ 
+ 		/*
+@@ -744,9 +734,10 @@ static int msix_setup_entries(struct pci
+ 		entry->msi_attrib.default_irq	= dev->irq;
+ 		entry->mask_base		= base;
+ 
+-		addr = pci_msix_desc_addr(entry);
+-		if (addr)
++		if (!entry->msi_attrib.is_virtual) {
++			addr = pci_msix_desc_addr(entry);
+ 			entry->msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
++		}
+ 
+ 		list_add_tail(&entry->list, dev_to_msi_list(&dev->dev));
+ 		if (masks)
 
