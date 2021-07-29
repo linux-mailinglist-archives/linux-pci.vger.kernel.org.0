@@ -2,143 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A49B3DAEDC
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 00:29:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2DAD3DAFD9
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 01:32:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232725AbhG2W32 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 18:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229944AbhG2W3X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Jul 2021 18:29:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1982360720;
-        Thu, 29 Jul 2021 22:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627597759;
-        bh=Z5vs1zoSqEBxxqhhSmMqcsfe2C7l5EM32gjPdmoyxEM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ow5YnxaXbEOrfH4JYT2y1RMAesCkN/7tbE/AmLKSds8GczI0Z2cjX8NvoAD0tI9zl
-         5It9feOWMTsxvab3SeVe0xCOyamkWOKwr8fDgv21ShbrHrv/Z8LoEP03gHi2ZdyeSS
-         iiUkZSHEMh/r+ZgR24Bd3OxC4SCNsIH8PfONyr8yPoUM9s6AOm28pumoOJDUkLuBAp
-         8gxh3ZxZ6e8poQNmcPJLRm5B1L6YAuKA821nTVolYIdrBTwNGo8hCT/p6lz4KuN/3i
-         iaFnBo60imEzrzTWVnOj2hkdx/3lV87l+H+Czbg6cuwMyDWojb9mCrlyYJ4FZIgh8Z
-         P/U6AJk1KXKag==
-Date:   Thu, 29 Jul 2021 17:29:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 3/6] PCI: imx6: add IMX8MM support
-Message-ID: <20210729222917.GA998237@bjorn-Precision-5520>
+        id S229991AbhG2Xcx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 19:32:53 -0400
+Received: from mail-pj1-f49.google.com ([209.85.216.49]:38471 "EHLO
+        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229982AbhG2Xcw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 19:32:52 -0400
+Received: by mail-pj1-f49.google.com with SMTP id mz5-20020a17090b3785b0290176ecf64922so18065957pjb.3
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jul 2021 16:32:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=biN1hl2/e3cW/QbOjvBOrF1jLg4fdPkpI3WYfynWCaA=;
+        b=ckNMC1QYVpAnwxIZ+3R5hpzVAIRJnRw8R6hJzyvfgQir3ItMYYIsUte1B9vx2b8DAn
+         KjoJZzKXhf09BTxxkmUVi9IgfsW9Sko48kwCZ1WTanB63n4uogph6aA90jp8RRK/XIcf
+         KVatVAJ94BV61cWEWi+wKAQ2lHQeuAjdrw2udCxn+gMrxVOeG00O5sRVSGhSXSadjeFl
+         ETobA64lwq0U2/AvrBjA19EIX1YnNKCtYW+uGwxZ11SGodIk/i6XvuWXrL89BpXepUeM
+         qIr5r0sqMWUdglJNzO4A2npMcNYYmNuct7bmgB3X4TIClXY8anWWiWv/xkdEHXxRsJBq
+         ppzw==
+X-Gm-Message-State: AOAM531LpBjRhl7yxqxfy5JMVI4zsitDSxNDJBsU5Hwn5aFJSoCu29gF
+        0/LrYrPtLfHrwacZvDIKQTk=
+X-Google-Smtp-Source: ABdhPJwnvs3Fx6rNKv4ktbYfKecjvrPO7+aoq84dw+39k3x9ELFRW+BQXvwPaxgjriZ3HgRVCzUqaQ==
+X-Received: by 2002:a65:6243:: with SMTP id q3mr74529pgv.297.1627601567366;
+        Thu, 29 Jul 2021 16:32:47 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id d22sm4843325pfo.88.2021.07.29.16.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jul 2021 16:32:46 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v3 0/2] Allow deferred execution of iomem_get_mapping()
+Date:   Thu, 29 Jul 2021 23:32:33 +0000
+Message-Id: <20210729233235.1508920-1-kw@linux.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210723204958.7186-4-tharvey@gateworks.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Capitalize first letter of subject to match history:
+Hello,
 
-  PCI: imx6: Add IMX8MM support
+At the moment, the dependency on iomem_get_mapping() that is currently
+used in the pci_create_resource_files() and pci_create_legacy_files()
+stops us from completely retiring the late_initcall() that is used to
+invoke pci_sysfs_init() when creating sysfs object for PCI devices.
 
-On Fri, Jul 23, 2021 at 01:49:55PM -0700, Tim Harvey wrote:
-> Add IMX8MM support to the existing driver which shares most
-> functionality with the IMX8MM.
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 103 +++++++++++++++++++++++++-
->  1 file changed, 102 insertions(+), 1 deletion(-)
+This dependency on iomem_get_mapping() stops us from retiring the
+late_initcall at the moment as when we convert dynamically added sysfs
+objects, that are primarily added in the pci_create_resource_files() and
+pci_create_legacy_files(), as these attributes are added before the VFS
+completes its initialisation, and since most of the PCI devices are
+typically enumerated in subsys_initcall this leads to a failure and an
+Oops related to iomem_get_mapping() access.
 
-> +	case IMX8MM:
-> +		offset = imx6_pcie_grp_offset(imx6_pcie);
-> +
-> +		dev_info(imx6_pcie->pci->dev, "%s REF_CLK is used!.\n",
-> +				imx6_pcie->ext_osc ? "EXT" : "PLL");
-> +		if (imx6_pcie->ext_osc) {
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MQ_GPR_PCIE_REF_USE_PAD, 0);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_AUX_EN,
-> +					IMX8MM_GPR_PCIE_AUX_EN);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_POWER_OFF, 0);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_SSC_EN, 0);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +					IMX8MM_GPR_PCIE_REF_CLK_EXT);
-> +			udelay(100);
-> +			/* Do the PHY common block reset */
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_CMN_RST,
-> +					IMX8MM_GPR_PCIE_CMN_RST);
-> +			udelay(200);
-> +		} else {
-> +			/* Configure the internal PLL as REF clock */
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MQ_GPR_PCIE_REF_USE_PAD, 0);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_AUX_EN,
-> +					IMX8MM_GPR_PCIE_AUX_EN);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_POWER_OFF, 0);
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_SSC_EN, 0);
+See relevant conversations:
+  https://lore.kernel.org/linux-pci/20210204165831.2703772-1-daniel.vetter@ffwll.ch/
+  https://lore.kernel.org/linux-pci/20210313215747.GA2394467@bjorn-Precision-5520/
 
-Seems like all the above is common to both cases?  If so, it's a shame
-to repeat it because it makes it hard to see what's different.
+After some deliberation about the problem at hand, Dan Williams
+suggested a solution to the problem, as per:
+  https://lore.kernel.org/linux-pci/CAPcyv4i0y_4cMGEpNVShLUyUk3nyWH203Ry3S87BqnDJE0Rmxg@mail.gmail.com/
 
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +					IMX8MM_GPR_PCIE_REF_CLK_PLL);
-> +			udelay(100);
-> +			/* Configure the PHY */
-> +			writel(PCIE_PHY_CMN_REG62_PLL_CLK_OUT,
-> +					imx6_pcie->phy_base + PCIE_PHY_CMN_REG62);
-> +			writel(PCIE_PHY_CMN_REG64_AUX_RX_TX_TERM,
-> +					imx6_pcie->phy_base + PCIE_PHY_CMN_REG64);
-> +			/* Do the PHY common block reset */
-> +			regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
-> +					IMX8MM_GPR_PCIE_CMN_RST,
-> +					IMX8MM_GPR_PCIE_CMN_RST);
-> +			udelay(200);
-> +		}
-> +		/*
+The idea is to defer execution of the iomem_get_mapping() to only when
+the sysfs open callback is run, and thus removing the reliance of
+fs_initcalls to complete before any other sub-system that uses the
+iomem_get_mapping().
 
-> +		 * In order to pass the compliance tests.
-> +		 * Configure the TRSV regiser of iMX8MM PCIe PHY.
+Currently, the PCI sub-system will benefit the most from this change
+allowing for it to complete the transition from dynamically created to
+static sysfs objects.
 
-The "In order to ..." line isn't quite a sentence.  Maybe it should be
-joined with the second line?
+This series aims to take Dan Williams' idea through the finish line.
 
-s/regiser/register/ ?
+Related to:
+  https://lore.kernel.org/linux-pci/20210527205845.GA1421476@bjorn-Precision-5520/
+  https://lore.kernel.org/linux-pci/20210507102706.7658-1-danijel.slivka@amd.com/
+  https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/
 
-> +		 */
-> +		writel(PCIE_PHY_TRSV_REG5_GEN1_DEEMP,
-> +				imx6_pcie->phy_base + PCIE_PHY_TRSV_REG5);
+	Krzysztof
 
-> +	/* check for EXT osc */
+---
+Changes in v3:
+  Squashed first two patches from v2 into a single patch to resolve
+  compile time issues.
+  Carried over Dan Williams' review from v2 as there are no code or
+  functional changes.
 
-Since you have a comment here, it would be useful to spell out "osc"
-for newbies like me.  I assume it's short for "oscillator"?
+Changes in v2:
+  Added "Signed-off-by" and "Reviewed-by" from Dan Williams as per his
+  feedback.
+  Added third patch that renames struct bin_attribute member "mapping"
+  to "f_mapping" to keep the naming consistent with struct file.  N.B.
+  this patch can definitely be dropped as the rename is not required for
+  anything else to work.
 
-> +	imx6_pcie->ext_osc = of_property_read_bool(node, "fsl,ext-osc");
+Krzysztof Wilczyński (2):
+  sysfs: Invoke iomem_get_mapping() from the sysfs open callback
+  sysfs: Rename struct bin_attribute member to f_mapping
+
+ drivers/pci/pci-sysfs.c | 6 +++---
+ fs/sysfs/file.c         | 4 ++--
+ include/linux/sysfs.h   | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.32.0
+
