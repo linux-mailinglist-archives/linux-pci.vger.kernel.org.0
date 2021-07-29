@@ -2,110 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A46F93DA7EE
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 17:54:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8143E3DA9FB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 19:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237910AbhG2Pyg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 11:54:36 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60716 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237875AbhG2Pyf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 11:54:35 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id fea072fe12c31b53; Thu, 29 Jul 2021 17:54:30 +0200
-Received: from kreacher.localnet (89-64-80-223.dynamic.chello.pl [89.64.80.223])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 564DC669F29;
-        Thu, 29 Jul 2021 17:54:29 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Koba Ko <koba.ko@canonical.com>
-Subject: [PATCH v1.1 1/2] PCI: PM: Avoid forcing PCI_D0 for wakeup reasons inconsistently
-Date:   Thu, 29 Jul 2021 17:54:28 +0200
-Message-ID: <2593738.mvXUDI8C0e@kreacher>
-In-Reply-To: <2207145.ElGaqSPkdT@kreacher>
-References: <4668274.31r3eYUQgx@kreacher> <2207145.ElGaqSPkdT@kreacher>
+        id S229771AbhG2RUy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 13:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229620AbhG2RUy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Jul 2021 13:20:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C67E760F42;
+        Thu, 29 Jul 2021 17:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627579250;
+        bh=3u51lRqQafrXq5f6IqvWMxZ1ptNInQdEddFA3TjKAb0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bbTDTTZUuX1tvZrjspUiyv7DKa8/vf8E/FZBxFhlf4W1jolNX6oBAnUQmJLMA+/HO
+         os+AFaPTyDu57ZXYiK1ZmRz+uv4PsMw0xMU5NsT4xSr2TCKBn4DlXJQPC9aOVprzve
+         OXGhvZsI9KJS8jfurdZYrJmlILa2SrwZumTm2BeTDTueOvNKqD7DpMpMemfTMHwQtP
+         m7OWv5mIHK07aUFQSE73K7t6wqG3gJKYxq8Cv36//b5YyWFrVKc2ohRCANV5aEPjFA
+         js5QvQdGh2cPcaatgPANzygIq1RoxijBd88J8YAo6KIOtXqCmuSd4gLTGtZ0TAwS1H
+         3ysTC+kA1fsag==
+Received: by mail-ej1-f48.google.com with SMTP id e19so11929870ejs.9;
+        Thu, 29 Jul 2021 10:20:50 -0700 (PDT)
+X-Gm-Message-State: AOAM532WgPfHP1QJVQvUosrjizcT70WnF0mKtZUW3IjL7SbnwBIGnPIn
+        vRUygH3UR6wGhX9Vti6hopcJNpJ8dapK/6Dmow==
+X-Google-Smtp-Source: ABdhPJzuipRyW+xyNT+RtqOAnbQFg0W4CvcPJqdZSA4Ju9OA/O4unHd//H8Jvub6DcKsikWuNgfrKfNfwMj6Ur9hAJQ=
+X-Received: by 2002:a17:906:d287:: with SMTP id ay7mr5417811ejb.360.1627579249347;
+ Thu, 29 Jul 2021 10:20:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <cover.1627559126.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1627559126.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 29 Jul 2021 11:20:37 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fY3k7JzUYH5WX=nDoa2jLwnoEf8hp64UjYR5OpPAFiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+fY3k7JzUYH5WX=nDoa2jLwnoEf8hp64UjYR5OpPAFiA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] DT schema changes for HiKey970 PCIe hardware to work
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 89.64.80.223
-X-CLIENT-HOSTNAME: 89-64-80-223.dynamic.chello.pl
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrheefgdehtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhprghmkfhpucdlfedttddmnecujfgurhephffvufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepteeggfelteegudehueegieekveduleeuledvueefjeefffegfeejudfgteefhefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeelrdeigedrkedtrddvvdefnecuufhprghmkfhppeekledrieegrdektddrvddvfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrieegrdektddrvddvfedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgv
- lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghirdhhvghnghdrfhgvnhhgsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtohepuhhtkhgrrhhshhdrhhdrphgrthgvlhesihhnthgvlhdrtghomhdprhgtphhtthhopehkohgsrgdrkhhosegtrghnohhnihgtrghlrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Jul 29, 2021 at 5:56 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> After our discussions, I'm opting to submit first the DT bindings for the
+> Kirin 970 PCIe support.
+>
+> Patch 1 is there just because patch 2 needs. You already acked on it.
+>
+> Patch 5 is also there just as an example of the entire stuff added to
+> the DTS file.
+>
+> The core of this series are patches 2 to 4. They contain the conversion
+> of the kirin-pcie.txt file to the DT schema, and adds the needed
+> bindings.
+>
+> Currently, it generates some warnings:
+>
+>    Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f5000000: pcie@4,0:compatible: None of ['pciclass,0604'] are valid under the given schema
+>         From schema: Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
 
-It is inconsistent to return PCI_D0 from pci_target_state() instead
-of the original target state if 'wakeup' is true and the device
-cannot signal PME from D0.
+This should be fixed now in dtschema master.
 
-This only happens when the device cannot signal PME from the original
-target state and any shallower power states (including D0) and that
-case is effectively equivalent to the one in which PME singaling is
-not supported at all.  Since the original target state is returned in
-the latter case, make the function do that in the former one too.
+>   Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@4,0: reset-gpios: [[4294967295, 1, 0]] is too short
 
-Link: https://lore.kernel.org/linux-pm/3149540.aeNJFYEL58@kreacher/
-Fixes: 666ff6f83e1d ("PCI/PM: Avoid using device_may_wakeup() for runtime PM")
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Reported-by: Koba Ko <koba.ko@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+Your proposed change to pci-bus.yaml is wrong. It's requiring 4
+entries. You need 'minItems: 1'.
 
-v1 -> v1.1
-      * Resend under a suitable subject.
-
----
- drivers/pci/pci.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -2595,16 +2595,20 @@ static pci_power_t pci_target_state(stru
- 	if (dev->current_state == PCI_D3cold)
- 		target_state = PCI_D3cold;
- 
--	if (wakeup) {
-+	if (wakeup && dev->pme_support) {
-+		pci_power_t state = target_state;
-+
- 		/*
- 		 * Find the deepest state from which the device can generate
- 		 * PME#.
- 		 */
--		if (dev->pme_support) {
--			while (target_state
--			      && !(dev->pme_support & (1 << target_state)))
--				target_state--;
--		}
-+		while (state && !(dev->pme_support & (1 << state)))
-+			state--;
-+
-+		if (state)
-+			return state;
-+		else if (dev->pme_support & 1)
-+			return PCI_D0;
- 	}
- 
- 	return target_state;
-
-
-
+Rob
