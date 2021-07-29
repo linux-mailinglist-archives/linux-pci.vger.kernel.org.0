@@ -2,209 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 957173DAB94
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 21:03:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3AD3DADC6
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 22:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbhG2TDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 15:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229713AbhG2TDp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Jul 2021 15:03:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2217560041;
-        Thu, 29 Jul 2021 19:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627585422;
-        bh=QZzTxuOXLw86rHcrs3zAcLvxXqbKvso+gGJ/Bt/V7Yo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TH2hos7zxb777wZ4DD5mN0DLcj65CFt3bLmdhbc6AYFgav8nyV0CRJSDoH0LY8Jow
-         R+jXTaFeTZJMdfkVePdh3VudGpQfc2BmYI5fbu2AFf88fJLfMiwIHe1+CliGXbew8A
-         vwflPDfg0fR+UqRe8INTZ9eEF4/746XoDgm05V6Ja2QhKuvO4S6CP2pC2UB5Q6X/zA
-         i2JIBwXdzJJPH7Brqzo3PQgRgZr0Z42SETyY4c5URe+cCpiEh1tdnZGDp26UXwz61c
-         xccOpLXbdBL1w1TOe3rH67+4Evgt6KBDR8VsxSIMbs0GlUfk9bj6TFaBnAsGO9v9a9
-         dt4irhlxmF8Qw==
-Date:   Thu, 29 Jul 2021 21:03:37 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: PCI: kirin: Add support for Kirin970
-Message-ID: <20210729210337.6fc9a92c@coco.lan>
-In-Reply-To: <CAL_Jsq+JgWMf8XPdHQ9GRdA+7EODJ47vwuz0jGkkyeETZPXz9Q@mail.gmail.com>
-References: <cover.1627559126.git.mchehab+huawei@kernel.org>
-        <2cf7bd80d0b54f7658a64febf79d3a36e70aba86.1627559126.git.mchehab+huawei@kernel.org>
-        <CAL_Jsq+JgWMf8XPdHQ9GRdA+7EODJ47vwuz0jGkkyeETZPXz9Q@mail.gmail.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-redhat-linux-gnu)
+        id S233134AbhG2Ujc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 16:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233142AbhG2Uj1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 16:39:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09B0C061765
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jul 2021 13:39:22 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9Cmx-0000F8-Gi; Thu, 29 Jul 2021 22:37:55 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9Cml-0003d6-RY; Thu, 29 Jul 2021 22:37:43 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9Cml-0004Ht-Nr; Thu, 29 Jul 2021 22:37:43 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>, kernel@pengutronix.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell Currey <ruscur@russell.cc>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vadym Kochan <vkochan@marvell.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Michael Buesch <m@bues.ch>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        Alexander Duyck <alexanderduyck@fb.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-crypto@vger.kernel.org, qat-linux@intel.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, oss-drivers@corigine.com,
+        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
+Subject: [PATCH v1 0/5] PCI: Drop duplicated tracking of a pci_dev's bound driver
+Date:   Thu, 29 Jul 2021 22:37:35 +0200
+Message-Id: <20210729203740.1377045-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Thu, 29 Jul 2021 09:20:15 -0600
-Rob Herring <robh@kernel.org> escreveu:
+Hello,
 
-> On Thu, Jul 29, 2021 at 5:56 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > Add a new compatible, plus the new bindings needed by
-> > HiKey970 board.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  .../bindings/pci/hisilicon,kirin-pcie.yaml    | 61 ++++++++++++++++++-
-> >  1 file changed, 60 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > index 90cab09e8d4b..bb0c3a081d68 100644
-> > --- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > @@ -24,11 +24,13 @@ properties:
-> >      contains:
-> >        enum:
-> >          - hisilicon,kirin960-pcie
-> > +        - hisilicon,kirin970-pcie
-> >
-> >    reg:
-> >      description: |
-> >        Should contain dbi, apb, config registers location and length.
-> > -      For HiKey960, it should also contain phy.
-> > +      For HiKey960, it should also contain phy. All other devices
-> > +      should use a separate phy driver.
-> >      minItems: 3
-> >      maxItems: 4
-> >
-> > @@ -47,6 +49,7 @@ examples:
-> >    - |
-> >      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >      #include <dt-bindings/clock/hi3660-clock.h>
-> > +    #include <dt-bindings/clock/hi3670-clock.h>
-> >
-> >      soc {
-> >        #address-cells = <2>;
-> > @@ -83,4 +86,60 @@ examples:
-> >          clock-names = "pcie_phy_ref", "pcie_aux", "pcie_apb_phy",
-> >                        "pcie_apb_sys", "pcie_aclk";
-> >        };
-> > +
-> > +      pcie@f5000000 {
-> > +        compatible = "hisilicon,kirin970-pcie";
-> > +        reg = <0x0 0xf4000000 0x0 0x1000000>,
-> > +              <0x0 0xfc180000 0x0 0x1000>,
-> > +              <0x0 0xf5000000 0x0 0x2000>;
-> > +        reg-names = "dbi", "apb", "config";
-> > +        bus-range = <0x0  0x1>;
-> > +        msi-parent = <&its_pcie>;
-> > +        #address-cells = <3>;
-> > +        #size-cells = <2>;
-> > +        device_type = "pci";
-> > +        phys = <&pcie_phy>;
-> > +        ranges = <0x02000000 0x0 0x00000000
-> > +                  0x0 0xf6000000
-> > +                  0x0 0x02000000>;
-> > +        num-lanes = <1>;
-> > +        #interrupt-cells = <1>;
-> > +        interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
-> > +        interrupt-names = "msi";
-> > +        interrupt-map-mask = <0 0 0 7>;
-> > +        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-> > +                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-> > +                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-> > +                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-> > +        pcie@4,0 { // Lane 4: M.2
-> > +          reg = <0 0 0 0 0>;
-> > +          compatible = "pciclass,0604";
-> > +          device_type = "pci";
-> > +          reset-gpios = <&gpio7 1 0>;
-> > +          clkreq-gpios = <&gpio27 3 0 >;  
-> 
-> Looking at the schematics some more, this is not right. CLKREQ# is an
-> input from the device, and they are not connected to any GPIO (just
-> pulled high) on hikey970. These GPIOs are simply clock enables and
-> very much specific to hikey. So I'd call this 'hisilicon,clken-gpios'
-> and you can just stick them in the host bridge node.
-> 
+struct pci_dev tracks the bound pci driver twice. This series is about
+removing this duplication.
 
-Ok. If I understood your review, the schema will then be:
+The first two patches are just cleanups. The third patch introduces a
+wrapper that abstracts access to struct pci_dev->driver. In the next
+patch (hopefully) all users are converted to use the new wrapper and
+finally the fifth patch removes the duplication.
 
-      pcie@f4000000 {
-        compatible = "hisilicon,kirin970-pcie";
-        reg = <0x0 0xf4000000 0x0 0x1000000>,
-              <0x0 0xfc180000 0x0 0x1000>,
-              <0x0 0xf5000000 0x0 0x2000>;
-        reg-names = "dbi", "apb", "config";
-        bus-range = <0x0  0x1>;
-        msi-parent = <&its_pcie>;
-        #address-cells = <3>;
-        #size-cells = <2>;
-        device_type = "pci";
-        phys = <&pcie_phy>;
-        ranges = <0x02000000 0x0 0x00000000
-                  0x0 0xf6000000
-                  0x0 0x02000000>;
-        num-lanes = <1>;
-        #interrupt-cells = <1>;
-        interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
-        interrupt-names = "msi";
-        interrupt-map-mask = <0 0 0 7>;
-        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-        reset-gpios = <&gpio7 0 0>;
+Note this series is only build tested (allmodconfig on several
+architectures).
 
-        pcie@0 { // Lane 0: upstream
-          reg = <0 0 0 0 0>;
-          compatible = "pciclass,0604";
-          device_type = "pci";
-          #address-cells = <3>;
-          #size-cells = <2>;
-          hisilicon,clken-gpios = <&gpio27 3 0 >, <&gpio17 0 0 >, <&gpio20 6 0 >;
-          ranges;
+I'm open to restructure this series if this simplifies things. E.g. the
+use of the new wrapper in drivers/pci could be squashed into the patch
+introducing the wrapper. Patch 4 could be split by maintainer tree or
+squashed into patch 3 completely.
 
-          pcie@1,0 { // Lane 4: M.2
-            reg = <0x800 0 0 0 0>;
-            compatible = "pciclass,0604";
-            device_type = "pci";
-            reset-gpios = <&gpio3 1 0>;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            ranges;
-          };
+Best regards
+Uwe
 
-          pcie@5,0 { // Lane 5: Mini PCIe
-            reg = <0x2800 0 0 0 0>;
-            compatible = "pciclass,0604";
-            device_type = "pci";
-            reset-gpios = <&gpio27 4 0 >;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            ranges;
-          };
+Uwe Kleine-König (5):
+  PCI: Simplify pci_device_remove()
+  PCI: Drop useless check from pci_device_probe()
+  PCI: Provide wrapper to access a pci_dev's bound driver
+  PCI: Adapt all code locations to not use struct pci_dev::driver
+    directly
+  PCI: Drop duplicated tracking of a pci_dev's bound driver
 
-          pcie@7,0 { // Lane 7: Ethernet
-            reg = <0x3800 0 0 0 0>;
-            compatible = "pciclass,0604";
-            device_type = "pci";
-            reset-gpios = <&gpio25 2 0 >;
-            #address-cells = <3>;
-            #size-cells = <2>;
-            ranges;
-          };
-        };
-      };
-    };
+ arch/powerpc/include/asm/ppc-pci.h            |  3 +-
+ arch/powerpc/kernel/eeh_driver.c              | 12 +++--
+ arch/x86/events/intel/uncore.c                |  2 +-
+ arch/x86/kernel/probe_roms.c                  |  2 +-
+ drivers/bcma/host_pci.c                       |  6 ++-
+ drivers/crypto/hisilicon/qm.c                 |  2 +-
+ drivers/crypto/qat/qat_common/adf_aer.c       |  2 +-
+ drivers/message/fusion/mptbase.c              |  4 +-
+ drivers/misc/cxl/guest.c                      | 21 ++++----
+ drivers/misc/cxl/pci.c                        | 25 ++++++----
+ .../ethernet/hisilicon/hns3/hns3_ethtool.c    |  3 +-
+ .../ethernet/marvell/prestera/prestera_pci.c  |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/pci.c     |  2 +-
+ .../ethernet/netronome/nfp/nfp_net_ethtool.c  |  2 +-
+ drivers/pci/iov.c                             | 23 +++++----
+ drivers/pci/pci-driver.c                      | 48 +++++++++----------
+ drivers/pci/pci.c                             | 10 ++--
+ drivers/pci/pcie/err.c                        | 35 +++++++-------
+ drivers/pci/xen-pcifront.c                    |  4 +-
+ drivers/ssb/pcihost_wrapper.c                 |  7 ++-
+ drivers/usb/host/xhci-pci.c                   |  3 +-
+ include/linux/pci.h                           |  2 +-
+ 22 files changed, 121 insertions(+), 99 deletions(-)
 
-Right?
 
-After updating the dt-schema from your git tree, the above doesn't 
-generate warnings anymore.
+base-commit: 2734d6c1b1a089fb593ef6a23d4b70903526fe0c
+-- 
+2.30.2
 
-Thanks,
-Mauro
