@@ -2,39 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E071B3DAEF0
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 00:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B5D33DAEEF
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 00:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232948AbhG2Weq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S232810AbhG2Weq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 29 Jul 2021 18:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232559AbhG2Weq (ORCPT
+Received: from Galois.linutronix.de ([193.142.43.55]:49056 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229707AbhG2Weq (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jul 2021 18:34:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA0CC061765;
-        Thu, 29 Jul 2021 15:34:42 -0700 (PDT)
-Message-ID: <20210729215139.889204656@linutronix.de>
+Message-ID: <20210729222542.344136412@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1627598079;
+        s=2020; t=1627598080;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L1MWCB/mi8Eqvn+BCAxR2CLfHh9+meprPU/a+pwdFJI=;
-        b=n9wU0n0IwY73C4bhFxrVJ+fQ9oHD8p/CqgAYBIjFv0vifHSlsriOBNs5wFlVahFsdeOygT
-        XsmF+axvuuLpw4Rjb5vhvVGwdUofAQPrlCasuhQv+srhgT/T+HMXwBnrzlq1RkyJ+gRLBi
-        Nv05CLGIgBA/ujcpaQWqpMiqcAFHDNvyPavcNymfntrqRV8gtV5u8SB/AM2YJ2T6lc1riH
-        /E/rVGc94gDsYLGqj7QrvnO4FpmNS2HXLwYCYgiUmx1Xf3avmLkEHVbM+pkIzeXekKPMO+
-        mjwbWkDU14dO7AELrDQq4RjPk+8YnWrJPaQ559fyslBi1QNHQXEs1qgZPDPjzQ==
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=RUg7tFwxeXr+VQq+Rk54Zo4rNFwgWvVbGs+FETqcpGc=;
+        b=v/V6sFKxNS7wkJnFjx1m1UKY6VIyqRNxfaAzeezZcb0a2/cgjl621ydMKMnGMKNqAq4t+E
+        FQxOH5NoSowRlSBpkdNVvOcRNxb9068youWaUFHmbw0daG+AXLI7Qw019zeVZcm/wGDmGc
+        K2sEZh5snqL+6RL8RzCbOgdy0XGiKVjIhZhZyUrytvXwH9kcm9xrvRBb66Oml70I/RqDsK
+        O8AeK39Vbgl6P7mFm7KzXEVPGiGBZLEPMnmfVRXN6xx1zC8tGY18eBukW58HTZCjvv4rzr
+        LDpCy6CNk3jtXrU3ECr7vXX8Rhz978io0VnO2jQx93QWYzW6UQYRE4VMDwPufg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1627598079;
+        s=2020e; t=1627598080;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L1MWCB/mi8Eqvn+BCAxR2CLfHh9+meprPU/a+pwdFJI=;
-        b=VvDQJ9HSE98noTCMfJQ8qDwLaEYDJxTcUgeWpgg4nxyMomFzjmRbYrQerGxKtrhW8N01u6
-        MdwcyOuIrbhHOnDg==
-Date:   Thu, 29 Jul 2021 23:51:39 +0200
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=RUg7tFwxeXr+VQq+Rk54Zo4rNFwgWvVbGs+FETqcpGc=;
+        b=qsVaEGKJ8uJ0I8xtbnhOcO0+zAnZtuYkUKzaHduCQ5tMiiuvKZTwwg5GRtm1iEBBKP4qx3
+        zbn8NYlav4McN5Aw==
+Date:   Thu, 29 Jul 2021 23:51:40 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Alex Williamson <alex.williamson@redhat.com>,
@@ -48,43 +45,109 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [patch V2 00/19] PCI/MSI, x86: Cure a couple of inconsistencies
+Subject: [patch V2 01/19] PCI/MSI: Enable and mask MSI-X early
+References: <20210729215139.889204656@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-QSByZWNlbnQgZGlzY3Vzc2lvbiBhYm91dCB0aGUgUENJL01TSSBtYW5hZ2VtZW50IGZvciB2aXJ0
-aW8gdW5lYXJ0aGVkIGEKdmlvbGF0aW9uIG9mIHRoZSBNU0ktWCBzcGVjaWZpY2F0aW9uIHZzLiB3
-cml0aW5nIHRoZSBNU0ktWCBtZXNzYWdlOiB1bmRlcgpjZXJ0YWluIGNpcmN1bXN0YW5jZXMgdGhl
-IGVudHJ5IGlzIHdyaXR0ZW4gd2l0aG91dCBiZWluZyBtYXNrZWQuCgpXaGlsZSBsb29raW5nIGF0
-IHRoYXQgYW5kIHRoZSByZWxhdGVkIHZpb2xhdGlvbiBvZiB0aGUgeDg2IG5vbi1yZW1hcHBlZApp
-bnRlcnJ1cHQgYWZmaW5pdHkgbWVjaGFuaXNtIGEgZmV3IG90aGVyIGlzc3VlcyB3ZXJlIGRpc2Nv
-dmVyZWQgYnkKaW5zcGVjdGlvbi4KClRoZSBmb2xsb3dpbmcgc2VyaWVzIGFkZHJlc3NlcyB0aGVz
-ZS4KCk5vdGUgdGhpcyBkb2VzIG5vdCBmaXggdGhlIHZpcnRpbyBpc3N1ZSwgYnV0IHdoaWxlIHN0
-YXJpbmcgYXQgdGhlIGFib3ZlCnByb2JsZW1zIEkgY2FtZSB1cCB3aXRoIGEgcGxhbiB0byBhZGRy
-ZXNzIHRoaXMuIEknbSBzdGlsbCB0cnlpbmcgdG8KY29udmluY2UgbXlzZWxmIHRoYXQgSSBjYW4g
-Z2V0IGF3YXkgd2l0aG91dCBzcHJpbmtsaW5nIGxvY2tpbmcgYWxsIG92ZXIgdGhlCnBsYWNlLCBz
-byBkb24ndCBob2xkIHlvdXIgYnJlYXRoIHRoYXQgdGhpcyB3aWxsIG1hdGVyaWFsaXplIHRvbW9y
-cm93LgoKVGhlIHNlcmllcyBpcyBhbHNvIGF2YWlsYWJsZSBmcm9tIGdpdDoKCiAgICBnaXQ6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdGdseC9kZXZlbC5naXQgaXJx
-L21zaQoKVjEgY2FuIGJlIGZvdW5kIGhlcmU6CgogICBodHRwczovL2xvcmUua2VybmVsLm9yZy9y
-LzIwMjEwNzIxMTkxMTI2LjI3NDk0NjI4MEBsaW51dHJvbml4LmRlCgpDaGFuZ2VzIHZzLiBWMToK
-CiAgLSBJZGVudGlmaWVkIGFuZCBhZGRyZXNzZWQgbW9yZSBpbmNvbnNpc3RlbmNpZXMsIGVzcGVj
-aWFsbHkgdGhlIGxhY2sgb2YKICAgIHNlcmlhbGl6YXRpb24gZm9yIG11bHRpLU1TSSBtYXNraW5n
-CiAgICAKICAtIFJlbW92ZWQgdGhlIGV4dHJhIHZlY3RvciBtYXNraW5nIGluIFMzOTAgCgogIC0g
-QWRkcmVzc2VkIHJldmlldyBjb21tZW50cyBhbmQgcGlja2VkIHVwIHRhZ3Mgd2hlcmUgYXBwbGlj
-YWJsZQoKICAtIENsZWFuIHVwIG9mIHRoZSBuYW1pbmcgb2YgbXNpX2Rlc2M6Om1hc2tlZCBhcyBk
-aXNjdXNzZWQgaW4gdGhlIFYxCiAgICB0aHJlYWQKCiAgLSBDb25zb2xpZGF0aW9uIG9mIHRoZSBt
-YXNrL3VubWFzayBmdW5jdGlvbnMKClRoYW5rcywKCgl0Z2x4Ci0tLQogYXJjaC9zMzkwL3BjaS9w
-Y2lfaXJxLmMgICAgICAgIHwgICAgNCAKIGFyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMuYyB8
-ICAgIDYgCiBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9tc2kuYyAgICAgfCAgIDExICsKIGFyY2gveDg2
-L2tlcm5lbC9ocGV0LmMgICAgICAgICB8ICAgIDIgCiBkcml2ZXJzL2Jhc2UvY29yZS5jICAgICAg
-ICAgICAgfCAgICAxIAogZHJpdmVycy9wY2kvbXNpLmMgICAgICAgICAgICAgIHwgIDI3NCArKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQogaW5jbHVkZS9saW51eC9kZXZp
-Y2UuaCAgICAgICAgIHwgICAgMSAKIGluY2x1ZGUvbGludXgvaXJxLmggICAgICAgICAgICB8ICAg
-IDIgCiBpbmNsdWRlL2xpbnV4L21zaS5oICAgICAgICAgICAgfCAgIDEwIC0KIGtlcm5lbC9pcnEv
-Y2hpcC5jICAgICAgICAgICAgICB8ICAgIDUgCiAxMCBmaWxlcyBjaGFuZ2VkLCAxNzggaW5zZXJ0
-aW9ucygrKSwgMTM4IGRlbGV0aW9ucygtKQoKCg==
+From: Thomas Gleixner <tglx@linutronix.de>
+
+The ordering of MSI-X enable in hardware is dysfunctional:
+
+ 1) MSI-X is disabled in the control register
+ 2) Various setup functions
+ 3) pci_msi_setup_msi_irqs() is invoked which ends up accessing
+    the MSI-X table entries
+ 4) MSI-X is enabled and masked in the control register with the
+    comment that enabling is required for some hardware to access
+    the MSI-X table
+
+Step #4 obviously contradicts #3. The history of this is an issue with the
+NIU hardware. When #4 was introduced the table access actually happened in
+msix_program_entries() which was invoked after enabling and masking MSI-X.
+
+This was changed in commit d71d6432e105 ("PCI/MSI: Kill redundant call of
+irq_set_msi_desc() for MSI-X interrupts") which removed the table write
+from msix_program_entries().
+
+Interestingly enough nobody noticed and either NIU still works or it did
+not get any testing with a kernel 3.19 or later.
+
+Nevertheless this is inconsistent and there is no reason why MSI-X can't be
+enabled and masked in the control register early on, i.e. move step #4
+above to step #1. This preserves the NIU workaround and has no side effects
+on other hardware.
+
+Fixes: d71d6432e105 ("PCI/MSI: Kill redundant call of irq_set_msi_desc() for MSI-X interrupts")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/msi.c |   28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
+
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -772,18 +772,25 @@ static int msix_capability_init(struct p
+ 	u16 control;
+ 	void __iomem *base;
+ 
+-	/* Ensure MSI-X is disabled while it is set up */
+-	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
++	/*
++	 * Some devices require MSI-X to be enabled before the MSI-X
++	 * registers can be accessed.  Mask all the vectors to prevent
++	 * interrupts coming in before they're fully set up.
++	 */
++	pci_msix_clear_and_set_ctrl(dev, 0, PCI_MSIX_FLAGS_MASKALL |
++				    PCI_MSIX_FLAGS_ENABLE);
+ 
+ 	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
+ 	/* Request & Map MSI-X table region */
+ 	base = msix_map_region(dev, msix_table_size(control));
+-	if (!base)
+-		return -ENOMEM;
++	if (!base) {
++		ret = -ENOMEM;
++		goto out_disable;
++	}
+ 
+ 	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+ 	if (ret)
+-		return ret;
++		goto out_disable;
+ 
+ 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+ 	if (ret)
+@@ -794,14 +801,6 @@ static int msix_capability_init(struct p
+ 	if (ret)
+ 		goto out_free;
+ 
+-	/*
+-	 * Some devices require MSI-X to be enabled before we can touch the
+-	 * MSI-X registers.  We need to mask all the vectors to prevent
+-	 * interrupts coming in before they're fully set up.
+-	 */
+-	pci_msix_clear_and_set_ctrl(dev, 0,
+-				PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE);
+-
+ 	msix_program_entries(dev, entries);
+ 
+ 	ret = populate_msi_sysfs(dev);
+@@ -836,6 +835,9 @@ static int msix_capability_init(struct p
+ out_free:
+ 	free_msi_irqs(dev);
+ 
++out_disable:
++	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
++
+ 	return ret;
+ }
+ 
+
+
