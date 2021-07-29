@@ -2,152 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C363DA382
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 14:57:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D964D3DA3F4
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 15:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237180AbhG2M5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jul 2021 08:57:14 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58923 "EHLO mga06.intel.com"
+        id S237748AbhG2NXi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jul 2021 09:23:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26503 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234245AbhG2M5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Jul 2021 08:57:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="273953925"
+        id S237688AbhG2NXQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Jul 2021 09:23:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="210996468"
 X-IronPort-AV: E=Sophos;i="5.84,278,1620716400"; 
-   d="scan'208";a="273953925"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2021 05:57:10 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="210996468"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2021 06:23:11 -0700
 X-IronPort-AV: E=Sophos;i="5.84,278,1620716400"; 
-   d="scan'208";a="518199069"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2021 05:57:08 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1m95b2-00098L-6n; Thu, 29 Jul 2021 12:57:08 +0000
-Date:   Thu, 29 Jul 2021 20:56:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/vpd] BUILD SUCCESS
- e916dfbb77159d11ca4b1819c1aec3b59c3e40ab
-Message-ID: <6102a58a.yPNj2HZ9gHZFJ3+C%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="581334914"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2021 06:23:08 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 29 Jul 2021 16:23:05 +0300
+Date:   Thu, 29 Jul 2021 16:23:05 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        Koba Ko <koba.ko@canonical.com>
+Subject: Re: [PATCH v2] PCI: PM: Add special case handling for PCIe device
+ wakeup
+Message-ID: <YQKruWMmSXeH3GL6@lahna>
+References: <3149540.aeNJFYEL58@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <3149540.aeNJFYEL58@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
-branch HEAD: e916dfbb77159d11ca4b1819c1aec3b59c3e40ab  PCI/VPD: Remove struct pci_vpd.flag
+Hi Rafael,
 
-elapsed time: 720m
+On Wed, Jul 28, 2021 at 07:25:04PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Some PCIe devices only support PME (Power Management Event) from
+> D3cold.  One example is the ASMedia xHCI controller:
+> 
+>  11:00.0 USB controller: ASMedia Technology Inc. ASM1042A USB 3.0 Host Controller (prog-if 30 [XHCI])
+>    ...
+>    Capabilities: [78] Power Management version 3
+>        Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+>        Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> 
+> In those cases, if the device is expected to generate wakeup events
+> from its final power state, pci_target_state() returns D0, which
+> prevents the PCIe hierarchy above the device from entering any
+> low-power states too, but the device cannot signal PME from D0
+> either.  However, if the device were allowed to go into D3hot, its
+> parent PCIe port and its ancestors would also be able to go into D3
+> and if any of them goes into D3cold, the device would end up in
+> D3cold too (as per the PCI PM spec v1.2, Table 6-1), in which case
+> it would be able to signal PME.
+> 
+> This means that the system could be put into a lower-power
+> configuration while meeting the requirement to enable the device to
+> generate PME from the final state (which is not the case if the
+> device stays in D0 along with the entire hierarchy above it).
+> 
+> In order to avoid missing that opportunity, extend pci_pme_capable()
+> to return 'true' in the special case when the target state is D3hot
+> and the device can only signal PME from D3cold and update
+> pci_target_state() to return the current target state if
+> pci_pme_capable() returns 'true' for it.
+> 
+> This change can be regarded as a pci_target_state() fix, because that
+> function should ignore its 'wakeup' argument if signaling PME from
+> any power states shallower than the current candidate one (including
+> D0) is not supported.
+> 
+> Link: https://lore.kernel.org/linux-pm/20210617123653.58640-1-mika.westerberg@linux.intel.com
+> Fixes: 666ff6f83e1d ("PCI/PM: Avoid using device_may_wakeup() for runtime PM")
+> Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
+> Reported-by: Koba Ko <koba.ko@canonical.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-configs tested: 94
-configs skipped: 3
+Tried this now and it fixes the issue! Also checked with another device
+that actually supports PME from other states than D3cold and it also
+works (as expected).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Feel free to add my,
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210728
-mips                         tb0219_defconfig
-powerpc                    socrates_defconfig
-mips                         db1xxx_defconfig
-m68k                          atari_defconfig
-sh                             espt_defconfig
-powerpc                     asp8347_defconfig
-mips                         tb0287_defconfig
-arm                         hackkit_defconfig
-sh                   secureedge5410_defconfig
-arm                           viper_defconfig
-parisc                              defconfig
-powerpc                       ppc64_defconfig
-xtensa                              defconfig
-sh                            hp6xx_defconfig
-sh                          r7780mp_defconfig
-sh                           se7343_defconfig
-powerpc                     mpc512x_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210728
-x86_64               randconfig-a003-20210728
-x86_64               randconfig-a001-20210728
-x86_64               randconfig-a004-20210728
-x86_64               randconfig-a005-20210728
-x86_64               randconfig-a002-20210728
-i386                 randconfig-a005-20210728
-i386                 randconfig-a003-20210728
-i386                 randconfig-a004-20210728
-i386                 randconfig-a002-20210728
-i386                 randconfig-a001-20210728
-i386                 randconfig-a006-20210728
-i386                 randconfig-a016-20210728
-i386                 randconfig-a012-20210728
-i386                 randconfig-a013-20210728
-i386                 randconfig-a014-20210728
-i386                 randconfig-a011-20210728
-i386                 randconfig-a015-20210728
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-clang tested configs:
-x86_64               randconfig-c001-20210728
-x86_64               randconfig-a016-20210728
-x86_64               randconfig-a011-20210728
-x86_64               randconfig-a014-20210728
-x86_64               randconfig-a013-20210728
-x86_64               randconfig-a012-20210728
-x86_64               randconfig-a015-20210728
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks!
