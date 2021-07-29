@@ -2,194 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C34103D9BB1
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 04:21:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EAE13D9BDE
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jul 2021 04:35:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233467AbhG2CVp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jul 2021 22:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233900AbhG2CVf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jul 2021 22:21:35 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B7AC0617A3;
-        Wed, 28 Jul 2021 19:21:32 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id j21so5047282ioo.6;
-        Wed, 28 Jul 2021 19:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R17HCftwnExVBITUL3vMzRaZWklHE7WTCzst6j3TZE0=;
-        b=hdY7VFsi9N5o+MaERqFmJqM8rLDPtB24yNrw+m9uftYHjOvQS76KB/pQ/8oTN3TvTO
-         03Lp9St5tVPVpSf8lsDb1oebdIOF0hxx2HfufdT6xzCCEUmQ6mub+5LmyHdYF9pvmgCS
-         FH8eo6S3ndkglCahj1jXSXb+aGWYSKf1wadUkLEUM2uLvvYMKsnjFJt8ebATOnWMmaOQ
-         YX/pjqSFvHPI3aL2EQZmmZW7fPRRAbGkrILXQwFBQBe60rvEGG4c1fMzd/w6f7aIsA40
-         ihVvGtyc80KDt7UcbpWNaN04EY9Xn/5Q4C3Nacu/ER8xEExCKT3PqpWy3DXUn3AUZT7P
-         ZObQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R17HCftwnExVBITUL3vMzRaZWklHE7WTCzst6j3TZE0=;
-        b=KjvEv+bUPZsFIqUlMgMig5xDY16MQLjXR/6m9sFC0KvBXLxd2U/G4nnhrLHHSTWFA1
-         clVHokZdt9EYcaQHfoEvw5ZpghWlDUMcSTsEtJs/vAHFrzgjMYQN6qLR5MT31OyXB4MD
-         MRfjRnaAvdl9IV+yq0jpllkt8bOUZgHhVhH1EXk42Z5NkS2wISJEsTsU/FEEJGWv1tB0
-         NZnLQoAqDqU6fi3bY6iF2deNYCJrRSiWW5I9HZFjhQrf88fu8mTjmAHil/dwXVPCDPqA
-         /GkbW685SNQF+YFbfcWihZPCgNNR2vxqZVMLHS+KUj3Rtuv/ZpQFi9S5NiIFfy80Serc
-         NUMg==
-X-Gm-Message-State: AOAM530u66pF+67JsjV933ut8k/TQ5ooIRWzmkp9xxu39FBhi1AxW6/8
-        EIfQTImvvMS9POBVnY4W1Bd2Vs0voykwTS9+wuo=
-X-Google-Smtp-Source: ABdhPJwhF+4ItV92GHowHGlYO3feVZkAERCaidqhU4S0KwkvIU5yRksnVUo6bOZR3DlFQmAQ2tsdJ6eNwSE4qqzCU0I=
-X-Received: by 2002:a05:6602:2801:: with SMTP id d1mr2044245ioe.73.1627525291992;
- Wed, 28 Jul 2021 19:21:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210727023000.1030525-1-art@khadas.com> <20210727194323.GA725763@bjorn-Precision-5520>
-In-Reply-To: <20210727194323.GA725763@bjorn-Precision-5520>
-From:   Art Nikpal <email2tema@gmail.com>
-Date:   Thu, 29 Jul 2021 10:21:20 +0800
-Message-ID: <CAKaHn9LxBey-BT4nLWDUS7ZOUSFrUhXsqe8zp9LYWceVr5vfgA@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: DWC: meson: add 256 bytes MRRS quirk
+        id S233297AbhG2Cfv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jul 2021 22:35:51 -0400
+Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:3168
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233256AbhG2Cfu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jul 2021 22:35:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SjsAHXM4J8bxP68NKjEouR375DLZ2djj2FxA7BqmYB3GeCrXf4MkHZlON5ysd8PVWOUxrygUD/tc2uIXbL5FOcCWV0wzDxHY7RVQQ1axDwPmTcc5wVR84Mg9/q4bCa21jpYuywj9a/EZeLwt5YHWzW85cxxNLFlkOtJKH9r8D5hKVvl73/ejooNyyx3F3Ta6y3zp/dzcxSjS3fvQOzW39Vhpbpkir9waf1z4SLxC1IN2PRLMtEaVuIsDrvM3VljWPSzQqA8trHicwqWAVUwh1VcmLGzVlr7NaHGhawrkvujZKZLtwH/ejuUPWMuHG44Uaq8xl5CDu0tMBKMQEeqX2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hS1z5FAPjJxj/zEah8mJS9GA25i8tqX3oqDma0G1j0g=;
+ b=N6paMl6h4MbDvP/SXCxkmYbVwoYLAWgqXBS3MviGI+psuIuHQbIvoxJIKUcMI2IBSCoukTGLLY807+b9mWzp0Xq8zjbta7zOt2+U7BFF8x4u4eBJGKB/Mp6uQ+gH6G5ddE0o0Itb53+chW70u2OeoG+cJBKiPQHHx9CCvDtqYm3afbJs8hvw9/A7Rr9WD3aZKupcZ9MYwFvgP8ybVv7JeJsuBUTv3bhvva0/sFPKrtICOhl7FGPGblfmImu04+HHxnG60cmBSWdWhPef82yAbYh2aBkLBxypuos3vrfa9H61aj24DSITKW+5Y6TwsGo7u6xjuW27gKz9uPoG7JoQVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hS1z5FAPjJxj/zEah8mJS9GA25i8tqX3oqDma0G1j0g=;
+ b=JH/mz0S8RHXevpNhexQoQltBgVkL2dvt2llnryIODYsldYHy546JZHz9SQw9dMDR48wrEA/xkkK3xZgRN5WIuqAcLOUcdxFGvOsgrjZEHC2TFUDXdwqKveZqZZ76eTZBuqZCceMt6rjZO076tUH2GOl2LlygQyBN87IUpyImj9Ti/PO66qCWZmgQeEcoyBvtwWGdshWnbAxsgP+2TnPS6wX7ynE97vrnMHtLfPTpDAOF8WSrZHGYju9pUAb0KQRZebMU5pTz61N5ibYyaAXAYIYWyKMhKXD/dZQCCviScA4DeERNyz6FkTZFsvi9+jDWMq3J2IP0DkNxX3giDvbcXw==
+Received: from BN9PR03CA0800.namprd03.prod.outlook.com (2603:10b6:408:13f::25)
+ by DM4PR12MB5263.namprd12.prod.outlook.com (2603:10b6:5:39b::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18; Thu, 29 Jul
+ 2021 02:35:46 +0000
+Received: from BN8NAM11FT022.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:13f:cafe::29) by BN9PR03CA0800.outlook.office365.com
+ (2603:10b6:408:13f::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.20 via Frontend
+ Transport; Thu, 29 Jul 2021 02:35:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT022.mail.protection.outlook.com (10.13.176.112) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4373.18 via Frontend Transport; Thu, 29 Jul 2021 02:35:46 +0000
+Received: from [10.40.205.201] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 29 Jul
+ 2021 02:35:39 +0000
+Subject: Re: Query on ASPM driver design
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Artem Lapkin <art@khadas.com>, Nick Xie <nick@khadas.com>,
-        Gouwa Wang <gouwa@khadas.com>
-Content-Type: text/plain; charset="UTF-8"
+CC:     <hemantk@codeaurora.org>, <bhelgaas@google.com>,
+        <manivannan.sadhasivam@linaro.org>, <bjorn.andersson@linaro.org>,
+        <linux-pci@vger.kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20210728160140.GA823046@bjorn-Precision-5520>
+From:   Om Prakash Singh <omp@nvidia.com>
+Message-ID: <c38932ba-d0b4-63bc-5128-fb4a98502254@nvidia.com>
+Date:   Thu, 29 Jul 2021 08:05:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
+MIME-Version: 1.0
+In-Reply-To: <20210728160140.GA823046@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 28e0dd57-3ed9-4504-ebef-08d95239920e
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5263:
+X-Microsoft-Antispam-PRVS: <DM4PR12MB526392FE4A7A09F37F1BA9C7DAEB9@DM4PR12MB5263.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gprgBSIjmppyJTnvU+2JzuUk5TRQ733ehamF5nYVbpEAYz9KreJJ4z2mHnuKoqf37Scc71punH4Su9SMDjm2kv3zocLhbvVqQkVxbDzv0IitqJ47TLmUnNQaKa7lTQFb6X2XBH2pk6nPwvUM0OBf9i1wGJbutqXgTpXTzktpd00lOullmapi+j/ZZyE8962HfMVj42CrnxrJNelH+47A82PbA0xUVNnKpX5j7dlDbog5H3JbOmVpEgQAQxGG/6/c+eiP6kRTY9TvZkl4sCca4MzqPvpeCMtt0RixMtcoLwvpxcnF9ngLCvUSHKPJGJXaZYJ9OGNcC0qcVY1XEBrA9QJ6nCD5QB07KJfMoQ8VsXI/HSnT6LFuhkIPQ8GHXsXBqGjSq/FWZBka1z4yGOY4XDx7P5fdnpxuf7ILoF8Al7SKri1TgaogHsq8QVXOoWjY9ekHgr8ipiRB7SualvG8BmppmkDdu/VosjSpnqSzJyxShTV2Z8PD0wzjeXcN2F4uDE0zuB5OIwfURRuFubws+SieH65MPM6Uh0KAm99bzHIj0OTaroE1kYaoK3328guCPZbg4g5bHeH4hCIGIgdcL2nUssGJWswEBPDrtaa2zLqXtRTvbjnBKN2i1Mgki7TZp6hR0h1d4RCtbseEZEAYOnvt+wVD04mJWAdsqT6oZSSzzJrh59zTVP774rT/Fhgu0H5umwdC2cmMsvJXdENhuEakstR4s8NelmLhVT9uP6E=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(46966006)(36840700001)(6916009)(31696002)(8936002)(47076005)(4326008)(36756003)(86362001)(83380400001)(426003)(478600001)(2616005)(82740400003)(7636003)(31686004)(36860700001)(2906002)(356005)(336012)(70206006)(70586007)(8676002)(82310400003)(26005)(6666004)(186003)(16526019)(5660300002)(36906005)(54906003)(53546011)(16576012)(316002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2021 02:35:46.5111
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28e0dd57-3ed9-4504-ebef-08d95239920e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT022.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5263
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> This needs to say whether this is a functional or a performance issue.
 
-Looks like not a performance issue , this is a functional issue.
 
-We detect just one problem(may be exist another i dont know ) for
-writing(reading works fine) any data to NVME devices with MRRS != 256
-we have scrambled HDMI display
+On 7/28/2021 9:31 PM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> [+cc Rafael, driver-specific vs generic PM at very end]
+> 
+> On Wed, Jul 28, 2021 at 06:48:50AM +0530, Om Prakash Singh wrote:
+>> On 7/27/2021 8:48 PM, Bjorn Helgaas wrote:
+>>> On Tue, Jul 27, 2021 at 07:51:37AM +0530, Om Prakash Singh wrote:
+>>>> Hi Bjorn,
+>>>> I think it makes sense to have the scope of keeping default ASPM
+>>>> policy disable and API pci_enable_link_state() to selectively enable
+>>>> by EP Driver.
+>>>>
+>>>> sysfs interface for ASPM also does not allow enabling ASPM for a
+>>>> device if the default policy (policy_to_aspm_state()) does not allow
+>>>> it.
+>>>
+>>> The ASPM policy implementation may require changes.  I think the
+>>> current setup where a policy is compiled into the kernel via Kconfig
+>>> options is seriously flawed.
+>>>
+>>> We need a fail-safe kernel parameter, i.e., "pcie_aspm=off", for cases
+>>> where devices don't work at all with ASPM.  We need quirks to work
+>>> around devices known to be broken, e.g., those that advertise ASPM
+>>> support that doesn't actually work, or those that advertise incorrect
+>>> exit latencies.  I think most other configuration should be done via
+>>> sysfs.
+>>>
+>>>> Consider a situation, for a platform one wants to utilize ASPM
+>>>> capability of an onboard PCIe device because it is well evaluated,
+>>>> at the same time they want to keep ASPM disabled for other PCIe
+>>>> devices that can be connected on open PCIe slot to avoid possible
+>>>> performance issue.
+>>>>
+>>>> I see ASPM is broken on many devices, though the device shows ASPM
+>>>> capabilities but has performance issues when it is enabled.
+>>>
+>>> I'll wait to see your proposal and use case before commenting on this.
+>>
+>> few suggestions:
+>>
+>> 1. We can have a device-tree property to disable ASPM capabilities of a Root
+>> port. Corresponding to my example, the device-tree can use be use to enable
+>> ASPM capabilities of Root ports that have known/good/onboard PCIe device,
+>> and keep ASPM disabled for opens slots
+> 
+> ASPM can only be enabled for links between two devices.  For empty
+> slots, there's an upstream device (Root Port or Switch Downstream
+> Port) but no downstream device, so ASPM won't be enabled anyway.
 
-> Does this problem actually affect *all* DesignWare-based controllers?
-> So why is this limited to PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3?
+Yes, I meant to say this device-tree property will allow to disable ASPM 
+capabilities of selected root port, ASPM will be disabled even if 
+downstream device has ASPM capability.
 
-i can say only for VIM3 device which use this controller and have this problem
+> 
+>> 2. sysfs should allow overriding default ASPM policy.
+>>     With below change system can boot with default policy ASPM disabled
+>> (performance). But sysfs will still allow to enable ASPM capability of
+>> selective device
+> 
+> This sounds like a good idea.  If we could get rid of the Kconfig ASPM
+> policy selection, we'd likely make PCIEASPM_POWER_SUPERSAVE the
+> default.  Then userspace could use sysfs to disable ASPM states
+> selective as necessary for performance.
+> 
+> Even before removing the Kconfig policy selection (or if we can't do
+> that), I think it make sense to allow sysfs to override it.
 
-On Wed, Jul 28, 2021 at 3:43 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jul 27, 2021 at 10:30:00AM +0800, Artem Lapkin wrote:
-> > 256 bytes maximum read request size. They can't handle
-> > anything larger than this. So force this limit on
-> > any devices attached under these ports.
->
-> This needs to say whether this is a functional or a performance issue.
->
-> If it's a functional issue, i.e., if meson signals an error or abort
-> when it receives a read request for > 256 bytes, we need to explain
-> exactly what happens.
->
-> If it's a performance issue, we need to explain why MRRS affects
-> performance and that this is an optimization.
->
-> > Come-from: https://lkml.org/lkml/2021/6/18/160
-> > Come-from: https://lkml.org/lkml/2021/6/19/19
->
-> Please use lore.kernel.org URLs instead.  The lore URLs are a little
-> uglier, but are more functional, more likely to continue working, and
-> avoid the ads.  These are:
->
->   https://lore.kernel.org/r/20210618230132.GA3228427@bjorn-Precision-5520
->   https://lore.kernel.org/r/20210619063952.2008746-1-art@khadas.com
->
-> > It only affects PCIe in P2P, in non-P2P is will certainly affect
-> > transfers on the internal SoC/Processor/Chip internal bus/fabric.
->
-> This needs to explain how a field in a PCIe TLP affects transfers on
-> these non-PCIe fabrics.
->
-> > These quirks are currently implemented in the
-> > controller driver and only applies when the controller has been probed
-> > and to each endpoint detected on this particular controller.
-> >
-> > Continue having separate quirks for each controller if the core
-> > isn't the right place to handle MPS/MRRS.
->
-> I see similar code in dwc/pci-keystone.c.  Does this problem actually
-> affect *all* DesignWare-based controllers?
->
-> If so, we should put the workaround in the common dwc code, e.g.,
-> pcie-designware.c or similar.
->
-> It also seems to affect pci-loongson.c (not DesignWare-based).  Is
-> there some reason it has the same problem, e.g., does loongson contain
-> DesignWare IP, or does it use the same non-PCIe fabric?
->
-> > >> Neil
-> >
-> > Signed-off-by: Artem Lapkin <art@khadas.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-meson.c | 31 ++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> > index 686ded034..1498950de 100644
-> > --- a/drivers/pci/controller/dwc/pci-meson.c
-> > +++ b/drivers/pci/controller/dwc/pci-meson.c
-> > @@ -466,6 +466,37 @@ static int meson_pcie_probe(struct platform_device *pdev)
-> >       return ret;
-> >  }
-> >
-> > +static void meson_mrrs_limit_quirk(struct pci_dev *dev)
-> > +{
-> > +     struct pci_bus *bus = dev->bus;
-> > +     int mrrs, mrrs_limit = 256;
-> > +     static const struct pci_device_id bridge_devids[] = {
-> > +             { PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3) },
->
-> I don't really believe that PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3 is the
-> only device affected here.  Is this related to the Meson root port, or
-> is it related to a PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3 on a plug-in card?
-> I guess the former, since you're searching upward for a root port.
->
-> So why is this limited to PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3?
->
-> > +             { 0, },
-> > +     };
-> > +
-> > +     /* look for the matching bridge */
-> > +     while (!pci_is_root_bus(bus)) {
-> > +             /*
-> > +              * 256 bytes maximum read request size. They can't handle
-> > +              * anything larger than this. So force this limit on
-> > +              * any devices attached under these ports.
-> > +              */
-> > +             if (!pci_match_id(bridge_devids, bus->self)) {
-> > +                     bus = bus->parent;
-> > +                     continue;
-> > +             }
-> > +
-> > +             mrrs = pcie_get_readrq(dev);
-> > +             if (mrrs > mrrs_limit) {
-> > +                     pci_info(dev, "limiting MRRS %d to %d\n", mrrs, mrrs_limit);
-> > +                     pcie_set_readrq(dev, mrrs_limit);
-> > +             }
-> > +             break;
-> > +     }
-> > +}
-> > +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, meson_mrrs_limit_quirk);
-> > +
-> >  static const struct of_device_id meson_pcie_of_match[] = {
-> >       {
-> >               .compatible = "amlogic,axg-pcie",
-> > --
-> > 2.25.1
-> >
+I see Kconfig policy will is useful as different platform owner may want 
+to keep different default policy for their platform.
+
+> 
+>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>> index a08e7d6..268c2c5 100644
+>> --- a/drivers/pci/pcie/aspm.c
+>> +++ b/drivers/pci/pcie/aspm.c
+>> @@ -1278,7 +1278,7 @@
+>>                link->aspm_disable |= state;
+>>        }
+>>
+>> -     pcie_config_aspm_link(link, policy_to_aspm_state(link));
+>> +     pcie_config_aspm_link(link, state);
+>>
+>>        mutex_unlock(&aspm_lock);
+>>        up_read(&pci_bus_sem);
+>>
+>> 3. Add API pci_enable_link_state()
+>>     This will give control to driver to change ASPM at runtime depending on
+>> user selected performance mode. For example Android has different
+>> performance modes for Wifi chip, for sleep and active state. We are using
+>> similar API to overcome some performance issue related to wifi on our
+>> internal platform.
+> 
+> I'd prefer to keep performance modes out of the drivers as much as
+> possible because that's not really a scalable approach.  I'm not a
+> power management expert, but I suspect the most maintainable approach
+> is to do this in the generic PM core, with selectable overrides via
+> sysfs as necessary.  I cc'd Rafael in case he wants to chime in.
+> 
+> Maybe there's a place for drivers to tweak ASPM at runtime, but I'm
+> not convinced yet.  I think the intent of ASPM is that devices
+> advertise exit latencies that correspond with their internal
+> buffering, so the L0s and L1 states can be used with no significant
+> performance impact.  But without more specifics, we can talk about
+> this all day without getting anywhere.
+
+We are discussing about all these options because many times device 
+doesn't performs well with ASPM capabilities what they advertise.
+
+> 
+> Bjorn
+> 
