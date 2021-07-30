@@ -2,178 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B57B3DBDEC
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 19:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1E63DBF23
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jul 2021 21:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbhG3Rtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Jul 2021 13:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229773AbhG3Rtt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Jul 2021 13:49:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C121EC06175F
-        for <linux-pci@vger.kernel.org>; Fri, 30 Jul 2021 10:49:44 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m9Wcc-00064T-I3; Fri, 30 Jul 2021 19:48:34 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m9WcO-0005qH-Ky; Fri, 30 Jul 2021 19:48:20 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m9WcO-00079n-I5; Fri, 30 Jul 2021 19:48:20 +0200
-Date:   Fri, 30 Jul 2021 19:48:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        oss-drivers@corigine.com, Oliver O'Halloran <oohall@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-perf-users@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
+        id S230408AbhG3Tou (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Jul 2021 15:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231163AbhG3Tot (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Jul 2021 15:44:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 012C860F26;
+        Fri, 30 Jul 2021 19:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627674284;
+        bh=dxI61sDpO9sLxBOwYd+sYvdJ3WhWDIoa8/pLRkEcWSs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oIwPWX+iQ1dhu8H8h/1dEH080nK4p78Td28/cCuqGFg0anBDEYXC9c3wRDg6sB0Ov
+         XC/EZBtHCB6Fknv7ZhbocHEggIpf00ViKbe9IAJi2CZj/iDxKWaVYir+qmQA6ysQrn
+         WTUEF5+qCkzdNRMI7zgY2Bl4U1FkjdBeugHjd8R4J+uIfejAYT0LausT4dUBmIoV1l
+         kL9lJkARmxOFDEId31r+pz3/CV4uFHHst0fVPJmQsWzLrz7ci1Qzuearpr4Mearjfz
+         G2zL+cFCu4qOj1laUnSGUxJsIaZBP5v+BpqAzuiT9QJxvETFVR1Kv4hSmTA3yYArKY
+         6xkiUxtJE+SMw==
+Date:   Fri, 30 Jul 2021 14:44:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v1 0/5] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210730174820.i6ycjyvyzxcxwxsc@pengutronix.de>
-References: <20210729203740.1377045-1-u.kleine-koenig@pengutronix.de>
- <YQOy/OTvY66igEoe@smile.fi.intel.com>
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] sysfs: Invoke iomem_get_mapping() from the sysfs
+ open callback
+Message-ID: <20210730194442.GA1091180@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="t5ueb7xyetl6m7j3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YQOy/OTvY66igEoe@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210729233235.1508920-2-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jul 29, 2021 at 11:32:34PM +0000, Krzysztof Wilczyński wrote:
+> Defer invocation of the iomem_get_mapping() to the sysfs open callback
+> so that it can be executed as needed when the binary sysfs object has
+> been accessed.
+> 
+> To do that, convert the "mapping" member of the struct bin_attribute
+> from a pointer to the struct address_space into a function pointer with
+> a signature that requires the same return type, and then updates the
+> sysfs_kf_bin_open() to invoke provided function should the function
+> pointer be valid.
+> 
+> Also, convert every invocation of iomem_get_mapping() into a function
+> pointer assignment, therefore allowing for the iomem_get_mapping()
+> invocation to be deferred to when the sysfs open callback runs.
+> 
+> Thus, this change removes the need for the fs_initcalls to complete
+> before any other sub-system that uses the iomem_get_mapping() would be
+> able to invoke it safely without leading to a failure and an Oops
+> related to an invalid iomem_get_mapping() access.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
---t5ueb7xyetl6m7j3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Hi Andy,
-
-On Fri, Jul 30, 2021 at 11:06:20AM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 29, 2021 at 10:37:35PM +0200, Uwe Kleine-K=F6nig wrote:
-> > struct pci_dev tracks the bound pci driver twice. This series is about
-> > removing this duplication.
-> >=20
-> > The first two patches are just cleanups. The third patch introduces a
-> > wrapper that abstracts access to struct pci_dev->driver. In the next
-> > patch (hopefully) all users are converted to use the new wrapper and
-> > finally the fifth patch removes the duplication.
-> >=20
-> > Note this series is only build tested (allmodconfig on several
-> > architectures).
-> >=20
-> > I'm open to restructure this series if this simplifies things. E.g. the
-> > use of the new wrapper in drivers/pci could be squashed into the patch
-> > introducing the wrapper. Patch 4 could be split by maintainer tree or
-> > squashed into patch 3 completely.
->=20
-> I see only patch 4 and this cover letter...
-
-The full series is available at
-
-	https://lore.kernel.org/linux-pci/20210729203740.1377045-1-u.kleine-koenig=
-@pengutronix.de/
-
-All patches but #4 only touch drivers/pci/ (and include/linux/pci.h) and
-it seemed excessive to me to send all patches to all people. It seems at
-least for you I balanced this wrongly. The short version is that patch
-#3 introduces
-
-	+#define pci_driver_of_dev(pdev) ((pdev)->driver)
-
-which allows to do the stuff done in patch #4 and then patch #5 does
-
-	-#define pci_driver_of_dev(pdev) ((pdev)->driver)
-	+#define pci_driver_of_dev(pdev) ((pdev)->dev.driver ? to_pci_driver((pdev=
-)->dev.driver) : NULL)
-
-plus some cleanups.
-
-If you want I can send you a bounce (or you try
-
-	b4 am 20210729203740.1377045-1-u.kleine-koenig@pengutronix.de
-
-).
-
-Best regards and thanks for caring,
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---t5ueb7xyetl6m7j3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEEO2EACgkQwfwUeK3K
-7AkOCgf/UKvRbSIrjjdKl0HWJofJEfaXlbATSgBausmxV/dcXsg1sLkhkpTN66bG
-WmAdhFN03Vtx3jHKeYtgo3x8g39nfYT4NmlYTNumgxTow6TESnJxbYewE3i0alrR
-Jv0JvBFhUaXj++XetOVHn9f5/t7o5NL/XSF5DTwQM8lZ5skmA2+XXea8lU0IFufZ
-uTi0XA3G5BNhyU6RiehvnN59J6QCN3CIVqajOrZbqf33jiiyCTDf2tEqCYRbv1vJ
-zqt7zYp05RtUaqNKe9oH4N4UFCdChrjZlFP7w7gyqM6Jh/wOSERlVdpocf0BGClR
-W6o7YIB7QFf+ByIxy6hIBeXnaPaDFQ==
-=oi24
------END PGP SIGNATURE-----
-
---t5ueb7xyetl6m7j3--
+> ---
+>  drivers/pci/pci-sysfs.c | 6 +++---
+>  fs/sysfs/file.c         | 2 +-
+>  include/linux/sysfs.h   | 2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 5d63df7c1820..76e5545d0e73 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -965,7 +965,7 @@ void pci_create_legacy_files(struct pci_bus *b)
+>  	b->legacy_io->read = pci_read_legacy_io;
+>  	b->legacy_io->write = pci_write_legacy_io;
+>  	b->legacy_io->mmap = pci_mmap_legacy_io;
+> -	b->legacy_io->mapping = iomem_get_mapping();
+> +	b->legacy_io->mapping = iomem_get_mapping;
+>  	pci_adjust_legacy_attr(b, pci_mmap_io);
+>  	error = device_create_bin_file(&b->dev, b->legacy_io);
+>  	if (error)
+> @@ -978,7 +978,7 @@ void pci_create_legacy_files(struct pci_bus *b)
+>  	b->legacy_mem->size = 1024*1024;
+>  	b->legacy_mem->attr.mode = 0600;
+>  	b->legacy_mem->mmap = pci_mmap_legacy_mem;
+> -	b->legacy_io->mapping = iomem_get_mapping();
+> +	b->legacy_io->mapping = iomem_get_mapping;
+>  	pci_adjust_legacy_attr(b, pci_mmap_mem);
+>  	error = device_create_bin_file(&b->dev, b->legacy_mem);
+>  	if (error)
+> @@ -1195,7 +1195,7 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
+>  		}
+>  	}
+>  	if (res_attr->mmap)
+> -		res_attr->mapping = iomem_get_mapping();
+> +		res_attr->mapping = iomem_get_mapping;
+>  	res_attr->attr.name = res_attr_name;
+>  	res_attr->attr.mode = 0600;
+>  	res_attr->size = pci_resource_len(pdev, num);
+> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> index 9aefa7779b29..a3ee4c32a264 100644
+> --- a/fs/sysfs/file.c
+> +++ b/fs/sysfs/file.c
+> @@ -175,7 +175,7 @@ static int sysfs_kf_bin_open(struct kernfs_open_file *of)
+>  	struct bin_attribute *battr = of->kn->priv;
+>  
+>  	if (battr->mapping)
+> -		of->file->f_mapping = battr->mapping;
+> +		of->file->f_mapping = battr->mapping();
+>  
+>  	return 0;
+>  }
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index a12556a4b93a..d5bcc897583c 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -176,7 +176,7 @@ struct bin_attribute {
+>  	struct attribute	attr;
+>  	size_t			size;
+>  	void			*private;
+> -	struct address_space	*mapping;
+> +	struct address_space *(*mapping)(void);
+>  	ssize_t (*read)(struct file *, struct kobject *, struct bin_attribute *,
+>  			char *, loff_t, size_t);
+>  	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
+> -- 
+> 2.32.0
+> 
