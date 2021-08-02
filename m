@@ -2,110 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C17BA3DE2C6
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 00:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B1B73DE2D7
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 01:05:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232057AbhHBW7Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Aug 2021 18:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52966 "EHLO mail.kernel.org"
+        id S232164AbhHBXFa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Aug 2021 19:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231920AbhHBW7X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Aug 2021 18:59:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 39A9A60D07;
-        Mon,  2 Aug 2021 22:59:13 +0000 (UTC)
+        id S231126AbhHBXF3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Aug 2021 19:05:29 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 81F5660D07;
+        Mon,  2 Aug 2021 23:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627945153;
-        bh=1Bofb61PLpcRbzOyR/LUCmt5m+zVGAE7UgKRzYZRtGk=;
+        s=k20201202; t=1627945519;
+        bh=WUIcSBQjSgJB67+np/uRZK+3HKPV7Ij1i4amc4Hm1bU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N8yxfjDzHs8+x81LEfM8y1VUlQD16xO3QMdepox/dBTLcaGDXTWh6sni8moyjDLvh
-         lnWx9Vz+aTXi2Hv6LtDOwywLgjUFat03KxWtg5x1oZlXVnycSUSZHQ4Tl/ZkaQOzA0
-         mgI17rDarJ/bxR/bOSeV5pZKjcBhL+Sp6nyj4CB2dw2hNDrlye4YUGbSlFvs8Adiil
-         VB4zJvK0bwY7F2sna5LnULGmnBuxEQOiACjxNuAg9V4gpIFiHVmRRBRqbIuKArOjjx
-         W9gQKPdptkUEgLoO6eoyEG17Jk7v4sBaxdoAy2TfhyCajKxms5OrSitXZNjEBkGm5r
-         ynS+/gg7HXc+Q==
-Date:   Mon, 2 Aug 2021 17:59:11 -0500
+        b=FiY6NWvHhG9xX44PQGg0eaU6mL/wf2FLhT7l5+qlEXztPvht1b16J/6cnwMX88aO5
+         MJG9lyK2U6G0OgiuFLOPd2JaLXTiNW5UG4ePAIdNiZyFjKU65iegHG+JxxXjw2fqnB
+         DWeZTvuqHyWe/qrYqetgU9TyHGaSf4xX4RFFUR6oxfGtNutU8oZrTNr4kvKcYhDNSZ
+         4suu6Wk0rfplZTni+mBnbmwwoG4jzTuI2WMBtP8eHn/wE89OWE5Fh2b9LnePIEBSht
+         Y1cc3vKzvAEcde3nJqz9VBCzw2OsHwyM9ztVmcumOXP1m4pG/uSYlr+6KpyY1oZzsE
+         BZK4DkAHE1TXw==
+Date:   Mon, 2 Aug 2021 18:05:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amey Narkhede <ameynarkhede03@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v13 9/9] PCI: Change the type of probe argument in reset
- functions
-Message-ID: <20210802225911.GA1473016@bjorn-Precision-5520>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 0/8] PCI: hv: Support host bridge probing on ARM64
+Message-ID: <20210802230518.GA1473900@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210801142518.1224-10-ameynarkhede03@gmail.com>
+In-Reply-To: <YQepiKkFoJHC0gsK@boqun-archlinux>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 01, 2021 at 07:55:18PM +0530, Amey Narkhede wrote:
-> Change the type of probe argument in functions which implement reset
-> methods from int to bool to make the context and intent clear.
+On Mon, Aug 02, 2021 at 04:15:04PM +0800, Boqun Feng wrote:
+> On Tue, Jul 27, 2021 at 02:06:49AM +0800, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the v6 for the preparation of virtual PCI support on Hyper-V
+> > ARM64, Previous versions:
+> > 
+> > v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+> > v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+> > v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
+> > v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
+> > v5:	https://lore.kernel.org/lkml/20210720134429.511541-1-boqun.feng@gmail.com/
+> > 
+> > Changes since last version:
+> > 
+> > *	Rebase to 5.14-rc3
+> > 
+> > *	Comment fixes as suggested by Bjorn.
+> > 
+> > The basic problem we need to resolve is that ARM64 is an arch with
+> > PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
+> > Hyper-V PCI provides a paravirtualized PCI interface, so there is no
+> > actual pci_config_window for a PCI host bridge, so no information can be
+> > retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
+> > there is no corresponding ACPI device for the Hyper-V PCI root bridge,
+> > which introduces a special case when trying to find the ACPI device from
+> > the sysdata (see patch #3).
+> > 
+> > With this patchset, we could enable the virtual PCI on Hyper-V ARM64
+> > guest with other code under development.
+> > 
+> > Comments and suggestions are welcome.
 > 
-> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> Suggested-by: Krzysztof Wilczyński <kw@linux.com>
-> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> ---
->  drivers/crypto/cavium/nitrox/nitrox_main.c    |  2 +-
->  .../ethernet/cavium/liquidio/lio_vf_main.c    |  2 +-
->  drivers/pci/hotplug/pciehp.h                  |  2 +-
->  drivers/pci/hotplug/pciehp_hpc.c              |  4 +-
->  drivers/pci/hotplug/pnv_php.c                 |  4 +-
->  drivers/pci/pci-acpi.c                        |  7 +-
->  drivers/pci/pci.c                             | 69 ++++++++++---------
->  drivers/pci/pci.h                             | 12 ++--
->  drivers/pci/pcie/aer.c                        |  2 +-
->  drivers/pci/quirks.c                          | 34 ++++-----
->  include/linux/pci.h                           |  5 +-
->  include/linux/pci_hotplug.h                   |  2 +-
->  12 files changed, 75 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
-> index 15d6c8452807..f97fa8e997b5 100644
-> --- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-> +++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-> @@ -306,7 +306,7 @@ static int nitrox_device_flr(struct pci_dev *pdev)
->  		return -ENOMEM;
->  	}
->  
-> -	pcie_reset_flr(pdev, 0);
-> +	pcie_reset_flr(pdev, PCI_RESET_DO_RESET);
->  
->  	pci_restore_state(pdev);
->  
-> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> index 336d149ee2e2..6e666be6907a 100644
-> --- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
-> @@ -526,7 +526,7 @@ static void octeon_destroy_resources(struct octeon_device *oct)
->  			oct->irq_name_storage = NULL;
->  		}
->  		/* Soft reset the octeon device before exiting */
-> -		if (!pcie_reset_flr(oct->pci_dev, 1))
-> +		if (!pcie_reset_flr(oct->pci_dev, PCI_RESET_PROBE))
->  			octeon_pci_flr(oct);
->  		else
->  			cn23xx_vf_ask_pf_to_do_flr(oct);
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 4fd200d8b0a9..f12e1ef9f183 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -181,7 +181,7 @@ void pciehp_release_ctrl(struct controller *ctrl);
->  
->  int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot);
->  int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot);
-> -int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, int probe);
-> +int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool mode);
+> Ping ;-)
 
-Changing this to bool is ok, but I think changing the name from
-"probe" to "mode" makes it worse.  It makes sense that "probe == true"
-means do a probe instead of a reset, but "mode == true" tells me
-nothing.
+Lorenzo normally takes care of the native drivers (including Hyper-V),
+so I don't want to get in his way.  If he's too busy and doesn't get a
+chance, poke me again after -rc6 or so and I'll pick it up.
 
-Bjorn
+> > Arnd Bergmann (1):
+> >   PCI: hv: Generify PCI probing
+> > 
+> > Boqun Feng (7):
+> >   PCI: Introduce domain_nr in pci_host_bridge
+> >   PCI: Support populating MSI domains of root buses via bridges
+> >   arm64: PCI: Restructure pcibios_root_bridge_prepare()
+> >   arm64: PCI: Support root bridge preparation for Hyper-V
+> >   PCI: hv: Set ->domain_nr of pci_host_bridge at probing time
+> >   PCI: hv: Set up MSI domain at bridge probing time
+> >   PCI: hv: Turn on the host bridge probing on ARM64
+> > 
+> >  arch/arm64/kernel/pci.c             | 29 +++++++---
+> >  drivers/pci/controller/pci-hyperv.c | 86 +++++++++++++++++------------
+> >  drivers/pci/probe.c                 | 12 +++-
+> >  include/linux/pci.h                 | 11 ++++
+> >  4 files changed, 93 insertions(+), 45 deletions(-)
+> > 
+> > -- 
+> > 2.32.0
+> > 
