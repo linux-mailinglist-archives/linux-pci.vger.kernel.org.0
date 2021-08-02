@@ -2,47 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3C43DDDED
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 18:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3362D3DDDEF
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 18:48:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbhHBQsu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Aug 2021 12:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50360 "EHLO mail.kernel.org"
+        id S232390AbhHBQtE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Aug 2021 12:49:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229640AbhHBQsu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Aug 2021 12:48:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4100861050;
-        Mon,  2 Aug 2021 16:48:40 +0000 (UTC)
+        id S229640AbhHBQtD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Aug 2021 12:49:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A6F5761102
+        for <linux-pci@vger.kernel.org>; Mon,  2 Aug 2021 16:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627922920;
-        bh=cuyJ/J2aukiAzaiuV1WF4K1tog/tiqHtk4SlbgotFLw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JYsCNXSw61RrVD0A9e5ycoOfMOx4IM7O0JrKPDsFfgcf4Kwryz9lUPFM/ZBflo7gc
-         BVqd1pxxAJEduHu5DTGzYM1ziFUXJyH3Eoqr7GZR+T1PnCzvetVRSyH6RuQwD2TCh7
-         njgpn6VGiPN+ZX5g1zC4irt7s7XEsF9R58zyA0nCHnQzfinZT6pkTk8I2depW5TI1b
-         4qcteJZARrJMv4IiZSGBm8uoxihZ2XjbbWGBDSdikGA+/3Q5tLUeOFoRSVyHGaav76
-         A+PjZo8OvmDlWQJFHAsYjPRus5o7ryz7S1zaqaP+QtEru828OBlSw3OsVxi/gr1/B1
-         kMcBc3b0wCe1w==
-Date:   Mon, 2 Aug 2021 11:48:38 -0500
+        s=k20201202; t=1627922934;
+        bh=EkUi9SSb64en+93fJfS/M/JfFfsrtJooBuaIIsIupHo=;
+        h=Date:From:To:Subject:From;
+        b=N+xKlb6zd19ZXpQDLhtcnBADfSJjAIn371bxepU1/WambkR6DcrblJnH6SOSfsUMP
+         yWFXla4/dMrwtlNucie39JmclgoXEfiY0DLCoRai9xTdMnFDQRoA4BghUpAW2EkVV0
+         dWcH2avgQO9L9r81YUyAg+U+ADrdAteOLE8qddVinB6Fsb9lFw4bUf/k4lbcr0YC3t
+         pn/0fMtORIcvb+axR4E+9poZDVL9bWzKWNj2Lci3n5SgmCdopP99DAqDUqH89NrPCs
+         ioeF5l3NSsRuVxQFJKtViJsSoGToLhB7Z23qzcU5fOF9f+r8qvZ2Eke7UK3/mijDsk
+         O1bqpxiKjwqXw==
+Date:   Mon, 2 Aug 2021 11:48:52 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
-Cc:     kevo@gatorgraphics.com
 Subject: [bugzilla-daemon@bugzilla.kernel.org: [Bug 213945] New: Unable to
  power off iMac16,2]
-Message-ID: <20210802164838.GA1386212@bjorn-Precision-5520>
+Message-ID: <20210802164852.GA5017@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
-
-Thanks for the report, Kevin.
-
-Could you also attach the dmesg log from booting with "pci=earlydump"?
-The kernel really should log the BARs and windows we get from firmware
-before we change anything, but we currently do not, so "pci=earlydump"
-is the only way to get that.
 
 ----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
 
