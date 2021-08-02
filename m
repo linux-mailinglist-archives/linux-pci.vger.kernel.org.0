@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDA2A3DD635
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 14:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 846983DD637
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 14:59:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233752AbhHBM7D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Aug 2021 08:59:03 -0400
-Received: from mail-bn8nam12on2041.outbound.protection.outlook.com ([40.107.237.41]:20897
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        id S233855AbhHBM7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Aug 2021 08:59:09 -0400
+Received: from mail-dm6nam12on2057.outbound.protection.outlook.com ([40.107.243.57]:37728
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233665AbhHBM7C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Aug 2021 08:59:02 -0400
+        id S233862AbhHBM7I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Aug 2021 08:59:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QHsFkplyFyMMlzz0LAnNuJYaQ83kdAFGWPoz4YjCpRCmEyr+RgysEfCHK2eWFp7tTBWZ2U5d1vtpr+yYZec4fThv3pfP4rIHkIPM7VMDneHzWVtBE19l4o/bdOLn3PDamdqIVdBp31k48hlsywYSgxJguxm8zMgB6I1WZ2e8eCE1K9nWDuolLn3513aB9cvJZISOEVtRhVmbEi25ZYRaa0QahKq+7Aw4xEz4OYkHkwmpBYaYWXyaq8oZrL3IWHFiIH/hwaolDPd32mKs4lADZMv4hhThOr6aIn3yoSFZGEQUpxfqd5CMuR+4oU4K+yVAwqda3xWmwrQDZ1LA6XTmNw==
+ b=e+cE+MxViPek7fN/nZOuTQ8uPeY3GuMN+HPL7SXzp9cR6Itce6w5Cn4XhvEQVArUJMidEn25mMmQYIvSsjquF8kOPDhZM+AxZMeFdQjStlYv7Woc1TGdI5mPPfzwUOY4xtGgVqpJVqnLJwtgbqkYKmeMFhyf9um6Obs6tbZhsZ8ytyX3laetsqhgCFr2EnLfHwYmhgmiQehXPxwgs7tzxzaKK4NheP4VpzVP8+LjqkMJtgxQ1FCv64QFnI02ZqY/sPAACKOCzgWrawSQcO/p9/D2bKrevQr1EPa0Js3hiwgUsQh9Jg7X3FJmskqi9Snkis7sJoYvUbYMAT7v58ZLOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j4TQM/JSgcsWKb8ikUP6GKgFsbliHiRzN40UngX2oFU=;
- b=HF1T+UmwKN69J1bDcVUDFuCRcKHQoOucnaDb1CYhqb0XyRMiVHg2dqc/am5OH/MTiLr55GlxJdDoLiqVDlBQnS+gDVO8lZ54qwdqly+4MSDQxRlGYCD5bH8cV5ufoHCUyNDw0srErRAJpATdNvVKNtMplctKBEOs2LGcVasjG+aODLTViVcEpb83UYDmcjYScpIn+srYY+5VFdDqLLvBt3DdfwijUi4ZumWR6ugmvleq6GenVP9PderpgHB9bRh/8jNxB2TQxltP89kZIas6AN4fjx5ezNe0SbXnP9sYmyG2N1uFCKL6lVi4Z2+BzXBbxP/FyAWTuICgxiwSzR3Y+g==
+ bh=elF+gUZZbDHy8dzKKKso/rwGO9GihzH8aEPEOh4MQng=;
+ b=OICW8zhI170j3wP0Kcw2UfmXoEKiG5uU9Wsy0xaaEdozqhBhzRDgcTNVfK20DluHVtIcr+frnC6pB7mPqLWiOO0U+toe+r9FwYUvUKlBtyYZs6pAweO2d88ChkyLurTVITerVkogtEUbvRXrQIo/yi2eMW3lC//b6vmJ7Ewu2TJlOgvlsV7+zN6Z4JvKamzhGylh9kdEr+7ikPSxO1Mc70gA92EU7RuYdArEqkKG+dtb+jnHUTaZIITCZxcObyxO2XxnvPKIUBjq9U+KTNTQ6Djl28NNiuBW9+Ji0vtnq1udxnG0IXW1iknomRAypvhBThNkCWLNY3QIaxdsthgqZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j4TQM/JSgcsWKb8ikUP6GKgFsbliHiRzN40UngX2oFU=;
- b=itsDIMNfIXlgqWHdsHJZCbEAbJv2QK5r1M9bMDEnIkUbqA5Rq8T4UB74Z+wWfl77yuXwpCeRWr0IgTAbNj44qqI+P8iKT4iQDQlz0R3fDES8H4zekU93SxYXEOw6scKJrT+bKqwMypdtV9oRP+95QQ4nnWnq7tN4AstmbcoZcc8=
-Received: from MWHPR2001CA0024.namprd20.prod.outlook.com
- (2603:10b6:301:15::34) by CY4PR12MB1384.namprd12.prod.outlook.com
- (2603:10b6:903:3d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.26; Mon, 2 Aug
- 2021 12:58:51 +0000
-Received: from CO1NAM11FT052.eop-nam11.prod.protection.outlook.com
- (2603:10b6:301:15:cafe::12) by MWHPR2001CA0024.outlook.office365.com
- (2603:10b6:301:15::34) with Microsoft SMTP Server (version=TLS1_2,
+ bh=elF+gUZZbDHy8dzKKKso/rwGO9GihzH8aEPEOh4MQng=;
+ b=inXq9P5IC7UblvtVfRMXdNi9aGwKh6i/VFDWoXKS0sKzjetHvuB7p/HpUzTbQ+HLnnePILE5V+SkdNRuiP/H2j8UzfkKJOfPfXqIWLYbz1RIbiOHchFYcsMGZ4nAgXkG0VhO6l28vWaYz2FfytHQ29AEtylyIvebmpfICG609U4=
+Received: from MW2PR16CA0006.namprd16.prod.outlook.com (2603:10b6:907::19) by
+ BN8PR12MB3233.namprd12.prod.outlook.com (2603:10b6:408:9f::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4373.18; Mon, 2 Aug 2021 12:58:56 +0000
+Received: from CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:907:0:cafe::f6) by MW2PR16CA0006.outlook.office365.com
+ (2603:10b6:907::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend
- Transport; Mon, 2 Aug 2021 12:58:51 +0000
+ Transport; Mon, 2 Aug 2021 12:58:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; linux.intel.com; dkim=none (message not signed)
  header.d=none;linux.intel.com; dmarc=pass action=none header.from=amd.com;
@@ -44,22 +43,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT052.mail.protection.outlook.com (10.13.174.225) with Microsoft SMTP
+ CO1NAM11FT044.mail.protection.outlook.com (10.13.175.188) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4373.18 via Frontend Transport; Mon, 2 Aug 2021 12:58:50 +0000
+ 15.20.4373.18 via Frontend Transport; Mon, 2 Aug 2021 12:58:56 +0000
 Received: from sanjuamdntb2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.12; Mon, 2 Aug
- 2021 07:58:47 -0500
+ 2021 07:58:52 -0500
 From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
 To:     <mika.westerberg@linux.intel.com>, <andreas.noever@gmail.com>,
         <michael.jamet@intel.com>, <bhelgaas@google.com>,
         <YehezkelShB@gmail.com>
 CC:     <Basavaraj.Natikar@amd.com>, <linux-usb@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH 3/4] thunderbolt: Fix adapter init handling during switch add
-Date:   Mon, 2 Aug 2021 07:58:19 -0500
-Message-ID: <1627909100-83338-4-git-send-email-Sanju.Mehta@amd.com>
+Subject: [PATCH 4/4] thunderbolt: Fix port linking by checking all adapters
+Date:   Mon, 2 Aug 2021 07:58:20 -0500
+Message-ID: <1627909100-83338-5-git-send-email-Sanju.Mehta@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1627909100-83338-1-git-send-email-Sanju.Mehta@amd.com>
 References: <1627909100-83338-1-git-send-email-Sanju.Mehta@amd.com>
@@ -71,60 +70,60 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c6174010-dde4-452d-b799-08d955b54691
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1384:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB138404739E144525EFD3B8A8E5EF9@CY4PR12MB1384.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Office365-Filtering-Correlation-Id: fc6ff003-13ac-44cc-1abc-08d955b549bd
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3233:
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3233927746DA855616ECB85DE5EF9@BN8PR12MB3233.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AATgcFIxFh+V4sQD6hXPAUxeYstwrYm5/GuJFeyDXqgJ5L+ssBxNSk1s8Pt2dr2vPfQNSaSjruNmQNkuB5hxaWQQrTVqGDlrZliAPdsyBQaPo2C5AgJoAgU6IvkiaV6dHz6F87Xv8T/1fcaYw41QSXTAw3O9OElTd9Bd4zC4xmKNJtkTB7FEcB6c917ydfzS6IP+Sl4IMecSynz5yRpAA7uH7IX3Xr9UT8I1zFeCcdEk2H84ebHF1qgZOrfORaXH8tTWMyzcxq0heGffH9LxhNmO2D//JliS8TdorlXiMDg9f2hiX6aOn4ZwagwznrFAD5wZchJHadnwCHLdjyty8jvpgOj5qqK9ZyxjOFIdiCWn7gU2aUxQkP3RWpvh3gX5FAK+X4kBrJnWgLQrkkoXnKEgJQOhmd69hMI9E5iEVF3IV7jVRzd1F/uqHzFD3WFcYdRv2FTDPMpge4eIy/Hi6PQNDhGD8ywxRQSl9heZ4OQ5Y/byKaC+O3pGtI6bOBsrxyRjgIlnJpV4seNXNMPjtBoHYJSX3blBkTJqw2ks7Mqy6rQz7gDSUG2il/HlGbht9juYvDqJn89Fk80dhwGdkdOXBTI1qK/N6Foiy+IpILPKO5iHmuUOlWS3LDPdedVa5uOhZa4fVoLhrNpg8TzN0FFHXSLnTXFPZ8QfB5vuckzHr2p/h//CmouqBCnhfKFaMOR1FK2xsbKfzZr7MRJMzcZ82PcKZxheHZ2vouDQQjk=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(8676002)(86362001)(83380400001)(2906002)(66574015)(356005)(186003)(16526019)(8936002)(5660300002)(36756003)(336012)(6666004)(26005)(47076005)(82310400003)(4326008)(2616005)(316002)(110136005)(508600001)(70586007)(70206006)(54906003)(81166007)(426003)(7696005)(4744005)(36860700001)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: uDrHXj8qNfK+Y3c6YXDmUeaBKGGV1fR8jTaThc8f/ftUAucughJQdErsCpz/X6F+ensYnSXz3Rmujf3oqlzzQIUDsE5HxNJ6xxewUHS+YBjH0q97qqp1+O0XBgA3y+q/LPvWklSTRgaVKgbHKmYMgWtLIMhtpQbJP7hxmXzvNenkMZZBkeSt+jsIHWSCIRFaCo2lH4uQdf3EcIau6qAX/DmTu0uCNmTjYkD3wF1SfXnSLWDEfvWzYj6RoUMxYBBJbpbZmBm63SR5T1HCni85zR9mdG+O3izMnUGB08Fmauz5zTY+E+XFMXSw7k5UN4ndrJ3rxX+q1qxCJeuHwyKMx/6g2gSfESx93FpWTFGUQb4Ws8c7SJNn3JnXa+DveOACufEMje0MvjfhsD5LRrrjVBd4ccaXg3ZVeix2veP/nTXz/FzUAI/FlPU6oqWJ/SDX5Y6d8Rh5T8G/+/XLqHchomO+411JKcl6F4sF2/pN7KN3lt9T8VFucr4cFfvhESTxp22NKC+/nzcnHR7+bD7F17YHoFryGYxGtGuVtOlWiPFi7vj0/avGxSXYtswaCdYOgO4Fj7UXJ87aoBKl0I+i35hEoaoCDkZItJfzgseJVSIf3J2Aymo9FAq6IMFEEgUnMmcYOypQi632SdUQbRArK+D9J/xp7MxUdqtlVc5foQ3AVNkzNBznfsLkIYtSI2QQ5ZDgOTwEWy1aBPbJTh6CHvTcr4bvfyWw6XvfGIxMtGQ=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(376002)(36840700001)(46966006)(47076005)(82740400003)(110136005)(7696005)(83380400001)(478600001)(2906002)(82310400003)(54906003)(5660300002)(70206006)(4326008)(70586007)(8676002)(8936002)(426003)(26005)(186003)(16526019)(356005)(336012)(36860700001)(36756003)(2616005)(66574015)(81166007)(316002)(86362001)(6666004)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2021 12:58:50.9463
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2021 12:58:56.2568
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6174010-dde4-452d-b799-08d955b54691
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc6ff003-13ac-44cc-1abc-08d955b549bd
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT052.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1384
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3233
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-Adapter0 (Port0) is the control adapter on the AMD USB4 host router.
-As per USB4 spec in "Section 1.8", Control Adapters do not
-have an Adapter Configuration Space".
+In tb_switch_default_link_ports(), while linking of ports,
+only odd-numbered ports (1,3,5..) are considered and even-numbered
+ports are not considered.
 
-The read requests on Adapter0 time's out and driver initialization fails.
+AMD host router has lane adapters at 2 & 3 and link ports at
+adapter-2 is not considered due to which lane bonding gets disabled.
 
-Hence Disabling the Adapter in case of read-request timeout and continuing
-the driver init.
+Hence added a fix such that all ports are considered during
+linking of ports.
 
+Fixes: 0d46c08d1ed4 ("thunderbolt: Add default linking between lane adapters if not provided by DROM")
 Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 ---
- drivers/thunderbolt/switch.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/thunderbolt/switch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 83b1ef3..effbfe4 100644
+index effbfe4..8b2fe67 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -2747,8 +2747,9 @@ int tb_switch_add(struct tb_switch *sw)
- 			}
- 			ret = tb_init_port(&sw->ports[i]);
- 			if (ret) {
-+				sw->ports[i].disabled = true;
- 				dev_err(&sw->dev, "failed to initialize port %d\n", i);
--				return ret;
-+				continue;
- 			}
- 		}
+@@ -2456,7 +2456,7 @@ static void tb_switch_default_link_ports(struct tb_switch *sw)
+ {
+ 	int i;
+ 
+-	for (i = 1; i <= sw->config.max_port_number; i += 2) {
++	for (i = 1; i <= sw->config.max_port_number; i++) {
+ 		struct tb_port *port = &sw->ports[i];
+ 		struct tb_port *subordinate;
  
 -- 
 2.7.4
