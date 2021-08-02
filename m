@@ -2,42 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB9133DDEF2
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 20:09:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6403F3DDEFA
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Aug 2021 20:15:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbhHBSKA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Aug 2021 14:10:00 -0400
-Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:32106
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        id S229537AbhHBSPe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Aug 2021 14:15:34 -0400
+Received: from mail-mw2nam12on2085.outbound.protection.outlook.com ([40.107.244.85]:38504
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229537AbhHBSJ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Aug 2021 14:09:59 -0400
+        id S229551AbhHBSPd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Aug 2021 14:15:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ixkaCZCVDvYvl21RSMaT55/LDNq2y2ISfEtOml8rcLc5VNOv9nl6KNFEO3MAeNpVbG4EMezb5CLJ+B21qQ5hIYYV4ehE9nIaTtZK59/S4jNhjGtOIV5muD+Y3TCga5TdKvNnB0OI8vaTLN2WhKMUdTD7h1qxMlDCQJ3v+KyZTp107kkevbi0WyeHT++B4VjfspEv5hdi7LBMIT8qtC2fXL5Ivyu4Z0HEevmZYk24/4qhlQxJpQCgGFEY8cfPhLfPl2ggb5U8po6iylwS3BEKGsqDkcT9oeijo2Uai+Pu1jQo+FuwB0uWg3oMrGYKy49oxUTF0ybe6zN1Fhf4EPxC1w==
+ b=BscDPr1FehXy5zjukLtGi482657HplAx2cdonmB/cSxt2ViAtkefXVqN5aOOhtwh5mdHIYjmzR0f4pLSgNMwY0wppGIbKFbn+02DtxReJniUGjRajx9ICp7qAyJbeaZOd4mbZAZ7SxIJzsc4+BN35xRWlS2GJfK88e42OQa5w2Toyt0tU/Q9rmySCTxOqu7lBdZj/+T2Hosr4mZWprhXYKmvU5YQoT6vq/dP7ygEVZy0VVNcA9AfMh7cFOE3cEsOAEHYpJMlDKzlG+tv8cTwmbPKb71+y9j1IJ8d4wsA0SQJITK5sjSfnohaOAOnV5eY1kuhrfhirHzRANbouSqNUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0zpqdX8mJKf5+uGF+GSU4klmKWvDrXLbPpNzizdY2Fs=;
- b=Nv2++ZBvYg+AShmvDNvZVlndzghmEvxcT+5xu3RZspB62nSRVq0h+h+MUAOb1owVXKaj6ltpyV4Dz1xwj45r2CJqWjgtKEXSw67MD5HqlrdC/AseUAxf/XQVH6kcRC9IpC5NKCR5TSkdG6pU9uDT8Wlcl2SauNpNen55xJwBsrB9u4X9BjivY/c0O6wwUymsses1pC/r9FKH1WoRzL7wKlBlvPf2C9bb0kmmB2XZzWNntdX6/Z8Erw37nSAnmKkUXi5us5ka20vp59M81AeBMDY26fFRHb+/kU6Pf1sLPsQY/Klv+G8be5hcvgCi5UXa6c9VrlmjQc/5UnMpP4z4bg==
+ bh=yX0q3PD0bmQp7CVZb9QiClvA7r54RKw7aiEXH5ichFE=;
+ b=K9wHhOLLw653jS7JFGwQYK+MO+ZVzlF0ahVdErbU2/Thn8iUh5z8ikzvatv7248h99ODr1T4+f4pzfAQ3NBMZ/8QjQwgAcTazLtsmMwRFx7z7LvmbJdRrCueUSf2sx98SopASJywMpxS2TcYGJGhbM2jQRP1sLOtVgBlKRPAAkUdEDqqFyoKgpNvFFB7zKbJ3u+U9ClDbE304UMKDBdRHcONu3/8VnjBTvY5W5jI1UBYC6W5fR4DiiLEFsFdk0KF6KYRo89fThP2mThN/cq3gevzEIgQpPBW9RNaax5d/uaMKSWINeGqc+THiveK1k9sEignQ8LADhUoXqRTWTYAjw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0zpqdX8mJKf5+uGF+GSU4klmKWvDrXLbPpNzizdY2Fs=;
- b=Oa8pmuzTGAgf+3FGNnqsaQbInm/BYKdyeIaz/uJs95OmsC0wNydTBu4WNGEsO/AgoObB1hvSnE18j+rzE94VDdGhwMVZLQGCPxjSLymPouGxZ7P8Xg71rs8nRbdUiP92ITg27Ui1/i4Yq/N4kkLjP/JyjBoVzqmAmxPzN0cpAJk=
+ bh=yX0q3PD0bmQp7CVZb9QiClvA7r54RKw7aiEXH5ichFE=;
+ b=cOoG3OE7Mz5Dh1cK3pIFxwz1pG6bepYKtTiQj1M//jIXPbG5jCh26M/v4OgsTcyYCaERjQNguxz//U0H33HkX9mlvpxi8UIYs7sSQh8kRquY5PkkmJCZxe9hysiSNMEPLCDb2u2SBTTFAkm7y9i1QDgxDYVGXO2Zs7RrbmKUX+o=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB5103.namprd12.prod.outlook.com (2603:10b6:5:392::13)
- by DM4PR12MB5374.namprd12.prod.outlook.com (2603:10b6:5:39a::11) with
+ by DM6PR12MB5535.namprd12.prod.outlook.com (2603:10b6:5:20a::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.21; Mon, 2 Aug
- 2021 18:09:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18; Mon, 2 Aug
+ 2021 18:15:22 +0000
 Received: from DM4PR12MB5103.namprd12.prod.outlook.com
  ([fe80::18ea:5df5:f06e:f822]) by DM4PR12MB5103.namprd12.prod.outlook.com
  ([fe80::18ea:5df5:f06e:f822%3]) with mapi id 15.20.4373.026; Mon, 2 Aug 2021
- 18:09:47 +0000
-Subject: Re: [PATCH 1/4] PCI: Add AMD USB4 host router device IDs
+ 18:15:22 +0000
+Subject: Re: [PATCH 2/4] thunderbolt: Handle INTR when Disable ISR auto clear
+ bit set
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sanjay R Mehta <Sanju.Mehta@amd.com>
 Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
@@ -45,133 +46,180 @@ Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
         Basavaraj.Natikar@amd.com, linux-usb@vger.kernel.org,
         linux-pci@vger.kernel.org
 References: <1627909100-83338-1-git-send-email-Sanju.Mehta@amd.com>
- <1627909100-83338-2-git-send-email-Sanju.Mehta@amd.com>
- <YQgLX2CukV8oc8eW@lahna>
+ <1627909100-83338-3-git-send-email-Sanju.Mehta@amd.com>
+ <YQgNx/YiPVFEZrDb@lahna>
 From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <8578079b-76f1-b596-db3c-e02618724ba7@amd.com>
-Date:   Mon, 2 Aug 2021 23:39:32 +0530
+Message-ID: <ffe7a358-a3a8-5b6b-55da-f088316deff1@amd.com>
+Date:   Mon, 2 Aug 2021 23:45:07 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
-In-Reply-To: <YQgLX2CukV8oc8eW@lahna>
+In-Reply-To: <YQgNx/YiPVFEZrDb@lahna>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0162.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::32) To DM4PR12MB5103.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN1PR0101CA0053.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:d::15) To DM4PR12MB5103.namprd12.prod.outlook.com
  (2603:10b6:5:392::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.32.35] (165.204.159.242) by BM1PR01CA0162.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:68::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend Transport; Mon, 2 Aug 2021 18:09:42 +0000
+Received: from [172.31.32.35] (165.204.159.242) by PN1PR0101CA0053.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend Transport; Mon, 2 Aug 2021 18:15:17 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b19892a1-edeb-4790-3414-08d955e0b696
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5374:
+X-MS-Office365-Filtering-Correlation-Id: 0fd288f3-038f-4d48-6986-08d955e17e1b
+X-MS-TrafficTypeDiagnostic: DM6PR12MB5535:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5374A3A70FDF9D7CC1967AC9E5EF9@DM4PR12MB5374.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB55357FFBB42A0380C667CE24E5EF9@DM6PR12MB5535.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kcdE93ZMr+NHqaZSiMlnnvqpw8mILSAAD1L4L2HLo+t02OdZY2SQzJ/9yK6yDFvo0bEWGQXqyUIsMot+paqD8tLXarIU78NpXi6bjcpG6cGiXlgVgOFHVriEWZmbspfDx4F4ZA02aqr9X4Elvn2oI631wUQ7Zy01bBOnJP9KCVSusHssBCOfk6wEfcXHWvQsgifBBH0dtLdzwd8vwUgk1wgYCdOfnlcamq6OSNwbXbqnpoaRBKA+kUVOiRCkwW4L5Rhkz69Q57JE/1LM+PeQYTpQgVHewwJ5/5YYFawAcPYx2X37kmR6wKlrXc/YIk27ziaxlCrsUIg3kPo7xIyIpMH10mkGXLlskuRTyQKvTwmwQ8mQR+zdx5Iu4tpIdKPvrg7pM67bDITcRSVyalWHxk7hyYolDIzTOVLuENk0OpOTCOewVOaHTO/d98S9/RQ+JfLUiHIjkdzrSIoqULu3fZyYBDyEEEAuRTqUwE7vg3Gi9K5KKx2oiNwpnqoqd883qP1fuB1cpVozaBbmpVZ0o6yDsieC/B063OHqgoD8tu8zRDxjAT+lSXKSkugYl8l174rewZecoUH98iZ+a33QGzbVNcn/Eg2sxmSYRc6RsADDOf6rEHVHWqYYYDE8dR9kALai/Eua7/Z42uwom9/Q8j1Ew9jSQ6qPeAWoqA+0f03Sp86Y0zfwKUTN/Bvo9gGodiXdYZ66aFDgymkxdcEnJ3H+UTMvFkwrdFHGXcB0tDl2SZyjWXyg7KWa6e2TmCDQ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5103.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(39860400002)(136003)(346002)(376002)(6666004)(8676002)(316002)(66556008)(66476007)(66574015)(478600001)(36756003)(16576012)(31696002)(66946007)(110136005)(956004)(6636002)(2616005)(2906002)(38100700002)(186003)(5660300002)(31686004)(4326008)(53546011)(8936002)(26005)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: BDicZrs8hZ2ELvLlURnrucUHw67vTRFNcDQouCanBWPCLGLPfjMklRr9ZZtFo7umKTLL8KhlYb4Ivie4vZY5/nyOvgiqRR0X8QE5izH8+Hfr2eR9JP3Wkd9Qkou0ELujvTBLGk/cMWN6JcIgapoL1B2xf9D+W8LEMQ94lnJpVm+8gfQt7mKLRZTaKue3SsEqwcpnvk0LCfYoA7d1XVDuuWeBJF590C9gKTvNNhyXB4N4vlgoZSAIUDOwA0DTqIdVXlApvTFZLfnW2TRFhY/suwnmUNMAV6WJYRUyWk7NwnbY/cpiqUoNAvngsXfcnIbp7vs44qMnHUga6Ml5erpDT8YhWZJGMvqRjCoWoLL+grQm+VXOSSiinOLiRivwbkX3Yzk03SP2zgnoFoS1ZvrztS3zjy79Ssl7JnIvpaFuFZcF6h+eN7Gk3x8Kl+NdOykmlD+XcgR6U3n4upH+wdLdpySOxAzneAZ3SuGMQSHputfLbEsWdhCKsNkA43syoZtdsF44jav9Agmoa5ox2hniZp4LCKOljNw6MauDVispX/2RRfZpjd0QLu87vsCusJUa7FF+L2KQ2ui2a5e2F0GJvSnWyKgxNephG5b6g6OeUR1l9hXCULkaqPkHM42l8AAUp+WDH2x1vWXQRYEnnOrDKeRmVArz1H0/J2tHQEOnQDk3pijcig4pIXnCU0Ro9UBhUw7opwimRRzxVlVJ+H+H5/5QWSYClnYtfZl0KVzDEBc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5103.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(36756003)(26005)(186003)(53546011)(2616005)(956004)(316002)(6666004)(38100700002)(16576012)(31696002)(110136005)(4326008)(2906002)(508600001)(6486002)(83380400001)(66946007)(31686004)(8676002)(8936002)(5660300002)(66476007)(6636002)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NjhoM2JyV0pxcTEyTUpHdGd6ZGRibzk4ZWlFMFRtYVBYa2RxRTRFZ20zWG5E?=
- =?utf-8?B?UWZ3M25kenZwejQydW9FeUZZRm56UkkzaURvaVN5RXNFSlFCME12QnhsZEZ3?=
- =?utf-8?B?eUZCWlJhSzNETmkvVUZ2RmhSSTVUbi9UNkJCN2VHZDhrODB2ZDVuZmcza2NQ?=
- =?utf-8?B?QlMyM3lhSmxsM2cxQmk2QlFpNCt1TVdWRytGUzV1bG9LZEV3WU9DRkgxYTdC?=
- =?utf-8?B?U1N4aE1yc0Yrb041ZWxjSUloZVliaDhuOWRoM2NHOUVwME02azlacDhISUhW?=
- =?utf-8?B?dEpTbjc3SXJTMGVTWk1GRlYxSkxrTkp1dW5xUDFqWmFpUzUrbGQ3alZiNjlW?=
- =?utf-8?B?Tmswb1d6bmJkUC9sTUlqb3RzcTBRWUpPTHRBeVUxYUJlZGRrczdsajdYN0Z1?=
- =?utf-8?B?OVZZMmhzUzEzYUZBbFBZV2p1MS9iMmxZSktBWmQyeStzcUJIZ2xFN3AzNUNq?=
- =?utf-8?B?OHNIeGh6YUZ2K0ZxRUQ0U3ljUHkrUjR6QTZsb3hDQzdXY3NXeXkra1NaaE1r?=
- =?utf-8?B?WEJaMmxpR3lXRmQ5RENwWElkamJqaFdnUWIvNW9PTjFhOUVJdmNrUHFDSlhv?=
- =?utf-8?B?NW9wRHE2d2x2UTgwTUJqNG5YSWc2VGRhTHd5RU5vZ2RHUStxSldoNXFMNDRh?=
- =?utf-8?B?cFRzMkJ4MUdkeUFYMlVId280NStJNHVySTIxanRML1E0Z3F6NnBkU0UrdWhZ?=
- =?utf-8?B?c2hic0NldFNnMzF4SVh6SmhTMUQ4cTdTRUptbzVjUUNZL29SbUlxSGR0di9n?=
- =?utf-8?B?Q1FMVG1TbWY0cXNPMVNwNXJZZWxuU0laVHFMWXZGWHRGbFJldFVZcXE2NC8r?=
- =?utf-8?B?bkVFaU9aNXhncUlyR2wybnJmcitKOHp3MUdlZXJNQWZhZjRBcU1ybkxiTS85?=
- =?utf-8?B?bVVTYzJScDRnczVJZzJlQnZlZklmbis0N29iZ0VCbEhWU2ZlREI4Q1B2MUdu?=
- =?utf-8?B?UU5Yc2NVNzVLNkhlNjZrSTRZcGh3VWNRbFg3SDVtUFBUVDEvN1QwdkxOemNK?=
- =?utf-8?B?Rk93eEl0VURJdk5GRmNhVlYxanF0VHlwc1hyWlRhUDN3K1BETElsaFFmL0sv?=
- =?utf-8?B?R0RFRTZPclRYRUhOQmZOaGQvcTltTHNSV08yMHFNZjdsSUpxcDU0eFIyRGha?=
- =?utf-8?B?Y3hWMC9YOFNhcXJyM0hHZFlETWhBL2pFSmZTbUR6WlBDeFVBNG10Z3JnSXM1?=
- =?utf-8?B?dTNmUlBMa1ljemxLOE5tdW5JWUdWWU5FVFBlQXg2T0tFMVZtQWM0ZFBQeXM5?=
- =?utf-8?B?M1M0YTgyRTJKZ2ovVU41MjIwa0ZVQlJINVNNQ0pUMU93dkV5bnI3Q0JxRGli?=
- =?utf-8?B?Z1JQSnBUaHB3WE5xUmkzZTNiTWpEWmZLdjdrQ1dEMWc5eW5TYUpkWkFXSm1B?=
- =?utf-8?B?bEJZTmxGR1ZCYVJUUjB4MTZRL2s4UDA2ckJyWFhieWtTTmVjLzR4UnAwbFhX?=
- =?utf-8?B?aW50RzhFcDdtQmloV29rczg5YXhIdmpXMldUa3BjRXpxMEdGZ2g4SjBpN1pz?=
- =?utf-8?B?SzJvMENqSW1EWEp4aGlPRFpNeGFYd0tNRDdqVy9UNG51SXpWYXlpeEVUUXhT?=
- =?utf-8?B?QkptTDZzNmZwMnZxS1hURUhoZ1dYT3FrNGZ3dVVEMHNxLzk3MFl1eDd6alFp?=
- =?utf-8?B?QWc2bkJEUzk3bzdpc3JJMjltVGJQR1djV1M3Ulh1QTg3bEZ6a1R2ZGJiY3Vz?=
- =?utf-8?B?NTJsbVRFTEFqR0E3aE1Dd0cvNHlndlBXU05YUmNLWEZPMU5lVDQxa2JtVDF3?=
- =?utf-8?Q?m0ZDifFmp9atv+XMNvGd7492hW2yjy5UVzcWkN9?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MXJrZkU5VzRvSUE5MzNUS2hLaURodG9reUVzV2JmS09Ka3pHRHZuWXZmRElY?=
+ =?utf-8?B?WkQxa3ZWV1dzNHpEU1VkYmpTQWh5YVErcnRGWlRSU0RmN3JoN2t5OFFGemxq?=
+ =?utf-8?B?Q05jM292c2lGck5PU2ZWM0hvUXk4MmlxTVBjSTNPemMwYU4xVllPbHA1alNY?=
+ =?utf-8?B?RXdCVC8yTzVkTkdRRVBOUk9mYlU2ZmgycDdUN0ZhRFZQQ1F3bEhTYXF2aC82?=
+ =?utf-8?B?bmVZd3g3aldOd3VMS1lyT0Z6b2ZqV2QzalJyajNqYjQxcGRXWTZjRjhuRXBt?=
+ =?utf-8?B?T1VKNk5iK0JrSnhZVkRLRzBMbWpVL3czZmxHTWd6Y2l4alNVTkcrQUdrR2RU?=
+ =?utf-8?B?YmVVVnlJMXJQazA1V3IwRlk4MHRzTHZhaE5BNXhpTFhPVUlvZ3krL05tQzBB?=
+ =?utf-8?B?eVBSUy9rdkRESVNtTlY4MkExT0g1a0hVSDJ2aXltRUJQMnNPY1JGNU1NU3Uv?=
+ =?utf-8?B?ZVFRWkl4aEtsWGhRR1JNa056L0M2WHVDVEEwZmRyYWhsdmhMaS95R3NiRWVk?=
+ =?utf-8?B?WmdsSWw1ejcrTTdkOFpEY0VaUkxEcGFKNC9XVVM3RlRsWHkzMHRyZnFTWjFG?=
+ =?utf-8?B?SFZxZ09veGRRdkw1dnB0TURDUGJPcUlTZzV5U1gzWkNLZGtFWEMvdWxEY2Q5?=
+ =?utf-8?B?ZXVsOUxyRGU2bDhJWndST2xsbkRiTnNEVHcvSkdxZGY4VFl5NVowa3ZES09w?=
+ =?utf-8?B?UUZua1QwYVpkTjZ1aWJBaWpsTElmTWZMalF4eHk3NUdkeXN0S3NZS1krUXM3?=
+ =?utf-8?B?MnZGRlZiYTJLczRoUU1tSjZUbG11VzV4ektERCtZYUNVVEZTSUFIWDBCN2NP?=
+ =?utf-8?B?MCtIWDlMRFZPbnhiVXJ3RVZSN0JQSVNkUy9jV2trM2d0bDVyM2NWR09GS3Bm?=
+ =?utf-8?B?cGNuSVhNL3l3OTkrWnp5Snp3azROUTI2bmh3WEh1RkpURStsN2Qzam11eEtU?=
+ =?utf-8?B?eVpNNHBvQXBnR2ppMDhoVUxNWk8zUHFXOWprR1cwMzE5ZG1vaWdHRDRXcXVS?=
+ =?utf-8?B?MjZ2MW1RbCtLcjhldk1CL21oWkxzcGlSY1VMVTFCTmk3RENxNnMyU2NoaXJZ?=
+ =?utf-8?B?V0gzK0J0U2x5ZGVySnk3Y2RaN1Zmb2pSdS90R2pJcGhVTFEyM1NjMUtFZkZU?=
+ =?utf-8?B?aUdmZ1MwYWJhUTRKUzZnaWQxOEdxSDJuYy9qWHVoMUZPQzFQSHRFdGpod3dZ?=
+ =?utf-8?B?bmdwZXlyNjdxRjAvYlBPbklPMmdtbS9ub2FHYU95a0t5R3hvODFsbDFoSmtB?=
+ =?utf-8?B?bmUzcE9VQ1A4NGNhalBxZm42U1NINDcxckI0QzBVM2gyM3Rxd252bFluV2g5?=
+ =?utf-8?B?TUxkM3hQZVE2c1A1M3ZsTHVKdWVYalQ4Q3VVY1Mwc3RINUticUVhNmRmZXF6?=
+ =?utf-8?B?RC9RNDFwbWpVOHVSZXQvM0VkSkhzeloyTTZtemFkM3lRMWQwTmdkZEFxNXcw?=
+ =?utf-8?B?MUZQYUh5NXdsdkdkMlNMSkh3bTFQVHpTTVp5RDFuYVVmSzZoMmRPY1JGako2?=
+ =?utf-8?B?MU1CcTRBTFpBM3RSdGFuWGV4VFQvZ1gxdnNVaFdGZU5DNVk0WUFDTS84OFhM?=
+ =?utf-8?B?VDYyVmhxOXFXcXRlVHZFU0RlbkhUVmlGdG5lNWZmaElHZDRqbVpIVEUvMDFU?=
+ =?utf-8?B?SUJnbjdrWTdkUC9MeHloMi8xYmVpejhaUCtjTTh5d3A2cGRKZCtyRXBtcXlo?=
+ =?utf-8?B?bWF5eTVQdFU5bkhVZVdwZEppNXNmQ1pwZ3h2bHFmSkV1TncrTTZOeHNUL3NK?=
+ =?utf-8?Q?voPpC2275rAXpUN7phxcnTdiRnZ8UMoOJkm2UD7?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b19892a1-edeb-4790-3414-08d955e0b696
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fd288f3-038f-4d48-6986-08d955e17e1b
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5103.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2021 18:09:47.5591
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2021 18:15:22.2688
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mnSjzA0pUFKzT94ihoheEkR7w/q1z8LqIOMViayQPWLrTCOYRJACk/3cSep8ejbmSGCGdSuQOeQWwNurTY55gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5374
+X-MS-Exchange-CrossTenant-UserPrincipalName: HLeJ9X1ThoqlzzsjoDK4NdfL1Q571/dhD+SrpWutbSpS3MJFsQWICadIdIE52o6dRnn1zGlhc0+2x7c6m+Oe/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB5535
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 8/2/2021 8:42 PM, Mika Westerberg wrote:
+On 8/2/2021 8:52 PM, Mika Westerberg wrote:
 > [CAUTION: External Email]
 > 
-> On Mon, Aug 02, 2021 at 07:58:17AM -0500, Sanjay R Mehta wrote:
+> Hi,
+> 
+> On Mon, Aug 02, 2021 at 07:58:18AM -0500, Sanjay R Mehta wrote:
 >> From: Sanjay R Mehta <sanju.mehta@amd.com>
 >>
->> This patch enables support for AMD USB4 host router.
+>> when the "Disable ISR Auto-Clear" bit is set, the Tx/Rx ring
+>> interrupt status is not cleared. Hence handling it by setting
+>> the "Interrupt status clear" register to clear the
+>> corresponding Tx/Rx ring interrupt.
+> 
+> I think REG_DMA_MISC_INT_AUTO_CLEAR which is bit 2 in that register is
+> actually Intel specific and not the same as in the USB4 spec bit 17. I
+> guess the AMD controller works fine as is if this bit (2) is not set? If
+> that's the case we can simply limit this behavior for Intel controllers.
+> 
+
+Yes, you are right Mika. With bit 17 it's working for us and we didn't
+wanted to break Intel's functionality , hence we added this change which
+works for both :).
+
+Yes, as you suggested, we can limit this to Intel controllers.
+
+Will send the changes accordingly.
+
+Thanks,
+Sanjay
+
 >>
 >> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 >> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 >> ---
->>  drivers/thunderbolt/nhi.c | 4 ++++
->>  include/linux/pci_ids.h   | 2 ++
->>  2 files changed, 6 insertions(+)
+>>  drivers/thunderbolt/nhi.c   | 26 +++++++++++++++++++++++++-
+>>  include/linux/thunderbolt.h |  1 +
+>>  2 files changed, 26 insertions(+), 1 deletion(-)
 >>
 >> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
->> index fa44332..d7d9c4b 100644
+>> index d7d9c4b..63bbabf 100644
 >> --- a/drivers/thunderbolt/nhi.c
 >> +++ b/drivers/thunderbolt/nhi.c
->> @@ -1338,6 +1338,10 @@ static struct pci_device_id nhi_ids[] = {
->>       { PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ADL_NHI1),
->>         .driver_data = (kernel_ulong_t)&icl_nhi_ops },
+>> @@ -74,7 +74,11 @@ static void ring_interrupt_active(struct tb_ring *ring, bool active)
+>>               if (!(misc & REG_DMA_MISC_INT_AUTO_CLEAR)) {
+>>                       misc |= REG_DMA_MISC_INT_AUTO_CLEAR;
+>>                       iowrite32(misc, ring->nhi->iobase + REG_DMA_MISC);
+>> -             }
+>> +                     misc = ioread32(ring->nhi->iobase + REG_DMA_MISC);
+>> +                     if (misc & REG_DMA_MISC_INT_AUTO_CLEAR)
+>> +                             ring->nhi->is_intr_autoclr = true;
+>> +             } else
+>> +                     ring->nhi->is_intr_autoclr = true;
 >>
->> +     /* AMD USB4 host */
->> +     { PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_USB4_HIA0) },
->> +     { PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_USB4_HIA1) },
+>>               ivr_base = ring->nhi->iobase + REG_INT_VEC_ALLOC_BASE;
+>>               step = index / REG_INT_VEC_ALLOC_REGS * REG_INT_VEC_ALLOC_BITS;
+>> @@ -377,11 +381,31 @@ void tb_ring_poll_complete(struct tb_ring *ring)
+>>  }
+>>  EXPORT_SYMBOL_GPL(tb_ring_poll_complete);
+>>
+>> +static void check_and_clear_intr_status(struct tb_ring *ring, int int_pos)
+>> +{
+>> +     u32 value;
 >> +
->>       /* Any USB4 compliant host */
->>       { PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_USB_USB4, ~0) },
+>> +     if (!ring->nhi->is_intr_autoclr) {
+>> +             value = ioread32(ring->nhi->iobase
+>> +                                      + REG_RING_NOTIFY_BASE
+>> +                                      + 4 * (int_pos / 32));
+>> +             iowrite32(value, ring->nhi->iobase
+>> +                       + (REG_RING_NOTIFY_BASE + 8)
+>> +                       + 4 * (int_pos / 32));
+>> +     }
+>> +}
+>> +
+>>  static irqreturn_t ring_msix(int irq, void *data)
+>>  {
+>>       struct tb_ring *ring = data;
 >>
->> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->> index 4bac183..6d50019 100644
->> --- a/include/linux/pci_ids.h
->> +++ b/include/linux/pci_ids.h
->> @@ -604,6 +604,8 @@
->>  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS              0x780b
->>  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE                0x780c
->>  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
->> +#define PCI_DEVICE_ID_AMD_USB4_HIA0  0x162e
->> +#define PCI_DEVICE_ID_AMD_USB4_HIA1  0x162f
-> 
-> No need to add them here (and you actually should not since these IDs
-> are not shared between multiple drivers, see the top level comment in
-> this header).
-> 
-> I suggest adding these to drivers/thunderbolt/nhi.h instead.
-> 
-Thanks Mika. Agree and will add it in drivers/thunderbolt/nhi.h .
-
->>
->>  #define PCI_VENDOR_ID_TRIDENT                0x1023
->>  #define PCI_DEVICE_ID_TRIDENT_4DWAVE_DX      0x2000
+>>       spin_lock(&ring->nhi->lock);
+>> +
+>> +     if (ring->is_tx)
+>> +             check_and_clear_intr_status(ring, 0);
+>> +     else
+>> +             check_and_clear_intr_status(ring, ring->nhi->hop_count);
+>> +
+>>       spin_lock(&ring->lock);
+>>       __ring_interrupt(ring);
+>>       spin_unlock(&ring->lock);
+>> diff --git a/include/linux/thunderbolt.h b/include/linux/thunderbolt.h
+>> index e7c96c3..bbe7c7e 100644
+>> --- a/include/linux/thunderbolt.h
+>> +++ b/include/linux/thunderbolt.h
+>> @@ -478,6 +478,7 @@ struct tb_nhi {
+>>       struct tb_ring **rx_rings;
+>>       struct ida msix_ida;
+>>       bool going_away;
+>> +     bool is_intr_autoclr;
+>>       struct work_struct interrupt_work;
+>>       u32 hop_count;
+>>  };
 >> --
 >> 2.7.4
