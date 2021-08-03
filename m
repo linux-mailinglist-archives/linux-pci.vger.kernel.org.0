@@ -2,93 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33E4F3DF721
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 23:56:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27EDA3DF724
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 23:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230443AbhHCV4e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 17:56:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230124AbhHCV4e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Aug 2021 17:56:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9CC8860724;
-        Tue,  3 Aug 2021 21:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628027782;
-        bh=CtaBctNlap/TA51MNQzdE8Z4XTDacO9V6XB4566z4OY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n9acgLJETvuySpQhKuaTGNHHDO022gVq6tFNDIgn/na1HiYPq6L21pOnReGAmMSVO
-         vQhtRlvDOQA1DLxbDVpZRApimRHDcVhTp95NaW/42nxBoQLucTiVkejeKNP/X6Cswv
-         uwsuneTKzo/LrnNWGjOhQ3qILvhJEXuCrB8pabi5wvaWSDqNMF/KnDAVSNWWtgZB5z
-         aXfBQUoP6+rjXWSOwbxoT9cwRQyccd00dkTTYqarsJtlY1GMY/HnXwiID+C8+CBarV
-         GlnW9EHhn9cU6CsADyyLVgfO41M8fn8e65MMllL/BFDu+aQmXezq07OaDNaYb7d5hm
-         jhRNju0zNN3uA==
-Date:   Tue, 3 Aug 2021 16:56:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] PCI: Always initialize dev in pciconfig_read
-Message-ID: <20210803215621.GA1576408@bjorn-Precision-5520>
+        id S231329AbhHCV5L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 17:57:11 -0400
+Received: from mail-il1-f182.google.com ([209.85.166.182]:44589 "EHLO
+        mail-il1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230124AbhHCV5K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 17:57:10 -0400
+Received: by mail-il1-f182.google.com with SMTP id i13so8963310ilm.11
+        for <linux-pci@vger.kernel.org>; Tue, 03 Aug 2021 14:56:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yn4O9xEl6ru3rpDSJ+8kj55TrJUZvu9sqWFIWkVC+Pg=;
+        b=c12MSABvtrr4Uh6JRu8VRLw8ESgF2bNhcmnxOji28EA9RLXvkRUN7pQVFW1+38mpB5
+         I8BIkTHvRKZGKS0Nw76TDTRKDnGqgrlULvj75TbSbUWAGp8IQBgPIHrNtkwPnhgx2TlA
+         +hO7nuuIylsqBNcvmYMm5nh3SQJfHXbOGhNRd+/PxjtSP6JWbUhwL/Se6wz+snEUoIoN
+         hX3VjBJUU/R4XAYntGzVbIrW8Xl78d77oEuZf1ZUMt/i+0Ta1I1jU7Tsn2b73NGTDVUr
+         GlreATlSMMN9K0EW3AI/EKuYnvyZqXgGazIFiA727ggHKmt651+mMtjNIlz4Rkl8gLL0
+         uGIA==
+X-Gm-Message-State: AOAM532W9+tOnwHpckl+rmHgDtIL5kYELfKqKdvb7Nv3bbumOTAU6DgD
+        FowPJxEMgf5HxUJFs+3GbQ==
+X-Google-Smtp-Source: ABdhPJwNKianj0C+7zTvckxnhOj3b3Q0ZNocwW6PPcIY+xaavptFIG5JGlf3uP6IUcaPevqtQBZUPw==
+X-Received: by 2002:a92:ca8f:: with SMTP id t15mr1052313ilo.262.1628027819042;
+        Tue, 03 Aug 2021 14:56:59 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.248])
+        by smtp.googlemail.com with ESMTPSA id r24sm221635ioa.31.2021.08.03.14.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 14:56:58 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Roman Bacik <roman.bacik@broadcom.com>,
+        Bharat Gooty <bharat.gooty@broadcom.com>,
+        Abhishek Shah <abhishek.shah@broadcom.com>,
+        Jitendra Bhivare <jitendra.bhivare@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 1/2] PCI: of: Don't fail devm_pci_alloc_host_bridge() on missing 'ranges'
+Date:   Tue,  3 Aug 2021 15:56:55 -0600
+Message-Id: <20210803215656.3803204-1-robh@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210803200836.500658-1-nathan@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 01:08:36PM -0700, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> drivers/pci/syscall.c:25:6: warning: variable 'dev' is used
-> uninitialized whenever 'if' condition is true
-> [-Wsometimes-uninitialized]
->         if (!capable(CAP_SYS_ADMIN))
->             ^~~~~~~~~~~~~~~~~~~~~~~
-> drivers/pci/syscall.c:81:14: note: uninitialized use occurs here
->         pci_dev_put(dev);
->                     ^~~
-> drivers/pci/syscall.c:25:2: note: remove the 'if' if its condition is
-> always false
->         if (!capable(CAP_SYS_ADMIN))
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/pci/syscall.c:18:21: note: initialize the variable 'dev' to
-> silence this warning
->         struct pci_dev *dev;
->                            ^
->                             = NULL
-> 1 warning generated.
-> 
-> pci_dev_put accounts for a NULL pointer so initialize dev to NULL before
-> the capability check so that there is no use of uninitialized memory.
-> 
-> Fixes: 61a6199787d9 ("PCI: Return ~0 data on pciconfig_read() CAP_SYS_ADMIN failure")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Commit 669cbc708122 ("PCI: Move DT resource setup into
+devm_pci_alloc_host_bridge()") made devm_pci_alloc_host_bridge() fail on
+any DT resource parsing errors, but Broadcom iProc uses
+devm_pci_alloc_host_bridge() on BCMA bus devices that don't have DT
+resources. In particular, there is no 'ranges' property. Fix iProc by
+making 'ranges' optional.
 
-Squashed in locally, thanks!
+If 'ranges' is required by a platform, there's going to be more errors
+latter on if it is missing.
 
-> ---
->  drivers/pci/syscall.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
-> index 525f16caed1d..61a6fe3cde21 100644
-> --- a/drivers/pci/syscall.c
-> +++ b/drivers/pci/syscall.c
-> @@ -22,6 +22,7 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
->  	int err, cfg_ret;
->  
->  	err = -EPERM;
-> +	dev = NULL;
->  	if (!capable(CAP_SYS_ADMIN))
->  		goto error;
->  
-> 
-> base-commit: 21d8e94253eb09f7c94c4db00dc714efc75b8701
-> -- 
-> 2.33.0.rc0
-> 
+Fixes: 669cbc708122 ("PCI: Move DT resource setup into devm_pci_alloc_host_bridge()")
+Reported-by: Rafał Miłecki <zajec5@gmail.com>
+Cc: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Roman Bacik <roman.bacik@broadcom.com>
+Cc: Bharat Gooty <bharat.gooty@broadcom.com>
+Cc: Abhishek Shah <abhishek.shah@broadcom.com>
+Cc: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
+Cc: Ray Jui <ray.jui@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index a143b02b2dcd..d84381ce82b5 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -310,7 +310,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+ 	/* Check for ranges property */
+ 	err = of_pci_range_parser_init(&parser, dev_node);
+ 	if (err)
+-		goto failed;
++		return 0;
+ 
+ 	dev_dbg(dev, "Parsing ranges property...\n");
+ 	for_each_of_pci_range(&parser, &range) {
+-- 
+2.30.2
+
