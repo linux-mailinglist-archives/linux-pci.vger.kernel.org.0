@@ -2,170 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D37C73DEA65
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 12:06:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6A6E3DEA6F
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 12:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235141AbhHCKGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 06:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235340AbhHCKEK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 06:04:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045A6C0617BE
-        for <linux-pci@vger.kernel.org>; Tue,  3 Aug 2021 03:03:54 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArFM-0002yN-C1; Tue, 03 Aug 2021 12:02:04 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArFD-0006FL-MW; Tue, 03 Aug 2021 12:01:55 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mArFC-0002oK-Il; Tue, 03 Aug 2021 12:01:54 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Michael Buesch <m@bues.ch>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-crypto@vger.kernel.org, qat-linux@intel.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com,
-        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
-Subject: [PATCH v2 6/6] PCI: Drop duplicated tracking of a pci_dev's bound driver
-Date:   Tue,  3 Aug 2021 12:01:50 +0200
-Message-Id: <20210803100150.1543597-7-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
-References: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
+        id S235385AbhHCKHF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 06:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235311AbhHCKGl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 06:06:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0FEB161037;
+        Tue,  3 Aug 2021 10:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627985190;
+        bh=amKFWwxpJKw04QvdgzwXcqsqQ+F/NFHyOuqZIXDbk1c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XjEoXzfxmIrUj6YEyI/1nn/bFs2XN+/1xIOKmEHh0ZliMJ5miWSi+KFFZIRV3i7G2
+         FBrJg3xGZEemgh0lmKXUutXASdMU7DRx9DckTewzZjBLWp8lRLMRMUSKGKuqcCKO+l
+         ywlbG/UOew23gdqMNVJAxev4x7DpcgrR/mzQCI5/+dKHpgKqkUE+Na3I3u+kLYkjtX
+         i7/fC/yZfwtjd0GzE8BnThUGq2RudTGu5crO5cEWqVvtHEJtMfwwbOno3XDsozhmOW
+         KL5VuuEoYMgqxbSYgNBVZlbXHbiix9eK5dS/jUIJeg3C+Rwmm3iFECfc3wGbsjWa+I
+         jwqXueqQa3flg==
+Received: by mail-wr1-f44.google.com with SMTP id h14so24656967wrx.10;
+        Tue, 03 Aug 2021 03:06:29 -0700 (PDT)
+X-Gm-Message-State: AOAM531A7mScJe+/xPVmNxqueEODpJTRthL+CSgYUTN+tombAV3UEeDh
+        3I1G4HQ9haAkq3D/ZZwCdieaWY7b7spDR1L2NkY=
+X-Google-Smtp-Source: ABdhPJzwT+J+VFXSnW3+4tMTTqosPNaK30l2tA5qRE27wNMPCM24C2S98cstSFdgN7ZgaXO1ODqphFr5sTVPXXlD+B8=
+X-Received: by 2002:adf:e107:: with SMTP id t7mr22121083wrz.165.1627985188658;
+ Tue, 03 Aug 2021 03:06:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=yGEodBYjARp1eJPqP9/n/KpfKo6ALJzXr+t0LDtBUZM=; m=JRVTmu6nPliiiBslnXnYAnMTr94GnCwSSGQey1Vdrcw=; p=VXwrm6IwhM33tInq/RiiFiTf7eEJSweS+vvs0hZjA4Y=; g=dfdf1d247df87fe752d1cd93dee47b352d54b9dc
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEJFAcACgkQwfwUeK3K7AlY4QgAoQ1 tszu0I41Zf6v0DKUasmGS98o7Yfn0OAkexq7Ntd7+GO5Lwc/dR4OcqooMePO5FWdYTzhGFWsTXAAD LGujFGBNIwdOZY7PsRSHFlhr8DoTUgXyHh0WvMo6wsFShQYS62Ay8MgAU36nYDzrGR94CrNoCANwS h+SL7+g+mtMAbQlS/p+3RSIYxyZ7XVHTUqkYWvnbsQpiqJVjtySAaBAdOsmo1ks0PezNBWORDnTZx oiJmCi1ZKOwWmWW0oqRhmNELiPQJzEh2XFGYcJCfDILAltZ8JK14Akc3BKVCwfr8+rcyFeI1PC7hB WPmvafaXTQnzw47uX9Cc5oG6/RB92PA==
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
+ <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
+ <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com> <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
+In-Reply-To: <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 3 Aug 2021 12:06:12 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+Message-ID: <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     John Garry <john.garry@huawei.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently it's tracked twice which driver is bound to a given pci
-device. Now that all users of the pci specific one (struct
-pci_dev::driver) are updated to use an access macro
-(pci_driver_of_dev()), change the macro to use the information from the
-driver core and remove the driver member from struct pci_dev.
+On Tue, Aug 3, 2021 at 11:46 AM John Garry <john.garry@huawei.com> wrote:
+> On 05/07/2021 11:06, Arnd Bergmann wrote:
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pci/pci-driver.c | 4 ----
- include/linux/pci.h      | 3 +--
- 2 files changed, 1 insertion(+), 6 deletions(-)
+> >
+> > Linus, if you like this approach, then I can work on splitting it up into
+> > meaningful patches and submit it for a future release. I think the
+> > CONFIG_LEGACY_PCI option has value on its own, but the others
+> > do introduce some churn.
+> >
+> > Full patch (120KB): https://pastebin.com/yaFSmAuY
+> >
+>
+> Hi Arnd,
+>
+> I am not sure if anything is happening here.
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 740d5bf5d411..5d950eb476e2 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -305,12 +305,10 @@ static long local_pci_probe(void *_ddi)
- 	 * its remove routine.
- 	 */
- 	pm_runtime_get_sync(dev);
--	pci_dev->driver = pci_drv;
- 	rc = pci_drv->probe(pci_dev, ddi->id);
- 	if (!rc)
- 		return rc;
- 	if (rc < 0) {
--		pci_dev->driver = NULL;
- 		pm_runtime_put_sync(dev);
- 		return rc;
- 	}
-@@ -376,7 +374,6 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
-  * @pci_dev: PCI device being probed
-  *
-  * returns 0 on success, else error.
-- * side-effect: pci_dev->driver is set to drv when drv claims pci_dev.
-  */
- static int __pci_device_probe(struct pci_driver *drv, struct pci_dev *pci_dev)
- {
-@@ -451,7 +448,6 @@ static int pci_device_remove(struct device *dev)
- 		pm_runtime_put_noidle(dev);
- 	}
- 	pcibios_free_irq(pci_dev);
--	pci_dev->driver = NULL;
- 	pci_iov_remove(pci_dev);
- 
- 	/* Undo the runtime PM settings in local_pci_probe() */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 778f3b5e6f23..f44ab76e216f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -342,7 +342,6 @@ struct pci_dev {
- 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
- 	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
- 
--	struct pci_driver *driver;	/* Driver bound to this device */
- 	u64		dma_mask;	/* Mask of the bits of bus address this
- 					   device implements.  Normally this is
- 					   0xffffffff.  You only need to change
-@@ -887,7 +886,7 @@ struct pci_driver {
- };
- 
- #define	to_pci_driver(drv) container_of(drv, struct pci_driver, driver)
--#define pci_driver_of_dev(pdev) ((pdev)->driver)
-+#define pci_driver_of_dev(pdev) ((pdev)->dev.driver ? to_pci_driver((pdev)->dev.driver) : NULL)
- 
- /**
-  * PCI_DEVICE - macro used to describe a specific PCI device
--- 
-2.30.2
+No, I'm not currently working on this, though I have it applied to
+my randconfig tree.
 
+> Anyway, one thing I mentioned earlier was that we could solve the
+> problem of drivers accessing unmapped IO ports and crashing systems on
+> archs which define PCI_IOBASE by building them under some "native port
+> IO support" flag.
+
+Right, that was part of the goal here.
+
+> One example of such a driver was F71805F sensor. You put that under
+> HAS_IOPORT, which would be available for all archs, I think. But I could
+> not see where config LEGACY_PCI is introduced. Could we further refine
+> that config to not build for such archs as arm64?
+>
+> BTW, I think that the PPC dependency was added there to stop building
+> for power for that same reason, so hopefully we get rid of that.
+
+Good point. It seems that I actually never added the LEGACY_PCI option
+to my patch, so I'm just not building those drivers any more, and not
+defining the inb()/outb() helpers either, causing a build failure when I'm
+missing an option.
+
+However it sounds like you are interested in a third option here, which
+brings us to:
+
+LEGACY_PCI: any PCI driver that uses inb()/outb() or is only available
+    on old-style PCI but not PCIe hardware without a bridge.
+    To be disabled for most architectures and possibly distros but can
+    be enabled for kernels that want to use those devices, as long as
+    CONFIG_HAS_IOPORT is set by the architecture.
+
+HAS_IOPORT: not a legacy PCI device, but can only be built on
+    architectures that define inb()/outb(). To be disabled for s390
+    and any other machine that has no useful definition of those
+    functions.
+
+HARDCODED_IOPORT: (or another name you might think of,) Used by
+   drivers that unconditionally do inb()/outb() without checking the
+   validity of the address using firmware or other methods first.
+   depends on HAS_IOPORT and possibly architecture specific
+   settings.
+
+        Arnd
