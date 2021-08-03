@@ -2,77 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE4B63DF7C7
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 00:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B5483DF843
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 01:10:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232530AbhHCW1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 18:27:35 -0400
-Received: from mail-il1-f181.google.com ([209.85.166.181]:41553 "EHLO
-        mail-il1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbhHCW1f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 18:27:35 -0400
-Received: by mail-il1-f181.google.com with SMTP id j18so35616ile.8;
-        Tue, 03 Aug 2021 15:27:22 -0700 (PDT)
+        id S232822AbhHCXKM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 19:10:12 -0400
+Received: from mail-ed1-f53.google.com ([209.85.208.53]:41724 "EHLO
+        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232231AbhHCXKM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 19:10:12 -0400
+Received: by mail-ed1-f53.google.com with SMTP id x90so1128778ede.8;
+        Tue, 03 Aug 2021 16:09:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HHOdTdufKzUNRw/NzOjkZbCMKmy2XrmFe3sMoIzHStg=;
-        b=WiEWm6j0QRgiEb7f/lu9+jbyBw1f9/cpJXC7be+StotWtt9D6GUKSfUKakrva4V9v6
-         +U93IXbiNxD4dzD/8nu64HmS5TkoBxI8ot8MOh4bxmBVJduHZviU0bmsOVhfdmgJ6OYW
-         GjwvJHxu5TBJz8iYTw2RP3AxBhoAy7saNAatu7zm1qu4wq7E8kMp9gzCcanPgNKUjGbh
-         bNe1QTm3lfPq0x0WhCB6EaylRJLrMNUsJtaLtsbQFQ11sQUE8xsZOyxB4sxIjVqH2itQ
-         ScKwTQCs/lmWeo52qyWGkybYbg8HtyxOLg+Mt6OmnRR+Ce0VYKGJA6reeHK8KKctd50s
-         gIoA==
-X-Gm-Message-State: AOAM533EaYmPwdYvxk22PFisASUPosEufijpJcDeoczWpfWaw7f9n+7x
-        EoV3bABLw5jnTZrlzupMmQ==
-X-Google-Smtp-Source: ABdhPJx7vhyLuu8I+E1UqgXX+/KHJ5KHEYbfcMsVWEy1Mgn9AL+l4jXQCnuWyZfm50CO2Ek3Cd5FYg==
-X-Received: by 2002:a05:6e02:5ce:: with SMTP id l14mr237712ils.147.1628029642260;
-        Tue, 03 Aug 2021 15:27:22 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id l9sm125436ilv.31.2021.08.03.15.27.20
+        bh=trQM0Hda030RDfLIu2oPMAoILMKZsnY/bU/76uuHF2k=;
+        b=WpIwR/oLpVqzJ7QAFCfldsy7thyXRNoMBcyRSrETO9O7/hKSwDcCxAiPHHgyVcQ7GG
+         SVEqN/AsgM3DmXxJfZxLxvij8G2u7AGJD5Zj11+ApSIVfbliSai5EcnjjPD9KADPVRuZ
+         7AwWfAlfBkrWm0RLc0zCT3usRpl5NGZKglQgomApsr/rrU+CoJdCfvHoJJmIe5ljWWPJ
+         VS/Xeuma3U1/mgHmNl7N9rJp3EQmmoOIW1b+s/QPQuugRFbO8FAXeyy4AHazsrIBUZN8
+         2elbmCQ7LBiemM0zMw0IISSz1GEiPYAgCCfZnHt+PVw4yxSwiu8gUkWOsHiGxRhUQJ0L
+         ob2Q==
+X-Gm-Message-State: AOAM532BL8HTrLsuMWxmX8FxcH2Tz+JRmykTCTeMvwfKesAQd83PJC0t
+        2WRkr38E09X1b0pFaqrZcQ4=
+X-Google-Smtp-Source: ABdhPJxT+GbfrU9YXbQY7rBEwrAhYxRK4U8Xte6JjppSjmhiSgcjR6zfz5pWuK93JN0t3omly8SzeQ==
+X-Received: by 2002:aa7:c489:: with SMTP id m9mr28666485edq.256.1628032198680;
+        Tue, 03 Aug 2021 16:09:58 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c13sm167217edv.93.2021.08.03.16.09.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 15:27:21 -0700 (PDT)
-Received: (nullmailer pid 3841668 invoked by uid 1000);
-        Tue, 03 Aug 2021 22:27:19 -0000
-Date:   Tue, 3 Aug 2021 16:27:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: kirin: Convert kirin-pcie.txt
- to yaml
-Message-ID: <YQnCx9nvXwHOMcpx@robh.at.kernel.org>
-References: <cover.1627965261.git.mchehab+huawei@kernel.org>
- <4d6e172cee9d477547d5ea26d0e5945fcbce15a1.1627965261.git.mchehab+huawei@kernel.org>
+        Tue, 03 Aug 2021 16:09:58 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 01:09:56 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] PCI: Always initialize dev in pciconfig_read
+Message-ID: <20210803230956.GA65526@rocinante>
+References: <20210803200836.500658-1-nathan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4d6e172cee9d477547d5ea26d0e5945fcbce15a1.1627965261.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20210803200836.500658-1-nathan@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 06:38:56AM +0200, Mauro Carvalho Chehab wrote:
-> Convert the file into a JSON description at the yaml format.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../bindings/pci/hisilicon,kirin-pcie.yaml    | 86 +++++++++++++++++++
->  .../devicetree/bindings/pci/kirin-pcie.txt    | 50 -----------
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  2 +-
->  MAINTAINERS                                   |  2 +-
->  4 files changed, 88 insertions(+), 52 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+Hi Nathan,
 
-This doesn't apply to my tree. I think the problem is I have some other 
-snps,dw-pcie.yaml changes. Can you rebase and resend.
+> drivers/pci/syscall.c:18:21: note: initialize the variable 'dev' to
+> silence this warning
+>         struct pci_dev *dev;
+>                            ^
+>                             = NULL
+[...]
 
-Rob
+Nice catch!  Thank you for fixing and sorry that I miss this one!
+
+	Krzysztof
