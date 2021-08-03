@@ -2,151 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5228F3DE629
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 07:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF2FA3DE66D
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 07:58:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233675AbhHCF1Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 01:27:25 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47176 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbhHCF1Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 01:27:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1735R7xT081485;
-        Tue, 3 Aug 2021 00:27:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1627968427;
-        bh=3GymSx5fuQhs/15Zd9CuB3vkNv8nNT+a9AI+QPpxCyQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WDAAJ7MotOnmaj14mbtTpbefjyXXM02gXxzxgjaSz4Nf5Jdi+IABNlK3Sel0KH2AE
-         ZhwpeeRJ6HasiZQhizT0gCB6Ig2aUwjddFoR47+8xnkKZHqShMAo/B0k4EIi2Z4LRN
-         7NSqXRs3PUZfblU9CdXuHL/1Kr5+aUWOWDhniwnc=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1735R7KX002559
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Aug 2021 00:27:07 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 3 Aug
- 2021 00:27:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 3 Aug 2021 00:27:07 -0500
-Received: from [10.250.232.99] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1735R1V1115154;
-        Tue, 3 Aug 2021 00:27:02 -0500
-Subject: Re: [PATCH v7 0/3] Add Qualcomm PCIe Endpoint driver support
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <hemantk@codeaurora.org>, <smohanad@codeaurora.org>,
-        <bjorn.andersson@linaro.org>, <sallenki@codeaurora.org>,
-        <skananth@codeaurora.org>, <vpernami@codeaurora.org>,
-        <vbadigan@codeaurora.org>
-References: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2a0b7f85-dcd7-fc87-8e02-37725f66b9cf@ti.com>
-Date:   Tue, 3 Aug 2021 10:57:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="utf-8"
+        id S233916AbhHCF6W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 01:58:22 -0400
+Received: from mail-eopbgr60086.outbound.protection.outlook.com ([40.107.6.86]:48864
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233839AbhHCF6V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 01:58:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CepS2Dhvti8ozONCzjJkYnVYyFOXeh8ruycB/XPr1UsdeaRnmZOYgLFTtHbtFIDKipOF0p14QohBMj7dvU8DwcHupoBQ6lWdE2rMRY1p82pDFRxKbZH15ClqeF5jIDYjkz+x0iug5nEzsH83dsVwKq90vqgVB37N3jrJW6XwyWFB0V37PiaOMP8OqWrMa43hQE74ZcMJY6cBzjkFuPnhSXJkgHty+UEvObVZHFAizCoDEM1QLAyqvM4JT7YqQsiRrOGrgWUev8o38qA1I0LOQwVW9t0sU8X4s1MiV30ny+Gu461nraCHJioHX9q19I00OhN2e510YQRUc4R31FHqpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BrQiZl1Pz97N0jQyjxdvHkasMCCNfaKy3BwFEMJoAOY=;
+ b=fCkED2NL1STTru/MZi/jX2qGHx6lHUnD3q/AHhk1Ur1CPoYBnyWU2rAkFIAUavmHk0xPGSmaRsdfrdejbQnh+jc2PrtS1up07Z1+di7A0m82fzDGn7LWQEAHJ3y4pufYOSc7bbjvnCCy9tWOGYyzdGEM8q+43Xrh5gsiA8mpzy6iD7Hz7bE9F7s9QUks92ZqNyJtDcFm551n++ej+MAnWT4uBFNbVBtd0ca+8RZKBBN2gnbGZr0NqSV59fIKt7UIeZigiOp73BxCnOA8gL2maOBGPs5yCCcR/gzw6mbatxIvqOHVuRmy6umgrGoBmgYLymNT/MKx63AG97SzACGB5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BrQiZl1Pz97N0jQyjxdvHkasMCCNfaKy3BwFEMJoAOY=;
+ b=GhjV6iLwk4TZUOcyIYI22O6Kuf6bl5/RZdqbT4WymrCeAxA3SOdh99OPBCnkC7SHKs2e9MEuFhcznPcilKtg5OA113XHlqgoWM1FoEjR0UGxusfg+VfdQuSd4nCDlrs0atUfpOvhdDeb3/ng+lmAiVwAwJIrd6Pgz3VNt62S1tk=
+Received: from DU2PR04MB8726.eurprd04.prod.outlook.com (2603:10a6:10:2dd::9)
+ by DU2PR04MB8758.eurprd04.prod.outlook.com (2603:10a6:10:2e1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19; Tue, 3 Aug
+ 2021 05:58:09 +0000
+Received: from DU2PR04MB8726.eurprd04.prod.outlook.com
+ ([fe80::e50a:234a:7fb7:11d4]) by DU2PR04MB8726.eurprd04.prod.outlook.com
+ ([fe80::e50a:234a:7fb7:11d4%9]) with mapi id 15.20.4373.026; Tue, 3 Aug 2021
+ 05:58:08 +0000
+From:   "Wasim Khan (OSS)" <wasim.khan@oss.nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Wasim Khan (OSS)" <wasim.khan@oss.nxp.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Varun Sethi <V.Sethi@nxp.com>
+Subject: RE: [PATCH v2] PCI: Add ACS quirk for NXP LX2160 and LX2162 C/E/N
+ platforms
+Thread-Topic: [PATCH v2] PCI: Add ACS quirk for NXP LX2160 and LX2162 C/E/N
+ platforms
+Thread-Index: AQHXh7cFKOZKp7QqQEes/qfC0L8GMqtgYL0AgADoZ/A=
+Date:   Tue, 3 Aug 2021 05:58:08 +0000
+Message-ID: <DU2PR04MB8726E7690B48B101D8D0F0AB90F09@DU2PR04MB8726.eurprd04.prod.outlook.com>
+References: <20210802155644.3089929-1-wasim.khan@oss.nxp.com>
+ <20210802160434.GA1383714@bjorn-Precision-5520>
+In-Reply-To: <20210802160434.GA1383714@bjorn-Precision-5520>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6408b34b-724c-4e2e-a218-08d95643ab78
+x-ms-traffictypediagnostic: DU2PR04MB8758:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DU2PR04MB8758F1E0D0C963C0572C4C08D1F09@DU2PR04MB8758.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Zw7eDrfgKxZWPaxuTLt1wjvZHUnHOG1em08tase5jbxPbI23/1xkDxgMF1HAFj/Jm6+8n24D3PSJIVvTEAyvdyEg6jycZZjouP6R7YDSXWeNtcVBs5lE7171V/j5hrr7sw/APIRXT9AbiBmwS8SMs5pxwbHJkCuZLvV7tUVYZPZP5ceWif/xkQMTOy9+UBquKmDMr3FcqQDdYO2aVs7NKppowX28T+QF5Cip7NI2Zs8BjDab8HxclCch3YS6vn8IUjZY5jBJgafRcRhiRILwB36sa6MFdUK3/J7EID0OjI/LSU2gatTu0ctul9UHtoJoeG3Goh8cQhA2VmTgkCjFctf+cF9tF5Gm9ksuKIVLfiRc2FUbnFwJp81VdECkeebu92nBnaKbNB6ET7kVzRJVJkltg5II3XqFy4kM7za6QPQtbc37YZsOBysxpnRDVqhnLF7xCSH5sxuPnw450csPi+Sdtns60vp6+ERTa2IspqK4Xv7AnoyW7B5hB4X6eecYnUmhgYxyHshWIe3I9NY/w5xKLUchCg7Xx3K5Cqxtf3ng7uuO1WBvu5zMVPU0Y8RLigZiH1ZAZX7msZF8JPbtVFA186yZi37mrRXaC80gjwb1EQSlHz/b+cHoPkV01sUqhHWWh8lydDNiehgLkj5p6NK4XqsoSbra3GXGiLQ8ioTWi7Jxp6AGRFU6jQV717i5q7+ek90uhHoaH3pIBYSDag==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8726.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(83380400001)(4326008)(71200400001)(478600001)(76116006)(8936002)(316002)(86362001)(33656002)(38070700005)(5660300002)(7696005)(38100700002)(55016002)(8676002)(53546011)(26005)(2906002)(6506007)(122000001)(186003)(9686003)(66476007)(52536014)(110136005)(66946007)(66446008)(66556008)(64756008)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?DdLQsmncKs04scztUZRiq4GGNJMtd0epnb3h5YTlA6RwQD1VqvlbHpiyAgfm?=
+ =?us-ascii?Q?QsMtTpdbP/oRgpJRV3lPje0nZZ/QxIRnF5TRD6xy2pPJ2uW33FJN8n4pg6ji?=
+ =?us-ascii?Q?2hRGu0HzXPCNkltc9oXG2v/rBRDZPRYKNoDMHSj8ThX1qQ4lzC2MJFn2Ltlv?=
+ =?us-ascii?Q?rcW4W2wI9VQKynWiKlyPqfK+KQhzc4N8bpBzRw+2/sEcdNwJoBEfMJtObFc4?=
+ =?us-ascii?Q?8DO678sF9K1JOZKRYzqHw4VGmV/AHuoeSUGM+ocwB1OZCEtIGuI2ST2fazTk?=
+ =?us-ascii?Q?tfluNojZNqh+TEuKB4io0/x+MUmskLQpcvtmx+1dGSpanMBNPEkQXla3/Bwv?=
+ =?us-ascii?Q?Ca9edFhC8rj0OLf98JuzFVbJId+JhMrbrAijgR6o9VuHK+7JVExHpfiF8YN2?=
+ =?us-ascii?Q?KIg/R9jaS8MIh77p6bf2Bxi59qh0L/6QQ5gwjMRnVbvC0K0u++7QI8CGTy4x?=
+ =?us-ascii?Q?9hBCMca3KqhbnZtzd1iII5IjQMDk40f1Sue7FGgWsDYo8cUQmCegXBBOte5G?=
+ =?us-ascii?Q?u7at45Gw4KwI809mj5O10NiBHoy5H94EVMg+YViLooyGfzYars0+FWwaIh6x?=
+ =?us-ascii?Q?A0BwI97OTFZaaJTWb3LPNuAas7+LBI4d7Vt3SMiD8eCVqSejnhIKfmkw4L6b?=
+ =?us-ascii?Q?5bNUwKzIjRS7ctTjmHPtBtZbagGcaXTMbytRjt86zoZZNctDrjMRscBoyu/4?=
+ =?us-ascii?Q?f8T5c+LJGAL50F9UrYl8M5ZQiZSoGTpSnqWNvuQFEoWxz/J1LxtPq3Xyp/NX?=
+ =?us-ascii?Q?v/I1HJWngfOwdk0qTDNCvRsQMPMeMvGAn2tOKWksuYE9vTFtmJwFxZroxFLH?=
+ =?us-ascii?Q?8kd/TeXTo/yvc6RhUdef+jpOq1bM3B69BP40Om9Gj44DLSRUBk/pf8m+jZH2?=
+ =?us-ascii?Q?QYY1o3n9aJDsm1ykHt1xTlOrKm1IgGS3eiVTqPk5lv2CVMmgK9nsQXf/bH0O?=
+ =?us-ascii?Q?DXAQ2KJlCngAErsSydlPP9Z6v7+V8HTpgcm//l48beIYsGLBVRLZZ/DKQ/YZ?=
+ =?us-ascii?Q?9piIRhU2Ch5SsGM7OB2IwDImFk36X4OrdaNFEi9b4ZNdyqVyw40VHaXVSgYF?=
+ =?us-ascii?Q?G0xRN+bM2aQR79DYGhWo3hbeBu+K7CSvvflXdO9V91sA0SYUk8SKfFD4xq9S?=
+ =?us-ascii?Q?3ySORqfj+DM/rStCPe2L4quhtFwLb4x3NpuzI7kAszv2OCAHsRjhAfrZfUen?=
+ =?us-ascii?Q?PiBNYBEZOqt5ZLX1ujOXxy5f3hHT5u+YfUWxYOGb9xxYrpnQlGT6ttNtEAoI?=
+ =?us-ascii?Q?+ES5RlwStS/yCLkwQ0OxtPDJ8gngPxhrudd7J5pBmYS3x+P6F4os7w9uVpqF?=
+ =?us-ascii?Q?Ea4a9+eCL/1rxaesNLAh+Mtc?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8726.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6408b34b-724c-4e2e-a218-08d95643ab78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2021 05:58:08.8028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fcCqrV0HWUIf0cDqktjrWdHDMp9yeGwOs+3iFXRCOGg9sQZDA8khs4FnlIHzsAfOYGrHqOAdMwmVbgh15V4Xbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8758
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Manivannan,
 
-On 22/07/21 5:42 pm, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This series adds support for Qualcomm PCIe Endpoint controller found
-> in platforms like SDX55. The Endpoint controller is based on the designware
-> core with additional Qualcomm wrappers around the core.
-> 
-> The driver is added separately unlike other Designware based drivers that
-> combine RC and EP in a single driver. This is done to avoid complexity and
-> to maintain this driver autonomously.
-> 
-> The driver has been validated with an out of tree MHI function driver on
-> SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
 
-Can you also validate it with in-kernel pci-endpoint-test?
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Monday, August 2, 2021 9:35 PM
+> To: Wasim Khan (OSS) <wasim.khan@oss.nxp.com>
+> Cc: bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Varun Sethi <V.Sethi@nxp.com>; Wasim Khan
+> <wasim.khan@nxp.com>
+> Subject: Re: [PATCH v2] PCI: Add ACS quirk for NXP LX2160 and LX2162 C/E/=
+N
+> platforms
+>=20
+> On Mon, Aug 02, 2021 at 05:56:44PM +0200, Wasim Khan wrote:
+> > From: Wasim Khan <wasim.khan@nxp.com>
+> >
+> > LX2160C : security features + CAN-FD
+> > LX2160E : security features + CAN
+> > LX2160N : without security features + CAN LX2162C : security features
+> > + CAN-FD LX2162E : security features + CAN LX2162N : without security
+> > features + CAN
+>=20
+> Can you associate these with the device IDs, please?  Ideally a one-line
+> comment in the code, but if that doesn't fit nicely, at least include the=
+ device
+> ID for each here in the commit log.
 
-It would also help if you can test your patches after
-https://lore.kernel.org/r/20210803050310.27122-1-kishon@ti.com
+Thank you for the review.
+Sure, I will associate them with device IDs and send updated version.
 
-Not expecting any dependencies but just to cross check.
-
-Thanks
-Kishon
-
-> 
-> Thanks,
-> Mani
-> 
-> Changes in v7:
-> 
-> * Used existing naming convention for callback functions
-> * Used active low state for PERST# gpio
-> 
-> Changes in v6:
-> 
-> * Removed status property in DT and added reviewed tag from Rob
-> * Switched to _relaxed variants as suggested by Rob
-> 
-> Changes in v5:
-> 
-> * Removed the DBI register settings that are not needed
-> * Used the standard definitions available in pci_regs.h
-> * Added defines for all the register fields
-> * Removed the left over code from previous iteration
-> 
-> Changes in v4:
-> 
-> * Removed the active_config settings needed for IPA integration
-> * Switched to writel for couple of relaxed versions that sneaked in
-> 
-> Changes in v3:
-> 
-> * Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
-> * Noticeable changes are:
->   - Got rid of _relaxed calls and used readl/writel
->   - Got rid of separate TCSR memory region and used syscon for getting the
->     register offsets for Perst registers
->   - Changed the wake gpio handling logic
->   - Added remove() callback and removed "suppress_bind_attrs"
->   - stop_link() callback now just disables PERST IRQ
-> * Added MMIO region and doorbell interrupt to the binding
-> * Added logic to write MMIO physicall address to MHI base address as it is
->   for the function driver to work
-> 
-> Changes in v2:
-> 
-> * Addressed the comments from Rob on bindings patch
-> * Modified the driver as per binding change
-> * Fixed the warnings reported by Kbuild bot
-> * Removed the PERST# "enable_irq" call from probe()
-> 
-> Manivannan Sadhasivam (3):
->   dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
->     controller
->   PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
->   MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
-> 
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 158 ++++
->  MAINTAINERS                                   |  10 +-
->  drivers/pci/controller/dwc/Kconfig            |  10 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 710 ++++++++++++++++++
->  5 files changed, 888 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
-> 
+>=20
+> > Root Ports in NXP LX2160 and LX2162 where each Root Port is a Root
+> > Complex with unique segment numbers do provide isolation features to
+> > disable peer transactions and validate bus numbers in requests, but do
+> > not provide an actual PCIe ACS capability.
+> >
+> > Enable ACS quirk for NXP LX2160C/E/N and LX2162C/E/N platforms
+> >
+> > Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
+> > ---
+> > Changes in v2:
+> > - removed duplicate entry of 0x8d80 and 0x8d88
+> >
+> >  drivers/pci/quirks.c | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index
+> > 24343a76c034..1ad158066d39 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4787,6 +4787,23 @@ static const struct pci_dev_acs_enabled {
+> >  	{ PCI_VENDOR_ID_NXP, 0x8d80, pci_quirk_nxp_rp_acs },
+> >  	{ PCI_VENDOR_ID_NXP, 0x8d88, pci_quirk_nxp_rp_acs },
+> >  	{ PCI_VENDOR_ID_NXP, 0x8d89, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d90, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d91, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8da1, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8db0, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d92, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d82, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d93, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8da0, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8db1, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d99, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d8a, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d9b, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8da8, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8db9, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d98, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8db8, pci_quirk_nxp_rp_acs },
+> > +	{ PCI_VENDOR_ID_NXP, 0x8d9a, pci_quirk_nxp_rp_acs },
+>=20
+> Sort these in order of device ID so it's easier to see duplicates and to =
+find the
+> one you're looking for.
+>=20
+> >  	/* Zhaoxin Root/Downstream Ports */
+> >  	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID,
+> pci_quirk_zhaoxin_pcie_ports_acs },
+> >  	{ 0 }
+> > --
+> > 2.25.1
+> >
