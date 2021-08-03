@@ -2,86 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 865133DEABA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 12:19:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0FA53DEB47
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 12:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235241AbhHCKTy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 06:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235143AbhHCKTy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 06:19:54 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2359C06175F;
-        Tue,  3 Aug 2021 03:19:42 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id t3so21004354plg.9;
-        Tue, 03 Aug 2021 03:19:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F7RnLTo1duVJvP6tLxEr595jWac0+5GeUDVvQVHcqHw=;
-        b=KN2u/kABvY84pUcpffrlhIsxuY9/C2uY0va5yFYWn8ZEaIlxEsthJuMbC1UqYbB7Xc
-         VNXPHviFqwdNehgCxm+QGOr6oCUokHZ0vBNefe/wHKqBAcnmynU/jjcPGPYprTyyvNX9
-         R946PjvD07V7wJSe3TaSuI1xDrVcXN6uz+O18WpueokEERDC8+Fu3d5rXQFscSPVUJHZ
-         AWgXBC5gPiv9rvYDAVF1lsE7Vj3H4ofW3kA2wQ1U7FK/VrIlU0+881x1SYzRLllPT3iD
-         3MTHMqOXRLYYUTeOrsy7trTExcSE41XxZObua8dACBw6GZ5vpb6Z2w3pc5saeVDAv4Ry
-         ElrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F7RnLTo1duVJvP6tLxEr595jWac0+5GeUDVvQVHcqHw=;
-        b=JcB5k6BrWZ6+Cpd86JgNwwDwM9zW6MMIzCrT9s2XxUGSH3Ggjoe3OEtfIDV4p/xYsq
-         lAaVlSyA2m8GyQvcNWJXuFTePQffRgoeDkVY9QejDH9aZU5uDC6a6lYIapfyMponNayd
-         3VA3KescwPezg7zU1ZaBkpMtGLE9aizrMm8IvjcbZtsbrkf7U1GyIX8E0f0DO5kazaAn
-         temPzMgPU8jK3rXm7UWJmROHw6gEaMMCfN75diEG382PyXZ89XrJrfnBgL9Sos++rlVj
-         U3BWX/zIwk6CSO0yeTJzedghacdVAAPP637455s8vlUOVf2ge24JFseHjHiz6RbiZ+M/
-         /AXw==
-X-Gm-Message-State: AOAM5307WuOKj5IzRz4W65gzkg3qC7SUsiKf6bYeehqts3jsUcF/AoTZ
-        Jx1+r74H90f5A1xS5R7R2CS4NxC7fUb8ov3HBxo=
-X-Google-Smtp-Source: ABdhPJy+rTe0WWJKWfgUD5NiYTKWFd0/T4ONqgUvyaBzg+FYi56KGtPJ6MVhY0FmVEPN0Rl5CYM4YFGCT6tTE7pzhFk=
-X-Received: by 2002:aa7:800b:0:b029:330:455f:57a8 with SMTP id
- j11-20020aa7800b0000b0290330455f57a8mr21285120pfi.7.1627985982087; Tue, 03
- Aug 2021 03:19:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210730205355.26504-1-andriy.shevchenko@linux.intel.com> <20210802231643.GA1474171@bjorn-Precision-5520>
-In-Reply-To: <20210802231643.GA1474171@bjorn-Precision-5520>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Aug 2021 13:19:05 +0300
-Message-ID: <CAHp75VeKvBqi=vhkq0Vqv76t3qKzWmy_v_ZmeL4mbPztmcGb7g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] x86/PCI: Introduce pcibios_is_irq_managed() helper
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        id S235058AbhHCKxK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 06:53:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:47210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234904AbhHCKxK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 06:53:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 078A4106F;
+        Tue,  3 Aug 2021 03:52:56 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 703983F40C;
+        Tue,  3 Aug 2021 03:52:54 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 11:52:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, nadeem@cadence.com
+Subject: Re: [PATCH v2 0/6] PCI: Add support for J7200 and AM64
+Message-ID: <20210803105252.GD11252@lpieralisi>
+References: <20210803074932.19820-1-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210803074932.19820-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 3, 2021 at 2:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Fri, Jul 30, 2021 at 11:53:55PM +0300, Andy Shevchenko wrote:
+On Tue, Aug 03, 2021 at 01:19:26PM +0530, Kishon Vijay Abraham I wrote:
+> This series adds the compatible specific to J7200 and AM64 and
+> applies the erratas and configuration specific to them.
+> 
+> This series also includes Nadeem's patch that adds a quirk in
+> Cadence driver which is used by J7200 [1].
+> 
+> The DT binding for both J7200 and AM64 is already merged.
+> 
+> v1 of the patch series can be found at [2]
+> 
+> Changes from v1:
+> 1) As suggested by Bjorn, used unsigned int :1, instead of bool for
+> structure members
+> 2) Removed using unnecessary local variables and also fixed some
+> code alignment
+> 
+> [1] -> https://lore.kernel.org/r/20210528155626.21793-1-nadeem@cadence.com
+> [2] -> https://lore.kernel.org/r/20210706105035.9915-1-kishon@ti.com
+> 
+> Kishon Vijay Abraham I (5):
+>   PCI: cadence: Use bitfield for *quirk_retrain_flag* instead of bool
+>   PCI: j721e: Add PCIe support for J7200
+>   PCI: j721e: Add PCIe support for AM64
+>   misc: pci_endpoint_test: Do not request or allocate IRQs in probe
+>   misc: pci_endpoint_test: Add deviceID for AM64 and J7200
+> 
+> Nadeem Athani (1):
+>   PCI: cadence: Add quirk flag to set minimum delay in LTSSM
+>     Detect.Quiet state
+> 
+>  drivers/misc/pci_endpoint_test.c              | 27 ++++++--
+>  drivers/pci/controller/cadence/pci-j721e.c    | 61 +++++++++++++++++--
+>  .../pci/controller/cadence/pcie-cadence-ep.c  |  4 ++
+>  .../controller/cadence/pcie-cadence-host.c    |  3 +
+>  drivers/pci/controller/cadence/pcie-cadence.c | 17 ++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h | 17 +++++-
+>  6 files changed, 117 insertions(+), 12 deletions(-)
 
-...
+I am not convinced about patch (5) the rest of the series can be
+merged (even though I assume patch (6) depends on (5)).
 
-> > -     if (!pin || !dev->irq_managed || dev->irq <= 0)
-> > +     if (!pin || !pcibios_irq_is_managed(dev))
->
-> This file may be compiled for x86, arm64, and ia64, but it looks like
-> you only defined pcibios_irq_is_managed() for x86.
-
-Ah, right. Ignore this patch.
-Thanks for the review!
-
--- 
-With Best Regards,
-Andy Shevchenko
+Please let me know,
+Lorenzo
