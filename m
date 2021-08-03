@@ -2,160 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60A043DE2F4
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 01:16:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 352D63DE363
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 02:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232614AbhHBXQz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Aug 2021 19:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232588AbhHBXQy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Aug 2021 19:16:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7DCBB60EC0;
-        Mon,  2 Aug 2021 23:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627946204;
-        bh=3ptfVM59zuF6UcjTL1TI2rMJkJS7oye0pG8ghT5vEmQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Y0SIXoT9NyYYYfU9X6oKmpBTSgusjlgb4xakAEd/TK6RFo+w4De7J2fo30tNiLYjP
-         F/gBXwN7yZnqNj/AjBjaj5DcNqbtwbj3T+1CtmEtxB2zxHmwdEGokGqm9Z+bxKBN6E
-         IZhcMR7JLBOwXAKhYf5mbPi0vLlklMsxBv2rmQB+qG8AHkeCgrdqkEzxgreGo4qkkE
-         KF0R8IpPJFDW00CBacLD9bpONGKpGNT41dpq4ID6w4b3tIvFzD7iMVzT+AQolEdqPc
-         K87g4tnLDodIiPFdafhSsQsnyA4nPvhNpghsSOY6+lU8LprPbD6Po0yUK2S257OG7C
-         EtItq7fS7VMDg==
-Date:   Mon, 2 Aug 2021 18:16:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v1 1/1] x86/PCI: Introduce pcibios_is_irq_managed() helper
-Message-ID: <20210802231643.GA1474171@bjorn-Precision-5520>
+        id S232848AbhHCAJ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Aug 2021 20:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232208AbhHCAJz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Aug 2021 20:09:55 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7BB3C06175F
+        for <linux-pci@vger.kernel.org>; Mon,  2 Aug 2021 17:09:45 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id q2so21588448plr.11
+        for <linux-pci@vger.kernel.org>; Mon, 02 Aug 2021 17:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+j4BJpyfr/0bKpgqLUIWH//i3b70ShWiDMnlMOcrZc4=;
+        b=eEcbDKMNyZMv+PMgaHxZKMzSnpGt/8lW8qX0LM8mMc1QuP2Uem3YTKkMxkzZhEpFSy
+         ViAVjzj6ya5et0R6/1h6DHh6BqGEHxuEpXjs8SyGANf18SiilZkzQ7Ne2uFbgPOuWiqd
+         kMZ2hNrdwjrUgJC6mrCRv6ZMCNHRkfRiTAhsTVlcWxX6RIY4FL8K6DJcJt2jUcJh0XZJ
+         XimfGezD2Bo8/eWKrrfVTkz1RZ423OrsSRKzH9bCJOVLSQCRknWaPW//mRMiJMBJy6FB
+         eT0yhYXtzbmVnMjkwBRujoC7WUH28TflA+iWjDphpVqDhoylN3G7VoFyA9Lfe/VP7u6Q
+         P8ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+j4BJpyfr/0bKpgqLUIWH//i3b70ShWiDMnlMOcrZc4=;
+        b=Ybea6cexo23KCD7Oaqm/hXa6CynxFz1Pv51DjoKquAMQiJ+OxGD3weQNkBnHyE5JrJ
+         Xh/S5r119D9SqktTYiBXvftq0He6MaiqHvxuJT73AKps5u3qDjskt9m3qAEnUXeMWa80
+         COVD4jjqpkxwchyobOSW+cD3ors/yPKOXiyNbtqJk1KQQozHL390i4lD1WTyuyaUyZsZ
+         IS4IWP46ft90UXOwBpse2g4PRVnzBS55ojuk+82eDtQGL+A/fV15GY1FP83W9B1g3qvD
+         Q0hiWHaG8OFETSotrnp0lY7L3rPbCJ7BesE/2nRvxS5+BYI3p5dhKCpVtgcvUOAVL7Qc
+         l+zw==
+X-Gm-Message-State: AOAM531WR3Qtu36LoqjLAYAwpuLUOA0BhEIBhR5WcKNOOvAqHmbs1/1V
+        liY/fMxqZK9ChplG3SPi/0IMLaz6yKLndyaoQ6EkYw==
+X-Google-Smtp-Source: ABdhPJyXrIFW+sRaGg7Z4Xh/FAU4fOb9eNxkUqQavFW+qYQNyTNyh/csjGlerOoJZ9Ud8jPayJ7E2swcUPU2nfINbbY=
+X-Received: by 2002:a63:1857:: with SMTP id 23mr673574pgy.403.1627949384952;
+ Mon, 02 Aug 2021 17:09:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210730205355.26504-1-andriy.shevchenko@linux.intel.com>
+References: <20210624171759.4125094-1-dianders@chromium.org>
+ <YNXXwvuErVnlHt+s@8bytes.org> <CAD=FV=UFxZH7g8gH5+M=Fv4Y-e1bsLkNkPGJhNwhvVychcGQcQ@mail.gmail.com>
+ <CAD=FV=W=HmgH3O3z+nThWL6U+X4Oh37COe-uTzVB9SanP2n86w@mail.gmail.com>
+ <YOaymBHc4g2cIfRn@8bytes.org> <CAD=FV=U_mKPaGfWyN1SVi9S2hPBpG=rE_p89+Jvjr95d0TvgsA@mail.gmail.com>
+ <e3555c49-2978-355f-93bb-dbfa7d09cab8@arm.com> <CAD=FV=XaTqNDn=vLEXfJ2dV+EH2UoxPfzWeiS+_sZ9hrQ274bw@mail.gmail.com>
+In-Reply-To: <CAD=FV=XaTqNDn=vLEXfJ2dV+EH2UoxPfzWeiS+_sZ9hrQ274bw@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 2 Aug 2021 17:09:08 -0700
+Message-ID: <CACK8Z6FV+QYR01=aP4AT8rNUQMkX-WwesHzf5XY8465KuUZ=_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] iommu: Enable non-strict DMA on QCom SD/MMC
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Rob Clark <robdclark@chromium.org>, quic_c_gdjako@quicinc.com,
+        Saravana Kannan <saravanak@google.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jordan Crouse <jordan@cosmicpenguin.net>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 30, 2021 at 11:53:55PM +0300, Andy Shevchenko wrote:
-> The check for irq_managed flag along with non-zero irq is an idiom
-> for x86 PCI implementation. Introduce helper and switch users over
-> using it.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/x86/include/asm/pci.h   | 4 ++++
->  arch/x86/pci/intel_mid_pci.c | 5 ++---
->  arch/x86/pci/irq.c           | 4 ++--
->  drivers/acpi/pci_irq.c       | 4 ++--
->  4 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-> index d2c76c8d8cfd..ac25470c9558 100644
-> --- a/arch/x86/include/asm/pci.h
-> +++ b/arch/x86/include/asm/pci.h
-> @@ -92,6 +92,10 @@ void pcibios_scan_root(int bus);
->  struct irq_routing_table *pcibios_get_irq_routing_table(void);
->  int pcibios_set_irq_routing(struct pci_dev *dev, int pin, int irq);
->  
-> +static inline bool pcibios_irq_is_managed(struct pci_dev *dev)
-> +{
-> +	return dev->irq_managed && dev->irq > 0;
-> +}
->  
->  #define HAVE_PCI_MMAP
->  #define arch_can_pci_mmap_wc()	pat_enabled()
-> diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-> index f04742caf62b..0da287bcabf5 100644
-> --- a/arch/x86/pci/intel_mid_pci.c
-> +++ b/arch/x86/pci/intel_mid_pci.c
-> @@ -230,7 +230,7 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
->  	int ret;
->  	u8 gsi;
->  
-> -	if (dev->irq_managed && dev->irq > 0)
-> +	if (pcibios_irq_is_managed(dev))
->  		return 0;
->  
->  	ret = pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &gsi);
-> @@ -290,8 +290,7 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
->  
->  static void intel_mid_pci_irq_disable(struct pci_dev *dev)
->  {
-> -	if (!mp_should_keep_irq(&dev->dev) && dev->irq_managed &&
-> -	    dev->irq > 0) {
-> +	if (pcibios_irq_is_managed(dev) && !mp_should_keep_irq(&dev->dev)) {
->  		mp_unmap_irq(dev->irq);
->  		dev->irq_managed = 0;
->  	}
-> diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-> index d3a73f9335e1..ce3927b68f9e 100644
-> --- a/arch/x86/pci/irq.c
-> +++ b/arch/x86/pci/irq.c
-> @@ -1210,7 +1210,7 @@ static int pirq_enable_irq(struct pci_dev *dev)
->  			struct pci_dev *temp_dev;
->  			int irq;
->  
-> -			if (dev->irq_managed && dev->irq > 0)
-> +			if (pcibios_irq_is_managed(dev))
->  				return 0;
->  
->  			irq = IO_APIC_get_PCI_irq_vector(dev->bus->number,
-> @@ -1280,7 +1280,7 @@ bool mp_should_keep_irq(struct device *dev)
->  static void pirq_disable_irq(struct pci_dev *dev)
->  {
->  	if (io_apic_assign_pci_irqs && !mp_should_keep_irq(&dev->dev) &&
-> -	    dev->irq_managed && dev->irq) {
-> +	    pcibios_irq_is_managed(dev)) {
->  		mp_unmap_irq(dev->irq);
->  		dev->irq = 0;
->  		dev->irq_managed = 0;
-> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> index b63954c36e86..b463bdd2dbb5 100644
-> --- a/drivers/acpi/pci_irq.c
-> +++ b/drivers/acpi/pci_irq.c
-> @@ -397,7 +397,7 @@ int __acpi_pci_irq_enable(struct pci_dev *dev, int polarity)
->  		return 0;
->  	}
->  
-> -	if (dev->irq_managed && dev->irq > 0)
-> +	if (pcibios_irq_is_managed(dev))
->  		return 0;
->  
->  	entry = acpi_pci_irq_lookup(dev, pin);
-> @@ -486,7 +486,7 @@ void acpi_pci_irq_disable(struct pci_dev *dev)
->  	u8 pin;
->  
->  	pin = dev->pin;
-> -	if (!pin || !dev->irq_managed || dev->irq <= 0)
-> +	if (!pin || !pcibios_irq_is_managed(dev))
+Hi Robin, Doug,
 
-This file may be compiled for x86, arm64, and ia64, but it looks like
-you only defined pcibios_irq_is_managed() for x86.
+On Wed, Jul 14, 2021 at 8:14 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Tue, Jul 13, 2021 at 11:07 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2021-07-08 15:36, Doug Anderson wrote:
+> > [...]
+> > >> Or document for the users that want performance how to
+> > >> change the setting, so that they can decide.
+> > >
+> > > Pushing this to the users can make sense for a Linux distribution but
+> > > probably less sense for an embedded platform. So I'm happy to make
+> > > some way for a user to override this (like via kernel command line),
+> > > but I also strongly believe there should be a default that users don't
+> > > have to futz with that we think is correct.
+> >
+> > FYI I did make progress on the "punt it to userspace" approach. I'm not
+> > posting it even as an RFC yet because I still need to set up a machine
+> > to try actually testing any of it (it's almost certainly broken
+> > somewhere), but in the end it comes out looking surprisingly not too bad
+> > overall. If you're curious to take a look in the meantime I put it here:
+> >
+> > https://gitlab.arm.com/linux-arm/linux-rm/-/commits/iommu/fq
 
-We used to have a generic pci_has_managed_irq() that was the same as
-your pcibios_irq_is_managed(), but it was removed by 67b4eab91caf
-("Revert "PCI: Add helpers to manage pci_dev->irq and
-pci_dev->irq_managed"").
+I was wondering if you got any closer to testing / sending it out? I
+looked at the patches and am trying to understand, would they also
+make it possible to convert at runtime, an existing "non-strict"
+domain (for a particular device) into a "strict" domain leaving the
+other devices/domains as-is? Please let me know when you think your
+patches are good to be tested, and I'd also be interested in trying
+them out.
 
-I'm sorry that pdev->irq_managed got added without a comment by
-cffe0a2b5a34 ("x86, irq: Keep balance of IOAPIC pin reference count").
-Even reading that commit log, I'm not sure exactly what it means.  The
-log says:
+>
+> Being able to change this at runtime through sysfs sounds great and it
+> fills all the needs I'm aware of, thanks! In Chrome OS we can just use
+> this with some udev rules and get everything we need.
 
-  So flag irq_managed is introduced to track whether IRQ number is
-  assigned by OS and to protect pirq_enable_irq(), acpi_pci_irq_enable()
-  and intel_mid_pci_irq_enable() from reentrance.
+I still have another (inverse) use case where this does not work:
+We have an Intel chromebook with the default domain type being
+non-strict. There is an LTE modem (an internal PCI device which cannot
+be marked external), which we'd like to be treated as a "Strict" DMA
+domain.
 
->  		return;
->  
->  	/* Keep IOAPIC pin configuration when suspending */
-> -- 
-> 2.30.2
-> 
+Do I understand it right that using Rob's patches, I could potentially
+switch the domain to "strict" *after* booting (since we don't use
+initramfs), but by that time, the driver might have already attached
+to the modem device (using "non-strict" domain), and thus the damage
+may have already been done? So perhaps we still need a device property
+that the firmware could use to indicate "strictness" for certain
+devices at boot?
+
+Thanks,
+Rajat
