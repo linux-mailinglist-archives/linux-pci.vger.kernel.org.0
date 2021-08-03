@@ -2,87 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C9F3DF72C
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 00:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46EC63DF749
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 00:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231635AbhHCWBF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 18:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34740 "EHLO mail.kernel.org"
+        id S230059AbhHCWMI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 18:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230124AbhHCWBE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Aug 2021 18:01:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DEAB60FA0;
-        Tue,  3 Aug 2021 22:00:53 +0000 (UTC)
+        id S229663AbhHCWMH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 18:12:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2ECC060EE8;
+        Tue,  3 Aug 2021 22:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628028053;
-        bh=YgcQRaQCrh6jgIsmUNwvtzQmhCjaAmndO3t2iNcKXog=;
+        s=k20201202; t=1628028716;
+        bh=vSQLD2Dx1iWptSqQt/0j5xCISU3XPMV2GPsXMPEtfV0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L2cypB+HhtX5Wp44qIe7fI0F+C750ap/8QDy61pJcNeG/JOKteHQmpdhU9PUlRuKt
-         r/Ribms34YmPfCd4sD4oVyZ42MB3V18EM+aF85i7aN4hfD+izcr6NMig/A6jUcE/b0
-         uc4M4ki5kRdM9nwq8HJcZgRwSjdJrz9GbEZfdLx1qB2vaSyucyNUe8to5B/zsBuDjB
-         j94NJQjMZ+O8ozpEQMVtqqIEPOikGCdeR6WueYMJ4FA63pi8CFk6YMGZrsx6s867v8
-         MPAOmBoCu9cj6eaq1j1eSt4lt1BUYb7ydxoer5C7CTbjZ8k1qSzkwnorSeiHi01QPP
-         023xqPuZTOX9w==
-Received: by mail-ej1-f41.google.com with SMTP id x11so729928ejj.8;
-        Tue, 03 Aug 2021 15:00:53 -0700 (PDT)
-X-Gm-Message-State: AOAM532upCp58cKyMd05dmabhwcR1nyq1RSmxd3cn3hW7NhpR+yT+dgy
-        zrYi97AcdGDhJ1Hd9GKya9l/2aJihYxwa4ZKTg==
-X-Google-Smtp-Source: ABdhPJwz4h8NNTRdPM7c3ps1AwTtRoK6yY7hOTk68sydmHZ3zrBBq8RyD3UC5zFzAt+5LtmRdAf8E9Roeeom0WxvZy8=
-X-Received: by 2002:a17:906:4917:: with SMTP id b23mr23545434ejq.468.1628028051689;
- Tue, 03 Aug 2021 15:00:51 -0700 (PDT)
+        b=s5haClTxAMXXK+SMtVRQLn48uZKTcUAX14akEg9/wY3BQwYq7AVRcJt5h8zntzWFp
+         /UIT4jYCDh4j67dB934kbf0xKBY0ExfvhUpJLULbpvC9CRLDIfYnc8qFl1r0lBviUg
+         oZFikuRWBM1+EjbbORbQrpPJKFGgOwkP2YiUNOEafg5yicWOMdVeCmIA/ol3lWG4N0
+         0zBHnEOLov3Y9JnsSytJSucCkhh9DNixVMsecqjjjMcdBykCUp72WEzqHqi5CruOHu
+         j43AHg8y0n5589bpPH9Uk1xP1ZoR1kINMMjfcpYG3F3OQtuHRimmywvEoeL4L6M6KX
+         MDsWmeSO3lv9w==
+Received: by mail-ed1-f47.google.com with SMTP id p21so980211edi.9;
+        Tue, 03 Aug 2021 15:11:56 -0700 (PDT)
+X-Gm-Message-State: AOAM533bDacAEsEox1AgNDbp9nbedMzfs3TVsGyUlXie3pVglXRdu4Lg
+        mhIsFrli/3j/ZRa8CW9uZS073lRgvst9tW5vbQ==
+X-Google-Smtp-Source: ABdhPJy8lulYOjbYH1fj7VhNDQlwD+s1ZfdaUnK40lRIQAEPWK8BCRG86JqAGI6XEr1nfCf6u6Fiu0avOmOqKVXK26M=
+X-Received: by 2002:a05:6402:291d:: with SMTP id ee29mr28816734edb.289.1628028714789;
+ Tue, 03 Aug 2021 15:11:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <440bd70a-81c4-357d-9fb5-1f45fca17148@gmail.com>
-In-Reply-To: <440bd70a-81c4-357d-9fb5-1f45fca17148@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Aug 2021 16:00:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKd9Yz=pEdv7bjRcvQnio1nPJzBVxz9rexmQ-u00REQYA@mail.gmail.com>
-Message-ID: <CAL_JsqKd9Yz=pEdv7bjRcvQnio1nPJzBVxz9rexmQ-u00REQYA@mail.gmail.com>
-Subject: Re: PCI DT regressions affecting Northstar (iproc driver)
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Roman Bacik <roman.bacik@broadcom.com>,
-        Bharat Gooty <bharat.gooty@broadcom.com>,
-        Abhishek Shah <abhishek.shah@broadcom.com>,
-        Jitendra Bhivare <jitendra.bhivare@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <cover.1627965261.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1627965261.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Aug 2021 16:11:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLjw=+szXWJjGe86tMc51NA-5j=jVSXUAWuKeZRuJNJUg@mail.gmail.com>
+Message-ID: <CAL_JsqLjw=+szXWJjGe86tMc51NA-5j=jVSXUAWuKeZRuJNJUg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] DT schema changes for HiKey970 PCIe hardware to work
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 3, 2021 at 1:45 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> w=
-rote:
+On Mon, Aug 2, 2021 at 10:39 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 >
-> Hi,
+> Hi Rob,
 >
-> I normally stick to LTS kernel releases and I just late-found 2
-> regressions while switching from 5.4 to the 5.10.
+> That's the third version of the DT bindings for Kirin 970 PCIE and its
+> corresponding PHY.
 >
-> The whole thing is about Broadcom's Northstar platform and a bit quirky
-> iproc PCI driver (precisely: pcie-iproc-bcma part). The iproc PCI driver
-> supports both: platform device (based on DT) and bcma device.
->
-> Northstar support uses a mix of DT and bcma. The later is a bus with
-> EEPROM containing platform devices info. Its history is decades old and
-> that design comes from pre-DT times. In any case:
-> 1. Northstar PCI controllers are bcma devices with minimalistic DT nodes
-> 2. Everything worked great with 5.4 and quite OK with 5.8
->
-> Reference:
-> * arch/arm/boot/dts/bcm5301x.dtsi
-> * drivers/pci/controller/pcie-iproc-bcma.c
->
-> Could you look at those problems and check if it's possible to fix them
-> in some easy way (without a big refactoring) please?
+> It is identical to v2, except by:
+>         -          pcie@7,0 { // Lane 7: Ethernet
+>         +          pcie@7,0 { // Lane 6: Ethernet
 
-I just sent some untested fixes.
+Can you check whether you have DT node links in sysfs for the PCI
+devices? If you don't, then something is wrong still in the topology
+or the PCI core is failing to set the DT node pointer in struct
+device. Though you don't rely on that currently, we want the topology
+to match. It's possible this never worked on arm/arm64 as mainly
+powerpc relied on this.
+
+I'd like some way to validate the DT matches the PCI topology. We
+could have a tool that generates the DT structure based on the PCI
+topology.
+
+> at Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
+>
+> IMO, the best would be to merge this series via your tree, as it
+> depends on the patch converting the DT bindings for the PCIe DWC
+> driver.
+
+Yes, agreed.
 
 Rob
