@@ -2,170 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D3C33DE584
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 06:39:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2D03DE5B6
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 06:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233830AbhHCEjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 00:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233888AbhHCEjO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Aug 2021 00:39:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B81316104F;
-        Tue,  3 Aug 2021 04:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627965543;
-        bh=LrrFZSakdUxKwsRUW/i3f6iMngeHtZ/JieQmAqMg4aI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ME1cin80LMWK3bk/ft2AS9dbDKCgdkF9Uz7YzLlejaJ9zBE5m/yZKSgXtwYBaFFbU
-         jt/VCePPelSXrwc+HavXw59ttZRUySQWXvSIZQAY4qe0rVoy4J9/+qK3IsaiF1Aqxn
-         dUfeQbVJMCsyHMvcLPLI/KUwBqEbXgaAELpGuieJLqRYSxCkH47NMTuW46SPWDRWy2
-         rEjEmDlsequvUsOdVYl+d5Ot8tZ9bSEOGmAfrihviHTPjHNBPjblDiKZBvKoE79D+c
-         2rRfY0Y4MIPivb8J8ktuE5FVSd6BZVRrFvSa0wmnbxRBj9uHrxqIEWgLkaRqhNCCh3
-         cV+ZlG6A1S5Hg==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1mAmCj-00D8KL-If; Tue, 03 Aug 2021 06:39:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/4] dt-bindings: PCI: kirin: Add support for Kirin970
-Date:   Tue,  3 Aug 2021 06:38:57 +0200
-Message-Id: <c7f01a8aba924ba90c3e8071d57998f7e0590b9b.1627965261.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1627965261.git.mchehab+huawei@kernel.org>
-References: <cover.1627965261.git.mchehab+huawei@kernel.org>
+        id S233822AbhHCEtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 00:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233734AbhHCEtp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 00:49:45 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C0FC06175F;
+        Mon,  2 Aug 2021 21:49:33 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id e5so22221357pld.6;
+        Mon, 02 Aug 2021 21:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cZX9G51vdpyRQg2WBsftKD5FHWyuhYxr1YfFIpc6hfg=;
+        b=OQVKezk7+gecMuyjVA2/K1ZfeBWgpmSrBmZkXKyjQzRSJV74c8jcr0CiC4idTKpVte
+         1VcrFZ1x+5btyNnLVITbwSQoMdioo3MEwcR48zZwkvFwHMSizWbv6QWLZ7xX2nf7jdQc
+         DTGIGSCUeCZt8ZKxaIesH5XtIPxwEVfaHVO0qqBdJaYzUbw4Makn38bWJ06tERTOSBbE
+         ib3L3R35XLyl51+dWqHG8swuNYDAtUxF4WdtXRk2QmqfEnjJIe42aWrRBVB6ITT7vtJo
+         GNARzC7b8QdyXWrYJ1+dOfFOPosSlCCCE7KFmmyIdaIOtTXuDxtHGxUmEhQ944ZZ5LWP
+         nUvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cZX9G51vdpyRQg2WBsftKD5FHWyuhYxr1YfFIpc6hfg=;
+        b=PdSbmYsWVJpXyxZbx5Fndcxxcr5bNJ402R+QB7GDVcYdu+lr5e+eSemmXPCUwPxFGw
+         CDK9Njfn8Ci3vrpfXuNfUCbwksq0Bllr5kXYXMQTNCqISuuEj3eb2vj+Y8MiXmn+hKlU
+         1Ck+2HEH5eoMcyv85PbnS+KUH1nxsPV4oc3/UDByOBjgawXM+hweqY+rocMDg91Xcbft
+         JxWgLRVdykTi6Aujl/fpG73TNNp1z/J1P4QclsE579LazgUJ2k5RyotROIYX9iAkCdn5
+         o4/ICGLNNqmfzgPopG5Hn90yE3fJVfxJXOw30HnwrgI/HvVeilysSxwrJpnNeXhzqyem
+         sK2A==
+X-Gm-Message-State: AOAM530BCJ8lzEAOxGh4z1KThUg6Gc9SF1fhRrKF4MpOQA2OG5yTT4LT
+        p6gue0Df3f+2XkP5ODhPUjU=
+X-Google-Smtp-Source: ABdhPJy2SLmG0hmG4OvdmYhj0f88pWIXR/e+YKjvKcS714u8GHliAheSrMmyTq/vGH7W3N/AffKTZA==
+X-Received: by 2002:a17:90a:ead3:: with SMTP id ev19mr4377999pjb.229.1627966173354;
+        Mon, 02 Aug 2021 21:49:33 -0700 (PDT)
+Received: from localhost ([139.5.31.186])
+        by smtp.gmail.com with ESMTPSA id y139sm13306607pfb.107.2021.08.02.21.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Aug 2021 21:49:32 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 10:19:29 +0530
+From:   Amey Narkhede <ameynarkhede03@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v13 2/9] PCI: Add pcie_reset_flr to follow calling
+ convention of other reset methods
+Message-ID: <20210803044929.p22ren6wwl3jff3f@archlinux>
+References: <20210801142518.1224-3-ameynarkhede03@gmail.com>
+ <20210802224420.GA1472058@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210802224420.GA1472058@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new compatible, plus the new bindings needed by
-HiKey970 board.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../bindings/pci/hisilicon,kirin-pcie.yaml    | 76 ++++++++++++++++++-
- 1 file changed, 75 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-index 90cab09e8d4b..c0551d2e606d 100644
---- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -24,11 +24,12 @@ properties:
-     contains:
-       enum:
-         - hisilicon,kirin960-pcie
-+        - hisilicon,kirin970-pcie
- 
-   reg:
-     description: |
-       Should contain dbi, apb, config registers location and length.
--      For HiKey960, it should also contain phy.
-+      For hisilicon,kirin960-pcie, it should also contain phy.
-     minItems: 3
-     maxItems: 4
- 
-@@ -36,6 +37,11 @@ properties:
-     minItems: 3
-     maxItems: 4
- 
-+  hisilicon,clken-gpios:
-+    description: |
-+      Clock input enablement GPIOs from PCI devices like Ethernet, M.2 and
-+      mini-PCIe slots.
-+
- required:
-   - compatible
-   - reg
-@@ -47,6 +53,7 @@ examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/clock/hi3660-clock.h>
-+    #include <dt-bindings/clock/hi3670-clock.h>
- 
-     soc {
-       #address-cells = <2>;
-@@ -83,4 +90,71 @@ examples:
-         clock-names = "pcie_phy_ref", "pcie_aux", "pcie_apb_phy",
-                       "pcie_apb_sys", "pcie_aclk";
-       };
-+
-+      pcie@f5000000 {
-+        compatible = "hisilicon,kirin970-pcie";
-+        reg = <0x0 0xf4000000 0x0 0x1000000>,
-+              <0x0 0xfc180000 0x0 0x1000>,
-+              <0x0 0xf5000000 0x0 0x2000>;
-+        reg-names = "dbi", "apb", "config";
-+        bus-range = <0x0  0x1>;
-+        msi-parent = <&its_pcie>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        phys = <&pcie_phy>;
-+        ranges = <0x02000000 0x0 0x00000000
-+                  0x0 0xf6000000
-+                  0x0 0x02000000>;
-+        num-lanes = <1>;
-+        #interrupt-cells = <1>;
-+        interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "msi";
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+        reset-gpios = <&gpio7 0 0>;
-+        hisilicon,clken-gpios = <&gpio27 3 0>, <&gpio17 0 0>, <&gpio20 6 0>;
-+
-+        pcie@0 { // Lane 0: PCIe switch: Bus 1, Device 0
-+          reg = <0 0 0 0 0>;
-+          compatible = "pciclass,0604";
-+          device_type = "pci";
-+          #address-cells = <3>;
-+          #size-cells = <2>;
-+          ranges;
-+          pcie@1,0 { // Lane 4: M.2
-+            reg = <0x800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio3 1 0>;
-+            clkreq-gpios = <&gpio27 3 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+          pcie@5,0 { // Lane 5: Mini PCIe
-+            reg = <0x2800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio27 4 0 >;
-+            clkreq-gpios = <&gpio17 0 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+          pcie@7,0 { // Lane 6: Ethernet
-+            reg = <0x3800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio25 2 0 >;
-+            clkreq-gpios = <&gpio20 6 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+        };
-+      };
-     };
--- 
-2.31.1
-
+On 21/08/02 05:44PM, Bjorn Helgaas wrote:
+> On Sun, Aug 01, 2021 at 07:55:11PM +0530, Amey Narkhede wrote:
+> > Currently there is separate function pcie_has_flr() to probe if PCIe FLR
+> > is supported by the device which does not match the calling convention
+> > followed by reset methods which use second function argument to decide
+> > whether to probe or not. Add new function pcie_reset_flr() that follows
+> > the calling convention of reset methods.
+> >
+> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+> > ---
+> >  drivers/crypto/cavium/nitrox/nitrox_main.c |  4 +--
+> >  drivers/pci/pci.c                          | 40 +++++++++++++++-------
+> >  drivers/pci/pcie/aer.c                     | 12 +++----
+> >  drivers/pci/quirks.c                       |  9 ++---
+> >  include/linux/pci.h                        |  2 +-
+> >  5 files changed, 38 insertions(+), 29 deletions(-)
+>
+> >  int pcie_flr(struct pci_dev *dev)
+> >  {
+> > @@ -4655,7 +4653,26 @@ int pcie_flr(struct pci_dev *dev)
+> >
+> >  	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+> >  }
+> > -EXPORT_SYMBOL_GPL(pcie_flr);
+> > +EXPORT_SYMBOL(pcie_flr);
+>
+> Why this change?  If it's unintentional and there's no other reason to
+> repost, I can fix it up locally.
+Yeah my bad it was unintentional.
