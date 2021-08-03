@@ -2,63 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1419F3DF4F6
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 20:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD193DF516
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 21:00:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239261AbhHCSts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 14:49:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58040 "EHLO
+        id S237860AbhHCTAV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 15:00:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46593 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231878AbhHCStr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 14:49:47 -0400
+        by vger.kernel.org with ESMTP id S238764AbhHCTAU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 15:00:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628016575;
+        s=mimecast20190719; t=1628017200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=s4KWyk744Q3wL6JnNmKsjJ+6uacfM+MwhnkOhezWa0A=;
-        b=Yt9Wmh6AWMZAttkxqQDTZjv64eFlptitZYz13GilTQ4cfPd/oYD6d/NkVVAv/gPxF3LV5J
-        ccDyaMNXH765adDpVd06xtY7NnngjijcpcEeHju8B8MU6xH3471InvzaGR61fK8qZ9KUXr
-        SbqLKJNCjZxo5jxFCY2fiM5NEHpxHnU=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-ixg-MqEkP9KBBUpRMfqKjA-1; Tue, 03 Aug 2021 14:49:34 -0400
-X-MC-Unique: ixg-MqEkP9KBBUpRMfqKjA-1
-Received: by mail-oo1-f72.google.com with SMTP id t62-20020a4a3e410000b0290263d7da47fbso9360979oot.17
-        for <linux-pci@vger.kernel.org>; Tue, 03 Aug 2021 11:49:34 -0700 (PDT)
+        bh=l5USzdXQ9euxrl7NB3ZGmWIS9cg5EG63KnUhySjS41U=;
+        b=AFNyrJqo5r3/AVi5o5BERluPQp/YZaCgtEd5kIDHHYIF3O6OFpnmSKNP1aos9WY4FqQXwp
+        P/XfKpIii+lpl1KT10HtoN9OCwZXQY1Rl5gSssSmLc3Rj5PHiY06+vKocR7h+AiQpl2kTY
+        tN6RXCkGto3UIZ95SM/nUkteXlXKo9A=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-B27bgSL2MA24hwI-5F-mKA-1; Tue, 03 Aug 2021 14:59:59 -0400
+X-MC-Unique: B27bgSL2MA24hwI-5F-mKA-1
+Received: by mail-ot1-f70.google.com with SMTP id m19-20020a9d6ad30000b02904b7c1fa2d7cso10204069otq.16
+        for <linux-pci@vger.kernel.org>; Tue, 03 Aug 2021 11:59:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s4KWyk744Q3wL6JnNmKsjJ+6uacfM+MwhnkOhezWa0A=;
-        b=YYOz8dXA0RpCg7YYr7B0lIEGZoOIBIuCkiMietVBzy1Fi8kqYI041XJaSV40jTIeo9
-         1BRl4cGYjNMVOAWblrQ4NgctSw4vauwSzPZ7oMib8RlKvC7Jdcd8yRGSH+twzxq7R5sk
-         Iek3ovBJ2ZEmv0hjmykJBb11dWSNChzUEQDV+uRhf/IQJS52zQNUsy7uuAjT7R6E6Oj3
-         GMhQhtlUR5dmJyJK8UraxHNg2ey4Mjknx7BF5AcYmNCu5ID83c3UAzzn9+cDntps9O45
-         0wBbkbGEDfDRldZ9fmWsRWDM+tXb/XNR5gOD2tHRy3f020GPK7HveUkeLq60RoLq0Hq2
-         V6IA==
-X-Gm-Message-State: AOAM530vPpqmGSlSpQKNK11/0tvelDdRp3I6/ISl3lYOYOqo5f6/rJ6S
-        KfEQlR1rE3K+GvLkPRqMTdQbsC2gsB+HRVhPGfokuBDuGeGNM65BYgWk+CUJwCNpXuKzK7fayyj
-        wm1+KxFI3tjHdJf+jUmLO+U6cntIM6ICh6oowfM+1V7cSCqgiSMWI3qVvX3sNVinYklnSuRPt+Z
-        UQOG/b1g==
-X-Received: by 2002:aca:1316:: with SMTP id e22mr1740854oii.95.1628016573593;
-        Tue, 03 Aug 2021 11:49:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZQM1+YFE6lxRBMxrtzJJI52rqczFbFNXJHgIRseGVa5PUBazAFaaqedCQhuwCwnPD1MZ+MQ==
-X-Received: by 2002:aca:1316:: with SMTP id e22mr1740836oii.95.1628016573438;
-        Tue, 03 Aug 2021 11:49:33 -0700 (PDT)
+        bh=l5USzdXQ9euxrl7NB3ZGmWIS9cg5EG63KnUhySjS41U=;
+        b=Q2xL+s9IrDTB6whahBv0If7aTOvepADSITbw27CUcmANPfIECbY/RaJaDgNkt0EDM9
+         4JnpLQslqse5Q/1il6ZAHHch3BH8Pqwoj8+wQwDM9oSRwlRxSQgGkueAnv9L+H1FP8e0
+         meXHmTThOSZr9py/lSqBdTRlgE/X34g0ppIhiGzPbMdIjBFqpvovSHnIHuYssVPaUKHp
+         L3z2jGMMJb3qGzv2upX54/DSdniNa7fmex21MVhVHhSm9JaVSaa7AfZEgNov1LzDood3
+         GGpB82hJwtkOvPPyRJ4valvJTbMaieF9sHYSEtkQu6NPPybttZwvn88k2sb2K4QpUynY
+         xJ2Q==
+X-Gm-Message-State: AOAM531n0mmS0MVxioaEDc+LeKetJhW2wW4yEWQg4ZWRJYZhiK4GDwlZ
+        n9VSvKXOYw1Y0JLZA60+H+517LjEc976YjswghLq4CECphzHXHvW3iuU49zD+nqRfeHyz0e+8qn
+        FaPOi1ZBJsh0kt8kS7RSk
+X-Received: by 2002:a9d:64d9:: with SMTP id n25mr16237709otl.174.1628017198338;
+        Tue, 03 Aug 2021 11:59:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxtgrBaRd2X5njqX/Ru2B488M5h/QFnB3bHOr+H6V+E3tjpQSXOdgVKAE+2iD0E591AyC/uFA==
+X-Received: by 2002:a9d:64d9:: with SMTP id n25mr16237702otl.174.1628017198208;
+        Tue, 03 Aug 2021 11:59:58 -0700 (PDT)
 Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id r5sm2547956oti.5.2021.08.03.11.49.32
+        by smtp.gmail.com with ESMTPSA id u126sm2448781ooa.23.2021.08.03.11.59.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 11:49:33 -0700 (PDT)
-Date:   Tue, 3 Aug 2021 12:49:31 -0600
+        Tue, 03 Aug 2021 11:59:57 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 12:59:56 -0600
 From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc:     rajatja@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/ACS: Enforce pci=noats with Transaction Blocking
-Message-ID: <20210803124931.270ca006.alex.williamson@redhat.com>
-In-Reply-To: <162404966325.2362347.12176138291577486015.stgit@omen>
-References: <162404966325.2362347.12176138291577486015.stgit@omen>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: Make saved capability state private to core
+Message-ID: <20210803125956.2b0188f0.alex.williamson@redhat.com>
+In-Reply-To: <20210802221728.1469304-1-helgaas@kernel.org>
+References: <20210802221728.1469304-1-helgaas@kernel.org>
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -67,62 +66,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon,  2 Aug 2021 17:17:28 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Bump.
-
-On Fri, 18 Jun 2021 14:55:14 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> PCIe Address Translation Services (ATS) provides a mechanism for a
-> device to provide an on-device caching translation agent (device
-> iotlb).  We already have a means to disable support for this feature
-> via the pci=noats option.  For untrusted and externally facing
-> devices, we not only disable ATS support for the device, but we use
-> Access Control Services (ACS) Transaction Blocking to actively
-> prevent devices from sending TLPs with non-default AT field values.
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Extend pci=noats to also make use of PCI_ACS_TB so that not only is
-> ATS disabled at the device, but blocked at the downstream ports.
-> This provides a means to further lock-down ATS for cases such as
-> device assignment, where it may not be the hardware configuration of
-> the device that makes it untrusted, but the driver running on the
-> device.
+> Interfaces and structs for saving and restoring PCI Capability state were
+> declared in include/linux/pci.h, but aren't needed outside drivers/pci/.
 > 
-> Cc: Rajat Jain <rajatja@google.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> Move these to drivers/pci/pci.h:
+> 
+>   struct pci_cap_saved_data
+>   struct pci_cap_saved_state
+>   void pci_allocate_cap_save_buffers()
+>   void pci_free_cap_save_buffers()
+>   int pci_add_cap_save_buffer()
+>   int pci_add_ext_cap_save_buffer()
+>   struct pci_cap_saved_state *pci_find_saved_cap()
+>   struct pci_cap_saved_state *pci_find_saved_ext_cap()
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/pci.c    |    4 ++--
->  drivers/pci/quirks.c |    2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 68f57d86b243..5aa1bb2ddd80 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -915,8 +915,8 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	/* Upstream Forwarding */
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> -	/* Enable Translation Blocking for external devices */
-> -	if (dev->external_facing || dev->untrusted)
-> +	/* Enable Translation Blocking for external devices and noats */
-> +	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
->  		ctrl |= (cap & PCI_ACS_TB);
->  
->  	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 6d74386eadc2..d541076c083a 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5031,7 +5031,7 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
->  	ctrl |= (cap & PCI_ACS_CR);
->  	ctrl |= (cap & PCI_ACS_UF);
->  
-> -	if (dev->external_facing || dev->untrusted)
-> +	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
->  		ctrl |= (cap & PCI_ACS_TB);
->  
->  	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
-> 
-> 
+>  drivers/pci/pci.h   | 23 +++++++++++++++++++++--
+>  include/linux/pci.h | 18 ------------------
+>  2 files changed, 21 insertions(+), 20 deletions(-)
+
+LGTM
+
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 
