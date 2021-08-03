@@ -2,109 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9EC3DED2E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 13:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 123463DEDB2
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 14:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236045AbhHCLtf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 07:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236540AbhHCLtc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 07:49:32 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96F9C061384;
-        Tue,  3 Aug 2021 04:49:01 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id z3so22056448plg.8;
-        Tue, 03 Aug 2021 04:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=E3p7QBANfnDXzug1HVnf+mR89WyeHhHNhX08lGOpqhc=;
-        b=D/gLHBoFNb2XOZsMW/v2FKQrEt5kyE7XVPWKo2mvVaHKAl+7uKURgt0+RLULamecm+
-         Rwf64sqgFRpmSzJaZiUJJVs3DlJO6VHJLaTzrf1EITiGscPPag+Q7WIPrt2LU99SRAxS
-         oEkoE7+pSceTGX7Pqocaikhl0myY5jimV9JQYzsuAZ345DDfnynCQ/IPdO28Qwslbx+M
-         hyN2zzBVRa1f056Bhiw9Kv6Z1QF2gUfccZrRsuF+cD6YTA2I9W3S4NunW8DO24J9MnxK
-         fmZYuLKYhnNDSE0B3h1EUtlkd3DjzafBnEyS9+s7zRLdsv5d+1IhBlD8+WcNEhZ4Bbxy
-         dRtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=E3p7QBANfnDXzug1HVnf+mR89WyeHhHNhX08lGOpqhc=;
-        b=PyKPRLnCYiyr+ralJEh9fhppnx2LYMsZkwTjAW7yKBxhZLkAd7z00B2henmhVqOstG
-         3LZ1ezQGBYKJhniwcOjqmnTfpYn5yM8zPh3nbBT5h0+mr+GmqUzTaC2tLmlrCe/5zy8y
-         3bnWiOLH0oUg1NyGQzo/KUOk7wfGmjjp0mpdL9Mpgnb7daBDjE2dc/ibFHzpljG7U7pW
-         0I9tnCSsH7cLnmchI/n1iyXNh0JF0HESZ9Nhb758xULy5iJwTXNXc1DwTcEUHcDGcdR7
-         Tuah/r6BjYYhOxBqr8J+dCbHLsZGLSphAIrclTxo15tlV95M1XXFescK7j+dR8E5oJxI
-         0KPA==
-X-Gm-Message-State: AOAM530xIrYAazvxbtthltxGcGT/Gz/zys4OZYVIZ3+MebEo/6pbVoLk
-        BQRSKoW4m560YJmOiB/KJ5+thsRyMBRZnoRkHw==
-X-Google-Smtp-Source: ABdhPJzNN2Gicr5jDqIcr5dqxlDmX+VPFcujfZWBaTU9JRp7YfxAW9iKltVroPdqRFdRmRr9MKUFuA==
-X-Received: by 2002:aa7:8387:0:b029:395:a683:a0e6 with SMTP id u7-20020aa783870000b0290395a683a0e6mr21876161pfm.12.1627991341117;
-        Tue, 03 Aug 2021 04:49:01 -0700 (PDT)
-Received: from [10.144.0.6] ([154.16.166.154])
-        by smtp.gmail.com with ESMTPSA id n33sm17054942pgm.55.2021.08.03.04.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Aug 2021 04:49:00 -0700 (PDT)
-Subject: Re: [PATCH v2] tools: PCI: Zero-initialize param
-To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kw@linux.com,
-        leon@kernel.org, kishon@ti.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210714132331.5200-1-yang.shunyong@gmail.com>
- <9e40fd4c-6aec-db3e-f323-0f2cfb67d58c@ti.com>
-From:   Shunyong Yang <yang.shunyong@gmail.com>
-Message-ID: <2017bdfe-b053-0dbe-82e3-b5533dbe372e@gmail.com>
-Date:   Tue, 3 Aug 2021 19:48:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S234524AbhHCMPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 08:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235847AbhHCMPt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 08:15:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B875160F56;
+        Tue,  3 Aug 2021 12:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627992938;
+        bh=YFyNorBzvHKd2LCdkw4zsM+gAMFMoZIoTqWAAptOfkg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J4vot0vAmpIzv0uaEowWDkSGSknUbFG2w0ls6kn5sjZyCbGTHTXgcxzCDuA+/DRfn
+         s3YvkZ+d4b/xyx3I4Ky5pOJC8c4gon3eKy84lrQJRTRwwWV3/LGIwU+m5yumygPvjm
+         X6wlzVEY2QguuhaJCRmb/ATxyutApfmj+fMkdBs2ANSw9IzKEnn0tpS8QC09+kQj91
+         4WO/E05vUbAdhpe5vJ1IHu7wSEs7tAhspeZz2RZqzTBACbgqbOGiRio8lb1y2yV2Cc
+         NrGYvszcFaG4Wvpe0qhVYxOQB/gdnc78HprwXKly/XXbanIBswJBWR711f0SQ/R0Mi
+         q3X4QTrD5sYgQ==
+Received: by mail-wr1-f52.google.com with SMTP id p5so25102293wro.7;
+        Tue, 03 Aug 2021 05:15:38 -0700 (PDT)
+X-Gm-Message-State: AOAM5301wUk4NkN88MBRUUwQhUyH3WXltxrl95d8JVTsNKqwVwSq35CM
+        1GaC1eZpnL+KKyXnEnPcltJj3tUM34o03hnRNkg=
+X-Google-Smtp-Source: ABdhPJxAL8VftAhgCQ+bSLKaGZHOswlreW4hRX79bjyzo5amawkDoDYbsyb2ih3hosWG3M6soO1UgGXpHIPbXlBIBik=
+X-Received: by 2002:adf:e107:: with SMTP id t7mr22741611wrz.165.1627992937364;
+ Tue, 03 Aug 2021 05:15:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9e40fd4c-6aec-db3e-f323-0f2cfb67d58c@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
+ <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
+ <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
+ <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com> <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+In-Reply-To: <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 3 Aug 2021 14:15:21 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+Message-ID: <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     John Garry <john.garry@huawei.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
-
-    Would you please help to review and put this tiny fix (for 
-tools/pci/pcitest.c) in your merge queue? Kishon has acked.
-
-Thanks.
-
-Shunyong
-
-On 2021/7/14 21:32, Kishon Vijay Abraham I wrote:
+On Tue, Aug 3, 2021 at 1:23 PM John Garry <john.garry@huawei.com> wrote:
+> > so I'm just not building those drivers any more, and not
+> > defining the inb()/outb() helpers either, causing a build failure when I'm
+> > missing an option.
+> >
+> > However it sounds like you are interested in a third option here, which
+> > brings us to:
+> >
+> > LEGACY_PCI: any PCI driver that uses inb()/outb() or is only available
+> >      on old-style PCI but not PCIe hardware without a bridge.
+> >      To be disabled for most architectures and possibly distros but can
+> >      be enabled for kernels that want to use those devices, as long as
+> >      CONFIG_HAS_IOPORT is set by the architecture.
+> >
+> > HAS_IOPORT: not a legacy PCI device, but can only be built on
+> >      architectures that define inb()/outb(). To be disabled for s390
+> >      and any other machine that has no useful definition of those
+> >      functions.
 >
-> On 14/07/21 6:53 pm, Shunyong Yang wrote:
->> The values in param may be random if they are not initialized, which
->> may cause use_dma flag set even when "-d" option is not provided
->> in command line. Initializing all members to 0 to solve this.
->>
->> Signed-off-by: Shunyong Yang <yang.shunyong@gmail.com>
-> Thanks for the fix.
+> That seems reasonable. And asm-generic io.h should be ifdef'ed by
+> HAS_IOPORT. In your patch you had it under CONFIG_IOPORT - was that
+> intentional?
+
+No, that was a typo. Thanks for pointing this out.
+
+> On another point, I noticed SCSI driver AHA152x depends on ISA, but is
+> not an isa driver - however it does use port IO. Would such dependencies
+> need to be changed to depend on HAS_IOPORT?
+
+I'm not sure what you mean here. As far as I can tell, AHA152x is an ISA
+driver in the sense that it is a driver for ISA add-on cards. However, it
+is not a 'struct isa_driver' in the sense that AHA1542 is, AHA152x  is even
+older and uses the linux-2.4 style initialization using a module_init()
+function that does the probing.
+
+> I did notice that arm32 support CONFIG_ISA - not sure why.
+
+This is for some of the earlier machines we support:
+mach-footbridge has some on-board ISA components, while
+SA1100, PXA25x and S3C2410 each have at least one machine
+with a PC/104 connector using ISA signaling for add-on cards.
+
+There are also a couple of platforms with PCMCIA or CF slots
+using the same ISA style I/O signals, but those have separate
+drivers.
+
+> > HARDCODED_IOPORT: (or another name you might think of,) Used by
+> >     drivers that unconditionally do inb()/outb() without checking the
+> >     validity of the address using firmware or other methods first.
+> >     depends on HAS_IOPORT and possibly architecture specific
+> >     settings.
 >
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->
->
->> ---
->> v2: Change {0} to {} as Leon Romanovsky's comment.
->> ---
->>   tools/pci/pcitest.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
->> index 0a1344c45213..441b54234635 100644
->> --- a/tools/pci/pcitest.c
->> +++ b/tools/pci/pcitest.c
->> @@ -40,7 +40,7 @@ struct pci_test {
->>   
->>   static int run_test(struct pci_test *test)
->>   {
->> -	struct pci_endpoint_test_xfer_param param;
->> +	struct pci_endpoint_test_xfer_param param = {};
->>   	int ret = -EINVAL;
->>   	int fd;
->>   
->>
+> Yeah, that sounds the same as what I was thinking. Maybe IOPORT_NATIVE
+> could work as a name. I would think that only x86/ia64 would define it.
+> A concern though is that someone could argue that is a functional
+> dependency, rather than just a build dependency.
+
+You can have those on a number of platforms, such as early
+PowerPC CHRP or pSeries systems, a number of MIPS workstations
+including recent Loongson machines, and many Alpha platforms.
+
+Maybe the name should reflect that these all use PC-style ISA/LPC
+port numbers without the ISA connectors.
+
+       Arnd
