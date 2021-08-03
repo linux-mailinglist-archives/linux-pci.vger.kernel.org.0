@@ -2,173 +2,355 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9B33DEE2D
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 14:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F5753DEF38
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 15:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236018AbhHCMsx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 08:48:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7008 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235909AbhHCMsw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 08:48:52 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 173CXF1o026900;
-        Tue, 3 Aug 2021 08:48:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=y7eI/WKog5QgbT7neYvgTkNPKlxpYkmXQahi9gRnTTE=;
- b=h2wOAO13925nivPLe5i3sHZeZ2FWsrCvN0ztNOBvkVJbhBTTNtEHvEnPyfHA4VO15W92
- 3uLowxhQPz8nbcV0fVvkvqQm1bajUT73AxgsL/aG7+peIkvCGAUiYqwWSMtA0Q7fDtqd
- zsxuJoh/a0+a6OPqsjm+GxpgHumfDb/OepMJUGyUABHqW3QhqMCLNqs2+iHg4ETr1HFq
- TYDO3ggzNAk+dEvyovndt2wmKDTuXBUEnLnyoHp7UAPGtaC+Hb9tsmUsBFs60xgbUpPj
- A+9GxfUjgr7OvL7XcuHg3/0greq84bGkK/H/tw6poKsJXa2ujWojefebkx7h20nDNOwz Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5kke2g3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Aug 2021 08:48:23 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 173CY5N9029863;
-        Tue, 3 Aug 2021 08:48:22 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5kke2g2k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Aug 2021 08:48:22 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 173Chdmr032507;
-        Tue, 3 Aug 2021 12:48:19 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 3a4x596b9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Aug 2021 12:48:19 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 173CmF2Y51446018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Aug 2021 12:48:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4485F5204E;
-        Tue,  3 Aug 2021 12:48:15 +0000 (GMT)
-Received: from sig-9-145-29-26.uk.ibm.com (unknown [9.145.29.26])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 905AA52050;
-        Tue,  3 Aug 2021 12:48:14 +0000 (GMT)
-Message-ID: <9adb96573280c12a277ac8f63742065d6d574e54.camel@linux.ibm.com>
-Subject: Re: [patch V2 12/19] s390/pci: Do not mask MSI[-X] entries on
- teardown
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        x86@kernel.org, linux-s390@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Date:   Tue, 03 Aug 2021 14:48:14 +0200
-In-Reply-To: <20210729222542.939798136@linutronix.de>
-References: <20210729215139.889204656@linutronix.de>
-         <20210729222542.939798136@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Tnmq2Rh380lFtGMTYA-muuklRO8VYSL0
-X-Proofpoint-ORIG-GUID: 9iN5-hZhFCBWSavvkM-BUdb7I6xKL7Y_
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-03_02:2021-08-03,2021-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxscore=0 bulkscore=0 clxscore=1011 priorityscore=1501 adultscore=0
- mlxlogscore=981 phishscore=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108030084
+        id S234388AbhHCNqC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 09:46:02 -0400
+Received: from mail-co1nam11on2074.outbound.protection.outlook.com ([40.107.220.74]:60737
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232748AbhHCNqB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Aug 2021 09:46:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HG52myjMyMXKt03eNG6oBc3+voxNYS48p9NmXR4LdXSyYl4iDU491M/VPowlrpWzvUYjJPgOfTEJlP1G7Po6DfpHiVcPmi9C3r6AzadCp4fpexJUvRT9EtI5rg2DOWX/JiIlQAWvBSF72HxpS6D6oERyE2FhbM3WwnX5wBt8a6Gemah2++aLjU5I7AqdTviHjd3kGEq8b/EXRC8pr3vdryIpDL8NR+nwJs55HGHah9QlfiZoSJ9vORNGwPrcvf9Lijv2mac4y2vXKL97qkJmBx7h51VhzTTMywW6jHItQxXpqobFWvVed5rZZ4qoFD+A1H/m1j3+s9aPzb4KSJFsZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOK3AQPqCDwxTiIlBBo9JJR9mv4mxXVJjXJMI5iOHww=;
+ b=V3+ATnZfsKjChEza+TysYTKCz42PPaL5p7HVt8rl2yGieDuUvBxJhDSmEKzRH2mFVvSIWCX4/k+HX/ICgb8ZyPsws7LiXlk1mEj3XiQqZC26bbfAbp/mZz/a+dvCedg69PcYBoFViUIfhA8YMtLQ+GudGTQQokq1uSvZkNyyRaI1q3G5Ny6OdT59QzLUjZqlwg98qqba3sIAf3fsq1vhflmFyXAMwENHKQJEAEu9aLmjboUJh7pYZOUSBfon4AZMPp8+Nmx5fzeJEwhHcZxixprN9NWpT6yC85T0QbnkikzP5VP7WFAwGFMy/eWbEafSuO/5M5eksh5FvlbvAm1kvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=rjwysocki.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOK3AQPqCDwxTiIlBBo9JJR9mv4mxXVJjXJMI5iOHww=;
+ b=ajzgl/kfhSXOgAP8ikEd5Ss9gTnOnKkYOCHp0QZYx5QhODM+yBLpHU7+WWjuq1x78LGJNRDqpCQN7hnvOSUxgeP8iDU0b4qKGuk4qz2mjmbteuUwpu84gUDTC9pqFqmHOk/BPWIOA/lnMxP8CCyCBMVfofxEszaSgWSrufJaKs+AAGCcVKnerxshMbBc1fwKSYs9bBXZMRtQp0adLxuqfpgOcMgb3qaBLi/IpbAQLuergHGkFsM6dlI/1aQYPdRGz9EAeg7Se3Nv8lhfLqX88elwEd5dqixnPpbwHe50wRZzQzLEsSyIvUHSk/GXbl4xrEM+EJVyBlLhoTo4wc2EwA==
+Received: from MW4PR04CA0281.namprd04.prod.outlook.com (2603:10b6:303:89::16)
+ by DM6PR12MB2779.namprd12.prod.outlook.com (2603:10b6:5:4f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19; Tue, 3 Aug
+ 2021 13:45:49 +0000
+Received: from CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:89:cafe::11) by MW4PR04CA0281.outlook.office365.com
+ (2603:10b6:303:89::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15 via Frontend
+ Transport; Tue, 3 Aug 2021 13:45:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; rjwysocki.net; dkim=none (message not signed)
+ header.d=none;rjwysocki.net; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ CO1NAM11FT039.mail.protection.outlook.com (10.13.174.110) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4373.18 via Frontend Transport; Tue, 3 Aug 2021 13:45:48 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 3 Aug
+ 2021 13:45:48 +0000
+Received: from [10.20.23.47] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 3 Aug 2021
+ 13:45:46 +0000
+Subject: Re: [PATCH v13 5/9] PCI: Allow userspace to query and set device
+ reset mechanism
+To:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <alex.williamson@redhat.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+References: <20210801142518.1224-1-ameynarkhede03@gmail.com>
+ <20210801142518.1224-6-ameynarkhede03@gmail.com>
+From:   Shanker R Donthineni <sdonthineni@nvidia.com>
+Message-ID: <b3a5aef9-45ba-5f61-a756-c024c3a728ad@nvidia.com>
+Date:   Tue, 3 Aug 2021 08:45:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210801142518.1224-6-ameynarkhede03@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6c5e96ee-2c02-4003-4d17-08d956850064
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2779:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2779909231BB7B50609F6BACC7F09@DM6PR12MB2779.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:644;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hU310r+v7gUUzVyA1Cwp5qTxu6nM4+2AySphZfTXyWDdvzxbT8gqxUC/BKwEQO4mNm06znCOg539mXo9yGRnMU9y5vTjFbvM0W1CBNP3jZYKEph8T3lL64GKhmlVi2PiR+Gkc37leBWfHXKIw7uVjZZe0XaKiSbKsmv+xjBwdkL1X38DcvKd14sNTvWp62S1fdDKRB+C0ouv9noNmgV1GHVwU54N7NaxbBm4xP+PTh7m6M7Q9UlOJRdWmRfeKHwcXOLinKCKqg4J2vl8iLO8b875aoR9LhM5f5NKjQ7tpoK3t7vV37Q+92+nv/DynOiM4I32ldd1q4SSQFWyEivhQ3eig0SbibFTEmP8gXwL1t1eRF5wqMLAocIUDsIl1zIEbfuvyo3WmlyRhWh/pwHpTn8iouR601cL5pnJzhYL6KOWmAwotuLmUyrlJy8QEW/qM/KBHi6FmB25mm5TlqOsIxM9h+REOUijqsDBn/y0sLuUF0zt5i5qeqNYx8dvaHcMiuzvkRf631wUFFEiCBB2a6Q6MU8yQb6INIO5yGAaPEYnceOIgFWJLohWHoI2U0sNqi6KtTGrPIn1uHb0Jwu0QaNHqHrxKkpITHb/tYPN2jaCOTolZMDbP9Qy5N1vm/dBm0YP6S91xCAJwFwm1xCKWW+gd8FF2N4FsoSPQ/i8i62L4wZm7+cNb3Ff9ddre4h1Btm3OAWqSMsbrL6MhqXxpmTuyjprMG2q6D9nDyC6vuc=
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid04.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(396003)(346002)(46966006)(36840700001)(86362001)(2616005)(2906002)(82740400003)(7636003)(82310400003)(36756003)(47076005)(54906003)(31696002)(53546011)(83380400001)(426003)(110136005)(26005)(7416002)(356005)(16576012)(316002)(186003)(36906005)(31686004)(478600001)(16526019)(70206006)(70586007)(336012)(5660300002)(4326008)(8676002)(8936002)(36860700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2021 13:45:48.5728
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c5e96ee-2c02-4003-4d17-08d956850064
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT039.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2779
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2021-07-29 at 23:51 +0200, Thomas Gleixner wrote:
-> The PCI core already ensures that the MSI[-X] state is correct when MSI[-X]
-> is disabled. For MSI the reset state is all entries unmasked and for MSI-X
-> all vectors are masked.
-> 
-> S390 masks all MSI entries and masks the already masked MSI-X entries
-> again. Remove it and let the device in the correct state.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-s390@vger.kernel.org
-> Cc: Niklas Schnelle <schnelle@linux.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+
+
+On 8/1/21 9:25 AM, Amey Narkhede wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Add reset_method sysfs attribute to enable user to query and set user
+> preferred device reset methods and their ordering.
+>
+> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
 > ---
->  arch/s390/pci/pci_irq.c |    4 ----
->  drivers/pci/msi.c       |    4 ++--
->  include/linux/msi.h     |    2 --
->  3 files changed, 2 insertions(+), 8 deletions(-)
-> 
-> --- a/arch/s390/pci/pci_irq.c
-> +++ b/arch/s390/pci/pci_irq.c
-> @@ -365,10 +365,6 @@ void arch_teardown_msi_irqs(struct pci_d
->  	for_each_pci_msi_entry(msi, pdev) {
->  		if (!msi->irq)
->  			continue;
-> -		if (msi->msi_attrib.is_msix)
-> -			__pci_msix_desc_mask_irq(msi, 1);
-> -		else
-> -			__pci_msi_desc_mask_irq(msi, 1, 1);
->  		irq_set_msi_desc(msi->irq, NULL);
->  		irq_free_desc(msi->irq);
->  		msi->msg.address_lo = 0;
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -143,7 +143,7 @@ static inline __attribute_const__ u32 ms
->   * reliably as devices without an INTx disable bit will then generate a
->   * level IRQ which will never be cleared.
->   */
-> -void __pci_msi_desc_mask_irq(struct msi_desc *desc, u32 mask, u32 flag)
-> +static void __pci_msi_desc_mask_irq(struct msi_desc *desc, u32 mask, u32 flag)
->  {
->  	raw_spinlock_t *lock = &desc->dev->msi_lock;
->  	unsigned long flags;
-> @@ -180,7 +180,7 @@ static void __iomem *pci_msix_desc_addr(
->   * file.  This saves a few milliseconds when initialising devices with lots
->   * of MSI-X interrupts.
->   */
-> -u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
-> +static u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
->  {
->  	u32 mask_bits = desc->masked;
->  	void __iomem *desc_addr;
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -232,8 +232,6 @@ void free_msi_entry(struct msi_desc *ent
->  void __pci_read_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
->  void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
->  
-> -u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag);
-> -void __pci_msi_desc_mask_irq(struct msi_desc *desc, u32 mask, u32 flag);
->  void pci_msi_mask_irq(struct irq_data *data);
->  void pci_msi_unmask_irq(struct irq_data *data);
->  
-> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  19 +++++
+>  drivers/pci/pci-sysfs.c                 |   1 +
+>  drivers/pci/pci.c                       | 105 ++++++++++++++++++++++++
+>  drivers/pci/pci.h                       |   2 +
+>  4 files changed, 127 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ef00fada2efb..ef66b62bf025 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -121,6 +121,25 @@ Description:
+>                 child buses, and re-discover devices removed earlier
+>                 from this part of the device tree.
+>
+> +What:          /sys/bus/pci/devices/.../reset_method
+> +Date:          March 2021
+> +Contact:       Amey Narkhede <ameynarkhede03@gmail.com>
+> +Description:
+> +               Some devices allow an individual function to be reset
+> +               without affecting other functions in the same slot.
+> +
+> +               For devices that have this support, a file named
+> +               reset_method will be present in sysfs. Initially reading
+> +               this file will give names of the device supported reset
+> +               methods and their ordering. After write, this file will
+> +               give names and ordering of currently enabled reset methods.
+> +               Writing the name or space separated list of names of any of
+> +               the device supported reset methods to this file will set
+> +               the reset methods and their ordering to be used when
+> +               resetting the device. Writing empty string to this file
+> +               will disable ability to reset the device and writing
+> +               "default" will return to the original value.
+> +
+>  What:          /sys/bus/pci/devices/.../reset
+>  Date:          July 2009
+>  Contact:       Michael S. Tsirkin <mst@redhat.com>
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 316f70c3e3b4..54ee7193b463 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1491,6 +1491,7 @@ const struct attribute_group *pci_dev_groups[] = {
+>         &pci_dev_config_attr_group,
+>         &pci_dev_rom_attr_group,
+>         &pci_dev_reset_attr_group,
+> +       &pci_dev_reset_method_attr_group,
+>         &pci_dev_vpd_attr_group,
+>  #ifdef CONFIG_DMI
+>         &pci_dev_smbios_attr_group,
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 932dd21e759b..c496cd164aca 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5132,6 +5132,111 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+>         { pci_reset_bus_function, .name = "bus" },
+>  };
+>
+> +static ssize_t reset_method_show(struct device *dev,
+> +                                struct device_attribute *attr,
+> +                                char *buf)
+> +{
+> +       struct pci_dev *pdev = to_pci_dev(dev);
+> +       ssize_t len = 0;
+> +       int i, m;
+> +
+> +       for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
+> +               m = pdev->reset_methods[i];
+> +               if (!m)
+> +                       break;
+> +
+> +               len += sysfs_emit_at(buf, len, "%s%s", len ? " " : "",
+> +                                    pci_reset_fn_methods[m].name);
+> +       }
+> +
+> +       if (len)
+> +               len += sysfs_emit_at(buf, len, "\n");
+> +
+> +       return len;
+> +}
+> +
+> +static ssize_t reset_method_store(struct device *dev,
+> +                                 struct device_attribute *attr,
+> +                                 const char *buf, size_t count)
+> +{
+> +       struct pci_dev *pdev = to_pci_dev(dev);
+> +       int i = 0;
+> +       char *name, *options = NULL;
+> +
+> +       if (count >= (PAGE_SIZE - 1))
+> +               return -EINVAL;
+> +
+> +       if (sysfs_streq(buf, "")) {
+> +               pdev->reset_methods[0] = 0;
+> +               pci_warn(pdev, "All device reset methods disabled by user");
+> +               return count;
+> +       }
+> +
+> +       if (sysfs_streq(buf, "default")) {
+> +               pci_init_reset_methods(pdev);
+> +               return count;
+> +       }
+> +
+> +       options = kstrndup(buf, count, GFP_KERNEL);
+> +       if (!options)
+> +               return -ENOMEM;
+> +
+> +       while ((name = strsep(&options, " ")) != NULL) {
+> +               int m;
+> +
+> +               if (sysfs_streq(name, ""))
+> +                       continue;
+> +
+> +               name = strim(name);
+> +
+> +               for (m = 1; m < PCI_NUM_RESET_METHODS && i < PCI_NUM_RESET_METHODS; m++) {
+> +                       if (sysfs_streq(name, pci_reset_fn_methods[m].name) &&
+> +                           !pci_reset_fn_methods[m].reset_fn(pdev, 1)) {
+> +                               pdev->reset_methods[i++] = m;
+> +                               break;
+> +                       }
+> +               }
+> +
+Checking reset method logic isn't optimized, iterating through all entries if the
+device doesn't support a requested method.
 
-I gave this patch a try, adapted for v5.14-rc4 where
-__pci_msi_desc_msg() returns a u32, and all looks good. I tested with
-our pretty quirky ISM devices too, which are the only MSI ones on
-s390x.
+Something like this:
+        for (m = 1; m < PCI_NUM_RESET_METHODS && i < PCI_NUM_RESET_METHODS; m++) {
+                if (!sysfs_streq(name, pci_reset_fn_methods[m].name))
+                        continue;
+                if(!pci_reset_fn_methods[m].reset_fn(pdev, 1))
+                        pdev->reset_methods[i++] = m;
+                break;
+        }
 
-It also makes sense to me to let the common code handle this so feel
-free to add my:
+I think we should avoid duplicate entries in pdev->reset_methods.
+Example:
+   root# cat reset_method
+   acpi flr bus
 
-Acked-by: Niklas Schnelle <schnelle@linux.ibm.com>
+   root# echo "acpi flr bus flr" > reset_method
+   root# cat reset_method
+   acpi flr bus flr
 
-and/or
 
-Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-Thanks.
+
+> +               if (m == PCI_NUM_RESET_METHODS) {
+> +                       kfree(options);
+> +                       return -EINVAL;
+Set the last entry to zero in pdev->reset_methods otherwise the inconsistent
+methods are enabled.
+Example:
+   root# cat reset_method
+   acpi flr bus
+
+   root# echo "flr a" > reset_method
+   root# cat reset_method
+   flr flr bus
+
+> +
+> +               }
+> +       }
+> +
+> +       if (i < PCI_NUM_RESET_METHODS)
+> +               pdev->reset_methods[i] = 0;
+> +
+Last entry can be set unconditionally after removing the duplicate entries.
+Refactored code to filter duplicate entries and warn the user about the invalid
+& unsupported reset methods.
+
+static ssize_t reset_method_store(struct device *dev,
+                                  struct device_attribute *attr,
+                                  const char *buf, size_t count)
+{
+        struct pci_dev *pdev = to_pci_dev(dev);
+        char *name, *options = NULL;
+        int i, m, n = 0;
+
+        if (count >= (PAGE_SIZE - 1))
+                return -EINVAL;
+
+        if (sysfs_streq(buf, ""))
+                goto done;
+
+        if (sysfs_streq(buf, "default")) {
+                pci_init_reset_methods(pdev);
+                return count;
+        }
+
+        options = kstrndup(buf, count, GFP_KERNEL);
+        if (!options)
+                return -ENOMEM;
+
+        while ((name = strsep(&options, " ")) != NULL) {
+                if (sysfs_streq(name, ""))
+                        continue;
+                name = strim(name);
+
+                /* Validate reset method */
+                for (m = 1; m < PCI_NUM_RESET_METHODS; m++) {
+                        if (sysfs_streq(name, pci_reset_fn_methods[m].name))
+                                break;
+                }
+                if (m == PCI_NUM_RESET_METHODS) {
+                        pci_warn(pdev, "Skip invalid reset method '%s'", name);
+                        continue;
+                }
+
+                /* Check if the reset method is already enabled */
+                for (i = 0; i < n; i++) {
+                        if (pdev->reset_methods[i] == m)
+                                break;
+                }
+                if (i < n)
+                        continue;
+
+                /* Probe the requested reset method */
+                if (pci_reset_fn_methods[m].reset_fn(pdev, 1))
+                        pci_warn(pdev, "Unsupported reset method '%s'", name);
+
+                pdev->reset_methods[n++] = m;
+                BUG_ON(n == PCI_NUM_RESET_METHODS)
+       }
+        kfree(options);
+
+done:
+        pdev->reset_methods[n] = 0;
+        if (pdev->reset_methods[0] == 0) {
+                pci_warn(pdev, "All device reset methods are disabled");
+        } else if ((pdev->reset_methods[0] != 1) &&
+                   !pci_reset_fn_methods[1].reset_fn(pdev, 1)) {
+                pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
+        }
+        return count;
+}
+
 
 
