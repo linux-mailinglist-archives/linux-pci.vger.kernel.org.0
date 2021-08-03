@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8F8F3DEF83
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 16:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272C93DEF81
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 16:00:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236253AbhHCOAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 10:00:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:40720 "EHLO mga12.intel.com"
+        id S236370AbhHCOAt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 10:00:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30666 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236368AbhHCOAr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S236253AbhHCOAr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 3 Aug 2021 10:00:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="193287343"
+X-IronPort-AV: E=McAfee;i="6200,9189,10064"; a="274751127"
 X-IronPort-AV: E=Sophos;i="5.84,291,1620716400"; 
-   d="scan'208";a="193287343"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 07:00:33 -0700
+   d="scan'208";a="274751127"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 07:00:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,291,1620716400"; 
-   d="scan'208";a="437049068"
+   d="scan'208";a="502402278"
 Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 03 Aug 2021 07:00:31 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2021 07:00:30 -0700
 Received: from kbuild by d053b881505b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mAuy6-000Dxi-Vi; Tue, 03 Aug 2021 14:00:30 +0000
-Date:   Tue, 03 Aug 2021 22:00:02 +0800
+        id 1mAuy5-000DxQ-ND; Tue, 03 Aug 2021 14:00:29 +0000
+Date:   Tue, 03 Aug 2021 22:00:13 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/irq] BUILD SUCCESS
- d21faba11693c10072ce3b96b696445175f49be2
-Message-ID: <61094be2.iJaytrrq401rzmAE%lkp@intel.com>
+Subject: [pci:wip/bjorn-misc-v5.14] BUILD SUCCESS
+ 3238832f0d50f39cd0468366859e51f20c85c65c
+Message-ID: <61094bed.9LWU2KX7JKCyXF4B%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/irq
-branch HEAD: d21faba11693c10072ce3b96b696445175f49be2  PCI: Bulk conversion to generic_handle_domain_irq()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/bjorn-misc-v5.14
+branch HEAD: 3238832f0d50f39cd0468366859e51f20c85c65c  PCI: Make saved capability state private to core
 
-elapsed time: 730m
+elapsed time: 731m
 
-configs tested: 142
+configs tested: 145
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -87,12 +87,12 @@ sh                           se7722_defconfig
 arm                     eseries_pxa_defconfig
 sh                          r7780mp_defconfig
 sh                            titan_defconfig
-arm                       mainstone_defconfig
-parisc                generic-64bit_defconfig
-arm                        multi_v5_defconfig
-arm                            mps2_defconfig
-openrisc                    or1ksim_defconfig
-mips                        bcm63xx_defconfig
+s390                       zfcpdump_defconfig
+mips                         rt305x_defconfig
+powerpc                          g5_defconfig
+arc                            hsdk_defconfig
+sparc64                          alldefconfig
+mips                            e55_defconfig
 powerpc                    socrates_defconfig
 mips                      fuloong2e_defconfig
 mips                      malta_kvm_defconfig
@@ -101,6 +101,10 @@ sh                          sdk7786_defconfig
 riscv                    nommu_k210_defconfig
 arm                          badge4_defconfig
 arm                              alldefconfig
+sh                ecovec24-romimage_defconfig
+mips                           rs90_defconfig
+microblaze                          defconfig
+powerpc                  iss476-smp_defconfig
 powerpc                 xes_mpc85xx_defconfig
 m68k                        mvme16x_defconfig
 mips                       rbtx49xx_defconfig
@@ -109,7 +113,6 @@ arm                       imx_v6_v7_defconfig
 powerpc                      bamboo_defconfig
 arm                          ixp4xx_defconfig
 powerpc                      ppc44x_defconfig
-powerpc                  iss476-smp_defconfig
 powerpc                     akebono_defconfig
 nds32                             allnoconfig
 powerpc                    klondike_defconfig
