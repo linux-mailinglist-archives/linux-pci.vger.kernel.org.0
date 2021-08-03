@@ -2,152 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F35363DE6BD
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 08:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EF763DE77C
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Aug 2021 09:49:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234059AbhHCGeq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Aug 2021 02:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234103AbhHCGep (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 02:34:45 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E16C0613D5;
-        Mon,  2 Aug 2021 23:34:34 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id u9-20020a17090a1f09b029017554809f35so2432510pja.5;
-        Mon, 02 Aug 2021 23:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sRwYfIMmqsxjBnnSXDo+aOgwj2et1AAa2hNgV9gFeYU=;
-        b=vK1v22D+JBRGXG7Q00FuhVstwwDDjd6Gj1BHWhp/st/bsblY/un4WudZXFCPTPDZID
-         k81+q2delU6pX+EfBuQuAPZfREnS0GtRE8l+sAdATbGeCXvlBO7qIVneLb0JQNhY8T0K
-         RuG7itocLlrk/NfIVY/M/Q9bdRg604nzPzHkRkR7DbkAoqqsHtCTij988fehY6bQu++5
-         H4Jja/EkO6hFNz4FrhoX+1VB4p1G9jZAZRfz7kFieAjz9GvEVmviQ3goermt1c4qyC1c
-         KoUzPulIfTH6pugM+EUsTKugiqA6H6s2BoxWyWQJsMSJOwxMZw6nT2yHpVVKLvrph87g
-         /V/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sRwYfIMmqsxjBnnSXDo+aOgwj2et1AAa2hNgV9gFeYU=;
-        b=GV49kNiabzzsovWenYKASQ5T7VI7RWnsF+aI7u2KejUju+kMj22or3BD6alWPDWPOP
-         9IwrUiQjhTNZGuIsHGmSeh8cTX80mk/MMF7jaNQTVMrkEkZ9N6R1FLM+6Kz5oJ4PQRLO
-         UU7EfJEGyvLOqRW6E86Tq2Wk0SoFg7OUmkS73EuEUbGxeZkTr+pK505omrWE7UXUdTCL
-         asEoaFoS+mUA7oJxBDrhxkdAbayzzZ195TpNfUE59RNq7xLDL6G08G6OcDQNfk37lXfP
-         5ONJ4ubpymGDCtetd7D8SoeZknU3vMwA7MSIfA/mh3D7K/WkNcQTKwYBNd+gcrmf28uL
-         IVkQ==
-X-Gm-Message-State: AOAM533dDFJA7g9cA36FUjuZG5kzxn7CoIz3qUOFGVSXEgw52/vnjt9g
-        lNn5s9JIgsmVyEN3cppSwMc=
-X-Google-Smtp-Source: ABdhPJxy+cGjCgn9IXbnog8GeKn8D3W4gtzT1zah26FxsUyTxXauGklyXEvV0PkmOCxNin21lfqO3Q==
-X-Received: by 2002:a17:902:ba90:b029:12c:acd:88f3 with SMTP id k16-20020a170902ba90b029012c0acd88f3mr17223871pls.3.1627972474000;
-        Mon, 02 Aug 2021 23:34:34 -0700 (PDT)
-Received: from localhost ([139.5.31.186])
-        by smtp.gmail.com with ESMTPSA id w8sm12839194pja.24.2021.08.02.23.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 23:34:33 -0700 (PDT)
-Date:   Tue, 3 Aug 2021 12:04:24 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
-        Raphael Norwitz <raphael.norwitz@nutanix.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
-        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v13 5/9] PCI: Allow userspace to query and set device
- reset mechanism
-Message-ID: <20210803063424.aybmwdxxj6bt2iax@archlinux>
-References: <20210801142518.1224-6-ameynarkhede03@gmail.com>
- <20210802225559.GA1472320@bjorn-Precision-5520>
+        id S234148AbhHCHuF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Aug 2021 03:50:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35722 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234271AbhHCHuF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Aug 2021 03:50:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1737ndL5031663;
+        Tue, 3 Aug 2021 02:49:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1627976979;
+        bh=jU6NdUOo1QvDJP+eJFQCU2O42F89bmLL3ZejTmPvGHk=;
+        h=From:To:CC:Subject:Date;
+        b=dSQa9pc7mip0liDz7RQSJn4WMD2X1/FGOvkztAz/4xNW5Yapv+Bgj8HDjknIyCbio
+         D1aaKTyNHYIOR9JLS2jKg+d/9Rm1eTcJhUkHl176RDLMX+nOLlPczPBiprr0kLC9Je
+         kH26BZGGTyy5p8ZTvqOF1a2l+SBDdEOCTOh/w/nc=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1737ndu4120998
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Aug 2021 02:49:39 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 3 Aug
+ 2021 02:49:38 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 3 Aug 2021 02:49:38 -0500
+Received: from a0393678-ssd.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1737nXrv045202;
+        Tue, 3 Aug 2021 02:49:34 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <nadeem@cadence.com>
+Subject: [PATCH v2 0/6] PCI: Add support for J7200 and AM64
+Date:   Tue, 3 Aug 2021 13:19:26 +0530
+Message-ID: <20210803074932.19820-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210802225559.GA1472320@bjorn-Precision-5520>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/08/02 05:55PM, Bjorn Helgaas wrote:
-> On Sun, Aug 01, 2021 at 07:55:14PM +0530, Amey Narkhede wrote:
-> > Add reset_method sysfs attribute to enable user to query and set user
-> > preferred device reset methods and their ordering.
-> >
-> > Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
-> > ---
-> > +
-[...]
-> > +static ssize_t reset_method_store(struct device *dev,
-> > +				  struct device_attribute *attr,
-> > +				  const char *buf, size_t count)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int i = 0;
-> > +	char *name, *options = NULL;
-> > +
-> > +	if (count >= (PAGE_SIZE - 1))
-> > +		return -EINVAL;
-> > +
-> > +	if (sysfs_streq(buf, "")) {
-> > +		pdev->reset_methods[0] = 0;
-> > +		pci_warn(pdev, "All device reset methods disabled by user");
-> > +		return count;
-> > +	}
->
-> I think it's possible for the user to disable all reset methods by
-> supplying only junk.  Maybe this check could be moved to the end of
-> the function to catch both the "empty input" and the "input contains
-> only junk" cases?
->
-Supplying only junk doesn't disable the reset. It returns -EINVAL as it
-will go in following while loop. The check m == PCI_NUM_RESET_METHODS
-returns -EINVAL
+This series adds the compatible specific to J7200 and AM64 and
+applies the erratas and configuration specific to them.
 
-> > +	if (sysfs_streq(buf, "default")) {
-> > +		pci_init_reset_methods(pdev);
-> > +		return count;
-> > +	}
-> > +
-> > +	options = kstrndup(buf, count, GFP_KERNEL);
-> > +	if (!options)
-> > +		return -ENOMEM;
-> > +
->
->   i = 0;
->
-> here so it's nearer the loop it controls.
->
-> > +	while ((name = strsep(&options, " ")) != NULL) {
-> > +		int m;
-> > +
-> > +		if (sysfs_streq(name, ""))
-> > +			continue;
-> > +
-> > +		name = strim(name);
-> > +
-> > +		for (m = 1; m < PCI_NUM_RESET_METHODS && i < PCI_NUM_RESET_METHODS; m++) {
-> > +			if (sysfs_streq(name, pci_reset_fn_methods[m].name) &&
-> > +			    !pci_reset_fn_methods[m].reset_fn(pdev, 1)) {
-> > +				pdev->reset_methods[i++] = m;
-> > +				break;
-> > +			}
-> > +		}
-> > +
-> > +		if (m == PCI_NUM_RESET_METHODS) {
-> > +			kfree(options);
-> > +			return -EINVAL;
->
-> In this case, I think we have actually updated pdev->reset_methods[],
-> but we still return -EINVAL, right?  If we decide to silently ignore
-> unrecognized methods, we probably should return success here.
->
-Is it okay to do that? I hope it won't cause any trouble for user
-scripts
+This series also includes Nadeem's patch that adds a quirk in
+Cadence driver which is used by J7200 [1].
 
-Thanks,
-Amey
+The DT binding for both J7200 and AM64 is already merged.
 
-[...]
+v1 of the patch series can be found at [2]
+
+Changes from v1:
+1) As suggested by Bjorn, used unsigned int :1, instead of bool for
+structure members
+2) Removed using unnecessary local variables and also fixed some
+code alignment
+
+[1] -> https://lore.kernel.org/r/20210528155626.21793-1-nadeem@cadence.com
+[2] -> https://lore.kernel.org/r/20210706105035.9915-1-kishon@ti.com
+
+Kishon Vijay Abraham I (5):
+  PCI: cadence: Use bitfield for *quirk_retrain_flag* instead of bool
+  PCI: j721e: Add PCIe support for J7200
+  PCI: j721e: Add PCIe support for AM64
+  misc: pci_endpoint_test: Do not request or allocate IRQs in probe
+  misc: pci_endpoint_test: Add deviceID for AM64 and J7200
+
+Nadeem Athani (1):
+  PCI: cadence: Add quirk flag to set minimum delay in LTSSM
+    Detect.Quiet state
+
+ drivers/misc/pci_endpoint_test.c              | 27 ++++++--
+ drivers/pci/controller/cadence/pci-j721e.c    | 61 +++++++++++++++++--
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  4 ++
+ .../controller/cadence/pcie-cadence-host.c    |  3 +
+ drivers/pci/controller/cadence/pcie-cadence.c | 17 ++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 17 +++++-
+ 6 files changed, 117 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
