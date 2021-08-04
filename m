@@ -2,187 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A2FE3E0AC5
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 01:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 190643E0AD2
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 01:29:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbhHDXRo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 19:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        id S231310AbhHDX3w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 19:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229987AbhHDXRo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Aug 2021 19:17:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AA52B61029;
-        Wed,  4 Aug 2021 23:17:30 +0000 (UTC)
+        id S229464AbhHDX3v (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Aug 2021 19:29:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4FCF7610A8;
+        Wed,  4 Aug 2021 23:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628119051;
-        bh=LB/yWwNyZPNern/LMAfi3Q2yQX76M51Zx+XEZVhnae8=;
+        s=k20201202; t=1628119778;
+        bh=P7SfHN5MwK2Yea8Mc759NMWkYnjT904mx+vUrokN1a8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EKJq8oPfu3fKGmj6h/YUHkspfkI8cW8KKMtkE8AMSrBiM7SrQ3IlqFY8gBprdsKEw
-         e9K4jQjRXDSQ2EeWLceqX6ogolzZldyVn7afLljP4rSxY61IMB9aL4gr2waOSSok9i
-         IzGPOGEjpOWxzOhbCa43SnikCpXaDUIsaxIDcjJdmlVhs+pul3fc7JZmt1untR120O
-         l1Kv4C/t40Q3MPkA3g/ljwWl8eHZ3frdiAPkRjQq6wVM5nwTEdqkdrbyJ543VB8fVT
-         fa6GhvOdtp09nHMCBFtfDWsMWQVR71cWbXZZKsE+4xi7Z90aT0ubcohtpvGREn4kO4
-         AwQO/ZVz0xstA==
-Date:   Wed, 4 Aug 2021 18:17:29 -0500
+        b=Q9U2DkxKEneNMWJ5Tmj9LPqrkqsO3wF4kpNF9J2nfUOLywTdYD/xGpi06VzymtoJm
+         fM8XXIHtcJReWSwiMlKCDbUsLlfGrP9j2qq5R8wRJMCcYyTIMqICIBCUPgq73gdDGJ
+         24aUqtu3ytmzevHZmLvot7PipvxVTPqse3CBUnlaZ/KKSQgzJHBcDWPS1am7Nbzcm1
+         QhXkX7kLUkZnMW/byJH3F739Gsu2fVRRQ1aaeSVynQCbwGEtLluhYHzWZ/p2gHFYJt
+         c+j55UAw2IjfQD0YpaDtkMXhe/v1MqWggvfee9tNlqG82X+HxBf8uxNz9/LnUSAM7T
+         TB7fPwvci8PSg==
+Date:   Wed, 4 Aug 2021 18:29:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Dongdong Liu <liudongdong3@huawei.com>
 Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
         leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
         hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: Re: [PATCH V7 4/9] PCI: Enable 10-Bit Tag support for PCIe Endpoint
+Subject: Re: [PATCH V7 5/9] PCI/IOV: Enable 10-Bit tag support for PCIe VF
  devices
-Message-ID: <20210804231729.GA1679826@bjorn-Precision-5520>
+Message-ID: <20210804232937.GA1691653@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1628084828-119542-5-git-send-email-liudongdong3@huawei.com>
+In-Reply-To: <1628084828-119542-6-git-send-email-liudongdong3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 09:47:03PM +0800, Dongdong Liu wrote:
-> 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
-> field size from 8 bits to 10 bits.
-> 
-> PCIe spec 5.0 r1.0 section 2.2.6.2 "Considerations for Implementing
-> 10-Bit Tag Capabilities" Implementation Note.
-> For platforms where the RC supports 10-Bit Tag Completer capability,
-> it is highly recommended for platform firmware or operating software
-> that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-> bit automatically in Endpoints with 10-Bit Tag Requester capability. This
-> enables the important class of 10-Bit Tag capable adapters that send
-> Memory Read Requests only to host memory.
+On Wed, Aug 04, 2021 at 09:47:04PM +0800, Dongdong Liu wrote:
+> Enable VF 10-Bit Tag Requester when it's upstream component support
+> 10-bit Tag Completer.
 
-Quoted material should be set off with a blank line before it and
-indented by two spaces so it's clear exactly what comes from the spec
-and what you've added.  For example, see
-https://git.kernel.org/linus/ec411e02b7a2
+s/it's/its/
+s/support/supports/
 
-We need to say why we assume it's safe to enable 10-bit tags for all
-devices below a Root Port that supports them.  I think this has to do
-with switches being required to forward 10-bit tags correctly even if
-they were designed before 10-bit tags were added to the spec.
-
-And it should call out any cases where it is *not* safe, e.g., if P2P
-traffic is an issue.
-
-If there are cases where we don't want to enable 10-bit tags, whether
-it's to enable P2P traffic or merely to work around device defects,
-that ability needs to be here from the beginning.  If somebody needs
-to bisect with 10-bit tags disabled, we don't want a bisection hole
-between this commit and the commit that adds the control.
+I think "upstream component" here means the PF, doesn't it?  I don't
+think the PF is really an *upstream* component; there's no routing
+like with a switch.
 
 > Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  drivers/pci/probe.c | 47 ++++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/pci.h |  2 ++
->  2 files changed, 48 insertions(+), 1 deletion(-)
+>  drivers/pci/iov.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index c83245b..3da7baa 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2029,10 +2029,42 @@ static void pci_configure_mps(struct pci_dev *dev)
->  		 p_mps, mps, mpss);
->  }
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index dafdc65..0d0bed1 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -634,6 +634,10 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
 >  
-> +static void pci_configure_10bit_tags(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *bridge;
+>  	pci_iov_set_numvfs(dev, nr_virtfn);
+>  	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
+> +	if ((iov->cap & PCI_SRIOV_CAP_VF_10BIT_TAG_REQ) &&
+> +	    dev->ext_10bit_tag)
+> +		iov->ctrl |= PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN;
 > +
-> +	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP))
-> +		return;
-> +
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
-> +		dev->ext_10bit_tag = 1;
-> +		return;
-> +	}
-> +
-> +	bridge = pci_upstream_bridge(dev);
-> +	if (bridge && bridge->ext_10bit_tag)
-> +		dev->ext_10bit_tag = 1;
+>  	pci_cfg_access_lock(dev);
+>  	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
+>  	msleep(100);
+> @@ -650,6 +654,8 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+>  
+>  err_pcibios:
+>  	iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
+> +	if (iov->ctrl & PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN)
+> +		iov->ctrl &= ~PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN;
+>  	pci_cfg_access_lock(dev);
+>  	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
+>  	ssleep(1);
+> @@ -682,6 +688,8 @@ static void sriov_disable(struct pci_dev *dev)
+>  
+>  	sriov_del_vfs(dev);
+>  	iov->ctrl &= ~(PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE);
+> +	if (iov->ctrl & PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN)
+> +		iov->ctrl &= ~PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN;
 
-Is it meaningful to set dev->ext_10bit_tag when "dev" is a VF?  I
-suspect only if the VF could be a switch.  Is that possible?  If not,
-I think the dev->is_virtfn check could be done first.
+You can just clear PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN unconditionally,
+can't you?  I know it wouldn't change anything, but removing the "if"
+makes the code prettier.  You could just add it in the existing
+PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE mask.
 
-> +
-> +	/*
-> +	 * 10-Bit Tag Requester Enable in Device Control 2 Register is RsvdP
-> +	 * for VF.
-
-(Per 9.3.5.10)
-
-> +	 */
-> +	if (dev->is_virtfn)
-> +		return;
-> +
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT &&
-> +	    dev->ext_10bit_tag == 1 &&
-> +	    (dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ)) {
-> +		pci_dbg(dev, "enabling 10-Bit Tag Requester\n");
-> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
-> +					PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-> +	}
-> +}
-> +
->  int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->  {
->  	struct pci_host_bridge *host;
-> -	u16 ctl;
-> +	u16 ctl, ctl2;
->  	int ret;
->  
->  	if (!pci_is_pcie(dev))
-> @@ -2045,6 +2077,10 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->  	if (ret)
->  		return 0;
->  
-> +	ret = pcie_capability_read_word(dev, PCI_EXP_DEVCTL2, &ctl2);
-> +	if (ret)
-> +		return 0;
-> +
->  	host = pci_find_host_bridge(dev->bus);
->  	if (!host)
->  		return 0;
-> @@ -2059,6 +2095,12 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->  			pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
->  						   PCI_EXP_DEVCTL_EXT_TAG);
->  		}
-> +
-> +		if (ctl2 & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN) {
-> +			pci_info(dev, "disabling 10-Bit Tags\n");
-> +			pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
-> +					PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-> +		}
->  		return 0;
->  	}
->  
-> @@ -2067,6 +2109,9 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL,
->  					 PCI_EXP_DEVCTL_EXT_TAG);
->  	}
-> +
-> +	pci_configure_10bit_tags(dev);
-> +
->  	return 0;
->  }
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9aab67f..af6cb53 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -393,6 +393,8 @@ struct pci_dev {
->  #endif
->  	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
->  
-> +	unsigned int	ext_10bit_tag:1; /* 10-Bit Tag Completer Supported
-> +					    from root to here */
->  	pci_channel_state_t error_state;	/* Current connectivity state */
->  	struct device	dev;			/* Generic device interface */
->  
+>  	pci_cfg_access_lock(dev);
+>  	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
+>  	ssleep(1);
 > -- 
 > 2.7.4
 > 
