@@ -2,216 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD6B3E042C
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 17:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65F203E04D8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 17:51:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239062AbhHDP2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 11:28:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27378 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239045AbhHDP2M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 11:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628090879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LJgh9mjHO8ByFvPxq85k4fwtp10zme6S7oZHzHIV1/k=;
-        b=eNG3BYwDbwP/s2sUt8oDBsQ38UHLWNKLxv80NZRhoVpwVCrhGR34w0/hC5+fU+3ANxh61S
-        q9DoZ3z8qGg/gKlVlhQTun5953bdJFZxxzU7VDfxV7kFth8ojBALoTrPmN5pFJ6t1iDAIo
-        3w9C/R9dCQWV7i/2Bu06RXIy019rU5Y=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-598-5bKxPm2UPVCETi4QfA-ojg-1; Wed, 04 Aug 2021 11:27:58 -0400
-X-MC-Unique: 5bKxPm2UPVCETi4QfA-ojg-1
-Received: by mail-ot1-f71.google.com with SMTP id 30-20020a9d0da10000b02904cd320591a0so927612ots.18
-        for <linux-pci@vger.kernel.org>; Wed, 04 Aug 2021 08:27:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LJgh9mjHO8ByFvPxq85k4fwtp10zme6S7oZHzHIV1/k=;
-        b=Hwdqdg140NbjOBWpjZXkOAoFWEVl6ZG76N/Fr1wabF8E+fIZEQdP4MZyHIP5fyJeQP
-         3Oxiobj3u9espuGWzURsUR0wcTjtjOQ5wCvfAl1nXxkcYYMaYQTSFl9iplres8XAWy4T
-         XbkvTj9o7Vxv2dP346Bz5vvqBxvwiR5o4Kt5OwkPgqiYPk8sqGYCpaY91sudKSNJPNlH
-         ObCamcAIT17r2kDp468eGDM3hXn4FAQg8LktVJsW62SOIkCVJLlKvP94PgSrFOO+Bhx3
-         uI72//NBJER/yDxgzUA7MJhtgS3bDRg+dGZdRWZEEhFy8rHNccbQmpkj6LW6KZ1UDl/j
-         UTpw==
-X-Gm-Message-State: AOAM530IbODZtC2FCNQ1DVzmr9seXkbvYvgfXPJ41wkK4T/CnY/HihUt
-        tcqpJdtbUbAv59Vg+iKx9HUsxgg2/3SolPwkpzZu7ya3TUW8FAyB02GHv/gQB74Oz2AhnL3Pix4
-        ipKqv4QuJjiGS4f7cVLSV
-X-Received: by 2002:a9d:44e:: with SMTP id 72mr223081otc.100.1628090877873;
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+ELgNsvSXCAHgSepllsqtC2aa3OhQCzSV6th0yNQiae9HZ8gXcohMgtqXW3cYn9gOCEu4dQ==
-X-Received: by 2002:a9d:44e:: with SMTP id 72mr223040otc.100.1628090877509;
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id f3sm463961otc.49.2021.08.04.08.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 09:27:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>, <mgurtovoy@nvidia.com>,
-        <jgg@nvidia.com>, <maorg@nvidia.com>, <corbet@lwn.net>,
-        <michal.lkml@markovi.net>, <bhelgaas@google.com>,
-        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH 00/12] Introduce vfio_pci_core subsystem
-Message-ID: <20210804092754.5f15b60e.alex.williamson@redhat.com>
-In-Reply-To: <4580c83e-f3b1-0f93-d3ea-dc9cbdf6178d@nvidia.com>
-References: <20210721161609.68223-1-yishaih@nvidia.com>
-        <4580c83e-f3b1-0f93-d3ea-dc9cbdf6178d@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S239377AbhHDPvz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 11:51:55 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:54802 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239214AbhHDPvy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 11:51:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=VAs5UjRtgSdqMEi8N1UFafwkPftDPX3haJmemJpQxKo=; b=qzwKi3ShxTPZRbFP0IKYI2MLLq
+        4grholbmN7sed3zBtdSyb6zZt4gc7djXMu/fvYd5s/fV3FYvpCRZwCGt9nQihB6lQ5+QGlBuEa4lN
+        NCxkXiKrdmAstr7R8LwgXK/hWyU89OUdAt72RtgSzXLNXlnngadle8SNbXpD8ENBC5fOcbcdHogEp
+        eoavcbFlsIc35KIFQqVKBENHEpJSRU9yUHJwE1f9+zl5JkpAMFTYM/Zk3wSR92rbZrTX8zIhtLunJ
+        vJvuqznBqGc3ZLorPoNbcOxgJOkh7hvZrvf9AmmCRumNyXyMklmdCdZQ7YgQ2gK0rYUaBF34BVjyK
+        A5w5eWTA==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1mBJB8-0003B9-M2; Wed, 04 Aug 2021 09:51:35 -0600
+To:     Dongdong Liu <liudongdong3@huawei.com>, helgaas@kernel.org,
+        hch@infradead.org, kw@linux.com, leon@kernel.org,
+        linux-pci@vger.kernel.org, rajur@chelsio.com,
+        hverkuil-cisco@xs4all.nl
+Cc:     linux-media@vger.kernel.org, netdev@vger.kernel.org
+References: <1628084828-119542-1-git-send-email-liudongdong3@huawei.com>
+ <1628084828-119542-8-git-send-email-liudongdong3@huawei.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <75243571-3213-6ae2-040f-ae1b1f799e42@deltatee.com>
+Date:   Wed, 4 Aug 2021 09:51:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1628084828-119542-8-git-send-email-liudongdong3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: netdev@vger.kernel.org, linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl, rajur@chelsio.com, linux-pci@vger.kernel.org, leon@kernel.org, kw@linux.com, hch@infradead.org, helgaas@kernel.org, liudongdong3@huawei.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        MYRULES_OFFER,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH V7 7/9] PCI/sysfs: Add a 10-Bit Tag sysfs file
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 4 Aug 2021 16:41:34 +0300
-Yishai Hadas <yishaih@nvidia.com> wrote:
 
-> On 7/21/2021 7:15 PM, Yishai Hadas wrote:
-> > Prologue:
-> >
-> > This is the second series of three to send the "mlx5_vfio_pci" driver
-> > that has been discussed on the list for a while now. It comes on top of
-> > the first series (i.e. Reorganize reflck to support splitting vfio_pci)
-> > that was sent already and pending merge [1].
-> >
-> >   - Split vfio_pci into vfio_pci/vfio_pci_core and provide infrastructure
-> >     for non-generic VFIO PCI drivers.
-> >   - The new driver mlx5_vfio_pci that is a full implementation of
-> >     suspend/resume functionality for mlx5 devices.
-> >
-> > A preview of all the patches can be seen here:
-> > https://github.com/jgunthorpe/linux/commits/mlx5_vfio_pci
-> >
-> > [1] https://lore.kernel.org/dri-devel/0-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com/T/#t
-> > =====================
-> >
-> >  From Max Gurtovoy:
-> > ====================
-> > This series splits the vfio_pci driver into two parts, a PCI driver and
-> > a subsystem driver that will also be library of code. The main PCI
-> > driver, vfio_pci.ko, will remain as before and it will use the library
-> > module vfio_pci_core.ko to help create the vfio_device.
-> >
-> > This series is intended to solve the issues that were raised in the
-> > previous attempts for extending vfio-pci for device specific
-> > functionality:
-> >
-> > 1. https://lore.kernel.org/kvm/20200518024202.13996-1-yan.y.zhao@intel.com
-> >     by Yan Zhao
-> > 2. https://lore.kernel.org/kvm/20210702095849.1610-1-shameerali.kolothum.thodi@huawei.com
-> >     by Longfang Liu
-> >
-> > Also to support proposed future changes to virtio and other common
-> > protocols to support migration:
-> >
-> > https://lists.oasis-open.org/archives/virtio-comment/202106/msg00044.html
-> >
-> > This subsystem framework will also ease adding new device specific
-> > functionality to VFIO devices in the future by allowing another module
-> > to provide the pci_driver that can setup a number of details before
-> > registering to the VFIO subsystem, such as injecting its own operations.
-> >
-> > This series also extends the "driver_override" mechanism. A flag is
-> > added for PCI drivers that will declare themselves as "driver_override"
-> > capable which sends their match table to the modules.alias file but
-> > otherwise leaves them outside of the normal driver core auto-binding
-> > world, like vfio_pci.
-> >
-> > In order to get the best match for "driver_override" drivers, one can
-> > create a userspace program to inspect the modules.alias, an example can
-> > be found at:
-> >
-> > https://github.com/maxgurtovoy/linux_tools/blob/main/vfio/bind_vfio_pci_driver.py
-> >
-> > Which finds the 'best match' according to a simple algorithm: "the
-> > driver with the fewest '*' matches wins."
-> >
-> > For example, the vfio-pci driver will match to any pci device. So it
-> > will have the maximal '*' matches.
-> >
-> > In case we are looking for a match to a mlx5 based device, we'll have a
-> > match to vfio-pci.ko and mlx5-vfio-pci.ko. We'll prefer mlx5-vfio-pci.ko
-> > since it will have less '*' matches (probably vendor and device IDs will
-> > match). This will work in the future for NVMe/Virtio devices that can
-> > match according to a class code or other criteria.
-> >
-> > Yishai
-> >
-> >
-> > Jason Gunthorpe (2):
-> >    vfio: Use select for eventfd
-> >    vfio: Use kconfig if XX/endif blocks instead of repeating 'depends on'
-> >
-> > Max Gurtovoy (9):
-> >    vfio/pci: Rename vfio_pci.c to vfio_pci_core.c
-> >    vfio/pci: Rename vfio_pci_private.h to vfio_pci_core.h
-> >    vfio/pci: Rename vfio_pci_device to vfio_pci_core_device
-> >    vfio/pci: Rename ops functions to fit core namings
-> >    vfio/pci: Include vfio header in vfio_pci_core.h
-> >    vfio/pci: Split the pci_driver code out of vfio_pci_core.c
-> >    vfio/pci: Move igd initialization to vfio_pci.c
-> >    PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to struct pci_device_id
-> >    vfio/pci: Introduce vfio_pci_core.ko
-> >
-> > Yishai Hadas (1):
-> >    vfio/pci: Move module parameters to vfio_pci.c
-> >
-> >   Documentation/PCI/pci.rst                     |    1 +
-> >   drivers/pci/pci-driver.c                      |   25 +-
-> >   drivers/vfio/Kconfig                          |   29 +-
-> >   drivers/vfio/fsl-mc/Kconfig                   |    3 +-
-> >   drivers/vfio/mdev/Kconfig                     |    1 -
-> >   drivers/vfio/pci/Kconfig                      |   39 +-
-> >   drivers/vfio/pci/Makefile                     |    8 +-
-> >   drivers/vfio/pci/vfio_pci.c                   | 2238 +----------------
-> >   drivers/vfio/pci/vfio_pci_config.c            |   70 +-
-> >   drivers/vfio/pci/vfio_pci_core.c              | 2138 ++++++++++++++++
-> >   drivers/vfio/pci/vfio_pci_igd.c               |   19 +-
-> >   drivers/vfio/pci/vfio_pci_intrs.c             |   42 +-
-> >   drivers/vfio/pci/vfio_pci_rdwr.c              |   18 +-
-> >   drivers/vfio/pci/vfio_pci_zdev.c              |    4 +-
-> >   drivers/vfio/platform/Kconfig                 |    6 +-
-> >   drivers/vfio/platform/reset/Kconfig           |    4 +-
-> >   include/linux/mod_devicetable.h               |    7 +
-> >   include/linux/pci.h                           |   27 +
-> >   .../linux/vfio_pci_core.h                     |   89 +-
-> >   scripts/mod/devicetable-offsets.c             |    1 +
-> >   scripts/mod/file2alias.c                      |    8 +-
-> >   21 files changed, 2496 insertions(+), 2281 deletions(-)
-> >   create mode 100644 drivers/vfio/pci/vfio_pci_core.c
-> >   rename drivers/vfio/pci/vfio_pci_private.h => include/linux/vfio_pci_core.h (56%)
-> >  
-> Hi Alex,
-> 
-> Based on the feedback that we got so far on this series, no functional 
-> changes are expected in V2.
-> 
-> It may include the below minor changes:
-> 
-> - Drop DRIVER_VERSION as it's useless and not required any more. 
-> (Patches #6, #12).
-> 
-> - Add the sequence of commands/algorithm that is required by userspace 
-> to discover the matching driver to the commit message of patch #9.
-> 
-> Do we need to wait for more feedback or that we are fine to send V2 ?
 
- - Resolve Kconfig compatibility in patch 12
 
-Patch 9 also depends on an ack from Bjorn, so whether you want to try
-to get his buy-in before or after that patch gets updated to clarify
-what it's trying to do and why, is up to you.  Thanks,
+On 2021-08-04 7:47 a.m., Dongdong Liu wrote:
+> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
+> sending Requests to other Endpoints (as opposed to host memory), the
+> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
+> unless an implementation-specific mechanism determines that the Endpoint
+> supports 10-Bit Tag Completer capability. Add a 10bit_tag sysfs file,
+> write 0 to disable 10-Bit Tag Requester when the driver does not bind
+> the device if the peer device does not support the 10-Bit Tag Completer.
+> This will make P2P traffic safe. the 10bit_tag file content indicate
+> current 10-Bit Tag Requester Enable status.
 
-Alex
+Can we not have both the sysfs file and the command line parameter? If
+the user wants to disable it always for a specific device this sysfs
+parameter is fairly awkward. A script at boot to unbind the driver, set
+the sysfs file and rebind the driver is not trivial and the command line
+parameter offers additional options for users.
 
+Logan
