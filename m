@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFCC23E0985
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 22:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAECB3E0986
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 22:42:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240946AbhHDUmx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 16:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
+        id S240955AbhHDUmz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 16:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240958AbhHDUmt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 16:42:49 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC67FC06179B;
-        Wed,  4 Aug 2021 13:42:35 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id q2so4350375plr.11;
-        Wed, 04 Aug 2021 13:42:35 -0700 (PDT)
+        with ESMTP id S240941AbhHDUmy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 16:42:54 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DA0C0613D5;
+        Wed,  4 Aug 2021 13:42:40 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id u21-20020a17090a8915b02901782c36f543so1684197pjn.4;
+        Wed, 04 Aug 2021 13:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mTj0rf3a1EYwHmNg/sseGw7r3Ux8KGJ1n47pGcdfKY8=;
-        b=sfnIVL7muaRf40wqXFWzLJh3uUesgvNBX9SCaKqe6QY30P8cTCi8y68BDPbvTMlxs0
-         i985c0jiGUsq5B+3wtsDvwiqn8OF7EpUs2Y0uAU514hissqDCMCU1tHTk4NmywRrtYmq
-         LMLlWkfOcmGBqTG41WrV+DRGG/UTkFJ5UKSiOHS79ONMh7ItawQd9ORXEI9mP/wKilTb
-         wzYOPdw7t0rGRFtavk1ms7MvHTbD8I/MlBoHGb4K8Z/XDnRbKC81ppWAApKEzkJWL7dx
-         4Vs56MsdtJ6mFYzQ+JDCTXTcLBD1QRRbkuf+jySSBK3xqcsKxi7v9coVjw56DQ4p8Ge5
-         xXZw==
+        bh=iybQZ12qC8zX6NnxQv/Qw71ae7yPExH0GdYjIRAaEIA=;
+        b=krXVd6iYOCiBmrISEPNKZoS0nJTAWjnZlkp62UzBFBcp5nG5UD0Ho2D+fycqcckAtV
+         6zrp3+YnF1+lyMNc55OBYROIzoolTEg+Z/uR0uGu6kmHu14D2W4jgXMrL92qp6F/d4YN
+         4Nt6z1sRPE/mRk+nGAkydo1zMAEcNpmZ27h5fO+y8TfTgr78FfI2zvSnk2vW3ExZESqe
+         p34ur/Rw+eMDFNu+5wrYe2hxSnsvNxKgUYbxwcMWrkIICJAvP+vmpIi76d23bMfsJNQ2
+         HAiLq89ROG/kJ+L3pwlc1iBG+bOMfhMM3GUEwoqbufqAGIbTXZnEOZ7WoYEz1qwW3elo
+         eZDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mTj0rf3a1EYwHmNg/sseGw7r3Ux8KGJ1n47pGcdfKY8=;
-        b=KeiFkp3wK76FcMvlNDW25hqnvBw0YpMBXgM4z7pqKcItybO+v5dZkQUgSxLU+dv460
-         KYvVe/R4lgYbHim2fH/EKYowg7lZLBKvWTr4pfQGxCmkIm1uhm9ckwTZZdEOIX9Xzk5u
-         Zu5oDVjfjN0t1Y7r5ldJ3x34WXvEudQV3+qMFowb4ajvv8ZSEE5MWK/jzVZe4tqBEUmL
-         BGeVRwcySKaQh3DmycLyILtgGVMhahf1UtSkfoqIpS6o6bpV/OR2bbClerB/1yybgmjo
-         D8eovkqsNWoI7eu5xFj8K17sySbl7CKq92S6C/uYaHPmkUrcx6lMdf3i4lTdJEv7ARAr
-         hNPQ==
-X-Gm-Message-State: AOAM532j3kPwaNQuhjI6CLaSIIg+B9crEZSeKb4LR/nwuJQm2bOOijHh
-        CmgK81295UjpajkTC7S7Cjk=
-X-Google-Smtp-Source: ABdhPJwQdVr+AmJ31hjhuUUKn9J5HG/zcCaxT+na4VGUQrjDcAWuv7PsMEV8OCL2ecOdtiCMmFUVXQ==
-X-Received: by 2002:a17:90a:fef:: with SMTP id 102mr11302092pjz.148.1628109755355;
-        Wed, 04 Aug 2021 13:42:35 -0700 (PDT)
+        bh=iybQZ12qC8zX6NnxQv/Qw71ae7yPExH0GdYjIRAaEIA=;
+        b=iVmXTexnz24A9ESXBM1qIqLBQMEc3IBVCWXxZb3Q8tJv2TpTKxrsgCG4eYxBePkUFC
+         +M0WAkDWDMSI/ljz7zdN3lhI/DSPAZ0uUlFGfmekUOyTbOApXHGbOh6wxHIpRldaCFM2
+         RLAKV9ILTGiK4ZPWM2zz4NHAO1X2aAG94QQ3rrognWz+1BDedtv5yVvNcD0WAh353q/q
+         l7zeSYnzmTjs/6bGexIpmv2xDVHxTUA+w/I6AXQPqgumnKGOEZ1q/eLZeXgaQmHUEP2u
+         Ish1saIE9uJVDgOXcZjCJP8H3uzfiDBb1kgznAbCZJAi6wEddafPHc+CCvf1lfL/efbQ
+         r8MQ==
+X-Gm-Message-State: AOAM531ZeaU6/hB5taJ92a8VlOeDD4kik+cPSwA4Bvicp4/IrbQJT14e
+        zu8z8x9p0BuG2MphPZgvQQk=
+X-Google-Smtp-Source: ABdhPJzTHis84eT4EZ7sX7bfL1Wgr7J/x9/vNfVxiO8Po8g/xqbMOfHk3pQeskvu41mNxf60ol9FZA==
+X-Received: by 2002:a62:584:0:b029:32e:3b57:a1c6 with SMTP id 126-20020a6205840000b029032e3b57a1c6mr1498411pff.13.1628109760029;
+        Wed, 04 Aug 2021 13:42:40 -0700 (PDT)
 Received: from localhost.localdomain ([139.5.31.161])
-        by smtp.googlemail.com with ESMTPSA id w2sm7064922pjt.14.2021.08.04.13.42.31
+        by smtp.googlemail.com with ESMTPSA id w2sm7064922pjt.14.2021.08.04.13.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 13:42:35 -0700 (PDT)
+        Wed, 04 Aug 2021 13:42:39 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com,
@@ -54,11 +54,10 @@ Cc:     alex.williamson@redhat.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH v14 5/9] PCI: Allow userspace to query and set device reset mechanism
-Date:   Thu,  5 Aug 2021 02:11:57 +0530
-Message-Id: <20210804204201.1282-6-ameynarkhede03@gmail.com>
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: [PATCH v14 6/9] PCI: Define a function to set ACPI_COMPANION in pci_dev
+Date:   Thu,  5 Aug 2021 02:11:58 +0530
+Message-Id: <20210804204201.1282-7-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210804204201.1282-1-ameynarkhede03@gmail.com>
 References: <20210804204201.1282-1-ameynarkhede03@gmail.com>
@@ -68,199 +67,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add reset_method sysfs attribute to enable user to query and set user
-preferred device reset methods and their ordering.
+From: Shanker Donthineni <sdonthineni@nvidia.com>
 
-Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
+Move the existing code logic from acpi_pci_bridge_d3() to a separate
+function pci_set_acpi_fwnode() to set the ACPI fwnode.
+
+No functional change with this patch.
+
+Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
 ---
- Documentation/ABI/testing/sysfs-bus-pci |  19 ++++
- drivers/pci/pci-sysfs.c                 |   1 +
- drivers/pci/pci.c                       | 116 ++++++++++++++++++++++++
- drivers/pci/pci.h                       |   2 +
- 4 files changed, 138 insertions(+)
+ drivers/pci/pci-acpi.c | 12 ++++++++----
+ drivers/pci/pci.h      |  2 ++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index ef00fada2efb..ef66b62bf025 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -121,6 +121,25 @@ Description:
- 		child buses, and re-discover devices removed earlier
- 		from this part of the device tree.
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 36bc23e21759..eaddbf701759 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -934,6 +934,13 @@ static pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
  
-+What:		/sys/bus/pci/devices/.../reset_method
-+Date:		March 2021
-+Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-+Description:
-+		Some devices allow an individual function to be reset
-+		without affecting other functions in the same slot.
-+
-+		For devices that have this support, a file named
-+		reset_method will be present in sysfs. Initially reading
-+		this file will give names of the device supported reset
-+		methods and their ordering. After write, this file will
-+		give names and ordering of currently enabled reset methods.
-+		Writing the name or space separated list of names of any of
-+		the device supported reset methods to this file will set
-+		the reset methods and their ordering to be used when
-+		resetting the device. Writing empty string to this file
-+		will disable ability to reset the device and writing
-+		"default" will return to the original value.
-+
- What:		/sys/bus/pci/devices/.../reset
- Date:		July 2009
- Contact:	Michael S. Tsirkin <mst@redhat.com>
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 316f70c3e3b4..54ee7193b463 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1491,6 +1491,7 @@ const struct attribute_group *pci_dev_groups[] = {
- 	&pci_dev_config_attr_group,
- 	&pci_dev_rom_attr_group,
- 	&pci_dev_reset_attr_group,
-+	&pci_dev_reset_method_attr_group,
- 	&pci_dev_vpd_attr_group,
- #ifdef CONFIG_DMI
- 	&pci_dev_smbios_attr_group,
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8a516e9ca316..994426b2b502 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5132,6 +5132,122 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
- 	{ pci_reset_bus_function, .name = "bus" },
- };
+ static struct acpi_device *acpi_pci_find_companion(struct device *dev);
  
-+static ssize_t reset_method_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
++void pci_set_acpi_fwnode(struct pci_dev *dev)
 +{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t len = 0;
-+	int i, m;
-+
-+	for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
-+		m = pdev->reset_methods[i];
-+		if (!m)
-+			break;
-+
-+		len += sysfs_emit_at(buf, len, "%s%s", len ? " " : "",
-+				     pci_reset_fn_methods[m].name);
-+	}
-+
-+	if (len)
-+		len += sysfs_emit_at(buf, len, "\n");
-+
-+	return len;
++	if (!ACPI_COMPANION(&dev->dev) && !pci_dev_is_added(dev))
++		ACPI_COMPANION_SET(&dev->dev,
++				   acpi_pci_find_companion(&dev->dev));
 +}
 +
-+static ssize_t reset_method_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int i, m, n = 0;
-+	char *name, *options = NULL;
-+
-+	if (count >= (PAGE_SIZE - 1))
-+		return -EINVAL;
-+
-+	if (sysfs_streq(buf, "")) {
-+		goto free_and_exit;
-+	}
-+
-+	if (sysfs_streq(buf, "default")) {
-+		pci_init_reset_methods(pdev);
-+		return count;
-+	}
-+
-+	options = kstrndup(buf, count, GFP_KERNEL);
-+	if (!options)
-+		return -ENOMEM;
-+
-+	while ((name = strsep(&options, " ")) != NULL) {
-+		if (sysfs_streq(name, ""))
-+			continue;
-+
-+		name = strim(name);
-+
-+		for (m = 1; m < PCI_NUM_RESET_METHODS; m++) {
-+			if (sysfs_streq(name, pci_reset_fn_methods[m].name))
-+				break;
-+		}
-+
-+		if (m == PCI_NUM_RESET_METHODS) {
-+			pci_warn(pdev, "Skip invalid reset method '%s'", name);
-+			continue;
-+		}
-+
-+		for (i = 0; i < n; i++) {
-+			if (pdev->reset_methods[i] == m)
-+				break;
-+		}
-+
-+		if (i < n)
-+			continue;
-+
-+		if (pci_reset_fn_methods[m].reset_fn(pdev, 1)) {
-+			pci_warn(pdev, "Unsupported reset method '%s'", name);
-+			continue;
-+		}
-+
-+		pdev->reset_methods[n++] = m;
-+		BUG_ON(n == PCI_NUM_RESET_METHODS);
-+	}
-+
-+free_and_exit:
-+	kfree(options);
-+	/* All the reset methods are invalid */
-+	if (n == 0 && m == PCI_NUM_RESET_METHODS)
-+		return -EINVAL;
-+	pdev->reset_methods[n] = 0;
-+	if (pdev->reset_methods[0] == 0) {
-+		pci_warn(pdev, "All device reset methods disabled by user");
-+	} else if ((pdev->reset_methods[0] != 1) &&
-+		   !pci_reset_fn_methods[1].reset_fn(pdev, 1)) {
-+		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
-+	}
-+	return count;
-+}
-+static DEVICE_ATTR_RW(reset_method);
-+
-+static struct attribute *pci_dev_reset_method_attrs[] = {
-+	&dev_attr_reset_method.attr,
-+	NULL,
-+};
-+
-+static umode_t pci_dev_reset_method_attr_is_visible(struct kobject *kobj,
-+						    struct attribute *a, int n)
-+{
-+	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-+
-+	if (!pci_reset_supported(pdev))
-+		return 0;
-+
-+	return a->mode;
-+}
-+
-+const struct attribute_group pci_dev_reset_method_attr_group = {
-+	.attrs = pci_dev_reset_method_attrs,
-+	.is_visible = pci_dev_reset_method_attr_is_visible,
-+};
-+
- /**
-  * __pci_reset_function_locked - reset a PCI device function while holding
-  * the @dev mutex lock.
+ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ {
+ 	const struct fwnode_handle *fwnode;
+@@ -945,11 +952,8 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 		return false;
+ 
+ 	/* Assume D3 support if the bridge is power-manageable by ACPI. */
++	pci_set_acpi_fwnode(dev);
+ 	adev = ACPI_COMPANION(&dev->dev);
+-	if (!adev && !pci_dev_is_added(dev)) {
+-		adev = acpi_pci_find_companion(&dev->dev);
+-		ACPI_COMPANION_SET(&dev->dev, adev);
+-	}
+ 
+ 	if (adev && acpi_device_power_manageable(adev))
+ 		return true;
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 7438953745e0..31458d48eda7 100644
+index 31458d48eda7..8ef379b6cfad 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -714,4 +714,6 @@ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- extern const struct attribute_group aspm_ctrl_attr_group;
- #endif
- 
-+extern const struct attribute_group pci_dev_reset_method_attr_group;
-+
- #endif /* DRIVERS_PCI_H */
+@@ -703,7 +703,9 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
+ #ifdef CONFIG_ACPI
+ int pci_acpi_program_hp_params(struct pci_dev *dev);
+ extern const struct attribute_group pci_dev_acpi_attr_group;
++void pci_set_acpi_fwnode(struct pci_dev *dev);
+ #else
++static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
+ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+ {
+ 	return -ENODEV;
 -- 
 2.32.0
 
