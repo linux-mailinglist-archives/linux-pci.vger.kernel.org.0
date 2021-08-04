@@ -2,122 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07CC43E0263
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 15:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E800D3E029E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 16:03:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238567AbhHDNtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 09:49:49 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:12446 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238408AbhHDNtb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 09:49:31 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GftKz1z7bzckq3;
-        Wed,  4 Aug 2021 21:45:43 +0800 (CST)
-Received: from SZX1000464847.huawei.com (10.21.59.169) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Wed, 4 Aug 2021 21:49:17 +0800
-From:   Dongdong Liu <liudongdong3@huawei.com>
-To:     <helgaas@kernel.org>, <hch@infradead.org>, <kw@linux.com>,
-        <logang@deltatee.com>, <leon@kernel.org>,
-        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
-        <hverkuil-cisco@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH V7 9/9] PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
-Date:   Wed, 4 Aug 2021 21:47:08 +0800
-Message-ID: <1628084828-119542-10-git-send-email-liudongdong3@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1628084828-119542-1-git-send-email-liudongdong3@huawei.com>
-References: <1628084828-119542-1-git-send-email-liudongdong3@huawei.com>
+        id S238491AbhHDODO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 10:03:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44844 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238513AbhHDODO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 10:03:14 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 174E2oMH093964;
+        Wed, 4 Aug 2021 09:02:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1628085770;
+        bh=sMUS15sZoryFM7mBrI98D75T6KWCTkls5l3Y2MZV98k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=u/njbcLgd+kGIYKB+ct73TobZqhkgR+x45v6RJLvEMnJOUhs6YtD4fWMu2AtBo8Lt
+         FiRu/TiAZIQoJuR7ceTRHUAixAA4dYzlMHk+eSZxw2k+2p/XVzKD/rx4vJPPoWnTZX
+         0CePXUTAg/MhN7Did2dH4HottkAhY1mAdtNpDl8s=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 174E2oOO027011
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Aug 2021 09:02:50 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 4 Aug
+ 2021 09:02:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Wed, 4 Aug 2021 09:02:49 -0500
+Received: from [10.250.233.161] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 174E2iWO099533;
+        Wed, 4 Aug 2021 09:02:45 -0500
+Subject: Re: [PATCH v2 5/6] misc: pci_endpoint_test: Do not request or
+ allocate IRQs in probe
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <nadeem@cadence.com>
+References: <20210803074932.19820-1-kishon@ti.com>
+ <20210803074932.19820-6-kishon@ti.com> <20210803095839.GA11252@lpieralisi>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <02c1ddb7-539e-20a0-1bef-e10e76922a0e@ti.com>
+Date:   Wed, 4 Aug 2021 19:32:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.21.59.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20210803095839.GA11252@lpieralisi>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a 10-Bit Tag check in the P2PDMA code to ensure that a device with
-10-Bit Tag Requester doesn't interact with a device that does not
-support 10-BIT Tag Completer. Before that happens, the kernel should
-emit a warning. "echo 0 > /sys/bus/pci/devices/.../10bit_tag" to
-disable 10-BIT Tag Requester for PF device.
-"echo 0 > /sys/bus/pci/devices/.../sriov_vf_10bit_tag_ctl" to disable
-10-BIT Tag Requester for VF device.
+Hi Lorenzo,
 
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
----
- drivers/pci/p2pdma.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+On 03/08/21 3:28 pm, Lorenzo Pieralisi wrote:
+> On Tue, Aug 03, 2021 at 01:19:31PM +0530, Kishon Vijay Abraham I wrote:
+>> Allocation of IRQ vectors and requesting IRQ is done as part of
+>> PCITEST_SET_IRQTYPE. Do not request or allocate IRQs in probe for
+>> AM654 and J721E so that the user space test script has better control
+>> of the devices for which the IRQs are configured. Since certain user
+>> space scripts could rely on allocation of IRQ vectors during probe,
+>> remove allocation of IRQs only for TI's K3 platform.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/misc/pci_endpoint_test.c | 19 +++++++++++++------
+>>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> I don't claim to understand the inner details of the endpoint test
+> device but it looks like this approach should be redesigned.
+> 
+> I don't believe using devices quirks is the best approach to
+> expose/remove a feature to userspace, this can soon become
+> unmaintenable.
+> 
+> Maybe you can elaborate a bit more on what the real issue is please ?
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 50cdde3..948f2be 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -19,6 +19,7 @@
- #include <linux/random.h>
- #include <linux/seq_buf.h>
- #include <linux/xarray.h>
-+#include "pci.h"
- 
- enum pci_p2pdma_map_type {
- 	PCI_P2PDMA_MAP_UNKNOWN = 0,
-@@ -410,6 +411,41 @@ static unsigned long map_types_idx(struct pci_dev *client)
- 		(client->bus->number << 8) | client->devfn;
- }
- 
-+static bool check_10bit_tags_vaild(struct pci_dev *a, struct pci_dev *b,
-+				   bool verbose)
-+{
-+	bool req;
-+	bool comp;
-+	u16 ctl2;
-+
-+	if (a->is_virtfn) {
-+#ifdef CONFIG_PCI_IOV
-+		req = !!(a->physfn->sriov->ctrl &
-+			 PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN);
-+#endif
-+	} else {
-+		pcie_capability_read_word(a, PCI_EXP_DEVCTL2, &ctl2);
-+		req = !!(ctl2 & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-+	}
-+
-+	comp = !!(b->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP);
-+	if (req && (!comp)) {
-+		if (verbose) {
-+			pci_warn(a, "cannot be used for peer-to-peer DMA as 10-Bit Tag Requester enable is set in device (%s), but peer device (%s) does not support the 10-Bit Tag Completer\n",
-+				 pci_name(a), pci_name(b));
-+			if (a->is_virtfn)
-+				pci_warn(a, "to disable 10-Bit Tag Requester for this device, echo 0 > /sys/bus/pci/devices/%s/sriov_vf_10bit_tag_ctl\n",
-+					 pci_name(a));
-+			else
-+				pci_warn(a, "to disable 10-Bit Tag Requester for this device, echo 0 > /sys/bus/pci/devices/%s/10bit_tag\n",
-+					 pci_name(a));
-+		}
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- /*
-  * Calculate the P2PDMA mapping type and distance between two PCI devices.
-  *
-@@ -532,6 +568,10 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
- 	}
- done:
-+	if (!check_10bit_tags_vaild(client, provider, verbose) ||
-+	    !check_10bit_tags_vaild(provider, client, verbose))
-+		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
-+
- 	rcu_read_lock();
- 	p2pdma = rcu_dereference(provider->p2pdma);
- 	if (p2pdma)
--- 
-2.7.4
+The actual reason for introducing this patch (affects only AM654 and
+J721E) is due to Errata ID #i2101 GIC: ITS Misbehavior
+(https://www.ti.com/lit/er/sprz455a/sprz455a.pdf). So if more than 5
+devices use GIC ITS simultaneously, GIC fails to raise interrupts.
 
+Though this patch is not an actual workaround for the issue (the
+workaround is in GIC ITS driver provided in the errata document), it
+helps to keep testing PCIe RC/EP using pci-endpoint-test even when
+multiple pci-epf-test endpoint devices are connected (Normal test-setup
+having J721E-J721E back to back connection can support 21 pci-epf-test
+devices). So this patch lets user to individually enable interrupts for
+each of the devices and could disable after the interrupt test.
+
+Since pci_endpoint_test is used only for testing PCIE RC/EP
+communication and pci-endpoint-test has already implemented
+PCITEST_SET_IRQTYPE for the userspace to enable interrupt, tried to not
+enable the interrupts of all the devices by default in the probe (for
+AM654 and J721E where this errata applies).
+
+Thanks,
+Kishon
+
+> 
+> Thanks,
+> Lorenzo
+> 
+>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+>> index c7ee34013485..9740f2a0e7cd 100644
+>> --- a/drivers/misc/pci_endpoint_test.c
+>> +++ b/drivers/misc/pci_endpoint_test.c
+>> @@ -79,6 +79,9 @@
+>>  #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
+>>  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
+>>  
+>> +#define is_j721e_pci_dev(pdev)         \
+>> +		((pdev)->device == PCI_DEVICE_ID_TI_J721E)
+>> +
+>>  static DEFINE_IDA(pci_endpoint_test_ida);
+>>  
+>>  #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
+>> @@ -810,9 +813,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>>  
+>>  	pci_set_master(pdev);
+>>  
+>> -	if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
+>> -		err = -EINVAL;
+>> -		goto err_disable_irq;
+>> +	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
+>> +		if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
+>> +			err = -EINVAL;
+>> +			goto err_disable_irq;
+>> +		}
+>>  	}
+>>  
+>>  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+>> @@ -850,9 +855,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>>  		goto err_ida_remove;
+>>  	}
+>>  
+>> -	if (!pci_endpoint_test_request_irq(test)) {
+>> -		err = -EINVAL;
+>> -		goto err_kfree_test_name;
+>> +	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
+>> +		if (!pci_endpoint_test_request_irq(test)) {
+>> +			err = -EINVAL;
+>> +			goto err_kfree_test_name;
+>> +		}
+>>  	}
+>>  
+>>  	misc_device = &test->miscdev;
+>> -- 
+>> 2.17.1
+>>
