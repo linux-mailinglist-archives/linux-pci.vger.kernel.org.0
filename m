@@ -2,170 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9BD63DFBF3
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 09:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 767B33DFC13
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 09:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235740AbhHDHTb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 03:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235785AbhHDHTO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Aug 2021 03:19:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C10F861002;
-        Wed,  4 Aug 2021 07:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628061542;
-        bh=LrrFZSakdUxKwsRUW/i3f6iMngeHtZ/JieQmAqMg4aI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qCjBZRdYLZEHka1m01nCSdR0U7Pt27e17B312bW/x2gWXDnF215PRnwkRnTsr13K4
-         JRxi0t+RNFyLfqG3aEd/U0LBu7ss2VDjCjuZmX+s1Zjj6s2DxXljtMzPy+unLiN1+L
-         PErIkHCjYkemt18lPiYBM9yTpL2MwzF1JMRUwHFuu7ClRoemHMokVoTDu6if/Wqdzg
-         Qp2yXlb/S5Ey6rMQEvgYZOviysc33pCQvNDBFCSjdK4STxI49oUR1Wq9SWcyDMGu40
-         IUu0vIJkWOFl3/1qU/BavBrkV5jpYonpIyXXocC9f3BuNHkX8A1FORrJcZXBAoGqBA
-         nVXT1vMLD9Lkw==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1mBBB5-000BlL-8M; Wed, 04 Aug 2021 09:18:59 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 3/4] dt-bindings: PCI: kirin: Add support for Kirin970
-Date:   Wed,  4 Aug 2021 09:18:56 +0200
-Message-Id: <875a4571e253040d3885ee1f37467b0bade7361b.1628061310.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1628061310.git.mchehab+huawei@kernel.org>
-References: <cover.1628061310.git.mchehab+huawei@kernel.org>
+        id S235796AbhHDHaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 03:30:10 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:12444 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235794AbhHDHaJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 03:30:09 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GfjwF6KckzcklS;
+        Wed,  4 Aug 2021 15:26:21 +0800 (CST)
+Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Wed, 4 Aug 2021 15:29:55 +0800
+Received: from [127.0.0.1] (10.69.38.203) by dggema757-chm.china.huawei.com
+ (10.1.198.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 4 Aug
+ 2021 15:29:55 +0800
+Subject: Re: [PATCH v8 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
+ PMU
+To:     Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>
+CC:     <mark.rutland@arm.com>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
+References: <20210728080932.72515-1-liuqi115@huawei.com>
+ <20210728080932.72515-3-liuqi115@huawei.com>
+ <20210802100343.GA27282@willie-the-truck>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <a56266c4-c434-f078-6027-f30c021bd593@huawei.com>
+Date:   Wed, 4 Aug 2021 15:29:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+In-Reply-To: <20210802100343.GA27282@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.203]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggema757-chm.china.huawei.com (10.1.198.199)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a new compatible, plus the new bindings needed by
-HiKey970 board.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../bindings/pci/hisilicon,kirin-pcie.yaml    | 76 ++++++++++++++++++-
- 1 file changed, 75 insertions(+), 1 deletion(-)
+Hi Will,
+> Hmm, I was hoping that you would expose all the events as proper perf_events
+> and get rid of the subevents entirely.
+> 
+> Then userspace could do things like:
+> 
+>    // Count number of RX memory reads
+>    $ perf stat -e hisi_pcie0_0/rx_memory_read/
+> 
+>    // Count delay cycles
+>    $ perf stat -e hisi_pcie0_0/latency/
+> 
+>    // Count both of the above (events must be in the same group)
+>    $ perf stat -g -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
+> 
+> Note that in all three of these cases the hardware will be programmed in
+> the same way and both HISI_PCIE_CNT and HISI_PCIE_EXT_CNT are allocated!
+> 
+> So for example, doing this (i.e. without the '-g'):
+> 
+>    $ perf stat -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
+> 
+> would fail because the first event would allocate both of the counters.
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-index 90cab09e8d4b..c0551d2e606d 100644
---- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -24,11 +24,12 @@ properties:
-     contains:
-       enum:
-         - hisilicon,kirin960-pcie
-+        - hisilicon,kirin970-pcie
- 
-   reg:
-     description: |
-       Should contain dbi, apb, config registers location and length.
--      For HiKey960, it should also contain phy.
-+      For hisilicon,kirin960-pcie, it should also contain phy.
-     minItems: 3
-     maxItems: 4
- 
-@@ -36,6 +37,11 @@ properties:
-     minItems: 3
-     maxItems: 4
- 
-+  hisilicon,clken-gpios:
-+    description: |
-+      Clock input enablement GPIOs from PCI devices like Ethernet, M.2 and
-+      mini-PCIe slots.
-+
- required:
-   - compatible
-   - reg
-@@ -47,6 +53,7 @@ examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/clock/hi3660-clock.h>
-+    #include <dt-bindings/clock/hi3670-clock.h>
- 
-     soc {
-       #address-cells = <2>;
-@@ -83,4 +90,71 @@ examples:
-         clock-names = "pcie_phy_ref", "pcie_aux", "pcie_apb_phy",
-                       "pcie_apb_sys", "pcie_aclk";
-       };
-+
-+      pcie@f5000000 {
-+        compatible = "hisilicon,kirin970-pcie";
-+        reg = <0x0 0xf4000000 0x0 0x1000000>,
-+              <0x0 0xfc180000 0x0 0x1000>,
-+              <0x0 0xf5000000 0x0 0x2000>;
-+        reg-names = "dbi", "apb", "config";
-+        bus-range = <0x0  0x1>;
-+        msi-parent = <&its_pcie>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        phys = <&pcie_phy>;
-+        ranges = <0x02000000 0x0 0x00000000
-+                  0x0 0xf6000000
-+                  0x0 0x02000000>;
-+        num-lanes = <1>;
-+        #interrupt-cells = <1>;
-+        interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "msi";
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0x0 0 0 1 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 2 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 3 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+        reset-gpios = <&gpio7 0 0>;
-+        hisilicon,clken-gpios = <&gpio27 3 0>, <&gpio17 0 0>, <&gpio20 6 0>;
-+
-+        pcie@0 { // Lane 0: PCIe switch: Bus 1, Device 0
-+          reg = <0 0 0 0 0>;
-+          compatible = "pciclass,0604";
-+          device_type = "pci";
-+          #address-cells = <3>;
-+          #size-cells = <2>;
-+          ranges;
-+          pcie@1,0 { // Lane 4: M.2
-+            reg = <0x800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio3 1 0>;
-+            clkreq-gpios = <&gpio27 3 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+          pcie@5,0 { // Lane 5: Mini PCIe
-+            reg = <0x2800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio27 4 0 >;
-+            clkreq-gpios = <&gpio17 0 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+          pcie@7,0 { // Lane 6: Ethernet
-+            reg = <0x3800 0 0 0 0>;
-+            compatible = "pciclass,0604";
-+            device_type = "pci";
-+            reset-gpios = <&gpio25 2 0 >;
-+            clkreq-gpios = <&gpio20 6 0 >;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+          };
-+        };
-+      };
-     };
--- 
-2.31.1
+I'm confused with this situation when getting rid of subevent:
+
+$ perf stat -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
+
+In this case, driver checks the relationship of "latency" and 
+"rx_memory_read" in pmu->add() function and return a -EINVAL, but this 
+seems lead to time division multiplexing.
+
+	if (event->pmu->add(event, PERF_EF_START)) {
+		perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
+		event->oncpu = -1;
+		ret = -EAGAIN;
+		goto out;
+	}
+	...
+out:
+	perf_pmu_enable(event->pmu);
+
+This result doesn't meet our expection, do I miss something here?
+
+How about add an array to record events and check the relationship in 
+event_init() function? It seems that perf stat could only failed when 
+driver return invalid value in pmu->event_init() function.
+
+Thanks,
+Qi
+> 
+> All you need to do is check the counter scheduling constraints when
+> accepting an event group in the driver. No need for subevents at all.
+> 
+> Does that make sense?
+> 
+> Will
+> .
+> 
 
