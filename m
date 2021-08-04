@@ -2,104 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0F363DFD4F
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 10:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72EE53DFFAA
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 12:53:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235445AbhHDIwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 04:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43864 "EHLO mail.kernel.org"
+        id S237668AbhHDKxl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 06:53:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:59188 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235216AbhHDIwm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Aug 2021 04:52:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 194F160F6F;
-        Wed,  4 Aug 2021 08:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628067150;
-        bh=0iArU+ki2EYLRkNMmkYJbqoFHfcp+tUcOVzag8zIBck=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nobG9Gllv7N13jdGBP2jfG+ONsBdT6IEGWHjH/Oco3P/JFwCN0PDsDGkujbmZMAWe
-         BjdWUIvxBxnrqLftwh2D1cgQCKWkSUFW+wAM8uCwY04CZqKsKvZXc8GshDWm8MEyHO
-         aVcxw8Jd9apy8lEE+nRmqu0UieVsEssGfDd0ytPsynRejgJwh38QPDeGuT8XvI3VEX
-         dbH27biK1A5t4lHo3eKTfkopJBkymdBCTrrmItFkO0/OsoHYpCRVLJ/oSTmosIqe0M
-         knvdgIaQWoWde1rvTUFyE1H4qcwsPEQq4w4hxLwZ1Ozu4YIXbvRS+we8YRaSMCJfbC
-         9rSgjWs9x5jIA==
-Received: by mail-wm1-f42.google.com with SMTP id o7-20020a05600c5107b0290257f956e02dso3385465wms.1;
-        Wed, 04 Aug 2021 01:52:30 -0700 (PDT)
-X-Gm-Message-State: AOAM53316txzQsabJyuRzstgjNIjWx3j/mN2e5Pet6S6rU6yhrf7gNmp
-        q8aHFyJk9bzV7zWYqIh27p3NT+j5FX2aBfpYPLg=
-X-Google-Smtp-Source: ABdhPJwRBm+5B/otZTXkzrYbrncm3ie0XIHr+qNno/ecewugZENntEn3MDOC/UJz0gQwsZXJwdMVY0wo/wfqtPO74RM=
-X-Received: by 2002:a05:600c:3641:: with SMTP id y1mr17262306wmq.43.1628067148644;
- Wed, 04 Aug 2021 01:52:28 -0700 (PDT)
+        id S237653AbhHDKxj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Aug 2021 06:53:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BF2013A1;
+        Wed,  4 Aug 2021 03:53:26 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF84F3F719;
+        Wed,  4 Aug 2021 03:53:23 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 11:53:18 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v7 5/7] PCI: cadence: Add support to configure virtual
+ functions
+Message-ID: <20210804105318.GA31443@lpieralisi>
+References: <20210803050310.27122-1-kishon@ti.com>
+ <20210803050310.27122-6-kishon@ti.com>
+ <20210803114530.GE11252@lpieralisi>
+ <be907fe7-4095-e28b-5575-76629edc30f0@ti.com>
 MIME-Version: 1.0
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
- <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
- <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
- <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
- <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com> <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
- <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com> <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
- <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
-In-Reply-To: <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 4 Aug 2021 10:52:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
-Message-ID: <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-To:     John Garry <john.garry@huawei.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be907fe7-4095-e28b-5575-76629edc30f0@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 4, 2021 at 9:55 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 03/08/2021 13:15, Arnd Bergmann wrote:
-> >> That seems reasonable. And asm-generic io.h should be ifdef'ed by
-> >> HAS_IOPORT. In your patch you had it under CONFIG_IOPORT - was that
-> >> intentional?
-> > No, that was a typo. Thanks for pointing this out.
-> >
-> >> On another point, I noticed SCSI driver AHA152x depends on ISA, but is
-> >> not an isa driver - however it does use port IO. Would such dependencies
-> >> need to be changed to depend on HAS_IOPORT?
-> > I'm not sure what you mean here. As far as I can tell, AHA152x is an ISA
-> > driver in the sense that it is a driver for ISA add-on cards. However, it
-> > is not a 'struct isa_driver' in the sense that AHA1542 is, AHA152x  is even
-> > older and uses the linux-2.4 style initialization using a module_init()
-> > function that does the probing.
->
-> ok, fine. So I just wonder what the ISA kconfig dependency gets us for
-> aha152x. I experimented by removing the kconfig dependency and enabling
-> for the arm64 (which does not have CONFIG_ISA) std defconfig and it
-> built fine.
+On Tue, Aug 03, 2021 at 08:26:42PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
+> 
+> On 03/08/21 5:15 pm, Lorenzo Pieralisi wrote:
+> > On Tue, Aug 03, 2021 at 10:33:08AM +0530, Kishon Vijay Abraham I wrote:
+> >> Now that support for SR-IOV is added in PCIe endpoint core, add support
+> >> to configure virtual functions in the Cadence PCIe EP driver.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> Acked-by: Tom Joseph <tjoseph@cadence.com>
+> >> ---
+> >>  .../pci/controller/cadence/pcie-cadence-ep.c  | 241 +++++++++++++++---
+> >>  drivers/pci/controller/cadence/pcie-cadence.h |   7 +
+> >>  2 files changed, 217 insertions(+), 31 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> >> index 912a15be8bfd..791915054ff4 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> >> @@ -20,7 +20,18 @@ static int cdns_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+> >>  				     struct pci_epf_header *hdr)
+> >>  {
+> >>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> >> +	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+> >>  	struct cdns_pcie *pcie = &ep->pcie;
+> >> +	u32 reg;
+> >> +
+> >> +	if (vfn > 1) {
+> >> +		dev_dbg(&epc->dev, "Only Virtual Function #1 has deviceID\n");
+> >> +		return 0;
+> > 
+> > Shouldn't this return an error ?
+> 
+> Since the same function driver could be used for physical function and
+> virtual function, I tried to avoid adding any additional case specific
+> for virtual function in the function driver.
+> 
+> If we want to return an error here, then the function driver should be
+> modified to not invoke writeheader for vfn > 1.
 
-The point of CONFIG_ISA is to only build drivers for ISA add-on cards
-on architectures that can have such slots. For ISA drivers in particular,
-we don't want them to be loaded on machines that don't have them
-because of the various ways this can cause trouble with hardwired
-port and irq numbers.
+Well, I see it the other way around. If writing the header for vfn > 1
+is an error it must be reported as such and handled accordingly.
 
-> >> Yeah, that sounds the same as what I was thinking. Maybe IOPORT_NATIVE
-> >> could work as a name. I would think that only x86/ia64 would define it.
-> >> A concern though is that someone could argue that is a functional
-> >> dependency, rather than just a build dependency.
-> > You can have those on a number of platforms, such as early
-> > PowerPC CHRP or pSeries systems, a number of MIPS workstations
-> > including recent Loongson machines, and many Alpha platforms.
-> >
->
-> hmmm... if some machines under an arch support "native" port IO and some
-> don't, then if we use a common multi-platform defconfig which defines
-> HARDCODED_IOPORT, then we still build for platforms without "native"
-> port IO, which is not ideal.
+As it stands - it looks like we do nothing and everything is just
+fine, which is weird.
 
-Correct, but that's not a problem I'm trying to solve at this point. The
-machines that have those are extremely rare, so almost all configurations
-that one would encounter in practice do not suffer from it, and solving it
-reliably would be really hard.
+Thanks,
+Lorenzo
 
-       Arnd
+> >> +	} else if (vfn == 1) {
+> >> +		reg = cap + PCI_SRIOV_VF_DID;
+> >> +		cdns_pcie_ep_fn_writew(pcie, fn, reg, hdr->deviceid);
+> >> +		return 0;
+> >> +	}
+> >>  
+> >>  	cdns_pcie_ep_fn_writew(pcie, fn, PCI_DEVICE_ID, hdr->deviceid);
+> >>  	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_REVISION_ID, hdr->revid);
+> >> @@ -51,12 +62,14 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+> >>  				struct pci_epf_bar *epf_bar)
+> >>  {
+> >>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> >> +	u32 cap = CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET;
+> >>  	struct cdns_pcie_epf *epf = &ep->epf[fn];
+> >>  	struct cdns_pcie *pcie = &ep->pcie;
+> >>  	dma_addr_t bar_phys = epf_bar->phys_addr;
+> >>  	enum pci_barno bar = epf_bar->barno;
+> >>  	int flags = epf_bar->flags;
+> >>  	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
+> >> +	u32 first_vf_offset, stride;
+> >>  	u64 sz;
+> >>  
+> >>  	/* BAR size is 2^(aperture + 7) */
+> >> @@ -92,26 +105,50 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+> >>  
+> >>  	addr0 = lower_32_bits(bar_phys);
+> >>  	addr1 = upper_32_bits(bar_phys);
+> >> +
+> >> +	if (vfn == 1) {
+> >> +		/* All virtual functions use the same BAR config */
+> >> +		if (bar < BAR_4) {
+> >> +			reg = CDNS_PCIE_LM_EP_VFUNC_BAR_CFG0(fn);
+> >> +			b = bar;
+> >> +		} else {
+> >> +			reg = CDNS_PCIE_LM_EP_VFUNC_BAR_CFG1(fn);
+> >> +			b = bar - BAR_4;
+> >> +		}
+> >> +	} else if (vfn == 0) {
+> >> +		/* BAR configuration for physical function */
+> >> +		if (bar < BAR_4) {
+> >> +			reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG0(fn);
+> >> +			b = bar;
+> >> +		} else {
+> >> +			reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG1(fn);
+> >> +			b = bar - BAR_4;
+> >> +		}
+> >> +	}
+> > 
+> > Code in both branches is almost identical except for what is
+> > assigned to reg, it is not fundamental but maybe it can be rewritten
+> > more concisely.
+> 
+> okay.. let me think.
+> 
+> Thanks
+> Kishon
