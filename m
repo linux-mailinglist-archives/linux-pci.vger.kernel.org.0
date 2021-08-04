@@ -2,147 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 272A93E05D4
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 18:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE303E05EF
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 18:29:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235885AbhHDQYG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 12:24:06 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3581 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234482AbhHDQYG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 12:24:06 -0400
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gfxr86VKVz6GFTw;
-        Thu,  5 Aug 2021 00:23:36 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 4 Aug 2021 18:23:51 +0200
-Received: from localhost.localdomain (10.123.41.22) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 4 Aug 2021 17:23:51 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
-        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [RFC PATCH 4/4] cxl/pci: Add really basic CMA authentication support.
-Date:   Thu, 5 Aug 2021 00:18:39 +0800
-Message-ID: <20210804161839.3492053-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
+        id S229725AbhHDQ3P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 12:29:15 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:37731 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237669AbhHDQ3K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 12:29:10 -0400
+Received: by mail-io1-f43.google.com with SMTP id l20so908482iom.4;
+        Wed, 04 Aug 2021 09:28:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VKjRz072HGEgP1rwlJIh26JWC9tcVy1uWT48FAiuTh0=;
+        b=m4E2wfH91B5GM7A0QgkhuCeAtSnNHY/dJ8SW0/UBiK1AdQsiVysV0f6GUXYhzcnSaq
+         LZOnpc32XR71YT63yOwst/WOm/yhJAxuTJtI/S8FTJgVwXn4YrjrKbU0Teh/X2QzHxda
+         ACdmLHNyk70Rz0+bR+BYp0Ct/nd2bhDvFHgAvszd8rUDpO7Zo1WsFWHnoSKa0Mz/FDBV
+         ynkno4QwGIELfAT0tV2Aw2sEpmL8oSK7shHfZ3gf5ZvXoLlUOjRUqCG+If45wJTJ3ouV
+         USfmzodoUq8U9hTTVKyrKqOTrHZsRVBsI5QoIeDyWnGGryb/JxpKqINUNwOtcqAvwSCl
+         Ig+A==
+X-Gm-Message-State: AOAM530qNy6ZZmnAdiuypeO8uM42ZYiXitysLCp2S9uu3PVBwr6AXDkG
+        UGnT9SwM2sanYI1CEGPpwQ==
+X-Google-Smtp-Source: ABdhPJzM54EOzxkXV7o01ZjhBshqyv3YcG0rFRh3qFfZory8ZzZ/FUEYNWqi9A9W3x8CZlLwLtvqcQ==
+X-Received: by 2002:a02:7348:: with SMTP id a8mr302327jae.116.1628094536294;
+        Wed, 04 Aug 2021 09:28:56 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id u16sm1764975iob.41.2021.08.04.09.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Aug 2021 09:28:55 -0700 (PDT)
+Received: (nullmailer pid 1331554 invoked by uid 1000);
+        Wed, 04 Aug 2021 16:28:53 -0000
+Date:   Wed, 4 Aug 2021 10:28:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 0/4] DT schema changes for HiKey970 PCIe hardware to
+ work
+Message-ID: <YQrARd7wgYS1nywt@robh.at.kernel.org>
+References: <cover.1627965261.git.mchehab+huawei@kernel.org>
+ <CAL_JsqLjw=+szXWJjGe86tMc51NA-5j=jVSXUAWuKeZRuJNJUg@mail.gmail.com>
+ <20210804085045.3dddbb9c@coco.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210804085045.3dddbb9c@coco.lan>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is just for purposes of poking the CMA / SPDM code.
-What exactly the model in the driver looks like is still to
-be worked out.
+On Wed, Aug 04, 2021 at 08:50:45AM +0200, Mauro Carvalho Chehab wrote:
+> Em Tue, 3 Aug 2021 16:11:42 -0600
+> Rob Herring <robh+dt@kernel.org> escreveu:
+> 
+> > On Mon, Aug 2, 2021 at 10:39 PM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > That's the third version of the DT bindings for Kirin 970 PCIE and its
+> > > corresponding PHY.
+> > >
+> > > It is identical to v2, except by:
+> > >         -          pcie@7,0 { // Lane 7: Ethernet
+> > >         +          pcie@7,0 { // Lane 6: Ethernet  
+> > 
+> > Can you check whether you have DT node links in sysfs for the PCI
+> > devices? If you don't, then something is wrong still in the topology
+> > or the PCI core is failing to set the DT node pointer in struct
+> > device. Though you don't rely on that currently, we want the topology
+> > to match. It's possible this never worked on arm/arm64 as mainly
+> > powerpc relied on this.
+> >
+> > I'd like some way to validate the DT matches the PCI topology. We
+> > could have a tool that generates the DT structure based on the PCI
+> > topology.
+> 
+> The of_node node link is on those places:
+> 
+> 	$ find /sys/devices/platform/soc/f4000000.pcie/ -name of_node
+> 	/sys/devices/platform/soc/f4000000.pcie/of_node
+> 	/sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/of_node
+> 	/sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/pci_bus/0000:01/of_node
+> 	/sys/devices/platform/soc/f4000000.pcie/pci0000:00/pci_bus/0000:00/of_node
 
-Note the PROBE_FORCE_SYNCHRONOUS is a workaround to avoid warnings
-about trying to load an additional crypto module whilst doing an
-asychronous probe.
+Looks like we're missing some... 
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/cxl/Kconfig |  1 +
- drivers/cxl/mem.h   |  2 ++
- drivers/cxl/pci.c   | 13 ++++++++++++-
- 3 files changed, 15 insertions(+), 1 deletion(-)
+It's not immediately obvious to me what's wrong here. Only the root 
+bus is getting it's DT node set. The relevant code is pci_scan_device(), 
+pci_set_of_node() and pci_set_bus_of_node(). Give me a few days to try 
+to reproduce and debug it.
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index e2bca26eb879..c726cc9adddb 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -17,6 +17,7 @@ config CXL_MEM
- 	tristate "CXL.mem: Memory Devices"
- 	default CXL_BUS
- 	select PCI_DOE
-+	select PCI_CMA
- 	help
- 	  The CXL.mem protocol allows a device to act as a provider of
- 	  "System RAM" and/or "Persistent Memory" that is fully coherent
-diff --git a/drivers/cxl/mem.h b/drivers/cxl/mem.h
-index f626aa7eb389..cb8c2dfda277 100644
---- a/drivers/cxl/mem.h
-+++ b/drivers/cxl/mem.h
-@@ -57,6 +57,7 @@ struct cxl_memdev {
-  * @pdev: The PCI device associated with this CXL device.
-  * @cxlmd: Logical memory device chardev / interface
-  * @table_doe: Data exchange object mailbox used to read tables
-+ * @cma_doe: Component measurement and authentication mailbox
-  * @regs: Parsed register blocks
-  * @payload_size: Size of space for payload
-  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-@@ -73,6 +74,7 @@ struct cxl_mem {
- 	struct cxl_memdev *cxlmd;
- 
- 	struct pci_doe *table_doe;
-+	struct pci_doe *cma_doe;
- 	struct cxl_regs regs;
- 
- 	size_t payload_size;
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 471bddc9d167..e6ca84cc6fff 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -2,10 +2,12 @@
- /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
- #include <uapi/linux/cxl_mem.h>
- #include <linux/security.h>
-+#include <linux/pci-cma.h>
- #include <linux/debugfs.h>
- #include <linux/module.h>
- #include <linux/sizes.h>
- #include <linux/mutex.h>
-+#include <linux/spdm.h>
- #include <linux/list.h>
- #include <linux/cdev.h>
- #include <linux/idr.h>
-@@ -1723,6 +1725,7 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_mem *cxlm;
-+	struct spdm_state spdm_state;
- 	int rc, irqs;
- 
- 	rc = pcim_enable_device(pdev);
-@@ -1770,6 +1773,14 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	cxlm->table_doe = pci_doe_find(pdev, PCI_DVSEC_VENDOR_ID_CXL,
- 				       CXL_DOE_PROTOCOL_TABLE_ACCESS);
- 
-+	cxlm->cma_doe = pci_doe_find(pdev, PCI_VENDOR_ID_PCI_SIG,
-+				     PCI_DOE_PROTOCOL_CMA);
-+
-+	pci_cma_init(cxlm->cma_doe, &spdm_state);
-+	rc = pci_cma_authenticate(&spdm_state);
-+	if (rc)
-+		return rc;
-+
- 	rc = cxl_mem_setup_regs(cxlm);
- 	if (rc)
- 		return rc;
-@@ -1808,7 +1819,7 @@ static struct pci_driver cxl_mem_driver = {
- 	.id_table		= cxl_mem_pci_tbl,
- 	.probe			= cxl_mem_probe,
- 	.driver	= {
--		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
-+		.probe_type	= PROBE_FORCE_SYNCHRONOUS,
- 	},
- };
- 
--- 
-2.19.1
+In the mean time, I applied the series but haven't pushed it out.
 
+Rob
