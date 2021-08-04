@@ -2,112 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 767B33DFC13
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 09:29:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3323DFC53
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Aug 2021 09:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235796AbhHDHaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 03:30:10 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:12444 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235794AbhHDHaJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 03:30:09 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GfjwF6KckzcklS;
-        Wed,  4 Aug 2021 15:26:21 +0800 (CST)
-Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Wed, 4 Aug 2021 15:29:55 +0800
-Received: from [127.0.0.1] (10.69.38.203) by dggema757-chm.china.huawei.com
- (10.1.198.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 4 Aug
- 2021 15:29:55 +0800
-Subject: Re: [PATCH v8 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-To:     Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>
-CC:     <mark.rutland@arm.com>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
-References: <20210728080932.72515-1-liuqi115@huawei.com>
- <20210728080932.72515-3-liuqi115@huawei.com>
- <20210802100343.GA27282@willie-the-truck>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <a56266c4-c434-f078-6027-f30c021bd593@huawei.com>
-Date:   Wed, 4 Aug 2021 15:29:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S235991AbhHDH4W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 03:56:22 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3574 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235977AbhHDH4V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Aug 2021 03:56:21 -0400
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GfkZK1dqrz6GFWC;
+        Wed,  4 Aug 2021 15:55:53 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Wed, 4 Aug 2021 09:56:07 +0200
+Received: from [10.47.90.65] (10.47.90.65) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 4 Aug 2021
+ 08:56:06 +0100
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     Arnd Bergmann <arnd@kernel.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
+ <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
+ <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
+ <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
+ <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+ <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
+Date:   Wed, 4 Aug 2021 08:55:38 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20210802100343.GA27282@willie-the-truck>
+In-Reply-To: <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.38.203]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggema757-chm.china.huawei.com (10.1.198.199)
+X-Originating-IP: [10.47.90.65]
+X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 03/08/2021 13:15, Arnd Bergmann wrote:
+>> That seems reasonable. And asm-generic io.h should be ifdef'ed by
+>> HAS_IOPORT. In your patch you had it under CONFIG_IOPORT - was that
+>> intentional?
+> No, that was a typo. Thanks for pointing this out.
+> 
+>> On another point, I noticed SCSI driver AHA152x depends on ISA, but is
+>> not an isa driver - however it does use port IO. Would such dependencies
+>> need to be changed to depend on HAS_IOPORT?
+> I'm not sure what you mean here. As far as I can tell, AHA152x is an ISA
+> driver in the sense that it is a driver for ISA add-on cards. However, it
+> is not a 'struct isa_driver' in the sense that AHA1542 is, AHA152x  is even
+> older and uses the linux-2.4 style initialization using a module_init()
+> function that does the probing.
 
-Hi Will,
-> Hmm, I was hoping that you would expose all the events as proper perf_events
-> and get rid of the subevents entirely.
-> 
-> Then userspace could do things like:
-> 
->    // Count number of RX memory reads
->    $ perf stat -e hisi_pcie0_0/rx_memory_read/
-> 
->    // Count delay cycles
->    $ perf stat -e hisi_pcie0_0/latency/
-> 
->    // Count both of the above (events must be in the same group)
->    $ perf stat -g -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
-> 
-> Note that in all three of these cases the hardware will be programmed in
-> the same way and both HISI_PCIE_CNT and HISI_PCIE_EXT_CNT are allocated!
-> 
-> So for example, doing this (i.e. without the '-g'):
-> 
->    $ perf stat -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
-> 
-> would fail because the first event would allocate both of the counters.
+ok, fine. So I just wonder what the ISA kconfig dependency gets us for 
+aha152x. I experimented by removing the kconfig dependency and enabling 
+for the arm64 (which does not have CONFIG_ISA) std defconfig and it 
+built fine.
 
-I'm confused with this situation when getting rid of subevent:
+> 
+>> I did notice that arm32 support CONFIG_ISA - not sure why.
+> This is for some of the earlier machines we support:
+> mach-footbridge has some on-board ISA components, while
+> SA1100, PXA25x and S3C2410 each have at least one machine
+> with a PC/104 connector using ISA signaling for add-on cards.
+> 
+> There are also a couple of platforms with PCMCIA or CF slots
+> using the same ISA style I/O signals, but those have separate
+> drivers.
+> 
+>>> HARDCODED_IOPORT: (or another name you might think of,) Used by
+>>>      drivers that unconditionally do inb()/outb() without checking the
+>>>      validity of the address using firmware or other methods first.
+>>>      depends on HAS_IOPORT and possibly architecture specific
+>>>      settings.
+>> Yeah, that sounds the same as what I was thinking. Maybe IOPORT_NATIVE
+>> could work as a name. I would think that only x86/ia64 would define it.
+>> A concern though is that someone could argue that is a functional
+>> dependency, rather than just a build dependency.
+> You can have those on a number of platforms, such as early
+> PowerPC CHRP or pSeries systems, a number of MIPS workstations
+> including recent Loongson machines, and many Alpha platforms.
+> 
 
-$ perf stat -e hisi_pcie0_0/latency/ -e hisi_pcie0_0/rx_memory_read/
+hmmm... if some machines under an arch support "native" port IO and some 
+don't, then if we use a common multi-platform defconfig which defines 
+HARDCODED_IOPORT, then we still build for platforms without "native" 
+port IO, which is not ideal.
 
-In this case, driver checks the relationship of "latency" and 
-"rx_memory_read" in pmu->add() function and return a -EINVAL, but this 
-seems lead to time division multiplexing.
-
-	if (event->pmu->add(event, PERF_EF_START)) {
-		perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-		event->oncpu = -1;
-		ret = -EAGAIN;
-		goto out;
-	}
-	...
-out:
-	perf_pmu_enable(event->pmu);
-
-This result doesn't meet our expection, do I miss something here?
-
-How about add an array to record events and check the relationship in 
-event_init() function? It seems that perf stat could only failed when 
-driver return invalid value in pmu->event_init() function.
+> Maybe the name should reflect that these all use PC-style ISA/LPC
+> port numbers without the ISA connectors.
 
 Thanks,
-Qi
-> 
-> All you need to do is check the counter scheduling constraints when
-> accepting an event group in the driver. No need for subevents at all.
-> 
-> Does that make sense?
-> 
-> Will
-> .
-> 
+john
 
