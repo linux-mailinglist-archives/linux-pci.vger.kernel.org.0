@@ -2,86 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC5E33E1617
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 15:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A9523E161B
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 15:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241781AbhHENyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S241801AbhHENyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 5 Aug 2021 09:54:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:46348 "EHLO foss.arm.com"
+Received: from mail.kernel.org ([198.145.29.99]:42238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235180AbhHENyL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Aug 2021 09:54:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02CB531B;
-        Thu,  5 Aug 2021 06:53:57 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17C593F40C;
-        Thu,  5 Aug 2021 06:53:55 -0700 (PDT)
-Date:   Thu, 5 Aug 2021 14:53:53 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 2/2] PCI: dwc: Clean up Kconfig dependencies
- (PCIE_DW_EP)
-Message-ID: <20210805135353.GB22410@lpieralisi>
-References: <20210623140103.47818-1-andriy.shevchenko@linux.intel.com>
- <20210623140103.47818-2-andriy.shevchenko@linux.intel.com>
+        id S241778AbhHENyM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Aug 2021 09:54:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C4CE61157;
+        Thu,  5 Aug 2021 13:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628171638;
+        bh=ZalQG662IXTcyh3MsfHL5bDf1isxgd8l9UI/IjdZ6B4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aiY7GdTjJKfhSf96A3bqXb/p1a43jtGaD4oiZT6yst961vXXAgj/EaQNGjjTIyoam
+         EQc6U5whqoMp0u6D8u/ZFO50NTQDpoYKymUIowzlLCpZazcqIDp1FyRvRC44DOXeTc
+         qILxLyZNc6XUetrGlUzcY+iaCr+v1x6ccHBKijgC1SBTuMHezRF8p2yIUwH+XwSZSH
+         1ZBT1dx1/7ixHmQNCwYibl/+ITrQK3t5g09CPT8LWbKyQ8Zk5dCLHSUjlSFZcwI8NR
+         Yhtmn3ywcUl8YBWc92+LJB3Kz38azkkin/HrSOxmtiqLdvDpO4nHfhYHa84UCu7bQN
+         kYeckWD4v9+ww==
+Date:   Thu, 5 Aug 2021 16:53:54 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, helgaas@kernel.org,
+        hch@infradead.org, kw@linux.com, linux-pci@vger.kernel.org,
+        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH V7 7/9] PCI/sysfs: Add a 10-Bit Tag sysfs file
+Message-ID: <YQvtcjudPQQ8LToU@unreal>
+References: <1628084828-119542-1-git-send-email-liudongdong3@huawei.com>
+ <1628084828-119542-8-git-send-email-liudongdong3@huawei.com>
+ <75243571-3213-6ae2-040f-ae1b1f799e42@deltatee.com>
+ <8758a42b-233b-eb73-dce4-493e0ce8eed5@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210623140103.47818-2-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8758a42b-233b-eb73-dce4-493e0ce8eed5@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 23, 2021 at 05:01:03PM +0300, Andy Shevchenko wrote:
-> The "depends on" is no-op in the selectable options.
+On Thu, Aug 05, 2021 at 09:14:50PM +0800, Dongdong Liu wrote:
+> On 2021/8/4 23:51, Logan Gunthorpe wrote:
+> > 
+> > 
+> > 
+> > On 2021-08-04 7:47 a.m., Dongdong Liu wrote:
+> > > PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
+> > > sending Requests to other Endpoints (as opposed to host memory), the
+> > > Endpoint must not send 10-Bit Tag Requests to another given Endpoint
+> > > unless an implementation-specific mechanism determines that the Endpoint
+> > > supports 10-Bit Tag Completer capability. Add a 10bit_tag sysfs file,
+> > > write 0 to disable 10-Bit Tag Requester when the driver does not bind
+> > > the device if the peer device does not support the 10-Bit Tag Completer.
+> > > This will make P2P traffic safe. the 10bit_tag file content indicate
+> > > current 10-Bit Tag Requester Enable status.
+> > 
+> > Can we not have both the sysfs file and the command line parameter? If
+> > the user wants to disable it always for a specific device this sysfs
+> > parameter is fairly awkward. A script at boot to unbind the driver, set
+> > the sysfs file and rebind the driver is not trivial and the command line
+> > parameter offers additional options for users.
+> Does the command line parameter as "[PATCH V6 7/8] PCI: Add
+> "pci=disable_10bit_tag=" parameter for peer-to-peer support" does?
+> 
+> Do we also need such command line if we already had sysfs file?
+> I think we may not need.
 
-Same as in patch one, spell out what "depends on" you are referring
-to - please make this log more descriptive.
-
-Thanks,
-Lorenzo
+I think the same.
 
 > 
-> Clean up the users of PCIE_DW_EP and introduce idiom
-> 
-> 	depends on PCI_ENDPOINT
-> 	select PCIE_DW_EP
-> 
-> for all of them.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 9bfd41eadd5e..ca5de4e40fbe 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -12,7 +12,6 @@ config PCIE_DW_HOST
->  
->  config PCIE_DW_EP
->  	bool
-> -	depends on PCI_ENDPOINT
->  	select PCIE_DW
->  
->  config PCI_DRA7XX
-> @@ -37,8 +36,8 @@ config PCI_DRA7XX_HOST
->  config PCI_DRA7XX_EP
->  	bool "TI DRA7xx PCIe controller Endpoint Mode"
->  	depends on SOC_DRA7XX || COMPILE_TEST
-> -	depends on PCI_ENDPOINT
->  	depends on OF && HAS_IOMEM && TI_PIPE3
-> +	depends on PCI_ENDPOINT
->  	select PCIE_DW_EP
->  	select PCI_DRA7XX
->  	help
-> -- 
-> 2.30.2
-> 
+> Thanks,
+> Dongdong
+> > 
+> > Logan
+> > .
+> > 
