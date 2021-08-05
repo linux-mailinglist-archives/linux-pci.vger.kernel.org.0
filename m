@@ -2,112 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8453E1D06
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 21:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C29193E1576
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 15:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239551AbhHETyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Aug 2021 15:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
+        id S241661AbhHENP7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Aug 2021 09:15:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52221 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239656AbhHETyX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Aug 2021 15:54:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D4E02603E7;
-        Thu,  5 Aug 2021 19:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628193249;
-        bh=bKnmm79yvPru1/OpyG8CrtepkEsoiHjQUkuE4D3wOMU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HlI3SVMSBGa2u0UIB2qT9FQUofJBkZT7IigHbUfR6kr2pSpIKqCmSFmhZGkjXMz9E
-         tseUlSWv0lPimxcxuuiJUeWR5Iz3ZSI/K/L9lzdt+43Gn5oRjHQUgAsyfPDvjL0zBl
-         JZlVyTzfD9JVPX0joXL1UsswqKiNBRmr23YJdfvAZy05CEiizvPYmnjUpkPJ2zYEk+
-         WyVvjQiMZthvh8qeBoR7lK3zJbHS8nbZkVnlgvT1teY4AFiLRwwo8QcoR0n86ZvDLf
-         VP9dan2IXIBwYZNOypyKv8Lms/uwmiZ9aeSaebvATtYq+lzQkUAeKE0Kj508VAVpx0
-         e69bd2vGp0W1w==
-Date:   Thu, 5 Aug 2021 14:54:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V7 4/9] PCI: Enable 10-Bit Tag support for PCIe Endpoint
- devices
-Message-ID: <20210805195407.GA1763784@bjorn-Precision-5520>
+        id S241669AbhHENP6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Aug 2021 09:15:58 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10066"; a="212290986"
+X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
+   d="scan'208";a="212290986"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2021 06:15:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
+   d="scan'208";a="467504173"
+Received: from intel-z390-ud.iind.intel.com ([10.106.46.146])
+  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2021 06:15:38 -0700
+From:   srikanth.thokala@intel.com
+To:     robh+dt@kernel.org, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com,
+        mallikarjunappa.sangannavar@intel.com, kw@linux.com,
+        maz@kernel.org, srikanth.thokala@intel.com
+Subject: [PATCH v11 0/2] PCI: keembay: Add support for Intel Keem Bay
+Date:   Fri,  6 Aug 2021 02:40:08 +0530
+Message-Id: <20210805211010.29484-1-srikanth.thokala@intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d84ede9-8983-50f0-8387-3d4c6db1b042@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 03:47:31PM +0800, Dongdong Liu wrote:
-> Hi Bjorn
-> 
-> Many thanks for your review.
-> On 2021/8/5 7:17, Bjorn Helgaas wrote:
-> > On Wed, Aug 04, 2021 at 09:47:03PM +0800, Dongdong Liu wrote:
-> > > 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
-> > > field size from 8 bits to 10 bits.
-> > > 
-> > > PCIe spec 5.0 r1.0 section 2.2.6.2 "Considerations for Implementing
-> > > 10-Bit Tag Capabilities" Implementation Note.
-> > > For platforms where the RC supports 10-Bit Tag Completer capability,
-> > > it is highly recommended for platform firmware or operating software
-> > > that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-> > > bit automatically in Endpoints with 10-Bit Tag Requester capability. This
-> > > enables the important class of 10-Bit Tag capable adapters that send
-> > > Memory Read Requests only to host memory.
-> > 
-> > Quoted material should be set off with a blank line before it and
-> > indented by two spaces so it's clear exactly what comes from the spec
-> > and what you've added.  For example, see
-> > https://git.kernel.org/linus/ec411e02b7a2
-> Good point, will fix.
-> > 
-> > We need to say why we assume it's safe to enable 10-bit tags for all
-> > devices below a Root Port that supports them.  I think this has to do
-> > with switches being required to forward 10-bit tags correctly even if
-> > they were designed before 10-bit tags were added to the spec.
-> 
-> PCIe spec 5.0 r1.0 section 2.2.6.2 "Considerations for Implementing
-> 10-Bit Tag Capabilities" Implementation Note:
-> 
->   Switches that lack 10-Bit Tag Completer capability are still able to
->   forward NPRs and Completions carrying 10-Bit Tags correctly, since the
->   two new Tag bits are in TLP Header bits that were formerly Reserved,
->   and Switches are required to forward Reserved TLP Header bits without
->   modification. However, if such a Switch detects an error with an NPR
->   carrying a 10-Bit Tag, and that Switch handles the error by acting as
->   the Completer for the NPR, the resulting Completion will have an
->   invalid 10-Bit Tag. Thus, it is strongly recommended that Switches
->   between any components using 10-Bit Tags support 10-Bit Tag Completer
->   capability.  Note that Switches supporting 16.0 GT/s data rates or
->   greater must support 10-Bit Tag Completer capability.
-> 
-> This patch also consider to enable 10-Bit Tag for EP device need RP
-> and Switch device support 10-Bit Tag Completer capability.
-> > 
-> > And it should call out any cases where it is *not* safe, e.g., if P2P
-> > traffic is an issue.
-> Yes, indeed.
-> > 
-> > If there are cases where we don't want to enable 10-bit tags, whether
-> > it's to enable P2P traffic or merely to work around device defects,
-> > that ability needs to be here from the beginning.  If somebody needs
-> > to bisect with 10-bit tags disabled, we don't want a bisection hole
-> > between this commit and the commit that adds the control.
-> We provide sysfs file to disable 10-bit tag for P2P traffic when needed.
-> The details see PATCH 7/8/9.
+From: Srikanth Thokala <srikanth.thokala@intel.com>
 
-A mechanism for avoiding problems needs to be present from the very
-beginning so there's no bisection hole.  It should not be added by a
-future patch.
+Hi,
 
-The sysfs file is a start, but if we run into an issue, it could mean
-that we can't boot and run long enough to use sysfs to disable 10-bit
-tags.  So I think we might need a kernel parameter that disables it
-(and possibly other things like MPS optimization).
+The first patch is to document DT bindings for Keem Bay PCIe controller
+for both Root Complex and Endpoint modes.
 
-> Current we do not know the 10-bit tag defective devices, current may no
-> need do as 8-bit tag does in quirk_no_ext_tags().
+The second patch is the driver file, a glue driver. Keem Bay PCIe
+controller is based on DesignWare PCIe IP.
+
+The patch was tested with Keem Bay evaluation module board, with B0
+stepping.
+
+Kindly review.
+
+Thanks!
+Srikanth
+
+Changes since v10:
+- Added a comment to describe the deviation from standard DWC framework
+  in handling MSI IRQ.
+- Add 'Reviewed-by: Rob Herring <robh@kernel.org>', thanks to Rob.
+- Rebased to v5.14-rc4.
+
+Changes since v9:
+- Add 'Reviewed-by: Krzysztof Wilczyński <kw@linux.com>', thanks to Krzysztof.
+- Rebased to v5.13-rc5.
+
+Changes since v8:
+- Use chained IRQ to handle MSIs, as suggested by Lorenzo Pieralisi.
+- Rename *_setup_irq() to *_setup_msi_irq() to be more meaningful.
+- Move *_setup_msi_irq() call to *_add_pcie_port() to make it invoke
+  only when controller is in Root Complex mode. In Endpoint mode,
+  IRQ will be setup by the respective driver which will be based on
+  PCIe End Point Framework.
+
+Changes since v7:
+- Rename keembay_pcie_ltssm_enable() to align to its functionality.
+- Fix other minor comments from "Krzysztof Wilczyński <kw@linux.com>"
+
+Changes since v6:
+- Arrange SoB in chronological order.
+- Alphabetized and modified status of entry in MAINTAINERS.
+- Added a comment to specify the PCIe spec section about the delay.
+
+Changes since v5:
+- Rebased to v5.11-rc4.
+- Updated maintainers to add myself in DT binding documents.
+- Fix checkpatch issues.
+
+Changes since v4:
+- Rebased to v5.11-rc1 and retest.
+
+Changes since v3:
+- Add Reviewed-by: Rob Herring <robh@kernel.org> tag in dt-bindings
+  patch.
+- Remove the keembay_pcie_{readl,writel} wrappers. And replace them with
+  readl() and writel().
+- Remove the dead code related to unused irqs.
+- Remove unused definition for unused irqs.
+- In keembay_pcie_ep_init(), initialize enabled interrupts to known state.
+- Rebased to next-20201215.
+
+Changes since v2:
+- In keembay_pcie_probe(), use return keembay_pcie_add_pcie_port(pcie,
+  pdev); statement and remove return 0; at the end of the function.
+
+Changes since v1:
+- In dt-bindings patch.
+  - Fixed indent warning for compatible property.
+  - Rename interrupt-names to pcie, pcie_ev, pcie_err and
+    pcie_mem_access, similar to the name used in datasheet.
+  - Remove device_type, #address-cells and #size-cells property.
+  - Remove num-viewport, num-ib-windows and num-ob-windows property.
+  - Replace additionalProperties with unevaluatedProperties, for RC
+    only.
+  - Add dbi2 and atu property.
+  - Remove description for regs and interrupts property.
+  - Change enum value for num-lanes to 1 and 2 only.
+- In driver patch.
+  - In Kconfig file, remove dependency on ARM64.
+  - Add new define, PCIE_REGS_PCIE_SII_LINK_UP.
+  - Remove PCIE_DBI2_MASK.
+  - In struct keembay_pcie, declare pci member as struct, not pointer.
+    And remove irq number members.
+  - Rename and rework keembay_pcie_establish_link(), to
+    keembay_pcie_start_link().
+  - Remove unneeded BAR disable steps.
+  - Remove unused interrupt handlers; keembay_pcie_ev_irq_handler(),
+    keembay_pcie_err_irq_handler().
+  - Remove keembay_pcie_enable_interrupts().
+  - Rework keembay_pcie_setup_irq() and call it from
+    keembay_pcie_probe().
+  - Remove keembay_pcie_host_init() and make keembay_pcie_host_ops
+    empty.
+  - Keep and rework keembay_pcie_add_pcie_port() a little.
+  - Remove keembay_pcie_add_pcie_ep() and call dw_pcie_ep_init() from
+    keembay_pcie_probe().
+  - In keembay_pcie_probe(), remove dbi setup as it will be handled in
+    dwc common code.
+  - In keembay_pcie_link_up(), use return (val &
+    PCIE_REGS_PCIE_SII_LINK_UP) == PCIE_REGS_PCIE_SII_LINK_UP.
+  - In keembay_pcie_ep_raise_irq(), rework error message for
+    PCI_EPC_IRQ_LEGACY and default cases.
+- Rebased to next-20201124, that has dwc pci refactoring,
+  https://lore.kernel.org/linux-pci/20201105211159.1814485-1-robh@kernel.org/.
+
+Srikanth Thokala (2):
+  dt-bindings: PCI: Add Intel Keem Bay PCIe controller
+  PCI: keembay: Add support for Intel Keem Bay
+
+ .../bindings/pci/intel,keembay-pcie-ep.yaml   |  69 +++
+ .../bindings/pci/intel,keembay-pcie.yaml      |  97 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pci/controller/dwc/Kconfig            |  28 ++
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-keembay.c     | 460 ++++++++++++++++++
+ 6 files changed, 662 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
+
+
+base-commit: c500bee1c5b2f1d59b1081ac879d73268ab0ff17
+-- 
+2.17.1
+
