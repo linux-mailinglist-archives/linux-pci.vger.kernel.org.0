@@ -2,158 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E52FA3E13D6
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 13:26:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49B093E14F5
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 14:43:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241017AbhHEL1B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Aug 2021 07:27:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:43118 "EHLO foss.arm.com"
+        id S233152AbhHEMoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Aug 2021 08:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241022AbhHEL1A (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Aug 2021 07:27:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 604E11FB;
-        Thu,  5 Aug 2021 04:26:46 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F3753F719;
-        Thu,  5 Aug 2021 04:26:44 -0700 (PDT)
-Date:   Thu, 5 Aug 2021 12:26:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        id S233016AbhHEMoD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Aug 2021 08:44:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 42E4161131;
+        Thu,  5 Aug 2021 12:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1628167428;
+        bh=Lpsj90z+H7LHyrSlpa+uC5g21Y53OJdEV2uKhYpNbiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ReyCKngtjhYK4YbQq3Xy+wDQv3jAVUVdRnW7vfibaOOIDn563QVVAsi+Hb4MFt8Zo
+         d72ap9ywRpu1s5dumaTgyny/IpvoE4t1HwzVoXkhKGUySaCqy9lhbo2vNXA5scdhY6
+         WgwcHGLg28EFLpRk+UoGMGs18oL4MeCqpN6bA2zs=
+Date:   Thu, 5 Aug 2021 14:43:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, nadeem@cadence.com
-Subject: Re: [PATCH v2 5/6] misc: pci_endpoint_test: Do not request or
- allocate IRQs in probe
-Message-ID: <20210805112639.GA20438@lpieralisi>
-References: <20210803074932.19820-1-kishon@ti.com>
- <20210803074932.19820-6-kishon@ti.com>
- <20210803095839.GA11252@lpieralisi>
- <02c1ddb7-539e-20a0-1bef-e10e76922a0e@ti.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Allow deferred execution of iomem_get_mapping()
+Message-ID: <YQvdAkSLcMlFFoPO@kroah.com>
+References: <YQOI0qdVK0dudSbx@kroah.com>
+ <20210730195013.GA1090988@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <02c1ddb7-539e-20a0-1bef-e10e76922a0e@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210730195013.GA1090988@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 07:32:44PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
-> 
-> On 03/08/21 3:28 pm, Lorenzo Pieralisi wrote:
-> > On Tue, Aug 03, 2021 at 01:19:31PM +0530, Kishon Vijay Abraham I wrote:
-> >> Allocation of IRQ vectors and requesting IRQ is done as part of
-> >> PCITEST_SET_IRQTYPE. Do not request or allocate IRQs in probe for
-> >> AM654 and J721E so that the user space test script has better control
-> >> of the devices for which the IRQs are configured. Since certain user
-> >> space scripts could rely on allocation of IRQ vectors during probe,
-> >> remove allocation of IRQs only for TI's K3 platform.
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >>  drivers/misc/pci_endpoint_test.c | 19 +++++++++++++------
-> >>  1 file changed, 13 insertions(+), 6 deletions(-)
+On Fri, Jul 30, 2021 at 02:50:13PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jul 30, 2021 at 07:06:26AM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Jul 29, 2021 at 11:32:33PM +0000, Krzysztof Wilczyński wrote:
+> > > Hello,
+> > > 
+> > > At the moment, the dependency on iomem_get_mapping() that is currently
+> > > used in the pci_create_resource_files() and pci_create_legacy_files()
+> > > stops us from completely retiring the late_initcall() that is used to
+> > > invoke pci_sysfs_init() when creating sysfs object for PCI devices.
+> > > 
+> > > This dependency on iomem_get_mapping() stops us from retiring the
+> > > late_initcall at the moment as when we convert dynamically added sysfs
+> > > objects, that are primarily added in the pci_create_resource_files() and
+> > > pci_create_legacy_files(), as these attributes are added before the VFS
+> > > completes its initialisation, and since most of the PCI devices are
+> > > typically enumerated in subsys_initcall this leads to a failure and an
+> > > Oops related to iomem_get_mapping() access.
+> > > 
+> > > See relevant conversations:
+> > >   https://lore.kernel.org/linux-pci/20210204165831.2703772-1-daniel.vetter@ffwll.ch/
+> > >   https://lore.kernel.org/linux-pci/20210313215747.GA2394467@bjorn-Precision-5520/
+> > > 
+> > > After some deliberation about the problem at hand, Dan Williams
+> > > suggested a solution to the problem, as per:
+> > >   https://lore.kernel.org/linux-pci/CAPcyv4i0y_4cMGEpNVShLUyUk3nyWH203Ry3S87BqnDJE0Rmxg@mail.gmail.com/
+> > > 
+> > > The idea is to defer execution of the iomem_get_mapping() to only when
+> > > the sysfs open callback is run, and thus removing the reliance of
+> > > fs_initcalls to complete before any other sub-system that uses the
+> > > iomem_get_mapping().
+> > > 
+> > > Currently, the PCI sub-system will benefit the most from this change
+> > > allowing for it to complete the transition from dynamically created to
+> > > static sysfs objects.
+> > > 
+> > > This series aims to take Dan Williams' idea through the finish line.
+> > > 
+> > > Related to:
+> > >   https://lore.kernel.org/linux-pci/20210527205845.GA1421476@bjorn-Precision-5520/
+> > >   https://lore.kernel.org/linux-pci/20210507102706.7658-1-danijel.slivka@amd.com/
+> > >   https://lore.kernel.org/linux-pci/20200716110423.xtfyb3n6tn5ixedh@pali/
+> > > 
+> > > 	Krzysztof
+> > > 
 > > 
-> > I don't claim to understand the inner details of the endpoint test
-> > device but it looks like this approach should be redesigned.
-> > 
-> > I don't believe using devices quirks is the best approach to
-> > expose/remove a feature to userspace, this can soon become
-> > unmaintenable.
-> > 
-> > Maybe you can elaborate a bit more on what the real issue is please ?
+> > No objection from me on these, Bjorn, mind if I take them through my
+> > driver core tree?
 > 
-> The actual reason for introducing this patch (affects only AM654 and
-> J721E) is due to Errata ID #i2101 GIC: ITS Misbehavior
-> (https://www.ti.com/lit/er/sprz455a/sprz455a.pdf). So if more than 5
-> devices use GIC ITS simultaneously, GIC fails to raise interrupts.
+> That'd be great!
 > 
-> Though this patch is not an actual workaround for the issue (the
-> workaround is in GIC ITS driver provided in the errata document), it
-> helps to keep testing PCIe RC/EP using pci-endpoint-test even when
-> multiple pci-epf-test endpoint devices are connected (Normal test-setup
-> having J721E-J721E back to back connection can support 21 pci-epf-test
-> devices). So this patch lets user to individually enable interrupts for
-> each of the devices and could disable after the interrupt test.
+> Is your tree immutable?  I'm hoping we can take advantage of this to
+> get rid of pci_sysfs_init(), which will fix a race that people seem to
+> be hitting frequently now [1].  I think Krzysztof is getting pretty
+> close.
 > 
-> Since pci_endpoint_test is used only for testing PCIE RC/EP
-> communication and pci-endpoint-test has already implemented
-> PCITEST_SET_IRQTYPE for the userspace to enable interrupt, tried to not
-> enable the interrupts of all the devices by default in the probe (for
-> AM654 and J721E where this errata applies).
+> [1] https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl
 
-I understand - what I am asking is:
+Yes, my tree is immutable.  Let me create a branch just for this that
+you can pull from after it passes 0-day...
 
-is it possible, instead of applying this patch, to make
+thanks,
 
-pci_endpoint_test_alloc_irq_vectors() and pci_endpoint_test_request_irq()
-
-fail in the target platforms instead of preventing to call them ?
-
-My worry is that you may end up with more corner cases in the future
-and peppering code with is_() calls to work around them which does
-not look right.
-
-Thanks,
-Lorenzo
-
-> Thanks,
-> Kishon
-> 
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> >> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> >> index c7ee34013485..9740f2a0e7cd 100644
-> >> --- a/drivers/misc/pci_endpoint_test.c
-> >> +++ b/drivers/misc/pci_endpoint_test.c
-> >> @@ -79,6 +79,9 @@
-> >>  #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
-> >>  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
-> >>  
-> >> +#define is_j721e_pci_dev(pdev)         \
-> >> +		((pdev)->device == PCI_DEVICE_ID_TI_J721E)
-> >> +
-> >>  static DEFINE_IDA(pci_endpoint_test_ida);
-> >>  
-> >>  #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
-> >> @@ -810,9 +813,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
-> >>  
-> >>  	pci_set_master(pdev);
-> >>  
-> >> -	if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
-> >> -		err = -EINVAL;
-> >> -		goto err_disable_irq;
-> >> +	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
-> >> +		if (!pci_endpoint_test_alloc_irq_vectors(test, irq_type)) {
-> >> +			err = -EINVAL;
-> >> +			goto err_disable_irq;
-> >> +		}
-> >>  	}
-> >>  
-> >>  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> >> @@ -850,9 +855,11 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
-> >>  		goto err_ida_remove;
-> >>  	}
-> >>  
-> >> -	if (!pci_endpoint_test_request_irq(test)) {
-> >> -		err = -EINVAL;
-> >> -		goto err_kfree_test_name;
-> >> +	if (!(is_am654_pci_dev(pdev) || is_j721e_pci_dev(pdev))) {
-> >> +		if (!pci_endpoint_test_request_irq(test)) {
-> >> +			err = -EINVAL;
-> >> +			goto err_kfree_test_name;
-> >> +		}
-> >>  	}
-> >>  
-> >>  	misc_device = &test->miscdev;
-> >> -- 
-> >> 2.17.1
-> >>
+greg k-h
