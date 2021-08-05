@@ -2,179 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E653E0BE6
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 02:55:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F3143E0CBA
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 05:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234675AbhHEA4F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 20:56:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27469 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237465AbhHEAy6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Aug 2021 20:54:58 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10066"; a="214027500"
-X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
-   d="scan'208";a="214027500"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 17:53:53 -0700
-X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
-   d="scan'208";a="437617307"
-Received: from mjkendri-mobl.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.17.117])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 17:53:51 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 15/15] x86/tdx: Add cmdline option to force use of ioremap_shared
-Date:   Wed,  4 Aug 2021 17:52:18 -0700
-Message-Id: <20210805005218.2912076-16-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S232749AbhHEDTY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 23:19:24 -0400
+Received: from mail-dm3nam07on2084.outbound.protection.outlook.com ([40.107.95.84]:49888
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231321AbhHEDTX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Aug 2021 23:19:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gEOaOQkYSNz0mxzzgiIkkALIveu1e9xcIQNUzsuCyozph0r5h3iAIfUJBp/+IZdyBYt0Vob2Fr3LrQPsaSNdLen8Q5LPTvTJRkA6pc08cfJQSk9qKu4UF8vDVZqTwet62xjXH6FpyDCmlelB9pvq0+NMmz08modKojDtMZZWUrNIF8652ecv7wgXXkzshIJcnlqpz710qaU1xN9AVwE6gglb97Ewo1Wdly9Ll5AexFbJo5zOkzKYYL/ERU41mzVpwufjPofSq4FLylygLNgSyUevaDcLna9pyqrUBiE33ELNIxjuju6LxgFWEiWMqwcQEdE6exySU71KpExfhUSd0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ejeuyp10ROvklGYAyROI96r2DhteT/6SHx2VRyJ6qEI=;
+ b=L2XwxCUn5HZI4Eh3P3Plb4SfsGiVviw4phd0pgeN1Ua62RHowk5lqM2wOL1Hg9Lp25jmkNlqpIGzYCekvFaF+Vnzmvdb5YVgqLMoKECS1fgwsL4nZ+0jhbk/FxpOLiUqJxv9ICOvFSL3wCi5OhVSfKsXlYojEPCjhb9Ajy72cJf29mHjmuQRzXub0EDLHlYYeHIExNvRAzjZTkbHgmSXTStHz/UrgZHO/IWXPiTWQxwwhUpvwZt7C+atCk/cyywL1ZGitu3sEYP8+yMqPzP4DOxmLq3nbK/tAcKfj2gacEHWxwpCM+ViP/PKxDfXdGB0krLDa0mG+nry2D3TXYpstQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.32) smtp.rcpttodomain=rjwysocki.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ejeuyp10ROvklGYAyROI96r2DhteT/6SHx2VRyJ6qEI=;
+ b=ChkYCrKNlI6QzO9qWRC6iz2mzdrBlLTygLZRWtKzTcjx5pJbHZiEt5aT3lCMJIuBCy0kicXmcVCcDD5ED4Xn8Fsou9hjYqFGdnRum0DxVjbvScm9UC0KPSHgEkj86piYDlFWGeqQyNkd+L1zuvc2fJjW3iEu/YBCoxIxPMpEL6wA48oLp7D4cWhqNpVEylyG1uaw3yMLFRrT5w3O0ekg0Ie40RvHc5GYXQ4QiwJ6SCQkfVZFHePepKzt6q+3T2wUuSJLIcsbiJL9VS6b35ekKQgWVL0NtVI6q4LmWP/F8JQrnt81DnNuoH2ScXvxyTdq0R9Nh99r3ImfWJfwkZo6Ig==
+Received: from DM5PR16CA0011.namprd16.prod.outlook.com (2603:10b6:3:c0::21) by
+ DM6PR12MB4233.namprd12.prod.outlook.com (2603:10b6:5:210::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4373.21; Thu, 5 Aug 2021 03:19:08 +0000
+Received: from DM6NAM11FT058.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:c0:cafe::3a) by DM5PR16CA0011.outlook.office365.com
+ (2603:10b6:3:c0::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.16 via Frontend
+ Transport; Thu, 5 Aug 2021 03:19:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
+ smtp.mailfrom=nvidia.com; rjwysocki.net; dkim=none (message not signed)
+ header.d=none;rjwysocki.net; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.32; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.32) by
+ DM6NAM11FT058.mail.protection.outlook.com (10.13.172.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4394.16 via Frontend Transport; Thu, 5 Aug 2021 03:19:08 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 4 Aug
+ 2021 20:19:07 -0700
+Received: from [10.20.23.47] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 5 Aug 2021
+ 03:19:06 +0000
+Subject: Re: [PATCH v14 6/9] PCI: Define a function to set ACPI_COMPANION in
+ pci_dev
+To:     Amey Narkhede <ameynarkhede03@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <alex.williamson@redhat.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kw@linux.com>, Sinan Kaya <okaya@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+References: <20210804204201.1282-1-ameynarkhede03@gmail.com>
+ <20210804204201.1282-7-ameynarkhede03@gmail.com>
+From:   Shanker R Donthineni <sdonthineni@nvidia.com>
+Message-ID: <28235d1b-d268-789f-fa12-8add880fc8a5@nvidia.com>
+Date:   Wed, 4 Aug 2021 22:19:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210804204201.1282-7-ameynarkhede03@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 263adc1f-70fd-4e63-e221-08d957bfc9b8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4233:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB42335BDD5FFD11EDC6A6CC49C7F29@DM6PR12MB4233.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IAGnihbEA8LfgCbYUbVCZmabli0wd0TvlPNLnEsSbMzFRTqW0I6rpBpiZ2TWUsLxBmNfZ432NThk+tBhVWPMZrcLFZq7LewxKWB86PH/girSt8uRDJOHJUmX5aLF3DPwA+FlTQbBp7/4F0lvrSAM6k2ViVG4iwb4eExJgLqw0nhJTdL5zXtWfu3X6OOBj3szblrY7r7In0QeOXvar0GCV/Nc7PXMfe/QSOzMSTPtEaqXx5Xrx22Lm5McrEQHqhesVE8GhBLYnIr1zstupRvRmTECBGXdzKj+f3jIdoaSXSNV30fgA6/oXgHa5hQmjFcfkbshJ9s1Vx9uJSidnqnR4ATLvWBtCDO/Hk9REFlD0Y8/xpUfEQh2Cn8vQbn85Qb2QbibcRTCvf6sZn2rAGiDgg2lO9SpNjFKcdIPFejuuX3ykWvM3AbW1zMyli7wKOZCRgA7wo+llWVsPcvzWK/9ifnPafHTpG+WBO4NBdUrfhUblKSiioyBCHb2pJeUtU5Nbb0N9ZgK+n2YyEsVqVjKFqS2R5yvAuNJ4bnl+XcOzFtBEUo6Zm2pO6OHA0Q6KiCQl5pz0QCJxA0ln9JujP7k3BF8qeR8osMiIqtJBzbj8ms04V61effGMPf9yK4LpLsVQ0zJjzMFeNXOc/jFiNiEm06GeJ2T1/mmCefjXhlNTnAeAemiDpPzrv3hAgVUNVUkaAeZruOjToWDGHt6tfVZzcKQ0g0qpRv86CNzFUrsl1Q=
+X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(46966006)(36840700001)(36860700001)(47076005)(86362001)(82740400003)(70586007)(31696002)(82310400003)(7636003)(426003)(7416002)(478600001)(8936002)(4744005)(2906002)(186003)(53546011)(16576012)(26005)(2616005)(8676002)(31686004)(5660300002)(36756003)(16526019)(70206006)(54906003)(356005)(110136005)(4326008)(316002)(336012)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2021 03:19:08.2843
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 263adc1f-70fd-4e63-e221-08d957bfc9b8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT058.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4233
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a command line option to force all the enabled drivers to use
-shared memory mappings. This will be useful when enabling new drivers
-in the protected guest without making all the required changes to use
-shared mappings in it.
+Hi Amey,
 
-Note that this might also allow other non explicitly enabled drivers
-to interact with the host, which could cause other security risks.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- .../admin-guide/kernel-parameters.rst         |  1 +
- .../admin-guide/kernel-parameters.txt         | 12 ++++++++++++
- arch/x86/include/asm/io.h                     |  2 ++
- arch/x86/mm/ioremap.c                         | 19 ++++++++++++++++++-
- 4 files changed, 33 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.rst b/Documentation/admin-guide/kernel-parameters.rst
-index 01ba293a2d70..bdf3896a100c 100644
---- a/Documentation/admin-guide/kernel-parameters.rst
-+++ b/Documentation/admin-guide/kernel-parameters.rst
-@@ -147,6 +147,7 @@ parameter is applicable::
- 	PCI	PCI bus support is enabled.
- 	PCIE	PCI Express support is enabled.
- 	PCMCIA	The PCMCIA subsystem is enabled.
-+	PG	Protected guest is enabled.
- 	PNP	Plug & Play support is enabled.
- 	PPC	PowerPC architecture is enabled.
- 	PPT	Parallel port support is enabled.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bdb22006f713..ba390be62f89 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2062,6 +2062,18 @@
- 			1 - Bypass the IOMMU for DMA.
- 			unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
- 
-+	ioremap_force_shared= [X86_64, PG]
-+			Force the kernel to use shared memory mappings which do
-+			not use ioremap_shared/pcimap_shared to opt-in to shared
-+			mappings with the host. This feature is mainly used by
-+			a protected guest when enabling new drivers without
-+			proper shared memory related changes. Please note that
-+			this option might also allow other non explicitly enabled
-+			drivers to interact with the host in protected guest,
-+			which could cause other security risks. This option will
-+			also cause BIOS data structures to be shared with the host,
-+			which might open security holes.
-+
- 	io7=		[HW] IO7 for Marvel-based Alpha systems
- 			See comment before marvel_specify_io7 in
- 			arch/alpha/kernel/core_marvel.c.
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 51c2c45456bf..744f72835a30 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -413,6 +413,8 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- extern bool phys_mem_access_encrypted(unsigned long phys_addr,
- 				      unsigned long size);
- 
-+extern bool ioremap_force_shared;
-+
- /**
-  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-  * @dst: destination, in MMIO space (must be 512-bit aligned)
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 74260aaa494b..7576e886fad8 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -28,6 +28,7 @@
- #include <asm/memtype.h>
- #include <asm/setup.h>
- #include <asm/tdx.h>
-+#include <asm/cmdline.h>
- 
- #include "physaddr.h"
- 
-@@ -162,6 +163,17 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
- 	__ioremap_check_other(addr, desc);
- }
- 
-+/*
-+ * Normally only drivers that are hardened for use in confidential guests
-+ * force shared mappings. But if device filtering is disabled other
-+ * devices can be loaded, and these need shared mappings too. This
-+ * variable is set to true if these filters are disabled.
-+ *
-+ * Note this has some side effects, e.g. various BIOS tables
-+ * get shared too which is risky.
-+ */
-+bool ioremap_force_shared;
-+
- /*
-  * Remap an arbitrary physical address space into the kernel virtual
-  * address space. It transparently creates kernel huge I/O mapping when
-@@ -249,7 +261,7 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
- 	prot = PAGE_KERNEL_IO;
- 	if ((io_desc.flags & IORES_MAP_ENCRYPTED) || encrypted)
- 		prot = pgprot_encrypted(prot);
--	else if (shared)
-+	else if (shared || ioremap_force_shared)
- 		prot = pgprot_protected_guest(prot);
- 
- 	switch (pcm) {
-@@ -847,6 +859,11 @@ void __init early_ioremap_init(void)
- 	WARN_ON((fix_to_virt(0) + PAGE_SIZE) & ((1 << PMD_SHIFT) - 1));
- #endif
- 
-+	/* Parse cmdline params for ioremap_force_shared */
-+	if (cmdline_find_option_bool(boot_command_line,
-+				     "ioremap_force_shared"))
-+		ioremap_force_shared = 1;
-+
- 	early_ioremap_setup();
- 
- 	pmd = early_ioremap_pmd(fix_to_virt(FIX_BTMAP_BEGIN));
--- 
-2.25.1
-
+On 8/4/21 3:41 PM, Amey Narkhede wrote:
+> From: Shanker Donthineni <sdonthineni@nvidia.com>
+>
+> Move the existing code logic from acpi_pci_bridge_d3() to a separate
+> function pci_set_acpi_fwnode() to set the ACPI fwnode.
+>
+> No functional change with this patch.
+>
+> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
+Alex's reviewed-by has been dropped from v13 and this patch series, could you you add it?
