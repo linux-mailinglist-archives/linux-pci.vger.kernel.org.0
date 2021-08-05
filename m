@@ -2,220 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B833E0B13
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 02:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B99D3E0B6D
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Aug 2021 02:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234268AbhHEAFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Aug 2021 20:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
+        id S234846AbhHEAxg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Aug 2021 20:53:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12119 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229991AbhHEAFk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Aug 2021 20:05:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D221E60F41;
-        Thu,  5 Aug 2021 00:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628121927;
-        bh=aJsHU45E+AMYpCbQOpoPjJfhQy92huQZqAwWcJibXu0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CaFGLAXx3W/YYe2NufnLcbOTs9MvistiGxZ8qj/CgsE0F3+nkq1eWc8MeUb6bW4C7
-         bZQqA5Nl4IwwBMFM7ueF0LtZWhJ63bkvYEiaC/cjMz2TgYoB0F3zjTXfhQHsLpBVK3
-         kJHG49lpjZxmuEre2Iuc+7C34r3SGAsXlc8Z+OHW+36tFp5XJKMIIoZ9zTVZaS1I7H
-         6c+KRjyg8Dg6RZMBrGIghKQvvFNHpofWWXEyKx3+jw5PkmIYj9CebtVJph07fXfLbe
-         c8gl9neCtbaGi+/LoT1Ec2suodKzyjBEDppwgJUyS69JXV9cosYwZQIZc03wr8YB9V
-         5k+xrRmnExl8Q==
-Date:   Wed, 4 Aug 2021 19:05:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V7 8/9] PCI/IOV: Add 10-Bit Tag sysfs files for VF devices
-Message-ID: <20210805000525.GA1693795@bjorn-Precision-5520>
+        id S231355AbhHEAxf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Aug 2021 20:53:35 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10066"; a="201215413"
+X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
+   d="scan'208";a="201215413"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 17:53:20 -0700
+X-IronPort-AV: E=Sophos;i="5.84,296,1620716400"; 
+   d="scan'208";a="437617163"
+Received: from mjkendri-mobl.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.17.117])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 17:53:17 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 00/15] Add TDX Guest Support (shared-mm support)
+Date:   Wed,  4 Aug 2021 17:52:03 -0700
+Message-Id: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1628084828-119542-9-git-send-email-liudongdong3@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 09:47:07PM +0800, Dongdong Liu wrote:
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
-> sending Requests to other Endpoints (as opposed to host memory), the
-> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
-> unless an implementation-specific mechanism determines that the
-> Endpoint supports 10-Bit Tag Completer capability.
-> Add sriov_vf_10bit_tag file to query the status of VF 10-Bit Tag
-> Requester Enable. Add sriov_vf_10bit_tag_ctl file to disable the VF
-> 10-Bit Tag Requester. The typical use case is for p2pdma when the peer
-> device does not support 10-BIT Tag Completer.
+Hi All,
 
-Fix the usual spec quoting issue.  Or maybe this is not actually
-quoted but is missing blank lines between paragraphs.
+Intel's Trust Domain Extensions (TDX) protect guest VMs from malicious
+hosts and some physical attacks. Since VMM is untrusted entity, it does
+not allow VMM to access guest private memory. Any memory that is required
+for communication with VMM must be shared explicitly. This series adds
+support to securely share guest memory with VMM when it is required by
+guest.
 
-s/10-BIT/10-Bit/
+Originally TDX did automatic sharing of every ioremap. But it was found that
+this ends up with a lot of memory shared that is supposed to be private, for
+example ACPI tables. Also in general since only a few drivers are expected
+to be used it's safer to mark them explicitly (for virtio it actually only
+needs two places). This gives the advantage of automatically preventing
+other drivers from doing MMIO, which can happen in some cases even with
+the device filter. There is still a command line option to override this option,
+which allows to use all drivers.
 
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci | 20 +++++++++++++
->  drivers/pci/iov.c                       | 50 +++++++++++++++++++++++++++++++++
->  2 files changed, 70 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index 0e0c97d..8fdbfae 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -421,3 +421,23 @@ Description:
->  		to disable 10-Bit Tag Requester when the driver does not bind
->  		the deivce. The typical use case is for p2pdma when the peer
->  		device does not support 10-BIT Tag Completer.
-> +
-> +What:		/sys/bus/pci/devices/.../sriov_vf_10bit_tag
-> +Date:		August 2021
-> +Contact:	Dongdong Liu <liudongdong3@huawei.com>
-> +Description:
-> +		This file is associated with a SR-IOV physical function (PF).
-> +		It is visible when the device has VF 10-Bit Tag Requester
-> +		Supported. It contains the status of VF 10-Bit Tag Requester
-> +		Enable. The file is only readable.
+This series is the continuation of the patch series titled "Add TDX Guest
+Support (Initial support)", "Add TDX Guest Support (#VE handler support)"
+and "Add TDX Guest Support (boot fixes)" which added initial support,
+ #VE handler support and boot fixes for TDX guests. You  can find the
+related patchsets in the following links.
 
-s/only readable/read-only/
+[set 1, v5] - https://lore.kernel.org/patchwork/project/lkml/list/?series=510805
+[set 2, v4] - https://lore.kernel.org/patchwork/project/lkml/list/?series=510814
+[set 3, v4] - https://lore.kernel.org/patchwork/project/lkml/list/?series=510816
 
-> +What:		/sys/bus/pci/devices/.../sriov_vf_10bit_tag_ctl
+Also please note that this series alone is not necessarily fully
+functional. You need to apply all the above 3 patch series to get
+a fully functional TDX guest.
 
-Why does this file have "_ctl" on the end when the one in patch 7/9
-does not?
+You can find TDX related documents in the following link.
 
-> +Date:		August 2021
-> +Contact:	Dongdong Liu <liudongdong3@huawei.com>
-> +Description:
-> +		This file is associated with a SR-IOV virtual function (VF).
-> +		It is visible when the device has VF 10-Bit Tag Requester
-> +		Supported. It only allows to write 0 to disable VF 10-Bit
-> +		Tag Requester. The file is only writeable when the vf driver
-> +		does not bind to a dirver. The typical use case is for p2pdma
-> +		when the peer device does not support 10-BIT Tag Completer.
+https://software.intel.com/content/www/br/pt/develop/articles/intel-trust-domain-extensions.html
 
-s/vf/VF/
-s/dirver/driver/
-s/10-BIT/10-Bit/
+Also, ioremap related changes in mips, parisc, alpha, sparch archs' are
+only compile tested, and hence need help from the community users of these
+archs' to make sure that it does not break any functionality.
 
-"when the vr driver does not bind to a driver"?  Not quite right.
-Must be a "device" in there somewhere.
+In this patch series, following patches are in PCI domain and are
+meant for the PCI domain reviewers.
 
-So IIUC this file is associated with a VF, but the bit it writes is
-actually in the *PF*?  So writing 0 to any VF's file disables 10-bit
-tags for *all* VFs?  That's worth mentioning here.
+  pci: Consolidate pci_iomap* and pci_iomap*wc
+  pci: Add pci_iomap_shared{,_range}
+  pci: Mark MSI data shared
 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 0d0bed1..04c1298 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -220,10 +220,38 @@ static ssize_t sriov_vf_msix_count_store(struct device *dev,
->  static DEVICE_ATTR_WO(sriov_vf_msix_count);
->  #endif
->  
-> +static ssize_t sriov_vf_10bit_tag_ctl_store(struct device *dev,
-> +					    struct device_attribute *attr,
-> +					    const char *buf, size_t count)
-> +{
-> +	struct pci_dev *vf_dev = to_pci_dev(dev);
-> +	struct pci_dev *pdev = pci_physfn(vf_dev);
-> +	struct pci_sriov *iov;
-> +	bool enable;
-> +
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	if (enable != false)
-> +		return -EINVAL;
+Patch titled "asm/io.h: Add ioremap_shared fallback" adds generic
+and arch specific ioremap_shared headers and are meant to be reviewed
+by linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+sparclinux@vger.kernel.org.
 
-Is this "if (enable)" again?
+Similarly patch titled "virtio: Use shared mappings for virtio
+PCI devices" adds ioremap_shared() support for virtio drivers
+and are meant to be reviewed by virtio driver maintainers.
 
-> +	if (vf_dev->driver)
-> +		return -EBUSY;
-> +
-> +	iov = pdev->sriov;
-> +	iov->ctrl &= ~PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN;
-> +	pci_write_config_word(pdev, iov->pos + PCI_SRIOV_CTRL, iov->ctrl);
-> +	pci_info(pdev, "disabled SRIOV 10-Bit Tag Requester\n");
+I have CCed this patch series to all the related domain maintainers
+and open lists. If you prefer to get only patches specific to your
+domain, please let me know. I will fix this in next submission.
 
-s/SRIOV/SR-IOV/ to match spec and other usages.
+Changes since v3:
+ * Rebased on top of Tom Lendacky's protected guest
+   changes (https://lore.kernel.org/patchwork/cover/1468760/)
+ * Added new API to share io-reamapped memory selectively
+   (using ioremap_shared())
+ * Added new wrapper (pci_iomap_shared_range()) for PCI IO
+   remap shared mappings use case.
 
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(sriov_vf_10bit_tag_ctl);
-> +
->  static struct attribute *sriov_vf_dev_attrs[] = {
->  #ifdef CONFIG_PCI_MSI
->  	&dev_attr_sriov_vf_msix_count.attr,
->  #endif
-> +	&dev_attr_sriov_vf_10bit_tag_ctl.attr,
->  	NULL,
->  };
->  
-> @@ -236,6 +264,11 @@ static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
->  	if (!pdev->is_virtfn)
->  		return 0;
->  
-> +	pdev = pci_physfn(pdev);
-> +	if ((a == &dev_attr_sriov_vf_10bit_tag_ctl.attr) &&
-> +	     !(pdev->sriov->cap & PCI_SRIOV_CAP_VF_10BIT_TAG_REQ))
-> +		return 0;
-> +
->  	return a->mode;
->  }
->  
-> @@ -487,12 +520,23 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
->  	return count;
->  }
->  
-> +static ssize_t sriov_vf_10bit_tag_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	return sysfs_emit(buf, "%u\n",
-> +		!!(pdev->sriov->ctrl & PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN));
-> +}
-> +
->  static DEVICE_ATTR_RO(sriov_totalvfs);
->  static DEVICE_ATTR_RW(sriov_numvfs);
->  static DEVICE_ATTR_RO(sriov_offset);
->  static DEVICE_ATTR_RO(sriov_stride);
->  static DEVICE_ATTR_RO(sriov_vf_device);
->  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
-> +static DEVICE_ATTR_RO(sriov_vf_10bit_tag);
->  
->  static struct attribute *sriov_pf_dev_attrs[] = {
->  	&dev_attr_sriov_totalvfs.attr,
-> @@ -501,6 +545,7 @@ static struct attribute *sriov_pf_dev_attrs[] = {
->  	&dev_attr_sriov_stride.attr,
->  	&dev_attr_sriov_vf_device.attr,
->  	&dev_attr_sriov_drivers_autoprobe.attr,
-> +	&dev_attr_sriov_vf_10bit_tag.attr,
->  #ifdef CONFIG_PCI_MSI
->  	&dev_attr_sriov_vf_total_msix.attr,
->  #endif
-> @@ -511,10 +556,15 @@ static umode_t sriov_pf_attrs_are_visible(struct kobject *kobj,
->  					  struct attribute *a, int n)
->  {
->  	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  
->  	if (!dev_is_pf(dev))
->  		return 0;
->  
-> +	if ((a == &dev_attr_sriov_vf_10bit_tag.attr) &&
-> +	     !(pdev->sriov->cap & PCI_SRIOV_CAP_VF_10BIT_TAG_REQ))
-> +		return 0;
-> +
->  	return a->mode;
->  }
->  
-> -- 
-> 2.7.4
-> 
+Changes since v2:
+ * Rebased on top of v5.14-rc1.
+ * No functional changes.
+
+Andi Kleen (6):
+  pci: Consolidate pci_iomap* and pci_iomap*wc
+  asm/io.h: Add ioremap_shared fallback
+  pci: Add pci_iomap_shared{,_range}
+  pci: Mark MSI data shared
+  virtio: Use shared mappings for virtio PCI devices
+  x86/tdx: Implement ioremap_shared for x86
+
+Isaku Yamahata (1):
+  x86/tdx: ioapic: Add shared bit for IOAPIC base address
+
+Kirill A. Shutemov (6):
+  x86/mm: Move force_dma_unencrypted() to common code
+  x86/tdx: Exclude Shared bit from physical_mask
+  x86/tdx: Make pages shared in ioremap()
+  x86/tdx: Add helper to do MapGPA hypercall
+  x86/tdx: Make DMA pages shared
+  x86/kvm: Use bounce buffers for TD guest
+
+Kuppuswamy Sathyanarayanan (2):
+  x86/tdx: Enable shared memory protected guest flags for TDX guest
+  x86/tdx: Add cmdline option to force use of ioremap_shared
+
+ .../admin-guide/kernel-parameters.rst         |   1 +
+ .../admin-guide/kernel-parameters.txt         |  12 ++
+ arch/alpha/include/asm/io.h                   |   1 +
+ arch/mips/include/asm/io.h                    |   1 +
+ arch/parisc/include/asm/io.h                  |   1 +
+ arch/sparc/include/asm/io_64.h                |   1 +
+ arch/x86/Kconfig                              |   9 +-
+ arch/x86/include/asm/io.h                     |   5 +
+ arch/x86/include/asm/mem_encrypt_common.h     |  20 +++
+ arch/x86/include/asm/pgtable.h                |   5 +
+ arch/x86/include/asm/tdx.h                    |  22 +++
+ arch/x86/kernel/apic/io_apic.c                |  18 ++-
+ arch/x86/kernel/tdx.c                         |  64 +++++++++
+ arch/x86/mm/Makefile                          |   2 +
+ arch/x86/mm/ioremap.c                         |  64 +++++++--
+ arch/x86/mm/mem_encrypt.c                     |   8 +-
+ arch/x86/mm/mem_encrypt_common.c              |  38 ++++++
+ arch/x86/mm/pat/set_memory.c                  |  45 ++++++-
+ drivers/pci/msi.c                             |   2 +-
+ drivers/virtio/virtio_pci_modern_dev.c        |   2 +-
+ include/asm-generic/io.h                      |   4 +
+ include/asm-generic/pci_iomap.h               |   6 +
+ include/linux/protected_guest.h               |   1 +
+ lib/pci_iomap.c                               | 125 +++++++++++++-----
+ 24 files changed, 393 insertions(+), 64 deletions(-)
+ create mode 100644 arch/x86/include/asm/mem_encrypt_common.h
+ create mode 100644 arch/x86/mm/mem_encrypt_common.c
+
+-- 
+2.25.1
+
