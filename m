@@ -2,126 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C502F3E2DF0
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 17:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74B713E2E4B
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 18:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244795AbhHFPw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 11:52:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42050 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238025AbhHFPw2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Aug 2021 11:52:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628265132;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ocgP4yowhB/EUlnSIxuQMOG6kjLjSAHTmb8OYmd4EOQ=;
-        b=Kr6m1tpPchjzWu25UwcCdoz89ETW1+vRd7RRMfRNYX4nGIxHvllkR0L2F5v5mFFixMHvUc
-        JVeauVsbuSHqa0uzlJC2AqY9UW8RYUadGgK6czeLNAlX6KJLtbiOUdtYD6YYzQW2FzzXX8
-        dM9TF6Z098Bd+L/N5iDlu/5sscf8AAw=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-a_9KXiuLPyqYgAA73mQGNA-1; Fri, 06 Aug 2021 11:52:11 -0400
-X-MC-Unique: a_9KXiuLPyqYgAA73mQGNA-1
-Received: by mail-lj1-f199.google.com with SMTP id k6-20020a2e92060000b0290199022fba24so2007291ljg.13
-        for <linux-pci@vger.kernel.org>; Fri, 06 Aug 2021 08:52:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ocgP4yowhB/EUlnSIxuQMOG6kjLjSAHTmb8OYmd4EOQ=;
-        b=VKteX1+vyx1Z7zMiaAK9vlBYbNazm/cNO59r77igsHxwrEr2NzCwuA6IEgIMDUtsIC
-         2imfZMD44K2LqOUOQfCu2dVfvyVpaX8iDj9ew0jpSA1pcDTM1/ouWpCacatcbDoMhnru
-         JF21VrJaN2iHuRuurMoGjYdouFm8/935MwAm9EzGSR+pa9vKmhTC0+rckJepo6+bkidT
-         bhMHUqaW2rdQ1funJxL8uUNCHjc0zQz+02FyffFoYwLMBcxxKoa48aEvYyKBCTsSZKq3
-         ZOYKRwULyEQ3TYEBcxsw5Gr4CJMAdLcgR8DNVBw6yCLHI4L+JfRsge+XJ9MNiKlwVJsK
-         bxRg==
-X-Gm-Message-State: AOAM533tooFR6lm5OOjIZMVCdjxnJxP0/2JHNajBKJT/UItjIyHFlMpY
-        g3CS6DQTG+GOYxy6qiXPpG34AcgAYR1MNMvKnLV5KJHMZYWRiC2py9rGthO8IunZedC0+LFuxAa
-        ta9j54UF8mgoHtkDDuXYY1qJmSTUuDSzxNjML
-X-Received: by 2002:ac2:446d:: with SMTP id y13mr8071808lfl.632.1628265129892;
-        Fri, 06 Aug 2021 08:52:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9NmyUDGHNtqA5+JG3Fj8AovGBdtXdP/uo+X1AK+D5LYRCKOEMar1/c1smD31PF3dDW/0pEabI/MsAyUK/eQ0=
-X-Received: by 2002:ac2:446d:: with SMTP id y13mr8071774lfl.632.1628265129728;
- Fri, 06 Aug 2021 08:52:09 -0700 (PDT)
+        id S231795AbhHFQYF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 12:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231453AbhHFQYF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 12:24:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1A633611C6;
+        Fri,  6 Aug 2021 16:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628267029;
+        bh=ty09/fANA+AaGrdFgiDJV6XUc9mA5WlqFGlxLtHeCkk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nh1X7AYI2SpnDgYGEGdB308YJJC2wKemKrWUG/4GpawrksGQk/WWgEqQfsnkiIbPg
+         ni2K6Ws3qYLGZqFR7ioShg1lQufUlkX9iN74koEamayIxMgEBJ2sqENQx0YvNUGhcB
+         arkxFo/RTUWmbE2GZwHAVUH+zouylzowoHRJ6XjRtOWy403qzHIjihyyS7Slbq4xga
+         HLZ5PaVzNdCceISnS5RN/TJ4+0gidvAqEkClXY4fcUFwC5T/X26Kj35D9lE0Q11+VH
+         ahJ4aoGavzVWAOfOI9FecvaGbPNrz91ozlkvUZv8xe294IvxUcQZ/HIXWBM8kSBV18
+         Svoc4ZvFn07bw==
+Received: by mail-ej1-f50.google.com with SMTP id o5so15948577ejy.2;
+        Fri, 06 Aug 2021 09:23:49 -0700 (PDT)
+X-Gm-Message-State: AOAM532Ia08jOU2bvbGWXosaIT1FVWho7L/nXRmsF2PkGREQfX7HxnIp
+        Zo9co0j5s2bczGVe6U3H8YJ4uZhocyx1lVxOMg==
+X-Google-Smtp-Source: ABdhPJwuUx8QjZdGDDM7P5slP1wzk+qqeyMJSv+CHKKN77QK/ubEn42xQa4s0696lJ4xkH4ylKUBy7+/jIXhiQ/49jk=
+X-Received: by 2002:a17:906:d287:: with SMTP id ay7mr10250474ejb.360.1628267027568;
+ Fri, 06 Aug 2021 09:23:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210720232624.1493424-1-nitesh@redhat.com> <20210720232624.1493424-2-nitesh@redhat.com>
-In-Reply-To: <20210720232624.1493424-2-nitesh@redhat.com>
-From:   Ming Lei <ming.lei@redhat.com>
-Date:   Fri, 6 Aug 2021 23:51:58 +0800
-Message-ID: <CAFj5m9+9asdQOCRHb0tZ=XSD-sOj+RLEDVEAObN81Z9y1JcgQg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/14] genirq: Provide new interfaces for affinity hints
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
-        tglx@linutronix.de, jesse.brandeburg@intel.com,
-        Robin Murphy <robin.murphy@arm.com>, mtosatti@redhat.com,
-        mingo@kernel.org, jbrandeb@kernel.org, frederic@kernel.org,
-        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
-        rostedt@goodmis.org, peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, maz@kernel.org, nhorman@tuxdriver.com,
-        pjwaskiewicz@gmail.com, sassmann@redhat.com, thenzl@redhat.com,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        sumit.saxena@broadcom.com, shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
-        suganath-prabu.subramani@broadcom.com,
-        James Smart <james.smart@broadcom.com>,
-        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
-        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
-        benve@cisco.com, govind@gmx.com, jassisinghbrar@gmail.com,
-        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        somnath.kotur@broadcom.com, nilal@redhat.com,
-        tatyana.e.nikolova@intel.com, mustafa.ismail@intel.com,
-        ahs3@redhat.com, leonro@nvidia.com,
-        chandrakanth.patil@broadcom.com, bjorn.andersson@linaro.org,
-        chunkuang.hu@kernel.org, yongqiang.niu@mediatek.com,
-        baolin.wang7@gmail.com, poros@redhat.com,
-        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>, _govind@gmx.com,
-        kabel@kernel.org, viresh.kumar@linaro.org,
-        Tushar.Khandelwal@arm.com, kuba@kernel.org
+References: <cover.1627965261.git.mchehab+huawei@kernel.org>
+ <CAL_JsqLjw=+szXWJjGe86tMc51NA-5j=jVSXUAWuKeZRuJNJUg@mail.gmail.com>
+ <20210804085045.3dddbb9c@coco.lan> <YQrARd7wgYS1nywt@robh.at.kernel.org>
+ <20210805094612.2bc2c78f@coco.lan> <20210805095848.464cf85c@coco.lan>
+In-Reply-To: <20210805095848.464cf85c@coco.lan>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 6 Aug 2021 10:23:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKso=z8LG3ViaggyS1k+1T2F5aAhP3_RNhumQoUUD+bbg@mail.gmail.com>
+Message-ID: <CAL_JsqKso=z8LG3ViaggyS1k+1T2F5aAhP3_RNhumQoUUD+bbg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] DT schema changes for HiKey970 PCIe hardware to work
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 7:26 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+On Thu, Aug 5, 2021 at 1:58 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 >
-> From: Thomas Gleixner <tglx@linutronix.de>
+> Em Thu, 5 Aug 2021 09:46:12 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 >
-> The discussion about removing the side effect of irq_set_affinity_hint() of
-> actually applying the cpumask (if not NULL) as affinity to the interrupt,
-> unearthed a few unpleasantries:
+> > Em Wed, 4 Aug 2021 10:28:53 -0600
+> > Rob Herring <robh@kernel.org> escreveu:
+> >
+> > > On Wed, Aug 04, 2021 at 08:50:45AM +0200, Mauro Carvalho Chehab wrote:
+> > > > Em Tue, 3 Aug 2021 16:11:42 -0600
+> > > > Rob Herring <robh+dt@kernel.org> escreveu:
+> > > >
+> > > > > On Mon, Aug 2, 2021 at 10:39 PM Mauro Carvalho Chehab
+> > > > > <mchehab+huawei@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi Rob,
+> > > > > >
+> > > > > > That's the third version of the DT bindings for Kirin 970 PCIE and its
+> > > > > > corresponding PHY.
+> > > > > >
+> > > > > > It is identical to v2, except by:
+> > > > > >         -          pcie@7,0 { // Lane 7: Ethernet
+> > > > > >         +          pcie@7,0 { // Lane 6: Ethernet
+> > > > >
+> > > > > Can you check whether you have DT node links in sysfs for the PCI
+> > > > > devices? If you don't, then something is wrong still in the topology
+> > > > > or the PCI core is failing to set the DT node pointer in struct
+> > > > > device. Though you don't rely on that currently, we want the topology
+> > > > > to match. It's possible this never worked on arm/arm64 as mainly
+> > > > > powerpc relied on this.
+> > > > >
+> > > > > I'd like some way to validate the DT matches the PCI topology. We
+> > > > > could have a tool that generates the DT structure based on the PCI
+> > > > > topology.
+> > > >
+> > > > The of_node node link is on those places:
+> > > >
+> > > >   $ find /sys/devices/platform/soc/f4000000.pcie/ -name of_node
+> > > >   /sys/devices/platform/soc/f4000000.pcie/of_node
+> > > >   /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/of_node
+> > > >   /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/pci_bus/0000:01/of_node
+> > > >   /sys/devices/platform/soc/f4000000.pcie/pci0000:00/pci_bus/0000:00/of_node
+> > >
+> > > Looks like we're missing some...
+> > >
+> > > It's not immediately obvious to me what's wrong here. Only the root
+> > > bus is getting it's DT node set. The relevant code is pci_scan_device(),
+> > > pci_set_of_node() and pci_set_bus_of_node(). Give me a few days to try
+> > > to reproduce and debug it.
+> >
+> > I added a printk on both pci_set_*of_node() functions:
+> >
+> >       [    4.872991]  (null): pci_set_bus_of_node: of_node: /soc/pcie@f4000000
+> >       [    4.913806]  (null): pci_set_of_node: of_node: /soc/pcie@f4000000
+> >       [    4.978102] pci_bus 0000:01: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+> >       [    4.990622]  (null): pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+> >       [    5.052383] pci_bus 0000:02: pci_set_bus_of_node: of_node: (null)
+> >       [    5.059263]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.085552]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.112073]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.138320]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.164673]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.233759] pci_bus 0000:03: pci_set_bus_of_node: of_node: (null)
+> >       [    5.240539]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.310545] pci_bus 0000:04: pci_set_bus_of_node: of_node: (null)
+> >       [    5.324719] pci_bus 0000:05: pci_set_bus_of_node: of_node: (null)
+> >       [    5.338914] pci_bus 0000:06: pci_set_bus_of_node: of_node: (null)
+> >       [    5.345516]  (null): pci_set_of_node: of_node: (null)
+> >       [    5.415795] pci_bus 0000:07: pci_set_bus_of_node: of_node: (null)
 >
->   1) The modular perf drivers rely on the current behaviour for the very
->      wrong reasons.
+> The enclosed patch makes the above a clearer:
 >
->   2) While none of the other drivers prevents user space from changing
->      the affinity, a cursorily inspection shows that there are at least
->      expectations in some drivers.
->
-> #1 needs to be cleaned up anyway, so that's not a problem
->
-> #2 might result in subtle regressions especially when irqbalanced (which
->    nowadays ignores the affinity hint) is disabled.
->
-> Provide new interfaces:
->
->   irq_update_affinity_hint()  - Only sets the affinity hint pointer
->   irq_set_affinity_and_hint() - Set the pointer and apply the affinity to
->                                 the interrupt
->
-> Make irq_set_affinity_hint() a wrapper around irq_apply_affinity_hint() and
-> document it to be phased out.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> Link: https://lore.kernel.org/r/20210501021832.743094-1-jesse.brandeburg@intel.com
+>         [    4.800975]  (null): pci_set_bus_of_node: of_node: /soc/pcie@f4000000
+>         [    4.855983] pci 0000:00:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000
+>         [    4.879169] pci_bus 0000:01: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+>         [    4.900602] pci 0000:01:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+>         [    4.953086] pci_bus 0000:02: pci_set_bus_of_node: of_node: (null)
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+I believe the issue is we need another bridge node in the DT
+hierarchy. What we have is:
 
+Bus 0 is node /soc/pcie@f4000000
+Bus 1 is device 0 on bus 0 is node /soc/pcie@f4000000/pcie@0,0
+Bus 2 is device 0 on bus 1 in node ... whoops, there's no device 0
+under /soc/pcie@f4000000/pcie@0,0
+
+So we need the hierarchy to be: /soc/pcie@f4000000/pcie@0/pcie@0/pcie@{1,5,7}
+
+Rob
