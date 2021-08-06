@@ -2,162 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A174C3E310E
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 23:24:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC6A3E318D
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 00:13:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240528AbhHFVZK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 17:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
+        id S245427AbhHFWNP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 18:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240338AbhHFVZJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 17:25:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4064360EE8;
-        Fri,  6 Aug 2021 21:24:53 +0000 (UTC)
+        id S231577AbhHFWNO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 18:13:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 291E761179;
+        Fri,  6 Aug 2021 22:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628285093;
-        bh=OJXVvQV1lg0BTpnm4/Nv7ym7sLl0HIhqKTRdfOznYwg=;
+        s=k20201202; t=1628287978;
+        bh=ntBblkw27DzG1SDuhwy9/ADL5F68jkVcbJJtcTu4720=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=goH/1yJM9CgOOo+OcwLI85KOcKMTJKy8qsbi9kmA/eUKLp96x9J8M/JAw+C0HoXtl
-         LLP9C54GqLgkjnKpGR9kkrYUXUKz/g5bCUA/CpaOzR6XQzlUTgr5y3Dk7zGrmBxX8N
-         en5fOF69mFY7iz78CR1nGEcyNekjfw/CZ0EQbDXeU3Hh82nmIhL0nXS2kQ3mhduoVP
-         XswzHNEybaPpFHtw5KHBi3RP5f5dPsW9v9eFEsYvxzj76KiOdi8Bw4rMEV5B6PvQ1z
-         CLKL2wH1wGanKV5ZinDF8ZSKormkVT85L0UCSY8TizkDvEv+r8Jkclod/etLJWRRFl
-         2rifLx8uQfKtA==
-Date:   Fri, 6 Aug 2021 16:24:52 -0500
+        b=nTUpXNwatcS8bNHyLfP0yBfT8MRCkrXawEWlGkn+Y7ZWiwzgz/Fo7WGrVHb5Zu2Nf
+         /7g+YxnSxlnrDJ3YyFMOLHgmurdVnQRU59bID88Ia6SAOlaKPyax6Yua+aqsxPfB5d
+         zL2mZ/ospnIZW4FLU82UBzvdaOLSkK8ls6vRWHWyANh3AMakQAeDkQyo/uBIdVddZ3
+         w/DuweOx1bZrolnnKh2FbjE4lQLirPjj0/jWNTmdiFe0N4Z04Gmqg+ZRKNr5qLLVJ6
+         P5FpBeQFVJ5tcEgY2dnjA9ymLy7XqOmHQulbUH2rH8LWMsISaGTeC8t/IREtcqYSSL
+         aejk4FTUA+TiQ==
+Date:   Fri, 6 Aug 2021 17:12:56 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-perf-users@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210806212452.GA1867870@bjorn-Precision-5520>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI/ACPI: Add new quirk detection, enable bcm2711
+Message-ID: <20210806221256.GA1891371@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
+In-Reply-To: <20210805211200.491275-4-jeremy.linton@arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 06, 2021 at 08:46:23AM +0200, Uwe Kleine-König wrote:
-> On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
+In subject, this or similar would match history:
 
-> > I looked at all the bus_type.probe() methods, it looks like pci_dev is
-> > not the only offender here.  At least the following also have a driver
-> > pointer in the device struct:
-> > 
-> >   parisc_device.driver
-> >   acpi_device.driver
-> >   dio_dev.driver
-> >   hid_device.driver
-> >   pci_dev.driver
-> >   pnp_dev.driver
-> >   rio_dev.driver
-> >   zorro_dev.driver
+  PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
+
+On Thu, Aug 05, 2021 at 04:12:00PM -0500, Jeremy Linton wrote:
+> Now that we have a bcm2711 quirk, we need to be able to
+> detect it when the MCFG is missing. Use a namespace
+> property as an alternative to the MCFG OEM.
+
+Rewrap to use ~75 columns.
+
+Mention the DT namespace property here.
+
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>  drivers/acpi/pci_mcfg.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> Right, when I converted zorro_dev it was pointed out that the code was
-> copied from pci and the latter has the same construct. :-)
-> See
-> https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutronix.de
-> for the patch, I don't find where pci was pointed out, maybe it was on
-> irc only.
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 53cab975f612..7d77fc72c2a4 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>  	ALTRA_ECAM_QUIRK(1, 13),
+>  	ALTRA_ECAM_QUIRK(1, 14),
+>  	ALTRA_ECAM_QUIRK(1, 15),
+> +
+> +	{ "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
+> +	  DEFINE_RES_MEM(0xFD500000, 0xA000) },
+>  };
+>  
+>  static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> @@ -198,8 +201,19 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
+>  	u16 segment = root->segment;
+>  	struct resource *bus_range = &root->secondary;
+>  	struct mcfg_fixup *f;
+> +	const char *soc;
+>  	int i;
+>  
+> +	/*
+> +	 * This could be a machine with a PCI/SMC conduit,
+> +	 * which means it doens't have MCFG. Get the machineid from
+> +	 * the namespace definition instead.
 
-Oh, thanks!  I looked to see if you'd done something similar
-elsewhere, but I missed this one.
+s/SMC/SMCCC/ ?  Cover letter uses SMCCC (not sure it's relevant anyway)
+s/doens't/doesn't/
 
-> > Looking through the places that care about pci_dev.driver (the ones
-> > updated by patch 5/6), many of them are ... a little dubious to begin
-> > with.  A few need the "struct pci_error_handlers *err_handler"
-> > pointer, so that's probably legitimate.  But many just need a name,
-> > and should probably be using dev_driver_string() instead.
+Rewrap comment to use ~80 columns.
+
+Seems pretty reasonable that a platform without standard ECAM might
+not have MCFG, since MCFG basically implies ECAM.
+
+Is "linux,pcie-quirk" the right property to look for?  It doesn't
+sound very generic, and it doesn't sound like anything related to
+ECAM.  Is it new?  I don't see it in the tree yet.  Should it be in
+Documentation/devicetree/bindings/pci/pci.txt so we don't get a
+different property name for every new platform?
+
+> +	 */
+> +	if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
+> +					 "linux,pcie-quirk", &soc)) {
+> +		memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
+> +	}
+> +
+>  	for (i = 0, f = mcfg_quirks; i < ARRAY_SIZE(mcfg_quirks); i++, f++) {
+>  		if (pci_mcfg_quirk_matches(f, segment, bus_range)) {
+>  			if (f->cfgres.start)
+> -- 
+> 2.31.1
 > 
-> Yeah, I considered adding a function to get the driver name from a
-> pci_dev and a function to get the error handlers. Maybe it's an idea to
-> introduce these two and then use to_pci_driver(pdev->dev.driver) for the
-> few remaining users? Maybe doing that on top of my current series makes
-> sense to have a clean switch from pdev->driver to pdev->dev.driver?!
-
-I'd propose using dev_driver_string() for these places:
-
-  eeh_driver_name() (could change callers to use dev_driver_string())
-  bcma_host_pci_probe()
-  qm_alloc_uacce()
-  hns3_get_drvinfo()
-  prestera_pci_probe()
-  mlxsw_pci_probe()
-  nfp_get_drvinfo()
-  ssb_pcihost_probe()
-
-The use in mpt_device_driver_register() looks unnecessary: it's only
-to get a struct pci_device_id *, which is passed to ->probe()
-functions that don't need it.
-
-The use in adf_enable_aer() looks wrong: it sets the err_handler
-pointer in one of the adf_driver structs.  I think those structs
-should be basically immutable, and the drivers that call
-adf_enable_aer() from their .probe() methods should set
-".err_handler = &adf_err_handler" in their static adf_driver
-definitions instead.
-
-I think that basically leaves these:
-
-  uncore_pci_probe()     # .id_table, custom driver "registration"
-  match_id()             # .id_table, arch/x86/kernel/probe_roms.c
-  xhci_pci_quirks()      # .id_table
-  pci_error_handlers()   # roll-your-own AER handling, drivers/misc/cxl/guest.c
-
-I think it would be fine to use to_pci_driver(pdev->dev.driver) for
-these few.
-
-Bjorn
