@@ -2,59 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D4543E2776
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 11:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3491A3E288D
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 12:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244622AbhHFJkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 05:40:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:56766 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244184AbhHFJkU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 05:40:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B91A31B;
-        Fri,  6 Aug 2021 02:40:04 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.39.76])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCF143F719;
-        Fri,  6 Aug 2021 02:40:00 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>, matthias.bgg@gmail.com,
-        bhelgaas@google.com, robh+dt@kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, yong.wu@mediatek.com,
-        linux-kernel@vger.kernel.org, ryder.lee@mediatek.com,
-        Frank Wunderlich <frank-w@public-files.de>,
-        linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
-Subject: Re: [PATCH v11 0/4] PCI: mediatek: Spilt PCIe node to comply with hardware design
-Date:   Fri,  6 Aug 2021 10:39:54 +0100
-Message-Id: <162824274659.11010.3812952145024175369.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
-References: <20210719073456.28666-1-chuanjia.liu@mediatek.com>
+        id S245082AbhHFK2t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 06:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245066AbhHFK2p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Aug 2021 06:28:45 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70F2C061798
+        for <linux-pci@vger.kernel.org>; Fri,  6 Aug 2021 03:28:28 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id o5so14368766ejy.2
+        for <linux-pci@vger.kernel.org>; Fri, 06 Aug 2021 03:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vrtbo3nYb+A1LV8QTCtXNA/gtUtVZ8Uwf/UCTJHHo2E=;
+        b=fN0cCGCnATKllE3GHDHpwHGjFTP4zxQpCnNb/5OfuQkBBUgvts8cC2rVV6AByyrtbn
+         nBZLih1LgMqaSwFOIAlwkMSUaHeIRTRdj7DY+Ar3tXA9YGtb2rsVlL+82X74s8KO4WnD
+         m2CXJuM4WjmjBdPHR714R91GCaef/8GOscYIhUL44iZy/I7qP/AIIaRZ8QWy+PmtMoRf
+         JeYUuVHq9mR+d2PmIOX40WW9W+ChSkFF8+Qe8laaI88bxSxQ8jTrrZ3We6+A5XjRAfJ7
+         yxCZ7iCA+bhChVaxFAyEf67Jh9asfF98M2cED4LdUGH3FhHkwY74fIZp/j+enZbkWOUG
+         K93A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vrtbo3nYb+A1LV8QTCtXNA/gtUtVZ8Uwf/UCTJHHo2E=;
+        b=cq/7CeCCq1mCVmack4uV9XUdqCvcD0LUzY7uVwc3uiZYI7Gv5+Ea4ovFYFHdkVRLDw
+         9HHBW1hGeymQvpcEJloDrEJXhPf65bA7OblaiNYA4ics/xjK7aKU1D6AyVm958OJxXdU
+         WeK5JUFBfoPG0US+0AhYIDPdtbEIQ/uYCUT78tSMIG3tt+w1iTXVUnfGFGJ0+EIFJxkD
+         I8xcmF7GQ9aNgLurT7UyuzDZS6AE4W6jQm2V6mVe+uL59N5ywR+1WzpZcwlPaI4iABrH
+         XxS3NT/bUtgFvVqWG6WTDk7voL9Tm2agasD2K+U05SCxRLHCgkjIFlZ9NBuxFGIFd+GP
+         hEvQ==
+X-Gm-Message-State: AOAM530lBL/Oc8fLz5ugMekz+rqFi7lj4+rcKETf6K8blmdnWlOtdRw6
+        u8xLVwzzP6zvIXbZNwu96XysmnioUSsi3WghqkvCNA==
+X-Google-Smtp-Source: ABdhPJwa9HUUcxdtqwQ3XG5MjEhWNE43w2E0x+nkczBIqoR2r2er3dww7NDeYZnIZy5VyrBY6Sphn+vjF1fsvOf773g=
+X-Received: by 2002:a17:906:8a66:: with SMTP id hy6mr8959236ejc.309.1628245707552;
+ Fri, 06 Aug 2021 03:28:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1624618100.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1624618100.git.michal.simek@xilinx.com>
+From:   Michal Simek <monstr@monstr.eu>
+Date:   Fri, 6 Aug 2021 12:28:16 +0200
+Message-ID: <CAHTX3dL5qTaB+YFPXiDYQAcDD_L9mYu_zAY=zV_2kXMsOR=YAA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] PCI: xilinx-nwl: Add clock handling
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Ravi Kiran Gummaluri <rgummal@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 19 Jul 2021 15:34:52 +0800, Chuanjia Liu wrote:
-> There are two independent PCIe controllers in MT2712 and MT7622 platform.
-> Each of them should contain an independent MSI domain.
-> 
-> In old dts architecture, MSI domain will be inherited from the root bridge,
-> and all of the devices will share the same MSI domain.Hence that,
-> the PCIe devices will not work properly if the irq number
-> which required is more than 32.
-> 
-> [...]
+Hi Bjorn and Krzysztof,
 
-Applied patches 1-2 to pci/mediatek (we don't merge dts changes), thanks!
+p=C3=A1 25. 6. 2021 v 12:48 odes=C3=ADlatel Michal Simek <michal.simek@xili=
+nx.com> napsal:
+>
+> Hi,
+>
+> this small series add support for enabling PCIe reference clock by driver=
+.
+>
+> Thanks,
+> Michal
+>
+> Changes in v3:
+> - use PCIe instead of pcie
+> - add stable cc
+> - update commit message - reported by Krzysztof
+>
+> Changes in v2:
+> - new patch in this series because I found that it has never been sent
+> - Update commit message - reported by Krzysztof
+> - Check return value from clk_prepare_enable() - reported by Krzysztof
+>
+> Hyun Kwon (1):
+>   PCI: xilinx-nwl: Enable the clock through CCF
+>
+> Michal Simek (1):
+>   dt-bindings: pci: xilinx-nwl: Document optional clock property
+>
+>  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt      |  1 +
+>  drivers/pci/controller/pcie-xilinx-nwl.c             | 12 ++++++++++++
+>  2 files changed, 13 insertions(+)
+>
+> --
+> 2.32.0
+>
 
-[1/2] dt-bindings: PCI: mediatek: Update the Device tree bindings
-      https://git.kernel.org/lpieralisi/pci/c/9c23251640
-[2/2] PCI: mediatek: Add new method to get shared pcie-cfg base address and parse node
-      https://git.kernel.org/lpieralisi/pci/c/302e503e08
+Can you please take a look at this series?
 
 Thanks,
-Lorenzo
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
