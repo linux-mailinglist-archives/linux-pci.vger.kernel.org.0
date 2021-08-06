@@ -2,70 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C87A3E2C29
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 16:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CD083E2D06
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 16:56:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237142AbhHFOLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 10:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237023AbhHFOLB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Aug 2021 10:11:01 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB62EC061798
-        for <linux-pci@vger.kernel.org>; Fri,  6 Aug 2021 07:10:42 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id u3so15296195ejz.1
-        for <linux-pci@vger.kernel.org>; Fri, 06 Aug 2021 07:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=q3xyYt1HrVQnyL1KZndhIFKim0Z6RZXWCajZa6+jKaUt/xPBmWrU2b2TpwIqgxHoY3
-         6sUeXJPoUC3zz+xqx5Y/7bh16ON7BcCcP2liy5jl/yv+hyxVGmxIcBCDJXoapuOO0RIl
-         REN9Zv+ClhtVVEMybVDTEUTnyt+YraWqvgNO4CiPEvSNbjJp0ymaQzc4FwPALfOqM4La
-         f+KzIMXFoGuca5XlZdCXXnnqi+xUiOGsem/cV9JUjNFonSZWOzEGazowyEr2eG3dp5DR
-         pLBa7cN2FmOkeXw/dSFAaB7k29Eu0Yivashc8iQbXHlro4ZoI7aiyRP21+G8wGDlMmu6
-         HPDQ==
+        id S242762AbhHFO4q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 10:56:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49899 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242200AbhHFO4m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Aug 2021 10:56:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628261785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gplto+9RiGLBeHt41MKFNCwZ4jJrvlaCOPaj0G5G4zY=;
+        b=hxjkrEQvU1Wwpu2MQlNexil1atmHLu8i2fRIVZQna6SY0j16arm3Vzgwv7TKxj1TN6qgUs
+        HU7puA6ZeHn0iIptw8GhPC/OIF6nBgi+5z56nikmu4X1YQnRcD1bNnCfKYQdiFwLapLfgb
+        7l/M6071roFneViMYOlg8R97cA4TPks=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-xyxUHuaZMGqhfofydG2adw-1; Fri, 06 Aug 2021 10:56:24 -0400
+X-MC-Unique: xyxUHuaZMGqhfofydG2adw-1
+Received: by mail-lj1-f198.google.com with SMTP id s28-20020a2e151c0000b02901b39b1684fbso17079ljd.15
+        for <linux-pci@vger.kernel.org>; Fri, 06 Aug 2021 07:56:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/oMubRmlLM5EZ/UdY6Fj3wsfS2kyoMzN9ASXgZ3xneY=;
-        b=b7PxSVg41l1bgE9eJ6OpD9T2DusHBgDZihv/8wrQCfZg2uRNIzObxPSshrfcUQugpG
-         qQCW6kPwWdcR4XE3HC0DCrRCsKrvEsfzIp3GLOo1EGMgojZFuQm4fU1jVFf8on7Pt8ST
-         cyr8z95FdTP2OUbjZYxcTUm+9s8yKWeihAFfLaramqtDriQ7DeQq7ftJtLse0izBdMls
-         pp1e6cyunYZlVTqrmLpCgUEHv4PLtCtNioTt2bXVoafa7W9FRHktlq2C6bm4GcduNgER
-         2vs97SPbrQs+4r0xpvdWQ5Gpvv1jTGVF9JW1IRn6LH4bpeOZss+mzg5QExV9YZLRctfC
-         obbQ==
-X-Gm-Message-State: AOAM530H3cLq+8SD9vQYU/TlCSG19E5SUC+6v6uUgnhFpW/yf2aq+Z9u
-        MJey7DrmAyiejxHr8jwrBxqVFMqyiHeJxuhAEIyXCi2DdeDBjz1vHA==
-X-Google-Smtp-Source: ABdhPJx229jhz+o+nQwdgIkoqR5HwLh3S4+JGHt0eG+5fB4X3WTmNmInTj1ZpuXDIVm9CYEhhFZzLyuZYbLrplGdX6A=
-X-Received: by 2002:a05:6402:3094:: with SMTP id de20mr13526197edb.272.1628259031175;
- Fri, 06 Aug 2021 07:10:31 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gplto+9RiGLBeHt41MKFNCwZ4jJrvlaCOPaj0G5G4zY=;
+        b=HJ7tnyLkpEqleCWm9T4rpep7eTo3CNMkhjPeYzZiyMLBLtNVqb7JZpNt/4FOxtKULo
+         eNw0D3Avs4ANbxBuSn27nw2bEDpfvjohjmLmlHbBc9F65tiJ5fmPCtNm1I8vtwFR01De
+         HSbM0iWhZzwxUFtG0lAJZJxW4jdqzPuyTUB+XF01Sz/hcGKYAdxlm2XrS9iKY+GRrdQ2
+         69renVuG2XRo3sLbx1XzRSNII7LSCSfHrArGlzqvf9KQjpY1v83x+9EihSzpykuA8E8m
+         pg6Znwpsku6wDdojaKlR6cSyoNQ65gscwIZE0V9V2IKLtiwfWe7aItFSGfkx0PwpGo8Q
+         z6LA==
+X-Gm-Message-State: AOAM5336xcNklVLIQiKa/MUCdsqrAhm3ZHuL3nW38SZpLZgJIRkvcaET
+        iEkie1dpeb3nm779mPKxtRwOS0LigIQljNWLaR4zpuuw//X5lHaFLz7CVGoNA5H6JBTKD+dkiJd
+        NzIZJrVvOyryJH44mGg37iJdbWTnKq+qOtQRt
+X-Received: by 2002:a2e:a5c5:: with SMTP id n5mr6964962ljp.197.1628261783010;
+        Fri, 06 Aug 2021 07:56:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwC/7IBeDvUIpspKDafXFNaZJL39fA0LdoJUUoo9fxtc2w2X3B23dOmAeuPnaLpGXRV1mvPec3FVULqmmMy5+E=
+X-Received: by 2002:a2e:a5c5:: with SMTP id n5mr6964936ljp.197.1628261782465;
+ Fri, 06 Aug 2021 07:56:22 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a54:26cf:0:0:0:0:0 with HTTP; Fri, 6 Aug 2021 07:10:30 -0700 (PDT)
-Reply-To: mrmaxwellwatford@gmail.com
-From:   Maxwell Watford <orchowskiruthi@gmail.com>
-Date:   Fri, 6 Aug 2021 14:10:30 +0000
-Message-ID: <CA+q9Q6OJB6Z0+y=5_3MBDNGkAUG9rVxg7bZVma38uDOvJ+sOGw@mail.gmail.com>
-Subject: i need your reply
-To:     orchowskiruthi@gmail.com
+References: <20210720232624.1493424-1-nitesh@redhat.com> <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
+ <yq11r77gtq0.fsf@ca-mkp.ca.oracle.com>
+In-Reply-To: <yq11r77gtq0.fsf@ca-mkp.ca.oracle.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Fri, 6 Aug 2021 10:56:11 -0400
+Message-ID: <CAFki+LmgTDtbZEhJF6FMRUV_oSMPLWqvrcKvBXUfNhzodVh+aA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/14] genirq: Cleanup the abuse of irq_set_affinity_hint()
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, jassisinghbrar@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Tushar.Khandelwal@arm.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        lewis.hanly@microchip.com, ley.foon.tan@intel.com,
+        kabel@kernel.org, huangguangbin2@huawei.com, davem@davemloft.net,
+        benve@cisco.com, govind@gmx.com, kashyap.desai@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com, suganath-prabu.subramani@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, linux-pci@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, rostedt@goodmis.org,
+        Marc Zyngier <maz@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Neil Horman <nhorman@tuxdriver.com>,
+        pjwaskiewicz@gmail.com, Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
+        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
+        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
+        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greetings,
+On Thu, Aug 5, 2021 at 11:06 PM Martin K. Petersen
+<martin.petersen@oracle.com> wrote:
+>
+>
+> Nitesh,
+>
+> > Gentle ping.
+> > Any comments on the following patches:
+> >
+> >   scsi: megaraid_sas: Use irq_set_affinity_and_hint
+> >   scsi: mpt3sas: Use irq_set_affinity_and_hint
+>
+> Sumit and Sreekanth: Please review.
+>
+> Thanks!
+>
+> --
+> Martin K. Petersen      Oracle Linux Engineering
+>
 
-We are writing to you from Ecowas Finance Controller Office Lome Togo,
-because we have received a file from the Ministry of Finance Lome-
-Togo, concerning an Inherited Fund bearing your name on it, And after
-our verifications, we found out that the funds belong to you.
+Thanks, Martin, Sumit & Sreekanth for the help.
 
-It has been awarded and I will like to guide you to claim the funds.
-Please contact me at my private email address
-(mrmaxwellwatford@gmail.com) for more information and directive
+--
+Nitesh
 
-I am looking forward to your urgent reply,
-Best regards
-Mr Maxwell Watford
