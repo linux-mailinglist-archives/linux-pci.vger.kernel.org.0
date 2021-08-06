@@ -2,49 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD61E3E31F4
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 00:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E266C3E31FD
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 00:59:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244574AbhHFWwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 18:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46974 "EHLO mail.kernel.org"
+        id S233256AbhHFW7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 18:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244333AbhHFWwu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 18:52:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BBC4D60EE9;
-        Fri,  6 Aug 2021 22:52:33 +0000 (UTC)
+        id S230280AbhHFW7f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 18:59:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A030A60EE9;
+        Fri,  6 Aug 2021 22:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628290354;
-        bh=8AhSzyoKMb17jPDzZIXalXwaGBTj/E65mxGB0HZtyQk=;
+        s=k20201202; t=1628290758;
+        bh=HU2xeowJBFARB+34Pp8jGrd/zZAOVyAJGJWh8YkA/Ho=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cUznrRVcak9e6FGk/LLIA/DBMGgPGAwK5zdyK6P2fo471bSkkbzthlA7ECPmcmDkS
-         dmIS4Uq6kV/zIJUmqMTMkzZ5LqATWpE3xhCdm/gjQjwpYYHTIGYZ3ceJ9XjFMVrgMj
-         OYSh/5+DKqCOzfkrTJd0HhbHoLH3t0syVrR0/ZVcOQagJT+82JWS9ftK6QDCVBDCbl
-         DwqNvHvIM6jj/WTO3TjwLgjHZni/WMJCmLLRWYJJWye6Ya9An/5zFeiWMxG06v0spI
-         ZJZeBQLEDcldVw8Umpd0ASlLTJyTyxpUz1LjP30J2hsMqWB4pB9uB3Bf3rw0YvU11Z
-         Y5EizCYuH+OZQ==
-Date:   Fri, 6 Aug 2021 17:52:32 -0500
+        b=d3jngVQutsnEePS1XLx+uK1ceEvIan/3CPVuRqoMqeoPrlsJOhlRopE606S4OnOVL
+         xYzOtTibLua3S6jLxK4i3hSqCV1cv3wGzPbpMmXJpB8Zkm47bdbZS4W2dCzYZJXvYD
+         Y8mLDXTOt7g3Si/7HmQ6q8XBerUZdY7F2OzSPKFmwXRJUWbb3Io5LfYpcJ+4weLeY7
+         YNlmo/DW9TX61aM0Mh6im9C5H/7U+8MZVT1rvvTAOmiUWd1HJVy5xnSUmVgd1dpM6P
+         w0uujMI/8gsDaiYwjPm/Sc8xaOnw2LvOD1WrpDQGO8JPMBWqSSOBxb8rSEuTC+nWvq
+         05X8uhCWFRHcA==
+Date:   Fri, 6 Aug 2021 17:59:17 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/3] PCI: of: Fix handling of multi-level PCI devices
-Message-ID: <20210806225232.GA1893914@bjorn-Precision-5520>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
+        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH V7 5/9] PCI/IOV: Enable 10-Bit tag support for PCIe VF
+ devices
+Message-ID: <20210806225917.GA1897594@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3365235394fe4e7f35694c95af95fce96da7c9bb.1628151761.git.mchehab+huawei@kernel.org>
+In-Reply-To: <08b7a9b7-2951-43c3-5e81-3461b6724955@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 10:28:58AM +0200, Mauro Carvalho Chehab wrote:
+On Thu, Aug 05, 2021 at 04:03:58PM +0800, Dongdong Liu wrote:
+> 
+> On 2021/8/5 7:29, Bjorn Helgaas wrote:
+> > On Wed, Aug 04, 2021 at 09:47:04PM +0800, Dongdong Liu wrote:
+> > > Enable VF 10-Bit Tag Requester when it's upstream component support
+> > > 10-bit Tag Completer.
+> > 
+> > I think "upstream component" here means the PF, doesn't it?  I don't
+> > think the PF is really an *upstream* component; there's no routing
+> > like with a switch.
+>
+> I want to say the switch and root port devices that support 10-Bit
+> Tag Completer. Sure, VF also needs to have 10-bit Tag Requester
+> Supported capability.
 
-> 	$ dmesg|grep of_node
-
-Adding "|cut -b16-" or so would make this more readable.  Could also
-indent by two spaces instead of a tab if that would help.
-
-> 	[    4.932405]  (null): pci_set_bus_of_node: of_node: /soc/pcie@f4000000
-> 	[    4.985916] pci 0000:00:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000
+OK.  IIUC we're not talking about P2PDMA here; we're talking about
+regular DMA to host memory, which means I *think* only the Root Port
+is important, since it is the completer for DMA to host memory.  We're
+not talking about P2PDMA to a switch BAR, where the switch would be
+the completer.
