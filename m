@@ -2,205 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B83E23E220B
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 05:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8303E2374
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 08:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232199AbhHFDFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Aug 2021 23:05:40 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:54992 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231679AbhHFDFj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Aug 2021 23:05:39 -0400
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1762v4qt023067;
-        Fri, 6 Aug 2021 03:04:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2021-07-09;
- bh=RFlk/4n9YjHv95qLTUAeUlBQHaWHNmXOvqmaDpogwLw=;
- b=pAlNtAhKRYrHUjBpk1NgIXH11dikoxJrLh5SjbvHCGiRTlkYbheFPVTU/OtLmg7/RLC3
- IryDgTEb9ej+1/KUH4pok10wDxhzDOPMJd0c9yqG5DS+fpAfQthykMg3IAXaojZd7CeX
- maEs2LTb+AaRlVfVEYnQTqPxdjSewscnZn/hJ9ZgehdxLrWn3E1oqRel9xQXmKIURrrz
- Dht/COsbD55rhl5EZbjpFwLgc04h/t2w5czBe8Ztgo4UeRIFAZOQ1SlPaSodDtSXAv+N
- h40XtujdR1RlflP+5cu/i67VnONxGgTwGIMcrLOcf9oRsCmG/PA1XleRUbNUJ/vQ0rfE iA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2020-01-29;
- bh=RFlk/4n9YjHv95qLTUAeUlBQHaWHNmXOvqmaDpogwLw=;
- b=oCoLEYYsadmfblU7qfxCoadphrD+7Nh9Mf3vXSIbADhyDt8mOmmuUhBiuafkkHLex0YO
- HTWl+h+xh/5fv8fA32FSbPq5CCd8VW4OPTC3dD3VXipEwiMt8FizWbjbBhcFx97m23uz
- QFtGWJfz3PewYmNP1xTnhLJVjgbwExqsTm059NrH6ZprpyxvE6LfMCSXwOiXg0ij4S+G
- 4OrGK8XM/1wLpo3mNRmsqbsunL6YUhpxOrtJxQVIXM169Hky7fAPiPEIYJH9gZHb3ick
- jVh/T4pOuG83MAbjOZopiUO8z5Otk6JwkqIMsrr4fKtme90a+kqhqVLHpkT42v2KUzDn gQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3a7hxpnk32-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Aug 2021 03:04:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1762u7I0100016;
-        Fri, 6 Aug 2021 03:04:36 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-        by aserp3020.oracle.com with ESMTP id 3a7r4aurk4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Aug 2021 03:04:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bVXPEHJNNE1hd+ucT6z4Yet5ozzsfqulACOH4gO4ob5nE3PF2jer+gtFb9c2QWy1IAA1Qf6gu6h9516m3Rgtjk1prel38Rhvww1ikq8gKEPTQl1fhFKrcKTeR5zHuUWrgy2PFAZ83CLDEWjmviKaloBNDzdT2Q5lj+gdx/EYyJOFLngX8c7x+4UDzLAQTzxECy83UFlcU6Pwu46D8YvGk7UX8oIk0q8L/n2EjJGXKB8M6sMTyJFtfED+APbTOKdubH2dPJjOKTC7pgHJCbmVPueDLUq+1rsXEdoXplw1NT55ruTaXA40vvnOIEt0osyQjKuivKG+V+kSUrkpa8qneg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFlk/4n9YjHv95qLTUAeUlBQHaWHNmXOvqmaDpogwLw=;
- b=SS4HylG6Wm5od4SgT4xfQ8Kaa+Mh+21pJP5Hwb93bE6s4RDhhLEPgetMKrqOGQEocMLB6J4trmO6oLgsUC5xbvekwVFEtmvmvrl1VruhGnJQL38sn+eq01o3+Nw4qrMGrNhOe+M/mVjqWMUOrH0H0szJkePQfxptOj6JuT4PWZh73Qi0f0xd/i7sElwuFY2G06Fx6uFmR2/Ew49Fa+H8G518BmHgbUkBiApRx9Pat1147P3IdHr8zkpM88OrvsbNe7FDgwOgkL3raIrlLAlp12ASp0msu0FBTxjTwoHDy9VSYmQW2B1agSjUcwavWGwcFGooWv8JnzlxeQGxSC1b8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFlk/4n9YjHv95qLTUAeUlBQHaWHNmXOvqmaDpogwLw=;
- b=OyKPcLBcL232lVdrDMT9DP2kCcJ7bMjBwhHBwb01+/X3qsMfxFcn5PuTCkJ4L+b+3LrKB7HgxF6tdr6H+gRRIfQZGEg3jHT/Dd5k6g0B38k4oTFtC2lxW8JVcKanF71VdAFbO3JYqDVZ6vNQH232XuJTQSVmN97UYEDvon3k3SA=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=oracle.com;
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by PH0PR10MB4648.namprd10.prod.outlook.com (2603:10b6:510:30::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.24; Fri, 6 Aug
- 2021 03:04:33 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::153e:22d1:d177:d4f1]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::153e:22d1:d177:d4f1%8]) with mapi id 15.20.4373.026; Fri, 6 Aug 2021
- 03:04:32 +0000
-To:     Nitesh Lal <nilal@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, jassisinghbrar@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Tushar.Khandelwal@arm.com, manivannan.sadhasivam@linaro.org,
-        lewis.hanly@microchip.com, ley.foon.tan@intel.com,
-        kabel@kernel.org, huangguangbin2@huawei.com, davem@davemloft.net,
-        benve@cisco.com, govind@gmx.com, kashyap.desai@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        suganath-prabu.subramani@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        rostedt@goodmis.org, Marc Zyngier <maz@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S236666AbhHFGtF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 02:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236559AbhHFGtF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Aug 2021 02:49:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D07C061798
+        for <linux-pci@vger.kernel.org>; Thu,  5 Aug 2021 23:48:49 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtcu-0007Bd-Gw; Fri, 06 Aug 2021 08:46:40 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtce-0004p1-8f; Fri, 06 Aug 2021 08:46:24 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtce-0003LN-5b; Fri, 06 Aug 2021 08:46:24 +0200
+Date:   Fri, 6 Aug 2021 08:46:23 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Neil Horman <nhorman@tuxdriver.com>,
-        pjwaskiewicz@gmail.com, Stefan Assmann <sassmann@redhat.com>,
-        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com,
-        Alaa Hleihel <ahleihel@redhat.com>,
-        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
-        saeedm@nvidia.com,
-        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
-        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
-        Al Stone <ahs3@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
-        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
-        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH v5 00/14] genirq: Cleanup the abuse of
- irq_set_affinity_hint()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq11r77gtq0.fsf@ca-mkp.ca.oracle.com>
-References: <20210720232624.1493424-1-nitesh@redhat.com>
-        <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
-Date:   Thu, 05 Aug 2021 23:04:28 -0400
-In-Reply-To: <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
-        (Nitesh Lal's message of "Mon, 2 Aug 2021 11:26:39 -0400")
-Content-Type: text/plain
-X-ClientProxiedBy: SA0PR12CA0012.namprd12.prod.outlook.com
- (2603:10b6:806:6f::17) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-perf-users@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
+        qat-linux@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
+References: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
+ <20210805234234.GA1797883@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ca-mkp.ca.oracle.com (138.3.200.58) by SA0PR12CA0012.namprd12.prod.outlook.com (2603:10b6:806:6f::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.17 via Frontend Transport; Fri, 6 Aug 2021 03:04:31 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ab48ed34-4aa0-410c-84e6-08d95886ea06
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4648:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PH0PR10MB4648AC32D0D6969750ECA7428EF39@PH0PR10MB4648.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K+wo+KFhAWE3OISkkQDhNnMBFJScsoGUC1EqMNowmp6M9Hnsrksqcw22AfmZzmOq0faAr4aGF0zcUtll6blLzKPX+l7Q1/1KIwCNzDkVaZywv7Iwh1PpwOf9Ht501DW/xjpKAqlUcsBT7RuNY0O0Z9KTfhdxbRTX79WVmdbXfk34nrWNS6g+erpDoArLj7ibJRfA2QUPhrZ20294X6VH0iV6aSNa45FODwOYSV0Y6Lqr8sOPPtYeTPeGfW3XBJFEKccVWdOnBAAN8lZncK070kOfggSWB4LRBXUoje2Sr8PrmZ8kplC5cco+qz+s+kRlqb221c2+b8KTkt93RBvYi9O0F9+EPKvZarAaMhZxDyLq7rJxYiERS5CAZFt9p+m+zCCfW3Z14izTonXeK509+AnKMkPpmLISPNuYZqeWZE7zlwRYyr1lkthJrylknHKhX+rbStHsLQKWF46lcicbmHAaDcaqZ5pXBfide4WNkHW6xjeMN6qpN42+jg5UNnfkWOL5dXbkHUKSzjbXbpYHZOtcQ0gKADIbPOTHbodsmkuI+UkL8vFp/+fyF41UFxFToO6N4mXd8QgeLqKuBzYrS8mVn4jBCswYM9kDcegAU74Y9INWNk9j+XK5xCddVEMbQGfh4PhMUJCVXNAwu/pvCA+OABLnCc3DO17RE9BD5y1CcaIQvGjTJdMDAiFaT44jHVQPTADNYmX8gBiwFeo2EQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(346002)(396003)(39860400002)(366004)(5660300002)(55016002)(186003)(86362001)(558084003)(478600001)(956004)(8676002)(316002)(54906003)(66476007)(66556008)(66946007)(7406005)(7696005)(36916002)(38100700002)(4326008)(6666004)(7416002)(6916009)(7366002)(8936002)(38350700002)(26005)(2906002)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?S5mdj/itJrqcM8RrZ74MjLcPjYmbfrb0igFGwFgOy9EXbq5FeTRKXCikGUFA?=
- =?us-ascii?Q?eVFIq8DUVqMAWxM80oAG69NrtDJUVIHDsVE03HtR6V/AZoo9ara4ElAQbO45?=
- =?us-ascii?Q?PVGPRy/CnfyWhhjru/cHfBCkqEjBFnq6PJNvfXgqbk+YacddLWBz2cObu50l?=
- =?us-ascii?Q?1CfaN1MsijD8vxG4uYXnhSFhPee717fRhbQd41F8bZVm0pg6H0J19VRSUG4e?=
- =?us-ascii?Q?h6EpcFipnZCV/WO75KyIC0KeK0mARNqEZ5Sbvv0fyQAIaDECvhRFDTbcYMpU?=
- =?us-ascii?Q?BiDOQ13uyk6RuJi/dyBaWsiY5RO0GOH7KLUjWhocaE/0hcQeGMkYqUushnNl?=
- =?us-ascii?Q?lGWhm4ozBpziAJ/cr+lIt1vqD/445HmJUbnfmRIeJ7RIy88MenBXygSaAXXz?=
- =?us-ascii?Q?lewj0tZzfbs4Q8laMfhB/n1WB6Cg1PEElEzmo0HHPwybaXuy77ikgCzv+MXM?=
- =?us-ascii?Q?cnAKvx9NndV5NDmtKOyuODcjF8S789ny4LElYBV1S/1DKJWO050yMEq4J3TA?=
- =?us-ascii?Q?w2jwk3F384Xp9TS2LtLAYA3r3A/piMbWAa13wGZXIn9m+p5nloT6VT3Vcxv/?=
- =?us-ascii?Q?o4bvUUoFDliYYPlDUZw8p1t4rpEa7Lz4X+iEudp+4vuxtuPHbJEyxn/qeAMm?=
- =?us-ascii?Q?hg1Llaaur6hj4cMPdL5rxc88uYwilfd5m8TdobRUp97MssFySqkbUAUmPB5g?=
- =?us-ascii?Q?432eO4LLI5ZJQ0gfNQ3B8YeL53qcVeSXs6CO79BRd0tB9WMQNpvCRHrdNTR7?=
- =?us-ascii?Q?q5riBiqREv9+UKk1mhvp7/9ReCxtj09LHyyPrk/Pj7AU0GN1sFf60hG88Xc5?=
- =?us-ascii?Q?MH2A0zlQ22FiwMFqtpDDUkiBI0AQKCER1YhQaACsYqjEqnYlOoT1T1clvnei?=
- =?us-ascii?Q?y7dXaK/vNoWod+1lQ/yX2ruqX5h4+tpJjq1dx7WmE6YsADE5Gh2+fLydAqMV?=
- =?us-ascii?Q?bikdLIPyEl2OGQ+id+DdHWwgVMgI4nbFsm4fUFdKDJfYkfqjGDLKpezB4Giv?=
- =?us-ascii?Q?cmV5O3+6+O4/NvoG9gnqndvCoebF7gb4IL/rP27M2DIE89Nwo5gb/S+11SAt?=
- =?us-ascii?Q?hyofjPj8TP40KgkcwowHRuZt04i6pDPr6um5Gqlm7yVth1gSRIO5JhmgDBnN?=
- =?us-ascii?Q?vN/rBTyW3OMs8it1Zd9MUOqqxkfoDRFctfmVQlLpWlh+a6Wj9nDyQsJvw0Tf?=
- =?us-ascii?Q?6lpaHzDrvGnBZdBvtUmoa+3a1MZaoKJTgYgdMK5dqyPskuk0YgyoyPDdMO72?=
- =?us-ascii?Q?PY2DdhzidEg6/h4TrmLdZ94VtPdxGRzWsHAT6tolWFJPjSD0nzgFA6N6VUW1?=
- =?us-ascii?Q?DTfgqE8Cbqc+Gq/k778JtHv6?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab48ed34-4aa0-410c-84e6-08d95886ea06
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2021 03:04:32.7760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7vXuWf/Fegg79HMRDXXgirViFLIUu7RUDt+igoKM3+jOLb4gLKZsWDvkbfdiVAnfhfRkU1WfQmR8cmdNeIWN2TqQMprFxkEOu0fqxhAo9sU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4648
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10067 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 spamscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108060016
-X-Proofpoint-GUID: Ct0jbMyeE6PnI9tLBopNWGxgARRVhlyX
-X-Proofpoint-ORIG-GUID: Ct0jbMyeE6PnI9tLBopNWGxgARRVhlyX
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nllglfksvmzlkdkm"
+Content-Disposition: inline
+In-Reply-To: <20210805234234.GA1797883@bjorn-Precision-5520>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-Nitesh,
+--nllglfksvmzlkdkm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Gentle ping.
-> Any comments on the following patches:
->
->   scsi: megaraid_sas: Use irq_set_affinity_and_hint
->   scsi: mpt3sas: Use irq_set_affinity_and_hint
+Hello Bjorn,
 
-Sumit and Sreekanth: Please review.
+On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 03, 2021 at 12:01:44PM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > changes since v1 (https://lore.kernel.org/linux-pci/20210729203740.1377=
+045-1-u.kleine-koenig@pengutronix.de):
+> >=20
+> > - New patch to simplify drivers/pci/xen-pcifront.c, spotted and
+> >   suggested by Boris Ostrovsky
+> > - Fix a possible NULL pointer dereference I introduced in xen-pcifront.c
+> > - A few whitespace improvements
+> > - Add a commit log to patch #6 (formerly #5)
+> >=20
+> > I also expanded the audience for patches #4 and #6 to allow affected
+> > people to actually see the changes to their drivers.
+> >=20
+> > Interdiff can be found below.
+> >=20
+> > The idea is still the same: After a few cleanups (#1 - #3) a new macro
+> > is introduced abstracting access to struct pci_dev->driver. All users
+> > are then converted to use this and in the last patch the macro is
+> > changed to make use of struct pci_dev::dev->driver to get rid of the
+> > duplicated tracking.
+>=20
+> I love the idea of this series!
 
-Thanks!
+\o/
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> I looked at all the bus_type.probe() methods, it looks like pci_dev is
+> not the only offender here.  At least the following also have a driver
+> pointer in the device struct:
+>=20
+>   parisc_device.driver
+>   acpi_device.driver
+>   dio_dev.driver
+>   hid_device.driver
+>   pci_dev.driver
+>   pnp_dev.driver
+>   rio_dev.driver
+>   zorro_dev.driver
+
+Right, when I converted zorro_dev it was pointed out that the code was
+copied from pci and the latter has the same construct. :-)
+See
+https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutro=
+nix.de
+for the patch, I don't find where pci was pointed out, maybe it was on
+irc only.
+
+> Do you plan to do the same for all of them, or is there some reason
+> why they need the pointer and PCI doesn't?
+
+There is a list of cleanup stuff I intend to work on. Considering how
+working on that list only made it longer in the recent past, maybe it
+makes more sense to not work on it :-)
+
+> In almost all cases, other buses define a "to_<bus>_driver()"
+> interface.  In fact, PCI already has a to_pci_driver().
+>=20
+> This series adds pci_driver_of_dev(), which basically just means we
+> can do this:
+>=20
+>   pdrv =3D pci_driver_of_dev(pdev);
+>=20
+> instead of this:
+>=20
+>   pdrv =3D to_pci_driver(pdev->dev.driver);
+>=20
+> I don't see any other "<bus>_driver_of_dev()" interfaces, so I assume
+> other buses just live with the latter style?  I'd rather not be
+> different and have two ways to get the "struct pci_driver *" unless
+> there's a good reason.
+
+Among few the busses I already fixed in this regard pci was the first
+that has a considerable amount of usage. So I considered it worth giving
+it a name.
+=20
+> Looking through the places that care about pci_dev.driver (the ones
+> updated by patch 5/6), many of them are ... a little dubious to begin
+> with.  A few need the "struct pci_error_handlers *err_handler"
+> pointer, so that's probably legitimate.  But many just need a name,
+> and should probably be using dev_driver_string() instead.
+
+Yeah, I considered adding a function to get the driver name from a
+pci_dev and a function to get the error handlers. Maybe it's an idea to
+introduce these two and then use to_pci_driver(pdev->dev.driver) for the
+few remaining users? Maybe doing that on top of my current series makes
+sense to have a clean switch from pdev->driver to pdev->dev.driver?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--nllglfksvmzlkdkm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEM2rwACgkQwfwUeK3K
+7AlqBggAh2Z8+ZW+YMYlQQ8AzujRmGYo9gKX26eGdp2jNjZUeOc0CEZwm/GiW4aZ
+9+W1RS3i+O6ToHVYkt9fNEpdUGO3YdBKiMHGWsrkQuwNjm4Yv5Dlx/wRz0dU4vIX
+QQDa5tw6Mow1g0gjZqHvDuwbgKoJyHXzFD115kBaINYN/XqOLST9YvMqxxSsHHsD
+qRmpU59QTxEqHXKIsgABctdVnQBkbixppZH3/6nu+Xh7qkZvczBLpx/C5V1+XeAv
+47LOxaH3wiLQBS/sICKlAFeYcbAyNhwh+nbMxx5i3lG6O6LhaeX46FPMoTG6qiAj
+MaO1mAnwrEO35eTXFBgw4IYh37zS9A==
+=/ZHI
+-----END PGP SIGNATURE-----
+
+--nllglfksvmzlkdkm--
