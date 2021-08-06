@@ -2,316 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89BBB3E300B
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 22:00:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A174C3E310E
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 23:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244365AbhHFUAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 16:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
+        id S240528AbhHFVZK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 17:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244341AbhHFUAN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 16:00:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F83061181;
-        Fri,  6 Aug 2021 19:59:57 +0000 (UTC)
+        id S240338AbhHFVZJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 17:25:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4064360EE8;
+        Fri,  6 Aug 2021 21:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628279997;
-        bh=UqVKLug64Y4PSY9jX3pZI+5Ny/f/MK1K8tRFuFCfIcE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WRfD/kZjjUvo7RJtlbHRvoYZrFlgi+kOi3Bt13z5T+6J9G+9uOW0qD5DXQsFvg0ow
-         grhKMFnbQvRmxznTEq0wpNHEqxLN1qTPdsHPeSNT9mb4gec986nDpN4/kUBlv1PjVV
-         Jw4IkpnNGw90XtP2PJ1SZK+3CTnhMOhnZbxvKXCmZxnW7xfbRIyBEUvmSdJKOzeSUn
-         ib5mmv7EGoC9ErrGyOkVRmzJnivM9d3TISMp/MPdeDl49S8sMNAAjx06FooJ+WW1Dz
-         dzL2iNZTDQKdeQMLcG9qwF6ryBL0GG2G+CGmBg2u9+M73p5oit6U5/MZxU2vekCVx1
-         NtmNIIi0ePsyw==
-Received: by mail-ed1-f45.google.com with SMTP id i6so14684826edu.1;
-        Fri, 06 Aug 2021 12:59:57 -0700 (PDT)
-X-Gm-Message-State: AOAM531+JgIKpDglFrmTvVk4cS+ohMA5kn6rxiXQ7ILVGKVQi8kYrNW6
-        hYPIdgMEhIum10jVQTioa69NUGCgiJO4b9LTkg==
-X-Google-Smtp-Source: ABdhPJz+E0OEuJndsCm2YSbEUXUzlIlGlq0qlb1skxBmctqYc2VbHUieNbcaIln7cAxq7HYGzjQeRBnuJq5qJ972iHM=
-X-Received: by 2002:a05:6402:2043:: with SMTP id bc3mr15137346edb.62.1628279996090;
- Fri, 06 Aug 2021 12:59:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1620203062.git.baruch@tkos.co.il> <e17461407cf4bb79fed5925ec81196a0b84e7827.1620203062.git.baruch@tkos.co.il>
-In-Reply-To: <e17461407cf4bb79fed5925ec81196a0b84e7827.1620203062.git.baruch@tkos.co.il>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 6 Aug 2021 13:59:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOGo4eXKA7FZK7AQQ24MDDbg2-ngUQF9CJK=8eH_pxHQ@mail.gmail.com>
-Message-ID: <CAL_JsqKOGo4eXKA7FZK7AQQ24MDDbg2-ngUQF9CJK=8eH_pxHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] PCI: qcom: add support for IPQ60xx PCIe controller
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
+        s=k20201202; t=1628285093;
+        bh=OJXVvQV1lg0BTpnm4/Nv7ym7sLl0HIhqKTRdfOznYwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=goH/1yJM9CgOOo+OcwLI85KOcKMTJKy8qsbi9kmA/eUKLp96x9J8M/JAw+C0HoXtl
+         LLP9C54GqLgkjnKpGR9kkrYUXUKz/g5bCUA/CpaOzR6XQzlUTgr5y3Dk7zGrmBxX8N
+         en5fOF69mFY7iz78CR1nGEcyNekjfw/CZ0EQbDXeU3Hh82nmIhL0nXS2kQ3mhduoVP
+         XswzHNEybaPpFHtw5KHBi3RP5f5dPsW9v9eFEsYvxzj76KiOdi8Bw4rMEV5B6PvQ1z
+         CLKL2wH1wGanKV5ZinDF8ZSKormkVT85L0UCSY8TizkDvEv+r8Jkclod/etLJWRRFl
+         2rifLx8uQfKtA==
+Date:   Fri, 6 Aug 2021 16:24:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-perf-users@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
+        qat-linux@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20210806212452.GA1867870@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 5, 2021 at 3:18 AM Baruch Siach <baruch@tkos.co.il> wrote:
->
-> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->
-> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
-> platform.
->
-> The code is based on downstream Codeaurora kernel v5.4. Split out the
-> DBI registers access part from .init into .post_init. DBI registers are
-> only accessible after phy_power_on().
->
-> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v2:
->   * Drop ATU configuration; rely on common code instead
->
->   * Use more common register macros
->
->   * Use bulk clk and reset APIs
-> ---
->  drivers/pci/controller/dwc/pcie-designware.h |   1 +
->  drivers/pci/controller/dwc/pcie-qcom.c       | 150 +++++++++++++++++++
->  2 files changed, 151 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index ceb359b6e6a6..346462c74a3e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -76,6 +76,7 @@
->
->  #define GEN3_RELATED_OFF                       0x890
->  #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL   BIT(0)
-> +#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS    BIT(13)
->  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE       BIT(16)
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT 24
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK  GENMASK(25, 24)
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 8a7a300163e5..93766aee3e7c 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -52,6 +52,10 @@
->  #define PCIE20_PARF_DBI_BASE_ADDR              0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE                0x16C
->  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL       0x174
-> +#define AHB_CLK_EN                             BIT(0)
-> +#define MSTR_AXI_CLK_EN                                BIT(1)
-> +#define BYPASS                                 BIT(4)
-> +
->  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT      0x178
->  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2   0x1A8
->  #define PCIE20_PARF_LTSSM                      0x1B0
-> @@ -94,6 +98,12 @@
->  #define SLV_ADDR_SPACE_SZ                      0x10000000
->
->  #define PCIE20_LNK_CONTROL2_LINK_STATUS2       0xa0
-> +#define PCIE_CAP_CURR_DEEMPHASIS               BIT(16)
+On Fri, Aug 06, 2021 at 08:46:23AM +0200, Uwe Kleine-König wrote:
+> On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
 
-Isn't this a standard register field?
+> > I looked at all the bus_type.probe() methods, it looks like pci_dev is
+> > not the only offender here.  At least the following also have a driver
+> > pointer in the device struct:
+> > 
+> >   parisc_device.driver
+> >   acpi_device.driver
+> >   dio_dev.driver
+> >   hid_device.driver
+> >   pci_dev.driver
+> >   pnp_dev.driver
+> >   rio_dev.driver
+> >   zorro_dev.driver
+> 
+> Right, when I converted zorro_dev it was pointed out that the code was
+> copied from pci and the latter has the same construct. :-)
+> See
+> https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutronix.de
+> for the patch, I don't find where pci was pointed out, maybe it was on
+> irc only.
 
-> +#define SPEED_GEN1                             0x1
-> +#define SPEED_GEN2                             0x2
-> +#define SPEED_GEN3                             0x3
+Oh, thanks!  I looked to see if you'd done something similar
+elsewhere, but I missed this one.
 
-And these?
+> > Looking through the places that care about pci_dev.driver (the ones
+> > updated by patch 5/6), many of them are ... a little dubious to begin
+> > with.  A few need the "struct pci_error_handlers *err_handler"
+> > pointer, so that's probably legitimate.  But many just need a name,
+> > and should probably be using dev_driver_string() instead.
+> 
+> Yeah, I considered adding a function to get the driver name from a
+> pci_dev and a function to get the error handlers. Maybe it's an idea to
+> introduce these two and then use to_pci_driver(pdev->dev.driver) for the
+> few remaining users? Maybe doing that on top of my current series makes
+> sense to have a clean switch from pdev->driver to pdev->dev.driver?!
 
-There's already some common DWC code for setting the link speed.
+I'd propose using dev_driver_string() for these places:
 
-> +#define AXI_CLK_RATE                           200000000
-> +#define RCHNG_CLK_RATE                         100000000
->
->  #define DEVICE_TYPE_RC                         0x4
->
-> @@ -168,6 +178,11 @@ struct qcom_pcie_resources_2_7_0 {
->         struct clk *pipe_clk;
->  };
->
-> +struct qcom_pcie_resources_2_9_0 {
-> +       struct clk_bulk_data clks[5];
-> +       struct reset_control *rst;
-> +};
-> +
->  union qcom_pcie_resources {
->         struct qcom_pcie_resources_1_0_0 v1_0_0;
->         struct qcom_pcie_resources_2_1_0 v2_1_0;
-> @@ -175,6 +190,7 @@ union qcom_pcie_resources {
->         struct qcom_pcie_resources_2_3_3 v2_3_3;
->         struct qcom_pcie_resources_2_4_0 v2_4_0;
->         struct qcom_pcie_resources_2_7_0 v2_7_0;
-> +       struct qcom_pcie_resources_2_9_0 v2_9_0;
->  };
->
->  struct qcom_pcie;
-> @@ -1266,6 +1282,130 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
->         clk_disable_unprepare(res->pipe_clk);
->  }
->
-> +static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +       struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +       struct dw_pcie *pci = pcie->pci;
-> +       struct device *dev = pci->dev;
-> +       int ret;
-> +
-> +       res->clks[0].id = "iface";
-> +       res->clks[1].id = "axi_m";
-> +       res->clks[2].id = "axi_s";
-> +       res->clks[3].id = "axi_bridge";
-> +       res->clks[4].id = "rchng";
-> +
-> +       ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       res->rst = devm_reset_control_array_get_exclusive(dev);
-> +       if (IS_ERR(res->rst))
-> +               return PTR_ERR(res->rst);
-> +
-> +       return 0;
-> +}
-> +
-> +static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +       struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +
-> +       clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-> +}
-> +
-> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +       struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +       struct device *dev = pcie->pci->dev;
-> +       int ret;
-> +
-> +       ret = reset_control_assert(res->rst);
-> +       if (ret) {
-> +               dev_err(dev, "reset assert failed (%d)\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       usleep_range(2000, 2500);
-> +
-> +       ret = reset_control_deassert(res->rst);
-> +       if (ret) {
-> +               dev_err(dev, "reset deassert failed (%d)\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       /*
-> +        * Don't have a way to see if the reset has completed.
-> +        * Wait for some time.
-> +        */
-> +       usleep_range(2000, 2500);
-> +
-> +       ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +       if (ret)
-> +               goto err_reset;
-> +
-> +       return 0;
-> +
-> +       /*
-> +        * Not checking for failure, will anyway return
-> +        * the original failure in 'ret'.
-> +        */
-> +err_reset:
-> +       reset_control_assert(res->rst);
-> +
-> +       return ret;
-> +}
-> +
-> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +       struct dw_pcie *pci = pcie->pci;
-> +       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +       u32 val;
-> +       int i;
-> +
-> +       writel(SLV_ADDR_SPACE_SZ,
-> +               pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-> +
-> +       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +       val &= ~BIT(0);
-> +       writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +       writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +       writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-> +       writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
-> +               pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +       writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
-> +               | GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
-> +               pci->dbi_base + GEN3_RELATED_OFF);
-> +
-> +       writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-> +               | SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-> +               AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-> +               pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +       writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-> +
-> +       dw_pcie_dbi_ro_wr_en(pci);
-> +       writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
-> +
-> +       /* Configure PCIe link capabilities for ASPM */
-> +       val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +       val &= ~PCI_EXP_LNKCAP_ASPMS;
-> +       writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +
-> +       writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
-> +                       PCI_EXP_DEVCTL2);
-> +
-> +       writel(PCIE_CAP_CURR_DEEMPHASIS | SPEED_GEN3,
-> +                       pci->dbi_base + offset + PCI_EXP_DEVCTL2);
+  eeh_driver_name() (could change callers to use dev_driver_string())
+  bcma_host_pci_probe()
+  qm_alloc_uacce()
+  hns3_get_drvinfo()
+  prestera_pci_probe()
+  mlxsw_pci_probe()
+  nfp_get_drvinfo()
+  ssb_pcihost_probe()
 
-Doesn't this overwrite the prior register write?
+The use in mpt_device_driver_register() looks unnecessary: it's only
+to get a struct pci_device_id *, which is passed to ->probe()
+functions that don't need it.
 
-> +
-> +       for (i = 0;i < 256;i++)
-> +               writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
-> +                               + (4 * i));
-> +
-> +       return 0;
-> +}
-> +
->  static int qcom_pcie_link_up(struct dw_pcie *pci)
->  {
->         u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> @@ -1456,6 +1596,15 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
->         .config_sid = qcom_pcie_config_sid_sm8250,
->  };
->
-> +/* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
-> +static const struct qcom_pcie_ops ops_2_9_0 = {
-> +       .get_resources = qcom_pcie_get_resources_2_9_0,
-> +       .init = qcom_pcie_init_2_9_0,
-> +       .post_init = qcom_pcie_post_init_2_9_0,
-> +       .deinit = qcom_pcie_deinit_2_9_0,
-> +       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +};
-> +
->  static const struct dw_pcie_ops dw_pcie_ops = {
->         .link_up = qcom_pcie_link_up,
->         .start_link = qcom_pcie_start_link,
-> @@ -1555,6 +1704,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->         { .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
->         { .compatible = "qcom,pcie-sdm845", .data = &ops_2_7_0 },
->         { .compatible = "qcom,pcie-sm8250", .data = &ops_1_9_0 },
-> +       { .compatible = "qcom,pcie-ipq6018", .data = &ops_2_9_0 },
->         { }
->  };
->
-> --
-> 2.30.2
->
+The use in adf_enable_aer() looks wrong: it sets the err_handler
+pointer in one of the adf_driver structs.  I think those structs
+should be basically immutable, and the drivers that call
+adf_enable_aer() from their .probe() methods should set
+".err_handler = &adf_err_handler" in their static adf_driver
+definitions instead.
+
+I think that basically leaves these:
+
+  uncore_pci_probe()     # .id_table, custom driver "registration"
+  match_id()             # .id_table, arch/x86/kernel/probe_roms.c
+  xhci_pci_quirks()      # .id_table
+  pci_error_handlers()   # roll-your-own AER handling, drivers/misc/cxl/guest.c
+
+I think it would be fine to use to_pci_driver(pdev->dev.driver) for
+these few.
+
+Bjorn
