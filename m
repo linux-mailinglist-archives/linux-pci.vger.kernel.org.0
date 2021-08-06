@@ -2,122 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD7093E2629
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 10:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A0583E2631
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Aug 2021 10:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240663AbhHFIcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 04:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        id S243228AbhHFIeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 04:34:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11433 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235706AbhHFIcm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 04:32:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D47E61052;
-        Fri,  6 Aug 2021 08:32:27 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mBvHF-003Jke-0l; Fri, 06 Aug 2021 09:32:25 +0100
+        id S242530AbhHFIeI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 04:34:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10067"; a="214316244"
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="214316244"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 01:33:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="523384518"
+Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2021 01:33:48 -0700
+Received: from kbuild by d053b881505b with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mBvIa-000GgI-2f; Fri, 06 Aug 2021 08:33:48 +0000
+Date:   Fri, 06 Aug 2021 16:33:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 89ba70faa33cd8e8e6054e3219568647ab91c251
+Message-ID: <610cf3dd.+Upc+knx32q3DJJZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Date:   Fri, 06 Aug 2021 09:32:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] PCI: aardvark: Correctly clear and unmask all MSI
- interrupts
-In-Reply-To: <20210625090319.10220-7-pali@kernel.org>
-References: <20210625090319.10220-1-pali@kernel.org>
- <20210625090319.10220-7-pali@kernel.org>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <fb3a7ef15397292692b6d5dd0d2e439e@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: pali@kernel.org, lorenzo.pieralisi@arm.com, thomas.petazzoni@bootlin.com, bhelgaas@google.com, robh@kernel.org, kabel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-06-25 10:03, Pali Rohár wrote:
-> Define a new macro PCIE_MSI_ALL_MASK and use it for masking, unmasking 
-> and
-> clearing all MSI interrupts.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Reviewed-by: Marek Behún <kabel@kernel.org>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/pci/controller/pci-aardvark.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c
-> b/drivers/pci/controller/pci-aardvark.c
-> index 0e81d89f307d..7cad6d989f6c 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -117,6 +117,7 @@
->  #define PCIE_MSI_ADDR_HIGH_REG			(CONTROL_BASE_ADDR + 0x54)
->  #define PCIE_MSI_STATUS_REG			(CONTROL_BASE_ADDR + 0x58)
->  #define PCIE_MSI_MASK_REG			(CONTROL_BASE_ADDR + 0x5C)
-> +#define     PCIE_MSI_ALL_MASK			GENMASK(31, 0)
->  #define PCIE_MSI_PAYLOAD_REG			(CONTROL_BASE_ADDR + 0x9C)
->  #define     PCIE_MSI_DATA_MASK			GENMASK(15, 0)
-> 
-> @@ -470,19 +471,22 @@ static void advk_pcie_setup_hw(struct advk_pcie 
-> *pcie)
->  	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
-> 
->  	/* Clear all interrupts */
-> +	advk_writel(pcie, PCIE_MSI_ALL_MASK, PCIE_MSI_STATUS_REG);
->  	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_REG);
->  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
->  	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
-> 
->  	/* Disable All ISR0/1 Sources */
-> -	reg = PCIE_ISR0_ALL_MASK;
-> -	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
-> -	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
-> -
-> +	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_MASK_REG);
->  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
-> 
->  	/* Unmask all MSIs */
-> -	advk_writel(pcie, 0, PCIE_MSI_MASK_REG);
-> +	advk_writel(pcie, ~(u32)PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
-> +
-> +	/* Unmask summary MSI interrupt */
-> +	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-> +	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
-> +	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
-> 
->  	/* Enable summary interrupt for GIC SPI source */
->  	reg = PCIE_IRQ_ALL_MASK & (~PCIE_IRQ_ENABLE_INTS_MASK);
-> @@ -1177,7 +1181,7 @@ static void advk_pcie_handle_msi(struct advk_pcie 
-> *pcie)
-> 
->  	msi_mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
->  	msi_val = advk_readl(pcie, PCIE_MSI_STATUS_REG);
-> -	msi_status = msi_val & ~msi_mask;
-> +	msi_status = msi_val & ((~msi_mask) & PCIE_MSI_ALL_MASK);
-> 
->  	for (msi_idx = 0; msi_idx < MSI_IRQ_NUM; msi_idx++) {
->  		if (!(BIT(msi_idx) & msi_status))
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 89ba70faa33cd8e8e6054e3219568647ab91c251  Merge branch 'remotes/lorenzo/pci/misc'
 
-This still begs the question: why would you ever enable all
-MSIs the first place? They should be enabled on request only.
+elapsed time: 724m
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+configs tested: 126
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210804
+i386                 randconfig-c001-20210805
+arm                     eseries_pxa_defconfig
+sh                   sh7724_generic_defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                         wii_defconfig
+arm                        cerfcube_defconfig
+mips                      loongson3_defconfig
+mips                         tb0219_defconfig
+arm                       mainstone_defconfig
+powerpc                     mpc512x_defconfig
+um                                  defconfig
+riscv                            allmodconfig
+sh                      rts7751r2d1_defconfig
+mips                     loongson2k_defconfig
+arc                                 defconfig
+m68k                       m5275evb_defconfig
+arm                          imote2_defconfig
+arm                            qcom_defconfig
+mips                  maltasmvp_eva_defconfig
+ia64                            zx1_defconfig
+i386                             alldefconfig
+sh                          sdk7780_defconfig
+ia64                        generic_defconfig
+arm                            hisi_defconfig
+mips                         tb0226_defconfig
+powerpc                     sequoia_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                     taishan_defconfig
+sh                          urquell_defconfig
+arc                     haps_hs_smp_defconfig
+powerpc                     ep8248e_defconfig
+x86_64                            allnoconfig
+sh                         ecovec24_defconfig
+parisc                           alldefconfig
+m68k                         apollo_defconfig
+arm                         palmz72_defconfig
+mips                            gpr_defconfig
+powerpc                 mpc834x_mds_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a002-20210805
+x86_64               randconfig-a006-20210805
+x86_64               randconfig-a004-20210805
+x86_64               randconfig-a003-20210805
+x86_64               randconfig-a001-20210805
+x86_64               randconfig-a005-20210805
+i386                 randconfig-a005-20210805
+i386                 randconfig-a004-20210805
+i386                 randconfig-a002-20210805
+i386                 randconfig-a006-20210805
+i386                 randconfig-a003-20210805
+i386                 randconfig-a001-20210805
+x86_64               randconfig-a012-20210804
+x86_64               randconfig-a016-20210804
+x86_64               randconfig-a011-20210804
+x86_64               randconfig-a013-20210804
+x86_64               randconfig-a014-20210804
+x86_64               randconfig-a015-20210804
+i386                 randconfig-a012-20210806
+i386                 randconfig-a011-20210806
+i386                 randconfig-a015-20210806
+i386                 randconfig-a013-20210806
+i386                 randconfig-a014-20210806
+i386                 randconfig-a016-20210806
+i386                 randconfig-a012-20210805
+i386                 randconfig-a011-20210805
+i386                 randconfig-a015-20210805
+i386                 randconfig-a013-20210805
+i386                 randconfig-a014-20210805
+i386                 randconfig-a016-20210805
+i386                 randconfig-a012-20210804
+i386                 randconfig-a011-20210804
+i386                 randconfig-a015-20210804
+i386                 randconfig-a013-20210804
+i386                 randconfig-a014-20210804
+i386                 randconfig-a016-20210804
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-c001-20210804
+x86_64               randconfig-c001-20210805
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
