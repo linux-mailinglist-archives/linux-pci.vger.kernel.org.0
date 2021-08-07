@@ -2,224 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DA5A3E344F
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 11:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ABA63E352C
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 13:35:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231603AbhHGJ3E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Aug 2021 05:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbhHGJ3E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Aug 2021 05:29:04 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4340CC0613CF
-        for <linux-pci@vger.kernel.org>; Sat,  7 Aug 2021 02:28:47 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mCIc5-0000Og-1o; Sat, 07 Aug 2021 11:27:29 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mCIbl-0007UG-9f; Sat, 07 Aug 2021 11:27:09 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mCIbl-0007Ct-6j; Sat, 07 Aug 2021 11:27:09 +0200
-Date:   Sat, 7 Aug 2021 11:26:45 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
+        id S231950AbhHGLf5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Aug 2021 07:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230012AbhHGLf4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 7 Aug 2021 07:35:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D89661058;
+        Sat,  7 Aug 2021 11:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628336139;
+        bh=geblf3fX8PJQFl8H5UntTROSiNmSEU1F1HpzgQX/MBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vQcYX1HCrkOJB6JwHhUhF6Y2/Z9CPhJJDNX2xQ10dmmtTl2uv1PvHg+dKBeg5MGm3
+         rjUvjIe1aHJ+AnREgbmTBAU6tgcfObFfW3ZLecWfx9+CQWmSnOD0o7Hbmp7mZRESfS
+         cHAISAuiJWS2b1v1Lj75pZTvFRlf5Ce/bdGO500pBL0Bygk35B2WPh0lZxaAbdhxGe
+         Ybw9T28a0M8rShfk7wH8v7QknxOYOWATy/h4V7km6txgK+e81x5YGXZgI6Y01ockU4
+         nJQ/b/duUxCMw7m/yM9zF8f6ga8uyq2BXb41tyeMq8S1mhsIwjO6h3K+sGjwjvDaXB
+         zJRTUvZibBlUw==
+Received: by pali.im (Postfix)
+        id CEE77A52; Sat,  7 Aug 2021 13:35:36 +0200 (CEST)
+Date:   Sat, 7 Aug 2021 13:35:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     robh@kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Horman <simon.horman@corigine.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210807092645.52kn4ustyjudztvl@pengutronix.de>
-References: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
- <20210806212452.GA1867870@bjorn-Precision-5520>
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
+ space
+Message-ID: <20210807113536.24ik7m7uonebwox2@pali>
+References: <20210624215546.4015-1-pali@kernel.org>
+ <20210624215546.4015-3-pali@kernel.org>
+ <87pmv919bq.fsf@BL-laptop>
+ <20210723141204.waiipazikhzzloj7@pali>
+ <20210723155247.GB4103@lpieralisi>
+ <20210723164512.vo3scpzoodff2j33@pali>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hfh2djfsv3k2boqr"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210806212452.GA1867870@bjorn-Precision-5520>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210723164512.vo3scpzoodff2j33@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Friday 23 July 2021 18:45:12 Pali Rohár wrote:
+> On Friday 23 July 2021 16:52:47 Lorenzo Pieralisi wrote:
+> > On Fri, Jul 23, 2021 at 04:12:04PM +0200, Pali Rohár wrote:
+> > > On Friday 23 July 2021 14:52:25 Gregory CLEMENT wrote:
+> > > > Hello Pali,
+> > > > 
+> > > > > Current PCIe MEM space of size 16 MB is not enough for some combination
+> > > > > of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
+> > > > > Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
+> > > > > so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
+> > > > > allocate more PCIe BARs for more PCIe cards.
+> > > > >
+> > > > > Without this change some combination of PCIe cards cannot be used and
+> > > > > kernel show error messages in dmesg during initialization:
+> > > > >
+> > > > >     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
+> > > > >     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > > > >     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
+> > > > >     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
+> > > > >     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > > > >     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
+> > > > >     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
+> > > > >     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
+> > > > >     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
+> > > > >     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
+> > > > >     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
+> > > > >
+> > > > > Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
+> > > > > kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
+> > > > > crashes during loading of kernel DTB file. This bug is present only in
+> > > > > U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
+> > > > > affected by this bug. Bug is fixed in U-Boot version 2021.07.
+> > > > >
+> > > > > To not break booting new kernels on existing versions of U-Boot on Turris
+> > > > > Mox, use first 16 MB range for IO and second range with rest of PCIe window
+> > > > > for MEM.
+> > > > 
+> > > > Is there any depencey with the firs patch of this series ?
+> > > > 
+> > > > What happend if this patch is applied without the other ?
+> > > 
+> > > First patch is fixing reading and setting ranges configuration from DTS.
+> > > Without first patch memory windows stays as they were in bootloader or
+> > > in its default configuration. Which is that all 128 MB are transparently
+> > > mapped to PCIe MEM space.
+> > > 
+> > > Therefore this second DTS patch does not fixes issue with IO space
+> > > (kernel still crashes when accessing it). But allows to use all PCIe MEM
+> > > space (due to bootloader / default configuration) and therefore allows
+> > > to use more PCIe cards (which needs more PCIe MEM space).
+> > 
+> > So, the two patches are decoupled then ? We are not taking dts changes
+> > through the PCI tree.
+> 
+> Well, both patches are required to fix setup and use of PCIe ranges on
+> A3720 platforms. But I would say they are independent and you can apply
+> them in any order. So Gregory, feel free to take DTS change in your tree
+> and Lorenzo can review other patch.
 
---hfh2djfsv3k2boqr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Lorenzo, so will you take driver change via PCI tree?
 
-On Fri, Aug 06, 2021 at 04:24:52PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 06, 2021 at 08:46:23AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
->=20
-> > > I looked at all the bus_type.probe() methods, it looks like pci_dev is
-> > > not the only offender here.  At least the following also have a driver
-> > > pointer in the device struct:
-> > >=20
-> > >   parisc_device.driver
-> > >   acpi_device.driver
-> > >   dio_dev.driver
-> > >   hid_device.driver
-> > >   pci_dev.driver
-> > >   pnp_dev.driver
-> > >   rio_dev.driver
-> > >   zorro_dev.driver
-> >=20
-> > Right, when I converted zorro_dev it was pointed out that the code was
-> > copied from pci and the latter has the same construct. :-)
-> > See
-> > https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@peng=
-utronix.de
-> > for the patch, I don't find where pci was pointed out, maybe it was on
-> > irc only.
->=20
-> Oh, thanks!  I looked to see if you'd done something similar
-> elsewhere, but I missed this one.
->=20
-> > > Looking through the places that care about pci_dev.driver (the ones
-> > > updated by patch 5/6), many of them are ... a little dubious to begin
-> > > with.  A few need the "struct pci_error_handlers *err_handler"
-> > > pointer, so that's probably legitimate.  But many just need a name,
-> > > and should probably be using dev_driver_string() instead.
-> >=20
-> > Yeah, I considered adding a function to get the driver name from a
-> > pci_dev and a function to get the error handlers. Maybe it's an idea to
-> > introduce these two and then use to_pci_driver(pdev->dev.driver) for the
-> > few remaining users? Maybe doing that on top of my current series makes
-> > sense to have a clean switch from pdev->driver to pdev->dev.driver?!
->=20
-> I'd propose using dev_driver_string() for these places:
->=20
->   eeh_driver_name() (could change callers to use dev_driver_string())
->   bcma_host_pci_probe()
->   qm_alloc_uacce()
->   hns3_get_drvinfo()
->   prestera_pci_probe()
->   mlxsw_pci_probe()
->   nfp_get_drvinfo()
->   ssb_pcihost_probe()
+And Gregory, DTS change via DTS tree?
 
-So the idea is:
-
-	PCI: Simplify pci_device_remove()
-	PCI: Drop useless check from pci_device_probe()
-	xen/pci: Drop some checks that are always true
-
-are kept as is as preparation. (Do you want to take them from this v2,
-or should I include them again in v3?)
-
-Then convert the list of functions above to use dev_driver_string() in a
-4th patch.
-
-> The use in mpt_device_driver_register() looks unnecessary: it's only
-> to get a struct pci_device_id *, which is passed to ->probe()
-> functions that don't need it.
-
-This is patch #5.
-
-> The use in adf_enable_aer() looks wrong: it sets the err_handler
-> pointer in one of the adf_driver structs.  I think those structs
-> should be basically immutable, and the drivers that call
-> adf_enable_aer() from their .probe() methods should set
-> ".err_handler =3D &adf_err_handler" in their static adf_driver
-> definitions instead.
-
-I don't understand that one without some research, probably this yields
-at least one patch.
-
-> I think that basically leaves these:
->=20
->   uncore_pci_probe()     # .id_table, custom driver "registration"
->   match_id()             # .id_table, arch/x86/kernel/probe_roms.c
->   xhci_pci_quirks()      # .id_table
->   pci_error_handlers()   # roll-your-own AER handling, drivers/misc/cxl/g=
-uest.c
->=20
-> I think it would be fine to use to_pci_driver(pdev->dev.driver) for
-> these few.
-
-Converting these will be patch 7 then and patch 8 can then drop the
-duplicated handling.
-
-Sounds reasonable?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---hfh2djfsv3k2boqr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEOUc0ACgkQwfwUeK3K
-7AnHpgf/RF3DUcUr+MLq/SXC+ZFfynYOmvBgChskJ2ZCMYGHElw/XWeeZ3ypnETk
-Bq9PLYeIZrTWUb6sDYkPOkeSkiNrYOAp2v1vkl8fGpTpxobnkCW2Rv2fYndODqw9
-z5he4PjzBqPSO+LpWQ+XuW6OKaQaPijZm6SgH4JdVW2Etu1RiIeQHnTlFMkx2pd8
-hn3lUEsH/SF+WGd7olILhZ/FxycXldBLR4CjQNbCJ1G7LZ6IuGu+Ir2TbrlnPMPD
-RWuspO5voAOSEaTPlgGYELadA2nNr375R89u659MJOo/DssBdSaNaKik6udH5Vea
-yvZvenIp8//zyIdZpD38UlFSayO1OQ==
-=tPhD
------END PGP SIGNATURE-----
-
---hfh2djfsv3k2boqr--
+> I sent these two patches in one series as they are fixing one common
+> issue. It is common that for fixing one common issue it is required to
+> touch more subsystems / trees.
+> 
+> > Besides: these dts patches are a nightmare for backward compatibility,
+> > hopefully Rob can shed some light on whether what you are doing here
+> > is advisable and how to sync the changes with kernel changes.
+> 
+> As written in comment for armada-3720-turris-mox.dts file, there are
+> specific requirements what needs to be put into ranges section. And
+> version of this file without applying this patch and also version of
+> this file with applied patch matches these requirements.
+> 
+> So I would say that this DTS change is backward and also forward
+> compatible.
+> 
+> But I agree that DTS changes are lot of time nightmare...
+> 
+> > Lorenzo
+> > 
+> > > > Could you test it to see if any regression occure ?
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > Grégory
+> > > > 
+> > > > >
+> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > > Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
+> > > > > ---
+> > > > >  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
+> > > > >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
+> > > > >  2 files changed, 26 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > index 53e817c5f6f3..86b3025f174b 100644
+> > > > > --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > @@ -134,6 +134,23 @@
+> > > > >  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+> > > > >  	status = "okay";
+> > > > >  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> > > > > +	/*
+> > > > > +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
+> > > > > +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
+> > > > > +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
+> > > > > +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
+> > > > > +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
+> > > > > +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
+> > > > > +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
+> > > > > +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
+> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
+> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
+> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
+> > > > > +	 */
+> > > > > +	#address-cells = <3>;
+> > > > > +	#size-cells = <2>;
+> > > > > +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
+> > > > > +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
+> > > > >  
+> > > > >  	/* enabled by U-Boot if PCIe module is present */
+> > > > >  	status = "disabled";
+> > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > index 7a2df148c6a3..dac3007f2ac1 100644
+> > > > > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > @@ -488,8 +488,15 @@
+> > > > >  			#interrupt-cells = <1>;
+> > > > >  			msi-parent = <&pcie0>;
+> > > > >  			msi-controller;
+> > > > > -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
+> > > > > -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
+> > > > > +			/*
+> > > > > +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
+> > > > > +			 * dedicated for PCIe and can be assigned to 8 windows
+> > > > > +			 * with size a power of two. Use one 64 KiB window for
+> > > > > +			 * IO at the end and the remaining seven windows
+> > > > > +			 * (totaling 127 MiB) for MEM.
+> > > > > +			 */
+> > > > > +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
+> > > > > +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
+> > > > >  			interrupt-map-mask = <0 0 0 7>;
+> > > > >  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
+> > > > >  					<0 0 0 2 &pcie_intc 1>,
+> > > > > -- 
+> > > > > 2.20.1
+> > > > >
+> > > > 
+> > > > -- 
+> > > > Gregory Clement, Bootlin
+> > > > Embedded Linux and Kernel engineering
+> > > > http://bootlin.com
