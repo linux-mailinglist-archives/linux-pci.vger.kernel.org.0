@@ -2,62 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E266C3E31FD
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 00:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 584E63E3260
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 02:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233256AbhHFW7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 18:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
+        id S229601AbhHGAfT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 20:35:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:42446 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230280AbhHFW7f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 18:59:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A030A60EE9;
-        Fri,  6 Aug 2021 22:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628290758;
-        bh=HU2xeowJBFARB+34Pp8jGrd/zZAOVyAJGJWh8YkA/Ho=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=d3jngVQutsnEePS1XLx+uK1ceEvIan/3CPVuRqoMqeoPrlsJOhlRopE606S4OnOVL
-         xYzOtTibLua3S6jLxK4i3hSqCV1cv3wGzPbpMmXJpB8Zkm47bdbZS4W2dCzYZJXvYD
-         Y8mLDXTOt7g3Si/7HmQ6q8XBerUZdY7F2OzSPKFmwXRJUWbb3Io5LfYpcJ+4weLeY7
-         YNlmo/DW9TX61aM0Mh6im9C5H/7U+8MZVT1rvvTAOmiUWd1HJVy5xnSUmVgd1dpM6P
-         w0uujMI/8gsDaiYwjPm/Sc8xaOnw2LvOD1WrpDQGO8JPMBWqSSOBxb8rSEuTC+nWvq
-         05X8uhCWFRHcA==
-Date:   Fri, 6 Aug 2021 17:59:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V7 5/9] PCI/IOV: Enable 10-Bit tag support for PCIe VF
- devices
-Message-ID: <20210806225917.GA1897594@bjorn-Precision-5520>
+        id S229379AbhHGAfT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 20:35:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 870E731B;
+        Fri,  6 Aug 2021 17:35:02 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A37FA3F66F;
+        Fri,  6 Aug 2021 17:35:01 -0700 (PDT)
+Subject: Re: [PATCH 3/3] PCI/ACPI: Add new quirk detection, enable bcm2711
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20210806221256.GA1891371@bjorn-Precision-5520>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <5f4f484b-9eef-2722-405d-a7ff6259aa0f@arm.com>
+Date:   Fri, 6 Aug 2021 19:34:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08b7a9b7-2951-43c3-5e81-3461b6724955@huawei.com>
+In-Reply-To: <20210806221256.GA1891371@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 04:03:58PM +0800, Dongdong Liu wrote:
-> 
-> On 2021/8/5 7:29, Bjorn Helgaas wrote:
-> > On Wed, Aug 04, 2021 at 09:47:04PM +0800, Dongdong Liu wrote:
-> > > Enable VF 10-Bit Tag Requester when it's upstream component support
-> > > 10-bit Tag Completer.
-> > 
-> > I think "upstream component" here means the PF, doesn't it?  I don't
-> > think the PF is really an *upstream* component; there's no routing
-> > like with a switch.
->
-> I want to say the switch and root port devices that support 10-Bit
-> Tag Completer. Sure, VF also needs to have 10-bit Tag Requester
-> Supported capability.
+Hi,
 
-OK.  IIUC we're not talking about P2PDMA here; we're talking about
-regular DMA to host memory, which means I *think* only the Root Port
-is important, since it is the completer for DMA to host memory.  We're
-not talking about P2PDMA to a switch BAR, where the switch would be
-the completer.
+Thanks for looking at this.
+
+On 8/6/21 5:12 PM, Bjorn Helgaas wrote:
+> In subject, this or similar would match history:
+> 
+>    PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
+> 
+> On Thu, Aug 05, 2021 at 04:12:00PM -0500, Jeremy Linton wrote:
+>> Now that we have a bcm2711 quirk, we need to be able to
+>> detect it when the MCFG is missing. Use a namespace
+>> property as an alternative to the MCFG OEM.
+> 
+> Rewrap to use ~75 columns.
+> 
+> Mention the DT namespace property here.
+> 
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   drivers/acpi/pci_mcfg.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+>> index 53cab975f612..7d77fc72c2a4 100644
+>> --- a/drivers/acpi/pci_mcfg.c
+>> +++ b/drivers/acpi/pci_mcfg.c
+>> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>>   	ALTRA_ECAM_QUIRK(1, 13),
+>>   	ALTRA_ECAM_QUIRK(1, 14),
+>>   	ALTRA_ECAM_QUIRK(1, 15),
+>> +
+>> +	{ "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
+>> +	  DEFINE_RES_MEM(0xFD500000, 0xA000) },
+>>   };
+>>   
+>>   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+>> @@ -198,8 +201,19 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
+>>   	u16 segment = root->segment;
+>>   	struct resource *bus_range = &root->secondary;
+>>   	struct mcfg_fixup *f;
+>> +	const char *soc;
+>>   	int i;
+>>   
+>> +	/*
+>> +	 * This could be a machine with a PCI/SMC conduit,
+>> +	 * which means it doens't have MCFG. Get the machineid from
+>> +	 * the namespace definition instead.
+> 
+> s/SMC/SMCCC/ ?  Cover letter uses SMCCC (not sure it's relevant anyway)
+> s/doens't/doesn't/
+> 
+> Rewrap comment to use ~80 columns.
+> 
+> Seems pretty reasonable that a platform without standard ECAM might
+> not have MCFG, since MCFG basically implies ECAM.
+
+
+Sure, on all the above comments.
+
+> 
+> Is "linux,pcie-quirk" the right property to look for?  It doesn't
+> sound very generic, and it doesn't sound like anything related to
+> ECAM.  Is it new?  I don't see it in the tree yet.  Should it be in
+> Documentation/devicetree/bindings/pci/pci.txt so we don't get a
+> different property name for every new platform?
+
+Yes, I made it up. Someone else commented about the "linux," partially 
+because it should be "linux-" to conform with 
+https://github.com/UEFI/DSD-Guide. But also in the same context of it 
+being linux specific.  I think that guide is where it should end up, 
+rather than the devicetree bindings.
+
+I guess we can request addition to the uefi- but that seems like a 
+mistake this is really (hopefully?) a Linux specific properly as other 
+OS's will simply use the SMC. I think we could request another prefix if 
+we come up with a good one and think it belongs in that guide.
+
+
+
+
+> 
+>> +	 */
+>> +	if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
+>> +					 "linux,pcie-quirk", &soc)) {
+>> +		memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
+>> +	}
+>> +
+>>   	for (i = 0, f = mcfg_quirks; i < ARRAY_SIZE(mcfg_quirks); i++, f++) {
+>>   		if (pci_mcfg_quirk_matches(f, segment, bus_range)) {
+>>   			if (f->cfgres.start)
+>> -- 
+>> 2.31.1
+>>
+
