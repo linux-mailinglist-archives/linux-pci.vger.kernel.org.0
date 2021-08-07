@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 584E63E3260
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 02:35:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 698A63E32D2
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 04:55:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbhHGAfT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Aug 2021 20:35:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:42446 "EHLO foss.arm.com"
+        id S230053AbhHGCzu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Aug 2021 22:55:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:44300 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229379AbhHGAfT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Aug 2021 20:35:19 -0400
+        id S230147AbhHGCzt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Aug 2021 22:55:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 870E731B;
-        Fri,  6 Aug 2021 17:35:02 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A67006D;
+        Fri,  6 Aug 2021 19:55:32 -0700 (PDT)
 Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A37FA3F66F;
-        Fri,  6 Aug 2021 17:35:01 -0700 (PDT)
-Subject: Re: [PATCH 3/3] PCI/ACPI: Add new quirk detection, enable bcm2711
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FECD3F40C;
+        Fri,  6 Aug 2021 19:55:32 -0700 (PDT)
+Subject: Re: [PATCH 2/3] PCI: brcmstb: Add ACPI config space quirk
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
         nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
@@ -25,14 +25,14 @@ Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
         f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
         linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210806221256.GA1891371@bjorn-Precision-5520>
+References: <20210806222151.GA1892781@bjorn-Precision-5520>
 From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <5f4f484b-9eef-2722-405d-a7ff6259aa0f@arm.com>
-Date:   Fri, 6 Aug 2021 19:34:56 -0500
+Message-ID: <51a11c89-d49b-7367-a75c-13016a2ea5d9@arm.com>
+Date:   Fri, 6 Aug 2021 21:55:27 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210806221256.GA1891371@bjorn-Precision-5520>
+In-Reply-To: <20210806222151.GA1892781@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -42,95 +42,185 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi,
 
-Thanks for looking at this.
+On 8/6/21 5:21 PM, Bjorn Helgaas wrote:
+> On Thu, Aug 05, 2021 at 04:11:59PM -0500, Jeremy Linton wrote:
+>> The PFTF CM4 is an ACPI platform that is following the PCIe SMCCC
+>> standard because its PCIe config space isn't ECAM compliant and is
+>> split into two parts. One part for the root port registers and a
+>> moveable window which points at a given device's 4K config space.
+>> Thus it doesn't have a MCFG (and really any MCFG provided would be
+>> nonsense anyway). As Linux doesn't support the PCIe SMCCC standard
+>> we key off a Linux specific host bridge _DSD to add custom ECAM
+>> ops and cfgres. The cfg op selects between those two regions, as
+>> well as disallowing problematic accesses, particularly if the link
+>> is down because there isn't an attached device.
+> 
+> I'm not sure SMCCC is *really* relevant here.  If it is, an expansion
+> of the acronym and a link to a spec would be helpful.
+> 
+> But AFAICT the only important thing here is that it doesn't have
+> standard ECAM, and we're going to work around that.
 
-On 8/6/21 5:12 PM, Bjorn Helgaas wrote:
-> In subject, this or similar would match history:
+I will reword it a bit.
+
 > 
->    PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
-> 
-> On Thu, Aug 05, 2021 at 04:12:00PM -0500, Jeremy Linton wrote:
->> Now that we have a bcm2711 quirk, we need to be able to
->> detect it when the MCFG is missing. Use a namespace
->> property as an alternative to the MCFG OEM.
-> 
-> Rewrap to use ~75 columns.
-> 
-> Mention the DT namespace property here.
+> I don't see anything about _DSD in this series.
+
+That is the "linux,pci-quirk" in the next patch.
+
 > 
 >> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 >> ---
->>   drivers/acpi/pci_mcfg.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
+>>   drivers/pci/controller/Makefile            |  1 +
+>>   drivers/pci/controller/pcie-brcmstb-acpi.c | 77 ++++++++++++++++++++++
+>>   include/linux/pci-ecam.h                   |  1 +
+>>   3 files changed, 79 insertions(+)
+>>   create mode 100644 drivers/pci/controller/pcie-brcmstb-acpi.c
 >>
->> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
->> index 53cab975f612..7d77fc72c2a4 100644
->> --- a/drivers/acpi/pci_mcfg.c
->> +++ b/drivers/acpi/pci_mcfg.c
->> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
->>   	ALTRA_ECAM_QUIRK(1, 13),
->>   	ALTRA_ECAM_QUIRK(1, 14),
->>   	ALTRA_ECAM_QUIRK(1, 15),
+>> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+>> index aaf30b3dcc14..65aa6fd3ed89 100644
+>> --- a/drivers/pci/controller/Makefile
+>> +++ b/drivers/pci/controller/Makefile
+>> @@ -57,5 +57,6 @@ ifdef CONFIG_PCI_QUIRKS
+>>   obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+>>   obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+>>   obj-$(CONFIG_ARM64) += pci-xgene.o
+>> +obj-$(CONFIG_ARM64) += pcie-brcmstb-acpi.o
+>>   endif
+>>   endif
+>> diff --git a/drivers/pci/controller/pcie-brcmstb-acpi.c b/drivers/pci/controller/pcie-brcmstb-acpi.c
+>> new file mode 100644
+>> index 000000000000..76944876155f
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/pcie-brcmstb-acpi.c
+>> @@ -0,0 +1,77 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * ACPI quirks for Brcm2711 PCIe host controller
+>> + * As used on the Raspberry Pi Compute Module 4
+>> + *
+>> + * Copyright (C) 2021 Arm Ltd.
+>> + */
 >> +
->> +	{ "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
->> +	  DEFINE_RES_MEM(0xFD500000, 0xA000) },
->>   };
->>   
->>   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
->> @@ -198,8 +201,19 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
->>   	u16 segment = root->segment;
->>   	struct resource *bus_range = &root->secondary;
->>   	struct mcfg_fixup *f;
->> +	const char *soc;
->>   	int i;
->>   
+>> +#include <linux/io.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/pci-acpi.h>
+> 
+> Do we use something from pci-acpi.h?
+
+Good catch.
+
+> 
+>> +#include <linux/pci-ecam.h>
+>> +#include "../pci.h"
+>> +#include "pcie-brcmstb.h"
+>> +
+>> +static int brcm_acpi_init(struct pci_config_window *cfg)
+>> +{
 >> +	/*
->> +	 * This could be a machine with a PCI/SMC conduit,
->> +	 * which means it doens't have MCFG. Get the machineid from
->> +	 * the namespace definition instead.
-> 
-> s/SMC/SMCCC/ ?  Cover letter uses SMCCC (not sure it's relevant anyway)
-> s/doens't/doesn't/
-> 
-> Rewrap comment to use ~80 columns.
-> 
-> Seems pretty reasonable that a platform without standard ECAM might
-> not have MCFG, since MCFG basically implies ECAM.
-
-
-Sure, on all the above comments.
-
-> 
-> Is "linux,pcie-quirk" the right property to look for?  It doesn't
-> sound very generic, and it doesn't sound like anything related to
-> ECAM.  Is it new?  I don't see it in the tree yet.  Should it be in
-> Documentation/devicetree/bindings/pci/pci.txt so we don't get a
-> different property name for every new platform?
-
-Yes, I made it up. Someone else commented about the "linux," partially 
-because it should be "linux-" to conform with 
-https://github.com/UEFI/DSD-Guide. But also in the same context of it 
-being linux specific.  I think that guide is where it should end up, 
-rather than the devicetree bindings.
-
-I guess we can request addition to the uefi- but that seems like a 
-mistake this is really (hopefully?) a Linux specific properly as other 
-OS's will simply use the SMC. I think we could request another prefix if 
-we come up with a good one and think it belongs in that guide.
-
-
-
-
-> 
+>> +	 * This platform doesn't technically have anything that could be called
+>> +	 * ECAM. Its config region has root port specific registers between
+>> +	 * standard PCIe defined config registers. Thus the region setup by the
+>> +	 * generic ECAM code needs to be adjusted. The HW can access bus 0-ff
+>> +	 * but the footprint isn't a nice power of 2 (40k). For purposes of
+>> +	 * mapping the config region we are just going to squash the standard
+>> +	 * and nonstandard registers together rather than mapping them
+>> +	 * separately. This code simply honors the quirk provided base+size
+>> +	 * instead.
 >> +	 */
->> +	if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
->> +					 "linux,pcie-quirk", &soc)) {
->> +		memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
->> +	}
+>> +	iounmap(cfg->win);
+>> +	cfg->win = pci_remap_cfgspace(cfg->res.start, resource_size(&cfg->res));
+>> +	if (!cfg->win)
+>> +		goto err_exit;
 >> +
->>   	for (i = 0, f = mcfg_quirks; i < ARRAY_SIZE(mcfg_quirks); i++, f++) {
->>   		if (pci_mcfg_quirk_matches(f, segment, bus_range)) {
->>   			if (f->cfgres.start)
+>> +	/* MSI is nonstandard as well */
+>> +	pci_no_msi();
+>> +
+>> +	return 0;
+>> +err_exit:
+>> +	dev_err(cfg->parent, "PCI: Failed to remap config\n");
+>> +	return -ENOMEM;
+>> +}
+>> +
+>> +static void __iomem *brcm_pcie_map_conf2(struct pci_bus *bus, unsigned int devfn,
+>> +					int where)
+> 
+> Rewrap to fit in 80 columns.  81 is just ... weird :)
+Sure,
+> 
+>> +{
+>> +	struct pci_config_window *cfg = bus->sysdata;
+>> +	void __iomem *base = cfg->win;
+>> +	int idx;
+>> +	u32 up;
+>> +
+>> +	/* Accesses to the RC go right to the RC registers if slot==0 */
+>> +	if (pci_is_root_bus(bus))
+>> +		return PCI_SLOT(devfn) ? NULL : base + where;
+>> +
+>> +	/* Assure link up before sending request */
+>> +	up = readl(base + PCIE_MISC_PCIE_STATUS);
+>> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK))
+>> +		return NULL;
+>> +
+>> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK))
+>> +		return NULL;
+> 
+> What happens if the link goes down here?  Hopefully that's a
+> recoverable error?
+
+This check is intended to verify that something is plugged into the 
+first bus/slot before attempting to probe it. If nothing is plugged in 
+bad things (TM) happen without this check.
+
+But, you sparked my curiosity. I've had some reasonable luck with error 
+recovery with a number of those cheap pcie->pcie switches that passively 
+route PCIe over USB3 cables when plugged into this thing. So, I tried 
+hotpluging the first one to see what happens.
+
+Game over!  :)
+
+Linux was nice enough to tell me it couldn't change the power state back 
+to active, but it looks like the link state actually recovered. OTOH, 
+the downstream switch appeared to need reconfiguration even though it 
+was on a separate power domain. Given, I booted the machine off a NVMe 
+drive plugged into that switch, I got another nice screen full of blk_mq 
+errors before it officially passed on.
+
+So, the link appears to recover, but that doesn't appear to be enough to 
+make the downstream devices recoverable.
+
+Thanks,
+
+
+> 
+>> +	/* For devices, write to the config space index register */
+>> +	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
+>> +	writel(idx, base + PCIE_EXT_CFG_INDEX);
+>> +	return base + PCIE_EXT_CFG_DATA + where;
+>> +}
+>> +
+>> +const struct pci_ecam_ops bcm2711_pcie_ops = {
+>> +	.init		= brcm_acpi_init,
+>> +	.bus_shift	= 1,
+>> +	.pci_ops	= {
+>> +		.map_bus	= brcm_pcie_map_conf2,
+>> +		.read		= pci_generic_config_read,
+>> +		.write		= pci_generic_config_write,
+>> +	}
+>> +};
+>> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+>> index adea5a4771cf..a5de0285bb7f 100644
+>> --- a/include/linux/pci-ecam.h
+>> +++ b/include/linux/pci-ecam.h
+>> @@ -87,6 +87,7 @@ extern const struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 *
+>>   extern const struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+>>   extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
+>>   extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+>> +extern const struct pci_ecam_ops bcm2711_pcie_ops; /* Bcm2711 PCIe */
+>>   #endif
+>>   
+>>   #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
 >> -- 
 >> 2.31.1
 >>
