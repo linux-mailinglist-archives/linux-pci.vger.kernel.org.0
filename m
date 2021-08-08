@@ -2,211 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABA63E352C
-	for <lists+linux-pci@lfdr.de>; Sat,  7 Aug 2021 13:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6B073E37D2
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Aug 2021 03:41:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbhHGLf5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 Aug 2021 07:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230012AbhHGLf4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 7 Aug 2021 07:35:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D89661058;
-        Sat,  7 Aug 2021 11:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628336139;
-        bh=geblf3fX8PJQFl8H5UntTROSiNmSEU1F1HpzgQX/MBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vQcYX1HCrkOJB6JwHhUhF6Y2/Z9CPhJJDNX2xQ10dmmtTl2uv1PvHg+dKBeg5MGm3
-         rjUvjIe1aHJ+AnREgbmTBAU6tgcfObFfW3ZLecWfx9+CQWmSnOD0o7Hbmp7mZRESfS
-         cHAISAuiJWS2b1v1Lj75pZTvFRlf5Ce/bdGO500pBL0Bygk35B2WPh0lZxaAbdhxGe
-         Ybw9T28a0M8rShfk7wH8v7QknxOYOWATy/h4V7km6txgK+e81x5YGXZgI6Y01ockU4
-         nJQ/b/duUxCMw7m/yM9zF8f6ga8uyq2BXb41tyeMq8S1mhsIwjO6h3K+sGjwjvDaXB
-         zJRTUvZibBlUw==
-Received: by pali.im (Postfix)
-        id CEE77A52; Sat,  7 Aug 2021 13:35:36 +0200 (CEST)
-Date:   Sat, 7 Aug 2021 13:35:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     robh@kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
- space
-Message-ID: <20210807113536.24ik7m7uonebwox2@pali>
-References: <20210624215546.4015-1-pali@kernel.org>
- <20210624215546.4015-3-pali@kernel.org>
- <87pmv919bq.fsf@BL-laptop>
- <20210723141204.waiipazikhzzloj7@pali>
- <20210723155247.GB4103@lpieralisi>
- <20210723164512.vo3scpzoodff2j33@pali>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210723164512.vo3scpzoodff2j33@pali>
-User-Agent: NeoMutt/20180716
+        id S229988AbhHHBmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 Aug 2021 21:42:10 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51571 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229882AbhHHBmJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 Aug 2021 21:42:09 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 000835C00B0;
+        Sat,  7 Aug 2021 21:41:50 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute2.internal (MEProxy); Sat, 07 Aug 2021 21:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type:content-transfer-encoding; s=fm2; bh=F96tM
+        Wj2xtLgP3+Yu+6pP+OueHUggM2jfq+yApxhj4Y=; b=lMsAQgW/EBndX0U76cjn2
+        jKXOX+9qt/nipvdhyhsx/11gM0zOGRDK4mrnCfelaua3p5n0gMnn4DuVxrcjpVIj
+        hxfxCxgmQ1UbSmoMYzSotcCkruynSwgqevN0ztMVQ7ZwHR4pAx4I4Jm3gjh12x9J
+        SbPr0EOQSmvH2J2yrdgmVEFmJN/e8ORsdlx55EhuY7r9feR1F6pm/hM0YoTooYxC
+        TRenqW3Imlzc+u9n2V5Q9QEEWeiQ+4++Zg5TNO4jwpt7WOUV/NcCXjwSNNHxgp4/
+        sUicB/f37gf3deIfQEq0WXxbH3Mj4B0uod5tQE2QcT1eHLx1FnFr7bNbdRaa5I/i
+        A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=F96tMWj2xtLgP3+Yu+6pP+OueHUggM2jfq+yApxhj
+        4Y=; b=RSOFPHeXJajQkY1o4JJDlT6sOMqXtuh4pDiOSVqRfo4oUnPFwo8DNU7/2
+        SKPkDfQuMH3s+YQK92Q6+Y0ya1fS9c1P8tbbQ34PGnX9NE0/L61nKDDuAvLy6W0W
+        GHoWez8Ys5fHlg4stjD6MIk/BwrzhN6N4KKkJO3JT+lHD2zRePEyZTSUz4ufy5+h
+        G1vZtijthobDPsgorcvsQqUm3kG42tiTGhDJBJibDY1VU9ziAE4Mg5LutSF+fHWc
+        6XwsIunU6IYDVrC0jhdH62jAcQuGSbp4HEBy2UoTAhwKAdsCR3Cpg6Hh8vo8Ja25
+        r2Cd9Ve38fU5RsoceOcmlcqVoGIjA==
+X-ME-Sender: <xms:XjYPYQPxL7hO5t8OCJEpj-9J17oC8sqh8uVgUD5EOujT3fE4FpKYlQ>
+    <xme:XjYPYW9srI9PCMkaCmtGGRayQLDwnHF-V-6nHid1NTpSMsdYN2BL01N-zAqeNj1YN
+    yGKeIFXXNcM8rX_5Fs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrjeeggdefkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdflihgr
+    gihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpeefteegkeevfeethffgudehgedvueduvdeifedvvdelhfef
+    heekteefueektdefjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:XjYPYXQ9ikWIkhz_5kAw1Hrz9dBGCxjXaUZHa5xFWFmyOOhxStN_nQ>
+    <xmx:XjYPYYvO5VKDaxPWMR0fm46n4EKM4vGVwV4xjAZmTVGVmfXtAOAK7g>
+    <xmx:XjYPYYeX0fENrMgBepPZK_mexFzZR65vgUEbB4ORC6zoTYhT8MsYSw>
+    <xmx:XjYPYWvwVYhBrYK2tOMjNidl85gAnDCilaMj1wFH4WJTDs8srDpJuw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 211E7FA0AA5; Sat,  7 Aug 2021 21:41:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-552-g2afffd2709-fm-20210805.001-g2afffd27
+Mime-Version: 1.0
+Message-Id: <7f0d48a6-d4ae-4e8d-aaa8-4b0bb4ad8e35@www.fastmail.com>
+In-Reply-To: <20210807072409.9018-3-sergio.paracuellos@gmail.com>
+References: <20210807072409.9018-1-sergio.paracuellos@gmail.com>
+ <20210807072409.9018-3-sergio.paracuellos@gmail.com>
+Date:   Sun, 08 Aug 2021 09:41:29 +0800
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Sergio Paracuellos" <sergio.paracuellos@gmail.com>,
+        "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>, matthias.bgg@gmail.com,
+        gregkh@linuxfoundation.org,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-staging@lists.linux.dev, neil@brown.name,
+        linux-kernel@vger.kernel.org
+Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_PCI:_of:_avoid_'devm=5Fpci=5Fremap=5Fiospace'_?=
+ =?UTF-8?Q?if_PCI=5FIOBASE_is_not_defined?=
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 23 July 2021 18:45:12 Pali Rohár wrote:
-> On Friday 23 July 2021 16:52:47 Lorenzo Pieralisi wrote:
-> > On Fri, Jul 23, 2021 at 04:12:04PM +0200, Pali Rohár wrote:
-> > > On Friday 23 July 2021 14:52:25 Gregory CLEMENT wrote:
-> > > > Hello Pali,
-> > > > 
-> > > > > Current PCIe MEM space of size 16 MB is not enough for some combination
-> > > > > of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
-> > > > > Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
-> > > > > so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
-> > > > > allocate more PCIe BARs for more PCIe cards.
-> > > > >
-> > > > > Without this change some combination of PCIe cards cannot be used and
-> > > > > kernel show error messages in dmesg during initialization:
-> > > > >
-> > > > >     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
-> > > > >     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
-> > > > >     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
-> > > > >     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
-> > > > >     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
-> > > > >     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
-> > > > >     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
-> > > > >     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
-> > > > >     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
-> > > > >     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
-> > > > >     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
-> > > > >
-> > > > > Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
-> > > > > kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
-> > > > > crashes during loading of kernel DTB file. This bug is present only in
-> > > > > U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
-> > > > > affected by this bug. Bug is fixed in U-Boot version 2021.07.
-> > > > >
-> > > > > To not break booting new kernels on existing versions of U-Boot on Turris
-> > > > > Mox, use first 16 MB range for IO and second range with rest of PCIe window
-> > > > > for MEM.
-> > > > 
-> > > > Is there any depencey with the firs patch of this series ?
-> > > > 
-> > > > What happend if this patch is applied without the other ?
-> > > 
-> > > First patch is fixing reading and setting ranges configuration from DTS.
-> > > Without first patch memory windows stays as they were in bootloader or
-> > > in its default configuration. Which is that all 128 MB are transparently
-> > > mapped to PCIe MEM space.
-> > > 
-> > > Therefore this second DTS patch does not fixes issue with IO space
-> > > (kernel still crashes when accessing it). But allows to use all PCIe MEM
-> > > space (due to bootloader / default configuration) and therefore allows
-> > > to use more PCIe cards (which needs more PCIe MEM space).
-> > 
-> > So, the two patches are decoupled then ? We are not taking dts changes
-> > through the PCI tree.
-> 
-> Well, both patches are required to fix setup and use of PCIe ranges on
-> A3720 platforms. But I would say they are independent and you can apply
-> them in any order. So Gregory, feel free to take DTS change in your tree
-> and Lorenzo can review other patch.
 
-Lorenzo, so will you take driver change via PCI tree?
 
-And Gregory, DTS change via DTS tree?
+=E5=9C=A82021=E5=B9=B48=E6=9C=887=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
+=8D=883:24=EF=BC=8CSergio Paracuellos=E5=86=99=E9=81=93=EF=BC=9A
+> Defining PCI_IOBASE for MIPS ralink in expected addresses results in=20=
 
-> I sent these two patches in one series as they are fixing one common
-> issue. It is common that for fixing one common issue it is required to
-> touch more subsystems / trees.
-> 
-> > Besides: these dts patches are a nightmare for backward compatibility,
-> > hopefully Rob can shed some light on whether what you are doing here
-> > is advisable and how to sync the changes with kernel changes.
-> 
-> As written in comment for armada-3720-turris-mox.dts file, there are
-> specific requirements what needs to be put into ranges section. And
-> version of this file without applying this patch and also version of
-> this file with applied patch matches these requirements.
-> 
-> So I would say that this DTS change is backward and also forward
-> compatible.
-> 
-> But I agree that DTS changes are lot of time nightmare...
-> 
-> > Lorenzo
-> > 
-> > > > Could you test it to see if any regression occure ?
-> > > > 
-> > > > Thanks,
-> > > > 
-> > > > Grégory
-> > > > 
-> > > > >
-> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
-> > > > > ---
-> > > > >  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
-> > > > >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
-> > > > >  2 files changed, 26 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > > > > index 53e817c5f6f3..86b3025f174b 100644
-> > > > > --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > > > > +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-> > > > > @@ -134,6 +134,23 @@
-> > > > >  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-> > > > >  	status = "okay";
-> > > > >  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-> > > > > +	/*
-> > > > > +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
-> > > > > +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
-> > > > > +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
-> > > > > +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
-> > > > > +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
-> > > > > +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
-> > > > > +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
-> > > > > +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
-> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
-> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
-> > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
-> > > > > +	 */
-> > > > > +	#address-cells = <3>;
-> > > > > +	#size-cells = <2>;
-> > > > > +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
-> > > > > +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
-> > > > >  
-> > > > >  	/* enabled by U-Boot if PCIe module is present */
-> > > > >  	status = "disabled";
-> > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > > > > index 7a2df148c6a3..dac3007f2ac1 100644
-> > > > > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> > > > > @@ -488,8 +488,15 @@
-> > > > >  			#interrupt-cells = <1>;
-> > > > >  			msi-parent = <&pcie0>;
-> > > > >  			msi-controller;
-> > > > > -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
-> > > > > -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
-> > > > > +			/*
-> > > > > +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
-> > > > > +			 * dedicated for PCIe and can be assigned to 8 windows
-> > > > > +			 * with size a power of two. Use one 64 KiB window for
-> > > > > +			 * IO at the end and the remaining seven windows
-> > > > > +			 * (totaling 127 MiB) for MEM.
-> > > > > +			 */
-> > > > > +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
-> > > > > +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
-> > > > >  			interrupt-map-mask = <0 0 0 7>;
-> > > > >  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> > > > >  					<0 0 0 2 &pcie_intc 1>,
-> > > > > -- 
-> > > > > 2.20.1
-> > > > >
-> > > > 
-> > > > -- 
-> > > > Gregory Clement, Bootlin
-> > > > Embedded Linux and Kernel engineering
-> > > > http://bootlin.com
+> PCI IO
+> resources being assigned but the addresses generated for IO accesses=20=
+
+> are wrong
+> since the ioremap in the PCI core function=20
+> 'pci_parse_request_of_pci_ranges'
+> tries to remap to a fixed virtual address (PC_IOBASE) which can't work=
+=20
+> for KSEG1
+> addresses. To get it working this way, we would need to put PCI_IOBASE=
+=20
+> somewhere
+> into KSEG2 which will result in creating TLB entries for IO addresses,=
+=20
+> which most
+> of the time isn't needed on MIPS because of access via KSEG1. To allow=
+=20
+
+It was designed to allow multiple PCI bridge with sparse IO space patter=
+n.
+So for ralink it's not going to happen?
+
+Thanks.
+- Jiaxun
+
+
+> MIPS PCI
+> drivers to properly use the PCI generic core we need to increase=20
+> IO_SPACE_LIMIT
+> since IO addresses are in addresses higher that 0xffff. We also need t=
+o=20
+> avoid
+> the call 'devm_pci_remap_iospace' when=20
+> 'pci_parse_request_of_pci_ranges' is
+> called to avoid the following problem:
+>=20
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 1 at ../drivers/pci/pci.c:4066 pci_remap_iospace+=
+0x3c/0x54
+> This architecture does not support memory mapped I/O
+> Modules linked in:
+> CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.10.1+ #1228
+> Stack : 00000000 00000000 807fa974 00000000 827ffa80 80066b48 80710000=
+ 0000000b
+>         00000000 00000000 81c59aac 7d06ddec 80850000 00000001 81c59a40=
+ 7d06ddec
+>         00000000 00000000 807c909c 81c598f0 00000001 81c59904 00000000=
+ 0000000a
+>         203a6d6d 80708880 0000000f 70617773 80850000 00000000 00000000=
+ 807d0000
+>         807ffecc 1e160000 00000001 00000200 00000000 8054e920 00000008=
+ 815e0008
+>         ...
+> Call Trace:
+> [<80008efc>] show_stack+0x8c/0x130
+> [<806e1674>] dump_stack+0x9c/0xc8
+> [<80024a3c>] __warn+0xc0/0xe8
+> [<80024ad0>] warn_slowpath_fmt+0x6c/0xbc
+> [<80410ca8>] pci_remap_iospace+0x3c/0x54
+> [<80410d20>] devm_pci_remap_iospace+0x58/0xa4
+> [<8042019c>] devm_of_pci_bridge_init+0x4dc/0x55c
+> [<80408de8>] devm_pci_alloc_host_bridge+0x78/0x88
+> [<80424e44>] mt7621_pci_probe+0x68/0x9a4
+> [<80464804>] platform_drv_probe+0x40/0x7c
+> [<804628bc>] really_probe+0x2fc/0x4e4
+> [<80463214>] device_driver_attach+0x4c/0x74
+> [<80463384>] __driver_attach+0x148/0x150
+> [<8046047c>] bus_for_each_dev+0x6c/0xb0
+> [<804614dc>] bus_add_driver+0x1b4/0x1fc
+> [<80463aa0>] driver_register+0xd0/0x110
+> [<80001714>] do_one_initcall+0x84/0x1c0
+> [<808e7fd0>] kernel_init_freeable+0x214/0x24c
+> [<806e4164>] kernel_init+0x14/0x118
+> [<80003358>] ret_from_kernel_thread+0x14/0x1c
+>=20
+> ---[ end trace 1c9d4412bd51b53c ]---
+> mt7621-pci 1e140000.pcie: error -19: failed to map resource [io =20
+> 0x1e160000-0x1e16ffff]
+>=20
+> Hence don't call 'devm_pci_remap_iospace' if PCI_IOBASE is not defined=
+ to get
+> a working PCI core APIs for MIPS ralink platforms.
+>=20
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+>  drivers/pci/of.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index a143b02b2dcd..657aef39bf63 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -564,12 +564,14 @@ static int pci_parse_request_of_pci_ranges(struc=
+t=20
+> device *dev,
+> =20
+>  		switch (resource_type(res)) {
+>  		case IORESOURCE_IO:
+> +#ifdef PCI_IOBASE
+>  			err =3D devm_pci_remap_iospace(dev, res, iobase);
+>  			if (err) {
+>  				dev_warn(dev, "error %d: failed to map resource %pR\n",
+>  					 err, res);
+>  				resource_list_destroy_entry(win);
+>  			}
+> +#endif
+>  			break;
+>  		case IORESOURCE_MEM:
+>  			res_valid |=3D !(res->flags & IORESOURCE_PREFETCH);
+> --=20
+> 2.25.1
+>=20
+>=20
+
+
+--=20
+- Jiaxun
