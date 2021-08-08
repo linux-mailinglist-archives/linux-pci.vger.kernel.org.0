@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C23C3E3BE0
-	for <lists+linux-pci@lfdr.de>; Sun,  8 Aug 2021 19:20:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E61463E3BE3
+	for <lists+linux-pci@lfdr.de>; Sun,  8 Aug 2021 19:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbhHHRUa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Aug 2021 13:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45008 "EHLO
+        id S231559AbhHHRV1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Aug 2021 13:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbhHHRUa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Aug 2021 13:20:30 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191D5C061760
-        for <linux-pci@vger.kernel.org>; Sun,  8 Aug 2021 10:20:10 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id f5so2404884wrm.13
-        for <linux-pci@vger.kernel.org>; Sun, 08 Aug 2021 10:20:10 -0700 (PDT)
+        with ESMTP id S230049AbhHHRV1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Aug 2021 13:21:27 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00635C061760
+        for <linux-pci@vger.kernel.org>; Sun,  8 Aug 2021 10:21:06 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id q11-20020a7bce8b0000b02902e6880d0accso950849wmj.0
+        for <linux-pci@vger.kernel.org>; Sun, 08 Aug 2021 10:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=65E1bA4oCNTLY3YGhSWBcoGT7k6EVcPa7tZb07l1a80=;
-        b=G3aJVEkRRex0jYOsfYHT46CO1UrOiFtenAdWwUdYgQD4ZyPoekAmB+7QKo5tUVfZes
-         0GDq3KATYolCD/ieEG2gXx5iQvgqx8ZXTdFhrNu6AVTzCfRLxnOwBkP7cFruiQ18IvAn
-         3/PtbJHeVQgc45mzAGAM/2jp3iNwpqz5qc8FEX85sQ3EfobsiYpFtOUpUxLHHVOIbxRS
-         /U6aD8M3ZA4ZFDVnA4S1Q9YxerG9EjPZRK1uRo9kLIH3C9lzXWNzjEeVW+dOu1DKW6/R
-         94ke4VXtTIJkr3WgarvNP/o2RiM6CKjzphz3nKMwnFCAR6m4cP5IfC5LzORZrh0LDgNu
-         rJTw==
+        bh=LZ0CiqYvQd9POK26TIoWPQqNqHc6FZbED182og4oCLo=;
+        b=u9kj9Mc45d4cFgKucX08N8JMBNkxG7E5oByUaW2CIipUn2tirDdECwBulYgGyqmHxj
+         IG5v1SqiegjfQ/vszdJojbV8bJcF0EqfwXwraRAcRefEZYDINch75PNMCWXxoqHJHnWh
+         kNfjE301ZGHzS9MeNbc5um92xApuYCPTFmkJuw0gtXdH2scce5RFmWAOSqFYW0meBWzy
+         ekfukHOUmckZWLB0FVaHH056aNW7zr4Vr2ZjuB10vbszUQyxSjz9eR/FkeJNTVCc1Q6q
+         CAxWJxEf8n4xLVX//FlWMUWT7cCY+o3xM1SOdVY2shi/NSTQt2h0e49beXrnPOnJq5Qo
+         50Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=65E1bA4oCNTLY3YGhSWBcoGT7k6EVcPa7tZb07l1a80=;
-        b=pLUr/lyVLkk2E4xhw8Ve1wf4rzV4yCmWiRgtkgfBnQV1IemP4rqbc/GleOGnZ2x4xh
-         gWL+QaaQjaNmuCL/577LfzSCIaXyNcP90XqXvgAU9PbBGMGNJN7lygLF+Q2hgGZ9fshA
-         Fz7gTC/nYajKeqzRDkLfUPhLadsJToNY4eUD7Wmwv84Z+EFfRyVr2XjaC4zuRqthqc3D
-         LwvWrRQvpLYAliVGUZmNTbEws+E6ZejBdiVaUap69AOjPzw2imH4zf1mEBrkgoKbzy0C
-         eVpDFjTk9zNeBYb6Zv9TjCiajhTyuIMQihm3X0q0hvPjrbSIF5Cmubg5y8gvWa81f35H
-         Vjvg==
-X-Gm-Message-State: AOAM530yIQGahDreYFpinZOcQ7kFyUIq2i2myaX0u06IKBYEM3tRSpfZ
-        e5Aqp9varPHhBsKsHGG/4yLUgQdOlQSd8A==
-X-Google-Smtp-Source: ABdhPJy6/tn9lPwY1GkBZvpSEJeCdmbMx3fdFY4125sBeCN6GWwq0Px/QA2tmjX1YiJ//327UXcrbQ==
-X-Received: by 2002:a5d:58da:: with SMTP id o26mr1747858wrf.140.1628443208507;
-        Sun, 08 Aug 2021 10:20:08 -0700 (PDT)
+        bh=LZ0CiqYvQd9POK26TIoWPQqNqHc6FZbED182og4oCLo=;
+        b=HC8t4B/ZiltyEoL9aWdzSC4991lPvy47S4jshXrJnrwi/SZ/FCsIFnWcaINgMyXp32
+         VhRmbdgbci8rSKv3HDjrNySiLGe/Z2nsLahb5SMRsTwvEEhoQ5DbeP7s+9ZvlQ5wySbz
+         mHSYBL9YNvImAhL7IohxtZCesqwBBE8C3pj/9ELOYHEib/x79nEDaU/nwMUJyouEoJek
+         DPv87Omjhrx2fA290FoCitL1XGG8nhRbvVf2sH1bJCUpEOyMttLlyxYdEth4p5SpYgUU
+         2v4E+Yj5JPBlMHoX93TxkuXBAx0YnGkRlvI+F9Du8/aPThBDRWqVHzied5kLg8yXMdC6
+         Uw+g==
+X-Gm-Message-State: AOAM530MsQ9FTT8yvNOnj+6NoJ1YzHQMTwvySiskniZ6+HmLjBBOFXhR
+        Sl9fTOp5no7Z0QGFvFOovo1wiOEcBs7BAA==
+X-Google-Smtp-Source: ABdhPJzcDDI9lypE8p18iusXE8qi1MZ3lHFnX5SlbtCokRKtEk8ZgViQ6con+n7zYqyBvaD1d2Qj+w==
+X-Received: by 2002:a7b:c014:: with SMTP id c20mr12637397wmb.81.1628443265463;
+        Sun, 08 Aug 2021 10:21:05 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f10:c200:7101:8b48:5eab:cb5f? (p200300ea8f10c20071018b485eabcb5f.dip0.t-ipconnect.de. [2003:ea:8f10:c200:7101:8b48:5eab:cb5f])
-        by smtp.googlemail.com with ESMTPSA id z5sm18062757wmp.26.2021.08.08.10.20.05
+        by smtp.googlemail.com with ESMTPSA id s2sm14818985wmh.46.2021.08.08.10.21.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Aug 2021 10:20:08 -0700 (PDT)
-Subject: [PATCH 2/6] PCI/VPD: Remove struct pci_vpd_ops
+        Sun, 08 Aug 2021 10:21:05 -0700 (PDT)
+Subject: [PATCH 3/6] PCI/VPD: Remove member valid from struct pci_vpd
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <1e61d5dc-824c-e855-01eb-6c7f45c55285@gmail.com>
-Message-ID: <b2532a41-df8b-860f-461f-d5c066c819d0@gmail.com>
-Date:   Sun, 8 Aug 2021 19:20:05 +0200
+Message-ID: <9f777bc7-5316-e1b8-e5d4-f9f609bdb5dd@gmail.com>
+Date:   Sun, 8 Aug 2021 19:21:02 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
@@ -66,165 +66,123 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Code can be significantly simplified by removing struct pci_vpd_ops and
-avoiding the indirect calls.
+Instead of having a separate flag let's use vp->len != 0 as indicator that
+VPD validity has been checked. Now vpd->len == PCI_VPD_SZ_INVALID is used
+to indicate that VPD is invalid.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/vpd.c | 90 ++++++++++++++++++-----------------------------
- 1 file changed, 34 insertions(+), 56 deletions(-)
+ drivers/pci/vpd.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index e87f299ee..6a0d617b2 100644
+index 6a0d617b2..d6c216caf 100644
 --- a/drivers/pci/vpd.c
 +++ b/drivers/pci/vpd.c
-@@ -13,13 +13,7 @@
- 
- /* VPD access through PCI 2.2+ VPD capability */
- 
--struct pci_vpd_ops {
--	ssize_t (*read)(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
--	ssize_t (*write)(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
--};
--
- struct pci_vpd {
--	const struct pci_vpd_ops *ops;
+@@ -17,7 +17,6 @@ struct pci_vpd {
  	struct mutex	lock;
  	unsigned int	len;
  	u8		cap;
-@@ -123,11 +117,16 @@ static int pci_vpd_wait(struct pci_dev *dev, bool set)
- static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
- 			    void *arg)
- {
--	struct pci_vpd *vpd = dev->vpd;
-+	struct pci_vpd *vpd;
- 	int ret = 0;
- 	loff_t end = pos + count;
- 	u8 *buf = arg;
+-	unsigned int	valid:1;
+ };
  
-+	if (!dev || !dev->vpd)
-+		return -ENODEV;
+ static struct pci_dev *pci_get_func0_dev(struct pci_dev *dev)
+@@ -25,7 +24,8 @@ static struct pci_dev *pci_get_func0_dev(struct pci_dev *dev)
+ 	return pci_get_slot(dev->bus, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
+ }
+ 
+-#define PCI_VPD_MAX_SIZE (PCI_VPD_ADDR_MASK + 1)
++#define PCI_VPD_MAX_SIZE	(PCI_VPD_ADDR_MASK + 1)
++#define PCI_VPD_SZ_INVALID	UINT_MAX
+ 
+ /**
+  * pci_vpd_size - determine actual size of Vital Product Data
+@@ -36,6 +36,9 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+ 	size_t off = 0;
+ 	unsigned char header[1+2];	/* 1 byte tag, 2 bytes length */
+ 
++	/* Otherwise the following reads would fail. */
++	dev->vpd->len = PCI_VPD_MAX_SIZE;
 +
-+	vpd = dev->vpd;
-+
+ 	while (pci_read_vpd(dev, off, 1, header) == 1) {
+ 		unsigned char tag;
+ 		size_t size;
+@@ -48,7 +51,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+ 			if (pci_read_vpd(dev, off + 1, 2, &header[1]) != 2) {
+ 				pci_warn(dev, "failed VPD read at offset %zu\n",
+ 					 off + 1);
+-				return off;
++				return off ?: PCI_VPD_SZ_INVALID;
+ 			}
+ 			size = pci_vpd_lrdt_size(header);
+ 			if (off + size > PCI_VPD_MAX_SIZE)
+@@ -73,7 +76,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+ 	pci_info(dev, "invalid VPD tag %#04x at offset %zu%s\n",
+ 		 header[0], off, off == 0 ?
+ 		 "; assume missing optional EEPROM" : "");
+-	return off;
++	return off ?: PCI_VPD_SZ_INVALID;
+ }
+ 
+ /*
+@@ -130,12 +133,10 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
  	if (pos < 0)
  		return -EINVAL;
  
-@@ -189,11 +188,16 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
- static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 			     const void *arg)
- {
--	struct pci_vpd *vpd = dev->vpd;
-+	struct pci_vpd *vpd;
- 	const u8 *buf = arg;
- 	loff_t end = pos + count;
- 	int ret = 0;
+-	if (!vpd->valid) {
+-		vpd->valid = 1;
++	if (!vpd->len)
+ 		vpd->len = pci_vpd_size(dev);
+-	}
  
-+	if (!dev || !dev->vpd)
-+		return -ENODEV;
-+
-+	vpd = dev->vpd;
-+
+-	if (vpd->len == 0)
++	if (vpd->len == PCI_VPD_SZ_INVALID)
+ 		return -EIO;
+ 
+ 	if (pos > vpd->len)
+@@ -201,12 +202,10 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
  	if (pos < 0 || (pos & 3) || (count & 3))
  		return -EINVAL;
  
-@@ -238,44 +242,6 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 	return ret ? ret : count;
- }
+-	if (!vpd->valid) {
+-		vpd->valid = 1;
++	if (!vpd->len)
+ 		vpd->len = pci_vpd_size(dev);
+-	}
  
--static const struct pci_vpd_ops pci_vpd_ops = {
--	.read = pci_vpd_read,
--	.write = pci_vpd_write,
--};
--
--static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
--			       void *arg)
--{
--	struct pci_dev *tdev = pci_get_func0_dev(dev);
--	ssize_t ret;
--
--	if (!tdev)
--		return -ENODEV;
--
--	ret = pci_read_vpd(tdev, pos, count, arg);
--	pci_dev_put(tdev);
--	return ret;
--}
--
--static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
--				const void *arg)
--{
--	struct pci_dev *tdev = pci_get_func0_dev(dev);
--	ssize_t ret;
--
--	if (!tdev)
--		return -ENODEV;
--
--	ret = pci_write_vpd(tdev, pos, count, arg);
--	pci_dev_put(tdev);
--	return ret;
--}
--
--static const struct pci_vpd_ops pci_vpd_f0_ops = {
--	.read = pci_vpd_f0_read,
--	.write = pci_vpd_f0_write,
--};
--
- void pci_vpd_init(struct pci_dev *dev)
- {
- 	struct pci_vpd *vpd;
-@@ -290,10 +256,6 @@ void pci_vpd_init(struct pci_dev *dev)
+-	if (vpd->len == 0)
++	if (vpd->len == PCI_VPD_SZ_INVALID)
+ 		return -EIO;
+ 
+ 	if (end > vpd->len)
+@@ -255,10 +254,8 @@ void pci_vpd_init(struct pci_dev *dev)
+ 	if (!vpd)
  		return;
  
- 	vpd->len = PCI_VPD_MAX_SIZE;
--	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0)
--		vpd->ops = &pci_vpd_f0_ops;
--	else
--		vpd->ops = &pci_vpd_ops;
+-	vpd->len = PCI_VPD_MAX_SIZE;
  	mutex_init(&vpd->lock);
  	vpd->cap = cap;
- 	vpd->valid = 0;
-@@ -388,9 +350,17 @@ EXPORT_SYMBOL_GPL(pci_vpd_find_info_keyword);
-  */
- ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf)
- {
--	if (!dev->vpd || !dev->vpd->ops)
--		return -ENODEV;
--	return dev->vpd->ops->read(dev, pos, count, buf);
-+	ssize_t ret;
-+
-+	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-+		dev = pci_get_func0_dev(dev);
-+		ret = pci_vpd_read(dev, pos, count, buf);
-+		pci_dev_put(dev);
-+	} else {
-+		ret = pci_vpd_read(dev, pos, count, buf);
-+	}
-+
-+	return ret;
+-	vpd->valid = 0;
+ 	dev->vpd = vpd;
  }
- EXPORT_SYMBOL(pci_read_vpd);
  
-@@ -403,9 +373,17 @@ EXPORT_SYMBOL(pci_read_vpd);
-  */
- ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void *buf)
+@@ -423,8 +420,7 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
+ static void quirk_blacklist_vpd(struct pci_dev *dev)
  {
--	if (!dev->vpd || !dev->vpd->ops)
--		return -ENODEV;
--	return dev->vpd->ops->write(dev, pos, count, buf);
-+	ssize_t ret;
-+
-+	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-+		dev = pci_get_func0_dev(dev);
-+		ret = pci_vpd_write(dev, pos, count, buf);
-+		pci_dev_put(dev);
-+	} else {
-+		ret = pci_vpd_write(dev, pos, count, buf);
-+	}
-+
-+	return ret;
+ 	if (dev->vpd) {
+-		dev->vpd->len = 0;
+-		dev->vpd->valid = 1;
++		dev->vpd->len = PCI_VPD_SZ_INVALID;
+ 		pci_warn(dev, FW_BUG "disabling VPD access (can't determine size of non-standard VPD format)\n");
+ 	}
  }
- EXPORT_SYMBOL(pci_write_vpd);
+@@ -455,7 +451,6 @@ static void pci_vpd_set_size(struct pci_dev *dev, size_t len)
+ 	if (!vpd || len == 0 || len > PCI_VPD_MAX_SIZE)
+ 		return;
+ 
+-	vpd->valid = 1;
+ 	vpd->len = len;
+ }
  
 -- 
 2.32.0
