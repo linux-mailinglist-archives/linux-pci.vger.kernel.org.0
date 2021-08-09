@@ -2,241 +2,276 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BD5B3E4BF0
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 20:14:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 788223E4BF8
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 20:15:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234978AbhHISOl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Aug 2021 14:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234847AbhHISOk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Aug 2021 14:14:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5978561002;
-        Mon,  9 Aug 2021 18:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628532859;
-        bh=qXeJ0P/U8JvDxO9kR9G0/0wx57hQ6JjYEoFVv0vPQv8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WW6aFqzA3dvX3Ze6M+eftHp7JaBZzCklo9aY7tR1PQm8w/hnkzEnuCle4tCjoZiSe
-         nT6rKeORsoNdjHgHs9BqQjZRVKkrC6rxN1uu2Ygmc41jcEEm8UEVPbXxSnQ6K0Wfj8
-         qSINXH8XorzrEZOa15qbiDu7ItPII0bkSjch0lXkcnkoO4HSU1QbFOtyKkGI+wZYNN
-         0+0+St5OBLuFlSt+oW4UklxyjCkK/jpDv/4IACdl9gU6SOxr0i2z8LDiCotUp5Fcfn
-         PGIel408/Vk6fQxN4caUeDLV9ODEWUpMqiy48I+zaYWawQn9qjAcLm5+IUrHSYXRZm
-         w1DE8HFaMxc8g==
-Date:   Mon, 9 Aug 2021 13:14:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
+        id S231357AbhHISPq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 14:15:46 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:20080 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233837AbhHISPn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 14:15:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1628532923; x=1660068923;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Fh8i8RuSmLYdZEiYN/BxpHDN3XDZCpVtlp5XsxdL3Vg=;
+  b=AGaKBEqZgIJb73wDUTOJsujhyT5jMKX2JRT7UStpylp6MvXr2uoPkRXb
+   00fmHiPI585gJzBguOOoWIKaR/ylli9BZjwEJUAqcHJY7IDuB9vYz/3/8
+   fAcke3w1iVSE+zjF6t6KadyKDztIaIWGh4QNHtM716AIa0sMJ5k8PPam+
+   I=;
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 09 Aug 2021 11:15:22 -0700
+X-QCInternal: smtphost
+Received: from nasanexm03e.na.qualcomm.com ([10.85.0.48])
+  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Aug 2021 11:15:22 -0700
+Received: from [10.111.162.189] (10.80.80.8) by nasanexm03e.na.qualcomm.com
+ (10.85.0.48) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Mon, 9 Aug
+ 2021 11:15:21 -0700
+Subject: Re: [PATCH v2 4/6] PCI/VPD: Reject resource tags with invalid size
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+CC:     Hannes Reinecke <hare@suse.de>, <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Horman <simon.horman@corigine.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210809181418.GA2168343@bjorn-Precision-5520>
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>
+References: <20210729184234.976924-1-helgaas@kernel.org>
+ <20210729184234.976924-5-helgaas@kernel.org>
+From:   Qian Cai <quic_qiancai@quicinc.com>
+Message-ID: <a20b07f5-6849-e4b6-82fa-ddf67693e104@quicinc.com>
+Date:   Mon, 9 Aug 2021 14:15:20 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210807092645.52kn4ustyjudztvl@pengutronix.de>
+In-Reply-To: <20210729184234.976924-5-helgaas@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanexm03g.na.qualcomm.com (10.85.0.49) To
+ nasanexm03e.na.qualcomm.com (10.85.0.48)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 07, 2021 at 11:26:45AM +0200, Uwe Kleine-König wrote:
-> On Fri, Aug 06, 2021 at 04:24:52PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Aug 06, 2021 at 08:46:23AM +0200, Uwe Kleine-König wrote:
-> > > On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
-> > 
-> > > > I looked at all the bus_type.probe() methods, it looks like pci_dev is
-> > > > not the only offender here.  At least the following also have a driver
-> > > > pointer in the device struct:
-> > > > 
-> > > >   parisc_device.driver
-> > > >   acpi_device.driver
-> > > >   dio_dev.driver
-> > > >   hid_device.driver
-> > > >   pci_dev.driver
-> > > >   pnp_dev.driver
-> > > >   rio_dev.driver
-> > > >   zorro_dev.driver
-> > > 
-> > > Right, when I converted zorro_dev it was pointed out that the code was
-> > > copied from pci and the latter has the same construct. :-)
-> > > See
-> > > https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutronix.de
-> > > for the patch, I don't find where pci was pointed out, maybe it was on
-> > > irc only.
-> > 
-> > Oh, thanks!  I looked to see if you'd done something similar
-> > elsewhere, but I missed this one.
-> > 
-> > > > Looking through the places that care about pci_dev.driver (the ones
-> > > > updated by patch 5/6), many of them are ... a little dubious to begin
-> > > > with.  A few need the "struct pci_error_handlers *err_handler"
-> > > > pointer, so that's probably legitimate.  But many just need a name,
-> > > > and should probably be using dev_driver_string() instead.
-> > > 
-> > > Yeah, I considered adding a function to get the driver name from a
-> > > pci_dev and a function to get the error handlers. Maybe it's an idea to
-> > > introduce these two and then use to_pci_driver(pdev->dev.driver) for the
-> > > few remaining users? Maybe doing that on top of my current series makes
-> > > sense to have a clean switch from pdev->driver to pdev->dev.driver?!
-> > 
-> > I'd propose using dev_driver_string() for these places:
-> > 
-> >   eeh_driver_name() (could change callers to use dev_driver_string())
-> >   bcma_host_pci_probe()
-> >   qm_alloc_uacce()
-> >   hns3_get_drvinfo()
-> >   prestera_pci_probe()
-> >   mlxsw_pci_probe()
-> >   nfp_get_drvinfo()
-> >   ssb_pcihost_probe()
-> 
-> So the idea is:
-> 
-> 	PCI: Simplify pci_device_remove()
-> 	PCI: Drop useless check from pci_device_probe()
-> 	xen/pci: Drop some checks that are always true
-> 
-> are kept as is as preparation. (Do you want to take them from this v2,
-> or should I include them again in v3?)
-
-Easiest if you include them until we merge the series.
-
-> Then convert the list of functions above to use dev_driver_string() in a
-> 4th patch.
-> 
-> > The use in mpt_device_driver_register() looks unnecessary: it's only
-> > to get a struct pci_device_id *, which is passed to ->probe()
-> > functions that don't need it.
-> 
-> This is patch #5.
-> 
-> > The use in adf_enable_aer() looks wrong: it sets the err_handler
-> > pointer in one of the adf_driver structs.  I think those structs
-> > should be basically immutable, and the drivers that call
-> > adf_enable_aer() from their .probe() methods should set
-> > ".err_handler = &adf_err_handler" in their static adf_driver
-> > definitions instead.
-> 
-> I don't understand that one without some research, probably this yields
-> at least one patch.
-
-Yeah, it's a little messy because you'd have to make adf_err_handler
-non-static and add an extern for it.  Sample below.
-
-> > I think that basically leaves these:
-> > 
-> >   uncore_pci_probe()     # .id_table, custom driver "registration"
-> >   match_id()             # .id_table, arch/x86/kernel/probe_roms.c
-> >   xhci_pci_quirks()      # .id_table
-> >   pci_error_handlers()   # roll-your-own AER handling, drivers/misc/cxl/guest.c
-> > 
-> > I think it would be fine to use to_pci_driver(pdev->dev.driver) for
-> > these few.
-> 
-> Converting these will be patch 7 then and patch 8 can then drop the
-> duplicated handling.
-> 
-> Sounds reasonable?
-
-Sounds good to me.  Thanks for working on this!
-
-Bjorn
 
 
-diff --git a/drivers/crypto/qat/qat_4xxx/adf_drv.c b/drivers/crypto/qat/qat_4xxx/adf_drv.c
-index a8805c815d16..75e6c5540523 100644
---- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
-+++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
-@@ -310,6 +310,7 @@ static struct pci_driver adf_driver = {
- 	.probe = adf_probe,
- 	.remove = adf_remove,
- 	.sriov_configure = adf_sriov_configure,
-+	.err_handler = adf_err_handler,
- };
- 
- module_pci_driver(adf_driver);
-diff --git a/drivers/crypto/qat/qat_common/adf_aer.c b/drivers/crypto/qat/qat_common/adf_aer.c
-index d2ae293d0df6..701c3c5f8b9b 100644
---- a/drivers/crypto/qat/qat_common/adf_aer.c
-+++ b/drivers/crypto/qat/qat_common/adf_aer.c
-@@ -166,7 +166,7 @@ static void adf_resume(struct pci_dev *pdev)
- 	dev_info(&pdev->dev, "Device is up and running\n");
- }
- 
--static const struct pci_error_handlers adf_err_handler = {
-+const struct pci_error_handlers adf_err_handler = {
- 	.error_detected = adf_error_detected,
- 	.slot_reset = adf_slot_reset,
- 	.resume = adf_resume,
-@@ -187,7 +187,6 @@ int adf_enable_aer(struct adf_accel_dev *accel_dev)
- 	struct pci_dev *pdev = accel_to_pci_dev(accel_dev);
- 	struct pci_driver *pdrv = pdev->driver;
- 
--	pdrv->err_handler = &adf_err_handler;
- 	pci_enable_pcie_error_reporting(pdev);
- 	return 0;
- }
-diff --git a/drivers/crypto/qat/qat_common/adf_common_drv.h b/drivers/crypto/qat/qat_common/adf_common_drv.h
-index c61476553728..98a29e0b8769 100644
---- a/drivers/crypto/qat/qat_common/adf_common_drv.h
-+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
-@@ -95,6 +95,7 @@ void adf_ae_fw_release(struct adf_accel_dev *accel_dev);
- int adf_ae_start(struct adf_accel_dev *accel_dev);
- int adf_ae_stop(struct adf_accel_dev *accel_dev);
- 
-+extern const struct pci_error_handlers adf_err_handler;
- int adf_enable_aer(struct adf_accel_dev *accel_dev);
- void adf_disable_aer(struct adf_accel_dev *accel_dev);
- void adf_reset_sbr(struct adf_accel_dev *accel_dev);
+On 7/29/2021 2:42 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> VPD is limited in size by the 15-bit VPD Address field in the VPD
+> Capability.  Each resource tag includes a length that determines the
+> overall size of the resource.  Reject any resources that would extend past
+> the maximum VPD size.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
++ mlx5_core maintainers
+
+Hi there, running the latest linux-next with this commit, our system started to
+get noisy. Could those indicate some device firmware bugs?
+
+[  164.937191] mlx5_core 0000:01:00.0: invalid VPD tag 0x78 at offset 113
+[  165.933527] mlx5_core 0000:01:00.1: invalid VPD tag 0x78 at offset 113
+
+0000:01:00.0 Ethernet controller: Mellanox Technologies MT27710 Family [ConnectX-4 Lx]
+	Subsystem: Mellanox Technologies MCX4421A-ACQN ConnectX-4 Lx EN OCP,2x25G
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 318
+	Region 0: Memory at 10100000000 (64-bit, prefetchable) [size=32M]
+	Expansion ROM at 10030000000 [disabled] [size=1M]
+	Capabilities: [60] Express (v2) Endpoint, MSI 00
+		DevCap:	MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 75.000W
+		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
+			MaxPayload 512 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM L1, Exit Latency L1 <4us
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 8GT/s (ok), Width x8 (ok)
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Range ABC, TimeoutDis+, NROPrPrP-, LTR-
+			 10BitTagComp-, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS-, TPHComp-, ExtTPHComp-
+			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 260ms to 900ms, TimeoutDis-, LTR-, OBFF Disabled
+			 AtomicOpsCtl: ReqEn-
+		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+			 Compliance De-emphasis: -6dB
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+, EqualizationPhase1+
+			 EqualizationPhase2+, EqualizationPhase3+, LinkEqualizationRequest-
+	Capabilities: [48] Vital Product Data
+		Product Name: CX4421A- ConnectX-4 LX SFP28
+		Read-only fields:
+			[PN] Part number: MCX4421A-ACQN        
+			[EC] Engineering changes: AE
+			[SN] Serial number: MT2042X16761            
+			[V0] Vendor specific: PCIeGen3 x8     
+			[RV] Reserved: checksum good, 0 byte(s) reserved
+		No end tag found
+	Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	Capabilities: [c0] Vendor Specific Information: Len=18 <?>
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [100 v1] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		AERCap:	First Error Pointer: 04, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [150 v1] Alternative Routing-ID Interpretation (ARI)
+		ARICap:	MFVC- ACS-, Next Function: 1
+		ARICtl:	MFVC- ACS-, Function Group: 0
+	Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+		IOVCap:	Migration-, Interrupt Message Number: 000
+		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy+
+		IOVSta:	Migration-
+		Initial VFs: 8, Total VFs: 8, Number of VFs: 0, Function Dependency Link: 00
+		VF offset: 2, stride: 1, Device ID: 1016
+		Supported Page Size: 000007ff, System Page Size: 00000010
+		Region 0: Memory at 0000010104000000 (64-bit, prefetchable)
+		VF Migration: offset: 00000000, BIR: 0
+	Capabilities: [1c0 v1] Secondary PCI Express
+		LnkCtl3: LnkEquIntrruptEn-, PerformEqu-
+		LaneErrStat: 0
+	Capabilities: [230 v1] Access Control Services
+		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
+	Kernel driver in use: mlx5_core
+	Kernel modules: mlx5_core
+
+
+0000:01:00.1 Ethernet controller: Mellanox Technologies MT27710 Family [ConnectX-4 Lx]
+	Subsystem: Mellanox Technologies MCX4421A-ACQN ConnectX-4 Lx EN OCP,2x25G
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 392
+	Region 0: Memory at 10102000000 (64-bit, prefetchable) [size=32M]
+	Expansion ROM at 10030100000 [disabled] [size=1M]
+	Capabilities: [60] Express (v2) Endpoint, MSI 00
+		DevCap:	MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 75.000W
+		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
+			MaxPayload 512 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM L1, Exit Latency L1 <4us
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 8GT/s (ok), Width x8 (ok)
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Range ABC, TimeoutDis+, NROPrPrP-, LTR-
+			 10BitTagComp-, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS-, TPHComp-, ExtTPHComp-
+			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 260ms to 900ms, TimeoutDis-, LTR-, OBFF Disabled
+			 AtomicOpsCtl: ReqEn-
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+	Capabilities: [48] Vital Product Data
+		Product Name: CX4421A- ConnectX-4 LX SFP28
+		Read-only fields:
+			[PN] Part number: MCX4421A-ACQN        
+			[EC] Engineering changes: AE
+			[SN] Serial number: MT2042X16761            
+			[V0] Vendor specific: PCIeGen3 x8     
+			[RV] Reserved: checksum good, 0 byte(s) reserved
+		No end tag found
+	Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	Capabilities: [c0] Vendor Specific Information: Len=18 <?>
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [100 v1] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		AERCap:	First Error Pointer: 04, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [150 v1] Alternative Routing-ID Interpretation (ARI)
+		ARICap:	MFVC- ACS-, Next Function: 0
+		ARICtl:	MFVC- ACS-, Function Group: 0
+	Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+		IOVCap:	Migration-, Interrupt Message Number: 000
+		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy-
+		IOVSta:	Migration-
+		Initial VFs: 8, Total VFs: 8, Number of VFs: 0, Function Dependency Link: 00
+		VF offset: 9, stride: 1, Device ID: 1016
+		Supported Page Size: 000007ff, System Page Size: 00000010
+		Region 0: Memory at 0000010104800000 (64-bit, prefetchable)
+		VF Migration: offset: 00000000, BIR: 0
+	Capabilities: [230 v1] Access Control Services
+		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
+	Kernel driver in use: mlx5_core
+	Kernel modules: mlx5_core
+
+
+> ---
+>  drivers/pci/vpd.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 66703de2cf2b..e52382050e3e 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -77,6 +77,7 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+>  
+>  	while (off < old_size && pci_read_vpd(dev, off, 1, header) == 1) {
+>  		unsigned char tag;
+> +		size_t size;
+>  
+>  		if (off == 0 && (header[0] == 0x00 || header[0] == 0xff))
+>  			goto error;
+> @@ -94,8 +95,11 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+>  						 off + 1);
+>  					return 0;
+>  				}
+> -				off += PCI_VPD_LRDT_TAG_SIZE +
+> -					pci_vpd_lrdt_size(header);
+> +				size = pci_vpd_lrdt_size(header);
+> +				if (off + size > PCI_VPD_MAX_SIZE)
+> +					goto error;
+> +
+> +				off += PCI_VPD_LRDT_TAG_SIZE + size;
+>  			} else {
+>  				pci_warn(dev, "invalid large VPD tag %02x at offset %zu",
+>  					 tag, off);
+> @@ -103,9 +107,12 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+>  			}
+>  		} else {
+>  			/* Short Resource Data Type Tag */
+> -			off += PCI_VPD_SRDT_TAG_SIZE +
+> -				pci_vpd_srdt_size(header);
+>  			tag = pci_vpd_srdt_tag(header);
+> +			size = pci_vpd_srdt_size(header);
+> +			if (size == 0 || off + size > PCI_VPD_MAX_SIZE)
+> +				goto error;
+> +
+> +			off += PCI_VPD_SRDT_TAG_SIZE + size;
+>  			if (tag == PCI_VPD_STIN_END)	/* End tag descriptor */
+>  				return off;
+>  		}
+> 
