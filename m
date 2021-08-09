@@ -2,75 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B123A3E3E6F
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 05:47:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC79F3E3ED0
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 06:24:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232739AbhHIDsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Aug 2021 23:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231459AbhHIDsD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Aug 2021 23:48:03 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77846C06175F
-        for <linux-pci@vger.kernel.org>; Sun,  8 Aug 2021 20:47:42 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id u25so21775505oiv.5
-        for <linux-pci@vger.kernel.org>; Sun, 08 Aug 2021 20:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=s2d4yWq2/GXtOoZyEod6tz1PGriNllPBZKTwZOnx4zw=;
-        b=YEgJ9BNnJNOPfu/GQ1GYFuv4v7+f7xyDrMghy3gJzkC2t6zK4vW01NlcizmqYUkic7
-         mRK/iHeGlSS93KbqRBk2X83a5Aomo4GVCflyvbMRcm8G2bPK+X9U+XlmvgxdOVy+NRIe
-         GgQ6al9MIi3Eqox5l+p4cPlPyASmuEjI+IOTqZinN8SyUD6yabUFGAXslozIdxvfZFrT
-         XevrZaWvZo6AU4PBycoIU/VHXWWcfMnmmEuthQBqDdQkPbwh+B4HUZCY15o12YVaMmnq
-         1lSDFkYBT1HThqLj6cAG7USGCQCVOG8XThoJJTXMngwRQHT82InJmeiGUuMK29j18U1o
-         g/dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=s2d4yWq2/GXtOoZyEod6tz1PGriNllPBZKTwZOnx4zw=;
-        b=B64F29wBhqEy/61xlnB/XwZMH9Zqzmg5IymS7yKOIPWW4xhgNAUAGi0xA77oGtseiK
-         tfBPXhNhPN21F6hbo1nfTbnVT5VvwqPC1/UX7jEi16t7JvkhSXCbNIl/k5leHvxK8w04
-         JLSHhvB+khwRVYCga/XoA+UvIuIXxbZvKqEzy7aoQiuBw8NxNr9h2LnBZkLwAZ/6x1xf
-         PQsviu3xnVLyT3GnEwrbj1OxGQz5JsJKEyPjaQisT/JDTCCO23Q1Co34lQOZmddduH9h
-         t+3Xi986TUa6PZu/HCV2b9sr1GHEFVzgY0EcvO5wYeKzaqz/GLUeLUKxyKvu+jG+sSrn
-         5GyA==
-X-Gm-Message-State: AOAM531mLkUpIrBP/SSlpkenHeTR6GR4UMy68+6zHuA6IW9Vsa4lGDfv
-        G+KNs6w5u3ZW+8L1JGHdutje7jS/s4q729774Zo=
-X-Google-Smtp-Source: ABdhPJzTf/7DPGDwXjQEgQ/blusJsLCyVQf+AeO71ZBXltxu59pdwrc2lTT9LbpRcN8nJI252wB3IP238HKloxoCByY=
-X-Received: by 2002:a05:6808:1924:: with SMTP id bf36mr14878197oib.106.1628480861749;
- Sun, 08 Aug 2021 20:47:41 -0700 (PDT)
+        id S230365AbhHIEYr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 00:24:47 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:45426
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229483AbhHIEYq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 00:24:46 -0400
+Received: from HP-EliteBook-840-G7.. (1-171-221-113.dynamic-ip.hinet.net [1.171.221.113])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 10DEE3F044;
+        Mon,  9 Aug 2021 04:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1628483065;
+        bh=rNTKmk2f1FxpFVDQvfWr910vGJV6I98CEVlT78OYqBE=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version;
+        b=TUHQykpM0pxI6F8Cq4R0iDbUXHb9/c46e6JafcYChga/jtxDXltw+/m/H7l6grPn5
+         xoVetVE+Jq3Z9JcZ+smqUeTj/TgJAvC2uHaLeDqTa7J2UpWCHbPvZxNFIJbhO4W6xF
+         6RWF8IFAyNX0z/WpeuEb1GsqE1M8YJajx+P7OdTPU7B+Jux1Agu3owmL6rP8Optowq
+         0Eo/HWShE3+QFaU1XIJc8YxgsUlcqndKSssbCeyjdUjY0i+MB0kglKV9i50GHU7XRC
+         0/uS19cjV2fzhZcMVVootW/DjcrCk7+YGqTQw87jeoyBg4zXCgt0snSiqCfArVsl/A
+         59FyswxOkgX1Q==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] PCI/portdrv: Disallow runtime suspend when waekup is required but PME service isn't supported
+Date:   Mon,  9 Aug 2021 12:24:12 +0800
+Message-Id: <20210809042414.107430-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
+References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6820:60a:0:0:0:0 with HTTP; Sun, 8 Aug 2021 20:47:41
- -0700 (PDT)
-Reply-To: fredfyk2019@gmail.com
-From:   "Mrs.Wendy Adams" <genkell94@gmail.com>
-Date:   Sun, 8 Aug 2021 20:47:41 -0700
-Message-ID: <CA+KPcuH6NFu0SLxbR_DGfk4g0y5c4trEgAkghfdtot9xhNiUWA@mail.gmail.com>
-Subject: GOD BLESS YOU DEAR.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Some platforms cannot detect ethernet hotplug once its upstream port is
+runtime suspended because PME isn't enabled in _OSC. The issue can be
+workarounded by "pcie_ports=native".
+
+The vendor confirmed that the PME in _OSC is disabled intentionally for
+stability issues on the other OS, so we should also honor the PME
+setting here.
+
+Disallow port runtime suspend when any child device requires wakeup, so
+pci_pme_list_scan() can still read the PME status from the devices
+behind the port.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=213873
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pcie/portdrv_pci.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index c7ff1eea225a..e693d243c90d 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -59,14 +59,30 @@ static int pcie_port_runtime_suspend(struct device *dev)
+ 	return pcie_port_device_runtime_suspend(dev);
+ }
+ 
++static int pcie_port_wakeup_check(struct device *dev, void *data)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (!pdev)
++		return 0;
++
++	return pdev->wakeup_prepared;
++}
++
+ static int pcie_port_runtime_idle(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (!pcie_port_find_device(pdev, PCIE_PORT_SERVICE_PME) &&
++	    device_for_each_child(dev, NULL, pcie_port_wakeup_check))
++		return -EBUSY;
++
+ 	/*
+ 	 * Assume the PCI core has set bridge_d3 whenever it thinks the port
+ 	 * should be good to go to D3.  Everything else, including moving
+ 	 * the port to D3, is handled by the PCI core.
+ 	 */
+-	return to_pci_dev(dev)->bridge_d3 ? 0 : -EBUSY;
++	return pdev->bridge_d3 ? 0 : -EBUSY;
+ }
+ 
+ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
 -- 
-Dear
-I am Mrs. Wendy Adams a widow , I am looking for a good and reliable
-person who will not betray me or bring more pain to me, but help and
-brings me out of this wicked country.
-I and my late Husband came back home last year 2020 from UK because of
-his health condition, Four months later my late husband died of High
-Blood Pressure.
-Before his death he sold our houses with other landed properties and
-deposited the money in a bank here, which he wanted to use and start a
-Hotel business as soon as he get better.
-Now his brothers and families has been fighting me and also trying to
-claim the fund for themselves because I do not have a child.
-If you can help me receive this fund into your Bank account and bring
-me to start a new life there in your country.  I am ready to abide by
-your terms and condition provided you will be honest to me.
-I wait to hear from you.
-Mrs.Wendy.
+2.31.1
+
