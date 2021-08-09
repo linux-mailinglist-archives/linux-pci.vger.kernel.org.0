@@ -2,149 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACFDF3E4C87
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 20:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE9513E4C8A
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 20:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235656AbhHIS6M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Aug 2021 14:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235604AbhHIS6L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 14:58:11 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA850C0613D3
-        for <linux-pci@vger.kernel.org>; Mon,  9 Aug 2021 11:57:50 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id k5-20020a05600c1c85b02902e699a4d20cso717519wms.2
-        for <linux-pci@vger.kernel.org>; Mon, 09 Aug 2021 11:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q2V3VDp2VWzp6PGKLwjtja5w/UBXzz0jjo0xw2vO0Q0=;
-        b=okn6t7AquJdYDdrnv55lYB0Aqr7/KcIqPHljeihVHltyF0DhKsjuWmxCcCp0kLsbeQ
-         6dFjfRomYcKJms8ZoSponiV9qd9hJlJ+jK5Mpc1oYZCDb8d76tK1ivfpZAG+TXFQPuTi
-         /kzRo//4NCr+MmwIbLunEPZk3MpqzLD469UWcznVaKQNiEIh/Zkgm8CwNmEkZDVSJ1h7
-         GffHFDGTQVHzYpNxWOcGWaRix+M81ZbhwSuCL/14Y9S6iR/0rNHIifEv2PWV4CO/GQ7j
-         2tx4ZKHaE4YhCvVR10huQOAI38FpW46ym06vkTxPwUSsdHzeO+3YsZ6nw7bP6vyJ/9r9
-         hl4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q2V3VDp2VWzp6PGKLwjtja5w/UBXzz0jjo0xw2vO0Q0=;
-        b=WpmRltz8+A6ZQx42aP0etGLrsxj1b4CcBEAbw10Jj4wI+HfHJInMNqrmZgbzUwneAN
-         7yPGoPngIf5aEIEm+wBncI+wTcE1qy8y7Mry0CleZo/cjVrogG2OmhADK+4nlfrtTpb5
-         w7aTwKuIZzEKefo7orTRLjWyGqkKWlZj9rPY/ShQ1/CHnh3XDn+oEiPbIBc1YauNiCeg
-         MtCwaG0kd9dj6s4QtkQyLKbNUZJuwmOI7gPtiQwdEz3R0ljCLP5PgXvHiaVNHGs+TftE
-         XiHJhLQb0AdAQ4W0F/qn9y/FUonf2Bj6cdNSwE8WORe4P85B1plynqi5aaiC/FkDwZ+e
-         NB9A==
-X-Gm-Message-State: AOAM533oixTpCztrjBBpzvwCnNlfWj2/yLqxMVaIxxW8gnsNo/V3NgHt
-        DpzEaDzfshybhcR+lLwtVeU=
-X-Google-Smtp-Source: ABdhPJw6P4xBAo+dl22Z02wTOJsCKm+mW2kDDmGr+djXJQJwzOPcShP3Yxu/0QIogWfbooHQUXHu1w==
-X-Received: by 2002:a05:600c:a44:: with SMTP id c4mr557269wmq.83.1628535469420;
-        Mon, 09 Aug 2021 11:57:49 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f10:c200:50b3:512f:3b7:fe04? (p200300ea8f10c20050b3512f03b7fe04.dip0.t-ipconnect.de. [2003:ea:8f10:c200:50b3:512f:3b7:fe04])
-        by smtp.googlemail.com with ESMTPSA id j36sm314954wms.16.2021.08.09.11.57.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Aug 2021 11:57:48 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] PCI/VPD: Reject resource tags with invalid size
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Qian Cai <quic_qiancai@quicinc.com>
-Cc:     Hannes Reinecke <hare@suse.de>, linux-pci@vger.kernel.org,
+        id S235487AbhHIS7Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 14:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235300AbhHIS7Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Aug 2021 14:59:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1F49560FE3;
+        Mon,  9 Aug 2021 18:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628535543;
+        bh=S0RgmCBdI1dbiqAimstrJEuW072G2RP/9teOq+ZKJ8I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VsiijoOt+eWYgZlBVPueoOaEhsFmdX+6yYAXDtSb8eqZxMUUq6K41LcO0s0YKZdLh
+         x9TU0rPHWxQkens1v1x2y6H1IWQttUIM2CFTm/+qTks5pxSxcowXFa2zjiMlWcziL5
+         dCGkoUTVboafAslZLlFEMOVnODJbiatWHZrF12JLATKBHNGoi44fbG8mVZ4ZMt9WlE
+         RW9PxVKOWW8hqP1WwNZpc9EtoVMz5Tu5cIwcGhy5ZHd5PPErZRkAvbLlXFCFmmcJwk
+         sEEKsfGnMInzaTD6HigFiEPkst9Ln/ySeakhJ98mR2WirH0S0XVk6LAvNwkGB7ho2n
+         pE+cPKsgZ1zpA==
+Date:   Mon, 9 Aug 2021 13:59:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        David Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-References: <20210809184639.GA2172096@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <4182b611-a257-5fa8-258a-694fe71f4828@gmail.com>
-Date:   Mon, 9 Aug 2021 20:57:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
+Message-ID: <20210809185901.GA2176971@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210809184639.GA2172096@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210803170642.GA1556172@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09.08.2021 20:46, Bjorn Helgaas wrote:
-> On Mon, Aug 09, 2021 at 02:15:20PM -0400, Qian Cai wrote:
->>
->>
->> On 7/29/2021 2:42 PM, Bjorn Helgaas wrote:
->>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>> VPD is limited in size by the 15-bit VPD Address field in the VPD
->>> Capability.  Each resource tag includes a length that determines the
->>> overall size of the resource.  Reject any resources that would extend past
->>> the maximum VPD size.
->>>
->>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> + mlx5_core maintainers
->>
->> Hi there, running the latest linux-next with this commit, our system started to
->> get noisy. Could those indicate some device firmware bugs?
->>
->> [  164.937191] mlx5_core 0000:01:00.0: invalid VPD tag 0x78 at offset 113
->> [  165.933527] mlx5_core 0000:01:00.1: invalid VPD tag 0x78 at offset 113
+On Tue, Aug 03, 2021 at 12:06:44PM -0500, Bjorn Helgaas wrote:
+> On Sat, Jul 24, 2021 at 05:30:02PM +0800, Huacai Chen wrote:
+> > Hi, Bjorn,
+> > 
+> > On Sat, Jul 24, 2021 at 8:10 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 23, 2021 at 05:53:36PM +0800, Huacai Chen wrote:
+> > > > Hi, Bjorn,
+> > > >
+> > > > On Fri, Jul 23, 2021 at 5:29 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >
+> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > >
+> > > > > This is a little bit of rework and extension of Huacai's nice work at [1].
+> > > > >
+> > > > > It moves the VGA arbiter to the PCI subsystem, fixes a few nits, and breaks
+> > > > > a few pieces off Huacai's patch to make the main patch a little smaller.
+> > > > >
+> > > > > That last patch is still not very small, and it needs a commit log, as I
+> > > > > mentioned at [2].
+> > > > >
+> > > > > All comments welcome!
+> > > > >
+> > > > > [1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
+> > > > > [2] https://lore.kernel.org/r/20210720221923.GA43331@bjorn-Precision-5520
+> > > > Thank you for your splitting. Your two questions are answered in the following.
+> > > >
+> > > > (1) explain why your initcall ordering is unusual.
+> > > > The original problem happens on MIPS. vga_arb_device_init() and
+> > > > pcibios_init() are both wrapped by subsys_initcall(). The order of
+> > > > functions in the same level depends on the Makefile.
+> > > >
+> > > > TOP level Makefile:
+> > > > drivers-y       := drivers/ sound/
+> > > > ....
+> > > > include arch/$(SRCARCH)/Makefile
+> > > >
+> > > > drivers/Makefile:
+> > > > obj-$(CONFIG_ACPI)              += acpi/
+> > > > ....
+> > > > obj-y                           += gpu/
+> > > >
+> > > > arch/mips/Makefile:
+> > > > drivers-$(CONFIG_PCI)           += arch/mips/pci/
+> > > >
+> > > > This makes pcibios_init() in arch/mips/pci/ placed after
+> > > > vga_arb_device_init() in drivers/gpu. ACPI-based systems have no
+> > > > problems because acpi_init() in drivers/acpi is placed before
+> > > > vga_arb_device_init().
+> > >
+> > > Thanks for the above; that was helpful.  To summarize:
+> > >
+> > >   - On your system, the AST2500 bridge [1a03:1150] does not implement
+> > >     PCI_BRIDGE_CTL_VGA [1].  This is perfectly legal but means the
+> > >     legacy VGA resources won't reach downstream devices unless they're
+> > >     included in the usual bridge windows.
+> > >
+> > >   - vga_arb_select_default_device() will set a device below such a
+> > >     bridge as the default VGA device as long as it has PCI_COMMAND_IO
+> > >     and PCI_COMMAND_MEMORY enabled.
+> > >
+> > >   - vga_arbiter_add_pci_device() is called for every VGA device,
+> > >     either at boot-time or at hot-add time, and it will also set the
+> > >     device as the default VGA device, but ONLY if all bridges leading
+> > >     to it implement PCI_BRIDGE_CTL_VGA.
+> > >
+> > >   - This difference between vga_arb_select_default_device() and
+> > >     vga_arbiter_add_pci_device() means that a device below an AST2500
+> > >     or similar bridge can only be set as the default if it is
+> > >     enumerated before vga_arb_device_init().
+> > >
+> > >   - On ACPI-based systems, PCI devices are enumerated by acpi_init(),
+> > >     which runs before vga_arb_device_init().
+> > >
+> > >   - On non-ACPI systems, like your MIPS system, they are enumerated by
+> > >     pcibios_init(), which typically runs *after*
+> > >     vga_arb_device_init().
+> > >
+> > > So I think the critical change is actually that you made
+> > > vga_arb_update_default_device(), which you call from
+> > > vga_arbiter_add_pci_device(), set the default device even if it does
+> > > not own the VGA resources because an upstream bridge doesn't implement
+> > > PCI_BRIDGE_CTL_VGA, i.e.,
+> > >
+> > >   (vgadev->owns & VGA_RSRC_LEGACY_MASK) != VGA_RSRC_LEGACY_MASK
+> > >
+> > > Does that seem right?
+> >
+> > Yes, that's right.
 > 
-> Thanks a lot for reporting this!
+> I think that means I screwed up.  I somehow had it in my head that the
+> hot-add path would never set the default VGA device.  But that is
+> false.
 > 
-> I guess VPD contains a tag of 0x78, which is a small resource item
-> with name 0xf (an End Tag) and size 0.  Per PNPISA, the End Tag should
-> have a length 1, with the single byte being a checksum of the resource
-> data.  But the PCI spec doesn't mention that checksum byte, so I think
-> we should accept the size 0 without any message.
+> I still think we should move vgaarb.c to drivers/pci/ and get it more
+> tightly integrated into the PCI core.
 > 
+> BUT that's a lot of churn and obscures the simple change that fixes
+> the problem for you.  So I think the first step should be the change
+> to vga_arb_update_default_device() so it sets the default device even
+> when the upstream bridge doesn't implement PCI_BRIDGE_CTL_VGA.
+> 
+> That should be a relatively small change, and I think it's better to
+> make the fix before embarking on major restructuring.
 
-PCI 2.2 spec includes a VPD example in section I.3.2.
-There the end tag is listed as 0x78.
+To make sure this doesn't get lost: I'm hoping you can separate out
+and post the small patch to vga_arb_update_default_device().
 
-> I think the following patch on top of linux-next should do this:
-> 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 5e2e638093f1..d7f705ba6664 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -69,12 +69,11 @@ EXPORT_SYMBOL(pci_write_vpd);
->   */
->  static size_t pci_vpd_size(struct pci_dev *dev)
->  {
-> -	size_t off = 0;
-> -	unsigned char header[1+2];	/* 1 byte tag, 2 bytes length */
-> +	size_t off = 0, size;
-> +	unsigned char tag, header[1+2];	/* 1 byte tag, 2 bytes length */
->  
->  	while (pci_read_vpd(dev, off, 1, header) == 1) {
-> -		unsigned char tag;
-> -		size_t size;
-> +		size = 0;
->  
->  		if (off == 0 && (header[0] == 0x00 || header[0] == 0xff))
->  			goto error;
-> @@ -95,7 +94,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
->  			/* Short Resource Data Type Tag */
->  			tag = pci_vpd_srdt_tag(header);
->  			size = pci_vpd_srdt_size(header);
-> -			if (size == 0 || off + size > PCI_VPD_MAX_SIZE)
-> +			if (off + size > PCI_VPD_MAX_SIZE)
->  				goto error;
->  
->  			off += PCI_VPD_SRDT_TAG_SIZE + size;
-> @@ -106,8 +105,8 @@ static size_t pci_vpd_size(struct pci_dev *dev)
->  	return off;
->  
->  error:
-> -	pci_info(dev, "invalid VPD tag %#04x at offset %zu%s\n",
-> -		 header[0], off, off == 0 ?
-> +	pci_info(dev, "invalid VPD tag %#04x (size %zu) at offset %zu%s\n",
-> +		 header[0], size, off, off == 0 ?
->  		 "; assume missing optional EEPROM" : "");
->  	return off;
->  }
-> 
+I can look at the move/restructure stuff later.
 
+> > > [1] https://lore.kernel.org/r/CAAhV-H4pn53XC7qVvwM792ppkQRnjWpPDwmrhBv8twgQu0eabQ@mail.gmail.com
+> > >
+> > > > (2) explain the approach, which IIUC is basically to add the
+> > > > vga_arb_select_default_device() functionality to
+> > > > vga_arbiter_add_pci_device().
+> > > > vga_arb_select_default_device() has only one chance to be called, we
+> > > > want to make it be called every time a new vga device is added. So
+> > > > rename it to vga_arb_update_default_device() and move the callsite to
+> > > > vga_arbiter_add_pci_device().
+> > > >
+> > > > I think you know all the information which you need now. And you can
+> > > > reorganize the commit message based on the existing one. As English is
+> > > > not my first language, the updated commit message written by me may
+> > > > still not be as good as you want.:)
+> > > >
+> > > > Huacai
+> > > >
+> > > > > Bjorn Helgaas (4):
+> > > > >   PCI/VGA: Move vgaarb to drivers/pci
+> > > > >   PCI/VGA: Replace full MIT license text with SPDX identifier
+> > > > >   PCI/VGA: Use unsigned format string to print lock counts
+> > > > >   PCI/VGA: Remove empty vga_arb_device_card_gone()
+> > > > >
+> > > > > Huacai Chen (5):
+> > > > >   PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
+> > > > >   PCI/VGA: Prefer vga_default_device()
+> > > > >   PCI/VGA: Split out vga_arb_update_default_device()
+> > > > >   PCI/VGA: Log bridge control messages when adding devices
+> > > > >   PCI/VGA: Rework default VGA device selection
+> > > > >
+> > > > >  drivers/gpu/vga/Kconfig           |  19 ---
+> > > > >  drivers/gpu/vga/Makefile          |   1 -
+> > > > >  drivers/pci/Kconfig               |  19 +++
+> > > > >  drivers/pci/Makefile              |   1 +
+> > > > >  drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
+> > > > >  5 files changed, 126 insertions(+), 183 deletions(-)
+> > > > >  rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
+> > > > >
+> > > > > --
+> > > > > 2.25.1
+> > > > >
