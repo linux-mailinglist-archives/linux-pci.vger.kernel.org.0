@@ -2,155 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5285C3E48D3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 17:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6BBB3E493F
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 17:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235583AbhHIP1m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Aug 2021 11:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        id S235865AbhHIPyQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 11:54:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:35664 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235778AbhHIP1f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Aug 2021 11:27:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D5921610A4;
-        Mon,  9 Aug 2021 15:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628522834;
-        bh=1yD6V5YYEokX5B0rQ6t8LnnMturN0d6B+H9Rzr2ePkc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GOAYeokh8GrdF7C/AvDAIIKSptbh2HpqYejVxyWVx6bBa+5d2MH29qaQQH8DAB+/W
-         sKwbrZ9SytvKO2XEd6pFS8+H6UdjZ+ZCfew23EBRnaOXX7uPgU8VG4fHSSsfFG2hn3
-         maxfaSjCkoOlcEz5NnNJEVkQKDT7Wz03fbIpAKxpixXxm7plLo7RcrSZi6bdLuEMf7
-         GntCEm1BjPVireUD2v6rM3ELqOLHFqtISAhJdBuJ/PdyjMvTcWcBHcDcLqWT/rY3PN
-         CG3zq5w8eIEChtrO24oj3N8N5ZTmpgBNdwyFU/h9vw0UAox8KYpJsdbcDdjlZ7txd/
-         ny4hWuh04vMlA==
-Received: by mail-ej1-f45.google.com with SMTP id c25so15796728ejb.3;
-        Mon, 09 Aug 2021 08:27:14 -0700 (PDT)
-X-Gm-Message-State: AOAM530y8G085LhkUXyDNR7y4fq8uIKAhKE+y8f4sGmQyG8YGzJ1C3VV
-        xUqEaeoMF1O3l2Gn10WQAg5J/7uIG9Pk5UFJZA==
-X-Google-Smtp-Source: ABdhPJwNSzt5P0dsLVvJ9d/PPbBsKhqS8CaRCWNvJwEWmLp/8/EgBK3DkDbdiNvt5XWcWpYYkYD8eTiEnnf+pIKALIE=
-X-Received: by 2002:a17:906:fa92:: with SMTP id lt18mr4028759ejb.359.1628522833303;
- Mon, 09 Aug 2021 08:27:13 -0700 (PDT)
+        id S235740AbhHIPyN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Aug 2021 11:54:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB55B31B;
+        Mon,  9 Aug 2021 08:53:52 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E7A03F718;
+        Mon,  9 Aug 2021 08:53:50 -0700 (PDT)
+Date:   Mon, 9 Aug 2021 16:53:43 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 8/8] PCI: hv: Turn on the host bridge probing on ARM64
+Message-ID: <20210809155343.GA31511@lpieralisi>
+References: <20210726180657.142727-1-boqun.feng@gmail.com>
+ <20210726180657.142727-9-boqun.feng@gmail.com>
+ <20210803171451.GA15466@lpieralisi>
+ <YRE9+LaAjAW3SUvc@boqun-archlinux>
 MIME-Version: 1.0
-References: <20210806221256.GA1891371@bjorn-Precision-5520> <5f4f484b-9eef-2722-405d-a7ff6259aa0f@arm.com>
-In-Reply-To: <5f4f484b-9eef-2722-405d-a7ff6259aa0f@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 9 Aug 2021 09:27:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL=ipGBOsMUaCDvAETX5DQ2tCunNSAtFs6VZybOW7Xrdg@mail.gmail.com>
-Message-ID: <CAL_JsqL=ipGBOsMUaCDvAETX5DQ2tCunNSAtFs6VZybOW7Xrdg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI/ACPI: Add new quirk detection, enable bcm2711
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YRE9+LaAjAW3SUvc@boqun-archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 6, 2021 at 6:35 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->
-> Hi,
->
-> Thanks for looking at this.
->
-> On 8/6/21 5:12 PM, Bjorn Helgaas wrote:
-> > In subject, this or similar would match history:
-> >
-> >    PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
-> >
-> > On Thu, Aug 05, 2021 at 04:12:00PM -0500, Jeremy Linton wrote:
-> >> Now that we have a bcm2711 quirk, we need to be able to
-> >> detect it when the MCFG is missing. Use a namespace
-> >> property as an alternative to the MCFG OEM.
-> >
-> > Rewrap to use ~75 columns.
-> >
-> > Mention the DT namespace property here.
-> >
-> >> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> >> ---
-> >>   drivers/acpi/pci_mcfg.c | 14 ++++++++++++++
-> >>   1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> >> index 53cab975f612..7d77fc72c2a4 100644
-> >> --- a/drivers/acpi/pci_mcfg.c
-> >> +++ b/drivers/acpi/pci_mcfg.c
-> >> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
-> >>      ALTRA_ECAM_QUIRK(1, 13),
-> >>      ALTRA_ECAM_QUIRK(1, 14),
-> >>      ALTRA_ECAM_QUIRK(1, 15),
-> >> +
-> >> +    { "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
-> >> +      DEFINE_RES_MEM(0xFD500000, 0xA000) },
-> >>   };
-> >>
-> >>   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-> >> @@ -198,8 +201,19 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
-> >>      u16 segment = root->segment;
-> >>      struct resource *bus_range = &root->secondary;
-> >>      struct mcfg_fixup *f;
-> >> +    const char *soc;
-> >>      int i;
-> >>
-> >> +    /*
-> >> +     * This could be a machine with a PCI/SMC conduit,
-> >> +     * which means it doens't have MCFG. Get the machineid from
-> >> +     * the namespace definition instead.
-> >
-> > s/SMC/SMCCC/ ?  Cover letter uses SMCCC (not sure it's relevant anyway)
-> > s/doens't/doesn't/
-> >
-> > Rewrap comment to use ~80 columns.
-> >
-> > Seems pretty reasonable that a platform without standard ECAM might
-> > not have MCFG, since MCFG basically implies ECAM.
->
->
-> Sure, on all the above comments.
->
-> >
-> > Is "linux,pcie-quirk" the right property to look for?  It doesn't
-> > sound very generic, and it doesn't sound like anything related to
-> > ECAM.  Is it new?  I don't see it in the tree yet.  Should it be in
-> > Documentation/devicetree/bindings/pci/pci.txt so we don't get a
-> > different property name for every new platform?
+On Mon, Aug 09, 2021 at 10:38:48PM +0800, Boqun Feng wrote:
+> On Tue, Aug 03, 2021 at 06:14:51PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 27, 2021 at 02:06:57AM +0800, Boqun Feng wrote:
+> > > Now we have everything we need, just provide a proper sysdata type for
+> > > the bus to use on ARM64 and everything else works.
+> > > 
+> > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pci-hyperv.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > > index e6276aaa4659..62dbe98d1fe1 100644
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -40,6 +40,7 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/pci.h>
+> > > +#include <linux/pci-ecam.h>
+> > >  #include <linux/delay.h>
+> > >  #include <linux/semaphore.h>
+> > >  #include <linux/irqdomain.h>
+> > > @@ -448,7 +449,11 @@ enum hv_pcibus_state {
+> > >  };
+> > >  
+> > >  struct hv_pcibus_device {
+> > > +#ifdef CONFIG_X86
+> > >  	struct pci_sysdata sysdata;
+> > > +#elif defined(CONFIG_ARM64)
+> > > +	struct pci_config_window sysdata;
+> > 
+> > This is ugly. HV does not need pci_config_window at all right
+> > (other than arm64 pcibios_root_bridge_prepare()) ?
+> > 
+> 
+> Right.
+> 
+> > The issue is that in HV you have to have *some* sysdata != NULL, it is
+> > just some data to retrieve the hv_pcibus_device.
+> > 
+> > Mmaybe we can rework ARM64 ACPI code to store the acpi_device in struct
+> > pci_host_bridge->private instead of retrieving it from pci_config_window
+> > so that we decouple HV from the ARM64 back-end.
+> > 
+> > HV would just set struct pci_host_bridge->private == NULL.
+> > 
+> 
+> Works for me, but please note that pci_sysdata is an x86-specific
+> structure, so we still need to define a fake pci_sysdata inside
+> pci-hyperv.c, like:
+> 
+> 	#ifndef CONFIG_X86
+> 	struct pci_sysdata { };
+> 	#end
+> 
+> > I need to think about this a bit, I don't think it should block
+> > this series though but it would be nicer.
+> 
+> After a quick look into the code, seems that what we need to do is to
+> add an additional parameter for acpi_pci_root_create() and introduce a
+> slightly different version of pci_create_root_bus(). A question is:
+> should we only do this for ARM64, or should we also do this for
+> other acpi_pci_root_create() users (x86 and ia64)? Another question
+> comes to my mind is, while we are at it, is there anything else that we
+> want to move from sysdata to ->private? These questions are out of scope
+> of this patchset, I think. Maybe it's better that we address them in the
+> future, and I can send out separate RFC patches to start the discussion.
+> Does that sound like a plan to you?
 
-No, it should not be in pci.txt. Nothing to do with DT and I don't
-review ACPI bindings (someone should) if I can help it.
+Yes it does and we can start from ARM64 - what I really don't like
+is the arch/arm64 dependency with the HV controller driver as I
+described, being forced to have a struct pci_config_window in the
+driver is not really nice or clean IMO.
 
-> Yes, I made it up. Someone else commented about the "linux," partially
-> because it should be "linux-" to conform with
-> https://github.com/UEFI/DSD-Guide. But also in the same context of it
-> being linux specific.  I think that guide is where it should end up,
-> rather than the devicetree bindings.
->
-> I guess we can request addition to the uefi- but that seems like a
-> mistake this is really (hopefully?) a Linux specific properly as other
-> OS's will simply use the SMC. I think we could request another prefix if
-> we come up with a good one and think it belongs in that guide.
+Not that I expect any other PCI host bridge driver with ACPI coming
+anytime soon but even if it is not within set (that we can merge) I'd
+like to see the decoupling rework done asap, let me put it this way.
 
-It's only Linux specific until it's not.
+Thanks,
+Lorenzo
 
-What happens when there's a second PCIe quirk here? Say what the quirk
-is (and not in terms of Linux policy).
-
-Don't you know the device here and can imply all this (like implying
-off of 'compatible' in DT)? Adding properties to address issues
-creates compatibility issues. Maybe not an issue in this case if the
-firmware is not stable, but not a good practice to be in.
-
-Rob
+> Regards,
+> Boqun
+> 
+> > 
+> > Lorenzo
+> > 
+> > > +#endif
+> > >  	struct pci_host_bridge *bridge;
+> > >  	struct fwnode_handle *fwnode;
+> > >  	/* Protocol version negotiated with the host */
+> > > @@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
+> > >  			 dom_req, dom);
+> > >  
+> > >  	hbus->bridge->domain_nr = dom;
+> > > +#ifdef CONFIG_X86
+> > >  	hbus->sysdata.domain = dom;
+> > > +#endif
+> > >  
+> > >  	hbus->hdev = hdev;
+> > >  	INIT_LIST_HEAD(&hbus->children);
+> > > -- 
+> > > 2.32.0
+> > > 
