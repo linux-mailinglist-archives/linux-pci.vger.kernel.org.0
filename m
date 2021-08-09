@@ -2,456 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73C013E4449
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 12:58:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 769B13E446E
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 13:14:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234861AbhHIK63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Aug 2021 06:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233496AbhHIK6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 06:58:18 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11AC7C0613D3;
-        Mon,  9 Aug 2021 03:57:50 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id c137so28270339ybf.5;
-        Mon, 09 Aug 2021 03:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=29y/iLxNFNnvLYgOgqntrEvNskLkzb3T+cHZyF7bUPo=;
-        b=Abm0cm6I/+CyTKXMwu6hEStFtMK0RXqgvqMbDOU/bH56Ibe53b1hnHrCED8JjLC51E
-         FuEsvn9kUgt7XKG2dGVuq0RFAivZ3D8b/WEMs30oyTvoCZN8vkxzcSXzzxZ8d3Qo++Au
-         znyFDhAK2894pPpwut/GtMhzTJTCfM08naRZMqmAW+0QXj+s511h06x48j7oFq8GKTT0
-         3HlzxlTe8RpL55FsYZyNR0/kpfW4F6qHG9BNc5P6uvui74Cfulrj77qQi2CzO3Mj9vIC
-         QGk+kN7D2AmTLvjikUV4Uf+PwYfbYrNESCZWBc/fAX1WYFJMe2r49iEGnj2BEIDJE6Zx
-         9SRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=29y/iLxNFNnvLYgOgqntrEvNskLkzb3T+cHZyF7bUPo=;
-        b=k0NP7ArG3Iz1RgzZB6dKyEnp2dqXEEt6mXoI6QuDiTQ83hPycxW4npYl6EWy1lu2A0
-         6Cv72EvkdJXcYRjPQ4f4S41gmr7ps/pIXpYMyJ6EEd5cyHriBTyeXyTP1AYJoPitnwgP
-         D6nfd5f7EMm7Xhco7eL8lHmo3Xxe44mC1RJs7R8wN3Mf1zP+dMtlSmPXcpBWuZ4Df7kR
-         MkJBT9u7UL66m6jNATnqcKavsZw0SI6JXG1lJvGtKfioswhUiy3Ix9Wxe28EhXwG5fxC
-         wYm2NxgI+LbcNlNb9Y1VLKI80hbW3nOK7WZTtuYvKzorirYyEt+gG0FUqRG90NSfjwZN
-         L0MA==
-X-Gm-Message-State: AOAM531IwqO06EnADMk7z+kLILhj8wGdmQ7M0sVd7K6Je5sb9nQ38VOD
-        7oiMVFhVt64C2uFkq0kJIemXgbaxYxO9vP2Q6rM=
-X-Google-Smtp-Source: ABdhPJyIaGIL719GmPBLn0xZ+eSUsLKZMW2KPqAsrxqSHsss+LR1j4yGTNSE/bVQW/GmAV7DPoLWWnaPvdWwoWs45oY=
-X-Received: by 2002:a25:3c5:: with SMTP id 188mr28131568ybd.437.1628506669209;
- Mon, 09 Aug 2021 03:57:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210625065511.1096935-1-xxm@rock-chips.com> <202108091743281185811@rock-chips.com>
-In-Reply-To: <202108091743281185811@rock-chips.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 9 Aug 2021 06:57:38 -0400
-Message-ID: <CAMdYzYqX-3BVqiyZycWFixQhUiNT5hg3SZvid8s=+mjGs06KkQ@mail.gmail.com>
-Subject: Re: [PATCH v11] PCI: rockchip-dwc: Add Rockchip RK356X host
- controller driver
-To:     "xxm@rock-chips.com" <xxm@rock-chips.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rockchip <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "robh+dt" <robh+dt@kernel.org>, jbx6244 <jbx6244@gmail.com>,
-        heiko <heiko@sntech.de>,
-        "kever.yang" <kever.yang@rock-chips.com>,
-        =?UTF-8?B?5p6X5rabKOW6leWxguW5s+WPsCk=?= <shawn.lin@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S233660AbhHILO2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 07:14:28 -0400
+Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:41574 "EHLO
+        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233516AbhHILO1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 07:14:27 -0400
+Received: from pps.filterd (m0127840.ppops.net [127.0.0.1])
+        by mx0a-002c1b01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 179BDvXh017245;
+        Mon, 9 Aug 2021 04:13:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version;
+ s=proofpoint20171006; bh=Zel9s0+ucEEWQyXUu8dmUdK+9mkzNE9P9tZDb41iyqI=;
+ b=dLfd35sIhgUT2+TEJMJ5H8UFB2+puYjv6pWdvdUJboWr66VKmxWljixbNbRsnfo9d8Hd
+ RPAkj5pyk1dzSyjFMKHX82bX+EyB0xBXbPOvZ8xR/6r+gWdAKQJypzUvg4UGINEmT5dq
+ //J92SKfHjle3mdE5LoOjsvKfPMisps97twtfGIvTuGzpQFtN5yfujKT1F+xupfUaOAv
+ TbRR70AzxmBOf/nilojRrw+Am+ol5V/1cBUAfxwW+4W/xSgEPmAfn51+4Fzj9UQQc9xM
+ CyJ3M/jvmi312cB/QctONmAnT/wEWAOVH12fAosxs00RuwgzjoDAmiD1UVgiQonABvmn Kw== 
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2049.outbound.protection.outlook.com [104.47.73.49])
+        by mx0a-002c1b01.pphosted.com with ESMTP id 3aawvg8jx3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Aug 2021 04:13:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NXgHTtXS5clZggXGYoVsVUEF6++4T8Bvd9VPhtW5HOwT/Wja4aj5yipzwxae7HNa82v9NzVWvGXLo54QGo61bmZ5VPKaB0WBmZHA4C9VmSOVFfXz8SGbrx/uYGyyfi/mHWP6fe/YffTm+EtJdfF3vhJt+YXZ0pbVLQw2+AkTfSimnBBkE53coP0Ab2b7u3/cRrE+xe9G37fbt0QdGzHnnPmguKvqzybUeQeHSSow/ZglD7EhxYbceIZqJhbQvzkJ0VBQkTDX4YeBhHJ+UUPGgaBWPFyysAAaLnRbuIYa515361h+81fxjhUiHLpziZrCFsfs9noUK39qULimVC3IEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zel9s0+ucEEWQyXUu8dmUdK+9mkzNE9P9tZDb41iyqI=;
+ b=aJhW8XyzedE3c5p+eqklxwItvbXn+Xq9I8gpZkOXdy3GHSLEGkjX38QSFB5G6X6hxjWy0doBzhMnPKZer383FObT2KijyqCrWv9jy24iqh1Dh2xMzMqTBNvxN340j1TP/QRQEWSP7eINuqHfhLvi71w54Vn1613zbrRUNSFlVa2oqk8OLJzAG47M4Ffi/spIiYTSkcCNr4fD4hTVh03CKsS7gd9M61LNjABh4cyi8lDYob+knOMZuwluy8SqVfULqr7NYHBNIKw8xQgjTnMHlfi+p2P/xElk8GF9KMRI+LK4Ilg/Z/d5MPG9B0k4Ufg+gYwfh2KcL+gdk6uv5SOm7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+Received: from SN6PR02MB4543.namprd02.prod.outlook.com (2603:10b6:805:b1::24)
+ by SA2PR02MB7754.namprd02.prod.outlook.com (2603:10b6:806:148::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.17; Mon, 9 Aug
+ 2021 11:13:55 +0000
+Received: from SN6PR02MB4543.namprd02.prod.outlook.com
+ ([fe80::182b:62b8:51c1:ba59]) by SN6PR02MB4543.namprd02.prod.outlook.com
+ ([fe80::182b:62b8:51c1:ba59%5]) with mapi id 15.20.4394.023; Mon, 9 Aug 2021
+ 11:13:55 +0000
+From:   Raphael Norwitz <raphael.norwitz@nutanix.com>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v15 1/9] PCI: Cache PCIe FLR capability
+Thread-Topic: [PATCH v15 1/9] PCI: Cache PCIe FLR capability
+Thread-Index: AQHXihcaLdQv1XRRNU+UHrH2m10VyatrCxOA
+Date:   Mon, 9 Aug 2021 11:13:54 +0000
+Message-ID: <20210809111349.GA867@raphael-debian-dev>
+References: <20210805162917.3989-1-ameynarkhede03@gmail.com>
+ <20210805162917.3989-2-ameynarkhede03@gmail.com>
+In-Reply-To: <20210805162917.3989-2-ameynarkhede03@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nutanix.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8d91687c-072f-4a3c-2b55-08d95b26c6c1
+x-ms-traffictypediagnostic: SA2PR02MB7754:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA2PR02MB77546A18E04EDAB63F43F800EAF69@SA2PR02MB7754.namprd02.prod.outlook.com>
+x-proofpoint-crosstenant: true
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: soRoC9wnKqAZewzGzMMbWBU4Y8nHGAVVqqkW+kSa22j+WPeNtuYWDD+Qei2E5MXvYUerBb/VIE8sOx0zZSaFa5So9rw47RhZRM/iyHJJEptaNd+CCiyhgT2XRSE93jYkwSx4G22LsR5203ysTNbqmtRbDnIChvE1BJBvpfSXKBgY+F/EVPfAahLN+uqfvA9WPvTLo0dOeHQDHXJouj92axpusm1RFMmb4/o97S7paazZGY4fU/iXhSaY4EK4Q2mteG425rYeRQEhXT/x3GaNrRGaQ6LHxgUupDPVHRlSzQL9ULCDx45/5dIPbnDFE5pgNZi98hixb6gIJBj0yLxebRhTTT2Iu5y7ys97f1STdH76uTHD2mNPCd9wC1bHhhSi3d5yVCpes5e7lZFlXFwfOnSroy+bmfo22s73fxBgNdRvyxhTG+J04uuDOyPtI/z54eHMG9dPSVfWnWEzQ2eYxmJwteMaHNP6LKaCa5hBfnpHK+vDiNak63ynMiDQ1/oWUZC8nVCCPqw46auXEaWcR31WWB3+EpEfB1/keThhGUf/FKxR5uIlEe06pPw2oVsNJDKcbyrLql/xTTn6VZK8PlWtFCZWtEl6myOilT0UpTucgIiZdlF4uzeiRhsWfOmygur4tue3LODdnW7sm8wWVkghGa48V6PP2Wn686xVHi/RBQEHVD1gLw48I0+GecNBBsCtEHJvdHJ/BSFhm/uLpg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR02MB4543.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(376002)(39860400002)(136003)(396003)(346002)(8676002)(4326008)(64756008)(5660300002)(66476007)(66446008)(66946007)(1076003)(83380400001)(6512007)(76116006)(66556008)(186003)(478600001)(6486002)(33716001)(6506007)(38070700005)(8936002)(26005)(33656002)(9686003)(44832011)(2906002)(7416002)(91956017)(38100700002)(71200400001)(86362001)(316002)(122000001)(6916009)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?2bevv05JIWAgbuah9sclOBV/aDvcjH5HBLSU3yDA0ki7Mqir5bEAE3TKpcrn?=
+ =?us-ascii?Q?sJ19JL3+c/zHgjtv/yRWlRBpmB1AN0w0xo2hgMPghVjkab6v9SSWpjNBb407?=
+ =?us-ascii?Q?l9UD/EPIvc6+CVLMr6Lc/G9FgGO3/PVjrpxy26tpukFBBkgXs5SRAmTsqlOG?=
+ =?us-ascii?Q?ZnD1x2gRqLZp/Ru5swziwO8TScXs1YZp5jXD3Y3muS+k4F6fJ96gRN4HlCEP?=
+ =?us-ascii?Q?eKL0HLXuYz4KyVTwJ1lnbH2BIcv/skmM4WN4VIUULZRmd3kAms8sKnGaKtVT?=
+ =?us-ascii?Q?NYyjCp9wnALFUt38pCqgGcozXbYQsgDtoGDTfykbuCdruMO0bCiMFbQGEdIL?=
+ =?us-ascii?Q?PJPGB3+XdT+cmuX7QtuQYraJYJkjO0peetC1J5inKTfAdn3IHGgUmhqlc/xN?=
+ =?us-ascii?Q?wh1ZxFXp26uYSe6lio8lHdSyrsAu4ab9AqdpdfaZLRsAea+ypZEJs4T0/fOg?=
+ =?us-ascii?Q?3lgFLxZ8HRjzK4UeKKbRzZKvGW2Z9O4aRADmpQUHvT5G8//Ny3YVxC6O/n2Q?=
+ =?us-ascii?Q?HOGNupRciaLYhQBcPlWLRCizH+U7Uv1JPm/Vbyubrw24k2L9C2GCNfj5N7Z3?=
+ =?us-ascii?Q?+C2g4a+a/6NyZvi6TKQqu/XDIeeltuPaSxy0Ll2eKS0A+fV8JGSm5pHNAdKB?=
+ =?us-ascii?Q?cQqRwk8dtzuI5puNgUggtwBK1c/mlZQPqWwXPBGBNbD9XsX1PRZhWnJ97OrJ?=
+ =?us-ascii?Q?BMKq3VGDztGK49pdK4i1A2HlWLxh8x4C/1EWfmDa+vBpDDrYPyfzbmy/xVuB?=
+ =?us-ascii?Q?dGi7NoVrkujWnPeXycPDSmZaN+y4aVcfTW02Y05IC2QsjD3lDdV2NvlILmNi?=
+ =?us-ascii?Q?+QI1NONb1V530TJlf4Pl1W37geHQtlFd2x00gHmoAFI+P8pppaM+cCXspu1o?=
+ =?us-ascii?Q?tz2K71HTU5UtBVeed+NX4235DfWno6mLWkeSW4ua0l0HeZDxSuA7Ct4sm95T?=
+ =?us-ascii?Q?U/88iSc8QFh9HoiW4z8YS36JYAuCMlC6nlpY+FlOuJhw2zwJ80Vg58qVDChh?=
+ =?us-ascii?Q?2CVtGGe2kSHksGDJjatyScxUAGj8CKn27Ffni4CUUjRdDCndff+W1z4vU/M2?=
+ =?us-ascii?Q?BdfWdDKPQ9GPhpGnPdyVZae7+0t9XSV4IRL4YLnQIyB1NuK6v4DL+WQw9fiq?=
+ =?us-ascii?Q?p/b876ZCiLQVgW9PDviV9+M2s33QHhQUiApv8U+4Rp0pWpSWGTuCkiwEDSkq?=
+ =?us-ascii?Q?kRmgf++3kf8d4ieavnL2clK0Eke+GdaQkvrRbKz7DvaUWky1gJFpbWaiBzKF?=
+ =?us-ascii?Q?Oo3ljlNezK6rjCnsrx6y2kw7b/hMymjcCkuwCGaOFrX3xlZbWJ6Ea2KnJhfx?=
+ =?us-ascii?Q?j+1kr0SkynoWJFzCmnU9XM2f?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <756CE8A2531071478BBA56B8E8D34D12@namprd02.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4543.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d91687c-072f-4a3c-2b55-08d95b26c6c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2021 11:13:54.9399
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: L8QZyNgrATqSd+k5dX0HF676avENCFidDU8/7Gn/FOPQOY5aXHcvaEa0A8aKMRoJGv0KVEsRJTyRqFMna1xp5MfC4ovejPS5fKlAMW9ATyk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR02MB7754
+X-Proofpoint-GUID: v1RV6wKsvDyfqd5MPRiiQlXMGkk5LqMe
+X-Proofpoint-ORIG-GUID: v1RV6wKsvDyfqd5MPRiiQlXMGkk5LqMe
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-09_04:2021-08-06,2021-08-09 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 9, 2021 at 5:43 AM xxm@rock-chips.com <xxm@rock-chips.com> wrot=
-e:
->
-> Hi all,
->
-> If any new comments about this patch?
+On Thu, Aug 05, 2021 at 09:59:09PM +0530, Amey Narkhede wrote:
+> Add a new member called devcap in struct pci_dev for caching the device
+> capabilities to avoid reading PCI_EXP_DEVCAP multiple times.
+>=20
+> Refactor pcie_has_flr() to use cached device capabilities.
+>=20
+> Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
 
-Good Morning,
+Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
 
-Not a direct comment, but certainly adjacent.
-Is there any status on the ITS errata?
-
-My reasoning is the mbi-alias method isn't perfect, for example the
-following error is constantlyseen using it:
-[39910.458531] ixgbe 0000:01:00.1 enp1s0f1: NIC Link is Up 10 Gbps,
-Flow Control: RX/TX
-[40049.195579] ixgbe 0000:01:00.1 enp1s0f1: NIC Link is Down
-[40049.783010] ixgbe 0000:01:00.1 enp1s0f1: NIC Link is Up 10 Gbps,
-Flow Control: RX/TX
-[40110.597421] ixgbe 0000:01:00.1 enp1s0f1: NIC Link is Down
-
-This issue doesn't occur when using legacy interrupts nor proper ITS servic=
-es.
-
-The only other issue I have encountered is dGPUs do not function.
-I suspect the PCIe controller is affected by the same cache coherency
-issue as the ITS translator is, is that correct?
-
-Otherwise, I've had great success with this driver.
-
-Very Respectfully,
-Peter Geis
-
-> >Add a driver for the DesignWare-based PCIe controller found on
-> >RK356X. The existing pcie-rockchip-host driver is only used for
-> >the Rockchip-designed IP found on RK3399.
-> >
-> >Tested-by: Peter Geis <pgwipeout@gmail.com>
-> >Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-> >Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> >Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> >---
-> > drivers/pci/controller/dwc/Kconfig            |  11 +
-> > drivers/pci/controller/dwc/Makefile           |   1 +
-> > drivers/pci/controller/dwc/pcie-dw-rockchip.c | 276 ++++++++++++++++++
-> > 3 files changed, 288 insertions(+)
-> > create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> >
-> >diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller=
-/dwc/Kconfig
-> >index 423d35872ce4..60d3dde9ca39 100644
-> >--- a/drivers/pci/controller/dwc/Kconfig
-> >+++ b/drivers/pci/controller/dwc/Kconfig
-> >@@ -214,6 +214,17 @@ config PCIE_ARTPEC6_EP
-> >   Enables support for the PCIe controller in the ARTPEC-6 SoC to work i=
-n
-> >   endpoint mode. This uses the DesignWare core.
-> >
-> >+config PCIE_ROCKCHIP_DW_HOST
-> >+      bool "Rockchip DesignWare PCIe controller"
-> >+      select PCIE_DW
-> >+      select PCIE_DW_HOST
-> >+      depends on PCI_MSI_IRQ_DOMAIN
-> >+      depends on ARCH_ROCKCHIP || COMPILE_TEST
-> >+      depends on OF
-> >+      help
-> >+        Enables support for the DesignWare PCIe controller in the
-> >+        Rockchip SoC except RK3399.
-> >+
-> > config PCIE_INTEL_GW
-> > bool "Intel Gateway PCIe host controller support"
-> > depends on OF && (X86 || COMPILE_TEST)
-> >diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controlle=
-r/dwc/Makefile
-> >index 9e6ce0dc2f53..3710e91471f7 100644
-> >--- a/drivers/pci/controller/dwc/Makefile
-> >+++ b/drivers/pci/controller/dwc/Makefile
-> >@@ -14,6 +14,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) +=3D pci-layerscape-ep=
-.o
-> > obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
-> > obj-$(CONFIG_PCIE_ARMADA_8K) +=3D pcie-armada8k.o
-> > obj-$(CONFIG_PCIE_ARTPEC6) +=3D pcie-artpec6.o
-> >+obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) +=3D pcie-dw-rockchip.o
-> > obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
-> > obj-$(CONFIG_PCIE_KIRIN) +=3D pcie-kirin.o
-> > obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
-> >diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci=
-/controller/dwc/pcie-dw-rockchip.c
-> >new file mode 100644
-> >index 000000000000..20cef2e06f66
-> >--- /dev/null
-> >+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> >@@ -0,0 +1,276 @@
-> >+// SPDX-License-Identifier: GPL-2.0
-> >+/*
-> >+ * PCIe host controller driver for Rockchip SoCs.
-> >+ *
-> >+ * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
-> >+ *    http://www.rock-chips.com
-> >+ *
-> >+ * Author: Simon Xue <xxm@rock-chips.com>
-> >+ */
-> >+
-> >+#include <linux/clk.h>
-> >+#include <linux/gpio/consumer.h>
-> >+#include <linux/mfd/syscon.h>
-> >+#include <linux/module.h>
-> >+#include <linux/of_device.h>
-> >+#include <linux/phy/phy.h>
-> >+#include <linux/platform_device.h>
-> >+#include <linux/regmap.h>
-> >+#include <linux/reset.h>
-> >+
-> >+#include "pcie-designware.h"
-> >+
-> >+/*
-> >+ * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-> >+ * mask for the lower 16 bits.
-> >+ */
-> >+#define HIWORD_UPDATE(mask, val) (((mask) << 16) | (val))
-> >+#define HIWORD_UPDATE_BIT(val)        HIWORD_UPDATE(val, val)
-> >+
-> >+#define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
-> >+
-> >+#define PCIE_CLIENT_RC_MODE   HIWORD_UPDATE_BIT(0x40)
-> >+#define PCIE_CLIENT_ENABLE_LTSSM      HIWORD_UPDATE_BIT(0xc)
-> >+#define PCIE_SMLH_LINKUP      BIT(16)
-> >+#define PCIE_RDLH_LINKUP      BIT(17)
-> >+#define PCIE_LINKUP   (PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> >+#define PCIE_L0S_ENTRY        0x11
-> >+#define PCIE_CLIENT_GENERAL_CONTROL   0x0
-> >+#define PCIE_CLIENT_GENERAL_DEBUG     0x104
-> >+#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
-> >+#define PCIE_CLIENT_LTSSM_STATUS      0x300
-> >+#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
-> >+#define PCIE_LTSSM_STATUS_MASK        GENMASK(5, 0)
-> >+
-> >+struct rockchip_pcie {
-> >+      struct dw_pcie  pci;
-> >+      void __iomem    *apb_base;
-> >+      struct phy      *phy;
-> >+      struct clk_bulk_data    *clks;
-> >+      unsigned int    clk_cnt;
-> >+      struct reset_control    *rst;
-> >+      struct gpio_desc        *rst_gpio;
-> >+      struct regulator                *vpcie3v3;
-> >+};
-> >+
-> >+static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
-> >+           u32 reg)
-> >+{
-> >+      return readl_relaxed(rockchip->apb_base + reg);
-> >+}
-> >+
-> >+static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip,
-> >+      u32 val, u32 reg)
-> >+{
-> >+      writel_relaxed(val, rockchip->apb_base + reg);
-> >+}
-> >+
-> >+static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
-> >+{
-> >+      rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-> >+      PCIE_CLIENT_GENERAL_CONTROL);
-> >+}
-> >+
-> >+static int rockchip_pcie_link_up(struct dw_pcie *pci)
-> >+{
-> >+      struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
-> >+      u32 val =3D rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_S=
-TATUS);
-> >+
-> >+      if ((val & PCIE_LINKUP) =3D=3D PCIE_LINKUP &&
-> >+          (val & PCIE_LTSSM_STATUS_MASK) =3D=3D PCIE_L0S_ENTRY)
-> >+      return 1;
-> >+
-> >+      return 0;
-> >+}
-> >+
-> >+static int rockchip_pcie_start_link(struct dw_pcie *pci)
-> >+{
-> >+      struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
-> >+
-> >+      /* Reset device */
-> >+      gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
-> >+
-> >+      rockchip_pcie_enable_ltssm(rockchip);
-> >+
-> >+      /*
-> >+      * PCIe requires the refclk to be stable for 100=C2=B5s prior to r=
-eleasing
-> >+      * PERST. See table 2-4 in section 2.6.2 AC Specifications of the =
-PCI
-> >+      * Express Card Electromechanical Specification, 1.1. However, we =
-don't
-> >+      * know if the refclk is coming from RC's PHY or external OSC. If =
-it's
-> >+      * from RC, so enabling LTSSM is the just right place to release #=
-PERST.
-> >+      * We need more extra time as before, rather than setting just
-> >+      * 100us as we don't know how long should the device need to reset=
-.
-> >+      */
-> >+      msleep(100);
-> >+      gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
-> >+
-> >+      return 0;
-> >+}
-> >+
-> >+static int rockchip_pcie_host_init(struct pcie_port *pp)
-> >+{
-> >+      struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
-> >+      struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
-> >+      u32 val =3D HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-> >+
-> >+      /* LTSSM enable control mode */
-> >+      rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTR=
-L);
-> >+
-> >+      rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-> >+      PCIE_CLIENT_GENERAL_CONTROL);
-> >+
-> >+      return 0;
-> >+}
-> >+
-> >+static const struct dw_pcie_host_ops rockchip_pcie_host_ops =3D {
-> >+      .host_init =3D rockchip_pcie_host_init,
-> >+};
-> >+
-> >+static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
-> >+{
-> >+      struct device *dev =3D rockchip->pci.dev;
-> >+      int ret;
-> >+
-> >+      ret =3D devm_clk_bulk_get_all(dev, &rockchip->clks);
-> >+      if (ret < 0)
-> >+      return ret;
-> >+
-> >+      rockchip->clk_cnt =3D ret;
-> >+
-> >+      return clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks)=
-;
-> >+}
-> >+
-> >+static int rockchip_pcie_resource_get(struct platform_device *pdev,
-> >+            struct rockchip_pcie *rockchip)
-> >+{
-> >+      rockchip->apb_base =3D devm_platform_ioremap_resource_byname(pdev=
-, "apb");
-> >+      if (IS_ERR(rockchip->apb_base))
-> >+      return PTR_ERR(rockchip->apb_base);
-> >+
-> >+      rockchip->rst_gpio =3D devm_gpiod_get_optional(&pdev->dev, "reset=
-",
-> >+           GPIOD_OUT_HIGH);
-> >+      if (IS_ERR(rockchip->rst_gpio))
-> >+      return PTR_ERR(rockchip->rst_gpio);
-> >+
-> >+      return 0;
-> >+}
-> >+
-> >+static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
-> >+{
-> >+      struct device *dev =3D rockchip->pci.dev;
-> >+      int ret;
-> >+
-> >+      rockchip->phy =3D devm_phy_get(dev, "pcie-phy");
-> >+      if (IS_ERR(rockchip->phy))
-> >+      return dev_err_probe(dev, PTR_ERR(rockchip->phy),
-> >+           "missing PHY\n");
-> >+
-> >+      ret =3D phy_init(rockchip->phy);
-> >+      if (ret < 0)
-> >+      return ret;
-> >+
-> >+      ret =3D phy_power_on(rockchip->phy);
-> >+      if (ret)
-> >+      phy_exit(rockchip->phy);
-> >+
-> >+      return ret;
-> >+}
-> >+
-> >+static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
-> >+{
-> >+      phy_exit(rockchip->phy);
-> >+      phy_power_off(rockchip->phy);
-> >+}
-> >+
-> >+static int rockchip_pcie_reset_control_release(struct rockchip_pcie *ro=
-ckchip)
-> >+{
-> >+      struct device *dev =3D rockchip->pci.dev;
-> >+
-> >+      rockchip->rst =3D devm_reset_control_array_get_exclusive(dev);
-> >+      if (IS_ERR(rockchip->rst))
-> >+      return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-> >+           "failed to get reset lines\n");
-> >+
-> >+      return reset_control_deassert(rockchip->rst);
-> >+}
-> >+
-> >+static const struct dw_pcie_ops dw_pcie_ops =3D {
-> >+      .link_up =3D rockchip_pcie_link_up,
-> >+      .start_link =3D rockchip_pcie_start_link,
-> >+};
-> >+
-> >+static int rockchip_pcie_probe(struct platform_device *pdev)
-> >+{
-> >+      struct device *dev =3D &pdev->dev;
-> >+      struct rockchip_pcie *rockchip;
-> >+      struct pcie_port *pp;
-> >+      int ret;
-> >+
-> >+      rockchip =3D devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
-> >+      if (!rockchip)
-> >+      return -ENOMEM;
-> >+
-> >+      platform_set_drvdata(pdev, rockchip);
-> >+
-> >+      rockchip->pci.dev =3D dev;
-> >+      rockchip->pci.ops =3D &dw_pcie_ops;
-> >+
-> >+      pp =3D &rockchip->pci.pp;
-> >+      pp->ops =3D &rockchip_pcie_host_ops;
-> >+
-> >+      ret =3D rockchip_pcie_resource_get(pdev, rockchip);
-> >+      if (ret)
-> >+      return ret;
-> >+
-> >+      /* DON'T MOVE ME: must be enable before PHY init */
-> >+      rockchip->vpcie3v3 =3D devm_regulator_get_optional(dev, "vpcie3v3=
-");
-> >+      if (IS_ERR(rockchip->vpcie3v3))
-> >+      if (PTR_ERR(rockchip->vpcie3v3) !=3D -ENODEV)
-> >+      return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
-> >+      "failed to get vpcie3v3 regulator\n");
-> >+
-> >+      ret =3D regulator_enable(rockchip->vpcie3v3);
-> >+      if (ret) {
-> >+      dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-> >+      return ret;
-> >+      }
-> >+
-> >+      ret =3D rockchip_pcie_phy_init(rockchip);
-> >+      if (ret)
-> >+      goto disable_regulator;
-> >+
-> >+      ret =3D rockchip_pcie_reset_control_release(rockchip);
-> >+      if (ret)
-> >+      goto deinit_phy;
-> >+
-> >+      ret =3D rockchip_pcie_clk_init(rockchip);
-> >+      if (ret)
-> >+      goto deinit_phy;
-> >+
-> >+      ret =3D dw_pcie_host_init(pp);
-> >+      if (!ret)
-> >+      return 0;
-> >+
-> >+      clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-> >+deinit_phy:
-> >+      rockchip_pcie_phy_deinit(rockchip);
-> >+disable_regulator:
-> >+      regulator_disable(rockchip->vpcie3v3);
-> >+
-> >+      return ret;
-> >+}
-> >+
-> >+static const struct of_device_id rockchip_pcie_of_match[] =3D {
-> >+      { .compatible =3D "rockchip,rk3568-pcie", },
-> >+      {},
-> >+};
-> >+
-> >+static struct platform_driver rockchip_pcie_driver =3D {
-> >+      .driver =3D {
-> >+      .name   =3D "rockchip-dw-pcie",
-> >+      .of_match_table =3D rockchip_pcie_of_match,
-> >+      .suppress_bind_attrs =3D true,
-> >+      },
-> >+      .probe =3D rockchip_pcie_probe,
-> >+};
-> >+builtin_platform_driver(rockchip_pcie_driver);
-> >--
-> >2.25.1
-> >
-> >
-> >
-> >
+> ---
+>  drivers/pci/pci.c   | 6 ++----
+>  drivers/pci/probe.c | 5 +++--
+>  include/linux/pci.h | 1 +
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 452351025a09..1fafd05caa41 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <asm/dma.h>
+>  #include <linux/aer.h>
+> +#include <linux/bitfield.h>
+>  #include "pci.h"
+> =20
+>  DEFINE_MUTEX(pci_slot_mutex);
+> @@ -4620,13 +4621,10 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+>   */
+>  bool pcie_has_flr(struct pci_dev *dev)
+>  {
+> -	u32 cap;
+> -
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>  		return false;
+> =20
+> -	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+> -	return cap & PCI_EXP_DEVCAP_FLR;
+> +	return FIELD_GET(PCI_EXP_DEVCAP_FLR, dev->devcap) =3D=3D 1;
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_has_flr);
+> =20
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 3a62d09b8869..df3f9db6e151 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/hypervisor.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/bitfield.h>
+>  #include "pci.h"
+> =20
+>  #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+> @@ -1497,8 +1498,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>  	pdev->pcie_cap =3D pos;
+>  	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+>  	pdev->pcie_flags_reg =3D reg16;
+> -	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+> -	pdev->pcie_mpss =3D reg16 & PCI_EXP_DEVCAP_PAYLOAD;
+> +	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+> +	pdev->pcie_mpss =3D FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
+> =20
+>  	parent =3D pci_upstream_bridge(pdev);
+>  	if (!parent)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c20211e59a57..697b1f085c7b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -333,6 +333,7 @@ struct pci_dev {
+>  	struct rcec_ea	*rcec_ea;	/* RCEC cached endpoint association */
+>  	struct pci_dev  *rcec;          /* Associated RCEC device */
+>  #endif
+> +	u32		devcap;		/* PCIe device capabilities */
+>  	u8		pcie_cap;	/* PCIe capability offset */
+>  	u8		msi_cap;	/* MSI capability offset */
+>  	u8		msix_cap;	/* MSI-X capability offset */
+> --=20
+> 2.32.0
+>=20
+> =
