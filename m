@@ -2,195 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 448813E47D8
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 16:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 063593E47D1
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Aug 2021 16:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232696AbhHIOoq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Aug 2021 10:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235536AbhHIOmo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Aug 2021 10:42:44 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311FEC0617A4;
-        Mon,  9 Aug 2021 07:38:58 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id s184so27880402ios.2;
-        Mon, 09 Aug 2021 07:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZJFa7d2MMspvNHYHeb9vzFdsiru50qHv4RgXeKQT0og=;
-        b=IqozBY6P6n0YzqrBK7p9SAteUFAqjxnyGIHv/kYcKrr7nh9bL7VPCKSImSd2ExBqAD
-         WzClQLbIPTw/VyD/METBhkisqtqZL6E+PGlEho0TyWVqevTjI76YGCP7pJYPDkcP2Kx6
-         BWkVdJhjWjqsqWnxMaYRFal57J3B7DpnlOiDrlbb/pVQZONG710/ZiDCNcqyGBJEOwIp
-         TTkNSRLHE2iQT0Eb+i+SmbKimGdkg+TYvgl4MFVD4fRSPU9BgubVJ8pXmhoVnfJF+wy8
-         gDuTphWzFAGamMS7H4d5d5DRTPqFgNu4WdAgdpSc03egz7LLEV23beRgQhi5chCx6Ll1
-         K/zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZJFa7d2MMspvNHYHeb9vzFdsiru50qHv4RgXeKQT0og=;
-        b=OFBkFnfHvt+kdjYBRSRTA0DV8TJrnqEi3uAUpcByzS3DKC/5m1LXT7KuBqw2/9EB5Z
-         VyZ11eYDpO9Khzef6uxobNC7nB0mPA9mzp6XXRfNSArTsyQnd8A85HjhOZtOaQ00KbQt
-         AR42LUuLK2fM987zl2hCniCW6+wc0EnuZwictPzBC5Rn+ACAidsjHUIFBCnDb346/9vz
-         7Fr0AEb3HuLUSCvpIeMdMoeq3kH4wfFDb1cw5RgOIFPzAtEDZBit/Txcq4mFHXErmOP/
-         tARC0b7zgAx/Fs74h/adBN4k6pJO39MOtwOOuglpodDEm17fQzrXppKLJHQYYlU1YYiT
-         ITwQ==
-X-Gm-Message-State: AOAM530Uc1IuJbUMoN4QiC5KpSH7NTiY0FI23MFtb6LhYTwPaz6lU2sc
-        Cj+rugYtt7vGyWpXZoUKhMs=
-X-Google-Smtp-Source: ABdhPJz6AaDqIPar7LvgnhtcoluXCQeKSt2vZi3mKbto+SViQe/qpvzlij4OcoX6HW4KgxE8Djvsnw==
-X-Received: by 2002:a02:2348:: with SMTP id u69mr22677803jau.141.1628519937572;
-        Mon, 09 Aug 2021 07:38:57 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id z22sm10866290ioe.52.2021.08.09.07.38.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Aug 2021 07:38:56 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E03FD27C0054;
-        Mon,  9 Aug 2021 10:38:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 09 Aug 2021 10:38:55 -0400
-X-ME-Sender: <xms:_j0RYZXs62PWFpDnUpmAIUJNpQtGDCOVG8X7lbSEWqPWPVz1Dto4eg>
-    <xme:_j0RYZm1UxnUbaFs0_wcq8fTHR1r7bqkI0CG3PFFMZeWE4jB9aDjz13iPl_rKnpVd
-    Ld8WMEAiQ0Y1lC2kQ>
-X-ME-Received: <xmr:_j0RYVYgOAzkpPs3dCNEajXWw5C1EF8yGgTIojhGjwv9wIvPa2wkcmYnvbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrjeejgdejlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
-    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:_j0RYcV0HknFo072PK0YHeBsIBByQvk5pozwCnR8Wcf_oqlhCze6Tw>
-    <xmx:_j0RYTl6wDZhk6s5gZwk9t04FaAfmBMLYrrX3mSs6IwG9D12aSQ1rQ>
-    <xmx:_j0RYZfcNdkqtUX0X19id6cCl88mUknSV_zjev27n5RsNTeeg2lRXg>
-    <xmx:_z0RYScwR4jOSbLZJfrO42CST2x9L60ReYGjhm1DsFu74juc7DJl2s2hG1I>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 9 Aug 2021 10:38:53 -0400 (EDT)
-Date:   Mon, 9 Aug 2021 22:38:48 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v6 8/8] PCI: hv: Turn on the host bridge probing on ARM64
-Message-ID: <YRE9+LaAjAW3SUvc@boqun-archlinux>
-References: <20210726180657.142727-1-boqun.feng@gmail.com>
- <20210726180657.142727-9-boqun.feng@gmail.com>
- <20210803171451.GA15466@lpieralisi>
+        id S233910AbhHIOnN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Aug 2021 10:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235648AbhHIOjq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 9 Aug 2021 10:39:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6ECEC60234;
+        Mon,  9 Aug 2021 14:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628519966;
+        bh=1ihZ2r+7Mr+u9hu6BG8YAHj+316a13abVADO3tMi+5U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m81bRfhj2Ga/1o07fPBKAAMRT/NuWWIsGXjOV9ZcvblF3VSWEt4HHjIiFb52A4Suo
+         NNwZdC3HLv+6CryXWYuhlgWusVHqN1dqjaO+cVGMaote05SH2VceXdJpcTKDjFgbio
+         M1XHUD3WqB1exZfutPPGe5tDGW8auJ2ZLqVUJBsS13WCJ1IWWyGsge1qE4+Nl5F00w
+         o8UkOweQjCtxB01M+GmCj6UD2ZXyRNgSwkJVVoRZSUaUXE7QGjhdtzU2glz+kOVRnt
+         bC0c8dObBh7wcFJtPpBzb9eZTXP90VNnBg1whMkXZ7DsY6Whx0tw5tC4Ln/ZvDTtW2
+         zz7jFeRwY2XUg==
+Received: by mail-ed1-f46.google.com with SMTP id y7so24939714eda.5;
+        Mon, 09 Aug 2021 07:39:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532MwUYja+otCvyvzKC+2pImbEcC11LazxoUEmVzhfrwT/EzpHHl
+        XCj+eZ9qQN7O9z6dZWM11YiFi4AfMA6ngJCa8g==
+X-Google-Smtp-Source: ABdhPJzB8Z+clDtufI8TAGx9E2xZjWgkEt6Cn39QWZwhkUxrlr7yCVT7FkzqSfuAX1zne9+n2xkutY6VnGcBuZO6x08=
+X-Received: by 2002:aa7:c603:: with SMTP id h3mr30164744edq.165.1628519964968;
+ Mon, 09 Aug 2021 07:39:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210803171451.GA15466@lpieralisi>
+References: <20210625065511.1096935-1-xxm@rock-chips.com>
+In-Reply-To: <20210625065511.1096935-1-xxm@rock-chips.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 9 Aug 2021 08:39:12 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+b9adwUav8Ny43hsdB_mVPaKcV4wSJYydGuA1f5u-YQA@mail.gmail.com>
+Message-ID: <CAL_Jsq+b9adwUav8Ny43hsdB_mVPaKcV4wSJYydGuA1f5u-YQA@mail.gmail.com>
+Subject: Re: [PATCH v11] PCI: rockchip-dwc: Add Rockchip RK356X host
+ controller driver
+To:     Simon Xue <xxm@rock-chips.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 06:14:51PM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Jul 27, 2021 at 02:06:57AM +0800, Boqun Feng wrote:
-> > Now we have everything we need, just provide a proper sysdata type for
-> > the bus to use on ARM64 and everything else works.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index e6276aaa4659..62dbe98d1fe1 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -40,6 +40,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-ecam.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/semaphore.h>
-> >  #include <linux/irqdomain.h>
-> > @@ -448,7 +449,11 @@ enum hv_pcibus_state {
-> >  };
-> >  
-> >  struct hv_pcibus_device {
-> > +#ifdef CONFIG_X86
-> >  	struct pci_sysdata sysdata;
-> > +#elif defined(CONFIG_ARM64)
-> > +	struct pci_config_window sysdata;
-> 
-> This is ugly. HV does not need pci_config_window at all right
-> (other than arm64 pcibios_root_bridge_prepare()) ?
-> 
+On Fri, Jun 25, 2021 at 12:55 AM Simon Xue <xxm@rock-chips.com> wrote:
+>
+> Add a driver for the DesignWare-based PCIe controller found on
+> RK356X. The existing pcie-rockchip-host driver is only used for
+> the Rockchip-designed IP found on RK3399.
+>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig            |  11 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 276 ++++++++++++++++++
+>  3 files changed, 288 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
 
-Right.
-
-> The issue is that in HV you have to have *some* sysdata != NULL, it is
-> just some data to retrieve the hv_pcibus_device.
-> 
-> Mmaybe we can rework ARM64 ACPI code to store the acpi_device in struct
-> pci_host_bridge->private instead of retrieving it from pci_config_window
-> so that we decouple HV from the ARM64 back-end.
-> 
-> HV would just set struct pci_host_bridge->private == NULL.
-> 
-
-Works for me, but please note that pci_sysdata is an x86-specific
-structure, so we still need to define a fake pci_sysdata inside
-pci-hyperv.c, like:
-
-	#ifndef CONFIG_X86
-	struct pci_sysdata { };
-	#end
-
-> I need to think about this a bit, I don't think it should block
-> this series though but it would be nicer.
-
-After a quick look into the code, seems that what we need to do is to
-add an additional parameter for acpi_pci_root_create() and introduce a
-slightly different version of pci_create_root_bus(). A question is:
-should we only do this for ARM64, or should we also do this for
-other acpi_pci_root_create() users (x86 and ia64)? Another question
-comes to my mind is, while we are at it, is there anything else that we
-want to move from sysdata to ->private? These questions are out of scope
-of this patchset, I think. Maybe it's better that we address them in the
-future, and I can send out separate RFC patches to start the discussion.
-Does that sound like a plan to you?
-
-Regards,
-Boqun
-
-> 
-> Lorenzo
-> 
-> > +#endif
-> >  	struct pci_host_bridge *bridge;
-> >  	struct fwnode_handle *fwnode;
-> >  	/* Protocol version negotiated with the host */
-> > @@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
-> >  			 dom_req, dom);
-> >  
-> >  	hbus->bridge->domain_nr = dom;
-> > +#ifdef CONFIG_X86
-> >  	hbus->sysdata.domain = dom;
-> > +#endif
-> >  
-> >  	hbus->hdev = hdev;
-> >  	INIT_LIST_HEAD(&hbus->children);
-> > -- 
-> > 2.32.0
-> > 
+Reviewed-by: Rob Herring <robh@kernel.org>
