@@ -2,89 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A8603E7BC9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 17:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C67623E7C73
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 17:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242498AbhHJPKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 11:10:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:57658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242538AbhHJPKx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Aug 2021 11:10:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803A01FB;
-        Tue, 10 Aug 2021 08:10:31 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1016E3F718;
-        Tue, 10 Aug 2021 08:10:31 -0700 (PDT)
-Subject: Re: [PATCH 1/3] PCI: brcmstb: Break register definitions into
- separate header
-To:     Florian Fainelli <f.fainelli@gmail.com>, linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210805211200.491275-1-jeremy.linton@arm.com>
- <20210805211200.491275-2-jeremy.linton@arm.com>
- <f82761b1-fb7e-08b2-8bc3-c84d258e26d3@gmail.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <ab2aa9e3-cdc7-1bc7-d493-8f3c991c3285@arm.com>
-Date:   Tue, 10 Aug 2021 10:10:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S243348AbhHJPhx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 11:37:53 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:41616
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243361AbhHJPhw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 11:37:52 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPS id 18F9F3F0A1
+        for <linux-pci@vger.kernel.org>; Tue, 10 Aug 2021 15:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1628609849;
+        bh=V4JCrLtO4cRvhqN1sG1W5Ma2FLvhmCKkVeREp756lBA=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=NHGnd8yj29JBgnvB3oWve0BipQxHbotTVZFJxJFqAFIlnb8dY7lJ+5zzNYQthgz3m
+         zVWBnXur64Ow7A6zR6xvr/FUyiFITTRR1MnVIfGpHAJX09PpQZ4/dbzzHgbNvT6yw2
+         vmckRdDpI0/x8yo8edlEiS1b52ZYcRbH+ByVeGSPgzxWP7ZX+Ojilq+TbpjFuWS38V
+         SbPEyohwhnsfRlE5NnGWgC3KDrWcKgZPQsQ+nGrLoqEvh4ZxZBmgA51mmEzfx7qIIg
+         LweWZ/FVG4mYiPtsgv0jFvjQa73Xcew3UfLFh9xxMMw0TrCxUttYvYMQTkkLsH0Utw
+         rlJd6ygHGkZhQ==
+Received: by mail-ed1-f70.google.com with SMTP id v11-20020a056402348bb02903be68e116adso3053882edc.14
+        for <linux-pci@vger.kernel.org>; Tue, 10 Aug 2021 08:37:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V4JCrLtO4cRvhqN1sG1W5Ma2FLvhmCKkVeREp756lBA=;
+        b=iUpnRR8DM7J1/fZKqTJNe4DJPlMUiTHixXDsOQ+ohuIoDCb6ikjXVeghlvwgukgXv4
+         G/nx51haRku3cGIZKD6Vn8uED+gnpUUhY7VjPd+wm9X3qx17/SNset2k/0xtWgXhVQLv
+         nybDPDNciXX6IZejGghBfn2kuc+oCHaDhJjv396yvZ6LkAU/ZFlIvC9nYyOFpCMFw5ig
+         WEy//WWmN/6o7b5cqxGioK+ss4pJbWNWJMr+0LhpTauVuEuTvW6XstFDREq4AbCpZd+F
+         OPiWhSLYHiGsCQchVeDoI5unR5VlAjG4bSc29eVL68mcwMHiZUpRBSvEle0OloYCLLy3
+         BXHg==
+X-Gm-Message-State: AOAM531LTKZolwq+0lcTRJIfvwQcjT7obcCFL5HaaJ2/Ahe5rLuseGDa
+        DbXalQe0FjWV7reHoGnnvzRa0uJsrDH2WB8Y65i2FEtVmMD5l+7fnfsxmaFgKRBxFbmpG9QHlv1
+        1Q+tjfQxR+xFiTVoQE96yISSQmBnlLO8tLxobJN8+cKKWaxgG7tGQrw==
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr8750047ejs.230.1628609847566;
+        Tue, 10 Aug 2021 08:37:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyO79SEXR3fza5J1CuMJKz2W4dwLasWiXGBGugj43FtUB/yk1977ekIs7BvIay+TLOvqYt8fvr4BN9qEwlT2oo=
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr8749848ejs.230.1628609844666;
+ Tue, 10 Aug 2021 08:37:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f82761b1-fb7e-08b2-8bc3-c84d258e26d3@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
+ <20210809042414.107430-1-kai.heng.feng@canonical.com> <20210809094731.GA16595@wunner.de>
+ <CAAd53p7cR3EzUjEU04cDhJDY5F=5k+eRHMVNKQ=jEfbZvUQq3Q@mail.gmail.com> <20210809150005.GA6916@wunner.de>
+In-Reply-To: <20210809150005.GA6916@wunner.de>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Tue, 10 Aug 2021 23:37:12 +0800
+Message-ID: <CAAd53p7qm=K99xO1n0Pwmn020Q7_iDj2S6-QGjeRjP0CpSphTg@mail.gmail.com>
+Subject: Re: [PATCH] PCI/portdrv: Disallow runtime suspend when waekup is
+ required but PME service isn't supported
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Mon, Aug 9, 2021 at 11:00 PM Lukas Wunner <lukas@wunner.de> wrote:
+>
+> [cc += Rafael]
+>
+> On Mon, Aug 09, 2021 at 06:40:41PM +0800, Kai-Heng Feng wrote:
+> > On Mon, Aug 9, 2021 at 5:47 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Mon, Aug 09, 2021 at 12:24:12PM +0800, Kai-Heng Feng wrote:
+> > > > Some platforms cannot detect ethernet hotplug once its upstream port is
+> > > > runtime suspended because PME isn't enabled in _OSC.
+> > >
+> > > If PME is not handled natively, why does the NIC runtime suspend?
+> > > Shouldn't this be fixed in the NIC driver by keeping the device
+> > > runtime active if PME cannot be used?
+> >
+> > That means we need to fix every user of pci_dev_run_wake(), or fix the
+> > issue in pci_dev_run_wake() helper itself.
+>
+> If PME is not granted to the OS, the only consequence is that the PME
+> port service is not instantiated at the root port.  But PME is still
+> enabled for downstream devices.  Maybe that's a mistake?  I think the
+> ACPI spec is a little unclear what to do if PME control is *not* granted.
+> It only specifies what to do if PME control is *granted*:
 
-Thanks for taking a look at this!
+So do you prefer to just disable runtime PM for the downstream device?
 
+>
+>    "If the OS successfully receives control of this feature, it must
+>     handle power management events as described in the PCI Express Base
+>     Specification."
+>
+>    "If firmware allows the OS control of this feature, then in the context
+>     of the _OSC method it must ensure that all PMEs are routed to root port
+>     interrupts as described in the PCI Express Base Specification.
+>     Additionally, after control is transferred to the OS, firmware must not
+>     update the PME Status field in the Root Status register or the PME
+>     Interrupt Enable field in the Root Control register. If control of this
+>     feature was requested and denied or was not requested, firmware returns
+>     this bit set to 0."
+>
+> Perhaps something like the below is appropriate, I'm not sure.
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 091b4a4..7e64185 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3099,7 +3099,7 @@ void pci_pm_init(struct pci_dev *dev)
+>         }
+>
+>         pmc &= PCI_PM_CAP_PME_MASK;
+> -       if (pmc) {
+> +       if (pmc && pci_find_host_bridge(dev->bus)->native_pme) {
+>                 pci_info(dev, "PME# supported from%s%s%s%s%s\n",
+>                          (pmc & PCI_PM_CAP_PME_D0) ? " D0" : "",
+>                          (pmc & PCI_PM_CAP_PME_D1) ? " D1" : "",
+>
+>
 
-On 8/10/21 5:07 AM, Florian Fainelli wrote:
-> 
-> 
-> On 8/5/2021 2:11 PM, Jeremy Linton wrote:
->> We are about to create a standalone ACPI quirk module for the
->> bcmstb controller. Lets move the register definitions into a separate
->> file so they can be shared between the APCI quirk and the normal
->> host bridge driver.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   drivers/pci/controller/pcie-brcmstb.c | 179 +------------------------
->>   drivers/pci/controller/pcie-brcmstb.h | 182 ++++++++++++++++++++++++++
->>   2 files changed, 183 insertions(+), 178 deletions(-)
->>   create mode 100644 drivers/pci/controller/pcie-brcmstb.h
-> 
-> You moved more than just register definitions into pcie-brcmstb.h you 
-> also moved internal structure definitions, enumerations, etc. which are 
-> not required since pcie-brcmstb-acpi.c does not access the brcm_pcie 
-> structure but open codes accesses to the MISC_STATUS register instead.
-> 
-> There are no include guards added to this file (it is debatable whether 
-> we should add them), and it is also not covered by the existing BROADCOM 
-> BCM2711/BCM2835 ARM ARCHITECTURE MAINTAINERS file entry.
+I think this will also prevent non-root port devices from using PME.
 
-Sure, I will reduce the .h to just the register definitions, guard it, 
-and tweak maintainers to cover pcie-brcmstb*.
+[snipped]
 
+> >
+> > I think PME IRQ and D3cold are different things here.
+> > The root port of the affected NIC doesn't support D3cold because
+> > there's no power resource.
+>
+> If a bridge is runtime suspended to D3, the hierarchy below it is
+> inaccessible, which is basically the same as if it's put in D3cold,
+> hence the name pci_dev_check_d3cold().  That function allows a device
+> to block an upstream bridge from runtime suspending because the device
+> is not allowed to go to D3cold.  The function specifically checks whether
+> a device is PME-capable from D3cold.  The NIC claims it's capable but
+> the PME event has no effect because PME control wasn't granted to the
+> OS and firmware neglected to set PME Interrupt Enable in the Root Control
+> register.  We could check for this case and block runtime PM of bridges
+> based on the rationale that PME polling is needed to detect wakeup.
 
-> 
-> Given that there can be new platforms supported by this PCIe controller 
-> in the future possibly with the same limitations as the 2711, but with a 
-> seemingly different MISC_STATUS layout, you will have to think about a 
-> solution that scales, maybe we cross that bridge when we get there.
+So for this case, should we prevent the downstream devices from
+runtime suspending, or let it suspend but keep the root port active in
+order to make pci_pme_list_scan() work?
 
-Yes, given I don't know what those changes are I can't predict how they 
-would have to be handled, or even if the platform would be a target of 
-the community maintaining the UEFI/ACPI port on the RPi. So punting on 
-that topic seems a reasonable solution at the moment. Better yet, more 
-of the linux community will see the advantage of the firmware interface 
-and this platform can utilize that method.
+Kai-Heng
+
+>
+> Thanks,
+>
+> Lukas
