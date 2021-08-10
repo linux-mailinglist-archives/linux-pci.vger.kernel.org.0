@@ -2,43 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 363063E579A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 11:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17ED23E57A2
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 11:56:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239329AbhHJJ4M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 05:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
+        id S239353AbhHJJ4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 05:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239274AbhHJJ4K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S239275AbhHJJ4K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 10 Aug 2021 05:56:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CB3C26109E;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DEE1F610FF;
         Tue, 10 Aug 2021 09:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1628589348;
-        bh=N9/YcIenJR/XOmZm6Zglqx5lf0VytJltRDOLZ++zXHQ=;
+        bh=TXJ1u7MVWN0FWVTPNy5JjGB30jYHeFOl74oKTqbFZYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tn5beqWtzdxlPHHWwCs+1zEctk1P2UXy9OtVowZ24OcWHfBVPpYd+SaH9TBaa0FGL
-         sbK7NhAKDifwff2FfaqAuVMWw5/jiPjZeQn8+NuF+K4Bho0WSocFfX4qnChDobo/0H
-         YF4RBFwGnGeLBZSeeIOrs0BYRetIUPME/CniQouhLYiKD20/GS0jnon/ssxwMWNlPI
-         3kKHynn7tlRU9ir6mKMwT9ocRXMQxpkSl8689zvtBHaBtfJ0M3yCyDK6e6aV0RujhT
-         T9G5bcwL9bMdko22Db2XXhGM5FRCPuu/SLWk2J2Hej7HJvxGnTUqBJ599kBmE9WfO5
-         UOTKXliohVOsw==
+        b=LXH2MZFLLbs2BDXg0mu1gOxAmCXSK1hfp75m5vSEuUt9ENArQK8GPjqB93n2cKIpX
+         dTU0TyfYuM8fjmObjp0ZvLqiIH8X3vzbD/3kDLp3utekA2J5WgXGkcgogoub15CtD6
+         fqMgj5FU3/8d1Ko8J1MKNKRiAlpvYGy89vd8fRuITMTB7CAvhiZgI7EEgVRzsb+lFA
+         gnRoeys2pH4skqPUbq4l5s7IW5L+CYh3YJEtzgOCyHjCVF1KTqFLqCUOgP+wEdhaGs
+         O3pGY6mOFQaueVM7fAr+/giY6jRe9SsRXW4WbYzCxUEp2L+s5x1YeK1QVJapXKpE0s
+         sZOZoKCinwUXg==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1mDOU6-00AcFz-0S; Tue, 10 Aug 2021 11:55:46 +0200
+        id 1mDOU6-00AcG3-1Q; Tue, 10 Aug 2021 11:55:46 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Wesley Sheng <wesley.sheng@amd.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v10 07/11] PCI: kirin: Add MODULE_* macros
-Date:   Tue, 10 Aug 2021 11:55:38 +0200
-Message-Id: <b2f7344594662c41c7130ed52334029eef9f53ca.1628589155.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v10 08/11] PCI: kirin: Allow building it as a module
+Date:   Tue, 10 Aug 2021 11:55:39 +0200
+Message-Id: <c3d415b1b9b66ffaea3150fc3e73292dd8f3ad87.1628589155.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1628589155.git.mchehab+huawei@kernel.org>
 References: <cover.1628589155.git.mchehab+huawei@kernel.org>
@@ -49,26 +55,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This driver misses the MODULE_* macros. Add them.
+There's nothing preventing this driver to be loaded as a
+module. So, change its config from bool to tristate.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-kirin.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/controller/dwc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 306d440e1b62..218b90ac93dc 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -802,3 +802,8 @@ static struct platform_driver kirin_pcie_driver = {
- 	},
- };
- builtin_platform_driver(kirin_pcie_driver);
-+
-+MODULE_DEVICE_TABLE(of, kirin_pcie_match);
-+MODULE_DESCRIPTION("PCIe host controller driver for Kirin Phone SoCs");
-+MODULE_AUTHOR("Xiaowei Song <songxiaowei@huawei.com>");
-+MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 423d35872ce4..e0091bfae5b5 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -227,7 +227,7 @@ config PCIE_INTEL_GW
+ 
+ config PCIE_KIRIN
+ 	depends on OF && (ARM64 || COMPILE_TEST)
+-	bool "HiSilicon Kirin series SoCs PCIe controllers"
++	tristate "HiSilicon Kirin series SoCs PCIe controllers"
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	help
 -- 
 2.31.1
 
