@@ -2,103 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5FF3E57FC
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 12:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C60D33E587D
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 12:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239702AbhHJKHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 06:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239700AbhHJKHl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 06:07:41 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38601C0613D3;
-        Tue, 10 Aug 2021 03:07:20 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id q2so20279873plr.11;
-        Tue, 10 Aug 2021 03:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/WTc/jRXHtXJWj+Wad8h2vDSBuhiirpHVCKMKslUCDg=;
-        b=TNzlV9OG9ouGtp33JYXV2CuqznwDNP+DLbiBbjPq10lw0tgYJQrVP/+stIoYG4DXet
-         B87oFA8bW29TZO5VXi2mOwA9Rk3vZXkZ80ISTqoP0SE3+1OxsVzP9hTM+rLn0uz/LCGE
-         +MKiFdsXZ6HFdR5FJTNDZ0dLjDLyMeSu0qmO+2oP7qzz1NQFdYQ0mo7CslWrZtMDxYqk
-         ww0SI0/bW4NQaPo5cOCiMiay3F5TWMZkyzimhZYDYpzGde+9z0BW+PP61iFT1w1ZNLb+
-         J54pBg8f8UjIP6T0Cmb9kBMSs2oddz0yD3GyW0JYhavYjirW7xymU0js/JVMWdw/eYe+
-         EXyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/WTc/jRXHtXJWj+Wad8h2vDSBuhiirpHVCKMKslUCDg=;
-        b=oD98Cq46TLunVWDj+Ii2VmbDhSvUIVCl+Ihr6V+kZbyk2ttKTrfSgpYSN4VEHSqGyr
-         +jRR73I5JZG+TsitkVS901iEZ4fmeF2sQyhdWfiIeJmvPDU5PVnH7BTxpK7QWsbd+EE1
-         PsXsbMtRJrGZCN828k/JlMz+c6Yt5Sv0hAP76UQ+cnrPGV6ISHd/RmDLW+LvzuTl9ese
-         Bocti5GGgrR3I4ieZ3zXgRdf1XQ8pbVf1IdXXzFiuWkQPndLAVt+ROaK0/pZM8H/zWxZ
-         Puv1k0NZgmXJlmYPcDtxlI7pPSD3FAWJIAtrYLGmZB/mTbcRhAMPLHS/NOx+vXjpzMfp
-         xLCQ==
-X-Gm-Message-State: AOAM5311CWx/8+yrRMZ/QiZ/OuVLTx7YmIneuwCd/O0gRdAo39O1fgjj
-        m0/sOaidRvQdUbNwKtWi8UIT4jMvcq6BfA==
-X-Google-Smtp-Source: ABdhPJzQFOqSq8XNRMUD+FN2uxXqX1t0SFajo0UanRiC2+h2uFmQlLC6oXYrIbW9iIs84t6N9EOIAA==
-X-Received: by 2002:a62:ea0f:0:b029:319:8eef:5ff1 with SMTP id t15-20020a62ea0f0000b02903198eef5ff1mr28642049pfh.74.1628590039333;
-        Tue, 10 Aug 2021 03:07:19 -0700 (PDT)
-Received: from [192.168.1.22] (amarseille-551-1-7-65.w92-145.abo.wanadoo.fr. [92.145.152.65])
-        by smtp.gmail.com with ESMTPSA id bk24sm2421518pjb.26.2021.08.10.03.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Aug 2021 03:07:18 -0700 (PDT)
-Subject: Re: [PATCH 1/3] PCI: brcmstb: Break register definitions into
- separate header
-To:     Jeremy Linton <jeremy.linton@arm.com>, linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210805211200.491275-1-jeremy.linton@arm.com>
- <20210805211200.491275-2-jeremy.linton@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f82761b1-fb7e-08b2-8bc3-c84d258e26d3@gmail.com>
-Date:   Tue, 10 Aug 2021 03:07:13 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S239883AbhHJKlQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 06:41:16 -0400
+Received: from ni.piap.pl ([195.187.100.5]:57204 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239884AbhHJKlQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Aug 2021 06:41:16 -0400
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        by ni.piap.pl (Postfix) with ESMTPSA id 99935C369550
+        for <linux-pci@vger.kernel.org>; Tue, 10 Aug 2021 12:40:48 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 99935C369550
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1628592048; bh=zfujDMcxyu6TyvFHQiwCJhCNFAk1LFud6MBKsw0lWLU=;
+        h=From:To:Subject:Date:From;
+        b=WQuqcwjTIxSsCrC2rH6ZLWEa6jBQPcAIBZhsQ6Mnsp/VCO5X54xgv/rsY1u0AijAe
+         x0nqUCTRocNHcqF3BLBz7ZSXfzYchxpNCFOi5xxH76B40k7au+CK9G6c5gFgilGRVl
+         Gh1Bw22gENRUPA8CykSxY65gkOuWBtlp5/S6In8g=
+From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To:     linux-pci@vger.kernel.org
+Subject: ARM Max Read Req Size and PCIE_BUS_PERFORMANCE stories
+Sender: khalasa@piap.pl
+Date:   Tue, 10 Aug 2021 12:40:48 +0200
+Message-ID: <m3zgtp8tvz.fsf@t19.piap.pl>
 MIME-Version: 1.0
-In-Reply-To: <20210805211200.491275-2-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 1
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Lua-Profiles: 165491 [Aug 10 2021]
+X-KLMS-AntiSpam-Version: 5.9.20.0
+X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
+X-KLMS-AntiSpam-Rate: 0
+X-KLMS-AntiSpam-Status: not_detected
+X-KLMS-AntiSpam-Method: none
+X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
+X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, piap.pl:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t19.piap.pl:7.1.1
+X-MS-Exchange-Organization-SCL: -1
+X-KLMS-AntiSpam-Interceptor-Info: scan successful
+X-KLMS-AntiPhishing: Clean, bases: 2021/08/10 08:09:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/10 03:45:00 #17007547
+X-KLMS-AntiVirus-Status: Clean, skipped
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
+
+Background: I'm using an ARMv7 (i.MX6) system with an RTL8111 (aka
+RTL8169) network interface. By default, the system is using
+PCIE_BUS_DEFAULT:
+
+config PCIE_BUS_DEFAULT
+          Default choice; ensure that the MPS matches upstream bridge.
+
+and the r8169 driver doesn't work - the RTL chip requests PCIe read
+longer than 512 bytes, and the CPU rejects the request.
+
+I've traced the problem to this: (r8169_main.c: rtl_jumbo_config())
+	int readrq =3D 4096;
+...
+	if (pci_is_pcie(tp->pci_dev) && tp->supports_gmii)
+		pcie_set_readrq(tp->pci_dev, readrq);
+
+I've verified that changing the value back to 512 (after r8168 driver
+set it to 4096) makes it work again.
 
 
-On 8/5/2021 2:11 PM, Jeremy Linton wrote:
-> We are about to create a standalone ACPI quirk module for the
-> bcmstb controller. Lets move the register definitions into a separate
-> file so they can be shared between the APCI quirk and the normal
-> host bridge driver.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   drivers/pci/controller/pcie-brcmstb.c | 179 +------------------------
->   drivers/pci/controller/pcie-brcmstb.h | 182 ++++++++++++++++++++++++++
->   2 files changed, 183 insertions(+), 178 deletions(-)
->   create mode 100644 drivers/pci/controller/pcie-brcmstb.h
+We have several PCIE_BUS_* modes, all guarded by CONFIG_EXPERT. I've
+verified that PCIE_BUS_PERFORMANCE also fixes the problem. It sets
+MaxReadReqSize to MaxPayloadSize which is equal to 128 on i.MX6.
+This is, most probably, suboptimal (despite "performance" in the name).
 
-You moved more than just register definitions into pcie-brcmstb.h you 
-also moved internal structure definitions, enumerations, etc. which are 
-not required since pcie-brcmstb-acpi.c does not access the brcm_pcie 
-structure but open codes accesses to the MISC_STATUS register instead.
 
-There are no include guards added to this file (it is debatable whether 
-we should add them), and it is also not covered by the existing BROADCOM 
-BCM2711/BCM2835 ARM ARCHITECTURE MAINTAINERS file entry.
+Now, how should it be fixed (so it works by default)?
+1. should the drivers be banned from using pcie_set_readrq() etc?
+   I believe some chips may require MRRS adjustment by the driver,
+   though.
+2. should the PCI code limit MRRS to MPS by default?
+3. should the PCI code limit MRRS to the maximum safe value (512 on
+   this CPU)?
 
-Given that there can be new platforms supported by this PCIe controller 
-in the future possibly with the same limitations as the 2711, but with a 
-seemingly different MISC_STATUS layout, you will have to think about a 
-solution that scales, maybe we cross that bridge when we get there.
--- 
-Florian
+Does hardware like common x86 have a "maximum safe value" (lower than
+4096)?
+
+Any other ideas?
+
+i.MX6 details:
+There is mysterious CX_REMOTE_RD_REQ_SIZE (CPU design time constant)
+and the Remote_Read_Request_Size, a part of PCIE_PL_MRCCR0 register:
+
+"Remote Read Request Size specifies the largest amount of data (bytes)
+that will ever be requested (via an inbound MemRd TLP) by a remote
+device. Must never be programmed with a value that exceeds the value
+represented by the configuration parameter CX_REMOTE_RD_REQ_SIZE as the
+Master Response Composer RAM in the AXI bridge is sized using
+CX_REMOTE_RD_REQ_SIZE."
+
+Default value is 512 bytes (and works) and while I think it may be
+possible to set it to 1024 or even 2048 bytes, it doesn't seem to work.
+The "Remote Max Bridge Tag" (which is calculated automatically by the
+CPU based on "Remote Read Request Size" changes from 3 to 1 (which may
+make sense):
+
+"Remote Read Request Size" vs. "Remote Max Bridge Tag"
+ 128 13 <<< does that mean 14 simultaneous requests? Or 13?
+ 256  6
+ 512  3
+1024  1
+2048  0 <<< a single request? No requests?
+4096 31 <<< apparently some internal logic failure
+
+--=20
+Krzysztof "Chris" Ha=C5=82asa
+
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
