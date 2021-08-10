@@ -2,75 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D567F3E57A0
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 11:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5FF3E57FC
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 12:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233294AbhHJJ4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 05:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239316AbhHJJ4L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Aug 2021 05:56:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F9FB610A7;
-        Tue, 10 Aug 2021 09:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628589349;
-        bh=/ntXjC0T/LfuRQkxXY7V2CnXziznXTVk99SyCyqh69g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6lbQWC6N3YuSJFnTmPdPQ4BggpPnj9vU9bqmrWabqkB9w52AXsitIQTAkzD3AhvT
-         WPNjraM050QXi3ShOxQTSKRFYU/5XOIYkulOleY1n0NWRUaOUNJ19q0lCQvfrex8NU
-         OICH8G9oWeyPTi7qWKLEQMAZvCPJgj65BqkBillENx4w6myqSt8vCJ9Dn1klv9kJUA
-         KQUZqeMcvbY9olAJ7dyYvp0BRfCSJXazzB9c0TFxt0VldlJGr9iAjqFE2qggWz0azZ
-         xlhHwBcwPZQPeMmuh0G2sBguRa70eAI25Z4Z+JEmuY5BxE2l3/2nxlA7xA2UNw93As
-         M4VyWeiKBaICQ==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1mDOU6-00AcGF-4L; Tue, 10 Aug 2021 11:55:46 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v10 11/11] PCI: kirin: Allow removing the driver
-Date:   Tue, 10 Aug 2021 11:55:42 +0200
-Message-Id: <22fc912a3e6c1c6c25c672eefad89bb21164ff6f.1628589155.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1628589155.git.mchehab+huawei@kernel.org>
-References: <cover.1628589155.git.mchehab+huawei@kernel.org>
+        id S239702AbhHJKHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 06:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239700AbhHJKHl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 06:07:41 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38601C0613D3;
+        Tue, 10 Aug 2021 03:07:20 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id q2so20279873plr.11;
+        Tue, 10 Aug 2021 03:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/WTc/jRXHtXJWj+Wad8h2vDSBuhiirpHVCKMKslUCDg=;
+        b=TNzlV9OG9ouGtp33JYXV2CuqznwDNP+DLbiBbjPq10lw0tgYJQrVP/+stIoYG4DXet
+         B87oFA8bW29TZO5VXi2mOwA9Rk3vZXkZ80ISTqoP0SE3+1OxsVzP9hTM+rLn0uz/LCGE
+         +MKiFdsXZ6HFdR5FJTNDZ0dLjDLyMeSu0qmO+2oP7qzz1NQFdYQ0mo7CslWrZtMDxYqk
+         ww0SI0/bW4NQaPo5cOCiMiay3F5TWMZkyzimhZYDYpzGde+9z0BW+PP61iFT1w1ZNLb+
+         J54pBg8f8UjIP6T0Cmb9kBMSs2oddz0yD3GyW0JYhavYjirW7xymU0js/JVMWdw/eYe+
+         EXyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/WTc/jRXHtXJWj+Wad8h2vDSBuhiirpHVCKMKslUCDg=;
+        b=oD98Cq46TLunVWDj+Ii2VmbDhSvUIVCl+Ihr6V+kZbyk2ttKTrfSgpYSN4VEHSqGyr
+         +jRR73I5JZG+TsitkVS901iEZ4fmeF2sQyhdWfiIeJmvPDU5PVnH7BTxpK7QWsbd+EE1
+         PsXsbMtRJrGZCN828k/JlMz+c6Yt5Sv0hAP76UQ+cnrPGV6ISHd/RmDLW+LvzuTl9ese
+         Bocti5GGgrR3I4ieZ3zXgRdf1XQ8pbVf1IdXXzFiuWkQPndLAVt+ROaK0/pZM8H/zWxZ
+         Puv1k0NZgmXJlmYPcDtxlI7pPSD3FAWJIAtrYLGmZB/mTbcRhAMPLHS/NOx+vXjpzMfp
+         xLCQ==
+X-Gm-Message-State: AOAM5311CWx/8+yrRMZ/QiZ/OuVLTx7YmIneuwCd/O0gRdAo39O1fgjj
+        m0/sOaidRvQdUbNwKtWi8UIT4jMvcq6BfA==
+X-Google-Smtp-Source: ABdhPJzQFOqSq8XNRMUD+FN2uxXqX1t0SFajo0UanRiC2+h2uFmQlLC6oXYrIbW9iIs84t6N9EOIAA==
+X-Received: by 2002:a62:ea0f:0:b029:319:8eef:5ff1 with SMTP id t15-20020a62ea0f0000b02903198eef5ff1mr28642049pfh.74.1628590039333;
+        Tue, 10 Aug 2021 03:07:19 -0700 (PDT)
+Received: from [192.168.1.22] (amarseille-551-1-7-65.w92-145.abo.wanadoo.fr. [92.145.152.65])
+        by smtp.gmail.com with ESMTPSA id bk24sm2421518pjb.26.2021.08.10.03.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Aug 2021 03:07:18 -0700 (PDT)
+Subject: Re: [PATCH 1/3] PCI: brcmstb: Break register definitions into
+ separate header
+To:     Jeremy Linton <jeremy.linton@arm.com>, linux-pci@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
+        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20210805211200.491275-1-jeremy.linton@arm.com>
+ <20210805211200.491275-2-jeremy.linton@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f82761b1-fb7e-08b2-8bc3-c84d258e26d3@gmail.com>
+Date:   Tue, 10 Aug 2021 03:07:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
+In-Reply-To: <20210805211200.491275-2-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that everything is in place at the poweroff sequence,
-this driver can use module_platform_driver(), which allows
-it to be removed.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 5535605ab1e7..7cbe434a3bd1 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -826,7 +826,7 @@ static struct platform_driver kirin_pcie_driver = {
- 		.suppress_bind_attrs	= true,
- 	},
- };
--builtin_platform_driver(kirin_pcie_driver);
-+module_platform_driver(kirin_pcie_driver);
- 
- MODULE_DEVICE_TABLE(of, kirin_pcie_match);
- MODULE_DESCRIPTION("PCIe host controller driver for Kirin Phone SoCs");
+On 8/5/2021 2:11 PM, Jeremy Linton wrote:
+> We are about to create a standalone ACPI quirk module for the
+> bcmstb controller. Lets move the register definitions into a separate
+> file so they can be shared between the APCI quirk and the normal
+> host bridge driver.
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>   drivers/pci/controller/pcie-brcmstb.c | 179 +------------------------
+>   drivers/pci/controller/pcie-brcmstb.h | 182 ++++++++++++++++++++++++++
+>   2 files changed, 183 insertions(+), 178 deletions(-)
+>   create mode 100644 drivers/pci/controller/pcie-brcmstb.h
+
+You moved more than just register definitions into pcie-brcmstb.h you 
+also moved internal structure definitions, enumerations, etc. which are 
+not required since pcie-brcmstb-acpi.c does not access the brcm_pcie 
+structure but open codes accesses to the MISC_STATUS register instead.
+
+There are no include guards added to this file (it is debatable whether 
+we should add them), and it is also not covered by the existing BROADCOM 
+BCM2711/BCM2835 ARM ARCHITECTURE MAINTAINERS file entry.
+
+Given that there can be new platforms supported by this PCIe controller 
+in the future possibly with the same limitations as the 2711, but with a 
+seemingly different MISC_STATUS layout, you will have to think about a 
+solution that scales, maybe we cross that bridge when we get there.
 -- 
-2.31.1
-
+Florian
