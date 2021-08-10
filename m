@@ -2,106 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B773E5E4E
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 16:47:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C2B3E5E51
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 16:47:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241321AbhHJOrm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 10:47:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:57182 "EHLO foss.arm.com"
+        id S241847AbhHJOr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 10:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241835AbhHJOrk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:47:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28E621FB;
-        Tue, 10 Aug 2021 07:47:18 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A38B23F718;
-        Tue, 10 Aug 2021 07:47:17 -0700 (PDT)
-Subject: Re: [PATCH 3/3] PCI/ACPI: Add new quirk detection, enable bcm2711
-To:     Shanker R Donthineni <sdonthineni@nvidia.com>,
-        linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210805211200.491275-1-jeremy.linton@arm.com>
- <20210805211200.491275-4-jeremy.linton@arm.com>
- <b574f9bb-72f3-72cd-9a6a-f1f4d998afda@nvidia.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <1ed33f6e-fbfb-e8a0-741e-6961f9a7072b@arm.com>
-Date:   Tue, 10 Aug 2021 09:47:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S241835AbhHJOr7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Aug 2021 10:47:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 142F660F25;
+        Tue, 10 Aug 2021 14:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628606857;
+        bh=w2Dz/2K8UpCBs+YfXsHYqixApJ1UabAsDWwqZ5GOGyI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=neYehoZJC+E+pom8FC2YzXkQeIOrdOO7f+qVKzLZmEYJMjBxZ3I6HshcemhSxjCX0
+         cn7jNIFb9KFfBgpbsyaoahvkXD5tRe//TyLYS3fduF7Kae1TVR7/Nn0qzkOcT1bv5j
+         z7n0j9PQCAEwNrO9ey7gKp0xXVZG77mda8bMx2GNnPJ4W+uEn+npiELJdIw1DAtZHA
+         sZfEVEYLU38IupNn9xFdjwo0AJCM0s2F2GFUixswhe0bbNzM2RqtSD4RsU2GjeDsyC
+         rJ51mWmnVpa8FE1ERvvXDheCmhObDznChfl1PE+1Vbq3+kdPtRYjZ6NWH019pLN2TK
+         dUHAF1oUhnWHw==
+Date:   Tue, 10 Aug 2021 09:47:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     George Cherian <george.cherian@marvell.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH] PCI: Add ACS quirk for Cavium multi-function devices
+Message-ID: <20210810144735.GA2264304@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <b574f9bb-72f3-72cd-9a6a-f1f4d998afda@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210810122425.1115156-1-george.cherian@marvell.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, Aug 10, 2021 at 05:54:25PM +0530, George Cherian wrote:
+> Some Cavium endpoints are implemented as multi-function devices
+> without ACS capability, but they actually don't support peer-to-peer
+> transactions.
+> 
+> Add ACS quirks to declare DMA isolation.
+> 
+> Apply te quirk for following devices
+> 1. BGX device found on Octeon-TX (8xxx)
+> 2. CGX device found on Octeon-TX2 (9xxx)
+> 3. RPM device found on Octeon-TX3 (10xxx)
+> 
+> Signed-off-by: George Cherian <george.cherian@marvell.com>
+> ---
+>  drivers/pci/quirks.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 6d74386eadc2..076932018494 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4840,6 +4840,10 @@ static const struct pci_dev_acs_enabled {
+>  	{ 0x10df, 0x720, pci_quirk_mf_endpoint_acs }, /* Emulex Skyhawk-R */
+>  	/* Cavium ThunderX */
+>  	{ PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID, pci_quirk_cavium_acs },
+> +	/* Cavium multi-function devices */
+> +	{ PCI_VENDOR_ID_CAVIUM, 0xA026, pci_quirk_mf_endpoint_acs },
+> +	{ PCI_VENDOR_ID_CAVIUM, 0xA059, pci_quirk_mf_endpoint_acs },
+> +	{ PCI_VENDOR_ID_CAVIUM, 0xA060, pci_quirk_mf_endpoint_acs },
 
-Thanks for looking at this!
+Is there a plan to add ACS capabilities to future devices, or is
+Cavium just resigned to forever adding and backporting quirks?
 
-On 8/10/21 9:31 AM, Shanker R Donthineni wrote:
-> Hi Jeremy,
+>  	/* APM X-Gene */
+>  	{ PCI_VENDOR_ID_AMCC, 0xE004, pci_quirk_xgene_acs },
+>  	/* Ampere Computing */
+> -- 
+> 2.25.1
 > 
-> On 8/5/21 4:12 PM, Jeremy Linton wrote:
->> Now that we have a bcm2711 quirk, we need to be able to
->> detect it when the MCFG is missing. Use a namespace
->> property as an alternative to the MCFG OEM.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   drivers/acpi/pci_mcfg.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
->> index 53cab975f612..7d77fc72c2a4 100644
->> --- a/drivers/acpi/pci_mcfg.c
->> +++ b/drivers/acpi/pci_mcfg.c
->> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
->>          ALTRA_ECAM_QUIRK(1, 13),
->>          ALTRA_ECAM_QUIRK(1, 14),
->>          ALTRA_ECAM_QUIRK(1, 15),
->> +
->> +       { "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
->> +         DEFINE_RES_MEM(0xFD500000, 0xA000) },
->>   };
->>
->>   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
->> @@ -198,8 +201,19 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
->>          u16 segment = root->segment;
->>          struct resource *bus_range = &root->secondary;
->>          struct mcfg_fixup *f;
->> +       const char *soc;
->>          int i;
->>
->> +       /*
->> +        * This could be a machine with a PCI/SMC conduit,
->> +        * which means it doens't have MCFG. Get the machineid from
->> +        * the namespace definition instead.
->> +        */
->> +       if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
->> +                                        "linux,pcie-quirk", &soc)) {
->> +               memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
->> +       }
->> +
-> 
-> Is there any specific reason for not using the firmware agnostic API to get properties?
->   
-> 
->   if (!device_property_read_string(root->device, "linux,pcie-quirk", &soc)) {
->       memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
->   }
-> 
-> 
-
-IIRC it was because the "device" here isn't a struct device, rather a 
-struct acpi_device. I think this is the normal way in this situation 
-since we are directly picking up the fwnode rather than finding a 
-generic node and then backtracking to get the fwnode.
-
