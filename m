@@ -2,95 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0F13E592A
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 13:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90EBF3E5990
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 14:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237731AbhHJLeb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 07:34:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229527AbhHJLeb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Aug 2021 07:34:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 40E386101E;
-        Tue, 10 Aug 2021 11:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628595249;
-        bh=U4Zld7mAu6v7/9xMDyWvpT/NNYAWTiUJU4He5dD/eL4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lJZtsLaj7jaRkxeJSZpFbApjAOcERUr6k3R9FD36dUPQtws4z6KYPDzXzDfxVdwp+
-         I4Rx380OJYH4+KsXFBVtVm/uNG5+BdcR8Ahwh6jgjxh0K/tABjGp27T2Hg8JZBXE66
-         8vBTJdpdvoQehoE9FCEvW0W8q/WWprPCty3ERtdmGnbv+mapiDKrWvnX8QiMmTnYa2
-         eYoAva5zQNUQpGzDJ8+QTXuMJ98dyx8tkIJ3Dt2Fuj9PHNrLQFBRSE/kIXBj0GOi3Z
-         1go5tRWI2r6aELq/bjZcQ5B37g3vK98ee8qExwrQ3Eb4Nk0uOW3E9PugjHiPxx5cBQ
-         drvvS5gCGI1tg==
-Received: by mail-wr1-f54.google.com with SMTP id i4so8337645wru.0;
-        Tue, 10 Aug 2021 04:34:09 -0700 (PDT)
-X-Gm-Message-State: AOAM5305gi1q9rTqsanlIG5ZRWYeUAyZc58HNcj3DqN4dPj1uy6WfPms
-        1x7VI5hCJVipRmNQey0KM6Dgbqvl+ToDS2hZJIs=
-X-Google-Smtp-Source: ABdhPJyjNp84V0PWdniYskkVm3tgBt8qm+LU5nYRyMlh1QdiRB65+ZJ6dm/n9ev4DK0S0p/m2pg884gI41cWjwdHPfc=
-X-Received: by 2002:adf:a309:: with SMTP id c9mr12971585wrb.99.1628595247894;
- Tue, 10 Aug 2021 04:34:07 -0700 (PDT)
+        id S240322AbhHJMAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 08:00:20 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:8001 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238333AbhHJMAT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 08:00:19 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GkWhs1KySzYmb4;
+        Tue, 10 Aug 2021 19:59:41 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 10 Aug 2021 19:59:54 +0800
+Subject: Re: [PATCH V7 6/9] PCI: Enable 10-Bit Tag support for PCIe RP devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20210809172650.GA1897893@bjorn-Precision-5520>
+CC:     <hch@infradead.org>, <kw@linux.com>, <logang@deltatee.com>,
+        <leon@kernel.org>, <linux-pci@vger.kernel.org>,
+        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <bf71ba50-42d3-13e1-4600-3f39613863a3@huawei.com>
+Date:   Tue, 10 Aug 2021 19:59:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
- <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
- <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
- <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
- <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com> <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
- <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com> <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
- <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com> <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
- <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
-In-Reply-To: <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Tue, 10 Aug 2021 13:33:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
-Message-ID: <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-To:     John Garry <john.garry@huawei.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210809172650.GA1897893@bjorn-Precision-5520>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 11:19 AM John Garry <john.garry@huawei.com> wrote:
-> On 04/08/2021 09:52, Arnd Bergmann wrote:
+
+
+On 2021/8/10 1:26, Bjorn Helgaas wrote:
+> On Thu, Aug 05, 2021 at 04:25:23PM +0800, Dongdong Liu wrote:
+>> On 2021/8/5 7:38, Bjorn Helgaas wrote:
+>>> On Wed, Aug 04, 2021 at 09:47:05PM +0800, Dongdong Liu wrote:
+>>>> PCIe spec 5.0r1.0 section 2.2.6.2 implementation note, In configurations
+>>>> where a Requester with 10-Bit Tag Requester capability needs to target
+>>>> multiple Completers, one needs to ensure that the Requester sends 10-Bit
+>>>> Tag Requests only to Completers that have 10-Bit Tag Completer capability.
+>>>> So we enable 10-Bit Tag Requester for root port only when the devices
+>>>> under the root port support 10-Bit Tag Completer.
+>>>
+>>> Fix quoting.  I can't tell what is from the spec and what you wrote.
+>> Will fix.
+>>>
+>>>> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+>>>> ---
+>>>>  drivers/pci/pcie/portdrv_pci.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 69 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+>>>> index c7ff1ee..2382cd2 100644
+>>>> --- a/drivers/pci/pcie/portdrv_pci.c
+>>>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>>>> @@ -90,6 +90,72 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>>>>  #define PCIE_PORTDRV_PM_OPS	NULL
+>>>>  #endif /* !PM */
+>>>>
+>>>> +static int pci_10bit_tag_comp_support(struct pci_dev *dev, void *data)
+>>>> +{
+>>>> +	bool *support = (bool *)data;
+>>>> +
+>>>> +	if (!pci_is_pcie(dev)) {
+>>>> +		*support = false;
+>>>> +		return 1;
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
+>>>> +	 * For configurations where a Requester with 10-Bit Tag Requester
+>>>> +	 * capability targets Completers where some do and some do not have
+>>>> +	 * 10-Bit Tag Completer capability, how the Requester determines which
+>>>> +	 * NPRs include 10-Bit Tags is outside the scope of this specification.
+>>>> +	 * So we do not consider hotplug scenario.
+>>>> +	 */
+>>>> +	if (dev->is_hotplug_bridge) {
+>>>> +		*support = false;
+>>>> +		return 1;
+>>>> +	}
+>>>> +
+>>>> +	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP)) {
+>>>> +		*support = false;
+>>>> +		return 1;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void pci_configure_rp_10bit_tag(struct pci_dev *dev)
+>>>> +{
+>>>> +	bool support = true;
+>>>> +
+>>>> +	if (dev->subordinate == NULL)
+>>>> +		return;
+>>>> +
+>>>> +	/* If no devices under the root port, no need to enable 10-Bit Tag. */
+>>>> +	if (list_empty(&dev->subordinate->devices))
+>>>> +		return;
+>>>> +
+>>>> +	pci_10bit_tag_comp_support(dev, &support);
+>>>> +	if (!support)
+>>>> +		return;
+>>>> +
+>>>> +	/*
+>>>> +	 * PCIe spec 5.0r1.0 section 2.2.6.2 implementation note.
+>>>> +	 * In configurations where a Requester with 10-Bit Tag Requester
+>>>> +	 * capability needs to target multiple Completers, one needs to ensure
+>>>> +	 * that the Requester sends 10-Bit Tag Requests only to Completers
+>>>> +	 * that have 10-Bit Tag Completer capability. So we enable 10-Bit Tag
+>>>> +	 * Requester for root port only when the devices under the root port
+>>>> +	 * support 10-Bit Tag Completer.
+>>>> +	 */
+>>>> +	pci_walk_bus(dev->subordinate, pci_10bit_tag_comp_support, &support);
+>>>> +	if (!support)
+>>>> +		return;
+>>>> +
+>>>> +	if (!(dev->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
+>>>> +		return;
+>>>> +
+>>>> +	pci_dbg(dev, "enabling 10-Bit Tag Requester\n");
+>>>> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+>>>> +				 PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+>>>> +}
+>>>> +
+>>>>  /*
+>>>>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>>>>   * @dev: PCI-Express port device being probed
+>>>> @@ -111,6 +177,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>>>>  	     (type != PCI_EXP_TYPE_RC_EC)))
+>>>>  		return -ENODEV;
+>>>>
+>>>> +	if (type == PCI_EXP_TYPE_ROOT_PORT)
+>>>> +		pci_configure_rp_10bit_tag(dev);
+>>>
+>>> I don't think this has anything to do with the portdrv, so all this
+>>> should go somewhere else.
+>>
+>> Yes, any suggestion where to put the code?
 >
-> This seems a reasonable approach. Do you have a plan for this work? Or
-> still waiting for the green light?
+> It seems similar to pci_configure_ltr(), pci_configure_eetlp_prefix(),
+> and other things in drivers/pci/probe.c, so maybe there?
+Seems similar to pcie_bus_configure_settings().
+Enable RP 10-bit tag requester need to know all the EP devices 10-bit 
+tag completer capability under the RP.
 
-I'm rather busy with other work at the moment, so no particular plans
-for any time soon.
-
-> I have noticed the kernel test robot reporting the following to me,
-> which seems to be the same issue which was addressed in this series
-> originally:
 >
-> config: s390-randconfig-r032-20210802 (attached as .config)
-> compiler: clang version 13.0.0 (https://github.com/llvm/llvm-project
-> 4f71f59bf3d9914188a11d0c41bedbb339d36ff5)
-> ...
-> All errors (new ones prefixed by >>):
+> Or, if this is more of a theoretical advantage than a demonstrated
+> performance improvement, we could just hold off on doing it until it
+> becomes important.  I can't tell if you have a scenario that actually
+> benefits from this yet.
+
+Ok, I will remove this patch from the patchset.
+We will do this later when get performance improvement data.
+
+Thanks,
+Dongdong
 >
->     In file included from drivers/block/null_blk/main.c:12:
->     In file included from drivers/block/null_blk/null_blk.h:8:
->     In file included from include/linux/blkdev.h:25:
->     In file included from include/linux/scatterlist.h:9:
->     In file included from arch/s390/include/asm/io.h:75:
->     include/asm-generic/io.h:464:31: warning: performing pointer
-> arithmetic on a null pointer has undefined behavior
-> [-Wnull-pointer-arithmetic]
->             val = __raw_readb(PCI_IOBASE + addr);
+>>> Out of curiosity, IIUC this enables 10-bit tags for MMIO transactions
+>>> from the root port toward the device, i.e., traffic that originates
+>>> from a CPU.  Is that a significant benefit?  I would expect high-speed
+>>> devices would primarily operate via DMA with relatively little MMIO
+>>> traffic.
+>>
+>> The benefits of 10-Bit Tag for EP are obvious.
+>> There are few RP scenarios. Unless there are two:
+>> 1. RC has its own DMA.
+>> 2. The P2P tag is replaced at the RP when the P2PDMA go through RP.
 >
-> So I imagine lots of people are seeing these.
-
-Right, this is the original problem that Niklas was trying to solve.
-
-If Niklas has time to get this fixed, I can probably find a way to work
-with him on finishing up my proposed patch with the changes you
-suggested.
-
-       Arnd
+> .
+>
