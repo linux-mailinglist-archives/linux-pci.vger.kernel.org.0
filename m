@@ -2,142 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 483EF3E8615
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 00:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EC5E3E8681
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 01:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235084AbhHJWdK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 18:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
+        id S235258AbhHJX2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 19:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231380AbhHJWdK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Aug 2021 18:33:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2FD2960F94;
-        Tue, 10 Aug 2021 22:32:47 +0000 (UTC)
+        id S234470AbhHJX2B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Aug 2021 19:28:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5161660551;
+        Tue, 10 Aug 2021 23:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628634767;
-        bh=jBhUSswXbu7eqOIoOTNA6LTai3QKt3yxiCxd0AsaSVM=;
+        s=k20201202; t=1628638058;
+        bh=6iPB0AbzSm7HODbCyg5KLlAo2RPy57aRQOOWAgrSrEc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UlmwruyWNcVqCzdrGmJPwoT3zO+oq3c4bN4e1EG0j8Ii782GwufWkNoeuTDL0xflB
-         ibTEtBFLr0igVxyV7HL8hPn+SCaP1x3th5gqtBsam28jRK9tdNeL2wovy8u/qrpKWL
-         +3ON1m8q99OGqedxcga0dnuz8NVYmecq+yg2bUs024Ngg71HgXSIe9W4JRi++hh349
-         SIt0uQxYWMXOgIAKY+5YfI8XqoxtksF9hr0fyuWl6G698LuWhGbGg24ZrDtltwIF1q
-         ryYvHMuiPy/tBFJDq/n+5m6kmjByrUKxp9FT2Oz6rL/iywuYUqYIv5Nhwdvs3r7oD4
-         GosihRIA4TfYw==
-Date:   Tue, 10 Aug 2021 17:32:45 -0500
+        b=qM/qY4W4W4elcZICZhfmoj5pOp7JTj5IbeandeMHqKveNEIz10ruAZgC/zaSrvnwo
+         Qp8ajl0nHC47VIeuyfrc1cfdXwKKFlUYS+qnb2xQNwL+3xaFb5rCeqpByDqBtVdygG
+         Ht4G8Tntn/UkVvUoK94Wrp5/jki1fgr6NGErVPSCaz7s0p503lL1c9CKjyqojFR/Up
+         cITnl6lf2a9nH5ckOkQ+dLw92PrQxkqYLa1PAv7r8akwlCvOSuc1sXeHWtz94XBQle
+         Ivq31kXQRIpz6X3UfqkwqDM0rND+4Qiwd+p4M72Zrzlynh5++U+W7Fe8xazrSv++LS
+         CRP9LOEIIHIBA==
+Date:   Tue, 10 Aug 2021 18:27:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     tsbogend@alpha.franken.de, bhelgaas@google.com,
-        matthias.bgg@gmail.com, gregkh@linuxfoundation.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-staging@lists.linux.dev, neil@brown.name,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: of: avoid 'devm_pci_remap_iospace' if
- PCI_IOBASE is not defined
-Message-ID: <20210810223245.GA2311409@bjorn-Precision-5520>
+To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     linux-pci@vger.kernel.org, Artem Lapkin <email2tema@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Huacai Chen <chenhuacai@gmail.com>
+Subject: Re: ARM Max Read Req Size and PCIE_BUS_PERFORMANCE stories
+Message-ID: <20210810232736.GA2315513@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210807072409.9018-3-sergio.paracuellos@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <m3zgtp8tvz.fsf@t19.piap.pl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 07, 2021 at 09:24:08AM +0200, Sergio Paracuellos wrote:
-> Defining PCI_IOBASE for MIPS ralink in expected addresses results in PCI IO
-> resources being assigned but the addresses generated for IO accesses are wrong
-> since the ioremap in the PCI core function 'pci_parse_request_of_pci_ranges'
-> tries to remap to a fixed virtual address (PC_IOBASE) which can't work for KSEG1
-> addresses. To get it working this way, we would need to put PCI_IOBASE somewhere
-> into KSEG2 which will result in creating TLB entries for IO addresses, which most
-> of the time isn't needed on MIPS because of access via KSEG1. To allow MIPS PCI
-> drivers to properly use the PCI generic core we need to increase IO_SPACE_LIMIT
-> since IO addresses are in addresses higher that 0xffff. We also need to avoid
-> the call 'devm_pci_remap_iospace' when 'pci_parse_request_of_pci_ranges' is
-> called to avoid the following problem:
+[+cc Artem, Art, Neil, Huacai]
 
-Rewrap to fit in ~75 columns.
-
-This is a generic change so the commit log needs to be generic as
-well.  The MIPS/KSEG1/KSEG2 information is not really useful here
-because most readers won't understand it (and I don't :)).
-
-devm_pci_remap_iospace() calls pci_remap_iospace(), which already
-contains #ifdef PCI_IOBASE.  When PCI_IOBASE is not defined (as on 
-MIPS ralink), it emits the warning below and returns failure.
-
-This patch avoids that failure, but it still leaves
-devm_pci_remap_iospace() and pci_remap_iospace() broken on MIPS
-ralink.  It's true that on MIPS ralink, they are currently only called
-via pci_parse_request_of_pci_ranges(), but I think it would be better
-if we could fix pci_remap_iospace() to handle this case so all these
-interfaces work consistently.
-
-This patch doesn't do anything with IO_SPACE_LIMIT, so I don't know
-what that part of the commit log is telling me.
-
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 1 at ../drivers/pci/pci.c:4066 pci_remap_iospace+0x3c/0x54
-> This architecture does not support memory mapped I/O
-> Modules linked in:
-> CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.10.1+ #1228
-> Stack : 00000000 00000000 807fa974 00000000 827ffa80 80066b48 80710000 0000000b
->         00000000 00000000 81c59aac 7d06ddec 80850000 00000001 81c59a40 7d06ddec
->         00000000 00000000 807c909c 81c598f0 00000001 81c59904 00000000 0000000a
->         203a6d6d 80708880 0000000f 70617773 80850000 00000000 00000000 807d0000
->         807ffecc 1e160000 00000001 00000200 00000000 8054e920 00000008 815e0008
->         ...
-> Call Trace:
-> [<80008efc>] show_stack+0x8c/0x130
-> [<806e1674>] dump_stack+0x9c/0xc8
-> [<80024a3c>] __warn+0xc0/0xe8
-> [<80024ad0>] warn_slowpath_fmt+0x6c/0xbc
-> [<80410ca8>] pci_remap_iospace+0x3c/0x54
-> [<80410d20>] devm_pci_remap_iospace+0x58/0xa4
-> [<8042019c>] devm_of_pci_bridge_init+0x4dc/0x55c
-> [<80408de8>] devm_pci_alloc_host_bridge+0x78/0x88
-> [<80424e44>] mt7621_pci_probe+0x68/0x9a4
-> [<80464804>] platform_drv_probe+0x40/0x7c
-> [<804628bc>] really_probe+0x2fc/0x4e4
-> [<80463214>] device_driver_attach+0x4c/0x74
-> [<80463384>] __driver_attach+0x148/0x150
-> [<8046047c>] bus_for_each_dev+0x6c/0xb0
-> [<804614dc>] bus_add_driver+0x1b4/0x1fc
-> [<80463aa0>] driver_register+0xd0/0x110
-> [<80001714>] do_one_initcall+0x84/0x1c0
-> [<808e7fd0>] kernel_init_freeable+0x214/0x24c
-> [<806e4164>] kernel_init+0x14/0x118
-> [<80003358>] ret_from_kernel_thread+0x14/0x1c
+On Tue, Aug 10, 2021 at 12:40:48PM +0200, Krzysztof Hałasa wrote:
+> Hi,
 > 
-> ---[ end trace 1c9d4412bd51b53c ]---
-> mt7621-pci 1e140000.pcie: error -19: failed to map resource [io  0x1e160000-0x1e16ffff]
+> Background: I'm using an ARMv7 (i.MX6) system with an RTL8111 (aka
+> RTL8169) network interface. By default, the system is using
+> PCIE_BUS_DEFAULT:
 > 
-> Hence don't call 'devm_pci_remap_iospace' if PCI_IOBASE is not defined to get
-> a working PCI core APIs for MIPS ralink platforms.
+> config PCIE_BUS_DEFAULT
+>           Default choice; ensure that the MPS matches upstream bridge.
 > 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  drivers/pci/of.c | 2 ++
->  1 file changed, 2 insertions(+)
+> and the r8169 driver doesn't work - the RTL chip requests PCIe read
+> longer than 512 bytes, and the CPU rejects the request.
+
+Super.  IIUC, i.MX6 is another DWC-based controller, so this looks
+like another case of the issue that afflicts amlogic, keystone,
+loongson (weirdly apparently *not* DWC-based), meson, and probably
+others.
+
+Some previous discussion here:
+https://lore.kernel.org/linux-pci/20210707155418.GA897940@bjorn-Precision-5520/
+
+> I've traced the problem to this: (r8169_main.c: rtl_jumbo_config())
+> 	int readrq = 4096;
+> ...
+> 	if (pci_is_pcie(tp->pci_dev) && tp->supports_gmii)
+> 		pcie_set_readrq(tp->pci_dev, readrq);
 > 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index a143b02b2dcd..657aef39bf63 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -564,12 +564,14 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
->  
->  		switch (resource_type(res)) {
->  		case IORESOURCE_IO:
-> +#ifdef PCI_IOBASE
->  			err = devm_pci_remap_iospace(dev, res, iobase);
->  			if (err) {
->  				dev_warn(dev, "error %d: failed to map resource %pR\n",
->  					 err, res);
->  				resource_list_destroy_entry(win);
->  			}
-> +#endif
->  			break;
->  		case IORESOURCE_MEM:
->  			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> -- 
-> 2.25.1
+> I've verified that changing the value back to 512 (after r8168 driver
+> set it to 4096) makes it work again.
+
+This sounds like a defect in the CPU/PCI host adapter.  If the device
+initiates a 4096-byte read and the CPU or whatever can't deal with it,
+the host adapter should break it up into whatever the CPU *can*
+handle.  I don't think this is the device's problem or the device
+driver's problem.
+
+There is no mechanism in the PCIe or ACPI spec for the driver to learn
+the maximum MRRS value the CPU can tolerate.
+
+> We have several PCIE_BUS_* modes, all guarded by CONFIG_EXPERT. I've
+> verified that PCIE_BUS_PERFORMANCE also fixes the problem. It sets
+> MaxReadReqSize to MaxPayloadSize which is equal to 128 on i.MX6.
+> This is, most probably, suboptimal (despite "performance" in the name).
+
+Yes.
+
+> Now, how should it be fixed (so it works by default)?
+> 1. should the drivers be banned from using pcie_set_readrq() etc?
+>    I believe some chips may require MRRS adjustment by the driver,
+>    though.
+
+I don't know the details of this particular situation, but ideally,
+drivers should not change MRRS or MPS.  If they do, they definitely
+need to use a PCI core interface like pcie_set_readrq() because these
+are system-level parameters that need to be considered in relation to
+other devices in the hierarchy and sometimes to problems in the PCI
+host adapter.
+
+> 2. should the PCI code limit MRRS to MPS by default?
+> 3. should the PCI code limit MRRS to the maximum safe value (512 on
+>    this CPU)?
+
+How do we learn the maximum safe value?  Is this something a native
+driver could read from PCIE_PL_MRCCR0 (see below)?
+
+This sounds like a real train wreck if any of these designs want to
+use ACPI.  There's nothing in ACPI to communicate a "maximum safe
+MRRS" value to the OS.
+
+> Does hardware like common x86 have a "maximum safe value" (lower than
+> 4096)?
+
+Not that I'm aware of.
+
+> Any other ideas?
 > 
+> i.MX6 details:
+> There is mysterious CX_REMOTE_RD_REQ_SIZE (CPU design time constant)
+> and the Remote_Read_Request_Size, a part of PCIE_PL_MRCCR0 register:
+> 
+> "Remote Read Request Size specifies the largest amount of data (bytes)
+> that will ever be requested (via an inbound MemRd TLP) by a remote
+> device. Must never be programmed with a value that exceeds the value
+> represented by the configuration parameter CX_REMOTE_RD_REQ_SIZE as the
+> Master Response Composer RAM in the AXI bridge is sized using
+> CX_REMOTE_RD_REQ_SIZE."
+> 
+> Default value is 512 bytes (and works) and while I think it may be
+> possible to set it to 1024 or even 2048 bytes, it doesn't seem to work.
+> The "Remote Max Bridge Tag" (which is calculated automatically by the
+> CPU based on "Remote Read Request Size" changes from 3 to 1 (which may
+> make sense):
+> 
+> "Remote Read Request Size" vs. "Remote Max Bridge Tag"
+>  128 13 <<< does that mean 14 simultaneous requests? Or 13?
+>  256  6
+>  512  3
+> 1024  1
+> 2048  0 <<< a single request? No requests?
+> 4096 31 <<< apparently some internal logic failure
