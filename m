@@ -2,154 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E91723E59BB
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 14:16:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B78473E59D7
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Aug 2021 14:24:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240522AbhHJMQs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Aug 2021 08:16:48 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:8390 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240385AbhHJMQs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 08:16:48 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GkWzb4RNTz83BW;
-        Tue, 10 Aug 2021 20:12:27 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Tue, 10 Aug 2021 20:16:23 +0800
-Subject: Re: [PATCH V7 7/9] PCI/sysfs: Add a 10-Bit Tag sysfs file
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20210809173733.GA2167121@bjorn-Precision-5520>
-CC:     <hch@infradead.org>, <kw@linux.com>, <logang@deltatee.com>,
-        <leon@kernel.org>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <614f640d-c442-4f79-8761-a33b1c7af3c6@huawei.com>
-Date:   Tue, 10 Aug 2021 20:16:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S232158AbhHJMZB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Aug 2021 08:25:01 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:28510 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229764AbhHJMZA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Aug 2021 08:25:00 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17AC6Z9N023924;
+        Tue, 10 Aug 2021 05:24:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0220; bh=2OwKwlT4M0KGaXC2/f5VCihT6aa2tg7mp2yF9377/4U=;
+ b=NVrYoOCtHTR4LwVahcXcR1duLrO4TJjWZnTUE6BhmhXAmA1w8TGtqKpd43pqmUbxdKoR
+ N+B3OEoz5LKyrmH4oaPtCgIC6xzOr5SaUAVUNLNF91YCKQMy89LTlu6EE57Vji9nn/Qc
+ c0vcH8ZYOrj7AE7WczQYaUWpAXgGe74pKrkdmraEJyDfkoIYdEpOxnRojCQn+bd1cJBd
+ 1dXKSyFNa16LKt0/UnHfXT9u3ZDcK/Q30E9DuETNNiUWv5SaR/ITgpw3OCUPeZER6SeE
+ rwJnBAkeT0qR6CDEyzHTOlk1FhxT5+2iaO2IguPqUy3uHUDv4V7Vxzsh3SEc178/WSHv XQ== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 3abfu2hwhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 10 Aug 2021 05:24:37 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 10 Aug
+ 2021 05:24:35 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Tue, 10 Aug 2021 05:24:35 -0700
+Received: from hyd1584.marvell.com (unknown [10.29.37.82])
+        by maili.marvell.com (Postfix) with ESMTP id 6976E5E687E;
+        Tue, 10 Aug 2021 05:24:34 -0700 (PDT)
+From:   George Cherian <george.cherian@marvell.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <bhelgaas@google.com>, George Cherian <george.cherian@marvell.com>
+Subject: [PATCH] PCI: Add ACS quirk for Cavium multi-function devices
+Date:   Tue, 10 Aug 2021 17:54:25 +0530
+Message-ID: <20210810122425.1115156-1-george.cherian@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210809173733.GA2167121@bjorn-Precision-5520>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: HIYwT2w7tNtda6uSNIWHB5eO3zC1CKQF
+X-Proofpoint-GUID: HIYwT2w7tNtda6uSNIWHB5eO3zC1CKQF
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-10_05:2021-08-10,2021-08-10 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Some Cavium endpoints are implemented as multi-function devices
+without ACS capability, but they actually don't support peer-to-peer
+transactions.
 
+Add ACS quirks to declare DMA isolation.
 
-On 2021/8/10 1:37, Bjorn Helgaas wrote:
-> On Sat, Aug 07, 2021 at 03:01:56PM +0800, Dongdong Liu wrote:
->>
->> On 2021/8/5 23:31, Bjorn Helgaas wrote:
->>> On Thu, Aug 05, 2021 at 04:37:39PM +0800, Dongdong Liu wrote:
->>>>
->>>>
->>>> On 2021/8/5 7:49, Bjorn Helgaas wrote:
->>>>> On Wed, Aug 04, 2021 at 09:47:06PM +0800, Dongdong Liu wrote:
->>>>>> PCIe spec 5.0 r1.0 section 2.2.6.2 says that if an Endpoint supports
->>>>>> sending Requests to other Endpoints (as opposed to host memory), the
->>>>>> Endpoint must not send 10-Bit Tag Requests to another given Endpoint
->>>>>> unless an implementation-specific mechanism determines that the Endpoint
->>>>>> supports 10-Bit Tag Completer capability. Add a 10bit_tag sysfs file,
->>>>>> write 0 to disable 10-Bit Tag Requester when the driver does not bind
->>>>>> the device if the peer device does not support the 10-Bit Tag Completer.
->>>>>> This will make P2P traffic safe. the 10bit_tag file content indicate
->>>>>> current 10-Bit Tag Requester Enable status.
->>>>>>
->>>>>> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
->>>>>> ---
->>>>>>  Documentation/ABI/testing/sysfs-bus-pci | 16 +++++++-
->>>>>>  drivers/pci/pci-sysfs.c                 | 69 +++++++++++++++++++++++++++++++++
->>>>>>  2 files changed, 84 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
->>>>>> index 793cbb7..0e0c97d 100644
->>>>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
->>>>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->>>>>> @@ -139,7 +139,7 @@ Description:
->>>>>>  		binary file containing the Vital Product Data for the
->>>>>>  		device.  It should follow the VPD format defined in
->>>>>>  		PCI Specification 2.1 or 2.2, but users should consider
->>>>>> -		that some devices may have incorrectly formatted data.
->>>>>> +		that some devices may have incorrectly formatted data.
->>>>>>  		If the underlying VPD has a writable section then the
->>>>>>  		corresponding section of this file will be writable.
->>>>>>
->>>>>> @@ -407,3 +407,17 @@ Description:
->>>>>>
->>>>>>  		The file is writable if the PF is bound to a driver that
->>>>>>  		implements ->sriov_set_msix_vec_count().
->>>>>> +
->>>>>> +What:		/sys/bus/pci/devices/.../10bit_tag
->>>>>> +Date:		August 2021
->>>>>> +Contact:	Dongdong Liu <liudongdong3@huawei.com>
->>>>>> +Description:
->>>>>> +		If a PCI device support 10-Bit Tag Requester, will create the
->>>>>> +		10bit_tag sysfs file. The file is readable, the value
->>>>>> +		indicate current 10-Bit Tag Requester Enable.
->>>>>> +		1 - enabled, 0 - disabled.
->>>>>> +
->>>>>> +		The file is also writeable, the value only accept by write 0
->>>>>> +		to disable 10-Bit Tag Requester when the driver does not bind
->>>>>> +		the deivce. The typical use case is for p2pdma when the peer
->>>>>> +		device does not support 10-BIT Tag Completer.
->>>
->>>>>> +static ssize_t pci_10bit_tag_store(struct device *dev,
->>>>>> +				   struct device_attribute *attr,
->>>>>> +				   const char *buf, size_t count)
->>>>>> +{
->>>>>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>>>>> +	bool enable;
->>>>>> +
->>>>>> +	if (kstrtobool(buf, &enable) < 0)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	if (enable != false )
->>>>>> +		return -EINVAL;
->>>>>
->>>>> Is this the same as "if (enable)"?
->>>> Yes, Will fix.
->>>
->>> I actually don't like the one-way nature of this.  When the hierarchy
->>> supports 10-bit tags, we automatically enable them during enumeration.
->>>
->>> Then we provide this sysfs file, but it can only *disable* 10-bit
->>> tags.  There's no way to re-enable them except by rebooting (or using
->>> setpci, I guess).
->>>
->>> Why can't we allow *enabling* them here if they're supported in this
->>> hierarchy?
->> Yes, we can also provide this sysfs to enable 10-bit tag for EP devices
->> when the hierarchy supports 10-bit tags.
->>
->> I do not want to provide sysfs to enable/disable 10-bit tag for RP
->> devices as I can not tell current if the the Function has outstanding
->> Non-Posted Requests, may need to unbind all the EP drivers under the
->> RP, and current seems no scenario need to do this. This will make things
->> more complex.
->
-> You mean "no scenario requires disabling 10-bit tags and then
-> re-enabling them"?
-Just for Root Port devices.
-> That may be true, but I'm still hesitant to
-> provide a switch than can only be reversed by rebooting.
->
-> This is similar to the issue Leon raised that it's not practical to
-> reboot machines.  Maybe we accept a one-way switch if the sole purpose
-> is to work around a hardware defect.  Or maybe a kernel parameter that
-> disables 10-bit tags completely is the defect mitigation.  I think we
-> probably need such a parameter in case a defect prevents us from
-> booting far enough to use the sysfs switch.
-Make sense, will provide sysfs to enable and disable 10-bit tag.
+Apply te quirk for following devices
+1. BGX device found on Octeon-TX (8xxx)
+2. CGX device found on Octeon-TX2 (9xxx)
+3. RPM device found on Octeon-TX3 (10xxx)
 
-Thanks,
-Dongdong
-> .
->
+Signed-off-by: George Cherian <george.cherian@marvell.com>
+---
+ drivers/pci/quirks.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 6d74386eadc2..076932018494 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4840,6 +4840,10 @@ static const struct pci_dev_acs_enabled {
+ 	{ 0x10df, 0x720, pci_quirk_mf_endpoint_acs }, /* Emulex Skyhawk-R */
+ 	/* Cavium ThunderX */
+ 	{ PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID, pci_quirk_cavium_acs },
++	/* Cavium multi-function devices */
++	{ PCI_VENDOR_ID_CAVIUM, 0xA026, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_CAVIUM, 0xA059, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_CAVIUM, 0xA060, pci_quirk_mf_endpoint_acs },
+ 	/* APM X-Gene */
+ 	{ PCI_VENDOR_ID_AMCC, 0xE004, pci_quirk_xgene_acs },
+ 	/* Ampere Computing */
+-- 
+2.25.1
+
