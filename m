@@ -2,266 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A8E3E941A
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 16:58:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C09313E949E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 17:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232440AbhHKO6w convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 11 Aug 2021 10:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232823AbhHKO6t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Aug 2021 10:58:49 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C36460FA0;
-        Wed, 11 Aug 2021 14:58:25 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mDpgV-004MOX-FV; Wed, 11 Aug 2021 15:58:23 +0100
-Date:   Wed, 11 Aug 2021 15:58:23 +0100
-Message-ID: <87k0ks9gfk.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S233160AbhHKPhA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 11:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233010AbhHKPg7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 11:36:59 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112C7C061765;
+        Wed, 11 Aug 2021 08:36:36 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id x7so3275048ilh.10;
+        Wed, 11 Aug 2021 08:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C4Yippe1FfLHJnm/bBg0Tev596XLEVnx9ptKT8Tmv1w=;
+        b=tuo0NJhlbsE1cgJWOCTQMJGME0TyKH6WbYQBRHNGe6yb4vS8khVqpRBj9CelO4Drcu
+         ipgawXlzgK+T4+0OBbYZXrAC1LFA5a7zBBMAxXttMA0xiNXNci6NbPSr29QvVBGM+LzW
+         29epQDHdAjX31mv91AAwgsMS8FmaqZJ2+oJcz/nKZExo2GdJ6bM9tSj48TZSrpoMKC02
+         c+JeSib3R+Nz6EjTa6xDUcvTxRMEGNVg12BZ4RkXpr1AUdAsrvuWuBm2oTzNFEZOw4S7
+         PMChY9ksUDnIApH0yl+pHTagBMzZoevhZZ0489tbZYC1FLezbgfwtDnFmSd48OU9F4Sr
+         Cgpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C4Yippe1FfLHJnm/bBg0Tev596XLEVnx9ptKT8Tmv1w=;
+        b=LpSorsVwJjjVCPeQGFkGkfWbP7HWl53bo8sHm2c7D4QGOsuYZYyV88HR08mZuH45tb
+         0er6S5+RvjA6EBDmtYCULRCX0dvtRDnGGO1WUJIHtLumctYOOwYSeNtHGo1v1VQrg64g
+         B5KX1sxj8LIbxxFYsBU1OhjZT1ef7qpW+JjhENWVnYtWqW5WKMKkveHbEPrE+m47m1S3
+         V6fDbBLTxd2ZFUjOr0u6Qz/vCD/sEgXSkwVg1jvhU8+LodJeon9X2jb/MKQL3UbGyteU
+         vRASRzGwI6DP5+bPB9pkohaaInKBZfPyHQBpSy/0YzLfe9EVjjs0611usmD7kN1/TtSk
+         cBeA==
+X-Gm-Message-State: AOAM530djA9ULyBqQnzmp8PQhXfU3tV0rTxcBJLbT0RUtar2DDabmWdd
+        Unc9EAjeiolcGq3TOTiq5cU=
+X-Google-Smtp-Source: ABdhPJyNTPz4hVjuOvkYyoJGprZOIGKlvLeq9sYzEWOuFruqzCYMdKQk+WsJtr3StkToCnA5pmFe0A==
+X-Received: by 2002:a05:6e02:1aaf:: with SMTP id l15mr51523ilv.128.1628696195512;
+        Wed, 11 Aug 2021 08:36:35 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id r1sm12858165ilt.37.2021.08.11.08.36.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Aug 2021 08:36:35 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 1293C27C0054;
+        Wed, 11 Aug 2021 11:36:33 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 11 Aug 2021 11:36:34 -0400
+X-ME-Sender: <xms:f-4TYeyDY-tqzLn91IwpWBMsoKdcnhn-Po73HZSJ3YMhnblmhH6gIQ>
+    <xme:f-4TYaRPay_p1qCOKeStxdzVbhKSppcTl_RPqCUtDWdQJOq5zohNwNqwm6rsyrJRz
+    1s2B_ufH2JLpr152Q>
+X-ME-Received: <xmr:f-4TYQWZzjQEVuDeGplKGtke55nDNhu_9lu3CX5s3jm5oyWwKiAwekeYZKY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedugdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeeiueevjeelheduteefveeflefgjeetfeehvdekudekgfegudeghfduhfetveejuden
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
+    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
+    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:f-4TYUgR8cSw0c2QXu0An5T3UvBrcX3cDGBtKcReql7HxgKePM4i-w>
+    <xmx:f-4TYQDQzgoxcAIn_ZyyTk4-napsH79pFmucDo26F5V8xSvPVEIYyw>
+    <xmx:f-4TYVIs1alv2ETfrTUIikowPrWaQA-FrrMbpOX1YhoQKGbwm5dRWQ>
+    <xmx:ge4TYXC3gDEQxmiAu1dk9kOmvcSH1TynfVeQg8CBKcwSw82hnL8DC6YWMrk>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 11 Aug 2021 11:36:31 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] PCI: j721e: Add PCI legacy interrupt support for J7200
-In-Reply-To: <20210811123846.31921-3-kishon@ti.com>
-References: <20210811123846.31921-1-kishon@ti.com>
-        <20210811123846.31921-3-kishon@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kishon@ti.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, lokeshvutla@ti.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [RFC 0/5] PCI: Use the private field of pci_host_bridge for ACPI device
+Date:   Wed, 11 Aug 2021 23:36:14 +0800
+Message-Id: <20210811153619.88922-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 11 Aug 2021 13:38:46 +0100,
-Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> 
-> Add PCI legacy interrupt support for J7200. J7200 has a single HW
-> interrupt line for all the four legacy interrupts INTA/INTB/INTC/INTD.
-> The HW interrupt line connected to GIC is a pulse interrupt whereas
-> the legacy interrupts by definition is level interrupt. In order to
-> provide level interrupt functionality to edge interrupt line, PCIe
-> in J7200 has provided USER_EOI_REG register. When the SW writes to
-> USER_EOI_REG register after handling the interrupt, the IP checks the
-> state of legacy interrupt and re-triggers pulse interrupt invoking
-> the handler again.
-> 
-> Due to Errata ID #i2094 ([1]), EOI feature is not enabled in J721E
-> and only a single pulse interrupt will be generated for every
-> ASSERT_INTx/DEASSERT_INTx. Hence legacy interrupt is not enabled in
-> J721E.
+Hi Lorenzo,
 
-How do you prevent this from being enabled on an affected platform?
-Just by virtue of not having the interrupt-controller property in DT?
-In which case, it may be useful to clarify this in the DT binding and
-say that it is only valid on J7200.
+As our previous discussion, I make a patchset showing the required
+effort if we want to use ->private in pci_host_bridge to store ACPI
+device pointer on ARM64. This patchset is mostly for discussion purpose.
 
-> 
-> [1] -> J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0 SPRZ455A –
->        DECEMBER 2020 – REVISED AUGUST 2021
->        (https://www.ti.com/lit/er/sprz455a/sprz455a.pdf)
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c | 119 +++++++++++++++++++++
->  1 file changed, 119 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index ffb176d288cd..4e786d6b89e0 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -29,12 +29,24 @@
->  #define LINK_DOWN		BIT(1)
->  #define J7200_LINK_DOWN		BIT(10)
->  
-> +#define ENABLE_REG_SYS_1	0x104
-> +#define STATUS_REG_SYS_1	0x504
-> +#define SYS1_INTx_EN(num)	(1 << (22 + (num)))
-> +
->  #define J721E_PCIE_USER_CMD_STATUS	0x4
->  #define LINK_TRAINING_ENABLE		BIT(0)
->  
->  #define J721E_PCIE_USER_LINKSTATUS	0x14
->  #define LINK_STATUS			GENMASK(1, 0)
->  
-> +#define USER_EOI_REG		0xC8
-> +enum eoi_reg {
-> +	EOI_DOWNSTREAM_INTERRUPT,
-> +	EOI_FLR_INTERRUPT,
-> +	EOI_LEGACY_INTERRUPT,
-> +	EOI_POWER_STATE_INTERRUPT,
-> +};
-> +
->  enum link_status {
->  	NO_RECEIVERS_DETECTED,
->  	LINK_TRAINING_IN_PROGRESS,
-> @@ -59,6 +71,7 @@ struct j721e_pcie {
->  	void __iomem		*user_cfg_base;
->  	void __iomem		*intd_cfg_base;
->  	u32			linkdown_irq_regfield;
-> +	struct irq_domain	*legacy_irq_domain;
->  };
->  
->  enum j721e_pcie_mode {
-> @@ -121,6 +134,108 @@ static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
->  	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_2, reg);
->  }
->  
-> +static void j721e_pcie_legacy_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct j721e_pcie *pcie = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	int i, virq;
-> +	u32 reg;
-> +
-> +	chained_irq_enter(chip, desc);
-> +
-> +	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_1);
-> +	for (i = 0; i < PCI_NUM_INTX; i++) {
-> +		if (!(reg & SYS1_INTx_EN(i)))
-> +			continue;
-> +
-> +		virq = irq_find_mapping(pcie->legacy_irq_domain, i);
-> +		generic_handle_irq(virq);
+This patchset is based onto the v5 of my Hyper-V PCI on ARM64 patchset:
 
-Please use generic_handle_domain_irq().
+	https://lore.kernel.org/lkml/20210726180657.142727-1-boqun.feng@gmail.com/
 
-> +	}
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static void j721e_pcie_irq_eoi(struct irq_data *data)
-> +{
-> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +
-> +	j721e_pcie_user_writel(pcie, USER_EOI_REG, EOI_LEGACY_INTERRUPT);
-> +}
-> +
-> +static void j721e_pcie_irq_enable(struct irq_data *data)
-> +{
-> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	u32 reg;
-> +
-> +	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
-> +	reg |= SYS1_INTx_EN(irqd_to_hwirq(data));
-> +	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
+, and I've tested it with other code under development to fully enable
+Hyper-V virtual PCI on ARM64.
 
-RMW of a register shared between interrupts without a lock. It will
-eventually end badly.
+Regards,
+Boqun
 
-> +}
-> +
-> +static void j721e_pcie_irq_disable(struct irq_data *data)
-> +{
-> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	u32 reg;
-> +
-> +	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
-> +	reg &= ~SYS1_INTx_EN(irqd_to_hwirq(data));
-> +	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
 
-Same thing.
+Boqun Feng (5):
+  PCI: Introduce pci_create_root_bus_priv()
+  PCI/ACPI: Store ACPI device information in the host bridge structure
+  PCI: hv: Set NULL as the ACPI device for the PCI host bridge
+  arm64: PCI: Retrieve ACPI device information directly from host
+    bridges
+  PCI: hv: Remove the dependency of pci_config_window
 
-> +}
-> +
-> +struct irq_chip j721e_pcie_irq_chip = {
-> +	.name		= "J721E-PCIE-INTX",
-> +	.irq_eoi	= j721e_pcie_irq_eoi,
-> +	.irq_enable	= j721e_pcie_irq_enable,
-> +	.irq_disable	= j721e_pcie_irq_disable,
-> +};
-> +
-> +static int j721e_pcie_intx_map(struct irq_domain *domain, unsigned int irq, irq_hw_number_t hwirq)
-> +{
-> +	struct j721e_pcie *pcie = domain->host_data;
-> +
-> +	irq_set_chip_and_handler(irq, &j721e_pcie_irq_chip, handle_fasteoi_irq);
-> +	irq_set_chip_data(irq, pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops j721e_pcie_intx_domain_ops = {
-> +	.map = j721e_pcie_intx_map,
-> +};
-> +
-> +static int j721e_pcie_config_legacy_irq(struct j721e_pcie *pcie)
-> +{
-> +	struct irq_domain *legacy_irq_domain;
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *intc_node;
-> +	int irq;
-> +
-> +	intc_node = of_get_child_by_name(node, "interrupt-controller");
-> +	if (!intc_node) {
-> +		dev_dbg(dev, "interrupt-controller node is absent. Legacy INTR not supported\n");
-> +		return 0;
-> +	}
-> +
-> +	irq = irq_of_parse_and_map(intc_node, 0);
-> +	if (!irq) {
-> +		dev_err(dev, "Failed to parse and map legacy irq\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	irq_set_chained_handler_and_data(irq, j721e_pcie_legacy_irq_handler, pcie);
-
-At this stage, you now have enabled the mux interrupt, and it can fire
-at will (who knows what state the enabled bits are, given that you
-don't initialise them?). However, you still haven't allocated the
-domain. What could possibly go wrong?
-
-Please initialise all the interrupts to their disabled state, and only
-register the handler once all the data structures have been populated.
-
-> +
-> +	legacy_irq_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
-> +						  &j721e_pcie_intx_domain_ops, pcie);
-> +	if (!legacy_irq_domain) {
-> +		dev_err(dev, "Failed to add irq domain for legacy irqs\n");
-> +		return -EINVAL;
-> +	}
-> +	pcie->legacy_irq_domain = legacy_irq_domain;
-> +
-> +	return 0;
-> +}
-> +
->  static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie)
->  {
->  	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
-> @@ -433,6 +548,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  			goto err_get_sync;
->  		}
->  
-> +		ret = j721e_pcie_config_legacy_irq(pcie);
-> +		if (ret < 0)
-> +			goto err_get_sync;
-> +
->  		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
->  		if (!bridge) {
->  			ret = -ENOMEM;
-
-Thanks,
-
-	M.
+ arch/arm64/kernel/pci.c             | 14 +-------------
+ drivers/acpi/pci_root.c             |  5 +++--
+ drivers/pci/controller/pci-hyperv.c | 20 +++++++++++++++-----
+ drivers/pci/probe.c                 | 15 ++++++++++++---
+ include/linux/pci-acpi.h            |  5 +++++
+ include/linux/pci.h                 |  3 +++
+ 6 files changed, 39 insertions(+), 23 deletions(-)
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.32.0
+
