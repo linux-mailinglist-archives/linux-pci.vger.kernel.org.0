@@ -2,158 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9143E8994
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 07:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC00C3E8A3D
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 08:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234112AbhHKFHE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 01:07:04 -0400
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:50986
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233852AbhHKFHD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 01:07:03 -0400
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPS id BAE8F40634
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 05:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1628658399;
-        bh=TotvfBcP1kbMjZh8i1BQ1gZcG+xBW5bAWGmpNSwCNpM=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=MaxgNhH5g/cUUNLHZHshJ2LxVqSOKLnzT8XA/oZ/Ngqh3z8S+wdTHTjne6m1tUBBv
-         fWQHusnVTW7iWjY5Kufd3Qt1RGwmm44EREuTxyRGQwtxSwy1DlPls8mtUvWYVfJsl5
-         tNI/PGIOxhmPuXNCPrwXxP5vGQ0fabuk+AD5lRaFwC+BzFFUwC0dfNl9IHWMY9xLF3
-         Da2XWANv/Z/HCgRLhqd+zpK2ARSAahZrDux251hOt7kUFfnsNqnHA6uvWBxnyv177L
-         TLDwJrYiovUF3XYAtejaD19yCQqJ+nvt9SPOYz/Ar7z7+MuOxy6CZ7mGZt8txXfx7D
-         VnSHnS14mFg+A==
-Received: by mail-ed1-f71.google.com with SMTP id ec47-20020a0564020d6fb02903be5e0a8cd2so639559edb.0
-        for <linux-pci@vger.kernel.org>; Tue, 10 Aug 2021 22:06:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TotvfBcP1kbMjZh8i1BQ1gZcG+xBW5bAWGmpNSwCNpM=;
-        b=AoJRY5ZM7BuhuEazLWsQFkjXcL7Fki4Thhl/z6aXj0ZS3s2qemIFc1H/sWm8IFzu6C
-         NjjG2Pn8e/wRKTcn5EVrJK78tQUTpUtRbemgE9dIRu7uwo32nOmlOWqr6DmTq3hkLAjB
-         HACEEedpkvIfhJj4zX+PurkOriafRyquwv50P1E3Hi2w7f4g9D0MV6MYimF2zZ8m0m+p
-         b9Nqe6zcSd2MGe3TbKcpk1Kj0C9+eX4IM6Uygy44yD/q9qAgSic4xTGwRgz0EVMB0Hm3
-         kaPi95QCIZFM0KlHqSo9NuYsFlLKtthCaInmmALwDuJ4OGY4kigNDPIABhcXU3J+miux
-         Ajow==
-X-Gm-Message-State: AOAM533xi6dMX/J9CnVG/1DM5fwvrbBWxtWxsk4VcuS0Bn1JE6s69WkJ
-        b98gkyfvGA7vKhxdW6XEXgzJiUUgeqqtRiPpVMrVyC6rnkZOom0Zu7Kx8RhXYxl91sEVhVyx22t
-        4rZEpJR3AlOn5w4sNYIUteOhcSVVVA4llCk+OYNAZC0UpAy/5oNWRAQ==
-X-Received: by 2002:a17:906:1fd5:: with SMTP id e21mr1818186ejt.78.1628658399260;
-        Tue, 10 Aug 2021 22:06:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxjbceDaG+3OstRYpbet+P/X5bEXCCmLxZKIkHr9viaPkg/A8aTiHo8F16CG0uSfno2K4R1xAFbim0uYcXs4JM=
-X-Received: by 2002:a17:906:1fd5:: with SMTP id e21mr1818176ejt.78.1628658399029;
- Tue, 10 Aug 2021 22:06:39 -0700 (PDT)
+        id S234760AbhHKGeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 02:34:14 -0400
+Received: from ni.piap.pl ([195.187.100.5]:57836 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234674AbhHKGeN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Aug 2021 02:34:13 -0400
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        by ni.piap.pl (Postfix) with ESMTPSA id 13AA7C369544;
+        Wed, 11 Aug 2021 08:33:49 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 13AA7C369544
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1628663629; bh=Rf3odP/2nQECwS2Q8rkyDShCByYgbf9l8DET/R9ZeuI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=PG9r9ci/4uNLJolzAy/+VBc3IwaHJqEKkx0rOEW6Secoed7Ue5mVl4TkV7ZsGOK08
+         i58+H3clBaqfjuw14aY51OCDPGHKdliwlu9F3PQVOskwAyXtoTlagyO6aynfMf+fht
+         r0IUDBmMCUxf86HuYKG8GyItW+ZuuPiD6R7HoPo4=
+From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Artem Lapkin <email2tema@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Huacai Chen <chenhuacai@gmail.com>
+Subject: Re: ARM Max Read Req Size and PCIE_BUS_PERFORMANCE stories
+References: <20210810232736.GA2315513@bjorn-Precision-5520>
+Sender: khalasa@piap.pl
+Date:   Wed, 11 Aug 2021 08:33:48 +0200
+In-Reply-To: <20210810232736.GA2315513@bjorn-Precision-5520> (Bjorn Helgaas's
+        message of "Tue, 10 Aug 2021 18:27:36 -0500")
+Message-ID: <m3r1f08p83.fsf@t19.piap.pl>
 MIME-Version: 1.0
-References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
- <20210809042414.107430-1-kai.heng.feng@canonical.com> <20210809094731.GA16595@wunner.de>
- <CAAd53p7cR3EzUjEU04cDhJDY5F=5k+eRHMVNKQ=jEfbZvUQq3Q@mail.gmail.com>
- <20210809150005.GA6916@wunner.de> <CAAd53p7qm=K99xO1n0Pwmn020Q7_iDj2S6-QGjeRjP0CpSphTg@mail.gmail.com>
- <20210810162144.GA24713@wunner.de>
-In-Reply-To: <20210810162144.GA24713@wunner.de>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed, 11 Aug 2021 13:06:27 +0800
-Message-ID: <CAAd53p7bMm5KyjXvUOTevspm9e0mtPP2KWoq5xZSWng8q1kGPg@mail.gmail.com>
-Subject: Re: [PATCH] PCI/portdrv: Disallow runtime suspend when waekup is
- required but PME service isn't supported
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 1
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Lua-Profiles: 165505 [Aug 10 2021]
+X-KLMS-AntiSpam-Version: 5.9.20.0
+X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
+X-KLMS-AntiSpam-Rate: 0
+X-KLMS-AntiSpam-Status: not_detected
+X-KLMS-AntiSpam-Method: none
+X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
+X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_uf_ne_domains}, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, t19.piap.pl:7.1.1;lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;piap.pl:7.1.1;127.0.0.199:7.1.2
+X-MS-Exchange-Organization-SCL: -1
+X-KLMS-AntiSpam-Interceptor-Info: scan successful
+X-KLMS-AntiPhishing: Clean, bases: 2021/08/11 05:40:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/10 18:48:00 #17010874
+X-KLMS-AntiVirus-Status: Clean, skipped
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 12:21 AM Lukas Wunner <lukas@wunner.de> wrote:
+Hi Bjorn,
+
+Bjorn Helgaas <helgaas@kernel.org> writes:
+
+> Super.  IIUC, i.MX6 is another DWC-based controller, so this looks
+> like another case of the issue that afflicts amlogic, keystone,
+> loongson (weirdly apparently *not* DWC-based), meson, and probably
+> others.
 >
-> On Tue, Aug 10, 2021 at 11:37:12PM +0800, Kai-Heng Feng wrote:
-> > On Mon, Aug 9, 2021 at 11:00 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > If PME is not granted to the OS, the only consequence is that the PME
-> > > port service is not instantiated at the root port.  But PME is still
-> > > enabled for downstream devices.  Maybe that's a mistake?  I think the
-> > > ACPI spec is a little unclear what to do if PME control is *not* granted.
-> > > It only specifies what to do if PME control is *granted*:
-> >
-> > So do you prefer to just disable runtime PM for the downstream device?
+> Some previous discussion here:
+> https://lore.kernel.org/linux-pci/20210707155418.GA897940@bjorn-Precision=
+-5520/
+
+Ok. So I guess the fix for i.MX6 is a simple PCI fixup, limiting MRRS to
+512 (while MPS =3D 128).
+
+Now the Kconfig states that MRRS=3DMPS is the "best performance" case. Is
+it really true? One could think requesting 512 bytes (memory read)
+completed with 4 response packets 128 bytes each could be faster than
+4 requests and 4 responses. Various docs suggest that lowering MRRS is
+good for "interactivity", but not exactly for throughput.
+Should I do some benchmarking?
+
+> This sounds like a defect in the CPU/PCI host adapter.  If the device
+> initiates a 4096-byte read and the CPU or whatever can't deal with it,
+> the host adapter should break it up into whatever the CPU *can*
+> handle.  I don't think this is the device's problem or the device
+> driver's problem.
+
+As I see it, this is not a CPU (ARM core, IXI bus etc) problem. This is
+DWC PCIe thing, and the cause is apparently the size of its buffers.
+That's why the max number of tags (which I assume is a number of
+individual read requests) depends on the MRRS size.
+
+The PCIe 3 docs state:
+Max_Read_Request_Size =E2=80=93 This field sets the maximum Read
+Request size for the Function as a Requester. The Function
+must not generate Read Requests with a size exceeding the set
+value.
+
+Not sure about the "set value", but perhaps a limit (lower than 4096) is
+permitted - e.g. for the whole system or bus.
+
+The i.MX6 errata list states:
+"ERR003754 PCIe: 9000403702=E2=80=94AHB/AXI Bridge Master responds with UR
+status instead of CA status for inbound MRd requesting greater than
+CX_REMOTE_RD_REQ_SIZE
+
+Description:
+         The AHB/AXI Bridge RAM is sized at configuration time to support i=
+nbound read requests with a
+         maximum size of CX_REMOTE_RD_REQ_SIZE. When this limit is violated=
+ the core responds
+         with UR status, when it should respond with CA status."
+
+The above suggests that aborting an oversized read request is ok. It
+should be done with a CA (Completer Abort) code rather than UR
+(Unsupported Request), but that's just a difference in the error code.
+
+>> 2. should the PCI code limit MRRS to MPS by default?
+>> 3. should the PCI code limit MRRS to the maximum safe value (512 on
+>>    this CPU)?
 >
-> I honestly don't know.  I was just wondering whether it is okay
-> to enable PME on devices if control is not granted by the firmware.
-> The spec is fairly vague.  But I guess the idea is that enabling PME
-> on devices is correct, just handling the interrupts is done by firmware
-> instead of the OS.
+> How do we learn the maximum safe value?  Is this something a native
+> driver could read from PCIE_PL_MRCCR0 (see below)?
 
-Does this imply that current ACPI doesn't handle this part?
+It will read "512" by default (unless maybe some boot loader etc.
+changed it).
+I think, for these particular SoCs, a fixed 512 would do.
+But perhaps we could experiment with larger values, which need to be
+*written* to this register before use.
 
->
-> In your case, the endpoint device claims it can signal PME from D3cold,
-> which is why we allow the root port above to runtime suspend to D3hot.
-> The lspci output you've attached to the bugzilla indicates that yes,
-> signaling PME in D3cold does work, but the PME interrupt is neither
-> handled by the OS (because it's not allowed to) nor by firmware.
->
-> So you would like to rely on PME polling instead, which only works if the
-> root port remains in D0.  Otherwise config space of the endpoint device
-> is inaccessible.
+I will think about it.
+--=20
+Krzysztof "Chris" Ha=C5=82asa
 
-The Windows approach is to make the entire hierarchy stays at D0, I
-think maybe it's a better way than relying on PME polling.
-
->
-> I think the proper solution is that firmware should handle the PME
-> interrupt.  You've said the vendor objects because they found PME
-> doesn't work reliably.
-
-The PME works, what vendor said is that enabling PME makes the system
-"unstable".
-
-> Well in that case the endpoint device shouldn't
-> indicate that it can signal PME, at least not from D3cold.  Perhaps
-> the vendor is able to change the endpoint device's config space so
-> that it doesn't claim to support PME?
-
- This is not an viable option, and we have to consider that BIOS from
-different vendors can exhibit the same behavior.
-
->
-> If that doesn't work and thus a kernel patch is necessary, the next
-> question is whether changing core code is the right approach.
-
-I really don't see other way because non-granted PME is a system-wide thing...
-
->
-> If you do want to change core code, I'd suggest modifying
-> pci_dev_check_d3cold() so that it blocks runtime PM on upstream
-> bridges if PME is not handled natively AND firmware failed to enable
-> the PME interrupt at the root port.  The rationale is that upstream
-> bridges need to remain in D0 so that PME polling is possible.
-
-How do I know that firmware failed to enable PME IRQ?
-
-And let me see how to make pci_dev_check_d3cold() work for this case.
-
->
-> An alternative would be a quirk for this specific laptop which clears
-> pdev->pme_support.
-
-This won't scale, because many models are affected.
-
-Kai-Heng
-
->
-> Thanks,
->
-> Lukas
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
