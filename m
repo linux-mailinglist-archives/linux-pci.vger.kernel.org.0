@@ -2,187 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE7E23E9A6E
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 23:34:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95A583E9AAC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 00:00:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232169AbhHKVfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 17:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbhHKVfN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 17:35:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2E8C0613D3
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 14:34:49 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDvs3-0005CZ-9n; Wed, 11 Aug 2021 23:34:43 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDvrx-0001l9-Om; Wed, 11 Aug 2021 23:34:37 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDvrx-00056u-N4; Wed, 11 Aug 2021 23:34:37 +0200
-Date:   Wed, 11 Aug 2021 23:34:05 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     Fiona Trahe <fiona.trahe@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        qat-linux@intel.com, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        linux-pci@vger.kernel.org, Jack Xu <jack.xu@intel.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 6/8] crypto: qat - simplify adf_enable_aer()
-Message-ID: <20210811213405.avihazo33irdjxic@pengutronix.de>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
- <20210811080637.2596434-7-u.kleine-koenig@pengutronix.de>
- <YRO69xL+F/6Paj+I@silpixa00400314>
+        id S232209AbhHKWBN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 18:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232166AbhHKWBN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Aug 2021 18:01:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9113E60F11;
+        Wed, 11 Aug 2021 22:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628719248;
+        bh=q4yFbBS07Jh1QjiI3/dx4PrL9nVJzTZYIvw3zW3oL+M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=U/0GdvOLVVIPB0A32MChchNIB8rK+CQGuZW4Ez8D2/p7cpLcAHJszQBt/NngRjjVQ
+         ohrz3O94NOSSEXRlpng6en3hY6D1SJ0PXglUEU5fJ25Hpt0ca5oes8G97MQcZTa7JO
+         kIKldq+aKaGPXChX5DHpB6m1CJz/T2rmkrnOt9QRL9wIjblUVBJIjYHd8XdyjFx2tm
+         ZKF8oFF5HLSwpnrA6z/8z2IYuwn334fC9I663KX1GG3tYt2i8o5/ECWo+HqgZ0WPo4
+         b82cXBGmUr84NTxpeKu4JspEJE6rxCXb3OW5AxM32slG/lHB/10am2EyxiRgvaII4A
+         t+RGy+8XZkHUw==
+Date:   Wed, 11 Aug 2021 17:00:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Mark D Rustad <mark.d.rustad@intel.com>,
+        Alexander Duyck <alexanderduyck@fb.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH 2/6] PCI/VPD: Remove struct pci_vpd_ops
+Message-ID: <20210811220047.GA2407168@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nru7sdu6ylpnbz6f"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YRO69xL+F/6Paj+I@silpixa00400314>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+In-Reply-To: <b2532a41-df8b-860f-461f-d5c066c819d0@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc Mark, Alex D, Jesse, Alex W]
 
---nru7sdu6ylpnbz6f
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Aug 08, 2021 at 07:20:05PM +0200, Heiner Kallweit wrote:
+> Code can be significantly simplified by removing struct pci_vpd_ops and
+> avoiding the indirect calls.
 
-On Wed, Aug 11, 2021 at 12:56:39PM +0100, Giovanni Cabiddu wrote:
-> On Wed, Aug 11, 2021 at 10:06:35AM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > A struct pci_driver is supposed to be constant and assigning .err_handl=
-er
-> > once per bound device isn't really sensible. Also as the function retur=
-ns
-> > zero unconditionally let it return no value instead and simplify the
-> > callers accordingly.
-> >=20
-> > As a side effect this removes one user of struct pci_dev::driver. This
-> > member is planned to be removed.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Thanks Uwe for the rework.
->=20
-> > ---
-> >  drivers/crypto/qat/qat_4xxx/adf_drv.c          |  7 ++-----
-> >  drivers/crypto/qat/qat_c3xxx/adf_drv.c         |  7 ++-----
-> >  drivers/crypto/qat/qat_c62x/adf_drv.c          |  7 ++-----
-> >  drivers/crypto/qat/qat_common/adf_aer.c        | 10 +++-------
-> >  drivers/crypto/qat/qat_common/adf_common_drv.h |  2 +-
-> >  drivers/crypto/qat/qat_dh895xcc/adf_drv.c      |  7 ++-----
-> >  6 files changed, 12 insertions(+), 28 deletions(-)
-> >=20
-> > diff --git a/drivers/crypto/qat/qat_4xxx/adf_drv.c b/drivers/crypto/qat=
-/qat_4xxx/adf_drv.c
-> > index a8805c815d16..1620281a9ed8 100644
-> > --- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
-> > +++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
-> > @@ -253,11 +253,7 @@ static int adf_probe(struct pci_dev *pdev, const s=
-truct pci_device_id *ent)
-> > =20
-> >  	pci_set_master(pdev);
-> > =20
-> > -	if (adf_enable_aer(accel_dev)) {
-> > -		dev_err(&pdev->dev, "Failed to enable aer.\n");
-> > -		ret =3D -EFAULT;
-> > -		goto out_err;
-> > -	}
-> > +	adf_enable_aer(accel_dev);
-> After seeing your patch, I'm thinking to get rid of both adf_enable_aer()
-> (and adf_disable_aer()) and call directly pci_enable_pcie_error_reporting=
-()
-> here.
->=20
-> There is another patch around this area that I reworked (but not sent
-> yet - https://patchwork.kernel.org/project/linux-crypto/patch/a19132d07a6=
-5dbef5e818f84b2bc971f26cc3805.1625983602.git.christophe.jaillet@wanadoo.fr/=
-).
-> Would you mind if your patch goes through Herbert's tree?
-> If you want I can also send a reworked version.
+I really like this patch.
 
-As patch #8 of my series depends on this one I think the best option is
-to create a tag and pull that into both, the pci and the crypto tree?!
+Nothing to do with *this* patch, but I have a little heartburn about
+the "access somebody else's VPD" approach.
 
-@Bjorn: Would you agree to this procedure? There has to be a v4, if it
-helps I can provide a signed tag for pulling?! Just tell me what would
-be helpful here.
+I think the beginning of this was Mark's post [1].  IIUC, there are
+Intel multifunction NICs that share some VPD hardware between
+functions, and concurrent accesses to VPD of different functions
+doesn't work correctly.
 
-> >  	if (pci_save_state(pdev)) {
-> >  		dev_err(&pdev->dev, "Failed to save pci state.\n");
-> > @@ -310,6 +306,7 @@ static struct pci_driver adf_driver =3D {
-> >  	.probe =3D adf_probe,
-> >  	.remove =3D adf_remove,
-> >  	.sriov_configure =3D adf_sriov_configure,
-> > +	.err_handler =3D adf_err_handler,
-> Compilation fails here:
->     drivers/crypto/qat/qat_4xxx/adf_drv.c:309:24: error: =E2=80=98adf_err=
-_handler=E2=80=99 undeclared here (not in a function)
->       309 |         .err_handler =3D adf_err_handler,
->           |                        ^~~~~~~~~~~~~~~
->=20
-> Were you thinking to change it this way?
->=20
-> 	--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
-> 	+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
-> 	@@ -95,8 +95,11 @@ void adf_ae_fw_release(struct adf_accel_dev *accel_de=
-v);
-> 	 int adf_ae_start(struct adf_accel_dev *accel_dev);
-> 	 int adf_ae_stop(struct adf_accel_dev *accel_dev);
->=20
-> 	+extern const struct pci_error_handlers adf_err_handler;
->=20
-> 	--- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
-> 	+++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
-> 	@@ -306,7 +306,7 @@ static struct pci_driver adf_driver =3D {
-> 		.probe =3D adf_probe,
-> 		.remove =3D adf_remove,
-> 		.sriov_configure =3D adf_sriov_configure,
-> 	-       .err_handler =3D adf_err_handler,
-> 	+       .err_handler =3D &adf_err_handler,
-> 	 };
+I'm pretty sure this is a defect per spec, because PCIe r5.0, sec
+7.9.19 doesn't say anything about having to treat VPD on
+multi-function devices specially.
 
-Yeah, the other three drivers need an adaption, too. I will send a v4 in
-the next few days. The current state is available at
+The current solution is for all Intel multi-function NICs to redirect
+VPD access to function 0.  That single-threads VPD access across all
+the functions because we hold function 0's vpd->lock mutex while
+reading or writing.
 
-	https://git.pengutronix.de/git/ukl/linux pci-dedup
+But I think we still have the problem that this implicit sharing of
+function 0's VPD opens a channel between functions: if functions are
+assigned to different VMs, the VMs can communicate by reading and
+writing VPD.
 
-Best regards
-Uwe
+So I wonder if we should just disallow VPD access for these NICs
+except on function 0.  There was a little bit of discussion in that
+direction at [2].
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+[1] https://lore.kernel.org/linux-pci/20150519000037.56109.68356.stgit@mdrustad-wks.jf.intel.com/
+[2] https://lore.kernel.org/linux-pci/20150519160158.00002cd6@unknown/
 
---nru7sdu6ylpnbz6f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEUQioACgkQwfwUeK3K
-7Anz8Af/SM6mdzhAVZbGFRqcWvlCSsJe3IKHavBmbozr+PbkfmOULWuZXj3pogJC
-fWz09VVMMi8XlJy2P/qmFoTsoNrQK5bKPsinvTj9jQk7lywLFXooSHoEveB7Q7eI
-VhZUw3DUZvYDliq0l5VGcAhNkQ2pjrW6D0o1AjR8o5mYArKA8o/j5pHjNqot2TC7
-QN+UFsxKCoXCiZcX1g7XT3VS25QGVMUyrgz+5JT2809GJr6cE6qC7SX2Vo5A+Bfg
-MGv/U6G4b7ZPkI55NXF8PMIrSDsNikN7R48nuaF3xqWYykt/AhkocY3jStrApO/9
-yPk4hbE6+SqYkrfNlnzXwWXbbPqnWA==
-=iuNF
------END PGP SIGNATURE-----
-
---nru7sdu6ylpnbz6f--
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/pci/vpd.c | 90 ++++++++++++++++++-----------------------------
+>  1 file changed, 34 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index e87f299ee..6a0d617b2 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -13,13 +13,7 @@
+>  
+>  /* VPD access through PCI 2.2+ VPD capability */
+>  
+> -struct pci_vpd_ops {
+> -	ssize_t (*read)(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
+> -	ssize_t (*write)(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
+> -};
+> -
+>  struct pci_vpd {
+> -	const struct pci_vpd_ops *ops;
+>  	struct mutex	lock;
+>  	unsigned int	len;
+>  	u8		cap;
+> @@ -123,11 +117,16 @@ static int pci_vpd_wait(struct pci_dev *dev, bool set)
+>  static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+>  			    void *arg)
+>  {
+> -	struct pci_vpd *vpd = dev->vpd;
+> +	struct pci_vpd *vpd;
+>  	int ret = 0;
+>  	loff_t end = pos + count;
+>  	u8 *buf = arg;
+>  
+> +	if (!dev || !dev->vpd)
+> +		return -ENODEV;
+> +
+> +	vpd = dev->vpd;
+> +
+>  	if (pos < 0)
+>  		return -EINVAL;
+>  
+> @@ -189,11 +188,16 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+>  static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+>  			     const void *arg)
+>  {
+> -	struct pci_vpd *vpd = dev->vpd;
+> +	struct pci_vpd *vpd;
+>  	const u8 *buf = arg;
+>  	loff_t end = pos + count;
+>  	int ret = 0;
+>  
+> +	if (!dev || !dev->vpd)
+> +		return -ENODEV;
+> +
+> +	vpd = dev->vpd;
+> +
+>  	if (pos < 0 || (pos & 3) || (count & 3))
+>  		return -EINVAL;
+>  
+> @@ -238,44 +242,6 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+>  	return ret ? ret : count;
+>  }
+>  
+> -static const struct pci_vpd_ops pci_vpd_ops = {
+> -	.read = pci_vpd_read,
+> -	.write = pci_vpd_write,
+> -};
+> -
+> -static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
+> -			       void *arg)
+> -{
+> -	struct pci_dev *tdev = pci_get_func0_dev(dev);
+> -	ssize_t ret;
+> -
+> -	if (!tdev)
+> -		return -ENODEV;
+> -
+> -	ret = pci_read_vpd(tdev, pos, count, arg);
+> -	pci_dev_put(tdev);
+> -	return ret;
+> -}
+> -
+> -static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
+> -				const void *arg)
+> -{
+> -	struct pci_dev *tdev = pci_get_func0_dev(dev);
+> -	ssize_t ret;
+> -
+> -	if (!tdev)
+> -		return -ENODEV;
+> -
+> -	ret = pci_write_vpd(tdev, pos, count, arg);
+> -	pci_dev_put(tdev);
+> -	return ret;
+> -}
+> -
+> -static const struct pci_vpd_ops pci_vpd_f0_ops = {
+> -	.read = pci_vpd_f0_read,
+> -	.write = pci_vpd_f0_write,
+> -};
+> -
+>  void pci_vpd_init(struct pci_dev *dev)
+>  {
+>  	struct pci_vpd *vpd;
+> @@ -290,10 +256,6 @@ void pci_vpd_init(struct pci_dev *dev)
+>  		return;
+>  
+>  	vpd->len = PCI_VPD_MAX_SIZE;
+> -	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0)
+> -		vpd->ops = &pci_vpd_f0_ops;
+> -	else
+> -		vpd->ops = &pci_vpd_ops;
+>  	mutex_init(&vpd->lock);
+>  	vpd->cap = cap;
+>  	vpd->valid = 0;
+> @@ -388,9 +350,17 @@ EXPORT_SYMBOL_GPL(pci_vpd_find_info_keyword);
+>   */
+>  ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf)
+>  {
+> -	if (!dev->vpd || !dev->vpd->ops)
+> -		return -ENODEV;
+> -	return dev->vpd->ops->read(dev, pos, count, buf);
+> +	ssize_t ret;
+> +
+> +	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
+> +		dev = pci_get_func0_dev(dev);
+> +		ret = pci_vpd_read(dev, pos, count, buf);
+> +		pci_dev_put(dev);
+> +	} else {
+> +		ret = pci_vpd_read(dev, pos, count, buf);
+> +	}
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(pci_read_vpd);
+>  
+> @@ -403,9 +373,17 @@ EXPORT_SYMBOL(pci_read_vpd);
+>   */
+>  ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void *buf)
+>  {
+> -	if (!dev->vpd || !dev->vpd->ops)
+> -		return -ENODEV;
+> -	return dev->vpd->ops->write(dev, pos, count, buf);
+> +	ssize_t ret;
+> +
+> +	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
+> +		dev = pci_get_func0_dev(dev);
+> +		ret = pci_vpd_write(dev, pos, count, buf);
+> +		pci_dev_put(dev);
+> +	} else {
+> +		ret = pci_vpd_write(dev, pos, count, buf);
+> +	}
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(pci_write_vpd);
+>  
+> -- 
+> 2.32.0
+> 
+> 
