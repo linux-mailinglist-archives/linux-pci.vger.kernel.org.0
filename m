@@ -2,147 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A063E9A37
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 23:07:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE7E23E9A6E
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 23:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231316AbhHKVHY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 17:07:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
+        id S232169AbhHKVfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 17:35:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbhHKVHX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 17:07:23 -0400
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE9CC061765;
-        Wed, 11 Aug 2021 14:06:59 -0700 (PDT)
-Received: by mail-oo1-xc32.google.com with SMTP id h7-20020a4ab4470000b0290263c143bcb2so1110260ooo.7;
-        Wed, 11 Aug 2021 14:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CWnPOaXqwG7kn4SEtHcFJeDqfvrX/IkhUBZgOG8Xn+I=;
-        b=ND+o9xQuiGBiwFoK5Fwd3WFKu3m1KxQgoSQ3dnGdS8By0mIO59fqEmOZywQZagOxgN
-         0GSR3eBYLcSrLD1p7A7XZAOAf2wg0oMGq7XuruiN6Ie8NvO3qrxXk7qcjhzfINjLPDoT
-         4fZpIW6gSN9KFap1MP8BiOxTGZqEmfP43+o1c87f7XfQGDZrYT7tMI+LS8F5SolqW1Ep
-         DUOKMsMS2NRRoB999WODOP/gMj/MAfk8t0XODOOEBuBlytQox4EYrxJ9HKEN/7JD45po
-         6ZFRYt23PmfDcoqXTNDYGGz8XSDIZrfy3cLEofPT4uFCIPs1LOI+sATDgun10wJEx71K
-         lEvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CWnPOaXqwG7kn4SEtHcFJeDqfvrX/IkhUBZgOG8Xn+I=;
-        b=scAc+mBXquL8g5lWcvnFzGXNXxw519KpqFFbYtZ2PgW/i0FWIMud0d3Xaw2qE+ra1s
-         BoD9IExgBr2U1riZ9HqR9M58y9pVGSSp9MPtZZ8wtUdkPwUroe21vjqjSr302b+lWpOd
-         d5IWJYyZ/LBAJefUzu5hIrT0EvavpZN7u/85vgDKjhUOkH0792Evum358ymTZtED2gVy
-         aY6xGwqphkyk++GR4WluxYQls6+DBdK49YCyOJf5CNU4+Hl1/p2J+sOVC8DUCuAescsU
-         flW3AJ65GsCIjtsuzGDzwMdqbGTe2WlOnl/q4Y/PvLW7TkcKI6f3Q+jNG2csswuD56v4
-         sBAQ==
-X-Gm-Message-State: AOAM533MDb6bzBi9jFcT6RA+YJLV31gsxoNdXlLBysBl3PEEKKf4/Zlh
-        xj9gmtXmlvgVcPetdv7DvU2TxEFsVaSgXz/LLPU=
-X-Google-Smtp-Source: ABdhPJz50GMn/63EG6LYzmro/LcC+4AaIqvjolekdLwtXM1aGZhDDRXgd3BlXm/8kV4KHY/A60Gyc+7Vkz9Bm/JQkHQ=
-X-Received: by 2002:a4a:a38a:: with SMTP id s10mr537795ool.72.1628716018794;
- Wed, 11 Aug 2021 14:06:58 -0700 (PDT)
+        with ESMTP id S229589AbhHKVfN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 17:35:13 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2E8C0613D3
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 14:34:49 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mDvs3-0005CZ-9n; Wed, 11 Aug 2021 23:34:43 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mDvrx-0001l9-Om; Wed, 11 Aug 2021 23:34:37 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mDvrx-00056u-N4; Wed, 11 Aug 2021 23:34:37 +0200
+Date:   Wed, 11 Aug 2021 23:34:05 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     Fiona Trahe <fiona.trahe@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        qat-linux@intel.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        linux-pci@vger.kernel.org, Jack Xu <jack.xu@intel.com>,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 6/8] crypto: qat - simplify adf_enable_aer()
+Message-ID: <20210811213405.avihazo33irdjxic@pengutronix.de>
+References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+ <20210811080637.2596434-7-u.kleine-koenig@pengutronix.de>
+ <YRO69xL+F/6Paj+I@silpixa00400314>
 MIME-Version: 1.0
-References: <20210811191104.21919-1-Ramesh.Errabolu@amd.com>
- <CADnq5_OVA1fB5x6=CGrd_5O-i=P7snmoJaTyauF2RKuWjc8Gog@mail.gmail.com> <ba4ee532-d64a-72c5-7aab-2b86a75b8174@amd.com>
-In-Reply-To: <ba4ee532-d64a-72c5-7aab-2b86a75b8174@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 11 Aug 2021 17:06:47 -0400
-Message-ID: <CADnq5_OmH6ZsL_Q_wO2B7dbaD_JFcaNbYFzd_Nv4kui1npkVPw@mail.gmail.com>
-Subject: Re: [PATCH] Whitelist AMD host bridge device(s) to enable P2P DMA
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Ramesh Errabolu <Ramesh.Errabolu@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nru7sdu6ylpnbz6f"
+Content-Disposition: inline
+In-Reply-To: <YRO69xL+F/6Paj+I@silpixa00400314>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 4:50 PM Felix Kuehling <felix.kuehling@amd.com> wro=
-te:
->
->
-> Am 2021-08-11 um 3:29 p.m. schrieb Alex Deucher:
-> > On Wed, Aug 11, 2021 at 3:11 PM Ramesh Errabolu <Ramesh.Errabolu@amd.co=
-m> wrote:
-> >> Current implementation will disallow P2P DMA if the participating
-> >> devices belong to different root complexes. Implementation allows
-> >> this default behavior to be overridden for whitelisted devices. The
-> >> patch adds an AMD host bridge to be whitelisted
-> > Why do we need this?  cpu_supports_p2pdma() should return true for all
-> > AMD Zen CPUs.
->
-> This is part of our on-going work to get P2P support upstream. We want
-> to use pci_p2pdma_distance_many to determine whether P2P is possible
-> between a pair of devices. This whitelist is used in this function. This
-> will affect the P2P links reported in the topology and it will be
-> double-checked in the BO mapping function to ensure a peer mapping is leg=
-al.
->
-> I think this change is a bit free of context at the moment, as we're
-> still working on a few other loose ends for P2P support in our internal
-> branch. I'm hoping we'll have a bigger patch series for upstreamable KFD
-> P2P support ready in a few weeks. I also think we'll probably want to
-> add a few more PCI IDs for other supported AMD root complexes.
 
-We don't need to keep adding AMD root complexes.  You must be using an
-older kernel or something.  All root complexes on all Zen platforms
-support P2P DMA.  See:
+--nru7sdu6ylpnbz6f
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-commit dea286bb71baded7d2fb4f090e3b9fd2c1ccac58
-Author: Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed Jul 29 17:18:44 2020 -0600
+On Wed, Aug 11, 2021 at 12:56:39PM +0100, Giovanni Cabiddu wrote:
+> On Wed, Aug 11, 2021 at 10:06:35AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > A struct pci_driver is supposed to be constant and assigning .err_handl=
+er
+> > once per bound device isn't really sensible. Also as the function retur=
+ns
+> > zero unconditionally let it return no value instead and simplify the
+> > callers accordingly.
+> >=20
+> > As a side effect this removes one user of struct pci_dev::driver. This
+> > member is planned to be removed.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Thanks Uwe for the rework.
+>=20
+> > ---
+> >  drivers/crypto/qat/qat_4xxx/adf_drv.c          |  7 ++-----
+> >  drivers/crypto/qat/qat_c3xxx/adf_drv.c         |  7 ++-----
+> >  drivers/crypto/qat/qat_c62x/adf_drv.c          |  7 ++-----
+> >  drivers/crypto/qat/qat_common/adf_aer.c        | 10 +++-------
+> >  drivers/crypto/qat/qat_common/adf_common_drv.h |  2 +-
+> >  drivers/crypto/qat/qat_dh895xcc/adf_drv.c      |  7 ++-----
+> >  6 files changed, 12 insertions(+), 28 deletions(-)
+> >=20
+> > diff --git a/drivers/crypto/qat/qat_4xxx/adf_drv.c b/drivers/crypto/qat=
+/qat_4xxx/adf_drv.c
+> > index a8805c815d16..1620281a9ed8 100644
+> > --- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > +++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > @@ -253,11 +253,7 @@ static int adf_probe(struct pci_dev *pdev, const s=
+truct pci_device_id *ent)
+> > =20
+> >  	pci_set_master(pdev);
+> > =20
+> > -	if (adf_enable_aer(accel_dev)) {
+> > -		dev_err(&pdev->dev, "Failed to enable aer.\n");
+> > -		ret =3D -EFAULT;
+> > -		goto out_err;
+> > -	}
+> > +	adf_enable_aer(accel_dev);
+> After seeing your patch, I'm thinking to get rid of both adf_enable_aer()
+> (and adf_disable_aer()) and call directly pci_enable_pcie_error_reporting=
+()
+> here.
+>=20
+> There is another patch around this area that I reworked (but not sent
+> yet - https://patchwork.kernel.org/project/linux-crypto/patch/a19132d07a6=
+5dbef5e818f84b2bc971f26cc3805.1625983602.git.christophe.jaillet@wanadoo.fr/=
+).
+> Would you mind if your patch goes through Herbert's tree?
+> If you want I can also send a reworked version.
 
-    PCI/P2PDMA: Allow P2PDMA on AMD Zen and newer CPUs
+As patch #8 of my series depends on this one I think the best option is
+to create a tag and pull that into both, the pci and the crypto tree?!
 
-    Allow P2PDMA if the CPU vendor is AMD and family is 0x17 (Zen) or great=
-er.
+@Bjorn: Would you agree to this procedure? There has to be a v4, if it
+helps I can provide a signed tag for pulling?! Just tell me what would
+be helpful here.
 
-    [bhelgaas: commit log, simplify #if/#else/#endif]
-    Link: https://lore.kernel.org/r/20200729231844.4653-1-logang@deltatee.c=
-om
-    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-    Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-    Cc: Huang Rui <ray.huang@amd.com>
+> >  	if (pci_save_state(pdev)) {
+> >  		dev_err(&pdev->dev, "Failed to save pci state.\n");
+> > @@ -310,6 +306,7 @@ static struct pci_driver adf_driver =3D {
+> >  	.probe =3D adf_probe,
+> >  	.remove =3D adf_remove,
+> >  	.sriov_configure =3D adf_sriov_configure,
+> > +	.err_handler =3D adf_err_handler,
+> Compilation fails here:
+>     drivers/crypto/qat/qat_4xxx/adf_drv.c:309:24: error: =E2=80=98adf_err=
+_handler=E2=80=99 undeclared here (not in a function)
+>       309 |         .err_handler =3D adf_err_handler,
+>           |                        ^~~~~~~~~~~~~~~
+>=20
+> Were you thinking to change it this way?
+>=20
+> 	--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
+> 	+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+> 	@@ -95,8 +95,11 @@ void adf_ae_fw_release(struct adf_accel_dev *accel_de=
+v);
+> 	 int adf_ae_start(struct adf_accel_dev *accel_dev);
+> 	 int adf_ae_stop(struct adf_accel_dev *accel_dev);
+>=20
+> 	+extern const struct pci_error_handlers adf_err_handler;
+>=20
+> 	--- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> 	+++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> 	@@ -306,7 +306,7 @@ static struct pci_driver adf_driver =3D {
+> 		.probe =3D adf_probe,
+> 		.remove =3D adf_remove,
+> 		.sriov_configure =3D adf_sriov_configure,
+> 	-       .err_handler =3D adf_err_handler,
+> 	+       .err_handler =3D &adf_err_handler,
+> 	 };
 
-Alex
+Yeah, the other three drivers need an adaption, too. I will send a v4 in
+the next few days. The current state is available at
 
+	https://git.pengutronix.de/git/ukl/linux pci-dedup
 
->
-> Regards,
->   Felix
->
->
-> >
-> > Alex
-> >
-> >> Signed-off-by: Ramesh Errabolu <Ramesh.Errabolu@amd.com>
-> >> ---
-> >>  drivers/pci/p2pdma.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> >> index 196382630363..7003bb9faf23 100644
-> >> --- a/drivers/pci/p2pdma.c
-> >> +++ b/drivers/pci/p2pdma.c
-> >> @@ -305,6 +305,8 @@ static const struct pci_p2pdma_whitelist_entry {
-> >>         {PCI_VENDOR_ID_INTEL,   0x2032, 0},
-> >>         {PCI_VENDOR_ID_INTEL,   0x2033, 0},
-> >>         {PCI_VENDOR_ID_INTEL,   0x2020, 0},
-> >> +       /* AMD Host Bridge Devices */
-> >> +       {PCI_VENDOR_ID_AMD,     0x1480, 0},
-> >>         {}
-> >>  };
-> >>
-> >> --
-> >> 2.31.1
-> >>
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--nru7sdu6ylpnbz6f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEUQioACgkQwfwUeK3K
+7Anz8Af/SM6mdzhAVZbGFRqcWvlCSsJe3IKHavBmbozr+PbkfmOULWuZXj3pogJC
+fWz09VVMMi8XlJy2P/qmFoTsoNrQK5bKPsinvTj9jQk7lywLFXooSHoEveB7Q7eI
+VhZUw3DUZvYDliq0l5VGcAhNkQ2pjrW6D0o1AjR8o5mYArKA8o/j5pHjNqot2TC7
+QN+UFsxKCoXCiZcX1g7XT3VS25QGVMUyrgz+5JT2809GJr6cE6qC7SX2Vo5A+Bfg
+MGv/U6G4b7ZPkI55NXF8PMIrSDsNikN7R48nuaF3xqWYykt/AhkocY3jStrApO/9
+yPk4hbE6+SqYkrfNlnzXwWXbbPqnWA==
+=iuNF
+-----END PGP SIGNATURE-----
+
+--nru7sdu6ylpnbz6f--
