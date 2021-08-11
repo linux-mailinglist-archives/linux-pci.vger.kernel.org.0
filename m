@@ -2,243 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A15F63E91B0
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 14:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 836A03E9345
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 16:09:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbhHKMjd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 08:39:33 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55362 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbhHKMjb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 08:39:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 17BCd0BS018060;
-        Wed, 11 Aug 2021 07:39:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1628685540;
-        bh=oik4GnEIkEmZ9D1i+/AJF0jdOo3E9UKHSjJq6+bgAgM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZJPobtay5fhr+ZYnYFm9KZkOOuQmpMCZfgUJq8Y7h27IS1DdSFBsTc37u93btEr+Z
-         4Y/j8JIvAYtx5EqbUaqMlBB+Pb5YMNE6xCP33+c1zzaa7cTGdJfwkmq3iJvkAnlCpk
-         xWW3Wsl/KSsesEks9LUXhqpMWFwpAllvWraF0SG8=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 17BCd0gQ018463
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Aug 2021 07:39:00 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 11
- Aug 2021 07:38:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 11 Aug 2021 07:38:59 -0500
-Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 17BCckL1053470;
-        Wed, 11 Aug 2021 07:38:56 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>, <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 2/2] PCI: j721e: Add PCI legacy interrupt support for J7200
-Date:   Wed, 11 Aug 2021 18:08:46 +0530
-Message-ID: <20210811123846.31921-3-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210811123846.31921-1-kishon@ti.com>
-References: <20210811123846.31921-1-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+        id S232311AbhHKOJb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 10:09:31 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:59656 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232298AbhHKOJa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 10:09:30 -0400
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17BE5Zcm014476;
+        Wed, 11 Aug 2021 14:07:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=pOImKLoaG3NEUcdH9TmpuA+OG810TNyWPXJfSzA99yc=;
+ b=htbBlgVi1WumoUza2kQJECPUbrc/WQylh7Pk9tDqfA+TZObFnB8uEwbY5bPOcKjtRnmZ
+ 1IewIkG4FkQ33C+AefGXtQgzS0QV7T9g4o1WawFQwQz7EVsiVtgt7OSVGJGqvDI0XIfy
+ 90ErAzZlcrhPQTw3zkpidRa3LQyhKDK4e1pAfj/l4xIq0ZH/XdJHuJ1bYlyD8UOHbG46
+ ZybVn8J7UlY59PSDfjn7dT8oH+RPntz5qPomqlIwC3FqXYc9SpvGDDg/gKsOlPm3DLHH
+ xeTweR/8mL93zhHrGYbMajCj0QvXeaFp/qGlYn8oO+VeoHagomIjSetOJb2P4wL3gCer 4w== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=pOImKLoaG3NEUcdH9TmpuA+OG810TNyWPXJfSzA99yc=;
+ b=y4WCRMVpM3TTz7RXs5VCr8US/LYM6OD3o1S4HZOdHfTSOdyXy4FRpy/HKFfHK73NnLEE
+ QqtA0IoInjDPB44zxHYGRoEg6JGHcRivpc5zGqlqUPI3wsd98KtFNhF1vLdx673vwC+i
+ Xg49g10mWnclkg3GFMPuS3oxNmxlYXqljN4A2bLNWW2rPZEangR7Fo3eQUSXzKbyyxAV
+ f8sB+KFUPdmNQ5RkmT71WuPK2WbZ0b8htkuVR1e3ZVVVE18YcB2iymwD9JGWYqbjKkp+
+ 25JAmP363ddoPdgiwR3Amuj2SsvIwIMSkPqDuoQ4N5/d/JiRTW1l1S9ctO9Ff6UlUw2l Jw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3aceudr70j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Aug 2021 14:07:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 17BE0c0O065936;
+        Wed, 11 Aug 2021 14:07:36 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
+        by aserp3030.oracle.com with ESMTP id 3abx3vtmjf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Aug 2021 14:07:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JcD6tecuqXHlhqWjolVakgihSfP7tsDVAPR9EIvUvAGBaLSQ+/EU57+eqIpMgELeWunDXM5WPbLD3v8Fn81boBnYk+NNKKCo3Uz67AfRflQBrQ2jUZa/JBi6SugVur0vg6bCq/ULjVgai/4FhddTkwR/9Dvw8QAz0wYN9/a9wHcYbwyiLtA0S2d3U4feICGWxAEE3lww9TDb6HYWP3WvbRl23g8RUyi+oUvx8th96S+7XS96jE7V7+BsyvyRL0dj85c1mz0FvHQx1j+q5OcF1pTGVUMq2rtiQ70DFK2slCoFIVFqo/8pFOQW8MLh3iM3mfwG8s44QE19+dhib3P00w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pOImKLoaG3NEUcdH9TmpuA+OG810TNyWPXJfSzA99yc=;
+ b=m9o2oatopRzOmhOy3+ixn4kdYNeNM/uuduVG/7h5Oh3BlyZsVlrEZh+9adrwuxWpqYxiIYiV7nCZ3VDbZYrPV57KDy8+U1T9MOwCgYf7j+qm1QZQo2+9asEDG874LyhvGnKJS+A8CPWbgmnGNUHklLKKATH5Rg+WEK4+Cw+IYiw1wYtSeq2bkIGhhRWDLyi1cFPzX3SaxXW5GADg+mWQJD9iKttVymtmodOFi8xKfLiLwtxrvAmnnHw2XLMZVvboPpf9CRy2j0DTsVuVK++Z9K1BztS94aM2DAIZkgRlF/EeE9nethzeEzgs5Ttz9epFOZZiSOHjuU/FZ40HAjt/yQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pOImKLoaG3NEUcdH9TmpuA+OG810TNyWPXJfSzA99yc=;
+ b=fUs7Ii9YJab4cDa7yxImZTgPE+wooTFsJiF5272pYSZnzRWo4kU1iIJrQG0oCy68whtLhCQFlhNSZUfpYsT30fo02aa64N8+RD29kCyCRrrkshH0S6gyUTsYh1RaXVoF1wJsCGQ0xqkZJY+KU8Z6LAGSGAO6+eNBC5FOuVuoSNU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by MN2PR10MB4383.namprd10.prod.outlook.com (2603:10b6:208:1d4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.21; Wed, 11 Aug
+ 2021 14:07:33 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::7cd0:8600:6e6e:aa8c]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::7cd0:8600:6e6e:aa8c%7]) with mapi id 15.20.4415.016; Wed, 11 Aug 2021
+ 14:07:33 +0000
+Subject: Re: [PATCH v3 7/8] PCI: Replace pci_dev::driver usage by
+ pci_dev::dev.driver
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, kernel@pengutronix.de,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
+References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+ <20210811080637.2596434-8-u.kleine-koenig@pengutronix.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <1f843d53-b6ac-762e-eefc-46afd9ae0ff7@oracle.com>
+Date:   Wed, 11 Aug 2021 10:07:17 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.12.0
+In-Reply-To: <20210811080637.2596434-8-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
+X-ClientProxiedBy: BYAPR02CA0067.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::44) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.74.99.104] (138.3.201.40) by BYAPR02CA0067.namprd02.prod.outlook.com (2603:10b6:a03:54::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.13 via Frontend Transport; Wed, 11 Aug 2021 14:07:22 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 07a3b679-01e9-44ca-8ff0-08d95cd15d4b
+X-MS-TrafficTypeDiagnostic: MN2PR10MB4383:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR10MB4383E6DA2996D6C0C9F08B228AF89@MN2PR10MB4383.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:326;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mJ0paZ6vBETkR6J4HwzVLR1fjdkNhZxr/ppMGrmSeAqrWmeNWK6q6wY8G92t9AOnVKJsm0PNHcD9IrW/XXUxID+UAKCk6qooAW0iXSqZWnhVJrxYlDkCBA65f8NK3txkXCOx25Qwm3Np0udtSxLaZgEy1Vk19Rsd7oywIoUr5geUXlsxOiCcqoRc0rMjGOrfSru2BtYGgsC0vvvpW+O3E0k5Px0bWJymOCtdYbMizDXDBDi8oly6k3MHIMHvZkAJ3tbtym0etE9zvlpYjT3ni46Cpooy9u4G6/SufrVUEVT7KMlQAIZ4kfkfc5ewPgzYcfUkiEwLzoQVMcwXwq/GJXc88+ji1kQ3YtKro64yjHiJT8Dg8eRbG3CWIl1WVPnkRfq3+FCBtN2aHUKUSmWraOxWOV9KlBsmjAdWndJ9DX9IycUWfUdVEGOvN5hrT371qnVK2QBcxF/sbeFza4/GoSpfHQoB5zzrCGnQUbToGdqsCOJV8sFQP13JBTXynzqUzkamYqyz6iFdBQc5GP22Hp5o2aFFsVcW0nSh2p0me6dHOYYZnfq7kerQCdUZBoM4JlOD6Vv0q+zfKyC9h+MF0CnDBgezTGH9SOzkjs9XHcwXlbLpVMa8D0e8ffzO1ZeV7H7CQgsTiNZrZ8/x0m2ze13gpS7Xr4E/Uj4hBKveQ/9rstK3lmK+TaaFNJYe2e0geOhdGzyDgQsDBVqR0mK8HJzaxQTHjBCqyazb0vd9SsU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(39860400002)(136003)(366004)(396003)(346002)(478600001)(53546011)(86362001)(31696002)(36756003)(110136005)(186003)(7416002)(26005)(6666004)(54906003)(2616005)(8676002)(2906002)(44832011)(66556008)(4744005)(6486002)(7406005)(956004)(66946007)(66476007)(8936002)(5660300002)(16576012)(31686004)(316002)(38100700002)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SGRuTmt6aEhSY1ZVb2duVXBHWHNrdjBKQlIrZVEzZG9WV1dIWUhYeGg3eUJM?=
+ =?utf-8?B?QmN6VjdhT0RNZXptWldXWDBxd2MyYmxFTERJT3JOZXF3U244MVhBZ1Vqamdo?=
+ =?utf-8?B?bFc2K3hCSGNtYVlDaTF5eWliK01DdUFJTTJmWTRjVndPSi9ISGVUSGdNY2xY?=
+ =?utf-8?B?V2dSZ0QwV2RaNVFyRWlKSEFKQ3NXL3p2V0hENEJNQXZ2ODI2azFIRStRb3lV?=
+ =?utf-8?B?aGdVclpUNURmN3F5Lzd6dGRqdTJUc3FIMm1IZXpWaXpudkt1ZUtVSDBNaHNy?=
+ =?utf-8?B?bzZ6N2V1aEtUaFJDRklDSVNKZHIxZks5Q2IxeHRLY1VWK0J6TnluQlZBNkxk?=
+ =?utf-8?B?bDgvMDFKU3lJOGN1bzQyUXVOWlRZRTlzaFR5YUtHTlRRRzdaU0tYRDJTZ3Ir?=
+ =?utf-8?B?ZDRLSVZ6VFFiYkV3WHFyeXI5MmJqMnpxb1prcWVlQ2VXMU9aOGJ2NHB2cmk1?=
+ =?utf-8?B?VWJCU1VpY0MycEtnRmJaRHpWYkxWWk01RGkrVTU1SmFzWDRCSmlqbzhlUmdr?=
+ =?utf-8?B?ZXVVNmxGUDV4SWd1S1Q0Y29JSjh3ZTB5TUpTano1ZEg0ZG5Ia0JBUTJDbGVE?=
+ =?utf-8?B?WkhtRU4vUWpHZDQ4bW0rdjJaRWpMZ0pmdTh3SFpxdXA4R3BLbjFvL3dwS0xw?=
+ =?utf-8?B?UGJQMmJCbDJUL1NwMkpvMTBKMGU1cVU3TUJCb3c5bzBBR0JqdDBOZXIwaTFq?=
+ =?utf-8?B?NUNRclB5UTBXT000R0llR2txWmRMbERGbk9LdmpYOGRzQ1hDMDQ2MUUwWEN0?=
+ =?utf-8?B?aUoxcXRXNG5mMjB6Rk1zRWY3cWQ1dFBHOUdzQ2ZXbWVTYkdyZ01waGo3dXNv?=
+ =?utf-8?B?bVhjOSt3UlYyakRCSEtQdzl3amdhTHVmN1YwekNYajhLbXRTUkN4QVRHcEYw?=
+ =?utf-8?B?VDgxRE1qcFJGbTdDanA4QnhKRUdISWZPbG4rbFJWb3FQYTBvVTV6c1cxL1V6?=
+ =?utf-8?B?cW5oME1XbGJiWnV6N2NWQlpaZUVVMURrOFM1aml6UlJTaSs4TTQ1NlU3dlBo?=
+ =?utf-8?B?UlpxMWNFSExvMkQ0azZLMWpCLzlJam51WTV1ZjJGYktydlJ3OFdwamhFcVdo?=
+ =?utf-8?B?VG55aG1yZEhrUDBwZGlmSlg2aDhidEpKUG5YRjcyaHRZTk15cjZxK09ZRFU3?=
+ =?utf-8?B?SHNndk80bm1rN1BhKzRNNEJpTXFtUkZCU0VvS1JGY1RQTm80TEVrMWJ3TENI?=
+ =?utf-8?B?T0VQd0t2VXlyYk5PTVozK1B3b1ZJTS9wSk5WTnkyWmxzdzd0UHhwdlcyMkFN?=
+ =?utf-8?B?aVk1Q0UwWEd4VWZyZFhLdVViRG5qUStqdUtFRXhUMnhZMk9GYzFFdmt4WGEr?=
+ =?utf-8?B?aEZmMkJRYzJ3N09IMXJTZHg2Vko2QmpTMzA4Q3lsS2hBcmNXdWphR2JXTDVr?=
+ =?utf-8?B?ckZGZmdyUVJuZWM0czdySEc1YkszeGMxUDBIMUcxV1VqTzdycytsdTZCQ25V?=
+ =?utf-8?B?NVU4azRiOTB0MGpTMzk3Q1Z3dkFtMmJuTFpvSEJQbjJiNFBsRDFvMnkvYkZT?=
+ =?utf-8?B?RHIydjVJeFNGcUJOZ2VXcWhvN3pPelRLNThSb2tlbjRZU29uaTZHSzdmZXM1?=
+ =?utf-8?B?aG5tYmwrTDFvbmFsVk5CaHVCMnE3OEdPU1V1YmZ5QUJWU2p3bHI4MVJWS2Iw?=
+ =?utf-8?B?SkZzWFNpdmtTNDNlYmtQZGs0S1BodnV1eGh5Rk9FY01CUHhXWnJSSytqS2lx?=
+ =?utf-8?B?MUFlVW1qRTUwYnFHT0VpSHNEODJkZDYvQnJzSDQ0akVYU0JSMGg5RmJ5bDd5?=
+ =?utf-8?Q?luX84VVeQz3HtwhMslpQxWQyrzW8zrWWGyfQSZz?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07a3b679-01e9-44ca-8ff0-08d95cd15d4b
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2021 14:07:33.5666
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jwolo0mL32BhKNdxgkaJuu73dp6oVF9cKNvE7zf4ZLjxzSfrtmEUBgVaa4GyqdHXxilscVUzMHnq7cA2q1UNTfFFxNrq7xFv8SskM2b/DXk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4383
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10072 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
+ definitions=main-2108110095
+X-Proofpoint-ORIG-GUID: 35MWkgmyIv3VJo1ExJX6uD_LN4w-vk7O
+X-Proofpoint-GUID: 35MWkgmyIv3VJo1ExJX6uD_LN4w-vk7O
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCI legacy interrupt support for J7200. J7200 has a single HW
-interrupt line for all the four legacy interrupts INTA/INTB/INTC/INTD.
-The HW interrupt line connected to GIC is a pulse interrupt whereas
-the legacy interrupts by definition is level interrupt. In order to
-provide level interrupt functionality to edge interrupt line, PCIe
-in J7200 has provided USER_EOI_REG register. When the SW writes to
-USER_EOI_REG register after handling the interrupt, the IP checks the
-state of legacy interrupt and re-triggers pulse interrupt invoking
-the handler again.
 
-Due to Errata ID #i2094 ([1]), EOI feature is not enabled in J721E
-and only a single pulse interrupt will be generated for every
-ASSERT_INTx/DEASSERT_INTx. Hence legacy interrupt is not enabled in
-J721E.
+On 8/11/21 4:06 AM, Uwe Kleine-König wrote:
+> struct pci_dev::driver contains (apart from a constant offset) the same
+> data as struct pci_dev::dev->driver. Replace all remaining users of the
+> former pointer by the latter to allow removing the former.
+>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[1] -> J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0 SPRZ455A –
-       DECEMBER 2020 – REVISED AUGUST 2021
-       (https://www.ti.com/lit/er/sprz455a/sprz455a.pdf)
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 119 +++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+Xen:
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index ffb176d288cd..4e786d6b89e0 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -29,12 +29,24 @@
- #define LINK_DOWN		BIT(1)
- #define J7200_LINK_DOWN		BIT(10)
- 
-+#define ENABLE_REG_SYS_1	0x104
-+#define STATUS_REG_SYS_1	0x504
-+#define SYS1_INTx_EN(num)	(1 << (22 + (num)))
-+
- #define J721E_PCIE_USER_CMD_STATUS	0x4
- #define LINK_TRAINING_ENABLE		BIT(0)
- 
- #define J721E_PCIE_USER_LINKSTATUS	0x14
- #define LINK_STATUS			GENMASK(1, 0)
- 
-+#define USER_EOI_REG		0xC8
-+enum eoi_reg {
-+	EOI_DOWNSTREAM_INTERRUPT,
-+	EOI_FLR_INTERRUPT,
-+	EOI_LEGACY_INTERRUPT,
-+	EOI_POWER_STATE_INTERRUPT,
-+};
-+
- enum link_status {
- 	NO_RECEIVERS_DETECTED,
- 	LINK_TRAINING_IN_PROGRESS,
-@@ -59,6 +71,7 @@ struct j721e_pcie {
- 	void __iomem		*user_cfg_base;
- 	void __iomem		*intd_cfg_base;
- 	u32			linkdown_irq_regfield;
-+	struct irq_domain	*legacy_irq_domain;
- };
- 
- enum j721e_pcie_mode {
-@@ -121,6 +134,108 @@ static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
- 	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_2, reg);
- }
- 
-+static void j721e_pcie_legacy_irq_handler(struct irq_desc *desc)
-+{
-+	struct j721e_pcie *pcie = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	int i, virq;
-+	u32 reg;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_1);
-+	for (i = 0; i < PCI_NUM_INTX; i++) {
-+		if (!(reg & SYS1_INTx_EN(i)))
-+			continue;
-+
-+		virq = irq_find_mapping(pcie->legacy_irq_domain, i);
-+		generic_handle_irq(virq);
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void j721e_pcie_irq_eoi(struct irq_data *data)
-+{
-+	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-+
-+	j721e_pcie_user_writel(pcie, USER_EOI_REG, EOI_LEGACY_INTERRUPT);
-+}
-+
-+static void j721e_pcie_irq_enable(struct irq_data *data)
-+{
-+	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-+	u32 reg;
-+
-+	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
-+	reg |= SYS1_INTx_EN(irqd_to_hwirq(data));
-+	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
-+}
-+
-+static void j721e_pcie_irq_disable(struct irq_data *data)
-+{
-+	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
-+	u32 reg;
-+
-+	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
-+	reg &= ~SYS1_INTx_EN(irqd_to_hwirq(data));
-+	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
-+}
-+
-+struct irq_chip j721e_pcie_irq_chip = {
-+	.name		= "J721E-PCIE-INTX",
-+	.irq_eoi	= j721e_pcie_irq_eoi,
-+	.irq_enable	= j721e_pcie_irq_enable,
-+	.irq_disable	= j721e_pcie_irq_disable,
-+};
-+
-+static int j721e_pcie_intx_map(struct irq_domain *domain, unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	struct j721e_pcie *pcie = domain->host_data;
-+
-+	irq_set_chip_and_handler(irq, &j721e_pcie_irq_chip, handle_fasteoi_irq);
-+	irq_set_chip_data(irq, pcie);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops j721e_pcie_intx_domain_ops = {
-+	.map = j721e_pcie_intx_map,
-+};
-+
-+static int j721e_pcie_config_legacy_irq(struct j721e_pcie *pcie)
-+{
-+	struct irq_domain *legacy_irq_domain;
-+	struct device *dev = pcie->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *intc_node;
-+	int irq;
-+
-+	intc_node = of_get_child_by_name(node, "interrupt-controller");
-+	if (!intc_node) {
-+		dev_dbg(dev, "interrupt-controller node is absent. Legacy INTR not supported\n");
-+		return 0;
-+	}
-+
-+	irq = irq_of_parse_and_map(intc_node, 0);
-+	if (!irq) {
-+		dev_err(dev, "Failed to parse and map legacy irq\n");
-+		return -EINVAL;
-+	}
-+
-+	irq_set_chained_handler_and_data(irq, j721e_pcie_legacy_irq_handler, pcie);
-+
-+	legacy_irq_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
-+						  &j721e_pcie_intx_domain_ops, pcie);
-+	if (!legacy_irq_domain) {
-+		dev_err(dev, "Failed to add irq domain for legacy irqs\n");
-+		return -EINVAL;
-+	}
-+	pcie->legacy_irq_domain = legacy_irq_domain;
-+
-+	return 0;
-+}
-+
- static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie)
- {
- 	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
-@@ -433,6 +548,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			goto err_get_sync;
- 		}
- 
-+		ret = j721e_pcie_config_legacy_irq(pcie);
-+		if (ret < 0)
-+			goto err_get_sync;
-+
- 		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
- 		if (!bridge) {
- 			ret = -ENOMEM;
--- 
-2.17.1
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
 
