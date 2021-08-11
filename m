@@ -2,157 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB6603E8A64
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 08:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2733E8A5F
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 08:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234930AbhHKGsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 02:48:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42338 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234760AbhHKGsA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 02:48:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 17B6l62r026237;
-        Wed, 11 Aug 2021 01:47:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1628664426;
-        bh=5ToVPmf6k46EPyuQaA+kyIopP+BZEXEzFZsUj6vHfEs=;
-        h=From:To:CC:Subject:Date;
-        b=duvuwC3oC8q/7b+habCxAah+q2QYc5oJdTvaOWMZSB4eO6InmE+UfSW4xCDbIVVlA
-         IIRrhNDvfNr+/EnoGPm7Z27IPew3TDhrtZ+/qMh38IgjRp3KRAQoWrJuUUOIdQ5m9K
-         Vcvd+L2/2h6pOAcHBejTbB1kFBCp6U5UqrW5pb8Q=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 17B6l6Ft111940
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Aug 2021 01:47:06 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 11
- Aug 2021 01:47:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 11 Aug 2021 01:47:05 -0500
-Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 17B6kvu1013269;
-        Wed, 11 Aug 2021 01:46:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        id S234781AbhHKGrV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 02:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234760AbhHKGrS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Aug 2021 02:47:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B30CD6056C;
+        Wed, 11 Aug 2021 06:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628664415;
+        bh=cQZ5Ceo92fMCjMoNepYyMcCXXNTel21pdVZSy1necE8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qdv/OdiGLopkL3HLUtMTkU/J55Jq5uVtPc+rOe2OqCI1vFdaj/fWhCo0PlrudoKyS
+         mn4T/GtTI6Mmu2FZSuwSez46llplA0WUkMZA+fdPH4dz0nA5YInlnFjNa+83qPleBa
+         dXa0/YgrSV/HsXseq7ianHJbfDxkTR5o5ItPHvnf/8sPWw8zqJ0CXb0HOG6+3wyoqM
+         E9YLbZmUrB/4kiYoBV4647gUoHq7TZkT//rMo68UMFhNc+Sv504DDZUFMDg6HMabMA
+         JMS/rlWHXtPuGbOj5bB+LQUu6Q+WO9ciKe3H9/WpZFB2CLLJNJkBw54osbhbassMD0
+         1QIWqV2SXli+A==
+Date:   Wed, 11 Aug 2021 08:46:48 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Binghui Wang <wangbinghui@hisilicon.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>, <kishon@ti.com>
-Subject: [PATCH v8 0/8] Add SR-IOV support in PCIe Endpoint Core
-Date:   Wed, 11 Aug 2021 12:16:48 +0530
-Message-ID: <20210811064656.15399-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Jingoo Han <jingoohan1@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 0/4] DT schema changes for HiKey970 PCIe hardware to
+ work
+Message-ID: <20210811084648.66ddff29@coco.lan>
+In-Reply-To: <CAL_JsqL-R=kTugNAC-C1gfSm6Xnb0Nw_iLcRki8aQMNQjcLN6A@mail.gmail.com>
+References: <cover.1627965261.git.mchehab+huawei@kernel.org>
+        <CAL_JsqLjw=+szXWJjGe86tMc51NA-5j=jVSXUAWuKeZRuJNJUg@mail.gmail.com>
+        <20210804085045.3dddbb9c@coco.lan>
+        <YQrARd7wgYS1nywt@robh.at.kernel.org>
+        <20210805094612.2bc2c78f@coco.lan>
+        <20210805095848.464cf85c@coco.lan>
+        <CAL_JsqKso=z8LG3ViaggyS1k+1T2F5aAhP3_RNhumQoUUD+bbg@mail.gmail.com>
+        <20210810114211.01df0246@coco.lan>
+        <CAL_JsqKtXoFeJO6_13U+VsSXNGX_1TQvwOyQYRk5JUgBhvQChA@mail.gmail.com>
+        <20210810162054.1aa84b84@coco.lan>
+        <CAL_JsqL-R=kTugNAC-C1gfSm6Xnb0Nw_iLcRki8aQMNQjcLN6A@mail.gmail.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Patch series
-*) Adds support to add virtual functions to enable endpoint controller
-   which supports SR-IOV capability
-*) Add support in Cadence endpoint driver to configure virtual functions
-*) Enable pci_endpoint_test driver to create pci_device for virtual
-   functions
+Em Tue, 10 Aug 2021 11:13:48 -0600
+Rob Herring <robh@kernel.org> escreveu:
 
-v1 of the patch series can be found at [1]
-v2 of the patch series can be found at [2]
-v3 of the patch series can be found at [3]
-v4 of the patch series can be found at [4]
-v5 of the patch series can be found at [5]
-v6 of the patch series can be found at [6]
-v7 of the patch series can be found at [7]
+> > > >                                         compatible = "pciclass,0604";
+> > > >                                         device_type = "pci";
+> > > >                                         #address-cells = <3>;
+> > > >                                         #size-cells = <2>;
+> > > >                                         ranges;
+> > > >                                 };
+> > > >                                 pcie@1,0 { // Lane 4: M.2  
+> > >
+> > > These 3 nodes (1, 5, 7) need to be child nodes of the above node.  
+> 
+> This was the main issue.
 
-Here both physical functions and virtual functions use the same
-pci_endpoint_test driver and existing pcitest utility can be used
-to test virtual functions as well.
+Ok, placing 1, 5, 7 as child nodes of 0 worked, with the attached
+DT schema:
 
-Changes from v7:
-1) Added conditional operator to consicely write code to configure BAR
-   (Added a new patch to first simplify configuring BAR for physical
-    function)
-2) Return error if virtual function number is > 1 for configuring config
-   space header
 
-Changes from v6:
-*) Rebased to 5.14-rc4
+	$ ls -l $(find /sys/devices/platform/soc/f4000000.pcie/ -name of_node)
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/of_node -> ../../../../firmware/devicetree/base/soc/pcie@f4000000
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:01.0/of_node -> ../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@1,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:01.0/pci_bus/0000:03/of_node -> ../../../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@1,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:05.0/of_node -> ../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@5,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:05.0/pci_bus/0000:05/of_node -> ../../../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@5,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:07.0/of_node -> ../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/0000:02:07.0/pci_bus/0000:06/of_node -> ../../../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/of_node -> ../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/pci_bus/0000:02/of_node -> ../../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/of_node -> ../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/0000:00:00.0/pci_bus/0000:01/of_node -> ../../../../../../../../firmware/devicetree/base/soc/pcie@f4000000/pcie@0,0
+	lrwxrwxrwx 1 root root 0 ago 11 08:43 /sys/devices/platform/soc/f4000000.pcie/pci0000:00/pci_bus/0000:00/of_node -> ../../../../../../../firmware/devicetree/base/soc/pcie@f4000000
 
-Changes from v5:
-*) Rebased to 5.13-rc1
+The logs also seem OK on my eyes:
 
-Changes from v4:
-*) Added a fix in Cadence driver which was overwriting BAR configuration
-   of physical function.
-*) Didn't include Tom's Acked-by since Cadence driver is modified in
-   this revision.
+	[    3.911082]  (null): pci_set_bus_of_node: of_node: /soc/pcie@f4000000
+	[    4.001104] pci 0000:00:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000
+	[    4.043609] pci_bus 0000:01: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+	[    4.076756] pci 0000:01:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0
+	[    4.120652] pci_bus 0000:02: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.150766] pci 0000:02:01.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.196413] pci 0000:02:04.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.238896] pci 0000:02:05.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.280116] pci 0000:02:07.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.309821] pci 0000:02:09.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0
+	[    4.370830] pci_bus 0000:03: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@1,0
+	[    4.382345] pci_bus 0000:04: pci_set_bus_of_node: of_node: (null)
+	[    4.411966] pci_bus 0000:05: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@5,0
+	[    4.439898] pci_bus 0000:06: pci_set_bus_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0
+	[    4.491616] pci 0000:06:00.0: pci_set_of_node: of_node: /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0
+	[    4.519907] pci_bus 0000:07: pci_set_bus_of_node: of_node: (null)
 
-Changes from v3:
-*) Fixed Rob's comment and added his Reviewed-by as suggested by him.
+Thanks,
+Mauro
 
-Changes from v2:
-*) Fixed DT binding documentation comment by Rob
-*) Fixed the error check in pci-epc-core.c
 
-Changes from v1:
-*) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
-   binding for EP)
+		pcie@f4000000 {
+			compatible = "hisilicon,kirin970-pcie";
+			reg = <0x0 0xf4000000 0x0 0x1000000>,
+			      <0x0 0xfc180000 0x0 0x1000>,
+			      <0x0 0xf5000000 0x0 0x2000>;
+			reg-names = "dbi", "apb", "config";
+			bus-range = <0x00 0xff>;
+			#address-cells = <3>;
+			#size-cells = <2>;
+			device_type = "pci";
+			phys = <&pcie_phy>;
+			ranges = <0x02000000 0x0 0x00000000
+				  0x0 0xf6000000
+				  0x0 0x02000000>;
+			num-lanes = <1>;
+			#interrupt-cells = <1>;
+			interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "msi";
+			interrupt-map-mask = <0 0 0 7>;
+			interrupt-map = <0x0 0 0 1
+					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+					<0x0 0 0 2
+					 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+					<0x0 0 0 3
+					 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+					<0x0 0 0 4
+					 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
+			reset-gpios = <&gpio7 0 0>;
+			hisilicon,clken-gpios = <&gpio27 3 0>, <&gpio17 0 0>,
+						<&gpio20 6 0>;
+			pcie@0,0 { // Lane 0: PCIe switch: Bus 1, Device 0
+				reg = <0x80 0 0 0 0>;
+				compatible = "pciclass,0604";
+				device_type = "pci";
+				#address-cells = <3>;
+				#size-cells = <2>;
+				ranges;
+				bus-range = <0x01 0xff>;
+				msi-parent = <&its_pcie>;
 
-[1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
-[2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
-[3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
-[4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
-[5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
-[6] -> http://lore.kernel.org/r/20210517074723.10212-1-kishon@ti.com
-[7] -> https://lore.kernel.org/r/20210803050310.27122-1-kishon@ti.com
+				pcie@0,0 { // Lane 0: upstream
+					reg = <0x010000 0 0 0 0>;
+					compatible = "pciclass,0604";
+					device_type = "pci";
+					#address-cells = <3>;
+					#size-cells = <2>;
+					ranges;
 
-Kishon Vijay Abraham I (8):
-  dt-bindings: PCI: pci-ep: Add binding to specify virtual function
-  PCI: endpoint: Add support to add virtual function in endpoint core
-  PCI: endpoint: Add support to link a physical function to a virtual
-    function
-  PCI: endpoint: Add virtual function number in pci_epc ops
-  PCI: cadence: Simplify code to get register base address for
-    configuring BAR
-  PCI: cadence: Add support to configure virtual functions
-  misc: pci_endpoint_test: Populate sriov_configure ops to configure
-    SR-IOV device
-  Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
+					pcie@1,0 { // Lane 4: M.2
+						reg = <0x010800 0 0 0 0>;
+						compatible = "pciclass,0604";
+						device_type = "pci";
+						reset-gpios = <&gpio3 1 0>;
+						#address-cells = <3>;
+						#size-cells = <2>;
+						ranges;
+					};
 
- .../PCI/endpoint/pci-endpoint-cfs.rst         |  12 +-
- .../devicetree/bindings/pci/pci-ep.yaml       |   7 +
- drivers/misc/pci_endpoint_test.c              |   1 +
- .../pci/controller/cadence/pcie-cadence-ep.c  | 194 +++++++++++++-----
- drivers/pci/controller/cadence/pcie-cadence.h |  11 +
- .../pci/controller/dwc/pcie-designware-ep.c   |  36 ++--
- drivers/pci/controller/pcie-rcar-ep.c         |  19 +-
- drivers/pci/controller/pcie-rockchip-ep.c     |  18 +-
- drivers/pci/endpoint/functions/pci-epf-ntb.c  |  89 ++++----
- drivers/pci/endpoint/functions/pci-epf-test.c |  74 ++++---
- drivers/pci/endpoint/pci-ep-cfs.c             |  24 +++
- drivers/pci/endpoint/pci-epc-core.c           | 134 ++++++++----
- drivers/pci/endpoint/pci-epf-core.c           | 144 ++++++++++++-
- include/linux/pci-epc.h                       |  57 ++---
- include/linux/pci-epf.h                       |  16 +-
- 15 files changed, 611 insertions(+), 225 deletions(-)
+					pcie@5,0 { // Lane 5: Mini PCIe
+						reg = <0x012800 0 0 0 0>;
+						compatible = "pciclass,0604";
+						device_type = "pci";
+						reset-gpios = <&gpio27 4 0 >;
+						#address-cells = <3>;
+						#size-cells = <2>;
+						ranges;
+					};
 
--- 
-2.17.1
-
+					pcie@7,0 { // Lane 6: Ethernet
+						reg = <0x013800 0 0 0 0>;
+						compatible = "pciclass,0604";
+						device_type = "pci";
+						reset-gpios = <&gpio25 2 0 >;
+						#address-cells = <3>;
+						#size-cells = <2>;
+						ranges;
+					};
+				};
+			};
+		};
