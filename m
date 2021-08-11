@@ -2,186 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1232A3E8D8D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 11:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC0143E8E67
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 12:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236521AbhHKJvw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 05:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
+        id S236966AbhHKKUr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 06:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236432AbhHKJvv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 05:51:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C9AC061765
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 02:51:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDktP-0000qM-4V; Wed, 11 Aug 2021 11:51:23 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDktN-0000bd-JH; Wed, 11 Aug 2021 11:51:21 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDktN-0003Cy-IH; Wed, 11 Aug 2021 11:51:21 +0200
-Date:   Wed, 11 Aug 2021 11:51:19 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        kernel@pengutronix.de, linux-pci@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 3/8] xen/pci: Drop some checks that are always true
-Message-ID: <20210811095119.qxwhsexayjq6xhmx@pengutronix.de>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
- <20210811080637.2596434-4-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S237045AbhHKKUW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 06:20:22 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57622C061765;
+        Wed, 11 Aug 2021 03:19:52 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id x11so527577vke.1;
+        Wed, 11 Aug 2021 03:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I5+sfKd8Qk5fi/K9nkfNRq3adRlaCZduPHrRMySxD8Q=;
+        b=ldcW3CpuFUXP9UrjOK7qktadT10ivs8KVrrs7JsoTaX/NAdEGiTSkixKByyeW1Oc9j
+         xXd+Xr9e2nGn+ttE8jICPmzUBbCcUrgRion53J9uFOkxnvzpTT7mH2YXtO2wsh8AezVV
+         FxxybmRptOKS8f7lyLRnxE9lZclXnFWszANsq2aaBLGgjSitc9JaGYCRDuo2MW+iWfza
+         ebLhrR4FyLBCWy6C/MN1BXRXxhNbdUPNTez56nv4754PQiwHnXWlCHRYPBbfNf3ggCJi
+         Alw63VCEwV1sbaS8KSmKGrJ5ICbHc4SxR04hR2mkiYhIExf6rM9W3Z7X5JhFE1Yo5+J+
+         VCmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I5+sfKd8Qk5fi/K9nkfNRq3adRlaCZduPHrRMySxD8Q=;
+        b=WmvDRdxXP8p/moKH5c4UzYUFVN2qqigrFXp/GMH1xsKcmTn7JLqeNW5BVSlmC6JZ48
+         X9mOFLZmgQFgSR47B+5iJ93aKc9GEhmz1Xd5icj8vZeRPwqOLdfF9/J7vrgznJ/JhRlb
+         uFd1tQ+Gt0dx18frI8Ov8GN+qWTBd/ITbFIR3Y91VhZ7cafNuI4T8uOwh7XYQyEEpVcg
+         Z5wFMklvsuouDgcRvlXjIT9qgGHcxgLEB9z8WbRmRNfgzLSaOL/KF3wC7wrvQ/aq0p02
+         sDyKiTW6TryzkGAIr0J3c+qvlt/Os4taJfbLJ9rPIw7yCK/rBj0iRrnWaVr0JaRvBpY3
+         pn2g==
+X-Gm-Message-State: AOAM530vvUccTORwJtwdipvNSuCIncdWLGgfv2uXsc7MTI60dX8mofs5
+        Ug5YmmWX9Q8GnITK6U0LsepVPr3ZAHNDPXGyDos=
+X-Google-Smtp-Source: ABdhPJxNKHPZi0srhB9nyrbfWxcjJPGixvokF8J7BnQ8SqYZNjtYkAc9Eq6ekrydVHBucD3e4YkM3pbdwPVl9xq89Wc=
+X-Received: by 2002:a05:6122:925:: with SMTP id j37mr3630877vka.21.1628677190504;
+ Wed, 11 Aug 2021 03:19:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rjjcl33e7y7yovv7"
-Content-Disposition: inline
-In-Reply-To: <20210811080637.2596434-4-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+References: <20210807072409.9018-3-sergio.paracuellos@gmail.com> <20210810223245.GA2311409@bjorn-Precision-5520>
+In-Reply-To: <20210810223245.GA2311409@bjorn-Precision-5520>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Wed, 11 Aug 2021 12:19:39 +0200
+Message-ID: <CAMhs-H9+A1k7=vTHV4TTMOw=8vudD7D5HTgPKGN_NG40=THTQQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: of: avoid 'devm_pci_remap_iospace' if PCI_IOBASE
+ is not defined
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-staging@lists.linux.dev, NeilBrown <neil@brown.name>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn,
 
---rjjcl33e7y7yovv7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 11, 2021 at 12:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sat, Aug 07, 2021 at 09:24:08AM +0200, Sergio Paracuellos wrote:
+> > Defining PCI_IOBASE for MIPS ralink in expected addresses results in PCI IO
+> > resources being assigned but the addresses generated for IO accesses are wrong
+> > since the ioremap in the PCI core function 'pci_parse_request_of_pci_ranges'
+> > tries to remap to a fixed virtual address (PC_IOBASE) which can't work for KSEG1
+> > addresses. To get it working this way, we would need to put PCI_IOBASE somewhere
+> > into KSEG2 which will result in creating TLB entries for IO addresses, which most
+> > of the time isn't needed on MIPS because of access via KSEG1. To allow MIPS PCI
+> > drivers to properly use the PCI generic core we need to increase IO_SPACE_LIMIT
+> > since IO addresses are in addresses higher that 0xffff. We also need to avoid
+> > the call 'devm_pci_remap_iospace' when 'pci_parse_request_of_pci_ranges' is
+> > called to avoid the following problem:
+>
+> Rewrap to fit in ~75 columns.
 
-This mail didn't reach all intended recipients as there was a newline at
-the wrong place in the input for git send-email. I fixed this up for
-this reply, please make sure to do the same if you reply to this patch.
-The other patches in this thread should be fine. I'm keeping the mail
-content below to facilitate replying.
+I thought it was already around 75 columns :). For sure, I will
+carefully check this for the next version.
 
-Sorry for the inconvenience,
-Uwe
+>
+> This is a generic change so the commit log needs to be generic as
+> well.  The MIPS/KSEG1/KSEG2 information is not really useful here
+> because most readers won't understand it (and I don't :)).
 
-On Wed, Aug 11, 2021 at 10:06:32AM +0200, Uwe Kleine-K=F6nig wrote:
-> pcifront_common_process() has a check at the start that exits early if
-> pcidev or pdidev->driver are NULL. So simplify the following code by not
-> checking these two again.
->=20
-> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pci/xen-pcifront.c | 57 +++++++++++++++++---------------------
->  1 file changed, 25 insertions(+), 32 deletions(-)
->=20
-> diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
-> index b7a8f3a1921f..3c648e6cb8f8 100644
-> --- a/drivers/pci/xen-pcifront.c
-> +++ b/drivers/pci/xen-pcifront.c
-> @@ -591,7 +591,6 @@ static pci_ers_result_t pcifront_common_process(int c=
-md,
->  	int devfn =3D pdev->sh_info->aer_op.devfn;
->  	int domain =3D pdev->sh_info->aer_op.domain;
->  	struct pci_dev *pcidev;
-> -	int flag =3D 0;
-> =20
->  	dev_dbg(&pdev->xdev->dev,
->  		"pcifront AER process: cmd %x (bus:%x, devfn%x)",
-> @@ -606,40 +605,34 @@ static pci_ers_result_t pcifront_common_process(int=
- cmd,
->  	}
->  	pdrv =3D pcidev->driver;
-> =20
-> -	if (pdrv) {
-> -		if (pdrv->err_handler && pdrv->err_handler->error_detected) {
-> -			pci_dbg(pcidev, "trying to call AER service\n");
-> -			if (pcidev) {
-> -				flag =3D 1;
-> -				switch (cmd) {
-> -				case XEN_PCI_OP_aer_detected:
-> -					result =3D pdrv->err_handler->
-> -						 error_detected(pcidev, state);
-> -					break;
-> -				case XEN_PCI_OP_aer_mmio:
-> -					result =3D pdrv->err_handler->
-> -						 mmio_enabled(pcidev);
-> -					break;
-> -				case XEN_PCI_OP_aer_slotreset:
-> -					result =3D pdrv->err_handler->
-> -						 slot_reset(pcidev);
-> -					break;
-> -				case XEN_PCI_OP_aer_resume:
-> -					pdrv->err_handler->resume(pcidev);
-> -					break;
-> -				default:
-> -					dev_err(&pdev->xdev->dev,
-> -						"bad request in aer recovery "
-> -						"operation!\n");
-> -
-> -				}
-> -			}
-> +	if (pdrv->err_handler && pdrv->err_handler->error_detected) {
-> +		pci_dbg(pcidev, "trying to call AER service\n");
-> +		switch (cmd) {
-> +		case XEN_PCI_OP_aer_detected:
-> +			result =3D pdrv->err_handler->
-> +				 error_detected(pcidev, state);
-> +			break;
-> +		case XEN_PCI_OP_aer_mmio:
-> +			result =3D pdrv->err_handler->
-> +				 mmio_enabled(pcidev);
-> +			break;
-> +		case XEN_PCI_OP_aer_slotreset:
-> +			result =3D pdrv->err_handler->
-> +				 slot_reset(pcidev);
-> +			break;
-> +		case XEN_PCI_OP_aer_resume:
-> +			pdrv->err_handler->resume(pcidev);
-> +			break;
-> +		default:
-> +			dev_err(&pdev->xdev->dev,
-> +				"bad request in aer recovery "
-> +				"operation!\n");
->  		}
-> +
-> +		return result;
->  	}
-> -	if (!flag)
-> -		result =3D PCI_ERS_RESULT_NONE;
-> =20
-> -	return result;
-> +	return PCI_ERS_RESULT_NONE;
->  }
-> =20
-> =20
-> --=20
-> 2.30.2
->=20
->=20
->=20
+Yes, you are right, my bad here. MIPS specific address segment names
+should be out of generic commit messages like this.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+> devm_pci_remap_iospace() calls pci_remap_iospace(), which already
+> contains #ifdef PCI_IOBASE.  When PCI_IOBASE is not defined (as on
+> MIPS ralink), it emits the warning below and returns failure.
+>
+> This patch avoids that failure, but it still leaves
+> devm_pci_remap_iospace() and pci_remap_iospace() broken on MIPS
+> ralink.  It's true that on MIPS ralink, they are currently only called
+> via pci_parse_request_of_pci_ranges(), but I think it would be better
+> if we could fix pci_remap_iospace() to handle this case so all these
+> interfaces work consistently.
 
---rjjcl33e7y7yovv7
-Content-Type: application/pgp-signature; name="signature.asc"
+Ok, agred. So... what should be the correct approach here? Change the
+core 'pci_remap_iospace' WARN_ON to a maybe a normal 'pr_warn' message
+and silently return 0 and delete function comment there saying that
+architectures that don't define PCI_IOBASE should not call that
+function? Or should we just redefine this weak 'pci_remap_iospace'
+symbol for mips ralink?? I prefer to always do changes in normal core
+functions but if this is going to be a mips ralink adjustment because
+of architecture specific stuff maybe is better to go for the other
+option... Thoughts?
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmETnZEACgkQwfwUeK3K
-7AngaAgAhEohc3nPXbwySEwZbfw6RPi2g6gRtdXlaRxqTxqb0JZ11qNwa6bM0v9W
-b8nEtOl3bkpqXI9s5UBip3TmvluoVEiSvG84QigbZoj3DkgDa80it/20WZE9FTcT
-7Gy9JlF0K4hHt4ui/1kUfdB5fwHvFjU+Sa7/j/2zBZlxFeBanU4MbxNRu92g75ny
-P3QVqNa7HlqxvWAzdr0Ris9qd04mIDHkeuelBKtxWKTDrVN997meU+WexFOrdHd0
-Y7CKpGvAJDlJdBHs40/d1zt9kLrd/XpV2PXxWY+HmeWTQfna1W59H64mwe84G2zb
-vreJoLkUUhMYD/VSOLW8TgN33oZERA==
-=rzAP
------END PGP SIGNATURE-----
+>
+> This patch doesn't do anything with IO_SPACE_LIMIT, so I don't know
+> what that part of the commit log is telling me.
 
---rjjcl33e7y7yovv7--
+True, I was introducing the whole thing to have all pci io stuff
+working but it is out of scope for this commit in particular. Thanks
+for pointing out this also.
+
+Thanks in advance for your time.
+
+Best regards,
+    Sergio Paracuellos
+>
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 2 PID: 1 at ../drivers/pci/pci.c:4066 pci_remap_iospace+0x3c/0x54
+> > This architecture does not support memory mapped I/O
+> > Modules linked in:
+> > CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.10.1+ #1228
+> > Stack : 00000000 00000000 807fa974 00000000 827ffa80 80066b48 80710000 0000000b
+> >         00000000 00000000 81c59aac 7d06ddec 80850000 00000001 81c59a40 7d06ddec
+> >         00000000 00000000 807c909c 81c598f0 00000001 81c59904 00000000 0000000a
+> >         203a6d6d 80708880 0000000f 70617773 80850000 00000000 00000000 807d0000
+> >         807ffecc 1e160000 00000001 00000200 00000000 8054e920 00000008 815e0008
+> >         ...
+> > Call Trace:
+> > [<80008efc>] show_stack+0x8c/0x130
+> > [<806e1674>] dump_stack+0x9c/0xc8
+> > [<80024a3c>] __warn+0xc0/0xe8
+> > [<80024ad0>] warn_slowpath_fmt+0x6c/0xbc
+> > [<80410ca8>] pci_remap_iospace+0x3c/0x54
+> > [<80410d20>] devm_pci_remap_iospace+0x58/0xa4
+> > [<8042019c>] devm_of_pci_bridge_init+0x4dc/0x55c
+> > [<80408de8>] devm_pci_alloc_host_bridge+0x78/0x88
+> > [<80424e44>] mt7621_pci_probe+0x68/0x9a4
+> > [<80464804>] platform_drv_probe+0x40/0x7c
+> > [<804628bc>] really_probe+0x2fc/0x4e4
+> > [<80463214>] device_driver_attach+0x4c/0x74
+> > [<80463384>] __driver_attach+0x148/0x150
+> > [<8046047c>] bus_for_each_dev+0x6c/0xb0
+> > [<804614dc>] bus_add_driver+0x1b4/0x1fc
+> > [<80463aa0>] driver_register+0xd0/0x110
+> > [<80001714>] do_one_initcall+0x84/0x1c0
+> > [<808e7fd0>] kernel_init_freeable+0x214/0x24c
+> > [<806e4164>] kernel_init+0x14/0x118
+> > [<80003358>] ret_from_kernel_thread+0x14/0x1c
+> >
+> > ---[ end trace 1c9d4412bd51b53c ]---
+> > mt7621-pci 1e140000.pcie: error -19: failed to map resource [io  0x1e160000-0x1e16ffff]
+> >
+> > Hence don't call 'devm_pci_remap_iospace' if PCI_IOBASE is not defined to get
+> > a working PCI core APIs for MIPS ralink platforms.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  drivers/pci/of.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index a143b02b2dcd..657aef39bf63 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -564,12 +564,14 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+> >
+> >               switch (resource_type(res)) {
+> >               case IORESOURCE_IO:
+> > +#ifdef PCI_IOBASE
+> >                       err = devm_pci_remap_iospace(dev, res, iobase);
+> >                       if (err) {
+> >                               dev_warn(dev, "error %d: failed to map resource %pR\n",
+> >                                        err, res);
+> >                               resource_list_destroy_entry(win);
+> >                       }
+> > +#endif
+> >                       break;
+> >               case IORESOURCE_MEM:
+> >                       res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> > --
+> > 2.25.1
+> >
