@@ -2,200 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 682093E8C4F
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:47:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 659FC3E8CA1
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:54:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbhHKIrY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 04:47:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54988 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229676AbhHKIrX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Aug 2021 04:47:23 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="194673134"
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="194673134"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 01:47:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="526835758"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Aug 2021 01:46:56 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mDjt1-000LSL-H9; Wed, 11 Aug 2021 08:46:55 +0000
-Date:   Wed, 11 Aug 2021 16:46:12 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS bdb29f8679f19cec0ad0d3af2b0feab16cc18387
-Message-ID: <61138e54.d3/8itxOnZ/enDRS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235282AbhHKIzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 04:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236421AbhHKIzO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 04:55:14 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D560C061765
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:54:51 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id b13so2001137wrs.3
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AdZSQ0X+1xmlIOCiK7mbRupUifnXy1bypiN4ePEVhpo=;
+        b=NYHjlhMB8TM5zp9duF3xZETgM39NR+9yBinSScToFbIfEbnXn39BIIVPZe4za05aUb
+         cf2f1Y9/aCgVKimYExUKFB/EvCOuQNZ+VbeR+nOSu8OJ+Osh19rg48uY+u+9cmkqzWkc
+         I9M90EdC5zITFwGEUXacD7OiG72XPdYiRHgs6PrXvQSOFlJwCAGkD7IlQ1ukSq7WkCP0
+         qzz0vxOQaztTOkpJiUFYHPymXKDfBgKzo9nCO0MS5L6tGDIvilKSJKSntlG0eFFhOLdx
+         ocWrh6qXs3Mt45ODd4lwG7126d2AfUdIIo7v61g0hP94acduZyOuLdoPI//6aNy7f3mB
+         94HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=AdZSQ0X+1xmlIOCiK7mbRupUifnXy1bypiN4ePEVhpo=;
+        b=j3RFOrGIzK0ETYh9gb1Lg4IGTSS6cBKgpqsFRouQ3zKEyl/udK03G7Weely0+DO7U1
+         IYBjSfTjzbUUlaKZ44Pp5j3LnXqIaOJaUOsV4WLL3RqfYiansEnKcv39EHN5LtNsabfH
+         ngG9r4cfvEHxM6oPWvgH/8v76S5A2+XKxBMbg/RNDtpK0+yVROc3fIrctorJ0BZMcS8k
+         Osyi79mlxVAHjJDy54Qx0UgHaI8TQLM/oJV7yBCLxFlUK/oAE8f7E5LRda2Y/xCEIfBe
+         xVfPYX3XeZQuyRRpApB66Dn5sIkggKbSGoR8GoemZ4NLm4sVYZaX5HppNUaALSG0YX9M
+         TZkA==
+X-Gm-Message-State: AOAM530X/iTn2t8Um7yb2ZTSPLacRU8kZonlfxG0e/zKNkkVRxmCox7z
+        aYdr+ICvrdLo0IbkL4kVKSRkEhtkXog7oK32/2c=
+X-Google-Smtp-Source: ABdhPJzD9x1Kyw+pnCtpLu0adVidT/DLGaHTNYS2YmNKYRKTNTnrmhcQbRUAgrDoS3jYKkUvh77c6yVf1vsrUsrkKks=
+X-Received: by 2002:adf:f707:: with SMTP id r7mr34370726wrp.175.1628672089392;
+ Wed, 11 Aug 2021 01:54:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a7b:c7d1:0:0:0:0:0 with HTTP; Wed, 11 Aug 2021 01:54:48
+ -0700 (PDT)
+Reply-To: asemotauyizahra@gmail.com
+From:   ASEMOTA UYI ZAHRA <harryanderson033@gmail.com>
+Date:   Wed, 11 Aug 2021 01:54:48 -0700
+Message-ID: <CAEC4EUXqL2aWY0vpiA7E=Aj8pG9iO1GBHLUO6b_PvJxiWTHTJw@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: bdb29f8679f19cec0ad0d3af2b0feab16cc18387  Merge branch 'remotes/lorenzo/pci/tools'
+-- 
+GOOD MORNNG\GOOD EVENING TO YOU BEAUTIFUL ANGEL
 
-elapsed time: 723m
+MY NAME IS ASEMOTA UYI ZAHRA
 
-configs tested: 143
-configs skipped: 3
+I AM FROM NIGERIA, BUT I BASED IN BURKINA FASO
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I AM 35 YEARS OLD
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210810
-i386                 randconfig-c001-20210811
-sh                               j2_defconfig
-mips                          rb532_defconfig
-sh                        dreamcast_defconfig
-powerpc               mpc834x_itxgp_defconfig
-powerpc                      acadia_defconfig
-arm                  colibri_pxa270_defconfig
-powerpc                      makalu_defconfig
-arm                          imote2_defconfig
-m68k                            q40_defconfig
-arm                            mmp2_defconfig
-csky                             alldefconfig
-mips                       bmips_be_defconfig
-powerpc                 canyonlands_defconfig
-mips                      loongson3_defconfig
-powerpc64                           defconfig
-arm                        realview_defconfig
-arm                        mvebu_v7_defconfig
-arc                              alldefconfig
-mips                            gpr_defconfig
-powerpc                     powernv_defconfig
-ia64                                defconfig
-m68k                       m5249evb_defconfig
-powerpc                      ppc44x_defconfig
-powerpc                      walnut_defconfig
-arm                           h3600_defconfig
-arm                          lpd270_defconfig
-mips                        nlm_xlp_defconfig
-powerpc                     mpc83xx_defconfig
-microblaze                      mmu_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210810
-x86_64               randconfig-a006-20210810
-x86_64               randconfig-a003-20210810
-x86_64               randconfig-a005-20210810
-x86_64               randconfig-a002-20210810
-x86_64               randconfig-a001-20210810
-i386                 randconfig-a004-20210810
-i386                 randconfig-a002-20210810
-i386                 randconfig-a001-20210810
-i386                 randconfig-a003-20210810
-i386                 randconfig-a006-20210810
-i386                 randconfig-a005-20210810
-i386                 randconfig-a004-20210811
-i386                 randconfig-a001-20210811
-i386                 randconfig-a002-20210811
-i386                 randconfig-a003-20210811
-i386                 randconfig-a006-20210811
-i386                 randconfig-a005-20210811
-x86_64               randconfig-a013-20210811
-x86_64               randconfig-a011-20210811
-x86_64               randconfig-a012-20210811
-x86_64               randconfig-a016-20210811
-x86_64               randconfig-a014-20210811
-x86_64               randconfig-a015-20210811
-x86_64               randconfig-a016-20210808
-x86_64               randconfig-a012-20210808
-x86_64               randconfig-a013-20210808
-x86_64               randconfig-a011-20210808
-x86_64               randconfig-a014-20210808
-x86_64               randconfig-a015-20210808
-i386                 randconfig-a011-20210811
-i386                 randconfig-a015-20210811
-i386                 randconfig-a014-20210811
-i386                 randconfig-a013-20210811
-i386                 randconfig-a016-20210811
-i386                 randconfig-a012-20210811
-i386                 randconfig-a011-20210810
-i386                 randconfig-a015-20210810
-i386                 randconfig-a013-20210810
-i386                 randconfig-a014-20210810
-i386                 randconfig-a016-20210810
-i386                 randconfig-a012-20210810
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+I AM A CHRISTIAN\I SPEAK ENGLISH AND MY NATIVE LANGUE
 
-clang tested configs:
-x86_64               randconfig-c001-20210810
-x86_64               randconfig-a013-20210810
-x86_64               randconfig-a011-20210810
-x86_64               randconfig-a012-20210810
-x86_64               randconfig-a016-20210810
-x86_64               randconfig-a014-20210810
-x86_64               randconfig-a015-20210810
-x86_64               randconfig-a016-20210809
-x86_64               randconfig-a012-20210809
-x86_64               randconfig-a013-20210809
-x86_64               randconfig-a011-20210809
-x86_64               randconfig-a014-20210809
-x86_64               randconfig-a015-20210809
-x86_64               randconfig-a004-20210811
-x86_64               randconfig-a006-20210811
-x86_64               randconfig-a003-20210811
-x86_64               randconfig-a002-20210811
-x86_64               randconfig-a005-20210811
-x86_64               randconfig-a001-20210811
+I AM SERIOUSLY LOOKING FOR A GOOD PARTNER
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+THAT WE WILL BOTH SPENT THE REST OF OUR LIFE
+
+TOGETHER TILL DEATH DEPART US
+
+I AM REAL MAN WITH TRUTH AND HONEST
+
+I AM A HUMBLE MAN AND I FORGIVE EASLY AND ALSO GOD FEARING MAN
+
+I BELIVE THAT TRUE LOVE STILL EXIST
+
+I BELIVED THAT REAL PEOPLE STILL EXIST
+
+I BELIVE THAT REAL WOMEN WHO HAS GOD FEARING HEART STILL EXIST
+
+I BELIVE IF THE TRUE PERSON COMES YOUR WAY
+
+DISTANCE CAN NEVER BE A BARRIER TO TRUE LOVE
+
+NEVER DECLINE A PROSPOSA FROM A MAN BEACUSE
+
+YOU NO YOU ARE SENIOR TO HIM OR THE MAN IS SENIOR TO HER
+
+THAT IS ANOTHER BLOCKAGE IN A HUMAN MARITAL LIFE
+
+DONT CONDEM ANY MAN BEACUSE IS from A LOCAL COUNTRY
+
+beacuse that person maybe THE PERSON WHO GOD WANT IN YOUR LIFE
+
+IF YOU ARE TRULY INTERESTED IN ME I WILL SEND YOU MY PICTURS
+
+CONTACT ME...asemotauyizahra@gmail.com
+
+GMAIL HANGOUTS...uyia2205@gmail.com
+
+WHATSAPP NUMBER...+226 06 89 12 57
+
+call my cell phone number...+226 06 89 12 57
+
+REGARDS
+
+ASEMOTA UYI ZAHRA
