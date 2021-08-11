@@ -2,135 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC00C3E8A3D
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 08:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB6603E8A64
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 08:47:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234760AbhHKGeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 02:34:14 -0400
-Received: from ni.piap.pl ([195.187.100.5]:57836 "EHLO ni.piap.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234674AbhHKGeN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Aug 2021 02:34:13 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        by ni.piap.pl (Postfix) with ESMTPSA id 13AA7C369544;
-        Wed, 11 Aug 2021 08:33:49 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 13AA7C369544
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1628663629; bh=Rf3odP/2nQECwS2Q8rkyDShCByYgbf9l8DET/R9ZeuI=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=PG9r9ci/4uNLJolzAy/+VBc3IwaHJqEKkx0rOEW6Secoed7Ue5mVl4TkV7ZsGOK08
-         i58+H3clBaqfjuw14aY51OCDPGHKdliwlu9F3PQVOskwAyXtoTlagyO6aynfMf+fht
-         r0IUDBmMCUxf86HuYKG8GyItW+ZuuPiD6R7HoPo4=
-From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Artem Lapkin <email2tema@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Huacai Chen <chenhuacai@gmail.com>
-Subject: Re: ARM Max Read Req Size and PCIE_BUS_PERFORMANCE stories
-References: <20210810232736.GA2315513@bjorn-Precision-5520>
-Sender: khalasa@piap.pl
-Date:   Wed, 11 Aug 2021 08:33:48 +0200
-In-Reply-To: <20210810232736.GA2315513@bjorn-Precision-5520> (Bjorn Helgaas's
-        message of "Tue, 10 Aug 2021 18:27:36 -0500")
-Message-ID: <m3r1f08p83.fsf@t19.piap.pl>
+        id S234930AbhHKGsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 02:48:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42338 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234760AbhHKGsA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 02:48:00 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 17B6l62r026237;
+        Wed, 11 Aug 2021 01:47:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1628664426;
+        bh=5ToVPmf6k46EPyuQaA+kyIopP+BZEXEzFZsUj6vHfEs=;
+        h=From:To:CC:Subject:Date;
+        b=duvuwC3oC8q/7b+habCxAah+q2QYc5oJdTvaOWMZSB4eO6InmE+UfSW4xCDbIVVlA
+         IIRrhNDvfNr+/EnoGPm7Z27IPew3TDhrtZ+/qMh38IgjRp3KRAQoWrJuUUOIdQ5m9K
+         Vcvd+L2/2h6pOAcHBejTbB1kFBCp6U5UqrW5pb8Q=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 17B6l6Ft111940
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Aug 2021 01:47:06 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 11
+ Aug 2021 01:47:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Wed, 11 Aug 2021 01:47:05 -0500
+Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 17B6kvu1013269;
+        Wed, 11 Aug 2021 01:46:57 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <kishon@ti.com>
+Subject: [PATCH v8 0/8] Add SR-IOV support in PCIe Endpoint Core
+Date:   Wed, 11 Aug 2021 12:16:48 +0530
+Message-ID: <20210811064656.15399-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 1
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Lua-Profiles: 165505 [Aug 10 2021]
-X-KLMS-AntiSpam-Version: 5.9.20.0
-X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
-X-KLMS-AntiSpam-Rate: 0
-X-KLMS-AntiSpam-Status: not_detected
-X-KLMS-AntiSpam-Method: none
-X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
-X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_uf_ne_domains}, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, t19.piap.pl:7.1.1;lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;piap.pl:7.1.1;127.0.0.199:7.1.2
-X-MS-Exchange-Organization-SCL: -1
-X-KLMS-AntiSpam-Interceptor-Info: scan successful
-X-KLMS-AntiPhishing: Clean, bases: 2021/08/11 05:40:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/10 18:48:00 #17010874
-X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Patch series
+*) Adds support to add virtual functions to enable endpoint controller
+   which supports SR-IOV capability
+*) Add support in Cadence endpoint driver to configure virtual functions
+*) Enable pci_endpoint_test driver to create pci_device for virtual
+   functions
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+v1 of the patch series can be found at [1]
+v2 of the patch series can be found at [2]
+v3 of the patch series can be found at [3]
+v4 of the patch series can be found at [4]
+v5 of the patch series can be found at [5]
+v6 of the patch series can be found at [6]
+v7 of the patch series can be found at [7]
 
-> Super.  IIUC, i.MX6 is another DWC-based controller, so this looks
-> like another case of the issue that afflicts amlogic, keystone,
-> loongson (weirdly apparently *not* DWC-based), meson, and probably
-> others.
->
-> Some previous discussion here:
-> https://lore.kernel.org/linux-pci/20210707155418.GA897940@bjorn-Precision=
--5520/
+Here both physical functions and virtual functions use the same
+pci_endpoint_test driver and existing pcitest utility can be used
+to test virtual functions as well.
 
-Ok. So I guess the fix for i.MX6 is a simple PCI fixup, limiting MRRS to
-512 (while MPS =3D 128).
+Changes from v7:
+1) Added conditional operator to consicely write code to configure BAR
+   (Added a new patch to first simplify configuring BAR for physical
+    function)
+2) Return error if virtual function number is > 1 for configuring config
+   space header
 
-Now the Kconfig states that MRRS=3DMPS is the "best performance" case. Is
-it really true? One could think requesting 512 bytes (memory read)
-completed with 4 response packets 128 bytes each could be faster than
-4 requests and 4 responses. Various docs suggest that lowering MRRS is
-good for "interactivity", but not exactly for throughput.
-Should I do some benchmarking?
+Changes from v6:
+*) Rebased to 5.14-rc4
 
-> This sounds like a defect in the CPU/PCI host adapter.  If the device
-> initiates a 4096-byte read and the CPU or whatever can't deal with it,
-> the host adapter should break it up into whatever the CPU *can*
-> handle.  I don't think this is the device's problem or the device
-> driver's problem.
+Changes from v5:
+*) Rebased to 5.13-rc1
 
-As I see it, this is not a CPU (ARM core, IXI bus etc) problem. This is
-DWC PCIe thing, and the cause is apparently the size of its buffers.
-That's why the max number of tags (which I assume is a number of
-individual read requests) depends on the MRRS size.
+Changes from v4:
+*) Added a fix in Cadence driver which was overwriting BAR configuration
+   of physical function.
+*) Didn't include Tom's Acked-by since Cadence driver is modified in
+   this revision.
 
-The PCIe 3 docs state:
-Max_Read_Request_Size =E2=80=93 This field sets the maximum Read
-Request size for the Function as a Requester. The Function
-must not generate Read Requests with a size exceeding the set
-value.
+Changes from v3:
+*) Fixed Rob's comment and added his Reviewed-by as suggested by him.
 
-Not sure about the "set value", but perhaps a limit (lower than 4096) is
-permitted - e.g. for the whole system or bus.
+Changes from v2:
+*) Fixed DT binding documentation comment by Rob
+*) Fixed the error check in pci-epc-core.c
 
-The i.MX6 errata list states:
-"ERR003754 PCIe: 9000403702=E2=80=94AHB/AXI Bridge Master responds with UR
-status instead of CA status for inbound MRd requesting greater than
-CX_REMOTE_RD_REQ_SIZE
+Changes from v1:
+*) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
+   binding for EP)
 
-Description:
-         The AHB/AXI Bridge RAM is sized at configuration time to support i=
-nbound read requests with a
-         maximum size of CX_REMOTE_RD_REQ_SIZE. When this limit is violated=
- the core responds
-         with UR status, when it should respond with CA status."
+[1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
+[3] -> https://lore.kernel.org/r/20210305050410.9201-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20210310160943.7606-1-kishon@ti.com
+[5] -> https://lore.kernel.org/r/20210419083401.31628-1-kishon@ti.com
+[6] -> http://lore.kernel.org/r/20210517074723.10212-1-kishon@ti.com
+[7] -> https://lore.kernel.org/r/20210803050310.27122-1-kishon@ti.com
 
-The above suggests that aborting an oversized read request is ok. It
-should be done with a CA (Completer Abort) code rather than UR
-(Unsupported Request), but that's just a difference in the error code.
+Kishon Vijay Abraham I (8):
+  dt-bindings: PCI: pci-ep: Add binding to specify virtual function
+  PCI: endpoint: Add support to add virtual function in endpoint core
+  PCI: endpoint: Add support to link a physical function to a virtual
+    function
+  PCI: endpoint: Add virtual function number in pci_epc ops
+  PCI: cadence: Simplify code to get register base address for
+    configuring BAR
+  PCI: cadence: Add support to configure virtual functions
+  misc: pci_endpoint_test: Populate sriov_configure ops to configure
+    SR-IOV device
+  Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
 
->> 2. should the PCI code limit MRRS to MPS by default?
->> 3. should the PCI code limit MRRS to the maximum safe value (512 on
->>    this CPU)?
->
-> How do we learn the maximum safe value?  Is this something a native
-> driver could read from PCIE_PL_MRCCR0 (see below)?
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |  12 +-
+ .../devicetree/bindings/pci/pci-ep.yaml       |   7 +
+ drivers/misc/pci_endpoint_test.c              |   1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 194 +++++++++++++-----
+ drivers/pci/controller/cadence/pcie-cadence.h |  11 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  36 ++--
+ drivers/pci/controller/pcie-rcar-ep.c         |  19 +-
+ drivers/pci/controller/pcie-rockchip-ep.c     |  18 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |  89 ++++----
+ drivers/pci/endpoint/functions/pci-epf-test.c |  74 ++++---
+ drivers/pci/endpoint/pci-ep-cfs.c             |  24 +++
+ drivers/pci/endpoint/pci-epc-core.c           | 134 ++++++++----
+ drivers/pci/endpoint/pci-epf-core.c           | 144 ++++++++++++-
+ include/linux/pci-epc.h                       |  57 ++---
+ include/linux/pci-epf.h                       |  16 +-
+ 15 files changed, 611 insertions(+), 225 deletions(-)
 
-It will read "512" by default (unless maybe some boot loader etc.
-changed it).
-I think, for these particular SoCs, a fixed 512 would do.
-But perhaps we could experiment with larger values, which need to be
-*written* to this register before use.
+-- 
+2.17.1
 
-I will think about it.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
