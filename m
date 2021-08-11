@@ -2,98 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 956373E8BBF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EA93E8BF0
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:39:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236104AbhHKIZq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 04:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236096AbhHKIZo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 04:25:44 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8FAC061798
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:25:20 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id az7so1482976qkb.5
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=GE6cCY/0hnI+CqkRsz34r3mZcz58ATQdIipjSK1xhAQ=;
-        b=VgXN7PhdlLreRdkKxtf4GAJICfMXPa2xQBCBiypPwQ4sCIyNNy8iA9NUxE0BXazodw
-         X/YtmX9G6GIA5fRZ8iDBf2Y02TmeTfUXUrIkVIwVz3rYfNHAg903jabi0pj9d62NuJ9U
-         gGaiVjJ9o2tGfOqrbhaaOZZwMQ4zwzd9WdMKx4dv96yFbd9w2tIZPZYk+aIFh/8kDW53
-         QkAgsZpc6mmPpimt59TDioljvzbXghhYzfsftL0plx7TOpWg7ygdkszbW/SIVTQz/tLU
-         zwwnw7vhoDzMjlMf4DQHHZmI+BztsPOK3UQOP5b1und/xQeTYwPl5XaJr/8ka+qg+SCl
-         qXsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=GE6cCY/0hnI+CqkRsz34r3mZcz58ATQdIipjSK1xhAQ=;
-        b=K1I6Yjk6awbVIxDKYUBdLdAns0EuxeJfixeKmOxxLX+aXEDtMtR/E0lmnlsqrHc6dp
-         YTZJIALMrfImuSanj99o4rjWPkeqG2LKVOWZ1g63qI4Od4vvJshZNcwZthISm86s3QML
-         dT/v9su9GquB3dYvqsBft+Rct7Fib+M3LakR/TPhtuOhwBH9afn2f+ZD2uLKSxfVHKZY
-         1/z+deQDvIYmgI2UcPMOes4sSDHSqPS2v7fG/xDrW9zsrh6NL9IarXc5vCMGi7QE0WL1
-         OXePGxJlt7sUDuv0pP6D/K1ZVKwiWH7bgE4QZ5rL2w7ZIuSEnwr9qrp1l1/JK4907uY2
-         cWVA==
-X-Gm-Message-State: AOAM530DSbECtwu1HZn+3OM2SPwyakAO5dH1cYLgrl3Q3mMH/qAWuI1z
-        ToZfF6zH6Jc3E2ihbrYhOD4C3rYUnTZpUz/vaw==
-X-Google-Smtp-Source: ABdhPJz5vyGGHENngO2PASUapUVre/aZK6J20o3ZbNGpKOj2z0wvQpOG9YNCBPEoWnCDIwszXWc9e6zmk5qJeeDOMqE=
-X-Received: by 2002:a05:620a:1506:: with SMTP id i6mr32638880qkk.199.1628670319744;
- Wed, 11 Aug 2021 01:25:19 -0700 (PDT)
+        id S236136AbhHKIjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 04:39:36 -0400
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:49262 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236074AbhHKIjf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 04:39:35 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 17B8ceTn029249; Wed, 11 Aug 2021 17:38:40 +0900
+X-Iguazu-Qid: 2wHI1WtxCCdJWdk7yS
+X-Iguazu-QSIG: v=2; s=0; t=1628671120; q=2wHI1WtxCCdJWdk7yS; m=uhCheTdU5gs+WCRi6kl3yWL7U8eyQmXgnGl4qr7N7go=
+Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
+        by relay.securemx.jp (mx-mr1112) id 17B8ccHa006735
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 11 Aug 2021 17:38:39 +0900
+Received: from enc02.toshiba.co.jp (enc02.toshiba.co.jp [61.202.160.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by imx12-a.toshiba.co.jp (Postfix) with ESMTPS id 7DB6D1000E0;
+        Wed, 11 Aug 2021 17:38:38 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 17B8cbbN018239;
+        Wed, 11 Aug 2021 17:38:38 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        devicetree@vger.kernel.org, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH v6 0/3] Visconti: Add Toshiba Visconti PCIe host controller driver
+Date:   Wed, 11 Aug 2021 17:38:27 +0900
+X-TSB-HOP: ON
+Message-Id: <20210811083830.784065-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Received: by 2002:a05:6214:951:0:0:0:0 with HTTP; Wed, 11 Aug 2021 01:25:19
- -0700 (PDT)
-Reply-To: drabrarzebadiyah@gmail.com
-From:   "dr.Abrar Zebadiyah" <mrs.marios.nn1966@gmail.com>
-Date:   Wed, 11 Aug 2021 01:25:19 -0700
-Message-ID: <CAFsK1rvnVcVkTODcTFZpHy=htkF_KhSNQtLOuymUGa3jCX-dXA@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
+
+This series is the PCIe driver for Toshiba's ARM SoC, Visconti[0].
+This provides DT binding documentation, device driver, MAINTAINER files.
+
+Best regards,
+  Nobuhiro
+
+[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
+
+  dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
+    v5 -> v6:
+      - No update.
+    v4 -> v5:
+      - No update.
+    v3 -> v4:
+     - Changed the redundant clock name.
+    v2 -> v3:
+      - No update.
+    v1 -> v2:
+      - Remove white space.
+      - Drop num-viewport and bus-range from required.
+      - Drop status line from example.
+      - Drop bus-range from required.
+      - Removed lines defined in pci-bus.yaml from required.
+
+  PCI: visconti: Add Toshiba Visconti PCIe host controller driver
+    v5 -> v6:                                                                                                                                                                                                                                                                                                                         - Remove unnecessary commit log.                                                                                                                                                                                                                                                                                                - Fix split line of visconti_add_pcie_port() 
+    v4 -> v5:
+      - Remove PCIE_BUS_OFFSET
+      - Change link_up confirmation function of visconti_pcie_link_up().
+      - Move setting event mask before dw_pcie_link_up().
+      - Move the contents of visconti_pcie_power_on() to visconti_pcie_host_init().
+      - Remove code for link_gen.
+    v3 -> v4:
+      - Change variable from pci_addr to cpu_addr in visconti_pcie_cpu_addr_fixup().
+      - Change the calculation method of CPU addres from subtraction to mask, and
+        add comment.
+      - Drop dma_set_mask_and_coherent().
+      - Drop set MAX_MSI_IRQS.
+      - Drop dev_dbg for Link speed.
+      - Use use the dev_err_probe() to handle the devm_clk_get() failed.
+      - Changed the redundant clock name.
+    v2 -> v3:
+      - Update subject.
+      - Wrap description in 75 columns.
+      - Change config name to PCIE_VISCONTI_HOST.
+      - Update Kconfig text.
+      - Drop empty lines.
+      - Adjusted to 80 columns.
+      - Drop inline from functions for register access.
+      - Changed function name from visconti_pcie_check_link_status to
+        visconti_pcie_link_up.
+      - Update to using dw_pcie_host_init().
+      - Reorder these in the order of use in visconti_pcie_establish_link().
+      - Rewrite visconti_pcie_host_init() without dw_pcie_setup_rc().
+      - Change function name from  visconti_device_turnon() to
+        visconti_pcie_power_on().
+      - Unify formats such as dev_err().
+      - Drop error label in visconti_add_pcie_port(). 
+    v1 -> v2:
+      - Fix typo in commit message.
+      - Drop "depends on OF && HAS_IOMEM" from Kconfig.
+      - Stop using the pointer of struct dw_pcie.
+      - Use _relaxed variant.
+      - Drop dw_pcie_wait_for_link.
+      - Drop dbi resource processing.
+      - Drop MSI IRQ initialization processing.
+  
+  MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
+    v5 -> v6:
+      - No update.
+    v4 -> v5:
+      - No update.
+    v3 -> v4:
+      - No update.
+    v2 -> v3:
+      - No update.
+    v1 -> v2:
+      - No update.
+
+Nobuhiro Iwamatsu (3):
+  dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
+  PCI: visconti: Add Toshiba Visconti PCIe host controller driver
+  MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
+
+ .../bindings/pci/toshiba,visconti-pcie.yaml   | 110 ++++++
+ MAINTAINERS                                   |   2 +
+ drivers/pci/controller/dwc/Kconfig            |   9 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-visconti.c    | 333 ++++++++++++++++++
+ 5 files changed, 455 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-visconti.c
+
 -- 
-My Dear Friend.
+2.32.0
 
-How are you and your family Today? I hope all is well, and I am happy
-to share this transaction with you ,but you must keep everything as
-secret and very confidential.
-
-I have a very lucrative business transaction which requires your
-utmost discretion. Please understand that you and me, are to work as
-one team to inherit this fund, hence I am your insider in the bank as
-the transaction commence. I advise you to feel free with me for all is
-going to be well with us. This business is 100% risk free.
-
-Though, I know it would come to you at uttermost surprise unbelief
-because it is virtually impossible to know who is trustworthy and who
-to believed I am dr.Abrar Zebadiyah sum of $10.5 million is lying in
-our bank without claim i want you to help me to claim and receive it
-to your account in your country for our benefit.
-
-I am aware of the unsafe nature of the internet, and was compelled to
-use this medium due to the nature of this project.I have access to
-every vital information that can be used to transfer this huge amount
-of money, which may culminate into the investment of the said funds
-into your account or any lucrative company in your country.
-
-If you will like to assist me as a partner then indicate your
-interest, after which we shall both discuss the modalities and the
-sharing percentage. Upon receipt of your reply on your expression of
-interest, I will give you full details on how the business will be
-executed. I am open for negotiation,
-
-Thanks for your anticipated cooperation.Note you might receive this
-message in your inbox or spam folder, depends on your web host or
-server network
-
-Contact my private email only if you are interested (drabrarzebadiyah@gmail.com)
-
-Compliment of the day,
-Regards,
-
-dr.Abrar Zebadiyah
