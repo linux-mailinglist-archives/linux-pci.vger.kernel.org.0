@@ -2,111 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 012FA3E8B74
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 956373E8BBF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 10:25:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235837AbhHKIJM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 04:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51188 "EHLO
+        id S236104AbhHKIZq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Aug 2021 04:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235884AbhHKIH2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 04:07:28 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41191C061798
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:06:48 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDjG9-00017p-TR; Wed, 11 Aug 2021 10:06:45 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDjG9-0000P3-CS; Wed, 11 Aug 2021 10:06:45 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mDjG6-0002xp-AQ; Wed, 11 Aug 2021 10:06:42 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v3 8/8] PCI: Drop duplicated tracking of a pci_dev's bound driver
-Date:   Wed, 11 Aug 2021 10:06:37 +0200
-Message-Id: <20210811080637.2596434-9-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S236096AbhHKIZo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Aug 2021 04:25:44 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8FAC061798
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:25:20 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id az7so1482976qkb.5
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 01:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=GE6cCY/0hnI+CqkRsz34r3mZcz58ATQdIipjSK1xhAQ=;
+        b=VgXN7PhdlLreRdkKxtf4GAJICfMXPa2xQBCBiypPwQ4sCIyNNy8iA9NUxE0BXazodw
+         X/YtmX9G6GIA5fRZ8iDBf2Y02TmeTfUXUrIkVIwVz3rYfNHAg903jabi0pj9d62NuJ9U
+         gGaiVjJ9o2tGfOqrbhaaOZZwMQ4zwzd9WdMKx4dv96yFbd9w2tIZPZYk+aIFh/8kDW53
+         QkAgsZpc6mmPpimt59TDioljvzbXghhYzfsftL0plx7TOpWg7ygdkszbW/SIVTQz/tLU
+         zwwnw7vhoDzMjlMf4DQHHZmI+BztsPOK3UQOP5b1und/xQeTYwPl5XaJr/8ka+qg+SCl
+         qXsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=GE6cCY/0hnI+CqkRsz34r3mZcz58ATQdIipjSK1xhAQ=;
+        b=K1I6Yjk6awbVIxDKYUBdLdAns0EuxeJfixeKmOxxLX+aXEDtMtR/E0lmnlsqrHc6dp
+         YTZJIALMrfImuSanj99o4rjWPkeqG2LKVOWZ1g63qI4Od4vvJshZNcwZthISm86s3QML
+         dT/v9su9GquB3dYvqsBft+Rct7Fib+M3LakR/TPhtuOhwBH9afn2f+ZD2uLKSxfVHKZY
+         1/z+deQDvIYmgI2UcPMOes4sSDHSqPS2v7fG/xDrW9zsrh6NL9IarXc5vCMGi7QE0WL1
+         OXePGxJlt7sUDuv0pP6D/K1ZVKwiWH7bgE4QZ5rL2w7ZIuSEnwr9qrp1l1/JK4907uY2
+         cWVA==
+X-Gm-Message-State: AOAM530DSbECtwu1HZn+3OM2SPwyakAO5dH1cYLgrl3Q3mMH/qAWuI1z
+        ToZfF6zH6Jc3E2ihbrYhOD4C3rYUnTZpUz/vaw==
+X-Google-Smtp-Source: ABdhPJz5vyGGHENngO2PASUapUVre/aZK6J20o3ZbNGpKOj2z0wvQpOG9YNCBPEoWnCDIwszXWc9e6zmk5qJeeDOMqE=
+X-Received: by 2002:a05:620a:1506:: with SMTP id i6mr32638880qkk.199.1628670319744;
+ Wed, 11 Aug 2021 01:25:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=yGEodBYjARp1eJPqP9/n/KpfKo6ALJzXr+t0LDtBUZM=; m=JRVTmu6nPliiiBslnXnYAnMTr94GnCwSSGQey1Vdrcw=; p=rv0aVc4k04hVGAp5b4bWm/VdX4YI7e2/eYWOrVGVROU=; g=f3b7d22ed7c914b1939595bea1dcb198b436a8ca
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEThQUACgkQwfwUeK3K7Am3oAgAoMx pMpGM06uIV7Xo2rMowk67L2rW1jPh0AYqtOu3RsEMq91tE9tgxF/mi1THKyWCBvJbS2eQRjxw9yAx z82fz1J+63tT2fE6KMdJqSDIfpCzUqMPoYfcZL+wLb3Y9BvS1Qu5GDeDWdXBUWWqF4FsQc2nP8Bdu 9zshiwoeIivagRO+EDdhccg4thu6TXEzHdpHOSdzBgqPiMVCRTK/zpPA+tOo2VbyHb7ijCmufFeIn WZg2fvaLSnX1VTYxYSM5KuCdRWMUY8BBVlRuQGJz+J27ZLikzhDBvhKff/SqobOMtMBnFtd8LSJPm kwVcwedWCDIf57gSLdktCp2rucHafrA==
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Received: by 2002:a05:6214:951:0:0:0:0 with HTTP; Wed, 11 Aug 2021 01:25:19
+ -0700 (PDT)
+Reply-To: drabrarzebadiyah@gmail.com
+From:   "dr.Abrar Zebadiyah" <mrs.marios.nn1966@gmail.com>
+Date:   Wed, 11 Aug 2021 01:25:19 -0700
+Message-ID: <CAFsK1rvnVcVkTODcTFZpHy=htkF_KhSNQtLOuymUGa3jCX-dXA@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently it's tracked twice which driver is bound to a given pci
-device. Now that all users of the pci specific one (struct
-pci_dev::driver) are updated to use an access macro
-(pci_driver_of_dev()), change the macro to use the information from the
-driver core and remove the driver member from struct pci_dev.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pci/pci-driver.c | 4 ----
- include/linux/pci.h      | 1 -
- 2 files changed, 5 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index e4bab9d0d6d8..cfc4cb6da8c0 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -305,12 +305,10 @@ static long local_pci_probe(void *_ddi)
- 	 * its remove routine.
- 	 */
- 	pm_runtime_get_sync(dev);
--	pci_dev->driver = pci_drv;
- 	rc = pci_drv->probe(pci_dev, ddi->id);
- 	if (!rc)
- 		return rc;
- 	if (rc < 0) {
--		pci_dev->driver = NULL;
- 		pm_runtime_put_sync(dev);
- 		return rc;
- 	}
-@@ -376,7 +374,6 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
-  * @pci_dev: PCI device being probed
-  *
-  * returns 0 on success, else error.
-- * side-effect: pci_dev->driver is set to drv when drv claims pci_dev.
-  */
- static int __pci_device_probe(struct pci_driver *drv, struct pci_dev *pci_dev)
- {
-@@ -451,7 +448,6 @@ static int pci_device_remove(struct device *dev)
- 		pm_runtime_put_noidle(dev);
- 	}
- 	pcibios_free_irq(pci_dev);
--	pci_dev->driver = NULL;
- 	pci_iov_remove(pci_dev);
- 
- 	/* Undo the runtime PM settings in local_pci_probe() */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 540b377ca8f6..019a8f2e0fdd 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -342,7 +342,6 @@ struct pci_dev {
- 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
- 	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
- 
--	struct pci_driver *driver;	/* Driver bound to this device */
- 	u64		dma_mask;	/* Mask of the bits of bus address this
- 					   device implements.  Normally this is
- 					   0xffffffff.  You only need to change
 -- 
-2.30.2
+My Dear Friend.
 
+How are you and your family Today? I hope all is well, and I am happy
+to share this transaction with you ,but you must keep everything as
+secret and very confidential.
+
+I have a very lucrative business transaction which requires your
+utmost discretion. Please understand that you and me, are to work as
+one team to inherit this fund, hence I am your insider in the bank as
+the transaction commence. I advise you to feel free with me for all is
+going to be well with us. This business is 100% risk free.
+
+Though, I know it would come to you at uttermost surprise unbelief
+because it is virtually impossible to know who is trustworthy and who
+to believed I am dr.Abrar Zebadiyah sum of $10.5 million is lying in
+our bank without claim i want you to help me to claim and receive it
+to your account in your country for our benefit.
+
+I am aware of the unsafe nature of the internet, and was compelled to
+use this medium due to the nature of this project.I have access to
+every vital information that can be used to transfer this huge amount
+of money, which may culminate into the investment of the said funds
+into your account or any lucrative company in your country.
+
+If you will like to assist me as a partner then indicate your
+interest, after which we shall both discuss the modalities and the
+sharing percentage. Upon receipt of your reply on your expression of
+interest, I will give you full details on how the business will be
+executed. I am open for negotiation,
+
+Thanks for your anticipated cooperation.Note you might receive this
+message in your inbox or spam folder, depends on your web host or
+server network
+
+Contact my private email only if you are interested (drabrarzebadiyah@gmail.com)
+
+Compliment of the day,
+Regards,
+
+dr.Abrar Zebadiyah
