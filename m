@@ -2,168 +2,266 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F7C63E93DE
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 16:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25A8E3E941A
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Aug 2021 16:58:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232717AbhHKOo7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Aug 2021 10:44:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64384 "EHLO mga11.intel.com"
+        id S232440AbhHKO6w convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 11 Aug 2021 10:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232725AbhHKOo6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Aug 2021 10:44:58 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="212025356"
-X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
-   d="scan'208";a="212025356"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 07:44:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
-   d="scan'208";a="439733409"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga002.jf.intel.com with ESMTP; 11 Aug 2021 07:44:29 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Wed, 11 Aug 2021 07:44:29 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10 via Frontend Transport; Wed, 11 Aug 2021 07:44:29 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.10; Wed, 11 Aug 2021 07:43:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FYF3pAUMLgYDM/8hREu2omG01DwJQMkMxAiu7tPekwIv8iZegjs94dyrxHWbeHUdRMP1NmYBCUOKldSCSDC3XVweUyXhEpgVON+zTfbOAOKOaZTOf04Imwb8mvrHqFAdPm+6LTyljBe/mNsFOYn9NGNi7xDf83+HVRs/WnTNL+hGAY4bQKmCyXQ0nUZc2TuAIsUX3SmJ7v0YVHQGmrkUmE+Toft6PUpcE0kW4Jm9zberVTqY366m/JYhx5IZIWS/KLIcpfymHytOdiSCeJFvH9W7zoNurAS/f2MGBBG8GmVuIPkBBqjaLad3wvoYVqdt8BaAhq4vU0a3EG28A3Ur7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=60WTLF8RLrlb7qSoisJ/nwWtW8lWjAp6ZjjHAApTu7I=;
- b=TP7TUGkVgjML1GYX0egrPQ2hKnd6ChzOvHbAUmvJCfsHwKG+z8Ks5/md36brMDxIxIQmfLrKcTwHHlixlZRvK4NsuWBeCCljto2tpC1msd/vMyU40UiqJ4fNvJ9VtVN4PGDXXHokQ5amoAx+W5EWtV0uGETxMi6dK9WFb3YjGiZmTQxjd2vGS2ihJmX+h+aavFF/Jwr+80qRrb+lmPvtAzBohOGLvBk4lc/50x7d0IKtsOYmnkHKKiIE3VwDV+qaapTMQvzeHnrmiuLzQgJTRBA7CJz72k3MMCEv62hl8vc6Cldrx/ypdfZXMBcMi+g3LCMb/kxGUjowX9hrd5ll2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=60WTLF8RLrlb7qSoisJ/nwWtW8lWjAp6ZjjHAApTu7I=;
- b=ksjYSufVAAGpLPefoih3fO77cDtNDk/xwS+PKFAMmMjzaG19DgySuLg3NFjzesnfAmtWEKwVPvdDNEzLJ+kYPJaLbZdvurMWI7cKZ7XgoiDUHwrqOAcV5onlhlOVgQYrOlQ9LuyAeVNMhrwSET3SacP3hXysPPXSJ1Jvt7G88lM=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-Received: from DM6PR11MB2746.namprd11.prod.outlook.com (2603:10b6:5:c9::10) by
- DM5PR11MB1356.namprd11.prod.outlook.com (2603:10b6:3:14::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4415.13; Wed, 11 Aug 2021 14:43:47 +0000
-Received: from DM6PR11MB2746.namprd11.prod.outlook.com
- ([fe80::95c6:8d41:62e6:24c7]) by DM6PR11MB2746.namprd11.prod.outlook.com
- ([fe80::95c6:8d41:62e6:24c7%7]) with mapi id 15.20.4415.016; Wed, 11 Aug 2021
- 14:43:47 +0000
-Subject: Re: [PATCH] PCI: vmd: depend on !UML
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Berg, Johannes" <johannes.berg@intel.com>
-References: <20210811162530.affe26231bc3.I131b3c1e67e3d2ead6e98addd256c835fbef9a3e@changeid>
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Message-ID: <a8905276-7b46-cc50-740f-b9d86ec54717@intel.com>
-Date:   Wed, 11 Aug 2021 08:43:45 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-In-Reply-To: <20210811162530.affe26231bc3.I131b3c1e67e3d2ead6e98addd256c835fbef9a3e@changeid>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::46) To DM6PR11MB2746.namprd11.prod.outlook.com
- (2603:10b6:5:c9::10)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.123.78] (192.55.52.194) by BYAPR05CA0033.namprd05.prod.outlook.com (2603:10b6:a03:c0::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.6 via Frontend Transport; Wed, 11 Aug 2021 14:43:46 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f5d69017-86f2-41aa-da45-08d95cd66d3c
-X-MS-TrafficTypeDiagnostic: DM5PR11MB1356:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR11MB135621399F9FB4983FA12D6D98F89@DM5PR11MB1356.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Dp1BARTxRuYyrN+4b6gpLAn9P8iy2zSf6CRfIvAkzhMHYsBDvB73qTgh/sNnLdpIT++lWKUcaBT4RLbp0+FEnXehASDQFOiTYRofP50DAU8aWxROZ9AS4caJnldYRlJ6YEHvfnT6nh3nDA4VthpSPfG+fFn9cgeNbGnDIPYHcjUvcctwTJXpoVSaTyObNKo4DVElvbki+XI4JI3gR4YHrp7Ep8adAry3za2Dh4JtuUCqJa8w6s6gQlNKCwVWwZVUKFtLI0+16izP7KP99jHiLuKxQnjA5f7gbMsoTBdvID+BBA947l95QqhRC5YDVFM9l6zf9t4m+TS8hvC/Tn2x0nVxPdVmEKSq7cJpmBOChwA0Gw/VR34YQzhxe8yPvuF3fXBjwv9ehoP8Gu27mTgGk+AXD2u7N22CUAd5yBeldnWW5KDfuiaLrwi82nh/V6u/Ap4tC6PETRU6Ydp//RI0J7NBZ1i1s0pOPAc6JyLjyk36rrm/wwBzY5nYp/zoynDVRvXnvXVOMk+IkkeGOFOoDfmK115kFCZKEvcFRPgbqKvHNjWT0wPneSvoC2CtPnoidJ2nYqDk44yDYJQ0LYa9MffwoiMvqExECUtEunQ1OFcpaAdP+9steGFW7T0xpEfWezUfeAx8v2GLylfSX0Cj3+19MxqH6qdgFKyNO134PGDv7E8INtBYy8JRF8MsAMQjDpZwW/NUbTYh6GeFcR2gdGHjlsi2ZRKGC7kXO84AbjjluYoiqz5FogCXG9fZ1IEd
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2746.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(36756003)(316002)(86362001)(16576012)(2616005)(5660300002)(53546011)(8676002)(110136005)(26005)(31686004)(83380400001)(4326008)(956004)(54906003)(66946007)(38100700002)(186003)(8936002)(66556008)(31696002)(6486002)(478600001)(66476007)(107886003)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TTJ5T0JhY1AzUGZLN1BHT2tUa014WjdISXAwVFVyc2NhMTNtN0Z1Uk5SM3cz?=
- =?utf-8?B?NWV6NUlYKzhHRFJMdHdBNktXOUlzTmpGd0ZTc1oxRm5tTDdGczRpcUY3THJt?=
- =?utf-8?B?bks3Wi9wM2puRHErV1puNm9sVFo5V2J2cUtYd3dJNDJtVGo0cFhXUXAwSWRF?=
- =?utf-8?B?dkZkc3o0UFpNYnFRVHBVL0NaN0Yxb1ZOakNHQkxnSURiNlRBcXlIUUp2UmQ5?=
- =?utf-8?B?R3ptV0lNQUV6TnhnczYxRUlxQU5LWGpsb3dxeHM2TDFSUjQxbzdKQThFT28w?=
- =?utf-8?B?VjJtVis0YytHdnh1NkluUTl6akdWYzFtOTBRTmxwTHFTeUFVYnFpU3kyNGlm?=
- =?utf-8?B?MnM5UVhjMGllMldoY2xuWjludUZOUEtVZjJSbGVUdFU4L0VDcDAwZ1J5QkFz?=
- =?utf-8?B?OVQvWE1IdkgrL2xaZXl2VkV6azZhdWFiU2cvQ0J3NFR0S0Z3VU9FMXVNSHVD?=
- =?utf-8?B?bWZ6TnVTbjF3WUtMR3JndThXdUJadHpjVUo4T2FGdk5RUmlDcmR3YnJCSGRj?=
- =?utf-8?B?blhaRERLVmhXY0VqK1RjQlg1djVvUzdkMmJpMWxQNXgwZzFVS2UwNkxIWmVo?=
- =?utf-8?B?cm9qdXRuYjRXcFB3KzduR1pmaENMTnpOa3lxQTg3MUFTcnZhNEJzdjVxZmU2?=
- =?utf-8?B?WnY4emlPTlArVDFnWjFJbWQvL29JaVNYWnBRMWRMRGo4dmxUbzJ2M2crS1pw?=
- =?utf-8?B?YVVJRmcySU9qUzVFRnZsMGJwMWVwZUlKYzg0cG0rS05ucThxRnBhQ3d1dEpR?=
- =?utf-8?B?RHltczF1N2owTXJZRHVqbWd2NEVUOFFxZ1BjeU1RdWVTM0RSbHo0NXloQnNr?=
- =?utf-8?B?OEdqRGE0U2VoZjhKaGFtZ2F6MnV4TzdQaUswVk0ycGd6Vmo3b1AzZk40TWJK?=
- =?utf-8?B?TlJWU3hBMVVSZmZ3NTNqbnRmMGt1bWxSVk95VjdqWDBGOC9hRGR1MFZGb3RE?=
- =?utf-8?B?OWJPaDVVdWV5Yk1XT1l5Y1Z5MlQ3VDQ1TEcyK0ZvNUgrcFJhMkxNVGh0OSsv?=
- =?utf-8?B?ZzN0MC9aTC9QOXAraFVyT0NBMzd5ZkZWd1dtUndWbWdiZk9QM0RxZ0Q5em9T?=
- =?utf-8?B?dnNSUnU3eXUwUU5YODVLSTNOdzE2b1NIQWFPbjY0alNHSmw3azM2SHhJMEN0?=
- =?utf-8?B?UjBIMUlGOGxhZjlYZ09QZ0NCTVJzaG5JaGEvcjMrZUk4d2FBR0N1dGd3U21U?=
- =?utf-8?B?UUs4dlVqcHFzRWNGUGtNenc5UElKMnZ5S2swQ1NOeVhCRVk1V1ZwK3Q4Qm1l?=
- =?utf-8?B?OWJqZ3g4UWViRURMY0E1aG5qOFNHZlpOTUd0Y3VyLzQzVVNNVEdET25rRUhC?=
- =?utf-8?B?TStGOEVRVXovVHcySStrbWdxVVJWMkYrMmthdFA0WEhvMGY5YS92d0Eva3lG?=
- =?utf-8?B?Vm5nSTRiY0g1cUhSemtJY0RJUzlTUk92Z0R5dkU1MkpSNFZJRmpsQ2JMYm5K?=
- =?utf-8?B?Ry9lZW9BWFNJNnVoWnQ5aWJXU0pnWHJqUTMwRzFKUjM1c0dyakRKL1l1WnJN?=
- =?utf-8?B?QmFjZ2t2OWR3WmxMeW9qcVQ2aHVJTDJVQ0ErMjBrSm1OS3NXWUVxb3N0OHlX?=
- =?utf-8?B?T2QrSkRmZWNCUG9YSjIwcDRVRW1BM0VBRXp4alRpN2RjSjQ1R3R2bWkrK1NJ?=
- =?utf-8?B?dlVpUGFZOWF5aGprQ2pDSEFxM2ZuT1BKUzFTMCtXV2JsU01aR0ovVUc2elRZ?=
- =?utf-8?B?ejNGd2x2Nm13dVY5RGUrd2hNbjNqaUdISm1CTG01US9yQ0R4dFNIeG43ZVN1?=
- =?utf-8?Q?n83g6E/Xsg6+I1A/Pusn4RhVzqDI+IK0F+334hG?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5d69017-86f2-41aa-da45-08d95cd66d3c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2746.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2021 14:43:47.6296
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: miOemOsEhu5LSCbThdbdmqrPAGJaNvG8yod3MttE8ARmMgLJ73z8PQgafXsoXeyZdKwmZGaY9XD5p13CVSqCfePSiDMqPO4tXTYkD0+hwk8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1356
-X-OriginatorOrg: intel.com
+        id S232823AbhHKO6t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Aug 2021 10:58:49 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C36460FA0;
+        Wed, 11 Aug 2021 14:58:25 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mDpgV-004MOX-FV; Wed, 11 Aug 2021 15:58:23 +0100
+Date:   Wed, 11 Aug 2021 15:58:23 +0100
+Message-ID: <87k0ks9gfk.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] PCI: j721e: Add PCI legacy interrupt support for J7200
+In-Reply-To: <20210811123846.31921-3-kishon@ti.com>
+References: <20210811123846.31921-1-kishon@ti.com>
+        <20210811123846.31921-3-kishon@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kishon@ti.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, lokeshvutla@ti.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+On Wed, 11 Aug 2021 13:38:46 +0100,
+Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> 
+> Add PCI legacy interrupt support for J7200. J7200 has a single HW
+> interrupt line for all the four legacy interrupts INTA/INTB/INTC/INTD.
+> The HW interrupt line connected to GIC is a pulse interrupt whereas
+> the legacy interrupts by definition is level interrupt. In order to
+> provide level interrupt functionality to edge interrupt line, PCIe
+> in J7200 has provided USER_EOI_REG register. When the SW writes to
+> USER_EOI_REG register after handling the interrupt, the IP checks the
+> state of legacy interrupt and re-triggers pulse interrupt invoking
+> the handler again.
+> 
+> Due to Errata ID #i2094 ([1]), EOI feature is not enabled in J721E
+> and only a single pulse interrupt will be generated for every
+> ASSERT_INTx/DEASSERT_INTx. Hence legacy interrupt is not enabled in
+> J721E.
 
-On 8/11/2021 8:25 AM, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+How do you prevent this from being enabled on an affected platform?
+Just by virtue of not having the interrupt-controller property in DT?
+In which case, it may be useful to clarify this in the DT binding and
+say that it is only valid on J7200.
+
 > 
-> With UML having enabled (simulated) PCI on UML, VMD breaks
-> allyesconfig/allmodconfig compilation because it assumes
-> it's running on X86_64 bare metal, and has hardcoded API
-> use of ARCH=x86. Make it depend on !UML to fix this.
+> [1] -> J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0 SPRZ455A –
+>        DECEMBER 2020 – REVISED AUGUST 2021
+>        (https://www.ti.com/lit/er/sprz455a/sprz455a.pdf)
 > 
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/pci/controller/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/controller/cadence/pci-j721e.c | 119 +++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 64e2f5e379aa..297bbd86806a 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -257,7 +257,7 @@ config PCIE_TANGO_SMP8759
->  	  config and MMIO accesses.
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index ffb176d288cd..4e786d6b89e0 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -29,12 +29,24 @@
+>  #define LINK_DOWN		BIT(1)
+>  #define J7200_LINK_DOWN		BIT(10)
 >  
->  config VMD
-> -	depends on PCI_MSI && X86_64 && SRCU
-> +	depends on PCI_MSI && X86_64 && SRCU && !UML
->  	tristate "Intel Volume Management Device Driver"
->  	help
->  	  Adds support for the Intel Volume Management Device (VMD). VMD is a
-> 
+> +#define ENABLE_REG_SYS_1	0x104
+> +#define STATUS_REG_SYS_1	0x504
+> +#define SYS1_INTx_EN(num)	(1 << (22 + (num)))
+> +
+>  #define J721E_PCIE_USER_CMD_STATUS	0x4
+>  #define LINK_TRAINING_ENABLE		BIT(0)
+>  
+>  #define J721E_PCIE_USER_LINKSTATUS	0x14
+>  #define LINK_STATUS			GENMASK(1, 0)
+>  
+> +#define USER_EOI_REG		0xC8
+> +enum eoi_reg {
+> +	EOI_DOWNSTREAM_INTERRUPT,
+> +	EOI_FLR_INTERRUPT,
+> +	EOI_LEGACY_INTERRUPT,
+> +	EOI_POWER_STATE_INTERRUPT,
+> +};
+> +
+>  enum link_status {
+>  	NO_RECEIVERS_DETECTED,
+>  	LINK_TRAINING_IN_PROGRESS,
+> @@ -59,6 +71,7 @@ struct j721e_pcie {
+>  	void __iomem		*user_cfg_base;
+>  	void __iomem		*intd_cfg_base;
+>  	u32			linkdown_irq_regfield;
+> +	struct irq_domain	*legacy_irq_domain;
+>  };
+>  
+>  enum j721e_pcie_mode {
+> @@ -121,6 +134,108 @@ static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
+>  	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_2, reg);
+>  }
+>  
+> +static void j721e_pcie_legacy_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct j721e_pcie *pcie = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	int i, virq;
+> +	u32 reg;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_1);
+> +	for (i = 0; i < PCI_NUM_INTX; i++) {
+> +		if (!(reg & SYS1_INTx_EN(i)))
+> +			continue;
+> +
+> +		virq = irq_find_mapping(pcie->legacy_irq_domain, i);
+> +		generic_handle_irq(virq);
+
+Please use generic_handle_domain_irq().
+
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void j721e_pcie_irq_eoi(struct irq_data *data)
+> +{
+> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +
+> +	j721e_pcie_user_writel(pcie, USER_EOI_REG, EOI_LEGACY_INTERRUPT);
+> +}
+> +
+> +static void j721e_pcie_irq_enable(struct irq_data *data)
+> +{
+> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
+> +	reg |= SYS1_INTx_EN(irqd_to_hwirq(data));
+> +	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
+
+RMW of a register shared between interrupts without a lock. It will
+eventually end badly.
+
+> +}
+> +
+> +static void j721e_pcie_irq_disable(struct irq_data *data)
+> +{
+> +	struct j721e_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_1);
+> +	reg &= ~SYS1_INTx_EN(irqd_to_hwirq(data));
+> +	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_1, reg);
+
+Same thing.
+
+> +}
+> +
+> +struct irq_chip j721e_pcie_irq_chip = {
+> +	.name		= "J721E-PCIE-INTX",
+> +	.irq_eoi	= j721e_pcie_irq_eoi,
+> +	.irq_enable	= j721e_pcie_irq_enable,
+> +	.irq_disable	= j721e_pcie_irq_disable,
+> +};
+> +
+> +static int j721e_pcie_intx_map(struct irq_domain *domain, unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	struct j721e_pcie *pcie = domain->host_data;
+> +
+> +	irq_set_chip_and_handler(irq, &j721e_pcie_irq_chip, handle_fasteoi_irq);
+> +	irq_set_chip_data(irq, pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops j721e_pcie_intx_domain_ops = {
+> +	.map = j721e_pcie_intx_map,
+> +};
+> +
+> +static int j721e_pcie_config_legacy_irq(struct j721e_pcie *pcie)
+> +{
+> +	struct irq_domain *legacy_irq_domain;
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *intc_node;
+> +	int irq;
+> +
+> +	intc_node = of_get_child_by_name(node, "interrupt-controller");
+> +	if (!intc_node) {
+> +		dev_dbg(dev, "interrupt-controller node is absent. Legacy INTR not supported\n");
+> +		return 0;
+> +	}
+> +
+> +	irq = irq_of_parse_and_map(intc_node, 0);
+> +	if (!irq) {
+> +		dev_err(dev, "Failed to parse and map legacy irq\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(irq, j721e_pcie_legacy_irq_handler, pcie);
+
+At this stage, you now have enabled the mux interrupt, and it can fire
+at will (who knows what state the enabled bits are, given that you
+don't initialise them?). However, you still haven't allocated the
+domain. What could possibly go wrong?
+
+Please initialise all the interrupts to their disabled state, and only
+register the handler once all the data structures have been populated.
+
+> +
+> +	legacy_irq_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
+> +						  &j721e_pcie_intx_domain_ops, pcie);
+> +	if (!legacy_irq_domain) {
+> +		dev_err(dev, "Failed to add irq domain for legacy irqs\n");
+> +		return -EINVAL;
+> +	}
+> +	pcie->legacy_irq_domain = legacy_irq_domain;
+> +
+> +	return 0;
+> +}
+> +
+>  static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie)
+>  {
+>  	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> @@ -433,6 +548,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  			goto err_get_sync;
+>  		}
+>  
+> +		ret = j721e_pcie_config_legacy_irq(pcie);
+> +		if (ret < 0)
+> +			goto err_get_sync;
+> +
+>  		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+>  		if (!bridge) {
+>  			ret = -ENOMEM;
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
