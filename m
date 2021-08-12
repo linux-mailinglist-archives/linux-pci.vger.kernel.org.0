@@ -2,185 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C628F3EA064
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 10:16:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D423EA327
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 12:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234949AbhHLIQ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 04:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46440 "EHLO
+        id S236607AbhHLKym (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 06:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbhHLIQ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 04:16:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3BBC061765
-        for <linux-pci@vger.kernel.org>; Thu, 12 Aug 2021 01:16:02 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mE5rm-0002LU-Am; Thu, 12 Aug 2021 10:15:06 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mE5rb-0002s2-AN; Thu, 12 Aug 2021 10:14:55 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mE5rb-0006R3-8Y; Thu, 12 Aug 2021 10:14:55 +0200
-Date:   Thu, 12 Aug 2021 10:14:25 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rafa?? Mi??ecki <zajec5@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Simon Horman <simon.horman@corigine.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 4/8] PCI: replace pci_dev::driver usage that gets the
- driver name
-Message-ID: <20210812081425.7pjy4a25e2ehkr3x@pengutronix.de>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
- <20210811080637.2596434-5-u.kleine-koenig@pengutronix.de>
- <YRTIqGm5Dr8du7a7@infradead.org>
+        with ESMTP id S236585AbhHLKyl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 06:54:41 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782D8C061765;
+        Thu, 12 Aug 2021 03:54:16 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id w14so8701730pjh.5;
+        Thu, 12 Aug 2021 03:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YCXbaLZyAk42RWgMxpHdoCR+RmbVoLlnmRpT4XB1Zs0=;
+        b=OXl36u7mUGRjrLqjsNMrUu/aSFE/HWV5G5ZUWIi3gUAh4V/Uj7o0dtNQLkHNoAlbvh
+         g+eYvlrjVGMS/hq7JwC4+gbKBO4mUg5gJ0LZ0UgHnZrDSioeqvUZ9LASaolIh4WXXQ73
+         bdzTfRaNKux/yL8kBiBZpj+lO4nXcP3TRQrHRAVlE+LzlBHw0qTzvpH2rglAGMxrFwIE
+         ++luP571SbOdqpxN4jXkL8Mehq32mslAEXlADFMiFk328vPnmZoRlheLYLaXIIHFl28j
+         4tsZYKjAyUW+bV61gXSAMuqVsNRmCDWLOuT3pUk40E1xWlh1VB6VGNYCoUYuV387SYeD
+         Z7fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YCXbaLZyAk42RWgMxpHdoCR+RmbVoLlnmRpT4XB1Zs0=;
+        b=kSFhlpc0lbEJk1CMCl4W0L9Oc7AiPOXaD3bjFXMfs0JOHoI4XIetsExkPDQaQtcwfR
+         YH2Bg6XwtiiMmy8xr8g3/YVzbcao8wevPcYyIxwFKz3dd1J9hbVYSwMaWrMN4Fl/HM67
+         GHifUSnjaEXPNrRb3RmsLHveShAF0nA8rn2BEvsEb5B6P0l7LlwjaWnbS7MiSG2OA4oY
+         5Hcg3oRx8LUFaVEokdH8X2uiZEItW/T9lqmTjxkkWOczoeN6C9P9XEKbpEUXwfFL4jGL
+         0XTr1TU7qgx1QVHFV+aYmmVsQiVTwaSY6U4+rKQ/pR2BIE27x52WipSFny46vTA1vfSK
+         62dw==
+X-Gm-Message-State: AOAM533qLKKpmgg03rC4jL0C3N26hxPMN7pSrHHk7PXBbRuNYSu3TvqW
+        dlEuAXDDsZQGgeL/IciVuBs=
+X-Google-Smtp-Source: ABdhPJwk3GRwrN27Su119B29DfpaU4Jt5FxZZYTT1kwDKcpIdN0ZZ+01KRiiUCo4i46IzAb/cZ3M4Q==
+X-Received: by 2002:a65:5288:: with SMTP id y8mr3306317pgp.275.1628765656004;
+        Thu, 12 Aug 2021 03:54:16 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8916:5000:73b9:7bc0:297c:e850])
+        by smtp.gmail.com with ESMTPSA id j16sm3070866pfi.165.2021.08.12.03.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Aug 2021 03:54:15 -0700 (PDT)
+From:   Barry Song <21cnbao@gmail.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+        maz@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linuxarm@huawei.com,
+        robin.murphy@arm.com, will@kernel.org, lorenzo.pieralisi@arm.com,
+        dwmw@amazon.co.uk, Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH v2 0/2] msi: extend msi_irqs sysfs entries to platform devices
+Date:   Thu, 12 Aug 2021 22:53:39 +1200
+Message-Id: <20210812105341.51657-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n62mnckfisrc5gc5"
-Content-Disposition: inline
-In-Reply-To: <YRTIqGm5Dr8du7a7@infradead.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Barry Song <song.bao.hua@hisilicon.com>
 
---n62mnckfisrc5gc5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just like pci devices have msi_irqs which can be used by userspace irq affinity
+tools or applications to bind irqs, platform devices also widely support msi
+irqs.
+For platform devices, for example ARM SMMU, userspaces also care about its msi
+irqs as applications can know the mapping between devices and irqs and then
+make smarter decision on handling irq affinity. For example, for SVA mode,
+it is better to pin io page fault to the numa node applications are running
+on. Otherwise, io page fault will get a remote page from the node iopf happens
+rather than from the node applications are running on.
 
-On Thu, Aug 12, 2021 at 08:07:20AM +0100, Christoph Hellwig wrote:
-> On Wed, Aug 11, 2021 at 10:06:33AM +0200, Uwe Kleine-K??nig wrote:
-> >  static inline const char *eeh_driver_name(struct pci_dev *pdev)
-> >  {
-> > -	return (pdev && pdev->driver) ? pdev->driver->name : "<null>";
-> > +	const char *drvstr =3D pdev ? dev_driver_string(&pdev->dev) : "";
-> > +
-> > +	if (*drvstr =3D=3D '\0')
-> > +		return "<null>";
-> > +
-> > +	return drvstr;
->=20
-> This looks rather obsfucated due to the fact that dev_driver_string
-> never returns '\0', and due to the strange mix of a tenary operation
-> and the if on a related condition.
+The first patch extracts the sysfs populate/destory code from PCI to
+MSI core. The 2nd patch lets platform-msi export msi_irqs entry so that
+userspace can know the mapping between devices and irqs for platform
+devices.
 
-dev_driver_string() might return "" (via dev_bus_name()). If that happens
-*drvstr =3D=3D '\0' becomes true.
+-v2:
+  extract common code for msi_irqs sysfs populate/destory from PCI to MSI core,
+  platform_device can directly reuse common code;
 
-Would the following be better?:
+-v1:
+  https://lore.kernel.org/lkml/20210811105020.12980-1-song.bao.hua@hisilicon.com/
 
-	const char *drvstr;
+Barry Song (2):
+  genirq/msi: extract common sysfs populate entries to msi core from pci
+  platform-msi: Add ABI to show msi_irqs of platform devices
 
-	if (pdev)
-		return "<null>";
+ Documentation/ABI/testing/sysfs-bus-platform |  14 +++
+ drivers/base/platform-msi.c                  |  10 ++
+ drivers/pci/msi.c                            | 124 ++-----------------------
+ include/linux/msi.h                          |   4 +
+ kernel/irq/msi.c                             | 134 +++++++++++++++++++++++++++
+ 5 files changed, 171 insertions(+), 115 deletions(-)
 
-	drvstr =3D dev_driver_string(&pdev->dev);
+-- 
+1.8.3.1
 
-	if (!strcmp(drvstr, ""))
-		return "<null>";
-
-	return drvstr;
-
-When I thought about this hunk I considered it ugly to have "<null>" in
-it twice.
-
-> >  }
-> > =20
-> >  #endif /* CONFIG_EEH */
-> > diff --git a/drivers/bcma/host_pci.c b/drivers/bcma/host_pci.c
-> > index 69c10a7b7c61..dc2ffa686964 100644
-> > --- a/drivers/bcma/host_pci.c
-> > +++ b/drivers/bcma/host_pci.c
-> > @@ -175,9 +175,10 @@ static int bcma_host_pci_probe(struct pci_dev *dev,
-> >  	if (err)
-> >  		goto err_kfree_bus;
-> > =20
-> > -	name =3D dev_name(&dev->dev);
-> > -	if (dev->driver && dev->driver->name)
-> > -		name =3D dev->driver->name;
-> > +	name =3D dev_driver_string(&dev->dev);
-> > +	if (*name =3D=3D '\0')
-> > +		name =3D dev_name(&dev->dev);
->=20
-> Where does this '\0' check come from?
-
-The original code is equivalent to
-
-	if (dev->driver && dev->driver->name)
-		name =3D dev->driver->name;
-	else:
-		name =3D dev_name(...);
-
-As dev_driver_string() implements something like:
-
-	if (dev->driver && dev->driver->name)
-		return dev->driver->name;
-	else
-		return "";
-
-the change looks fine to me. (One could wonder if it's sensible to fall
-back to the device name if the driver has no nice name, but this isn't
-new with my change.)
-
-> > +	name =3D dev_driver_string(&dev->dev);
-> > +	if (*name =3D=3D '\0')
-> > +		name =3D dev_name(&dev->dev);
-> > +
->=20
-> More of this weirdness.
-
-I admit it's not pretty. Would it help to use !strcmp(name, "")
-instead of *name =3D=3D '\0'? Any other constructive suggestion?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---n62mnckfisrc5gc5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEU2FkACgkQwfwUeK3K
-7An+dgf/QrRVML0a6qk3HkGyLdsB8Vz7TG3WIJF9aLj4O2kfcEPwkNYsSxN/21iu
-rEFabdOH9lU5Zd2HWHmas7GEMR232ZquxQiELI+9rh01/2S6Y/u/6AVGLvdzqFVZ
-rXTrEHH02r9SqMl/V0Z/M7VIltjkbZwF4eSLW4+5+hHb65DACabRPBWTAjvotPU4
-0WlKPyYnJf0uVw9UF7NqDkXjgdyYzRf0lM6Ie9SLp3JctB9pqnVCu4JQSqBln0Ri
-AoFiE71+XFMORrsnY4gr2qdjhzoIRRGvDVVZ1BqXx0WZ7ZTzxcWXBg4xzrjF5kw0
-FlVhUnMK0NFPQnBoNJXA7B6UG7ZkvA==
-=3HwH
------END PGP SIGNATURE-----
-
---n62mnckfisrc5gc5--
