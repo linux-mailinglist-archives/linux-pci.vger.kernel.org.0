@@ -2,71 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 205F83E9E02
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 07:39:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6DEA3E9EBE
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 08:46:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234371AbhHLFjt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 01:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        id S231393AbhHLGq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 02:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234365AbhHLFjt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 01:39:49 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466FCC061765
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 22:39:24 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id b7so7758566edu.3
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 22:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=o42wBDdZ8eUnP65ttOx8SoiRxi7wqG5rfLFPzZF055Wumtk9+Otebp0gc+jrsbFXpf
-         SKJu0pQkRhdr8lwoXRCrLN3FzWdall/ccuWr2cvquTMdWfe9n5qoxACYgwrZsrZ0XHmi
-         jleo0SgL+nXa5mLBsvY9OFu2uf7vfDmVVWfggMDyXNSDXHgbmK+2zb+PmMkDTpn3N0Ve
-         +fcAb0/rdiKUm4/iWcNh6nVs16sQPOnNylFwn/y15QSurfaWcBhxcDrtkmZ04mB5XLRQ
-         /0p30m+ODWydRihtrBUjc0MuLZ3VxrbKL9MK4itElCGf/ETlc7Acr42QMr2lESRZoIUk
-         OHfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=Aauu7gYvMaBruI9Zt1CgTlkxSZ8evQwPBhKOMH6jf8s=;
-        b=nYymZ2GUxge2Qr3K6jT/2xERTta8DKcsQ/VqjGgVO3UYLgCy7a1RVsKSP7DHCi3zi3
-         0WoA3UebPGO0xZreypHQ9H6ZPv7X3QWuST+Gxq9QfY7UtO7o0VDCBkQ5l6oGXX2/zebG
-         BifqPt7FegNpekmIZ6OjjvHMGiZlQIEei1vEqiRt7q1nVaQkf2DxBfrZ6RZsAWpMO0OU
-         EOFP5se0Q0OFs4Uz9lN/NFLjQzgFKhWrbXOaTBJFwxvREZf3ohHX3kVtCVz87P2Rv4py
-         fqhzycUcYnb+zCElP0CE0Sq1Nek/9xEGzh/5/yR9hMeTG+ooubQt50dkkoB2YgvFQAGF
-         CSkw==
-X-Gm-Message-State: AOAM5335t/vMwyZECsbZQyqcEZ44661vuYooMa508nwG17FUHLl5tUWX
-        nz8QkMbx9ATjapTrSenigiy2hHRCeEt0ec5nJLc=
-X-Google-Smtp-Source: ABdhPJxjA0Jg0qIwHXi4Z8PkNNES7uws7RFBpxPdKy5wYU5yOnngysGLYCZLAgOfQAACXgT4cackBxetTPteIXVXS5A=
-X-Received: by 2002:aa7:ce87:: with SMTP id y7mr3374126edv.306.1628746762842;
- Wed, 11 Aug 2021 22:39:22 -0700 (PDT)
+        with ESMTP id S231253AbhHLGq1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 02:46:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E2AC061765
+        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 23:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tCUhEwxONxwl2dtWLeLqvDeI+cMrrsBA9i6z2UiPp40=; b=u8ESGKVYpeOtFIFQemmm9DCrfA
+        TYtnHsyj36ZLGaeFAy2+tlmByL30V3l685HQQXfBD33LiKqaYIqCJQvvWZMYiBEiw0NvIK+fO+OuW
+        +SbNtMFcIG4MVciTdfjlUQAGTzSQRZjt5lfiV93FCFIDkOO41AtSuo2xCOdn6oVLlZZRGaUwZBit/
+        +/XciT+x+euNOxRTszJuJYLfhEMib540AxcPnKLiN5Vr6/1eg+lEuLxzhgbvr9jGexTwPZU1r0M+4
+        kqP552r6i7mUHHs63VuBo+PxtRwGjY9ZNtAIojqVwsdm0XC0RwfwFFDSAbNOcQ9aEpu9dbitvBgtS
+        iWgkXeWQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mE4S4-00EFfY-7p; Thu, 12 Aug 2021 06:44:43 +0000
+Date:   Thu, 12 Aug 2021 07:44:28 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 1/8] PCI: Simplify pci_device_remove()
+Message-ID: <YRTDTKxaGknLnW0w@infradead.org>
+References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+ <20210811080637.2596434-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: godwinpeter2401@gmail.com
-Received: by 2002:a50:7ec9:0:0:0:0:0 with HTTP; Wed, 11 Aug 2021 22:39:22
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Thu, 12 Aug 2021 07:39:22 +0200
-X-Google-Sender-Auth: 9dB3Kq6fVsZaEWjQhXMYkp_Lhw8
-Message-ID: <CAGyeThDJtSy-yjCiZiPNMtRhWZb2tCZUWMZP0NwyfoGcL=ctZA@mail.gmail.com>
-Subject: I need your response
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210811080637.2596434-2-u.kleine-koenig@pengutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My good friend,
+On Wed, Aug 11, 2021 at 10:06:30AM +0200, Uwe Kleine-K??nig wrote:
+> When the driver core calls pci_device_remove() there is a driver that bound
+> the device and so pci_dev->driver is never NULL.
 
-I just want to know if you, can help me to transfer the amount of
-($6Million). After the transfer we have to share it, 50% for me, and
-50% for you. Please let me know if you can help me for more
-information in regards with the transfer. I hope you can work with me
-honestly?
+Looks good,
 
-
-Thanks.
-
-Godwin Peter,
+Reviewed-by: Christoph Hellwig <hch@lst.de>
