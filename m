@@ -2,173 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC103EA32C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 12:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD1023EA32F
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 12:56:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236618AbhHLKy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 06:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55366 "EHLO
+        id S236478AbhHLK4Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 06:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236661AbhHLKyx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 06:54:53 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA13C0613D3;
-        Thu, 12 Aug 2021 03:54:28 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id a8so8717594pjk.4;
-        Thu, 12 Aug 2021 03:54:28 -0700 (PDT)
+        with ESMTP id S236442AbhHLK4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 06:56:14 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052C9C061765;
+        Thu, 12 Aug 2021 03:55:50 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id e19so6748921pla.10;
+        Thu, 12 Aug 2021 03:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Odt01punb17ITFlrIkGGB8hHCTznUelJjiAvTAKdxNI=;
-        b=vfrDdL+5PqWsegVKDIXrbiWTQL7QR6VHOm7UT1PxnU6oqF0CqAFPkb+NLyTo+8w9Ms
-         lME7b0GTtxn/JAzXRWRaTpm88R//Kp5DYx78I4SmSNAcRZtcxtFc4ILheCorn1IpvmAJ
-         KpwRmf1zg4HZ16y0Xbf/vqKvSa7T4tw27J42gVLjlOVtpdZmyiaiCEe3FJ6OH+SEWpqG
-         xgwbkXBWtsa8M7Oeg9nH9tx0DVHIeBdznAyBC7rzlfuxR6yBgQidzzAmsc8Vf6d9nWT0
-         q1i4ZN6zu5LDKe8jBHmeOH3oh1WjqwnH9SyDLj4zaurmaNJVXSIYjjLCRy0/9os/SjYR
-         waeg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eq9Xh1F7xdY3qhY4IzprUVHF5yW7bLehYY5/rO8uEeA=;
+        b=GJOkBGonE+ybwwOlKpANl+y0qg5PXXeou55G7E5sGB25X97XoOQ54LoA0xAFS2XrFC
+         kY2LA0BtFa1QII2X6O8kmiuleMpLKt7ZG+ABldp3wLqx7gDKO+IOg+TwxZ5fz9zm2GU/
+         rpGNu1dVjC115xDXeTe3zAKYLpHiySWQod3s4pcIBxvaeoq/DB7rjcgVcDhsFAuFk4UA
+         ix0yacAO1vOLUllzUvR4aRHLEgW9bFxzz6tYtqRrEpQXizwYkW+/uw+ygQvsC6W7Mkd6
+         ACo1KAebCYYIcgxHraY6s1qTf8mhVDcroXpkRvK2EwWTNJzdYPXYVcEbtbYxlge/7dsJ
+         LdYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Odt01punb17ITFlrIkGGB8hHCTznUelJjiAvTAKdxNI=;
-        b=fHj5KMiEAH6/5U9hOCootu75eAeEEzEDQcIeAQYDUWWA1XGf2WiehHYfA/E65AljXA
-         malJoZdpXQMr/Cg7/sH+eWCY680Qm/2vWPHynwiD6dv5ziCXJrNmNNNUOQlYxRvpSlAQ
-         Ic750caOFWm2inJzbwyNhEo5M/luI/BwOjMYTugFMb563a7jvGqcFjfs44J8U6xCq8Pt
-         FtPWCJjbTaOZNTZKL3IYPxKYl+2npkEdAz+tULNVwsprLZJSx1fqW6eb/FKdjq22ve+f
-         32QcS2TqIXkZrHu/3091LiMsDnnUBDUz64Wgn489DlYhWgXE9wPp3qCPAsa5R4+ny5ol
-         warg==
-X-Gm-Message-State: AOAM530/d8kp3RKhUgY52qbYVku+U+GQ/gaB5MjMY4/EHtGdbKQdWVZm
-        Y6qBJfZgOx+8E7pjts06FBk=
-X-Google-Smtp-Source: ABdhPJzt872/2bBcxuFIUUQb/AgGb70PXH8tioGbiuL2GZPWp4IFUlUB6RmzFeU0TszPZFLYe+8Xgg==
-X-Received: by 2002:a17:90a:cb12:: with SMTP id z18mr3807423pjt.84.1628765667913;
-        Thu, 12 Aug 2021 03:54:27 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8916:5000:73b9:7bc0:297c:e850])
-        by smtp.gmail.com with ESMTPSA id j16sm3070866pfi.165.2021.08.12.03.54.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eq9Xh1F7xdY3qhY4IzprUVHF5yW7bLehYY5/rO8uEeA=;
+        b=rDzlDexZZbX9Kag22EzlCuFPgpjNaF2/Ivo6B2Wl7kQTyZyu+zcoNUGob4jSFbL9at
+         tEcT9g4ao6fjVfwm26hCAPsqCwM8pn+DD2B91Y+b8bStQQ7tx7Of91j007PKjS5fHdJg
+         kwaQJ/q1pvq3OwaIjtPJSeh2dJsXTEasDTcb230iB0ua2wP2fHG3j7f/qr3SOuxwmcrQ
+         3A0HPZtkkbkhREc9ugr9Wctb1KM1bAlqNwByIkqkkjj4wgBIBFI2clICLVRaTREEJflG
+         DrPdzbvk3fw5oshyPNQ/zPS7KwlKMOmi07YlCzcgCVnth7V3LkY9DoIMPeCZyiyCADbv
+         R36Q==
+X-Gm-Message-State: AOAM531/9iMYIKtNP0knIDGPJRofGpu54HernopKOz0laPymxxGKPxAG
+        npTFi/IX0ddPUCVRjNColnwgFUa+Ze/Xs4fL5hA=
+X-Google-Smtp-Source: ABdhPJyb+lVLZvTwmpYzxubeLGi3KVZEZfje3QngJArxyahIJNOVk58p4KTNvs4FIxI9O7eornU8xA==
+X-Received: by 2002:a17:902:bf48:b0:12d:8409:48ca with SMTP id u8-20020a170902bf4800b0012d840948camr680721pls.9.1628765749254;
+        Thu, 12 Aug 2021 03:55:49 -0700 (PDT)
+Received: from uver-laptop ([2405:201:6006:a148:da50:248a:1651:e22d])
+        by smtp.gmail.com with ESMTPSA id j5sm3219757pgg.41.2021.08.12.03.55.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 03:54:27 -0700 (PDT)
-From:   Barry Song <21cnbao@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-        maz@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, linuxarm@huawei.com,
-        robin.murphy@arm.com, will@kernel.org, lorenzo.pieralisi@arm.com,
-        dwmw@amazon.co.uk, Barry Song <song.bao.hua@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 2/2] platform-msi: Add ABI to show msi_irqs of platform devices
-Date:   Thu, 12 Aug 2021 22:53:41 +1200
-Message-Id: <20210812105341.51657-3-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210812105341.51657-1-21cnbao@gmail.com>
-References: <20210812105341.51657-1-21cnbao@gmail.com>
+        Thu, 12 Aug 2021 03:55:48 -0700 (PDT)
+Date:   Thu, 12 Aug 2021 16:25:37 +0530
+From:   Utkarsh Verma <utkarshverma294@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] PCI: Remove duplicate #ifdef in pci_try_set_mwi()
+Message-ID: <20210812105537.GA9541@uver-laptop>
+References: <20210811234601.341947-1-utkarshverma294@gmail.com>
+ <YRTEcd0S2/2XlL7p@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YRTEcd0S2/2XlL7p@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Barry Song <song.bao.hua@hisilicon.com>
+On Thu, Aug 12, 2021 at 08:49:21AM +0200, Greg KH wrote:
+> On Thu, Aug 12, 2021 at 05:16:01AM +0530, Utkarsh Verma wrote:
+> > Remove the unnecessary #ifdef PCI_DISABLE_MWI, because pci_set_mwi()
+> > performs the same check.
+> > 
+> > Signed-off-by: Utkarsh Verma <utkarshverma294@gmail.com>
+> > ---
+> >  drivers/pci/pci.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index aacf575c15cf..7d4c7c294ef2 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -4456,11 +4456,7 @@ EXPORT_SYMBOL(pcim_set_mwi);
+> >   */
+> >  int pci_try_set_mwi(struct pci_dev *dev)
+> >  {
+> > -#ifdef PCI_DISABLE_MWI
+> > -	return 0;
+> > -#else
+> >  	return pci_set_mwi(dev);
+> > -#endif
+> >  }
+> >  EXPORT_SYMBOL(pci_try_set_mwi);
+> 
+> If this is the case, why do we even need pci_try_set_mwi()?  Why not
+> just replace it with calls to pci_set_mwi() and then delete this one?
 
-Just like pci devices have msi_irqs which can be used by userspace irq affinity
-tools or applications to bind irqs, platform devices also widely support msi
-irqs. For platform devices, for example ARM SMMU, userspaces also care about
-its msi irqs as applications can know the mapping between devices and irqs
-and then make smarter decision on handling irq affinity. For example, for
-SVA mode, it is better to pin io page fault to the numa node applications
-are running on. Otherwise, io page fault will get a remote page from the
-node iopf happens.
-With this patch, a system with multiple arm SMMUs in multiple different numa
-node can get the mapping between devices and irqs now:
-root@ubuntu:/sys/devices/platform# ls -l arm-smmu-v3.*/msi_irqs/*
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.0.auto/msi_irqs/25
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.0.auto/msi_irqs/26
--r--r--r-- 1 root root 4096 Aug 11 10:28 arm-smmu-v3.1.auto/msi_irqs/27
--r--r--r-- 1 root root 4096 Aug 11 10:28 arm-smmu-v3.1.auto/msi_irqs/28
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.2.auto/msi_irqs/29
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.2.auto/msi_irqs/30
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.3.auto/msi_irqs/31
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.3.auto/msi_irqs/32
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.4.auto/msi_irqs/33
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.4.auto/msi_irqs/34
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.5.auto/msi_irqs/35
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.5.auto/msi_irqs/36
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.6.auto/msi_irqs/37
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.6.auto/msi_irqs/38
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.7.auto/msi_irqs/39
--r--r--r-- 1 root root 4096 Aug 11 10:29 arm-smmu-v3.7.auto/msi_irqs/40
+The only difference between the pci_set_mwi() and pci_try_set_mwi() is
+that, pci_set_mwi() is declared as __must_check which forces return
+value checking.
 
-Applications can use the mapping and the numa node information to pin
-irqs by leveraging the numa information which has also been exported:
-root@ubuntu:/sys/devices/platform# cat arm-smmu-v3.0.auto/numa_node
-0
-root@ubuntu:/sys/devices/platform# cat arm-smmu-v3.4.auto/numa_node
-2
+The reason why pci_try_set_mwi() was introduced in the first place was
+because it gives the drivers both options:
+(1) most of the drivers don't require checking the return value, and
+they can safely ignore the errors values returned if any, so
+pci_try_set_mwi() can be used.
+(2) But for some of the drivers it is nice to check the return values,
+and generate proper warnings for error handling. By using the
+pci_set_mwi(), we force the driver for proper error checking.
 
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- Documentation/ABI/testing/sysfs-bus-platform | 14 ++++++++++++++
- drivers/base/platform-msi.c                  | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+So both the functions are similar but have different purposes, and it
+seems a more appropriate design.
+The whole argument about adding this function:
+https://lore.kernel.org/linux-ide/20070404213704.224128ec.randy.dunlap@oracle.com/
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-platform b/Documentation/ABI/testing/sysfs-bus-platform
-index 194ca70..ff30728 100644
---- a/Documentation/ABI/testing/sysfs-bus-platform
-+++ b/Documentation/ABI/testing/sysfs-bus-platform
-@@ -28,3 +28,17 @@ Description:
- 		value comes from an ACPI _PXM method or a similar firmware
- 		source. Initial users for this file would be devices like
- 		arm smmu which are populated by arm64 acpi_iort.
-+
-+What:		/sys/bus/platform/devices/.../msi_irqs/
-+Date:		August 2021
-+Contact:	Barry Song <song.bao.hua@hisilicon.com>
-+Description:
-+		The /sys/devices/.../msi_irqs directory contains a variable set
-+		of files, with each file being named after a corresponding msi
-+		irq vector allocated to that device.
-+
-+What:		/sys/bus/platform/devices/.../msi_irqs/<N>
-+Date:		August 2021
-+Contact:	Barry Song <song.bao.hua@hisilicon.com>
-+Description:
-+		This attribute will show "msi" if <N> is a valid msi irq
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index 0b72b13..a3bf910 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -23,6 +23,7 @@
- struct platform_msi_priv_data {
- 	struct device		*dev;
- 	void 			*host_data;
-+	const struct attribute_group    **msi_irq_groups;
- 	msi_alloc_info_t	arg;
- 	irq_write_msi_msg_t	write_msg;
- 	int			devid;
-@@ -272,8 +273,16 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
- 	if (err)
- 		goto out_free_desc;
- 
-+	priv_data->msi_irq_groups = msi_populate_sysfs(dev);
-+	if (IS_ERR(priv_data->msi_irq_groups)) {
-+		err = PTR_ERR(priv_data->msi_irq_groups);
-+		goto out_free_irqs;
-+	}
-+
- 	return 0;
- 
-+out_free_irqs:
-+	msi_domain_free_irqs(dev->msi_domain, dev);
- out_free_desc:
- 	platform_msi_free_descs(dev, 0, nvec);
- out_free_priv_data:
-@@ -293,6 +302,7 @@ void platform_msi_domain_free_irqs(struct device *dev)
- 		struct msi_desc *desc;
- 
- 		desc = first_msi_entry(dev);
-+		msi_destroy_sysfs(dev, desc->platform.msi_priv_data->msi_irq_groups);
- 		platform_msi_free_priv_data(desc->platform.msi_priv_data);
- 	}
- 
--- 
-1.8.3.1
+Also earlier there was a patch that removed the pci_try_set_mwi() and
+__must_check attribute from pci_set_mwi(), just like you wanted,
+https://lore.kernel.org/linux-pci/4d535d35-6c8c-2bd8-812b-2b53194ce0ec@gmail.com/
+But it was not accepted because Bjorn wasn't convinced and he also gave
+the above argument and that we should not break something in the name of
+cleaning it up.
 
+But it is safe to only remove the duplicate #ifdef block inside the
+pci_try_set_mwi().
+
+
+Best Regards,
+Utkarsh Verma
