@@ -2,179 +2,332 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5A23EA667
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 16:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AB3F3EA6B5
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 16:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237259AbhHLOTM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 10:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231311AbhHLOTM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 10:19:12 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E415C0617AD
-        for <linux-pci@vger.kernel.org>; Thu, 12 Aug 2021 07:18:47 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id lw7-20020a17090b1807b029017881cc80b7so15437452pjb.3
-        for <linux-pci@vger.kernel.org>; Thu, 12 Aug 2021 07:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BYIEVqAwtUQet5A0SgR3uxf9S0vFKIdFocOOg6UEHvc=;
-        b=sZjJmMgs/qL5hh52BRvV7+VDIbNIvxy75sTex2lp1gz7Dy6zjw7u/ZJcYjFeGEqr3j
-         EO4clORky0VgE26w1ua1vEagYaQB7OuahuAGnDfN+yPsrPf2iDnrsflisqTEeSk+ZiTO
-         qgq8LmRLs2MtXn4KWqKmwgZ5SL8bUytKCv9KE6vN+TweSx4G7QCuiF6sXUX3zt3FzwPy
-         bK2AXNWvgfZ01jLRXUD11ONVMnRNsCskQSnn5yphCxvjfbOn+THOmF8KraziQohUn5hQ
-         1AAJaB0DNuqbI0Fdj5vwbGf4PkMktVAPr57SPkP9b6V64uFMqzdyCMJ4RKNhe/MF7fz5
-         dlnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BYIEVqAwtUQet5A0SgR3uxf9S0vFKIdFocOOg6UEHvc=;
-        b=jMlaOlLoy3qfVXPOHKUkIHyrrI6wmbtvgHCx0ZpPqdPnsFsk2NHhBTucOf33F25EAf
-         6gyDQDHDnaKM7uU+PgZjxDE0ABVtSk21jOXsYNzJfYskFqJxklVgRUfmUoBpK+3jXh1V
-         2arxf6/nPRdddfQLw6OanrMozdvb2m5KLXc+Pwxg4kdzlml5P/80InQthlNncMKqcExb
-         nGc0UtpS8OsNVv6OzqEM8r+/b/s+rt5S2HY/bahMuSPttOUiqql/Mp54eMJg+0wrEhOk
-         o+v3zkbmH7J6zftQP5EdLbzWXrfo0HBMIoHgwq6sq1m+PYskt6FX8gDfm54UGnBdU1nf
-         TV8Q==
-X-Gm-Message-State: AOAM530nuhkKyTcFguiDEqMVKoXBZPdTg/VwI1GoWn1D2HSBrfr70fgm
-        QI7yDj9Ar5ciBEgfZGzH0cDY
-X-Google-Smtp-Source: ABdhPJw6FoC6XUQlLIUFbTLhHX7pIBFRmHDm5S+hGtJ/FJbTjlF73jJSPu5m90BuVOp54j24GS1efA==
-X-Received: by 2002:a63:88c7:: with SMTP id l190mr4036320pgd.438.1628777926652;
-        Thu, 12 Aug 2021 07:18:46 -0700 (PDT)
-Received: from workstation ([120.138.12.52])
-        by smtp.gmail.com with ESMTPSA id b9sm2836554pfo.175.2021.08.12.07.18.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Aug 2021 07:18:46 -0700 (PDT)
-Date:   Thu, 12 Aug 2021 19:48:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, smohanad@codeaurora.org,
-        bjorn.andersson@linaro.org, sallenki@codeaurora.org,
-        skananth@codeaurora.org, vpernami@codeaurora.org,
-        vbadigan@codeaurora.org
-Subject: Re: [PATCH v7 0/3] Add Qualcomm PCIe Endpoint driver support
-Message-ID: <20210812141841.GD7897@workstation>
-References: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org>
- <2a0b7f85-dcd7-fc87-8e02-37725f66b9cf@ti.com>
+        id S236638AbhHLOnp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 10:43:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47366 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233079AbhHLOno (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Aug 2021 10:43:44 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="237399845"
+X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
+   d="scan'208";a="237399845"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 07:43:19 -0700
+X-IronPort-AV: E=Sophos;i="5.84,316,1620716400"; 
+   d="scan'208";a="517479659"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 07:43:15 -0700
+Date:   Thu, 12 Aug 2021 15:43:09 +0100
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Fiona Trahe <fiona.trahe@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        qat-linux@intel.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        linux-pci@vger.kernel.org, Jack Xu <jack.xu@intel.com>,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 6/8] crypto: qat - simplify adf_enable_aer()
+Message-ID: <YRUzfQCLOtRmXyCr@silpixa00400314>
+References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+ <20210811080637.2596434-7-u.kleine-koenig@pengutronix.de>
+ <YRO69xL+F/6Paj+I@silpixa00400314>
+ <20210811213405.avihazo33irdjxic@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2a0b7f85-dcd7-fc87-8e02-37725f66b9cf@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210811213405.avihazo33irdjxic@pengutronix.de>
+Organization: Intel Research and Development Ireland Ltd - Co. Reg. #308263 -
+ Collinstown Industrial Park, Leixlip, County Kildare - Ireland
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+On Wed, Aug 11, 2021 at 11:34:05PM +0200, Uwe Kleine-König wrote:
+> On Wed, Aug 11, 2021 at 12:56:39PM +0100, Giovanni Cabiddu wrote:
+> > On Wed, Aug 11, 2021 at 10:06:35AM +0200, Uwe Kleine-König wrote:
+> > > A struct pci_driver is supposed to be constant and assigning .err_handler
+> > > once per bound device isn't really sensible. Also as the function returns
+> > > zero unconditionally let it return no value instead and simplify the
+> > > callers accordingly.
+> > > 
+> > > As a side effect this removes one user of struct pci_dev::driver. This
+> > > member is planned to be removed.
+> > > 
+> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Thanks Uwe for the rework.
+> > 
+> > > ---
+> > >  drivers/crypto/qat/qat_4xxx/adf_drv.c          |  7 ++-----
+> > >  drivers/crypto/qat/qat_c3xxx/adf_drv.c         |  7 ++-----
+> > >  drivers/crypto/qat/qat_c62x/adf_drv.c          |  7 ++-----
+> > >  drivers/crypto/qat/qat_common/adf_aer.c        | 10 +++-------
+> > >  drivers/crypto/qat/qat_common/adf_common_drv.h |  2 +-
+> > >  drivers/crypto/qat/qat_dh895xcc/adf_drv.c      |  7 ++-----
+> > >  6 files changed, 12 insertions(+), 28 deletions(-)
+> > > 
+> > > diff --git a/drivers/crypto/qat/qat_4xxx/adf_drv.c b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > > index a8805c815d16..1620281a9ed8 100644
+> > > --- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > > +++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > > @@ -253,11 +253,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+> > >  
+> > >  	pci_set_master(pdev);
+> > >  
+> > > -	if (adf_enable_aer(accel_dev)) {
+> > > -		dev_err(&pdev->dev, "Failed to enable aer.\n");
+> > > -		ret = -EFAULT;
+> > > -		goto out_err;
+> > > -	}
+> > > +	adf_enable_aer(accel_dev);
+> > After seeing your patch, I'm thinking to get rid of both adf_enable_aer()
+> > (and adf_disable_aer()) and call directly pci_enable_pcie_error_reporting()
+> > here.
+I'm going to rework this in a subsequent patchset.
 
-On Tue, Aug 03, 2021 at 10:57:00AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Manivannan,
+> > There is another patch around this area that I reworked (but not sent
+> > yet - https://patchwork.kernel.org/project/linux-crypto/patch/a19132d07a65dbef5e818f84b2bc971f26cc3805.1625983602.git.christophe.jaillet@wanadoo.fr/).
+> > Would you mind if your patch goes through Herbert's tree?
+> > If you want I can also send a reworked version.
 > 
-> On 22/07/21 5:42 pm, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This series adds support for Qualcomm PCIe Endpoint controller found
-> > in platforms like SDX55. The Endpoint controller is based on the designware
-> > core with additional Qualcomm wrappers around the core.
-> > 
-> > The driver is added separately unlike other Designware based drivers that
-> > combine RC and EP in a single driver. This is done to avoid complexity and
-> > to maintain this driver autonomously.
-> > 
-> > The driver has been validated with an out of tree MHI function driver on
-> > SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
+> As patch #8 of my series depends on this one I think the best option is
+> to create a tag and pull that into both, the pci and the crypto tree?!
+Probably there is no need for that.
+Your patch applies cleanly on top of this series:
+https://patchwork.kernel.org/project/linux-crypto/list/?series=530407
+
 > 
-> Can you also validate it with in-kernel pci-endpoint-test?
+> @Bjorn: Would you agree to this procedure? There has to be a v4, if it
+> helps I can provide a signed tag for pulling?! Just tell me what would
+> be helpful here.
 > 
-
-The Qcom EP driver or the DWC IP is designed to work only for MHI bus
-that has the fixed BAR address and register layout etc...
-
-So we can't use the pci-endpoint-test driver to validate the EP driver.
-But I do have an out of tree MHI EPF driver and validated using that.
-
-> It would also help if you can test your patches after
-> https://lore.kernel.org/r/20210803050310.27122-1-kishon@ti.com
+> > >  	if (pci_save_state(pdev)) {
+> > >  		dev_err(&pdev->dev, "Failed to save pci state.\n");
+> > > @@ -310,6 +306,7 @@ static struct pci_driver adf_driver = {
+> > >  	.probe = adf_probe,
+> > >  	.remove = adf_remove,
+> > >  	.sriov_configure = adf_sriov_configure,
+> > > +	.err_handler = adf_err_handler,
+> > Compilation fails here:
+> >     drivers/crypto/qat/qat_4xxx/adf_drv.c:309:24: error: ‘adf_err_handler’ undeclared here (not in a function)
+> >       309 |         .err_handler = adf_err_handler,
+> >           |                        ^~~~~~~~~~~~~~~
+> > 
+> > Were you thinking to change it this way?
+> > 
+> > 	--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
+> > 	+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+> > 	@@ -95,8 +95,11 @@ void adf_ae_fw_release(struct adf_accel_dev *accel_dev);
+> > 	 int adf_ae_start(struct adf_accel_dev *accel_dev);
+> > 	 int adf_ae_stop(struct adf_accel_dev *accel_dev);
+> > 
+> > 	+extern const struct pci_error_handlers adf_err_handler;
+> > 
+> > 	--- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > 	+++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+> > 	@@ -306,7 +306,7 @@ static struct pci_driver adf_driver = {
+> > 		.probe = adf_probe,
+> > 		.remove = adf_remove,
+> > 		.sriov_configure = adf_sriov_configure,
+> > 	-       .err_handler = adf_err_handler,
+> > 	+       .err_handler = &adf_err_handler,
+> > 	 };
 > 
-
-I added below patches (v7) on top and verified that the EP driver works fine.
-
-PCI: endpoint: Add virtual function number in pci_epc ops
-PCI: endpoint: Add support to link a physical function to a virtual function
-PCI: endpoint: Add support to add virtual function in endpoint core
-
-Thanks,
-Mani
-
-> Not expecting any dependencies but just to cross check.
+> Yeah, the other three drivers need an adaption, too. I will send a v4 in
+> the next few days. The current state is available at
 > 
-> Thanks
-> Kishon
-> 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Changes in v7:
-> > 
-> > * Used existing naming convention for callback functions
-> > * Used active low state for PERST# gpio
-> > 
-> > Changes in v6:
-> > 
-> > * Removed status property in DT and added reviewed tag from Rob
-> > * Switched to _relaxed variants as suggested by Rob
-> > 
-> > Changes in v5:
-> > 
-> > * Removed the DBI register settings that are not needed
-> > * Used the standard definitions available in pci_regs.h
-> > * Added defines for all the register fields
-> > * Removed the left over code from previous iteration
-> > 
-> > Changes in v4:
-> > 
-> > * Removed the active_config settings needed for IPA integration
-> > * Switched to writel for couple of relaxed versions that sneaked in
-> > 
-> > Changes in v3:
-> > 
-> > * Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
-> > * Noticeable changes are:
-> >   - Got rid of _relaxed calls and used readl/writel
-> >   - Got rid of separate TCSR memory region and used syscon for getting the
-> >     register offsets for Perst registers
-> >   - Changed the wake gpio handling logic
-> >   - Added remove() callback and removed "suppress_bind_attrs"
-> >   - stop_link() callback now just disables PERST IRQ
-> > * Added MMIO region and doorbell interrupt to the binding
-> > * Added logic to write MMIO physicall address to MHI base address as it is
-> >   for the function driver to work
-> > 
-> > Changes in v2:
-> > 
-> > * Addressed the comments from Rob on bindings patch
-> > * Modified the driver as per binding change
-> > * Fixed the warnings reported by Kbuild bot
-> > * Removed the PERST# "enable_irq" call from probe()
-> > 
-> > Manivannan Sadhasivam (3):
-> >   dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
-> >     controller
-> >   PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
-> >   MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
-> > 
-> >  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 158 ++++
-> >  MAINTAINERS                                   |  10 +-
-> >  drivers/pci/controller/dwc/Kconfig            |  10 +
-> >  drivers/pci/controller/dwc/Makefile           |   1 +
-> >  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 710 ++++++++++++++++++
-> >  5 files changed, 888 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > 
+> 	https://git.pengutronix.de/git/ukl/linux pci-dedup
+I fixed that and tested on c62x. Here is an updated patch:
+
+----8<----
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Date: Wed, 11 Aug 2021 10:06:35 +0200
+Subject: [PATCH] crypto: qat - simplify adf_enable_aer()
+
+A struct pci_driver is supposed to be constant and assigning .err_handler
+once per bound device isn't really sensible. Also as the function returns
+zero unconditionally let it return no value instead and simplify the
+callers accordingly.
+
+As a side effect this removes one user of struct pci_dev::driver. This
+member is planned to be removed.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Co-developed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+---
+ drivers/crypto/qat/qat_4xxx/adf_drv.c          |  7 ++-----
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c         |  7 ++-----
+ drivers/crypto/qat/qat_c62x/adf_drv.c          |  7 ++-----
+ drivers/crypto/qat/qat_common/adf_aer.c        | 10 +++-------
+ drivers/crypto/qat/qat_common/adf_common_drv.h |  5 ++++-
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c      |  7 ++-----
+ 6 files changed, 15 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/crypto/qat/qat_4xxx/adf_drv.c b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+index a8805c815d16..e863f7ac9c44 100644
+--- a/drivers/crypto/qat/qat_4xxx/adf_drv.c
++++ b/drivers/crypto/qat/qat_4xxx/adf_drv.c
+@@ -253,11 +253,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	pci_set_master(pdev);
+ 
+-	if (adf_enable_aer(accel_dev)) {
+-		dev_err(&pdev->dev, "Failed to enable aer.\n");
+-		ret = -EFAULT;
+-		goto out_err;
+-	}
++	adf_enable_aer(accel_dev);
+ 
+ 	if (pci_save_state(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to save pci state.\n");
+@@ -310,6 +306,7 @@ static struct pci_driver adf_driver = {
+ 	.probe = adf_probe,
+ 	.remove = adf_remove,
+ 	.sriov_configure = adf_sriov_configure,
++	.err_handler = &adf_err_handler,
+ };
+ 
+ module_pci_driver(adf_driver);
+diff --git a/drivers/crypto/qat/qat_c3xxx/adf_drv.c b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
+index 7fb3343ae8b0..c62330357e63 100644
+--- a/drivers/crypto/qat/qat_c3xxx/adf_drv.c
++++ b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
+@@ -33,6 +33,7 @@ static struct pci_driver adf_driver = {
+ 	.probe = adf_probe,
+ 	.remove = adf_remove,
+ 	.sriov_configure = adf_sriov_configure,
++	.err_handler = &adf_err_handler,
+ };
+ 
+ static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
+@@ -199,11 +200,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	}
+ 	pci_set_master(pdev);
+ 
+-	if (adf_enable_aer(accel_dev)) {
+-		dev_err(&pdev->dev, "Failed to enable aer\n");
+-		ret = -EFAULT;
+-		goto out_err_free_reg;
+-	}
++	adf_enable_aer(accel_dev);
+ 
+ 	if (pci_save_state(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to save pci state\n");
+diff --git a/drivers/crypto/qat/qat_c62x/adf_drv.c b/drivers/crypto/qat/qat_c62x/adf_drv.c
+index 1f5de442e1e6..ad9f18a9eb1d 100644
+--- a/drivers/crypto/qat/qat_c62x/adf_drv.c
++++ b/drivers/crypto/qat/qat_c62x/adf_drv.c
+@@ -33,6 +33,7 @@ static struct pci_driver adf_driver = {
+ 	.probe = adf_probe,
+ 	.remove = adf_remove,
+ 	.sriov_configure = adf_sriov_configure,
++	.err_handler = &adf_err_handler,
+ };
+ 
+ static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
+@@ -199,11 +200,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	}
+ 	pci_set_master(pdev);
+ 
+-	if (adf_enable_aer(accel_dev)) {
+-		dev_err(&pdev->dev, "Failed to enable aer\n");
+-		ret = -EFAULT;
+-		goto out_err_free_reg;
+-	}
++	adf_enable_aer(accel_dev);
+ 
+ 	if (pci_save_state(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to save pci state\n");
+diff --git a/drivers/crypto/qat/qat_common/adf_aer.c b/drivers/crypto/qat/qat_common/adf_aer.c
+index d2ae293d0df6..9284d09e3af8 100644
+--- a/drivers/crypto/qat/qat_common/adf_aer.c
++++ b/drivers/crypto/qat/qat_common/adf_aer.c
+@@ -166,11 +166,12 @@ static void adf_resume(struct pci_dev *pdev)
+ 	dev_info(&pdev->dev, "Device is up and running\n");
+ }
+ 
+-static const struct pci_error_handlers adf_err_handler = {
++const struct pci_error_handlers adf_err_handler = {
+ 	.error_detected = adf_error_detected,
+ 	.slot_reset = adf_slot_reset,
+ 	.resume = adf_resume,
+ };
++EXPORT_SYMBOL_GPL(adf_err_handler);
+ 
+ /**
+  * adf_enable_aer() - Enable Advance Error Reporting for acceleration device
+@@ -179,17 +180,12 @@ static const struct pci_error_handlers adf_err_handler = {
+  * Function enables PCI Advance Error Reporting for the
+  * QAT acceleration device accel_dev.
+  * To be used by QAT device specific drivers.
+- *
+- * Return: 0 on success, error code otherwise.
+  */
+-int adf_enable_aer(struct adf_accel_dev *accel_dev)
++void adf_enable_aer(struct adf_accel_dev *accel_dev)
+ {
+ 	struct pci_dev *pdev = accel_to_pci_dev(accel_dev);
+-	struct pci_driver *pdrv = pdev->driver;
+ 
+-	pdrv->err_handler = &adf_err_handler;
+ 	pci_enable_pcie_error_reporting(pdev);
+-	return 0;
+ }
+ EXPORT_SYMBOL_GPL(adf_enable_aer);
+ 
+diff --git a/drivers/crypto/qat/qat_common/adf_common_drv.h b/drivers/crypto/qat/qat_common/adf_common_drv.h
+index c61476553728..3d7fb9715cf8 100644
+--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
++++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+@@ -95,8 +95,11 @@ void adf_ae_fw_release(struct adf_accel_dev *accel_dev);
+ int adf_ae_start(struct adf_accel_dev *accel_dev);
+ int adf_ae_stop(struct adf_accel_dev *accel_dev);
+ 
+-int adf_enable_aer(struct adf_accel_dev *accel_dev);
++extern const struct pci_error_handlers adf_err_handler;
++
++void adf_enable_aer(struct adf_accel_dev *accel_dev);
+ void adf_disable_aer(struct adf_accel_dev *accel_dev);
++
+ void adf_reset_sbr(struct adf_accel_dev *accel_dev);
+ void adf_reset_flr(struct adf_accel_dev *accel_dev);
+ void adf_dev_restore(struct adf_accel_dev *accel_dev);
+diff --git a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
+index a9ec4357144c..9e9d495271b5 100644
+--- a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
++++ b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
+@@ -33,6 +33,7 @@ static struct pci_driver adf_driver = {
+ 	.probe = adf_probe,
+ 	.remove = adf_remove,
+ 	.sriov_configure = adf_sriov_configure,
++	.err_handler = &adf_err_handler,
+ };
+ 
+ static void adf_cleanup_pci_dev(struct adf_accel_dev *accel_dev)
+@@ -199,11 +200,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	}
+ 	pci_set_master(pdev);
+ 
+-	if (adf_enable_aer(accel_dev)) {
+-		dev_err(&pdev->dev, "Failed to enable aer\n");
+-		ret = -EFAULT;
+-		goto out_err_free_reg;
+-	}
++	adf_enable_aer(accel_dev);
+ 
+ 	if (pci_save_state(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to save pci state\n");
+-- 
+2.31.1
+
+
