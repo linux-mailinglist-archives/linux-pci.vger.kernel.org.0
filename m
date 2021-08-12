@@ -2,53 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE6D3E9EC8
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 08:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DF853E9ECF
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 08:49:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbhHLGsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 02:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234322AbhHLGsV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 02:48:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C6DC061765
-        for <linux-pci@vger.kernel.org>; Wed, 11 Aug 2021 23:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ov4Rt0HX+mmU4192K4Y5nFCPnpfgMeQNRVtuAWv3mBw=; b=cmxWdlSn0ohPE5fbiKEn4Rl6K6
-        o+nfbEm0J0BgFYWQQ1R58EF4OuK2MsQp6HNkEnWqCH8c+KC+0C/P0GxjzXHX8PjLwf44D7eem64kw
-        Qnpi5bmitAOSz3M+JJKpCh/ipWZe5tkzsBdz/3pT07SyS1ovMj10hsPNKVYoP+3X9ewODHtZLricx
-        qOjXlKu7+STPUX2FCzN3YGCcHEIZLqAFDALnU0Zmmos0cmUtCDx8tXzUSMxxEtt323Vwzh32XMvlF
-        FrDg7jNTGRz2Ud2oVoNdGvtH3VLiWcaxTLyodPPaEPVDffwuyZGN4moEdZdrioHm43NVJ4qSMUJdB
-        PWFhAy2Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mE4UB-00EFk0-8V; Thu, 12 Aug 2021 06:46:50 +0000
-Date:   Thu, 12 Aug 2021 07:46:39 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 2/8] PCI: Drop useless check from pci_device_probe()
-Message-ID: <YRTDz4V82WVnO5tF@infradead.org>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
- <20210811080637.2596434-3-u.kleine-koenig@pengutronix.de>
+        id S234455AbhHLGtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 02:49:50 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45947 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233567AbhHLGtu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 02:49:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id DF8255C00EB;
+        Thu, 12 Aug 2021 02:49:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 12 Aug 2021 02:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=7tumxtnlUFmqcDNOcJ47r7kQUco
+        YA0a+Ye8p8V4K8f4=; b=g/5E8jn8FWxiDYkpiYRmkneKF9SN4WjUCz7ct7j0OQT
+        sEXB3cQ6CqMTn75GHh+X0oG5r7A9gYK2/dqC1rn0Nhy5ayMild9xn1wXIBsLgd8y
+        anuNOwQnpynWmuUy8c+Uo1GcsIEdvUhAVPM8Mx+VMUkqNaodprxX3PAUkgJsEz3a
+        mz9+b36kumggPgFKxL75s7i7FMlIQ2YFfBtcs+a8hQa0jWiiloqdMhQ1hRhfbRAs
+        lZUao9xbGY56Qwk/h6kpU7YBR+uF2j5K9s14BPS5yJ45VK2bqHUq3AMGzpVj4bDA
+        uj/SvD8hQ9D0XZyNgcoBugEoec9QdZWkXwaOsAaAOQA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7tumxt
+        nlUFmqcDNOcJ47r7kQUcoYA0a+Ye8p8V4K8f4=; b=nRfbpaXW0mrcWyOUxOA3Dp
+        cLQn9yUvRtuuhFejrpsoWoP8QCjyaEepM0FjKqIEprRgB5U9V942gJsPhbA5OnPt
+        VnvI5pq3ubX+9mg1mJUX/yA8kI1Nzw75+hFLKjMwYstjiwgr9SnMYyfpB35O5TJ2
+        U13ZSiqPajZGRXJhsp7h4rFjz9tT6Tt7eaDYVNSNO8cNjGsXYTD9c9+psFnApu/p
+        ehMKEsTBOZMVnIKYzLCAjgafiJTntwNyJOE6dGrgOUkU1saSU/AUPlFf2NrAbDPg
+        7JRmHqoSzVRyZ0iaY+Ys9/Suhq2wDCJK36K0sJuKTve8kF2BgmKkZjMXOZlQbSXg
+        ==
+X-ME-Sender: <xms:dMQUYQphzqRkZ2HiEbkss8afgKmhm_y0dfSSShNW0FupZyOq83qoUg>
+    <xme:dMQUYWppPADCfRGeS6-EHieeq9pKD4rpBBaDwM_DMEeTfMpqHKPDq3gR7C8AnLDHe
+    gWn37lFWx2YVw>
+X-ME-Received: <xmr:dMQUYVN2hnHJSi9WE7WZV8RFmB1-M34hLiBrtyhXBo0o3WY_U02oM4gANZEGTIHTGfmxmVLUzCEZDxmnHvPNfJC2uAM56Gst>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedvgddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
+    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhh
+    drtghomh
+X-ME-Proxy: <xmx:dMQUYX5f9ndG9qfz2Dl1Wm0Q6kbMiSyCMYapAkijLh-DuqIhQ2-B7g>
+    <xmx:dMQUYf6gHfaqoEV9-qyF49xF2elM8TvK0Ilom7aNjgZ5eAyk8_dbjg>
+    <xmx:dMQUYXhcUJjcEuM-RdCfZ_oiCzbaGRstggucEvkekK88_PWXBpMtHg>
+    <xmx:dMQUYZuZW9V_OZNExTQ16o9gYwhPkcat1JpG_lf29AM9NMK8WEon5A>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Aug 2021 02:49:24 -0400 (EDT)
+Date:   Thu, 12 Aug 2021 08:49:21 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Utkarsh Verma <utkarshverma294@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Remove duplicate #ifdef in pci_try_set_mwi()
+Message-ID: <YRTEcd0S2/2XlL7p@kroah.com>
+References: <20210811234601.341947-1-utkarshverma294@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210811080637.2596434-3-u.kleine-koenig@pengutronix.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210811234601.341947-1-utkarshverma294@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 10:06:31AM +0200, Uwe Kleine-K??nig wrote:
-> When the device core calls the probe callback for a device the device is
-> never bound and so !pci_dev->driver is always true.
+On Thu, Aug 12, 2021 at 05:16:01AM +0530, Utkarsh Verma wrote:
+> Remove the unnecessary #ifdef PCI_DISABLE_MWI, because pci_set_mwi()
+> performs the same check.
+> 
+> Signed-off-by: Utkarsh Verma <utkarshverma294@gmail.com>
+> ---
+>  drivers/pci/pci.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index aacf575c15cf..7d4c7c294ef2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4456,11 +4456,7 @@ EXPORT_SYMBOL(pcim_set_mwi);
+>   */
+>  int pci_try_set_mwi(struct pci_dev *dev)
+>  {
+> -#ifdef PCI_DISABLE_MWI
+> -	return 0;
+> -#else
+>  	return pci_set_mwi(dev);
+> -#endif
+>  }
+>  EXPORT_SYMBOL(pci_try_set_mwi);
 
-Looks good,
+If this is the case, why do we even need pci_try_set_mwi()?  Why not
+just replace it with calls to pci_set_mwi() and then delete this one?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+thanks,
+
+greg k-h
