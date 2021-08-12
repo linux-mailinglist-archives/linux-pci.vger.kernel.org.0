@@ -2,93 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E921E3EAB6C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 22:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A713EABC1
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 22:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236112AbhHLT7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 15:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48000 "EHLO mail.kernel.org"
+        id S233613AbhHLU1A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 16:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230171AbhHLT7w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Aug 2021 15:59:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A137E60FBF;
-        Thu, 12 Aug 2021 19:59:26 +0000 (UTC)
+        id S229677AbhHLU07 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Aug 2021 16:26:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E738460C3F;
+        Thu, 12 Aug 2021 20:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628798367;
-        bh=M9MyqYO47NUoI+rSK25M9cleAgWnxVJ7RNwXJaCJ784=;
+        s=k20201202; t=1628799994;
+        bh=gCEp159FxcYRrujxKawE9sngnP7fwMT//Cws8omxxXk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S0sstHONAg47gnc8TuM9hdMaI4FuTs1ssboJ4GN5T8mHA68t/zt66QenDgukc3poP
-         7Cu2sGQ0rNJlPfWQeS9AvsoiYxHAnYfvXf6xAkh+ij3s4n3mSRtGAyLy6LWSK+LIvj
-         ktTJrQoJn0UBhc2u06NNNSfdeLzytl8dZ5MQFA65emz3+V5PnrdvcfMfeOG4U+Od10
-         5Hrz7WavVye8gbcn+lqvXJJNzaHVPqZZwhphJGmUb6s5iTMrRMocF11fOQsZJKZx3U
-         W1iOsn8cHPY3pqIJkzpTB0yH8hUthUs7TGrnbLq9ylbBqXAXb13rQ+VtzZSlmtoShY
-         vnreubjLEnGtA==
-Date:   Thu, 12 Aug 2021 14:59:25 -0500
+        b=Rlk/u6kQYLNpFKp8UJoMnJ47Gbu/5kTeNIql9WNhUq8z14w6/CePlVBh2xFgaNzNy
+         JEeHenkeXihHz8fTtvPcrBLgUtLmLnrUuyCSQUFw9s48Tpr0MOA3XGeC7lWhHDpp95
+         GDfiIpF6EtiY5RkNguRglHyxmYgdWLtVr5yVI4xzgV6GAulNFSUPx8vwoi5a8bcBSR
+         k+caNmWAej31OGt5WsodKzUWNs/Kwc50GQkUFhI4t3zmlJ0v+1/imuH4BtOR4qdggN
+         kxT9EF+Z5j4GS9Lc+eDJXAwfqRvlJovKk+UBYtNA/0Kk0TGY6b4alp0jgmV0gbd1TH
+         5E4Boix3cf8Ow==
+Date:   Thu, 12 Aug 2021 15:26:32 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Barry Song <21cnbao@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-        maz@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxarm@huawei.com,
-        robin.murphy@arm.com, will@kernel.org, lorenzo.pieralisi@arm.com,
-        dwmw@amazon.co.uk, Barry Song <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v2 0/2] msi: extend msi_irqs sysfs entries to platform
- devices
-Message-ID: <20210812195925.GA2503574@bjorn-Precision-5520>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        corbet@lwn.net, alex.williamson@redhat.com,
+        diana.craciun@oss.nxp.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, masahiroy@kernel.org,
+        michal.lkml@markovi.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        mgurtovoy@nvidia.com, maorg@nvidia.com, leonro@nvidia.com
+Subject: Re: [PATCH 09/12] PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to
+ struct pci_device_id
+Message-ID: <20210812202632.GA2504075@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210812105341.51657-1-21cnbao@gmail.com>
+In-Reply-To: <20210812195126.GA4026@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 10:53:39PM +1200, Barry Song wrote:
-> From: Barry Song <song.bao.hua@hisilicon.com>
+On Thu, Aug 12, 2021 at 04:51:26PM -0300, Jason Gunthorpe wrote:
+> On Thu, Aug 12, 2021 at 10:57:07AM -0500, Bjorn Helgaas wrote:
+> > On Thu, Aug 12, 2021 at 10:27:28AM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Aug 11, 2021 at 02:07:37PM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Aug 05, 2021 at 09:23:57PM -0300, Jason Gunthorpe wrote:
+> > 
+> > > > Do the other bus types have a flag analogous to
+> > > > PCI_ID_F_VFIO_DRIVER_OVERRIDE?  If we're doing something similar to
+> > > > other bus types, it'd be nice if the approach were similar.
+> > > 
+> > > They could, this series doesn't attempt it. I expect the approach to
+> > > be similar as driver_override was copied from PCI to other
+> > > busses. When this is completed I hope to take a look at it.
+> > 
+> > I think this would make more sense as two patches:
+> > 
+> >   - Add a "PCI_ID_DRIVER_OVERRIDE" flag.  This is not VFIO-specific,
+> >     since nothing in PCI depends on the VFIO-ness of drivers that use
+> >     the flag.  The only point here is that driver id_table entries
+> >     with this flag only match when driver_override matches the driver.
 > 
-> Just like pci devices have msi_irqs which can be used by userspace irq affinity
-> tools or applications to bind irqs, platform devices also widely support msi
-> irqs.
-> For platform devices, for example ARM SMMU, userspaces also care about its msi
-> irqs as applications can know the mapping between devices and irqs and then
-> make smarter decision on handling irq affinity. For example, for SVA mode,
-> it is better to pin io page fault to the numa node applications are running
-> on. Otherwise, io page fault will get a remote page from the node iopf happens
-> rather than from the node applications are running on.
-> 
-> The first patch extracts the sysfs populate/destory code from PCI to
-> MSI core. The 2nd patch lets platform-msi export msi_irqs entry so that
-> userspace can know the mapping between devices and irqs for platform
-> devices.
-> 
-> -v2:
->   extract common code for msi_irqs sysfs populate/destory from PCI to MSI core,
->   platform_device can directly reuse common code;
-> 
-> -v1:
->   https://lore.kernel.org/lkml/20210811105020.12980-1-song.bao.hua@hisilicon.com/
-> 
-> Barry Song (2):
->   genirq/msi: extract common sysfs populate entries to msi core from pci
->   platform-msi: Add ABI to show msi_irqs of platform devices
-> 
->  Documentation/ABI/testing/sysfs-bus-platform |  14 +++
->  drivers/base/platform-msi.c                  |  10 ++
->  drivers/pci/msi.c                            | 124 ++-----------------------
->  include/linux/msi.h                          |   4 +
->  kernel/irq/msi.c                             | 134 +++++++++++++++++++++++++++
->  5 files changed, 171 insertions(+), 115 deletions(-)
+> This would require using two flags, one to indicate the above to the
+> PCI code and another to indicate the vfio_pci string to
+> file2alias. This doesn't seem justified at this point, IMHO.
 
-I assume the IRQ guys will take care of this.
+I don't think it requires two flags.  do_pci_entry() has:
 
-For the drivers/pci/ part:
+  if (flags & PCI_ID_F_VFIO_DRIVER_OVERRIDE)
+    strcpy(alias, "vfio_pci:");
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I'm just proposing a rename:
 
-But I would update the commit logs to consistently capitalize
-initialisms.  Currently it's a mix of "PCI", "pci", "MSI", "msi",
-"numa", "irq", "io", etc.
+s/PCI_ID_F_VFIO_DRIVER_OVERRIDE/PCI_ID_DRIVER_OVERRIDE/
 
-Also, if you rewrap the 2/2 commit log to fit in 75 columns, you won't
-have a line that becomes 83 columns when "git log" indents it.  Maybe
-also indent quoted things like the "ls" output by 2 spaces and add a
-blank line before so the text doesn't run into them.
+> >   - Update file2alias.c to export the flags and the "vfio_pci:" alias.
+> >     This seems to be the only place where VFIO comes into play, and
+> >     putting it in a separate patch will make it much smaller and it
+> >     will be clear how it could be extended for other buses.
+> 
+> Well, I don't want to see a flag called PCI_ID_DRIVER_OVERRIDE mapped
+> to the string "vfio_pci", that is just really confusing.
+
+Hahaha, I see, that's fair :)  It confused me for a long time why you
+wanted "VFIO" in the flag name because from the kernel's point of
+view, the flag is not related to any VFIO-ness.  It's only related to
+a special variety of driver_override, and VFIO happens to be one user
+of it.
+
+I think a separate patch that maps the flag to "vfio_pci" would be
+less confusing because without the distractions of the PCI core
+changes, it will be obvious that "vfio_" is a file2alias thing that's
+there for userspace convenience, not for kernel reasons.
+
+Do you envision any other prefixes in the future?  I hope we don't
+have to clutter pci_match_device() with checking multiple flags.
+Maybe the problem is that the modules.alias entry includes "vfio_" --
+maybe we need a more generic prefix with just the idea of an
+"alternate" driver.
+
+Bjorn
