@@ -2,69 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD0DC3EA84F
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 18:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFAC23EA865
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 18:17:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbhHLQNu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 12:13:50 -0400
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:40544 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231384AbhHLQNI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 12:13:08 -0400
-Received: by mail-lj1-f169.google.com with SMTP id m17so7558100ljp.7
-        for <linux-pci@vger.kernel.org>; Thu, 12 Aug 2021 09:12:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v02StyjpgDyu9cObm0nKUgeCS1MQ3K36dNC5PTaA9EM=;
-        b=PtuFOFuzjGDryHpkLuXd01eI+6R1Sxklh3Dhvn00VSwC9R6uv2ImRtrR81/GRKFnIk
-         KSNN1EYRXnO1hdKOvCU2d/ZBXh38gnZqXPucBziKi6XSZCuhVK6rvhFf8tmMQUn+iCET
-         yWid0PLDW7qjG9K+juT8EPxq6CJ/BNLiJUUoY3Ekd9R2N1KM4oeN07IQoHWPbqGfJE+F
-         1mdu7gbcBAeowdXhcWKkXe+FVj7rCvmrM+luNMx+xIFKIJLnTsYfG3vqp8WKRtwFkY7w
-         +ys5UUW09HUV9zwvAWEMoPOp++vAWizrSPbW0RGC2JLH5e3SibjaMUWT5T20D7k+Z2ev
-         jZog==
-X-Gm-Message-State: AOAM530kH3F5ZFfDrIekrWEnB8nX3nPgprpguQR2fYbDf8iZOqAsFNRg
-        niAdh8C1rq4V59Nn14yuygNGyl5eLRjUC1oD
-X-Google-Smtp-Source: ABdhPJzlKW+2OZlRu1g/7fd1P5z6T95x4FaYprINgTIPwtnnIqYKtz6Z3SRpHPdPbNv4Jkw6WqiFUA==
-X-Received: by 2002:a2e:8114:: with SMTP id d20mr3464190ljg.405.1628784718388;
-        Thu, 12 Aug 2021 09:11:58 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id d9sm383191ljq.54.2021.08.12.09.11.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 09:11:57 -0700 (PDT)
-Date:   Thu, 12 Aug 2021 18:11:56 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] x86/pci: Add missing forward declaration for
- pci_numachip_init()
-Message-ID: <20210812161156.GA563797@rocinante>
-References: <20210730211920.GA1099849@bjorn-Precision-5520>
- <87y296hez9.ffs@tglx>
+        id S231881AbhHLQRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 12:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231927AbhHLQRh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Aug 2021 12:17:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D221C6103E;
+        Thu, 12 Aug 2021 16:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628785032;
+        bh=KHLN9Y+lZHfS5VXhYh9H8i5xR0A3R3Os+eX6SjdXIF8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KuSQUq0I7urC7eX7fUlW23ZVg1kVf8+otlrR5aRJzZsmgshtE+Ino4AZ08T3PHI/t
+         W4blq3XVyIJvJEyLTa1fCmBEhpTlcwJbytKWfeSQPCM21F1h+kjnx7mxHvlg6Ublej
+         csmjny/yP8NTy6LEj1C/bsCYbaKX/mBE2N20Ya192yRN8n+xIvEuk9MgQ5DgzeJnh4
+         wCmghCjFOWPrtA8+LEpEZzxtwZW/RYb0d8M57LhtXB05Yju+qr9TYXVEuILSCv/VXJ
+         5t38qDTrkGSflgtX7BJp4EwPzfDZw45GjJn9/128Fxi56jAFyxEkJplzSy/ejig+IS
+         SniEMAtVXmssQ==
+Date:   Thu, 12 Aug 2021 11:17:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Use correct variable for the legacy_mem sysfs
+ object
+Message-ID: <20210812161710.GA2479934@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87y296hez9.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210812132144.791268-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+[+to Greg, please update sysfs_defferred_iomem_get_mapping-5.15]
 
-[...]
-> > What should be done with the pci_numachip_init() declaration in
-> > arch/x86/include/asm/numachip/numachip.h?  It doesn't seem like we
-> > should have *two* declarations.
+On Thu, Aug 12, 2021 at 01:21:44PM +0000, Krzysztof Wilczyński wrote:
+> Two legacy PCI sysfs objects "legacy_io" and "legacy_mem" were updated
+> to use an unified address space in the commit 636b21b50152 ("PCI: Revoke
+> mappings like devmem").  This allows for revocations to be managed from
+> a single place when drivers want to take over and mmap() a /dev/mem
+> range.
 > 
-> Right. Include that file in the C file and be done with it.
+> Following the update, both of the sysfs objects should leverage the
+> iomem_get_mapping() function to get an appropriate address range, but
+> only the "legacy_io" has been correctly updated - the second attribute
+> seems to be using a wrong variable to pass the iomem_get_mapping()
+> function to.
+> 
+> Thus, correct the variable name used so that the "legacy_mem" sysfs
+> object would also correctly call the iomem_get_mapping() function.
+> 
+> Fixes: 636b21b50152 ("PCI: Revoke mappings like devmem")
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 
-I will send v2 shortly with the correct header file included.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thank you both!
+Ouch.  This needs to be applied to any -stable trees that contain
+636b21b50152, which was merged in v5.12.
 
-	Krzysztof
+It *also* needs to be applied with the obvious updates to Greg's
+sysfs_defferred_iomem_get_mapping-5.15 branch because it was changed
+by f06aff924f97 ("sysfs: Rename struct bin_attribute member to
+f_mapping") [1]
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/gregkh/driver-core.git/commit/?id=f06aff924f97
+
+> ---
+>  drivers/pci/pci-sysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 5d63df7c1820..7bbf2673c7f2 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -978,7 +978,7 @@ void pci_create_legacy_files(struct pci_bus *b)
+>  	b->legacy_mem->size = 1024*1024;
+>  	b->legacy_mem->attr.mode = 0600;
+>  	b->legacy_mem->mmap = pci_mmap_legacy_mem;
+> -	b->legacy_io->mapping = iomem_get_mapping();
+> +	b->legacy_mem->mapping = iomem_get_mapping();
+>  	pci_adjust_legacy_attr(b, pci_mmap_mem);
+>  	error = device_create_bin_file(&b->dev, b->legacy_mem);
+>  	if (error)
+> -- 
+> 2.32.0
+> 
