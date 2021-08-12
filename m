@@ -2,82 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90F2E3EA94F
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 19:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7528D3EA9CF
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 19:53:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234537AbhHLRRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 13:17:47 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:54839 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234899AbhHLRRp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Aug 2021 13:17:45 -0400
-Received: by mail-wm1-f52.google.com with SMTP id g138so5039875wmg.4
-        for <linux-pci@vger.kernel.org>; Thu, 12 Aug 2021 10:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Qi3OR67SAq3fUw8wqhj8a2q70c4e8cOFtASlxxpzWak=;
-        b=tx7AC94Qwt0nac2ka3EZ0Z7G5+lBBOhrlmdieI6UtQatMvHMXooSYdt+HlTqo/UNsV
-         /18vhOtIvqXPrp7VVQHPXzmewNiPkxF8dtxDlDYBDz/fxH5wfyX8DKjx+XLZqBXwZTvb
-         ptAY8SUde84PHCChH6s82PVaMyP7BdYnNReQgToTuzjmxVOgiRpJG1INSYUZZaUA+3Hm
-         TQ8VCJebNV77QGGPNC8QN/MSyYaTgxS2vKhVur0iYSg7IEpARpdClfK5Iqb4ChYO83C7
-         S3bArDDyuKIJO2bNJUxahO9cmdpct7K0ERb9z89bAYIcZ0fGsh4nSuUNNsKDujmI8XLk
-         lvrw==
-X-Gm-Message-State: AOAM532B3cRE8hvq/YJbn/CWagv+snUAJL3brN+Ofh0efVuejnliamyV
-        ChaXn4Puou0mITlKx/YQS0U=
-X-Google-Smtp-Source: ABdhPJwNzAJpXOvs+ZZP/wImZb04nFbnh8y15+9hr4Rl9vLdbI65+1TYory+UqqoLdUNkg5ZSkGiHQ==
-X-Received: by 2002:a1c:150:: with SMTP id 77mr5179271wmb.90.1628788639246;
-        Thu, 12 Aug 2021 10:17:19 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id l9sm3499512wro.92.2021.08.12.10.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 10:17:18 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2] x86/pci: Add missing forward declaration for pci_numachip_init()
-Date:   Thu, 12 Aug 2021 17:17:17 +0000
-Message-Id: <20210812171717.1471243-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
+        id S237136AbhHLRx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 13:53:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229851AbhHLRx7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Aug 2021 13:53:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 833BD60C3F;
+        Thu, 12 Aug 2021 17:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628790813;
+        bh=rzIen6n17XL3TXkwlUFGX5zNCj/pNZGFZZ5rqCWckSo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eP/vvc2iHfScDXLb1gMzLSLRSp1ZFUrAM14CEC1mwMXjwRvmpC/Kh9nLV9hKkyLeF
+         tE1hwo+OewJiKgL931jJBI3Yhj7/uo+7YTbfhi8cV/8dhmvj8gE9CrCDnm24O1eWeV
+         mFnd4dkNdAWWLCTid97bLi49P9PRYN3SN6K52A9gVUk0HIpb+az9erIORcbc/kcsgb
+         YX/nbM/ECQENqGPWOnDj6Pi7wOH9RGfbVqe6nHQct7nDZcFRdd/qlPag0v91Cp9x+h
+         Y+POG/Huc5Q6REkvE2lawaWd832tef+pvc+D54Nr11OQHAnkVKXWCcveClz3ogyQWi
+         OmszTiiWHoPbQ==
+Date:   Thu, 12 Aug 2021 12:53:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 0/6] PCI/VPD: Further improvements
+Message-ID: <20210812175332.GA2490883@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e61d5dc-824c-e855-01eb-6c7f45c55285@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-At the moment, the function pci_numachip_init() is defined in the
-numachip.c file, but lacks matching forward declaration causing the
-following sparse and compile time warnings:
+On Sun, Aug 08, 2021 at 07:18:08PM +0200, Heiner Kallweit wrote:
+> This series includes a number of further improvements to VPD handling.
+> 
+> Heiner Kallweit (6):
+>   PCI/VPD: Move pci_read/write_vpd in the code
+>   PCI/VPD: Remove struct pci_vpd_ops
+>   PCI/VPD: Remove member valid from struct pci_vpd
+>   PCI/VPD: Embed struct pci_vpd member in struct pci_dev
+>   PCI/VPD: Determine VPD size in pci_vpd_init already
+>   PCI/VPD: Treat invalid VPD like no VPD capability
+> 
+>  drivers/pci/probe.c |   1 -
+>  drivers/pci/vpd.c   | 253 ++++++++++++++++----------------------------
+>  include/linux/pci.h |   9 +-
+>  3 files changed, 97 insertions(+), 166 deletions(-)
 
-  arch/x86/pci/numachip.c:108:12: warning: no previous prototype for function 'pci_numachip_init' [-Wmissing-prototypes]
-  arch/x86/pci/numachip.c:108:12: warning: symbol 'pci_numachip_init' was not declared. Should it be static?
+This looks great!
 
-Thus, add missing include of asm/numachip/numachip.h that includes the
-missing forward declaration.  This will resolve the aforementioned
-warnings.
+Applied to pci/vpd for v5.15, thanks!
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- arch/x86/pci/numachip.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/pci/numachip.c b/arch/x86/pci/numachip.c
-index 01a085d9135a..4f0147d4e225 100644
---- a/arch/x86/pci/numachip.c
-+++ b/arch/x86/pci/numachip.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/pci.h>
- #include <asm/pci_x86.h>
-+#include <asm/numachip/numachip.h>
- 
- static u8 limit __read_mostly;
- 
--- 
-2.32.0
-
+I tweaked 2/6 to test for func0_dev being NULL in pci_read_vpd()
+instead of pci_vpd_read().  Could go either way, but it's really only
+relevant for the PCI_DEV_FLAGS_VPD_REF_F0 case, which is now all in
+pci_read_vpd().  For the non-PCI_DEV_FLAGS_VPD_REF_F0 case, we've
+already dereference dev->dev_flags, so "dev" can never be NULL in
+pci_vpd_read().
