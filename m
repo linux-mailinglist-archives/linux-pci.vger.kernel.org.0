@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ECC03E9FF9
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 09:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CCB43E9FFC
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Aug 2021 09:56:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234930AbhHLH4Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Aug 2021 03:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
+        id S234949AbhHLH40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Aug 2021 03:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234889AbhHLH4X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S234245AbhHLH4X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 12 Aug 2021 03:56:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8FCDD60FE6;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8BDDF60FC4;
         Thu, 12 Aug 2021 07:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1628754958;
-        bh=DIaYlAqGSSNogck6c8+7tffKBZEzgkCKP9DQtTZZp2c=;
+        bh=ii0nBQbue9NAVogxJU47bDMTGMtwHme2vnmmfk4oB34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pA83Yxu436j05pvnjfUXAB6UWbmgxtggbBZV0Yp2QXt1ka3afdUTk1/XrZGUUhJJe
-         dLM0gMHe8bS12WdEkRhrlpo7tUYTURbRy2V/OBH/C6Mhqp/sZqxpHzXWH/P/4X7zWQ
-         x2YEEO3ptmW9RUMkNrddEmdvtFwraglespg+VE0ZB1NfGiDREA9JPCPGYYeaM0D25P
-         AYcqgGQ5Qb4P78GaXrmezhCwxR5yERvAfJlVGHaAz1YC9i413Reu7ZYGYmipwYBgy+
-         69KCiS5jMpICk6UOjSlYGfHLNdEPbg9GlxyElCha0W3emcE1ojsBDA0M/BEby6MdBh
-         IHVp4ajAsiF9w==
+        b=rZH0tmH5GxzvIjQDpuckvBU43dj/DjkL2xAFP3Shp3lskxT6DkTBm+L/EPLAnENBZ
+         gHJ9iH43CXzrzmwdo3rsAGdtV4hxDiv8QH15hYMroLWaC+Frd+3V4NiwyyRWV23nOi
+         Om6vJPp/8DUIfVR58Kd8TTaIGYAnCCI8ZLc6tcct0CuVtbM08LdDR7GzjrIPJQZR44
+         jvZffzhx3/3A+ADXtd0ShjpBBzCrfcvJ+BiL6CYHT8Ytdw16MOx8pb4DgSpShaKlig
+         z/dqHqJ9jEKSOndkpYCI2t38dRGy4ff2E18ze8vvXsiPr9eIhXVcB2GVudEHRFqEvK
+         9cXm7qp+ykXwg==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1mE5ZE-00DZ3y-LR; Thu, 12 Aug 2021 09:55:56 +0200
+        id 1mE5ZE-00DZ41-NH; Thu, 12 Aug 2021 09:55:56 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Rob Herring <robh@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -36,9 +36,9 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: PCI: kirin: fix bus-range
-Date:   Thu, 12 Aug 2021 09:55:51 +0200
-Message-Id: <a5395599b110e30c2410d8af4ff4de0b4af3e270.1628754620.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: PCI: kirin: fix HiKey970 example
+Date:   Thu, 12 Aug 2021 09:55:52 +0200
+Message-Id: <655e21422a14620ae2d55335eb72bcaa66f5384d.1628754620.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1628754620.git.mchehab+huawei@kernel.org>
 References: <cover.1628754620.git.mchehab+huawei@kernel.org>
@@ -49,44 +49,106 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Using bus-range = <0 1> causes a runtime warning:
-
-            [    5.363450] pci_bus 0000:00: root bus resource [bus 00-01]
-            [    5.396998] pci_bus 0000:01: busn_res: can not insert [bus 01-ff] under [bus 00-01] (conflicts with (null) [bus 00-01])
-            [    5.284831] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-
-On Kirin 960, changing to bus-range = <0 0xff> produces a
-cleaner log.
-
-Kirin 970 is more complex, so better to just drop bus-range
-as a hole.
+The given example doesn't produce all of_nodes at sysfs.
+Update it to reflect what's actually working.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../devicetree/bindings/pci/hisilicon,kirin-pcie.yaml          | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../bindings/pci/hisilicon,kirin-pcie.yaml    | 64 +++++++++++--------
+ 1 file changed, 36 insertions(+), 28 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-index c0551d2e606d..d05deebe9dbb 100644
+index d05deebe9dbb..668a09e27139 100644
 --- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -66,7 +66,7 @@ examples:
-               <0x0 0xf3f20000 0x0 0x40000>,
-               <0x0 0xf5000000 0x0 0x2000>;
-         reg-names = "dbi", "apb", "phy", "config";
--        bus-range = <0x0  0x1>;
-+        bus-range = <0x0  0xff>;
-         #address-cells = <3>;
-         #size-cells = <2>;
-         device_type = "pci";
 @@ -97,7 +97,6 @@ examples:
                <0x0 0xfc180000 0x0 0x1000>,
                <0x0 0xf5000000 0x0 0x2000>;
          reg-names = "dbi", "apb", "config";
--        bus-range = <0x0  0x1>;
-         msi-parent = <&its_pcie>;
+-        msi-parent = <&its_pcie>;
          #address-cells = <3>;
          #size-cells = <2>;
+         device_type = "pci";
+@@ -116,43 +115,52 @@ examples:
+                         <0x0 0 0 4 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
+         reset-gpios = <&gpio7 0 0>;
+         hisilicon,clken-gpios = <&gpio27 3 0>, <&gpio17 0 0>, <&gpio20 6 0>;
+-
+-        pcie@0 { // Lane 0: PCIe switch: Bus 1, Device 0
+-          reg = <0 0 0 0 0>;
++        pcie@0,0 { // Lane 0: PCIe switch: Bus 1, Device 0
++          reg = <0x80 0 0 0 0>;
+           compatible = "pciclass,0604";
+           device_type = "pci";
+           #address-cells = <3>;
+           #size-cells = <2>;
+           ranges;
+-          pcie@1,0 { // Lane 4: M.2
+-            reg = <0x800 0 0 0 0>;
++          msi-parent = <&its_pcie>;
++
++          pcie@0,0 { // Lane 0: upstream
++            reg = <0 0 0 0 0>;
+             compatible = "pciclass,0604";
+             device_type = "pci";
+-            reset-gpios = <&gpio3 1 0>;
+-            clkreq-gpios = <&gpio27 3 0 >;
+-            #address-cells = <3>;
+-            #size-cells = <2>;
+-            ranges;
+-          };
+-          pcie@5,0 { // Lane 5: Mini PCIe
+-            reg = <0x2800 0 0 0 0>;
+-            compatible = "pciclass,0604";
+-            device_type = "pci";
+-            reset-gpios = <&gpio27 4 0 >;
+-            clkreq-gpios = <&gpio17 0 0 >;
+-            #address-cells = <3>;
+-            #size-cells = <2>;
+-            ranges;
+-          };
+-          pcie@7,0 { // Lane 6: Ethernet
+-            reg = <0x3800 0 0 0 0>;
+-            compatible = "pciclass,0604";
+-            device_type = "pci";
+-            reset-gpios = <&gpio25 2 0 >;
+-            clkreq-gpios = <&gpio20 6 0 >;
+             #address-cells = <3>;
+             #size-cells = <2>;
+             ranges;
++
++            pcie@1,0 { // Lane 4: M.2
++              reg = <0x0800 0 0 0 0>;
++              compatible = "pciclass,0604";
++              device_type = "pci";
++              reset-gpios = <&gpio3 1 0>;
++              #address-cells = <3>;
++              #size-cells = <2>;
++              ranges;
++            };
++
++            pcie@5,0 { // Lane 5: Mini PCIe
++              reg = <0x2800 0 0 0 0>;
++              compatible = "pciclass,0604";
++              device_type = "pci";
++              reset-gpios = <&gpio27 4 0 >;
++              #address-cells = <3>;
++              #size-cells = <2>;
++              ranges;
++            };
++
++            pcie@7,0 { // Lane 6: Ethernet
++              reg = <0x03800 0 0 0 0>;
++              compatible = "pciclass,0604";
++              device_type = "pci";
++              reset-gpios = <&gpio25 2 0 >;
++              #address-cells = <3>;
++              #size-cells = <2>;
++              ranges;
++            };
+           };
+         };
+       };
 -- 
 2.31.1
 
