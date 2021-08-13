@@ -2,98 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C36683EB503
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 14:10:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA0B3EB572
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 14:27:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240046AbhHMMKZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 08:10:25 -0400
-Received: from ni.piap.pl ([195.187.100.5]:53930 "EHLO ni.piap.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239977AbhHMMKY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 08:10:24 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        by ni.piap.pl (Postfix) with ESMTPSA id 82D2FC36953E;
-        Fri, 13 Aug 2021 14:09:51 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 82D2FC36953E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1628856591; bh=sb8e8PT14BLA3aZ+YBy/mSlODk/x4ypFarC/P08hpFM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Uve5ELBJeZgsyoJ2Ut+4X/C+QpRBdvI63X/vA04veCIK3dUhgW5oBz5lCL47VMBcN
-         WX0GCobXQzVxcBEAnDArn/K40nlItSEKDWTFqMs3QbRQRm1+p5N25Pf84i7H8U3yuG
-         YYjIhY/1OnDO69X0/EZdqHjVEiWaBF/zplryHGP8=
-From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Artem Lapkin <email2tema@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCIe: limit Max Read Request Size on i.MX to 512 bytes
-References: <m37dgp20cr.fsf@t19.piap.pl> <20210813101305.GA598827@rocinante>
-Sender: khalasa@piap.pl
-Date:   Fri, 13 Aug 2021 14:09:51 +0200
-In-Reply-To: <20210813101305.GA598827@rocinante> ("Krzysztof =?utf-8?Q?Wil?=
- =?utf-8?Q?czy=C5=84ski=22's?=
-        message of "Fri, 13 Aug 2021 12:13:05 +0200")
-Message-ID: <m31r6x1r74.fsf@t19.piap.pl>
+        id S240276AbhHMM1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 08:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229474AbhHMM1e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Aug 2021 08:27:34 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3988FC061756;
+        Fri, 13 Aug 2021 05:27:07 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id l11so11736593plk.6;
+        Fri, 13 Aug 2021 05:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJxkE2wkJq+QgJn112ZtChVb7MaeOYwvtc3bN2p1tTg=;
+        b=rsM63gA8Ke+q7OOmBS5bZp/+xQPASbpbS2dehshnFn+vjWgOcu8yP5YcfLQE3aq7n5
+         pbwlwoIIWZ05Pmk91JkBLx9S3Bw80wDFlOF5pnecDofoWJBORuuoC3zeGKX/q5KNsX8S
+         0AuqQCm7EnhCAlzJ5pIw6geleL4JXw7wmf0smSK9zQLEI4L62zK1+lGd6BxLYEKnEFPt
+         VYhfWUUzcC448IDgIenx9/Ph6sAfJKy2VrdpTtFhjH6NbJSjOgc1M7Rw2OhWjmn6IbQw
+         Ni46Lc0hjA9aDNOeSdl1znTp/aNhGN1xBJPQ6MEKPj2V7mBkDPr4gKkemJFKm9ryQAZ3
+         iX2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJxkE2wkJq+QgJn112ZtChVb7MaeOYwvtc3bN2p1tTg=;
+        b=HCHgV3EVh3+lHRPot/M5iRQRzDfC3UeWVypveLf2dvfKMXjcVBj8mdblBIjLduX6FK
+         4EqQUQ3/hFQtqQxQ8d/9B8iBjIbbonKfBsSRJIi6quI6tGsa0jbHyeJ+f82ixrLK0KhT
+         6OMgmvBci1nvZHJTpKBvm8RYTVqsahRme1k4CywX1NNFp7X8QpBoaLw9lyACmfSxFkLx
+         8TgDi+A7KlMeLd9NNXftgA5Z9VDG5dfLLQ7jTQIvmDGDoBwqfWFbRTLFfZL7sNve+bWj
+         C8TrN732fo+3UrmgYfCPGKq/f+xOixOz/VyDiDsoKhjIMKNHk4moormGNJN5N6EcE6RO
+         gvQw==
+X-Gm-Message-State: AOAM531eHFgfS2grf3gu3ikc0XTY45IpKXy6+BW+R9Nx3XiPJ6nKIqbk
+        szRL1QVTyC3x4dUvwfTqFoU=
+X-Google-Smtp-Source: ABdhPJzr9deUC5KetbUoge6dxu/lJuhGJtQDTpk8G4TR7fvnQj/s7kpkntZWUGZGM0AgSqKq2fVZhA==
+X-Received: by 2002:a17:90a:4285:: with SMTP id p5mr2409655pjg.162.1628857626705;
+        Fri, 13 Aug 2021 05:27:06 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8916:5000:f39c:9aee:21bf:36f5])
+        by smtp.gmail.com with ESMTPSA id b10sm2218293pfi.122.2021.08.13.05.27.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Aug 2021 05:27:06 -0700 (PDT)
+From:   Barry Song <21cnbao@gmail.com>
+To:     bhelgaas@google.com, corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     mchehab+huawei@kernel.org, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, leon@kernel.org,
+        schnelle@linux.ibm.com, bilbao@vt.edu, luzmaximilian@gmail.com,
+        linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH] PCI/MSI: Clarify the irq sysfs ABI for PCI devices
+Date:   Sat, 14 Aug 2021 00:26:50 +1200
+Message-Id: <20210813122650.25764-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 1
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Lua-Profiles: 165559 [Aug 13 2021]
-X-KLMS-AntiSpam-Version: 5.9.20.0
-X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
-X-KLMS-AntiSpam-Rate: 0
-X-KLMS-AntiSpam-Status: not_detected
-X-KLMS-AntiSpam-Method: none
-X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
-X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_Text_ENG_RU_Has_Extended_Latin_Letters, eng}, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;piap.pl:7.1.1;127.0.0.199:7.1.2;t19.piap.pl:7.1.1
-X-MS-Exchange-Organization-SCL: -1
-X-KLMS-AntiSpam-Interceptor-Info: scan successful
-X-KLMS-AntiPhishing: Clean, bases: 2021/08/13 11:35:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/13 05:50:00 #17026350
-X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Krzysztof, :-)
+From: Barry Song <song.bao.hua@hisilicon.com>
 
-> Would it be possible to implement this particular MRRS fix as a quirk
-> only for the i.MX6 controller?  Unless this is something that we need in
-> the core, a quirk would be preferred over something that changes the PCI
-> core.
+/sys/bus/pci/devices/.../irq has been there for many years but it has never
+been documented. This patch is trying to document it. Plus, irq ABI is very
+confusing at this moment especially for MSI and MSI-x cases. MSI sets irq
+to the first number in the vector, but MSI-X does nothing for this though
+it saves default_irq in msix_setup_entries(). Weird the saved default_irq
+for MSI-X is never used in pci_msix_shutdown(), which is quite different
+with pci_msi_shutdown(). Thus, this patch also moves to show the first IRQ
+number which is from the first msi_entry for MSI-X. Hopefully, this can
+make irq ABI more clear and more consistent.
 
-I have briefly considered it, but I think it would be *much* more
-complicated and error-prone. It also appears that there are more
-platforms which need it - the old CNS3xxx, which currently subverts the
-PCIE_BUS_PEER2PEER, the loongson, keystone, maybe all DWC PCIe.
-Multiplication of the "quirk" code doesn't really look good to me.
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ Documentation/ABI/testing/sysfs-bus-pci | 8 ++++++++
+ drivers/pci/msi.c                       | 6 ++++++
+ 2 files changed, 14 insertions(+)
 
-TBH I don't think of this as of a "quirk" - all systems have MRRS
-limits, it just happens that these ones have their limit lower than 4096
-bytes. This isn't a limitation of a particular PCIe device, this is a
-common limit of the whole system.
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index 793cbb7..8d42385 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -96,6 +96,14 @@ Description:
+ 		This attribute indicates the mode that the irq vector named by
+ 		the file is in (msi vs. msix)
+ 
++What:		/sys/bus/pci/devices/.../irq
++Date:		August 2021
++Contact:	Barry Song <song.bao.hua@hisilicon.com>
++Description:
++		Historically this attribute represent the IRQ line which runs
++		from the PCI device to the Interrupt controller. With MSI and
++		MSI-X, this attribute is the first IRQ number of IRQ vectors.
++
+ What:		/sys/bus/pci/devices/.../remove
+ Date:		January 2009
+ Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 9232255..6bbf81b 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -771,6 +771,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 	int ret;
+ 	u16 control;
+ 	void __iomem *base;
++	struct msi_desc *desc;
+ 
+ 	/* Ensure MSI-X is disabled while it is set up */
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+@@ -814,6 +815,10 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+ 
+ 	pcibios_free_irq(dev);
++
++	desc = first_pci_msi_entry(dev);
++	dev->irq = desc->irq;
++
+ 	return 0;
+ 
+ out_avail:
+@@ -1024,6 +1029,7 @@ static void pci_msix_shutdown(struct pci_dev *dev)
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+ 	pci_intx_for_msi(dev, 1);
+ 	dev->msix_enabled = 0;
++	dev->irq = entry->msi_attrib.default_irq;
+ 	pcibios_alloc_irq(dev);
+ }
+ 
+-- 
+1.8.3.1
 
-Also I'm not exactly sure the loongson fixup is complete.
-It's only done at pci-enable*() time (e.g. for devices which have bigger
-MRRS after power-up), while e.g. the r8169 driver changes MRRS well
-after pci-enable*().
-
-This means it needs to stay in/below pcie_get_readrq(), and while it
-could mean going to ops->write*, it would be a real mess parsing the
-devices, PCIE capabilities etc.
-Now it's basically a few lines in a seldom called routine in pci.c, and
-the loongson case (and others) can be made simpler (and really fixed) as
-well.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
