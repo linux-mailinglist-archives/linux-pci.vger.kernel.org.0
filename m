@@ -2,193 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8F13EB190
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 09:37:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2BC3EB22E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 10:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239212AbhHMHg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 03:36:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56748 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239485AbhHMHg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:36:58 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="212405996"
-X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="212405996"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 00:36:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="674234063"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2021 00:36:29 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mERjw-000NW0-Gu; Fri, 13 Aug 2021 07:36:28 +0000
-Date:   Fri, 13 Aug 2021 15:35:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/sysfs] BUILD SUCCESS
- 52b2c453ff9f4c4521df70df54841a09bf90105a
-Message-ID: <611620cd.cborg+sL6Reib2g6%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S238974AbhHMIDy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 04:03:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239523AbhHMICk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Aug 2021 04:02:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836E9C061756;
+        Fri, 13 Aug 2021 01:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Si6+tA9D1y9EtzA7fh9EgJw213gBjxE8cIu39WNfpqM=; b=kKNETURQC2XIzBmc596h1eynqR
+        cW9A2OBkLxe74dTeo8jpFByDwxQbOUshieUvzgWw/Zq+/gXYymQPfDZNItNGMCeGi+iS0mKUjlbEs
+        18zhFj/1KoA0wT3RpKNHgNt/Zt/ooGDTQhqfQZMGVXaNP6a+pNLtY0xH72epEAWg+ZOMt3DbnmByN
+        K1GvMeWF45WoTFmJ/QeavyyPhoGVojFuy3i+eQeyIXACx25wLMUoNE/Rigi79v3HBq8N30EgckY13
+        FhI5tMlDrK/gsN9o1qI0HlZ9KKwJvKqgeGGKJiJnjc/OQXXiLTltL2hV8EMgIQ8j4YERJnv01ExH2
+        36X0GZzg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mES4r-00FT89-TJ; Fri, 13 Aug 2021 07:58:17 +0000
+Date:   Fri, 13 Aug 2021 08:58:05 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 10/15] asm/io.h: Add ioremap_shared fallback
+Message-ID: <YRYmDcPNT6iYxTJc@infradead.org>
+References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210805005218.2912076-11-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210805005218.2912076-11-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
-branch HEAD: 52b2c453ff9f4c4521df70df54841a09bf90105a  sysfs: Rename struct bin_attribute member to f_mapping
-
-elapsed time: 724m
-
-configs tested: 135
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210812
-i386                 randconfig-c001-20210813
-sh                          polaris_defconfig
-powerpc                      bamboo_defconfig
-powerpc                       holly_defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                        cell_defconfig
-powerpc                 mpc837x_rdb_defconfig
-m68k                             alldefconfig
-sh                          rsk7264_defconfig
-sh                            titan_defconfig
-powerpc                     asp8347_defconfig
-powerpc                        icon_defconfig
-arc                          axs103_defconfig
-s390                          debug_defconfig
-h8300                            alldefconfig
-powerpc                 mpc834x_mds_defconfig
-arm                            mps2_defconfig
-mips                  maltasmvp_eva_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                        maltaup_defconfig
-mips                           ip22_defconfig
-sh                           se7721_defconfig
-openrisc                  or1klitex_defconfig
-arc                    vdk_hs38_smp_defconfig
-mips                           ip32_defconfig
-xtensa                              defconfig
-sh                          sdk7786_defconfig
-sh                         microdev_defconfig
-arm                          pxa910_defconfig
-sh                           se7780_defconfig
-powerpc                         ps3_defconfig
-mips                         rt305x_defconfig
-arm                            qcom_defconfig
-sh                   secureedge5410_defconfig
-powerpc                       eiger_defconfig
-arm                        multi_v7_defconfig
-mips                        workpad_defconfig
-mips                     decstation_defconfig
-mips                          ath25_defconfig
-powerpc                     ppa8548_defconfig
-arc                        nsimosci_defconfig
-arm                            zeus_defconfig
-sh                             sh03_defconfig
-arm                       aspeed_g5_defconfig
-arc                     nsimosci_hs_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20210812
-x86_64               randconfig-a004-20210812
-x86_64               randconfig-a003-20210812
-x86_64               randconfig-a005-20210812
-x86_64               randconfig-a002-20210812
-x86_64               randconfig-a001-20210812
-i386                 randconfig-a004-20210812
-i386                 randconfig-a003-20210812
-i386                 randconfig-a002-20210812
-i386                 randconfig-a001-20210812
-i386                 randconfig-a006-20210812
-i386                 randconfig-a005-20210812
-i386                 randconfig-a011-20210812
-i386                 randconfig-a015-20210812
-i386                 randconfig-a013-20210812
-i386                 randconfig-a014-20210812
-i386                 randconfig-a016-20210812
-i386                 randconfig-a012-20210812
-i386                 randconfig-a011-20210813
-i386                 randconfig-a015-20210813
-i386                 randconfig-a014-20210813
-i386                 randconfig-a013-20210813
-i386                 randconfig-a016-20210813
-i386                 randconfig-a012-20210813
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c001-20210812
-x86_64               randconfig-a006-20210813
-x86_64               randconfig-a004-20210813
-x86_64               randconfig-a003-20210813
-x86_64               randconfig-a002-20210813
-x86_64               randconfig-a005-20210813
-x86_64               randconfig-a001-20210813
-x86_64               randconfig-a011-20210812
-x86_64               randconfig-a013-20210812
-x86_64               randconfig-a012-20210812
-x86_64               randconfig-a016-20210812
-x86_64               randconfig-a015-20210812
-x86_64               randconfig-a014-20210812
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+_shared is just a horrible name for these.  Please find a more specific
+name, and document them instead of just adding to the macro forrest.
