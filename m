@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11B4D3EB18F
+	by mail.lfdr.de (Postfix) with ESMTP id 5A8F13EB190
 	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 09:37:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239483AbhHMHg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 03:36:57 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6114 "EHLO mga17.intel.com"
+        id S239212AbhHMHg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 03:36:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56748 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239212AbhHMHg4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:36:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="195790263"
+        id S239485AbhHMHg6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 03:36:58 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="212405996"
 X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="195790263"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 00:36:30 -0700
+   d="scan'208";a="212405996"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 00:36:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
-   d="scan'208";a="446938269"
+   d="scan'208";a="674234063"
 Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Aug 2021 00:36:29 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2021 00:36:29 -0700
 Received: from kbuild by d053b881505b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mERjw-000NVw-Dt; Fri, 13 Aug 2021 07:36:28 +0000
-Date:   Fri, 13 Aug 2021 15:35:32 +0800
+        id 1mERjw-000NW0-Gu; Fri, 13 Aug 2021 07:36:28 +0000
+Date:   Fri, 13 Aug 2021 15:35:41 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 7eb6ea4148579b85540a41d57bcec315b8af8ff8
-Message-ID: <611620c4.MYVz9axPKHiBoNkn%lkp@intel.com>
+Subject: [pci:pci/sysfs] BUILD SUCCESS
+ 52b2c453ff9f4c4521df70df54841a09bf90105a
+Message-ID: <611620cd.cborg+sL6Reib2g6%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: 7eb6ea4148579b85540a41d57bcec315b8af8ff8  PCI: Fix pci_dev_str_match_path() alloc while atomic bug
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
+branch HEAD: 52b2c453ff9f4c4521df70df54841a09bf90105a  sysfs: Rename struct bin_attribute member to f_mapping
 
-elapsed time: 723m
+elapsed time: 724m
 
 configs tested: 135
 configs skipped: 3
