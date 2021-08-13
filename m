@@ -2,63 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CC373EB6DF
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 16:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1B43EB74D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 17:01:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240366AbhHMOlD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 10:41:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:54196 "EHLO foss.arm.com"
+        id S241092AbhHMPBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 11:01:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:54396 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233567AbhHMOlD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 10:41:03 -0400
+        id S241033AbhHMPBV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 11:01:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C8051042;
-        Fri, 13 Aug 2021 07:40:36 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.41.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2F7E3F718;
-        Fri, 13 Aug 2021 07:40:33 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     kw@linux.com, Michal Simek <michal.simek@xilinx.com>,
-        git@xilinx.com, bharat.kumar.gogada@xilinx.com, monstr@monstr.eu,
-        linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        Ravi Kiran Gummaluri <rgummal@xilinx.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: xilinx-nwl: Add clock handling
-Date:   Fri, 13 Aug 2021 15:40:28 +0100
-Message-Id: <162886561478.21160.11916586885494837733.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <cover.1624618100.git.michal.simek@xilinx.com>
-References: <cover.1624618100.git.michal.simek@xilinx.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29EBE1042;
+        Fri, 13 Aug 2021 08:00:54 -0700 (PDT)
+Received: from [10.57.36.146] (unknown [10.57.36.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BC443F718;
+        Fri, 13 Aug 2021 08:00:51 -0700 (PDT)
+Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference in
+ probe
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Simon Xue <xxm@rock-chips.com>, Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, kernel-janitors@vger.kernel.org
+References: <20210813113338.GA30697@kili>
+ <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com> <20210813135412.GA7722@kadam>
+ <2917a1c8-d59b-43b1-1650-228d20dfc070@arm.com>
+ <20210813143250.GA5209@sirena.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <566c26bb-c488-8c86-f47e-6a748b9b6c77@arm.com>
+Date:   Fri, 13 Aug 2021 16:00:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210813143250.GA5209@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 25 Jun 2021 12:48:21 +0200, Michal Simek wrote:
-> this small series add support for enabling PCIe reference clock by driver.
+On 2021-08-13 15:32, Mark Brown wrote:
+> On Fri, Aug 13, 2021 at 03:01:10PM +0100, Robin Murphy wrote:
 > 
-> Thanks,
-> Michal
+>> Indeed I've thought before that it would be nice if regulators worked like
+>> GPIOs, where the absence of an optional one does give you NULL, and most of
+>> the API is also NULL-safe. Probably a pretty big job though...
 > 
-> Changes in v3:
-> - use PCIe instead of pcie
-> - add stable cc
-> - update commit message - reported by Krzysztof
-> 
-> [...]
+> It also encourages *really* bad practice with error handling, and in
+> general there are few use cases for optional regulators where there's
+> not some other actions that need to be taken in the case where the
+> supply isn't there (elimintating some operating points or features,
+> reconfiguring power internally and so on).  If we genuninely don't need
+> to do anything special one wonders why we're trying to turn the power on
+> in the first place.
 
-Applied to pci/xilinx-nwl, thanks!
+Sure, once you get into it, regulators are arguably a rather deeper area 
+than GPIOs, so in terms of the NULL-safe aspect anything beyond 
+enable/disable - for the sake of keeping trivial usage simple - would be 
+pretty questionable for sure.
 
-[1/2] dt-bindings: pci: xilinx-nwl: Document optional clock property
-      https://git.kernel.org/lpieralisi/pci/c/4d79e36718
-[2/2] PCI: xilinx-nwl: Enable the clock through CCF
-      https://git.kernel.org/lpieralisi/pci/c/de0a01f529
+A lot of the usage of regulator_get_optional() seems to be just making 
+sure some external thing is powered between probe() and remove() if it's 
+not hard-wired already, so maybe something like a 
+devm_regulator_get_optional_enabled() could be an answer to that 
+argument without even touching the underlying API.
 
-Thanks,
-Lorenzo
+Robin.
