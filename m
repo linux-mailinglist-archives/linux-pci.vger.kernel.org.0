@@ -2,86 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB3743EBBEE
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 20:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB35C3EBC7B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 21:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232820AbhHMSTQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 14:19:16 -0400
-Received: from ni.piap.pl ([195.187.100.5]:51452 "EHLO ni.piap.pl"
+        id S233635AbhHMTXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 15:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229607AbhHMSTN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 14:19:13 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        by ni.piap.pl (Postfix) with ESMTPSA id BE5DDC3694D5;
-        Fri, 13 Aug 2021 20:18:44 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl BE5DDC3694D5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1628878724; bh=NVDSKyv7tsdrcUXHfz6e7Pjm4BQy3eCLcMPq+7bG+QY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=HOnuku6JPKA6MWjtgUGeLPiplT1hrqdebmpQ1L248/WnCCH3acRboIN29aMxPBdAX
-         dfourjF86DBozXkyC7lnb5vCaSTP7J1p1pZv9HMKCUQ6g9LK3dzZs13xjzTtXw3RUM
-         0orltoHrHsu7NInM0/MwW3lFQJaV9IOWvsvRIXA4=
-From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
+        id S229601AbhHMTXX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 15:23:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 32EA3608FC;
+        Fri, 13 Aug 2021 19:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628882576;
+        bh=IwlgeTmsHnWv+9SX8uMxnltkECACWYzF6awWr2YZcrU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=o4dhA/iDEfMJoYZ2bq9y+AcVgg5wyrNkht08+6Sokb5kptg8j5bwvX9SmE5lLoUTh
+         ZnDMjBLQ6j7rDj0Ln6vUmfsasFfH5boVhF99nKnzKOL2/Net1VIjBOEB1zpvk8m8Mx
+         OCjYYYH+WEcZkiI6u2jmHs6LaAuK9KvOOXRVy4rHDv36CdDd9TAV3hI+JX01X53NwO
+         LW7GPazfmHAcDUbmk5dexWqvvSJH6su5jN6Bcy8neKCTPMz994v5+NdsupUfw2r6mY
+         1IGPOlgeF8kz9pBj2oeCpdpcM2EJ84ewb7R1xMPk+aJ9j0O0T51amSvu65Xisy2/MQ
+         YztMO3hb56Y+g==
+Date:   Fri, 13 Aug 2021 14:22:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Artem Lapkin <email2tema@gmail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Huacai Chen <chenhuacai@gmail.com>,
+        Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84s?= =?utf-8?Q?ki?= 
-        <kw@linux.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] PCIe: limit Max Read Request Size on i.MX to 512 bytes
-References: <m37dgp20cr.fsf@t19.piap.pl>
-        <CAL_JsqL1bPwbPB-3y6s0d6XoNkjrSzpbx=p7BcTq8UyTbh8pvw@mail.gmail.com>
-Sender: khalasa@piap.pl
-Date:   Fri, 13 Aug 2021 20:18:44 +0200
-In-Reply-To: <CAL_JsqL1bPwbPB-3y6s0d6XoNkjrSzpbx=p7BcTq8UyTbh8pvw@mail.gmail.com>
-        (Rob Herring's message of "Fri, 13 Aug 2021 08:45:43 -0500")
-Message-ID: <m3v949ky2j.fsf@t19.piap.pl>
+Message-ID: <20210813192254.GA2604116@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 1
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Lua-Profiles: 165564 [Aug 13 2021]
-X-KLMS-AntiSpam-Version: 5.9.20.0
-X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
-X-KLMS-AntiSpam-Rate: 0
-X-KLMS-AntiSpam-Status: not_detected
-X-KLMS-AntiSpam-Method: none
-X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
-X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_arrow_text}, {Tracking_Text_ENG_RU_Has_Extended_Latin_Letters, eng}, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, t19.piap.pl:7.1.1;piap.pl:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-MS-Exchange-Organization-SCL: -1
-X-KLMS-AntiSpam-Interceptor-Info: scan successful
-X-KLMS-AntiPhishing: Clean, bases: 2021/08/13 14:41:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/13 16:28:00 #17028567
-X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <m31r6x1r74.fsf@t19.piap.pl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rob,
+On Fri, Aug 13, 2021 at 02:09:51PM +0200, Krzysztof Hałasa wrote:
+> Krzysztof, :-)
+> 
+> > Would it be possible to implement this particular MRRS fix as a quirk
+> > only for the i.MX6 controller?  Unless this is something that we need in
+> > the core, a quirk would be preferred over something that changes the PCI
+> > core.
+> 
+> I have briefly considered it, but I think it would be *much* more
+> complicated and error-prone. It also appears that there are more
+> platforms which need it - the old CNS3xxx, which currently subverts the
+> PCIE_BUS_PEER2PEER, the loongson, keystone, maybe all DWC PCIe.
+> Multiplication of the "quirk" code doesn't really look good to me.
+> 
+> TBH I don't think of this as of a "quirk" - all systems have MRRS
+> limits, it just happens that these ones have their limit lower than 4096
+> bytes. This isn't a limitation of a particular PCIe device, this is a
+> common limit of the whole system.
 
-Rob Herring <robh@kernel.org> writes:
+Do you have a reference for this?  I don't see anything in the PCIe
+spec that suggests platforms must limit MRRS, and it seems that only
+these ARM-related controllers have this issue.  If there *is* a
+platform connection here, we'll need some way to discover it, e.g.,
+an ACPI _DSM method or similar.
 
->> +++ b/drivers/pci/Kconfig
->> @@ -34,6 +34,9 @@ config PCI_DOMAINS_GENERIC
->>  config PCI_SYSCALL
->>         bool
->>
->> +config NEED_PCIE_MAX_MRRS
->
-> We don't need a config option for this. It's not much code and it will
-> effectively always be enabled with multi-platform kernels.
+The only guidance in the spec about setting MRRS is that:
 
-But... non-ARM kernels?
-Then perhaps #if CONFIG_ARM?
---=20
-Krzysztof "Chris" Ha=C5=82asa
+  - Software must set Max_Read_Request_Size of an
+    isochronous-configured device with a value that does not exceed
+    the Max_Payload_Size set for the device (PCIe r5.0, sec 6.3.4.1)
 
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
+  - The Max_Read_Request_Size mechanism allows improved control of
+    bandwidth allocation in systems where Quality of Service (QoS) is
+    important for the target applications. For example, an arbitration
+    scheme based on counting Requests (and not the sizes of those
+    Requests) provides imprecise bandwidth allocation when some
+    Requesters use much larger sizes than others. The
+    Max_Read_Request_Size mechanism can be used to force more uniform
+    allocation of bandwidth, by restricting the upper size of Read
+    Requests (sec 7.5.3.4 implementation note)
+
