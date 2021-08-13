@@ -2,99 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5732A3EB619
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 15:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 805FA3EB633
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 15:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239016AbhHMNfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 09:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43100 "EHLO mail.kernel.org"
+        id S240668AbhHMNqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 09:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239907AbhHMNex (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 09:34:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 187A86109D;
-        Fri, 13 Aug 2021 13:34:25 +0000 (UTC)
+        id S240654AbhHMNqY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 09:46:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4821761139;
+        Fri, 13 Aug 2021 13:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628861665;
-        bh=9Qb86SEcqSX6DL3UPIPIbuJjCwOh3exFov3A37CTFTA=;
+        s=k20201202; t=1628862357;
+        bh=EeUi56ckdIOJ1FigLpBTvp288V0VDz6TPWb/K7uw19Q=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A9DVApuuX8cKZ+y7eUG2FZQkxImAiO+5Y7okEril/Wj/QfqCw2kPhb8iqtVXoYkoI
-         0cu2T8dCz6WK046poLS5ez0WKw3gMu4+MQoRqSO7c66ZWT3X2uECu1AMMfBhVAavKb
-         SI32RXrbt5aZUeYfh7T/oFy/R65CvG3eStm5udvgorbfmgPWHmCpHqNLgGxk4wN9TB
-         H2IUuiq5FJwNVjXb3F1sUesXJbXJko5JzPJMMIDsBIxEN5PuWxHBzccQgOsO1Cu6vZ
-         iA790T9c3waU7y/Xo5SAoSvlMjAeoWDtWcGHMDUWil6nfoh7sJVKrAO2Y51mQuYrrE
-         r7PPEsSiHvOLQ==
-Received: by mail-ej1-f48.google.com with SMTP id h9so18363578ejs.4;
-        Fri, 13 Aug 2021 06:34:24 -0700 (PDT)
-X-Gm-Message-State: AOAM532JQCvN3tGiGuFvQXtTlbTUZODKFSUfEbsHc2iXgDFRd5S7zMrB
-        xS3FM8X6E0HvtFvh+PVm5dk13JjyibjnYnlCnw==
-X-Google-Smtp-Source: ABdhPJxykWQAAdheo/ybHO8yXMFnNnbUNOwuVGCk/NVi5KQsWbsVMBqVHL+sFluDbVY0htG/vh471fwCFjdLoezEmCQ=
-X-Received: by 2002:a17:906:8cd:: with SMTP id o13mr2457754eje.341.1628861663642;
- Fri, 13 Aug 2021 06:34:23 -0700 (PDT)
+        b=Y77V+g/QCxA9W5CuhWYiq/iyFiDxYmMWQIhl/IrFE3E+ORsAxs/FOU4MYxXc5TpAx
+         +2MFZrryhLSxP993y1eMAewgHk/7Sycyiiq7VUf8u2rRfVbiSu/Ehd8C4ZpwWW+lvG
+         s3fnxEGwC1UqUK70fENXPwjAjbCi3ahnTbJNGRBQopHTW/CJXuk476mD9+LC6BHRjy
+         Rq/N3zVg/tMcTJhjJpkpiENnmFTMYMhJVanh1ZPEXF/TBGfjSDwPkuK+jwUSNR8vsc
+         htCi2kP8hb2+Hpt63BWA54Y5tJrix+Aqb3dUq1iqs6XVeIODEEHdETm6hYTTxO7/PJ
+         Ocuz90Lnxx7dg==
+Received: by mail-ej1-f52.google.com with SMTP id u3so18442164ejz.1;
+        Fri, 13 Aug 2021 06:45:57 -0700 (PDT)
+X-Gm-Message-State: AOAM531YIrWWGYDk6h3N8eayQvjxsQBJU+//EUZgt7ahAlgBPBIf0oyh
+        Qm5zJA/DSiFNHeGCPPouJEfOqiFZNRssSRYj2g==
+X-Google-Smtp-Source: ABdhPJxxWttkbdBWX8ZKSgLQqFULtwlJIpWYYEFhpKUkIwyXS4wzCmpMsQQjP1T/EycbKePdrTrQ68PmxuaJ4dAcXfQ=
+X-Received: by 2002:a17:906:8cd:: with SMTP id o13mr2516158eje.341.1628862355806;
+ Fri, 13 Aug 2021 06:45:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210813113338.GA30697@kili> <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com>
-In-Reply-To: <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com>
+References: <m37dgp20cr.fsf@t19.piap.pl>
+In-Reply-To: <m37dgp20cr.fsf@t19.piap.pl>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 13 Aug 2021 08:34:11 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ4Dadf00pJxEDd14zbWyN99s1A2L4fxZSkZddeg2pV6g@mail.gmail.com>
-Message-ID: <CAL_JsqJ4Dadf00pJxEDd14zbWyN99s1A2L4fxZSkZddeg2pV6g@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference in probe
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+Date:   Fri, 13 Aug 2021 08:45:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL1bPwbPB-3y6s0d6XoNkjrSzpbx=p7BcTq8UyTbh8pvw@mail.gmail.com>
+Message-ID: <CAL_JsqL1bPwbPB-3y6s0d6XoNkjrSzpbx=p7BcTq8UyTbh8pvw@mail.gmail.com>
+Subject: Re: [PATCH] PCIe: limit Max Read Request Size on i.MX to 512 bytes
+To:     =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org
+        Artem Lapkin <email2tema@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 7:55 AM Robin Murphy <robin.murphy@arm.com> wrote:
+On Fri, Aug 13, 2021 at 3:52 AM Krzysztof Ha=C5=82asa <khalasa@piap.pl> wro=
+te:
 >
-> On 2021-08-13 12:33, Dan Carpenter wrote:
-> > If devm_regulator_get_optional() returns an error pointer, then we
-> > should return it to the user.  The current code makes an exception
-> > for -ENODEV that will result in an error pointer dereference on the
-> > next line when it calls regulator_enable().  Remove the exception.
+> DWC PCIe controller imposes limits on the Read Request Size that it can
+> handle. For i.MX6 family it's fixed at 512 bytes by default.
 >
-> Doesn't this break the apparent intent of the regulator being optional,
-> though?
+> If a memory read larger than the limit is requested, the CPU responds
+> with Completer Abort (CA) (on i.MX6 Unsupported Request (UR) is returned
+> instead due to a design error).
+>
+> The i.MX6 documentation states that the limit can be changed by writing
+> to the PCIE_PL_MRCCR0 register, however there is a fixed (and
+> undocumented) maximum (CX_REMOTE_RD_REQ_SIZE constant). Tests indicate
+> that values larger than 512 bytes don't work, though.
+>
+> This patch makes the RTL8111 work on i.MX6.
+>
+> Signed-off-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
+>
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 0c473d75e625..a11ec93a8cd0 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -34,6 +34,9 @@ config PCI_DOMAINS_GENERIC
+>  config PCI_SYSCALL
+>         bool
+>
+> +config NEED_PCIE_MAX_MRRS
 
-I'm pretty sure 'optional' means ENODEV is never returned. So there
-wasn't any real problem, but the check was unnecessary.
+We don't need a config option for this. It's not much code and it will
+effectively always be enabled with multi-platform kernels.
 
->
-> Robin.
->
-> > Fixes: e1229e884e19 ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 5 ++---
-> >   1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > index 20cef2e06f66..2d0ffd3c4e16 100644
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -225,9 +225,8 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
-> >       /* DON'T MOVE ME: must be enable before PHY init */
-> >       rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-> >       if (IS_ERR(rockchip->vpcie3v3))
-> > -             if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
-> > -                     return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
-> > -                                     "failed to get vpcie3v3 regulator\n");
-> > +             return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
-> > +                                  "failed to get vpcie3v3 regulator\n");
-> >
-> >       ret = regulator_enable(rockchip->vpcie3v3);
-> >       if (ret) {
-> >
+Rob
