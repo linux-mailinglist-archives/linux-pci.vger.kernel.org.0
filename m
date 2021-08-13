@@ -2,112 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33AB93EB997
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 17:54:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8902C3EB99E
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 17:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241457AbhHMPyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 11:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        id S241152AbhHMP60 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 11:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241487AbhHMPyh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 11:54:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 29E29601FD;
-        Fri, 13 Aug 2021 15:54:09 +0000 (UTC)
+        id S241089AbhHMP60 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 11:58:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6508761038;
+        Fri, 13 Aug 2021 15:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628870050;
-        bh=tJWVgi5froVJvA8ey2vsX+89Npe4dBRwLUBJHkjVxxU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bSAdvmE+CD8W/vpFYSjqLytsYxktaeVxeQW3Jxkim70RLVERPDJMnGQkecCWcRlxa
-         aqREybTG41HncW8Lp8kOKktqfWUjNHVvuOjhjQe9ppr+WjONx/3uhIulEPVEIyM/yG
-         jWfZ/h4qzyc9IHkCYvo47+RM6Phl9bZPMcP834OumIlPHz5o1tLMrEIO9a7ajcw6Q7
-         IJ2ZbTSR2AgJAllxB1n8uY6yOQfN2f8osQNECE1P73UcsVkiuQDcjS3NVy+wluIojD
-         6DB4UWsdbXaje0HmVc4/p3Tu2FgRU2XrvsHuBvVWwAA14T1JxOAYmMqGdYJ2fkTsI/
-         zfw0s4opj+hwA==
-Date:   Fri, 13 Aug 2021 16:53:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
+        s=k20201202; t=1628870279;
+        bh=pY+Zqp963icDROpevltpSJJAR69cOdOt+bXbLF0MeIQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NBua0hL2wLvzxP6HrYAvZnxiNgtH4qsQqRY6RucoaV7bNIS/7dzMoUHHjb2iLJ4OS
+         xNZl8EbVd5kAqWkX0zJFXWaGY8rjdbMYiwVC685ry27Lcj4KcPUGHAG6G8wnoDvLYa
+         ngdXRpRLpez9PUgtoaBukuaM/WSKQcrL0b36AKjL+hRQwBrroz1ACQuz4Mm4OaQtbH
+         kgLJCeMPxoMDK2u52+Eh1YxwH4YhyID5KZUwF8HetYYzXF9TBDkdQm4Qx8PxPZY6u9
+         hr3VmYb0MLDDbN7/7ar4kcaNgR51zp+yHVL5yBzWzjNsvNysmxXbiVfqIh/TJbL2FK
+         CJv51K4HL2zeg==
+Received: by mail-ed1-f50.google.com with SMTP id z11so16062356edb.11;
+        Fri, 13 Aug 2021 08:57:59 -0700 (PDT)
+X-Gm-Message-State: AOAM5311YqH1CqjJSKd95O/JgGGpCGbD8w2puZ5AfydxnaDtDqtmncH8
+        NjKYGY0beY1vVQadUnakJsMI/GEx+F5sn0lwvw==
+X-Google-Smtp-Source: ABdhPJzGb/GgbXDVHZTmqzulqvJERz/jWWIhITrpEQe00RTcREbvrBDSwmoXTlx2OUnRARI/JvACJ/JQOgQrTZnANvc=
+X-Received: by 2002:aa7:cb19:: with SMTP id s25mr4083549edt.194.1628870276974;
+ Fri, 13 Aug 2021 08:57:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210813113338.GA30697@kili> <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com>
+ <CAL_JsqJ4Dadf00pJxEDd14zbWyN99s1A2L4fxZSkZddeg2pV6g@mail.gmail.com> <81b9a25d-f12f-90e0-0b05-b5e396f14c08@arm.com>
+In-Reply-To: <81b9a25d-f12f-90e0-0b05-b5e396f14c08@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 13 Aug 2021 10:57:44 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLWVLRDdkR62BSv69oW3QCLVebgpU1TKtxvzZmD4wuP4Q@mail.gmail.com>
+Message-ID: <CAL_JsqLWVLRDdkR62BSv69oW3QCLVebgpU1TKtxvzZmD4wuP4Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference in probe
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Xue <xxm@rock-chips.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Heiko Stuebner <heiko@sntech.de>,
         Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Kever Yang <kever.yang@rock-chips.com>,
         Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference
- in probe
-Message-ID: <20210813155350.GC5209@sirena.org.uk>
-References: <20210813113338.GA30697@kili>
- <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com>
- <20210813135412.GA7722@kadam>
- <2917a1c8-d59b-43b1-1650-228d20dfc070@arm.com>
- <20210813143250.GA5209@sirena.org.uk>
- <20210813154505.GC7722@kadam>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
-Content-Disposition: inline
-In-Reply-To: <20210813154505.GC7722@kadam>
-X-Cookie: E Pluribus Unix
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Aug 13, 2021 at 8:47 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2021-08-13 14:34, Rob Herring wrote:
+> > On Fri, Aug 13, 2021 at 7:55 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >>
+> >> On 2021-08-13 12:33, Dan Carpenter wrote:
+> >>> If devm_regulator_get_optional() returns an error pointer, then we
+> >>> should return it to the user.  The current code makes an exception
+> >>> for -ENODEV that will result in an error pointer dereference on the
+> >>> next line when it calls regulator_enable().  Remove the exception.
+> >>
+> >> Doesn't this break the apparent intent of the regulator being optional,
+> >> though?
+> >
+> > I'm pretty sure 'optional' means ENODEV is never returned. So there
+> > wasn't any real problem, but the check was unnecessary.
+>
+> In fact it's the other way round - "optional" in this case is for when
+> the supply may legitimately not exist so the driver may or may not need
+> to handle it, so it can return -ENODEV if a regulator isn't described by
+> firmware. A non-optional regulator is assumed to represent a necessary
+> supply, so if there's nothing described by firmware you get the (valid)
+> dummy regulator back.
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 13, 2021 at 06:45:05PM +0300, Dan Carpenter wrote:
-> On Fri, Aug 13, 2021 at 03:32:50PM +0100, Mark Brown wrote:
-> > On Fri, Aug 13, 2021 at 03:01:10PM +0100, Robin Murphy wrote:
-
-> > > Indeed I've thought before that it would be nice if regulators worked=
- like
-> > > GPIOs, where the absence of an optional one does give you NULL, and m=
-ost of
-> > > the API is also NULL-safe. Probably a pretty big job though...
-
-> > It also encourages *really* bad practice with error handling
-
-> I'm not necessarily 100% positive what you mean by this.  I think you
-> mean you don't like when people pass invalid pointers to free functions?
-
-No, it's the case where people don't bother checking if they got the
-regulator in the first place, don't bother checking if when they tried
-to enable the regulator that actually worked, and don't do whatever
-extra handling they need to do to configure the system for the fact that
-one of the power supplies is missing.  It really only helps in the case
-where you can just ignore the regulator completely.
-
-> But making regulator code NULL-safe wouldn't affect error handling
-> because NULL wouldn't be an error.
->=20
-> 	p =3D get_optional();
-> 	if (IS_ERR(p))
-> 		return PTR_ERR(p);
-> 	enable(p);
-
-Your example already misses the error handling on enable...
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEWlY0ACgkQJNaLcl1U
-h9C+gQf/ViZcfsBNoNvLiykQAQseACeSDusRgV0howjP0zujMhkdfwwpnudqKcsf
-DbhucuvGyD0G27s4xKKb1J4oU7r8ogVSNgc2eGyIciT85dsSVFGn1wYCVICmxCQk
-0s+rakCrDjbTYunX9f7k/0JhzxJ43Q432DY+ro1vEc0Iwi9ZeEg+cGAjg6JVwxYW
-2+5djM+OKFuB8nlXSxlRu+bUaD7/40Mgz4nvWMC97esw9SbMvPJqisaIfjuh6im6
-9e+Olu8uN4clwg4UcSgwnOiKM0lvgMf1XQZzpzlWkuHY/ffo1jVrmGGACaEg40AW
-XdY2AeFvANNrXHSvhHIt3xREICEjEg==
-=qDSo
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
+Ah yes, regulators is the oddball. Surely no one else will assume the
+same behavior of _optional() variants across subsystems... ;)
