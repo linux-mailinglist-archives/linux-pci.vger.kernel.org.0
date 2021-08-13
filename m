@@ -2,77 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1B43EB74D
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 17:01:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A2E13EB912
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 17:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241092AbhHMPBV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 11:01:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:54396 "EHLO foss.arm.com"
+        id S242724AbhHMPVl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 11:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241033AbhHMPBV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 11:01:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29EBE1042;
-        Fri, 13 Aug 2021 08:00:54 -0700 (PDT)
-Received: from [10.57.36.146] (unknown [10.57.36.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BC443F718;
-        Fri, 13 Aug 2021 08:00:51 -0700 (PDT)
-Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference in
- probe
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Xue <xxm@rock-chips.com>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        id S242528AbhHMPSN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Aug 2021 11:18:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 320F1604D7;
+        Fri, 13 Aug 2021 15:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1628867866;
+        bh=7IvGPmbqt6MeOuUj/O12dGFXesS8HBm8zaWzZDYSZSU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=szT/Ohsjn9/mPLA0w8HRUPcr13w/4QxpFOK0SLkKliYX/HXKfUpfV25WshO9bsjWq
+         bug2cJTKZjzXohR20iZfvKgzJWMKGyDTRp55ivfUuhBYxChjrWMztb/NyKzNXvTXRf
+         86CbOG9kIEGGAx50fTdBgXAW+etmkNHnZJWUvb98=
+Date:   Fri, 13 Aug 2021 17:09:37 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, kernel-janitors@vger.kernel.org
-References: <20210813113338.GA30697@kili>
- <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com> <20210813135412.GA7722@kadam>
- <2917a1c8-d59b-43b1-1650-228d20dfc070@arm.com>
- <20210813143250.GA5209@sirena.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <566c26bb-c488-8c86-f47e-6a748b9b6c77@arm.com>
-Date:   Fri, 13 Aug 2021 16:00:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/sysfs: Use correct variable for the legacy_mem sysfs
+ object
+Message-ID: <YRaLMWh3zsVQqNr1@kroah.com>
+References: <YRYrDQ3yuvtLtoKr@kroah.com>
+ <20210813142901.GA2574831@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210813143250.GA5209@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210813142901.GA2574831@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-08-13 15:32, Mark Brown wrote:
-> On Fri, Aug 13, 2021 at 03:01:10PM +0100, Robin Murphy wrote:
+On Fri, Aug 13, 2021 at 09:29:01AM -0500, Bjorn Helgaas wrote:
+> On Fri, Aug 13, 2021 at 10:19:25AM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 12, 2021 at 12:14:50PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Aug 12, 2021 at 11:17:12AM -0500, Bjorn Helgaas wrote:
+> > > > [+to Greg, please update sysfs_defferred_iomem_get_mapping-5.15]
+> > > 
+> > > Actually, Greg, totally up to you, but if nobody else is depending on
+> > > the sysfs_defferred_iomem_get_mapping-5.15 branch, another possibility
+> > > would be for you to drop that branch and for me to merge the two
+> > > patches on it + Krzysztof's fix below + (hopefully) Krzysztof's PCI
+> > > static attribute work.
+> > 
+> > I can not "drop" the branch as it is already merged into my
+> > driver-core-next branch that I can not rebase.  I could revert it, but
+> > is that really needed?
 > 
->> Indeed I've thought before that it would be nice if regulators worked like
->> GPIOs, where the absence of an optional one does give you NULL, and most of
->> the API is also NULL-safe. Probably a pretty big job though...
-> 
-> It also encourages *really* bad practice with error handling, and in
-> general there are few use cases for optional regulators where there's
-> not some other actions that need to be taken in the case where the
-> supply isn't there (elimintating some operating points or features,
-> reconfiguring power internally and so on).  If we genuninely don't need
-> to do anything special one wonders why we're trying to turn the power on
-> in the first place.
+> Nope, I don't think a revert is warranted.  I'll take care of getting
+> Krzysztof's fix into v5.15.
 
-Sure, once you get into it, regulators are arguably a rather deeper area 
-than GPIOs, so in terms of the NULL-safe aspect anything beyond 
-enable/disable - for the sake of keeping trivial usage simple - would be 
-pretty questionable for sure.
+Thanks, I'll handle the merge issues after that happens in my tree.
 
-A lot of the usage of regulator_get_optional() seems to be just making 
-sure some external thing is powered between probe() and remove() if it's 
-not hard-wired already, so maybe something like a 
-devm_regulator_get_optional_enabled() could be an answer to that 
-argument without even touching the underlying API.
-
-Robin.
+greg k-h
