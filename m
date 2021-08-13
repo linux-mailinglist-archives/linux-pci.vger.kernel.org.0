@@ -2,89 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB35C3EBC7B
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 21:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE8083EBDD2
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 23:27:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233635AbhHMTXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 15:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229601AbhHMTXX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 15:23:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 32EA3608FC;
-        Fri, 13 Aug 2021 19:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628882576;
-        bh=IwlgeTmsHnWv+9SX8uMxnltkECACWYzF6awWr2YZcrU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=o4dhA/iDEfMJoYZ2bq9y+AcVgg5wyrNkht08+6Sokb5kptg8j5bwvX9SmE5lLoUTh
-         ZnDMjBLQ6j7rDj0Ln6vUmfsasFfH5boVhF99nKnzKOL2/Net1VIjBOEB1zpvk8m8Mx
-         OCjYYYH+WEcZkiI6u2jmHs6LaAuK9KvOOXRVy4rHDv36CdDd9TAV3hI+JX01X53NwO
-         LW7GPazfmHAcDUbmk5dexWqvvSJH6su5jN6Bcy8neKCTPMz994v5+NdsupUfw2r6mY
-         1IGPOlgeF8kz9pBj2oeCpdpcM2EJ84ewb7R1xMPk+aJ9j0O0T51amSvu65Xisy2/MQ
-         YztMO3hb56Y+g==
-Date:   Fri, 13 Aug 2021 14:22:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Artem Lapkin <email2tema@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCIe: limit Max Read Request Size on i.MX to 512 bytes
-Message-ID: <20210813192254.GA2604116@bjorn-Precision-5520>
+        id S234841AbhHMV2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 17:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234764AbhHMV2S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Aug 2021 17:28:18 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6B1C0617AD
+        for <linux-pci@vger.kernel.org>; Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id l11so13705372plk.6
+        for <linux-pci@vger.kernel.org>; Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fIuqP4Yz2mMXyBFDc+vWEGTE5nozItHKoX69RiBlK9c=;
+        b=vJ4OFEkcbG1agdPxGccwQbBc8rAuR9cGgCsYwGAV+KW85F0NTQ9u9u6kv62Sr91ufO
+         h44HljNo1fS7MZN/dn1k7xMIgM/v+ynUOPHCN3PlOMIMj59SBLALsuiRcEMj8/X0uAH3
+         BMCyChW78mKbnoLLz7SfV6ri1HFHLCqS0abdKjAKsoB9yrW8nkL/ci8srOl1+j71MigB
+         r+kNJLMwIQZDVgvZxr4yjbfWqMluBWnLXpTKIYijwcXLwrVHMwcO6cNjGTfT4uI/D8y5
+         RnVKHojA3v1dbA7tAMYV1f/CJdJkR4GJLD3trYzde7/0NJumsKbW2WmC3pI1Cv+6Z4u5
+         MGJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fIuqP4Yz2mMXyBFDc+vWEGTE5nozItHKoX69RiBlK9c=;
+        b=F6m7jNNZ1dc1QmzUIkWMIocxOn5vn6mTsDW/AjBOWjLmZQl8TzpA6F2mGDLp5vgNHF
+         2n0KXRTID4swJFcI/Co3X+xYHYk0rEMBFh1TnyuGqfDB5xCv3tl+olIaHE4BJSuiJxwf
+         ZddthB2CB+ZrwWUiphzZlF1DcMzJHCFxKF4MZqME5wnuaKRfQjpIyZvodv1aKLKJLChq
+         CNWt8u/+mdzM+IYXTWN2ZeQHuSIdMRvfMtKfpKNlzIak6Dz4UktKN9sfsRRt4oREFOq9
+         cGLrFPyuoNufwtKw8ejrbiWYJDscEuNph43TNdGSQ7bUncjCcVbb9WFLcdCHpxfyicvZ
+         X6sQ==
+X-Gm-Message-State: AOAM5325bh2zEG3GY+gQc75j9Gc+81P36BSGqB6O5wcWA2jcOmFzyWt/
+        VwgL8iA6I6/tGzDJ1SaJDYZM2MfINtQ5/pD6GYxo1w==
+X-Google-Smtp-Source: ABdhPJyeEo2GV1LHXrjsMojC83k03WtHncas+SnV0s9fpP+5J5WcDDtW7g6EGcAAsdn4yPgsmmawAkdI4/LU2VXVzTQ=
+X-Received: by 2002:a63:311:: with SMTP id 17mr4040003pgd.450.1628890070229;
+ Fri, 13 Aug 2021 14:27:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <m31r6x1r74.fsf@t19.piap.pl>
+References: <DM5PR12MB2534D383B0226498DD7F2005BDFA9@DM5PR12MB2534.namprd12.prod.outlook.com>
+ <20210813171421.GA2593219@bjorn-Precision-5520>
+In-Reply-To: <20210813171421.GA2593219@bjorn-Precision-5520>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 13 Aug 2021 14:27:39 -0700
+Message-ID: <CAPcyv4gQz7EBkvPdu_y8hBqQ_S12B5cAz4x42C1mx7dsBXKV9w@mail.gmail.com>
+Subject: Re: CXL Hot and Warm Reset Testing
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vikram Sethi <vsethi@nvidia.com>,
+        Chris Browy <cbrowy@avery-design.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Shanker Donthineni <sdonthineni@nvidia.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 02:09:51PM +0200, Krzysztof Hałasa wrote:
-> Krzysztof, :-)
-> 
-> > Would it be possible to implement this particular MRRS fix as a quirk
-> > only for the i.MX6 controller?  Unless this is something that we need in
-> > the core, a quirk would be preferred over something that changes the PCI
-> > core.
-> 
-> I have briefly considered it, but I think it would be *much* more
-> complicated and error-prone. It also appears that there are more
-> platforms which need it - the old CNS3xxx, which currently subverts the
-> PCIE_BUS_PEER2PEER, the loongson, keystone, maybe all DWC PCIe.
-> Multiplication of the "quirk" code doesn't really look good to me.
-> 
-> TBH I don't think of this as of a "quirk" - all systems have MRRS
-> limits, it just happens that these ones have their limit lower than 4096
-> bytes. This isn't a limitation of a particular PCIe device, this is a
-> common limit of the whole system.
+On Fri, Aug 13, 2021 at 10:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Amey (working on PCI resets), linux-pci]
+>
+> On Fri, Aug 13, 2021 at 05:01:32PM +0000, Vikram Sethi wrote:
+> > Hi Dan,
+> >
+> > > -----Original Message-----
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > On Wed, Aug 11, 2021 at 9:42 AM Chris Browy <cbrowy@avery-design.com>
+> > > wrote:
+> > >
+> > > /sys/bus/pci/devices/$device/reset is a method to trigger PCI
+> > > device reset, but I do not expect that will ever gain CXL specific
+> > > knowledge.
+> > >
+> > CXL reset may need some thought, specially for devices that don't
+> > expose FLR but do expose CXL reset (while former does not affect
+> > CXL.cache/mem, the latter wipes out CXL.cache/mem state in the
+> > device and there is discoverability as to whether or not memory
+> > contents can be cleared as part of CXL reset). We may need a way of
+> > triggering CXL reset from userspace, and if the existing
+> > /sys/bus/pci/devices/$device/reset won't have knowledge of CXL
+> > reset, there still should be a prioritized order in the kernel in
+> > which CXL reset is attempted before more drastic resets like SBR.
+> > IIRC CXL reset can also impact all functions that use CXL.cache/mem,
+> > but not legacy PCIe functions on the device which do not use
+> > CXL.cache/mem (there is discoverability as to which functions are
+> > not impacted by CXL reset).
 
-Do you have a reference for this?  I don't see anything in the PCIe
-spec that suggests platforms must limit MRRS, and it seems that only
-these ARM-related controllers have this issue.  If there *is* a
-platform connection here, we'll need some way to discover it, e.g.,
-an ACPI _DSM method or similar.
-
-The only guidance in the spec about setting MRRS is that:
-
-  - Software must set Max_Read_Request_Size of an
-    isochronous-configured device with a value that does not exceed
-    the Max_Payload_Size set for the device (PCIe r5.0, sec 6.3.4.1)
-
-  - The Max_Read_Request_Size mechanism allows improved control of
-    bandwidth allocation in systems where Quality of Service (QoS) is
-    important for the target applications. For example, an arbitration
-    scheme based on counting Requests (and not the sizes of those
-    Requests) provides imprecise bandwidth allocation when some
-    Requesters use much larger sizes than others. The
-    Max_Read_Request_Size mechanism can be used to force more uniform
-    allocation of bandwidth, by restricting the upper size of Read
-    Requests (sec 7.5.3.4 implementation note)
-
+What's the Linux use case for supporting CXL reset for a CXL memory
+expander? PCI reset is useful for device assignment, and CXL reset
+might be useful for similarly assigning an accelerator. CXL.mem on the
+other hand can be directly assigned at a per-page level without also
+needing to assign the device. How could a VM reliably program HDM
+decoders when it cannot perceive the host physical address space? I
+understand the utility of CXL reset for device bring-up and test
+software that knows what it is doing can write config space directly,
+but that software would assume all responsibility.
