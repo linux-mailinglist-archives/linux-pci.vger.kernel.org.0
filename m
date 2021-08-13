@@ -2,96 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C5F53EB9AF
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 18:01:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01E823EB9B4
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Aug 2021 18:03:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241378AbhHMQCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Aug 2021 12:02:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241349AbhHMQCD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Aug 2021 12:02:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 30C7E60FC4;
-        Fri, 13 Aug 2021 16:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628870496;
-        bh=eLebXlVu6RTNHtlBr3MavHA+nmxGCpm8/vDDNL6AUJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TCPNX7RlFSfcKvVLfK2y3Jl5XFpmpFMn/kFwVRo0Yoh5n0Dt39MJ/G2VOFkSu6EaT
-         81qqm+Tirad290QNC5mwKRYU1AC01XG7bh1YNmctzFD3PlIyPZIg9KwvYYaAPKPVOP
-         exymlxMegRBNS7Sv1uMS4fWU20aC52D/6AGCf70RKaPModZQq+tL4MJDOhp0Zh7b0r
-         zz/FnO5Glda91rNuaxbJL6z3+Px/1ru3G0HO056j2qeNaOzhkvPTdbOZWVqXdLWdDt
-         s5GSNFMIzjgMoNTI/a6CTsBJ3/6nYaspQ09ogRyn+1Wm5IN2nwX0/zdoYQsRk1UlEL
-         0zVjmIWLErASA==
-Date:   Fri, 13 Aug 2021 17:01:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        id S241152AbhHMQD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Aug 2021 12:03:26 -0400
+Received: from mail-oo1-f44.google.com ([209.85.161.44]:41592 "EHLO
+        mail-oo1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236895AbhHMQDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Aug 2021 12:03:25 -0400
+Received: by mail-oo1-f44.google.com with SMTP id f33-20020a4a89240000b029027c19426fbeso2936316ooi.8
+        for <linux-pci@vger.kernel.org>; Fri, 13 Aug 2021 09:02:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=igXLnd1eISg2P0hGoYZnUOJKTMPuxVIxAZpu/coMklo=;
+        b=pZ0WgpOHNFQq4FOyZqRHtUkNDX9ujEUjkEr/mURGVci1dppTENYrumfy60l4HLFL/w
+         UNMEiGBAuGuxmU/4yfWqhzK80UtK7UC/buYI7YqrUt+qn6xEuY7CQyOpmp/Zc3MwZ+Sy
+         15OJaKWkZEY5WOGIQTcceIJajAA5fqMrvGqsY192hEvrcqP2Qhy+55nb828ybwKXgvAt
+         dbRON2/yuLJ8sYKF6V1iZim9fhi/T+KU2iEL5SN+rwhjmwXiaR3SmWLTHFFrgORdh+T/
+         dSQpCoKbkR+icrg2F1TUPLq0rrrTotx0nNSP1b/pWV5s9h0/CYQl1AosLjonF/bjVszC
+         zKYA==
+X-Gm-Message-State: AOAM5333HLzmON3HRaIliihzKtRtMWteVlRbLLsNi9xVoiJELEjXC1I6
+        lON3B/GT72NVIrWVx3JBsw==
+X-Google-Smtp-Source: ABdhPJxiB3tr1hTNXtMRt4s0i4ZTXw15nplCz2EbiuxYKNJ3IXT2f+h5fbf6BhiK8/w5RqphdsmTIA==
+X-Received: by 2002:a05:6820:305:: with SMTP id l5mr2347123ooe.21.1628870578477;
+        Fri, 13 Aug 2021 09:02:58 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id w13sm389995otl.41.2021.08.13.09.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Aug 2021 09:02:57 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip-dwc: Potential error pointer dereference
- in probe
-Message-ID: <20210813160116.GE5209@sirena.org.uk>
-References: <20210813113338.GA30697@kili>
- <01b7c3da-1c58-c1d9-6a54-0ce30ca76097@arm.com>
- <CAL_JsqJ4Dadf00pJxEDd14zbWyN99s1A2L4fxZSkZddeg2pV6g@mail.gmail.com>
- <81b9a25d-f12f-90e0-0b05-b5e396f14c08@arm.com>
- <CAL_JsqLWVLRDdkR62BSv69oW3QCLVebgpU1TKtxvzZmD4wuP4Q@mail.gmail.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH] PCI: of: Fix MSI domain lookup with child bus nodes
+Date:   Fri, 13 Aug 2021 11:02:57 -0500
+Message-Id: <20210813160257.3570515-1-robh@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLWVLRDdkR62BSv69oW3QCLVebgpU1TKtxvzZmD4wuP4Q@mail.gmail.com>
-X-Cookie: E Pluribus Unix
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+When a DT contains PCI child bus nodes, lookup of the MSI domain on PCI
+buses fails resulting in the following warnings:
 
---imjhCm/Pyz7Rq5F2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+WARNING: CPU: 4 PID: 7 at include/linux/msi.h:256 __pci_enable_msi_range+0x398/0x59c
 
-On Fri, Aug 13, 2021 at 10:57:44AM -0500, Rob Herring wrote:
-> On Fri, Aug 13, 2021 at 8:47 AM Robin Murphy <robin.murphy@arm.com> wrote:
+The issue is that pci_host_bridge_of_msi_domain() will check the DT node of
+the passed in bus even if it's not the host bridge's bus. Based on the
+name of the function, that's clearly not what we want. Fix this by
+walking the bus parents to the root bus.
 
-> > In fact it's the other way round - "optional" in this case is for when
-> > the supply may legitimately not exist so the driver may or may not need
-> > to handle it, so it can return -ENODEV if a regulator isn't described by
-> > firmware. A non-optional regulator is assumed to represent a necessary
-> > supply, so if there's nothing described by firmware you get the (valid)
-> > dummy regulator back.
+Reported-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Compile tested only. Mauro, Can you see if this fixes your issue.
 
-> Ah yes, regulators is the oddball. Surely no one else will assume the
-> same behavior of _optional() variants across subsystems... ;)
+ drivers/pci/of.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-It would be silly to copy the *whole* pattern!
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index a143b02b2dcd..ea70aede054c 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -84,6 +84,10 @@ struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus)
+ 	if (!bus->dev.of_node)
+ 		return NULL;
+ 
++	/* Find the host bridge bus */
++	while (!pci_is_root_bus(bus))
++		bus = bus->parent;
++
+ 	/* Start looking for a phandle to an MSI controller. */
+ 	d = of_msi_get_domain(&bus->dev, bus->dev.of_node, DOMAIN_BUS_PCI_MSI);
+ 	if (d)
+-- 
+2.30.2
 
---imjhCm/Pyz7Rq5F2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEWl0sACgkQJNaLcl1U
-h9AWngf9EmuXkHFWSOYnfO7Y0ZVqCKtx2n3Z4yWOugf8kKVfrU/Jl4Vd5eE/P5gF
-5OVayvHPX8JCwCtV/EPX6vQQoGbPD6rbNyWmsRkCN73iqT3WBIieZqEDmbvNo9UI
-bW30zehOnqz2NuSie+qk0RZ23hLVdhEVbidMVnZjnXUtiPHR8K6e5o4ugdXBnasP
-LuAzqewWfVnzglouTgPJbWu52Gf9R6TO/k1OC8UhFEQP+nk8tEnOGZel7nuHMBdD
-5E469rHqG/n2gMyGPVVIQckcgGokMjnF1nwyQ6O5fLRMAQVpf4WHRUybcsjzbDx+
-KBQxF1a6o8r3bOPWZcAEdLM5DjJLHw==
-=NuQM
------END PGP SIGNATURE-----
-
---imjhCm/Pyz7Rq5F2--
