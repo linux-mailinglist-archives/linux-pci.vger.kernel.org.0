@@ -2,102 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 226FE3EC16C
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Aug 2021 10:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A795F3EC1BD
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Aug 2021 11:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237574AbhHNIkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 Aug 2021 04:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237426AbhHNIkJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 Aug 2021 04:40:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB31C06175F;
-        Sat, 14 Aug 2021 01:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=62Vas8vfgaU4Fg6a79+EgFsfJwf25X3qtqREVjssypo=; b=rpZ/Hf6OytEohJ44VJerrJnY/s
-        TEFsUGwQv3vlbUI/UJ63t6E2YTwPjll3r0wySKJteuhDjjHUkTC891M2EaZAtSmzc/6A7VtDUYdeZ
-        sj04B0bK0q7cXgHrj4BkRf93eUFG3YOvax+SqxiXEMu68HGkPpVwIx3Bxu1nSZfJ9kMUCSzXM+sto
-        M6hSpq59VxPiY/BdGTlq9OS61Y6ZM0kqRjZzvGbgjN7M74UQJlVY3yE+PFufg32Mk50/mGh+9hFnM
-        AZlp+9VpV1p/UVgYqoI5Yt2M0GsKqu2cVVjHNlp2YnwDTFsE9y6r5rwyYuCw4Obj52pcnajsvDSDo
-        yGLfyGTw==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mEpBa-00GXfB-Cb; Sat, 14 Aug 2021 08:38:41 +0000
-Date:   Sat, 14 Aug 2021 09:38:34 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rafa?? Mi??ecki <zajec5@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Simon Horman <simon.horman@corigine.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 4/8] PCI: replace pci_dev::driver usage that gets the
- driver name
-Message-ID: <YReBCtWxvmDx7Uqg@infradead.org>
-References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
- <20210811080637.2596434-5-u.kleine-koenig@pengutronix.de>
- <YRTIqGm5Dr8du7a7@infradead.org>
- <20210812081425.7pjy4a25e2ehkr3x@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210812081425.7pjy4a25e2ehkr3x@pengutronix.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        id S229894AbhHNJp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 Aug 2021 05:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231683AbhHNJpt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 14 Aug 2021 05:45:49 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9F060EFE;
+        Sat, 14 Aug 2021 09:45:21 +0000 (UTC)
+Received: from 109-170-232-56.xdsl.murphx.net ([109.170.232.56] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mEqEB-004xOs-Ls; Sat, 14 Aug 2021 10:45:19 +0100
+Date:   Sat, 14 Aug 2021 10:45:19 +0100
+Message-ID: <87fsvc1hsg.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Barry Song <21cnbao@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        bhelgaas@google.com, dwmw@amazon.co.uk, gregkh@linuxfoundation.org,
+        linux-pci@vger.kernel.org, linuxarm@huawei.com,
+        lorenzo.pieralisi@arm.com, rafael@kernel.org, robin.murphy@arm.com,
+        song.bao.hua@hisilicon.com, will@kernel.org
+Subject: Re: [PATCH v3 0/2] msi: extend msi_irqs sysfs entries to platform devices
+In-Reply-To: <20210813035628.6844-1-21cnbao@gmail.com>
+References: <20210813035628.6844-1-21cnbao@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 109.170.232.56
+X-SA-Exim-Rcpt-To: 21cnbao@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, bhelgaas@google.com, dwmw@amazon.co.uk, gregkh@linuxfoundation.org, linux-pci@vger.kernel.org, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, robin.murphy@arm.com, song.bao.hua@hisilicon.com, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 12, 2021 at 10:14:25AM +0200, Uwe Kleine-K??nig wrote:
-> dev_driver_string() might return "" (via dev_bus_name()). If that happens
-> *drvstr == '\0' becomes true.
+On Fri, 13 Aug 2021 04:56:26 +0100,
+Barry Song <21cnbao@gmail.com> wrote:
 > 
-> Would the following be better?:
+> From: Barry Song <song.bao.hua@hisilicon.com>
 > 
-> 	const char *drvstr;
+> -v3:
+>   added Acked-by of Greg Kroah-Hartman and Bjorn Helgaas, thanks!
+>   refined commit log with respect to Bjorn's comments
 > 
-> 	if (pdev)
-> 		return "<null>";
+>   Hi Thomas & Marc,
+>   Would you please handle this series? Thanks!
 > 
-> 	drvstr = dev_driver_string(&pdev->dev);
+> -v2:
+>   extract common code for msi_irqs sysfs populate/destory from PCI to MSI core,
+>   platform_device can directly reuse common code;
+>   https://lore.kernel.org/lkml/20210812105341.51657-1-21cnbao@gmail.com/
 > 
-> 	if (!strcmp(drvstr, ""))
-> 		return "<null>";
+> -v1:
+>   https://lore.kernel.org/lkml/20210811105020.12980-1-song.bao.hua@hisilicon.com/
 > 
-> 	return drvstr;
+> Just like pci devices have msi_irqs which can be used by userspace irq affinity
+> tools or applications to bind irqs, platform devices also widely support msi
+> irqs.
+> For platform devices, for example ARM SMMU, userspaces also care about its msi
+> irqs as applications can know the mapping between devices and irqs and then
+> make smarter decision on handling irq affinity. For example, for SVA mode,
+> it is better to pin io page fault to the numa node applications are running
+> on. Otherwise, io page fault will get a remote page from the node iopf happens
+> rather than from the node applications are running on.
 > 
-> When I thought about this hunk I considered it ugly to have "<null>" in
-> it twice.
+> The first patch extracts the sysfs populate/destory code from PCI to
+> MSI core. The 2nd patch lets platform-msi export msi_irqs entry so that
+> userspace can know the mapping between devices and irqs for platform
+> devices.
 
-Well, if you want to avoid that you can do:
+Although I'm not in a position to test it right now, this looks
+reasonable to me:
 
-	if (pdev) {
-		const char *name = dev_driver_string(&pdev->dev);
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-		if (strcmp(drvstr, ""))
-			return name;
-	}
-	return "<null>";
+Thomas, do you want to queue this one, given that you already carry a
+ton of MSI-related patches?
 
-Which would be a lot more readable.
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
