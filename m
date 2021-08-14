@@ -2,60 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 828B83EC162
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Aug 2021 10:24:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 226FE3EC16C
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Aug 2021 10:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237526AbhHNIZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 Aug 2021 04:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237401AbhHNIZV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 14 Aug 2021 04:25:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E1FF160EE2;
-        Sat, 14 Aug 2021 08:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1628929493;
-        bh=Cfglcap9UZcx9wX6xKYoZqz19Fj5k5vI6Kkv/t63bcc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PFOl3ekhuAWp//OuaV7Ll1WAiurWd9WCi2VYoaNzWtTerRyFrPYyvFKh0mXhMqqKv
-         UbvZ52LqOa1k+6pLuJZY+tzTtGxQiLlaWMcIydv/JrYNuHvTdxzhXZfFAAuG0asx6r
-         w1loc7s7qITMXX2Sp4zG5E3jUXZl1R9Gr76mbjPA=
-Date:   Sat, 14 Aug 2021 10:24:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Barry Song <21cnbao@gmail.com>
-Cc:     bhelgaas@google.com, corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mchehab+huawei@kernel.org,
-        Jonathan.Cameron@huawei.com, leon@kernel.org,
-        schnelle@linux.ibm.com, bilbao@vt.edu, luzmaximilian@gmail.com,
-        linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH] PCI/MSI: Clarify the irq sysfs ABI for PCI devices
-Message-ID: <YRd90p6Kcxpq6cbp@kroah.com>
-References: <20210813122650.25764-1-21cnbao@gmail.com>
+        id S237574AbhHNIkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 Aug 2021 04:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237426AbhHNIkJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 Aug 2021 04:40:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB31C06175F;
+        Sat, 14 Aug 2021 01:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=62Vas8vfgaU4Fg6a79+EgFsfJwf25X3qtqREVjssypo=; b=rpZ/Hf6OytEohJ44VJerrJnY/s
+        TEFsUGwQv3vlbUI/UJ63t6E2YTwPjll3r0wySKJteuhDjjHUkTC891M2EaZAtSmzc/6A7VtDUYdeZ
+        sj04B0bK0q7cXgHrj4BkRf93eUFG3YOvax+SqxiXEMu68HGkPpVwIx3Bxu1nSZfJ9kMUCSzXM+sto
+        M6hSpq59VxPiY/BdGTlq9OS61Y6ZM0kqRjZzvGbgjN7M74UQJlVY3yE+PFufg32Mk50/mGh+9hFnM
+        AZlp+9VpV1p/UVgYqoI5Yt2M0GsKqu2cVVjHNlp2YnwDTFsE9y6r5rwyYuCw4Obj52pcnajsvDSDo
+        yGLfyGTw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mEpBa-00GXfB-Cb; Sat, 14 Aug 2021 08:38:41 +0000
+Date:   Sat, 14 Aug 2021 09:38:34 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Rafa?? Mi??ecki <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Simon Horman <simon.horman@corigine.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 4/8] PCI: replace pci_dev::driver usage that gets the
+ driver name
+Message-ID: <YReBCtWxvmDx7Uqg@infradead.org>
+References: <20210811080637.2596434-1-u.kleine-koenig@pengutronix.de>
+ <20210811080637.2596434-5-u.kleine-koenig@pengutronix.de>
+ <YRTIqGm5Dr8du7a7@infradead.org>
+ <20210812081425.7pjy4a25e2ehkr3x@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210813122650.25764-1-21cnbao@gmail.com>
+In-Reply-To: <20210812081425.7pjy4a25e2ehkr3x@pengutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 14, 2021 at 12:26:50AM +1200, Barry Song wrote:
-> From: Barry Song <song.bao.hua@hisilicon.com>
+On Thu, Aug 12, 2021 at 10:14:25AM +0200, Uwe Kleine-K??nig wrote:
+> dev_driver_string() might return "" (via dev_bus_name()). If that happens
+> *drvstr == '\0' becomes true.
 > 
-> /sys/bus/pci/devices/.../irq has been there for many years but it has never
-> been documented. This patch is trying to document it. Plus, irq ABI is very
-> confusing at this moment especially for MSI and MSI-x cases. MSI sets irq
-> to the first number in the vector, but MSI-X does nothing for this though
-> it saves default_irq in msix_setup_entries(). Weird the saved default_irq
-> for MSI-X is never used in pci_msix_shutdown(), which is quite different
-> with pci_msi_shutdown(). Thus, this patch also moves to show the first IRQ
-> number which is from the first msi_entry for MSI-X. Hopefully, this can
-> make irq ABI more clear and more consistent.
+> Would the following be better?:
 > 
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci | 8 ++++++++
->  drivers/pci/msi.c                       | 6 ++++++
->  2 files changed, 14 insertions(+)
+> 	const char *drvstr;
+> 
+> 	if (pdev)
+> 		return "<null>";
+> 
+> 	drvstr = dev_driver_string(&pdev->dev);
+> 
+> 	if (!strcmp(drvstr, ""))
+> 		return "<null>";
+> 
+> 	return drvstr;
+> 
+> When I thought about this hunk I considered it ugly to have "<null>" in
+> it twice.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Well, if you want to avoid that you can do:
+
+	if (pdev) {
+		const char *name = dev_driver_string(&pdev->dev);
+
+		if (strcmp(drvstr, ""))
+			return name;
+	}
+	return "<null>";
+
+Which would be a lot more readable.
