@@ -2,314 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AAA93ECAA4
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 21:20:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E943ECAEF
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 22:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbhHOTUl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 15:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        id S230173AbhHOUbS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 16:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229603AbhHOTUk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Aug 2021 15:20:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A21B461288;
-        Sun, 15 Aug 2021 19:20:10 +0000 (UTC)
+        id S229582AbhHOUbS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Aug 2021 16:31:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BD48B61283;
+        Sun, 15 Aug 2021 20:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629055210;
-        bh=VywPFDOWy9cuAQXve0KOxXXMJWV9RLbj7AIB+yaP6QU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V8UIr1pcVWN3WmFnIVTaOEgyWvUlT/3JQhX6wEV/EaJzbLYX7+xkjTWsKxEEWJDP1
-         vM42sgiq8tCJQPAF8RUnGf4KqTtISO0Tukr/Yb8o8sRk0swbiC/ws/muaelSq9invS
-         3btFLwSE4GwIfFa9hYRNV6y2TuFeu1UXd+SOoxtsmvZual8CBzNLypdSe1PmQfsMcP
-         ESpEfPjTo2E4de0WttB/W5U4b2DWulOwnCHtB0a2E+Z9lADQD3OcY8SB/oYYkF4b4F
-         oQCr2EuWwO+24NfBtOc2bPu/ow5uAgQXJ1tmBDK95qDRljBfof1DzzyIXkcwlp5onU
-         zTkyJY67E8Usg==
-Received: by mail-ej1-f50.google.com with SMTP id z20so28026451ejf.5;
-        Sun, 15 Aug 2021 12:20:10 -0700 (PDT)
-X-Gm-Message-State: AOAM531v58tYHeBCXWlO7tbJfM0LmQw3cUIjKDpS6ZM9RO3ZhthT158k
-        HmlcNgk9MCx2NmvFTG+OFrH4QzBT0kLYN0aGGQ==
-X-Google-Smtp-Source: ABdhPJxScnsFLW5iYyuPYWljjp8QzFmAIPBuYxbrzMlPJapC3N52bIUc8w1d/+uJLKE/yGBG49E9/mQFJ5F2NrGeQWk=
-X-Received: by 2002:a17:906:519:: with SMTP id j25mr12275611eja.525.1629055209089;
- Sun, 15 Aug 2021 12:20:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210726083204.93196-1-mark.kettenis@xs4all.nl>
- <20210726083204.93196-2-mark.kettenis@xs4all.nl> <20210726231848.GA1025245@robh.at.kernel.org>
- <87sfzt1pg9.wl-maz@kernel.org> <CAL_JsqLvqWiuib9s4PzX8pOQYJQ0eR7Gxz==J849eVJ5MDq4SA@mail.gmail.com>
- <8735ra1x8t.wl-maz@kernel.org>
-In-Reply-To: <8735ra1x8t.wl-maz@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sun, 15 Aug 2021 14:19:57 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ5M3soMT30ntSTbqqdrQP8TT26mHL-0xExsn10MWPofA@mail.gmail.com>
-Message-ID: <CAL_JsqJ5M3soMT30ntSTbqqdrQP8TT26mHL-0xExsn10MWPofA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
-        devicetree@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Sven Peter <sven@svenpeter.dev>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Hector Martin <marcan@marcan.st>,
+        s=k20201202; t=1629059448;
+        bh=U1Bn0jmeesQXigOAHRvgl+2uQxdlxWt1EJV19mZQ+40=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qnTsmiqxlyuSwVivBlYYOWzQzhqJfqT+LdjFxdjHFIvXIzfsIoVgL6yNfx2sQLs4Y
+         aCFLYE4a0bkPWfkaPfmyo/A2eZDQU2ONo/YtBuMJosFHHLWReC/DzGxV42G14tdfYn
+         FNjbX4dXh3BJxu7omeVlXeo4aduQkHljM/xLn3bWUMtV5tfZpdv3tjl/E6ljr1NYvK
+         5HcoNqhCGOMt/7Ot3yw1vn7do5ZAR2/z6y/JpRYoo3Fcc0LEgOV7I0UtTQr/oICPRe
+         eIs+mtopTv5ayb4GPobJxEqfYNn5rIdkjo7wPmolyCnCsuiKo1FIm39ihOHNmVCTfa
+         sCWU/sPUf5TbA==
+Received: by pali.im (Postfix)
+        id 61E4898C; Sun, 15 Aug 2021 22:30:45 +0200 (CEST)
+Date:   Sun, 15 Aug 2021 22:30:45 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     robh@kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: dts: marvell: armada-37xx: Extend PCIe MEM
+ space
+Message-ID: <20210815203045.hiir4aqm6btrqfy5@pali>
+References: <20210624215546.4015-1-pali@kernel.org>
+ <20210624215546.4015-3-pali@kernel.org>
+ <87pmv919bq.fsf@BL-laptop>
+ <20210723141204.waiipazikhzzloj7@pali>
+ <20210723155247.GB4103@lpieralisi>
+ <20210723164512.vo3scpzoodff2j33@pali>
+ <20210807113536.24ik7m7uonebwox2@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210807113536.24ik7m7uonebwox2@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 15, 2021 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Rob,
->
-> Apologies for the delay, I somehow misplaced this email...
->
-> On Mon, 02 Aug 2021 17:10:39 +0100,
-> Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Aug 1, 2021 at 3:31 AM Marc Zyngier <maz@kernel.org> wrote:
-> > >
-> > > On Tue, 27 Jul 2021 00:18:48 +0100,
-> > > Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Mon, Jul 26, 2021 at 10:32:00AM +0200, Mark Kettenis wrote:
-> > > > > From: Mark Kettenis <kettenis@openbsd.org>
-> > > > >
-> > > > > The Apple PCIe host controller is a PCIe host controller with
-> > > > > multiple root ports present in Apple ARM SoC platforms, including
-> > > > > various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > > > >
-> > > > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
-> > > > >  MAINTAINERS                                   |   1 +
-> > > > >  2 files changed, 167 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..bfcbdee79c64
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > > @@ -0,0 +1,166 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Apple PCIe host controller
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Mark Kettenis <kettenis@openbsd.org>
-> > > > > +
-> > > > > +description: |
-> > > > > +  The Apple PCIe host controller is a PCIe host controller with
-> > > > > +  multiple root ports present in Apple ARM SoC platforms, including
-> > > > > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > > > > +  The controller incorporates Synopsys DesigWare PCIe logic to
-> > > > > +  implements its root ports.  But the ATU found on most DesignWare
-> > > > > +  PCIe host bridges is absent.
-> > > >
-> > > > blank line
-> > > >
-> > > > > +  All root ports share a single ECAM space, but separate GPIOs are
-> > > > > +  used to take the PCI devices on those ports out of reset.  Therefore
-> > > > > +  the standard "reset-gpio" and "max-link-speed" properties appear on
-> > > >
-> > > > reset-gpios
-> > > >
-> > > > > +  the child nodes that represent the PCI bridges that correspond to
-> > > > > +  the individual root ports.
-> > > >
-> > > > blank line
-> > > >
-> > > > > +  MSIs are handled by the PCIe controller and translated into regular
-> > > > > +  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
-> > > > > +  distributed over the root ports as the OS sees fit by programming
-> > > > > +  the PCIe controller's port registers.
-> > > > > +
-> > > > > +allOf:
-> > > > > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    items:
-> > > > > +      - const: apple,t8103-pcie
-> > > > > +      - const: apple,pcie
-> > > > > +
-> > > > > +  reg:
-> > > > > +    minItems: 3
-> > > > > +    maxItems: 5
-> > > > > +
-> > > > > +  reg-names:
-> > > > > +    minItems: 3
-> > > > > +    maxItems: 5
-> > > > > +    items:
-> > > > > +      - const: config
-> > > > > +      - const: rc
-> > > > > +      - const: port0
-> > > > > +      - const: port1
-> > > > > +      - const: port2
-> > > > > +
-> > > > > +  ranges:
-> > > > > +    minItems: 2
-> > > > > +    maxItems: 2
-> > > > > +
-> > > > > +  interrupts:
-> > > > > +    description:
-> > > > > +      Interrupt specifiers, one for each root port.
-> > > > > +    minItems: 1
-> > > > > +    maxItems: 3
-> > > > > +
-> > > > > +  msi-controller: true
-> > > > > +  msi-parent: true
-> > > > > +
-> > > > > +  msi-ranges:
-> > > > > +    description:
-> > > > > +      A list of pairs <intid span>, where "intid" is the first
-> > > > > +      interrupt number that can be used as an MSI, and "span" the size
-> > > > > +      of that range.
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > > > > +    items:
-> > > > > +      minItems: 2
-> > > > > +      maxItems: 2
-> > > >
-> > > > I still have issues I raised on v1 with this property. It's genericish
-> > > > looking, but not generic. 'intid' as a single cell can't specify any
-> > > > parent interrupt such as a GIC which uses 3 cells. You could put in all
-> > > > the cells, but you'd still be assuming which cell you can increment.
-> > >
-> > > The GIC bindings already use similar abstractions, see what we do for
-> > > both GICv2m and GICv3 MBIs. Other MSI controllers use similar
-> > > properties (alpine and loongson, for example).
-> >
-> > That's the problem. Everyone making up their own crap.
->
-> And that crap gets approved:
->
-> https://lore.kernel.org/lkml/20200512205704.GA10412@bogus/
->
-> I'm not trying to be antagonistic here, but it seems that your
-> position on this very subject has changed recently.
+On Saturday 07 August 2021 13:35:36 Pali Rohár wrote:
+> On Friday 23 July 2021 18:45:12 Pali Rohár wrote:
+> > On Friday 23 July 2021 16:52:47 Lorenzo Pieralisi wrote:
+> > > On Fri, Jul 23, 2021 at 04:12:04PM +0200, Pali Rohár wrote:
+> > > > On Friday 23 July 2021 14:52:25 Gregory CLEMENT wrote:
+> > > > > Hello Pali,
+> > > > > 
+> > > > > > Current PCIe MEM space of size 16 MB is not enough for some combination
+> > > > > > of PCIe cards (e.g. NVMe disk together with ath11k wifi card). ARM Trusted
+> > > > > > Firmware for Armada 3700 platform already assigns 128 MB for PCIe window,
+> > > > > > so extend PCIe MEM space to the end of 128 MB PCIe window which allows to
+> > > > > > allocate more PCIe BARs for more PCIe cards.
+> > > > > >
+> > > > > > Without this change some combination of PCIe cards cannot be used and
+> > > > > > kernel show error messages in dmesg during initialization:
+> > > > > >
+> > > > > >     pci 0000:00:00.0: BAR 8: no space for [mem size 0x01800000]
+> > > > > >     pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > > > > >     pci 0000:00:00.0: BAR 6: assigned [mem 0xe8000000-0xe80007ff pref]
+> > > > > >     pci 0000:01:00.0: BAR 8: no space for [mem size 0x01800000]
+> > > > > >     pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x01800000]
+> > > > > >     pci 0000:02:03.0: BAR 8: no space for [mem size 0x01000000]
+> > > > > >     pci 0000:02:03.0: BAR 8: failed to assign [mem size 0x01000000]
+> > > > > >     pci 0000:02:07.0: BAR 8: no space for [mem size 0x00100000]
+> > > > > >     pci 0000:02:07.0: BAR 8: failed to assign [mem size 0x00100000]
+> > > > > >     pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit]
+> > > > > >     pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit]
+> > > > > >
+> > > > > > Due to bugs in U-Boot port for Turris Mox, the second range in Turris Mox
+> > > > > > kernel DTS file for PCIe must start at 16 MB offset. Otherwise U-Boot
+> > > > > > crashes during loading of kernel DTB file. This bug is present only in
+> > > > > > U-Boot code for Turris Mox and therefore other Armada 3700 devices are not
+> > > > > > affected by this bug. Bug is fixed in U-Boot version 2021.07.
+> > > > > >
+> > > > > > To not break booting new kernels on existing versions of U-Boot on Turris
+> > > > > > Mox, use first 16 MB range for IO and second range with rest of PCIe window
+> > > > > > for MEM.
+> > > > > 
+> > > > > Is there any depencey with the firs patch of this series ?
+> > > > > 
+> > > > > What happend if this patch is applied without the other ?
+> > > > 
+> > > > First patch is fixing reading and setting ranges configuration from DTS.
+> > > > Without first patch memory windows stays as they were in bootloader or
+> > > > in its default configuration. Which is that all 128 MB are transparently
+> > > > mapped to PCIe MEM space.
+> > > > 
+> > > > Therefore this second DTS patch does not fixes issue with IO space
+> > > > (kernel still crashes when accessing it). But allows to use all PCIe MEM
+> > > > space (due to bootloader / default configuration) and therefore allows
+> > > > to use more PCIe cards (which needs more PCIe MEM space).
+> > > 
+> > > So, the two patches are decoupled then ? We are not taking dts changes
+> > > through the PCI tree.
+> > 
+> > Well, both patches are required to fix setup and use of PCIe ranges on
+> > A3720 platforms. But I would say they are independent and you can apply
+> > them in any order. So Gregory, feel free to take DTS change in your tree
+> > and Lorenzo can review other patch.
+> 
+> Lorenzo, so will you take driver change via PCI tree?
+> 
+> And Gregory, DTS change via DTS tree?
 
-Not really, I think it's not the first time we've discussed this. But
-as I see things over and over, my tolerance for another instance
-without solving the problem for everyone diminishes. And what other
-leverage do I have?
+PING?
 
-Additionally, how long we have to support something comes into play. I
-have no idea for a Loongson MSI controller. I have a better idea on an
-Apple product...
-
-> > > > I think you should just list all these under 'interrupts' using
-> > > > interrupt-names to make your life easier:
-> > > >
-> > > > interrupt-names:
-> > > >   items:
-> > > >     - const: port0
-> > > >     - const: port1
-> > > >     - const: port2
-> > > >     - const: msi0
-> > > >     - const: msi1
-> > > >     - const: msi2
-> > > >     - const: msi3
-> > > >     ...
-> > > >
-> > > > Yeah, it's kind of verbose, but if the h/w block handles N interrupts,
-> > > > you should list N interrupts. The worst case for the above is N entries
-> > > > too if not contiguous.
-> > >
-> > > And that's where I beg to differ, again.
-> > >
-> > > Specifying interrupts like this gives the false impression that these
-> > > interrupts are generated by the device that owns them (the RC). Which
-> > > for MSIs is not the case.
-> >
-> > It's no different than an interrupt controller node having an
-> > interrupts property. The source is downstream and the interrupt
-> > controller is combining/translating the interrupts.
-> >
-> > The physical interrupt signals are connected to and originating in
-> > this block.
->
-> Oh, I also object to this, for the same reasons. The only case where
-> it makes sense IMHO is when the interrupt controller is a multiplexer.
-
-So we've had the same kind of property for interrupt multiplexers. I'm
-fine if you think an 'MSI to interrupts mapping property' should be
-named something else.
-
-> > That sounds like perfectly 'describing the h/w' to me.
->
-> I guess we have a different view of about these things. At the end of
-> the day, I don't care enough as long as we can expose a range of
-> interrupts one way or another.
-
-I don't really either. I just don't want 10 ways AND another...
-
-> > > This is not only verbose, this is
-> > > semantically dubious. And what should we do when the number of
-> > > possible interrupt is ridiculously large, as it is for the GICv3 ITS?
-> >
-> > I don't disagree with the verbose part. But that's not really an issue
-> > in this case.
-> >
-> > > I wish we had a standard way to express these constraints. Until we
-> > > do, I don't think enumerating individual interrupts is a practical
-> > > thing to do, nor that it actually represents the topology of the
-> > > system.
-> >
-> > The only way a standard way will happen is to stop accepting the
-> > custom properties.
-> >
-> > All the custom properties suffer from knowledge of what the parent
-> > interrupt controller is. To fix that, I think we need something like
-> > this:
-> >
-> > msi-ranges = <intspec base>, <intspec step>, <intspec end>;
-> >
-> > 'intspec' is defined by the parent interrupt-controller cells. step is
-> > the value to add. And end is what to match on to stop aka the last
-> > interrupt in the range. For example, if the GIC is the parent, we'd
-> > have something like this:
-> >
-> > <GIC_SPI 123 0>, <0 1 0>, <GIC_SPI 124 0>
-> >
-> > Does this apply to cases other than MSI? I think so as don't we have
-> > the same type of properties with the low power mode shadow interrupt
-> > controllers?  So 'interrupt-ranges'?
->
-> This would work, though the increment seems a bit over-engineered. You
-> also may need this property to accept multiple ranges.
-
-Yes, certainly. Worst case is a map.
-
-> > It looks to me like there's an assumption in the kernel that an MSI
-> > controller has a linear range of parent interrupts? Is that correct
-> > and something that's guaranteed? That assumption leaks into the
-> > existing bindings.
->
-> Depends on how the controller works. In general, the range maps to the
-> MultiMSI requirements where the message is an offset from the base of
-> the interrupt range. So you generally end-up with ranges of at least
-> 32 contiguous MSIs. Anything under that is sub-par and probably not
-> worth supporting.
-
-Maybe just this is enough:
-msi-ranges = <intspec base>, <length>, <intspec base>, <length>, ...
-
-While I say 'length' here, that's really up to the interrupt parent to
-interpret the intspec cells.
-
-> Of course, the controller may have some mapping facilities, which
-> makes things more... interesting.
->
-> > It's fine for the kernel to assume that until there's a case that's
-> > not linear, but a common binding needs to be able handle a
-> > non-linear case.
->
-> Fair enough. I can probably work with Mark to upgrade the binding and
-> the M1 PCIe code. Could you come up with a more formalised proposal?
-
-Not my itch.
-
-Rob
+> > I sent these two patches in one series as they are fixing one common
+> > issue. It is common that for fixing one common issue it is required to
+> > touch more subsystems / trees.
+> > 
+> > > Besides: these dts patches are a nightmare for backward compatibility,
+> > > hopefully Rob can shed some light on whether what you are doing here
+> > > is advisable and how to sync the changes with kernel changes.
+> > 
+> > As written in comment for armada-3720-turris-mox.dts file, there are
+> > specific requirements what needs to be put into ranges section. And
+> > version of this file without applying this patch and also version of
+> > this file with applied patch matches these requirements.
+> > 
+> > So I would say that this DTS change is backward and also forward
+> > compatible.
+> > 
+> > But I agree that DTS changes are lot of time nightmare...
+> > 
+> > > Lorenzo
+> > > 
+> > > > > Could you test it to see if any regression occure ?
+> > > > > 
+> > > > > Thanks,
+> > > > > 
+> > > > > Grégory
+> > > > > 
+> > > > > >
+> > > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > > > Fixes: 76f6386b25cc ("arm64: dts: marvell: Add Aardvark PCIe support for Armada 3700")
+> > > > > > ---
+> > > > > >  .../boot/dts/marvell/armada-3720-turris-mox.dts | 17 +++++++++++++++++
+> > > > > >  arch/arm64/boot/dts/marvell/armada-37xx.dtsi    | 11 +++++++++--
+> > > > > >  2 files changed, 26 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > > index 53e817c5f6f3..86b3025f174b 100644
+> > > > > > --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > > +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> > > > > > @@ -134,6 +134,23 @@
+> > > > > >  	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+> > > > > >  	status = "okay";
+> > > > > >  	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> > > > > > +	/*
+> > > > > > +	 * U-Boot port for Turris Mox has a bug which always expects that "ranges" DT property
+> > > > > > +	 * contains exactly 2 ranges with 3 (child) address cells, 2 (parent) address cells and
+> > > > > > +	 * 2 size cells and also expects that the second range starts at 16 MB offset. If these
+> > > > > > +	 * conditions are not met then U-Boot crashes during loading kernel DTB file. PCIe address
+> > > > > > +	 * space is 128 MB long, so the best split between MEM and IO is to use fixed 16 MB window
+> > > > > > +	 * for IO and the rest 112 MB (64+32+16) for MEM, despite that maximal IO size is just 64 kB.
+> > > > > > +	 * This bug is not present in U-Boot ports for other Armada 3700 devices and is fixed in
+> > > > > > +	 * U-Boot version 2021.07. See relevant U-Boot commits (the last one contains fix):
+> > > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/cb2ddb291ee6fcbddd6d8f4ff49089dfe580f5d7
+> > > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/c64ac3b3185aeb3846297ad7391fc6df8ecd73bf
+> > > > > > +	 * https://source.denx.de/u-boot/u-boot/-/commit/4a82fca8e330157081fc132a591ebd99ba02ee33
+> > > > > > +	 */
+> > > > > > +	#address-cells = <3>;
+> > > > > > +	#size-cells = <2>;
+> > > > > > +	ranges = <0x81000000 0 0xe8000000   0 0xe8000000   0 0x01000000   /* Port 0 IO */
+> > > > > > +		  0x82000000 0 0xe9000000   0 0xe9000000   0 0x07000000>; /* Port 0 MEM */
+> > > > > >  
+> > > > > >  	/* enabled by U-Boot if PCIe module is present */
+> > > > > >  	status = "disabled";
+> > > > > > diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > > index 7a2df148c6a3..dac3007f2ac1 100644
+> > > > > > --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > > +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> > > > > > @@ -488,8 +488,15 @@
+> > > > > >  			#interrupt-cells = <1>;
+> > > > > >  			msi-parent = <&pcie0>;
+> > > > > >  			msi-controller;
+> > > > > > -			ranges = <0x82000000 0 0xe8000000   0 0xe8000000 0 0x1000000 /* Port 0 MEM */
+> > > > > > -				  0x81000000 0 0xe9000000   0 0xe9000000 0 0x10000>; /* Port 0 IO*/
+> > > > > > +			/*
+> > > > > > +			 * The 128 MiB address range [0xe8000000-0xf0000000] is
+> > > > > > +			 * dedicated for PCIe and can be assigned to 8 windows
+> > > > > > +			 * with size a power of two. Use one 64 KiB window for
+> > > > > > +			 * IO at the end and the remaining seven windows
+> > > > > > +			 * (totaling 127 MiB) for MEM.
+> > > > > > +			 */
+> > > > > > +			ranges = <0x82000000 0 0xe8000000   0 0xe8000000   0 0x07f00000   /* Port 0 MEM */
+> > > > > > +				  0x81000000 0 0xefff0000   0 0xefff0000   0 0x00010000>; /* Port 0 IO */
+> > > > > >  			interrupt-map-mask = <0 0 0 7>;
+> > > > > >  			interrupt-map = <0 0 0 1 &pcie_intc 0>,
+> > > > > >  					<0 0 0 2 &pcie_intc 1>,
+> > > > > > -- 
+> > > > > > 2.20.1
+> > > > > >
+> > > > > 
+> > > > > -- 
+> > > > > Gregory Clement, Bootlin
+> > > > > Embedded Linux and Kernel engineering
+> > > > > http://bootlin.com
