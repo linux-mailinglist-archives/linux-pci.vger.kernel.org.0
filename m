@@ -2,259 +2,314 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B954E3ECA86
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 20:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AAA93ECAA4
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 21:20:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbhHOSRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 14:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbhHOSRa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Aug 2021 14:17:30 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DB9C061764;
-        Sun, 15 Aug 2021 11:17:00 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id u15so10202960wmj.1;
-        Sun, 15 Aug 2021 11:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ux9pO3x1hQSBE99kyI1heGrozy/mYbOjhQCAwbGOSnQ=;
-        b=T6ACtUucC/yMoe2azdeZ6bmt/HKhJlQltpLW+PkTRxUqoPxLfE0gZOnU8oepuUqHLS
-         oRNKqw56/31d54TfpAfMp8zsTAYHFz90rgzKoLMnXw22Fysre4FPab9zs88ftEDPfOJl
-         P5mjWN3n7LPdYx94ekatCAsLGIBXFTONT5zywXP56rhtQXBJF3awHBr57BT//6fwXXGZ
-         +B0lNYIBoboOQ3o9ZoDoQNDLLWohQJxmLdp93qRquvi3ksSvmU+bnfxNPyqYL3leZD6I
-         bp/CvnNCLIpj6jtkPethGMzTzaHt3p6mFCXoS4LNkHnZpguSmHWF0ndLnD8r3zF5Eieu
-         MGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ux9pO3x1hQSBE99kyI1heGrozy/mYbOjhQCAwbGOSnQ=;
-        b=EqrpIJxB7tWcDwzK2wl38ZpvFOCobKnm3LYOod9mkGbGLCn2JD/F0NYZz768CqDMTy
-         GFQ2YTUROMxknCtgEzbiic1W8oTQiI+uqmMYdd4wfR9l9AH9wNBYFt/VN/sJu2In83Ev
-         pLvUIQX4LFCudWYgvGosPbsH8ug1yDUWCDfXs5akHpXaA4wXbpmjCq4KKymOHk09aJEN
-         VlBgmm0bGTmEW3tRTosRpQWJPvce2M1iZsPWlgkxqTM9i4v3LKVi04WGxJEZ9yTRoE6E
-         RwqieDdbI72a2reIdmjkvUh27fBbfpoZIU2LElJpgw53IaKLrbNlDqnqsnNcbjAmq6cd
-         Md1Q==
-X-Gm-Message-State: AOAM5320pRMSbWq/zsnvpQizEGkopaveSKKvAT/kafGHQ6CVxpb0qcP7
-        UQrdhHcq0MxK2WJWoFudjKcaKoGvwQGBiA==
-X-Google-Smtp-Source: ABdhPJwnlhc4uisPrMvFKz0bmp/H98d4kVoXUSMPVx2VfjQcV14wVhAngFlBKzgn7mkTlN+8NV3vbA==
-X-Received: by 2002:a7b:ca56:: with SMTP id m22mr11499176wml.16.1629051418908;
-        Sun, 15 Aug 2021 11:16:58 -0700 (PDT)
-Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id i9sm11167501wre.36.2021.08.15.11.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Aug 2021 11:16:58 -0700 (PDT)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH V7] PCI: rcar: Add L1 link state fix into data abort hook
-Date:   Sun, 15 Aug 2021 20:16:50 +0200
-Message-Id: <20210815181650.132579-1-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        id S230112AbhHOTUl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 15:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229603AbhHOTUk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Aug 2021 15:20:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A21B461288;
+        Sun, 15 Aug 2021 19:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629055210;
+        bh=VywPFDOWy9cuAQXve0KOxXXMJWV9RLbj7AIB+yaP6QU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=V8UIr1pcVWN3WmFnIVTaOEgyWvUlT/3JQhX6wEV/EaJzbLYX7+xkjTWsKxEEWJDP1
+         vM42sgiq8tCJQPAF8RUnGf4KqTtISO0Tukr/Yb8o8sRk0swbiC/ws/muaelSq9invS
+         3btFLwSE4GwIfFa9hYRNV6y2TuFeu1UXd+SOoxtsmvZual8CBzNLypdSe1PmQfsMcP
+         ESpEfPjTo2E4de0WttB/W5U4b2DWulOwnCHtB0a2E+Z9lADQD3OcY8SB/oYYkF4b4F
+         oQCr2EuWwO+24NfBtOc2bPu/ow5uAgQXJ1tmBDK95qDRljBfof1DzzyIXkcwlp5onU
+         zTkyJY67E8Usg==
+Received: by mail-ej1-f50.google.com with SMTP id z20so28026451ejf.5;
+        Sun, 15 Aug 2021 12:20:10 -0700 (PDT)
+X-Gm-Message-State: AOAM531v58tYHeBCXWlO7tbJfM0LmQw3cUIjKDpS6ZM9RO3ZhthT158k
+        HmlcNgk9MCx2NmvFTG+OFrH4QzBT0kLYN0aGGQ==
+X-Google-Smtp-Source: ABdhPJxScnsFLW5iYyuPYWljjp8QzFmAIPBuYxbrzMlPJapC3N52bIUc8w1d/+uJLKE/yGBG49E9/mQFJ5F2NrGeQWk=
+X-Received: by 2002:a17:906:519:: with SMTP id j25mr12275611eja.525.1629055209089;
+ Sun, 15 Aug 2021 12:20:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210726083204.93196-1-mark.kettenis@xs4all.nl>
+ <20210726083204.93196-2-mark.kettenis@xs4all.nl> <20210726231848.GA1025245@robh.at.kernel.org>
+ <87sfzt1pg9.wl-maz@kernel.org> <CAL_JsqLvqWiuib9s4PzX8pOQYJQ0eR7Gxz==J849eVJ5MDq4SA@mail.gmail.com>
+ <8735ra1x8t.wl-maz@kernel.org>
+In-Reply-To: <8735ra1x8t.wl-maz@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Sun, 15 Aug 2021 14:19:57 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ5M3soMT30ntSTbqqdrQP8TT26mHL-0xExsn10MWPofA@mail.gmail.com>
+Message-ID: <CAL_JsqJ5M3soMT30ntSTbqqdrQP8TT26mHL-0xExsn10MWPofA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
+        devicetree@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Sun, Aug 15, 2021 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> Apologies for the delay, I somehow misplaced this email...
+>
+> On Mon, 02 Aug 2021 17:10:39 +0100,
+> Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sun, Aug 1, 2021 at 3:31 AM Marc Zyngier <maz@kernel.org> wrote:
+> > >
+> > > On Tue, 27 Jul 2021 00:18:48 +0100,
+> > > Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Mon, Jul 26, 2021 at 10:32:00AM +0200, Mark Kettenis wrote:
+> > > > > From: Mark Kettenis <kettenis@openbsd.org>
+> > > > >
+> > > > > The Apple PCIe host controller is a PCIe host controller with
+> > > > > multiple root ports present in Apple ARM SoC platforms, including
+> > > > > various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > > >
+> > > > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
+> > > > >  MAINTAINERS                                   |   1 +
+> > > > >  2 files changed, 167 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..bfcbdee79c64
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > > @@ -0,0 +1,166 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Apple PCIe host controller
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Mark Kettenis <kettenis@openbsd.org>
+> > > > > +
+> > > > > +description: |
+> > > > > +  The Apple PCIe host controller is a PCIe host controller with
+> > > > > +  multiple root ports present in Apple ARM SoC platforms, including
+> > > > > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > > > +  The controller incorporates Synopsys DesigWare PCIe logic to
+> > > > > +  implements its root ports.  But the ATU found on most DesignWare
+> > > > > +  PCIe host bridges is absent.
+> > > >
+> > > > blank line
+> > > >
+> > > > > +  All root ports share a single ECAM space, but separate GPIOs are
+> > > > > +  used to take the PCI devices on those ports out of reset.  Therefore
+> > > > > +  the standard "reset-gpio" and "max-link-speed" properties appear on
+> > > >
+> > > > reset-gpios
+> > > >
+> > > > > +  the child nodes that represent the PCI bridges that correspond to
+> > > > > +  the individual root ports.
+> > > >
+> > > > blank line
+> > > >
+> > > > > +  MSIs are handled by the PCIe controller and translated into regular
+> > > > > +  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
+> > > > > +  distributed over the root ports as the OS sees fit by programming
+> > > > > +  the PCIe controller's port registers.
+> > > > > +
+> > > > > +allOf:
+> > > > > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    items:
+> > > > > +      - const: apple,t8103-pcie
+> > > > > +      - const: apple,pcie
+> > > > > +
+> > > > > +  reg:
+> > > > > +    minItems: 3
+> > > > > +    maxItems: 5
+> > > > > +
+> > > > > +  reg-names:
+> > > > > +    minItems: 3
+> > > > > +    maxItems: 5
+> > > > > +    items:
+> > > > > +      - const: config
+> > > > > +      - const: rc
+> > > > > +      - const: port0
+> > > > > +      - const: port1
+> > > > > +      - const: port2
+> > > > > +
+> > > > > +  ranges:
+> > > > > +    minItems: 2
+> > > > > +    maxItems: 2
+> > > > > +
+> > > > > +  interrupts:
+> > > > > +    description:
+> > > > > +      Interrupt specifiers, one for each root port.
+> > > > > +    minItems: 1
+> > > > > +    maxItems: 3
+> > > > > +
+> > > > > +  msi-controller: true
+> > > > > +  msi-parent: true
+> > > > > +
+> > > > > +  msi-ranges:
+> > > > > +    description:
+> > > > > +      A list of pairs <intid span>, where "intid" is the first
+> > > > > +      interrupt number that can be used as an MSI, and "span" the size
+> > > > > +      of that range.
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> > > > > +    items:
+> > > > > +      minItems: 2
+> > > > > +      maxItems: 2
+> > > >
+> > > > I still have issues I raised on v1 with this property. It's genericish
+> > > > looking, but not generic. 'intid' as a single cell can't specify any
+> > > > parent interrupt such as a GIC which uses 3 cells. You could put in all
+> > > > the cells, but you'd still be assuming which cell you can increment.
+> > >
+> > > The GIC bindings already use similar abstractions, see what we do for
+> > > both GICv2m and GICv3 MBIs. Other MSI controllers use similar
+> > > properties (alpine and loongson, for example).
+> >
+> > That's the problem. Everyone making up their own crap.
+>
+> And that crap gets approved:
+>
+> https://lore.kernel.org/lkml/20200512205704.GA10412@bogus/
+>
+> I'm not trying to be antagonistic here, but it seems that your
+> position on this very subject has changed recently.
 
-When the link is in L1, hardware should return it to L0
-automatically whenever a transaction targets a component on the
-other end of the link (PCIe r5.0, sec 5.2).
+Not really, I think it's not the first time we've discussed this. But
+as I see things over and over, my tolerance for another instance
+without solving the problem for everyone diminishes. And what other
+leverage do I have?
 
-The R-Car PCIe controller doesn't handle this transition correctly.
-If the link is not in L0, an MMIO transaction targeting a downstream
-device fails, and the controller reports an ARM imprecise external
-abort.
+Additionally, how long we have to support something comes into play. I
+have no idea for a Loongson MSI controller. I have a better idea on an
+Apple product...
 
-Work around this by hooking the abort handler so the driver can
-detect this situation and help the hardware complete the link state
-transition.
+> > > > I think you should just list all these under 'interrupts' using
+> > > > interrupt-names to make your life easier:
+> > > >
+> > > > interrupt-names:
+> > > >   items:
+> > > >     - const: port0
+> > > >     - const: port1
+> > > >     - const: port2
+> > > >     - const: msi0
+> > > >     - const: msi1
+> > > >     - const: msi2
+> > > >     - const: msi3
+> > > >     ...
+> > > >
+> > > > Yeah, it's kind of verbose, but if the h/w block handles N interrupts,
+> > > > you should list N interrupts. The worst case for the above is N entries
+> > > > too if not contiguous.
+> > >
+> > > And that's where I beg to differ, again.
+> > >
+> > > Specifying interrupts like this gives the false impression that these
+> > > interrupts are generated by the device that owns them (the RC). Which
+> > > for MSIs is not the case.
+> >
+> > It's no different than an interrupt controller node having an
+> > interrupts property. The source is downstream and the interrupt
+> > controller is combining/translating the interrupts.
+> >
+> > The physical interrupt signals are connected to and originating in
+> > this block.
+>
+> Oh, I also object to this, for the same reasons. The only case where
+> it makes sense IMHO is when the interrupt controller is a multiplexer.
 
-When the R-Car controller receives a PM_ENTER_L1 DLLP from the
-downstream component, it sets PMEL1RX bit in PMSR register, but then
-the controller enters some sort of in-between state.  A subsequent
-MMIO transaction will fail, resulting in the external abort.  The
-abort handler detects this condition and completes the link state
-transition by setting the L1IATN bit in PMCTLR and waiting for the
-link state transition to complete.
+So we've had the same kind of property for interrupt multiplexers. I'm
+fine if you think an 'MSI to interrupts mapping property' should be
+named something else.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Update commit message, add link to TFA repository commit
-    - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
-    - Cache clock and check whether they are enabled before register
-      access
-V3: - Fix commit message according to spellchecker
-    - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
-      (in case the kernel is multiplatform)
-V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
-V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
-    - Update commit message again to point out issues with L1/D3Hot states
-V6: - Return 1 only if condition cannot be fixed
-V7: - Replace commit message by one provided by upstream, verbatim
-    - Use readl_poll_timeout_atomic() to poll for L1FAEG bit with timeout
----
- drivers/pci/controller/pcie-rcar-host.c | 86 +++++++++++++++++++++++++
- drivers/pci/controller/pcie-rcar.h      |  7 ++
- 2 files changed, 93 insertions(+)
+> > That sounds like perfectly 'describing the h/w' to me.
+>
+> I guess we have a different view of about these things. At the end of
+> the day, I don't care enough as long as we can expose a range of
+> interrupts one way or another.
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 00a8267eda14..8f3131844e77 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -13,12 +13,14 @@
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/iopoll.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-@@ -41,6 +43,21 @@ struct rcar_msi {
- 	int irq2;
- };
- 
-+#ifdef CONFIG_ARM
-+/*
-+ * Here we keep a static copy of the remapped PCIe controller address.
-+ * This is only used on aarch32 systems, all of which have one single
-+ * PCIe controller, to provide quick access to the PCIe controller in
-+ * the L1 link state fixup function, called from the ARM fault handler.
-+ */
-+static void __iomem *pcie_base;
-+/*
-+ * Static copy of bus clock pointer, so we can check whether the clock
-+ * is enabled or not.
-+ */
-+static struct clk *pcie_bus_clk;
-+#endif
-+
- /* Structure representing the PCIe interface */
- struct rcar_pcie_host {
- 	struct rcar_pcie	pcie;
-@@ -774,6 +791,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- 	}
- 	host->msi.irq2 = i;
- 
-+#ifdef CONFIG_ARM
-+	/* Cache static copy for L1 link state fixup hook on aarch32 */
-+	pcie_base = pcie->base;
-+	pcie_bus_clk = host->bus_clk;
-+#endif
-+
- 	return 0;
- 
- err_irq2:
-@@ -1029,4 +1052,67 @@ static struct platform_driver rcar_pcie_driver = {
- 	},
- 	.probe = rcar_pcie_probe,
- };
-+
-+#ifdef CONFIG_ARM
-+static DEFINE_SPINLOCK(pmsr_lock);
-+static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-+		unsigned int fsr, struct pt_regs *regs)
-+{
-+	unsigned long flags;
-+	u32 pmsr, val;
-+	int ret = 0;
-+
-+	spin_lock_irqsave(&pmsr_lock, flags);
-+
-+	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
-+		ret = 1;
-+		goto unlock_exit;
-+	}
-+
-+	pmsr = readl(pcie_base + PMSR);
-+
-+	/*
-+	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
-+	 * the PCIe controller is not in L1 link state. If true, apply
-+	 * fix, which will put the controller into L1 link state, from
-+	 * which it can return to L0s/L0 on its own.
-+	 */
-+	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
-+		writel(L1IATN, pcie_base + PMCTLR);
-+		ret = readl_poll_timeout_atomic(pcie_base + PMSR, val,
-+						val & L1FAEG, 10, 1000);
-+		WARN(ret, "Timeout waiting for L1 link state, ret=%d\n", ret);
-+		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
-+	}
-+
-+unlock_exit:
-+	spin_unlock_irqrestore(&pmsr_lock, flags);
-+	return ret;
-+}
-+
-+static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-+	{ .compatible = "renesas,pcie-r8a7779" },
-+	{ .compatible = "renesas,pcie-r8a7790" },
-+	{ .compatible = "renesas,pcie-r8a7791" },
-+	{ .compatible = "renesas,pcie-rcar-gen2" },
-+	{},
-+};
-+
-+static int __init rcar_pcie_init(void)
-+{
-+	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-+#ifdef CONFIG_ARM_LPAE
-+		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+				"asynchronous external abort");
-+#else
-+		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-+				"imprecise external abort");
-+#endif
-+	}
-+
-+	return platform_driver_register(&rcar_pcie_driver);
-+}
-+device_initcall(rcar_pcie_init);
-+#else
- builtin_platform_driver(rcar_pcie_driver);
-+#endif
-diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-index d4c698b5f821..9bb125db85c6 100644
---- a/drivers/pci/controller/pcie-rcar.h
-+++ b/drivers/pci/controller/pcie-rcar.h
-@@ -85,6 +85,13 @@
- #define  LTSMDIS		BIT(31)
- #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
- #define PMSR			0x01105c
-+#define  L1FAEG			BIT(31)
-+#define  PMEL1RX		BIT(23)
-+#define  PMSTATE		GENMASK(18, 16)
-+#define  PMSTATE_L1		(3 << 16)
-+#define PMCTLR			0x011060
-+#define  L1IATN			BIT(31)
-+
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
- #define  SPCNGRSN		BIT(31)
--- 
-2.30.2
+I don't really either. I just don't want 10 ways AND another...
 
+> > > This is not only verbose, this is
+> > > semantically dubious. And what should we do when the number of
+> > > possible interrupt is ridiculously large, as it is for the GICv3 ITS?
+> >
+> > I don't disagree with the verbose part. But that's not really an issue
+> > in this case.
+> >
+> > > I wish we had a standard way to express these constraints. Until we
+> > > do, I don't think enumerating individual interrupts is a practical
+> > > thing to do, nor that it actually represents the topology of the
+> > > system.
+> >
+> > The only way a standard way will happen is to stop accepting the
+> > custom properties.
+> >
+> > All the custom properties suffer from knowledge of what the parent
+> > interrupt controller is. To fix that, I think we need something like
+> > this:
+> >
+> > msi-ranges = <intspec base>, <intspec step>, <intspec end>;
+> >
+> > 'intspec' is defined by the parent interrupt-controller cells. step is
+> > the value to add. And end is what to match on to stop aka the last
+> > interrupt in the range. For example, if the GIC is the parent, we'd
+> > have something like this:
+> >
+> > <GIC_SPI 123 0>, <0 1 0>, <GIC_SPI 124 0>
+> >
+> > Does this apply to cases other than MSI? I think so as don't we have
+> > the same type of properties with the low power mode shadow interrupt
+> > controllers?  So 'interrupt-ranges'?
+>
+> This would work, though the increment seems a bit over-engineered. You
+> also may need this property to accept multiple ranges.
+
+Yes, certainly. Worst case is a map.
+
+> > It looks to me like there's an assumption in the kernel that an MSI
+> > controller has a linear range of parent interrupts? Is that correct
+> > and something that's guaranteed? That assumption leaks into the
+> > existing bindings.
+>
+> Depends on how the controller works. In general, the range maps to the
+> MultiMSI requirements where the message is an offset from the base of
+> the interrupt range. So you generally end-up with ranges of at least
+> 32 contiguous MSIs. Anything under that is sub-par and probably not
+> worth supporting.
+
+Maybe just this is enough:
+msi-ranges = <intspec base>, <length>, <intspec base>, <length>, ...
+
+While I say 'length' here, that's really up to the interrupt parent to
+interpret the intspec cells.
+
+> Of course, the controller may have some mapping facilities, which
+> makes things more... interesting.
+>
+> > It's fine for the kernel to assume that until there's a case that's
+> > not linear, but a common binding needs to be able handle a
+> > non-linear case.
+>
+> Fair enough. I can probably work with Mark to upgrade the binding and
+> the M1 PCIe code. Could you come up with a more formalised proposal?
+
+Not my itch.
+
+Rob
