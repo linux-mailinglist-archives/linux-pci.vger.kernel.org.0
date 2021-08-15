@@ -2,81 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 055C33EC9D6
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 17:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5C263ECA3D
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 18:36:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232896AbhHOPI5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 11:08:57 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:41808 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbhHOPI5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Aug 2021 11:08:57 -0400
-Received: by mail-lj1-f176.google.com with SMTP id h9so23338028ljq.8
-        for <linux-pci@vger.kernel.org>; Sun, 15 Aug 2021 08:08:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D5fDOg5hsVZqctxAJ1KqBrrp45rGk2Hwe8BSRjMZN1Y=;
-        b=XP9nsdiy37cBjhNGXPqvIdjgPQcjvCZVkYDuQDwnZeoomIx4oT/UA0lMNXEW0RYZ1A
-         C8q5J4ej0XVXVMyQbqF+E3ov1ySEOIzZqDngy41uJNTjqiSdp3bo/Iw9llCM9enBOj9i
-         ErM9rOpfTc96SSrGk3bp4chCRBE0FZ1eGCgKNOAgRbMhIMb98YaWR6/dFKk31wpAIIvM
-         UAtxdQZ4Zy7rUVEKvii0L3ac4nZqCC+WQUa1545PnacglH87cOPXKlt/EBdIn70+e4Ae
-         JU9CDEbIPitfXxx0wOW9nzi3ZMTlroTLMQ+Xdj9FkUURwgM8yyllY4CEdRU7+5pNkKOE
-         EH9Q==
-X-Gm-Message-State: AOAM530S9apuatLBGRHdwu7RMo1QWnsoyVzUbHGJYFxsuFn6HoZx8zwF
-        YzscAI462fPJr80difkM5KI=
-X-Google-Smtp-Source: ABdhPJwpF0cemkUw4FZX68VO7kjRHFP9AxEZ0Jp0ACe/KDRok7UQqu2zprcNtJlgrcQAIWFJUBNbwQ==
-X-Received: by 2002:a2e:7411:: with SMTP id p17mr8986860ljc.104.1629040106245;
-        Sun, 15 Aug 2021 08:08:26 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id m5sm641831ljg.55.2021.08.15.08.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Aug 2021 08:08:25 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Bin Lai <robinlai@tencent.com>, Jiang Biao <benbjiang@tencent.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Allow scheduling to take place in proc_bus_pci_read()
-Date:   Sun, 15 Aug 2021 15:08:24 +0000
-Message-Id: <20210815150824.96773-1-kw@linux.com>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S229493AbhHOQgf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 12:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229453AbhHOQgf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Aug 2021 12:36:35 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE1A611C4;
+        Sun, 15 Aug 2021 16:36:05 +0000 (UTC)
+Received: from 109-170-232-56.xdsl.murphx.net ([109.170.232.56] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mFJ7D-0058KJ-CF; Sun, 15 Aug 2021 17:36:03 +0100
+Date:   Sun, 15 Aug 2021 17:36:02 +0100
+Message-ID: <8735ra1x8t.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
+        devicetree@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
+In-Reply-To: <CAL_JsqLvqWiuib9s4PzX8pOQYJQ0eR7Gxz==J849eVJ5MDq4SA@mail.gmail.com>
+References: <20210726083204.93196-1-mark.kettenis@xs4all.nl>
+        <20210726083204.93196-2-mark.kettenis@xs4all.nl>
+        <20210726231848.GA1025245@robh.at.kernel.org>
+        <87sfzt1pg9.wl-maz@kernel.org>
+        <CAL_JsqLvqWiuib9s4PzX8pOQYJQ0eR7Gxz==J849eVJ5MDq4SA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 109.170.232.56
+X-SA-Exim-Rcpt-To: robh@kernel.org, mark.kettenis@xs4all.nl, devicetree@vger.kernel.org, robin.murphy@arm.com, sven@svenpeter.dev, kettenis@openbsd.org, marcan@marcan.st, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI configuration space reads from the /proc/bus/pci for a particular
-device, depending on the underlying hardware, can often take several
-milliseconds to complete.
+Hi Rob,
 
-Thus, add a schedule point in proc_bus_pci_read() to reduce the maximum
-latency.
+Apologies for the delay, I somehow misplaced this email...
 
-A similar change has already been completed in the past for the sysfs
-counterpart in the commit 2ce02a864ac1 ("PCI: Add schedule point in
-pci_read_config()").
+On Mon, 02 Aug 2021 17:10:39 +0100,
+Rob Herring <robh@kernel.org> wrote:
+> 
+> On Sun, Aug 1, 2021 at 3:31 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Tue, 27 Jul 2021 00:18:48 +0100,
+> > Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, Jul 26, 2021 at 10:32:00AM +0200, Mark Kettenis wrote:
+> > > > From: Mark Kettenis <kettenis@openbsd.org>
+> > > >
+> > > > The Apple PCIe host controller is a PCIe host controller with
+> > > > multiple root ports present in Apple ARM SoC platforms, including
+> > > > various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > >
+> > > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > > > ---
+> > > >  .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
+> > > >  MAINTAINERS                                   |   1 +
+> > > >  2 files changed, 167 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..bfcbdee79c64
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > @@ -0,0 +1,166 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Apple PCIe host controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Mark Kettenis <kettenis@openbsd.org>
+> > > > +
+> > > > +description: |
+> > > > +  The Apple PCIe host controller is a PCIe host controller with
+> > > > +  multiple root ports present in Apple ARM SoC platforms, including
+> > > > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > > +  The controller incorporates Synopsys DesigWare PCIe logic to
+> > > > +  implements its root ports.  But the ATU found on most DesignWare
+> > > > +  PCIe host bridges is absent.
+> > >
+> > > blank line
+> > >
+> > > > +  All root ports share a single ECAM space, but separate GPIOs are
+> > > > +  used to take the PCI devices on those ports out of reset.  Therefore
+> > > > +  the standard "reset-gpio" and "max-link-speed" properties appear on
+> > >
+> > > reset-gpios
+> > >
+> > > > +  the child nodes that represent the PCI bridges that correspond to
+> > > > +  the individual root ports.
+> > >
+> > > blank line
+> > >
+> > > > +  MSIs are handled by the PCIe controller and translated into regular
+> > > > +  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
+> > > > +  distributed over the root ports as the OS sees fit by programming
+> > > > +  the PCIe controller's port registers.
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      - const: apple,t8103-pcie
+> > > > +      - const: apple,pcie
+> > > > +
+> > > > +  reg:
+> > > > +    minItems: 3
+> > > > +    maxItems: 5
+> > > > +
+> > > > +  reg-names:
+> > > > +    minItems: 3
+> > > > +    maxItems: 5
+> > > > +    items:
+> > > > +      - const: config
+> > > > +      - const: rc
+> > > > +      - const: port0
+> > > > +      - const: port1
+> > > > +      - const: port2
+> > > > +
+> > > > +  ranges:
+> > > > +    minItems: 2
+> > > > +    maxItems: 2
+> > > > +
+> > > > +  interrupts:
+> > > > +    description:
+> > > > +      Interrupt specifiers, one for each root port.
+> > > > +    minItems: 1
+> > > > +    maxItems: 3
+> > > > +
+> > > > +  msi-controller: true
+> > > > +  msi-parent: true
+> > > > +
+> > > > +  msi-ranges:
+> > > > +    description:
+> > > > +      A list of pairs <intid span>, where "intid" is the first
+> > > > +      interrupt number that can be used as an MSI, and "span" the size
+> > > > +      of that range.
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> > > > +    items:
+> > > > +      minItems: 2
+> > > > +      maxItems: 2
+> > >
+> > > I still have issues I raised on v1 with this property. It's genericish
+> > > looking, but not generic. 'intid' as a single cell can't specify any
+> > > parent interrupt such as a GIC which uses 3 cells. You could put in all
+> > > the cells, but you'd still be assuming which cell you can increment.
+> >
+> > The GIC bindings already use similar abstractions, see what we do for
+> > both GICv2m and GICv3 MBIs. Other MSI controllers use similar
+> > properties (alpine and loongson, for example).
+> 
+> That's the problem. Everyone making up their own crap.
 
-Link: https://lore.kernel.org/r/20200824052025.48362-1-benbjiang@tencent.com
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/proc.c | 1 +
- 1 file changed, 1 insertion(+)
+And that crap gets approved:
 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index d32fbfc93ea9..cb18f8a13ab6 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -83,6 +83,7 @@ static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
- 		buf += 4;
- 		pos += 4;
- 		cnt -= 4;
-+		cond_resched();
- 	}
- 
- 	if (cnt >= 2) {
+https://lore.kernel.org/lkml/20200512205704.GA10412@bogus/
+
+I'm not trying to be antagonistic here, but it seems that your
+position on this very subject has changed recently.
+
+> > > I think you should just list all these under 'interrupts' using
+> > > interrupt-names to make your life easier:
+> > >
+> > > interrupt-names:
+> > >   items:
+> > >     - const: port0
+> > >     - const: port1
+> > >     - const: port2
+> > >     - const: msi0
+> > >     - const: msi1
+> > >     - const: msi2
+> > >     - const: msi3
+> > >     ...
+> > >
+> > > Yeah, it's kind of verbose, but if the h/w block handles N interrupts,
+> > > you should list N interrupts. The worst case for the above is N entries
+> > > too if not contiguous.
+> >
+> > And that's where I beg to differ, again.
+> >
+> > Specifying interrupts like this gives the false impression that these
+> > interrupts are generated by the device that owns them (the RC). Which
+> > for MSIs is not the case.
+> 
+> It's no different than an interrupt controller node having an
+> interrupts property. The source is downstream and the interrupt
+> controller is combining/translating the interrupts.
+> 
+> The physical interrupt signals are connected to and originating in
+> this block.
+
+Oh, I also object to this, for the same reasons. The only case where
+it makes sense IMHO is when the interrupt controller is a multiplexer.
+
+> That sounds like perfectly 'describing the h/w' to me.
+
+I guess we have a different view of about these things. At the end of
+the day, I don't care enough as long as we can expose a range of
+interrupts one way or another.
+
+> > This is not only verbose, this is
+> > semantically dubious. And what should we do when the number of
+> > possible interrupt is ridiculously large, as it is for the GICv3 ITS?
+> 
+> I don't disagree with the verbose part. But that's not really an issue
+> in this case.
+> 
+> > I wish we had a standard way to express these constraints. Until we
+> > do, I don't think enumerating individual interrupts is a practical
+> > thing to do, nor that it actually represents the topology of the
+> > system.
+> 
+> The only way a standard way will happen is to stop accepting the
+> custom properties.
+> 
+> All the custom properties suffer from knowledge of what the parent
+> interrupt controller is. To fix that, I think we need something like
+> this:
+> 
+> msi-ranges = <intspec base>, <intspec step>, <intspec end>;
+> 
+> 'intspec' is defined by the parent interrupt-controller cells. step is
+> the value to add. And end is what to match on to stop aka the last
+> interrupt in the range. For example, if the GIC is the parent, we'd
+> have something like this:
+> 
+> <GIC_SPI 123 0>, <0 1 0>, <GIC_SPI 124 0>
+> 
+> Does this apply to cases other than MSI? I think so as don't we have
+> the same type of properties with the low power mode shadow interrupt
+> controllers?  So 'interrupt-ranges'?
+
+This would work, though the increment seems a bit over-engineered. You
+also may need this property to accept multiple ranges.
+
+> It looks to me like there's an assumption in the kernel that an MSI
+> controller has a linear range of parent interrupts? Is that correct
+> and something that's guaranteed? That assumption leaks into the
+> existing bindings.
+
+Depends on how the controller works. In general, the range maps to the
+MultiMSI requirements where the message is an offset from the base of
+the interrupt range. So you generally end-up with ranges of at least
+32 contiguous MSIs. Anything under that is sub-par and probably not
+worth supporting.
+
+Of course, the controller may have some mapping facilities, which
+makes things more... interesting.
+
+> It's fine for the kernel to assume that until there's a case that's
+> not linear, but a common binding needs to be able handle a
+> non-linear case.
+
+Fair enough. I can probably work with Mark to upgrade the binding and
+the M1 PCIe code. Could you come up with a more formalised proposal?
+
+Thanks,
+
+	M.
+
 -- 
-2.32.0
-
+Without deviation from the norm, progress is not possible.
