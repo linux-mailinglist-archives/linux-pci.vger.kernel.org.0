@@ -2,111 +2,259 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 972F53ECA74
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 19:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B954E3ECA86
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 20:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbhHORhd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 13:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229563AbhHORhc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Aug 2021 13:37:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 61F0B61164;
-        Sun, 15 Aug 2021 17:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629049022;
-        bh=Bsh6jyyvlHrWDtL3ExcVzRpHaJ4Uvz8QySUMNoiSi90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V/wUODBs2O3QEJG1mAaE/Kfs+Kes7SdCy65kIZykiRdZrPpLqdupXCAqxp2QzxSEX
-         NTJrv+rfI3Zp5EOI4k+rNb9IfMEpoVPr+5X/eE20RHv+0nSmVtwxt5wVEnWxq7G62k
-         MNEBSN42iRHruq3RzmC4E/2TXAKVwNuajsDL0gPAe9QHPUMAPOnUTZV4Bp/sYoWb28
-         Q0H8wmpgB2B1AgEVagFKQrq7sQlW4NlH/zCAmDBFGX81XGFCH9t4RyhlBVNu0Zbo0v
-         TkZJ5IsFb1cAPAL3MK477x8A7ZE+a49WlIHzZA6+bNym01BX6q0SAW6E3LvD4gxbWZ
-         l/hVV7coxbY/Q==
-Received: by pali.im (Postfix)
-        id E79BF98C; Sun, 15 Aug 2021 19:36:59 +0200 (CEST)
-Date:   Sun, 15 Aug 2021 19:36:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        id S229609AbhHOSRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 14:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229502AbhHOSRa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Aug 2021 14:17:30 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DB9C061764;
+        Sun, 15 Aug 2021 11:17:00 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id u15so10202960wmj.1;
+        Sun, 15 Aug 2021 11:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ux9pO3x1hQSBE99kyI1heGrozy/mYbOjhQCAwbGOSnQ=;
+        b=T6ACtUucC/yMoe2azdeZ6bmt/HKhJlQltpLW+PkTRxUqoPxLfE0gZOnU8oepuUqHLS
+         oRNKqw56/31d54TfpAfMp8zsTAYHFz90rgzKoLMnXw22Fysre4FPab9zs88ftEDPfOJl
+         P5mjWN3n7LPdYx94ekatCAsLGIBXFTONT5zywXP56rhtQXBJF3awHBr57BT//6fwXXGZ
+         +B0lNYIBoboOQ3o9ZoDoQNDLLWohQJxmLdp93qRquvi3ksSvmU+bnfxNPyqYL3leZD6I
+         bp/CvnNCLIpj6jtkPethGMzTzaHt3p6mFCXoS4LNkHnZpguSmHWF0ndLnD8r3zF5Eieu
+         MGUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ux9pO3x1hQSBE99kyI1heGrozy/mYbOjhQCAwbGOSnQ=;
+        b=EqrpIJxB7tWcDwzK2wl38ZpvFOCobKnm3LYOod9mkGbGLCn2JD/F0NYZz768CqDMTy
+         GFQ2YTUROMxknCtgEzbiic1W8oTQiI+uqmMYdd4wfR9l9AH9wNBYFt/VN/sJu2In83Ev
+         pLvUIQX4LFCudWYgvGosPbsH8ug1yDUWCDfXs5akHpXaA4wXbpmjCq4KKymOHk09aJEN
+         VlBgmm0bGTmEW3tRTosRpQWJPvce2M1iZsPWlgkxqTM9i4v3LKVi04WGxJEZ9yTRoE6E
+         RwqieDdbI72a2reIdmjkvUh27fBbfpoZIU2LElJpgw53IaKLrbNlDqnqsnNcbjAmq6cd
+         Md1Q==
+X-Gm-Message-State: AOAM5320pRMSbWq/zsnvpQizEGkopaveSKKvAT/kafGHQ6CVxpb0qcP7
+        UQrdhHcq0MxK2WJWoFudjKcaKoGvwQGBiA==
+X-Google-Smtp-Source: ABdhPJwnlhc4uisPrMvFKz0bmp/H98d4kVoXUSMPVx2VfjQcV14wVhAngFlBKzgn7mkTlN+8NV3vbA==
+X-Received: by 2002:a7b:ca56:: with SMTP id m22mr11499176wml.16.1629051418908;
+        Sun, 15 Aug 2021 11:16:58 -0700 (PDT)
+Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id i9sm11167501wre.36.2021.08.15.11.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Aug 2021 11:16:58 -0700 (PDT)
+From:   marek.vasut@gmail.com
+To:     linux-pci@vger.kernel.org
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: aardvark: Fix masking MSI interrupts
-Message-ID: <20210815173659.2mjug3jffp6a4ybg@pali>
-References: <20210815103624.19528-1-pali@kernel.org>
- <20210815103624.19528-3-pali@kernel.org>
- <87zgtizly3.wl-maz@kernel.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH V7] PCI: rcar: Add L1 link state fix into data abort hook
+Date:   Sun, 15 Aug 2021 20:16:50 +0200
+Message-Id: <20210815181650.132579-1-marek.vasut@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87zgtizly3.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sunday 15 August 2021 17:56:04 Marc Zyngier wrote:
-> On Sun, 15 Aug 2021 11:36:23 +0100,
-> Pali Rohár <pali@kernel.org> wrote:
-> > 
-> > Masking of individual MSI interrupts is done via PCIE_MSI_MASK_REG
-> > register. At the driver probe time mask all MSI interrupts and then let
-> > kernel IRQ chip code to unmask particular MSI interrupt when needed.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 44 ++++++++++++++++++++++++---
-> >  1 file changed, 40 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index bacfccee44fe..96580e1e4539 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -480,12 +480,10 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> >  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
-> >  	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
-> >  
-> > -	/* Disable All ISR0/1 Sources */
-> > +	/* Disable All ISR0/1 and MSI Sources */
-> >  	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_MASK_REG);
-> >  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
-> > -
-> > -	/* Unmask all MSIs */
-> > -	advk_writel(pcie, ~(u32)PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
-> > +	advk_writel(pcie, PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
-> >  
-> >  	/* Unmask summary MSI interrupt */
-> >  	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-> > @@ -1026,6 +1024,40 @@ static int advk_msi_set_affinity(struct irq_data *irq_data,
-> >  	return -EINVAL;
-> >  }
-> >  
-> > +static void advk_msi_irq_mask(struct irq_data *d)
-> > +{
-> > +	struct advk_pcie *pcie = d->domain->host_data;
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > +	u32 mask;
-> > +
-> > +	mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
-> > +	mask |= BIT(hwirq);
-> > +	advk_writel(pcie, mask, PCIE_MSI_MASK_REG);
-> 
-> This isn't atomic, and will results in corruption when two MSIs are
-> masked/unmasked concurrently.
+From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-Does it mean that also current implementation of masking legacy
-interrupt is incorrect?
+When the link is in L1, hardware should return it to L0
+automatically whenever a transaction targets a component on the
+other end of the link (PCIe r5.0, sec 5.2).
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-aardvark.c?h=v5.13#n874
+The R-Car PCIe controller doesn't handle this transition correctly.
+If the link is not in L0, an MMIO transaction targeting a downstream
+device fails, and the controller reports an ARM imprecise external
+abort.
 
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+Work around this by hooking the abort handler so the driver can
+detect this situation and help the hardware complete the link state
+transition.
+
+When the R-Car controller receives a PM_ENTER_L1 DLLP from the
+downstream component, it sets PMEL1RX bit in PMSR register, but then
+the controller enters some sort of in-between state.  A subsequent
+MMIO transaction will fail, resulting in the external abort.  The
+abort handler detects this condition and completes the link state
+transition by setting the L1IATN bit in PMCTLR and waiting for the
+link state transition to complete.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Update commit message, add link to TFA repository commit
+    - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
+    - Cache clock and check whether they are enabled before register
+      access
+V3: - Fix commit message according to spellchecker
+    - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
+      (in case the kernel is multiplatform)
+V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
+V5: - Add mutex around rcar_pcie_aarch32_abort_handler()
+    - Update commit message again to point out issues with L1/D3Hot states
+V6: - Return 1 only if condition cannot be fixed
+V7: - Replace commit message by one provided by upstream, verbatim
+    - Use readl_poll_timeout_atomic() to poll for L1FAEG bit with timeout
+---
+ drivers/pci/controller/pcie-rcar-host.c | 86 +++++++++++++++++++++++++
+ drivers/pci/controller/pcie-rcar.h      |  7 ++
+ 2 files changed, 93 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 00a8267eda14..8f3131844e77 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -13,12 +13,14 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/iopoll.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+@@ -41,6 +43,21 @@ struct rcar_msi {
+ 	int irq2;
+ };
+ 
++#ifdef CONFIG_ARM
++/*
++ * Here we keep a static copy of the remapped PCIe controller address.
++ * This is only used on aarch32 systems, all of which have one single
++ * PCIe controller, to provide quick access to the PCIe controller in
++ * the L1 link state fixup function, called from the ARM fault handler.
++ */
++static void __iomem *pcie_base;
++/*
++ * Static copy of bus clock pointer, so we can check whether the clock
++ * is enabled or not.
++ */
++static struct clk *pcie_bus_clk;
++#endif
++
+ /* Structure representing the PCIe interface */
+ struct rcar_pcie_host {
+ 	struct rcar_pcie	pcie;
+@@ -774,6 +791,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
+ 	}
+ 	host->msi.irq2 = i;
+ 
++#ifdef CONFIG_ARM
++	/* Cache static copy for L1 link state fixup hook on aarch32 */
++	pcie_base = pcie->base;
++	pcie_bus_clk = host->bus_clk;
++#endif
++
+ 	return 0;
+ 
+ err_irq2:
+@@ -1029,4 +1052,67 @@ static struct platform_driver rcar_pcie_driver = {
+ 	},
+ 	.probe = rcar_pcie_probe,
+ };
++
++#ifdef CONFIG_ARM
++static DEFINE_SPINLOCK(pmsr_lock);
++static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
++		unsigned int fsr, struct pt_regs *regs)
++{
++	unsigned long flags;
++	u32 pmsr, val;
++	int ret = 0;
++
++	spin_lock_irqsave(&pmsr_lock, flags);
++
++	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
++		ret = 1;
++		goto unlock_exit;
++	}
++
++	pmsr = readl(pcie_base + PMSR);
++
++	/*
++	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
++	 * the PCIe controller is not in L1 link state. If true, apply
++	 * fix, which will put the controller into L1 link state, from
++	 * which it can return to L0s/L0 on its own.
++	 */
++	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
++		writel(L1IATN, pcie_base + PMCTLR);
++		ret = readl_poll_timeout_atomic(pcie_base + PMSR, val,
++						val & L1FAEG, 10, 1000);
++		WARN(ret, "Timeout waiting for L1 link state, ret=%d\n", ret);
++		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
++	}
++
++unlock_exit:
++	spin_unlock_irqrestore(&pmsr_lock, flags);
++	return ret;
++}
++
++static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
++	{ .compatible = "renesas,pcie-r8a7779" },
++	{ .compatible = "renesas,pcie-r8a7790" },
++	{ .compatible = "renesas,pcie-r8a7791" },
++	{ .compatible = "renesas,pcie-rcar-gen2" },
++	{},
++};
++
++static int __init rcar_pcie_init(void)
++{
++	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
++#ifdef CONFIG_ARM_LPAE
++		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
++				"asynchronous external abort");
++#else
++		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
++				"imprecise external abort");
++#endif
++	}
++
++	return platform_driver_register(&rcar_pcie_driver);
++}
++device_initcall(rcar_pcie_init);
++#else
+ builtin_platform_driver(rcar_pcie_driver);
++#endif
+diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
+index d4c698b5f821..9bb125db85c6 100644
+--- a/drivers/pci/controller/pcie-rcar.h
++++ b/drivers/pci/controller/pcie-rcar.h
+@@ -85,6 +85,13 @@
+ #define  LTSMDIS		BIT(31)
+ #define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
+ #define PMSR			0x01105c
++#define  L1FAEG			BIT(31)
++#define  PMEL1RX		BIT(23)
++#define  PMSTATE		GENMASK(18, 16)
++#define  PMSTATE_L1		(3 << 16)
++#define PMCTLR			0x011060
++#define  L1IATN			BIT(31)
++
+ #define MACS2R			0x011078
+ #define MACCGSPSETR		0x011084
+ #define  SPCNGRSN		BIT(31)
+-- 
+2.30.2
+
