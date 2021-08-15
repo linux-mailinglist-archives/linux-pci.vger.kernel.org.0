@@ -2,58 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ACC63EC800
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 09:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6650B3EC803
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 09:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235963AbhHOHnX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 03:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232774AbhHOHnW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Aug 2021 03:43:22 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 092BE60C40;
-        Sun, 15 Aug 2021 07:42:53 +0000 (UTC)
-Received: from 109-170-232-56.xdsl.murphx.net ([109.170.232.56] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mFAnD-00556V-01; Sun, 15 Aug 2021 08:42:51 +0100
-Date:   Sun, 15 Aug 2021 08:42:50 +0100
-Message-ID: <87a6lj17d1.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Stan Skowronek <stan@corellium.com>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Hector Martin <marcan@marcan.st>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] PCI: apple: Add driver for the Apple M1
+        id S236425AbhHOHoX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 03:44:23 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:57423 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232774AbhHOHoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Aug 2021 03:44:22 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6F6E0580459;
+        Sun, 15 Aug 2021 03:43:52 -0400 (EDT)
+Received: from imap21 ([10.202.2.71])
+  by compute1.internal (MEProxy); Sun, 15 Aug 2021 03:43:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm2; bh=JYImuR03mpyy/rAlIKz6Q+OjYcAd
+        UjX8XlIMHyRnrIM=; b=LQjxSXjtmU4FqY0uztd/96ETx+XFoOwNxhRIxLmZu6XD
+        kBjaFyvcQK34KRKIzfcFf4yY4nBMbWo1PAeJmYrx8J8YLN32yUh1GijJtqTblrMG
+        9CntEQ2nMJmiUFlrn0/XEPm1cU4DENCsDe3IwrY9QznehOf3dLISRRuvpXMTvfXa
+        2GxAQUvVNYol89wpdjOwnvYnZadnjKZQ5Zt4FZZ+VE7Y2JkxT7PwnQccoEmmJfvE
+        XDFtE80Zp0BYgL+/2p4hFCBNCeGFiyWijyalaeehCrnRorvsXd207BQpeTpczAn3
+        cCQG3U+LTKE6w6PGEq/IAlIrgW/EvFhhjl6qf/ef0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=JYImuR
+        03mpyy/rAlIKz6Q+OjYcAdUjX8XlIMHyRnrIM=; b=MfPatZgFjfzfhr3BoYjm4f
+        JrwgJlVch86hLluezYcnQgJvZqBgoIJEv4OZVdnvqds5BHiKCbBghn37a8yWym9f
+        UUlJZ81KvvpgFTBZ+GDJbUa8UQZUCx1Q6+sDr7FImDn8HGMlA2cN3gPG6gA8uH3B
+        lDmaes3mQJhHst5nDtyPB5IDoefOu7YMWqZUuXJbClyycMBwFo81JN9nyfRpcXum
+        uAaYPHwJAquxV83QWa+N4h3Yyw2HAFW8knxN/8FwwPG8IGfTZ+eGcwcqsB2mta5c
+        2yPIaT6OmKmlV5O/eCp9vp1l+X3iK0Hd4ZzPDynL9yIjz2WNYyUOavw79dhaMJWg
+        ==
+X-ME-Sender: <xms:t8UYYQLE_5rsFVHJDE_IWk_BJqLyBH3n68FffF0XktvX8ja3-uFM6Q>
+    <xme:t8UYYQJdzn5eXsAuIbWhRakyiL_POLsPC7Ic2ftgytM0JstG8uo2ssD2aY46HgYuF
+    9bCFdsmWVrIYG8ZLp0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeekgdduvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdfuvhgv
+    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
+    htthgvrhhnpefgieegieffuefhtedtjefgteejteefleefgfefgfdvvddtgffhffduhedv
+    feekffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:t8UYYQu-pdYwpIkC497jKa_37W5fhX4AT4WjGqZfTBEPQzOBcRDdKA>
+    <xmx:t8UYYdY4V07u8qir4O0IZH3P1KY6xIdVgYVS11vzAJp8BdFP8sKozg>
+    <xmx:t8UYYXY7v-1oS994sMxVmWrDusWckCKSxy9Kt7RAVZPxyNlzCghJOg>
+    <xmx:uMUYYRk7pLC8CIciyHJCW5yeJN-wbzDK1z66l4k-xlN8kzRpIkXlbA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 550B051C0060; Sun, 15 Aug 2021 03:43:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1082-gccb13bca62-fm-ubox-20210811.001-gccb13bca
+Mime-Version: 1.0
+Message-Id: <fb037103-66d5-477f-ba2e-03da74da97c0@www.fastmail.com>
 In-Reply-To: <20210815042525.36878-3-alyssa@rosenzweig.io>
 References: <20210815042525.36878-1-alyssa@rosenzweig.io>
-        <20210815042525.36878-3-alyssa@rosenzweig.io>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 109.170.232.56
-X-SA-Exim-Rcpt-To: alyssa@rosenzweig.io, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev, marcan@marcan.st, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+ <20210815042525.36878-3-alyssa@rosenzweig.io>
+Date:   Sun, 15 Aug 2021 09:43:00 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        linux-pci@vger.kernel.org
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Stan Skowronek" <stan@corellium.com>,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Mark Kettenis" <kettenis@openbsd.org>,
+        "Hector Martin" <marcan@marcan.st>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] PCI: apple: Add driver for the Apple M1
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 15 Aug 2021 05:25:25 +0100,
-Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
-> 
+
+
+On Sun, Aug 15, 2021, at 06:25, Alyssa Rosenzweig wrote:
 > Add a driver for the PCIe controller found in Apple system-on-chips,
 > particularly the Apple M1. This driver exposes the internal bus used for
 > the USB type-A ports, Ethernet, Wi-Fi, and Bluetooth. This patch brings
@@ -66,15 +94,6 @@ Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
 > from Mark Kettenis's U-Boot patches which in turn is derived from
 > Corellium's patches for the hardware. The rest of the driver is derived
 > from Marc Zyngier's driver for the hardware.
-
-This really needs to be split into multiple patches:
-
-- PCI probing
-- Clock management
-- MSI implementation
-
-A couple of comments below:
-
 > 
 > Co-developed-by: Stan Skowronek <stan@corellium.com>
 > Signed-off-by: Stan Skowronek <stan@corellium.com>
@@ -125,7 +144,8 @@ A couple of comments below:
 >  source "drivers/pci/controller/dwc/Kconfig"
 >  source "drivers/pci/controller/mobiveil/Kconfig"
 >  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> diff --git a/drivers/pci/controller/Makefile 
+> b/drivers/pci/controller/Makefile
 > index aaf30b3dcc14..f9d40bad932c 100644
 > --- a/drivers/pci/controller/Makefile
 > +++ b/drivers/pci/controller/Makefile
@@ -137,7 +157,8 @@ A couple of comments below:
 >  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
 >  obj-y				+= dwc/
 >  obj-y				+= mobiveil/
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> diff --git a/drivers/pci/controller/pcie-apple.c 
+> b/drivers/pci/controller/pcie-apple.c
 > new file mode 100644
 > index 000000000000..08088e06460f
 > --- /dev/null
@@ -147,8 +168,10 @@ A couple of comments below:
 > +/*
 > + * PCIe host bridge driver for Apple system-on-chips.
 > + *
-> + * The HW is ECAM compliant, so once the controller is initialized, the driver
-> + * mostly only needs MSI handling. Initialization requires enabling power and
+> + * The HW is ECAM compliant, so once the controller is initialized, 
+> the driver
+> + * mostly only needs MSI handling. Initialization requires enabling 
+> power and
 > + * clocks, along with a number of register pokes.
 > + *
 > + * Copyright (C) 2021 Google LLC
@@ -264,19 +287,22 @@ A couple of comments below:
 > +/* The doorbell address is "well known" */
 > +#define DOORBELL_ADDR			0xfffff000
 > +
-> +/* The hardware exposes 3 ports. Port 0 (WiFi and Bluetooth) is special, as it
+> +/* The hardware exposes 3 ports. Port 0 (WiFi and Bluetooth) is 
+> special, as it
 > + * is power-gated by SMC to facilitate rfkill.
 > + */
 > +enum apple_pcie_port {
 > +	APPLE_PCIE_PORT_RADIO    = 0,
 > +	APPLE_PCIE_PORT_USB      = 1,
 > +	APPLE_PCIE_PORT_ETHERNET = 2,
-
-This really doesn't belong in a low-level PCIe controller driver. The
-ports should be purely generic.
-
 > +	APPLE_PCIE_NUM_PORTS
 > +};
+
+This will also be used for the Thunderbolt ports, where this enum
+won't apply at all. I could also see Apple changing the individual port
+assignments in the future. I'd just remove it here and have this file be
+a generic PCIe driver for Apple SoCs.
+
 > +
 > +struct apple_pcie {
 > +	u32			msi_base;
@@ -291,13 +317,6 @@ ports should be purely generic.
 > +static inline void rmwl(u32 clr, u32 set, void __iomem *addr)
 > +{
 > +	writel((readl(addr) & ~clr) | set, addr);
-
-Please use relaxed accessors. If the barriers are actually needed,
-please document what you are ordering against. This applies throughout
-the patch.
-
-This also begs the question: can this be called concurrently?
-
 > +}
 > +
 > +static void apple_msi_top_irq_mask(struct irq_data *d)
@@ -316,10 +335,6 @@ This also begs the question: can this be called concurrently?
 > +{
 > +	irq_chip_eoi_parent(d);
 > +}
-
-Drop this and use the irq_chip_eoi_parent() directly in the
-irqchip. This was only here for debug.
-
 > +
 > +static struct irq_chip apple_msi_top_chip = {
 > +	.name			= "PCIe MSI",
@@ -330,17 +345,11 @@ irqchip. This was only here for debug.
 > +	.irq_set_type		= irq_chip_set_type_parent,
 > +};
 > +
-> +static void apple_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+> +static void apple_msi_compose_msg(struct irq_data *data, struct 
+> msi_msg *msg)
 > +{
 > +	msg->address_hi = 0;
 > +	msg->address_lo = DOORBELL_ADDR;
-
-What was never clear is whether this doorbell address really is always
-at this location, or whether it is actually programmed by *something*.
-
-In any case, please use the lower_32bit/upper_32bit helpers, just in
-case we can move the address somewhere else.
-
 > +	msg->data = data->hwirq;
 > +}
 > +
@@ -355,7 +364,8 @@ case we can move the address somewhere else.
 > +	.irq_compose_msi_msg	= apple_msi_compose_msg,
 > +};
 > +
-> +static int apple_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +static int apple_msi_domain_alloc(struct irq_domain *domain, unsigned 
+> int virq,
 > +				  unsigned int nr_irqs, void *args)
 > +{
 > +	struct apple_pcie *pcie = domain->host_data;
@@ -392,7 +402,8 @@ case we can move the address somewhere else.
 > +	return 0;
 > +}
 > +
-> +static void apple_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+> +static void apple_msi_domain_free(struct irq_domain *domain, unsigned 
+> int virq,
 > +				  unsigned int nr_irqs)
 > +{
 > +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
@@ -452,7 +463,8 @@ case we can move the address somewhere else.
 > +	return 0;
 > +}
 > +
-> +static int apple_pcie_setup_port(struct apple_pcie *pcie, unsigned int i)
+> +static int apple_pcie_setup_port(struct apple_pcie *pcie, unsigned int 
+> i)
 > +{
 > +	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
 > +	void __iomem *port;
@@ -498,9 +510,6 @@ case we can move the address somewhere else.
 > +	}
 > +
 > +	writel(0xfb512fff, port + PORT_INTMSKSET);
-
-Magic. What is this for?
-
 > +
 > +	writel(PORT_INT_LINK_UP | PORT_INT_LINK_DOWN | PORT_INT_AF_TIMEOUT |
 > +	       PORT_INT_REQADDR_GT32 | PORT_INT_MSI_ERR |
@@ -517,23 +526,11 @@ Magic. What is this for?
 > +		dev_err(pcie->dev, "port %u link up wait timeout\n", i);
 > +		return ret;
 > +	}
-
-I have the strong feeling that a lot of things in the above is to get
-an interrupt when the port reports an event. Why the polling then?
-
 > +
 > +	writel(DOORBELL_ADDR, port + PORT_MSIADDR);
 > +	writel(0, port + PORT_MSIBASE);
-
-So here you go, the MSI doorbell *is* configurable. Should it be
-placed somewhere else? Shouldn't it be configured before the link is
-up?
-
 > +	writel((5 << PORT_MSICFG_L2MSINUM_SHIFT) | PORT_MSICFG_EN,
 > +	       port + PORT_MSICFG);
-
-Ah, that one actually makes sense (enables 32 MSIs for the port).
-
 > +
 > +	return 0;
 > +}
@@ -555,10 +552,10 @@ Ah, that one actually makes sense (enables 32 MSIs for the port).
 > +		if (i == APPLE_PCIE_PORT_RADIO)
 > +			continue;
 
-Why? Shouldn't this be moved into the driver for the endpoint, rather
-than hardcoding something here which is likely to change from one
-system to another? If establishing the link actually requires talking
-to another part of the system, then it should be described in DT.
+As above, I don't think it makes sense to special-case anything for the
+devices on the bus here. These controllers also have hot plug support,
+so the radios don't have to be on by the time it's initialized.
+We could also just turn them on in the bootloader for now.
 
 > +
 > +		ret = apple_pcie_setup_port(pcie, i);
@@ -652,10 +649,11 @@ to another part of the system, then it should be described in DT.
 > +module_platform_driver(apple_pci_driver);
 > +
 > +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.30.2
+> 
+> 
 
-Thanks,
-
-	M.
 
 -- 
-Without deviation from the norm, progress is not possible.
+Sven Peter
