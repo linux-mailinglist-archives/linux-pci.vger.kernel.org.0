@@ -2,114 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F743ECB90
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Aug 2021 23:55:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DACA83ECB99
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 00:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbhHOVzd convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Sun, 15 Aug 2021 17:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230077AbhHOVzd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Aug 2021 17:55:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E274E6138B;
-        Sun, 15 Aug 2021 21:55:02 +0000 (UTC)
-Received: from 109-170-232-56.xdsl.murphx.net ([109.170.232.56] helo=[127.0.0.1])
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mFO5s-005A7t-R6; Sun, 15 Aug 2021 22:55:00 +0100
-Date:   Sun, 15 Aug 2021 22:55:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        =?ISO-8859-1?Q?Marek_Beh=FAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: aardvark: Fix masking MSI interrupts
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20210815173659.2mjug3jffp6a4ybg@pali>
-References: <20210815103624.19528-1-pali@kernel.org> <20210815103624.19528-3-pali@kernel.org> <87zgtizly3.wl-maz@kernel.org> <20210815173659.2mjug3jffp6a4ybg@pali>
-Message-ID: <D64971ED-5502-4A7B-8176-B4FBF00CD80B@kernel.org>
+        id S230124AbhHOWKf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 18:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229582AbhHOWKf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Aug 2021 18:10:35 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC13AC061764;
+        Sun, 15 Aug 2021 15:10:04 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id k5so2921778lfu.4;
+        Sun, 15 Aug 2021 15:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=qG3xd9FrDeupsPwKg/Vc42uAbKfVCy/1xjeqXZAMe1A=;
+        b=th+Klh1ha4srMNZHDomFwGBf9bf/Xgs88c1y6ENI/KEc/xkX8VClsOaR2ZPmyrjCOS
+         wPpGeISyXO/s/CeLZ81sOvlh6h+gPkbxPZJFeD7C59+QjKC0Qdt8CIVzwTh8Mt0FpBG6
+         W4xVrXX7ZBgEbMUyGv9Zkk5NMmEz+qIczIyCROgux1YHO9nqYPRU3R+xnZcYOuWR2i4V
+         9ENlx0/iVdaWWSMnPsABB9HD2mNwigENMApiUPIdEuJ6IWIVEcPLi/id1WyE4YS0rK56
+         pjkDoX3XKjtpjbQOspK81S+cgaLux7R6D1iXlnbBjeLra0ujOOrvutp2fb9zOcnRbdn3
+         C71Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=qG3xd9FrDeupsPwKg/Vc42uAbKfVCy/1xjeqXZAMe1A=;
+        b=d8KRkqvd9aeG/fq/7XkH1fabRTiL+FnXVFpTwAqn/vulvuJ6tPKAJocxumXLj4TA3v
+         fNEW/I3KO2FKxqLfaSrGsuxmYbj5L8Pg5auQR0hssrSOwMXIG4mVSsRMPuojA9eauYYK
+         nwHwHh88JFK5TfDhc+M/vNO04K94LKpM7JnQ1me6iER3ZWgAAE/RVLQEa/G5qmkwAFAN
+         m8oquQSzbJG1awoGJyRtDEnbKnU/gwZoEKa3dWfbjsWh/ayzmcYGwdNe4mKlYDHdCXX3
+         HVCk0gACiukQIZ6TfVXSFbLM2uBdsxkfbxs6oR3r4I/XVqegfN5ktV5OYYVrWgXu+Due
+         J0yg==
+X-Gm-Message-State: AOAM532hQVkH23+nvB9np8FcDkUkN1h0w5GWBywNi4mmRYBvcmH7EAgi
+        XVG6gcgtZKfxn6TuGzG8LWw=
+X-Google-Smtp-Source: ABdhPJzHciuPs15NMgtyIiX6wXXPm/vUzNwlYpgWhz1sWg1JDEPZTK3elB/fmoKLKeeS008NM5y0Vg==
+X-Received: by 2002:a05:6512:152a:: with SMTP id bq42mr9340696lfb.68.1629065402500;
+        Sun, 15 Aug 2021 15:10:02 -0700 (PDT)
+Received: from [192.168.0.91] ([188.242.181.97])
+        by smtp.googlemail.com with ESMTPSA id a10sm769244lfl.215.2021.08.15.15.10.01
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 15 Aug 2021 15:10:02 -0700 (PDT)
+Message-ID: <611993B1.4070302@gmail.com>
+Date:   Mon, 16 Aug 2021 01:22:41 +0300
+From:   Nikolai Zhubr <zhubr.2@gmail.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 109.170.232.56
-X-SA-Exim-Rcpt-To: pali@kernel.org, lorenzo.pieralisi@arm.com, thomas.petazzoni@bootlin.com, bhelgaas@google.com, robh@kernel.org, kw@linux.com, kabel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] x86: PIRQ/ELCR-related fixes and updates
+References: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello Maciej,
+
+20.07.2021 6:27, Maciej W. Rozycki:
+[...]
+>   Nikolai: for your system only 1/6 and 2/6 are required, though you are
+> free to experiment with all the patches.  Mind that 3/6 mechanically
+> depends on the earlier change for the SIO PIRQ router referred above.  In
+> any case please use the debug patch for PCI code as well as the earlier
+> patches for your other system and send the resulting bootstrap log for
+> confirmation.
+
+Here is a new log with 1/6 and 2/6 applied:
+
+https://pastebin.com/0MgXAGtG
+
+It looks like something went a bit unexpected ("runtime IRQ mapping not 
+provided by arch").
 
 
-On 15 August 2021 18:36:59 BST, "Pali Rohár" <pali@kernel.org> wrote:
->On Sunday 15 August 2021 17:56:04 Marc Zyngier wrote:
->> On Sun, 15 Aug 2021 11:36:23 +0100,
->> Pali Rohár <pali@kernel.org> wrote:
->> > 
->> > Masking of individual MSI interrupts is done via PCIE_MSI_MASK_REG
->> > register. At the driver probe time mask all MSI interrupts and then let
->> > kernel IRQ chip code to unmask particular MSI interrupt when needed.
->> > 
->> > Signed-off-by: Pali Rohár <pali@kernel.org>
->> > Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
->> > ---
->> >  drivers/pci/controller/pci-aardvark.c | 44 ++++++++++++++++++++++++---
->> >  1 file changed, 40 insertions(+), 4 deletions(-)
->> > 
->> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
->> > index bacfccee44fe..96580e1e4539 100644
->> > --- a/drivers/pci/controller/pci-aardvark.c
->> > +++ b/drivers/pci/controller/pci-aardvark.c
->> > @@ -480,12 +480,10 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->> >  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
->> >  	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
->> >  
->> > -	/* Disable All ISR0/1 Sources */
->> > +	/* Disable All ISR0/1 and MSI Sources */
->> >  	advk_writel(pcie, PCIE_ISR0_ALL_MASK, PCIE_ISR0_MASK_REG);
->> >  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_MASK_REG);
->> > -
->> > -	/* Unmask all MSIs */
->> > -	advk_writel(pcie, ~(u32)PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
->> > +	advk_writel(pcie, PCIE_MSI_ALL_MASK, PCIE_MSI_MASK_REG);
->> >  
->> >  	/* Unmask summary MSI interrupt */
->> >  	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
->> > @@ -1026,6 +1024,40 @@ static int advk_msi_set_affinity(struct irq_data *irq_data,
->> >  	return -EINVAL;
->> >  }
->> >  
->> > +static void advk_msi_irq_mask(struct irq_data *d)
->> > +{
->> > +	struct advk_pcie *pcie = d->domain->host_data;
->> > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
->> > +	u32 mask;
->> > +
->> > +	mask = advk_readl(pcie, PCIE_MSI_MASK_REG);
->> > +	mask |= BIT(hwirq);
->> > +	advk_writel(pcie, mask, PCIE_MSI_MASK_REG);
->> 
->> This isn't atomic, and will results in corruption when two MSIs are
->> masked/unmasked concurrently.
->
->Does it mean that also current implementation of masking legacy
->interrupt is incorrect?
->
->https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-aardvark.c?h=v5.13#n874
+Thank you,
 
-Yes, that's completely busted. If you have configuration registers that are shared between interrupts and that the HW doesn't provide set/clear accessors so that it can cope with such races, you need mutual exclusion.
-
-You'd think people would have worked that one out.... 60 years ago?
-
-        M.
-
-Jazz is not dead, it just smells funny
+Regards,
+Nikolai
