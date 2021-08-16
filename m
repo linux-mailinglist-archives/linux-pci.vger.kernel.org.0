@@ -2,151 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83F23EDCE9
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 20:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B7F3EDD0F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 20:27:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229748AbhHPSMa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Aug 2021 14:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbhHPSMa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Aug 2021 14:12:30 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50899C061764;
-        Mon, 16 Aug 2021 11:11:58 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id a15so5587798iot.2;
-        Mon, 16 Aug 2021 11:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OgXtNKQVWNS/t9DnTxT4k+sKuavXVHdSyozmTrDmIzs=;
-        b=VQMcJfqDIF28JPMngb0oQ/7fJS4RV/h/jGqHDfDcji1nnRVIW5va2razqqgzHvBHOS
-         TGfaCQjdn1vsY7Aam4D1pRST+6Ff/b4jXbQdLkSUS/jeJp2FMDX4bx1t2rZgASQVXNPn
-         WOJw/pN70skdHEW9+0y1qly5biPDnQ+jn9qcKqMzwA6DZEksN2oYTuSgCkTJlXiMqKBz
-         Et09bRVTahG0zDEiaW3HwGOd6dqWseR7SEYxBZQ4cNJ2DaOZuDpgFczJoNGB3XsmyVO1
-         YQZzJ7c0yfYdDp8kx9lkckpUCjm21/JIkZG4vjROEk/KkAooM4GdibKsTu5Il6ecpfmq
-         277w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OgXtNKQVWNS/t9DnTxT4k+sKuavXVHdSyozmTrDmIzs=;
-        b=dBmopis+IxKL3SfqvUk3TepQgG2G+tsn/g5hw4Y2elP/wPmhe2iWLMNXAGYtv+qCA3
-         n8LuFk6wTwCNFIlNQhpU4DEsblNDre1awaeeKwoz0d7peXIYZi4AGeDBmW8nkG+lXMjm
-         q8my3wGuUSG90o1p44hFPPKXecHZfP8a3M2mVDrwoXVR8ADPEEfQ5O/IPYSiONRiHFUK
-         Qzi3hZuisZjb8lw2cCSdnsGPobJpoT2sKzk7JDC7MOyh0uYs5pmXF1raY/jq4uGVx1R7
-         HQ3JDPbeF+ZIGwex5HIKNtOndK/ivmqqPtD7AXSpTESzSWex/b5MRJGipVLUPXF7qeBL
-         nMQA==
-X-Gm-Message-State: AOAM530KUO7xM7Nf3dy+6ibNmmvJjJc3fyUkW+mJAexzGku/k7VJhjFC
-        /adnouicA0Uqtv95R2mrBVw5PdgCg2yPBnDQk3Y=
-X-Google-Smtp-Source: ABdhPJxe4xcrw0U4Dd1whvty55tfoYVW3p2Pw16+UKKJO6nXVsQXetYWVAQeXSpRs8A+FqzmkFphq0Q/eIfOk9SMXqI=
-X-Received: by 2002:a5d:9eda:: with SMTP id a26mr150414ioe.166.1629137517690;
- Mon, 16 Aug 2021 11:11:57 -0700 (PDT)
+        id S230095AbhHPS1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Aug 2021 14:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229966AbhHPS1e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Aug 2021 14:27:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5279560F41;
+        Mon, 16 Aug 2021 18:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629138422;
+        bh=J5kTQ9jNl7GtseCHsR5QNLO97/SZNfu88It1yT0aXgE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=soBU96Am8xpoYrCIDFq34hMvCNLtkV/saokQsws6vR5idXFHlIkTzhfhaFJUeaZTN
+         7/rz7MbYA+vUxC39AAP//LRFFD+cx58LpziOIaR77NAittHTWUhLl6fGmgP0OsZYPm
+         HNFZMz4UV5GyUK0NwhioXsRLNmZ3v4f1YM35kE9dkgpsohCI97iDQEvZRGpGVHlpem
+         9ifcfx8E0t4/nXt4+GkWlFQWouvn0jiyEXs0UHSQoCVcquNZrZIww7I97AOZJRXqUX
+         UEEBCsVs5tM172pAD+iUTyUDY1M0txYO0txd6Vlx8aqJSjkPu+sWCPTeRis8SipiK0
+         EQnA0KFtephVw==
+Received: by mail-ed1-f45.google.com with SMTP id cq23so10511771edb.12;
+        Mon, 16 Aug 2021 11:27:02 -0700 (PDT)
+X-Gm-Message-State: AOAM532GfXz/E7QYLNICPFEJnKPMAas4YX86IuUPLBojl73tDlpX2xeH
+        rHU/D+dKNi7i8jui8dvcwl3djBaAAR4Vy6xEQQ==
+X-Google-Smtp-Source: ABdhPJz6YhgNYjBk8iIsDDdHBbb7lpGhLb6RzR0UMxHzXXHppoWWDik/vzQWomeYCgfQTi6gAbFbYjX0iK/BvYvkAKc=
+X-Received: by 2002:a05:6402:557:: with SMTP id i23mr21699802edx.373.1629138420901;
+ Mon, 16 Aug 2021 11:27:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210720232624.1493424-1-nitesh@redhat.com> <20210720232624.1493424-11-nitesh@redhat.com>
-In-Reply-To: <20210720232624.1493424-11-nitesh@redhat.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Mon, 16 Aug 2021 13:11:47 -0500
-Message-ID: <CABb+yY3Wz57dYZ8pa5zHatGRu1RFmyRK+UvN+B8txCcOUTPQzw@mail.gmail.com>
-Subject: Re: [PATCH v5 10/14] mailbox: Use irq_update_affinity_hint
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        jesse.brandeburg@intel.com, Robin Murphy <robin.murphy@arm.com>,
-        mtosatti@redhat.com, mingo@kernel.org, jbrandeb@kernel.org,
-        frederic@kernel.org, juri.lelli@redhat.com, abelits@marvell.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, peterz@infradead.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
-        nhorman@tuxdriver.com, pjwaskiewicz@gmail.com, sassmann@redhat.com,
-        thenzl@redhat.com, kashyap.desai@broadcom.com,
-        sumit.saxena@broadcom.com, shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
-        suganath-prabu.subramani@broadcom.com, james.smart@broadcom.com,
-        dick.kennedy@broadcom.com, jkc@redhat.com, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com, ahleihel@redhat.com,
-        kheib@redhat.com, borisp@nvidia.com, saeedm@nvidia.com,
-        benve@cisco.com, govind@gmx.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        nilal@redhat.com, tatyana.e.nikolova@intel.com,
-        mustafa.ismail@intel.com, ahs3@redhat.com, leonro@nvidia.com,
-        chandrakanth.patil@broadcom.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        Baolin Wang <baolin.wang7@gmail.com>, poros@redhat.com,
-        minlei@redhat.com, emilne@redhat.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, _govind@gmx.com, kabel@kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Tushar Khandelwal <Tushar.Khandelwal@arm.com>,
-        Jakub Kicinski <kuba@kernel.org>
+References: <cover.1626855713.git.mchehab+huawei@kernel.org> <e483ba44ed3d70e1f4ca899bb287fa38ee8a2876.1626855713.git.mchehab+huawei@kernel.org>
+In-Reply-To: <e483ba44ed3d70e1f4ca899bb287fa38ee8a2876.1626855713.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 16 Aug 2021 13:26:49 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLJkqr_UhDGa9duPxx5mXxcp2Ju4Xv2gH6vdru6zQY9OQ@mail.gmail.com>
+Message-ID: <CAL_JsqLJkqr_UhDGa9duPxx5mXxcp2Ju4Xv2gH6vdru6zQY9OQ@mail.gmail.com>
+Subject: Re: [PATCH v7 08/10] arm64: dts: HiSilicon: Add support for HiKey 970
+ PCIe controller hardware
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 6:27 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+On Wed, Jul 21, 2021 at 3:39 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 >
-> The driver uses irq_set_affinity_hint() to:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 >
-> - Set the affinity_hint which is consumed by the userspace for
->   distributing the interrupts
+> Add DTS bindings for the HiKey 970 board's PCIe hardware.
 >
-> - Enforce affinity
->
-> As per commit 6ac17fe8c14a ("mailbox: bcm-flexrm-mailbox: Set IRQ affinity
-> hint for FlexRM ring IRQs") the latter is done to ensure that the FlexRM
-> ring interrupts are evenly spread across all available CPUs. However, since
-> commit a0c9259dc4e1 ("irq/matrix: Spread interrupts on allocation") the
-> spreading of interrupts is dynamically performed at the time of allocation.
-> Hence, there is no need for the drivers to enforce their own affinity for
-> the spreading of interrupts.
->
-> Also, irq_set_affinity_hint() applying the provided cpumask as an affinity
-> for the interrupt is an undocumented side effect. To remove this side
-> effect irq_set_affinity_hint() has been marked as deprecated and new
-> interfaces have been introduced. Hence, replace the irq_set_affinity_hint()
-> with the new interface irq_update_affinity_hint() that only sets the
-> affinity_hint pointer.
->
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> Co-developed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/mailbox/bcm-flexrm-mailbox.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     | 71 +++++++++++++++++++
+>  .../boot/dts/hisilicon/hikey970-pmic.dtsi     |  1 -
+>  drivers/pci/controller/dwc/pcie-kirin.c       | 12 ----
+>  3 files changed, 71 insertions(+), 13 deletions(-)
 >
-> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
-> index 78073ad1f2f1..16982c13d323 100644
-> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
-> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
-> @@ -1298,7 +1298,7 @@ static int flexrm_startup(struct mbox_chan *chan)
->         val = (num_online_cpus() < val) ? val / num_online_cpus() : 1;
->         cpumask_set_cpu((ring->num / val) % num_online_cpus(),
->                         &ring->irq_aff_hint);
-> -       ret = irq_set_affinity_hint(ring->irq, &ring->irq_aff_hint);
-> +       ret = irq_update_affinity_hint(ring->irq, &ring->irq_aff_hint);
->         if (ret) {
->                 dev_err(ring->mbox->dev,
->                         "failed to set IRQ affinity hint for ring%d\n",
-> @@ -1425,7 +1425,7 @@ static void flexrm_shutdown(struct mbox_chan *chan)
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+> index 1f228612192c..6dfcfcfeedae 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+> @@ -177,6 +177,12 @@ sctrl: sctrl@fff0a000 {
+>                         #clock-cells = <1>;
+>                 };
 >
->         /* Release IRQ */
->         if (ring->irq_requested) {
-> -               irq_set_affinity_hint(ring->irq, NULL);
-> +               irq_update_affinity_hint(ring->irq, NULL);
->                 free_irq(ring->irq, ring);
->                 ring->irq_requested = false;
->         }
+> +               pmctrl: pmctrl@fff31000 {
+> +                       compatible = "hisilicon,hi3670-pmctrl", "syscon";
+> +                       reg = <0x0 0xfff31000 0x0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+>                 iomcu: iomcu@ffd7e000 {
+>                         compatible = "hisilicon,hi3670-iomcu", "syscon";
+>                         reg = <0x0 0xffd7e000 0x0 0x1000>;
+> @@ -660,6 +666,71 @@ gpio28: gpio@fff1d000 {
+>                         clock-names = "apb_pclk";
+>                 };
 >
-Seems ok to me. But I don't have the h/w to test.
+> +               its_pcie: interrupt-controller@f4000000 {
+> +                       compatible = "arm,gic-v3-its";
+> +                       msi-controller;
+> +                       reg = <0x0 0xf5100000 0x0 0x100000>;
 
-Acked-by: Jassi Brar <jaswinder.singh@linaro.org>
+How does this h/w have a GIC-400 (which is GICv2) and then a GIC v3 ITS?
 
-cheers.
+> +               };
+> +
+> +               pcie_phy: pcie-phy@fc000000 {
+> +                       compatible = "hisilicon,hi970-pcie-phy";
+> +                       reg = <0x0 0xfc000000 0x0 0x80000>;
+> +
+> +                       phy-supply = <&ldo33>;
+> +
+> +                       clocks = <&crg_ctrl HI3670_CLK_GATE_PCIEPHY_REF>,
+> +                                <&crg_ctrl HI3670_CLK_GATE_PCIEAUX>,
+> +                                <&crg_ctrl HI3670_PCLK_GATE_PCIE_PHY>,
+> +                                <&crg_ctrl HI3670_PCLK_GATE_PCIE_SYS>,
+> +                                <&crg_ctrl HI3670_ACLK_GATE_PCIE>;
+> +                       clock-names = "phy_ref", "aux",
+> +                                     "apb_phy", "apb_sys",
+> +                                     "aclk";
+> +
+> +                       reset-gpios = <&gpio7 0 0 >, <&gpio25 2 0 >,
+> +                                     <&gpio3 1 0 >, <&gpio27 4 0 >;
+> +
+> +                       clkreq-gpios = <&gpio20 6 0 >, <&gpio27 3 0 >,
+> +                                      <&gpio17 0 0 >;
+> +
+> +                       /* vboost iboost pre post main */
+> +                       hisilicon,eye-diagram-param = <0xFFFFFFFF 0xFFFFFFFF
+> +                                                      0xFFFFFFFF 0xFFFFFFFF
+> +                                                      0xFFFFFFFF>;
+> +
+> +                       #phy-cells = <0>;
+> +               };
+> +
+> +               pcie@f4000000 {
+> +                       compatible = "hisilicon,kirin970-pcie";
+> +                       reg = <0x0 0xf4000000 0x0 0x1000000>,
+> +                             <0x0 0xfc180000 0x0 0x1000>,
+> +                             <0x0 0xf5000000 0x0 0x2000>;
+> +                       reg-names = "dbi", "apb", "config";
+> +                       bus-range = <0x0  0x1>;
+> +                       msi-parent = <&its_pcie>;
+
+This means the PCI host doesn't have a MSI controller...
+
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +                       device_type = "pci";
+> +                       phys = <&pcie_phy>;
+> +                       ranges = <0x02000000 0x0 0x00000000
+> +                                 0x0 0xf6000000
+> +                                 0x0 0x02000000>;
+> +                       num-lanes = <1>;
+> +                       #interrupt-cells = <1>;
+> +                       interrupts = <0 283 4>;
+> +                       interrupt-names = "msi";
+
+But then this says it does...
