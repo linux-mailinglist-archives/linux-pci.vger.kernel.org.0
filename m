@@ -2,157 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55B7F3EDD0F
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 20:27:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC923EDD7D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 21:01:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbhHPS1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Aug 2021 14:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47478 "EHLO mail.kernel.org"
+        id S229755AbhHPTBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Aug 2021 15:01:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229966AbhHPS1e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Aug 2021 14:27:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5279560F41;
-        Mon, 16 Aug 2021 18:27:02 +0000 (UTC)
+        id S229556AbhHPTBv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Aug 2021 15:01:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DB16360F39
+        for <linux-pci@vger.kernel.org>; Mon, 16 Aug 2021 19:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629138422;
-        bh=J5kTQ9jNl7GtseCHsR5QNLO97/SZNfu88It1yT0aXgE=;
+        s=k20201202; t=1629140479;
+        bh=fELjCVaqBimtld+aBQWf5IDFjErooAnKz0sP9yUiUoA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=soBU96Am8xpoYrCIDFq34hMvCNLtkV/saokQsws6vR5idXFHlIkTzhfhaFJUeaZTN
-         7/rz7MbYA+vUxC39AAP//LRFFD+cx58LpziOIaR77NAittHTWUhLl6fGmgP0OsZYPm
-         HNFZMz4UV5GyUK0NwhioXsRLNmZ3v4f1YM35kE9dkgpsohCI97iDQEvZRGpGVHlpem
-         9ifcfx8E0t4/nXt4+GkWlFQWouvn0jiyEXs0UHSQoCVcquNZrZIww7I97AOZJRXqUX
-         UEEBCsVs5tM172pAD+iUTyUDY1M0txYO0txd6Vlx8aqJSjkPu+sWCPTeRis8SipiK0
-         EQnA0KFtephVw==
-Received: by mail-ed1-f45.google.com with SMTP id cq23so10511771edb.12;
-        Mon, 16 Aug 2021 11:27:02 -0700 (PDT)
-X-Gm-Message-State: AOAM532GfXz/E7QYLNICPFEJnKPMAas4YX86IuUPLBojl73tDlpX2xeH
-        rHU/D+dKNi7i8jui8dvcwl3djBaAAR4Vy6xEQQ==
-X-Google-Smtp-Source: ABdhPJz6YhgNYjBk8iIsDDdHBbb7lpGhLb6RzR0UMxHzXXHppoWWDik/vzQWomeYCgfQTi6gAbFbYjX0iK/BvYvkAKc=
-X-Received: by 2002:a05:6402:557:: with SMTP id i23mr21699802edx.373.1629138420901;
- Mon, 16 Aug 2021 11:27:00 -0700 (PDT)
+        b=PGk1ZfMjxtL2c7d+4+YZ1KNYe2K+qVsxmZBLIohzDtlN1KQPZYuxzyEgY15dE4caj
+         8XcO/cvuttvE01ISBZsLNixFrnuKexZgc4VxUsc8/KAWB3r/42ql75k82qTX5w6U5k
+         v/KQjLf2tz7Zo3RsrtRLxxvjLSG4XI1EsLKpSr4NU1LY7sgoUU6HKzdMKw9o5+srQB
+         DVfePQhGpfuitx+D6xqiklmSK3RFTZBYSxdAbQmOJcGjHEK/uH7EokAvclmfVna8qf
+         y4l96kOq5EdbrD3jgT56ntnwdY45OYWo7mivJ2AZVZ5QEBkzL6c6V/1T1ER+0R8yw+
+         rNJsM+WpZku5A==
+Received: by mail-ej1-f44.google.com with SMTP id d11so33647779eja.8
+        for <linux-pci@vger.kernel.org>; Mon, 16 Aug 2021 12:01:19 -0700 (PDT)
+X-Gm-Message-State: AOAM530vKRI4XSFpUc3Uj1jPGzWtoHWPLxuYgB6qbINgLvPTYyD7b8LJ
+        +VSjHngiCziYVn0rGbr+54S9z0G5QR1PlP/CUA==
+X-Google-Smtp-Source: ABdhPJw+vG4f/8fBGvP07tjJac8/Smb+C5YLriCvjYb2K6u4Dsncboy5pzrpdFBoiDjCrbtSQB0cVthF/0Jgme/G238=
+X-Received: by 2002:a17:906:791:: with SMTP id l17mr17210445ejc.360.1629140478400;
+ Mon, 16 Aug 2021 12:01:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1626855713.git.mchehab+huawei@kernel.org> <e483ba44ed3d70e1f4ca899bb287fa38ee8a2876.1626855713.git.mchehab+huawei@kernel.org>
-In-Reply-To: <e483ba44ed3d70e1f4ca899bb287fa38ee8a2876.1626855713.git.mchehab+huawei@kernel.org>
+References: <20210813160257.3570515-1-robh@kernel.org> <20210813191938.6a8a4ee4@coco.lan>
+ <CAL_JsqL+aPRh9CJ0iKbzGCyE3wDR6QMEKAEC8p=1ZVRDSb6JDA@mail.gmail.com>
+ <20210816104252.045a7b75@coco.lan> <20210816153624.74910775@coco.lan>
+In-Reply-To: <20210816153624.74910775@coco.lan>
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 16 Aug 2021 13:26:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLJkqr_UhDGa9duPxx5mXxcp2Ju4Xv2gH6vdru6zQY9OQ@mail.gmail.com>
-Message-ID: <CAL_JsqLJkqr_UhDGa9duPxx5mXxcp2Ju4Xv2gH6vdru6zQY9OQ@mail.gmail.com>
-Subject: Re: [PATCH v7 08/10] arm64: dts: HiSilicon: Add support for HiKey 970
- PCIe controller hardware
+Date:   Mon, 16 Aug 2021 14:01:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJqu=EaNeLWvvd5uQiY9RQYLCh+Gq+eEFJQQhJmwJwS3Q@mail.gmail.com>
+Message-ID: <CAL_JsqJqu=EaNeLWvvd5uQiY9RQYLCh+Gq+eEFJQQhJmwJwS3Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: of: Fix MSI domain lookup with child bus nodes
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linuxarm <linuxarm@huawei.com>, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
+Cc:     PCI <linux-pci@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 3:39 AM Mauro Carvalho Chehab
+On Mon, Aug 16, 2021 at 8:36 AM Mauro Carvalho Chehab
 <mchehab+huawei@kernel.org> wrote:
 >
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Em Mon, 16 Aug 2021 10:42:52 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 >
-> Add DTS bindings for the HiKey 970 board's PCIe hardware.
+> > Em Sat, 14 Aug 2021 12:32:56 -0500
+> > Rob Herring <robh@kernel.org> escreveu:
+> >
+> > > On Fri, Aug 13, 2021 at 12:19 PM Mauro Carvalho Chehab
+> > > <mchehab+huawei@kernel.org> wrote:
+> > > >
+> > > > Em Fri, 13 Aug 2021 11:02:57 -0500
+> > > > Rob Herring <robh@kernel.org> escreveu:
+> > > >
+> > > > > When a DT contains PCI child bus nodes, lookup of the MSI domain on PCI
+> > > > > buses fails resulting in the following warnings:
+> > > > >
+> > > > > WARNING: CPU: 4 PID: 7 at include/linux/msi.h:256 __pci_enable_msi_range+0x398/0x59c
+> > > > >
+> > > > > The issue is that pci_host_bridge_of_msi_domain() will check the DT node of
+> > > > > the passed in bus even if it's not the host bridge's bus. Based on the
+> > > > > name of the function, that's clearly not what we want. Fix this by
+> > > > > walking the bus parents to the root bus.
+> > > > >
+> > > > > Reported-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > > > Cc: Marc Zyngier <maz@kernel.org>
+> > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > > ---
+> > > > > Compile tested only. Mauro, Can you see if this fixes your issue.
+> > > > >
+> > > > >  drivers/pci/of.c | 4 ++++
+> > > > >  1 file changed, 4 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > > > index a143b02b2dcd..ea70aede054c 100644
+> > > > > --- a/drivers/pci/of.c
+> > > > > +++ b/drivers/pci/of.c
+> > > > > @@ -84,6 +84,10 @@ struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus)
+> > > > >       if (!bus->dev.of_node)
+> > > > >               return NULL;
+> > > > >
+> > > > > +     /* Find the host bridge bus */
+> > > > > +     while (!pci_is_root_bus(bus))
+> > > > > +             bus = bus->parent;
+> > > > > +
+> > > > >       /* Start looking for a phandle to an MSI controller. */
+> > > > >       d = of_msi_get_domain(&bus->dev, bus->dev.of_node, DOMAIN_BUS_PCI_MSI);
+> > > > >       if (d)
+> > > >
+> > > > Nope, it didn't solve the issue.
+> > >
+> > > Can you try adding some prints of the domain, pci dev, and DT node to
+> > > pci_set_bus_msi_domain(). Comparing those when having child nodes or
+> > > not would be helpful.
+> >
+> > Debug patch enclosed.
+> >
+> > This is what happens when msi-parent is at /soc/pcie@f4000000/pcie@0,0:
+> >
+> > [    4.305247] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: ffff000104a2f6c0
+> > [    4.442212] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: ffff000104a2f6c0
+> > [    4.688145] pci_bus 0000:03: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@1,0: IRQ domain: ffff000104a2f6c0
+> > [    4.800613] pci_bus 0000:04: pci_set_bus_msi_domain: of_node (null): IRQ domain: ffff000104a2f6c0
+> > [    4.856254] pci_bus 0000:05: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@5,0: IRQ domain: ffff000104a2f6c0
+> > [    4.922117] pci_bus 0000:06: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0: IRQ domain: ffff000104a2f6c0
+> > [    5.032708] pci_bus 0000:07: pci_set_bus_msi_domain: of_node (null): IRQ domain: ffff000104a2f6c0
+> >
+> > And this is what happens when msi-parent is at /soc/pcie@f4000000
+> > (either with or without your patch applied):
+> >
+> > [    4.120328] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.214541] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.226054] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.478858] pci_bus 0000:03: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@1,0: IRQ domain: 0000000000000000
+> > [    4.491218] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.502793] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.588196] pci_bus 0000:04: pci_set_bus_msi_domain: of_node (null): IRQ domain: 0000000000000000
+> > [    4.597161] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.608747] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.658892] pci_bus 0000:05: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@5,0: IRQ domain: 0000000000000000
+> > [    4.671241] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.682869] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.732938] pci_bus 0000:06: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0/pcie@7,0: IRQ domain: 0000000000000000
+> > [    4.745305] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.756880] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.850363] pci_bus 0000:07: pci_set_bus_msi_domain: of_node (null): IRQ domain: 0000000000000000
+> > [    4.859322] pci_bus 0000:02: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0/pcie@0,0: IRQ domain: 0000000000000000
+> > [    4.870895] pci_bus 0000:01: pci_set_bus_msi_domain: of_node /soc/pcie@f4000000/pcie@0,0: IRQ domain: 0000000000000000
+> >
+> > Btw, despite lspci works on both cases, the Ethernet adapter stops
+> > working when msi-parent is at /soc/pcie@f4000000. I didn't notice it
+> > before, as (up to last week) I was using WiFi to connect to this board.
+> >
+> > Thanks,
+> > Mauro
+> >
+> > [PATCH] PCI: probe: Add a debug printk at pci_set_bus_msi_domain
+> >
+> > That helps to discover problems when trying to get the MSI IRQ
+> > domain.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index c5dfc1afb1d3..f73bd81922b3 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -866,6 +866,8 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
+> >         for (b = bus, d = NULL; !d && !pci_is_root_bus(b); b = b->parent) {
+> >                 if (b->self)
+> >                         d = dev_get_msi_domain(&b->self->dev);
+> > +               dev_dbg(&b->dev, "%s: of_node %pOF: IRQ domain: %px\n",
+> > +                       __func__, b->dev.of_node, d);
+> >         }
+> >
+> >         if (!d)
+> >
 >
-> Co-developed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     | 71 +++++++++++++++++++
->  .../boot/dts/hisilicon/hikey970-pmic.dtsi     |  1 -
->  drivers/pci/controller/dwc/pcie-kirin.c       | 12 ----
->  3 files changed, 71 insertions(+), 13 deletions(-)
+> I added a lot of other debug stuff (see attached).
 >
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-> index 1f228612192c..6dfcfcfeedae 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-> @@ -177,6 +177,12 @@ sctrl: sctrl@fff0a000 {
->                         #clock-cells = <1>;
->                 };
+> When msi-parent is at:
 >
-> +               pmctrl: pmctrl@fff31000 {
-> +                       compatible = "hisilicon,hi3670-pmctrl", "syscon";
-> +                       reg = <0x0 0xfff31000 0x0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
->                 iomcu: iomcu@ffd7e000 {
->                         compatible = "hisilicon,hi3670-iomcu", "syscon";
->                         reg = <0x0 0xffd7e000 0x0 0x1000>;
-> @@ -660,6 +666,71 @@ gpio28: gpio@fff1d000 {
->                         clock-names = "apb_pclk";
->                 };
->
-> +               its_pcie: interrupt-controller@f4000000 {
-> +                       compatible = "arm,gic-v3-its";
-> +                       msi-controller;
-> +                       reg = <0x0 0xf5100000 0x0 0x100000>;
+>         pcie@f4000000 {
+>                 msi-parent = <&its_pcie>;
+>         };
 
-How does this h/w have a GIC-400 (which is GICv2) and then a GIC v3 ITS?
+Are you sure the IRQ domain got created for its_pcie? From your dts
+changes, you have a GICv3-ITS without a GICv3. I don't think that's
+right.
 
-> +               };
-> +
-> +               pcie_phy: pcie-phy@fc000000 {
-> +                       compatible = "hisilicon,hi970-pcie-phy";
-> +                       reg = <0x0 0xfc000000 0x0 0x80000>;
-> +
-> +                       phy-supply = <&ldo33>;
-> +
-> +                       clocks = <&crg_ctrl HI3670_CLK_GATE_PCIEPHY_REF>,
-> +                                <&crg_ctrl HI3670_CLK_GATE_PCIEAUX>,
-> +                                <&crg_ctrl HI3670_PCLK_GATE_PCIE_PHY>,
-> +                                <&crg_ctrl HI3670_PCLK_GATE_PCIE_SYS>,
-> +                                <&crg_ctrl HI3670_ACLK_GATE_PCIE>;
-> +                       clock-names = "phy_ref", "aux",
-> +                                     "apb_phy", "apb_sys",
-> +                                     "aclk";
-> +
-> +                       reset-gpios = <&gpio7 0 0 >, <&gpio25 2 0 >,
-> +                                     <&gpio3 1 0 >, <&gpio27 4 0 >;
-> +
-> +                       clkreq-gpios = <&gpio20 6 0 >, <&gpio27 3 0 >,
-> +                                      <&gpio17 0 0 >;
-> +
-> +                       /* vboost iboost pre post main */
-> +                       hisilicon,eye-diagram-param = <0xFFFFFFFF 0xFFFFFFFF
-> +                                                      0xFFFFFFFF 0xFFFFFFFF
-> +                                                      0xFFFFFFFF>;
-> +
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               pcie@f4000000 {
-> +                       compatible = "hisilicon,kirin970-pcie";
-> +                       reg = <0x0 0xf4000000 0x0 0x1000000>,
-> +                             <0x0 0xfc180000 0x0 0x1000>,
-> +                             <0x0 0xf5000000 0x0 0x2000>;
-> +                       reg-names = "dbi", "apb", "config";
-> +                       bus-range = <0x0  0x1>;
-> +                       msi-parent = <&its_pcie>;
+The DWC driver will skip setting up it's own MSI controller if
+'msi-parent' is present in the DWC node. So if you move it out of that
+node, then the DWC MSI controller will be found and used. Try removing
+'msi-parent' and the its_pcie node.
 
-This means the PCI host doesn't have a MSI controller...
-
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       device_type = "pci";
-> +                       phys = <&pcie_phy>;
-> +                       ranges = <0x02000000 0x0 0x00000000
-> +                                 0x0 0xf6000000
-> +                                 0x0 0x02000000>;
-> +                       num-lanes = <1>;
-> +                       #interrupt-cells = <1>;
-> +                       interrupts = <0 283 4>;
-> +                       interrupt-names = "msi";
-
-But then this says it does...
+Rob
