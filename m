@@ -2,96 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E69013EDA0E
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 17:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 475303EDA36
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 17:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233220AbhHPPk7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Aug 2021 11:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236784AbhHPPkk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Aug 2021 11:40:40 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE6CC061796
-        for <linux-pci@vger.kernel.org>; Mon, 16 Aug 2021 08:40:08 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id u13-20020a17090abb0db0290177e1d9b3f7so33099654pjr.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 Aug 2021 08:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3AyfMcp2yhnMT8b6WgE0Tq0TI+fTS/T3AjxmgLG4RFY=;
-        b=XY+nexCppv0jvgdLyAS8tfu9dWl7F48uM5zLpUFgPuJr5TASNvWiJSsMRb58l1Mdpk
-         ajCsvVhN0kTxNb6wPhp2qKWAIvpEDkmvx/RIKkJG5OUoQFnQIiDBBiuRrYTDfdl0FGbZ
-         O3Blyo5uA7inwySQo0MalCg5X/1J+YC3/KdaETe6dm3vRX6zGZ2pjy9EqQM9ZkyNvXIh
-         RUT3EScLPM+3VVFYU7qOFir/od/db/Rrpk+QNDuvKz1FtK44wpByriIGmNQx+aEgEQkK
-         Jtx69NH6tNW55mQr1lROPIx7/Ldx3iIa4NfMpDphzVU5Cy5+FI08eXlm9qmLmhrNvCOO
-         zwYg==
+        id S236579AbhHPPxd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Aug 2021 11:53:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34194 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237164AbhHPPux (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Aug 2021 11:50:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629129021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e9V47nu1tdB3HihFEHa605ngQMwEj5TNSAxNMSmRQs8=;
+        b=YMhwCDMNNsCMc4wPLeW2KCj2rNQUa9hS5ABC/V8xZe4A6y9+Ng0Qx48lSdsfUYRqNCkg3n
+        83BcRK3SHZJzm/gqgq6CaulvqEnilaE0QSBJHP8UVJXayfwY3JKduJGAI5LkuAxMPOP/dR
+        BjzgHLIex+RdV+L6BjBlbTwUbaxUe5E=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-yzkMb6wMNdmbNYKqXB878Q-1; Mon, 16 Aug 2021 11:50:19 -0400
+X-MC-Unique: yzkMb6wMNdmbNYKqXB878Q-1
+Received: by mail-lf1-f70.google.com with SMTP id x7-20020ac259c70000b02903c7883796e9so4230044lfn.11
+        for <linux-pci@vger.kernel.org>; Mon, 16 Aug 2021 08:50:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3AyfMcp2yhnMT8b6WgE0Tq0TI+fTS/T3AjxmgLG4RFY=;
-        b=WMaSuN/eXR+vMxTd5uz7C1itsR0KtryCIn8puqPGBuZ00MOQllZJnsUIPqagFMzstv
-         ucUtcaWCLE4Iy3Xn6y/xul0P+Tgh5hqDKfkL++H9EPccyiIkZb6bzUHrYwD5c1n02i2U
-         UY4z4Dg0OuT2rpro1AnZ0eW5aR2OudlwZrkm8Ira1b/fty/3ZzwokvN1tx0M8hfpX4TW
-         EaXNKIK5NAf+p/k03rFuM1T2fI3zIVIztpsVClj99FpYpurvm5ELxgBbUkDd8WH9+ddM
-         CmQORuC7CKgxg0XQH95WSX0fRjaVpSJ188JDa0OgYYv7sLwK2paWSi3CzDB2YGJ1eT1F
-         KmFA==
-X-Gm-Message-State: AOAM531TdnqIa/yKw3nhJlIVbsUWh/KDLx1J3ca9CLo/9wLe04TiCR/P
-        NjO4yNgW0Go3yw40/cpQ+WCemeIHy2bBNfwlD1uqbA==
-X-Google-Smtp-Source: ABdhPJzhnxfzdvPDrfj5hvBd4graOCrPdcFqBHhlQyegW5ZMcqxUq9IwdQQp8Ee69yX+lK+Y0hqPjSkdKOdo0sNmhRk=
-X-Received: by 2002:a63:150e:: with SMTP id v14mr14590874pgl.126.1629128408340;
- Mon, 16 Aug 2021 08:40:08 -0700 (PDT)
+        bh=e9V47nu1tdB3HihFEHa605ngQMwEj5TNSAxNMSmRQs8=;
+        b=D/HY5PbY65wNEAtetbgrGFH/2e4Xqoh6UJvV1xH0D+PJ3b0idwM51A7gmmo7Z+GrMo
+         b2P3FAQEeObFbObcZKd5Huip0m4ax8pxXAwrq83YdPcmO3hxsw7xnz98VpI6kgVZdS7H
+         HAWLxmqssyhoFzbrIWA9fEfD59kUOV9dn2jSCOL9o1BMLPbbiyAzfDfn9uSm+GISPKdA
+         ENXHGlWSfOzF8/iYoWLwQgCy7rachvLTPxwGPO7Dg0W6nyfD5H9yqZfJB1kUmZUHRQ5m
+         KGhQ1xyJshP0wjaVXGQNoMP3Wz4topSKvXXoSQHjNA6H+KJYxAdEEaAvIl3tz7Fy4xw5
+         asWQ==
+X-Gm-Message-State: AOAM533GbAKTXcVgnsWG+cH9qy3P3OXf+e8nSBjMsCJYgLoaxGJ+lUNC
+        1O3VyNQyTvut3cC/wXtI5T5kJh1I9/kmuI61WgUaYoE6AOUivjTf07PZUhvYTAWzXlVAzdeN03t
+        TZLvHnUNPdPe6nmWNkVYjIxPpSiRbMJuxVFL5
+X-Received: by 2002:a05:6512:456:: with SMTP id y22mr5533248lfk.647.1629129018298;
+        Mon, 16 Aug 2021 08:50:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYKp8N35ngSFV1JQgPEtrP2LghXpp0ovI3XuTPw6uhwPl2Oh6I/VaDu17nmxri46bGsTbAB55Bxd3XRif017c=
+X-Received: by 2002:a05:6512:456:: with SMTP id y22mr5533214lfk.647.1629129018115;
+ Mon, 16 Aug 2021 08:50:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210723204958.7186-1-tharvey@gateworks.com> <36070609-9f1f-00c8-ccf5-8ed7877b29da@pengutronix.de>
- <VI1PR04MB58533AF76EA4DFD8AD6CDA158CEC9@VI1PR04MB5853.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB58533AF76EA4DFD8AD6CDA158CEC9@VI1PR04MB5853.eurprd04.prod.outlook.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Mon, 16 Aug 2021 08:39:57 -0700
-Message-ID: <CAJ+vNU1tgVsQWtxa0E8SArO=hA2K8OkqiSPrRSpx0Q5XS4gUWA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Add IMX8M Mini PCI support
-To:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20210720232624.1493424-1-nitesh@redhat.com> <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
+In-Reply-To: <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Mon, 16 Aug 2021 11:50:06 -0400
+Message-ID: <CAFki+LkyTNeorQ5e_6_Ud==X7dt27G38ZjhEewuhqGLfanjw_A@mail.gmail.com>
+Subject: Re: [PATCH v5 00/14] genirq: Cleanup the abuse of irq_set_affinity_hint()
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net, benve@cisco.com, _govind@gmx.com,
+        jassisinghbrar@gmail.com, Viresh Kumar <viresh.kumar@linaro.org>,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com
+Cc:     linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
+        Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com, Nitesh Lal <nilal@redhat.com>,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
+        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
+        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
+        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        kabel@kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        kashyap.desai@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        suganath-prabu.subramani@broadcom.com,
+        Thomas Gleixner <tglx@linutronix.de>, ley.foon.tan@intel.com,
+        huangguangbin2@huawei.com, jbrunet@baylibre.com,
+        johannes@sipsolutions.net, snelson@pensando.io,
+        lewis.hanly@microchip.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 6:28 PM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+On Mon, Aug 2, 2021 at 11:26 AM Nitesh Lal <nilal@redhat.com> wrote:
 >
-> Hi Tim:
-> Just as Ahmad mentioned, Lucas had issue one patch-set to support i.MX8MM PCIe.
-> Some comments in the review cycle.
-> - One separate PHY driver should be used for i.MX8MM PCIe driver.
-> - Schema file should be used I think, otherwise the .txt file in the dt-binding.
+> On Tue, Jul 20, 2021 at 7:26 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >
+> > The drivers currently rely on irq_set_affinity_hint() to either set the
+> > affinity_hint that is consumed by the userspace and/or to enforce a custom
+> > affinity.
+> >
+
+[...]
+
 >
-> I'm preparing one patch-set, but it's relied on the yaml file exchanges and power-domain changes(block control and so on).
-> Up to now, I only walking on the first step, trying to exchange the dt-binding files to schema yaml file.
+> Gentle ping.
+> Any comments on the following patches:
 >
-> Best Regards
-> Richard Zhu
+>   genirq: Provide new interfaces for affinity hints
+>   scsi: megaraid_sas: Use irq_set_affinity_and_hint
+>   scsi: mpt3sas: Use irq_set_affinity_and_hint
+>   enic: Use irq_update_affinity_hint
+>   be2net: Use irq_update_affinity_hint
+>   mailbox: Use irq_update_affinity_hint
+>   hinic: Use irq_set_affinity_and_hint
+>
+> or any other patches?
+>
 
-Richard / Ahmad,
+Any comments on the following patches:
 
-Thanks for your response - I did not see the series from Lucas. I will
-drop this and wait for him to complete his work.
+  enic: Use irq_update_affinity_hint
+  be2net: Use irq_update_affinity_hint
+  mailbox: Use irq_update_affinity_hint
+  hinic: Use irq_set_affinity_and_hint
 
-Thanks,
+or any other patches?
+Any help in testing will also be very useful.
 
-Tim
+-- 
+Thanks
+Nitesh
+
