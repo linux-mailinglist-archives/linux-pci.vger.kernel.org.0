@@ -2,15 +2,15 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50B763ECD0A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 05:16:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C6C23ECD0C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Aug 2021 05:16:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230262AbhHPDRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Aug 2021 23:17:15 -0400
-Received: from [138.197.143.207] ([138.197.143.207]:45154 "EHLO rosenzweig.io"
+        id S232045AbhHPDR0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Aug 2021 23:17:26 -0400
+Received: from [138.197.143.207] ([138.197.143.207]:45176 "EHLO rosenzweig.io"
         rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S229663AbhHPDRO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Aug 2021 23:17:14 -0400
+        id S229663AbhHPDRZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Aug 2021 23:17:25 -0400
 From:   Alyssa Rosenzweig <alyssa@rosenzweig.io>
 To:     linux-pci@vger.kernel.org
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -24,86 +24,216 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Sven Peter <sven@svenpeter.dev>,
         Hector Martin <marcan@marcan.st>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] Add PCI driver for the Apple M1
-Date:   Sun, 15 Aug 2021 23:16:15 -0400
-Message-Id: <20210816031621.240268-1-alyssa@rosenzweig.io>
+Subject: [PATCH v2 1/6] dt-bindings: pci: Add DT bindings for apple,pcie
+Date:   Sun, 15 Aug 2021 23:16:16 -0400
+Message-Id: <20210816031621.240268-2-alyssa@rosenzweig.io>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210816031621.240268-1-alyssa@rosenzweig.io>
+References: <20210816031621.240268-1-alyssa@rosenzweig.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This adds a PCIe driver for the internal bus on the Apple M1 (and
-presumably other Apple system-on-chips). It's based on the work of Marc
-Zyngier, Mark Kettenis, and Stan Skowronek (Corellium). In conjunction
-with a pinctrl driver, this enables the USB type-A ports and the
-Ethernet port. It also paves the way for Wi-Fi and Bluetooth, but that
-requires further work.
+From: Mark Kettenis <kettenis@openbsd.org>
 
-For the largest change since v1 of the series-- this now uses Mark
-Kettenis's device tree bindings for PCIe. This series contains Mark's
-patches (currently under discussion on the LKML) adding the device tree
-nodes required for PCIe. I have made minor modifications to Mark's
-original patches to get everything working under Linux:
+The Apple PCIe host controller is a PCIe host controller with
+multiple root ports present in Apple ARM SoC platforms, including
+various iPhone and iPad devices and the "Apple Silicon" Macs.
 
-* In the bindings themselves, I've increased the maximum number of
-  interrupts to accommodate the full set.
-* In the PCIe node, I've added the full set of interrupts.
-* I've added the PCIe DART nodes (IOMMUs) and the corresponding
-  iommu-map(-mask) properties already covered in the bindings.
-* I've tweaked the sizes of the `reg` blocks. Otherwise I got a page
-  fault early on.
-
-I've collected the patches required to test on this branch:
-
-	https://github.com/mu-one/linux/commits/pcie-v2
-
-This branch is based on linux-next and contains a GPIO (pinctrl) driver,
-a clock gate driver, additional device tree nodes, and this series.  The
-type-A ports and Ethernet should work out-of-the-box on that tree,
-provided the kernel is booted through m1n1. This improves on Maz's
-initial PCIe driver, which required U-Boot to function.
-
-I've started using Linux on M1 as my workstation for Panfrost
-development, so this should have 40 hours of testing by this time next
-week.
-
-== Project Blurb ==
-
-Asahi Linux is an open community project dedicated to developing and
-maintaining mainline support for Apple Silicon on Linux. Feel free to
-drop by #asahi and #asahi-dev on OFTC to chat with us, or check
-our website for more information on the project:
-
-== Changes ==
-
-Changes for v2:
-- Cherrypicked Mark's device tree bindings and switched to using them.
-- Split up the PCI driver patch into 3.
-- Large numbers of minor changes to the driver better match upstream
-  quality standards (using more helper functions, etc.)
-
-Alyssa Rosenzweig (3):
-  PCI: apple: Add initial hardware bring-up
-  PCI: apple: Set up reference clocks when probing
-  PCI: apple: Add MSI handling
-
-Mark Kettenis (3):
-  dt-bindings: pci: Add DT bindings for apple,pcie
-  arm64: apple: Add pinctrl nodes
-  arm64: apple: Add PCIe node
-
- .../devicetree/bindings/pci/apple,pcie.yaml   | 166 +++++++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/apple/t8103.dtsi          | 207 ++++++++
- drivers/pci/controller/Kconfig                |  12 +
- drivers/pci/controller/Makefile               |   1 +
- drivers/pci/controller/pcie-apple.c           | 448 ++++++++++++++++++
- 6 files changed, 841 insertions(+)
+Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+---
+ .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 167 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
- create mode 100644 drivers/pci/controller/pcie-apple.c
 
+diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+new file mode 100644
+index 000000000000..054f6f069833
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+@@ -0,0 +1,166 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple PCIe host controller
++
++maintainers:
++  - Mark Kettenis <kettenis@openbsd.org>
++
++description: |
++  The Apple PCIe host controller is a PCIe host controller with
++  multiple root ports present in Apple ARM SoC platforms, including
++  various iPhone and iPad devices and the "Apple Silicon" Macs.
++  The controller incorporates Synopsys DesigWare PCIe logic to
++  implements its root ports.  But the ATU found on most DesignWare
++  PCIe host bridges is absent.
++  All root ports share a single ECAM space, but separate GPIOs are
++  used to take the PCI devices on those ports out of reset.  Therefore
++  the standard "reset-gpio" and "max-link-speed" properties appear on
++  the child nodes that represent the PCI bridges that correspond to
++  the individual root ports.
++  MSIs are handled by the PCIe controller and translated into regular
++  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
++  distributed over the root ports as the OS sees fit by programming
++  the PCIe controller's port registers.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: apple,t8103-pcie
++      - const: apple,pcie
++
++  reg:
++    minItems: 3
++    maxItems: 5
++
++  reg-names:
++    minItems: 3
++    maxItems: 5
++    items:
++      - const: config
++      - const: rc
++      - const: port0
++      - const: port1
++      - const: port2
++
++  ranges:
++    minItems: 2
++    maxItems: 2
++
++  interrupts:
++    description:
++      Interrupt specifiers.
++    minItems: 1
++    maxItems: 35
++
++  msi-controller: true
++  msi-parent: true
++
++  msi-ranges:
++    description:
++      A list of pairs <intid span>, where "intid" is the first
++      interrupt number that can be used as an MSI, and "span" the size
++      of that range.
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      minItems: 2
++      maxItems: 2
++
++  iommu-map: true
++  iommu-map-mask: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - bus-range
++  - interrupts
++  - msi-controller
++  - msi-parent
++  - msi-ranges
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/apple-aic.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pcie0: pcie@690000000 {
++        compatible = "apple,t8103-pcie", "apple,pcie";
++        device_type = "pci";
++
++        reg = <0x6 0x90000000 0x0 0x1000000>,
++              <0x6 0x80000000 0x0 0x4000>,
++              <0x6 0x81000000 0x0 0x8000>,
++              <0x6 0x82000000 0x0 0x8000>,
++              <0x6 0x83000000 0x0 0x8000>;
++        reg-names = "config", "rc", "port0", "port1", "port2";
++
++        interrupt-parent = <&aic>;
++        interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
++                     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
++
++        msi-controller;
++        msi-parent = <&pcie0>;
++        msi-ranges = <704 32>;
++
++        iommu-map = <0x100 &dart0 1 1>,
++                    <0x200 &dart1 1 1>,
++                    <0x300 &dart2 1 1>;
++        iommu-map-mask = <0xff00>;
++
++        bus-range = <0 3>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
++                 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
++
++        clocks = <&pcie_core_clk>, <&pcie_aux_clk>, <&pcie_ref_clk>;
++        pinctrl-0 = <&pcie_pins>;
++        pinctrl-names = "default";
++
++        pci@0,0 {
++          device_type = "pci";
++          reg = <0x0 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 152 0>;
++          max-link-speed = <2>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++
++        pci@1,0 {
++          device_type = "pci";
++          reg = <0x800 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 153 0>;
++          max-link-speed = <2>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++
++        pci@2,0 {
++          device_type = "pci";
++          reg = <0x1000 0x0 0x0 0x0 0x0>;
++          reset-gpios = <&pinctrl_ap 33 0>;
++          max-link-speed = <1>;
++
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges;
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b63403793c81..a5687cf6f925 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1701,6 +1701,7 @@ C:	irc://irc.oftc.net/asahi-dev
+ T:	git https://github.com/AsahiLinux/linux.git
+ F:	Documentation/devicetree/bindings/arm/apple.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
++F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	arch/arm64/boot/dts/apple/
+ F:	drivers/irqchip/irq-apple-aic.c
 -- 
 2.30.2
 
