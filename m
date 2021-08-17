@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D95D83EF180
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 20:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E3863EF181
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 20:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233607AbhHQSKt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Aug 2021 14:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50616 "EHLO
+        id S233372AbhHQSKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Aug 2021 14:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233389AbhHQSKo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Aug 2021 14:10:44 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4DDC061764;
-        Tue, 17 Aug 2021 11:10:11 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id oa17so427706pjb.1;
-        Tue, 17 Aug 2021 11:10:11 -0700 (PDT)
+        with ESMTP id S233592AbhHQSKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Aug 2021 14:10:48 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB38CC0613CF;
+        Tue, 17 Aug 2021 11:10:14 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id e19so25762079pla.10;
+        Tue, 17 Aug 2021 11:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lLnQgIMItD6zf5chSN5MtQHXoBE4AHjJqDsuFsI1dtI=;
-        b=B9e3g0ga4AXwMeSONGID2GGGXrLDVqXJLfPcg+YgUYVSeKddFHZLSX3qN/ZkphZTLg
-         F8+kMP+iibW04ujVQ2TXU38Gr674ZISDfqwM9nImGQQTQJ5nTUdqDGixCWOmW3lb5roE
-         pCe/qw4jKjRLokVspuM65fv6StowyepMzTd9wwajYHfHLpj94METMIuZkPUEPBczPoT2
-         ANgPRrpNy29mIptUNzFVdhNAk4Oym5nuSayMrBqDxXzca2MEaYuOFmA4rQvKNw1Ckf2m
-         nJ7CA9esaKoDksuh/k+KsD+IMSOl2DzmqRKd0WG26H6Osmam/KXHUxlBvsyJ57AE7nbK
-         4KPQ==
+        bh=Rgryk5duYMg0I6U6vS/GxLsDfUJoC6HD3ngWCb4FyxQ=;
+        b=kVn/QL0q9eYDDOqQNpNmsuOhY+vI1zEDlmtrCCsI0SeXaPIKawnkPcClQ9QceTjBw6
+         pj0VCQLcNfMfYanKrwQwl8283Jq/IFFx743r6iRTw2CP2h9vt9ZK24BojZfbJTh/lbNc
+         7DQ59dX/2jQC0xins+dx0o6XQbyJOHChBZcp4ubnlkj5IdHzapcZFXj8MPLTQppTdBQ+
+         chdZK6oTjgS0EO8W6vPzKO3kO4Aj7lojok2MGOTJocZMVPiNQGEwrjrYKIjA96PYxHWw
+         MHiQ+a3V3U5TRcOYDJbNtlAStmJUQwqfFIwxGUORVt5vIHUp1W0/ISPkQiC3OImWr6hB
+         QnXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lLnQgIMItD6zf5chSN5MtQHXoBE4AHjJqDsuFsI1dtI=;
-        b=BBBBeGtvjCdsW8IeRPIMpvp+8KESAM3ZgMBC/UlypkykotSBEQCy3ctKz8hFCmcrJM
-         Cf7nuW6SY8wS4f/KFE7CwJJXiIj231hKllhNkzx8Z/woys17PwR9vPYmWgQtzDTCx+KZ
-         meZq0BbSI+VWrKLpjt5z+kbkO8USmbwWF7oJjUrGY/8yr01KTaY4QQ+gaIn5w99MJ7xR
-         4/ZZZoOixu3Qva3olnRCZpP5nestfYKfGsZkUqcWympvgwFOgyh8x+nup5sR9bohFhXe
-         O9grJi+TjDBV49wKrX1aUsz32xTaidw07YG4MrHCT3rBI45K1Zf3KY19nxkzKbfbvwzk
-         x5ow==
-X-Gm-Message-State: AOAM533DXoPVlhjaVgIFlAF+ObiCf9kCNvVGh4ppgmV87e1c/OId8C9b
-        xMCXN8qjvkky22iqW4Wm8zY=
-X-Google-Smtp-Source: ABdhPJwyzMM6EmzU8x6fES1IoHe3MFyJx6kltdZoqNsvhhv1EU6deV5behz0NoEfXxTClW12dNKO/w==
-X-Received: by 2002:a17:90b:150a:: with SMTP id le10mr4708051pjb.135.1629223811113;
-        Tue, 17 Aug 2021 11:10:11 -0700 (PDT)
+        bh=Rgryk5duYMg0I6U6vS/GxLsDfUJoC6HD3ngWCb4FyxQ=;
+        b=YyIlMrto2DtYnRzzuO6jQGdLpLaJydOwAptA++/VD0ZK1YYbXws2g2fXAU7aVsxKlc
+         aMLYVevs6xPpknz976QGWWHiEb/pPCMnPiS6tYCujm6XwLN11lAAheCup756v1212LJe
+         RlwEiIEdI8YMTgb+CUX/xHavAt3QU1lmbNw4Ka44gNmtFcMYJPSZ4ASNXtyPV139VUSf
+         SpWY+ImHKlq45i+NIiU0AZwfg0R8H2ae7yDUpEJdiv78SSfzMF0g8vYaNWOmBhGccFRx
+         MVkBCO+45otrQndj2yJBUcJEZpayOvBRRjTXbKh3dLEOnYlZqad7NEA8H0rPa3dI0XwR
+         R6aQ==
+X-Gm-Message-State: AOAM531ASHeoSIwO7fMHAF6EJ7wJkWN2Sjpf6Fd4861ZVYYPRB5zE19r
+        6HRmSopKduz8AQPE2bhS/I0=
+X-Google-Smtp-Source: ABdhPJzYUWuJ9fH2R6F15cqGi8+AyUutS7NRx4db7k7+V36ad8h4ye2FmtXkdmJEmUTT4N77DUQ9Vg==
+X-Received: by 2002:a17:902:b190:b029:12d:487:dddc with SMTP id s16-20020a170902b190b029012d0487dddcmr3845247plr.24.1629223814469;
+        Tue, 17 Aug 2021 11:10:14 -0700 (PDT)
 Received: from localhost.localdomain ([103.248.31.158])
-        by smtp.googlemail.com with ESMTPSA id d18sm4011306pgk.24.2021.08.17.11.10.08
+        by smtp.googlemail.com with ESMTPSA id d18sm4011306pgk.24.2021.08.17.11.10.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 11:10:10 -0700 (PDT)
+        Tue, 17 Aug 2021 11:10:14 -0700 (PDT)
 From:   Amey Narkhede <ameynarkhede03@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     alex.williamson@redhat.com,
@@ -55,9 +55,9 @@ Cc:     alex.williamson@redhat.com,
         kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
         Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH v16 6/9] PCI: Define a function to set ACPI_COMPANION in pci_dev
-Date:   Tue, 17 Aug 2021 23:39:34 +0530
-Message-Id: <20210817180937.3123-7-ameynarkhede03@gmail.com>
+Subject: [PATCH v16 7/9] PCI: Setup ACPI fwnode early and at the same time with OF
+Date:   Tue, 17 Aug 2021 23:39:35 +0530
+Message-Id: <20210817180937.3123-8-ameynarkhede03@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210817180937.3123-1-ameynarkhede03@gmail.com>
 References: <20210817180937.3123-1-ameynarkhede03@gmail.com>
@@ -69,63 +69,145 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Shanker Donthineni <sdonthineni@nvidia.com>
 
-Move the existing code logic from acpi_pci_bridge_d3() to a separate
-function pci_set_acpi_fwnode() to set the ACPI fwnode.
+The pci_dev objects are created through two mechanisms 1) during PCI
+bus scan and 2) from I/O Virtualization. The fwnode in pci_dev object
+is being set at different places depends on the type of firmware used,
+device creation mechanism, and acpi_pci_bridge_d3().
 
-No functional change with this patch.
+The software features which have a dependency on ACPI fwnode properties
+and need to be handled before device_add() will not work. One use case,
+the software has to check the existence of _RST method to support ACPI
+based reset method.
+
+This patch does the two changes in order to provide fwnode consistently.
+ - Set ACPI and OF fwnodes from pci_setup_device().
+ - Cleanup acpi_pci_bridge_d3() since FWNODE is available long before
+   it's being called.
+
+After this patch, ACPI/OF firmware properties are visible at the same
+time during the early stage of pci_dev setup. And also call sites should
+be able to use firmware agnostic functions device_property_xxx() for the
+early PCI quirks in the future.
 
 Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
 Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/pci/pci-acpi.c | 12 ++++++++----
- drivers/pci/pci.h      |  2 ++
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/pci/pci-acpi.c | 49 ++++++++++++++++--------------------------
+ drivers/pci/probe.c    |  7 +++---
+ 2 files changed, 23 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 36bc23e21..eaddbf701 100644
+index eaddbf701..e9a403191 100644
 --- a/drivers/pci/pci-acpi.c
 +++ b/drivers/pci/pci-acpi.c
-@@ -934,6 +934,13 @@ static pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+@@ -941,55 +941,44 @@ void pci_set_acpi_fwnode(struct pci_dev *dev)
+ 				   acpi_pci_find_companion(&dev->dev));
+ }
  
- static struct acpi_device *acpi_pci_find_companion(struct device *dev);
- 
-+void pci_set_acpi_fwnode(struct pci_dev *dev)
++static bool acpi_pci_power_manageable(struct pci_dev *dev)
 +{
-+	if (!ACPI_COMPANION(&dev->dev) && !pci_dev_is_added(dev))
-+		ACPI_COMPANION_SET(&dev->dev,
-+				   acpi_pci_find_companion(&dev->dev));
++	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
++	return adev ? acpi_device_power_manageable(adev) : false;
 +}
 +
  static bool acpi_pci_bridge_d3(struct pci_dev *dev)
  {
- 	const struct fwnode_handle *fwnode;
-@@ -945,11 +952,8 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+-	const struct fwnode_handle *fwnode;
++	const union acpi_object *obj;
+ 	struct acpi_device *adev;
+-	struct pci_dev *root;
+-	u8 val;
++	struct pci_dev *rpdev;
+ 
+ 	if (!dev->is_hotplug_bridge)
  		return false;
  
  	/* Assume D3 support if the bridge is power-manageable by ACPI. */
-+	pci_set_acpi_fwnode(dev);
- 	adev = ACPI_COMPANION(&dev->dev);
--	if (!adev && !pci_dev_is_added(dev)) {
--		adev = acpi_pci_find_companion(&dev->dev);
--		ACPI_COMPANION_SET(&dev->dev, adev);
--	}
- 
- 	if (adev && acpi_device_power_manageable(adev))
+-	pci_set_acpi_fwnode(dev);
+-	adev = ACPI_COMPANION(&dev->dev);
+-
+-	if (adev && acpi_device_power_manageable(adev))
++	if (acpi_pci_power_manageable(dev))
  		return true;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 31458d48e..8ef379b6c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -703,7 +703,9 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
- #ifdef CONFIG_ACPI
- int pci_acpi_program_hp_params(struct pci_dev *dev);
- extern const struct attribute_group pci_dev_acpi_attr_group;
-+void pci_set_acpi_fwnode(struct pci_dev *dev);
- #else
-+static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
- static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
- {
- 	return -ENODEV;
+ 
+ 	/*
+-	 * Look for a special _DSD property for the root port and if it
+-	 * is set we know the hierarchy behind it supports D3 just fine.
++	 * The ACPI firmware will provide the device-specific properties through
++	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
++	 * for the root port and if it is set we know the hierarchy behind it
++	 * supports D3 just fine.
+ 	 */
+-	root = pcie_find_root_port(dev);
+-	if (!root)
++	rpdev = pcie_find_root_port(dev);
++	if (!rpdev)
+ 		return false;
+ 
+-	adev = ACPI_COMPANION(&root->dev);
+-	if (root == dev) {
+-		/*
+-		 * It is possible that the ACPI companion is not yet bound
+-		 * for the root port so look it up manually here.
+-		 */
+-		if (!adev && !pci_dev_is_added(root))
+-			adev = acpi_pci_find_companion(&root->dev);
+-	}
+-
++	adev = ACPI_COMPANION(&rpdev->dev);
+ 	if (!adev)
+ 		return false;
+ 
+-	fwnode = acpi_fwnode_handle(adev);
+-	if (fwnode_property_read_u8(fwnode, "HotPlugSupportInD3", &val))
++	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
++				   ACPI_TYPE_INTEGER, &obj) < 0)
+ 		return false;
+ 
+-	return val == 1;
+-}
+-
+-static bool acpi_pci_power_manageable(struct pci_dev *dev)
+-{
+-	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
+-	return adev ? acpi_device_power_manageable(adev) : false;
++	return obj->integer.value == 1;
+ }
+ 
+ static int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 379e85037..15a6975d3 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1789,6 +1789,9 @@ int pci_setup_device(struct pci_dev *dev)
+ 	dev->error_state = pci_channel_io_normal;
+ 	set_pcie_port_type(dev);
+ 
++	pci_set_of_node(dev);
++	pci_set_acpi_fwnode(dev);
++
+ 	pci_dev_assign_slot(dev);
+ 
+ 	/*
+@@ -1924,6 +1927,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	default:				    /* unknown header */
+ 		pci_err(dev, "unknown header type %02x, ignoring device\n",
+ 			dev->hdr_type);
++		pci_release_of_node(dev);
+ 		return -EIO;
+ 
+ 	bad:
+@@ -2351,10 +2355,7 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
+ 	dev->vendor = l & 0xffff;
+ 	dev->device = (l >> 16) & 0xffff;
+ 
+-	pci_set_of_node(dev);
+-
+ 	if (pci_setup_device(dev)) {
+-		pci_release_of_node(dev);
+ 		pci_bus_put(dev->bus);
+ 		kfree(dev);
+ 		return NULL;
 -- 
 2.32.0
 
