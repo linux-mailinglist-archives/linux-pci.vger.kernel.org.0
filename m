@@ -2,135 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E000C3EE606
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 07:06:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6703EE74D
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 09:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233861AbhHQFHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Aug 2021 01:07:16 -0400
-Received: from ni.piap.pl ([195.187.100.5]:58032 "EHLO ni.piap.pl"
+        id S234799AbhHQHf0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Aug 2021 03:35:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230272AbhHQFHQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Aug 2021 01:07:16 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        by ni.piap.pl (Postfix) with ESMTPSA id E7513C3F3EDA;
-        Tue, 17 Aug 2021 07:06:41 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl E7513C3F3EDA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1629176802; bh=BncA8TWUZxHXaDjf1pRp2qEcIPewHUnFiNIakbpEBjI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KoaGh/d/HYCFAn2OGQST+S1bTFmvu1Ue0EoCOiQQ8T6zkQLJyTrcG6XTp6W5K9iDM
-         iE6M4HbKhLoIyPO5elp3ngxzQ1CYayMBVJuJkmVnsPFxaaiyCh2ydpqcBn/wGvKm1M
-         g5Il0XwQ53ioPjv8BPBa1a4kDDaV2KhD7C1s5GBI=
-From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Artem Lapkin <email2tema@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCIe: limit Max Read Request Size on i.MX to 512 bytes
-Sender: khalasa@piap.pl
-Date:   Tue, 17 Aug 2021 07:06:41 +0200
-Message-ID: <m3bl5wzmla.fsf@t19.piap.pl>
+        id S234601AbhHQHf0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Aug 2021 03:35:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2B59060FA0;
+        Tue, 17 Aug 2021 07:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629185693;
+        bh=SemVCuGqjhzqig8PxA4tle98CZxitX+M8IpUnKNEyUA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OXr83AwRHiFqs1oqVG1TVqjHBFonZfn/qj2J0TnkQlvi1H+VSJEZBjtKrVjpSr+65
+         NarL9M7xI5huBerrqXPxOJHPD6AD3fjQPLqZHoUDgwFt0I5wdJzV5vOw71uZnCGXuM
+         AgsxghosI/L4IklLbZWc78qF7jDaeVJhiOZ3RhKhC0VsbLXVD6o2Yg4oZYy83frnBp
+         L9DhJo4UbsBlPfLGPtNzVYHgS+QPbr1HCUq/l/KJAitZt1GAY2NRwc9F97w/RxlJeG
+         WyBgQwS7Zhs8MNGt04x7dma09CqjE8n2WkKfc3/eumPiP7kYPxTlmVxYIRPmfcI7rJ
+         SEgioVVlQv2ww==
+Received: by mail-wr1-f52.google.com with SMTP id r7so27248897wrs.0;
+        Tue, 17 Aug 2021 00:34:53 -0700 (PDT)
+X-Gm-Message-State: AOAM531gf/T9OnTdWH3bIp+U0mL3USD26k7kCm6Za/6AutTXGVqDTpFe
+        WZ+KUGTLHyvseQ+0ckwo2w00eNuXTC+EddfhqxU=
+X-Google-Smtp-Source: ABdhPJzC9G4r4ojNPIiUqEHZhs2nqnS08mHa9NRUHYAZJyDs7A0fV2N4cjAAbV6G5sALGYsnq27bRNX1pLc5miW5+RE=
+X-Received: by 2002:adf:f202:: with SMTP id p2mr2327557wro.361.1629185691739;
+ Tue, 17 Aug 2021 00:34:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20210815042525.36878-1-alyssa@rosenzweig.io> <20210815042525.36878-3-alyssa@rosenzweig.io>
+ <87a6lj17d1.wl-maz@kernel.org> <YRm//JU0otojw+rV@sunset> <87tujpyrxu.wl-maz@kernel.org>
+In-Reply-To: <87tujpyrxu.wl-maz@kernel.org>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 17 Aug 2021 09:34:35 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3_NBek+w2xYp5Kscc9d+6DFOuF-vy1ySYo81qAmebk9A@mail.gmail.com>
+Message-ID: <CAK8P3a3_NBek+w2xYp5Kscc9d+6DFOuF-vy1ySYo81qAmebk9A@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] PCI: apple: Add driver for the Apple M1
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 1
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Lua-Profiles: 165596 [Aug 17 2021]
-X-KLMS-AntiSpam-Version: 5.9.20.0
-X-KLMS-AntiSpam-Envelope-From: khalasa@piap.pl
-X-KLMS-AntiSpam-Rate: 0
-X-KLMS-AntiSpam-Status: not_detected
-X-KLMS-AntiSpam-Method: none
-X-KLMS-AntiSpam-Auth: dkim=pass header.d=piap.pl
-X-KLMS-AntiSpam-Info: LuaCore: 454 454 39c6e442fd417993330528e7f9d13ac1bf7fdf8c, {Tracking_marketers, three}, {Tracking_from_domain_doesnt_match_to}, piap.pl:7.1.1;t19.piap.pl:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-MS-Exchange-Organization-SCL: -1
-X-KLMS-AntiSpam-Interceptor-Info: scan successful
-X-KLMS-AntiPhishing: Clean, bases: 2021/08/17 03:39:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/08/17 02:51:00 #17049510
-X-KLMS-AntiVirus-Status: Clean, skipped
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DWC PCIe controller imposes limits on the Read Request Size that it can
-handle. For i.MX6 family it's fixed at 512 bytes by default.
+On Mon, Aug 16, 2021 at 11:57 PM Marc Zyngier <maz@kernel.org> wrote:
+> On Mon, 16 Aug 2021 02:31:40 +0100, Alyssa Rosenzweig <alyssa@rosenzweig.=
+io> wrote:
+>
+> > > Please use relaxed accessors. If the barriers are actually needed,
+> > > please document what you are ordering against. This applies throughou=
+t
+> > > the patch.
+> >
+> > Relaxed accessors are used throughout in v2... it Works For Me=E2=84=A2=
+ but no
+> > guarantees I didn't introduce a race...
+>
+> That's not exactly what I wanted to read... You really need to make an
+> informed decision on the need of barriers. If the MMIO write needs to
+> be ordered after a main memory write (i.e. a memory write that is
+> consumed by the device you are subsequently writing to), you then need
+> a barrier. If, as I suspect, the device isn't DMA capable and doesn't
+> require ordering with the rest of the memory accesses, then no
+> barriers are required.
 
-If a memory read larger than the limit is requested, the CPU responds
-with Completer Abort (CA) (on i.MX6 Unsupported Request (UR) is returned
-instead due to a design error).
+My normal rule is to always use the normal accessors, and only use
+any special variants if this is either required for correct operation
+(e.g. heavy barriers on arm32 may call code that must not recursively
+use heavy barriers) or that you have proven to /both/ be correct and
+relevant for performance. IOW, don't use the relaxed accessors just
+because it isn't wrong in your driver, other developers may copy the
+code into a driver that can't do it.
 
-The i.MX6 documentation states that the limit can be changed by writing
-to the PCIE_PL_MRCCR0 register, however there is a fixed (and
-undocumented) maximum (CX_REMOTE_RD_REQ_SIZE constant). Tests indicate
-that values larger than 512 bytes don't work, though.
-
-This patch makes the RTL8111 work on i.MX6.
-
-Signed-off-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
----
-While ATM needed only on ARM, this version is compiled in on all
-archs.
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller=
-/dwc/pci-imx6.c
-index 80fc98acf097..225380e75fff 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1148,6 +1148,7 @@ static int imx6_pcie_probe(struct platform_device *pd=
-ev)
- 		imx6_pcie->vph =3D NULL;
- 	}
-=20
-+	max_pcie_mrrs =3D 512;
- 	platform_set_drvdata(pdev, imx6_pcie);
-=20
- 	ret =3D imx6_pcie_attach_pd(dev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index aacf575c15cf..abeb48a64ee3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -112,6 +112,8 @@ enum pcie_bus_config_types pcie_bus_config =3D PCIE_BUS=
-_PEER2PEER;
- enum pcie_bus_config_types pcie_bus_config =3D PCIE_BUS_DEFAULT;
- #endif
-=20
-+u16 max_pcie_mrrs =3D 4096; // no limit
-+
- /*
-  * The default CLS is used if arch didn't set CLS explicitly and not
-  * all pci devices agree on the same value.  Arch can override either
-@@ -5816,6 +5818,9 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 			rq =3D mps;
- 	}
-=20
-+	if (rq > max_pcie_mrrs)
-+		rq =3D max_pcie_mrrs;
-+
- 	v =3D (ffs(rq) - 8) << 12;
-=20
- 	ret =3D pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 06ff1186c1ef..2b95a8204819 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -996,6 +996,7 @@ enum pcie_bus_config_types {
- };
-=20
- extern enum pcie_bus_config_types pcie_bus_config;
-+extern u16 max_pcie_mrrs;
-=20
- extern struct bus_type pci_bus_type;
-=20
-
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
+      Arnd
