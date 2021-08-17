@@ -2,268 +2,296 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66AD33EEB77
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 13:19:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C2C3EECF4
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Aug 2021 15:02:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236683AbhHQLTu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Aug 2021 07:19:50 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:55890 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231515AbhHQLTu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Aug 2021 07:19:50 -0400
-X-UUID: dbcb470c89a149709a094139ebe5c298-20210817
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=Tr7tuitzJilGkvLYD5l+l36XytZgtqS/B3bOfn2WYkQ=;
-        b=XZMTFL5yPQkLgfMVFXrd9TkJJyMtmpIDNbkuu3eq9BAKqN1o9Bpol/r1S+m+aS4d6zw78N3cQqiNB7CFULZpCI/P6tIFlQYjbdfQWCV9wzFIL0FRwDur2/bkIGaq60U9U24cX5KmduFnaKRBG2YbNc0Gspkm4iyfoeFaBWZhEpI=;
-X-UUID: dbcb470c89a149709a094139ebe5c298-20210817
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1960029609; Tue, 17 Aug 2021 19:19:10 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 17 Aug 2021 19:19:09 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.239)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.792.15 via Frontend Transport; Tue, 17 Aug 2021 19:19:09 +0800
+        id S230251AbhHQNCe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Aug 2021 09:02:34 -0400
+Received: from mail-mw2nam12on2065.outbound.protection.outlook.com ([40.107.244.65]:62945
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229721AbhHQNCd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Aug 2021 09:02:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HtYTQhEJ3NxGNHd/AuTA8o+/2SdZctCArnljiIIf73SJsryGVd4zIUM8SQLO87A+azPDKqRXtC46v3O9C86bgaLuK6B/OhWfAO12SrX2lmPs/k7fqeH9YAjIft2Tb6YDdQtpXVQpgJMWSOUwljFrJsGgCtDUWohdiViQIKiXwyH0P0cBU0+42pj/yzOwJ0HHgGugmR6ELgWCY2NNRfQz6J3LI7FTkE2pqsTf9ayiCz1kLuOTlqbO2dOXpgq5SJ5BTcUehG4rVjTc5PMPcfFio4J+zjPhKz2uwTGqIlQZV/PjQz2AT4JxTaFSiRsI4FHjpVygLKPANNgRg8R+0jOHXg==
+ b=bmZZHwlsmuhYCFe4rdCmiD3x4ajRDYSjaSby/qJhVx0EIkLca64LYOvpwFlH2TWO/mTJDfJG1uyWJ2dVPMt4h7unnhmDR28EJ7caIxFMRCILVksyUU2rdDBESbFSXrQy8w4wHO37Ew/s3uy1O2pGYwlxYlCkNJRkQPjMiXNvEx+ErHSfe+ESEZAgZhe/1Wmp8TXB99aI4tStgYmXdTDTZi6zWyVvaS79sKrdcO/ysipdvU66R4udb0cDSZrOFM01iSXCg5nzuGdWMUl88Ho3FCYpBTBzLbvzId13hrq9SLKytXiNzeNhG2fK+ZRLyYq+Ls1QT0KWx+7dHlmZ+cAqIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tr7tuitzJilGkvLYD5l+l36XytZgtqS/B3bOfn2WYkQ=;
- b=eFjhxfyoEHSorjTIN5Mj63G/CPZQlg7d3ddiPBPpS/a0rY29ZO8uuYvxGy5oq4I+lqn8O8wxcydp0PS8N4lssn1Up1NrcbjztT/FTo9dxlj1sEa7YtytZJ2C5DP+H7qA/amRoNbFnFrxFlkCHZLJQyZzUx34vlROGVlKc/c7qOgcFmgVpaYA6QQU/2R5FjwXp9/WDsCFOmP0DX4L2kewsUCv4vU/YvRT4evs70YqwSY4Gax5lpviptTm1u5rs/cUn16S181O7rNSqTgFmQu+IWucZOa8jstocGL1SYV4BHCVDBDHrObajpMeVKieEVXzjjAjypgEpa1+qkk79rkLmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ bh=uRCKPu/omrtlE8wVPLNZD462lb/kdJIWyl01eFNTG4Q=;
+ b=GPSCtbFT0KHsXhAXX0MupgwSBLjuMVVfBM6+zrkK3xu/DCxkSKxvMQ1NtoLmi3VEjYabUQA3afPlcqmKLKRu0UpLircjyPc1PsWebcrGt4sL2/G99mrPZixxW4kKO2cpSRTqQMznKrIG7SjLPdFjZ7ASriVwdUvjwFq1zQ5/UDZ7Jv3tLjEIzSAJL8YFaGy6xN7KpvW2mRrb7gRqJxVSG9jsAs7hWahcdOC96U3gcj+6qYHY1SXEeINWncu0wy7/MFeidiEk0jext5P1XEfmzF75qgjAY/Y3NOH3Ci358qXL+zXc64XBpY7WTaIhKLKB38Q85ng5LU/P9Aan/9ozqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=markovi.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tr7tuitzJilGkvLYD5l+l36XytZgtqS/B3bOfn2WYkQ=;
- b=YRfmusK8oA5GBufw0yBP+rtpoOICHB7mRVP1X2ZZrQvneA4HrmLZ5okKVjY6BLGa5zQW3gzx2PWx37PnX0uD6Pl5YjKR4uSAh5pAIav+C82Mk9pSeDO8x0H249CnWEwsoCiEtJan8dBx2Udt60qnPNh1uYqg15A+yVSZxCoOOxQ=
-Received: from KL1PR03MB4694.apcprd03.prod.outlook.com (2603:1096:820:12::14)
- by KL1PR0302MB5380.apcprd03.prod.outlook.com (2603:1096:820:33::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.14; Tue, 17 Aug
- 2021 11:18:55 +0000
-Received: from KL1PR03MB4694.apcprd03.prod.outlook.com
- ([fe80::88a8:25ac:66d5:5ec1]) by KL1PR03MB4694.apcprd03.prod.outlook.com
- ([fe80::88a8:25ac:66d5:5ec1%7]) with mapi id 15.20.4436.018; Tue, 17 Aug 2021
- 11:18:55 +0000
-From:   =?utf-8?B?Q2h1YW5qaWEgTGl1ICjmn7PkvKDlmIkp?= 
-        <Chuanjia.Liu@mediatek.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "frank-w@public-files.de" <frank-w@public-files.de>,
-        =?utf-8?B?WW9uZyBXdSAo5ZC05YuHKQ==?= <Yong.Wu@mediatek.com>,
-        =?utf-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
-        <Jianjun.Wang@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        =?utf-8?B?UnlkZXIgTGVlICjmnY7luproq7op?= <Ryder.Lee@mediatek.com>
-Subject: Re: [PATCH v11 2/4] PCI: mediatek: Add new method to get shared
- pcie-cfg base address and parse node
-Thread-Topic: [PATCH v11 2/4] PCI: mediatek: Add new method to get shared
- pcie-cfg base address and parse node
-Thread-Index: AQHXfHE58Vwso+DZ00iND05GAYdwVqttRusAgARuTgCABgU5gA==
-Date:   Tue, 17 Aug 2021 11:18:54 +0000
-Message-ID: <55495cac6a6f7bd3efc2e2932a2a4b4a76789e94.camel@mediatek.com>
-References: <20210719073456.28666-3-chuanjia.liu@mediatek.com>
-         <20210810194250.GA2276275@bjorn-Precision-5520>
-         <20210813152239.GA15515@lpieralisi>
-In-Reply-To: <20210813152239.GA15515@lpieralisi>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfd1c974-ed0a-4ac2-5368-08d96170cce4
-x-ms-traffictypediagnostic: KL1PR0302MB5380:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1PR0302MB5380D83C5BB048EEACB305F0E6FE9@KL1PR0302MB5380.apcprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NJntBDBL3xejjw9Oxw+Vy3UbZ8KF82QztAuQ0ouOu8LKAXuc2U/GfQOpJqaELPZjhMqz5X6XSMbKhSwo6Z36NplBFiAgdE0cA54GNnNbbtM1Q/3QAsQCY2yptOr+jeDwbtZZkfF/7WNhFG8h1bvQfVOjcqiGuQ6BWb9VDHJYbHR3kErnE+Ye/8PI6dRcKYe99m1igmdQQjsM78J4fNn0SyIwSXnZsZDh1SrRgSy13ErGl3uwg9o9nKFxx9JAMMLJJXWcJ2CiiEGKF1JERhc5Dqhs1Ou+NK/Eu/4rol5Xj+wmTVyV5kU7OyFMYZc0LwxBaHXFdSvO2RkI+17pz0pOuQmYTlze+1lms8Kr+KjlKPb7j5hAxrm8z4im1WVz48bOe2zbxZhOHa6vT3ccchsx/Fg2UJH2o3wflwi5+AT4MCyjJ7/cYOTQonN6scP3jH08h0STBn9zPw/6Aje+YJvCnV84veAW9FiSuie65uzmAgr/opdP+Zoqt8b+iedjMOREoLHZg5dDO57kzmLFf2l57OyctQZB8CVqgdifz1mLL+4P6FX6T1VvgT+ThVpXZ7CEOF4gcRDxbVd/NTaeg25XOkdBfMRbeit/gspgFwIxsMlVN8b29A1cC+Ze9Dp74mcw+pDkpcJaE1sOSOzGbPsypU9xsmu+mzC8JuA5nH3MQekdeHdyCztH1p5eA9lvXvPGBF9sBR442fQAcUxuTXcUiA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB4694.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66476007)(38070700005)(2906002)(5660300002)(6506007)(36756003)(6486002)(38100700002)(7416002)(6512007)(508600001)(83380400001)(76116006)(91956017)(66446008)(64756008)(66556008)(186003)(8936002)(26005)(2616005)(107886003)(71200400001)(316002)(8676002)(4326008)(86362001)(110136005)(66946007)(122000001)(85182001)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MjZzZGxmaDNLbEdVUmdmRnhwaU9Ic0g3Y25tRlAzLzZudVVodm1pTDRkU0dJ?=
- =?utf-8?B?MnhQR1lmNmlwZEVOcjlqQzQ3RlFTNkY2Vmx0c2drL25laHhqK2NFMUhsdjg2?=
- =?utf-8?B?eWt6SXRpd1p2YkJ6c0g1dk9nVFd1UHBWN3EwVTdIWlN5VTZVV3IrckZoR2p4?=
- =?utf-8?B?b1VsNDNoVW9HcENLU3Zjb3FHZDdEQ0czL3NsZTVDdDRPOUtxYmlQWkNncmc5?=
- =?utf-8?B?Z0ZlY2IvazluQkJ6U2RuYTJEZUNxWDJXSjVoNS8rdzVWaE5DblEwMUtmeFA0?=
- =?utf-8?B?T0hSL0R1d2tFYXppN3VDQzlHV3pYdTE0aCt1TFZTdWJDTGpadXdPUW52SEJl?=
- =?utf-8?B?bjJML0NOa2RXZGtab1Yrd05veDUyWU4rTGtTS1pNSTB2NTIrTEd1OVZKZU5P?=
- =?utf-8?B?MHFzTmpNT2FFc1FTemZYTUZlWWxLRXAyODFCbFY3ZVlwUitzb0YzRkxvZmZo?=
- =?utf-8?B?WThTVTlOdVpqcWNzczJuazhyY1dIZ0FIRHFVVzdtR0VLT3UxQmlRajFEQkE0?=
- =?utf-8?B?NEE2aXRHVm5TWWVRenpLdVlOSkNLa1pZakM0V0U3L2pOejJwdmFtSm5uVXJH?=
- =?utf-8?B?eWZDeVhKR3Fzbm5CR2wwRFd1RDNUQTRoWFduNFlScWxxT0VjVkJGbDYvcC9y?=
- =?utf-8?B?NGg3YlduL2d4bFozdE5SVXQ4YW1kMnVORFJMbFBCYXhQTmw5VXAwWmF4Nk5k?=
- =?utf-8?B?N2p5OS9WcmNHNTZZTHpUTXJrNnpENmU5YjQxSHhoVUxjMmZRdDlyTExkdUJE?=
- =?utf-8?B?RnlaOGJ6eDZOVy9FUEtHRElCeXVXRjBpSk9BNFV3ZWZvaG9TMXJjUHNqWGlU?=
- =?utf-8?B?N1ZBRVJGNTVtaEYyUUNjMG0yOFBwR3owdkVLVVU4VGU5VVU1OS9BbHFXeTk1?=
- =?utf-8?B?RmpOdG1Bemp3ZDZiejByU3JXWjJXdmQyR1Q0OUtPS0tDa2g5d3VLRXJoWkVB?=
- =?utf-8?B?c2w5VDZhOHQzbFEyVjhaQTVRcytjaWl4c25oTjFoZkpNbS92K2d4bnFpVDdE?=
- =?utf-8?B?MGRrdHdQN2U0TFhlOUFyNmhCaW5JM093OUk2NFF5cTNVdHdpeFBZNmVUM3N1?=
- =?utf-8?B?YzJJZ1Blay8wYWFMNjRVQkxHdEFwcTluckMrVzh0RHNhRlFVOWJZNFgrRU9U?=
- =?utf-8?B?bVZONmtTNUdKcFFhZTBGK21aZnk5N3VkTnZNdytBMk9nVW04TC81VHltVC9q?=
- =?utf-8?B?enYwYWk0VGFiKzNhTlpZOXZ3Y1N3TXAzVGNZWVNUTldSdjZMUnpDaEd0OXZ1?=
- =?utf-8?B?MU52Z2VHYTJqVnBScUxsRmtmd3pBZ0QvRWxsQTd1MUlrWm1IOG5PT3h2SzlY?=
- =?utf-8?B?VytGNGswT3FFRmZWMWxkdnRpTVBCYnQvL2QrWElMQnJXeVoyanpRWkkvOThv?=
- =?utf-8?B?YmNHeW45WFdMbTBvRVNLWUF3a1dxU09yMEw3Sm04QTE1bVJWK0RJTFFNak03?=
- =?utf-8?B?V1dObWc0cUhYYlFaaDIzRU1NMGlMRTRscnZPaUloT3BtVWptZUh3ckt0dTZj?=
- =?utf-8?B?UFZKNnBBUVRZVWFLMG5ncE00blZwa2labDZuQ1dycXRYemZiN01wTStlMjhs?=
- =?utf-8?B?NC9nbzY1THdvQ3JILzN1a1ZJbFE4QnVmbys3c2YyVFczVGtJTlcyNHIzWWdV?=
- =?utf-8?B?ZDhZa2dISE0yYldldGZHZEJsMXhHN3dmSllMalFZZ0dQNTMxUHBxK2lQWmpk?=
- =?utf-8?B?WlppajJYMDVoZHZkMzgxTitaeG5wdGgyUnNISHZsV3pOL01SMXh3TXJxL3Ro?=
- =?utf-8?Q?um1R/oQwP1lhRB3cYwPFAshnHMQV6JQAmFumh+4?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9B7AF417C08384A9E2B4FE5A2B702A0@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ bh=uRCKPu/omrtlE8wVPLNZD462lb/kdJIWyl01eFNTG4Q=;
+ b=ZpS6Mxx3tHP+QlbSO3iK2LMKsQoH9A1QLB7iWDzhcB78rTGoXnTEBGYN64zNSJLE3GxcTBfDjhtRzM8u7Skz1vXTLS3sargs7x9NPBj7gliWR/YWBtsr7Ah6X2u8w4GgXsOFwr9tnl0NvJtzkFSAwhHBeVAXGTy3rdDzDE5OqxOG5sAfLwxf0wN5KSEI9RWC8E8nZ7bannj/KuTxQLQj3QpnwsyQVIA5T6ueakg9sOPjzO83m8KKEDjE9wkD9wUbUJjhMc7Uywq4bw6G3tkUz0RYKlc+00FBaV7nfsmTIgOYV1sZrxEhnp1YDlA7VJnUK+UkKkScGhit6DI7/WMwUg==
+Received: from DM5PR21CA0045.namprd21.prod.outlook.com (2603:10b6:3:ed::31) by
+ DM6PR12MB4043.namprd12.prod.outlook.com (2603:10b6:5:216::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4415.17; Tue, 17 Aug 2021 13:01:58 +0000
+Received: from DM6NAM11FT052.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:ed:cafe::8c) by DM5PR21CA0045.outlook.office365.com
+ (2603:10b6:3:ed::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.1 via Frontend
+ Transport; Tue, 17 Aug 2021 13:01:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; markovi.net; dkim=none (message not signed)
+ header.d=none;markovi.net; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT052.mail.protection.outlook.com (10.13.172.111) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4415.14 via Frontend Transport; Tue, 17 Aug 2021 13:01:57 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Aug
+ 2021 13:01:57 +0000
+Received: from [172.27.13.131] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Aug
+ 2021 13:01:52 +0000
+Subject: Re: [PATCH 09/12] PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to
+ struct pci_device_id
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Jason Gunthorpe <jgg@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>, <bhelgaas@google.com>,
+        <corbet@lwn.net>, <alex.williamson@redhat.com>,
+        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
+        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <maorg@nvidia.com>, <leonro@nvidia.com>
+References: <20210816172156.GA2928236@bjorn-Precision-5520>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+Message-ID: <872e77ee-5f6d-af10-805d-4954484e5399@nvidia.com>
+Date:   Tue, 17 Aug 2021 16:01:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB4694.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfd1c974-ed0a-4ac2-5368-08d96170cce4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2021 11:18:55.0063
+In-Reply-To: <20210816172156.GA2928236@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7b4b220a-0f7c-4291-e50e-08d9617f31f7
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4043:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB40439E772CF33DD53C8F3FC7DEFE9@DM6PR12MB4043.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bpfvs2fPi4Ov+k+mYeluG5KqgP1c9032wyXFYeXo8oVstTAbed4C5Hj30mGBn0yYY50aAFzcbkcv8Wmz3400cw+Ru9IIvQLYlMJ36/dRLM+aD0EX7keN5X0wyxysh+raYRjBo8FPrTdkQMjU4YVDvrSPGFJxuh2GiY9f4H+Xwd++7ldx7tCfBtnqJDkFpYUNH+NwTLG1NmVjcU6t7HvrienbQ6iQTR0sWSGnUTGuGHPtsvNIrwjXSb/R+QJ8vcSHGpw4X1k1x2PewVGQIcAhIe5awH6WAzugaBOyCPTboAemF2xLK1M/uTRlV2ou66OazDemR+iMaF4oIMf0d2CqCejfQ6Xj6n8mfhU6+SGGP9Vg/alLaIknX1tBsRoDRzoDTtTcnVkAOXH5otinGESAltePwMlVHltnMcj5QcrQkeG+gADNUlFJt8tFhUhjapHQw4Y2cOTNjyoN11ETkzofdQJElvtCh6OY9cNuhPTtYDgIr7av5tendWj+BEkX1ZGeEpgge3Frhox4ahOhNlTV4LAp8sa3xNpiHO22bB4gV4/tNvUHYR6ARLXLC3KfEJOL5FNc1+3Vfd/WK2j0rjfEFz89YVMn+IfRHDx8EhqxtEAopaPdrT95e6+JVa90VJ0hQxdXch+MU/OnbthPI7mBpPzzGZTd1Np8zQnWSVRNT87/2ui6QVC8dLxOnwENirvny5FLYp8LUsReE1wQld+0RHS2dAGN5ZTv2hQM25jnHGAZZI2HsPFYpGyX/vV98DXJPJBHqZBL+Ed5mT7sSbxXoWas560u0P6H75L52ssdqny+hfSxPldKYl0t+J8G4NzU
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(46966006)(36840700001)(54906003)(5660300002)(426003)(336012)(36756003)(2616005)(478600001)(4326008)(16576012)(31686004)(316002)(6666004)(83380400001)(82740400003)(7416002)(107886003)(966005)(70206006)(7636003)(70586007)(86362001)(356005)(47076005)(36860700001)(8936002)(26005)(6916009)(31696002)(2906002)(82310400003)(186003)(53546011)(16526019)(8676002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2021 13:01:57.5726
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4dbWT4rY90MZVbFV4ddg/cqcOS4HrwwE4d30zS20y19cDY6IKzgk45QcsSifwBKCBjQJDcwvKptv4mInWF24aT5aBMroYeNWMk0d1zoSiXQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0302MB5380
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b4b220a-0f7c-4291-e50e-08d9617f31f7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT052.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4043
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTA4LTEzIGF0IDE2OjIyICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gVHVlLCBBdWcgMTAsIDIwMjEgYXQgMDI6NDI6NTBQTSAtMDUwMCwgQmpvcm4gSGVs
-Z2FhcyB3cm90ZToNCj4gPiBPbiBNb24sIEp1bCAxOSwgMjAyMSBhdCAwMzozNDo1NFBNICswODAw
-LCBDaHVhbmppYSBMaXUgd3JvdGU6DQo+ID4gPiBGb3IgdGhlIG5ldyBkdHMgZm9ybWF0LCBhZGQg
-YSBuZXcgbWV0aG9kIHRvIGdldA0KPiA+ID4gc2hhcmVkIHBjaWUtY2ZnIGJhc2UgYWRkcmVzcyBh
-bmQgcGFyc2Ugbm9kZS4NCj4gPiANCj4gPiBUaGlzIGNvbW1pdCBsb2cgZG9lc24ndCBzZWVtIHRv
-IHJlYWxseSBjb3ZlciB3aGF0J3MgZ29pbmcgb24NCj4gPiBoZXJlLiAgSXQNCj4gPiBsb29rcyBs
-aWtlOg0KPiA+IA0KPiA+ICAgLSBZb3UgYWRkZWQgYSBjaGVjayBmb3IgIm1lZGlhdGVrLGdlbmVy
-aWMtcGNpZWNmZyIgKEkgZ3Vlc3MgdGhpcw0KPiA+IGlzDQo+ID4gICAgIHRoZSAic2hhcmVkIHBj
-aWUtY2ZnIGJhc2UgYWRkcmVzcyIgcGFydCkuICBQcm9iYWJseSBjb3VsZCBoYXZlDQo+ID4gICAg
-IGJlZW4gaXRzIG93biBwYXRjaC4NCj4gPiANCj4gPiAgIC0gWW91IGFkZGVkIGNoZWNrcyBmb3Ig
-ImludGVycnVwdC1uYW1lcyIgYW5kICJwY2llX2lycSIuICBOb3QNCj4gPiAgICAgZXhwbGFpbmVk
-IGluIGNvbW1pdCBsb2c7IHByb2JhYmx5IGNvdWxkIGhhdmUgYmVlbiBpdHMgb3duDQo+ID4gcGF0
-Y2gsDQo+ID4gICAgIHRvby4NCj4gPiANCj4gPiAgIC0gWW91IG5vdyBsb29rIGZvciAibGludXgs
-cGNpLWRvbWFpbiIgKHZpYQ0KPiA+IG9mX2dldF9wY2lfZG9tYWluX25yKCkpLg0KPiA+ICAgICBJ
-ZiBwcmVzZW50LCB5b3UgcGFyc2Ugb25seSBvbmUgcG9ydCBpbnN0ZWFkIG9mIGxvb2tpbmcgZm9y
-IGFsbA0KPiA+IHRoZQ0KPiA+ICAgICBjaGlsZHJlbiBvZiB0aGUgbm9kZS4NCj4gPiANCj4gPiAg
-ICAgVGhhdCdzIHNvcnQgb2Ygd2VpcmQgYmVoYXZpb3IgLS0gd2h5IHNob3VsZCB0aGUgcHJlc2Vu
-Y2Ugb2YNCj4gPiAgICAgImxpbnV4LHBjaS1kb21haW4iIGRldGVybWluZSB3aGV0aGVyIHRoZSBu
-b2RlIGNhbiBoYXZlDQo+ID4gY2hpbGRyZW4/DQo+ID4gICAgIElzIHRoYXQgcmVhbGx5IHdoYXQg
-eW91IGludGVuZD8NCj4gPiANCj4gPiAgICAgU2hvdWxkIGJlIGV4cGxhaW5lZCBpbiB0aGUgY29t
-bWl0IGxvZyBhbmQgY291bGQgaGF2ZSBiZWVuIGl0cw0KPiA+IG93bg0KPiA+ICAgICBwYXRjaCwg
-dG9vLg0KaGksIEJqb3JuLA0KWWVzLCB0aGlzIGlzIG15IGludGVudGlvbiwiTGludXgscGNpLWRv
-bWFpbiIgaGFzIHR3byBwdXJwb3Nlcw0KMSlEaXN0aW5ndWlzaCB0aGUgb2xkIGFuZCBuZXcgZHRz
-IGZvcm1hdHMsIHRoZW4gcGFyc2UgdGhlbQ0KMilEZXRlcm1pbmUgdGhlIGN1cnJlbnQgcGNpZSBz
-bG90IG51bSBpbiBuZXcgZHRzIGZvcm1hdCwgYmVjYXVzZSB0aGUNCm9mZnNldCBvZiBzb21lIHJl
-Z3MgbmVlZHMgdG8gYmUgYmFzZWQgb24gc2xvdCBudW0NCg0KSSB3aWxsIHNwbGl0IHRoaXMgcGF0
-Y2ggaW50byB0aHJlZSBwYXRjaGVzLCBhbmQgdGhlbiBleHBsYWluIHRoZW0gaW4NCmNvbW1pdCBs
-b2csIHRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KPiANCj4gSSBhZ3JlZSB3aXRoIEJqb3JuLCB0
-aGlzIHBhdGNoIHNob3VsZCBiZSBzcGxpdCAoYW5kIGNvbW1pdCBsb2dzDQo+IHJld3JpdHRlbiku
-IEkgd2lsbCBkcm9wIGl0IGZyb20gbXkgdHJlZSwgd2FpdGluZyBmb3IgYSB2MTIuDQo+IA0KPiBM
-b3JlbnpvDQoNCmhpLCBMb3JlbnpvDQpUaGFua3MgZm9yIHlvdXIgY29uZmlybWF0aW9uLCBJIHdp
-bGwgc2VuZCB0aGUgVjEyIHZlcnNpb24gYXMgc29vbiBhcw0KcG9zc2libGUuDQoNCkNodWFuamlh
-DQo+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQ2h1YW5qaWEgTGl1IDxjaHVhbmppYS5saXVAbWVk
-aWF0ZWsuY29tPg0KPiA+ID4gQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVr
-LmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRp
-YXRlay5jIHwgNTIgKysrKysrKysrKysrKysrKysrKy0NCj4gPiA+IC0tLS0tLQ0KPiA+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkNCj4gPiA+IA0K
-PiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5j
-DQo+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jDQo+ID4gPiBp
-bmRleCAyNWJlZTY5MzgzNGYuLjkyOGUwOTgzYTkwMCAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiA+ID4gQEAgLTE0LDYgKzE0LDcgQEANCj4g
-PiA+ICAjaW5jbHVkZSA8bGludXgvaXJxY2hpcC9jaGFpbmVkX2lycS5oPg0KPiA+ID4gICNpbmNs
-dWRlIDxsaW51eC9pcnFkb21haW4uaD4NCj4gPiA+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+
-DQo+ID4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4NCj4gPiA+ICAjaW5jbHVkZSA8
-bGludXgvbXNpLmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gICNp
-bmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+ID4gPiBAQCAtMjMsNiArMjQsNyBAQA0KPiA+
-ID4gICNpbmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPg0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQo+
-ID4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9y
-ZXNldC5oPg0KPiA+ID4gIA0KPiA+ID4gICNpbmNsdWRlICIuLi9wY2kuaCINCj4gPiA+IEBAIC0y
-MDcsNiArMjA5LDcgQEAgc3RydWN0IG10a19wY2llX3BvcnQgew0KPiA+ID4gICAqIHN0cnVjdCBt
-dGtfcGNpZSAtIFBDSWUgaG9zdCBpbmZvcm1hdGlvbg0KPiA+ID4gICAqIEBkZXY6IHBvaW50ZXIg
-dG8gUENJZSBkZXZpY2UNCj4gPiA+ICAgKiBAYmFzZTogSU8gbWFwcGVkIHJlZ2lzdGVyIGJhc2UN
-Cj4gPiA+ICsgKiBAY2ZnOiBJTyBtYXBwZWQgcmVnaXN0ZXIgbWFwIGZvciBQQ0llIGNvbmZpZw0K
-PiA+ID4gICAqIEBmcmVlX2NrOiBmcmVlLXJ1biByZWZlcmVuY2UgY2xvY2sNCj4gPiA+ICAgKiBA
-bWVtOiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSByZXNvdXJjZQ0KPiA+ID4gICAqIEBwb3J0czog
-cG9pbnRlciB0byBQQ0llIHBvcnQgaW5mb3JtYXRpb24NCj4gPiA+IEBAIC0yMTUsNiArMjE4LDcg
-QEAgc3RydWN0IG10a19wY2llX3BvcnQgew0KPiA+ID4gIHN0cnVjdCBtdGtfcGNpZSB7DQo+ID4g
-PiAgCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiA+ICAJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiA+
-ID4gKwlzdHJ1Y3QgcmVnbWFwICpjZmc7DQo+ID4gPiAgCXN0cnVjdCBjbGsgKmZyZWVfY2s7DQo+
-ID4gPiAgDQo+ID4gPiAgCXN0cnVjdCBsaXN0X2hlYWQgcG9ydHM7DQo+ID4gPiBAQCAtNjUwLDcg
-KzY1NCwxMSBAQCBzdGF0aWMgaW50IG10a19wY2llX3NldHVwX2lycShzdHJ1Y3QNCj4gPiA+IG10
-a19wY2llX3BvcnQgKnBvcnQsDQo+ID4gPiAgCQlyZXR1cm4gZXJyOw0KPiA+ID4gIAl9DQo+ID4g
-PiAgDQo+ID4gPiAtCXBvcnQtPmlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgcG9ydC0+c2xv
-dCk7DQo+ID4gPiArCWlmIChvZl9maW5kX3Byb3BlcnR5KGRldi0+b2Zfbm9kZSwgImludGVycnVw
-dC1uYW1lcyIsIE5VTEwpKQ0KPiA+ID4gKwkJcG9ydC0+aXJxID0gcGxhdGZvcm1fZ2V0X2lycV9i
-eW5hbWUocGRldiwgInBjaWVfaXJxIik7DQo+ID4gPiArCWVsc2UNCj4gPiA+ICsJCXBvcnQtPmly
-cSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgcG9ydC0+c2xvdCk7DQo+ID4gPiArDQo+ID4gPiAg
-CWlmIChwb3J0LT5pcnEgPCAwKQ0KPiA+ID4gIAkJcmV0dXJuIHBvcnQtPmlycTsNCj4gPiA+ICAN
-Cj4gPiA+IEBAIC02ODIsNiArNjkwLDEwIEBAIHN0YXRpYyBpbnQgbXRrX3BjaWVfc3RhcnR1cF9w
-b3J0X3YyKHN0cnVjdA0KPiA+ID4gbXRrX3BjaWVfcG9ydCAqcG9ydCkNCj4gPiA+ICAJCXZhbCB8
-PSBQQ0lFX0NTUl9MVFNTTV9FTihwb3J0LT5zbG90KSB8DQo+ID4gPiAgCQkgICAgICAgUENJRV9D
-U1JfQVNQTV9MMV9FTihwb3J0LT5zbG90KTsNCj4gPiA+ICAJCXdyaXRlbCh2YWwsIHBjaWUtPmJh
-c2UgKyBQQ0lFX1NZU19DRkdfVjIpOw0KPiA+ID4gKwl9IGVsc2UgaWYgKHBjaWUtPmNmZykgew0K
-PiA+ID4gKwkJdmFsID0gUENJRV9DU1JfTFRTU01fRU4ocG9ydC0+c2xvdCkgfA0KPiA+ID4gKwkJ
-ICAgICAgUENJRV9DU1JfQVNQTV9MMV9FTihwb3J0LT5zbG90KTsNCj4gPiA+ICsJCXJlZ21hcF91
-cGRhdGVfYml0cyhwY2llLT5jZmcsIFBDSUVfU1lTX0NGR19WMiwgdmFsLA0KPiA+ID4gdmFsKTsN
-Cj4gPiA+ICAJfQ0KPiA+ID4gIA0KPiA+ID4gIAkvKiBBc3NlcnQgYWxsIHJlc2V0IHNpZ25hbHMg
-Ki8NCj4gPiA+IEBAIC05ODUsNiArOTk3LDcgQEAgc3RhdGljIGludCBtdGtfcGNpZV9zdWJzeXNf
-cG93ZXJ1cChzdHJ1Y3QNCj4gPiA+IG10a19wY2llICpwY2llKQ0KPiA+ID4gIAlzdHJ1Y3QgZGV2
-aWNlICpkZXYgPSBwY2llLT5kZXY7DQo+ID4gPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2UoZGV2KTsNCj4gPiA+ICAJc3RydWN0IHJlc291cmNlICpy
-ZWdzOw0KPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNmZ19ub2RlOw0KPiA+ID4gIAlpbnQg
-ZXJyOw0KPiA+ID4gIA0KPiA+ID4gIAkvKiBnZXQgc2hhcmVkIHJlZ2lzdGVycywgd2hpY2ggYXJl
-IG9wdGlvbmFsICovDQo+ID4gPiBAQCAtOTk1LDYgKzEwMDgsMTQgQEAgc3RhdGljIGludCBtdGtf
-cGNpZV9zdWJzeXNfcG93ZXJ1cChzdHJ1Y3QNCj4gPiA+IG10a19wY2llICpwY2llKQ0KPiA+ID4g
-IAkJCXJldHVybiBQVFJfRVJSKHBjaWUtPmJhc2UpOw0KPiA+ID4gIAl9DQo+ID4gPiAgDQo+ID4g
-PiArCWNmZ19ub2RlID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwNCj4gPiA+
-ICsJCQkJCSAgICJtZWRpYXRlayxnZW5lcmljLXBjaWVjZmciKTsNCj4gPiA+ICsJaWYgKGNmZ19u
-b2RlKSB7DQo+ID4gPiArCQlwY2llLT5jZmcgPSBzeXNjb25fbm9kZV90b19yZWdtYXAoY2ZnX25v
-ZGUpOw0KPiA+ID4gKwkJaWYgKElTX0VSUihwY2llLT5jZmcpKQ0KPiA+ID4gKwkJCXJldHVybiBQ
-VFJfRVJSKHBjaWUtPmNmZyk7DQo+ID4gPiArCX0NCj4gPiA+ICsNCj4gPiA+ICAJcGNpZS0+ZnJl
-ZV9jayA9IGRldm1fY2xrX2dldChkZXYsICJmcmVlX2NrIik7DQo+ID4gPiAgCWlmIChJU19FUlIo
-cGNpZS0+ZnJlZV9jaykpIHsNCj4gPiA+ICAJCWlmIChQVFJfRVJSKHBjaWUtPmZyZWVfY2spID09
-IC1FUFJPQkVfREVGRVIpDQo+ID4gPiBAQCAtMTAyNywyMiArMTA0OCwyNyBAQCBzdGF0aWMgaW50
-IG10a19wY2llX3NldHVwKHN0cnVjdCBtdGtfcGNpZQ0KPiA+ID4gKnBjaWUpDQo+ID4gPiAgCXN0
-cnVjdCBkZXZpY2UgKmRldiA9IHBjaWUtPmRldjsNCj4gPiA+ICAJc3RydWN0IGRldmljZV9ub2Rl
-ICpub2RlID0gZGV2LT5vZl9ub2RlLCAqY2hpbGQ7DQo+ID4gPiAgCXN0cnVjdCBtdGtfcGNpZV9w
-b3J0ICpwb3J0LCAqdG1wOw0KPiA+ID4gLQlpbnQgZXJyOw0KPiA+ID4gKwlpbnQgZXJyLCBzbG90
-Ow0KPiA+ID4gKw0KPiA+ID4gKwlzbG90ID0gb2ZfZ2V0X3BjaV9kb21haW5fbnIoZGV2LT5vZl9u
-b2RlKTsNCj4gPiA+ICsJaWYgKHNsb3QgPCAwKSB7DQo+ID4gPiArCQlmb3JfZWFjaF9hdmFpbGFi
-bGVfY2hpbGRfb2Zfbm9kZShub2RlLCBjaGlsZCkgew0KPiA+ID4gKwkJCWVyciA9IG9mX3BjaV9n
-ZXRfZGV2Zm4oY2hpbGQpOw0KPiA+ID4gKwkJCWlmIChlcnIgPCAwKSB7DQo+ID4gPiArCQkJCWRl
-dl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBkZXZmbjoNCj4gPiA+ICVkXG4iLCBlcnIpOw0KPiA+
-ID4gKwkJCQlnb3RvIGVycm9yX3B1dF9ub2RlOw0KPiA+ID4gKwkJCX0NCj4gPiA+ICANCj4gPiA+
-IC0JZm9yX2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUobm9kZSwgY2hpbGQpIHsNCj4gPiA+
-IC0JCWludCBzbG90Ow0KPiA+ID4gKwkJCXNsb3QgPSBQQ0lfU0xPVChlcnIpOw0KPiA+ID4gIA0K
-PiA+ID4gLQkJZXJyID0gb2ZfcGNpX2dldF9kZXZmbihjaGlsZCk7DQo+ID4gPiAtCQlpZiAoZXJy
-IDwgMCkgew0KPiA+ID4gLQkJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHBhcnNlIGRldmZuOiAl
-ZFxuIiwNCj4gPiA+IGVycik7DQo+ID4gPiAtCQkJZ290byBlcnJvcl9wdXRfbm9kZTsNCj4gPiA+
-ICsJCQllcnIgPSBtdGtfcGNpZV9wYXJzZV9wb3J0KHBjaWUsIGNoaWxkLCBzbG90KTsNCj4gPiA+
-ICsJCQlpZiAoZXJyKQ0KPiA+ID4gKwkJCQlnb3RvIGVycm9yX3B1dF9ub2RlOw0KPiA+ID4gIAkJ
-fQ0KPiA+ID4gLQ0KPiA+ID4gLQkJc2xvdCA9IFBDSV9TTE9UKGVycik7DQo+ID4gPiAtDQo+ID4g
-PiAtCQllcnIgPSBtdGtfcGNpZV9wYXJzZV9wb3J0KHBjaWUsIGNoaWxkLCBzbG90KTsNCj4gPiA+
-ICsJfSBlbHNlIHsNCj4gPiA+ICsJCWVyciA9IG10a19wY2llX3BhcnNlX3BvcnQocGNpZSwgbm9k
-ZSwgc2xvdCk7DQo+ID4gPiAgCQlpZiAoZXJyKQ0KPiA+ID4gLQkJCWdvdG8gZXJyb3JfcHV0X25v
-ZGU7DQo+ID4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiA+ICAJfQ0KPiA+ID4gIA0KPiA+ID4gIAll
-cnIgPSBtdGtfcGNpZV9zdWJzeXNfcG93ZXJ1cChwY2llKTsNCj4gPiA+IC0tIA0KPiA+ID4gMi4x
-OC4wDQo+ID4gPiANCg==
+
+On 8/16/2021 8:21 PM, Bjorn Helgaas wrote:
+> On Sun, Aug 15, 2021 at 02:27:13AM +0300, Max Gurtovoy wrote:
+>> On 8/13/2021 8:44 PM, Bjorn Helgaas wrote:
+>>> On Fri, Aug 13, 2021 at 02:21:41AM +0300, Max Gurtovoy wrote:
+>>>> On 8/12/2021 11:26 PM, Bjorn Helgaas wrote:
+>>>>> On Thu, Aug 12, 2021 at 04:51:26PM -0300, Jason Gunthorpe wrote:
+>>>>>> On Thu, Aug 12, 2021 at 10:57:07AM -0500, Bjorn Helgaas wrote:
+>>>>>>> On Thu, Aug 12, 2021 at 10:27:28AM -0300, Jason Gunthorpe wrote:
+>>>>>>>> On Wed, Aug 11, 2021 at 02:07:37PM -0500, Bjorn Helgaas wrote:
+>>>>>>>>> On Thu, Aug 05, 2021 at 09:23:57PM -0300, Jason Gunthorpe wrote:
+>>>>>>>>> Do the other bus types have a flag analogous to
+>>>>>>>>> PCI_ID_F_VFIO_DRIVER_OVERRIDE?  If we're doing something similar to
+>>>>>>>>> other bus types, it'd be nice if the approach were similar.
+>>>>>>>> They could, this series doesn't attempt it. I expect the approach to
+>>>>>>>> be similar as driver_override was copied from PCI to other
+>>>>>>>> busses. When this is completed I hope to take a look at it.
+>>>>>>> I think this would make more sense as two patches:
+>>>>>>>
+>>>>>>>      - Add a "PCI_ID_DRIVER_OVERRIDE" flag.  This is not VFIO-specific,
+>>>>>>>        since nothing in PCI depends on the VFIO-ness of drivers that use
+>>>>>>>        the flag.  The only point here is that driver id_table entries
+>>>>>>>        with this flag only match when driver_override matches the driver.
+>>>>>> This would require using two flags, one to indicate the above to the
+>>>>>> PCI code and another to indicate the vfio_pci string to
+>>>>>> file2alias. This doesn't seem justified at this point, IMHO.
+>>>>> I don't think it requires two flags.  do_pci_entry() has:
+>>>>>
+>>>>>      if (flags & PCI_ID_F_VFIO_DRIVER_OVERRIDE)
+>>>>>        strcpy(alias, "vfio_pci:");
+>>>>>
+>>>>> I'm just proposing a rename:
+>>>>>
+>>>>> s/PCI_ID_F_VFIO_DRIVER_OVERRIDE/PCI_ID_DRIVER_OVERRIDE/
+>>>>>
+>>>>>>>      - Update file2alias.c to export the flags and the "vfio_pci:" alias.
+>>>>>>>        This seems to be the only place where VFIO comes into play, and
+>>>>>>>        putting it in a separate patch will make it much smaller and it
+>>>>>>>        will be clear how it could be extended for other buses.
+>>>>>> Well, I don't want to see a flag called PCI_ID_DRIVER_OVERRIDE mapped
+>>>>>> to the string "vfio_pci", that is just really confusing.
+>>>>> Hahaha, I see, that's fair :)  It confused me for a long time why you
+>>>>> wanted "VFIO" in the flag name because from the kernel's point of
+>>>>> view, the flag is not related to any VFIO-ness.  It's only related to
+>>>>> a special variety of driver_override, and VFIO happens to be one user
+>>>>> of it.
+>>>> In my original patch I used
+>>>>
+>>>> #define PCI_ID_DRIVER_OVERRIDE PCI_ID_F_VFIO_DRIVER_OVERRIDE
+>>>>
+>>>> and in the pci core code I used PCI_ID_DRIVER_OVERRIDE in the "if" clause.
+>>>>
+>>>> So we can maybe do that and leave the option to future update of the define
+>>>> without changing the core code.
+>>>>
+>>>> In the future we can have something like:
+>>>>
+>>>> #define PCI_ID_DRIVER_OVERRIDE (PCI_ID_F_VFIO_DRIVER_OVERRIDE |
+>>>> PCI_ID_F_MY_BUS_DRIVER_OVERRIDE)
+>>>>
+>>>> The file2alias.c still have to use the exact PCI_ID_F_VFIO_DRIVER_OVERRIDE
+>>>> flag to add "vfio_" prefix.
+>>>>
+>>>> Is that better ?
+>>> I don't think it's worth having two separate #defines.  If we need
+>>> more in the future, we can add them when we need them.
+>> I meant 1 #define and 1 enum:
+>>
+>> enum {
+>>      PCI_ID_F_VFIO_DRIVER_OVERRIDE    = 1 << 0,
+>> };
+>>
+>> #define PCI_ID_DRIVER_OVERRIDE PCI_ID_F_VFIO_DRIVER_OVERRIDE
+> Basically the same thing.  Doesn't seem worthwhile to me to have both.
+> When reading the code, it's not at all obvious why you would define a
+> new name for PCI_ID_F_VFIO_DRIVER_OVERRIDE.
+
+because we need the "vfio_" prefix in the alias.
+
+And the match can use PCI_ID_DRIVER_OVERRIDE that in the future cab be 
+(#define PCI_ID_DRIVER_OVERRIDE (PCI_ID_F_VFIO_DRIVER_OVERRIDE | 
+PCI_ID_F_SOME_OTHER_ALIAS_DRIVER_OVERRIDE)
+
+>>> What if we renamed "flags" to be specifically for this override case,
+>>> e.g., "override_only"?  Then the flag could be
+>>> PCI_ID_F_VFIO_DRIVER_OVERRIDE, which would trigger a "vfio_" prefix in
+>>> file2alias.c, but pci_match_device() could just check for it being
+>>> non-zero, without caring whether the reason is VFIO or something else,
+>>> e.g.,
+>>>
+>>>     pci_match_device(...)
+>>>     {
+>>>       ...
+>>>       if (found_id->override_only) {
+>>>         if (dev->driver_override)
+>>>           return found_id;
+>>>         ...
+>> Jason suggested something like this:
+>>
+>> static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
+>>                              struct pci_dev *dev)
+>> {
+>>      struct pci_dynid *dynid;
+>>      const struct pci_device_id *found_id = NULL, *ids;
+>>
+>>      /* When driver_override is set, only bind to the matching driver */
+>>      if (dev->driver_override && strcmp(dev->driver_override, drv->name))
+>>          return NULL;
+>>
+>>      /* Look at the dynamic ids first, before the static ones */
+>>      spin_lock(&drv->dynids.lock);
+>>      list_for_each_entry(dynid, &drv->dynids.list, node) {
+>>          if (pci_match_one_device(&dynid->id, dev)) {
+>>              found_id = &dynid->id;
+>>              break;
+>>          }
+>>      }
+>>      spin_unlock(&drv->dynids.lock);
+>>
+>>      if (found_id)
+>>          return found_id;
+>>
+>>      for (ids = drv->id_table; (found_id = pci_match_id(ids, dev));
+>>           ids = found_id + 1) {
+>>          /*
+>>           * The match table is split based on driver_override. Check the
+>>           * flags as well so that any matching
+>>           * PCI_ID_F_VFIO_DRIVER_OVERRIDE entry is returned.
+>>           */
+>>          if (!(found_id->flags & PCI_ID_F_VFIO_DRIVER_OVERRIDE) ||
+>>              dev->driver_override)
+>>              return found_id;
+>>      }
+>>
+>>      /*
+>>       * if no static match, driver_override will always match, send a dummy
+>>       * id.
+>>       */
+>>      if (dev->driver_override)
+>>          return &pci_device_id_any;
+>>      return NULL;
+>> }
+>>
+>>
+>> It looks good to me as well.
+> I missed your point.  Isn't the above basically the 09/12 patch [1] we're
+> talking about?
+>
+> Yes, I see the code structure is slightly different, but the question
+> we're talking about here is the name of the "flags" field and the enum
+> or #define for the VFIO bit.
+
+I guess the renaming of "__u32 flags" to "__u32 driver_override" is ok 
+from my perspective.
+
+The enum for vfio should stay.
+
+The prefix we want in the alias is "vfio_" and not "driver_override_".
+
+This will allow a clean uAPI. "driver_override_" prefix will be too 
+generic for userspace tools like libvirt that would like to find a 
+*VFIO* driver not something else.
+
+Thus we need alias to be "vfio_".
+
+In the future if some other driver will use this flag, it will create an 
+alias also. In your suggestion, the alias will be the same and the 
+userspace tool won't be able to distinguish between the two.
+
+But in the original solution, for non vfio driver override drivers, one 
+can use new enum PCI_ID_F_SOME_OTHER_ALIAS_DRIVER_OVERRIDE and add its 
+own alias prefix for recognition "my_prefix_".
+
+>
+>> I prefer the "flags" naming since its more generic and easy to extend.
+> We don't need to worry about "flags" being generic or extensible until
+> we need to extend it.  It's easy to fiddle with it at that point.
+>
+>> can we continue with the above suggestion for V2 ?
+> I don't see what really changed with the above suggestion.
+>
+> The point I'm trying to make is that using PCI_ID_F_VFIO_DRIVER_OVERRIDE
+> in pci_match_device() suggests that the code there has some connection
+> or dependency on VFIO, but it does not.
+
+This is why I suggested a "#define PCI_ID_DRIVER_OVERRIDE 
+PCI_ID_F_VFIO_DRIVER_OVERRIDE"
+
+
+>
+> [1] https://lore.kernel.org/r/20210721161609.68223-10-yishaih@nvidia.com
