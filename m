@@ -2,132 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7BC83F057A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 15:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6803F068B
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 16:22:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238320AbhHRN7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Aug 2021 09:59:42 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45650 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238027AbhHRN7l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 09:59:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 17IDwtkx030165;
-        Wed, 18 Aug 2021 08:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1629295135;
-        bh=JcQTkmL2npVaq5oSIjOTaMiBBRi3bnk0fB3Mygg/7Hc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KXcMNJHH9Xl3hUN5856K9/sSv+bOt5Wzy5TN13m9/fgQLiL5XylwKuzIsyZuEVoFW
-         WR5Woz9ygXDXAQ7l/s8sDEXrEmzRMlg+cw8i033cP5YdkTmG2yyYfJmJbKWUuamQwL
-         s0fl7vXr36dEv5+L62pDr5wQj/SJ3jQNgUpL7BZU=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 17IDwt2D121306
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Aug 2021 08:58:55 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 18
- Aug 2021 08:58:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 18 Aug 2021 08:58:54 -0500
-Received: from [10.250.232.133] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 17IDwoP7043374;
-        Wed, 18 Aug 2021 08:58:51 -0500
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: ti,j721e: Add bindings to
- specify legacy interrupts
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>, <linux-omap@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-References: <20210804132912.30685-1-kishon@ti.com>
- <20210804132912.30685-2-kishon@ti.com> <YRapMFNb63MSPJ1E@robh.at.kernel.org>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d0f83129-4c9a-d9ff-380a-cab37a86e29e@ti.com>
-Date:   Wed, 18 Aug 2021 19:28:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <YRapMFNb63MSPJ1E@robh.at.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S239496AbhHROXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Aug 2021 10:23:22 -0400
+Received: from sibelius.xs4all.nl ([83.163.83.176]:60681 "EHLO
+        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238544AbhHROXQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 10:23:16 -0400
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 3d105b57;
+        Wed, 18 Aug 2021 16:22:37 +0200 (CEST)
+Date:   Wed, 18 Aug 2021 16:22:37 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     sven@svenpeter.dev, maz@kernel.org, alyssa@rosenzweig.io,
+        linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org,
+        lorenzo.pieralisi@arm.com, kw@linux.com, stan@corellium.com,
+        kettenis@openbsd.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <092a2de3-6760-6398-e4de-2b24d30ac856@marcan.st> (message from
+        Hector Martin on Wed, 18 Aug 2021 20:43:48 +0900)
+Subject: Re: [RFC PATCH 2/2] PCI: apple: Add driver for the Apple M1
+References: <20210815042525.36878-1-alyssa@rosenzweig.io>
+ <20210815042525.36878-3-alyssa@rosenzweig.io> <87a6lj17d1.wl-maz@kernel.org>
+ <8650c850-2642-4582-ae97-a95134bda3e2@www.fastmail.com> <092a2de3-6760-6398-e4de-2b24d30ac856@marcan.st>
+Message-ID: <56140239180269fd@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-
-On 13/08/21 10:47 pm, Rob Herring wrote:
-> On Wed, Aug 04, 2021 at 06:59:10PM +0530, Kishon Vijay Abraham I wrote:
->> Add bindings to specify interrupt controller for legacy interrupts.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/ti,j721e-pci-host.yaml           | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> index cc900202df29..f461d7b4c0cc 100644
->> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> @@ -74,6 +74,11 @@ properties:
->>  
->>    msi-map: true
->>  
->> +patternProperties:
->> +  "interrupt-controller":
+> From: Hector Martin <marcan@marcan.st>
+> Date: Wed, 18 Aug 2021 20:43:48 +0900
 > 
-> Not a pattern unless you meant for foo-interrupt-controller-bar to be 
-> valid.
+> On 15/08/2021 21.33, Sven Peter wrote:
+> > The magic comes from the original Corellium driver. It first masks
+> > everything except for the interrupts in the next line, then acks
+> > the interrupts it keeps enabled and then probably wants to wait
+> > for PORT_INT_LINK_UP (or any of the other interrupts which seem to
+> > indicate various error conditions) to fire but instead polls for
+> > PORT_LINKSTS_UP.
 > 
-> Anything is allowed in the node?
+> Let's not take any magic numbers from their drivers (or what macOS does, 
+> for that matter) without making an attempt to understand what they do, 
+> unless it becomes clear it's incomprehensible. This has already bit us 
+> in the past (the SError disable thing).
 
-It's same as whatever is defined in schemas/interrupt-controller.yaml,
-just that it should be a subnode of pcie@. Should I add whatever is
-present in schemas/interrupt-controller.yaml here?
+The driver should really only unmask the interrupts it handles in its
+interrupt handler.  We should know the meaning of those bits so using
+the appropriate symbolic names shouldn't be too difficult.
 
-Thanks
-Kishon
-> 
->> +    type: object
->> +    description: interrupt controller to handle legacy interrupts.
->> +
->>  required:
->>    - compatible
->>    - reg
->> @@ -97,6 +102,8 @@ unevaluatedProperties: false
->>  
->>  examples:
->>    - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
->>      #include <dt-bindings/gpio/gpio.h>
->>  
->> @@ -131,5 +138,13 @@ examples:
->>              ranges = <0x01000000 0x0 0x10001000  0x00 0x10001000  0x0 0x0010000>,
->>                       <0x02000000 0x0 0x10011000  0x00 0x10011000  0x0 0x7fef000>;
->>              dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
->> +
->> +
->> +            pcie0_intc: interrupt-controller {
->> +                    interrupt-controller;
->> +                    #interrupt-cells = <1>;
->> +                    interrupt-parent = <&gic500>;
->> +                    interrupts = <GIC_SPI 312 IRQ_TYPE_EDGE_RISING>;
->> +            };
->>          };
->>      };
->> -- 
->> 2.17.1
->>
->>
+Didn't delve into this yet since U-Boot doesn't do interrupts (so I
+don't touch the port interrupt registers there) and on OpenBSD I only
+implemented MSIs for now as all the integrated devices support MSIs
+just fine.  I'll need to revisit this at some point to support the
+Thunderbolt ports.
