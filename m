@@ -2,156 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A5BB3F08B6
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 18:07:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E47383F09BD
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 18:58:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbhHRQI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Aug 2021 12:08:27 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54198 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbhHRQI0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 12:08:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=CDm4i4hwwrEGLoygLnIUbGFhDR61f58uuviY8Rqvqis=; b=gaUFIZeu4t5laVHZig7TFyAtzO
-        qe9BVj6lqRpa9C+ID8lUpWLPlL2s1k9opX3QgzUQ3RPNC3Q8l+3e0rimDS+kzs/BK8j4PXy/zZlCp
-        bjiO/VjnY/OHx906RphxMOaJ3PBfF3hf79tG9W8rVCYAKzw7cJmTv7wezTgLb+qgt+k91ByIa1Nos
-        JrRGytM7cAwPBHz1mBkuXwTbbtfxpZnxnM9AlrYhIVJ4sjSwwUKe2WNn5F1V6vpkShkJGd4znEryu
-        A2FmTvAyvL+PqRH6Vkw+vjFZ2IqXWx0q+9d0AyKIdd5/VrSS6+eSWrxO+C1E9m+tsLVGzCW4wFWQp
-        4UA+ElOQ==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1mGO6G-0001Ud-Cp; Wed, 18 Aug 2021 10:07:37 -0600
-To:     Dongdong Liu <liudongdong3@huawei.com>, helgaas@kernel.org,
-        hch@infradead.org, kw@linux.com, leon@kernel.org,
-        linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, netdev@vger.kernel.org
-References: <1629291717-38564-1-git-send-email-liudongdong3@huawei.com>
- <1629291717-38564-7-git-send-email-liudongdong3@huawei.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a097d255-85e4-cab8-c9be-c1b9af9dcaf5@deltatee.com>
-Date:   Wed, 18 Aug 2021 10:07:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S229889AbhHRQ6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Aug 2021 12:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229834AbhHRQ6n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 12:58:43 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23F8C061764;
+        Wed, 18 Aug 2021 09:58:07 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id o20so4187769oiw.12;
+        Wed, 18 Aug 2021 09:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YHiyP8NzEy58+Z+7tVFCTiv5LvRgvaNEfl1HIoWAXzI=;
+        b=iybBwr9w8ORfy+BMxsYXntANhHHp/2t21+w/pjnA6EDy6w/MYgwh6hB9Gd2VvKasi0
+         dGPCxnJFSpP1emoj9huuqKJSy/bYRpQPJrF7W+mm6wxBrCdWDYJToX+Bm4luzvpiaOga
+         RKlJIFTwlgUmcr9pjPGZCw/xoVEcShEts9aYXmljxV2RBZwX1bGxxIC+w/J7eFuvKeSZ
+         giHP/DjHJLhV2+PENrAlb+xFkvx2XoDr6DGy2KCZRojHrBPA1z/kjlbWCF8xURYMS8d1
+         L1inF5Wm3cFthy2ICmRD/dr53bPMgPhYdlsgphVhdrpld6pYcPnuOL29dIk/0SMkaSZb
+         5H7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YHiyP8NzEy58+Z+7tVFCTiv5LvRgvaNEfl1HIoWAXzI=;
+        b=CRID/7esOi5CVW/ai4xIQW+VBEK22yvwQuaSOtIV7QwOqW5QDLV8Vo/gQCbx7hsBYV
+         HcLvhoVD0xafiabcZkhXSwrRNyxAUVOamX8wO7CPGfda02K48nQDAdP+9UUkpLapAeA9
+         flxHeLKEuM1ArihKTo7WgdvWMUnlvkACagv5V/aTrPwZZs76DJMMxT3etNF/t8rVLJKT
+         DaKpftbLmLVSao2Uv1AVcYliQpfaffWUs01PX+h8HVZyJj+Ew9FUiNQs2x0WvUdehqqK
+         Y1t1Z6MJdkkSAKRTYxzmpOAZsecf0rgXru8VUhwdz6zXCsy2XzJiX0DoAF0C6GadTXiL
+         uHwA==
+X-Gm-Message-State: AOAM5302mVQQNQatvqbq3QalsGxIkzIti9qPRc3w+eE4qhu2qMO0k+94
+        zKDQaGk7zu3yggE/OSSGEX8=
+X-Google-Smtp-Source: ABdhPJwVTPIB5dzrFLoB5c4YXf4XuZqseUZg/4t+a1d6poikxsJfPA0AXaVZMY8YMAynvScGckidBw==
+X-Received: by 2002:aca:4b03:: with SMTP id y3mr8156528oia.72.1629305887188;
+        Wed, 18 Aug 2021 09:58:07 -0700 (PDT)
+Received: from vaslot-XPS-8930 (2603-8081-2340-02f5-dc15-49e0-e88f-845f.res6.spectrum.com. [2603:8081:2340:2f5:dc15:49e0:e88f:845f])
+        by smtp.gmail.com with ESMTPSA id v11sm129505oto.22.2021.08.18.09.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Aug 2021 09:58:06 -0700 (PDT)
+From:   Vishal Aslot <os.vaslot@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vishal Aslot <os.vaslot@gmail.com>
+Subject: [PATCH] PCI: ibmphp: Fix double unmap of io_mem
+Date:   Wed, 18 Aug 2021 11:57:51 -0500
+Message-Id: <20210818165751.591185-1-os.vaslot@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <1629291717-38564-7-git-send-email-liudongdong3@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: netdev@vger.kernel.org, linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl, rajur@chelsio.com, linux-pci@vger.kernel.org, leon@kernel.org, kw@linux.com, hch@infradead.org, helgaas@kernel.org, liudongdong3@huawei.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH V8 6/8] PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+ebda_rsrc_controller() calls iounmap(io_mem) on the error path. It's
+caller, ibmphp_access_ebda() also calls iounmap(io_mem) on good and
+error paths. Removing the iounmap(io_mem) invocation inside
+ebda_rsrc_controller().
 
+Signed-off-by: Vishal Aslot <os.vaslot@gmail.com>
+---
 
-On 2021-08-18 7:01 a.m., Dongdong Liu wrote:
-> Add a 10-Bit Tag check in the P2PDMA code to ensure that a device with
-> 10-Bit Tag Requester doesn't interact with a device that does not
-> support 10-Bit Tag Completer. Before that happens, the kernel should
-> emit a warning.
-> 
-> "echo 0 > /sys/bus/pci/devices/.../10bit_tag" to disable 10-Bit Tag
-> Requester for PF device.
-> 
-> "echo 0 > /sys/bus/pci/devices/.../sriov_vf_10bit_tag_ctl" to disable
-> 10-Bit Tag Requester for VF device.
-> 
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Why am I fixing this?
+I found this clean up item in drivers/pci/hotplug/TODO [lines 43-44]
+and decided to fix it. This is my 2nd patch ever in linux so my
+apologies for any style issues. I am very teachable. :)
 
-Looks good to me, thanks.
+ drivers/pci/hotplug/ibmphp_ebda.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+diff --git a/drivers/pci/hotplug/ibmphp_ebda.c b/drivers/pci/hotplug/ibmphp_ebda.c
+index 11a2661dc062..7fb75401ad8a 100644
+--- a/drivers/pci/hotplug/ibmphp_ebda.c
++++ b/drivers/pci/hotplug/ibmphp_ebda.c
+@@ -714,8 +714,7 @@ static int __init ebda_rsrc_controller(void)
+ 		/* init hpc structure */
+ 		hpc_ptr = alloc_ebda_hpc(slot_num, bus_num);
+ 		if (!hpc_ptr) {
+-			rc = -ENOMEM;
+-			goto error_no_hpc;
++			return -ENOMEM;
+ 		}
+ 		hpc_ptr->ctlr_id = ctlr_id;
+ 		hpc_ptr->ctlr_relative_id = ctlr;
+@@ -910,8 +909,6 @@ static int __init ebda_rsrc_controller(void)
+ 	kfree(tmp_slot);
+ error_no_slot:
+ 	free_ebda_hpc(hpc_ptr);
+-error_no_hpc:
+-	iounmap(io_mem);
+ 	return rc;
+ }
+ 
+-- 
+2.27.0
 
-> ---
->  drivers/pci/p2pdma.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 50cdde3..2b9c2c9 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -19,6 +19,7 @@
->  #include <linux/random.h>
->  #include <linux/seq_buf.h>
->  #include <linux/xarray.h>
-> +#include "pci.h"
->  
->  enum pci_p2pdma_map_type {
->  	PCI_P2PDMA_MAP_UNKNOWN = 0,
-> @@ -410,6 +411,50 @@ static unsigned long map_types_idx(struct pci_dev *client)
->  		(client->bus->number << 8) | client->devfn;
->  }
->  
-> +static bool pci_10bit_tags_unsupported(struct pci_dev *a,
-> +				       struct pci_dev *b,
-> +				       bool verbose)
-> +{
-> +	bool req;
-> +	bool comp;
-> +	u16 ctl;
-> +	const char *str = "10bit_tag";
-> +
-> +	if (a->is_virtfn) {
-> +#ifdef CONFIG_PCI_IOV
-> +		req = !!(a->physfn->sriov->ctrl &
-> +			 PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN);
-> +#endif
-> +	} else {
-> +		pcie_capability_read_word(a, PCI_EXP_DEVCTL2, &ctl);
-> +		req = !!(ctl & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-> +	}
-> +
-> +	comp = !!(b->pcie_devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP);
-> +
-> +	/* 10-bit tags not enabled on requester */
-> +	if (!req)
-> +		return false;
-> +
-> +	 /* Completer can handle anything */
-> +	if (comp)
-> +		return false;
-> +
-> +	if (!verbose)
-> +		return true;
-> +
-> +	pci_warn(a, "cannot be used for peer-to-peer DMA as 10-Bit Tag Requester enable is set for this device, but peer device (%s) does not support the 10-Bit Tag Completer\n",
-> +		 pci_name(b));
-> +
-> +	if (a->is_virtfn)
-> +		str = "sriov_vf_10bit_tag_ctl";
-> +
-> +	pci_warn(a, "to disable 10-Bit Tag Requester for this device, echo 0 > /sys/bus/pci/devices/%s/%s\n",
-> +		 pci_name(a), str);
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * Calculate the P2PDMA mapping type and distance between two PCI devices.
->   *
-> @@ -532,6 +577,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
->  	}
->  done:
-> +	if (pci_10bit_tags_unsupported(client, provider, verbose))
-> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
-> +
->  	rcu_read_lock();
->  	p2pdma = rcu_dereference(provider->p2pdma);
->  	if (p2pdma)
-> 
