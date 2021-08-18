@@ -2,192 +2,525 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FFE93F0D20
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 23:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 844A33F0E58
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 00:46:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233378AbhHRVIy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Aug 2021 17:08:54 -0400
-Received: from mail-oln040093003010.outbound.protection.outlook.com ([40.93.3.10]:42582
-        "EHLO outbound.mail.eo.outlook.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229965AbhHRVIw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 17:08:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQVDBKUBUtG1JdUN6UiS+9gFJj289KVWeJZWet5PSEuaT/g2ubDr+4j+XSOeXHd/43bBAN2Lk5Yg2rBd8QK7pdGSoVhim8iCQw3YxdrZQBKMeTDEFQHHLNsB1jlXBmMAcHuKzxFpoX/u8p+sbPyvz7yRG9SV6/L1ZL2bcJWVFgB/EHrNhvMExGhU0M1JNTXZkToBlI6y4VmFRmph0wrNkqBKg0OuulEqcNTnO4xR09lnKx4Lxgyar0keKx7PngwzQEKZ7il6I0HUsL30e3vC0BFwb9R4Xcpee2JiZBJhDwkMyCD1EkZgHYzrO1sdYzIh+iHFh+VY4sc00dpvvdNDgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tbseaehl9kCfv3D2mVRUrF2JkD4V+Sa/utKDc0mtYIY=;
- b=jdsL8VwQEK7TUC8rvRwa9UBFZe0WaEQrcIpzNSkdj82cTubcrkDcztUHjxfM9GUlOfmvA8rEKEMPo8VxXbNxvKvCHCj0ytSKnqgpiaGJsuHdougp551DuJBuox81NuxxGcr9kMsESaKCTE3CnxXA3ohPq8Wue40FkB+T1cz64nUirxrwblYH3Id6LFP5XMid8TKZgUss2wW8H1njpTnb5NLRwbYoOkZYAzrLEs51iYzhrUrTW5AHj9jV9MEnUuucmP8x8RJbirtRoTDa50X5/9zkVJaZN1qCJfbVLVxXzUqU/NoGYeotA1Ie37tEL9xlPwtL8rf8VF2C0JPhSjWDwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tbseaehl9kCfv3D2mVRUrF2JkD4V+Sa/utKDc0mtYIY=;
- b=E5VNjjIqPdrO31ntD9OFslY5QpwPFMeVU5v4duAji8XUmAjnYQ3lfVjuorfmrodPTBwBPLWtvY+oq5ykOqOUPJw4OfqFHHgMwgCayc63mPkLN3XCbvpqGAaE8M4onzQ0Kh602val+MtIBlPdGLzvZJGjIFwmBVkM4rnVb3WdWNM=
-Received: from DM6PR21MB1275.namprd21.prod.outlook.com (2603:10b6:5:16c::29)
- by DM6PR21MB1337.namprd21.prod.outlook.com (2603:10b6:5:175::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.5; Wed, 18 Aug
- 2021 21:08:14 +0000
-Received: from DM6PR21MB1275.namprd21.prod.outlook.com
- ([fe80::45d:4c1b:beb9:590b]) by DM6PR21MB1275.namprd21.prod.outlook.com
- ([fe80::45d:4c1b:beb9:590b%3]) with mapi id 15.20.4436.011; Wed, 18 Aug 2021
- 21:08:14 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Saeed Mahameed <saeed@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
-Thread-Topic: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
-Thread-Index: Add5D8Zto2s5ndNhQDWxYbgsDd9OBQABZMKwAPF1LOYAAFUOYABmTCiABX99UTA=
-Date:   Wed, 18 Aug 2021 21:08:14 +0000
-Message-ID: <DM6PR21MB12752F080EEE916DACA9F8D6BFFF9@DM6PR21MB1275.namprd21.prod.outlook.com>
-References: <BYAPR21MB12703228F3E7A8B8158EB054BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
- <BYAPR21MB127099BADA8490B48910D3F1BF129@BYAPR21MB1270.namprd21.prod.outlook.com>
- <YPPwel8mhaIdHP1y@unreal>
- <c61af64fd275b3a329bbad699de9db661e3cf082.camel@kernel.org>
- <BYAPR21MB127077DE03164CA31AE0B33DBFE19@BYAPR21MB1270.namprd21.prod.outlook.com>
- <87czrbpdty.ffs@nanos.tec.linutronix.de>
-In-Reply-To: <87czrbpdty.ffs@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5b3267b1-afd0-45b3-a0e7-36d6e2e236cd;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-08-18T20:57:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 61b74f20-3ab9-4708-d295-08d9628c4b11
-x-ms-traffictypediagnostic: DM6PR21MB1337:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1337B0B6F399DD264DFB9E87BFFF9@DM6PR21MB1337.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jbRWanyRcLYegnQ6fcq+9D9yl8jnh4W8I2nt41jrBt+pasYrZmAudK9ouUf5/suAkerC13rqQ01DB9oi3yQo/QCvX8/n5TEfx1dY1oDYrs4e7+wutmMU5xHQE4krcEiyXBGlrKQh87tKbcGhh14A3v3SN8W2Ve3iJEHVUP/9P7sSewagwQM3Il2i1ANHUmnKLLGWjRpxrknQ/VSR3Fm0YEbjJRK9xU7TIfko/dk5dX/ZwxTTEIqItzpbvfx+3it09E9I20Xk7ePn+YB8UtjTYB/D0OmZffvJ2NgbYDCMO7/6CbznpNM03Q2CyMBgU+PKOyDzhGKf1nCuCC7ndyy11j9wA/VOtw0axBK6ubEa5IHxF3pQ4Pg8248nJPDwvCeRJ9z4FE3IbOSzlJekY42jT2fUXIrkxMh+qaSgSApnNmWsQc2HxmW6zyQ7UgDacWxGqlKiN/pOWz/m3rtXAnFnB4Y2i6w7qZzbLlL+KA9pqMVmbOLVfEHhrL6cT2BhqbIUZPAI0OUSSmlzX57mf3w309UqYEA24sFveCWZrJOjQ5MlRgygA9ZQWxNCc1M1+q6/zEqCEgMfVRkFYFz3NGQEGtULdmVvTeC1d92M8N8ToUMTM/arO6b4qj1UBa9mHCnnGMxTJQXmMVKT6GV2wVPYKA18pSG7sSB9QY2+EkJOjrZQJk9z836W12TyXAo8Vaxq/unRKSNBJXOr392aGduFtg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1275.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(9686003)(26005)(10290500003)(508600001)(71200400001)(54906003)(52536014)(110136005)(4326008)(186003)(316002)(55016002)(8936002)(53546011)(86362001)(6506007)(66476007)(8676002)(66946007)(7696005)(2906002)(66556008)(64756008)(66446008)(83380400001)(76116006)(8990500004)(82960400001)(82950400001)(122000001)(33656002)(5660300002)(38100700002)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9qlVJ7Iw3f4FXMpYuw3xDCpkM0pCWpk58LhzqqK3/MZktnRN7r4quT871sK6?=
- =?us-ascii?Q?237sdr5ul+vXMnFWjY2fwqiI1lmFDl0YSqYVnwvc3wyMGqJ6Zx78O2YsYUfB?=
- =?us-ascii?Q?lR8VG87OQXmjYc3jlAMIUnlIE5BSuOzHRzsF6CSBJZHkBbpBgioMIVWVx6PN?=
- =?us-ascii?Q?dMPIvHsZcceWdRkqfixsswBgG2DMXQgtugyuNwA6k/uPnq1Wbt6ZyBWQxVJ6?=
- =?us-ascii?Q?j37RWQjSjHB9/Vyi/EHQS5GwXwyumKUUyTAgzeemNikNlLdZgWEJ/qfnXsFz?=
- =?us-ascii?Q?Y+1QQzgfxKqpmJ7+3oQJOoFWXk1Qsl2Yz2yitH4dotoVUfwdoS5A158ZK6cV?=
- =?us-ascii?Q?kuNxOqd4AC1KR62C3GXp9RtUy8VfM4EPCabKniTHQAvDaByZ+U9hUbY+PeFN?=
- =?us-ascii?Q?0VPZeKv1eY+TvpcwRlbSORcX3mgXEMkHucGV5kamiM/UMTkezc315UdZSqxt?=
- =?us-ascii?Q?USDKj/eLvOmRI6wMsy3g5ANDwgevSN4ZBJIIDwhSNiSTx8sQu4KIRuTY0Cru?=
- =?us-ascii?Q?rPS/ewSl6il8pALhlhxP6k5U+wbAvmWaETPzLKhKQp2IeSrHnNJ3wZ0sPFva?=
- =?us-ascii?Q?bxud/2XELls3Whi6LJ1RTR67le+MqRgIDQSkkiv1voFfYrf6CTcreL+//4tx?=
- =?us-ascii?Q?faDir2cLEe1JBmDnwUAIPhvsH6cebmYK4GNm+piqfv4UHJt9m6JZovHkLazC?=
- =?us-ascii?Q?wA7wpybJMM/zu/HkhLoZPaaUinqxw5SmjKVXf/djT/gZzjkPPArLi1CVLnDs?=
- =?us-ascii?Q?valXZkYrN4xLWyqWXkQL3ccZMEzUO1IoEXLp7ln81TO3cC9gKujvArzKOJQ3?=
- =?us-ascii?Q?+FqP6Y3wYDp5h7dMMnRq+brDLCkVuY53iZmR4ZM09AIH6OL1CV1p1s3YKS0t?=
- =?us-ascii?Q?qnVqvaZQIrw7tJPgFzV6xVaL4G0f6As+O5csFR57ElzIvyOonh5IN9tRpaYv?=
- =?us-ascii?Q?XV3xiENDJ0nj1zGlZ3GGMOBMJUCMNpz+R4tbm738uH8JYhDN3j0xcpzDbpHm?=
- =?us-ascii?Q?uOFfH32MkWxG5sQ7v3eYr2EtGg1GrjBZ1tIIjES9MPfy/yhlLif2PlJncKck?=
- =?us-ascii?Q?T2G/L9gasQucgnM0tk1QrpecVzx/wy98wLRhqK10OodrLGXi4WUvW2I5BrZU?=
- =?us-ascii?Q?R7/H7BTcxHi9uI+e2DQbZrLDASyriMtqboZH9Bm1XPauRp3ww0kUBPE0R8bT?=
- =?us-ascii?Q?FS3lanZhuhslQaNLnTQaW4hQbyeUP1VfSWAbO6OKM1XxuXd3B5eyfX20a0Ki?=
- =?us-ascii?Q?z5t7yOBhaNfcrM6ofim5cvT399QKnk6pge3PuDKlACRU80bt/vgp2awu4A3L?=
- =?us-ascii?Q?asvvDDNfN53C9+xMvf/19AYK?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S234586AbhHRWqp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Aug 2021 18:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232456AbhHRWqk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Aug 2021 18:46:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 464C660BD3;
+        Wed, 18 Aug 2021 22:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629326765;
+        bh=noMRJ+DQPS9HyBJ43GCd1hlBERKu7vhalxfCKWzR68w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Xd3vV1EhomaXnRyGQahAjbubAVpXgHBgdQr4MuRJrT7+xkuf8klox4ngZGYsfTc72
+         wNu22G8I/A/Q5skwxC7f15ENDnSZxnFTNgGMZhn84WZ20w1rOxL8baBChk1rvAUmtH
+         yVPP9NDVM24g3Xd/RNwOMznotRoA7bz2gReVuSkFDXf1IMTFv0LeCF/Vx5oLQ7ImYV
+         7Q5Qkwt26ibmoc2ZeUVUYfEdnqZoG2z0xKbrnTw1hzWT9bwwKFVw4IXnbBNbXHfmnR
+         EBiPeXX1XpnkbP/6BE1Nv7RG4LrgeNBzTldrd4nYoSF46khTa2vc29Zd4SVPK6JrK8
+         E28iCw56TbCWQ==
+Date:   Wed, 18 Aug 2021 17:46:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Amey Narkhede <ameynarkhede03@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, alex.williamson@redhat.com,
+        Raphael Norwitz <raphael.norwitz@nutanix.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, Shanker Donthineni <sdonthineni@nvidia.com>,
+        Sinan Kaya <okaya@kernel.org>, Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v16 0/9] PCI: Expose and manage PCI device reset
+Message-ID: <20210818224603.GA3142002@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1275.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61b74f20-3ab9-4708-d295-08d9628c4b11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2021 21:08:14.2829
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lMpf4wSWffN++XWwZ3yBpU/vLFEakM4CMZqBBs31kw3zEqwyyb9vTpStYhk9TBBtcjXQDbkUeahL68CbuHlFJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1337
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210817180937.3123-1-ameynarkhede03@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Wednesday, July 21, 2021 2:17 PM
-> To: Dexuan Cui <decui@microsoft.com>; Saeed Mahameed
->=20
-> On Mon, Jul 19 2021 at 20:33, Dexuan Cui wrote:
-> > This is a bare metal x86-64 host with Intel CPUs. Yes, I believe the
-> > issue is in the IOMMU Interrupt Remapping mechanism rather in the
-> > NIC driver. I just don't understand why bringing the CPUs online and
-> > offline can work around the issue. I'm trying to dump the IOMMU IR
-> > table entries to look for any error.
->=20
-> can you please enable GENERIC_IRQ_DEBUGFS and provide the output of
->=20
-> cat /sys/kernel/debug/irq/irqs/$THENICIRQS
->=20
-> Thanks,
->=20
->         tglx
+On Tue, Aug 17, 2021 at 11:39:28PM +0530, Amey Narkhede wrote:
+> PCI and PCIe devices may support a number of possible reset mechanisms
+> for example Function Level Reset (FLR) provided via Advanced Feature or
+> PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+> Currently the PCI subsystem creates a policy prioritizing these reset methods
+> which provides neither visibility nor control to userspace.
+> 
+> Expose the reset methods available per device to userspace, via sysfs
+> and allow an administrative user or device owner to have ability to
+> manage per device reset method priorities or exclusions.
+> This feature aims to allow greater control of a device for use cases
+> as device assignment, where specific device or platform issues may
+> interact poorly with a given reset method, and for which device specific
+> quirks have not been developed.
+> 
+> Changes in v16:
+> 	- Refactor acpi_pci_bridge_d3() in patch 7/9
+> 	- Fixed consistency issues in patch 9/9
+> 
+> Changes in v15:
+> 	- Fix use of uninitialized variable in patch 3/9
+> 
+> Changes in v14:
+> 	- Remove duplicate entries from pdev->reset_methods as per
+> 	  Shanker's suggestion
+> 
+> Changes in v13:
+> 	- Added "PCI: Cache PCIe FLR capability"
+> 	- Removed memcpy in pci_init_reset_methods() and reset_method_show
+> 	- Moved reset_method sysfs attribute code from pci-sysfs.c to
+> 	  pci.c
+> 
+> Changes in v12:
+>         - Corrected subject in 0/8 (cover letter).
+> 
+> Changes in v11:
+>         - Alex's suggestion fallback back to other resets if the ACPI RST
+>           fails. Fix "s/-EINVAL/-ENOTTY/" in 7/8 patch.
+> 
+> Changes in v10:
+>         - Fix build error on ppc as reported by build bot
+> 
+> Changes in v9:
+>         - Renamed has_flr bitfield to has_pcie_flr and restored
+>           use of PCI_DEV_FLAGS_NO_FLR_RESET in quirk_no_flr()
+>         - Cleaned up sysfs code
+> 
+> Changes in v8:
+>         - Added has_flr bitfield to struct pci_dev to cache flr
+>           capability
+>         - Updated encoding scheme used in reset_methods array as per
+>           Bjorn's suggestion
+>         - Updated Shanker's ACPI patches
+> 
+> Changes in v7:
+>         - Fix the pci_dev_acpi_reset() prototype mismatch
+>           in case of CONFIG_ACPI=n
+> 
+> Changes in v6:
+>         - Address Bjorn's and Krzysztof's review comments
+>         - Add Shanker's updated patches along with new
+>           "PCI: Setup ACPI_COMPANION early" patch
+> 
+> Changes in v5:
+>         - Rebase the series over pci/reset branch of
+>           Bjorn's pci tree to avoid merge conflicts
+>           caused by recent changes in existing reset
+>           sysfs attribute
+> 
+> Changes in v4:
+>         - Change the order or strlen and strim in reset_method_store
+>           function to avoid extra strlen call.
+>         - Use consistent terminology in new
+>           pci_reset_mode enum and rename the probe argument
+>           of reset functions.
+> 
+> Changes in v3:
+>         - Dropped "PCI: merge slot and bus reset implementations" which was
+>           already accepted separately
+>         - Grammar fixes
+>         - Added Shanker's patches which were rebased on v2 of this series
+>         - Added "PCI: Change the type of probe argument in reset functions"
+>           and additional user input sanitization code in reset_method_store
+>           function per review feedback from Krzysztof
+> 
+> Changes in v2:
+>         - Use byte array instead of bitmap to keep track of
+>           ordering of reset methods
+>         - Fix incorrect use of reset_fn field in octeon driver
+>         - Allow writing comma separated list of names of supported reset
+>           methods to reset_method sysfs attribute
+>         - Writing empty string instead of "none" to reset_method attribute
+>           disables ability of reset the device
+> 
+> Amey Narkhede (6):
+>   PCI: Cache PCIe FLR capability
+>   PCI: Add pcie_reset_flr to follow calling convention of other reset
+>     methods
+>   PCI: Add new array for keeping track of ordering of reset methods
+>   PCI: Remove reset_fn field from pci_dev
+>   PCI: Allow userspace to query and set device reset mechanism
+>   PCI: Change the type of probe argument in reset functions
+> 
+> Shanker Donthineni (3):
+>   PCI: Define a function to set ACPI_COMPANION in pci_dev
+>   PCI: Setup ACPI fwnode early and at the same time with OF
+>   PCI: Add support for ACPI _RST reset method
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci       |  19 ++
+>  drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
+>  .../ethernet/cavium/liquidio/lio_vf_main.c    |   2 +-
+>  drivers/pci/hotplug/pciehp.h                  |   2 +-
+>  drivers/pci/hotplug/pciehp_hpc.c              |   2 +-
+>  drivers/pci/hotplug/pnv_php.c                 |   2 +-
+>  drivers/pci/pci-acpi.c                        |  83 +++---
+>  drivers/pci/pci-sysfs.c                       |   3 +-
+>  drivers/pci/pci.c                             | 279 +++++++++++++-----
+>  drivers/pci/pci.h                             |  24 +-
+>  drivers/pci/pcie/aer.c                        |  12 +-
+>  drivers/pci/probe.c                           |  16 +-
+>  drivers/pci/quirks.c                          |  25 +-
+>  drivers/pci/remove.c                          |   1 -
+>  include/linux/pci.h                           |  14 +-
+>  include/linux/pci_hotplug.h                   |   2 +-
+>  16 files changed, 346 insertions(+), 144 deletions(-)
 
-Sorry for the late response! I checked the below sys file, and the output i=
-s
-exactly the same in the good/bad cases -- in both cases, I use maxcpus=3D8;
-the only difference in the good case is that I online and then offline CPU =
-8~31:
-for i in `seq 8 31`;  do echo 1 >  /sys/devices/system/cpu/cpu$i/online; do=
-ne
-for i in `seq 8 31`;  do echo 0 >  /sys/devices/system/cpu/cpu$i/online; do=
-ne
+I applied these to pci/reset for v5.15, thanks!
 
-# cat /sys/kernel/debug/irq/irqs/209
-handler:  handle_edge_irq
-device:   0000:d8:00.0
-status:   0x00004000
-istate:   0x00000000
-ddepth:   0
-wdepth:   0
-dstate:   0x35409200
-            IRQD_ACTIVATED
-            IRQD_IRQ_STARTED
-            IRQD_SINGLE_TARGET
-            IRQD_MOVE_PCNTXT
-            IRQD_AFFINITY_SET
-            IRQD_AFFINITY_ON_ACTIVATE
-            IRQD_CAN_RESERVE
-            IRQD_HANDLE_ENFORCE_IRQCTX
-node:     1
-affinity: 0-7
-effectiv: 5
-pending:
-domain:  INTEL-IR-MSI-3-3
- hwirq:   0x6c00000
- chip:    IR-PCI-MSI
-  flags:   0x30
-             IRQCHIP_SKIP_SET_WAKE
-             IRQCHIP_ONESHOT_SAFE
- parent:
-    domain:  INTEL-IR-3
-     hwirq:   0x20000
-     chip:    INTEL-IR
-      flags:   0x0
-     parent:
-        domain:  VECTOR
-         hwirq:   0xd1
-         chip:    APIC
-          flags:   0x0
-         Vector:    42
-         Target:     5
-         move_in_progress: 0
-         is_managed:       0
-         can_reserve:      1
-         has_reserved:     0
-         cleanup_pending:  0
+Of course, I made some edits, mostly trivial, but not all, so please
+take a look and see if I broke something.
 
-Thanks,
-Dexuan
+The biggest changes are to reset_method_store(), where I made it
+return -EINVAL if the user-supplied string contains an invalid method,
+a method whose probe call says it's unsupported, or too many methods.
+In all these cases, the previous reset_methods[] array is unchanged.
+
+I think this is basically what you originally proposed, Amey, and I
+thought it was too complicated.  But Krzysztof convinced me that
+silently ignoring bad data from the user makes the interface hard to
+use.
+
+Below is the whole diff from the v16 you posted to what's on the
+pci/reset branch.  I'm happy to update that branch before it gets
+merged into v5.15.
+
+Bjorn
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index aefb25e7c8d0..d4ae03296861 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -122,23 +122,21 @@ Description:
+ 		from this part of the device tree.
+ 
+ What:		/sys/bus/pci/devices/.../reset_method
+-Date:		March 2021
++Date:		August 2021
+ Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
+ Description:
+ 		Some devices allow an individual function to be reset
+ 		without affecting other functions in the same slot.
+ 
+ 		For devices that have this support, a file named
+-		reset_method will be present in sysfs. Initially reading
+-		this file will give names of the device supported reset
+-		methods and their ordering. After write, this file will
+-		give names and ordering of currently enabled reset methods.
+-		Writing the name or space separated list of names of any of
+-		the device supported reset methods to this file will set
+-		the reset methods and their ordering to be used when
+-		resetting the device. Writing empty string to this file
+-		will disable ability to reset the device and writing
+-		"default" will return to the original value.
++		reset_method is present in sysfs.  Reading this file
++		gives names of the supported and enabled reset methods and
++		their ordering.  Writing a space-separated list of names of
++		reset methods sets the reset methods and ordering to be
++		used when resetting the device.  Writing an empty string
++		disables the ability to reset the device.  Writing
++		"default" enables all supported reset methods in the
++		default ordering.
+ 
+ What:		/sys/bus/pci/devices/.../reset
+ Date:		July 2009
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index 4c17a5dc26cf..f4c2e6e01be0 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -537,7 +537,7 @@ static int pnv_php_reset_slot(struct hotplug_slot *slot, bool probe)
+ 	 * which don't have a bridge. Only claim to support
+ 	 * reset_slot() if we have a bridge device (for now...)
+ 	 */
+-	if (probe == PCI_RESET_PROBE)
++	if (probe)
+ 		return !bridge;
+ 
+ 	/* mask our interrupt while resetting the bridge */
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 968bf8aa5f15..fe286c861187 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -944,8 +944,7 @@ void pci_set_acpi_fwnode(struct pci_dev *dev)
+ /**
+  * pci_dev_acpi_reset - do a function level reset using _RST method
+  * @dev: device to reset
+- * @probe: If PCI_RESET_PROBE, check whether _RST method is included
+- *         in the acpi_device context.
++ * @probe: if true, return 0 if device supports _RST
+  */
+ int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
+ {
+@@ -968,7 +967,10 @@ int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
+ static bool acpi_pci_power_manageable(struct pci_dev *dev)
+ {
+ 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
+-	return adev ? acpi_device_power_manageable(adev) : false;
++
++	if (!adev)
++		return false;
++	return acpi_device_power_manageable(adev);
+ }
+ 
+ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index c76451bfeb89..b87bac5e4572 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4627,21 +4627,6 @@ int pci_wait_for_pending_transaction(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+ 
+-/**
+- * pcie_has_flr - check if a device supports function level resets
+- * @dev: device to check
+- *
+- * Returns true if the device advertises support for PCIe function level
+- * resets.
+- */
+-static bool pcie_has_flr(struct pci_dev *dev)
+-{
+-	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+-		return false;
+-
+-	return FIELD_GET(PCI_EXP_DEVCAP_FLR, dev->devcap) == 1;
+-}
+-
+ /**
+  * pcie_flr - initiate a PCIe function level reset
+  * @dev: device to reset
+@@ -4673,13 +4658,16 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+ /**
+  * pcie_reset_flr - initiate a PCIe function level reset
+  * @dev: device to reset
+- * @probe: If PCI_RESET_PROBE, only check if the device can be reset this way.
++ * @probe: if true, return 0 if device can be reset this way
+  *
+  * Initiate a function level reset on @dev.
+  */
+ int pcie_reset_flr(struct pci_dev *dev, bool probe)
+ {
+-	if (!pcie_has_flr(dev))
++	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
++		return -ENOTTY;
++
++	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
+ 		return -ENOTTY;
+ 
+ 	if (probe)
+@@ -4736,7 +4724,7 @@ static int pci_af_flr(struct pci_dev *dev, bool probe)
+ /**
+  * pci_pm_reset - Put device into PCI_D3 and back into PCI_D0.
+  * @dev: Device to reset.
+- * @probe: If PCI_RESET_PROBE, only check if the device can be reset this way.
++ * @probe: if true, return 0 if the device can be reset this way.
+  *
+  * If @dev supports native PCI PM and its PCI_PM_CTRL_NO_SOFT_RESET flag is
+  * unset, it will be reinitialized internally when going from PCI_D3hot to
+@@ -4759,7 +4747,7 @@ static int pci_pm_reset(struct pci_dev *dev, bool probe)
+ 	if (csr & PCI_PM_CTRL_NO_SOFT_RESET)
+ 		return -ENOTTY;
+ 
+-	if (probe == PCI_RESET_PROBE)
++	if (probe)
+ 		return 0;
+ 
+ 	if (dev->current_state != PCI_D0)
+@@ -5167,19 +5155,31 @@ static ssize_t reset_method_show(struct device *dev,
+ 	return len;
+ }
+ 
++static int reset_method_lookup(const char *name)
++{
++	int m;
++
++	for (m = 1; m < PCI_NUM_RESET_METHODS; m++) {
++		if (sysfs_streq(name, pci_reset_fn_methods[m].name))
++			return m;
++	}
++
++	return 0;	/* not found */
++}
++
+ static ssize_t reset_method_store(struct device *dev,
+ 				  struct device_attribute *attr,
+ 				  const char *buf, size_t count)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+-	int i, m = 0, n = 0;
+-	char *name, *options;
+-
+-	if (count >= (PAGE_SIZE - 1))
+-		return -EINVAL;
++	char *options, *name;
++	int m, n;
++	u8 reset_methods[PCI_NUM_RESET_METHODS] = { 0 };
+ 
+ 	if (sysfs_streq(buf, "")) {
+-		goto exit;
++		pdev->reset_methods[0] = 0;
++		pci_warn(pdev, "All device reset methods disabled by user");
++		return count;
+ 	}
+ 
+ 	if (sysfs_streq(buf, "default")) {
+@@ -5191,53 +5191,46 @@ static ssize_t reset_method_store(struct device *dev,
+ 	if (!options)
+ 		return -ENOMEM;
+ 
++	n = 0;
+ 	while ((name = strsep(&options, " ")) != NULL) {
+ 		if (sysfs_streq(name, ""))
+ 			continue;
+ 
+ 		name = strim(name);
+ 
+-		for (m = 1; m < PCI_NUM_RESET_METHODS; m++) {
+-			if (sysfs_streq(name, pci_reset_fn_methods[m].name))
+-				break;
++		m = reset_method_lookup(name);
++		if (!m) {
++			pci_err(pdev, "Invalid reset method '%s'", name);
++			goto error;
+ 		}
+ 
+-		if (m == PCI_NUM_RESET_METHODS) {
+-			pci_warn(pdev, "Skip invalid reset method '%s'", name);
+-			continue;
+-		}
+-
+-		for (i = 0; i < n; i++) {
+-			if (pdev->reset_methods[i] == m)
+-				break;
+-		}
+-
+-		if (i < n)
+-			continue;
+-
+ 		if (pci_reset_fn_methods[m].reset_fn(pdev, PCI_RESET_PROBE)) {
+-			pci_warn(pdev, "Unsupported reset method '%s'", name);
+-			continue;
++			pci_err(pdev, "Unsupported reset method '%s'", name);
++			goto error;
+ 		}
+ 
+-		pdev->reset_methods[n++] = m;
+-		BUG_ON(n == PCI_NUM_RESET_METHODS);
++		if (n == PCI_NUM_RESET_METHODS - 1) {
++			pci_err(pdev, "Too many reset methods\n");
++			goto error;
++		}
++
++		reset_methods[n++] = m;
+ 	}
+ 
++	reset_methods[n] = 0;
++
++	/* Warn if dev-specific supported but not highest priority */
++	if (pci_reset_fn_methods[1].reset_fn(pdev, PCI_RESET_PROBE) == 0 &&
++	    reset_methods[0] != 1)
++		pci_warn(pdev, "Device-specific reset disabled/de-prioritized by user");
++	memcpy(pdev->reset_methods, reset_methods, sizeof(pdev->reset_methods));
+ 	kfree(options);
+-
+-exit:
+-	/* All the reset methods are invalid */
+-	if (n == 0 && m == PCI_NUM_RESET_METHODS)
+-		return -EINVAL;
+-	pdev->reset_methods[n] = 0;
+-	if (pdev->reset_methods[0] == 0) {
+-		pci_warn(pdev, "All device reset methods disabled by user");
+-	} else if ((pdev->reset_methods[0] != 1) &&
+-		   !pci_reset_fn_methods[1].reset_fn(pdev, PCI_RESET_PROBE)) {
+-		pci_warn(pdev, "Device specific reset disabled/de-prioritized by user");
+-	}
+ 	return count;
++
++error:
++	/* Leave previous methods unchanged */
++	kfree(options);
++	return -EINVAL;
+ }
+ static DEVICE_ATTR_RW(reset_method);
+ 
+@@ -5296,7 +5289,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+ 	 * error, we're also finished: this indicates that further reset
+ 	 * mechanisms might be broken on the device.
+ 	 */
+-	for (i = 0; i <  PCI_NUM_RESET_METHODS; i++) {
++	for (i = 0; i < PCI_NUM_RESET_METHODS; i++) {
+ 		m = dev->reset_methods[i];
+ 		if (!m)
+ 			return -ENOTTY;
+@@ -5333,7 +5326,6 @@ void pci_init_reset_methods(struct pci_dev *dev)
+ 	might_sleep();
+ 
+ 	i = 0;
+-
+ 	for (m = 1; m < PCI_NUM_RESET_METHODS; m++) {
+ 		rc = pci_reset_fn_methods[m].reset_fn(dev, PCI_RESET_PROBE);
+ 		if (!rc)
+@@ -5659,14 +5651,14 @@ static int pci_slot_reset(struct pci_slot *slot, bool probe)
+ 	if (!slot || !pci_slot_resetable(slot))
+ 		return -ENOTTY;
+ 
+-	if (probe != PCI_RESET_PROBE)
++	if (!probe)
+ 		pci_slot_lock(slot);
+ 
+ 	might_sleep();
+ 
+ 	rc = pci_reset_hotplug_slot(slot->hotplug, probe);
+ 
+-	if (probe != PCI_RESET_PROBE)
++	if (!probe)
+ 		pci_slot_unlock(slot);
+ 
+ 	return rc;
+@@ -5726,7 +5718,7 @@ static int pci_bus_reset(struct pci_bus *bus, bool probe)
+ 	if (!bus->self || !pci_bus_resetable(bus))
+ 		return -ENOTTY;
+ 
+-	if (probe == PCI_RESET_PROBE)
++	if (probe)
+ 		return 0;
+ 
+ 	pci_bus_lock(bus);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 38db12d05ca0..a46363f29b68 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -52,7 +52,7 @@
+ /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
+ #define PCI_NUM_RESET_METHODS 7
+ 
+-#define	PCI_RESET_PROBE		true
++#define PCI_RESET_PROBE		true
+ #define PCI_RESET_DO_RESET	false
+ 
+ /*
+@@ -339,7 +339,7 @@ struct pci_dev {
+ 	struct rcec_ea	*rcec_ea;	/* RCEC cached endpoint association */
+ 	struct pci_dev  *rcec;          /* Associated RCEC device */
+ #endif
+-	u32		devcap;		/* PCIe device capabilities */
++	u32		devcap;		/* PCIe Device Capabilities */
+ 	u8		pcie_cap;	/* PCIe capability offset */
+ 	u8		msi_cap;	/* MSI capability offset */
+ 	u8		msix_cap;	/* MSI-X capability offset */
+@@ -511,10 +511,9 @@ struct pci_dev {
+ 	char		*driver_override; /* Driver name to force a match */
+ 
+ 	unsigned long	priv_flags;	/* Private flags for the PCI driver */
+-	/*
+-	 * See pci_reset_fn_methods array in pci.c for ordering.
+-	 */
+-	u8 reset_methods[PCI_NUM_RESET_METHODS];	/* Reset methods ordered by priority */
++
++	/* These methods index pci_reset_fn_methods[] */
++	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
