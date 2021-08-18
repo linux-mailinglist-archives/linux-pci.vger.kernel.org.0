@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE43F3F0B76
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 21:07:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030BC3F0B7A
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Aug 2021 21:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233213AbhHRTIE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Aug 2021 15:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
+        id S233378AbhHRTIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Aug 2021 15:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233277AbhHRTH6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 15:07:58 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1743EC0613CF;
-        Wed, 18 Aug 2021 12:07:22 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id f5so5040137wrm.13;
-        Wed, 18 Aug 2021 12:07:22 -0700 (PDT)
+        with ESMTP id S233496AbhHRTIF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Aug 2021 15:08:05 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1EDC0613A3;
+        Wed, 18 Aug 2021 12:07:25 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id c129-20020a1c35870000b02902e6b6135279so2476508wma.0;
+        Wed, 18 Aug 2021 12:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=viCiWeLBgQYfYhWjpq4wMjdK20Zi2YY4mho1UtETxPw=;
-        b=uk60/DRuP/r3It+7pa7c41w2H9nMbhocOBvWM2PzNNbRtyh82mKxX+ZwhX/rj9GSpH
-         +3cuhdvkU39CeZujkSXqkz2LBGJFso0997z9PiU2KkILDTm01XPYaxjKy5JW5psJTN7L
-         jiO5jkHxoTfPg5lBqc1umGWjuWX63VKaOoXUZ2p2pA8aR3OwrwKZTAVaw0CQLHDrgv4C
-         Jj1L4aqXdX+lopaf8kNy4fmyg8WDD3sgmfrVqH3I0O7Qzel+a7dVyh1mM2vFA/vwUnNN
-         ZwhJ6HMYftMzs9Wk2c7ZkTXz5tzqoNwGBH0H72Si8B9syMfkVwH8NM0sKUZIQN3Yahmz
-         1+Cw==
+        bh=LDIfWEhWO8mVudTFuw38niuUgR6UGRnl4p6utnT37F4=;
+        b=UvzolmWpYEyJzarXLllRnqJ9qRIjTu/H5jojxM9143e7AthN4ECQwqTBsQx/4ZyKHx
+         IItSbEB5UNZbi9dL5W0+9wvVNF1j2i050BJ6aaIQm264QM3uv14iq9tIB28PGMjiaPgm
+         JqaBkQL5/mwvAXaa2b2+ujSXNsaQ2y4o4/CaSfeIWeuP8DcTr/0eUT075PlvMfw4Frss
+         iGFWUwmap1Ujlg2jvIPtC9RwmAnPI9TWjJfOyow+Olq30E4CsjsmXFYOvR9CdDtjqJ+Q
+         TtlUyqIHBuqf79NxH5rdpfhnLor4Qp6JrDCBhIKNvsu8YA9/vbXqhVgoa2YuNC+Y553G
+         DrXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=viCiWeLBgQYfYhWjpq4wMjdK20Zi2YY4mho1UtETxPw=;
-        b=B/GuiMn2aovvGC8rgXgXWkPW+m/lu6WLxEQflMjWVoINBeRgMq7o1HvrItwtFSzW5Z
-         vRZSxbfDqDpphptCE44a1R24cnJlNLLs/NZsgXZrOxjPLQuaE880kwEeM6QVFa+LS42A
-         X+BW3FM3oF+/Is6AbehuBGywTVrVqQLpV1lX6/NMlp2Zoh/3kDnD279lPIXYIrxWpBRu
-         r1kh0bZMVeIar+2EDZx9AGyAXx5QKlKpqISmX2rCDRKimPM5nUCl2CuxjfRIlG9hPQHs
-         mStg8g7DcsBTCgERX27VhZtl5NUHgoEFSw/1TMNtXWMw8lpGIs6h/T0j5j+SlIPVwGOi
-         SYOQ==
-X-Gm-Message-State: AOAM533c3uryRMbsyFqFHGxYXJz+bsiux2I5p9twP6G+YB579rtDsSqs
-        OUi3kEEMse84FHONYB2sUIqD2n6Y54Ohcw==
-X-Google-Smtp-Source: ABdhPJwNK9wSwLji9YDtIe/ymlZz5bAhR385bB7wrMSefPHfNrn00T0PmbsT6wgPcdSSRqPlq1G0pQ==
-X-Received: by 2002:a5d:58d2:: with SMTP id o18mr12328384wrf.277.1629313640512;
-        Wed, 18 Aug 2021 12:07:20 -0700 (PDT)
+        bh=LDIfWEhWO8mVudTFuw38niuUgR6UGRnl4p6utnT37F4=;
+        b=izoJyANs8WbBdgeqpzGS7RkleT3FrxURkudAQPAxLu4+H69vTiEY5B1HhWaUwEgxdB
+         xAvupAuoZ8k3cXeFCGDECJB69x6uvSnUTI9x32LLxbchqDdysEMyEV43XL/kcctxAQuz
+         apBSAQT1wb4t2Za6neb3SpJS4LnVJyS4/P+CFdh6yXk8R30GT4MZo98svwbYPYh4x9hB
+         Sdz4al8wilk+R6kzU9ogC4BADnxGaEp2vIdarfvwBUgmzQf24Ka3mI8p7j+8g13LI4A/
+         oGK45VfLxYf8KL72b1UPKxE9Odjuxv9Dyt1O7cyVUFN/0Zt5y9hSxFR/YZ8C7qCwK1Nk
+         aHtQ==
+X-Gm-Message-State: AOAM5337pN3uqByl6NG26jY1hjIM+DJc4J0dE5cb7sw1dIHVlxMFPbYU
+        bbevxTj4DsO9Ocxr2QCqgmIrhSBmW4pafA==
+X-Google-Smtp-Source: ABdhPJzbczZWhLAF3ylgWjegsy80xxr46YwXW/f9gHPD38R3XLN1AUEBQQ+aJmwYzXcLaIG7PPv+ng==
+X-Received: by 2002:a7b:c5d2:: with SMTP id n18mr9990022wmk.97.1629313643865;
+        Wed, 18 Aug 2021 12:07:23 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f08:4500:5c16:403a:870d:fceb? (p200300ea8f0845005c16403a870dfceb.dip0.t-ipconnect.de. [2003:ea:8f08:4500:5c16:403a:870d:fceb])
-        by smtp.googlemail.com with ESMTPSA id i8sm5956419wma.7.2021.08.18.12.07.17
+        by smtp.googlemail.com with ESMTPSA id 7sm6043999wmk.39.2021.08.18.12.07.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 12:07:20 -0700 (PDT)
-Subject: [PATCH 7/8] tg3: Use new function pci_vpd_check_csum
+        Wed, 18 Aug 2021 12:07:23 -0700 (PDT)
+Subject: [PATCH 8/8] tg3: Use new function pci_vpd_find_ro_info_keyword
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Siva Reddy Kallam <siva.kallam@broadcom.com>,
         Prashant Sreedharan <prashant@broadcom.com>,
@@ -58,8 +58,8 @@ To:     Siva Reddy Kallam <siva.kallam@broadcom.com>,
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 References: <f693b1ae-447c-0eb1-7a9a-d1aaf9a26641@gmail.com>
-Message-ID: <7297fce9-47db-3b86-366e-10b9ef43beaf@gmail.com>
-Date:   Wed, 18 Aug 2021 21:05:26 +0200
+Message-ID: <0ae9d4c0-590d-682a-a0af-2272e5f71630@gmail.com>
+Date:   Wed, 18 Aug 2021 21:06:40 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
@@ -71,55 +71,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use new VPD API function pci_vpd_check_csum() to simplify the code.
+Use new VPD API function pci_vpd_find_ro_info_keyword() to simplify
+the code.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 31 ++++-------------------------
- 1 file changed, 4 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/broadcom/tg3.c | 59 ++++++++---------------------
+ 1 file changed, 16 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index fd4522c81..309aec742 100644
+index 309aec742..6637a97d7 100644
 --- a/drivers/net/ethernet/broadcom/tg3.c
 +++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -13010,33 +13010,10 @@ static int tg3_test_nvram(struct tg3 *tp)
- 	if (!buf)
- 		return -ENOMEM;
+@@ -15592,63 +15592,36 @@ static int tg3_phy_probe(struct tg3 *tp)
+ static void tg3_read_vpd(struct tg3 *tp)
+ {
+ 	u8 *vpd_data;
+-	unsigned int block_end, rosize, len, vpdlen;
+-	int j, i = 0;
++	unsigned int len, vpdlen;
++	int i;
  
--	i = pci_vpd_find_tag((u8 *)buf, len, PCI_VPD_LRDT_RO_DATA);
--	if (i > 0) {
--		j = pci_vpd_lrdt_size(&((u8 *)buf)[i]);
+ 	vpd_data = (u8 *)tg3_vpd_readblock(tp, &vpdlen);
+ 	if (!vpd_data)
+ 		goto out_no_vpd;
+ 
+-	i = pci_vpd_find_tag(vpd_data, vpdlen, PCI_VPD_LRDT_RO_DATA);
++	i = pci_vpd_find_ro_info_keyword(vpd_data, vpdlen,
++					 PCI_VPD_RO_KEYWORD_MFR_ID, &len);
+ 	if (i < 0)
+-		goto out_not_found;
+-
+-	rosize = pci_vpd_lrdt_size(&vpd_data[i]);
+-	block_end = i + PCI_VPD_LRDT_TAG_SIZE + rosize;
+-	i += PCI_VPD_LRDT_TAG_SIZE;
+-
+-	if (block_end > vpdlen)
+-		goto out_not_found;
+-
+-	j = pci_vpd_find_info_keyword(vpd_data, i, rosize,
+-				      PCI_VPD_RO_KEYWORD_MFR_ID);
+-	if (j > 0) {
+-		len = pci_vpd_info_field_size(&vpd_data[j]);
++		goto partno;
+ 
+-		j += PCI_VPD_INFO_FLD_HDR_SIZE;
+-		if (j + len > block_end || len != 4 ||
+-		    memcmp(&vpd_data[j], "1028", 4))
+-			goto partno;
++	if (len != 4 || memcmp(vpd_data + i, "1028", 4))
++		goto partno;
+ 
+-		j = pci_vpd_find_info_keyword(vpd_data, i, rosize,
+-					      PCI_VPD_RO_KEYWORD_VENDOR0);
 -		if (j < 0)
--			goto out;
+-			goto partno;
 -
--		if (i + PCI_VPD_LRDT_TAG_SIZE + j > len)
--			goto out;
+-		len = pci_vpd_info_field_size(&vpd_data[j]);
++	i = pci_vpd_find_ro_info_keyword(vpd_data, vpdlen,
++					 PCI_VPD_RO_KEYWORD_VENDOR0, &len);
++	if (i < 0)
++		goto partno;
+ 
+-		j += PCI_VPD_INFO_FLD_HDR_SIZE;
+-		if (j + len > block_end)
+-			goto partno;
 -
--		i += PCI_VPD_LRDT_TAG_SIZE;
--		j = pci_vpd_find_info_keyword((u8 *)buf, i, j,
--					      PCI_VPD_RO_KEYWORD_CHKSUM);
--		if (j > 0) {
--			u8 csum8 = 0;
--
--			j += PCI_VPD_INFO_FLD_HDR_SIZE;
--
--			for (i = 0; i <= j; i++)
--				csum8 += ((u8 *)buf)[i];
--
--			if (csum8)
--				goto out;
--		}
+-		if (len >= sizeof(tp->fw_ver))
+-			len = sizeof(tp->fw_ver) - 1;
+-		memset(tp->fw_ver, 0, sizeof(tp->fw_ver));
+-		snprintf(tp->fw_ver, sizeof(tp->fw_ver), "%.*s bc ", len,
+-			 &vpd_data[j]);
 -	}
++	memset(tp->fw_ver, 0, sizeof(tp->fw_ver));
++	snprintf(tp->fw_ver, sizeof(tp->fw_ver), "%.*s bc ", len, vpd_data + i);
+ 
+ partno:
+-	i = pci_vpd_find_info_keyword(vpd_data, i, rosize,
+-				      PCI_VPD_RO_KEYWORD_PARTNO);
++	i = pci_vpd_find_ro_info_keyword(vpd_data, vpdlen,
++					 PCI_VPD_RO_KEYWORD_PARTNO, &len);
+ 	if (i < 0)
+ 		goto out_not_found;
+ 
+-	len = pci_vpd_info_field_size(&vpd_data[i]);
 -
--	err = 0;
--
-+	err = pci_vpd_check_csum(buf, len);
-+	/* go on if no checksum found */
-+	if (err == 1)
-+		err = 0;
- out:
- 	kfree(buf);
- 	return err;
+-	i += PCI_VPD_INFO_FLD_HDR_SIZE;
+-	if (len > TG3_BPN_SIZE ||
+-	    (len + i) > vpdlen)
++	if (len > TG3_BPN_SIZE)
+ 		goto out_not_found;
+ 
+ 	memcpy(tp->board_part_number, &vpd_data[i], len);
 -- 
 2.32.0
 
