@@ -2,111 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B91713F1B87
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 16:22:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6423F1BB6
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 16:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240278AbhHSOXA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 10:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240264AbhHSOXA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 10:23:00 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526E1C061757
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 07:22:24 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 28-20020a17090a031cb0290178dcd8a4d1so7374831pje.0
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 07:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=78xOaLYOlWGNuqYKX8nJ/razzvdH0eYMQ7PneXUBfCY=;
-        b=dbVDI1nlDwGzV0OEvCPALB2HivKy0lvO/YXdyT8JmDytW0hOnL3jHj9F2muK4uacRd
-         1uXQMriFlLGmJBef39j1FUwxIW+Z8SAQlFQSkJBMi8uxm4TklgD688N4nkwtIyghuO7C
-         AstCXkRX4vvTf8cm3mDSZD4NaEekCEfmBNG2LvacHc6Xu/tQMbH4m1g+YkSIUsrZgdoG
-         oQGql8YTn58LxS7N0CDGGJAOyfF7bD6eEiHopdhcc8zccv809nQirmGrGKmnvckj8xgO
-         C/0Fy56+MUon8vGkDmqYQJltFmlKeIzLJMF5HDFwFhM5/u3MNh4YF8IciuQEAJCO0Pft
-         8UpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=78xOaLYOlWGNuqYKX8nJ/razzvdH0eYMQ7PneXUBfCY=;
-        b=nut3K9xT9UwylZ9UbLnv3kBCSBuiLp6BSjG/t/HfGOsAnlRRQFKRVurEr2PAVu65UZ
-         GxEHCrTfi8ks0kfOm/DjAH2NAW5e97VNd0pnwTQxIAo2IHVD9ddCH5iUCSFTW69HkY3J
-         IGS8xZBQDZrfcPrU87LxR6IUArQDk1LasYAKMapfHUjbGwnzoOfnLCawrYjaMpPTzvFd
-         KiV/iPRMiKcMfBN0XAwDGSSEtFtO/QCwq05wvoguV2Res96dk9fTNCK2nGWEB0VdEM64
-         szErn+QMP9J3PVZFRBcsu7pDh7Ya1hId8GxvwoSCnU9l19byxFnR9xXgrYU/cKWo2H36
-         Yp1A==
-X-Gm-Message-State: AOAM530SORoB7fZf/4qxCDdex5+dKda9w9kzNPt0tsce6X3WSyQtXJBk
-        HI+V3gwXg3MWnhkipCUfU62Y
-X-Google-Smtp-Source: ABdhPJxorLBc7/gHMqJ2HYnYUAdZ/SuDPgf4Z3jFcOJTcP0BgdY/eDtahab4jECG5N3Cq/Bmvrb7OA==
-X-Received: by 2002:a17:903:22c2:b0:12d:a7ad:aceb with SMTP id y2-20020a17090322c200b0012da7adacebmr12214602plg.33.1629382943667;
-        Thu, 19 Aug 2021 07:22:23 -0700 (PDT)
-Received: from thinkpad ([2409:4072:6298:4497:5a1e:ff34:9091:5bac])
-        by smtp.gmail.com with ESMTPSA id e31sm3282655pjk.19.2021.08.19.07.22.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 07:22:23 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 19:52:17 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        smohanad@codeaurora.org
-Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
-Message-ID: <20210819142217.GC200135@thinkpad>
-References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
- <ef957b1e-9350-c244-6cd7-fbb81ffc0f56@ti.com>
+        id S240521AbhHSOik (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 10:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240520AbhHSOij (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Aug 2021 10:38:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 142B2610A7;
+        Thu, 19 Aug 2021 14:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629383883;
+        bh=TCOAJEPL6JlpALK+Wmf2/5K+wXqZbcrSXzG+yXZD8T4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TP1QcFIR32VbtjlwEOh6RX7CBqvMfSmWK3Y8EvQ9G/Z9Y7q9XhWivbyveWNO/5b+F
+         JKMx2xZ9MNJ0bNZGdh0HmDnHk6B7TmkQ73DAnLxcZK/sv5TYlWBtrik3a55zU4jrIC
+         f2gsci2xFp0JyEILrsYKRW5L+Fl9subQvOXhFSD2HqWNIMZoUKtwBPE4h+28E0ZVGT
+         aGauFiibnkIDr76BhfWnJMrYs/+BFqHMmllx5CCGDSTsDCAh+GuRqjHuVj1/Wwtnai
+         Uln+rzSey+dQO7+RuwIDsaLuUCFOyMpBtb/O67MxQpkuU6/Ng0CBaDxrX3hX2jKMXK
+         x8nQse029X1rg==
+Date:   Thu, 19 Aug 2021 09:38:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        f.fainelli@gmail.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Subject: Re: [PATCH v1] MAINTAINERS: new entry for Broadcom STB PCIe driver
+Message-ID: <20210819143801.GA3202443@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ef957b1e-9350-c244-6cd7-fbb81ffc0f56@ti.com>
+In-Reply-To: <20210818225031.8502-1-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 07:45:06PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Manivannan,
+On Wed, Aug 18, 2021 at 06:50:30PM -0400, Jim Quinlan wrote:
+> The two files listed are also covered by
 > 
-> On 16/06/21 5:29 pm, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This series adds support for additional notifiers in the PCI endpoint
-> > framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
-> > for all PCI endpoints but there is also a custom notifier (CUSTOM) added
-> > to pass the device/vendor specific events to EPF from EPC.
-> > 
-> > The example usage of all notifiers is provided in the commit description.
+> "BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
 > 
-> In my earlier comment I didn't mean you to provide example usage in
-> commit description. Rather to be used in a existing endpoint controller
-> driver and handled in endpoint function drivers. Otherwise no point in
-> adding them to the upstream kernel.
+> which covers the Raspberry Pi specifics of the PCIe driver.
 > 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 
-Oh, sorry then I must have misinterpreted your comments. I'll submit this series
-along with the MHI stack that makes use of these notifiers.
+Applied to for-linus for v5.14, thanks!
 
-Thanks,
-Mani
+I updated the subject/commit log like this:
 
-> Thanks
-> Kishon
+  MAINTAINERS: Add Jim Quinlan et al as Broadcom STB PCIe maintainers
+
+  Add Jim Quinlan, Nicolas Saenz Julienne, and Florian Fainelli as
+  maintainers of the Broadcom STB PCIe controller driver.
+
+  This driver is also included in these entries:
+
+    BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE
+    BROADCOM BCM7XXX ARM ARCHITECTURE
+
+  which cover the Raspberry Pi specifics of the PCIe driver.
+
+> ---
+>  MAINTAINERS | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Manivannan Sadhasivam (5):
-> >   PCI: endpoint: Add linkdown notifier support
-> >   PCI: endpoint: Add BME notifier support
-> >   PCI: endpoint: Add PME notifier support
-> >   PCI: endpoint: Add D_STATE notifier support
-> >   PCI: endpoint: Add custom notifier support
-> > 
-> >  drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
-> >  include/linux/pci-epc.h             |  5 ++
-> >  include/linux/pci-epf.h             |  5 ++
-> >  3 files changed, 99 insertions(+)
-> > 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bc0ceef87b73..0f5c8832ae49 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3809,6 +3809,16 @@ L:	bcm-kernel-feedback-list@broadcom.com
+>  S:	Maintained
+>  F:	drivers/mtd/nand/raw/brcmnand/
+>  
+> +BROADCOM STB PCIE DRIVER
+> +M:	Jim Quinlan <jim2101024@gmail.com>
+> +M:	Nicolas Saenz Julienne <nsaenz@kernel.org>
+> +M:	Florian Fainelli <f.fainelli@gmail.com>
+> +M:	bcm-kernel-feedback-list@broadcom.com
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +F:	drivers/pci/controller/pcie-brcmstb.c
+> +
+>  BROADCOM SYSTEMPORT ETHERNET DRIVER
+>  M:	Florian Fainelli <f.fainelli@gmail.com>
+>  L:	bcm-kernel-feedback-list@broadcom.com
+> -- 
+> 2.17.1
+> 
