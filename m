@@ -2,113 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AF13F1B76
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 16:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B91713F1B87
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 16:22:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240434AbhHSOSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 10:18:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:39502 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235352AbhHSOSn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Aug 2021 10:18:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B0EC106F;
-        Thu, 19 Aug 2021 07:18:06 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 178653F66F;
-        Thu, 19 Aug 2021 07:18:03 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 15:17:58 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v6 0/8] PCI: hv: Support host bridge probing on ARM64
-Message-ID: <20210819141758.GA27305@lpieralisi>
-References: <20210726180657.142727-1-boqun.feng@gmail.com>
+        id S240278AbhHSOXA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 10:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240264AbhHSOXA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 10:23:00 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526E1C061757
+        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 07:22:24 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 28-20020a17090a031cb0290178dcd8a4d1so7374831pje.0
+        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 07:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=78xOaLYOlWGNuqYKX8nJ/razzvdH0eYMQ7PneXUBfCY=;
+        b=dbVDI1nlDwGzV0OEvCPALB2HivKy0lvO/YXdyT8JmDytW0hOnL3jHj9F2muK4uacRd
+         1uXQMriFlLGmJBef39j1FUwxIW+Z8SAQlFQSkJBMi8uxm4TklgD688N4nkwtIyghuO7C
+         AstCXkRX4vvTf8cm3mDSZD4NaEekCEfmBNG2LvacHc6Xu/tQMbH4m1g+YkSIUsrZgdoG
+         oQGql8YTn58LxS7N0CDGGJAOyfF7bD6eEiHopdhcc8zccv809nQirmGrGKmnvckj8xgO
+         C/0Fy56+MUon8vGkDmqYQJltFmlKeIzLJMF5HDFwFhM5/u3MNh4YF8IciuQEAJCO0Pft
+         8UpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=78xOaLYOlWGNuqYKX8nJ/razzvdH0eYMQ7PneXUBfCY=;
+        b=nut3K9xT9UwylZ9UbLnv3kBCSBuiLp6BSjG/t/HfGOsAnlRRQFKRVurEr2PAVu65UZ
+         GxEHCrTfi8ks0kfOm/DjAH2NAW5e97VNd0pnwTQxIAo2IHVD9ddCH5iUCSFTW69HkY3J
+         IGS8xZBQDZrfcPrU87LxR6IUArQDk1LasYAKMapfHUjbGwnzoOfnLCawrYjaMpPTzvFd
+         KiV/iPRMiKcMfBN0XAwDGSSEtFtO/QCwq05wvoguV2Res96dk9fTNCK2nGWEB0VdEM64
+         szErn+QMP9J3PVZFRBcsu7pDh7Ya1hId8GxvwoSCnU9l19byxFnR9xXgrYU/cKWo2H36
+         Yp1A==
+X-Gm-Message-State: AOAM530SORoB7fZf/4qxCDdex5+dKda9w9kzNPt0tsce6X3WSyQtXJBk
+        HI+V3gwXg3MWnhkipCUfU62Y
+X-Google-Smtp-Source: ABdhPJxorLBc7/gHMqJ2HYnYUAdZ/SuDPgf4Z3jFcOJTcP0BgdY/eDtahab4jECG5N3Cq/Bmvrb7OA==
+X-Received: by 2002:a17:903:22c2:b0:12d:a7ad:aceb with SMTP id y2-20020a17090322c200b0012da7adacebmr12214602plg.33.1629382943667;
+        Thu, 19 Aug 2021 07:22:23 -0700 (PDT)
+Received: from thinkpad ([2409:4072:6298:4497:5a1e:ff34:9091:5bac])
+        by smtp.gmail.com with ESMTPSA id e31sm3282655pjk.19.2021.08.19.07.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 07:22:23 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 19:52:17 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        smohanad@codeaurora.org
+Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
+Message-ID: <20210819142217.GC200135@thinkpad>
+References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+ <ef957b1e-9350-c244-6cd7-fbb81ffc0f56@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210726180657.142727-1-boqun.feng@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ef957b1e-9350-c244-6cd7-fbb81ffc0f56@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 02:06:49AM +0800, Boqun Feng wrote:
-> Hi,
+On Thu, Aug 19, 2021 at 07:45:06PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Manivannan,
 > 
-> This is the v6 for the preparation of virtual PCI support on Hyper-V
-> ARM64, Previous versions:
+> On 16/06/21 5:29 pm, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > This series adds support for additional notifiers in the PCI endpoint
+> > framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
+> > for all PCI endpoints but there is also a custom notifier (CUSTOM) added
+> > to pass the device/vendor specific events to EPF from EPC.
+> > 
+> > The example usage of all notifiers is provided in the commit description.
 > 
-> v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
-> v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
-> v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
-> v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
-> v5:	https://lore.kernel.org/lkml/20210720134429.511541-1-boqun.feng@gmail.com/
+> In my earlier comment I didn't mean you to provide example usage in
+> commit description. Rather to be used in a existing endpoint controller
+> driver and handled in endpoint function drivers. Otherwise no point in
+> adding them to the upstream kernel.
 > 
-> Changes since last version:
-> 
-> *	Rebase to 5.14-rc3
-> 
-> *	Comment fixes as suggested by Bjorn.
-> 
-> The basic problem we need to resolve is that ARM64 is an arch with
-> PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
-> Hyper-V PCI provides a paravirtualized PCI interface, so there is no
-> actual pci_config_window for a PCI host bridge, so no information can be
-> retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
-> there is no corresponding ACPI device for the Hyper-V PCI root bridge,
-> which introduces a special case when trying to find the ACPI device from
-> the sysdata (see patch #3).
-> 
-> With this patchset, we could enable the virtual PCI on Hyper-V ARM64
-> guest with other code under development.
-> 
-> Comments and suggestions are welcome.
-> 
-> Regards,
-> Boqun
-> 
-> Arnd Bergmann (1):
->   PCI: hv: Generify PCI probing
-> 
-> Boqun Feng (7):
->   PCI: Introduce domain_nr in pci_host_bridge
->   PCI: Support populating MSI domains of root buses via bridges
->   arm64: PCI: Restructure pcibios_root_bridge_prepare()
->   arm64: PCI: Support root bridge preparation for Hyper-V
->   PCI: hv: Set ->domain_nr of pci_host_bridge at probing time
->   PCI: hv: Set up MSI domain at bridge probing time
->   PCI: hv: Turn on the host bridge probing on ARM64
-> 
->  arch/arm64/kernel/pci.c             | 29 +++++++---
->  drivers/pci/controller/pci-hyperv.c | 86 +++++++++++++++++------------
->  drivers/pci/probe.c                 | 12 +++-
->  include/linux/pci.h                 | 11 ++++
->  4 files changed, 93 insertions(+), 45 deletions(-)
 
-If we take this series via the PCI tree we'd need Catalin/Will ACKs on
-patches 3-4.
+Oh, sorry then I must have misinterpreted your comments. I'll submit this series
+along with the MHI stack that makes use of these notifiers.
 
-I need some time to look into [1] (thanks for that).
+Thanks,
+Mani
 
-Without [1] patch 8 is ugly, that's no news. The question is whether
-it is worth waiting for a kernel cycle to integrate [1] into this series
-or not.
-
-Is it really a problem if we postpone this series for another kernel
-cycle so that we can look into it ?
-
-[1] https://lore.kernel.org/lkml/20210811153619.88922-1-boqun.feng@gmail.com/
+> Thanks
+> Kishon
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > Manivannan Sadhasivam (5):
+> >   PCI: endpoint: Add linkdown notifier support
+> >   PCI: endpoint: Add BME notifier support
+> >   PCI: endpoint: Add PME notifier support
+> >   PCI: endpoint: Add D_STATE notifier support
+> >   PCI: endpoint: Add custom notifier support
+> > 
+> >  drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
+> >  include/linux/pci-epc.h             |  5 ++
+> >  include/linux/pci-epf.h             |  5 ++
+> >  3 files changed, 99 insertions(+)
+> > 
