@@ -2,131 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9DA33F182E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 13:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E893F1867
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 13:42:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234882AbhHSL3r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 07:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        id S238611AbhHSLnB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 07:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231210AbhHSL3q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Aug 2021 07:29:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 45DBE610D2;
-        Thu, 19 Aug 2021 11:29:10 +0000 (UTC)
+        id S238208AbhHSLnB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Aug 2021 07:43:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 75BCA61051;
+        Thu, 19 Aug 2021 11:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629372550;
-        bh=A7r+csymhYMGfcbq2KwxlTUQKlQXRKL2+USLxiLcJfU=;
+        s=k20201202; t=1629373345;
+        bh=3ESGGX79rMhnGcZfV5Ry+oGNnhm6MRLHvW3TMspM5YQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WAh1lKewT/u6UyP5EyuSQZNrpLQMxqMwfAdWNqC/PbBcn9pQRixOeRr26w3vJTqEN
-         tJgZTHWTOmonxVMnj19cjybfkOwowYJdS+JNSgQ/chfIz9EM5RpViuD6q89CYd31jc
-         dp7pFNdZTk8DQ4cQrYGv8mOvmSumiouY2uDXV5VLjUbdKjZAHU3pz2X8+A5hFRIMJQ
-         HtJQs4B5BGpAyyPISdv2mggP8HwY3fsifiKsusa+cphLf0FA7rdEN2nliTYA9bMItw
-         7v3EJg6aNugSIqA3pceKra1x5VjmLLEu3mewzC+DJHeauxJ3tF2K29+Ya8ZdTxnxHo
-         f6JYpMDwrJsug==
-Date:   Thu, 19 Aug 2021 06:29:08 -0500
+        b=ut8KSdULgn3p+M/Bco5J4bgKkhiUQXAS5GDNXzK4yQXTlm0KUPdhzgA8z56YYw3oM
+         QF4fCpw0syrbBrFuPtZp3mntejrxdNeExeierW5o8WW3YQUOLRRucl0g7DdyXhHIFJ
+         U+bT9/jEKBt9YQhQKcHpywECTYlKGGmWTnnm7bufSWp8Zh/osdvehka7DsIAwoCNQE
+         OcPiLZpCLkiYgnuNRtFJi6dVmtoYsFYATcOawtf6yQD9aK2/TEeCf+ZKkY63iPLRjY
+         Z/egnnPMQnKMR7TqK0l2K+CntvJ3r6Uw5DybYU7jV3ccg8knS9TYrSFwYujM+iNu+r
+         4ztCznJ/eOCzQ==
+Date:   Thu, 19 Aug 2021 06:42:23 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?B?V2lsY3p577+977+977+9c2tp?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?utf-8?B?Um9o77+977+977+9cg==?= <pali@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: uniphier: Take lock in INTX irq_{mask,unmask,ack}
- callbacks
-Message-ID: <20210819112908.GA3188927@bjorn-Precision-5520>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/3] r8169: Implement dynamic ASPM mechanism
+Message-ID: <20210819114223.GA3189268@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1629370566-29984-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20210819054542.608745-2-kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Possibly update subject to be more descriptive, along lines of:
+On Thu, Aug 19, 2021 at 01:45:40PM +0800, Kai-Heng Feng wrote:
+> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
+> Same issue can be observed with older vendor drivers.
 
-  Serialize INTx masking/unmasking
+On some platforms but not on others?  Maybe the PCIe topology is a
+factor?  Do you have bug reports with data, e.g., "lspci -vv" output?
 
-On Thu, Aug 19, 2021 at 07:56:06PM +0900, Kunihiko Hayashi wrote:
-> The same condition register PCI_RCV_INTX is used in irq_mask(),
-> irq_unmask() and irq_ack() callbacks. Accesses to register can occur at the
-> same time without lock.
-> This introduces a lock into the callbacks to prevent the issue.
+> The issue is however solved by the latest vendor driver. There's a new
+> mechanism, which disables r8169's internal ASPM when the NIC traffic has
+> more than 10 packets, and vice versa. 
 
-Rewrap into a single paragraph or add blank line between paragraphs.
+Presumably there's a time interval related to the 10 packets?  For
+example, do you want to disable ASPM if 10 packets are received (or
+sent?) in a certain amount of time?
 
-s/This introduces/Add/ to make this an imperative description of what
-you want this patch to do.  No need for "This" since the context is
-obvious.
+> The possible reason for this is
+> likely because the buffer on the chip is too small for its ASPM exit
+> latency.
 
-> Fixes: 7e6d5cd88a6f ("PCI: uniphier: Add UniPhier PCIe host controller support")
-> Suggested-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Maybe this means the chip advertises incorrect exit latencies?  If so,
+maybe a quirk could override that?
+
+> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
+> use dynamic ASPM under Windows. So implement the same mechanism here to
+> resolve the issue.
+
+What exactly is "dynamic ASPM"?
+
+I see Heiner's comment about this being intended only for a downstream
+kernel.  But why?
+
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> v3:
+>  - Use msecs_to_jiffies() for delay time
+>  - Use atomic_t instead of mutex for bh
+>  - Mention the buffer size and ASPM exit latency in commit message
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index ebe43e9..5075714 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -186,12 +186,17 @@ static void uniphier_pcie_irq_ack(struct irq_data *d)
->  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	unsigned long flags;
->  	u32 val;
+> v2: 
+>  - Use delayed_work instead of timer_list to avoid interrupt context
+>  - Use mutex to serialize packet counter read/write
+>  - Wording change
+> 
+>  drivers/net/ethernet/realtek/r8169_main.c | 44 ++++++++++++++++++++++-
+>  1 file changed, 43 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 7a69b468584a2..3359509c1c351 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -624,6 +624,10 @@ struct rtl8169_private {
 >  
-> +	raw_spin_lock_irqsave(&pp->lock, flags);
+>  	unsigned supports_gmii:1;
+>  	unsigned aspm_manageable:1;
+> +	unsigned rtl_aspm_enabled:1;
+> +	struct delayed_work aspm_toggle;
+> +	atomic_t aspm_packet_count;
 > +
->  	val = readl(priv->base + PCL_RCV_INTX);
->  	val &= ~PCL_RCV_INTX_ALL_STATUS;
->  	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_STATUS_SHIFT);
->  	writel(val, priv->base + PCL_RCV_INTX);
+>  	dma_addr_t counters_phys_addr;
+>  	struct rtl8169_counters *counters;
+>  	struct rtl8169_tc_offsets tc_offset;
+> @@ -2665,8 +2669,13 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
+>  
+>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>  {
+> +	if (!tp->aspm_manageable && enable)
+> +		return;
 > +
-> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +	tp->rtl_aspm_enabled = enable;
+> +
+>  	/* Don't enable ASPM in the chip if OS can't control ASPM */
+> -	if (enable && tp->aspm_manageable) {
+> +	if (enable) {
+>  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+>  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+>  	} else {
+> @@ -4415,6 +4424,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
+>  
+>  	dirty_tx = tp->dirty_tx;
+>  
+> +	atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
+>  	while (READ_ONCE(tp->cur_tx) != dirty_tx) {
+>  		unsigned int entry = dirty_tx % NUM_TX_DESC;
+>  		u32 status;
+> @@ -4559,6 +4569,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
+>  		rtl8169_mark_to_asic(desc);
+>  	}
+>  
+> +	atomic_add(count, &tp->aspm_packet_count);
+> +
+>  	return count;
 >  }
 >  
->  static void uniphier_pcie_irq_mask(struct irq_data *d)
-> @@ -199,12 +204,17 @@ static void uniphier_pcie_irq_mask(struct irq_data *d)
->  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	unsigned long flags;
->  	u32 val;
->  
-> +	raw_spin_lock_irqsave(&pp->lock, flags);
-> +
->  	val = readl(priv->base + PCL_RCV_INTX);
->  	val &= ~PCL_RCV_INTX_ALL_MASK;
->  	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
->  	writel(val, priv->base + PCL_RCV_INTX);
-> +
-> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> @@ -4666,8 +4678,32 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
+>  	return 0;
 >  }
 >  
->  static void uniphier_pcie_irq_unmask(struct irq_data *d)
-> @@ -212,12 +222,17 @@ static void uniphier_pcie_irq_unmask(struct irq_data *d)
->  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	unsigned long flags;
->  	u32 val;
+> +#define ASPM_PACKET_THRESHOLD 10
+> +#define ASPM_TOGGLE_INTERVAL 1000
+> +
+> +static void rtl8169_aspm_toggle(struct work_struct *work)
+> +{
+> +	struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
+> +						  aspm_toggle.work);
+> +	int packet_count;
+> +	bool enable;
+> +
+> +	packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
+> +	enable = packet_count <= ASPM_PACKET_THRESHOLD;
+> +
+> +	if (tp->rtl_aspm_enabled != enable) {
+> +		rtl_unlock_config_regs(tp);
+> +		rtl_hw_aspm_clkreq_enable(tp, enable);
+> +		rtl_lock_config_regs(tp);
+> +	}
+> +
+> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
+> +}
+> +
+>  static void rtl8169_down(struct rtl8169_private *tp)
+>  {
+> +	cancel_delayed_work_sync(&tp->aspm_toggle);
+> +
+>  	/* Clear all task flags */
+>  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
 >  
-> +	raw_spin_lock_irqsave(&pp->lock, flags);
+> @@ -4694,6 +4730,8 @@ static void rtl8169_up(struct rtl8169_private *tp)
+>  	rtl_reset_work(tp);
+>  
+>  	phy_start(tp->phydev);
 > +
->  	val = readl(priv->base + PCL_RCV_INTX);
->  	val &= ~PCL_RCV_INTX_ALL_MASK;
->  	val &= ~BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
->  	writel(val, priv->base + PCL_RCV_INTX);
-> +
-> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
 >  }
 >  
->  static struct irq_chip uniphier_pcie_irq_chip = {
+>  static int rtl8169_close(struct net_device *dev)
+> @@ -5354,6 +5392,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  
+>  	INIT_WORK(&tp->wk.work, rtl_task);
+>  
+> +	INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
+> +
+> +	atomic_set(&tp->aspm_packet_count, 0);
+> +
+>  	rtl_init_mac_address(tp);
+>  
+>  	dev->ethtool_ops = &rtl8169_ethtool_ops;
 > -- 
-> 2.7.4
+> 2.32.0
 > 
