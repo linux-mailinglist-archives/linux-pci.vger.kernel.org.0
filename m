@@ -2,123 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 696A73F1658
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 11:36:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D781B3F16D5
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 11:56:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237562AbhHSJhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 05:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59232 "EHLO
+        id S238103AbhHSJ5B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 05:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbhHSJhM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 05:37:12 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46303C061575
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 02:36:36 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id q6so8067873wrv.6
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 02:36:36 -0700 (PDT)
+        with ESMTP id S238109AbhHSJ5A (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 05:57:00 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3C1C0613CF;
+        Thu, 19 Aug 2021 02:56:23 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id l11so8182491wrx.4;
+        Thu, 19 Aug 2021 02:56:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m+LHyne0kv5mF9vWjh7fD8eOk46K8HFKzEPGFhrnFPM=;
-        b=GvRLgi6eJnrZ1RKBLJvKMsbPyP9D8ACO613KOSlfXAwS/eni21eNpmEOmnJU7BdUq6
-         sozDszho81xo0ejjZywT1pCdbumjvRt+StSteFgApCyAgeZVSE+nrlbcmmQffXD8eZrJ
-         nw327OkI8DDT82RUaWB+sAPpNumoMNfpinT+fgQujT/u1ADNKg+l9S0KVmJfWSGerfb0
-         4fm6fgaHnslyjoqitvvXw89wnWmxq0fn/VQy4xsfnTR4P5m9CteELGeG+VqEh6sNCm20
-         MLKqFg+I4GfWWRo53RBPm8qVqNXX3P/QjbSB0rd02cfFzlXLqEU+nTSKdavbLifSGmGV
-         Dz8g==
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZGvg8dfc9wmKRNl+QTgPyRSm2QhtLNfk+83gimM4XNI=;
+        b=hag8HjWkoLnlWff2dlAOAjapUPbMFhns4/RrxwIf+cDegN7pvOFV7IfidwjeW08FXQ
+         Je5DUPNJLtqG/sUQaoBAmHu5UXUQxve7qCtaIKPUOmDLAf6T9UhuCy7bmTfQed2OxHrM
+         aHChMrPIA7tydWGo4dnGXOD0+ZzCHzGFZM8F4oOAJoi5JO2vs2iWYwaWZ+wKS5Lkgsb/
+         WZdhWbue0BccvU9iVXZItQuIhcCvx1tvofwNURqgK5385KBnererOE2iJWfQrNS+eBPk
+         j5ZJRQo5rlxDP6qRR5bQysbTRpyJnnuii4QnhDZ0aXklIyB6vr2vkP7byz9KkKYcz5v8
+         RcjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m+LHyne0kv5mF9vWjh7fD8eOk46K8HFKzEPGFhrnFPM=;
-        b=EdzeibsJD6IeAiqsjp8Suga/RGnzdDjMO/mGkiwgJrOyEqBqm8UCOtbwa4FEhqgMJ9
-         od2MqCWaeqQJE901BfHeA4ABVsALlej2KXKCfEALB+xI1bFUqsabaymjV7qTCJmB/sbH
-         +njVn9vG1uncTP8acMQwKntb4UrKVF4f8KwUfSWMfKbawyICtUqmoKbTntDMqWvhmkXP
-         lTK/cFTsbOi468Pex7HzZ/lvYcrQ+ir7N2/oNuaTeOqb4IxgiHm6/0VCw1y7qusiqDhW
-         hWHfwGCgqseQCIUS2NCXIhTHedMfobHOLFuAISBt+7kOar25vushMYWIULeWSFmYJQFM
-         7b1Q==
-X-Gm-Message-State: AOAM5324HWEASI3GKpvHhizuqwZfckZplQZ3n0p4uyeCZEo2/neMgXDd
-        SU8mrGT5hlBQTmO20vLf7RovSQ==
-X-Google-Smtp-Source: ABdhPJxkp5oW5Dn0ctdn3JjnnGk8HMnsKNq7mdpuH7P0JWvijzf9A93EMtNVZJgUM9dNSCfCtHfAkQ==
-X-Received: by 2002:a5d:6da4:: with SMTP id u4mr2634271wrs.50.1629365794902;
-        Thu, 19 Aug 2021 02:36:34 -0700 (PDT)
-Received: from google.com ([2.31.167.59])
-        by smtp.gmail.com with ESMTPSA id w18sm2520320wrg.68.2021.08.19.02.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 02:36:34 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 10:36:32 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        mgross@linux.intel.com, bhelgaas@google.com,
-        srinivas.pandruvada@intel.com, andy.shevchenko@gmail.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] MFD: intel_pmt: Add general DVSEC/VSEC support
-Message-ID: <YR4mIGeZAqJJCZ9i@google.com>
-References: <20210817224018.1013192-1-david.e.box@linux.intel.com>
- <21f59d91-c9b9-2a7e-e5d9-a7697979b4bf@redhat.com>
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZGvg8dfc9wmKRNl+QTgPyRSm2QhtLNfk+83gimM4XNI=;
+        b=nzZAs+Xe2ink19GpjDYLZ1Ko4/sEEbMjSNNJ3PYlPNLmo7ohKwVIDgNEg5kFHpD+uI
+         l3AdU0pfV/VoljaF/mamP4l8/YqKbVBZc3F31bta9lY3A4ewZoOk5Ii5WMNT/fGyMT2Y
+         69Kl3va95o2rSdMLx4TublyaFD1eFu3V8MoJL5JKtrAFwQGhlWjCFbmlc9Cq3KX6MSSE
+         XSlKmGyomYS7eJfMsE8Hl1GRlJhRLZS5bZrgPPTCBgEkK2O07/Il7bI6Bvahcs3cyuqI
+         dlT06oS5Rs8nqPlFSGMnKojm+GFzyCE1TrfzSel/N2nIGGtBD9lNLtaD8jRmPzNiY+6A
+         0eig==
+X-Gm-Message-State: AOAM533MX1Orz/MNaCjkm02Uc1izYrcpJmLIosCAxxL4YqdeS41zugti
+        TApjSQNLHy8kDxwCVkNFgsUIiahcZGSieg==
+X-Google-Smtp-Source: ABdhPJxlGYn7yHv27sS4+nkt/PPDWOb1MWMaWjfTDsGFR/1mUORspVeaACo9BHfSH46NWm2h9tIvHA==
+X-Received: by 2002:a5d:4d8e:: with SMTP id b14mr2683537wru.422.1629366982248;
+        Thu, 19 Aug 2021 02:56:22 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f08:4500:c830:756b:68fa:7529? (p200300ea8f084500c830756b68fa7529.dip0.t-ipconnect.de. [2003:ea:8f08:4500:c830:756b:68fa:7529])
+        by smtp.googlemail.com with ESMTPSA id o14sm2005680wms.2.2021.08.19.02.56.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Aug 2021 02:56:21 -0700 (PDT)
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     nic_swsd <nic_swsd@realtek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20210819054542.608745-1-kai.heng.feng@canonical.com>
+ <20210819054542.608745-4-kai.heng.feng@canonical.com>
+ <084b8ea3-99d8-3393-4b74-0779c92fde64@gmail.com>
+ <CAAd53p4CYOOXjyNdTnBtsQ+2MW-Jar8fgEfPFZHSPrJde=HqVA@mail.gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next v3 3/3] r8169: Enable ASPM for selected NICs
+Message-ID: <d3e4ec0b-2681-1b3c-f0ca-828b24b253e7@gmail.com>
+Date:   Thu, 19 Aug 2021 11:56:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
+In-Reply-To: <CAAd53p4CYOOXjyNdTnBtsQ+2MW-Jar8fgEfPFZHSPrJde=HqVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <21f59d91-c9b9-2a7e-e5d9-a7697979b4bf@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 18 Aug 2021, Hans de Goede wrote:
+On 19.08.2021 08:50, Kai-Heng Feng wrote:
+> On Thu, Aug 19, 2021 at 2:08 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>>
+>> On 19.08.2021 07:45, Kai-Heng Feng wrote:
+>>> The latest vendor driver enables ASPM for more recent r8168 NICs, so
+>>> disable ASPM on older chips and enable ASPM for the rest.
+>>>
+>>> Rename aspm_manageable to pcie_aspm_manageable to indicate it's ASPM
+>>> from PCIe, and use rtl_aspm_supported for Realtek NIC's internal ASPM
+>>> function.
+>>>
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> ---
+>>> v3:
+>>>  - Use pcie_aspm_supported() to retrieve ASPM support status
+>>>  - Use whitelist for r8169 internal ASPM status
+>>>
+>>> v2:
+>>>  - No change
+>>>
+>>>  drivers/net/ethernet/realtek/r8169_main.c | 27 ++++++++++++++++-------
+>>>  1 file changed, 19 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+>>> index 3359509c1c351..88e015d93e490 100644
+>>> --- a/drivers/net/ethernet/realtek/r8169_main.c
+>>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+>>> @@ -623,7 +623,8 @@ struct rtl8169_private {
+>>>       } wk;
+>>>
+>>>       unsigned supports_gmii:1;
+>>> -     unsigned aspm_manageable:1;
+>>> +     unsigned pcie_aspm_manageable:1;
+>>> +     unsigned rtl_aspm_supported:1;
+>>>       unsigned rtl_aspm_enabled:1;
+>>>       struct delayed_work aspm_toggle;
+>>>       atomic_t aspm_packet_count;
+>>> @@ -702,6 +703,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
+>>>              tp->mac_version <= RTL_GIGA_MAC_VER_53;
+>>>  }
+>>>
+>>> +static int rtl_supports_aspm(struct rtl8169_private *tp)
+>>> +{
+>>> +     switch (tp->mac_version) {
+>>> +     case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
+>>> +     case RTL_GIGA_MAC_VER_37:
+>>> +     case RTL_GIGA_MAC_VER_39:
+>>> +     case RTL_GIGA_MAC_VER_43:
+>>> +     case RTL_GIGA_MAC_VER_47:
+>>> +             return 0;
+>>> +     default:
+>>> +             return 1;
+>>> +     }
+>>> +}
+>>> +
+>>>  static bool rtl_supports_eee(struct rtl8169_private *tp)
+>>>  {
+>>>       return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
+>>> @@ -2669,7 +2684,7 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
+>>>
+>>>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>>>  {
+>>> -     if (!tp->aspm_manageable && enable)
+>>> +     if (!(tp->pcie_aspm_manageable && tp->rtl_aspm_supported) && enable)
+>>>               return;
+>>>
+>>>       tp->rtl_aspm_enabled = enable;
+>>> @@ -5319,12 +5334,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>>       if (rc)
+>>>               return rc;
+>>>
+>>> -     /* Disable ASPM completely as that cause random device stop working
+>>> -      * problems as well as full system hangs for some PCIe devices users.
+>>> -      */
+>>> -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S |
+>>> -                                       PCIE_LINK_STATE_L1);
+>>> -     tp->aspm_manageable = !rc;
+>>> +     tp->pcie_aspm_manageable = pcie_aspm_supported(pdev);
+>>
+>> That's not what I meant, and it's also not correct.
+> 
+> In case I make another mistake in next series, let me ask it more clearly...
+> What you meant was to check both link->aspm_enabled and link->aspm_support?
+> 
+aspm_enabled can be changed by the user at any time.
+pci_disable_link_state() also considers whether BIOS forbids that OS
+mess with ASPM. See aspm_disabled.
 
-> Hi,
+>>
+>>> +     tp->rtl_aspm_supported = rtl_supports_aspm(tp);
 > 
-> On 8/18/21 12:40 AM, David E. Box wrote:
-> > This patch enables general support for Intel defined PCIe VSEC and DVSEC
-> > capabilities in the Intel Platform Monitoring Technology (PMT) driver.
-> > Though the driver was written exclusively for PMT capabilities, newer DVSEC
-> > and VSEC IDs for other capabilities can exist on the same device requiring
-> > that the driver handle them.
-> > 
-> > This 2nd revision drops the creation of a separate OOBMSM driver. Instead,
-> > all cell drivers will have a dependency on CONFIG_MFD_INTEL_PMT, whether or
-> > not they are PMT. Changes in this patchset to the current cell drivers
-> > located in platform/x86 are based on Hans for-next branch where they have
-> > been moved to the intel/pmt subfolder.
-> > 
-> > David E. Box (5):
-> >   PCI: Add #defines for accessing PCIE DVSEC fields
-> >   MFD: intel_pmt: Support non-PMT capabilities
-> >   MFD: intel_pmt: Add support for PCIe VSEC structures
-> >   platform/x86: intel_pmt_telemetry: Ignore zero sized entries
+> Is rtl_supports_aspm() what you expect for the whitelist?
+> And what else am I missing?
 > 
-> Since this patch is pretty much a stand alone patch I've picked
-> this one (4/5) up now.
-> 
-> The rest of the patches touch both MFD and pdx86 files, so these
-> should be picked up by Lee. But they rely on the patch moving
-> the pdx86 pmt code into the drivers/platform/x86/intel/pmt dir
-> which is currently only available in my for-next branch.
-> 
-> I think it is probably best to wait for 5.15-rc1 and then Lee
-> can merge the rest. Here is my ack for Lee picking up
-> the pdx86 bits:
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Lee, alternatively you could also merge commit e184b1e589a7fbb80bfdd0364c11422999a17a26
-> from the pdx86 tree, that is only 1 commit ahead of my latest fixes
-> pull-req to Linus for 5.14, so in essence that is 5.14-rc? (?=5 I think)
-> + just the commit which you need as base, then you could still merge
-> these this cycle. If you wish I can put a signed tag on that
-> for you (I will treat it as immutable either way).
+I meant use rtl_supports_aspm() to check when ASPM is relevant at all,
+and in addition use a blacklist for chip versions where ASPM is
+completely unusable.
 
-I'm happy to wait.
+> Kai-Heng
+> 
+>>>
+>>>       /* enable device (incl. PCI PM wakeup and hotplug setup) */
+>>>       rc = pcim_enable_device(pdev);
+>>>
+>>
 
-The MFD patches aren't even reviewed yet and it's late in the cycle.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
