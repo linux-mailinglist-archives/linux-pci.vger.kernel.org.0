@@ -2,118 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07F063F227E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 23:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 511083F228D
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 23:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235676AbhHSVxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 17:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
+        id S235439AbhHSV5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 17:57:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:47484 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233567AbhHSVxT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Aug 2021 17:53:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 16DA661029;
-        Thu, 19 Aug 2021 21:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629409962;
-        bh=lVxMSHjueZlMfEBoUSerhjw3+tnhPwfYJwK4Bjj66FE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U5X0Iox8zg+g4AdUXxKc66LA0Ku4gfX4YtZXt8g0KcL1qPsxVaXnc1oRXTm9Sm+Aj
-         9oMnyecskuAJgQtaKLbpj5C8C23tXWjlF/q8hQpZEiCxHicpOq9IBTIGaSZwWq7Tu6
-         W7AEHT6IWUcDyxvbrXz/SfPxuE5SBGY55wnwTIaTHiwAxOMlzCJh4WTlnMasPJLK2H
-         WvEhKG9CPEsYvzMNL6aa9D0bg5v6xqkp4JH8C8AUkK0eLo3LFVCMcBp4eyMKPJto70
-         N/FAp6hRtvWinx99Uf8sCTFxPot4aIyB87TfXypFUJ4hx9h7Rc1Q1memGl26W67BIt
-         L418Cy9FD+8gQ==
-Date:   Thu, 19 Aug 2021 16:52:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 0/9] PCI/VGA: Rework default VGA device selection
-Message-ID: <20210819215240.GA3241693@bjorn-Precision-5520>
+        id S229605AbhHSV5x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Aug 2021 17:57:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EC751042;
+        Thu, 19 Aug 2021 14:57:16 -0700 (PDT)
+Received: from u200856.usa.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74E593F40C;
+        Thu, 19 Aug 2021 14:57:15 -0700 (PDT)
+From:   Jeremy Linton <jeremy.linton@arm.com>
+To:     linux-pci@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
+        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, sdonthineni@nvidia.com,
+        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH v2 0/4] CM4 ACPI PCIe quirk
+Date:   Thu, 19 Aug 2021 16:56:51 -0500
+Message-Id: <20210819215655.84866-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210809185901.GA2176971@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 09, 2021 at 01:59:01PM -0500, Bjorn Helgaas wrote:
-> On Tue, Aug 03, 2021 at 12:06:44PM -0500, Bjorn Helgaas wrote:
-> > On Sat, Jul 24, 2021 at 05:30:02PM +0800, Huacai Chen wrote:
-> > > On Sat, Jul 24, 2021 at 8:10 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+The PFTF CM4 is an ACPI platform that is following the Arm PCIe SMC
+(DEN0115) standard because its PCIe config space isn't ECAM compliant
+since it is split into two parts. One part describes the root port
+registers, and another contains a moveable window pointing at a given
+device's 4K config space. Thus it doesn't have an MCFG table. As
+Linux doesn't support the PCI/SMC, a host bridge specific _DSD is
+added and associated with custom ECAM ops and cfgres.  The custom cfg
+op selects between those two regions, as well as disallowing
+problematic accesses.
 
-> > > > Thanks for the above; that was helpful.  To summarize:
-> > > >
-> > > >   - On your system, the AST2500 bridge [1a03:1150] does not implement
-> > > >     PCI_BRIDGE_CTL_VGA [1].  This is perfectly legal but means the
-> > > >     legacy VGA resources won't reach downstream devices unless they're
-> > > >     included in the usual bridge windows.
-> > > >
-> > > >   - vga_arb_select_default_device() will set a device below such a
-> > > >     bridge as the default VGA device as long as it has PCI_COMMAND_IO
-> > > >     and PCI_COMMAND_MEMORY enabled.
-> > > >
-> > > >   - vga_arbiter_add_pci_device() is called for every VGA device,
-> > > >     either at boot-time or at hot-add time, and it will also set the
-> > > >     device as the default VGA device, but ONLY if all bridges leading
-> > > >     to it implement PCI_BRIDGE_CTL_VGA.
-> > > >
-> > > >   - This difference between vga_arb_select_default_device() and
-> > > >     vga_arbiter_add_pci_device() means that a device below an AST2500
-> > > >     or similar bridge can only be set as the default if it is
-> > > >     enumerated before vga_arb_device_init().
-> > > >
-> > > >   - On ACPI-based systems, PCI devices are enumerated by acpi_init(),
-> > > >     which runs before vga_arb_device_init().
-> > > >
-> > > >   - On non-ACPI systems, like your MIPS system, they are enumerated by
-> > > >     pcibios_init(), which typically runs *after*
-> > > >     vga_arb_device_init().
-> > > >
-> > > > So I think the critical change is actually that you made
-> > > > vga_arb_update_default_device(), which you call from
-> > > > vga_arbiter_add_pci_device(), set the default device even if it does
-> > > > not own the VGA resources because an upstream bridge doesn't implement
-> > > > PCI_BRIDGE_CTL_VGA, i.e.,
-> > > >
-> > > >   (vgadev->owns & VGA_RSRC_LEGACY_MASK) != VGA_RSRC_LEGACY_MASK
-> > > >
-> > > > Does that seem right?
-> > >
-> > > Yes, that's right.
-> > 
-> > I think that means I screwed up.  I somehow had it in my head that the
-> > hot-add path would never set the default VGA device.  But that is
-> > false.
-> > 
-> > I still think we should move vgaarb.c to drivers/pci/ and get it more
-> > tightly integrated into the PCI core.
-> > 
-> > BUT that's a lot of churn and obscures the simple change that fixes
-> > the problem for you.  So I think the first step should be the change
-> > to vga_arb_update_default_device() so it sets the default device even
-> > when the upstream bridge doesn't implement PCI_BRIDGE_CTL_VGA.
-> > 
-> > That should be a relatively small change, and I think it's better to
-> > make the fix before embarking on major restructuring.
-> 
-> To make sure this doesn't get lost: I'm hoping you can separate out
-> and post the small patch to vga_arb_update_default_device().
-> 
-> I can look at the move/restructure stuff later.
+V1->V2:
+	Only move register definitions to new .h file, add
+	     include guards.
+	Change quirk namespace identifier.
+	Update Maintainers file.
+	A number of whitespace, grammar, etc fixes.
 
-What's happening with this?  I'm still assuming you can post a small
-patch to vga_arb_update_default_device() that's suitable for v5.15,
-Huacai.
 
-Otherwise I'm afraid we won't make any forward progress this cycle.
+Jeremy Linton (4):
+  PCI: brcmstb: Break register definitions into separate header
+  PCI: brcmstb: Add ACPI config space quirk
+  PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
+  MAINTAINERS: Widen brcmstb PCIe file scope
 
-Bjorn
+ MAINTAINERS                                |   2 +-
+ drivers/acpi/pci_mcfg.c                    |  13 ++
+ drivers/pci/controller/Makefile            |   1 +
+ drivers/pci/controller/pcie-brcmstb-acpi.c |  74 ++++++++++
+ drivers/pci/controller/pcie-brcmstb.c      | 150 +-------------------
+ drivers/pci/controller/pcie-brcmstb.h      | 155 +++++++++++++++++++++
+ include/linux/pci-ecam.h                   |   1 +
+ 7 files changed, 247 insertions(+), 149 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-brcmstb-acpi.c
+ create mode 100644 drivers/pci/controller/pcie-brcmstb.h
+
+-- 
+2.31.1
+
