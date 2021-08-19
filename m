@@ -2,236 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3394A3F1D36
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 17:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCE13F1D40
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 17:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240659AbhHSPqR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 11:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        id S238755AbhHSPtH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 11:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240703AbhHSPqM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 11:46:12 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7891C0617AD;
-        Thu, 19 Aug 2021 08:45:33 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id k8so9806509wrn.3;
-        Thu, 19 Aug 2021 08:45:33 -0700 (PDT)
+        with ESMTP id S235645AbhHSPtG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 11:49:06 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DCBC061575;
+        Thu, 19 Aug 2021 08:48:30 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id f15so6419479ilk.4;
+        Thu, 19 Aug 2021 08:48:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eQrASbfptxTsgIiNjID9TCI5OemXiRerL5FW550+aBQ=;
-        b=NCpLY4tOdyODXAAXLPv57+hr5XJs6BA9L214LOe+c2mh0wDY3kTSmtO/H25Ct/rfJZ
-         RiTC1I5SSgUZeinVXAIpwLqPBFSSbw2w89eq6dNIPXV6tPSOKrSBe1cuO/rbjWOU4f+i
-         CU4nlBktoV3RvXYvgC5TQy4Umrw5bt/so/ZO4Dh76Twzk/Lywr0misnxoM57Vi3xI0kV
-         Xs7r6RlqYTSFlE5g2uYBidnjxKByJfuyxPhKFbDGYPQyq8r0wFyDHASmStqo1+b5Hf2K
-         UH5wIS+nE/bg65/xc0B/W6T47MgIRGS3QmThpYJlFJ7gR2wscdBkX6ivLPwnW2DrKNR0
-         4eCQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1XLarHIwSltc8JzGiLc6RNqTtH7ZzdM7gO/rhwWjhvA=;
+        b=r/PFK0f5g1h3iNeVtG4snJF+KC48zZHcYCI84FO17uz8H20Aw09ixwoI/EYFXkj4ys
+         w0xkg72L8/LKn6+Hsn51N/mlAh58jLtOjsOMd+jK3YOuN4ykgEFQsK4L60oHtFvBo/l3
+         mnMPWgAbbgdzGPyVKC57FFMOnwbpN2Gm4F0usY3COQZzLu4l+2MbmyngWsm7NfkKaYtI
+         exHtanNjlEpg2ooe6vp6hJfmI90AwwXBdET443Kym3ELr/c0rDYj39+vuRGyrsQUUHwT
+         qq8RPsflRY6eQ96bv0Oqmyz8eukNlnV7xkKf8jjfJ5GOrzIXdIkbs0m8kYLWPd+gbrEi
+         mXyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eQrASbfptxTsgIiNjID9TCI5OemXiRerL5FW550+aBQ=;
-        b=oR0gV9pUiDI9o8y9yahI0ETmcwKNlNQ4n6jp5XErJr5MpGTcnc+2kmP3usTyhyU6iL
-         u5m/bV73/e3JymV027o+pkaBNHX8wxYCziadISTa/udOFU18PrGKnjjPELsopHmKCmsg
-         29KT1UF9JZNERXVg7q5WFNPQnVLBrwdcVhoJJbz9IJVYVxFarHiUHTnjCCXoBYrIPR9x
-         mKJ3dS9Vuza5bn0wkubQN7WtOs6SxvhY0dOXalHBW8TK4WUV91qCMvhxD16RJT2mKHYw
-         98cbYjEvxNB2F4saqIQdsDx00Z5C9bf/UllUwhcstQh+IJdPJ9vyX20Pc/PNkGg87tIK
-         mXnA==
-X-Gm-Message-State: AOAM532SE9HLiq7Ewt4qfAcJNrsVMrNI8gj4i8Oxj/xQk+UggmXeSH20
-        xqeR63AKRtH2F/DOHjgThIjwtzNP1MVN5Q==
-X-Google-Smtp-Source: ABdhPJxT9bhWLMaHuIQ1DKiSTj6CRoe+fwDKB54JJuAjl7hWeEfrA6jt4H2uuruVGWORO9WAnui/Dw==
-X-Received: by 2002:adf:ffd2:: with SMTP id x18mr4627498wrs.184.1629387932085;
-        Thu, 19 Aug 2021 08:45:32 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f08:4500:c830:756b:68fa:7529? (p200300ea8f084500c830756b68fa7529.dip0.t-ipconnect.de. [2003:ea:8f08:4500:c830:756b:68fa:7529])
-        by smtp.googlemail.com with ESMTPSA id f17sm3270085wrt.49.2021.08.19.08.45.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 08:45:31 -0700 (PDT)
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     nic_swsd@realtek.com, bhelgaas@google.com, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210819114223.GA3189268@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next v3 1/3] r8169: Implement dynamic ASPM mechanism
-Message-ID: <9ebf8fa1-cbd4-75d6-1099-1a45ca8b8bb0@gmail.com>
-Date:   Thu, 19 Aug 2021 17:45:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1XLarHIwSltc8JzGiLc6RNqTtH7ZzdM7gO/rhwWjhvA=;
+        b=gLNrQXw0nO6aBi2kHrE9DTdt6VIFxV8c4587ahvXEn0PtZFe+31B/3B1lFGb0e4knA
+         wWxn1+b7RlLpM4ZJKOzKy/1UMaUF7/gVa4Vg06gjJR5qeOIK9NtX0/MqYhARSfJpfli8
+         pBjDfTr9yeSaZXlO9t/CHvbwZ28SYqHNcWobzNwuPUPvpcY/sQF0baGh6kuzZZBxxHDV
+         ld+uxDqKPQsV8lmKdUKiFYTeo32si8yHD7XUSQT3siMlkpFQaqygg/Y5KPoye37kY5pw
+         Uc+2+c6LZjJlSyh7bsILjdFgRiDLD2kSJMFMABEcqoHD22WdAcJTwZ/Z722jpHziS+cJ
+         KoAQ==
+X-Gm-Message-State: AOAM5331CFHhRZUOu31ymImpHVyKCjQG/Si/W/QHul0SaHULWAOqWcWp
+        RAvrQKU1GVM3g1XJlgBTIEI=
+X-Google-Smtp-Source: ABdhPJxf1Iuq2VjFkgmnwcK558JcDv6YWHuAZODF3dmKo/CLmewJHtCzfHU4BDfB/JOzSkzE4daXSw==
+X-Received: by 2002:a92:ad12:: with SMTP id w18mr10056613ilh.3.1629388108869;
+        Thu, 19 Aug 2021 08:48:28 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id m184sm1815314ioa.17.2021.08.19.08.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 08:48:28 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 43C2C27C005C;
+        Thu, 19 Aug 2021 11:48:26 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 19 Aug 2021 11:48:27 -0400
+X-ME-Sender: <xms:SX0eYTirq5f75nNnCRU3WRmDHYuGaMeBKLdTfo0aMJJjtdpbaBY-Hg>
+    <xme:SX0eYQBTgn_ffv1v9jdb25N42MXLPF-mIRGUZfoL7UlbjS776Bd3Hh4IMwV_k4VYW
+    dKKro4teavQKXrfZQ>
+X-ME-Received: <xmr:SX0eYTGvb9xo5bewwvZbml7YSrwYvKh4AbgSTTp-eBdfUYgW93FofuRDDIrZ-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrleejgdeludcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeevieejtdfhieejfeduheehvdevgedugeethefggfdtvdeutdevgeetvddvfeeg
+    tdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
+    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:SX0eYQQKA3fTHPppQ7--x2LYJ6HpeeVgHti9qCVN6NAwl9Z2vtpIBw>
+    <xmx:SX0eYQygPldJyYRlS9d3Q5qgPBP_m0spmjLKEK9nZUMOBubifpMtpQ>
+    <xmx:SX0eYW6Ja90A7Bs5hNPqwyITWmobECVEvPQROa6Tsh4tBKo5zCGbHA>
+    <xmx:Sn0eYRrQeEEZ4PgP4UH8dcT0BFaORd2OpuFB3gm5ZRrAfei4qRcTbCuekvw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 19 Aug 2021 11:48:25 -0400 (EDT)
+Date:   Thu, 19 Aug 2021 23:47:52 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 0/8] PCI: hv: Support host bridge probing on ARM64
+Message-ID: <YR59KJ+SenbQ58cw@boqun-archlinux>
+References: <20210726180657.142727-1-boqun.feng@gmail.com>
+ <20210819141758.GA27305@lpieralisi>
 MIME-Version: 1.0
-In-Reply-To: <20210819114223.GA3189268@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210819141758.GA27305@lpieralisi>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19.08.2021 13:42, Bjorn Helgaas wrote:
-> On Thu, Aug 19, 2021 at 01:45:40PM +0800, Kai-Heng Feng wrote:
->> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
->> Same issue can be observed with older vendor drivers.
+On Thu, Aug 19, 2021 at 03:17:58PM +0100, Lorenzo Pieralisi wrote:
+> On Tue, Jul 27, 2021 at 02:06:49AM +0800, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the v6 for the preparation of virtual PCI support on Hyper-V
+> > ARM64, Previous versions:
+> > 
+> > v1:	https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+> > v2:	https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+> > v3:	https://lore.kernel.org/lkml/20210609163211.3467449-1-boqun.feng@gmail.com/
+> > v4:	https://lore.kernel.org/lkml/20210714102737.198432-1-boqun.feng@gmail.com/
+> > v5:	https://lore.kernel.org/lkml/20210720134429.511541-1-boqun.feng@gmail.com/
+> > 
+> > Changes since last version:
+> > 
+> > *	Rebase to 5.14-rc3
+> > 
+> > *	Comment fixes as suggested by Bjorn.
+> > 
+> > The basic problem we need to resolve is that ARM64 is an arch with
+> > PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
+> > Hyper-V PCI provides a paravirtualized PCI interface, so there is no
+> > actual pci_config_window for a PCI host bridge, so no information can be
+> > retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
+> > there is no corresponding ACPI device for the Hyper-V PCI root bridge,
+> > which introduces a special case when trying to find the ACPI device from
+> > the sysdata (see patch #3).
+> > 
+> > With this patchset, we could enable the virtual PCI on Hyper-V ARM64
+> > guest with other code under development.
+> > 
+> > Comments and suggestions are welcome.
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > Arnd Bergmann (1):
+> >   PCI: hv: Generify PCI probing
+> > 
+> > Boqun Feng (7):
+> >   PCI: Introduce domain_nr in pci_host_bridge
+> >   PCI: Support populating MSI domains of root buses via bridges
+> >   arm64: PCI: Restructure pcibios_root_bridge_prepare()
+> >   arm64: PCI: Support root bridge preparation for Hyper-V
+> >   PCI: hv: Set ->domain_nr of pci_host_bridge at probing time
+> >   PCI: hv: Set up MSI domain at bridge probing time
+> >   PCI: hv: Turn on the host bridge probing on ARM64
+> > 
+> >  arch/arm64/kernel/pci.c             | 29 +++++++---
+> >  drivers/pci/controller/pci-hyperv.c | 86 +++++++++++++++++------------
+> >  drivers/pci/probe.c                 | 12 +++-
+> >  include/linux/pci.h                 | 11 ++++
+> >  4 files changed, 93 insertions(+), 45 deletions(-)
 > 
-> On some platforms but not on others?  Maybe the PCIe topology is a
-> factor?  Do you have bug reports with data, e.g., "lspci -vv" output?
+> If we take this series via the PCI tree we'd need Catalin/Will ACKs on
+> patches 3-4.
 > 
->> The issue is however solved by the latest vendor driver. There's a new
->> mechanism, which disables r8169's internal ASPM when the NIC traffic has
->> more than 10 packets, and vice versa. 
-> 
-> Presumably there's a time interval related to the 10 packets?  For
-> example, do you want to disable ASPM if 10 packets are received (or
-> sent?) in a certain amount of time?
-> 
->> The possible reason for this is
->> likely because the buffer on the chip is too small for its ASPM exit
->> latency.
-> 
-> Maybe this means the chip advertises incorrect exit latencies?  If so,
-> maybe a quirk could override that?
-> 
->> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
->> use dynamic ASPM under Windows. So implement the same mechanism here to
->> resolve the issue.
-> 
-> What exactly is "dynamic ASPM"?
-> 
-> I see Heiner's comment about this being intended only for a downstream
-> kernel.  But why?
-> 
-We've seen various more or less obvious symptoms caused by the broken
-ASPM support on Realtek network chips. Unfortunately Realtek releases
-neither datasheets nor errata information.
-Last time we attempted to re-enable ASPM numerous problem reports came
-in. These Realtek chips are used on basically every consumer mainboard.
-The proposed workaround has potential side effects: In case of a
-congestion in the chip it may take up to a second until ASPM gets
-disabled, what may affect performance, especially in case of alternating
-traffic patterns. Also we can't expect support from Realtek.
-Having said that my decision was that it's too risky to re-enable ASPM
-in mainline even with this workaround in place. Kai-Heng weights the
-power saving higher and wants to take the risk in his downstream kernel.
-If there are no problems downstream after few months, then this
-workaround may make it to mainline.
 
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> v3:
->>  - Use msecs_to_jiffies() for delay time
->>  - Use atomic_t instead of mutex for bh
->>  - Mention the buffer size and ASPM exit latency in commit message
->>
->> v2: 
->>  - Use delayed_work instead of timer_list to avoid interrupt context
->>  - Use mutex to serialize packet counter read/write
->>  - Wording change
->>
->>  drivers/net/ethernet/realtek/r8169_main.c | 44 ++++++++++++++++++++++-
->>  1 file changed, 43 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
->> index 7a69b468584a2..3359509c1c351 100644
->> --- a/drivers/net/ethernet/realtek/r8169_main.c
->> +++ b/drivers/net/ethernet/realtek/r8169_main.c
->> @@ -624,6 +624,10 @@ struct rtl8169_private {
->>  
->>  	unsigned supports_gmii:1;
->>  	unsigned aspm_manageable:1;
->> +	unsigned rtl_aspm_enabled:1;
->> +	struct delayed_work aspm_toggle;
->> +	atomic_t aspm_packet_count;
->> +
->>  	dma_addr_t counters_phys_addr;
->>  	struct rtl8169_counters *counters;
->>  	struct rtl8169_tc_offsets tc_offset;
->> @@ -2665,8 +2669,13 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
->>  
->>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
->>  {
->> +	if (!tp->aspm_manageable && enable)
->> +		return;
->> +
->> +	tp->rtl_aspm_enabled = enable;
->> +
->>  	/* Don't enable ASPM in the chip if OS can't control ASPM */
->> -	if (enable && tp->aspm_manageable) {
->> +	if (enable) {
->>  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
->>  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
->>  	} else {
->> @@ -4415,6 +4424,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
->>  
->>  	dirty_tx = tp->dirty_tx;
->>  
->> +	atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
->>  	while (READ_ONCE(tp->cur_tx) != dirty_tx) {
->>  		unsigned int entry = dirty_tx % NUM_TX_DESC;
->>  		u32 status;
->> @@ -4559,6 +4569,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
->>  		rtl8169_mark_to_asic(desc);
->>  	}
->>  
->> +	atomic_add(count, &tp->aspm_packet_count);
->> +
->>  	return count;
->>  }
->>  
->> @@ -4666,8 +4678,32 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
->>  	return 0;
->>  }
->>  
->> +#define ASPM_PACKET_THRESHOLD 10
->> +#define ASPM_TOGGLE_INTERVAL 1000
->> +
->> +static void rtl8169_aspm_toggle(struct work_struct *work)
->> +{
->> +	struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
->> +						  aspm_toggle.work);
->> +	int packet_count;
->> +	bool enable;
->> +
->> +	packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
->> +	enable = packet_count <= ASPM_PACKET_THRESHOLD;
->> +
->> +	if (tp->rtl_aspm_enabled != enable) {
->> +		rtl_unlock_config_regs(tp);
->> +		rtl_hw_aspm_clkreq_enable(tp, enable);
->> +		rtl_lock_config_regs(tp);
->> +	}
->> +
->> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
->> +}
->> +
->>  static void rtl8169_down(struct rtl8169_private *tp)
->>  {
->> +	cancel_delayed_work_sync(&tp->aspm_toggle);
->> +
->>  	/* Clear all task flags */
->>  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
->>  
->> @@ -4694,6 +4730,8 @@ static void rtl8169_up(struct rtl8169_private *tp)
->>  	rtl_reset_work(tp);
->>  
->>  	phy_start(tp->phydev);
->> +
->> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
->>  }
->>  
->>  static int rtl8169_close(struct net_device *dev)
->> @@ -5354,6 +5392,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->>  
->>  	INIT_WORK(&tp->wk.work, rtl_task);
->>  
->> +	INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
->> +
->> +	atomic_set(&tp->aspm_packet_count, 0);
->> +
->>  	rtl_init_mac_address(tp);
->>  
->>  	dev->ethtool_ops = &rtl8169_ethtool_ops;
->> -- 
->> 2.32.0
->>
+Got it.
 
+> I need some time to look into [1] (thanks for that).
+> 
+> Without [1] patch 8 is ugly, that's no news. The question is whether
+> it is worth waiting for a kernel cycle to integrate [1] into this series
+> or not.
+> 
+> Is it really a problem if we postpone this series for another kernel
+> cycle so that we can look into it ?
+> 
+
+Well, it's definitely better for me that we can have it in 5.15-rc1 ;-),
+because it's a dependency for Hyper-V virtual PCI support on ARM64 and
+we plan to send the rest of work in 5.15 cycle. And I can just base on
+hyperv-next for the rest of the work if this is in 5.15-rc1. But yes,
+it's not really a problem, since this one still needs to work with other
+patches to support virtual PCI on ARM64 Hyper-V.
+
+In fact, I personally don't think [1] is better than patch 8 (plus patch
+3 & 4): playing with ->private seems dangerous and not very helpful on
+readiblity, but I agree that we should explore every potential solution,
+and that's why I send [1].
+
+Regards,
+Boqun
+
+> [1] https://lore.kernel.org/lkml/20210811153619.88922-1-boqun.feng@gmail.com/
