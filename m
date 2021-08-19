@@ -2,175 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 704EF3F212E
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 21:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC1C3F215E
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 22:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbhHST6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 15:58:20 -0400
-Received: from mail-dm6nam11on2085.outbound.protection.outlook.com ([40.107.223.85]:15178
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233995AbhHST6T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Aug 2021 15:58:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OKyzgdMzuPmcGOKipIGph2vKHxhRwOiXZWxDOIEFhxJKT6jXHhwOCY++z9HIx0O2F3gy/SDEfBvGtfneb6aJnZsYFRopMCxprWPw1/nGESrntXcONTm4MGQP9EYAoBMyem0oPalyErJ6fmL9S2gGuCpBKlT3yqrlH23LcWhu7QBgJHDETkl6ZzabTIdw+GsZtzn4xCO2Q0EoWl/LpJ6i6Ak95wRKIgQG+ga+RQp7akHbpsU7xOHgnvAapDz/1jGlorudxuJSDGB1jeqPO/YV41PVhiJTI6Z4fJv6PVclNP8rMdMDz/vKF+cyeXjsN0QnjSfZdNwe0rk3EtJT0hYTIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AGcv4PF/48/Hux1yYzJyaDdbFQHx+eBFulGw2SnXz88=;
- b=k6JzrFyXx9hz2Elqr5AjTwzz8CbSCExiBrHhN1l6g5NsI423DWJQRmtm53QrFVPiRfaSO7zE6umFJuaJ5dmicvuPUDhDIoC97Vm+0MnfeO3nCA1zweINbc1/0yFZXBBEv+FWyFhbz+zWW3eBnN0UeEQfwgdfJVouUy4x66h5CHGTIszysuwgrkoIpGuvxaJarap1UMBrIgZrSOVBS7JI1ml129yYalYbD1Y6sIA4ueHJkVZp6JrXXEuow58stzm9d5ye5T6HGzPxbDuvDbLrKizjHIXvv52KOJJMGfyMa5e/W4eMXj3LWKe3W3OLtnvIZsEl6cd143hxTKz+K0vYig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.36) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AGcv4PF/48/Hux1yYzJyaDdbFQHx+eBFulGw2SnXz88=;
- b=YfPwbM7pLTWDhJD2czOsVZOx0i1muKGOiZihqRfj8U4biXbDPv+lbWLlm4wnM7rQ+IGQMFOPojjIWA8O8p5ZzGEgBkN4qW13EULOWr9/yWL91WSr0umBMUqPJifP7VYsMWFeQTOUYK0XqSwZF7HakpwDaWP+j0EXvv926hdKfjBvkExsNVj2IY9oJIyQzGhek+wCJZRQOgRkIYtzzGn/jw1S+AxbaH1YglIXSgWbom4Xm8+Lr2geAi0MS4ErRon4a/PLBD6eBrdxgCh9n39tRIxhkfWth/DaIfPJmP7/UjgoleL2vulJL2du+0jnmCEmbbnSGGx/dxW3uqPCFzaEDw==
-Received: from DM5PR15CA0059.namprd15.prod.outlook.com (2603:10b6:3:ae::21) by
- DM5PR12MB1818.namprd12.prod.outlook.com (2603:10b6:3:114::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4415.19; Thu, 19 Aug 2021 19:57:40 +0000
-Received: from DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:ae:cafe::23) by DM5PR15CA0059.outlook.office365.com
- (2603:10b6:3:ae::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend
- Transport; Thu, 19 Aug 2021 19:57:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.36; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.36) by
- DM6NAM11FT016.mail.protection.outlook.com (10.13.173.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4436.19 via Frontend Transport; Thu, 19 Aug 2021 19:57:40 +0000
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 19 Aug
- 2021 19:57:38 +0000
-Received: from [172.27.0.75] (172.20.187.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 19 Aug
- 2021 19:57:34 +0000
-Subject: Re: [PATCH V2 09/12] PCI: Add 'override_only' bitmap to struct
- pci_device_id
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Yishai Hadas <yishaih@nvidia.com>
-CC:     <bhelgaas@google.com>, <corbet@lwn.net>,
-        <alex.williamson@redhat.com>, <diana.craciun@oss.nxp.com>,
-        <kwankhede@nvidia.com>, <eric.auger@redhat.com>,
-        <masahiroy@kernel.org>, <michal.lkml@markovi.net>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>, <jgg@nvidia.com>,
-        <maorg@nvidia.com>, <leonro@nvidia.com>
-References: <20210819163945.GA3211852@bjorn-Precision-5520>
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-Message-ID: <cd749d14-16ba-6442-0855-32c1bfac6e2d@nvidia.com>
-Date:   Thu, 19 Aug 2021 22:57:30 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S234849AbhHSULe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 16:11:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34146 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234511AbhHSULd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 16:11:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629403856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hUjdriWE/mhfhMVe0BuBsPE//HBSVrp7FmonS2UDWFE=;
+        b=fAjvY6G1GNoeNlKEv3lbFsH495o+5Ji8MZPE6Pe13pJqro3evmmPsUNiH3SXrOmYtjBKMp
+        iUxIhZzjZTVK/N4aR9Xq1prHy1BNKxm2cIOIlxdc5q8ZE+I9IqUXZFglue1ZZ9U4MofE2n
+        64mbtSIAef8j1zWiNnLf/0XDPj+hKPk=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-545-F-MOyigeMxSFPjvN8AdgJA-1; Thu, 19 Aug 2021 16:10:55 -0400
+X-MC-Unique: F-MOyigeMxSFPjvN8AdgJA-1
+Received: by mail-oo1-f70.google.com with SMTP id bc36-20020a05682016a400b0028c8e8a2746so776245oob.5
+        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 13:10:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hUjdriWE/mhfhMVe0BuBsPE//HBSVrp7FmonS2UDWFE=;
+        b=EFKiNewkF9or4HdXPvLQwer0IjFvOjOS0DaR0MHNKVS+ePmp7TMhLHzFhLDwVtmx03
+         4Szk+J/ruDi2NVnmXi0aYpPoCovBaljpR2+gqSpTmPHCz8X1HEqBgAHEe04U8Z7k1Gr5
+         8r7eBulZoNggwe77HhKx3hku5G/udyDQUwPYJ6JREX9empmqJjgcuH+UjmWv1627I7vO
+         2FyRiG1DrjnCRQBqNAci+EU91xHI9wxEMTixDh4p4ina5XPKzstAsFbZdCLgqjG614F7
+         u7hYcf+RqZS37+8c5DGgu426aIfbmNkcBRcy4MIJ303p9a3vG3DetDPbddNwL3TB+642
+         aD6w==
+X-Gm-Message-State: AOAM533dNOsLIMXWH1f49x/aN2M05bomj3zCfmOPlsIQ3HYLQlS51u7z
+        cXv4PUJ//bRYLcVm0ybZBxl6j/PnOkLxN06KG0b58P8Ee6WmyfDOhUx947z076PD7e7zwIMkaBQ
+        xNfCxLvyrAXWkEDLwQkwd
+X-Received: by 2002:aca:c614:: with SMTP id w20mr422930oif.18.1629403854961;
+        Thu, 19 Aug 2021 13:10:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYzfVMo89adB0Sr6k8XaEyMhANuwC29Sepd1aOJQdORyWUa8WnrbwQLI0ExdAAqE1tRww9bQ==
+X-Received: by 2002:aca:c614:: with SMTP id w20mr422909oif.18.1629403854733;
+        Thu, 19 Aug 2021 13:10:54 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id r1sm793429ooi.21.2021.08.19.13.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Aug 2021 13:10:54 -0700 (PDT)
+Date:   Thu, 19 Aug 2021 14:10:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ionel-Catalin Mititelu <ionel-catalin.mititelu@intel.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mei: improve Denverton HSM & IFSI support
+Message-ID: <20210819141053.17a8a540.alex.williamson@redhat.com>
+In-Reply-To: <20210819150703.GA3204796@bjorn-Precision-5520>
+References: <20210819145114.21074-1-lukas.bulwahn@gmail.com>
+        <20210819150703.GA3204796@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20210819163945.GA3211852@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5ac3aa0a-87d2-46fe-45ef-08d9634b99ce
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1818:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18186E41DD8C7D297B2E3943DEC09@DM5PR12MB1818.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0x/5UAfpCXV0ZPbd9xafMPswjLFlqAWpJrQyhlN2LmBL6HeA7Vrv9Oud3v+shADZs65XvNhVJEVqMD5HgHw+Fzem6AYmwQGDySnjiQ8J/FE3TkzSCaWCd7RUcioUy1tjnuEptuSxVg2jNaWPA0zg/l5A2XvMSSxHi+xa0NPgi/qZVNeGqN7JEcxnTFmQnZWHnfRxin8+brZiH6Ng00SD/AVMbO42kz727BeLUU5CfL8IAmt42WregHocqu6fG7m/aIWVgTLDz+ENrkHE4Ai/EK8nqznWvvwHAnVO2bcWvBBcVA00U9NPEtctx2z6cYmMnD5uLLX542A1XtO2igYuhN6VkX6FnwyLkF5j+1GKbNIpBUSrooOaPEvVfEGWNnQnFLCL9+eC0bruo4KFr9BWvs9zBUQJLe/S/rn9ofhdPGPpx5YgyCj8uYZJsDcvYMh1/fxfH0044X77b8/NZZJENEkVjwFX2pRV5VWcjs6Gbvbu7G3+HN9Wnk495C5xEb568/TZtyU6rH+PATbmU3sbUPz73lWlCScQBGaYMRqy1DZtG0CxWzZSclJteMNCJnRo4JVY60oYK/WbjHk1Mlio2O3e9A69rKrQrjk9rrgjcmBOcZOQDooRP7EAQSHLfqmyQDaTXPDThAxXN4zPwyoRkJdBm3HZBINpd+k8ZZhIi8cqJC1n1OMpwTR8Y1gIRnLFdtYCRM+Y8fAQrZ0nFUC5YrVSBLO2rUz0d0xXS1Mpe8Q=
-X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(46966006)(36840700001)(2616005)(426003)(16576012)(5660300002)(31696002)(16526019)(8936002)(53546011)(336012)(478600001)(86362001)(186003)(82310400003)(31686004)(110136005)(70586007)(356005)(2906002)(47076005)(7416002)(7636003)(4326008)(54906003)(8676002)(82740400003)(316002)(107886003)(6666004)(26005)(6636002)(36860700001)(70206006)(36756003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2021 19:57:40.2725
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ac3aa0a-87d2-46fe-45ef-08d9634b99ce
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1818
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, 19 Aug 2021 10:07:03 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On 8/19/2021 7:39 PM, Bjorn Helgaas wrote:
-> On Thu, Aug 19, 2021 at 07:16:20PM +0300, Yishai Hadas wrote:
->> On 8/19/2021 6:15 PM, Bjorn Helgaas wrote:
->>> On Wed, Aug 18, 2021 at 06:16:03PM +0300, Yishai Hadas wrote:
->>>> From: Max Gurtovoy <mgurtovoy@nvidia.com>
->>>>    /**
->>>>     * struct pci_device_id - PCI device ID structure
->>>>     * @vendor:		Vendor ID to match (or PCI_ANY_ID)
->>>> @@ -34,12 +38,14 @@ typedef unsigned long kernel_ulong_t;
->>>>     *			Best practice is to use driver_data as an index
->>>>     *			into a static list of equivalent device types,
->>>>     *			instead of using it as a pointer.
->>>> + * @override_only:	Bitmap for override_only PCI drivers.
->>> "Match only when dev->driver_override is this driver"?
->> Just to be aligned here,
->>
->> This field will stay __u32 and may hold at the most 1 bit value set to
->> represent the actual subsystem/driver.
-> The PCI core does not require "at most 1 bit is set."
->
-> Actually, I don't think even the file2alias code requires that.  If
-> you set two bits, you can generate two aliases.
->
->> This is required to later on set the correct prefix in the modules.alias
->> file, and you just suggested to change the comment as of above, right ?
-> Yes, __u32 is fine and I'm only suggesting a comment change here.
+> [+cc Alex]
+> 
+> On Thu, Aug 19, 2021 at 04:51:14PM +0200, Lukas Bulwahn wrote:
+> > The Intel Denverton chip provides HSM & IFSI. In order to access
+> > HSM & IFSI at the same time, provide two HECI hardware IDs for accessing.
+> > 
+> > Suggested-by: Ionel-Catalin Mititelu <ionel-catalin.mititelu@intel.com>
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > ---
+> > Tomas, please pick this quick helpful extension for the hardware.
+> > 
+> >  drivers/misc/mei/hw-me-regs.h | 3 ++-
+> >  drivers/misc/mei/pci-me.c     | 1 +
+> >  drivers/pci/quirks.c          | 3 +++
+> >  3 files changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+> > index cb34925e10f1..c1c41912bb72 100644
+> > --- a/drivers/misc/mei/hw-me-regs.h
+> > +++ b/drivers/misc/mei/hw-me-regs.h
+> > @@ -68,7 +68,8 @@
+> >  #define MEI_DEV_ID_BXT_M      0x1A9A  /* Broxton M */
+> >  #define MEI_DEV_ID_APL_I      0x5A9A  /* Apollo Lake I */
+> >  
+> > -#define MEI_DEV_ID_DNV_IE     0x19E5  /* Denverton IE */
+> > +#define MEI_DEV_ID_DNV_IE	0x19E5  /* Denverton for HECI1 - IFSI */
+> > +#define MEI_DEV_ID_DNV_IE_2	0x19E6  /* Denverton 2 for HECI2 - HSM */
+> >  
+> >  #define MEI_DEV_ID_GLK        0x319A  /* Gemini Lake */
+> >  
+> > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+> > index c3393b383e59..30827cd2a1c2 100644
+> > --- a/drivers/misc/mei/pci-me.c
+> > +++ b/drivers/misc/mei/pci-me.c
+> > @@ -77,6 +77,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
+> >  
+> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_DNV_IE, MEI_ME_PCH8_CFG)},
+> > +	{MEI_PCI_DEVICE(MEI_DEV_ID_DNV_IE_2, MEI_ME_PCH8_SPS_CFG)},
+> >  
+> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_GLK, MEI_ME_PCH8_CFG)},
+> >  
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 6899d6b198af..2ab767ef8469 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4842,6 +4842,9 @@ static const struct pci_dev_acs_enabled {
+> >  	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+> >  	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
+> >  	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+> > +	/* Denverton */
+> > +	{ PCI_VENDOR_ID_INTEL, 0x19e5, pci_quirk_mf_endpoint_acs },
+> > +	{ PCI_VENDOR_ID_INTEL, 0x19e6, pci_quirk_mf_endpoint_acs },  
+> 
+> This looks like it should be a separate patch with a commit log that
+> explains it.  For example, see these:
+> 
+>   db2f77e2bd99 ("PCI: Add ACS quirk for Broadcom BCM57414 NIC")
+>   3247bd10a450 ("PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints")
+>   299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
+>   0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
+>   76e67e9e0f0f ("PCI: Add ACS quirk for Amazon Annapurna Labs root ports")
+>   46b2c32df7a4 ("PCI: Add ACS quirk for iProc PAXB")
+>   01926f6b321b ("PCI: Add ACS quirk for HXT SD4800")
+> 
+> It should be acked by somebody at Intel since this quirk relies on
+> behavior of the device for VM security.
 
-great.
++1 Thanks Bjorn.  I got curious and AFAICT these functions are the
+interface for the host system to communicate with "Innovation Engine"
+processors within the SoC, which seem to be available for system
+builders to innovate and differentiate system firmware features.  I'm
+not sure then how we can assume a specific interface ("HSM" or "IFSI",
+whatever those are) for each function, nor of course how we can assume
+isolation between them.  Thanks,
 
+Alex
 
->
->>> As far as PCI core is concerned there's no need for this to be a
->>> bitmap.
->>>
->>> I think this would make more sense if split into two patches.  The
->>> first would add override_only and change pci_match_device().  Then
->>> there's no confusion about whether this is specific to VFIO.
->> Splitting may end-up the first patch with a dead-code on below, as
->> found_id->override_only will be always 0.
->>
->> If you still believe that this is better we can do it.
-> I think it's fine to add the functionality in one patch and use it in
-> the next if it makes the commit clearer.  I wouldn't want to add
-> functionality that's not used at all in the series, but it's OK when
-> they're both posted together.
-
-Ok. We can do the separation if all agree that the first commit is have 
-a dead section.
-
-Alex,
-
-we would like to get few more reviewed-by signatures and we'll send the 
-V3 series in a couple of days to make it to 5.15 merge window as we planned.
-
-Are you ok with the series after we got the green light for this patch ?
-
-do you think we need another pair of eyes to review the other patches ?
-
--Max.
-
->
->> if (found_id->override_only) {
->>      if (dev->driver_override)
->>        return found_id;
->>    } else
->>      return found_id;
->>
->>> The second can add PCI_ID_F_VFIO_DRIVER_OVERRIDE and make the
->>> file2alias.c changes.  Most of the commit log applies to this part.
