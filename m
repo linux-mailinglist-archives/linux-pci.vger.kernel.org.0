@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB4C3F1BEF
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 16:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1233F1C28
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 17:05:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240621AbhHSOv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 10:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48450 "EHLO
+        id S231826AbhHSPFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 11:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240633AbhHSOvz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 10:51:55 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF36EC061756;
-        Thu, 19 Aug 2021 07:51:18 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id f5so9481889wrm.13;
-        Thu, 19 Aug 2021 07:51:18 -0700 (PDT)
+        with ESMTP id S229612AbhHSPFj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 11:05:39 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD24C061575;
+        Thu, 19 Aug 2021 08:05:02 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id q11so9597242wrr.9;
+        Thu, 19 Aug 2021 08:05:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n01mXawYd9GTWQOxDU1mYfKl1cowyI/OnBiVepqTeqs=;
-        b=oPPbee0GqE4ewK/FAEWTkdj5TUSEICN8k101RajknLDdMv2CBPrqqSm3a+O2lk3dEo
-         VCcVFr5mI5R233Ruse6tIx8d/OVIQQyjywMUEwy4qN8JJXibvpi/M6A+tXgnZ8w9UVj+
-         HMr5zq+jBTtmdn+YjFdqYzT3lJw14hxmO7wu82fRWD6vx4mPHqvdsgrtY3jR3v8w8l7T
-         Sp3tuzVDOL5Pxk3AqAdY7IuphY4hzBZkH8/q7fZ4wZftAZZoYUnn5hu2YTtISmWmY/CS
-         UEu2D3+i+3bF+jHcKf2VDG0lsUku4UFyijD4JfAFclAVzh30YVSk3AlcXH60VQn2CLGT
-         m25g==
+        bh=KNs0XZsqcquyt15ij0j3IP+57uuSZytRU9SIhFpuBmM=;
+        b=UGNu2HwU59wSnOuHp67G1NVODqe3RooN/VXZzBGZzDl1cLYK1Ch2q2HeadXUz/YjLn
+         hF4XD+Pne3OL2s34pYMRQaN8qTfpTmYlxef3TseXCMEXTIlZED+W2TXYdSnK7UT+Rxq9
+         Kfspv950zUgmWQ/qWbxF1cg5HwFPB0EvpflTfOGW1maudY8Sf+hy/nKxJwj6H8n9G2/c
+         mEK3QtZbao1DFAqX3xMEwnQWvIm2fUNiuHs8ML5nbbZZdZJglVhDI8aLmtN75ZF+lm6Z
+         kVHJfr6tOP/DYJo2KzyuJzyo2pJkknvGjkTOaEj5Csy7+1NmZsPFjq8JwDff1JyBTPxO
+         c6Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n01mXawYd9GTWQOxDU1mYfKl1cowyI/OnBiVepqTeqs=;
-        b=bKDMdfaJnXd0xLR6oQMzSVs1EX09KTzFmNLPpluHn+Mcg5ZqFpuXn1h4nr1Ynn2zVW
-         5w5YF/owJSGb+TtjRmZGk4JamPs/CQkC7Okra9u3/qSnJnWLRMfHWsrQ4mvlvFDAl3BB
-         FtqlilP5MRQLufFV+UJdTU2/P61bTM0d5OqvKFPjEvqoPqufrfJ//s+w4uPP2ElO9t3B
-         sr31GoIzn+/wiIkK9a5zTr5aq7vuAe/lAlqUv3B6u1IMDhuJigeWTH8IXOCMNpl7mtNM
-         EkLKAX5FvLBZT5SLFeZV+/vLzAiVTzCAE8WhmwJ9BKroLXb7BjwlJKEvOy5unsM2yW0T
-         OJ1Q==
-X-Gm-Message-State: AOAM5338aVN+yWJqyz3RqyaihoahnK2Ap5d5s8b7+5rp/aV/CbmKD68d
-        4qeYq/s0iaN14ElbmxeIkyI=
-X-Google-Smtp-Source: ABdhPJzB7iw8BxrewWuO3O3F01Pq3pYPwGDE5tVt/ni0S9YkiGGiJoccvP1kM8YIO8+9sKVhcx02sA==
-X-Received: by 2002:a5d:4fc9:: with SMTP id h9mr4461685wrw.2.1629384677424;
-        Thu, 19 Aug 2021 07:51:17 -0700 (PDT)
+        bh=KNs0XZsqcquyt15ij0j3IP+57uuSZytRU9SIhFpuBmM=;
+        b=AnRrkzyzye6QhOl6zSBKP2H5PmLe1RHPXtpBemVOFGFTS8Onj10OpwLDIIPmSHlQcj
+         GYfeihQd3eV6YPnZ5q9BVmMNtBMbQO3RzdQqu+B1zsXBdEy74wz7XLTM2S60X5kCVjnl
+         QzXY1LBnxU3kv1HP5cs0n3ijH4o8xkTLmlFBn363mEmTqg6NY9f48P0jIVGC9NFM0tv2
+         M2iFfXE+6y3xUoY/d7m84Uxg77b1Sn4axfEsfGdD3PlvhG5XgDOI/Ca7VBD/uB6XlZuZ
+         c2QNd/QZYj/pNv/BlIn8e9bHz/LMVkITukP7V6T8TNPnNcr/OJ/ssLA7IkN48j4AxOah
+         NrWQ==
+X-Gm-Message-State: AOAM53079P6S3IZ+pp2WB/wLXdrAU8Ti5eyvncQkhnw5N+IYh/muupyd
+        IciuryHRUT2lhsAt60uCCOt/x2sKDhc=
+X-Google-Smtp-Source: ABdhPJxKSOc3ZQM5yn5QTGXL+01uzh0smupx/0lNuR2ntoSFnY73l4TL68PSCBcNcRlnfM1z6R0yXw==
+X-Received: by 2002:a5d:4490:: with SMTP id j16mr4358642wrq.272.1629385501287;
+        Thu, 19 Aug 2021 08:05:01 -0700 (PDT)
 Received: from localhost.localdomain (arl-84-90-178-246.netvisao.pt. [84.90.178.246])
-        by smtp.gmail.com with ESMTPSA id o14sm3150409wrw.17.2021.08.19.07.51.16
+        by smtp.gmail.com with ESMTPSA id z137sm8234022wmc.14.2021.08.19.08.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 07:51:16 -0700 (PDT)
+        Thu, 19 Aug 2021 08:05:00 -0700 (PDT)
 From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
 To:     Tomas Winkler <tomas.winkler@intel.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -55,9 +55,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Ionel-Catalin Mititelu <ionel-catalin.mititelu@intel.com>,
         Jiri Kosina <jikos@kernel.org>, linux-kernel@vger.kernel.org,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] mei: improve Denverton HSM & IFSI support
-Date:   Thu, 19 Aug 2021 16:51:14 +0200
-Message-Id: <20210819145114.21074-1-lukas.bulwahn@gmail.com>
+Subject: [PATCH v2] mei: improve Denverton HSM & IFSI support
+Date:   Thu, 19 Aug 2021 17:04:59 +0200
+Message-Id: <20210819150459.21545-1-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,7 +79,7 @@ Tomas, please pick this quick helpful extension for the hardware.
  3 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
-index cb34925e10f1..c1c41912bb72 100644
+index cb34925e10f1..a436cbde2dd2 100644
 --- a/drivers/misc/mei/hw-me-regs.h
 +++ b/drivers/misc/mei/hw-me-regs.h
 @@ -68,7 +68,8 @@
@@ -87,8 +87,8 @@ index cb34925e10f1..c1c41912bb72 100644
  #define MEI_DEV_ID_APL_I      0x5A9A  /* Apollo Lake I */
  
 -#define MEI_DEV_ID_DNV_IE     0x19E5  /* Denverton IE */
-+#define MEI_DEV_ID_DNV_IE	0x19E5  /* Denverton for HECI1 - IFSI */
-+#define MEI_DEV_ID_DNV_IE_2	0x19E6  /* Denverton 2 for HECI2 - HSM */
++#define MEI_DEV_ID_DNV_IE     0x19E5  /* Denverton for HECI1 - IFSI */
++#define MEI_DEV_ID_DNV_IE_2   0x19E6  /* Denverton 2 for HECI2 - HSM */
  
  #define MEI_DEV_ID_GLK        0x319A  /* Gemini Lake */
  
