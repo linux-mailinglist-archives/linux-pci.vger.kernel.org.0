@@ -2,99 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4B093F19F8
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 15:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DA3F3F1A20
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Aug 2021 15:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbhHSNHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Aug 2021 09:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231956AbhHSNHG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Aug 2021 09:07:06 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54904C061575
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 06:06:30 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id j187so5439381pfg.4
-        for <linux-pci@vger.kernel.org>; Thu, 19 Aug 2021 06:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZUuW6CkvogNC0GIMX+IQPONt7G2cLV90jQ7k/cU6WLo=;
-        b=tf/HLOQY/32g5RxLsMgCbrCbZDkzKVH4iF2ZSAmdbBGISvFXk9vHoSL1dg+SMbm6DU
-         K9N466tC0ovKSLD5KJUcWVpfkJLxtbwo+YRofnPuoJmXRYYMMsq4SBMaUltyo1CuQQpl
-         mcrDXXXbp4YABMQIGyEoWivERBzrMDTZ5BguFUgUz4HS/cbshGswy45BDPPCs22wDTLp
-         NsCMUe1NXh/npYtCMmJdNRs3xjVMx0yODbOwA7p7VMiIGhmJ+4ICdfqf8J4ZCsNTA7mB
-         Hdw7Cf8Gapq8zasc/36S79LXnK/9TgBtVg8TWswH4MbTMiobLZ3ed84BRCkOC3IaCbDu
-         nwHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZUuW6CkvogNC0GIMX+IQPONt7G2cLV90jQ7k/cU6WLo=;
-        b=kb+0yXeg68nB1C+g79Ok3dwnU11r5gRY1zs8tIFOSvVQQEH3F0hnZ5/YRBXx8zf1io
-         DPIWBvwWjJvKa2dVvryvXuxq2O/U9S6zQp1aBjUoO/DhiOGW35DFhznXlO5KrczPHh2U
-         6b7s/nOokZpePrn2dBEQBzAnMBB+v/NIbdGuRPMMQmiNFTt4OK5RIIBnH/ugWiyCslTN
-         xVg7uFP7amGlpaOhclo9mdQv2bAymmfD/QRSrXVJz03/CuO4dY/x+qPQkSVfAYwKFIK9
-         luGJB8Nxs6/kuLrh2lop+6ZUwXhUCtmqxRne8MuPG4nMeOUJaiWXJ5XRdGE+csY99dlD
-         Kxow==
-X-Gm-Message-State: AOAM5304FxpltvjCIVMtaZy8cIJAJcAn6sQMcDYqagLo036e1+Hu0nZf
-        o4q1cdXkRpOjUprnMiSg/Lb0
-X-Google-Smtp-Source: ABdhPJx0Esfl/ZnW3okg0FVANmoc2rkKbzXPAvQstEHgv6gVgEP8FpM2X783udwvgLVHUTym9ud0Uw==
-X-Received: by 2002:a63:510a:: with SMTP id f10mr14064796pgb.249.1629378389545;
-        Thu, 19 Aug 2021 06:06:29 -0700 (PDT)
-Received: from thinkpad ([2409:4072:6298:4497:5a1e:ff34:9091:5bac])
-        by smtp.gmail.com with ESMTPSA id oj2sm2944717pjb.33.2021.08.19.06.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 06:06:29 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 18:36:23 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        smohanad@codeaurora.org
-Subject: Re: [PATCH 0/5] PCI: endpoint: Add support for additional notifiers
-Message-ID: <20210819130623.GB200135@thinkpad>
-References: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+        id S238460AbhHSNPJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Aug 2021 09:15:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:38240 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231826AbhHSNPI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Aug 2021 09:15:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D490031B;
+        Thu, 19 Aug 2021 06:14:31 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.42.121])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1104C3F70D;
+        Thu, 19 Aug 2021 06:14:28 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-doc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Tom Joseph <tjoseph@cadence.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 0/8] Add SR-IOV support in PCIe Endpoint Core
+Date:   Thu, 19 Aug 2021 14:14:24 +0100
+Message-Id: <162937885162.23420.11118528020954705739.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20210819123343.1951-1-kishon@ti.com>
+References: <20210819123343.1951-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210616115913.138778-1-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 05:29:08PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
+On Thu, 19 Aug 2021 18:03:35 +0530, Kishon Vijay Abraham I wrote:
+> Patch series
+> *) Adds support to add virtual functions to enable endpoint controller
+>    which supports SR-IOV capability
+> *) Add support in Cadence endpoint driver to configure virtual functions
+> *) Enable pci_endpoint_test driver to create pci_device for virtual
+>    functions
 > 
-> This series adds support for additional notifiers in the PCI endpoint
-> framework. The notifiers LINK_DOWN, BME, PME, and D_STATE are generic
-> for all PCI endpoints but there is also a custom notifier (CUSTOM) added
-> to pass the device/vendor specific events to EPF from EPC.
-> 
-> The example usage of all notifiers is provided in the commit description.
-> 
+> [...]
 
-Ping on this series!
+Applied to pci/endpoint, thanks!
+
+[1/8] dt-bindings: PCI: pci-ep: Add binding to specify virtual function
+      https://git.kernel.org/lpieralisi/pci/c/f00bfc6489
+[2/8] PCI: endpoint: Add support to add virtual function in endpoint core
+      https://git.kernel.org/lpieralisi/pci/c/1cf362e907
+[3/8] PCI: endpoint: Add support to link a physical function to a virtual function
+      https://git.kernel.org/lpieralisi/pci/c/101600e790
+[4/8] PCI: endpoint: Add virtual function number in pci_epc ops
+      https://git.kernel.org/lpieralisi/pci/c/53fd3cbe5e
+[5/8] PCI: cadence: Simplify code to get register base address for configuring BAR
+      https://git.kernel.org/lpieralisi/pci/c/0cf985d611
+[6/8] PCI: cadence: Add support to configure virtual functions
+      https://git.kernel.org/lpieralisi/pci/c/e19a0adf6e
+[7/8] misc: pci_endpoint_test: Populate sriov_configure ops to configure SR-IOV device
+      https://git.kernel.org/lpieralisi/pci/c/489b1f41e5
+[8/8] Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
+      https://git.kernel.org/lpieralisi/pci/c/0c84f5bf3e
 
 Thanks,
-Mani
-
-> Thanks,
-> Mani
-> 
-> Manivannan Sadhasivam (5):
->   PCI: endpoint: Add linkdown notifier support
->   PCI: endpoint: Add BME notifier support
->   PCI: endpoint: Add PME notifier support
->   PCI: endpoint: Add D_STATE notifier support
->   PCI: endpoint: Add custom notifier support
-> 
->  drivers/pci/endpoint/pci-epc-core.c | 89 +++++++++++++++++++++++++++++
->  include/linux/pci-epc.h             |  5 ++
->  include/linux/pci-epf.h             |  5 ++
->  3 files changed, 99 insertions(+)
-> 
-> -- 
-> 2.25.1
-> 
+Lorenzo
