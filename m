@@ -2,145 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34B3D3F3601
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D5D3F3617
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232732AbhHTV3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 17:29:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231761AbhHTV3X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 17:29:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 85F0261102;
-        Fri, 20 Aug 2021 21:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629494924;
-        bh=R50voVYXZmpGD90W00TuPBOn2Mv0DYhdqgh/nkdHNUk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Lc/cMTjn35gKO8m8KW7IobhELi3FVTmfK/7QkZhKqQ5pEkUdW+cadazBQ/3x82jZw
-         xpkVF4OL2c4WFj1r+swvl/wpAknPqKk+EWvmCl5EApIq1ANx5qlk6HUHDCMZtMwykA
-         nkBqBBYRG4PIRGHoICbcJ+soPINTe/pytH91hvzg0a0PR/yTCKMPStp9UC+Olcdi0v
-         j87v+Vg7d8yfy6v2gqltuxdQ+sG/vtripHP1qoBfu9X2OL4evnv1TDvwiEdkNzuTat
-         IAs3IuacKCrmKi88z8vkpvJlIVdrCQ/Wf5mOwvCQ36f76HAHGOtmfHo5891dguBVUg
-         9SLKyDO27+pIA==
-Date:   Fri, 20 Aug 2021 16:28:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] PCI: Make saved capability state private to core
-Message-ID: <20210820212843.GA3361474@bjorn-Precision-5520>
+        id S240643AbhHTVhC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 17:37:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232732AbhHTVhB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Aug 2021 17:37:01 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34968C061575;
+        Fri, 20 Aug 2021 14:36:23 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id x12so16023329wrr.11;
+        Fri, 20 Aug 2021 14:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yZTuCM5rKLyLBbJAnIoNGoNdOlF/b6zSjjh4GCOGYPc=;
+        b=Mq7gzKlbqW16jIags1osZC/swn8LdN5G+3zaqbaeaL5CEewRuxYvgR51X48q8fIHsP
+         TEaTq1VWtGcDy2i/MR1N2twB78gH2HRdx22U6OkkC1desKXWprSt91LhnBnkISeyEZ4s
+         9B06Stgo+co3m1fAW1td0MNMgCGvOrpVyZcoZnZlQcG0ooPJCP/j3sztwS1kpAbQHdRH
+         LnQI5sCsVl8CMZO+d8TOFiOGTRYO0pc+jtDPHU93n6vmuheSQV/UTKOithhHIwaHm+KP
+         rnz5BP72c2kgQYv+s97yEDwBMVaXpf+KDSj5wiOzSm2BfHgTCKnuemRDBxCav/AV9kHN
+         Hm+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yZTuCM5rKLyLBbJAnIoNGoNdOlF/b6zSjjh4GCOGYPc=;
+        b=IZDFoTFpCFvaF9xNbb5g3mOnwZgwrdVzzg4ohT1ADUH52WZhPirURtWBKHRzKo492i
+         PkKKCIaRNEGuZm4f9Q2bND5uYtAi9aXLXwACSNXDQJCnpD1KdJL/1yBhABnjq41t4F/G
+         41+uXKq3QfdFINl4B7cG6n0IMuOYkjO7eiIiCE1dhRLr9hzEfw43YTqW5CgCC71GKc3G
+         vrWagmxP2V7lddhyHSqt5NN8ND1kt/oh75coI1RvAG7whNIBbA/kJc8G31zz2NUCdxiz
+         rp683/xAlDVmZhPnOw7HsxOczeyg8jZvDJdTMWQEerZYKOc8PndYJQrZV7KiCQOSEd42
+         jH9w==
+X-Gm-Message-State: AOAM533lQR5JoLZZaUK48a6S/r0RFNkONPfcR8e+jvaW8o9f9URwaqO9
+        j7NLvu+IAdxAO0g9RtIGJDU4aUJ2YRs5aw==
+X-Google-Smtp-Source: ABdhPJy8VWGBXt9UCrjKn7gprpLQiPe3YzVuPZ/0yYHlvv26i0LcShq9aDc5/kMmleq+YN59tvl3yA==
+X-Received: by 2002:a5d:4c4e:: with SMTP id n14mr824330wrt.226.1629495381518;
+        Fri, 20 Aug 2021 14:36:21 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f08:4500:5107:c891:e5ee:838c? (p200300ea8f0845005107c891e5ee838c.dip0.t-ipconnect.de. [2003:ea:8f08:4500:5107:c891:e5ee:838c])
+        by smtp.googlemail.com with ESMTPSA id r10sm8727751wrq.32.2021.08.20.14.36.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Aug 2021 14:36:21 -0700 (PDT)
+Subject: Re: [PATCH 0/8] PCI/VPD: Extend PCI VPD API
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Edward Cree <ecree.xilinx@gmail.com>,
+        Martin Habets <habetsm.xilinx@gmail.com>,
+        Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20210820205036.GA3356538@bjorn-Precision-5520>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <9c2e1cad-9c3e-634e-e9d7-2e08ec4825df@gmail.com>
+Date:   Fri, 20 Aug 2021 23:36:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210802221728.1469304-1-helgaas@kernel.org>
+In-Reply-To: <20210820205036.GA3356538@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 02, 2021 at 05:17:28PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On 20.08.2021 22:50, Bjorn Helgaas wrote:
+> On Wed, Aug 18, 2021 at 08:58:18PM +0200, Heiner Kallweit wrote:
+>> This series adds three functions to the PCI VPD API that help to
+>> simplify driver code. First users are sfc and tg3 drivers because
+>> I have test hw. The other users of the VPD API will benefit from a
+>> migration as well.
+>> I'd propose to apply this series via the PCI tree.
+>>
+>> Added API calls:
+>>
+>> pci_vpd_alloc()
+>> Dynamically allocates a properly sized buffer and reads the VPD into it.
+>>
+>> pci_vpd_find_ro_info_keyword()
+>> Locates an info field keyword in the VPD RO section.
+>> pci_vpd_find_info_keyword() can be removed once all
+>> users have been migrated.
+>>
+>> pci_vpd_check_csum()
+>> Check VPD checksum based on algorithm defined in the PCI specification.
+>>
+>> Tested on a SFN6122F and a BCM95719 card.
+>>
+>> Heiner Kallweit (8):
+>>   PCI/VPD: Add pci_vpd_alloc
+>>   PCI/VPD: Add pci_vpd_find_ro_info_keyword and pci_vpd_check_csum
+>>   PCI/VPD: Add missing VPD RO field keywords
+>>   sfc: Use new function pci_vpd_alloc
+>>   sfc: Use new VPD API function pci_vpd_find_ro_info_keyword
+>>   tg3: Use new function pci_vpd_alloc
+>>   tg3: Use new function pci_vpd_check_csum
+>>   tg3: Use new function pci_vpd_find_ro_info_keyword
+>>
+>>  drivers/net/ethernet/broadcom/tg3.c | 115 +++++++---------------------
+>>  drivers/net/ethernet/broadcom/tg3.h |   1 -
+>>  drivers/net/ethernet/sfc/efx.c      |  78 +++++--------------
+>>  drivers/pci/vpd.c                   |  82 ++++++++++++++++++++
+>>  include/linux/pci.h                 |  32 ++++++++
+>>  5 files changed, 163 insertions(+), 145 deletions(-)
 > 
-> Interfaces and structs for saving and restoring PCI Capability state were
-> declared in include/linux/pci.h, but aren't needed outside drivers/pci/.
+> Beautiful!  I applied this with minor tweaks to pci/vpd for v5.15.
 > 
-> Move these to drivers/pci/pci.h:
+> I dropped the "add missing keywords" patch because there are no users
+> of the missing keywords yet.
 > 
->   struct pci_cap_saved_data
->   struct pci_cap_saved_state
->   void pci_allocate_cap_save_buffers()
->   void pci_free_cap_save_buffers()
->   int pci_add_cap_save_buffer()
->   int pci_add_ext_cap_save_buffer()
->   struct pci_cap_saved_state *pci_find_saved_cap()
->   struct pci_cap_saved_state *pci_find_saved_ext_cap()
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Chelsio T4 driver is using this keyword. Then I'll add this keyword
+when migrating the driver.
 
-Applied with Alex's Reviewed-by to pci/misc for v5.15.
-
-> ---
->  drivers/pci/pci.h   | 23 +++++++++++++++++++++--
->  include/linux/pci.h | 18 ------------------
->  2 files changed, 21 insertions(+), 20 deletions(-)
+> I would have removed pci_vpd_find_info_keyword() as well, but it looks
+> like there are stilla few users of it.
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 93dcdd431072..288126062a38 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -37,6 +37,27 @@ int pci_probe_reset_function(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
->  
-> +struct pci_cap_saved_data {
-> +	u16		cap_nr;
-> +	bool		cap_extended;
-> +	unsigned int	size;
-> +	u32		data[];
-> +};
-> +
-> +struct pci_cap_saved_state {
-> +	struct hlist_node		next;
-> +	struct pci_cap_saved_data	cap;
-> +};
-> +
-> +void pci_allocate_cap_save_buffers(struct pci_dev *dev);
-> +void pci_free_cap_save_buffers(struct pci_dev *dev);
-> +int pci_add_cap_save_buffer(struct pci_dev *dev, char cap, unsigned int size);
-> +int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
-> +				u16 cap, unsigned int size);
-> +struct pci_cap_saved_state *pci_find_saved_cap(struct pci_dev *dev, char cap);
-> +struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
-> +						   u16 cap);
-> +
->  #define PCI_PM_D2_DELAY         200	/* usec; see PCIe r4.0, sec 5.9.1 */
->  #define PCI_PM_D3HOT_WAIT       10	/* msec */
->  #define PCI_PM_D3COLD_WAIT      100	/* msec */
-> @@ -100,8 +121,6 @@ void pci_pm_init(struct pci_dev *dev);
->  void pci_ea_init(struct pci_dev *dev);
->  void pci_msi_init(struct pci_dev *dev);
->  void pci_msix_init(struct pci_dev *dev);
-> -void pci_allocate_cap_save_buffers(struct pci_dev *dev);
-> -void pci_free_cap_save_buffers(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
->  void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 540b377ca8f6..fd35327812af 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -288,18 +288,6 @@ enum pci_bus_speed {
->  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
->  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
->  
-> -struct pci_cap_saved_data {
-> -	u16		cap_nr;
-> -	bool		cap_extended;
-> -	unsigned int	size;
-> -	u32		data[];
-> -};
-> -
-> -struct pci_cap_saved_state {
-> -	struct hlist_node		next;
-> -	struct pci_cap_saved_data	cap;
-> -};
-> -
->  struct irq_affinity;
->  struct pcie_link_state;
->  struct pci_vpd;
-> @@ -1278,12 +1266,6 @@ int pci_load_saved_state(struct pci_dev *dev,
->  			 struct pci_saved_state *state);
->  int pci_load_and_free_saved_state(struct pci_dev *dev,
->  				  struct pci_saved_state **state);
-> -struct pci_cap_saved_state *pci_find_saved_cap(struct pci_dev *dev, char cap);
-> -struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
-> -						   u16 cap);
-> -int pci_add_cap_save_buffer(struct pci_dev *dev, char cap, unsigned int size);
-> -int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
-> -				u16 cap, unsigned int size);
->  int pci_platform_power_transition(struct pci_dev *dev, pci_power_t state);
->  int pci_set_power_state(struct pci_dev *dev, pci_power_t state);
->  pci_power_t pci_choose_state(struct pci_dev *dev, pm_message_t state);
-> -- 
-> 2.25.1
-> 
+Right, there are few more users. In this initial series I only changed
+users for which I have test hw.
