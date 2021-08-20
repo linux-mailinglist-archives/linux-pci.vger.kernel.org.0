@@ -2,96 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 032F93F2E5E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 16:47:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0543F2E76
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 17:01:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240894AbhHTOsQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 10:48:16 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:58472 "EHLO lizzard.sbs.de"
+        id S238570AbhHTPCH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 11:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240935AbhHTOsQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 10:48:16 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 17KElYgX006287
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Aug 2021 16:47:34 +0200
-Received: from [167.87.0.29] ([167.87.0.29])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 17KElX7I007803;
-        Fri, 20 Aug 2021 16:47:33 +0200
-Subject: Re: [PATCH] PCI/portdrv: Do not setup up IRQs if there are no users
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <43e1591d-51ed-39fa-3bc5-c11777f27b62@siemens.com>
- <20210820144532.GA25391@wunner.de>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <53a826fb-ece9-450d-e5fc-f145c2513688@siemens.com>
-Date:   Fri, 20 Aug 2021 16:47:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S235928AbhHTPCH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 11:02:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 926D460FE8;
+        Fri, 20 Aug 2021 15:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629471689;
+        bh=f4KQzaUDiLC6t79TdNH0xw/1Soy+9qM8gjQLjwed8kk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=aGBo/jkqrs/vaOFJB/a5zGqSBMPo/JruDhJOHUnIMNwt7ZH4BBQzkt9CbHIC2thd6
+         ABvkIru9/kCZo3wg/TmhYY35r/Bq8jawBoBFjjN7Ck7OOvU7rJURxZ4ykwnPvZoCE1
+         56F3Ei7wf3DnDN69Z2k0tB/YwZTr/6QRcF229xDj3GJiLiFrv1DQ7SL6yFNq+xQTsw
+         zaFuh/hA/Tof5Kd2boG9RYS+I5RchiYpj55UJ/bjWDRZ/7UtVYj2xj4Nie6GhK/yhs
+         8bLq9AhEUG0G9OHv2N0hTKpAJeX0m2XJFcsylIbhEDDvuhyDV7Xp0fYVclFVy/sFeD
+         Z1AaUqsqUKnmw==
+Date:   Fri, 20 Aug 2021 10:01:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rahul Tanwar <rtanwar@maxlinear.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Marcin Bachry <hegel666@gmail.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Greg KH <greg@kroah.com>
+Subject: [GIT PULL] PCI fixes for v5.14
+Message-ID: <20210820150128.GA3317758@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210820144532.GA25391@wunner.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20.08.21 16:45, Lukas Wunner wrote:
-> On Fri, Aug 20, 2021 at 03:52:18PM +0200, Jan Kiszka wrote:
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -312,7 +312,7 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
->>   */
->>  int pcie_port_device_register(struct pci_dev *dev)
->>  {
->> -	int status, capabilities, i, nr_service;
->> +	int status, capabilities, irq_services, i, nr_service;
->>  	int irqs[PCIE_PORT_DEVICE_MAXSERVICES];
->>  
->>  	/* Enable PCI Express port device */
->> @@ -326,18 +326,32 @@ int pcie_port_device_register(struct pci_dev *dev)
->>  		return 0;
->>  
->>  	pci_set_master(dev);
->> -	/*
->> -	 * Initialize service irqs. Don't use service devices that
->> -	 * require interrupts if there is no way to generate them.
->> -	 * However, some drivers may have a polling mode (e.g. pciehp_poll_mode)
->> -	 * that can be used in the absence of irqs.  Allow them to determine
->> -	 * if that is to be used.
->> -	 */
->> -	status = pcie_init_service_irqs(dev, irqs, capabilities);
->> -	if (status) {
->> -		capabilities &= PCIE_PORT_SERVICE_HP;
->> -		if (!capabilities)
->> -			goto error_disable;
->> +
->> +	irq_services = 0;
->> +	if (IS_ENABLED(CONFIG_PCIE_PME))
->> +		irq_services |= PCIE_PORT_SERVICE_PME;
->> +	if (IS_ENABLED(CONFIG_PCIEAER))
->> +		irq_services |= PCIE_PORT_SERVICE_AER;
->> +	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
->> +		irq_services |= PCIE_PORT_SERVICE_HP;
->> +	if (IS_ENABLED(CONFIG_PCIE_DPC))
->> +		irq_services |= PCIE_PORT_SERVICE_DPC;
->> +	irq_services &= capabilities;
-> 
-> get_port_device_capability() would seem like a more natural place
-> to put these checks.
-> 
-> Note that your check for CONFIG_PCIEAER is superfluous due to
-> the "#ifdef CONFIG_PCIEAER" in get_port_device_capability().
-> 
+The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
 
-Not all service drivers need IRQs. That's why the test is separate. See
-also the comment I shuffled around.
+  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
 
-Jan
+are available in the Git repository at:
 
--- 
-Siemens AG, T RDA IOT
-Corporate Competence Center Embedded Linux
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.14-fixes-2
+
+for you to fetch changes up to 045a9277b5615846c7b662ffaba84e781f08a172:
+
+  PCI/sysfs: Use correct variable for the legacy_mem sysfs object (2021-08-19 10:21:53 -0500)
+
+
+N.B. The sysfs fix will cause a trivial conflict when Greg's
+driver-core tree is merged during the v5.15 merge window.
+
+----------------------------------------------------------------
+PCI fixes:
+
+  - Add Rahul Tanwar as Intel LGM Gateway PCIe maintainer (Rahul Tanwar)
+
+  - Add Jim Quinlan et al as Broadcom STB PCIe maintainers (Jim Quinlan)
+
+  - Increase D3hot-to-D0 delay for AMD Renoir/Cezanne XHCI (Marcin Bachry)
+
+  - Correct iomem_get_mapping() usage for legacy_mem sysfs (Krzysztof
+    Wilczyński)
+
+----------------------------------------------------------------
+Jim Quinlan (1):
+      MAINTAINERS: Add Jim Quinlan et al as Broadcom STB PCIe maintainers
+
+Krzysztof Wilczyński (1):
+      PCI/sysfs: Use correct variable for the legacy_mem sysfs object
+
+Marcin Bachry (1):
+      PCI: Increase D3 delay for AMD Renoir/Cezanne XHCI
+
+Rahul Tanwar (1):
+      MAINTAINERS: Add Rahul Tanwar as Intel LGM Gateway PCIe maintainer
+
+ MAINTAINERS             | 17 +++++++++++++++++
+ drivers/pci/pci-sysfs.c |  2 +-
+ drivers/pci/quirks.c    |  1 +
+ 3 files changed, 19 insertions(+), 1 deletion(-)
