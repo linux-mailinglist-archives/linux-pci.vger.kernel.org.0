@@ -2,111 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED3073F2D9E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 16:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADF723F2DE5
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 16:21:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235032AbhHTODo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 10:03:44 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:58102 "EHLO lizzard.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234189AbhHTODo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 10:03:44 -0400
-X-Greylist: delayed 641 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Aug 2021 10:03:43 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 17KDqIjq007098
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Aug 2021 15:52:19 +0200
-Received: from [167.87.0.29] ([167.87.0.29])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 17KDqItv026769;
-        Fri, 20 Aug 2021 15:52:18 +0200
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH] PCI/portdrv: Do not setup up IRQs if there are no users
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <43e1591d-51ed-39fa-3bc5-c11777f27b62@siemens.com>
-Date:   Fri, 20 Aug 2021 15:52:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S240758AbhHTOWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 10:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237597AbhHTOWQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Aug 2021 10:22:16 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2B9C061575;
+        Fri, 20 Aug 2021 07:21:38 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4GrkMy5GVjzQk1w;
+        Fri, 20 Aug 2021 16:21:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id oQdTRAHGdyxc; Fri, 20 Aug 2021 16:21:30 +0200 (CEST)
+From:   =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH v3 0/2] mwifiex: Add quirks for MS Surface devices
+Date:   Fri, 20 Aug 2021 16:20:48 +0200
+Message-Id: <20210820142050.35741-1-verdre@v0yd.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BF4421887
+X-Rspamd-UID: 39dc6b
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+Third revision of this patch, here's version 1 and 2:
+version 1: https://lore.kernel.org/linux-wireless/20210522131827.67551-1-verdre@v0yd.nl/
+version 2: https://lore.kernel.org/linux-wireless/20210709145831.6123-1-verdre@v0yd.nl/
 
-Avoid registering service IRQs if there is no service that offers them
-or no driver to register a handler against them. This saves IRQ vectors
-when they are limited (e.g. on x86) and also avoids that spurious events
-could hit a missing handler. Such spurious events need to be generated
-by the Jailhouse hypervisor for active MSI vectors when enabling or
-disabling itself.
+Changes between v2 and v3:
+ - Removed a small comment about the choice of dev_dbg() over mwifiex_dbg()
+ - Switched to same licence boilerplate for pcie_quirks.* as the rest of mwifiex
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
----
- drivers/pci/pcie/portdrv_core.c | 40 ++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+Jonas Dreßler (1):
+  mwifiex: pcie: add DMI-based quirk implementation for Surface devices
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index e1fed6649c41..2a702ccffaac 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -312,7 +312,7 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
-  */
- int pcie_port_device_register(struct pci_dev *dev)
- {
--	int status, capabilities, i, nr_service;
-+	int status, capabilities, irq_services, i, nr_service;
- 	int irqs[PCIE_PORT_DEVICE_MAXSERVICES];
- 
- 	/* Enable PCI Express port device */
-@@ -326,18 +326,32 @@ int pcie_port_device_register(struct pci_dev *dev)
- 		return 0;
- 
- 	pci_set_master(dev);
--	/*
--	 * Initialize service irqs. Don't use service devices that
--	 * require interrupts if there is no way to generate them.
--	 * However, some drivers may have a polling mode (e.g. pciehp_poll_mode)
--	 * that can be used in the absence of irqs.  Allow them to determine
--	 * if that is to be used.
--	 */
--	status = pcie_init_service_irqs(dev, irqs, capabilities);
--	if (status) {
--		capabilities &= PCIE_PORT_SERVICE_HP;
--		if (!capabilities)
--			goto error_disable;
-+
-+	irq_services = 0;
-+	if (IS_ENABLED(CONFIG_PCIE_PME))
-+		irq_services |= PCIE_PORT_SERVICE_PME;
-+	if (IS_ENABLED(CONFIG_PCIEAER))
-+		irq_services |= PCIE_PORT_SERVICE_AER;
-+	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-+		irq_services |= PCIE_PORT_SERVICE_HP;
-+	if (IS_ENABLED(CONFIG_PCIE_DPC))
-+		irq_services |= PCIE_PORT_SERVICE_DPC;
-+	irq_services &= capabilities;
-+
-+	if (irq_services) {
-+		/*
-+		 * Initialize service irqs. Don't use service devices that
-+		 * require interrupts if there is no way to generate them.
-+		 * However, some drivers may have a polling mode (e.g.
-+		 * pciehp_poll_mode) that can be used in the absence of irqs.
-+		 * Allow them to determine if that is to be used.
-+		 */
-+		status = pcie_init_service_irqs(dev, irqs, irq_services);
-+		if (status) {
-+			irq_services &= PCIE_PORT_SERVICE_HP;
-+			if (!irq_services)
-+				goto error_disable;
-+		}
- 	}
- 
- 	/* Allocate child services if any */
+Tsuchiya Yuto (1):
+  mwifiex: pcie: add reset_d3cold quirk for Surface gen4+ devices
+
+ drivers/net/wireless/marvell/mwifiex/Makefile |   1 +
+ drivers/net/wireless/marvell/mwifiex/pcie.c   |  11 ++
+ drivers/net/wireless/marvell/mwifiex/pcie.h   |   1 +
+ .../wireless/marvell/mwifiex/pcie_quirks.c    | 161 ++++++++++++++++++
+ .../wireless/marvell/mwifiex/pcie_quirks.h    |  23 +++
+ 5 files changed, 197 insertions(+)
+ create mode 100644 drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+ create mode 100644 drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+
 -- 
 2.31.1
+
