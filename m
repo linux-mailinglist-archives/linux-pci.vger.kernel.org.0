@@ -2,92 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 202D03F35BF
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 22:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DD733F35D8
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:03:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241098AbhHTUvW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 16:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
+        id S240403AbhHTVDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 17:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240757AbhHTUvQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 16:51:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 680FC61042;
-        Fri, 20 Aug 2021 20:50:37 +0000 (UTC)
+        id S231171AbhHTVDt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 17:03:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ABC6C6103B;
+        Fri, 20 Aug 2021 21:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629492637;
-        bh=acvlAl1v8mDBpIowhQ0R4QANTyQZQe+E9DeC7pzeHUE=;
+        s=k20201202; t=1629493391;
+        bh=VwThOwWPE5ah7M2RNMlkuI70PYe8BX7MFqiL2p7+V4c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DlPpoQHveSVwPrgdIr3CweEzfkbgiZOqF5IZ1DWGjJVqdR2oZR1yJkdAEppQHgJHU
-         K29L8w13nF/v07E5jXxmh61vLD5nkRAXdZww8lwKdSSswNpcA145YM2cxWYozUgHM+
-         r853p9BM2Ag8l5uJ+8krgxlvHFctgr4fyg0UFUnFSomj4JvqufFcPol+ZqGn3yAKAr
-         /nN1ntrknXUCrQ6RE1gNruxjLN8urENGUyJaz00/zPr1X6zaVK3I0dUpkHFNhxGBtp
-         mUzLSG8Mn2jowT10584SxwI/EFWk+MmomHzzrWAD7OcwxuweQNzXkBSUX64pEW64P+
-         FWQwquEOAwbCQ==
-Date:   Fri, 20 Aug 2021 15:50:36 -0500
+        b=IL7alGUYy94QHWEfVdL9LwHa/8uQQOAUeDkP6l+STRyktqrTuM6aZwmW6ZT/vWyg2
+         71QbZqQwn/nCJhn8SV4O5+S51qNU3vaHIs+Nb0Wu3n5+T8ZZ0MHVVegsFdTvtPR4V9
+         r7UyhWKwJjVpv03y2qiGddGRDbA0BDinKfcCpFfBu8zbo5sMrAP+bgzcmQKH1FgbQK
+         fv+J8NV0xxIPgA4WMPEft8LPhib8t0obfWAdNT4m4/wHYlEUE+7hoA1s9FKbx6w18R
+         nyvYuRVjp198nEV/a1lwAZjAkLNuqk61A4I7vGbeaQSDt2JRqhPmk/mZdBhS8ooMdg
+         C/z/pFEAatw2A==
+Date:   Fri, 20 Aug 2021 16:03:09 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Edward Cree <ecree.xilinx@gmail.com>,
-        Martin Habets <habetsm.xilinx@gmail.com>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 0/8] PCI/VPD: Extend PCI VPD API
-Message-ID: <20210820205036.GA3356538@bjorn-Precision-5520>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, nic_swsd@realtek.com,
+        bhelgaas@google.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/3] r8169: Implement dynamic ASPM mechanism
+Message-ID: <20210820210309.GA3357515@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f693b1ae-447c-0eb1-7a9a-d1aaf9a26641@gmail.com>
+In-Reply-To: <9ebf8fa1-cbd4-75d6-1099-1a45ca8b8bb0@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 08:58:18PM +0200, Heiner Kallweit wrote:
-> This series adds three functions to the PCI VPD API that help to
-> simplify driver code. First users are sfc and tg3 drivers because
-> I have test hw. The other users of the VPD API will benefit from a
-> migration as well.
-> I'd propose to apply this series via the PCI tree.
-> 
-> Added API calls:
-> 
-> pci_vpd_alloc()
-> Dynamically allocates a properly sized buffer and reads the VPD into it.
-> 
-> pci_vpd_find_ro_info_keyword()
-> Locates an info field keyword in the VPD RO section.
-> pci_vpd_find_info_keyword() can be removed once all
-> users have been migrated.
-> 
-> pci_vpd_check_csum()
-> Check VPD checksum based on algorithm defined in the PCI specification.
-> 
-> Tested on a SFN6122F and a BCM95719 card.
-> 
-> Heiner Kallweit (8):
->   PCI/VPD: Add pci_vpd_alloc
->   PCI/VPD: Add pci_vpd_find_ro_info_keyword and pci_vpd_check_csum
->   PCI/VPD: Add missing VPD RO field keywords
->   sfc: Use new function pci_vpd_alloc
->   sfc: Use new VPD API function pci_vpd_find_ro_info_keyword
->   tg3: Use new function pci_vpd_alloc
->   tg3: Use new function pci_vpd_check_csum
->   tg3: Use new function pci_vpd_find_ro_info_keyword
-> 
->  drivers/net/ethernet/broadcom/tg3.c | 115 +++++++---------------------
->  drivers/net/ethernet/broadcom/tg3.h |   1 -
->  drivers/net/ethernet/sfc/efx.c      |  78 +++++--------------
->  drivers/pci/vpd.c                   |  82 ++++++++++++++++++++
->  include/linux/pci.h                 |  32 ++++++++
->  5 files changed, 163 insertions(+), 145 deletions(-)
+On Thu, Aug 19, 2021 at 05:45:22PM +0200, Heiner Kallweit wrote:
+> On 19.08.2021 13:42, Bjorn Helgaas wrote:
+> > On Thu, Aug 19, 2021 at 01:45:40PM +0800, Kai-Heng Feng wrote:
+> >> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
+> >> Same issue can be observed with older vendor drivers.
+> > 
+> > On some platforms but not on others?  Maybe the PCIe topology is a
+> > factor?  Do you have bug reports with data, e.g., "lspci -vv" output?
+> > 
+> >> The issue is however solved by the latest vendor driver. There's a new
+> >> mechanism, which disables r8169's internal ASPM when the NIC traffic has
+> >> more than 10 packets, and vice versa. 
+> > 
+> > Presumably there's a time interval related to the 10 packets?  For
+> > example, do you want to disable ASPM if 10 packets are received (or
+> > sent?) in a certain amount of time?
+> > 
+> >> The possible reason for this is
+> >> likely because the buffer on the chip is too small for its ASPM exit
+> >> latency.
+> > 
+> > Maybe this means the chip advertises incorrect exit latencies?  If so,
+> > maybe a quirk could override that?
+> > 
+> >> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
+> >> use dynamic ASPM under Windows. So implement the same mechanism here to
+> >> resolve the issue.
+> > 
+> > What exactly is "dynamic ASPM"?
+> > 
+> > I see Heiner's comment about this being intended only for a downstream
+> > kernel.  But why?
+> > 
+> We've seen various more or less obvious symptoms caused by the broken
+> ASPM support on Realtek network chips. Unfortunately Realtek releases
+> neither datasheets nor errata information.
+> Last time we attempted to re-enable ASPM numerous problem reports came
+> in. These Realtek chips are used on basically every consumer mainboard.
+> The proposed workaround has potential side effects: In case of a
+> congestion in the chip it may take up to a second until ASPM gets
+> disabled, what may affect performance, especially in case of alternating
+> traffic patterns. Also we can't expect support from Realtek.
+> Having said that my decision was that it's too risky to re-enable ASPM
+> in mainline even with this workaround in place. Kai-Heng weights the
+> power saving higher and wants to take the risk in his downstream kernel.
+> If there are no problems downstream after few months, then this
+> workaround may make it to mainline.
 
-Beautiful!  I applied this with minor tweaks to pci/vpd for v5.15.
+Since ASPM apparently works well on some platforms but not others, I'd
+suspect some incorrect exit latencies.
 
-I dropped the "add missing keywords" patch because there are no users
-of the missing keywords yet.
+Ideally we'd have some launchpad/bugzilla links, and a better
+understanding of the problem, and maybe a quirk that makes this work
+on all platforms without mucking up the driver with ASPM tweaks.
 
-I would have removed pci_vpd_find_info_keyword() as well, but it looks
-like there are stilla few users of it.
+But I'm a little out of turn here because the only direct impact to
+the PCI core is the pcie_aspm_supported() interface.  It *looks* like
+these patches don't actually touch the PCIe architected ASPM controls
+in Link Control; all I see is mucking with Realtek-specific registers.
+
+I think this is more work than it should be and likely to be not as
+reliable as it should be.  But I guess that's up to you guys.
+
+Bjorn
