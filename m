@@ -2,71 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7D53F35DF
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D73F3F35E6
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbhHTVH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 17:07:28 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29559 "EHLO mga14.intel.com"
+        id S240060AbhHTVLI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 17:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230175AbhHTVH2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 17:07:28 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10082"; a="216569438"
-X-IronPort-AV: E=Sophos;i="5.84,338,1620716400"; 
-   d="scan'208";a="216569438"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 14:06:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,338,1620716400"; 
-   d="scan'208";a="680433247"
-Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2021 14:06:47 -0700
-Received: from kbuild by d053b881505b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mHBiw-000VCF-9U; Fri, 20 Aug 2021 21:06:46 +0000
-Date:   Sat, 21 Aug 2021 05:06:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Jonathan Derrick <jonathan.derrick@intel.com>
-Cc:     kbuild-all@lists.01.org, Wendy Wang <wendy.wang@intel.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Box <david.e.box@linux.intel.com>
-Subject: [RFC PATCH] PCI: VMD: ACPI: pci_acpi_companion_lookup_key can be
- static
-Message-ID: <20210820210610.GA23698@ef1ee8e5bb1c>
-References: <11834551.O9o76ZdvQC@kreacher>
+        id S239997AbhHTVLI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 17:11:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0FFD6610CC;
+        Fri, 20 Aug 2021 21:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629493830;
+        bh=+hXcMODXmnsZlbnLMh0KDBhttdVnm9VF04ICSlE6y/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Wc3lbFqBp/ga2gYVJUcvVnKaIVTy9wuWBTSPu0ly+aE+kXI66EQsxUIRrrZnJDBQ1
+         /H8LYcYu4veYC2ftqRF8jrAOrIVH1ULlcDEIjkEdv2lbrkCF+j1yUnmEBJqt1krx+X
+         t1iK+nbJGIou5bOa+2aUpiC+OPGNz77+WcEbvlL0tyhZjjpM/YxiZIWvctg/O9Ay1m
+         KY+HXJo3Dx77TSws1l3ZgsoggOsG2ompVf3b1E1HMvtD6dd5TP2nD1kFfIvbujTFMy
+         t65mVWIbcN0N2C2fRg6Qc1vOJdG9mQ/mUjua0WJ1iyJRG/E1SiXMBJ+1uzZc6x1GEn
+         cSBwXo38+yZTA==
+Date:   Fri, 20 Aug 2021 16:10:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     bhelgaas@google.com, david.e.box@linux.intel.com,
+        linux-pci@vger.kernel.org, rafael.j.wysocki@intel.com
+Subject: Re: [PATCH] pci: ptm: remove error message at boot
+Message-ID: <20210820211028.GA3358973@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11834551.O9o76ZdvQC@kreacher>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210811185955.3112534-1-kuba@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-drivers/pci/pci-acpi.c:1164:1: warning: symbol 'pci_acpi_companion_lookup_key' was not declared. Should it be static?
+On Wed, Aug 11, 2021 at 11:59:55AM -0700, Jakub Kicinski wrote:
+> Since commit 39850ed51062 ("PCI/PTM: Save/restore Precision
+> Time Measurement Capability for suspend/resume") devices
+> which have PTM capability but don't enable it see this
+> message on calls to pci_save_state():
+> 
+>   "no suspend buffer for PTM"
+> 
+> Drop the message, it's perfectly fine not to use a capability.
+> 
+> Fixes: 39850ed51062 ("PCI/PTM: Save/restore Precision Time Measurement Capability for suspend/resume")
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- pci-acpi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to pci/misc for v5.15, thanks!
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 535f43034a073..c8718aeafae5d 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1161,7 +1161,7 @@ void acpi_pci_remove_bus(struct pci_bus *bus)
- /* ACPI bus type */
- 
- 
--DEFINE_STATIC_KEY_FALSE(pci_acpi_companion_lookup_key);
-+static DEFINE_STATIC_KEY_FALSE(pci_acpi_companion_lookup_key);
- static DEFINE_MUTEX(pci_acpi_companion_lookup_mtx);
- static struct acpi_device *(*pci_acpi_find_companion_hook)(struct pci_dev *);
- 
+I fixed your subject line to match previous ones and converted David's
+informal ack to an actual "Acked-by".
+
+> ---
+>  drivers/pci/pcie/ptm.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index 95d4eef2c9e8..4810faa67f52 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -60,10 +60,8 @@ void pci_save_ptm_state(struct pci_dev *dev)
+>  		return;
+>  
+>  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
+> -	if (!save_state) {
+> -		pci_err(dev, "no suspend buffer for PTM\n");
+> +	if (!save_state)
+>  		return;
+> -	}
+>  
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
+> -- 
+> 2.31.1
+> 
