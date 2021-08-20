@@ -2,186 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88C033F367E
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Aug 2021 00:37:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C3F3F3681
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Aug 2021 00:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbhHTWiO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 18:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229451AbhHTWiO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 18:38:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4337E6103D;
-        Fri, 20 Aug 2021 22:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629499055;
-        bh=C8jz8Bv63e052+kWi1tzbvXuwOtkfdMKISfabY64RtY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b+V/huH+0jWmkArd1seL+iNhzD4ysWWQ9Wp/b/XT8hv9QdhQKCZ4bklEbuTsUFi6O
-         ks8z/ZU6B5ZbtwKg1Pk0SRK/snSRADjJtCUYz588rdL4wTl+tjugOyOP/WF8U9BpEi
-         Iag150ytRBI+hnBASCbQ9A05qAT/m1FRUuaT+ImfLuPbcCh29+KzAoVUHNo0IHJmmH
-         PTwq6dqIJ43jEshblvbRRHLWilgXizjdHRFe2Hz3zKj3EFuLKMvoEU0zTiWjPnuIyE
-         HIV72x5kKh8h5/2DnyC7Owuv67FvMArXkeqw9Z9CoZgCxmloyPrilEsyqZHWXvDh/x
-         Et+I9bFTtIohQ==
-Date:   Fri, 20 Aug 2021 17:37:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3] PCI: Move pci_dev_is/assign_added() to pci.h
-Message-ID: <20210820223734.GA3366782@bjorn-Precision-5520>
+        id S229760AbhHTWit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 18:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229451AbhHTWis (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Aug 2021 18:38:48 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D36CC061575;
+        Fri, 20 Aug 2021 15:38:10 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id m26so9857351pff.3;
+        Fri, 20 Aug 2021 15:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0t3/+wgHla4asO76tC2T3DbSJIed/tmO3Dv6nXt2BRs=;
+        b=XwHnzh6VBBhPaCDvV4jNRIHc5ZIS5YNrvY21otIRqsNTsls2KlYwyeooImtouH4hOP
+         CvpEbYPLskGy8slUEGwAj694fag4YM2b9EMPmCrclDxO5xtIKsxoOXuEAI300kxSIr19
+         n4BXgatj5BSzThT0+Pk5OErP7C2my6zzfpnNVg30QU1KoPaE8lupJbu5f5uaP/SJB/A1
+         tRoeZduKQrUh0z5YL1+xf+1aTYp+pcHQDs51Q7PfOsR+kXSV7WcsmEquo3UMh7VdQVOI
+         z+EDfrhoioHbDI3QoVgjKvNe8P1OKa+fpmBuMYemhjrCcZWQsdKcsZdVFIdDb6UknAiF
+         /8jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0t3/+wgHla4asO76tC2T3DbSJIed/tmO3Dv6nXt2BRs=;
+        b=XmpQYZOpVj/0hXn5Apo9OaFCESS1TBh5YjNHbAoV/OUy08NLLU4yRet9GBqMMZc416
+         +qdNGfRBkuzDZ9KRJnnLZLI8/++Ljhho/Wz8zQCx+x/CvgGSVvTryH3uO/okO0BcRc7X
+         ql6dnnizfozy3rq7j3gTN8NPpRZ1QAfbxqkTU12qzC30stTEhNdsTuExZDgArbq15ihd
+         FBjbDR9ib6akFI6Ve7Nqu3fM9oE/adEN8vZ/j8O3bqtHOEOla8LAcPJw//W2xVfea/53
+         eWybkCelwGO0QQBXwOawRm5VoztcQVPP5hSNGRnA0B3JNDgov/ZRBg7lpd+jgsXXjqNu
+         tDEQ==
+X-Gm-Message-State: AOAM532R88gGnrdeQ0+S6MqYzwDZTtNfUds9LsO9Id0OCR4Q/EvxiNWF
+        D0NP2v4/URBEERheyd++WwY=
+X-Google-Smtp-Source: ABdhPJwOXHKSeUx0PdJSwy+V/3tz+tSk841hOaPxE6fpRUyNs/eI+elbqM2WFvoPDF1l5qy9lti1vA==
+X-Received: by 2002:a05:6a00:228d:b0:3e1:aba4:8e3 with SMTP id f13-20020a056a00228d00b003e1aba408e3mr21945765pfe.49.1629499089926;
+        Fri, 20 Aug 2021 15:38:09 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8916:5000:a761:e8b4:dc09:1a0e])
+        by smtp.gmail.com with ESMTPSA id y12sm8807619pgl.65.2021.08.20.15.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Aug 2021 15:38:09 -0700 (PDT)
+From:   Barry Song <21cnbao@gmail.com>
+To:     21cnbao@gmail.com, bhelgaas@google.com, corbet@lwn.net
+Cc:     Jonathan.Cameron@huawei.com, bilbao@vt.edu,
+        gregkh@linuxfoundation.org, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxarm@huawei.com, luzmaximilian@gmail.com,
+        mchehab+huawei@kernel.org, schnelle@linux.ibm.com,
+        song.bao.hua@hisilicon.com
+Subject: [PATCH v2 0/2] PCI/MSI: Clarify the IRQ sysfs ABI for PCI devices
+Date:   Sat, 21 Aug 2021 10:37:42 +1200
+Message-Id: <20210820223744.8439-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210720150145.640727-1-schnelle@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 05:01:45PM +0200, Niklas Schnelle wrote:
-> The helper function pci_dev_is_added() from drivers/pci/pci.h is used in
-> PCI arch code of both s390 and powerpc leading to awkward relative
-> includes. Move it to the global include/linux/pci.h and get rid of these
-> includes just for that one function.
+From: Barry Song <song.bao.hua@hisilicon.com>
 
-I agree the includes are awkward.
+/sys/bus/pci/devices/.../irq has been there for many years but it has never
+been documented. This patch is trying to document it. Plus, irq ABI is very
+confusing at this moment especially for MSI and MSI-x cases. MSI sets irq
+to the first number in the vector, but MSI-X does nothing for this though
+it saves default_irq in msix_setup_entries(). Weird the saved default_irq
+for MSI-X is never used in pci_msix_shutdown(), which is quite different
+with pci_msi_shutdown(). Thus, this patch also moves to show the first IRQ
+number which is from the first msi_entry for MSI-X. Hopefully, this can
+make irq ABI more clear and more consistent.
 
-But the arch code *using* pci_dev_is_added() seems awkward, too.
+-v2:
+  - split into two patches according to Bjorn's comments;
+  - Add Greg's Acked-by, thanks for reviewing!
+-v1:
+  https://lore.kernel.org/lkml/20210813122650.25764-1-21cnbao@gmail.com/#t
 
-AFAICS, in powerpc, pci_dev_is_added() is only used by
-pnv_pci_ioda_fixup_iov() and pseries_pci_fixup_iov_resources().  Those
-are only called from pcibios_add_device(), which is only called from
-pci_device_add().
+Barry Song (2):
+  PCI/MSI: Fix the confusing IRQ sysfs ABI for MSI-X
+  Documentation: ABI: sysfs-bus-pci: Add description for IRQ entry
 
-Is it even possible for pci_dev_is_added() to be true in that path?
+ Documentation/ABI/testing/sysfs-bus-pci | 8 ++++++++
+ drivers/pci/msi.c                       | 6 ++++++
+ 2 files changed, 14 insertions(+)
 
-s390 uses pci_dev_is_added() in recover_store(), but I don't know what
-that is (looks like a sysfs file, but it's not documented) or why s390
-is the only arch that does this.
+-- 
+1.8.3.1
 
-Maybe we should make powerpc and s390 less special?
-
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
-> Since v1 (and bad v2):
-> - Fixed accidental removal of PCI_DPC_RECOVERED, PCI_DPC_RECOVERING
->   defines and also move these to include/linux/pci.h
-> 
->  arch/powerpc/platforms/powernv/pci-sriov.c |  3 ---
->  arch/powerpc/platforms/pseries/setup.c     |  1 -
->  arch/s390/pci/pci_sysfs.c                  |  2 --
->  drivers/pci/hotplug/acpiphp_glue.c         |  1 -
->  drivers/pci/pci.h                          | 15 ---------------
->  include/linux/pci.h                        | 15 +++++++++++++++
->  6 files changed, 15 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pci-sriov.c b/arch/powerpc/platforms/powernv/pci-sriov.c
-> index 28aac933a439..2e0ca5451e85 100644
-> --- a/arch/powerpc/platforms/powernv/pci-sriov.c
-> +++ b/arch/powerpc/platforms/powernv/pci-sriov.c
-> @@ -9,9 +9,6 @@
->  
->  #include "pci.h"
->  
-> -/* for pci_dev_is_added() */
-> -#include "../../../../drivers/pci/pci.h"
-> -
->  /*
->   * The majority of the complexity in supporting SR-IOV on PowerNV comes from
->   * the need to put the MMIO space for each VF into a separate PE. Internally
-> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-> index 631a0d57b6cd..17585ec9f955 100644
-> --- a/arch/powerpc/platforms/pseries/setup.c
-> +++ b/arch/powerpc/platforms/pseries/setup.c
-> @@ -74,7 +74,6 @@
->  #include <asm/hvconsole.h>
->  
->  #include "pseries.h"
-> -#include "../../../../drivers/pci/pci.h"
->  
->  DEFINE_STATIC_KEY_FALSE(shared_processor);
->  EXPORT_SYMBOL_GPL(shared_processor);
-> diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-> index 6e2450c2b9c1..8dbe54ef8f8e 100644
-> --- a/arch/s390/pci/pci_sysfs.c
-> +++ b/arch/s390/pci/pci_sysfs.c
-> @@ -13,8 +13,6 @@
->  #include <linux/stat.h>
->  #include <linux/pci.h>
->  
-> -#include "../../../drivers/pci/pci.h"
-> -
->  #include <asm/sclp.h>
->  
->  #define zpci_attr(name, fmt, member)					\
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index f031302ad401..4cb963f88183 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -38,7 +38,6 @@
->  #include <linux/slab.h>
->  #include <linux/acpi.h>
->  
-> -#include "../pci.h"
->  #include "acpiphp.h"
->  
->  static LIST_HEAD(bridge_list);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 93dcdd431072..a159cd0f6f05 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -383,21 +383,6 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
->  	return dev->error_state == pci_channel_io_perm_failure;
->  }
->  
-> -/* pci_dev priv_flags */
-> -#define PCI_DEV_ADDED 0
-> -#define PCI_DPC_RECOVERED 1
-> -#define PCI_DPC_RECOVERING 2
-> -
-> -static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
-> -{
-> -	assign_bit(PCI_DEV_ADDED, &dev->priv_flags, added);
-> -}
-> -
-> -static inline bool pci_dev_is_added(const struct pci_dev *dev)
-> -{
-> -	return test_bit(PCI_DEV_ADDED, &dev->priv_flags);
-> -}
-> -
->  #ifdef CONFIG_PCIEAER
->  #include <linux/aer.h>
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 540b377ca8f6..ea0e23dbc8ec 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -507,6 +507,21 @@ struct pci_dev {
->  	unsigned long	priv_flags;	/* Private flags for the PCI driver */
->  };
->  
-> +/* pci_dev priv_flags */
-> +#define PCI_DEV_ADDED 0
-> +#define PCI_DPC_RECOVERED 1
-> +#define PCI_DPC_RECOVERING 2
-> +
-> +static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
-> +{
-> +	assign_bit(PCI_DEV_ADDED, &dev->priv_flags, added);
-> +}
-> +
-> +static inline bool pci_dev_is_added(const struct pci_dev *dev)
-> +{
-> +	return test_bit(PCI_DEV_ADDED, &dev->priv_flags);
-> +}
-> +
->  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
->  {
->  #ifdef CONFIG_PCI_IOV
-> -- 
-> 2.25.1
-> 
