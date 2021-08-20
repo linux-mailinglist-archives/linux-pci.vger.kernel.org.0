@@ -2,77 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E373F35EB
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5AD03F35F3
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 23:17:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240262AbhHTVPE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 17:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56932 "EHLO mail.kernel.org"
+        id S240480AbhHTVST (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 17:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239997AbhHTVPB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 17:15:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B6D79610CC;
-        Fri, 20 Aug 2021 21:14:21 +0000 (UTC)
+        id S231200AbhHTVST (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 17:18:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B1E2D6108B;
+        Fri, 20 Aug 2021 21:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629494062;
-        bh=G6ak4MPoXfP+D+22vDf1POlItZNsAjtB8G/diCkHPtc=;
+        s=k20201202; t=1629494261;
+        bh=0obuSI1tNMoYAEs10g4gx3XozPflo2KTNqYcUNC3ajE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ix07Xbqpe7IECD5DacDTXHLh53szEimduCgkTfoa+U4HfSfAmqIBGGdxaiAAZx0PY
-         HzBSZoZpWWmDdGEE0Yb7TksVYqCC1mbSekhOrgZ1Y5O4A3k3e1JATd+yW6po3h2iUj
-         PN+Xa5uFthnkbiTvbgNJWj5wJdO3jeqhBM0CVRfY3cRSOCSnsVLdpEtp/wAqegvebG
-         RSKpcnrIBjcgGjwA1Hm0+RMbrIteydLTY2109V0bD8QnLIYqICDxepNxZReNvuuMCu
-         LQv+mmRJ2JodNBr1OwxIe0T+xAI6zrIQPjyt7MZp1iplxRhTOJ0aAe7V8IT3AcyT28
-         g8ejx97j+royg==
-Date:   Fri, 20 Aug 2021 16:14:20 -0500
+        b=hUXzQXJJX7z5iXDEz76jNQACqBTZhP2+SFmLhaK8V+9NTQ6h1fJ0jedrRsQRsnZK1
+         Fob1Gt6j37W1yXZP+c32qkZe9p0e3pHDKwh8s4Q3cLFTFCU0KKCJwjLCdg6eag/JbS
+         d3lE3/juTRrIhJ/e6chPbPLGa3l3hi9JD/lZkbRLibAc6xrtenPOcxNUR0Ht4Ii04I
+         m487iA07HGsq1W04FlPaKcURaV5HHAH3SoGOpmDXiHDsOCx4xlv/sX63IPL3htU1G8
+         1HKSgWUSU7ccMz1zWaxANnafyJDiOnQ2z/4NpJz3ZdfaG50YBdzgjNhJ4tKYqYoapu
+         ggA6q3Gn4ABcg==
+Date:   Fri, 20 Aug 2021 16:17:39 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <george.cherian@marvell.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [PATCH] PCI: Add ACS quirk for Cavium multi-function devices
-Message-ID: <20210820211420.GA3359633@bjorn-Precision-5520>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] PCI: asm-generic/pci_iomap: Correct wrong comment for
+ #endif
+Message-ID: <20210820211739.GA3360138@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210810122425.1115156-1-george.cherian@marvell.com>
+In-Reply-To: <20210803123014.2963814-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 05:54:25PM +0530, George Cherian wrote:
-> Some Cavium endpoints are implemented as multi-function devices
-> without ACS capability, but they actually don't support peer-to-peer
-> transactions.
+On Tue, Aug 03, 2021 at 08:30:14PM +0800, Jonathan Cameron wrote:
+> If we are going to have comments on header guard #endifs then they should
+> be correct and match the #ifndef
 > 
-> Add ACS quirks to declare DMA isolation.
+> I'm guessing this one is a cut and paste error or has bit rotted.
 > 
-> Apply te quirk for following devices
-> 1. BGX device found on Octeon-TX (8xxx)
-> 2. CGX device found on Octeon-TX2 (9xxx)
-> 3. RPM device found on Octeon-TX3 (10xxx)
-> 
-> Signed-off-by: George Cherian <george.cherian@marvell.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Applied to pci/virtualization for v5.15, thanks!
+Applied to pci/misc for v5.15, thanks!
 
 > ---
->  drivers/pci/quirks.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  include/asm-generic/pci_iomap.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 6d74386eadc2..076932018494 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4840,6 +4840,10 @@ static const struct pci_dev_acs_enabled {
->  	{ 0x10df, 0x720, pci_quirk_mf_endpoint_acs }, /* Emulex Skyhawk-R */
->  	/* Cavium ThunderX */
->  	{ PCI_VENDOR_ID_CAVIUM, PCI_ANY_ID, pci_quirk_cavium_acs },
-> +	/* Cavium multi-function devices */
-> +	{ PCI_VENDOR_ID_CAVIUM, 0xA026, pci_quirk_mf_endpoint_acs },
-> +	{ PCI_VENDOR_ID_CAVIUM, 0xA059, pci_quirk_mf_endpoint_acs },
-> +	{ PCI_VENDOR_ID_CAVIUM, 0xA060, pci_quirk_mf_endpoint_acs },
->  	/* APM X-Gene */
->  	{ PCI_VENDOR_ID_AMCC, 0xE004, pci_quirk_xgene_acs },
->  	/* Ampere Computing */
+> diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
+> index d4f16dcc2ed7..df636c6d8e6c 100644
+> --- a/include/asm-generic/pci_iomap.h
+> +++ b/include/asm-generic/pci_iomap.h
+> @@ -52,4 +52,4 @@ static inline void __iomem *pci_iomap_wc_range(struct pci_dev *dev, int bar,
+>  }
+>  #endif
+>  
+> -#endif /* __ASM_GENERIC_IO_H */
+> +#endif /* __ASM_GENERIC_PCI_IOMAP_H */
 > -- 
-> 2.25.1
+> 2.19.1
 > 
