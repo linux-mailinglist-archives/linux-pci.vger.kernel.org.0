@@ -2,164 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 043FA3F2CF5
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 15:14:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA8193F2D08
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 15:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240444AbhHTNPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 09:15:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:24015 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238220AbhHTNPb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 09:15:31 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238897965"
-X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="238897965"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 06:14:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="424400658"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga006.jf.intel.com with ESMTP; 20 Aug 2021 06:14:52 -0700
-Received: from hasmsx603.ger.corp.intel.com (10.184.107.143) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Fri, 20 Aug 2021 06:14:51 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- HASMSX603.ger.corp.intel.com (10.184.107.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Fri, 20 Aug 2021 16:14:49 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.2242.010;
- Fri, 20 Aug 2021 16:14:49 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Mititelu, Ionel-catalin" <ionel-catalin.mititelu@intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] mei: improve Denverton HSM & IFSI support
-Thread-Topic: [PATCH] mei: improve Denverton HSM & IFSI support
-Thread-Index: AQHXlQmuQ4qPomT9pkSv5QQVYwk+4at6u12AgABU5ICAAM4MgIAAgdFg
-Date:   Fri, 20 Aug 2021 13:14:49 +0000
-Message-ID: <34db312890c94750ae27fbcf127866e0@intel.com>
-References: <20210819145114.21074-1-lukas.bulwahn@gmail.com>
- <20210819150703.GA3204796@bjorn-Precision-5520>
- <20210819141053.17a8a540.alex.williamson@redhat.com>
- <CAKXUXMxM6oUkwP-YGDY1WEA8T0mCrR-5c-HLAjW-UrNotfHiCQ@mail.gmail.com>
-In-Reply-To: <CAKXUXMxM6oUkwP-YGDY1WEA8T0mCrR-5c-HLAjW-UrNotfHiCQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S240660AbhHTNVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 09:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238228AbhHTNVO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Aug 2021 09:21:14 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F58C061575;
+        Fri, 20 Aug 2021 06:20:36 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id k65so18737309yba.13;
+        Fri, 20 Aug 2021 06:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R4mPqaVlukDDFG+TscWvZ4jnQjqXu0/EIxO1u7KNhy0=;
+        b=PJnfuZLqvqSpkXanRFW2UmTJJht/11VW6Oka5UdEdlA3NYzaKL0rABICyHhxLLiXy5
+         9djhU/pW+liBA7D76sI98/fqLIN6mpphtaxa6op3ZxBTnzGgoAUgOx6HGsqs3Tl7csQQ
+         xKWgIoPemM8icLv71gHIkO6t4e2//w6oKfKOiVqgqPLQAEsDCSL3ltkj+2AjbAo1PEvQ
+         4SfXRiKjlG7BohxhfkRFyR89zFWPSBeZHMT/Ncp5j0F//fr7TAm+rAj4HLblLHk2b1Vz
+         Dlvnf4yxjcN6A4w1GITV6XyUWkGZI2ZAW1hpXgBPmVeJTh3lJisF5gml9ZkRbmXSMUpP
+         VRaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R4mPqaVlukDDFG+TscWvZ4jnQjqXu0/EIxO1u7KNhy0=;
+        b=fGE9llWp/wvC+PnhL/GLbccEjsgcx5SNX58G4npyqk8rRSVtanh75ts2PEUThNf3Jk
+         YksS18qGm4QbH6EUo08CzyDRto+maL2//IRncARIGQMLajNILf3LDVPeRBwKrX9hdEzr
+         2nX6tSrMfZ5LaeL9aV//EEMrzICduYWeGCv5LXrAR62TDeoan29OTspGD66CfXNVZyOQ
+         ZSyxqHGOOzFVsdcVTmauEyw48IWenAxDUiuCRepqN7+gmPN3eFQAWQvU+1s02UTiInPY
+         soyoU4ciAEfR8PrTLtdWxWrj3UdK8piwIYg9Ge7lBm/XdOxTtTLYIEc3N3OfPwpbHkrN
+         hluw==
+X-Gm-Message-State: AOAM532ut7tSjwabtimxfSlrkzbHPhOX43MLEbihb9Tmh6jQOiGRHVCm
+        hPLMWR76KDRFTjn3ZVKRRUpdLnVaw9I6pzZ9CLg=
+X-Google-Smtp-Source: ABdhPJys2DSaGtqoT8h5EA1qRXRHCanUJcUbZJPKuRoDWhujTTxSyElBX/p4G++f9TqaK96euKD5PLV2w7l4/jsfI1I=
+X-Received: by 2002:a25:f310:: with SMTP id c16mr23596476ybs.464.1629465635574;
+ Fri, 20 Aug 2021 06:20:35 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210819145114.21074-1-lukas.bulwahn@gmail.com> <20210819150703.GA3204796@bjorn-Precision-5520>
+In-Reply-To: <20210819150703.GA3204796@bjorn-Precision-5520>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Fri, 20 Aug 2021 15:20:32 +0200
+Message-ID: <CAKXUXMw4TRocPRb2ROOBbGSGBVv5_y+bE-2koiEr-=b+skfzSg@mail.gmail.com>
+Subject: Re: [PATCH] mei: improve Denverton HSM & IFSI support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ionel-Catalin Mititelu <ionel-catalin.mititelu@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQo+IA0KPiBPbiBUaHUsIEF1ZyAxOSwgMjAyMSBhdCAxMDoxMCBQTSBBbGV4IFdpbGxpYW1zb24N
-Cj4gPGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9uIFRodSwg
-MTkgQXVnIDIwMjEgMTA6MDc6MDMgLTA1MDANCj4gPiBCam9ybiBIZWxnYWFzIDxoZWxnYWFzQGtl
-cm5lbC5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gPiBbK2NjIEFsZXhdDQo+ID4gPg0KPiA+ID4gT24g
-VGh1LCBBdWcgMTksIDIwMjEgYXQgMDQ6NTE6MTRQTSArMDIwMCwgTHVrYXMgQnVsd2FobiB3cm90
-ZToNCj4gPiA+ID4gVGhlIEludGVsIERlbnZlcnRvbiBjaGlwIHByb3ZpZGVzIEhTTSAmIElGU0ku
-IEluIG9yZGVyIHRvIGFjY2Vzcw0KPiA+ID4gPiBIU00gJiBJRlNJIGF0IHRoZSBzYW1lIHRpbWUs
-IHByb3ZpZGUgdHdvIEhFQ0kgaGFyZHdhcmUgSURzIGZvcg0KPiBhY2Nlc3NpbmcuDQo+ID4gPiA+
-DQo+ID4gPiA+IFN1Z2dlc3RlZC1ieTogSW9uZWwtQ2F0YWxpbiBNaXRpdGVsdQ0KPiA+ID4gPiA8
-aW9uZWwtY2F0YWxpbi5taXRpdGVsdUBpbnRlbC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
-IEx1a2FzIEJ1bHdhaG4gPGx1a2FzLmJ1bHdhaG5AZ21haWwuY29tPg0KPiA+ID4gPiAtLS0NCj4g
-PiA+ID4gVG9tYXMsIHBsZWFzZSBwaWNrIHRoaXMgcXVpY2sgaGVscGZ1bCBleHRlbnNpb24gZm9y
-IHRoZSBoYXJkd2FyZS4NCj4gPiA+ID4NCj4gPiA+ID4gIGRyaXZlcnMvbWlzYy9tZWkvaHctbWUt
-cmVncy5oIHwgMyArKy0NCj4gPiA+ID4gIGRyaXZlcnMvbWlzYy9tZWkvcGNpLW1lLmMgICAgIHwg
-MSArDQo+ID4gPiA+ICBkcml2ZXJzL3BjaS9xdWlya3MuYyAgICAgICAgICB8IDMgKysrDQo+ID4g
-PiA+ICAzIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+
-ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL21laS9ody1tZS1yZWdzLmgN
-Cj4gPiA+ID4gYi9kcml2ZXJzL21pc2MvbWVpL2h3LW1lLXJlZ3MuaCBpbmRleCBjYjM0OTI1ZTEw
-ZjEuLmMxYzQxOTEyYmI3Mg0KPiA+ID4gPiAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9t
-aXNjL21laS9ody1tZS1yZWdzLmgNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9taXNjL21laS9ody1t
-ZS1yZWdzLmgNCj4gPiA+ID4gQEAgLTY4LDcgKzY4LDggQEANCj4gPiA+ID4gICNkZWZpbmUgTUVJ
-X0RFVl9JRF9CWFRfTSAgICAgIDB4MUE5QSAgLyogQnJveHRvbiBNICovDQo+ID4gPiA+ICAjZGVm
-aW5lIE1FSV9ERVZfSURfQVBMX0kgICAgICAweDVBOUEgIC8qIEFwb2xsbyBMYWtlIEkgKi8NCj4g
-PiA+ID4NCj4gPiA+ID4gLSNkZWZpbmUgTUVJX0RFVl9JRF9ETlZfSUUgICAgIDB4MTlFNSAgLyog
-RGVudmVydG9uIElFICovDQo+ID4gPiA+ICsjZGVmaW5lIE1FSV9ERVZfSURfRE5WX0lFICAweDE5
-RTUgIC8qIERlbnZlcnRvbiBmb3IgSEVDSTEgLSBJRlNJDQo+ICovDQo+ID4gPiA+ICsjZGVmaW5l
-IE1FSV9ERVZfSURfRE5WX0lFXzIgICAgICAgIDB4MTlFNiAgLyogRGVudmVydG9uIDIgZm9yIEhF
-Q0kyDQo+IC0gSFNNICovDQo+ID4gPiA+DQo+ID4gPiA+ICAjZGVmaW5lIE1FSV9ERVZfSURfR0xL
-ICAgICAgICAweDMxOUEgIC8qIEdlbWluaSBMYWtlICovDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL21pc2MvbWVpL3BjaS1tZS5jIGIvZHJpdmVycy9taXNjL21laS9wY2kt
-bWUuYw0KPiA+ID4gPiBpbmRleCBjMzM5M2IzODNlNTkuLjMwODI3Y2QyYTFjMiAxMDA2NDQNCj4g
-PiA+ID4gLS0tIGEvZHJpdmVycy9taXNjL21laS9wY2ktbWUuYw0KPiA+ID4gPiArKysgYi9kcml2
-ZXJzL21pc2MvbWVpL3BjaS1tZS5jDQo+ID4gPiA+IEBAIC03Nyw2ICs3Nyw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBtZWlfbWVfcGNpX3RibFtdDQo+ID0gew0KPiA+ID4g
-PiAgICAge01FSV9QQ0lfREVWSUNFKE1FSV9ERVZfSURfQVBMX0ksIE1FSV9NRV9QQ0g4X0NGRyl9
-LA0KPiA+ID4gPg0KPiA+ID4gPiAgICAge01FSV9QQ0lfREVWSUNFKE1FSV9ERVZfSURfRE5WX0lF
-LCBNRUlfTUVfUENIOF9DRkcpfSwNCj4gPiA+ID4gKyAgIHtNRUlfUENJX0RFVklDRShNRUlfREVW
-X0lEX0ROVl9JRV8yLA0KPiBNRUlfTUVfUENIOF9TUFNfQ0ZHKX0sDQo+ID4gPiA+DQo+ID4gPiA+
-ICAgICB7TUVJX1BDSV9ERVZJQ0UoTUVJX0RFVl9JRF9HTEssIE1FSV9NRV9QQ0g4X0NGRyl9LA0K
-PiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2
-ZXJzL3BjaS9xdWlya3MuYyBpbmRleA0KPiA+ID4gPiA2ODk5ZDZiMTk4YWYuLjJhYjc2N2VmODQ2
-OSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiA+ID4gKysr
-IGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiA+ID4gQEAgLTQ4NDIsNiArNDg0Miw5IEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2Rldl9hY3NfZW5hYmxlZCB7DQo+ID4gPiA+ICAgICB7IFBD
-SV9WRU5ET1JfSURfSU5URUwsIDB4MTViNywgcGNpX3F1aXJrX21mX2VuZHBvaW50X2FjcyB9LA0K
-PiA+ID4gPiAgICAgeyBQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDE1YjgsIHBjaV9xdWlya19tZl9l
-bmRwb2ludF9hY3MgfSwNCj4gPiA+ID4gICAgIHsgUENJX1ZFTkRPUl9JRF9JTlRFTCwgUENJX0FO
-WV9JRCwgcGNpX3F1aXJrX3JjaWVwX2FjcyB9LA0KPiA+ID4gPiArICAgLyogRGVudmVydG9uICov
-DQo+ID4gPiA+ICsgICB7IFBDSV9WRU5ET1JfSURfSU5URUwsIDB4MTllNSwgcGNpX3F1aXJrX21m
-X2VuZHBvaW50X2FjcyB9LA0KPiA+ID4gPiArICAgeyBQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDE5
-ZTYsIHBjaV9xdWlya19tZl9lbmRwb2ludF9hY3MgfSwNCj4gPiA+DQo+ID4gPiBUaGlzIGxvb2tz
-IGxpa2UgaXQgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggd2l0aCBhIGNvbW1pdCBsb2cgdGhh
-dA0KPiA+ID4gZXhwbGFpbnMgaXQuICBGb3IgZXhhbXBsZSwgc2VlIHRoZXNlOg0KPiA+ID4NCj4g
-PiA+ICAgZGIyZjc3ZTJiZDk5ICgiUENJOiBBZGQgQUNTIHF1aXJrIGZvciBCcm9hZGNvbSBCQ001
-NzQxNCBOSUMiKQ0KPiA+ID4gICAzMjQ3YmQxMGE0NTAgKCJQQ0k6IEFkZCBBQ1MgcXVpcmsgZm9y
-IEludGVsIFJvb3QgQ29tcGxleCBJbnRlZ3JhdGVkDQo+IEVuZHBvaW50cyIpDQo+ID4gPiAgIDI5
-OWJkMDQ0YTZmMyAoIlBDSTogQWRkIEFDUyBxdWlyayBmb3IgWmhhb3hpbiBSb290L0Rvd25zdHJl
-YW0NCj4gUG9ydHMiKQ0KPiA+ID4gICAwMzI1ODM3YzUxY2IgKCJQQ0k6IEFkZCBBQ1MgcXVpcmsg
-Zm9yIFpoYW94aW4gbXVsdGktZnVuY3Rpb24gZGV2aWNlcyIpDQo+ID4gPiAgIDc2ZTY3ZTllMGYw
-ZiAoIlBDSTogQWRkIEFDUyBxdWlyayBmb3IgQW1hem9uIEFubmFwdXJuYSBMYWJzIHJvb3QNCj4g
-cG9ydHMiKQ0KPiA+ID4gICA0NmIyYzMyZGY3YTQgKCJQQ0k6IEFkZCBBQ1MgcXVpcmsgZm9yIGlQ
-cm9jIFBBWEIiKQ0KPiA+ID4gICAwMTkyNmY2YjMyMWIgKCJQQ0k6IEFkZCBBQ1MgcXVpcmsgZm9y
-IEhYVCBTRDQ4MDAiKQ0KPiA+ID4NCj4gPiA+IEl0IHNob3VsZCBiZSBhY2tlZCBieSBzb21lYm9k
-eSBhdCBJbnRlbCBzaW5jZSB0aGlzIHF1aXJrIHJlbGllcyBvbg0KPiA+ID4gYmVoYXZpb3Igb2Yg
-dGhlIGRldmljZSBmb3IgVk0gc2VjdXJpdHkuDQo+ID4NCj4gPiArMSBUaGFua3MgQmpvcm4uICBJ
-IGdvdCBjdXJpb3VzIGFuZCBBRkFJQ1QgdGhlc2UgZnVuY3Rpb25zIGFyZSB0aGUNCj4gPiBpbnRl
-cmZhY2UgZm9yIHRoZSBob3N0IHN5c3RlbSB0byBjb21tdW5pY2F0ZSB3aXRoICJJbm5vdmF0aW9u
-IEVuZ2luZSINCj4gPiBwcm9jZXNzb3JzIHdpdGhpbiB0aGUgU29DLCB3aGljaCBzZWVtIHRvIGJl
-IGF2YWlsYWJsZSBmb3Igc3lzdGVtDQo+ID4gYnVpbGRlcnMgdG8gaW5ub3ZhdGUgYW5kIGRpZmZl
-cmVudGlhdGUgc3lzdGVtIGZpcm13YXJlIGZlYXR1cmVzLiAgSSdtDQo+ID4gbm90IHN1cmUgdGhl
-biBob3cgd2UgY2FuIGFzc3VtZSBhIHNwZWNpZmljIGludGVyZmFjZSAoIkhTTSIgb3IgIklGU0ki
-LA0KPiA+IHdoYXRldmVyIHRob3NlIGFyZSkgZm9yIGVhY2ggZnVuY3Rpb24sIG5vciBvZiBjb3Vy
-c2UgaG93IHdlIGNhbiBhc3N1bWUNCj4gPiBpc29sYXRpb24gYmV0d2VlbiB0aGVtLiAgVGhhbmtz
-LA0KPiANCj4gQWxleCwgSSBnb3QgYSBEZW52ZXJ0b24gaGFyZHdhcmUgd2l0aCBJbm5vdmF0aW9u
-IEVuZ2luZSBhbmQgdGhlIHNwZWNpZmljDQo+IHN5c3RlbSBmaXJtd2FyZSAoYmFzaWNhbGx5IGRl
-bGl2ZXJlZCBmcm9tIEludGVsKS4gVG8gbWFrZSB1c2Ugb2YgdGhhdA0KPiBoYXJkd2FyZSwgc29t
-ZW9uZSBhdCBJbnRlbCBzdWdnZXN0ZWQgYWRkaW5nIHRoZXNlIFBDSSBBQ1MgcXVpcmtzLiBJdCBp
-cw0KPiB1bmNsZWFyIHRvIG1lIGlmIHRoZXJlIGFyZSB2YXJpb3VzIGRpZmZlcmVudCBEZW52ZXJ0
-b24gc3lzdGVtcyBvdXQgdGhlcmUgKEkNCj4gb25seSBnb3Qgb25lISkgd2l0aCBtYW55IGRpZmZl
-cmVudCBzeXN0ZW0gZmlybXdhcmUgdmFyaWFudHMgZm9yIHRoZQ0KPiBJbm5vdmF0aW9uIEVuZ2lu
-ZSBvciBpZiB0aGVyZSBpcyBqdXN0IG9uZSBEZW52ZXJ0b24gd2l0aCBJRSBzdXBwb3J0IGFuZCB3
-aXRoDQo+IG9uZSBmaXJtd2FyZSBmcm9tIEludGVsLCBpLmUuLCB0aGUgb25lIEkgZ290Lg0KPiAN
-Cj4gSWYgdGhlcmUgaXMgb25seSBvbmUgb3IgdHdvIHZhcmlhbnRzIG9mIHRoZSBEZW52ZXJ0b24g
-d2l0aCBJbm5vdmF0aW9uIEVuZ2luZQ0KPiBmaXJtd2FyZSBvdXQgdGhlcmUsIHRoZW4gd2UgY291
-bGQgYWRkIHRoaXMgQUNTIHF1aXJrIGhlcmUgdW5jb25kaXRpb25hbGx5DQo+IChiYXNpY2FsbHkg
-YXNzdW1pbmcgdGhhdCBpZiB0aGUgb3RoZXIgZmlybXdhcmUgaXMgdGhlcmUsIHRoZSBJRSB3b3Vs
-ZCBqdXN0IGRvDQo+IHRoZSByaWdodCB0aGluZywgZS5nLiwgZGVueSBhbnkgb3BlcmF0aW9uIGZv
-ciBhIG5vbi1leGlzdGluZyBmaXJtd2FyZQ0KPiBmdW5jdGlvbiksIHJpZ2h0PyBKdXN0IGFkZGlu
-ZyBhIGNvbW1pdCBzaW1pbGFyIHRvIHRoZSBjb21taXRzIEJqb3JuIHBvaW50ZWQNCj4gb3V0IGFi
-b3ZlLiBPdGhlcndpc2UsIHdlIHdvdWxkIG5lZWQgdG8gbWFrZSB0aGF0IGNvbmRpdGlvbmFsIGZv
-ciBwb3NzaWJsZQ0KPiBkaWZmZXJlbnQgdmFyaWFudHMsIGJ1dCBJIHdvdWxkIG5lZWQgYSBiaXQg
-bW9yZSBndWlkYW5jZSBmcm9tIHlvdSBvbiB3aGljaA0KPiBvdGhlciB2YXJpYW50cyBleGlzdCBh
-bmQgaG93IG9uZSBjYW4gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZW0uDQoNCkknbSBub3QgZmFt
-aWxpYXIgd2l0aCB0aGlzIGZpcm13YXJlIGhvdyBkbyBJIGtub3cgdGhpcyBmaXJtd2FyZSBzdXBw
-b3J0cyBjb3JyZWN0IEhFQ0kgcHJvdG9jb2w/ICBJIG5lZWQgc29tZW9uZSBmcm9tIEludGVsIHRv
-IGNvbmZpcm0uDQpUaGFua3MgDQpUb21hcw0KPiANCj4gTHVrYXMNCg==
+On Thu, Aug 19, 2021 at 5:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Alex]
+>
+> On Thu, Aug 19, 2021 at 04:51:14PM +0200, Lukas Bulwahn wrote:
+> > The Intel Denverton chip provides HSM & IFSI. In order to access
+> > HSM & IFSI at the same time, provide two HECI hardware IDs for accessing.
+> >
+> > Suggested-by: Ionel-Catalin Mititelu <ionel-catalin.mititelu@intel.com>
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > ---
+> > Tomas, please pick this quick helpful extension for the hardware.
+> >
+> >  drivers/misc/mei/hw-me-regs.h | 3 ++-
+> >  drivers/misc/mei/pci-me.c     | 1 +
+> >  drivers/pci/quirks.c          | 3 +++
+> >  3 files changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+> > index cb34925e10f1..c1c41912bb72 100644
+> > --- a/drivers/misc/mei/hw-me-regs.h
+> > +++ b/drivers/misc/mei/hw-me-regs.h
+> > @@ -68,7 +68,8 @@
+> >  #define MEI_DEV_ID_BXT_M      0x1A9A  /* Broxton M */
+> >  #define MEI_DEV_ID_APL_I      0x5A9A  /* Apollo Lake I */
+> >
+> > -#define MEI_DEV_ID_DNV_IE     0x19E5  /* Denverton IE */
+> > +#define MEI_DEV_ID_DNV_IE    0x19E5  /* Denverton for HECI1 - IFSI */
+> > +#define MEI_DEV_ID_DNV_IE_2  0x19E6  /* Denverton 2 for HECI2 - HSM */
+> >
+> >  #define MEI_DEV_ID_GLK        0x319A  /* Gemini Lake */
+> >
+> > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+> > index c3393b383e59..30827cd2a1c2 100644
+> > --- a/drivers/misc/mei/pci-me.c
+> > +++ b/drivers/misc/mei/pci-me.c
+> > @@ -77,6 +77,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+> >       {MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
+> >
+> >       {MEI_PCI_DEVICE(MEI_DEV_ID_DNV_IE, MEI_ME_PCH8_CFG)},
+> > +     {MEI_PCI_DEVICE(MEI_DEV_ID_DNV_IE_2, MEI_ME_PCH8_SPS_CFG)},
+> >
+> >       {MEI_PCI_DEVICE(MEI_DEV_ID_GLK, MEI_ME_PCH8_CFG)},
+> >
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 6899d6b198af..2ab767ef8469 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4842,6 +4842,9 @@ static const struct pci_dev_acs_enabled {
+> >       { PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+> >       { PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
+> >       { PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+> > +     /* Denverton */
+> > +     { PCI_VENDOR_ID_INTEL, 0x19e5, pci_quirk_mf_endpoint_acs },
+> > +     { PCI_VENDOR_ID_INTEL, 0x19e6, pci_quirk_mf_endpoint_acs },
+>
+> This looks like it should be a separate patch with a commit log that
+> explains it.  For example, see these:
+>
+>   db2f77e2bd99 ("PCI: Add ACS quirk for Broadcom BCM57414 NIC")
+>   3247bd10a450 ("PCI: Add ACS quirk for Intel Root Complex Integrated Endpoints")
+>   299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
+>   0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
+>   76e67e9e0f0f ("PCI: Add ACS quirk for Amazon Annapurna Labs root ports")
+>   46b2c32df7a4 ("PCI: Add ACS quirk for iProc PAXB")
+>   01926f6b321b ("PCI: Add ACS quirk for HXT SD4800")
+>
+> It should be acked by somebody at Intel since this quirk relies on
+> behavior of the device for VM security.
+>
+
+Bjorn, I will happily split this into two patches and follow the
+general conventions as soon as we have somebody at Intel to confirm on
+this email thread that the proposal basically makes sense or if this
+is actually flawed and why (although it was initially proposed by
+somebody at Intel in another off-list discussion).
+
+Lukas
+
+> >       /* QCOM QDF2xxx root ports */
+> >       { PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
+> >       { PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
+> > --
+> > 2.26.2
+> >
