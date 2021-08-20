@@ -2,101 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79E533F3686
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Aug 2021 00:38:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 911B73F368A
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Aug 2021 00:40:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234480AbhHTWjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 18:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234317AbhHTWjB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Aug 2021 18:39:01 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B308FC061575;
-        Fri, 20 Aug 2021 15:38:22 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d17so6749520plr.12;
-        Fri, 20 Aug 2021 15:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NUnIWkyil9TlIibxeGOppyJEEJ5wkYDGUjyoyMGRPV8=;
-        b=C5JDN9b81MOBbZHDPpdM8rCcw2swD4uCwRFNdYVUniP6pZz5CbXgk5c/r1ttBRauCX
-         aRNvDec44Zhns3NOVEBSY4YKoGeTrCJmBnRvA6r3Oo1/qCkO/4CtqU4vHuS197FLjfoP
-         4xDwtC0/wogOpHX9zj7XlMMg9DzA/LBiqgLjXAjbDWF3rnDYV2pY850g1ppHJ0R2jU4X
-         PLiStRKK9N5KUjUajcuJbnEmkNBaywuY7G0T+W0+TWlEaeAFWI6jVF4084PPyt1jr6p5
-         elNhIaqh0avIWhBqZ8PnOwDng/FtVoZMywkbPHVGqyvgofCyW2uQdRR2nduM/jx9FAiZ
-         lMDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NUnIWkyil9TlIibxeGOppyJEEJ5wkYDGUjyoyMGRPV8=;
-        b=poF73Yd5xDZtU9AuIc+aMqGkDoB+EyZcxhjA0udj0FONu+a4lY3cDqw5KJVfvYnNT8
-         Pjad5nLYwqIbyZN5xJD2PB+sAzAGqVO+p8FWnAv6uMLNJna7mBQGarINdqrRjIO4H5tB
-         jg0eYFXQlwGemwuk81OK3w3DDGcQaKXmtgebkF6rZjApm1JlaQQn4ALNS25tzNwI6wII
-         TRstesudZCdSZRNhZ8vkDvO511RRfjPhdQ+kQ4ZQeq3lGfNkyt9hR7T4XL7d1ZMjcQ4f
-         zYd9n2iDdChxqgFSP5DGIns1yKUgPp43jdckGpQDPOAYeHfeMwCdxJq9yp7oWWgGXeuS
-         fjFQ==
-X-Gm-Message-State: AOAM532/28QjU68dW7SHyL9MiCm31V/66v6Rqz+XMLaa3I2VcMfP3pJ5
-        L1sLwlIA5q+0VJ5EW3+9ZlQ=
-X-Google-Smtp-Source: ABdhPJyLzYuffz1IgHWesUtfZmF6TPBWkkgMGVQhOKtm5jV/CgwTSIniNr1CfrS6WJj+DxEdqqiuWw==
-X-Received: by 2002:a17:90a:2e0e:: with SMTP id q14mr1090277pjd.16.1629499102372;
-        Fri, 20 Aug 2021 15:38:22 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8916:5000:a761:e8b4:dc09:1a0e])
-        by smtp.gmail.com with ESMTPSA id y12sm8807619pgl.65.2021.08.20.15.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 15:38:21 -0700 (PDT)
-From:   Barry Song <21cnbao@gmail.com>
-To:     21cnbao@gmail.com, bhelgaas@google.com, corbet@lwn.net
-Cc:     Jonathan.Cameron@huawei.com, bilbao@vt.edu,
-        gregkh@linuxfoundation.org, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com, luzmaximilian@gmail.com,
-        mchehab+huawei@kernel.org, schnelle@linux.ibm.com,
-        song.bao.hua@hisilicon.com
-Subject: [PATCH v2 2/2] Documentation: ABI: sysfs-bus-pci: Add description for IRQ entry
-Date:   Sat, 21 Aug 2021 10:37:44 +1200
-Message-Id: <20210820223744.8439-3-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210820223744.8439-1-21cnbao@gmail.com>
-References: <20210820223744.8439-1-21cnbao@gmail.com>
+        id S231482AbhHTWkw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 18:40:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230527AbhHTWkw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 18:40:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 62D496103D;
+        Fri, 20 Aug 2021 22:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629499213;
+        bh=CiA4Isj34k4IUERg8A9SrOPmO4Q9Q9dmA82ZxVRjHBc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YRueHQnNHigghL4PyL/uuKgjEuIfe5rl/7TAhxQ3lI6tVeoMmiz97h/z7pHnUa2sM
+         0yCxOquYappGYi9eAX341uafMJ/Gfa6jnAVVt8phlJeO0OeNE4mBR/tRnnM+IauQhv
+         8llDNb8wSU1rrfqRBy2NMbkjoXAGdx4lI4kjZ91XdFnkLMXeJujE21Q4Qfk7gAMtvB
+         fS6TI5PJCTQFVrSK1Pd0wvkZbwyYIkpNlNT834ctUAFfk0vGEH3sGf5X3hvkNALMp+
+         nIUkA1xTFaW4XC1KJPnnXjGI0gH5q4S/WMyHmx2em+gCyYbeTe9m6TEsljBnD4VV93
+         2514N7GJs6fvQ==
+Date:   Fri, 20 Aug 2021 17:40:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v1 1/1] PCI: Sync __pci_register_driver() stub for
+ CONFIG_PCI=n
+Message-ID: <20210820224012.GA3367853@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210813153619.89574-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Barry Song <song.bao.hua@hisilicon.com>
+On Fri, Aug 13, 2021 at 06:36:19PM +0300, Andy Shevchenko wrote:
+> The CONFIG_PCI=y case got a new parameter long time ago.
+> Sync the stub as well.
+> 
+> Fixes: 725522b5453d ("PCI: add the sysfs driver name to all modules")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-/sys/bus/pci/devices/.../irq has been there for many years but it
-has never been documented. This patch is trying to document it.
+Applied to pci/misc for v5.15, thanks!
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- Documentation/ABI/testing/sysfs-bus-pci | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 793cbb7..8d42385 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -96,6 +96,14 @@ Description:
- 		This attribute indicates the mode that the irq vector named by
- 		the file is in (msi vs. msix)
- 
-+What:		/sys/bus/pci/devices/.../irq
-+Date:		August 2021
-+Contact:	Barry Song <song.bao.hua@hisilicon.com>
-+Description:
-+		Historically this attribute represent the IRQ line which runs
-+		from the PCI device to the Interrupt controller. With MSI and
-+		MSI-X, this attribute is the first IRQ number of IRQ vectors.
-+
- What:		/sys/bus/pci/devices/.../remove
- Date:		January 2009
- Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
--- 
-1.8.3.1
-
+> ---
+>  include/linux/pci.h | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 540b377ca8f6..1ef4ee6a8b2e 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1740,8 +1740,9 @@ static inline void pci_disable_device(struct pci_dev *dev) { }
+>  static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
+>  static inline int pci_assign_resource(struct pci_dev *dev, int i)
+>  { return -EBUSY; }
+> -static inline int __pci_register_driver(struct pci_driver *drv,
+> -					struct module *owner)
+> +static inline int __must_check __pci_register_driver(struct pci_driver *,
+> +						     struct module *,
+> +						     const char *mod_name)
+>  { return 0; }
+>  static inline int pci_register_driver(struct pci_driver *drv)
+>  { return 0; }
+> -- 
+> 2.30.2
+> 
