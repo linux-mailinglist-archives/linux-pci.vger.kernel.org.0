@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 456A33F298D
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 11:53:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82B463F2994
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Aug 2021 11:54:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235321AbhHTJyQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Aug 2021 05:54:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        id S238890AbhHTJyl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Aug 2021 05:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236934AbhHTJyQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Aug 2021 05:54:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55D3161051;
-        Fri, 20 Aug 2021 09:53:37 +0000 (UTC)
+        id S238940AbhHTJyj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Aug 2021 05:54:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2176661075;
+        Fri, 20 Aug 2021 09:53:59 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V7 3/5] PCI: Improve the MRRS quirk for LS7A
-Date:   Fri, 20 Aug 2021 17:52:27 +0800
-Message-Id: <20210820095229.624515-4-chenhuacai@loongson.cn>
+Subject: [PATCH V7 4/5] PCI: Add quirk for LS7A to avoid reboot failure
+Date:   Fri, 20 Aug 2021 17:52:28 +0800
+Message-Id: <20210820095229.624515-5-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210820095229.624515-1-chenhuacai@loongson.cn>
 References: <20210820095229.624515-1-chenhuacai@loongson.cn>
@@ -31,123 +31,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In new revision of LS7A, some PCIe ports support larger value than 256,
-but their maximum supported MRRS values are not detectable. Moreover,
-the current loongson_mrrs_quirk() cannot avoid devices increasing its
-MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-will actually set a big value in its driver. So the only possible way
-is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+Commit cc27b735ad3a75574a ("PCI/portdrv: Turn off PCIe services during
+shutdown") causes poweroff/reboot failure on systems with LS7A chipset.
+We found that if we remove "pci_command &= ~PCI_COMMAND_MASTER;" in
+do_pci_disable_device(), it can work well. The hardware engineer says
+that the root cause is that CPU is still accessing PCIe devices while
+poweroff/reboot, and if we disable the Bus Master Bit at this time, the
+PCIe controller doesn't forward requests to downstream devices, and also
+doesn't send TIMEOUT to CPU, which causes CPU wait forever (hardware
+deadlock). This behavior is a PCIe protocol violation (Bus Master should
+not be involved in CPU MMIO transactions), and it will be fixed in new
+revisions of hardware (add timeout mechanism for CPU read request,
+whether or not Bus Master bit is cleared).
 
-However, according to PCIe Spec, it is legal for an OS to program any
-value for MRRS, and it is also legal for an endpoint to generate a Read
-Request with any size up to its MRRS. As the hardware engineers say, the
-root cause here is LS7A doesn't break up large read requests. In detail,
-LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-request with a size that's "too big" ("too big" means larger than the
-PCIe ports can handle, which means 256 for some ports and 4096 for the
-others, and of course this is a problem in the LS7A's hardware design).
+On some x86 platforms, radeon/amdgpu devices can cause similar problems
+[1][2]. Once before I wanted to make a single patch to solve "all of
+these problems" together, but it seems unreasonable because maybe they
+are not exactly the same problem. So, this patch just add a quirk for
+LS7A to avoid clearing Bus Master bit in pcie_port_device_remove(), and
+leave other platforms as is.
+
+[1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
+[2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
- drivers/pci/pci.c                     |  6 ++++
+ drivers/pci/controller/pci-loongson.c | 20 ++++++++++++++++++++
+ drivers/pci/pcie/portdrv_core.c       |  6 +++++-
  include/linux/pci.h                   |  1 +
- 3 files changed, 25 insertions(+), 29 deletions(-)
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index db5b51ebff3c..c4b322cae97e 100644
+index c4b322cae97e..aaeeb14ef78a 100644
 --- a/drivers/pci/controller/pci-loongson.c
 +++ b/drivers/pci/controller/pci-loongson.c
-@@ -62,37 +62,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+@@ -83,6 +83,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, system_bus_quirk);
+ 			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
--static void loongson_mrrs_quirk(struct pci_dev *dev)
-+static void loongson_mrrs_quirk(struct pci_dev *pdev)
- {
--	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
--	static const struct pci_device_id bridge_devids[] = {
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
--		{ 0, },
--	};
--
--	/* look for the matching bridge */
--	while (!pci_is_root_bus(bus)) {
--		bridge = bus->self;
--		bus = bus->parent;
--		/*
--		 * Some Loongson PCIe ports have a h/w limitation of
--		 * 256 bytes maximum read request size. They can't handle
--		 * anything larger than this. So force this limit on
--		 * any devices attached under these ports.
--		 */
--		if (pci_match_id(bridge_devids, bridge)) {
--			if (pcie_get_readrq(dev) > 256) {
--				pci_info(dev, "limiting MRRS to 256\n");
--				pcie_set_readrq(dev, 256);
--			}
--			break;
--		}
--	}
++static void loongson_bmaster_quirk(struct pci_dev *pdev)
++{
 +	/*
-+	 * Some Loongson PCIe ports have h/w limitations of maximum read
-+	 * request size. They can't handle anything larger than this. So
-+	 * force this limit on any devices attached under these ports.
++	 * Some Loongson PCIe ports will cause CPU deadlock if disable
++	 * the Bus Master bit during poweroff/reboot.
 +	 */
 +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
 +
 +	if (!bridge)
 +		return;
 +
-+	bridge->no_inc_mrrs = 1;
- }
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
++	bridge->no_dis_bmaster = 1;
++}
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_0, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_1, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
- 
++			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
++
  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
  {
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index aacf575c15cf..3279da8ce2dd 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5800,6 +5800,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 	struct pci_config_window *cfg;
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index e1fed6649c41..7f9549a1f48b 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -486,9 +486,13 @@ EXPORT_SYMBOL_GPL(pcie_port_find_device);
+  */
+ void pcie_port_device_remove(struct pci_dev *dev)
  {
- 	u16 v;
- 	int ret;
 +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -5818,6 +5819,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
-+	if (bridge->no_inc_mrrs) {
-+		if (rq > pcie_get_readrq(dev))
-+			return -EINVAL;
-+	}
 +
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
+ 	device_for_each_child(&dev->dev, NULL, remove_iter);
+ 	pci_free_irq_vectors(dev);
+-	pci_disable_device(dev);
++
++	if (!bridge->no_dis_bmaster)
++		pci_disable_device(dev);
+ }
  
+ /**
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 540b377ca8f6..e2583c2785e2 100644
+index e2583c2785e2..46dfbb61f2f0 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -541,6 +541,7 @@ struct pci_host_bridge {
- 	void		*release_data;
+@@ -542,6 +542,7 @@ struct pci_host_bridge {
  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-+	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+ 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
++	unsigned int	no_dis_bmaster:1;	/* No Disable Bus Master */
  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
