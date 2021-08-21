@@ -2,165 +2,306 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEF6B3F3B29
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Aug 2021 17:26:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C990C3F3C9E
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Aug 2021 00:14:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232133AbhHUP1B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Aug 2021 11:27:01 -0400
-Received: from mail-co1nam11on2083.outbound.protection.outlook.com ([40.107.220.83]:55521
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231732AbhHUP1B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Aug 2021 11:27:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KSRHI4UNmIxkZZlNxMdmF/de+5Yi8Hi/OP/gSygU/vI3c+mXpU6kgenqRN7V86lQAEP9GLwC5fyy+SawdvSdvyOFgSaXy8XXCm/XN2824mUYqSPe3lMQEEF/Dvix3HEXaypket7ds3Bv7uoOcUsarGMaIw51yOS3DOKwjtvWT0dgUWLCF435IWkF8XixfHoPpUWzx87uew/ZS6l0rfEBx5pV7aTberJhpUfCuf0t+px2TAl6pTWKRTVRqqDy5weZewTdvfYBVu0EXqn6FrHNGfRsB26dF0nBZLPF068xhOhbAP+usY4aQWWcoWOza5Ulbx2WR3D0PU9Zm68W9ZplXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xwjPogDO3TSbsa82gbCFuwOlaaer8naLrSo43m9KRuw=;
- b=eG4py7hW0IcCR8LgVCXK/u4F+ZY7yGH/tBKY3Q0Fotg5mZI+lAVN2ItKx3SSr02wJolCbUFfBjs990I8uKj9uHE3+wJJoVNxiwFO0GTe0AdPCo6NqwzdAKcsEBCmd8+6+2kg1GuH/gBMBCMw2p+m08vLd0vTBBJpXBZILZH5iidhJvMyXkIfuqDznOsGRBDQjREV31JywBXTcuOQrzqOm0G0m23tuwRXFyfS/oTGeC/2T5oiS2qJxNp2Tz2+8MW7XdzQTH5q4cP1nR0bSvJD8mA4KOFUo6Xq2BZMi6+B4cnR0FT9zFCG1T00arxvYXDfY0mCFsNwWU+I8JHxIPmGAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.36) smtp.rcpttodomain=russell.cc smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xwjPogDO3TSbsa82gbCFuwOlaaer8naLrSo43m9KRuw=;
- b=IISxpUq6mdFEhrOMTm/m0t+icIIrVBexkPfaf56r7/K00CZuYepEDnie8TiYeqsQga3j0/mc7EkPq6Mq8a/9qDq8tqo9nVPQd/nx9z4QAjezBbMmmjyiP/dQloQMHRdpVuRqeqfNITJ81FECRk2On9MJYwnujtYQTQQLV6S1c10A2gUtRgoe+HaAPiB3ot+2IAAMK4LyV+ejhTE42H1P/FwhJUuQ1ImeqEMX8cfndS/pbvI5jFJ0syfEhva1kfMdo2OjiEgJmwAWUEpW9cRwMtkCr+59uarKU+y75b7ABZFzKehUlet4YekZRrhM1ESTjKqGrAMhd9wYA+fT3576zw==
-Received: from BN9PR03CA0562.namprd03.prod.outlook.com (2603:10b6:408:138::27)
- by DM6PR12MB4370.namprd12.prod.outlook.com (2603:10b6:5:2aa::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Sat, 21 Aug
- 2021 15:26:20 +0000
-Received: from BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:138:cafe::9a) by BN9PR03CA0562.outlook.office365.com
- (2603:10b6:408:138::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend
- Transport; Sat, 21 Aug 2021 15:26:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
- smtp.mailfrom=nvidia.com; russell.cc; dkim=none (message not signed)
- header.d=none;russell.cc; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.36; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.36) by
- BN8NAM11FT059.mail.protection.outlook.com (10.13.177.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4436.19 via Frontend Transport; Sat, 21 Aug 2021 15:26:19 +0000
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 21 Aug
- 2021 15:26:19 +0000
-Received: from [10.20.115.83] (172.20.187.6) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 21 Aug
- 2021 15:26:17 +0000
-Subject: Re: [PATCH] PCI/AER: Continue AER recovery of device with
- NO_BUS_RESET set
-To:     Bjorn Helgaas <bhelgaas@google.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Russell Currey <ruscur@russell.cc>
-References: <20210821133058.31583-1-sdonthineni@nvidia.com>
-From:   Shanker R Donthineni <sdonthineni@nvidia.com>
-Message-ID: <f8719589-e56a-25c1-b955-4abd67cf7490@nvidia.com>
-Date:   Sat, 21 Aug 2021 10:26:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S230178AbhHUWP2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Aug 2021 18:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229927AbhHUWP2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Aug 2021 18:15:28 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37865C061575;
+        Sat, 21 Aug 2021 15:14:48 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id z20so27901813ejf.5;
+        Sat, 21 Aug 2021 15:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+hik/cixapObGzvFN3C9sH7wClAUqIJeKpPSLmVoBQ=;
+        b=g786+7deKKXxJtWM7wcVUu4v6958rQ5EjAmBnJ3NIkySKlPwdph3omEhxNyH0/6GL2
+         FXOYD/ehgvFo/rWkbfvKer0hXq9KHo+Y2N6cUAHNkUSYQRwAy30bVDoJdwc8zDMvr93/
+         8uduxu80OFzS0Y2Rj2/Ky4A92j/2GqGX9Ga13KtkkW/H1+XTuCsSwboJaJk+Q6VKuq/5
+         0qOiMm9Ewsx22vyZHDUMtGztJ+CQPX/H7Nmjkuwp3ukYVizYFkR3C9thbUzT19K8DVal
+         qzsK8zkBZvWJMwBZQwUzGEsbhZS9TBXL8u1coEC+ReIwZmaQN2UBm8KjTsan9KvKgkEo
+         epmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+hik/cixapObGzvFN3C9sH7wClAUqIJeKpPSLmVoBQ=;
+        b=Lg8KmQgiQR8XS3JlbuvMMe/DqrMzPdT67cdaDIO1Q1ft6AQxLDeHxOYJdNxWw6tR2k
+         vwYvOMsmsvPphoDM1pCNNP+MPqZPSdZ2V2Z5cVCA6S9SXwPuUqVfVRVuw5QNLnh2ywDs
+         fZatOCyFUAg9OoF20smF9GEJucjnBgcIBeujSwfBjGmbIgnnAGS7PaDOZrru0W4B8SIr
+         E9YlWlXc0Ff6T+yvpthnQXvSSiDMkJNiM/YWrQbXHLHo5llLW1+YvOE/GtBHG5IPFZsG
+         O+DqZkucRMVFwaIqBZ0C0FLdS3nm5nd1JZ+rNqf2jmBo3Cs911+jTrP+YAO20nU3Sfyr
+         aBQg==
+X-Gm-Message-State: AOAM532pRBfLH4XDD5lyRXZqkASFcbx128SsJ+ycpSLMfnt3wYsO16xW
+        rQa/Crgm7Fxg7RXmdDmK+b7Ml/qXB756wil5mRI=
+X-Google-Smtp-Source: ABdhPJyXzgDdct8CSp+cu+YTlhvKOMoO7iYD+n8tbrK5ykiqSnfloquu0yzVz5vhtDp0UOyqjJxGBzbY9o7khmhpJRg=
+X-Received: by 2002:a17:906:11c7:: with SMTP id o7mr28425576eja.480.1629584086740;
+ Sat, 21 Aug 2021 15:14:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210821133058.31583-1-sdonthineni@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c13ad4fc-55e3-4433-ae4e-08d964b806b3
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4370:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB437017EFF3C560E7E60DA2DDC7C29@DM6PR12MB4370.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pqdH+0qm0zQk6qkauCbc7r0woW9uftT4l/da0vnpqpyi93tJGJ4YlWDEgc6l5yCZeq9RewpNUmsl8Z4uDvG6hcGg4bgClVfy9L9Z+peMAKLM5bxr9pNvs3T9qRivNrCPd79cn/uQMOlsWC/kCK3wCkvvUJ7/Mdxs3XMjVuzqZaLYp76gZVbCAX8IuFn0NiAqL4C8LPCrtFCs+lu6GZLVIQhjECgqlcx9KTbOTdVufr3TD7sfRUClL7tp5MQ2KKjTYpG3OiVzdHrgBHC0k1xbCB2czrQxDCUDGG4EsnIu9CtAiZoRFkWn+3fV5bC1oKMSOB/JoTGco6EI3SYxGu6px8AtpBCmygTu8ueYtBuRjPDDAvy47/uCVDN953OcJD1KKVdtRC4VTnSo3yc4qlrCJ2ruMam5ft6JCIVwevy6SklrEwyJHPepNrtEh07kp1fjaLxUQ5zaQhHFQRJCyuann1jPzvJObFbIasJSCC/krh9KYLl3cl3Vn/FwB3dfAtvlftiOz/rphsnIzCdkfBWUDp19E9UhZ8EhYAmb1K4hQK06PHYJLUEbiid5GZP3hwcDMPOiTxeKhx9jgsMZipZ+2lUk5dctwN6/wGPFVHQEt38LYWHOA6STcabvnvj/1UD4yaFhqmJap3PJ9OcwWROsvM/ESit3wYOHMfx2fKefB+7J5ruWNNxDL7AMHhrW9JJEQKaVRJHn7X8nrilkxmOcUICP9f4P97g5TUup0REeZbyRL3ojSHRRIzkVkobGc7boS97Kjcm36aEA5X/rNTRhwA==
-X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(376002)(396003)(346002)(39860400002)(36840700001)(46966006)(31696002)(82310400003)(8676002)(47076005)(2906002)(478600001)(36756003)(426003)(316002)(70206006)(16576012)(336012)(70586007)(8936002)(36906005)(2616005)(54906003)(36860700001)(31686004)(26005)(16526019)(82740400003)(53546011)(83380400001)(5660300002)(4326008)(186003)(6916009)(86362001)(356005)(7636003)(21314003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2021 15:26:19.7325
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c13ad4fc-55e3-4433-ae4e-08d964b806b3
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4370
+References: <20210820223744.8439-2-21cnbao@gmail.com> <20210820233328.GA3368938@bjorn-Precision-5520>
+ <877dgfqdsg.wl-maz@kernel.org>
+In-Reply-To: <877dgfqdsg.wl-maz@kernel.org>
+From:   Barry Song <21cnbao@gmail.com>
+Date:   Sun, 22 Aug 2021 10:14:35 +1200
+Message-ID: <CAGsJ_4wXqnudVO92qSKLdyJaMNuDE-d0srs=4rgJmOQKcG2P3g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI/MSI: Fix the confusing IRQ sysfs ABI for MSI-X
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jonathan.Cameron@huawei.com,
+        bilbao@vt.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Linuxarm <linuxarm@huawei.com>,
+        luzmaximilian@gmail.com, mchehab+huawei@kernel.org,
+        schnelle@linux.ibm.com, Barry Song <song.bao.hua@hisilicon.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sat, Aug 21, 2021 at 10:42 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Hi Bjorn,
+>
+> On Sat, 21 Aug 2021 00:33:28 +0100,
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Thomas, Marc]
+> >
+> > On Sat, Aug 21, 2021 at 10:37:43AM +1200, Barry Song wrote:
+> > > From: Barry Song <song.bao.hua@hisilicon.com>
+> > >
+> > > /sys/bus/pci/devices/.../irq sysfs ABI is very confusing at this
+> > > moment especially for MSI-X cases.
+> >
+> > AFAICT this patch *only* affects MSI-X.  So are you saying the sysfs
+> > ABI is fine for MSI but confusing for MSI-X?
+> >
+> > > While MSI sets IRQ to the first
+> > > number in the vector, MSI-X does nothing for this though it saves
+> > > default_irq in msix_setup_entries(). Weird the saved default_irq
+> > > for MSI-X is never used in pci_msix_shutdown(), which is quite
+> > > different with pci_msi_shutdown(). Thus, this patch moves to show
+> > > the first IRQ number which is from the first msi_entry for MSI-X.
+> > > Hopefully, this can make IRQ ABI more clear and more consistent.
+> > >
+> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> > > ---
+> > >  drivers/pci/msi.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> > > index 9232255..6bbf81b 100644
+> > > --- a/drivers/pci/msi.c
+> > > +++ b/drivers/pci/msi.c
+> > > @@ -771,6 +771,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+> > >     int ret;
+> > >     u16 control;
+> > >     void __iomem *base;
+> > > +   struct msi_desc *desc;
+> > >
+> > >     /* Ensure MSI-X is disabled while it is set up */
+> > >     pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+> > > @@ -814,6 +815,10 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+> > >     pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+> > >
+> > >     pcibios_free_irq(dev);
+> > > +
+> > > +   desc = first_pci_msi_entry(dev);
+> > > +   dev->irq = desc->irq;
+> >
+> > This change is not primarily about sysfs.  This is about changing
+> > "dev->irq" when MSI-X is enabled, and it's only incidental that sysfs
+> > reflects that.
+> >
+> > So we need to know the effect of changing dev->irq.  Drivers may use
+> > the value of dev->irq, and I'm *guessing* this change shouldn't break
+> > them since we already do this for MSI, but I'd like some more expert
+> > opinion than mine :)
+> >
+> > For MSI we have:
+> >
+> >   msi_capability_init
+> >     msi_setup_entry
+> >       entry = alloc_msi_entry(nvec)
+> >       entry->msi_attrib.default_irq = dev->irq;     /* Save IOAPIC IRQ */
+> >     dev->irq = entry->irq;
+> >
+> >   pci_msi_shutdown
+> >     /* Restore dev->irq to its default pin-assertion IRQ */
+> >     dev->irq = desc->msi_attrib.default_irq;
+> >
+> > and for MSI-X we have:
+> >
+> >   msix_capability_init
+> >     msix_setup_entries
+> >       for (i = 0; i < nvec; i++)
+> >         entry = alloc_msi_entry(1)
+> >       entry->msi_attrib.default_irq = dev->irq;
+> >
+> >   pci_msix_shutdown
+> >     for_each_pci_msi_entry(entry, dev)
+> >       __pci_msix_desc_mask_irq
+> > +   dev->irq = entry->msi_attrib.default_irq;   # added by this patch
+> >
+> >
+> > Things that seem strange to me:
+> >
+> >   - The msi_setup_entry() comment "Save IOAPIC IRQ" seems needlessly
+> >     specific; maybe it should be "INTx IRQ".
+> >
+> >   - The pci_msi_shutdown() comment "Restore ... pin-assertion IRQ"
+> >     should match the msi_setup_entry() one, e.g., maybe it should also
+> >     be "INTx IRQ".  There are no INTx or IOAPIC pins in PCIe.
+> >
+> >   - The only use of .default_irq is to save and restore dev->irq, so
+> >     it looks like a per-device thing, not a per-vector thing.
+> >
+> >     In msi_setup_entry() there's only one msi_entry, so there's only
+> >     one saved .default_irq.
+> >
+> >     In msix_setup_entries(), we get nvecs msi_entry structs, and we
+> >     get a saved .default_irq in each one?
+>
+> That's a key point.
+>
+> Old-school PCI/MSI is represented by a single interrupt, and you
+> *could* somehow make it relatively easy for drivers that only
+> understand INTx to migrate to MSI if you replaced whatever is held in
+> dev->irq (which should only represent the INTx mapping) with the MSI
+> interrupt number. Which I guess is what the MSI code is doing.
+>
+> This is the 21st century, and nobody should ever rely on such horror,
+> but I'm sure we do have such drivers in the tree. Boo.
+>
+> However, this *cannot* hold true for Multi-MSI, nor MSI-X, because
+> there is a plurality of interrupts. Even worse, for MSI-X, there is
+> zero guarantee that the allocated interrupts will be in a contiguous
+> space.
+>
+> Given that, what is dev->irq good for? "Absolutely Nothing! (say it
+> again!)".
+>
 
+The only thing is that dev->irq is an sysfs ABI to userspace. Due to
+the inconsistency
+between legacy PCI INTx, MSI, MSI-X, this ABI should have been
+absolutely broken nowadays.
+This is actually what the patchset was originally aiming at to fix.
 
-On 8/21/21 8:30 AM, Shanker Donthineni wrote:
-> External email: Use caution opening links or attachments
->
->
-> In the current implementation, the AER FATAL and NONFTAL recovery will be
-> terminated for the device that exhibits NO_BUS_RESET quirk. The non-zero
+One more question from me is that does dev->irq actually hold any
+valid hardware INTx
+information while hardware is using MSI-X? At least in my hardware,
+sysfs ABI for PCI is all "0".
 
-Correction, this problem happens only for AER_FATAL recovery case.
+root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# cat irq
+0
 
-> return value from pci_bus_error_reset() is treated as an error condition
-> in aer_root_reset() which leads to return PCI_ERS_RESULT_DISCONNECT.
+root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# ls -l msi_irqs/*
+-r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/499
+-r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/500
+-r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/501
+...
+root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# cat msi_irqs/499
+msix
+
+Not quite sure how it is going on different hardware platforms.
+
+> MSI-X is not something you can "accidentally" use. You have to
+> actively embrace it. In all honesty, this patch tries to move in the
+> wrong direction. If anything, we should kill this hack altogether and
+> fix the (handful of?) drivers that rely on it. That'd actually be a
+> good way to find whether they are still worth keeping in the tree. And
+> if it breaks too many of them, then at least we'll know where we
+> stand.
 >
->   aer_recover_work_func()
->     pcie_do_recovery()
->       report_frozen_detected()
->       if (aer_root_reset() == PCI_ERS_RESULT_DISCONNECT)
->          goto failed           # termimates here because of NO_BUS_RESET
+> I'd be tempted to leave the below patch simmer in -next for a few
+> weeks and see if how many people shout:
+
+This looks like a more proper direction to go.
+but here i am wondering how sysfs ABI document should follow the below change
+doc is patch 2/2:
+https://lore.kernel.org/lkml/20210820223744.8439-3-21cnbao@gmail.com/
+
+On the other hand, my feeling is that nobody should depend on sysfs
+irq entry nowadays.
+For example, userspace irqbalance is actually using /sys/devices/.../msi_irqs/
+So probably we should set this ABI invisible when devices are using
+MSI or MSI-X?
+
 >
->       ...
->       report_mmio_enabled()
->       report_resume()
->       pcie_clear_xxx_status()
->       ...
->       return 0
->   failed:
->       pci_uevent_ers(PCI_ERS_RESULT_DISCONNECT);
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index e5e75331b415..2be9a01cbe72 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -591,7 +591,6 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>         entry->msi_attrib.is_virtual    = 0;
+>         entry->msi_attrib.entry_nr      = 0;
+>         entry->msi_attrib.maskbit       = !!(control & PCI_MSI_FLAGS_MASKBIT);
+> -       entry->msi_attrib.default_irq   = dev->irq;     /* Save IOAPIC IRQ */
+>         entry->msi_attrib.multi_cap     = (control & PCI_MSI_FLAGS_QMASK) >> 1;
+>         entry->msi_attrib.multiple      = ilog2(__roundup_pow_of_two(nvec));
 >
-> The return value -ENOTTY from pci_bus_error_reset() indicates SBR was
-> skipped but no real errors were encountered. This scenario could be
-> considered as a non-error case so that the PCI device driver gets the
-> opportunity to recover the device back to an operational state instead
-> of keeping it in the DISCONNECT state.
+> @@ -682,7 +681,6 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+>         dev->msi_enabled = 1;
 >
-> Signed-off-by: Shanker Donthineni <sdonthineni@nvidia.com>
-> ---
->  drivers/pci/pcie/aer.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>         pcibios_free_irq(dev);
+> -       dev->irq = entry->irq;
+>         return 0;
+>  }
 >
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9784fdcf30061..8cf6bd6a3376d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1414,8 +1414,12 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->                         pci_info(dev, "not reset (no FLR support: %d)\n", rc);
->         } else {
->                 rc = pci_bus_error_reset(dev);
-> -               pci_info(dev, "%s Port link has been reset (%d)\n",
-> -                       pci_is_root_bus(dev->bus) ? "Root" : "Downstream", rc);
-> +               pci_info(dev, "%s Port link has %sbeen reset (%d)\n",
-> +                       pci_is_root_bus(dev->bus) ? "Root" : "Downstream",
-> +                       rc == -ENOTTY ? "not " : "", rc);
-> +
-> +               if (rc == -ENOTTY)
-> +                       rc = 0;
->         }
+> @@ -742,7 +740,6 @@ static int msix_setup_entries(struct pci_dev *dev, void __iomem *base,
+>                 entry->msi_attrib.is_virtual =
+>                         entry->msi_attrib.entry_nr >= vec_count;
 >
->         if ((host->native_aer || pcie_ports_native) && aer) {
+> -               entry->msi_attrib.default_irq   = dev->irq;
+>                 entry->mask_base                = base;
+>
+>                 addr = pci_msix_desc_addr(entry);
+> @@ -964,8 +961,6 @@ static void pci_msi_shutdown(struct pci_dev *dev)
+>         mask = msi_mask(desc->msi_attrib.multi_cap);
+>         msi_mask_irq(desc, mask, 0);
+>
+> -       /* Restore dev->irq to its default pin-assertion IRQ */
+> -       dev->irq = desc->msi_attrib.default_irq;
+>         pcibios_alloc_irq(dev);
+>  }
+>
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index e8bdcb83172b..a631664c1c38 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -114,7 +114,6 @@ struct ti_sci_inta_msi_desc {
+>   * @maskbit:   [PCI MSI/X] Mask-Pending bit supported?
+>   * @is_64:     [PCI MSI/X] Address size: 0=32bit 1=64bit
+>   * @entry_nr:  [PCI MSI/X] Entry which is described by this descriptor
+> - * @default_irq:[PCI MSI/X] The default pre-assigned non-MSI irq
+>   * @mask_pos:  [PCI MSI]   Mask register position
+>   * @mask_base: [PCI MSI-X] Mask register base address
+>   * @platform:  [platform]  Platform device specific msi descriptor data
+> @@ -148,7 +147,6 @@ struct msi_desc {
+>                                 u8      is_64           : 1;
+>                                 u8      is_virtual      : 1;
+>                                 u16     entry_nr;
+> -                               unsigned default_irq;
+>                         } msi_attrib;
+>                         union {
+>                                 u8      mask_pos;
+>
+> Thanks,
+>
+>         M.
+>
 > --
-> 2.25.1
->
+> Without deviation from the norm, progress is not possible.
 
+Thanks
+barry
