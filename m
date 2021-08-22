@@ -2,69 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5033F3EB7
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Aug 2021 10:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C6453F3EC2
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Aug 2021 10:55:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232503AbhHVIyR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Aug 2021 04:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
+        id S232417AbhHVI4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Aug 2021 04:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbhHVIyR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Aug 2021 04:54:17 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1455C061575;
-        Sun, 22 Aug 2021 01:53:36 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id d26so824288wrc.0;
-        Sun, 22 Aug 2021 01:53:36 -0700 (PDT)
+        with ESMTP id S231147AbhHVI4e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Aug 2021 04:56:34 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D05C061575;
+        Sun, 22 Aug 2021 01:55:53 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id x2-20020a1c7c02000000b002e6f1f69a1eso11905806wmc.5;
+        Sun, 22 Aug 2021 01:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hWrdUXFFT1hy7MQnE8Mf414YBD13mw+SDcsxULeOOEk=;
-        b=rLgB4VALwSt44QTvaGD+817BpwPkoc8LU+mbN6W3sImV+OQ0RE7v03MbvyvI0qyzAZ
-         5PsS4vEkUI39luGUxGYvw2gWjRelIji6wXOs56I/EZHtVxlhM+wsMFVpeyVKVPvJQO78
-         qT+j6MmOVIzPEBkW4o0xSXVyBVHgHy5Z1kvScY54YyvVOkKndozqD1EBGd//Wtrz2Cyj
-         rV7HkptEjvP1WCPzApY5zLx/jGB6YgnznLJGhBZcIiPXaVxmOR4JibVX3JGzqQkJAO8s
-         q+CFf3WJFdDg0yTDkEFM0Q1CvPtYgf9ZHvcVuFwLQxtswYrPXS3Tf5HgZGI9KVBN6IPd
-         eulg==
+        bh=pe2cxYTU35zCmd6K7ClNeA3FLV7YkQsHmnGoH/EDgPo=;
+        b=hfo0nWsD5ArA4ektXpXw/T4eXdq71PYcPZh+nrXYeTOoFCZ764v9/0Vf6Pp3Dp7d7g
+         /PpTeDZP3QYwTIzgyGcWICI5ozGMpIJPvbBc5fB8Jg0UuIACU31a4EpB/wZ45EYdZbj9
+         WrgHGptfMjp4AF3PTE58TxP4+rTxUDRM94IdOMEPchtXEONYvhv7d8vmtnU0iglh7cR+
+         RNpRx8bw9j0rViAoE5NzAudPNX6VhjM5zSuwe98dnDs9HZmCrhj1PLkFBKimRjzv18Lf
+         wSr4gByfKJhSwPS02EHMPxkQENY0SBO7qIgvPudVkwCZY9EVPlg5lm/BrjymR1zcQEyR
+         x11A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=hWrdUXFFT1hy7MQnE8Mf414YBD13mw+SDcsxULeOOEk=;
-        b=BNAhnTbB4kM+IpDZAzseiUIkpfALZmBJJAOF6hffsAuEtH+jtwbO6kulYUjPY0YGbV
-         vxXW00/i2F9Rttij8yEQfA3jcDgGkoIcVYqdZC1ON8Hg82zYpVrzH3PmYH+pCfktIZpB
-         mzc/OEraqKmM367/JqgZa9U81o8XcKqsPHm6qUJz9C7IraIK4vmZpdFb8neQoakt/xnr
-         wgPUaJk8qKfWVzQm2BaccCBd4qNiFVM8IegNRcJZQJAjLQJQzyh0KPVGZuEAu89SSYv6
-         CXhemEsmpjxKMdevO1hKoApcHMTJdpP0/yAuKbNZeCyYWqozDDlJePYWLrSM77at2suc
-         RahA==
-X-Gm-Message-State: AOAM5325TNo8SP4xui8BEXyOHANw1DvDyvpVKq5uiKEAZ+aw/AwzVTra
-        RGQ7i+kAMPo7s109K72kUBGRf7sjfauJVw==
-X-Google-Smtp-Source: ABdhPJy+9G/NDjSWeS03fUSf+0DXsM7P8UyIim0rVCaTq5iEuraxkSpc5tou6dJOpdol80OEeomilg==
-X-Received: by 2002:adf:f748:: with SMTP id z8mr7770989wrp.25.1629622414727;
-        Sun, 22 Aug 2021 01:53:34 -0700 (PDT)
+        bh=pe2cxYTU35zCmd6K7ClNeA3FLV7YkQsHmnGoH/EDgPo=;
+        b=FyW0qVLpH+pgvkVnXnopMk2BkT3Ncg32xmV4c6bseN5VYOd2ZVgzG1SFVt7tTZKMnz
+         UUrI7ri/mJxkzl95Y5EYOa5RSuo4WoVWEtXKJ/RpplJ8lWluwIhi6QJgmvHGR+VMmNFr
+         SLP9sTSeNqHM5UF7tKqIJNeEJr89k/H2HGcv8EeiSKFFGcClM2BKbLTEbmmCIeh+urlz
+         EZQ3RG++97XM/0+geSmWnVafTIXHN75j+pWz5iSaA3VwyTLTLTpeOShj6fpByyT8wi2X
+         5P4uB+pDJInYfkVvAAKij5CvFegmuS0cbFucUOuoTatvYfcBtUjWeLZ7VC8Hixd2a65E
+         8Y0Q==
+X-Gm-Message-State: AOAM5336p/qJwzeJ3jO9xaGijNZQL70SxqoSuq5sG9LXY7o1dYLbXN89
+        QbD7FA203djaibXKwvXniHlDfUQdf9AXzw==
+X-Google-Smtp-Source: ABdhPJzRmfoLK53kCyNgYR0q2bXAc9ELX+LjH7O//q8n55Qajfho/rvL7U63cWLHLuipE5plgI05oA==
+X-Received: by 2002:a05:600c:1d06:: with SMTP id l6mr11353079wms.18.1629622552318;
+        Sun, 22 Aug 2021 01:55:52 -0700 (PDT)
 Received: from [192.168.1.22] (amarseille-551-1-7-65.w92-145.abo.wanadoo.fr. [92.145.152.65])
-        by smtp.gmail.com with ESMTPSA id e14sm6620743wrr.6.2021.08.22.01.53.34
+        by smtp.gmail.com with ESMTPSA id s1sm14814844wmh.46.2021.08.22.01.55.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Aug 2021 01:53:34 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
-To:     Jeremy Linton <jeremy.linton@arm.com>, linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        Sun, 22 Aug 2021 01:55:52 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] MAINTAINERS: Widen brcmstb PCIe file scope
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robh@kernel.org, kw@linux.com,
         sdonthineni@nvidia.com, stefan.wahren@i2se.com,
         bcm-kernel-feedback-list@broadcom.com, linux-acpi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210819215655.84866-1-jeremy.linton@arm.com>
- <20210819215655.84866-4-jeremy.linton@arm.com>
+References: <20210820190917.GA3340819@bjorn-Precision-5520>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <9796674a-5870-135c-2fdc-fb0d5347d7c7@gmail.com>
-Date:   Sun, 22 Aug 2021 10:53:33 +0200
+Message-ID: <44703985-286c-4f57-c4ef-7b4cbd82a8d7@gmail.com>
+Date:   Sun, 22 Aug 2021 10:55:51 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210819215655.84866-4-jeremy.linton@arm.com>
+In-Reply-To: <20210820190917.GA3340819@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,54 +75,40 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 8/19/2021 11:56 PM, Jeremy Linton wrote:
-> Now that there is a bcm2711 quirk, it needs to be enabled when the
-> MCFG is missing. Use an ACPI namespace _DSD property
-> "linux-ecam-quirk-id" as an alternative to the MCFG OEM.
+On 8/20/2021 9:09 PM, Bjorn Helgaas wrote:
+> On Thu, Aug 19, 2021 at 04:56:55PM -0500, Jeremy Linton wrote:
+>> The brcmstb PCI hardware is now split across
+>> multiple files. Include them in the maintainers
+>> block.
 > 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   drivers/acpi/pci_mcfg.c | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
+> Rewrap to fill 75 columns or so.
 > 
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index 53cab975f612..4b991ee5c66c 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
->   	ALTRA_ECAM_QUIRK(1, 13),
->   	ALTRA_ECAM_QUIRK(1, 14),
->   	ALTRA_ECAM_QUIRK(1, 15),
-> +
-> +	{ "bcm2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
-> +	  DEFINE_RES_MEM(0xFD500000, 0xA000) },
->   };
->   
->   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-> @@ -198,8 +201,18 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
->   	u16 segment = root->segment;
->   	struct resource *bus_range = &root->secondary;
->   	struct mcfg_fixup *f;
-> +	const char *soc;
->   	int i;
->   
-> +	/*
-> +	 * This may be a machine with a PCI/SMC conduit, which means it doesn't
-> +	 * have an MCFG. Use an ACPI namespace definition instead.
-> +	 */
-> +	if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
-> +					 "linux-ecam-quirk-id", &soc)) {
-> +		memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
-
-Being super paranoid here, can we use one of the "safe" string copy 
-routines here just in case?
-
-> +	}
-> +
->   	for (i = 0, f = mcfg_quirks; i < ARRAY_SIZE(mcfg_quirks); i++, f++) {
->   		if (pci_mcfg_quirk_matches(f, segment, bus_range)) {
->   			if (f->cfgres.start)
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   MAINTAINERS | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index fd25e4ecf0b9..605a385cea36 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -3500,7 +3500,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>>   S:	Maintained
+>>   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git
+>>   F:	Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>> -F:	drivers/pci/controller/pcie-brcmstb.c
+>> +F:	drivers/pci/controller/pcie-brcmstb*
 > 
+> There are already two entries that mention
+> drivers/pci/controller/pcie-brcmstb.c, and a patch headed for v5.14
+> adds a third.  Do you want to update them all?
 
+That would be a good idea, the patch that Bjorn is referring to is:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e647eff57466c8cf7547532d6b26166b9b17f341
+
+With that fixed:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
