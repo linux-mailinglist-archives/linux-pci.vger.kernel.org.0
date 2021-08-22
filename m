@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E172A3F406F
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Aug 2021 18:26:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FEED3F40B4
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Aug 2021 19:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234272AbhHVQ11 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Aug 2021 12:27:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:30632 "EHLO mga01.intel.com"
+        id S229802AbhHVRn3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Aug 2021 13:43:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:12443 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229460AbhHVQ10 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 22 Aug 2021 12:27:26 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10084"; a="239114473"
+        id S229696AbhHVRn2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 22 Aug 2021 13:43:28 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10084"; a="217014125"
 X-IronPort-AV: E=Sophos;i="5.84,342,1620716400"; 
-   d="gz'50?scan'50,208,50";a="239114473"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2021 09:26:44 -0700
+   d="gz'50?scan'50,208,50";a="217014125"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2021 10:42:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,342,1620716400"; 
-   d="gz'50?scan'50,208,50";a="596395287"
+   d="gz'50?scan'50,208,50";a="514450346"
 Received: from lkp-server01.sh.intel.com (HELO d053b881505b) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2021 09:26:41 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 22 Aug 2021 10:42:42 -0700
 Received: from kbuild by d053b881505b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mHqIy-000Wnn-Ea; Sun, 22 Aug 2021 16:26:40 +0000
-Date:   Mon, 23 Aug 2021 00:25:56 +0800
+        id 1mHrUX-000Wqq-M8; Sun, 22 Aug 2021 17:42:41 +0000
+Date:   Mon, 23 Aug 2021 01:42:12 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Heiner Kallweit <hkallweit1@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Edward Cree <ecree.xilinx@gmail.com>,
-        Martin Habets <habetsm.xilinx@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
+        Ariel Elior <aelior@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-everest-linux-l2@marvell.com, Jakub Kicinski <kuba@kernel.org>,
+        David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>
+Cc:     kbuild-all@lists.01.org,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 01/12] sfc: falcon: Read VPD with pci_vpd_alloc()
-Message-ID: <202108230015.94nVrgF8-lkp@intel.com>
-References: <2a8d069e-9516-50d8-6520-2614222c8f5f@gmail.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 05/12] bnx2x: Read VPD with pci_vpd_alloc()
+Message-ID: <202108230150.AuZKqxsA-lkp@intel.com>
+References: <821a334d-ff9d-386e-5f42-9b620ab3dbfa@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="wac7ysb48OaltWcw"
+Content-Type: multipart/mixed; boundary="gKMricLos+KVdGMg"
 Content-Disposition: inline
-In-Reply-To: <2a8d069e-9516-50d8-6520-2614222c8f5f@gmail.com>
+In-Reply-To: <821a334d-ff9d-386e-5f42-9b620ab3dbfa@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---wac7ysb48OaltWcw
+--gKMricLos+KVdGMg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -69,10 +69,10 @@ compiler: xtensa-linux-gcc (GCC) 11.2.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/f04e3b53e818526cc8b869af3804e375c0a48abf
+        # https://github.com/0day-ci/linux/commit/11d3b0532e225fec84b84c082ff913ab35cecd29
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Heiner-Kallweit/PCI-VPD-Convert-more-users-to-the-new-VPD-API-functions/20210822-220229
-        git checkout f04e3b53e818526cc8b869af3804e375c0a48abf
+        git checkout 11d3b0532e225fec84b84c082ff913ab35cecd29
         # save the attached .config to linux build tree
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross ARCH=xtensa 
 
@@ -81,101 +81,91 @@ Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>):
 
-   drivers/net/ethernet/sfc/falcon/efx.c: In function 'ef4_probe_vpd_strings':
-   drivers/net/ethernet/sfc/falcon/efx.c:2792:20: error: implicit declaration of function 'pci_vpd_alloc'; did you mean 'pci_pool_alloc'? [-Werror=implicit-function-declaration]
-    2792 |         vpd_data = pci_vpd_alloc(dev, &vpd_size);
+   drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c: In function 'bnx2x_read_fwinfo':
+   drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c:12200:20: error: implicit declaration of function 'pci_vpd_alloc'; did you mean 'pci_pool_alloc'? [-Werror=implicit-function-declaration]
+   12200 |         vpd_data = pci_vpd_alloc(bp->pdev, &vpd_len);
          |                    ^~~~~~~~~~~~~
          |                    pci_pool_alloc
->> drivers/net/ethernet/sfc/falcon/efx.c:2792:18: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2792 |         vpd_data = pci_vpd_alloc(dev, &vpd_size);
+>> drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c:12200:18: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   12200 |         vpd_data = pci_vpd_alloc(bp->pdev, &vpd_len);
          |                  ^
    cc1: some warnings being treated as errors
 
 
-vim +2792 drivers/net/ethernet/sfc/falcon/efx.c
+vim +12200 drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
 
-  2781	
-  2782	/* NIC VPD information
-  2783	 * Called during probe to display the part number of the installed NIC.
-  2784	 */
-  2785	static void ef4_probe_vpd_strings(struct ef4_nic *efx)
-  2786	{
-  2787		struct pci_dev *dev = efx->pci_dev;
-  2788		int ro_start, ro_size, i, j;
-  2789		unsigned int vpd_size;
-  2790		u8 *vpd_data;
-  2791	
-> 2792		vpd_data = pci_vpd_alloc(dev, &vpd_size);
-  2793		if (IS_ERR(vpd_data)) {
-  2794			pci_warn(dev, "Unable to read VPD\n");
-  2795			return;
-  2796		}
-  2797	
-  2798		/* Get the Read only section */
-  2799		ro_start = pci_vpd_find_tag(vpd_data, vpd_size, PCI_VPD_LRDT_RO_DATA);
-  2800		if (ro_start < 0) {
-  2801			netif_err(efx, drv, efx->net_dev, "VPD Read-only not found\n");
-  2802			goto out;
-  2803		}
-  2804	
-  2805		ro_size = pci_vpd_lrdt_size(&vpd_data[ro_start]);
-  2806		j = ro_size;
-  2807		i = ro_start + PCI_VPD_LRDT_TAG_SIZE;
-  2808		if (i + j > vpd_size)
-  2809			j = vpd_size - i;
-  2810	
-  2811		/* Get the Part number */
-  2812		i = pci_vpd_find_info_keyword(vpd_data, i, j, "PN");
-  2813		if (i < 0) {
-  2814			netif_err(efx, drv, efx->net_dev, "Part number not found\n");
-  2815			goto out;
-  2816		}
-  2817	
-  2818		j = pci_vpd_info_field_size(&vpd_data[i]);
-  2819		i += PCI_VPD_INFO_FLD_HDR_SIZE;
-  2820		if (i + j > vpd_size) {
-  2821			netif_err(efx, drv, efx->net_dev, "Incomplete part number\n");
-  2822			goto out;
-  2823		}
-  2824	
-  2825		netif_info(efx, drv, efx->net_dev,
-  2826			   "Part Number : %.*s\n", j, &vpd_data[i]);
-  2827	
-  2828		i = ro_start + PCI_VPD_LRDT_TAG_SIZE;
-  2829		j = ro_size;
-  2830		i = pci_vpd_find_info_keyword(vpd_data, i, j, "SN");
-  2831		if (i < 0) {
-  2832			netif_err(efx, drv, efx->net_dev, "Serial number not found\n");
-  2833			goto out;
-  2834		}
-  2835	
-  2836		j = pci_vpd_info_field_size(&vpd_data[i]);
-  2837		i += PCI_VPD_INFO_FLD_HDR_SIZE;
-  2838		if (i + j > vpd_size) {
-  2839			netif_err(efx, drv, efx->net_dev, "Incomplete serial number\n");
-  2840			goto out;
-  2841		}
-  2842	
-  2843		efx->vpd_sn = kmalloc(j + 1, GFP_KERNEL);
-  2844		if (!efx->vpd_sn)
-  2845			goto out;
-  2846	
-  2847		snprintf(efx->vpd_sn, j + 1, "%s", &vpd_data[i]);
-  2848	out:
-  2849		kfree(vpd_data);
-  2850	}
-  2851	
+ 12189	
+ 12190	static void bnx2x_read_fwinfo(struct bnx2x *bp)
+ 12191	{
+ 12192		int i, block_end, rodi;
+ 12193		char str_id_reg[VENDOR_ID_LEN+1];
+ 12194		char str_id_cap[VENDOR_ID_LEN+1];
+ 12195		unsigned int vpd_len;
+ 12196		u8 *vpd_data, len;
+ 12197	
+ 12198		memset(bp->fw_ver, 0, sizeof(bp->fw_ver));
+ 12199	
+ 12200		vpd_data = pci_vpd_alloc(bp->pdev, &vpd_len);
+ 12201		if (IS_ERR(vpd_data))
+ 12202			return;
+ 12203	
+ 12204		/* VPD RO tag should be first tag after identifier string, hence
+ 12205		 * we should be able to find it in first BNX2X_VPD_LEN chars
+ 12206		 */
+ 12207		i = pci_vpd_find_tag(vpd_data, vpd_len, PCI_VPD_LRDT_RO_DATA);
+ 12208		if (i < 0)
+ 12209			goto out_not_found;
+ 12210	
+ 12211		block_end = i + PCI_VPD_LRDT_TAG_SIZE +
+ 12212			    pci_vpd_lrdt_size(&vpd_data[i]);
+ 12213		i += PCI_VPD_LRDT_TAG_SIZE;
+ 12214	
+ 12215		rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
+ 12216					   PCI_VPD_RO_KEYWORD_MFR_ID);
+ 12217		if (rodi < 0)
+ 12218			goto out_not_found;
+ 12219	
+ 12220		len = pci_vpd_info_field_size(&vpd_data[rodi]);
+ 12221	
+ 12222		if (len != VENDOR_ID_LEN)
+ 12223			goto out_not_found;
+ 12224	
+ 12225		rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
+ 12226	
+ 12227		/* vendor specific info */
+ 12228		snprintf(str_id_reg, VENDOR_ID_LEN + 1, "%04x", PCI_VENDOR_ID_DELL);
+ 12229		snprintf(str_id_cap, VENDOR_ID_LEN + 1, "%04X", PCI_VENDOR_ID_DELL);
+ 12230		if (!strncmp(str_id_reg, &vpd_data[rodi], VENDOR_ID_LEN) ||
+ 12231		    !strncmp(str_id_cap, &vpd_data[rodi], VENDOR_ID_LEN)) {
+ 12232	
+ 12233			rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
+ 12234							PCI_VPD_RO_KEYWORD_VENDOR0);
+ 12235			if (rodi >= 0) {
+ 12236				len = pci_vpd_info_field_size(&vpd_data[rodi]);
+ 12237	
+ 12238				rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
+ 12239	
+ 12240				if (len < 32 && (len + rodi) <= vpd_len) {
+ 12241					memcpy(bp->fw_ver, &vpd_data[rodi], len);
+ 12242					bp->fw_ver[len] = ' ';
+ 12243				}
+ 12244			}
+ 12245		}
+ 12246	out_not_found:
+ 12247		kfree(vpd_data);
+ 12248	}
+ 12249	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---wac7ysb48OaltWcw
+--gKMricLos+KVdGMg
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICDNtImEAAy5jb25maWcAjFxbc9s4sn6fX6FyXnarzsz4ktHmnFN+AElQwogkGAKULL+w
+H4sICAV/ImEAAy5jb25maWcAjFxbc9s4sn6fX6FyXnarzsz4ktHmnFN+AElQwogkGAKULL+w
 FEfJuMa2UrY8O9lfv93gDQ2AcvIwE37duPcdUN799G7GXo+Hx93x/m738PB99nX/tH/eHfef
 Z1/uH/b/P0vkrJB6xhOhfwHm7P7p9e9f/z7un152s99+uXj/y/nPz3eXs9X++Wn/MIsPT1/u
 v75CB/eHp5/e/RTLIhWLJo6bNa+UkEWj+Y2+Pms7+PkBe/v5693d7B+LOP7n7OLil8tfzs+s
@@ -1440,4 +1430,4 @@ KZ+LJ4EJ7aZ9h+cBMns8xtZ4W2NKlWjbXdyxNqPY+L4zJqq88S8T2EhxCN1AgAorx6e8FG8T
 xkOIyBEtYaKgxgdGzt2AmUNf9EQOn/DqHAHpCkNdWdvPzGmBiUGH7hEyf5NwrdOeJiwiuyaV
 SvLtffz/A82R7DkFbQQA
 
---wac7ysb48OaltWcw--
+--gKMricLos+KVdGMg--
