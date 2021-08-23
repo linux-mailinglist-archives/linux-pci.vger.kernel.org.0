@@ -2,389 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B688F3F4D6F
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 17:25:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AECE13F4D84
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 17:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231431AbhHWPZX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 11:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231338AbhHWPZX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 11:25:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6614B61407;
-        Mon, 23 Aug 2021 15:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629732280;
-        bh=+tC3LV1UrdSIPc9j2U2GAzIn7LLp+gJB/LXopp7UjkU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n8Ock/7s8mgNK+ro1JE2tTykNAS4ejaGcYzCUU/30GOc6xG3SOBiT2g/YYntK4v+B
-         iZ5oWmqgjwtqGhfPRIN/SumQaRBVlfsjTzWJmVBLLyesMzXtxkgoBXXrrR64+G+1+d
-         Z/ZL2yoOO1/7T1TlfjM4gBvFKtevr9cceEwjrsj2WStQmqpJuFqki+YDZ/pJRwVkaC
-         uEHp5sZvjiti6UtgMX/2iOE5jyeIUqDWGIr0TWZwMjqn5qnrRZ26Z5QbJ8Bpk5wGed
-         m0+S1te/xnebAD7EfKx/d0d0uSqLpv6w/Pg0I/yXYb21qITVtmYkvWjATTQf8p3kYW
-         pOi4dEfFlKWiQ==
-Received: by mail-ed1-f52.google.com with SMTP id z19so2235666edi.9;
-        Mon, 23 Aug 2021 08:24:40 -0700 (PDT)
-X-Gm-Message-State: AOAM530u174umz9LsKkgvx5mieAw01AvrnqY4MaRGia0NJx/tODvn5dm
-        XahwPyNAaMcXkayvVBzbEUfZ4p9ATQsgYoRLUw==
-X-Google-Smtp-Source: ABdhPJz6Cl4TrOit/7Szj+BAGCpmfttIrVWNUJFOLx7TDyALbToKa7IHuOtbIAHE+XTGna0KL7cRNgeqOHaJdOnZgW8=
-X-Received: by 2002:a05:6402:1215:: with SMTP id c21mr38062854edw.137.1629732278842;
- Mon, 23 Aug 2021 08:24:38 -0700 (PDT)
+        id S231305AbhHWP3n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 11:29:43 -0400
+Received: from mail-bn8nam08on2088.outbound.protection.outlook.com ([40.107.100.88]:5856
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230380AbhHWP3n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Aug 2021 11:29:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iMYQ1afa/TzNOuGSbEhUR8aKI3OFiIRX7VJO0u/rqWJfMlXUknAUdkrSZpJbtjm908XCqcuDpkQ8U2N51LgB2e+tPxNehaALW2v5v5BZvqKqaHSIZ5n8W+eKsTrFKkb4n/+TssPs9/2SfoFt4GX5BcIZODoFH9XXwRaU62dyUaG34kS9bP5qq9MVPT2Fi5s/fX6Daxd9STaRGMVDdeEy86dtyBObKDaprhf1NKb+u/N3JiNyA0bWYpbTHV/0F3r5BxLaaS2yj7NYGggaK50Eb32j3AffbKxzArtMwkBEOFc4QNuCI6T9MOc6ZAffPXvcZtbBrIbbC1MFJXb2lrr9XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNEs3u0zSvoRBiBxgRSJOOFae5LCdo8zc4TPY9bvovk=;
+ b=jUm0xYuHM15OvfwPCnNZddvfQueSu1B2FMUDEL0AeTZaZbM0EOl9SxyQTjr4pwpSbQ+B3JJyf47MzROYZd7sEQgrg9Vsdbrn6IQrbBcKVJIFU5A0CCd+qWplXwB0yQwKK5eT0P66YA7RduTqKSbKQyjhl8CX+u+IXjKxgaa3ZHFDFqa1JrJ+VKxkpJ5IVAlRz1od8fMjO/Q3sMm8aKlYYhG6UUUpVCrvwSANDMWbAI/t4sE4cllRQ7YtHxKTy/iOi2RIma1uHFTdkNvXsk2V1A+f9IJcIi7oYMsnLOW7rzT+YeDPOz/N+vwlZkELvm4hDd7WmzcSwAZVBAUnvdcVIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNEs3u0zSvoRBiBxgRSJOOFae5LCdo8zc4TPY9bvovk=;
+ b=o2W81zXjfuRWMR4DR7W1caI+su2EGMnVclwpQi3ZwxLg3c5lgaZa9z3/kP+0x0Sd9SvBVGIB6EXnTutHAvbmWkaLPeJVqrEJBnU6FhZmJW/GK/a3lMjEzS2il6B15mJoSbQ1iFO0SK4skzihxDtxK+tRxccdz6golTPh+HZVYqfNaM+oezWCwOtDWiRVblDIVLjRpFOaHShVGz1dzG4RXmUsemGhoOzV2YbJVyB98Famypj1SPUxiO2OohB6vRDTjwOXn6AmZWGph80fq8VhTq88xvOizR8uDaq7CrLzPKgGCAsomY0CK5+1VAyB5YucAHyNlRdKgL/Tawz7L0Z4xA==
+Received: from BN9P221CA0002.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::9)
+ by MWHPR12MB1822.namprd12.prod.outlook.com (2603:10b6:300:114::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.21; Mon, 23 Aug
+ 2021 15:28:58 +0000
+Received: from BN8NAM11FT025.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10a:cafe::cf) by BN9P221CA0002.outlook.office365.com
+ (2603:10b6:408:10a::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.18 via Frontend
+ Transport; Mon, 23 Aug 2021 15:28:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ BN8NAM11FT025.mail.protection.outlook.com (10.13.177.136) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4436.19 via Frontend Transport; Mon, 23 Aug 2021 15:28:57 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Aug
+ 2021 15:28:56 +0000
+Received: from [172.27.13.55] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Aug
+ 2021 15:28:52 +0000
+Subject: Re: [PATCH V3 06/13] vfio/pci: Split the pci_driver code out of
+ vfio_pci_core.c
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+CC:     <bhelgaas@google.com>, <corbet@lwn.net>,
+        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
+        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <jgg@nvidia.com>, <maorg@nvidia.com>, <leonro@nvidia.com>
+References: <20210822143602.153816-1-yishaih@nvidia.com>
+ <20210822143602.153816-7-yishaih@nvidia.com>
+ <20210823091624.697c67d6.alex.williamson@redhat.com>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+Message-ID: <393721ae-2183-2b1b-f670-8006992c4e55@nvidia.com>
+Date:   Mon, 23 Aug 2021 18:28:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <20210726083204.93196-1-mark.kettenis@xs4all.nl>
- <20210726083204.93196-2-mark.kettenis@xs4all.nl> <20210726231848.GA1025245@robh.at.kernel.org>
- <87sfzt1pg9.wl-maz@kernel.org> <CAL_JsqLvqWiuib9s4PzX8pOQYJQ0eR7Gxz==J849eVJ5MDq4SA@mail.gmail.com>
- <8735ra1x8t.wl-maz@kernel.org> <CAL_JsqJ5M3soMT30ntSTbqqdrQP8TT26mHL-0xExsn10MWPofA@mail.gmail.com>
- <56140331bd735d61@bloch.sibelius.xs4all.nl> <CAL_JsqJ-YDNWOoo8TUupDox31YreUNQAPXHnMMtXakQs0S_BDA@mail.gmail.com>
- <56140c26d86f4733@bloch.sibelius.xs4all.nl>
-In-Reply-To: <56140c26d86f4733@bloch.sibelius.xs4all.nl>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 23 Aug 2021 10:24:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJNs7QskN=jD3dvgxtXU-CBf6To6gSQn0PX1Pk5VkkD+g@mail.gmail.com>
-Message-ID: <CAL_JsqJNs7QskN=jD3dvgxtXU-CBf6To6gSQn0PX1Pk5VkkD+g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pci: Add DT bindings for apple,pcie
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sven Peter <sven@svenpeter.dev>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Hector Martin <marcan@marcan.st>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210823091624.697c67d6.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 28ab6a69-bf49-4615-826c-08d9664ab970
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1822:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1822D580D78509474F2FC860DEC49@MWHPR12MB1822.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QijZHw65fsoUyUnjpdN0VY2764Q07MZ8eX1ceRsMPvtpZnbBMYEkparmRpNQQFGwdPcliHjFEkH0VStiIUnruBxjMZzaESTYKor+09Hq9sV5oCqc06+H7GRu07horBMFgF0RjFpYGURPV3yGRjVOWrSrvM2Iun8ovNuFpWlaGz5giKLEyMnSAmC1u2yWwwEEm28aXsZS7fES7L+ll0Hp0zn18AlpXlk2vH4Q1dWkp2oHjbmKkoOTvJ2Bs65PayMTi0g5/IQiJY2eoNR6EKo0QjXJ59mAkyVlmZUsCzmlC4/O6F7fc82UYP445q2k5yuyYlijuMPCKR5F/dDUFePaF55Y/BzDHNUIqrfrz+kdQL/S1XgnCuakoVfCEmaadma+82149be8gDgScyjX8+R8A2FWw4bkDG7T6e8Z5mHRiMurzeBBPP2a+bI6gELLVnC6wh8IE5B0lk3ZfA0EZIyXhY0aSeiurawiSVmmcm3G/9a+yrI6PXbg90JzvFRRuOmBJBW15jz7VSfnxOO0HpEV91WKtaEj5EcT7bPEJ4Mqr+tKC3Coyl0NlfrBuV/M/eVPH6uU487H6GjDJ4on3EqEF8kUAu08b56cVKnf5nRZE0/4JteO/hJJrtwCvou6+dUGJPou373GHIBisTrKePH9iVRbU9QfweNImSb9C3fSD+347r2bTwv1nXw1e9AylBTPdlVRNsBmZLd1oCEJLDOvskv52g83QkfPC/eRGO6n4Ts=
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(46966006)(36840700001)(31696002)(8936002)(36756003)(356005)(8676002)(82740400003)(2616005)(7636003)(426003)(16526019)(186003)(336012)(5660300002)(82310400003)(110136005)(2906002)(47076005)(6636002)(16576012)(54906003)(36906005)(26005)(478600001)(107886003)(53546011)(70586007)(7416002)(70206006)(4326008)(31686004)(36860700001)(86362001)(6666004)(316002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2021 15:28:57.2768
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28ab6a69-bf49-4615-826c-08d9664ab970
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT025.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1822
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 22, 2021 at 12:44 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
->
-> > From: Rob Herring <robh@kernel.org>
-> > Date: Wed, 18 Aug 2021 15:51:11 -0500
->
-> Hi Rob,
->
-> > On Wed, Aug 18, 2021 at 2:56 PM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> > >
-> > > > From: Rob Herring <robh@kernel.org>
-> > > > Date: Sun, 15 Aug 2021 14:19:57 -0500
-> > > >
-> > > > On Sun, Aug 15, 2021 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
-> > > > >
-> > > > > Hi Rob,
-> > > > >
-> > > > > Apologies for the delay, I somehow misplaced this email...
-> > > > >
-> > > > > On Mon, 02 Aug 2021 17:10:39 +0100,
-> > > > > Rob Herring <robh@kernel.org> wrote:
-> > > > > >
-> > > > > > On Sun, Aug 1, 2021 at 3:31 AM Marc Zyngier <maz@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Tue, 27 Jul 2021 00:18:48 +0100,
-> > > > > > > Rob Herring <robh@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, Jul 26, 2021 at 10:32:00AM +0200, Mark Kettenis wrote:
-> > > > > > > > > From: Mark Kettenis <kettenis@openbsd.org>
-> > > > > > > > >
-> > > > > > > > > The Apple PCIe host controller is a PCIe host controller with
-> > > > > > > > > multiple root ports present in Apple ARM SoC platforms, including
-> > > > > > > > > various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> > > > > > > > > ---
-> > > > > > > > >  .../devicetree/bindings/pci/apple,pcie.yaml   | 166 ++++++++++++++++++
-> > > > > > > > >  MAINTAINERS                                   |   1 +
-> > > > > > > > >  2 files changed, 167 insertions(+)
-> > > > > > > > >  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > > > > > >
-> > > > > > > > > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > > > > > > new file mode 100644
-> > > > > > > > > index 000000000000..bfcbdee79c64
-> > > > > > > > > --- /dev/null
-> > > > > > > > > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > > > > > > > > @@ -0,0 +1,166 @@
-> > > > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > > > > > +%YAML 1.2
-> > > > > > > > > +---
-> > > > > > > > > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
-> > > > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > > > +
-> > > > > > > > > +title: Apple PCIe host controller
-> > > > > > > > > +
-> > > > > > > > > +maintainers:
-> > > > > > > > > +  - Mark Kettenis <kettenis@openbsd.org>
-> > > > > > > > > +
-> > > > > > > > > +description: |
-> > > > > > > > > +  The Apple PCIe host controller is a PCIe host controller with
-> > > > > > > > > +  multiple root ports present in Apple ARM SoC platforms, including
-> > > > > > > > > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
-> > > > > > > > > +  The controller incorporates Synopsys DesigWare PCIe logic to
-> > > > > > > > > +  implements its root ports.  But the ATU found on most DesignWare
-> > > > > > > > > +  PCIe host bridges is absent.
-> > > > > > > >
-> > > > > > > > blank line
-> > > > > > > >
-> > > > > > > > > +  All root ports share a single ECAM space, but separate GPIOs are
-> > > > > > > > > +  used to take the PCI devices on those ports out of reset.  Therefore
-> > > > > > > > > +  the standard "reset-gpio" and "max-link-speed" properties appear on
-> > > > > > > >
-> > > > > > > > reset-gpios
-> > > > > > > >
-> > > > > > > > > +  the child nodes that represent the PCI bridges that correspond to
-> > > > > > > > > +  the individual root ports.
-> > > > > > > >
-> > > > > > > > blank line
-> > > > > > > >
-> > > > > > > > > +  MSIs are handled by the PCIe controller and translated into regular
-> > > > > > > > > +  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
-> > > > > > > > > +  distributed over the root ports as the OS sees fit by programming
-> > > > > > > > > +  the PCIe controller's port registers.
-> > > > > > > > > +
-> > > > > > > > > +allOf:
-> > > > > > > > > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > > > > > > > > +
-> > > > > > > > > +properties:
-> > > > > > > > > +  compatible:
-> > > > > > > > > +    items:
-> > > > > > > > > +      - const: apple,t8103-pcie
-> > > > > > > > > +      - const: apple,pcie
-> > > > > > > > > +
-> > > > > > > > > +  reg:
-> > > > > > > > > +    minItems: 3
-> > > > > > > > > +    maxItems: 5
-> > > > > > > > > +
-> > > > > > > > > +  reg-names:
-> > > > > > > > > +    minItems: 3
-> > > > > > > > > +    maxItems: 5
-> > > > > > > > > +    items:
-> > > > > > > > > +      - const: config
-> > > > > > > > > +      - const: rc
-> > > > > > > > > +      - const: port0
-> > > > > > > > > +      - const: port1
-> > > > > > > > > +      - const: port2
-> > > > > > > > > +
-> > > > > > > > > +  ranges:
-> > > > > > > > > +    minItems: 2
-> > > > > > > > > +    maxItems: 2
-> > > > > > > > > +
-> > > > > > > > > +  interrupts:
-> > > > > > > > > +    description:
-> > > > > > > > > +      Interrupt specifiers, one for each root port.
-> > > > > > > > > +    minItems: 1
-> > > > > > > > > +    maxItems: 3
-> > > > > > > > > +
-> > > > > > > > > +  msi-controller: true
-> > > > > > > > > +  msi-parent: true
-> >
-> > BTW, I don't think msi-parent and msi-controller together is valid?
->
-> There is an existing example in:
->
-> arm64/boot/dts/marvell/armada-37xx.dtsi
->
-> I think it makes sense as the pcie bridge itself serves as the MSI
-> controller.
 
-That's pretty common such as all the DWC implementations using the
-built-in MSI controller (in that case 'msi-parent' present means no
-built-in controller). AFAICT, 'msi-parent' is just redundant here
-because the fallback if msi-parent is not found is checking the bus's
-DT node for a domain. See pci_host_bridge_of_msi_domain().
+On 8/23/2021 6:16 PM, Alex Williamson wrote:
+> On Sun, 22 Aug 2021 17:35:55 +0300
+> Yishai Hadas <yishaih@nvidia.com> wrote:
+>> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+>> new file mode 100644
+>> index 000000000000..15474ebadd98
+>> --- /dev/null
+>> +++ b/drivers/vfio/pci/vfio_pci.c
+> ...
+>> +static int vfio_pci_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
+>> +{
+>> +	might_sleep();
+>> +
+>> +	if (!enable_sriov)
+>> +		return -ENOENT;
+>> +
+>> +	return vfio_pci_core_sriov_configure(pdev, nr_virtfn);
+>> +}
+> As noted in previous version, why do we need the might_sleep() above
+> when the core code below includes it and there's nothing above that
+> might sleep before that?  Thanks,
 
-> > > > > > > > > +  msi-ranges:
-> > > > > > > > > +    description:
-> > > > > > > > > +      A list of pairs <intid span>, where "intid" is the first
-> > > > > > > > > +      interrupt number that can be used as an MSI, and "span" the size
-> > > > > > > > > +      of that range.
-> > > > > > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > > > > > > > > +    items:
-> > > > > > > > > +      minItems: 2
-> > > > > > > > > +      maxItems: 2
-> > > > > > > >
-> > > > > > > > I still have issues I raised on v1 with this property. It's genericish
-> > > > > > > > looking, but not generic. 'intid' as a single cell can't specify any
-> > > > > > > > parent interrupt such as a GIC which uses 3 cells. You could put in all
-> > > > > > > > the cells, but you'd still be assuming which cell you can increment.
-> > > > > > >
-> > > > > > > The GIC bindings already use similar abstractions, see what we do for
-> > > > > > > both GICv2m and GICv3 MBIs. Other MSI controllers use similar
-> > > > > > > properties (alpine and loongson, for example).
-> > > > > >
-> > > > > > That's the problem. Everyone making up their own crap.
-> > > > >
-> > > > > And that crap gets approved:
-> > > > >
-> > > > > https://lore.kernel.org/lkml/20200512205704.GA10412@bogus/
-> > > > >
-> > > > > I'm not trying to be antagonistic here, but it seems that your
-> > > > > position on this very subject has changed recently.
-> > > >
-> > > > Not really, I think it's not the first time we've discussed this. But
-> > > > as I see things over and over, my tolerance for another instance
-> > > > without solving the problem for everyone diminishes. And what other
-> > > > leverage do I have?
-> > > >
-> > > > Additionally, how long we have to support something comes into play. I
-> > > > have no idea for a Loongson MSI controller. I have a better idea on an
-> > > > Apple product...
-> > > >
-> > > > > > > > I think you should just list all these under 'interrupts' using
-> > > > > > > > interrupt-names to make your life easier:
-> > > > > > > >
-> > > > > > > > interrupt-names:
-> > > > > > > >   items:
-> > > > > > > >     - const: port0
-> > > > > > > >     - const: port1
-> > > > > > > >     - const: port2
-> > > > > > > >     - const: msi0
-> > > > > > > >     - const: msi1
-> > > > > > > >     - const: msi2
-> > > > > > > >     - const: msi3
-> > > > > > > >     ...
-> > > > > > > >
-> > > > > > > > Yeah, it's kind of verbose, but if the h/w block handles N interrupts,
-> > > > > > > > you should list N interrupts. The worst case for the above is N entries
-> > > > > > > > too if not contiguous.
-> > > > > > >
-> > > > > > > And that's where I beg to differ, again.
-> > > > > > >
-> > > > > > > Specifying interrupts like this gives the false impression that these
-> > > > > > > interrupts are generated by the device that owns them (the RC). Which
-> > > > > > > for MSIs is not the case.
-> > > > > >
-> > > > > > It's no different than an interrupt controller node having an
-> > > > > > interrupts property. The source is downstream and the interrupt
-> > > > > > controller is combining/translating the interrupts.
-> > > > > >
-> > > > > > The physical interrupt signals are connected to and originating in
-> > > > > > this block.
-> > > > >
-> > > > > Oh, I also object to this, for the same reasons. The only case where
-> > > > > it makes sense IMHO is when the interrupt controller is a multiplexer.
-> > > >
-> > > > So we've had the same kind of property for interrupt multiplexers. I'm
-> > > > fine if you think an 'MSI to interrupts mapping property' should be
-> > > > named something else.
-> > > >
-> > > > > > That sounds like perfectly 'describing the h/w' to me.
-> > > > >
-> > > > > I guess we have a different view of about these things. At the end of
-> > > > > the day, I don't care enough as long as we can expose a range of
-> > > > > interrupts one way or another.
-> > > >
-> > > > I don't really either. I just don't want 10 ways AND another...
-> > > >
-> > > > > > > This is not only verbose, this is
-> > > > > > > semantically dubious. And what should we do when the number of
-> > > > > > > possible interrupt is ridiculously large, as it is for the GICv3 ITS?
-> > > > > >
-> > > > > > I don't disagree with the verbose part. But that's not really an issue
-> > > > > > in this case.
-> > > > > >
-> > > > > > > I wish we had a standard way to express these constraints. Until we
-> > > > > > > do, I don't think enumerating individual interrupts is a practical
-> > > > > > > thing to do, nor that it actually represents the topology of the
-> > > > > > > system.
-> > > > > >
-> > > > > > The only way a standard way will happen is to stop accepting the
-> > > > > > custom properties.
-> > > > > >
-> > > > > > All the custom properties suffer from knowledge of what the parent
-> > > > > > interrupt controller is. To fix that, I think we need something like
-> > > > > > this:
-> > > > > >
-> > > > > > msi-ranges = <intspec base>, <intspec step>, <intspec end>;
-> > > > > >
-> > > > > > 'intspec' is defined by the parent interrupt-controller cells. step is
-> > > > > > the value to add. And end is what to match on to stop aka the last
-> > > > > > interrupt in the range. For example, if the GIC is the parent, we'd
-> > > > > > have something like this:
-> > > > > >
-> > > > > > <GIC_SPI 123 0>, <0 1 0>, <GIC_SPI 124 0>
-> > > > > >
-> > > > > > Does this apply to cases other than MSI? I think so as don't we have
-> > > > > > the same type of properties with the low power mode shadow interrupt
-> > > > > > controllers?  So 'interrupt-ranges'?
-> > > > >
-> > > > > This would work, though the increment seems a bit over-engineered. You
-> > > > > also may need this property to accept multiple ranges.
-> > > >
-> > > > Yes, certainly. Worst case is a map.
-> > > >
-> > > > > > It looks to me like there's an assumption in the kernel that an MSI
-> > > > > > controller has a linear range of parent interrupts? Is that correct
-> > > > > > and something that's guaranteed? That assumption leaks into the
-> > > > > > existing bindings.
-> > > > >
-> > > > > Depends on how the controller works. In general, the range maps to the
-> > > > > MultiMSI requirements where the message is an offset from the base of
-> > > > > the interrupt range. So you generally end-up with ranges of at least
-> > > > > 32 contiguous MSIs. Anything under that is sub-par and probably not
-> > > > > worth supporting.
-> > > >
-> > > > Maybe just this is enough:
-> > > > msi-ranges = <intspec base>, <length>, <intspec base>, <length>, ...
-> > > >
-> > > > While I say 'length' here, that's really up to the interrupt parent to
-> > > > interpret the intspec cells.
-> > >
-> > > So for the Apple PCIe controller we'd have:
-> > >
-> > >    msi-ranges = <AIC_IRQ 704 IRQ_TYPE_EDGE_RISING 32>;
-> > >
-> > > That would work just fine.
-> > >
-> > > Should this be documented in the apple,pcie binding, or somewhere more
-> > > generic?
-> >
-> > It doesn't have an 'apple,' prefix, so somewhere generic. Probably
-> > bindings/interrupt-controller/msi.txt. Or start an msi-controller.yaml
-> > schema as I'd rather not add things we can't validate, but I don't
-> > want to gate this on converting all the MSI bindings. Someone that
-> > understands MSI better than me should review too.
->
-> Yes, I'd like to avoid converting all the MSI bindings, but I could
-> add an msi-controller.yaml file and use it in the appropriate
-> interrupt controller and pci host bridge bindings that have been
-> converted to yaml.
+This is used to mention vfio_pci_core_sriov_configure might sleep.
 
-I didn't mean converting *all* MSI users, just what's in msi.txt and
-maybe the PCI MSI stuff. Just starting a msi-controller.yaml schema
-with the new properties is fine. Not that I wouldn't love for someone
-to do all of msi.txt.
+If this is redundant, can you please remove this one line upon merge ?
 
-> > Another thing I thought of is the above is assuming the interrupt
-> > parent is the same as any interrupts for the node and that all MSIs go
-> > to 1 interrupt controller. Also, given Marc doesn't think using
-> > 'interrupts' is right, then using 'interrupt-parent' isn't either
-> > (though many of the examples below do just that). So maybe we need the
-> > phandle in there:
-> >
-> > msi-ranges = <&aic AIC_IRQ 704 IRQ_TYPE_EDGE_RISING 32>;
 >
-> That makes sense.
+> Alex
 >
-> > Other examples of this type of property include:
-> > al,msi-base-spi/al,msi-base-spi
-> > arm,msi-base-spi/arm,msi-num-spis
-> > mbi-ranges
-> > loongson,msi-base-vec/loongson,msi-num-vecs
-> > marvell,spi-ranges
-> > ti,interrupt-ranges?
-> >
-> > We should make sure msi-ranges works for all of these cases at least
-> > even if we can't change them.
->
-> I think this scheme would work for all of these although it isn't
-> entirely clear to me whether ti,interrupt-ranges is about just MSIs or
-> if it also maps some other kind of interrupts.
->
-> marvell,spi-ranges is an interesting one since it typically specifies
-> two ranges of 64 MSIs.  But that's something your proposal addresses
-> just fine.  I suppose we will provide a phandle for the parent
-> interrupt controller for each individual range?
-
-Right.
-
-Rob
+>> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+>> index 94f062818e0c..87d1960d0d61 100644
+>> --- a/drivers/vfio/pci/vfio_pci_core.c
+>> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> ...
+>> -static int vfio_pci_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
+>> +int vfio_pci_core_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
+>>   {
+>>   	struct vfio_device *device;
+>>   	int ret = 0;
+>>   
+>>   	might_sleep();
+>>   
+>> -	if (!enable_sriov)
+>> -		return -ENOENT;
+>> -
+>>   	device = vfio_device_get_from_dev(&pdev->dev);
+>>   	if (!device)
+>>   		return -ENODEV;
