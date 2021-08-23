@@ -2,148 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 077783F43EE
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 05:29:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9F33F4502
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 08:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233572AbhHWDaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Aug 2021 23:30:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:51328 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233550AbhHWDaP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Aug 2021 23:30:15 -0400
-X-UUID: f85d6f69b0ce49a7bebf0393f013a560-20210823
-X-UUID: f85d6f69b0ce49a7bebf0393f013a560-20210823
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 221262932; Mon, 23 Aug 2021 11:29:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 23 Aug 2021 11:29:30 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkcas07.mediatek.inc
- (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Aug
- 2021 11:29:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 23 Aug 2021 11:29:29 +0800
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
-        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>
-CC:     <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <yong.wu@mediatek.com>, <chuanjia.liu@mediatek.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v12 6/6] ARM: dts: mediatek: Update MT7629 PCIe node for new format
-Date:   Mon, 23 Aug 2021 11:28:00 +0800
-Message-ID: <20210823032800.1660-7-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20210823032800.1660-1-chuanjia.liu@mediatek.com>
-References: <20210823032800.1660-1-chuanjia.liu@mediatek.com>
+        id S231715AbhHWGfr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 02:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230260AbhHWGfq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Aug 2021 02:35:46 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335D5C061575;
+        Sun, 22 Aug 2021 23:35:04 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id h13so24627782wrp.1;
+        Sun, 22 Aug 2021 23:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qSV/e6QyHif3aJ5CG58TgVpcSD8xLK7XuClJ7iB4h84=;
+        b=s4ev/IgiHuIFr5xnopqiQZRs20uU/t0h2JNQZlsDqPaBqfsR/w5PGZktTCle5ypukR
+         q9qYu6TrrwG08jWZQjFlyUGFT6HO0PSttR3IkTNlrXbUUXHAOmwTuV2oj4qc4q4HxLmU
+         /qAdU7f0caLOtYWXiaDy2Q4cSDyzYDXBk/RovNjn1c6/4Cg20kqKe3TKFATT9LNaV2JR
+         +jRwe6ADy/6NJi0HbTH7XOsJdJwz4yGO23OSrdt5ifHEQt77MnvciwIWwtuNMpcqrj0q
+         X5hDmeoZFRSIuWXGqk5wpLBo0V54/ch9mJdaD7n/kStlnURFcDfBzrgfPYttUaR4FPVL
+         p2rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qSV/e6QyHif3aJ5CG58TgVpcSD8xLK7XuClJ7iB4h84=;
+        b=bhz67+Atp8Tn3DpENqXrpQZ1BSgB2quLzwAikI2lMlh7dl49OA4U6lK/W7CSJSiFn5
+         n8ipwxelO+CWivwzoosysFLQgeP3GrCbQKKrhdm2Rz61+TO2oSz4U7cvDrY1fEcF9NSN
+         0f2xjzJOUHOrE8C+acPr5A23kmRo8sPu/Wkh22TLnYsHtM7pp4okmMq5sv0KsU8/XkUM
+         SuKAS9jEk63aZnqS6+rU2HLwP3+QDwIM3bypmBuJ+moWXxT7M5x8Bo1mmmoqQRSx5uv6
+         7Hr570YL8H5M0qjf72VB17g40B8jjFn2OwhhYC7DuRoE2I93/BKLjodcfqeGJF1VA7WP
+         b6sg==
+X-Gm-Message-State: AOAM53261wZ8z/eBN34Z2eV4wHUJoab3cVHGsLflsxjen3xyTfXoqxzQ
+        vGfdERpD0unjkNmJRiO+zSPGk085Ujr7gA==
+X-Google-Smtp-Source: ABdhPJw9dO/0knZ51VRdOTtD6rx3KHx7jFCK6IapWDUPd09TgcbryXdTAwCPpXPDU0IhlMgIAe1z4Q==
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr12317037wrn.66.1629700502635;
+        Sun, 22 Aug 2021 23:35:02 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f08:4500:ed43:740c:fec5:7f46? (p200300ea8f084500ed43740cfec57f46.dip0.t-ipconnect.de. [2003:ea:8f08:4500:ed43:740c:fec5:7f46])
+        by smtp.googlemail.com with ESMTPSA id o34sm17404318wms.10.2021.08.22.23.34.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Aug 2021 23:35:02 -0700 (PDT)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20210823120929.7c6f7a4f@canb.auug.org.au>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <fbac0963-385d-b593-e087-e1e75f62fcbf@gmail.com>
+Date:   Mon, 23 Aug 2021 08:34:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20210823120929.7c6f7a4f@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To match the new dts binding. Remove "subsys",unused
-interrupt and slot node.Add "interrupt-names",
-"linux,pci-domain" and pciecfg node.
-
-Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm/boot/dts/mt7629-rfb.dts |  3 ++-
- arch/arm/boot/dts/mt7629.dtsi    | 45 +++++++++++++++-----------------
- 2 files changed, 23 insertions(+), 25 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
-index 9980c10c6e29..eb536cbebd9b 100644
---- a/arch/arm/boot/dts/mt7629-rfb.dts
-+++ b/arch/arm/boot/dts/mt7629-rfb.dts
-@@ -140,9 +140,10 @@
- 	};
- };
- 
--&pcie {
-+&pcie1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_pins>;
-+	status = "okay";
- };
- 
- &pciephy1 {
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 874043f0490d..46fc236e1b89 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -361,16 +361,21 @@
- 			#reset-cells = <1>;
- 		};
- 
--		pcie: pcie@1a140000 {
-+		pciecfg: pciecfg@1a140000 {
-+			compatible = "mediatek,generic-pciecfg", "syscon";
-+			reg = <0x1a140000 0x1000>;
-+		};
-+
-+		pcie1: pcie@1a145000 {
- 			compatible = "mediatek,mt7629-pcie";
- 			device_type = "pci";
--			reg = <0x1a140000 0x1000>,
--			      <0x1a145000 0x1000>;
--			reg-names = "subsys","port1";
-+			reg = <0x1a145000 0x1000>;
-+			reg-names = "port1";
-+			linux,pci-domain = <1>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
--			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
--				     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-names = "pcie_irq";
- 			clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
- 				 <&pciesys CLK_PCIE_P0_AHB_EN>,
- 				 <&pciesys CLK_PCIE_P1_AUX_EN>,
-@@ -391,26 +396,18 @@
- 			power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
- 			bus-range = <0x00 0xff>;
- 			ranges = <0x82000000 0 0x20000000 0x20000000 0 0x10000000>;
-+			status = "disabled";
- 
--			pcie1: pcie@1,0 {
--				device_type = "pci";
--				reg = <0x0800 0 0 0 0>;
--				#address-cells = <3>;
--				#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-+					<0 0 0 2 &pcie_intc1 1>,
-+					<0 0 0 3 &pcie_intc1 2>,
-+					<0 0 0 4 &pcie_intc1 3>;
-+			pcie_intc1: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
- 				#interrupt-cells = <1>;
--				ranges;
--				num-lanes = <1>;
--				interrupt-map-mask = <0 0 0 7>;
--				interrupt-map = <0 0 0 1 &pcie_intc1 0>,
--						<0 0 0 2 &pcie_intc1 1>,
--						<0 0 0 3 &pcie_intc1 2>,
--						<0 0 0 4 &pcie_intc1 3>;
--
--				pcie_intc1: interrupt-controller {
--					interrupt-controller;
--					#address-cells = <0>;
--					#interrupt-cells = <1>;
--				};
- 			};
- 		};
- 
--- 
-2.18.0
-
+On 23.08.2021 04:09, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the net-next tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> drivers/net/ethernet/broadcom/bnx2.c: In function 'bnx2_read_vpd_fw_ver':
+> drivers/net/ethernet/broadcom/bnx2.c:8055:6: error: implicit declaration of function 'pci_vpd_find_ro_info_keyword'; did you mean 'pci_vpd_find_info_keyword'? [-Werror=implicit-function-declaration]
+>  8055 |  j = pci_vpd_find_ro_info_keyword(data, BNX2_VPD_LEN,
+>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |      pci_vpd_find_info_keyword
+> 
+> Caused by commit
+> 
+>   ddc122aac91f ("bnx2: Search VPD with pci_vpd_find_ro_info_keyword()")
+> 
+> I have used the net-next tree from next-20210820 for today.
+> 
+This series was supposed to go through the PCI tree. It builds on recent patches
+that are in the PCI tree, but not in linux-next yet.
+I mentioned this dependency in the cover letter for the last series, but forgot
+it this time. Sorry.
