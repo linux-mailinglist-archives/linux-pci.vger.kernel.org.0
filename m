@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C8CD3F48AB
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 12:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD173F48B3
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 12:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235998AbhHWKbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 06:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        id S233635AbhHWKeA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 06:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235997AbhHWKbL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 06:31:11 -0400
+        id S233118AbhHWKeA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Aug 2021 06:34:00 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA116137D;
-        Mon, 23 Aug 2021 10:30:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3A6137F;
+        Mon, 23 Aug 2021 10:33:18 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mI7Dn-006dWB-BN; Mon, 23 Aug 2021 11:30:27 +0100
-Date:   Mon, 23 Aug 2021 11:30:26 +0100
-Message-ID: <87a6l8qwql.wl-maz@kernel.org>
+        id 1mI7GW-006dXU-A9; Mon, 23 Aug 2021 11:33:16 +0100
+Date:   Mon, 23 Aug 2021 11:33:15 +0100
+Message-ID: <878s0sqwlw.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Barry Song <21cnbao@gmail.com>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>,
@@ -35,11 +35,12 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         schnelle@linux.ibm.com, Barry Song <song.bao.hua@hisilicon.com>,
         Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v2 1/2] PCI/MSI: Fix the confusing IRQ sysfs ABI for MSI-X
-In-Reply-To: <CAGsJ_4wXqnudVO92qSKLdyJaMNuDE-d0srs=4rgJmOQKcG2P3g@mail.gmail.com>
+In-Reply-To: <CAGsJ_4w35+mRE_qp117HhNOaHeUN1cO6GGPW36qtjaX6wUcQNA@mail.gmail.com>
 References: <20210820223744.8439-2-21cnbao@gmail.com>
         <20210820233328.GA3368938@bjorn-Precision-5520>
         <877dgfqdsg.wl-maz@kernel.org>
         <CAGsJ_4wXqnudVO92qSKLdyJaMNuDE-d0srs=4rgJmOQKcG2P3g@mail.gmail.com>
+        <CAGsJ_4w35+mRE_qp117HhNOaHeUN1cO6GGPW36qtjaX6wUcQNA@mail.gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -53,108 +54,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 21 Aug 2021 23:14:35 +0100,
+On Sat, 21 Aug 2021 23:41:17 +0100,
 Barry Song <21cnbao@gmail.com> wrote:
-> 
-> On Sat, Aug 21, 2021 at 10:42 PM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > On Sat, 21 Aug 2021 00:33:28 +0100,
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
 
 [...]
 
-> > >     In msix_setup_entries(), we get nvecs msi_entry structs, and we
-> > >     get a saved .default_irq in each one?
-> >
-> > That's a key point.
-> >
-> > Old-school PCI/MSI is represented by a single interrupt, and you
-> > *could* somehow make it relatively easy for drivers that only
-> > understand INTx to migrate to MSI if you replaced whatever is held in
-> > dev->irq (which should only represent the INTx mapping) with the MSI
-> > interrupt number. Which I guess is what the MSI code is doing.
-> >
-> > This is the 21st century, and nobody should ever rely on such horror,
-> > but I'm sure we do have such drivers in the tree. Boo.
-> >
-> > However, this *cannot* hold true for Multi-MSI, nor MSI-X, because
-> > there is a plurality of interrupts. Even worse, for MSI-X, there is
-> > zero guarantee that the allocated interrupts will be in a contiguous
-> > space.
-> >
-> > Given that, what is dev->irq good for? "Absolutely Nothing! (say it
-> > again!)".
-> >
+> > So probably we should set this ABI invisible when devices are using
+> > MSI or MSI-X?
 > 
-> The only thing is that dev->irq is an sysfs ABI to userspace. Due to
-> the inconsistency between legacy PCI INTx, MSI, MSI-X, this ABI
-> should have been absolutely broken nowadays.  This is actually what
-> the patchset was originally aiming at to fix.
-
-I do not think we should expose more of a broken abstraction to
-userspace. We will have to carry on exposing the first MSI in this
-field forever, but it doesn't mean we should have to do it for MSI-X.
-
-> One more question from me is that does dev->irq actually hold any
-> valid hardware INTx information while hardware is using MSI-X? At
-> least in my hardware, sysfs ABI for PCI is all "0".
-
-That's probably because nothing actually configured the interrupt, or
-that there is no INTx implementation. I have that on systems with
-pretty dodgy (or incomplete) firmware.
-
-> root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# cat irq
-> 0
+> i mean something like the below,
 > 
-> root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# ls -l msi_irqs/*
-> -r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/499
-> -r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/500
-> -r--r--r-- 1 root root 4096 Aug 21 22:04 msi_irqs/501
-> ...
-> root@ubuntu:/sys/devices/pci0000:7c/0000:7c:00.0/0000:7d:00.3# cat msi_irqs/499
-> msix
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 5d63df7..1323841 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/vgaarb.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/msi.h>
+>  #include <linux/of.h>
+>  #include "pci.h"
 > 
-> Not quite sure how it is going on different hardware platforms.
-
-My D05 does that as well, and it doesn't expose any INTx support.
-
+> @@ -1437,6 +1438,16 @@ static umode_t pci_dev_attrs_are_visible(struct
+> kobject *kobj,
+>                 if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
+>                         return 0;
 > 
-> > MSI-X is not something you can "accidentally" use. You have to
-> > actively embrace it. In all honesty, this patch tries to move in the
-> > wrong direction. If anything, we should kill this hack altogether and
-> > fix the (handful of?) drivers that rely on it. That'd actually be a
-> > good way to find whether they are still worth keeping in the tree. And
-> > if it breaks too many of them, then at least we'll know where we
-> > stand.
-> >
-> > I'd be tempted to leave the below patch simmer in -next for a few
-> > weeks and see if how many people shout:
-> 
-> This looks like a more proper direction to go.
-> but here i am wondering how sysfs ABI document should follow the below change
-> doc is patch 2/2:
-> https://lore.kernel.org/lkml/20210820223744.8439-3-21cnbao@gmail.com/
-> 
-> On the other hand, my feeling is that nobody should depend on sysfs
-> irq entry nowadays.
+> +#ifdef CONFIG_PCI_MSI
+> +       /*
+> +        * if devices are MSI and MSI-X, IRQ sysfs ABI is meaningless
+> +        * and broken
+> +        */
+> +       if (a == &dev_attr_irq.attr)
+> +               if (first_pci_msi_entry(pdev))
+> +                       return 0;
+> +#endif
+> +
+>         return a->mode;
+>  }
 
-Too late. It is there, and we need to preserve it. I just don't think
-feeding it more erroneous information is the right thing to do.
-
-My patch was only dealing with the kernel side of things, not the
-userspace ABI. That ABI should be carried on unchanged.
-
-
-> For example, userspace irqbalance is actually using
-> /sys/devices/.../msi_irqs/ So probably we should set this ABI
-> invisible when devices are using MSI or MSI-X?
-
-Can it actually be made optional? I don't believe we can.
-
-Thanks,
+I don't think you can break what we have today. Whatever change we
+make to the kernel internals, the userspace view must stay unchanged.
 
 	M.
 
