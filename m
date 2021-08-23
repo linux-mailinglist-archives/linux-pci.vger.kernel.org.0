@@ -2,105 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B2463F4E1D
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 18:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D917F3F4E69
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 18:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbhHWQQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 12:16:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:55018 "EHLO foss.arm.com"
+        id S229454AbhHWQdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 12:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229755AbhHWQQR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 12:16:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBB9F11D4;
-        Mon, 23 Aug 2021 09:15:34 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F313E3F5A1;
-        Mon, 23 Aug 2021 09:15:32 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 17:15:27 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        id S229962AbhHWQdv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Aug 2021 12:33:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3129D6101C;
+        Mon, 23 Aug 2021 16:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629736388;
+        bh=5sOx2aLL6QuASx5rt4q1aJg0cVftu5ctuGF4et88xkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FxjG1vunvZDj4VqYbLCK2AfkVXJ9x3PeEjDktDLuwS4lUl9zeJcwxLYSA/mpK4w/B
+         LmBwKqTXteYOLedloviZoRGf8d5Uru5rkmi0+ZXxOmQCgIZwuG3lRlsqQwhC17bkik
+         ZdWIWKP3GM2rFjxJYCHHN1uxao9jbJqhSrGMTDnn4IDfQ8CI3F8ULK7BxebWagz+yk
+         F0RQnGNU/ITxCGBYdHKiQnbwplRU7Rc9q8V/YYfGAechzcwUBzLfWje5MdhqKmS1PR
+         50Mfl/184LNDqD5DAwGbU7umfUNLJtzNaaLRc3+gPEPPRuHex5QcvYu5ncwzX1YrRB
+         piWxRG1pboNXA==
+Received: by pali.im (Postfix)
+        id C53CBFC2; Mon, 23 Aug 2021 18:33:05 +0200 (CEST)
+Date:   Mon, 23 Aug 2021 18:33:05 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rockchip-dwc: Potential error pointer
- dereference in probe
-Message-ID: <20210823161527.GA8289@lpieralisi>
-References: <20210813141257.GB7722@kadam>
- <20210813142648.GA12057@kili>
+        Rob Herring <robh@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] PCI: aardvark: Check for virq mapping when
+ processing INTx IRQ
+Message-ID: <20210823163305.okizte3ejnm6ltra@pali>
+References: <20210625090319.10220-1-pali@kernel.org>
+ <20210625090319.10220-3-pali@kernel.org>
+ <f38ad6edfb6ee63f273a430154e1038f@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210813142648.GA12057@kili>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f38ad6edfb6ee63f273a430154e1038f@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 05:26:48PM +0300, Dan Carpenter wrote:
-> If devm_regulator_get_optional() returns -ENODEV then it would lead
-> to an error pointer dereference on the next line and in the error
-> handling code.
+On Friday 06 August 2021 09:29:02 Marc Zyngier wrote:
+> On 2021-06-25 10:03, Pali Rohár wrote:
+> > It is possible that we receive spurious INTx interrupt. So add needed
+> > check
+> > before calling generic_handle_irq() function.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Reviewed-by: Marek Behún <kabel@kernel.org>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > b/drivers/pci/controller/pci-aardvark.c
+> > index 36fcc077ec72..59f91fad2481 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1226,7 +1226,11 @@ static void advk_pcie_handle_int(struct advk_pcie
+> > *pcie)
+> >  			    PCIE_ISR1_REG);
+> > 
+> >  		virq = irq_find_mapping(pcie->irq_domain, i);
+> > -		generic_handle_irq(virq);
+> > +		if (virq)
+> > +			generic_handle_irq(virq);
+> > +		else
+> > +			dev_err_ratelimited(&pcie->pdev->dev, "unexpected INT%c IRQ\n",
+> > +					    (char)i+'A');
+> >  	}
+> >  }
 > 
-> Fixes: e1229e884e19 ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> v2: The -ENODEV from devm_regulator_get_optional() has to be handled
->     specially.
+> Please use generic_handle_domain_irq() instead of irq_find_mapping()
+> and generic_handle_irq().
+
+Ok! At the time when I was sending these patches there was no function
+generic_handle_domain_irq().
+
+As all these interrupt related patches are targeting also stable tress
+where is no generic_handle_domain_irq() function too, it would be easier
+for backporting to use irq_find_mapping() + generic_handle_irq(). And
+later after applying all interrupt related patches, include a patch
+which converts all usage to generic_handle_domain_irq().
+
+> Thanks,
 > 
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-
-I squashed it in with the patch that is fixing, thanks a lot.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 20cef2e06f66..c9b341e55cbb 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -224,15 +224,17 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  
->  	/* DON'T MOVE ME: must be enable before PHY init */
->  	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-> -	if (IS_ERR(rockchip->vpcie3v3))
-> +	if (IS_ERR(rockchip->vpcie3v3)) {
->  		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
->  			return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
->  					"failed to get vpcie3v3 regulator\n");
-> -
-> -	ret = regulator_enable(rockchip->vpcie3v3);
-> -	if (ret) {
-> -		dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-> -		return ret;
-> +		rockchip->vpcie3v3 = NULL;
-> +	} else {
-> +		ret = regulator_enable(rockchip->vpcie3v3);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-> +			return ret;
-> +		}
->  	}
->  
->  	ret = rockchip_pcie_phy_init(rockchip);
-> @@ -255,7 +257,8 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  deinit_phy:
->  	rockchip_pcie_phy_deinit(rockchip);
->  disable_regulator:
-> -	regulator_disable(rockchip->vpcie3v3);
-> +	if (rockchip->vpcie3v3)
-> +		regulator_disable(rockchip->vpcie3v3);
->  
->  	return ret;
->  }
+>         M.
 > -- 
-> 2.20.1
-> 
+> Jazz is not dead. It just smells funny...
