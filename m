@@ -2,156 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AECE13F4D84
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 17:30:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 486843F4DB8
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Aug 2021 17:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbhHWP3n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 11:29:43 -0400
-Received: from mail-bn8nam08on2088.outbound.protection.outlook.com ([40.107.100.88]:5856
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230380AbhHWP3n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 11:29:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iMYQ1afa/TzNOuGSbEhUR8aKI3OFiIRX7VJO0u/rqWJfMlXUknAUdkrSZpJbtjm908XCqcuDpkQ8U2N51LgB2e+tPxNehaALW2v5v5BZvqKqaHSIZ5n8W+eKsTrFKkb4n/+TssPs9/2SfoFt4GX5BcIZODoFH9XXwRaU62dyUaG34kS9bP5qq9MVPT2Fi5s/fX6Daxd9STaRGMVDdeEy86dtyBObKDaprhf1NKb+u/N3JiNyA0bWYpbTHV/0F3r5BxLaaS2yj7NYGggaK50Eb32j3AffbKxzArtMwkBEOFc4QNuCI6T9MOc6ZAffPXvcZtbBrIbbC1MFJXb2lrr9XQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNEs3u0zSvoRBiBxgRSJOOFae5LCdo8zc4TPY9bvovk=;
- b=jUm0xYuHM15OvfwPCnNZddvfQueSu1B2FMUDEL0AeTZaZbM0EOl9SxyQTjr4pwpSbQ+B3JJyf47MzROYZd7sEQgrg9Vsdbrn6IQrbBcKVJIFU5A0CCd+qWplXwB0yQwKK5eT0P66YA7RduTqKSbKQyjhl8CX+u+IXjKxgaa3ZHFDFqa1JrJ+VKxkpJ5IVAlRz1od8fMjO/Q3sMm8aKlYYhG6UUUpVCrvwSANDMWbAI/t4sE4cllRQ7YtHxKTy/iOi2RIma1uHFTdkNvXsk2V1A+f9IJcIi7oYMsnLOW7rzT+YeDPOz/N+vwlZkELvm4hDd7WmzcSwAZVBAUnvdcVIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNEs3u0zSvoRBiBxgRSJOOFae5LCdo8zc4TPY9bvovk=;
- b=o2W81zXjfuRWMR4DR7W1caI+su2EGMnVclwpQi3ZwxLg3c5lgaZa9z3/kP+0x0Sd9SvBVGIB6EXnTutHAvbmWkaLPeJVqrEJBnU6FhZmJW/GK/a3lMjEzS2il6B15mJoSbQ1iFO0SK4skzihxDtxK+tRxccdz6golTPh+HZVYqfNaM+oezWCwOtDWiRVblDIVLjRpFOaHShVGz1dzG4RXmUsemGhoOzV2YbJVyB98Famypj1SPUxiO2OohB6vRDTjwOXn6AmZWGph80fq8VhTq88xvOizR8uDaq7CrLzPKgGCAsomY0CK5+1VAyB5YucAHyNlRdKgL/Tawz7L0Z4xA==
-Received: from BN9P221CA0002.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::9)
- by MWHPR12MB1822.namprd12.prod.outlook.com (2603:10b6:300:114::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.21; Mon, 23 Aug
- 2021 15:28:58 +0000
-Received: from BN8NAM11FT025.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:10a:cafe::cf) by BN9P221CA0002.outlook.office365.com
- (2603:10b6:408:10a::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.18 via Frontend
- Transport; Mon, 23 Aug 2021 15:28:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- BN8NAM11FT025.mail.protection.outlook.com (10.13.177.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4436.19 via Frontend Transport; Mon, 23 Aug 2021 15:28:57 +0000
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Aug
- 2021 15:28:56 +0000
-Received: from [172.27.13.55] (172.20.187.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Aug
- 2021 15:28:52 +0000
-Subject: Re: [PATCH V3 06/13] vfio/pci: Split the pci_driver code out of
- vfio_pci_core.c
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-CC:     <bhelgaas@google.com>, <corbet@lwn.net>,
-        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
-        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <jgg@nvidia.com>, <maorg@nvidia.com>, <leonro@nvidia.com>
-References: <20210822143602.153816-1-yishaih@nvidia.com>
- <20210822143602.153816-7-yishaih@nvidia.com>
- <20210823091624.697c67d6.alex.williamson@redhat.com>
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-Message-ID: <393721ae-2183-2b1b-f670-8006992c4e55@nvidia.com>
-Date:   Mon, 23 Aug 2021 18:28:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S231622AbhHWPtZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 11:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231574AbhHWPtZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Aug 2021 11:49:25 -0400
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE629C061760
+        for <linux-pci@vger.kernel.org>; Mon, 23 Aug 2021 08:48:42 -0700 (PDT)
+Received: by mail-oo1-xc36.google.com with SMTP id z3-20020a4a98430000b029025f4693434bso5545228ooi.3
+        for <linux-pci@vger.kernel.org>; Mon, 23 Aug 2021 08:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O0glvYqSibU40VAMSp5zjWVJ43TCEbbX6uJzxWnHUtQ=;
+        b=GAgnkM0wwEJjlEIz5GfHoZT4iw/5ADhWhs1ldWYEliZNeEWZE1eYVuqFOv+bwbP0+h
+         dNMV4z480Oy9vrzGqF3v9bzBc5kpjq4OMOSCK3lcxA8Q79RN8WFwym2AvuLZIJt4cG3s
+         pg6+Tk/1wlY5XnSXIjqJrVruTDz+R719TUOAM1aSq5mYGvsuT6AZIAqdkfK3V+eVflfv
+         RvaZ+78Lhp6CzJ0gzVSk0wFIHz1lYpDPBwpJKKwJsfmAk46qqjCqaIeKcE3G0P+uC/+W
+         B5rsbMe0jDEtc9arRbYs+EsTh/RPmUS3oF9iK4VwQqjNKore2ToKIjeDZdhnpXBQYaGT
+         1k9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O0glvYqSibU40VAMSp5zjWVJ43TCEbbX6uJzxWnHUtQ=;
+        b=F8bOpPJJTd7OrzANddHPfCCQDCaYDqHT0uO1pBGmB6fCC0AQOl2HrKN2IhUQdp/2mq
+         2z2UrUKfwxzWppqKgcGNaXkLgiCAhP5pvNM+6UObUgPR3/OIdTVDaqQyanR/fc1SEyfT
+         vN+YfBaUXCfn5g+qzq7Yad3kQVO9C3j8Oy1V+YzFiLxCl9uBtvG/VBwtyR/1dN+iZWUG
+         mmVDxQmYgUKVhQkl1Ut8k0oMxWIilVKAH7Yy7FWO67YwKGgWKQN9ARoJpvLZx5oKZIOL
+         FR9p7B2L7UI+59+2kcTYLP6ZSYeudI3KrrtC8NBDlvwPzEyzxFASTeXoRRndk3vLECf3
+         poBg==
+X-Gm-Message-State: AOAM531L0PsttIq8w8fqgHHSra5rNNHKFPNgejDZPjwoQSFlWgO5iG6A
+        fiWWjAm6N+UUX65ozZCFh7OdEg==
+X-Google-Smtp-Source: ABdhPJx6xlpMMcZaKdGUdFtmFiSaPC9Z8sINfr3GWqNyEX+Yf77J/bef2VBPMuvy4y1nsGj8mfxheg==
+X-Received: by 2002:a4a:9211:: with SMTP id f17mr14188311ooh.25.1629733721930;
+        Mon, 23 Aug 2021 08:48:41 -0700 (PDT)
+Received: from localhost.localdomain (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 4sm3704379oil.38.2021.08.23.08.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Aug 2021 08:48:41 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] PCI: dwc: Perform host_init() before registering msi
+Date:   Mon, 23 Aug 2021 08:49:57 -0700
+Message-Id: <20210823154958.305677-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20210823091624.697c67d6.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 28ab6a69-bf49-4615-826c-08d9664ab970
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1822:
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1822D580D78509474F2FC860DEC49@MWHPR12MB1822.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QijZHw65fsoUyUnjpdN0VY2764Q07MZ8eX1ceRsMPvtpZnbBMYEkparmRpNQQFGwdPcliHjFEkH0VStiIUnruBxjMZzaESTYKor+09Hq9sV5oCqc06+H7GRu07horBMFgF0RjFpYGURPV3yGRjVOWrSrvM2Iun8ovNuFpWlaGz5giKLEyMnSAmC1u2yWwwEEm28aXsZS7fES7L+ll0Hp0zn18AlpXlk2vH4Q1dWkp2oHjbmKkoOTvJ2Bs65PayMTi0g5/IQiJY2eoNR6EKo0QjXJ59mAkyVlmZUsCzmlC4/O6F7fc82UYP445q2k5yuyYlijuMPCKR5F/dDUFePaF55Y/BzDHNUIqrfrz+kdQL/S1XgnCuakoVfCEmaadma+82149be8gDgScyjX8+R8A2FWw4bkDG7T6e8Z5mHRiMurzeBBPP2a+bI6gELLVnC6wh8IE5B0lk3ZfA0EZIyXhY0aSeiurawiSVmmcm3G/9a+yrI6PXbg90JzvFRRuOmBJBW15jz7VSfnxOO0HpEV91WKtaEj5EcT7bPEJ4Mqr+tKC3Coyl0NlfrBuV/M/eVPH6uU487H6GjDJ4on3EqEF8kUAu08b56cVKnf5nRZE0/4JteO/hJJrtwCvou6+dUGJPou373GHIBisTrKePH9iVRbU9QfweNImSb9C3fSD+347r2bTwv1nXw1e9AylBTPdlVRNsBmZLd1oCEJLDOvskv52g83QkfPC/eRGO6n4Ts=
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(46966006)(36840700001)(31696002)(8936002)(36756003)(356005)(8676002)(82740400003)(2616005)(7636003)(426003)(16526019)(186003)(336012)(5660300002)(82310400003)(110136005)(2906002)(47076005)(6636002)(16576012)(54906003)(36906005)(26005)(478600001)(107886003)(53546011)(70586007)(7416002)(70206006)(4326008)(31686004)(36860700001)(86362001)(6666004)(316002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2021 15:28:57.2768
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28ab6a69-bf49-4615-826c-08d9664ab970
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT025.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1822
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On the Qualcomm sc8180x platform the bootloader does something related
+to PCI that leaves a pending "msi" interrupt, which with the current
+ordering often fires before init has a chance to enable the clocks that
+are necessary for the interrupt handler to access the hardware.
 
-On 8/23/2021 6:16 PM, Alex Williamson wrote:
-> On Sun, 22 Aug 2021 17:35:55 +0300
-> Yishai Hadas <yishaih@nvidia.com> wrote:
->> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
->> new file mode 100644
->> index 000000000000..15474ebadd98
->> --- /dev/null
->> +++ b/drivers/vfio/pci/vfio_pci.c
-> ...
->> +static int vfio_pci_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
->> +{
->> +	might_sleep();
->> +
->> +	if (!enable_sriov)
->> +		return -ENOENT;
->> +
->> +	return vfio_pci_core_sriov_configure(pdev, nr_virtfn);
->> +}
-> As noted in previous version, why do we need the might_sleep() above
-> when the core code below includes it and there's nothing above that
-> might sleep before that?  Thanks,
+Move the host_init() call before the registration of the "msi" interrupt
+handler to ensure the host driver has a chance to enable the clocks.
 
-This is used to mention vfio_pci_core_sriov_configure might sleep.
+The assignment of the bridge's ops and child_ops is moved along, because
+at least the TI Keystone driver overwrites these in its host_init
+callback.
 
-If this is redundant, can you please remove this one line upon merge ?
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
->
-> Alex
->
->> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
->> index 94f062818e0c..87d1960d0d61 100644
->> --- a/drivers/vfio/pci/vfio_pci_core.c
->> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> ...
->> -static int vfio_pci_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
->> +int vfio_pci_core_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
->>   {
->>   	struct vfio_device *device;
->>   	int ret = 0;
->>   
->>   	might_sleep();
->>   
->> -	if (!enable_sriov)
->> -		return -ENOENT;
->> -
->>   	device = vfio_device_get_from_dev(&pdev->dev);
->>   	if (!device)
->>   		return -ENODEV;
+Changes since v1:
+- New patch, instead of enabling resources in the qcom driver before jumping to
+  dw_pcie_host_init(), per Rob Herring's suggestion.
+
+ .../pci/controller/dwc/pcie-designware-host.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d1d9b8344ec9..f4755f3a03be 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -335,6 +335,16 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (pci->link_gen < 1)
+ 		pci->link_gen = of_pci_get_max_link_speed(np);
+ 
++	/* Set default bus ops */
++	bridge->ops = &dw_pcie_ops;
++	bridge->child_ops = &dw_child_pcie_ops;
++
++	if (pp->ops->host_init) {
++		ret = pp->ops->host_init(pp);
++		if (ret)
++			return ret;
++	}
++
+ 	if (pci_msi_enabled()) {
+ 		pp->has_msi_ctrl = !(pp->ops->msi_host_init ||
+ 				     of_property_read_bool(np, "msi-parent") ||
+@@ -388,15 +398,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		}
+ 	}
+ 
+-	/* Set default bus ops */
+-	bridge->ops = &dw_pcie_ops;
+-	bridge->child_ops = &dw_child_pcie_ops;
+-
+-	if (pp->ops->host_init) {
+-		ret = pp->ops->host_init(pp);
+-		if (ret)
+-			goto err_free_msi;
+-	}
+ 	dw_pcie_iatu_detect(pci);
+ 
+ 	dw_pcie_setup_rc(pp);
+-- 
+2.29.2
+
