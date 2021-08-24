@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEE463F5A90
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 11:12:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 007B93F5B3D
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 11:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235654AbhHXJM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 05:12:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29102 "EHLO
+        id S235842AbhHXJsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 05:48:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26638 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235674AbhHXJM5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 05:12:57 -0400
+        by vger.kernel.org with ESMTP id S235686AbhHXJsA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 05:48:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629796332;
+        s=mimecast20190719; t=1629798435;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=UO2zBbBs1G6uT3R3xch5pdAd9JzMFmQCenqYTZnnAws=;
-        b=ciI55oT+4ry/YlJLlDbugRTfprdq8vmV8TxkKb01viiPuKkCGhO804W14LS76wuqUuE+pJ
-        KfuZCRH8vytOEwSgN/ZVJOTN8ffYpvEEqlTWk9AnsTrzYcdsb0W9dwj/0mW756MhXE+X9y
-        cur4x82RiyCts6/Ze32mfLqL6/9yMes=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-_JBNNhvzN6yo8pJqfKopHQ-1; Tue, 24 Aug 2021 05:12:11 -0400
-X-MC-Unique: _JBNNhvzN6yo8pJqfKopHQ-1
-Received: by mail-ed1-f70.google.com with SMTP id a23-20020a50ff170000b02903b85a16b672so10208203edu.1
-        for <linux-pci@vger.kernel.org>; Tue, 24 Aug 2021 02:12:11 -0700 (PDT)
+        bh=byOliS/hAlH982j95uoj9FjiMsaJUQkzdYQOZKOZeFM=;
+        b=EpSjaKaORit2KBe35XMrcFltkhci8RVMV7pN97m/XqxyihAXn2G+tohwnWuAezzH4bp48M
+        efD8nrjBZJ6yjreif7/fjD3rTeTWH11Tav+ryGfZYH2nwH71eP7mowc9EipQYYwbSrgdrl
+        bEd+dJo0mtOfCZWeq1ubGE6hNpUgYI4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-8S3UT5AVMsOCPU5acye1qw-1; Tue, 24 Aug 2021 05:47:14 -0400
+X-MC-Unique: 8S3UT5AVMsOCPU5acye1qw-1
+Received: by mail-ej1-f70.google.com with SMTP id bx10-20020a170906a1ca00b005c341820edeso3878137ejb.10
+        for <linux-pci@vger.kernel.org>; Tue, 24 Aug 2021 02:47:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UO2zBbBs1G6uT3R3xch5pdAd9JzMFmQCenqYTZnnAws=;
-        b=LzgWQI1BR6/8gH8/uuJuyW0MW2pPxXZhlejhFlAqtm0L+GobkoarqPPi3BAZo2CAiu
-         uLzsZcQGWmM1CcCouQJ4euI8qxe0yS9/zs51vX6/ANU5Ss+5oZGghe2d1TuUeko34mKP
-         Q8x3GjeCBCGoo8c362ATcybjNpxnsn6x5VEvH48MpFNxgldbwUItO9Bfjnm3zaWsjM13
-         EWSpmoOhK0vsI1eAJA6UAf5Vs6gfkMZw1MUnx2oATU556zMQe7ygH8P4+5Hz6Lob9TAG
-         5J5/DSV6W1swVQdAcZ36f6C0qFdESjGniMdT7H5/yp2RWQgEY7ZO4He6FF0EYw8kL0JH
-         z5yA==
-X-Gm-Message-State: AOAM5309GFFCDd/llLqjWrn8vZHEK+38vR3KH1+ygf4AppHoq24k2vic
-        d3d+K3/SVLOl7Pwqcn1ngJpKnTf6/RCpF50P1Dw3kubmZ6dlMLU8ttL9doruPXMMw8x1O0G9fma
-        k0JHykLqVO/v0Pljs4qjG
-X-Received: by 2002:a17:906:544f:: with SMTP id d15mr39905071ejp.520.1629796330482;
-        Tue, 24 Aug 2021 02:12:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz3bMICaqu3WLm0C02mi3EAPqHyfBIAeSrxUN0aqhXmoBEhQ7Pz6k5PO9S6BLCHr/N7T4Bnvg==
-X-Received: by 2002:a17:906:544f:: with SMTP id d15mr39905053ejp.520.1629796330344;
-        Tue, 24 Aug 2021 02:12:10 -0700 (PDT)
+        bh=byOliS/hAlH982j95uoj9FjiMsaJUQkzdYQOZKOZeFM=;
+        b=Qs5iIQjx0L+FQ9sbnkyJ0UnWDpZmZR5gilncPEyxw05S6KGcT4lgkw5ksRkIXThR7o
+         nDzbS9SZsNMl41SIbTaM/MbvSx5AO6Y6JeE5DHZQg+PIvQcVXXr21jhYNfGXXRMwKpFy
+         subiwv5zmDwTdfi0gOWYwVD/ltWFqEQuWqFc+jEISQF/uEbKe2XP6Z3yi6o1yBKMRki9
+         L9p8g8cDc0r/74LYhBwkEc7wzy15kXbKO5o/6WMWWaHjDVeTBS1zOFNnmQLmbIL6hgcZ
+         SLEVO0mBeOrKOo/5LnvHnQ0OdQ4dMmbZUOjKqXq5J4/RNEnRnfjsOZUeMcePkw/3siTX
+         ps/Q==
+X-Gm-Message-State: AOAM530MTmaVLjbNpXJAzSmlUhcol6hafw/a4Ti6DnJ3oM78cXDnbBBh
+        RdrtmHW6hpLtLm7BYxgBvDNT/W+09NH7g9etL0Tdx95zACMQsQfUvwG05LUUuxRh9IebuMtZQ2h
+        OiTYl2a2OkwwpN0cFVZ3d
+X-Received: by 2002:a17:906:3542:: with SMTP id s2mr40413070eja.379.1629798433282;
+        Tue, 24 Aug 2021 02:47:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyUO88Sc9irEBtMZmBbVQ8WcILdFFNEosAjyt1865+nkRLAobkOu3Zuf3KEOK5TLE4bRYLW2A==
+X-Received: by 2002:a17:906:3542:: with SMTP id s2mr40413054eja.379.1629798433111;
+        Tue, 24 Aug 2021 02:47:13 -0700 (PDT)
 Received: from redhat.com ([2.55.137.225])
-        by smtp.gmail.com with ESMTPSA id b18sm2737239ejl.90.2021.08.24.02.12.05
+        by smtp.gmail.com with ESMTPSA id b18sm2800522ejl.90.2021.08.24.02.47.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 02:12:09 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 05:12:03 -0400
+        Tue, 24 Aug 2021 02:47:12 -0700 (PDT)
+Date:   Tue, 24 Aug 2021 05:47:03 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>,
@@ -68,57 +70,83 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Peter H Anvin <hpa@zytor.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
         Kirill Shutemov <kirill.shutemov@linux.intel.com>,
         Sean Christopherson <seanjc@google.com>,
         Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         virtualization@lists.linux-foundation.org
 Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-Message-ID: <20210824050842-mutt-send-email-mst@kernel.org>
+Message-ID: <20210824053830-mutt-send-email-mst@kernel.org>
 References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
  <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
  <20210823195409-mutt-send-email-mst@kernel.org>
  <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+ <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
+ <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+In-Reply-To: <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 05:30:54PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+On Mon, Aug 23, 2021 at 07:14:18PM -0700, Andi Kleen wrote:
 > 
-> 
-> On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
-> > > Add a new variant of pci_iomap for mapping all PCI resources
-> > > of a devices as shared memory with a hypervisor in a confidential
-> > > guest.
+> On 8/23/2021 6:04 PM, Dan Williams wrote:
+> > On Mon, Aug 23, 2021 at 5:31 PM Kuppuswamy, Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 > > > 
-> > > Signed-off-by: Andi Kleen<ak@linux.intel.com>
-> > > Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
-> > I'm a bit puzzled by this part. So why should the guest*not*  map
-> > pci memory as shared? And if the answer is never (as it seems to be)
-> > then why not just make regular pci_iomap DTRT?
+> > > 
+> > > On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
+> > > > > Add a new variant of pci_iomap for mapping all PCI resources
+> > > > > of a devices as shared memory with a hypervisor in a confidential
+> > > > > guest.
+> > > > > 
+> > > > > Signed-off-by: Andi Kleen<ak@linux.intel.com>
+> > > > > Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > I'm a bit puzzled by this part. So why should the guest*not*  map
+> > > > pci memory as shared? And if the answer is never (as it seems to be)
+> > > > then why not just make regular pci_iomap DTRT?
+> > > It is in the context of confidential guest (where VMM is un-trusted). So
+> > > we don't want to make all PCI resource as shared. It should be allowed
+> > > only for hardened drivers/devices.
+> > That's confusing, isn't device authorization what keeps unaudited
+> > drivers from loading against untrusted devices? I'm feeling like
+> > Michael that this should be a detail that drivers need not care about
+> > explicitly, in which case it does not need to be exported because the
+> > detail can be buried in lower levels.
 > 
-> It is in the context of confidential guest (where VMM is un-trusted). So
-> we don't want to make all PCI resource as shared. It should be allowed
-> only for hardened drivers/devices.
+> We originally made it default (similar to AMD), but it during code audit we
+> found a lot of drivers who do ioremap early outside the probe function.
+> Since it would be difficult to change them all we made it opt-in, which
+> ensures that only drivers that have been enabled can talk with the host at
+> all and can't be attacked. That made the problem of hardening all these
+> drivers a lot more practical.
+> 
+> Currently we only really need virtio and MSI-X shared, so for changing two
+> places in the tree you avoid a lot of headache elsewhere.
+> 
+> Note there is still a command line option to override if you want to allow
+> and load other drivers.
+> 
+> -Andi
 
-I can't say this answers the question at all. PCI devices are part of
-the VMM and so un-trusted. In particular PCI devices do not have
-the key to decrypt memory. Therefore as far as I can see PCI resources
-should not be encrypted.  I conclude they all should be marked
-shared.
+I see. Hmm. It's a bit of a random thing to do it at the map time
+though. E.g. DMA is all handled transparently behind the DMA API.
+Hardening is much more than just replacing map with map_shared
+and I suspect what you will end up with is basically
+vendors replacing map with map shared to make things work
+for their users and washing their hands.
 
-If I'm wrong can you please give an example of a PCI resource
-that is encrypted?
+I would say an explicit flag in the driver that says "hardened"
+and refusing to init a non hardened one would be better.
 
 -- 
 MST
