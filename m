@@ -2,150 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B643D3F6630
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 19:21:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC8D3F652E
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 19:09:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237016AbhHXRUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 13:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55476 "EHLO mail.kernel.org"
+        id S237861AbhHXRKi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 13:10:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34909 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239968AbhHXRSC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Aug 2021 13:18:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 68D6D6140B;
-        Tue, 24 Aug 2021 17:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629824560;
-        bh=MdJJa0Q/hFLCTbRIO/pYfO7Fg1Ens19ug6IpZWK/RWY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XiNNMp8S3doi8po/ByyIMlZgiajZY0EzaLCWA93tThbR6taP07Z3hiexnl7DAVov7
-         MonYnODaKpKU9CoWy/MTR46xUUvmQ+JWvbVeS5oPMgHpPFQEkPKW1VHXsr9iOceJM/
-         6vp7Z/we7KIFY3sCIMhbgdjPIXF03LmlbyMRDbLfsG/0XTIckGwp53Bncpy1cGrMQk
-         CJjXycNkd+CMCHpLEQ+ELXi3JogoUsfK5OCHZS6+7Nx/3OlKuz3OG2JHOcmwOO0e7y
-         GCTkkmovrGX7zK0zC4RGB3gcTZfgld58WmNXuWk49R/Mux0LsrIG2KPxNRt5AuYoDs
-         iUv4EkTOCOK2A==
-Date:   Tue, 24 Aug 2021 12:02:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-everest-linux-l2@marvell.com, Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 06/12] bnx2x: Search VPD with
- pci_vpd_find_ro_info_keyword()
-Message-ID: <20210824170239.GA3477243@bjorn-Precision-5520>
+        id S238870AbhHXRIw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Aug 2021 13:08:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="196931983"
+X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
+   d="scan'208";a="196931983"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 10:04:29 -0700
+X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
+   d="scan'208";a="526698792"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.119.65]) ([10.209.119.65])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 10:04:27 -0700
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+To:     Christoph Hellwig <hch@infradead.org>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210823195409-mutt-send-email-mst@kernel.org>
+ <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+ <YSSay4zGjLaNMOh1@infradead.org>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <2747d96f-5063-7c63-5a47-16ea299fa195@linux.intel.com>
+Date:   Tue, 24 Aug 2021 10:04:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9f730cf-e31e-902b-7b39-0ff2e99636e0@gmail.com>
+In-Reply-To: <YSSay4zGjLaNMOh1@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 22, 2021 at 03:54:23PM +0200, Heiner Kallweit wrote:
-> Use pci_vpd_find_ro_info_keyword() to search for keywords in VPD to
-> simplify the code.
-> 
-> str_id_reg and str_id_cap hold the same string and are used in the same
-> comparison. This doesn't make sense, use one string str_id instead.
 
-str_id_reg is printed with "%04x" (lower-case hex letters) and
-str_id_cap with "%04X" (upper-case hex letters), so the previous code
-would match either 0xabcd or 0xABCD.  After this patch, we'd match
-only the latter.
+On 8/24/2021 12:07 AM, Christoph Hellwig wrote:
+> On Mon, Aug 23, 2021 at 05:30:54PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>> On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
+>>>> Add a new variant of pci_iomap for mapping all PCI resources
+>>>> of a devices as shared memory with a hypervisor in a confidential
+>>>> guest.
+>>>>
+>>>> Signed-off-by: Andi Kleen<ak@linux.intel.com>
+>>>> Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
+>>> I'm a bit puzzled by this part. So why should the guest*not*  map
+>>> pci memory as shared? And if the answer is never (as it seems to be)
+>>> then why not just make regular pci_iomap DTRT?
+>> It is in the context of confidential guest (where VMM is un-trusted). So
+>> we don't want to make all PCI resource as shared. It should be allowed
+>> only for hardened drivers/devices.
+> Well, assuming the host can do any damage when mapped shared that also
+> means not mapping it shared will completely break the drivers.
 
-PCI_VENDOR_ID_DELL is 0x1028, so it shouldn't make any difference,
-which makes me wonder why somebody bothered with both.
+There are several cases:
 
-But it does seem like a potential landmine to change the case
-sensitivity.  Maybe strncasecmp() instead?
+- We have driver filtering active to protect you against attacks from 
+the host against unhardened drivers.
 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 57 +++++--------------
->  1 file changed, 15 insertions(+), 42 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> index 0466adf8d..2c7bfc416 100644
-> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> @@ -12189,11 +12189,10 @@ static int bnx2x_get_hwinfo(struct bnx2x *bp)
->  
->  static void bnx2x_read_fwinfo(struct bnx2x *bp)
->  {
-> -	int i, block_end, rodi;
-> -	char str_id_reg[VENDOR_ID_LEN+1];
-> -	char str_id_cap[VENDOR_ID_LEN+1];
-> -	unsigned int vpd_len;
-> -	u8 *vpd_data, len;
-> +	char str_id[VENDOR_ID_LEN + 1];
-> +	unsigned int vpd_len, kw_len;
-> +	u8 *vpd_data;
-> +	int rodi;
->  
->  	memset(bp->fw_ver, 0, sizeof(bp->fw_ver));
->  
-> @@ -12201,46 +12200,20 @@ static void bnx2x_read_fwinfo(struct bnx2x *bp)
->  	if (IS_ERR(vpd_data))
->  		return;
->  
-> -	/* VPD RO tag should be first tag after identifier string, hence
-> -	 * we should be able to find it in first BNX2X_VPD_LEN chars
-> -	 */
-> -	i = pci_vpd_find_tag(vpd_data, vpd_len, PCI_VPD_LRDT_RO_DATA);
-> -	if (i < 0)
-> -		goto out_not_found;
-> -
-> -	block_end = i + PCI_VPD_LRDT_TAG_SIZE +
-> -		    pci_vpd_lrdt_size(&vpd_data[i]);
-> -	i += PCI_VPD_LRDT_TAG_SIZE;
-> -
-> -	rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
-> -				   PCI_VPD_RO_KEYWORD_MFR_ID);
-> -	if (rodi < 0)
-> -		goto out_not_found;
-> -
-> -	len = pci_vpd_info_field_size(&vpd_data[rodi]);
-> -
-> -	if (len != VENDOR_ID_LEN)
-> +	rodi = pci_vpd_find_ro_info_keyword(vpd_data, vpd_len,
-> +					    PCI_VPD_RO_KEYWORD_MFR_ID, &kw_len);
-> +	if (rodi < 0 || kw_len != VENDOR_ID_LEN)
->  		goto out_not_found;
->  
-> -	rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
-> -
->  	/* vendor specific info */
-> -	snprintf(str_id_reg, VENDOR_ID_LEN + 1, "%04x", PCI_VENDOR_ID_DELL);
-> -	snprintf(str_id_cap, VENDOR_ID_LEN + 1, "%04X", PCI_VENDOR_ID_DELL);
-> -	if (!strncmp(str_id_reg, &vpd_data[rodi], VENDOR_ID_LEN) ||
-> -	    !strncmp(str_id_cap, &vpd_data[rodi], VENDOR_ID_LEN)) {
-> -
-> -		rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
-> -						PCI_VPD_RO_KEYWORD_VENDOR0);
-> -		if (rodi >= 0) {
-> -			len = pci_vpd_info_field_size(&vpd_data[rodi]);
-> -
-> -			rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
-> -
-> -			if (len < 32 && (len + rodi) <= vpd_len) {
-> -				memcpy(bp->fw_ver, &vpd_data[rodi], len);
-> -				bp->fw_ver[len] = ' ';
-> -			}
-> +	snprintf(str_id, VENDOR_ID_LEN + 1, "%04X", PCI_VENDOR_ID_DELL);
-> +	if (!strncmp(str_id, &vpd_data[rodi], VENDOR_ID_LEN)) {
-> +		rodi = pci_vpd_find_ro_info_keyword(vpd_data, vpd_len,
-> +						    PCI_VPD_RO_KEYWORD_VENDOR0,
-> +						    &kw_len);
-> +		if (rodi >= 0 && kw_len < sizeof(bp->fw_ver)) {
-> +			memcpy(bp->fw_ver, &vpd_data[rodi], kw_len);
-> +			bp->fw_ver[kw_len] = ' ';
->  		}
->  	}
->  out_not_found:
-> -- 
-> 2.33.0
-> 
-> 
+In this case the drivers not working is the intended behavior.
+
+- There is an command allow list override for some new driver, but the 
+driver is hardened and shared
+
+The other drivers will still not work, but that's also the intended behavior
+
+- Driver filtering is disabled or the allow list override is used to 
+enable some non hardened/enabled driver
+
+There is a command line option to override the ioremap sharing default, 
+it will allow all drivers to do ioremap. We would really prefer to make 
+it more finegrained, but it's not possible in this case. Other drivers 
+are likely attackable.
+
+- Driver filtering is disabled (allowing attacks on the drivers) and the 
+command line option for forced sharing is set.
+
+All drivers initialize and can talk to the host through MMIO. Lots of 
+unhardened drivers are likely attackable.
+
+-Andi
+
