@@ -2,87 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B283F5416
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 02:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A19723F541E
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 02:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233467AbhHXAbo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 20:31:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58722 "EHLO mga01.intel.com"
+        id S233260AbhHXAig (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 20:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233260AbhHXAbn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 20:31:43 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10085"; a="239348571"
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="239348571"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 17:30:59 -0700
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="473280486"
-Received: from arezooho-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.67.66])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 17:30:56 -0700
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210823195409-mutt-send-email-mst@kernel.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
-Date:   Mon, 23 Aug 2021 17:30:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.11.0
+        id S233360AbhHXAig (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Aug 2021 20:38:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 12364611F0;
+        Tue, 24 Aug 2021 00:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629765473;
+        bh=c8B0rBovsBLEBI0TuOmV/QZyzMIZicWoE31njEO6kd4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pslhJVHYFMPYh1rSaZfq0i7PZg08+RU+E9f7DEv7zXgrc9TpUsjJTvWcSoJXczLRA
+         cVuNf5uH9t58AxoUoi+SG/2CMe6B+FqqFwPVzSTZ2Zkwh7sHLoAmyffEdP2FFbrb/f
+         Gb4I/UsOwT6LjjwBPM2jD1pqpWPDOlfB+xFz6+IU27rRazYXBgGjpB60ZDT+XZqmkV
+         RXoQtEcmh9tyexYDj8qy6GUA5tos1hgcYTl1Z8UsyLPtf8InbZrhOpakVIrtAM/lRp
+         t58GX2MecK0zHcSvmM7nEBTOgQlK7ayLFGtlVMujBXX1rEVu+m4tdxhHp5Z9JQ4eP1
+         vjnxnE/KEOy3g==
+Date:   Mon, 23 Aug 2021 19:37:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Lukas Wunner <lukas@wunner.de>, jonathan.derrick@linux.dev,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>
+Subject: Re: [PATCH v2] PCI: pciehp: Quirk to ignore spurious DLLSC when off
+Message-ID: <20210824003751.GA3417333@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210823195409-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210823184919.3412-1-jonathan.derrick@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Subject should start with a verb (see history for examples).  "when
+off"?  Needs a little more context to make sense by itself.
 
+On Mon, Aug 23, 2021 at 12:49:19PM -0600, Jon Derrick wrote:
+> From: James Puthukattukaran <james.puthukattukaran@oracle.com>
+> 
+> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
+> upstream ports both support hotplugging on each respective x4 device, a
+> slot management system for the CEM card requires both x4 devices to be
+> sysfs removed from the OS before it can safely turn-off physical power.
+> The implications are that Slot Control will display Powered Off status
+> for the device where the device is actually powered until both ports
+> have powered off.
 
-On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
->> Add a new variant of pci_iomap for mapping all PCI resources
->> of a devices as shared memory with a hypervisor in a confidential
->> guest.
->>
->> Signed-off-by: Andi Kleen<ak@linux.intel.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
-> I'm a bit puzzled by this part. So why should the guest*not*  map
-> pci memory as shared? And if the answer is never (as it seems to be)
-> then why not just make regular pci_iomap DTRT?
+Apparently this is related to a "specific x8 CEM card"?  Please
+identify it (marketing name, model, etc -- some way a user can tell
+whether this quirk applies to the hardware he/she is holding),
+describe it, and make a case for why we care about it.  E.g., if this
+is a shipping product, we probably do care; if it's just a lab
+fixture, maybe not.
 
-It is in the context of confidential guest (where VMM is un-trusted). So
-we don't want to make all PCI resource as shared. It should be allowed
-only for hardened drivers/devices.
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> When power is removed from the first half, real power and link remains
+> active while waiting for the second half to have power removed. When
+> power is then removed from the second half, the first half starts
+> shutdown sequence and will trigger a DLLSC event. This is misinterpreted
+> as an enabling event and causes the first half to be re-enabled.
+> 
+> The spurious enable can be resolved by ignoring link status change
+> events when no link is active when in the off state. This patch adds a
+> quirk for the card.
+> 
+> Acked-by: Jon Derrick <jonathan.derrick@intel.com>
+> Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
+> ---
+> v1->v2: Device-specific quirk
+> 
+>  drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
+>  drivers/pci/quirks.c              | 30 ++++++++++++++++++++++++++++++
+>  include/linux/pci.h               |  1 +
+>  3 files changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index 529c34808440..db41f78bfac8 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+>  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  {
+>  	int present, link_active;
+> +	struct pci_dev *pdev = ctrl->pcie->port;
+>  
+>  	/*
+>  	 * If the slot is on and presence or link has changed, turn it off.
+> @@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  		cancel_delayed_work(&ctrl->button_work);
+>  		fallthrough;
+>  	case OFF_STATE:
+> +		if (pdev->shared_pcc_and_link_slot &&
+> +		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
+> +			mutex_unlock(&ctrl->state_lock);
+> +			break;
+> +		}
+> +
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+>  		if (present)
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 43fbf55871ef..92a5bae8926e 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5749,3 +5749,33 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+>  }
+>  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+>  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
+> +
+> +/*
+> + * This is a special card that sits in a x8 pciehp slot but is bifurcated as
+> + * a x4x4 and manifests as two slots with respect to PCIe hot plug register
+> + * states. However, the hotplug controller treats these slots as a single x8
+> + * slot for link and power. Either one of the two slots can be powered down
+> + * separately but real power and link will be active till the last of the two
+> + * slots is powered down. When the last of the two x4 slots is turned off,
+> + * power and link will be turned off for the x8 slot by the HP controller.
+> + * This configuration causes some interesting behavior in bringup sequence
+> + *
+> + * When the second slot is powered off to remove the card, this will cause
+> + * the link to go down for both x4 slots. So, the x4 that is already powered
+> + * down earlier will see a DLLSC event and attempt to bring itself up (card
+> + * present, link change event, link state is down). Special handling is
+> + * required in pciehp_handle_presence_or_link_change to prevent this unintended
+> + * bring up
+> + *
+> + */
+> +static void shared_pcc_and_link_slot(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent = pci_upstream_bridge(pdev);
+> +
+> +	if (pdev->subsystem_vendor == 0x108e &&
+> +	    pdev->subsystem_device == 0x487d) {
+> +		if (parent)
+> +			parent->shared_pcc_and_link_slot = 1;
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0B60, shared_pcc_and_link_slot);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e752cc39a1fe..ba84f7c93c31 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -469,6 +469,7 @@ struct pci_dev {
+>  
+>  #ifdef CONFIG_HOTPLUG_PCI_PCIE
+>  	unsigned int	broken_cmd_compl:1;	/* No compl for some cmds */
+> +	unsigned int	shared_pcc_and_link_slot:1;
+>  #endif
+>  #ifdef CONFIG_PCIE_PTM
+>  	unsigned int	ptm_root:1;
+> -- 
+> 2.27.0
+> 
