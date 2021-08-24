@@ -2,132 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC90C3F6B77
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 23:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9B8C3F6BE5
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 00:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238758AbhHXWAi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 18:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238734AbhHXWAh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 18:00:37 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5A3C061764
-        for <linux-pci@vger.kernel.org>; Tue, 24 Aug 2021 14:59:52 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id k24so21112782pgh.8
-        for <linux-pci@vger.kernel.org>; Tue, 24 Aug 2021 14:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jcFx0PZcA3f5x3kcuOE3FShtVPGcFTUcoRfnJMf2+WA=;
-        b=kSoxnifXykQ6StIPlHX99aPNWQu+Di5Pk4x5o0CyBgJd9Hi73+uUta5pC3l9MPuDvg
-         fBBpumEasAZeQZ2lG3NadMhBf/b9wuvINIZK2gj66HQh13cdNeZ+ZXIwck5oL9wu4os+
-         US/+tqwCN2mSD+JCYRel2n+VEvcXsl1OGVQLjDfi4InNQ0bwty5/GVhAIxR6hITtGdLg
-         B2dsfbm0W5uvRuyca+8kETN9jz+XRkeYZnbViXu4AvIglxlwUOQjCHGEfA65Iz68RZya
-         QItoB3l4XDQYmoL1ZwgpumDwEUbCDGUDrdkJu1fa/f2rehIPRlYuMHbS58voDQNxtFcC
-         VbJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jcFx0PZcA3f5x3kcuOE3FShtVPGcFTUcoRfnJMf2+WA=;
-        b=C+prn/EdA1+zBVmPl4sUvhv2INNF+0N1rQNY2EXLjkMiFjY7Ihtl35mqdbOa7cOOC7
-         TEWKjenXYq8Z6tWBGfVg2MNMhHftY22lk8a7m5OrTATjL5OO8J3pFErr7olxTR1kbK4a
-         I6j9NCGW2sfi0F9qfw4jVDO4NTv9GK4swRWdgz2gRDf6F9khvqiFhXX66Cm2TSJuRD+w
-         mvZJ9zBcpWKwZnr4+hBz9WQABAIrqvAuFrP/byeT2g+v3MZ4HNjxuFa8ykJO5qExmFMc
-         PvRqPdsvacFtKZ9lDNzDOpWEBN6zHBysO/mQfOWU5aAZkUUbVWfCyRykzpQt1BsdfeZl
-         HZgg==
-X-Gm-Message-State: AOAM530fi+a2C/yEF2nXxONZlXIlMU/w4kPstLXDM8m01q80slSPF4TK
-        oxiZhF9sYLp7JjAYApESI1E3oLGFrlT5q6ECE6cG2A==
-X-Google-Smtp-Source: ABdhPJwK8XFV5db9UjT/ngKEY9JdyqfX6Fj3bAtuqrgUOWJJ8sDeTs4RTnwa4sK7JgHj0SxhjNCQ0rptoEHmw8RZG3Y=
-X-Received: by 2002:a65:6642:: with SMTP id z2mr26520993pgv.240.1629842392235;
- Tue, 24 Aug 2021 14:59:52 -0700 (PDT)
+        id S229618AbhHXWta (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 18:49:30 -0400
+Received: from mail-co1nam11on2040.outbound.protection.outlook.com ([40.107.220.40]:64832
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229906AbhHXWt3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Aug 2021 18:49:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PY3bVDxwUeaGUlrdkUyGz3n4xzJLVytmAq2JzeUhj6XBkUq035rSJB9Jkl+U96yPxMWM1wc0w5TJmK8DqRprZvXPMWouIGGF4NL9/JiZsZTKDqna3RGfHoG5zT7+UfJVB9pWObNz2A+Z+ANZbPbH4UGdG/l+livHU0XHfcge9gsJ7QTDz6yZjOBssnvYNSAa61vUyOMDe7HQAHroHG9AXlfN46pomUZdJkYUislcnbjmOttLqqY4QTquUcBGIaQMyK2ZtSow/9vBrjq64DgCdvX98r0K005wso2qrVN1tIj8RUPEySM/enz/IVPIo9FvLhezLjjVX4S67ccZjQ/Big==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UXpK0HHuQWaJItC+7wz1xj8hz6wpgqavrequmqpNAP0=;
+ b=YbGNrt5jw3vU5MkzGQi1KKl47wbLX4wHOgHx8K3DhGFXzo/y+fEliPTaslDVXvGuvOFViA/1UXrcNI2soe6qg1XI9ehZ+JMyOWbAMALZrGFw8jqVf2eQZk08IMfxSTUj3h3ptMCNV4SMyDpRgES9YIKy5xz8fnJOu4VzUfmFbNFj7uaPsyqBvFfJwiLcl4eqqwsBc6Jy2u2wSUEbcIP719ZCmXL+c1UuL18sQhETJt07FT8YdEHT6L5g8gpN65ATL1vw+wkBHo/8NIpz4ZW8z1apGyS3x7hr3fP01tpuCxckvGRTpJR02oVDMvVhUHBYKUXrj4VzxiYK2+2WKHTJQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UXpK0HHuQWaJItC+7wz1xj8hz6wpgqavrequmqpNAP0=;
+ b=C47RhXOgIf2rM217yrCF+tTZNV5Q8M9cBHwt6Yynm1zX6rn/2MW6kzyejHv/Ilbbn/rA+yltZMq+ZdMJxMy2NovI58c7r0PXCYrtOELxTgjrRZ+lT91iQ8E2ZnbTJVm5K7Mnbt8eOcsZh8C1Yw4W++uzJi5kLQ2t85bweMmrEpxb+IkXGPV4n6/ueVIXki99JppE1VNNfhVq8qYKSiiNolZQ7rneF0YI9UIsHk9flzpHOeQCaX0UXi+lHUlqd3yOffezNNe4hhLjSGRH/56bP8uLMCqD/AVR/AHzURoKZdDK1Zuiof79tSO1fmPIUWyUwzeG99SIcKD8aQ423WM8dQ==
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5349.namprd12.prod.outlook.com (2603:10b6:208:31f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.15; Tue, 24 Aug
+ 2021 22:48:42 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::1de1:52a9:cf66:f336]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::1de1:52a9:cf66:f336%8]) with mapi id 15.20.4436.024; Tue, 24 Aug 2021
+ 22:48:42 +0000
+Date:   Tue, 24 Aug 2021 19:48:40 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        corbet@lwn.net, diana.craciun@oss.nxp.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, masahiroy@kernel.org,
+        michal.lkml@markovi.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maorg@nvidia.com, leonro@nvidia.com
+Subject: Re: [PATCH V3 06/13] vfio/pci: Split the pci_driver code out of
+ vfio_pci_core.c
+Message-ID: <20210824224840.GZ1721383@nvidia.com>
+References: <20210822143602.153816-1-yishaih@nvidia.com>
+ <20210822143602.153816-7-yishaih@nvidia.com>
+ <20210823091624.697c67d6.alex.williamson@redhat.com>
+ <393721ae-2183-2b1b-f670-8006992c4e55@nvidia.com>
+ <20210824154839.159a1243.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210824154839.159a1243.alex.williamson@redhat.com>
+X-ClientProxiedBy: MN2PR04CA0017.namprd04.prod.outlook.com
+ (2603:10b6:208:d4::30) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210823195409-mutt-send-email-mst@kernel.org> <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
- <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com> <CACK8Z6E+__kZqU8mVUnYhFc0wz_e81qBLO3ffqSDghVtztNeQw@mail.gmail.com>
-In-Reply-To: <CACK8Z6E+__kZqU8mVUnYhFc0wz_e81qBLO3ffqSDghVtztNeQw@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 24 Aug 2021 14:59:41 -0700
-Message-ID: <CAPcyv4gmQeRNJJqxef5Vhws=v1g8+NtMjLBnJ1KR6rCWcd5VnA@mail.gmail.com>
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-To:     Rajat Jain <rajatja@google.com>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR04CA0017.namprd04.prod.outlook.com (2603:10b6:208:d4::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.17 via Frontend Transport; Tue, 24 Aug 2021 22:48:41 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mIfDk-004c0M-Pc; Tue, 24 Aug 2021 19:48:40 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e65a9b22-c639-4589-1f7a-08d96751520f
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5349:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB53491B14278A31FB458DF83CC2C59@BL1PR12MB5349.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: j21IYUOgnLnjZ6w3+rWFHNRJoWAle/ztak/Ytjkth+9PE8YD8qQbT6NOxwgext7UEZmArK5yveJgqv9Jwl1RMcG58ttQ8HRIzUvtCQC8rnX0RMOxiH03K5n5EQ6KMObfCBtuIWXQtEToCchAB4yRV1leUS/GQrrS+76/glYS6/MteacX6HLO0zl7gwk637iDfXkJIde1bHxDgTx2HWvTg62Di98kLGpxm4ilQlQMlwpdW15+2TrdCFKO+sXNR4cS3me2eYFr2ZP14CciU4J9F8Jh4heTTHHbF3TXPhTOmKU1JYs4PUKk5JS6sn800mXYuYd4v+QJwKHNA/Xzh+AcFU57b6+w62lMR5ixlRyoFLYJK623dAuY0E4NBodKUwvwQk83QTA490R67wa4SfhkvFaVvson18FJ1M3b6aa1cDr0Jlua+aQgMHsdA9lKYrb/4/hqDGIRxwJVEXQ4eKiMaW7dUzAZO4CIYq6n+m3yhQJFNwii1Veqt5ZkxjAeqdoVChGlxOkBfHqyNaF4KxziCkAc/gKyf/io8liqgairopV1R6+5xrkgxWBN7pUN1OhXL4xqPkx0hZ+oZ80u7vdjqhuzhyreQCC9ygLpmcFH01rwC4EOkji4rMzwK16VqAK3BIlE4V/Fj5HqoVQyEjopRw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(5660300002)(2906002)(66476007)(186003)(66556008)(8936002)(9786002)(7416002)(478600001)(36756003)(426003)(26005)(33656002)(53546011)(8676002)(316002)(6916009)(1076003)(86362001)(107886003)(4326008)(83380400001)(54906003)(2616005)(66946007)(38100700002)(9746002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PtnQYROGpeRZZ9mcNgLnVHIqXfEEwXdZlh2JuefSLIY5RN5N83HzNIzn/T8o?=
+ =?us-ascii?Q?t5/lzlGIbibzgFVH6dvrw18pN6u06kSxLXBwqMbSfoMkrMrTwJYmzBheY5ya?=
+ =?us-ascii?Q?QXoSkxHf4iQx3YpzR/I5gbIXJTXxddQ6gzHChRp29x9S8G4bc7moRA6pD1If?=
+ =?us-ascii?Q?e2686u4PQjsHlobizWCxKlgzW1Dl1CbfTsas8oR5AyQcUqHPVgQl/F5reZUY?=
+ =?us-ascii?Q?K76ChWEmbV5sR7fSPxjkYHKXvaZ2mxJD+a0F5dvE5CGfalcuXBVerthqbXX0?=
+ =?us-ascii?Q?+7tgmwd3LfP7sct49eyRrk/B1x1CHIKIilpgTuxssIJsXAJAy5vddJfSIFGh?=
+ =?us-ascii?Q?YCHh1UP6hMq5UA9R7Q5ROuiPwtecyxkFzYlatqj8zppm4N65rVXtZA0AwoRD?=
+ =?us-ascii?Q?NijHXLw1LBdMKYkyBlzBbvauD0K01NeQGjVkQMr7iS72r0SBE8jLFhJXcaj/?=
+ =?us-ascii?Q?lLUnH0eQjajd1ZA0Sf+Co8zEVyb7jP37uwHTzEr3DqA8LNj9UlnMUR3UlFdW?=
+ =?us-ascii?Q?FybEDZ/Gfe3JKgC3aH7JpC5u/+RTpQfMr4Om9nxlD3G1h+K8UXwMpBXETIeD?=
+ =?us-ascii?Q?rnNbACqStOmd9HCYjnKhZ1ezF2pfyjgsg8jXLM7AZCGnSmD04hBL13MGn0Eq?=
+ =?us-ascii?Q?Te1M7xfH+f/YPJwgNXXnXQloQvQsXOxZ56t9xgc/TUiD6yIEkLdFidl1abEG?=
+ =?us-ascii?Q?q8Y/keF+gxV4IRBxKrHoZlppKrLtUV6YLMPVv/4bIv1KJslnZJeqlCE6w2oc?=
+ =?us-ascii?Q?c9J3q/by8hSeqC7HLrZxhELIqUM83LNds35r4rWHpQzlhKiJh3kG+zcqLMkl?=
+ =?us-ascii?Q?Cdq3gQQFOedSE9PBh0dFxoURf0Q7pLyhoKq18AAgpGl1Mv4qsnNAgbZsT9h4?=
+ =?us-ascii?Q?/2bvI+I5skarMNmSglP6sRwZyRDn0huz++8tuBThEzP+8vyBt00EniuhBlWZ?=
+ =?us-ascii?Q?EToPuc6AnNNfo5FLw99YdRaITAz7UQSAd5bZPSKG/2Caj+x0Wh93rgFlUWCY?=
+ =?us-ascii?Q?6GANsDqvoyMcX8QC9s5uxxY2dwtujEtiAxbdugm0PU3NMZYSWVkmomlkLUyc?=
+ =?us-ascii?Q?8F+3pZlGObgDy9WmWInrX++77+Lw5zWQdQ+u0hV8pHCDAVmggtsKNjdwzhFT?=
+ =?us-ascii?Q?0+JgF1jfM7bKpgR6JEykjr+zjBqgfR2IUHY4Tjz57dJTTuIJyUlg+IWyqch2?=
+ =?us-ascii?Q?r7dXzqJBZ/+qlWz+aSfk33P0P+U8ijxoLlC/MbYDol8DiJSaWFZ3JSfcDaQu?=
+ =?us-ascii?Q?b029ZCEjx8+Lxi126Xz8rzemKLKpKvrh2UHUVqgkQcAPyfY/Q3s3EvxooXkl?=
+ =?us-ascii?Q?0vHa8k2wyIasnS4f0W2ixbUg?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e65a9b22-c639-4589-1f7a-08d96751520f
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2021 22:48:41.8421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: av/hDTlbYr2uZKXFkBgH1IfbsCYHoBCHWOBbDlenDRM0aIWqKZox21ZKwEFLuv4o
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5349
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 2:57 PM Rajat Jain <rajatja@google.com> wrote:
->
-> On Mon, Aug 23, 2021 at 6:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Mon, Aug 23, 2021 at 5:31 PM Kuppuswamy, Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> > >
-> > >
-> > >
-> > > On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
-> > > >> Add a new variant of pci_iomap for mapping all PCI resources
-> > > >> of a devices as shared memory with a hypervisor in a confidential
-> > > >> guest.
-> > > >>
-> > > >> Signed-off-by: Andi Kleen<ak@linux.intel.com>
-> > > >> Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > I'm a bit puzzled by this part. So why should the guest*not*  map
-> > > > pci memory as shared? And if the answer is never (as it seems to be)
-> > > > then why not just make regular pci_iomap DTRT?
-> > >
-> > > It is in the context of confidential guest (where VMM is un-trusted). So
-> > > we don't want to make all PCI resource as shared. It should be allowed
-> > > only for hardened drivers/devices.
-> >
-> > That's confusing, isn't device authorization what keeps unaudited
-> > drivers from loading against untrusted devices? I'm feeling like
-> > Michael that this should be a detail that drivers need not care about
-> > explicitly, in which case it does not need to be exported because the
-> > detail can be buried in lower levels.
-> >
-> > Note, I specifically said "unaudited", not "hardened" because as Greg
-> > mentioned the kernel must trust drivers, its devices that may not be
-> > trusted.
->
-> Can you please point me to the thread where this discussion with Greg
-> is ongoing?
+On Tue, Aug 24, 2021 at 03:48:39PM -0600, Alex Williamson wrote:
+> On Mon, 23 Aug 2021 18:28:49 +0300
+> Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
+> 
+> > On 8/23/2021 6:16 PM, Alex Williamson wrote:
+> > > On Sun, 22 Aug 2021 17:35:55 +0300
+> > > Yishai Hadas <yishaih@nvidia.com> wrote:  
+> > >> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > >> new file mode 100644
+> > >> index 000000000000..15474ebadd98
+> > >> +++ b/drivers/vfio/pci/vfio_pci.c  
+> > > ...  
+> > >> +static int vfio_pci_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
+> > >> +{
+> > >> +	might_sleep();
+> > >> +
+> > >> +	if (!enable_sriov)
+> > >> +		return -ENOENT;
+> > >> +
+> > >> +	return vfio_pci_core_sriov_configure(pdev, nr_virtfn);
+> > >> +}  
+> > > As noted in previous version, why do we need the might_sleep() above
+> > > when the core code below includes it and there's nothing above that
+> > > might sleep before that?  Thanks,  
+> > 
+> > This is used to mention vfio_pci_core_sriov_configure might sleep.
+> > 
+> > If this is redundant, can you please remove this one line upon merge ?
+> 
+> I guess I'm not sure how far up we need to, or should, percolate
+> might_sleep() annotations.  vfio_pci_core_sriov_configure() calls
+> vfio_device_get_from_dev() which makes use of mutexes, which I think is
+> the original reason for the annotation there ahead of those in the PCI
+> iov code.  But is the annotation through mutex_lock() enough on its own,
+> ie. should we remove all of our gratuitous annotations in the vfio part
+> of the code path?  Thanks,
 
-It slowed down to implement the "move to the 'authorized' device
-model" recommendation. LWN has a good writeup (as usual) and a link to
-the thread:
+Generally you'd want to use might_sleep() on a path where the sleep is
+conditional - particularly something where the conditions are rare.
 
-https://lwn.net/Articles/865918/
+Given that the mutex_lock is basically unconditional and the
+!enable_sriov = false is rare, I'd suggest to delete the whole lot of
+it on this path.
+
+Jason
