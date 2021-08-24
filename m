@@ -2,216 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF9D3F5DE0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 14:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 865363F5DF1
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 14:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237243AbhHXMVv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 08:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237219AbhHXMVs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 08:21:48 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C15C061757;
-        Tue, 24 Aug 2021 05:21:04 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2b1ea.dip0.t-ipconnect.de [79.242.177.234])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id CDC26922;
-        Tue, 24 Aug 2021 14:21:00 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joro@8bytes.org, jroedel@suse.de
-Subject: [PATCH v3 4/4] PCI/ACPI: Check for _OSC support in acpi_pci_osc_control_set()
-Date:   Tue, 24 Aug 2021 14:20:54 +0200
-Message-Id: <20210824122054.29481-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210824122054.29481-1-joro@8bytes.org>
-References: <20210824122054.29481-1-joro@8bytes.org>
+        id S237255AbhHXMZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 08:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230132AbhHXMZv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Aug 2021 08:25:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B73016127B;
+        Tue, 24 Aug 2021 12:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629807907;
+        bh=Edj68RKjcXX2r4keA5K6DEuxfBNmsQDCDQXdGfLJ09I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eKhRQQn91hAhG6loFGwgvUTfuk90J2t693MaoSzkx7rKuyyuInsQaMgZU5awAgMiz
+         yFcJR6cf0jhhpE3vB4dGD9mLksEZzdr9I43oJSix1x0HOnWbmOZno+jd5ADXAhOGGw
+         7VBsLN+b3JDEPIAjmTsNi7pKwnFm4uEa/5d+I/GkW3Y2DHZWzSNnsAGKr2+6tje504
+         gdzarHSnOqsLqPhNt7yJfwf9JTDdZiL33VNsYfFYESXJXz9WctTg+j1c1a6yEUbDsV
+         61jwiPYWc7G6JK/UAycvuK3BgJF/MSVl2HltSH/g+u4GP57GgpVtVUtg+V/PoVe45Y
+         CkH0VXc58XDaQ==
+Date:   Tue, 24 Aug 2021 07:25:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
+Message-ID: <20210824122504.GA3452187@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+"Fix a bug ..." is not a very useful subject line.  It doesn't say
+anything about what the patch *does*.  It doesn't hint at a locking
+change.
 
-Get rid of acpi_pci_osc_support() and check for _OSC supported features
-directly in acpi_pci_osc_control_set(). There is no point in doing an
-unconditional _OSC query with control=0 even when the kernel later wants
-to take control over more features.
+On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> In hv_pci_bus_exit, the code is holding a spinlock while calling
+> pci_destroy_slot(), which takes a mutex.
 
-This safes one _OSC query and simplifies the code by getting rid of
-the acpi_pci_osc_support() function. As a side effect, the !control
-checks in acpi_pci_query_osc() can also be removed.
+It's unfortunate that slots are not better integrated into the PCI
+core.  I'm sorry your driver even has to worry about this.
+> 
+> This is not safe for spinlock. Fix this by moving the children to be
+> deleted to a list on the stack, and removing them after spinlock is
+> released.
+> 
+> Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
+> 
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/acpi/pci_root.c | 81 ++++++++++++++++-------------------------
- 1 file changed, 32 insertions(+), 49 deletions(-)
+A lore link to Dan's report would be useful here.
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index f12e512bcddc..ab2f7dfb0c44 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -203,26 +203,16 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
- 
- 	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
- 	capbuf[OSC_SUPPORT_DWORD] = support;
--	if (control)
--		capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
--	else
--		/* Run _OSC query only with existing controls. */
--		capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
-+	capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
- 
- 	status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
- 	if (ACPI_SUCCESS(status)) {
- 		root->osc_support_set = support;
--		if (control)
--			*control = result;
-+		*control = result;
- 	}
- 	return status;
- }
- 
--static acpi_status acpi_pci_osc_support(struct acpi_pci_root *root, u32 flags)
--{
--	return acpi_pci_query_osc(root, flags, NULL);
--}
--
- struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
- {
- 	struct acpi_pci_root *root;
-@@ -345,8 +335,9 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
-  * _OSC bits the BIOS has granted control of, but its contents are meaningless
-  * on failure.
-  **/
--static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 req)
-+static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 support)
- {
-+	u32 req = OSC_PCI_EXPRESS_CAPABILITY_CONTROL;
- 	struct acpi_pci_root *root;
- 	acpi_status status;
- 	u32 ctrl, capbuf[3];
-@@ -354,22 +345,16 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
- 	if (!mask)
- 		return AE_BAD_PARAMETER;
- 
--	ctrl = *mask;
--	if ((ctrl & req) != req)
--		return AE_TYPE;
--
- 	root = acpi_pci_find_root(handle);
- 	if (!root)
- 		return AE_NOT_EXIST;
- 
--	*mask = ctrl | root->osc_control_set;
--	/* No need to evaluate _OSC if the control was already granted. */
--	if ((root->osc_control_set & ctrl) == ctrl)
--		return AE_OK;
-+	ctrl   = *mask;
-+	*mask |= root->osc_control_set;
- 
- 	/* Need to check the available controls bits before requesting them. */
--	while (*mask) {
--		status = acpi_pci_query_osc(root, root->osc_support_set, mask);
-+	do {
-+		status = acpi_pci_query_osc(root, support, mask);
- 		if (ACPI_FAILURE(status))
- 			return status;
- 		if (ctrl == *mask)
-@@ -377,7 +362,11 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
- 		decode_osc_control(root, "platform does not support",
- 				   ctrl & ~(*mask));
- 		ctrl = *mask;
--	}
-+	} while (*mask);
-+
-+	/* No need to request _OSC if the control was already granted. */
-+	if ((root->osc_control_set & ctrl) == ctrl)
-+		return AE_OK;
- 
- 	if ((ctrl & req) != req) {
- 		decode_osc_control(root, "not requesting control; platform does not support",
-@@ -470,7 +459,7 @@ static bool os_control_query_checks(struct acpi_pci_root *root, u32 support)
- static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 				 bool is_pcie)
- {
--	u32 support, control, requested;
-+	u32 support, control = 0, requested = 0;
- 	acpi_status status;
- 	struct acpi_device *device = root->device;
- 	acpi_handle handle = device->handle;
-@@ -490,28 +479,15 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 	support = calculate_support();
- 
- 	decode_osc_support(root, "OS supports", support);
--	status = acpi_pci_osc_support(root, support);
--	if (ACPI_FAILURE(status)) {
--		*no_aspm = 1;
--
--		/* _OSC is optional for PCI host bridges */
--		if ((status == AE_NOT_FOUND) && !is_pcie)
--			return;
--
--		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
--			 acpi_format_exception(status));
--		return;
--	}
--
--	if (!os_control_query_checks(root, support))
--		return;
- 
--	requested = control = calculate_control();
-+	if (os_control_query_checks(root, support))
-+		requested = control = calculate_control();
- 
--	status = acpi_pci_osc_control_set(handle, &control,
--					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
-+	status = acpi_pci_osc_control_set(handle, &control, support);
- 	if (ACPI_SUCCESS(status)) {
--		decode_osc_control(root, "OS now controls", control);
-+		if (control)
-+			decode_osc_control(root, "OS now controls", control);
-+
- 		if (acpi_gbl_FADT.boot_flags & ACPI_FADT_NO_ASPM) {
- 			/*
- 			 * We have ASPM control, but the FADT indicates that
-@@ -522,11 +498,6 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 			*no_aspm = 1;
- 		}
- 	} else {
--		decode_osc_control(root, "OS requested", requested);
--		decode_osc_control(root, "platform willing to grant", control);
--		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
--			acpi_format_exception(status));
--
- 		/*
- 		 * We want to disable ASPM here, but aspm_disabled
- 		 * needs to remain in its state from boot so that we
-@@ -535,6 +506,18 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 		 * root scan.
- 		 */
- 		*no_aspm = 1;
-+
-+		/* _OSC is optional for PCI host bridges */
-+		if ((status == AE_NOT_FOUND) && !is_pcie)
-+			return;
-+
-+		if (control) {
-+			decode_osc_control(root, "OS requested", requested);
-+			decode_osc_control(root, "platform willing to grant", control);
-+		}
-+
-+		dev_info(&device->dev, "_OSC: platform retains control of PCIe features (%s)\n",
-+			 acpi_format_exception(status));
- 	}
- }
- 
--- 
-2.32.0
-
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index a53bd8728d0d..d4f3cce18957 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3220,6 +3220,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  	struct hv_pci_dev *hpdev, *tmp;
+>  	unsigned long flags;
+>  	int ret;
+> +	struct list_head removed;
+>  
+>  	/*
+>  	 * After the host sends the RESCIND_CHANNEL message, it doesn't
+> @@ -3229,9 +3230,18 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  		return 0;
+>  
+>  	if (!keep_devs) {
+> -		/* Delete any children which might still exist. */
+> +		INIT_LIST_HEAD(&removed);
+> +
+> +		/* Move all present children to the list on stack */
+>  		spin_lock_irqsave(&hbus->device_list_lock, flags);
+> -		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
+> +		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry)
+> +			list_move_tail(&hpdev->list_entry, &removed);
+> +		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+> +
+> +		/* Remove all children in the list */
+> +		while (!list_empty(&removed)) {
+> +			hpdev = list_first_entry(&removed, struct hv_pci_dev,
+> +						 list_entry);
+>  			list_del(&hpdev->list_entry);
+>  			if (hpdev->pci_slot)
+>  				pci_destroy_slot(hpdev->pci_slot);
+> @@ -3239,7 +3249,6 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  			put_pcichild(hpdev);
+>  			put_pcichild(hpdev);
+>  		}
+> -		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+>  	}
+>  
+>  	ret = hv_send_resources_released(hdev);
+> -- 
+> 2.25.1
+> 
