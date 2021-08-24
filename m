@@ -2,152 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 007B93F5B3D
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 11:47:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 967BF3F5CAF
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 13:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235842AbhHXJsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 05:48:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26638 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235686AbhHXJsA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 05:48:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629798435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=byOliS/hAlH982j95uoj9FjiMsaJUQkzdYQOZKOZeFM=;
-        b=EpSjaKaORit2KBe35XMrcFltkhci8RVMV7pN97m/XqxyihAXn2G+tohwnWuAezzH4bp48M
-        efD8nrjBZJ6yjreif7/fjD3rTeTWH11Tav+ryGfZYH2nwH71eP7mowc9EipQYYwbSrgdrl
-        bEd+dJo0mtOfCZWeq1ubGE6hNpUgYI4=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-8S3UT5AVMsOCPU5acye1qw-1; Tue, 24 Aug 2021 05:47:14 -0400
-X-MC-Unique: 8S3UT5AVMsOCPU5acye1qw-1
-Received: by mail-ej1-f70.google.com with SMTP id bx10-20020a170906a1ca00b005c341820edeso3878137ejb.10
-        for <linux-pci@vger.kernel.org>; Tue, 24 Aug 2021 02:47:14 -0700 (PDT)
+        id S236395AbhHXLC6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 07:02:58 -0400
+Received: from mail-wm1-f44.google.com ([209.85.128.44]:42937 "EHLO
+        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236377AbhHXLC4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 07:02:56 -0400
+Received: by mail-wm1-f44.google.com with SMTP id k20-20020a05600c0b5400b002e87ad6956eso348296wmr.1;
+        Tue, 24 Aug 2021 04:02:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=byOliS/hAlH982j95uoj9FjiMsaJUQkzdYQOZKOZeFM=;
-        b=Qs5iIQjx0L+FQ9sbnkyJ0UnWDpZmZR5gilncPEyxw05S6KGcT4lgkw5ksRkIXThR7o
-         nDzbS9SZsNMl41SIbTaM/MbvSx5AO6Y6JeE5DHZQg+PIvQcVXXr21jhYNfGXXRMwKpFy
-         subiwv5zmDwTdfi0gOWYwVD/ltWFqEQuWqFc+jEISQF/uEbKe2XP6Z3yi6o1yBKMRki9
-         L9p8g8cDc0r/74LYhBwkEc7wzy15kXbKO5o/6WMWWaHjDVeTBS1zOFNnmQLmbIL6hgcZ
-         SLEVO0mBeOrKOo/5LnvHnQ0OdQ4dMmbZUOjKqXq5J4/RNEnRnfjsOZUeMcePkw/3siTX
-         ps/Q==
-X-Gm-Message-State: AOAM530MTmaVLjbNpXJAzSmlUhcol6hafw/a4Ti6DnJ3oM78cXDnbBBh
-        RdrtmHW6hpLtLm7BYxgBvDNT/W+09NH7g9etL0Tdx95zACMQsQfUvwG05LUUuxRh9IebuMtZQ2h
-        OiTYl2a2OkwwpN0cFVZ3d
-X-Received: by 2002:a17:906:3542:: with SMTP id s2mr40413070eja.379.1629798433282;
-        Tue, 24 Aug 2021 02:47:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyUO88Sc9irEBtMZmBbVQ8WcILdFFNEosAjyt1865+nkRLAobkOu3Zuf3KEOK5TLE4bRYLW2A==
-X-Received: by 2002:a17:906:3542:: with SMTP id s2mr40413054eja.379.1629798433111;
-        Tue, 24 Aug 2021 02:47:13 -0700 (PDT)
-Received: from redhat.com ([2.55.137.225])
-        by smtp.gmail.com with ESMTPSA id b18sm2800522ejl.90.2021.08.24.02.47.06
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=usZCgUnmy/C/PHJqn4fGun/TO/sNvOWBArrpSOrh8r4=;
+        b=WteQERNJxIOAhkfrOpXlAu5/upcAvdfs6iBWklsaqBSgx6MMOrcOIXfHNWHwFXy1qF
+         mTwoWJPccYlWLP6reEuy0SuZtQmqzERAN3V8jCBxgiFhwjkurjjNlDpQFEJ0WJkBK5Ay
+         HAuwar4yKqletRe028hOXky00suoQtHlXhO/QAAPSAndHFKwt1n4DqpBL3dWob+2K7+U
+         2mC+pH0BgpBIQRVCacI0ny5+97Uj9ocUKC8bMbsGVk8NEd6Hh1JyHJQi4mB17dLI5cN+
+         hACGQTTCBLqnVHTuGaEtrJkcs+mBZRJMxLAjWQq9vcF3mOfQqfcBEtNlFPJl5BLWeZOv
+         QwxA==
+X-Gm-Message-State: AOAM532vD7dvF2Tr8mIEz3dcz1O7VPn0OIha8TegLjx7ouALbF4zmOD9
+        8VM3Z52k7ay1bRgl1CQwUkU=
+X-Google-Smtp-Source: ABdhPJxakZtWQlD5SBo/2sMDWicjLfQc70XCGpLnsqirbb8TG3DtMOAcieJ1RRSC2CuHadbexjsXUA==
+X-Received: by 2002:a1c:f002:: with SMTP id a2mr3564259wmb.79.1629802931140;
+        Tue, 24 Aug 2021 04:02:11 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z19sm2416079wma.0.2021.08.24.04.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 02:47:12 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 05:47:03 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        Tue, 24 Aug 2021 04:02:10 -0700 (PDT)
+Date:   Tue, 24 Aug 2021 11:02:08 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-Message-ID: <20210824053830-mutt-send-email-mst@kernel.org>
-References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210823195409-mutt-send-email-mst@kernel.org>
- <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
- <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
- <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
+Message-ID: <20210824110208.xd57oqm5rii4rr4n@liuwe-devbox-debian-v2>
+References: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 07:14:18PM -0700, Andi Kleen wrote:
+On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> On 8/23/2021 6:04 PM, Dan Williams wrote:
-> > On Mon, Aug 23, 2021 at 5:31 PM Kuppuswamy, Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> > > 
-> > > 
-> > > On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
-> > > > > Add a new variant of pci_iomap for mapping all PCI resources
-> > > > > of a devices as shared memory with a hypervisor in a confidential
-> > > > > guest.
-> > > > > 
-> > > > > Signed-off-by: Andi Kleen<ak@linux.intel.com>
-> > > > > Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > I'm a bit puzzled by this part. So why should the guest*not*  map
-> > > > pci memory as shared? And if the answer is never (as it seems to be)
-> > > > then why not just make regular pci_iomap DTRT?
-> > > It is in the context of confidential guest (where VMM is un-trusted). So
-> > > we don't want to make all PCI resource as shared. It should be allowed
-> > > only for hardened drivers/devices.
-> > That's confusing, isn't device authorization what keeps unaudited
-> > drivers from loading against untrusted devices? I'm feeling like
-> > Michael that this should be a detail that drivers need not care about
-> > explicitly, in which case it does not need to be exported because the
-> > detail can be buried in lower levels.
+> In hv_pci_bus_exit, the code is holding a spinlock while calling
+> pci_destroy_slot(), which takes a mutex.
 > 
-> We originally made it default (similar to AMD), but it during code audit we
-> found a lot of drivers who do ioremap early outside the probe function.
-> Since it would be difficult to change them all we made it opt-in, which
-> ensures that only drivers that have been enabled can talk with the host at
-> all and can't be attacked. That made the problem of hardening all these
-> drivers a lot more practical.
+> This is not safe for spinlock. Fix this by moving the children to be
+> deleted to a list on the stack, and removing them after spinlock is
+> released.
 > 
-> Currently we only really need virtio and MSI-X shared, so for changing two
-> places in the tree you avoid a lot of headache elsewhere.
+> Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
 > 
-> Note there is still a command line option to override if you want to allow
-> and load other drivers.
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> -Andi
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index a53bd8728d0d..d4f3cce18957 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3220,6 +3220,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  	struct hv_pci_dev *hpdev, *tmp;
+>  	unsigned long flags;
+>  	int ret;
+> +	struct list_head removed;
 
-I see. Hmm. It's a bit of a random thing to do it at the map time
-though. E.g. DMA is all handled transparently behind the DMA API.
-Hardening is much more than just replacing map with map_shared
-and I suspect what you will end up with is basically
-vendors replacing map with map shared to make things work
-for their users and washing their hands.
+This can be moved to where it is needed -- the if(!keep_dev) branch --
+to limit its scope.
 
-I would say an explicit flag in the driver that says "hardened"
-and refusing to init a non hardened one would be better.
+>  
+>  	/*
+>  	 * After the host sends the RESCIND_CHANNEL message, it doesn't
+> @@ -3229,9 +3230,18 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  		return 0;
+>  
+>  	if (!keep_devs) {
+> -		/* Delete any children which might still exist. */
+> +		INIT_LIST_HEAD(&removed);
+> +
+> +		/* Move all present children to the list on stack */
+>  		spin_lock_irqsave(&hbus->device_list_lock, flags);
+> -		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
+> +		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry)
+> +			list_move_tail(&hpdev->list_entry, &removed);
+> +		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+> +
+> +		/* Remove all children in the list */
+> +		while (!list_empty(&removed)) {
+> +			hpdev = list_first_entry(&removed, struct hv_pci_dev,
+> +						 list_entry);
 
--- 
-MST
+list_for_each_entry_safe can also be used here, right?
 
+Wei.
+
+>  			list_del(&hpdev->list_entry);
+>  			if (hpdev->pci_slot)
+>  				pci_destroy_slot(hpdev->pci_slot);
+> @@ -3239,7 +3249,6 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>  			put_pcichild(hpdev);
+>  			put_pcichild(hpdev);
+>  		}
+> -		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+>  	}
+>  
+>  	ret = hv_send_resources_released(hdev);
+> -- 
+> 2.25.1
+> 
