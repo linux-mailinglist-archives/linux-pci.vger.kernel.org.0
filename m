@@ -2,87 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F183F6A64
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 22:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B813F6A6E
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 22:31:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235003AbhHXUaQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 16:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
+        id S235205AbhHXUcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 16:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232122AbhHXUaL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Aug 2021 16:30:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E2F8B61139;
-        Tue, 24 Aug 2021 20:29:26 +0000 (UTC)
+        id S234675AbhHXUcB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Aug 2021 16:32:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3738C610F7;
+        Tue, 24 Aug 2021 20:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629836967;
-        bh=HQsWvV8TV7qqPx5tkk6zEg6d0THtw0M1zSBYG0+FXmM=;
+        s=k20201202; t=1629837076;
+        bh=u89RhbA1T4/YcegxqumOKFDZveULzg7IH3BXxWstXGA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=K/Tw7ZlbdNkpIaO6oyzFmAAAzaum09NyvSKjD4CShjnsOppD3snICoDL2XD7AxIgx
-         X9I/wCSwHSZaLvWywlpz3HmggK+DRCRIRo3RetksksrcOX8WB2jGnIvac6qevO9O0Q
-         2B0GkHQGzqcfrIY936DGo9U3Bx7MZnOI0clsFCIPmcT4D9TMnNoDvGn3Lc9iCDiEOJ
-         U1DdzFxyxvZho/calHxj99azcELX4zXrJfDxK8A/XOy2gjNkq0oHRrB3QMxwi7FFKA
-         GIenD1Yz9aM7+sSgzUPgG6T3cl5WyBfifMVQ4KjVSgJTUN3zLGSEJAeZr7ElF6ozQ+
-         oO60yUJ84jI2g==
-Date:   Tue, 24 Aug 2021 15:29:25 -0500
+        b=E7gmG9cu+2X8EpSv9jHNw194dQ/bFH+W8S5CviPC+WEzgK9x1GqwxeKDnQA93Ubc6
+         pIROpW9mCbmFawlLNt183dkzLJG92jUie48vdct5nMY9KMIpav4jCN5vVtcBqt99IN
+         LlMRmUTD9hQbKroaOXlhVlrUixEOK798eHEQ6pmGyuqfJJo5J4wfidKynCvdtb3s37
+         PjcEO5DOcIPu3SLREF0Tt+IUZRL6NjCeGqQy3Vt+WmnxMDtnryxVfbjA5YVJAeYKm9
+         BpOJvSuNngQVXkAMINkK0ZwKmdIz+EDYyzVhKaDWPyJSTPhZYBRtaAf1VAW/wDK4NO
+         xT3mGvV5LJ4bA==
+Date:   Tue, 24 Aug 2021 15:31:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: dwc: Perform host_init() before registering
- msi
-Message-ID: <20210824202925.GA3491441@bjorn-Precision-5520>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+Message-ID: <20210824203115.GA3492097@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YSVTdedrDSgSYgwm@ripper>
+In-Reply-To: <a80fc61a-bc55-b82c-354b-b57863ab03db@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 01:15:49PM -0700, Bjorn Andersson wrote:
-> On Tue 24 Aug 12:05 PDT 2021, Bjorn Helgaas wrote:
+On Tue, Aug 24, 2021 at 01:14:02PM -0700, Andi Kleen wrote:
 > 
-> > On Mon, Aug 23, 2021 at 08:49:57AM -0700, Bjorn Andersson wrote:
-> > > On the Qualcomm sc8180x platform the bootloader does something related
-> > > to PCI that leaves a pending "msi" interrupt, which with the current
-> > > ordering often fires before init has a chance to enable the clocks that
-> > > are necessary for the interrupt handler to access the hardware.
-> > > 
-> > > Move the host_init() call before the registration of the "msi" interrupt
-> > > handler to ensure the host driver has a chance to enable the clocks.
-> > 
-> > Did you audit other drivers for similar issues?  If they do, we should
-> > fix them all at once.
+> On 8/24/2021 11:55 AM, Bjorn Helgaas wrote:
+> > [+cc Rajat; I still don't know what "shared memory with a hypervisor
+> > in a confidential guest" means,
 > 
-> I only looked at the DesignWware drivers, in an attempt to find any
-> issues the proposed reordering.
-> 
-> The set of bugs causes by drivers registering interrupts before critical
-> resources tends to be rather visible and I don't know if there's much
-> value in speculatively "fixing" drivers.
-> 
-> E.g. a quick look through the drivers I see a similar pattern in
-> pci-tegra.c, but it's unlikely that they have the similar problem in
-> practice and I have no way to validate that a change to the order would
-> have a positive effect - or any side effects.
-> 
-> Or am I misunderstanding your request?
+> A confidential guest is a guest which uses memory encryption to isolate
+> itself from the host. It doesn't trust the host. But it still needs to
+> communicate with the host for IO, so it has some special memory areas that
+> are explicitly marked shared. These are used to do IO with the host. All
+> their usage needs to be carefully hardened to avoid any security attacks on
+> the guest, that's why we want to limit this interaction only to a small set
+> of hardened drivers. For MMIO, the set is currently only virtio and MSI-X.
 
-That is exactly my request.  I'm not sure if the potential issue you
-noticed in pci-tegra.c is similar to the one I mentioned here:
-
-  https://lore.kernel.org/linux-pci/20210624224040.GA3567297@bjorn-Precision-5520/
-
-but I am actually in favor of speculatively fixing drivers even though
-they're hard to test.  Code like this tends to get copied to other
-places, and fixing several drivers sometimes exposes opportunities for
-refactoring and sharing code.
+Good material for the commit log next time around.  Thanks!
 
 Bjorn
