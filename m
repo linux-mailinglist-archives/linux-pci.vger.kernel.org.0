@@ -2,183 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0E353F6150
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 17:10:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05BF13F61C3
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 17:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238093AbhHXPLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 11:11:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56999 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238059AbhHXPLD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Aug 2021 11:11:03 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="214204536"
-X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="214204536"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 08:03:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,347,1620716400"; 
-   d="scan'208";a="685393568"
-Received: from lkp-server02.sh.intel.com (HELO 181e7be6f509) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Aug 2021 08:03:51 -0700
-Received: from kbuild by 181e7be6f509 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mIXxv-0000cl-0e; Tue, 24 Aug 2021 15:03:51 +0000
-Date:   Tue, 24 Aug 2021 23:03:12 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/vpd] BUILD SUCCESS
- 466a79f417be2f2b0d875a9766a3cff10c3bedf1
-Message-ID: <61250a30.V7ULrxjY2ef0NKMU%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S238304AbhHXPgV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 11:36:21 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:39696 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235683AbhHXPgV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 11:36:21 -0400
+Received: by mail-ot1-f54.google.com with SMTP id m7-20020a9d4c87000000b0051875f56b95so47118976otf.6;
+        Tue, 24 Aug 2021 08:35:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=jINYQ1mvHiE2zLCibJDthuXZKNa+sewnEyR+eVgyDUc=;
+        b=gzTjIUzx6SbNm74FsVAs3TDLsgYjLmn9zecn8xWSg8FHXEgXrJ9+IUsoswBn4xBP/m
+         fkd6W4a2GSTLxfSGaQvz8jiKTkrbHd60oGWvOZ5E7NedVAjGT//xKqnjD1Hela7WJn7k
+         qoka7CRFkUiPy0kB/tbXo2zo0jQoQmnhrFUgL6aaBx2mu5jR+TFD6kvwiV21ettcexHB
+         OD8PA4Ys7Qq6zcNj1zqRsdk6P2FaoumKhTmop0FjAJ6MCKAfYUibX6x02PY8u0k/d3TA
+         tIKl6ZDhCObwb+H7SSZ8tQexlAPbgcVnobgJxTBM/ETUXzrLMlAkcz0V6JGmV1d3pmRL
+         TYSA==
+X-Gm-Message-State: AOAM530HW3rFIlMMcdBSUsfuFPuYp9QYMHZtXvtVp1ZM1bgxQBdO2mhx
+        5MlpjeBfDcsZpb9nVoj6Kg==
+X-Google-Smtp-Source: ABdhPJwro+5pXYcQli7tWFYc7LyPVh7C9bSuXsvUSn+YdFxxcHSAJ6CXP/U5QuZPqO6bL9O1ZEre6A==
+X-Received: by 2002:a05:6830:3482:: with SMTP id c2mr11429689otu.16.1629819336616;
+        Tue, 24 Aug 2021 08:35:36 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id l16sm4589113ota.55.2021.08.24.08.35.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Aug 2021 08:35:35 -0700 (PDT)
+Received: (nullmailer pid 496698 invoked by uid 1000);
+        Tue, 24 Aug 2021 15:35:34 -0000
+Date:   Tue, 24 Aug 2021 10:35:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] dt-bindings: Add 'slot-power-limit' PCIe port
+ property
+Message-ID: <YSURxtc7UAaSEfSy@robh.at.kernel.org>
+References: <20210820160023.3243-1-pali@kernel.org>
+ <20210820160023.3243-2-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210820160023.3243-2-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
-branch HEAD: 466a79f417be2f2b0d875a9766a3cff10c3bedf1  tg3: Search VPD with pci_vpd_find_ro_info_keyword()
+On Fri, Aug 20, 2021 at 06:00:21PM +0200, Pali Rohár wrote:
+> This property specifies slot power limit in mW unit. It is form-factor and
+> board specific value and must be initialized by hardware.
+> 
+> Some PCIe controllers delegates this work to software to allow hardware
+> flexibility and therefore this property basically specifies what should
+> host bridge programs into PCIe Slot Capabilities registers.
+> 
+> Property needs to be specified in mW unit, and not in special format
+> defined by Slot Capabilities (which encodes scaling factor or different
+> unit). Host drivers should convert value from mW unit to their format.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-elapsed time: 5391m
+This needs to be in dtschema schemas/pci/pci-bus.yaml instead.
 
-configs tested: 125
-configs skipped: 3
+(pci.txt is still here because it needs to be relicensed to move all the 
+descriptions to pci-bus.yaml.)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 6a8f2874a24d..e67d5db21514 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -32,6 +32,12 @@ driver implementation may support the following properties:
+>     root port to downstream device and host bridge drivers can do programming
+>     which depends on CLKREQ signal existence. For example, programming root port
+>     not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+> +- slot-power-limit:
+> +   If present this property specifies slot power limit in mW unit. Host drivers
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                          urquell_defconfig
-openrisc                         alldefconfig
-m68k                            q40_defconfig
-powerpc                   lite5200b_defconfig
-xtensa                  nommu_kc705_defconfig
-arm                        clps711x_defconfig
-mips                         tb0219_defconfig
-powerpc                 mpc8540_ads_defconfig
-arm                         palmz72_defconfig
-sh                             shx3_defconfig
-powerpc                 mpc85xx_cds_defconfig
-m68k                        mvme16x_defconfig
-arm                            xcep_defconfig
-sh                           se7780_defconfig
-arm                          imote2_defconfig
-arm                       imx_v4_v5_defconfig
-arm                     eseries_pxa_defconfig
-arm                        shmobile_defconfig
-sh                        edosk7705_defconfig
-powerpc                  iss476-smp_defconfig
-powerpc                    amigaone_defconfig
-arc                         haps_hs_defconfig
-arm                       aspeed_g5_defconfig
-arm                         s5pv210_defconfig
-arm                             pxa_defconfig
-arm                            qcom_defconfig
-powerpc                  storcenter_defconfig
-arm                        oxnas_v6_defconfig
-powerpc                 mpc8315_rdb_defconfig
-s390                          debug_defconfig
-powerpc                 linkstation_defconfig
-mips                  decstation_64_defconfig
-microblaze                      mmu_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20210822
-i386                 randconfig-a001-20210822
-i386                 randconfig-a002-20210822
-i386                 randconfig-a005-20210822
-i386                 randconfig-a003-20210822
-i386                 randconfig-a004-20210822
-x86_64               randconfig-a014-20210821
-x86_64               randconfig-a016-20210821
-x86_64               randconfig-a015-20210821
-x86_64               randconfig-a013-20210821
-x86_64               randconfig-a012-20210821
-x86_64               randconfig-a011-20210821
-i386                 randconfig-a011-20210821
-i386                 randconfig-a016-20210821
-i386                 randconfig-a012-20210821
-i386                 randconfig-a014-20210821
-i386                 randconfig-a013-20210821
-i386                 randconfig-a015-20210821
-arc                  randconfig-r043-20210821
-riscv                randconfig-r042-20210821
-s390                 randconfig-r044-20210821
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+As mentioned, this should have a unit suffix. I'm not sure it is 
+beneficial to share with SFP in this case though.
 
-clang tested configs:
-i386                 randconfig-c001-20210822
-s390                 randconfig-c005-20210822
-arm                  randconfig-c002-20210822
-riscv                randconfig-c006-20210822
-powerpc              randconfig-c003-20210822
-x86_64               randconfig-c007-20210822
-mips                 randconfig-c004-20210822
-x86_64               randconfig-a005-20210821
-x86_64               randconfig-a001-20210821
-x86_64               randconfig-a006-20210821
-x86_64               randconfig-a003-20210821
-x86_64               randconfig-a004-20210821
-x86_64               randconfig-a002-20210821
-i386                 randconfig-a006-20210821
-i386                 randconfig-a001-20210821
-i386                 randconfig-a002-20210821
-i386                 randconfig-a005-20210821
-i386                 randconfig-a004-20210821
-i386                 randconfig-a003-20210821
+> +   can parse this slot power limit and use it for programming Root Port or host
+> +   bridge, or for composing and sending PCIe Set_Slot_Power_Limit message
+> +   through the Root Port or host bridge when transitioning PCIe link from a
+> +   non-DL_Up Status to a DL_Up Status.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I no nothing about how this mechanism works, but I think this belongs in 
+the next section as for PCIe, a slot is always below a PCI-PCI bridge. 
+If we have N slots, then there's N bridges and needs to be N 
+slot-power-limit properties, right?
+
+(The same is probably true for all the properties here except 
+linux,pci-domain.) There's no distinction between host and PCI bridges  
+in pci-bus.yaml though.
+
+Rob
