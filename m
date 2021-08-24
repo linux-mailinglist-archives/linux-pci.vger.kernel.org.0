@@ -2,100 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D4D83F5425
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 02:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FD5E3F5554
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 03:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbhHXAn6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 20:43:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60583 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233101AbhHXAn6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 20:43:58 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10085"; a="204344167"
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="204344167"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 17:43:14 -0700
-X-IronPort-AV: E=Sophos;i="5.84,346,1620716400"; 
-   d="scan'208";a="535573127"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.123])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 17:43:14 -0700
-Date:   Mon, 23 Aug 2021 17:41:01 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>, jonathan.derrick@linux.dev,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Quirk to ignore spurious DLLSC when off
-Message-ID: <20210824004101.GA67273@otc-nc-03>
-References: <20210823184919.3412-1-jonathan.derrick@intel.com>
+        id S234722AbhHXBGm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 21:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234763AbhHXBGe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Aug 2021 21:06:34 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37CDC0612A4
+        for <linux-pci@vger.kernel.org>; Mon, 23 Aug 2021 18:04:11 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id s11so18263229pgr.11
+        for <linux-pci@vger.kernel.org>; Mon, 23 Aug 2021 18:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+KWjXh2lT4oyxvT6TUUge6cE2M/3E1/QPatrdIWAbCk=;
+        b=ssDUJbZQUoHOjzKeOoupouQflaDtoV/KGM0ZbImx65Id9YAIXzBr7xLGKgTJu5h7I2
+         HHPWAyYNY1bDMlXgvnD4vDkqa1dsykDsMeTtzg3vHCZHA743vpTJ8zJ4NdfqSdbmmqvy
+         KiEWa7Khi9N0O/9RoziHtutYHO2/nwyh6DBm4tBUK7GNpef0LXqDL+0p5s3nrsgMW6K/
+         FFWm8o5SonyxAvLyA2+U5fUS7ZWjvbxn5iMEzqko5Bo0H+b6KX6dRPsNpkxsT+0zJzz9
+         wV+DeBmwuvYfrQWDLM0QASdRWxoXpFfTwLTHLiDMsXuWjkskMss7fMermWEKgv/FmCUr
+         IxMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+KWjXh2lT4oyxvT6TUUge6cE2M/3E1/QPatrdIWAbCk=;
+        b=VIhVjxLuU9QSh6jf391+fdmYWJmnEuIjRIMOVCo1XA0tABlyCtBXPRF6qo00BJTd3k
+         gZS+r+thB2ugHdgbZp2eyLCg1DHCjyk0GO7h0jpOYevVmH5ozBQ7aF5mfN45QE5GYbzw
+         QEgpSLAHwTT8VR0NseYMfLIJFvXY9BMSi5NJzA2Sg0hrf8M+gaS621Z4RlybLzlWIVoj
+         YyfmCFzm7ju/2QjdUGnh26Oev5ni8bi6bZoBV4iBmSucILgwouSeERBTWCGmqki9GD3S
+         v9APK7PFlb90G7aruVrRQKWQj+rx98fYH0WlycxRAqBthSj/RQkGVgjRdF8j10tZj2Uo
+         5uKw==
+X-Gm-Message-State: AOAM5315YmWR8XP5pAt3dUbVIhPQT7RLTnszLEXGya/7X9M/yrLDGkTI
+        285a9TJnRfYrOAsweq+URCc9mHuXkKNK6NWQRbNNRA==
+X-Google-Smtp-Source: ABdhPJwr+d+03lWZE5hBC3RKJQrz+BrvZKJ9PwHrCLpkrlXplyqx0kAfavOgC5QFY0A8k9yCeP+k8gHn1t12t0fKZcY=
+X-Received: by 2002:a05:6a00:16c6:b029:32d:e190:9dd0 with SMTP id
+ l6-20020a056a0016c6b029032de1909dd0mr36118105pfc.70.1629767051049; Mon, 23
+ Aug 2021 18:04:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210823184919.3412-1-jonathan.derrick@intel.com>
+References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210823195409-mutt-send-email-mst@kernel.org> <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+In-Reply-To: <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 23 Aug 2021 18:04:00 -0700
+Message-ID: <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 12:49:19PM -0600, Derrick, Jonathan wrote:
-> From: James Puthukattukaran <james.puthukattukaran@oracle.com>
-> 
-> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
-> upstream ports both support hotplugging on each respective x4 device, a
-> slot management system for the CEM card requires both x4 devices to be
-> sysfs removed from the OS before it can safely turn-off physical power.
+On Mon, Aug 23, 2021 at 5:31 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 8/23/21 4:56 PM, Michael S. Tsirkin wrote:
+> >> Add a new variant of pci_iomap for mapping all PCI resources
+> >> of a devices as shared memory with a hypervisor in a confidential
+> >> guest.
+> >>
+> >> Signed-off-by: Andi Kleen<ak@linux.intel.com>
+> >> Signed-off-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
+> > I'm a bit puzzled by this part. So why should the guest*not*  map
+> > pci memory as shared? And if the answer is never (as it seems to be)
+> > then why not just make regular pci_iomap DTRT?
+>
+> It is in the context of confidential guest (where VMM is un-trusted). So
+> we don't want to make all PCI resource as shared. It should be allowed
+> only for hardened drivers/devices.
 
-sysfs removed from the OS seems a bit confusing.. Do you mean removed via
-sysfs by echo 0 > power?
+That's confusing, isn't device authorization what keeps unaudited
+drivers from loading against untrusted devices? I'm feeling like
+Michael that this should be a detail that drivers need not care about
+explicitly, in which case it does not need to be exported because the
+detail can be buried in lower levels.
 
-> The implications are that Slot Control will display Powered Off status
-> for the device where the device is actually powered until both ports
-> have powered off.
-> 
-> When power is removed from the first half, real power and link remains
-> active while waiting for the second half to have power removed. When
-> power is then removed from the second half, the first half starts
-> shutdown sequence and will trigger a DLLSC event. This is misinterpreted
-> as an enabling event and causes the first half to be re-enabled.
-> 
-> The spurious enable can be resolved by ignoring link status change
-> events when no link is active when in the off state. This patch adds a
-> quirk for the card.
-> 
-> Acked-by: Jon Derrick <jonathan.derrick@intel.com>
-> Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
-> ---
-> v1->v2: Device-specific quirk
-> 
->  drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
->  drivers/pci/quirks.c              | 30 ++++++++++++++++++++++++++++++
->  include/linux/pci.h               |  1 +
->  3 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..db41f78bfac8 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
->  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  {
->  	int present, link_active;
-> +	struct pci_dev *pdev = ctrl->pcie->port;
->  
->  	/*
->  	 * If the slot is on and presence or link has changed, turn it off.
-> @@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  		cancel_delayed_work(&ctrl->button_work);
->  		fallthrough;
->  	case OFF_STATE:
-> +		if (pdev->shared_pcc_and_link_slot &&
-> +		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
-
-Is it !link_active? Based on the explanation, until we turn off both slots
-you would see link is still active correct? 
-
-> +			mutex_unlock(&ctrl->state_lock);
-> +			break;
-> +		}
-> +
+Note, I specifically said "unaudited", not "hardened" because as Greg
+mentioned the kernel must trust drivers, its devices that may not be
+trusted.
