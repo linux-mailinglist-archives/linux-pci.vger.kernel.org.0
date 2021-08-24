@@ -2,190 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE8483F677C
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 19:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB3073F68C7
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 20:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238669AbhHXRfV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 13:35:21 -0400
-Received: from mail-centralus01namln1006.outbound.protection.outlook.com ([40.93.8.6]:7351
-        "EHLO outbound.mail.eo.outlook.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S241575AbhHXRbk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 13:31:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n3ZGNuqCqruE28W0ps5Seg5clrsvUzv4QfDrCtWVBdfUm2oi8r+1Eja+ztIpz8Ih3g+wutWfAvCDY1z5eYwCpkJo44OoyNEi4yHnTaWW4meaoH+TeOb9IzqfFV0tNSrzq/16vmseuWU1tL8bFJHDwvJdWT/2IA4S/jmThuKEMMQhEKAMCKFuXkBbO4Vm0y8ZVw14IAgoRc9Is0ADKT7IEW244pW0oDJMurlfnVt+mBWD2RSii7TuzzM5PVBQnv6NNOAiHLzrcV+ZIheoOMdUun2+6Mr1BAWlf9FLnvANIyGFH2N8Bwch+4Jo3o6uCJITU7XCYMeIpnAYXkIYny1L1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SuHhcZH5ywJgwCdvjSedYp/UsqNIg3iEujPCcQT8y2k=;
- b=eECmSWoyDyWuK5eF9kfyrb/AGmKdUzH8mFVzlJ2kUo4ebcXFbOp6Qtyf0NZBh5JozmF40hghxnyDtHlAYKDmGQfE0xjArgyWasm/tSZeoXTjxYhBmaucM/FIcqd4lnlFyqCjt7e4ciNIGih5I9fGGKXp1xlqtKWTYmUZRgAHVouTyn9fTXdfKt5G3+lppFWS/6sUUY8j+j80uEYW74QCd466jhvXbw58aMyCcu+nIOybYlGAwr5xFICWDe3VAlzBQ6FWbvslj3xFstFOrAMMh+D3soGJJ2FIGiCSDciIG1wH5d5X/xJsiDqxmcIrXoH6SmrPRiA/iYZNUTdwL8ACog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SuHhcZH5ywJgwCdvjSedYp/UsqNIg3iEujPCcQT8y2k=;
- b=Pq11+qNt3NhH1BAR1ckfqNA/sJeU9Pmpg2bY4zE/aFX6UkaJnvP1dsNT3bBUMMIYuTou1ggb9yUrjeGjSQXVJhUi96vvLFedWE3ORf7bBfeBnTnityDwrmxl/ck/9z37YK+nJboO7YY4stpbEa91smmcXneBSUAxEPGEs4XCams=
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12)
- by BY5PR21MB1412.namprd21.prod.outlook.com (2603:10b6:a03:235::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.3; Tue, 24 Aug
- 2021 17:30:48 +0000
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::75cf:f11d:d80d:dfd4]) by BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::75cf:f11d:d80d:dfd4%2]) with mapi id 15.20.4436.016; Tue, 24 Aug 2021
- 17:30:48 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: RE: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
-Thread-Topic: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
-Thread-Index: AQHXmLiDgHJZXiucJEOu37Y9ArQK+auClLAAgABU5cA=
-Date:   Tue, 24 Aug 2021 17:30:48 +0000
-Message-ID: <BY5PR21MB1506884F67EFBDB6804ECCB0CEC59@BY5PR21MB1506.namprd21.prod.outlook.com>
-References: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
- <20210824122504.GA3452187@bjorn-Precision-5520>
-In-Reply-To: <20210824122504.GA3452187@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d36b16f6-1ee6-4e67-9d64-e8d071f7ea0e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-08-24T17:28:54Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b9b47bb-e7cb-4953-a04d-08d96724e9b7
-x-ms-traffictypediagnostic: BY5PR21MB1412:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR21MB1412C1672E9A8B8B2CF88392CEC59@BY5PR21MB1412.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:378;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fjLg6d18eP71G22TOFuS4q4ZBGkP13TzNRJauUUEKUIu5AP0nfgEsKcY+MN/tjQGvDfu3E6lekgp8tspfCUdEeOhP3oG1g5TVYPH9O3AGkG/+eLG+O0Es8pSQ4+n76kzcMA6jDMPi8wUgAJKZCL6GfysYw9+naZYk/wRkPWtz3nu0u0JB2ahZV/PodvoETMKBVUf39aKnAkSR02kDrOGKnoLPuoJlKyC2M7r89O7uV9uomOYWVw1EzzvRrmUndunaFuaTXo+BMJpjNVbX6A0yTzBpHpY1iXmQkv9/nkH+sI7MfIusNpUCGTT1ZnyIoh8s2qpogUoCdVNmTZicbUAdLkGUdFPeWrwdZTZMFSPFHmRKYBEmkdQW3lnvwLrv/XiA6shV/OfJq4FLhJtoqrO5C9GnKtOfH2iPlXVxCwVn7s0xybeHQK+oEfJiizD6Fc02MXRxAd8HPZZh+DDN438WRRe9tytDLDT0JtxObrlBEKTKR5qxYZDa5iEKkIY2JJgxtoGoyI2+IZYPBSswFEwZPvTEArJaAQ6MOjZ0fkcgNP7LNwzU0lSVK2sjscy57K7/otZF+yCCfG9WONLfUijHEIgXVuqsOgEcrh0FbpdIkJAkbEBXmQKQS4FqIXOhcZDNI790IloDHlwgVMHfZqa0LrQ5yHy6LhVwtCgJAk9woKhCgj0ZA0ccISgoj50TqgkU/Ax7Y2TbspZJ+AFqlGGuA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38070700005)(66946007)(9686003)(66476007)(316002)(54906003)(2906002)(7696005)(83380400001)(64756008)(55016002)(66446008)(82960400001)(82950400001)(66556008)(66574015)(38100700002)(33656002)(26005)(122000001)(508600001)(10290500003)(71200400001)(4326008)(8936002)(6506007)(5660300002)(86362001)(186003)(110136005)(7416002)(76116006)(8676002)(8990500004)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?c1lleFcxMmtOQURZUmRvczhOeFZyNkZTc1BHWkJWLzZpV0IxZzJFc0tNb1oy?=
- =?utf-8?B?K1d3VEgrUlI0bDRQRmNpYy9Da0RNTVdiT0c3N1pJMjV4SERGNDFTdFJXbWdq?=
- =?utf-8?B?cytoN1hxRkdVbk5hSlhIVE1DV0ZhSTRHUXI2a0Q4YVFiZ1FRSTVXeVJnZmxa?=
- =?utf-8?B?ZW94OWczRk5kS0FKamIzT3FreDJpUjE1VmI5VVBXbHRCV3hWT1Rqa2pJOG83?=
- =?utf-8?B?QU02UjgyVHpCTUZPVkJtNHpVRWNnNU9QcTArdFUrQ1ZTdGx5K3ZrelVyN2Ni?=
- =?utf-8?B?ZGowT1ZKek1ZaWl3bnM2djVSNTFGVERrY3dFTnk4azNYMXNacjZxRElUVHpM?=
- =?utf-8?B?dlhtVEJFb2c0cE9MWUZSN0JIMWhRZjBrZnlpSE95Q3BKSEhQY3YzcWRjdWdM?=
- =?utf-8?B?eDF1RTkyT3ZKZFZ1c2pHTkRWWEpNVXRUUkpkS3hEWGloNmNHQ1N0eUpwdTJ4?=
- =?utf-8?B?aUl6MS9EZWVvY0c5RGE5RDFUUk9iaFFtWlVwZmhkaXBMNnRWQS8rM3dob1M0?=
- =?utf-8?B?VWdueXZIOGw3QVhGbzNQSzliUzd4d3lDMHBWUFdCK0NMbEdWVlR0ZW5VbE1z?=
- =?utf-8?B?SSs0Z0w4eWNCb28xb3hTMGZqdHU1TndvQTNSN1lCMVA4dWlDRllwUk5KcG1G?=
- =?utf-8?B?U2dJNHJLamZVSU54RGZTRDRqM1hOTDliek4wUVM0NFQybmU3aWZlWnRNRlpG?=
- =?utf-8?B?STdFeFk1dm9iRG8zWFA1cE9ZV1VMcUlxWGR5MU9kTlB3ejJrQi82a2ZUSnZ4?=
- =?utf-8?B?SDdLR3dlRTMwNEFkdWRjc05SdVlacE4wY2tLNGtmbmdJRjF3TlhxdkU0d0da?=
- =?utf-8?B?Y3VxZVdkc3RKYTg0SFhrYzFIN1E0STExcmRROXpYRGg2VnYxaXU5eFpXSlZO?=
- =?utf-8?B?c2Yyd0s5aHZ3SkIxN1RGb3p0ZFpzT3BRdFA0L1UyUlFmdW1ZOEZ3STF3MjRR?=
- =?utf-8?B?ckRXZ2pwY1FHbGxoMmVuS2FhWWpNMFNNSFl4RzVYak5BU2k4QXpoMGtEbjdP?=
- =?utf-8?B?YWJmL3Y0RHgrYTZQZmVFc0toeHBZTGU4cWU1bEJtZUc0T3JUMEdFUlNtR085?=
- =?utf-8?B?NnVoUFExTWRhK1pNbzFwMnVyTWtjMyttTzNzRFFPWTREUXdjNk5DbkwwMlVx?=
- =?utf-8?B?bmNLMW4xRTRlMWNZTEtrdnNDcGlmbVBGMW8rc1Q5WEdWblRPc0QyeU9rdzFM?=
- =?utf-8?B?cHpWaFM4Y09kbTRqWVFqQ0h4YkN6Nmo4SHhBaHBWczlzWkxpVXY0azI0L2d2?=
- =?utf-8?B?TkNhUFBYM0hvcTRES2I0NnJnOEkrQ2liK3VmMWNsYUVqazRoVnB4WnNzSnhL?=
- =?utf-8?B?MjUxUHFGb0JubitucDhUN2VFWmczYTJ6aTdkWGZpcDFubEN4bndYSXVzV1pG?=
- =?utf-8?B?elZtaUVvaktFaGtDOUQxSUVtbmNjbmt6K01OZTZSdERsZTBkYlVQV202aU1a?=
- =?utf-8?B?ZGlrMVdzT3c3RHVIN2NIaGZZWW5VSnBkOTdRakVTRmFtYjFEcmRNTit3b2pO?=
- =?utf-8?B?TERWY1hhREpaa3cyelM2MmVxVXduZElwM0wvcUZQQ3h4QlRDMkRsaTExQWdx?=
- =?utf-8?B?Vy9ZVnVTbEN6djJVQ0NYSmR5OWtsRDRhUU9LSUEzNzkxUXRtLzhPWk1UQUhV?=
- =?utf-8?B?czJoMmxWcnl6Q3A1SUlKM2NMbzR0ME5oODVZRzJuVWxKTWhDYlIxMk5uMVZu?=
- =?utf-8?B?eUtQUXVsMW1XTmNjRi9KQytMUkVJRWQ5M3l2MnRjb1hYbk9pVVlnRVhaYXgr?=
- =?utf-8?Q?AM322LVZ7HE19ACQzE=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S229670AbhHXSH3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 14:07:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230488AbhHXSH2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Aug 2021 14:07:28 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A448C061757;
+        Tue, 24 Aug 2021 11:06:44 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id l7-20020a1c2507000000b002e6be5d86b3so2880619wml.3;
+        Tue, 24 Aug 2021 11:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T9QISP9Y4PT9a1jwV196EPnSVESk04DbpPCP+n6p4Hc=;
+        b=HM5reH155XYRI4efGhCsAmloYaZzcfsAE+cjcIac4uw0cRpI2Cn+2SZ5OH+OMIU1fu
+         +mkRfPnGU7HrLgr8IclCxbu1zUHopAYUEksZaSWMmJIaTsZZQLOtd3xR3p8wqYCrgW9I
+         YDecM6HYsuKfXTeURuUzMowbjpg5MMdql5+lk/G2dwbVJ+GsYBvRPzL5iBktwwtKdcpo
+         DBsOGBuvEL76bc5C2uIZyMxmgOzW6XHCA29833wNI3zh613cb6Q+WwiGPRsUUz5LarTO
+         4u1feArkffXxSUiTULH+gBhRw43LQZ9Tcj9hQ86ilUoNMAqpJqmewFBkWllCR99PVyOB
+         hkbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T9QISP9Y4PT9a1jwV196EPnSVESk04DbpPCP+n6p4Hc=;
+        b=sqvNBl7DCPdNbjboyzkfQwmVmjTpKqIQ1UZkWf5QCu1onIU8dqf6an/HCpHuJbWi2M
+         MxjB2mq3/q+kHg8ATSESI11ibaGz5TzIKrWAevMg1q4OOuj/nwCTHnTbmj0TbeKbH6yG
+         1EOcT4SnLXsaXfmjUNDc/mcmxd5r1qohgJGK1ogo84LRAvZIm16GzG8bjvBzv9eOBib2
+         SxR0Okuo6jx7WAH64MvC9Ksp8vlSbYRYO1Xpiwa8lFZSGgJl9blTMx+DhReWAmUVJS8q
+         DU2IktLdpSskFJktUjX503wcrX/AOu6CzfsXyeQbE2t/R7wTrT8q8Qp21F9UR6e+iJPN
+         z0vg==
+X-Gm-Message-State: AOAM532smd1gIMcZB56qCzlnnsd9sqqY3yrRBEtM9lsIU0ho7RF7kv+n
+        7vYAoZpk+OjlZdFgM71ffdnbkPWtKlyMoQ==
+X-Google-Smtp-Source: ABdhPJzMQIVSf5yyOvIpEFP0qW9f5iQU/wsZ+RXYEZjSLZrVaechztM+pOnmphOoQPwmgsGU1f4+Fg==
+X-Received: by 2002:a1c:9a0e:: with SMTP id c14mr3403149wme.119.1629828401949;
+        Tue, 24 Aug 2021 11:06:41 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f08:4500:6d7d:72e5:938b:6820? (p200300ea8f0845006d7d72e5938b6820.dip0.t-ipconnect.de. [2003:ea:8f08:4500:6d7d:72e5:938b:6820])
+        by smtp.googlemail.com with ESMTPSA id d7sm19190169wrs.39.2021.08.24.11.06.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Aug 2021 11:06:41 -0700 (PDT)
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-everest-linux-l2@marvell.com, Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20210824170239.GA3477243@bjorn-Precision-5520>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 06/12] bnx2x: Search VPD with
+ pci_vpd_find_ro_info_keyword()
+Message-ID: <53d92923-fa8f-aa2c-ff14-340f380018b1@gmail.com>
+Date:   Tue, 24 Aug 2021 20:01:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b9b47bb-e7cb-4953-a04d-08d96724e9b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2021 17:30:48.2515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ptogMimf9PfHZKNgwl5ntWYrEzFh7TOaDFKunwTkXTYAckiIHyIJ/tsCiVFYHedlgS3nUrbPsPI9uvGDMAFuGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1412
+In-Reply-To: <20210824170239.GA3477243@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBQQ0k6IGh2OiBGaXggYSBidWcgb24gcmVtb3ZpbmcgY2hp
-bGQgZGV2aWNlcyBvbiB0aGUgYnVzDQo+IA0KPiAiRml4IGEgYnVnIC4uLiIgaXMgbm90IGEgdmVy
-eSB1c2VmdWwgc3ViamVjdCBsaW5lLiAgSXQgZG9lc24ndCBzYXkgYW55dGhpbmcgYWJvdXQgd2hh
-dA0KPiB0aGUgcGF0Y2ggKmRvZXMqLiAgSXQgZG9lc24ndCBoaW50IGF0IGEgbG9ja2luZyBjaGFu
-Z2UuDQo+IA0KPiBPbiBUdWUsIEF1ZyAyNCwgMjAyMSBhdCAxMjoyMDoyMEFNIC0wNzAwLCBsb25n
-bGlAbGludXhvbmh5cGVydi5jb20gd3JvdGU6DQo+ID4gRnJvbTogTG9uZyBMaSA8bG9uZ2xpQG1p
-Y3Jvc29mdC5jb20+DQo+ID4NCj4gPiBJbiBodl9wY2lfYnVzX2V4aXQsIHRoZSBjb2RlIGlzIGhv
-bGRpbmcgYSBzcGlubG9jayB3aGlsZSBjYWxsaW5nDQo+ID4gcGNpX2Rlc3Ryb3lfc2xvdCgpLCB3
-aGljaCB0YWtlcyBhIG11dGV4Lg0KPiANCj4gSXQncyB1bmZvcnR1bmF0ZSB0aGF0IHNsb3RzIGFy
-ZSBub3QgYmV0dGVyIGludGVncmF0ZWQgaW50byB0aGUgUENJIGNvcmUuICBJJ20gc29ycnkNCj4g
-eW91ciBkcml2ZXIgZXZlbiBoYXMgdG8gd29ycnkgYWJvdXQgdGhpcy4NCj4gPg0KPiA+IFRoaXMg
-aXMgbm90IHNhZmUgZm9yIHNwaW5sb2NrLiBGaXggdGhpcyBieSBtb3ZpbmcgdGhlIGNoaWxkcmVu
-IHRvIGJlDQo+ID4gZGVsZXRlZCB0byBhIGxpc3Qgb24gdGhlIHN0YWNrLCBhbmQgcmVtb3Zpbmcg
-dGhlbSBhZnRlciBzcGlubG9jayBpcw0KPiA+IHJlbGVhc2VkLg0KPiA+DQo+ID4gRml4ZXM6IDk0
-ZDIyNzYzMjA3YSAoIlBDSTogaHY6IEZpeCBhIHJhY2UgY29uZGl0aW9uIHdoZW4gcmVtb3Zpbmcg
-dGhlDQo+ID4gZGV2aWNlIikNCj4gPg0KPiA+IENjOiAiSy4gWS4gU3Jpbml2YXNhbiIgPGt5c0Bt
-aWNyb3NvZnQuY29tPg0KPiA+IENjOiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQu
-Y29tPg0KPiA+IENjOiBTdGVwaGVuIEhlbW1pbmdlciA8c3RoZW1taW5AbWljcm9zb2Z0LmNvbT4N
-Cj4gPiBDYzogV2VpIExpdSA8d2VpLmxpdUBrZXJuZWwub3JnPg0KPiA+IENjOiBEZXh1YW4gQ3Vp
-IDxkZWN1aUBtaWNyb3NvZnQuY29tPg0KPiA+IENjOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56
-by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
-Zz4NCj4gPiBDYzogIktyenlzenRvZiBXaWxjennFhHNraSIgPGt3QGxpbnV4LmNvbT4NCj4gPiBD
-YzogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4NCj4gPiBDYzogTWljaGFlbCBL
-ZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo+ID4gQ2M6IERhbiBDYXJwZW50ZXIgPGRh
-bi5jYXJwZW50ZXJAb3JhY2xlLmNvbT4NCj4gPiBSZXBvcnRlZC1ieTogRGFuIENhcnBlbnRlciA8
-ZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tPg0KPiANCj4gQSBsb3JlIGxpbmsgdG8gRGFuJ3MgcmVw
-b3J0IHdvdWxkIGJlIHVzZWZ1bCBoZXJlLg0KDQpJIHdpbGwgYWRkcmVzcyB5b3VyIGNvbW1lbnRz
-IGFuZCBzZW5kIHYyLg0KDQpMb25nDQoNCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTG9uZyBMaSA8
-bG9uZ2xpQG1pY3Jvc29mdC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvcGNpLWh5cGVydi5jIHwgMTUgKysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5jDQo+ID4gYi9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL3BjaS1oeXBlcnYuYw0KPiA+IGluZGV4IGE1M2JkODcyOGQwZC4uZDRmM2NjZTE4
-OTU3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5j
-DQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gPiBAQCAt
-MzIyMCw2ICszMjIwLDcgQEAgc3RhdGljIGludCBodl9wY2lfYnVzX2V4aXQoc3RydWN0IGh2X2Rl
-dmljZSAqaGRldiwNCj4gYm9vbCBrZWVwX2RldnMpDQo+ID4gIAlzdHJ1Y3QgaHZfcGNpX2RldiAq
-aHBkZXYsICp0bXA7DQo+ID4gIAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+ICAJaW50IHJldDsN
-Cj4gPiArCXN0cnVjdCBsaXN0X2hlYWQgcmVtb3ZlZDsNCj4gPg0KPiA+ICAJLyoNCj4gPiAgCSAq
-IEFmdGVyIHRoZSBob3N0IHNlbmRzIHRoZSBSRVNDSU5EX0NIQU5ORUwgbWVzc2FnZSwgaXQgZG9l
-c24ndCBAQA0KPiA+IC0zMjI5LDkgKzMyMzAsMTggQEAgc3RhdGljIGludCBodl9wY2lfYnVzX2V4
-aXQoc3RydWN0IGh2X2RldmljZSAqaGRldiwgYm9vbA0KPiBrZWVwX2RldnMpDQo+ID4gIAkJcmV0
-dXJuIDA7DQo+ID4NCj4gPiAgCWlmICgha2VlcF9kZXZzKSB7DQo+ID4gLQkJLyogRGVsZXRlIGFu
-eSBjaGlsZHJlbiB3aGljaCBtaWdodCBzdGlsbCBleGlzdC4gKi8NCj4gPiArCQlJTklUX0xJU1Rf
-SEVBRCgmcmVtb3ZlZCk7DQo+ID4gKw0KPiA+ICsJCS8qIE1vdmUgYWxsIHByZXNlbnQgY2hpbGRy
-ZW4gdG8gdGhlIGxpc3Qgb24gc3RhY2sgKi8NCj4gPiAgCQlzcGluX2xvY2tfaXJxc2F2ZSgmaGJ1
-cy0+ZGV2aWNlX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiA+IC0JCWxpc3RfZm9yX2VhY2hfZW50cnlf
-c2FmZShocGRldiwgdG1wLCAmaGJ1cy0+Y2hpbGRyZW4sDQo+IGxpc3RfZW50cnkpIHsNCj4gPiAr
-CQlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoaHBkZXYsIHRtcCwgJmhidXMtPmNoaWxkcmVuLA0K
-PiBsaXN0X2VudHJ5KQ0KPiA+ICsJCQlsaXN0X21vdmVfdGFpbCgmaHBkZXYtPmxpc3RfZW50cnks
-ICZyZW1vdmVkKTsNCj4gPiArCQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZoYnVzLT5kZXZpY2Vf
-bGlzdF9sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsJCS8qIFJlbW92ZSBhbGwgY2hpbGRyZW4g
-aW4gdGhlIGxpc3QgKi8NCj4gPiArCQl3aGlsZSAoIWxpc3RfZW1wdHkoJnJlbW92ZWQpKSB7DQo+
-ID4gKwkJCWhwZGV2ID0gbGlzdF9maXJzdF9lbnRyeSgmcmVtb3ZlZCwgc3RydWN0IGh2X3BjaV9k
-ZXYsDQo+ID4gKwkJCQkJCSBsaXN0X2VudHJ5KTsNCj4gPiAgCQkJbGlzdF9kZWwoJmhwZGV2LT5s
-aXN0X2VudHJ5KTsNCj4gPiAgCQkJaWYgKGhwZGV2LT5wY2lfc2xvdCkNCj4gPiAgCQkJCXBjaV9k
-ZXN0cm95X3Nsb3QoaHBkZXYtPnBjaV9zbG90KTsNCj4gPiBAQCAtMzIzOSw3ICszMjQ5LDYgQEAg
-c3RhdGljIGludCBodl9wY2lfYnVzX2V4aXQoc3RydWN0IGh2X2RldmljZSAqaGRldiwNCj4gYm9v
-bCBrZWVwX2RldnMpDQo+ID4gIAkJCXB1dF9wY2ljaGlsZChocGRldik7DQo+ID4gIAkJCXB1dF9w
-Y2ljaGlsZChocGRldik7DQo+ID4gIAkJfQ0KPiA+IC0JCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUo
-JmhidXMtPmRldmljZV9saXN0X2xvY2ssIGZsYWdzKTsNCj4gPiAgCX0NCj4gPg0KPiA+ICAJcmV0
-ID0gaHZfc2VuZF9yZXNvdXJjZXNfcmVsZWFzZWQoaGRldik7DQo+ID4gLS0NCj4gPiAyLjI1LjEN
-Cj4gPg0K
+On 24.08.2021 19:02, Bjorn Helgaas wrote:
+> On Sun, Aug 22, 2021 at 03:54:23PM +0200, Heiner Kallweit wrote:
+>> Use pci_vpd_find_ro_info_keyword() to search for keywords in VPD to
+>> simplify the code.
+>>
+>> str_id_reg and str_id_cap hold the same string and are used in the same
+>> comparison. This doesn't make sense, use one string str_id instead.
+> 
+> str_id_reg is printed with "%04x" (lower-case hex letters) and
+> str_id_cap with "%04X" (upper-case hex letters), so the previous code
+> would match either 0xabcd or 0xABCD.  After this patch, we'd match
+> only the latter.
+> 
+Right, I missed this difference. strncasecmp() would be an easy solution.
+Alternatively we could avoid this stringification and string comparison
+by using kstrtouint_from_user():
+
+kstrtouint_from_user(&vpd_data[rodi], kw_len, 16, &val)
+if (val == PCI_VENDOR_ID_DELL)
+
+But if there's no strong preference then I'd say we go the easy way.
+Would you like me to re-send or are you going to adjust the patch?
+
+> PCI_VENDOR_ID_DELL is 0x1028, so it shouldn't make any difference,
+> which makes me wonder why somebody bothered with both.
+> 
+> But it does seem like a potential landmine to change the case
+> sensitivity.  Maybe strncasecmp() instead?
+> 
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 57 +++++--------------
+>>  1 file changed, 15 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>> index 0466adf8d..2c7bfc416 100644
+>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>> @@ -12189,11 +12189,10 @@ static int bnx2x_get_hwinfo(struct bnx2x *bp)
+>>  
+>>  static void bnx2x_read_fwinfo(struct bnx2x *bp)
+>>  {
+>> -	int i, block_end, rodi;
+>> -	char str_id_reg[VENDOR_ID_LEN+1];
+>> -	char str_id_cap[VENDOR_ID_LEN+1];
+>> -	unsigned int vpd_len;
+>> -	u8 *vpd_data, len;
+>> +	char str_id[VENDOR_ID_LEN + 1];
+>> +	unsigned int vpd_len, kw_len;
+>> +	u8 *vpd_data;
+>> +	int rodi;
+>>  
+>>  	memset(bp->fw_ver, 0, sizeof(bp->fw_ver));
+>>  
+>> @@ -12201,46 +12200,20 @@ static void bnx2x_read_fwinfo(struct bnx2x *bp)
+>>  	if (IS_ERR(vpd_data))
+>>  		return;
+>>  
+>> -	/* VPD RO tag should be first tag after identifier string, hence
+>> -	 * we should be able to find it in first BNX2X_VPD_LEN chars
+>> -	 */
+>> -	i = pci_vpd_find_tag(vpd_data, vpd_len, PCI_VPD_LRDT_RO_DATA);
+>> -	if (i < 0)
+>> -		goto out_not_found;
+>> -
+>> -	block_end = i + PCI_VPD_LRDT_TAG_SIZE +
+>> -		    pci_vpd_lrdt_size(&vpd_data[i]);
+>> -	i += PCI_VPD_LRDT_TAG_SIZE;
+>> -
+>> -	rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
+>> -				   PCI_VPD_RO_KEYWORD_MFR_ID);
+>> -	if (rodi < 0)
+>> -		goto out_not_found;
+>> -
+>> -	len = pci_vpd_info_field_size(&vpd_data[rodi]);
+>> -
+>> -	if (len != VENDOR_ID_LEN)
+>> +	rodi = pci_vpd_find_ro_info_keyword(vpd_data, vpd_len,
+>> +					    PCI_VPD_RO_KEYWORD_MFR_ID, &kw_len);
+>> +	if (rodi < 0 || kw_len != VENDOR_ID_LEN)
+>>  		goto out_not_found;
+>>  
+>> -	rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
+>> -
+>>  	/* vendor specific info */
+>> -	snprintf(str_id_reg, VENDOR_ID_LEN + 1, "%04x", PCI_VENDOR_ID_DELL);
+>> -	snprintf(str_id_cap, VENDOR_ID_LEN + 1, "%04X", PCI_VENDOR_ID_DELL);
+>> -	if (!strncmp(str_id_reg, &vpd_data[rodi], VENDOR_ID_LEN) ||
+>> -	    !strncmp(str_id_cap, &vpd_data[rodi], VENDOR_ID_LEN)) {
+>> -
+>> -		rodi = pci_vpd_find_info_keyword(vpd_data, i, block_end,
+>> -						PCI_VPD_RO_KEYWORD_VENDOR0);
+>> -		if (rodi >= 0) {
+>> -			len = pci_vpd_info_field_size(&vpd_data[rodi]);
+>> -
+>> -			rodi += PCI_VPD_INFO_FLD_HDR_SIZE;
+>> -
+>> -			if (len < 32 && (len + rodi) <= vpd_len) {
+>> -				memcpy(bp->fw_ver, &vpd_data[rodi], len);
+>> -				bp->fw_ver[len] = ' ';
+>> -			}
+>> +	snprintf(str_id, VENDOR_ID_LEN + 1, "%04X", PCI_VENDOR_ID_DELL);
+>> +	if (!strncmp(str_id, &vpd_data[rodi], VENDOR_ID_LEN)) {
+>> +		rodi = pci_vpd_find_ro_info_keyword(vpd_data, vpd_len,
+>> +						    PCI_VPD_RO_KEYWORD_VENDOR0,
+>> +						    &kw_len);
+>> +		if (rodi >= 0 && kw_len < sizeof(bp->fw_ver)) {
+>> +			memcpy(bp->fw_ver, &vpd_data[rodi], kw_len);
+>> +			bp->fw_ver[kw_len] = ' ';
+>>  		}
+>>  	}
+>>  out_not_found:
+>> -- 
+>> 2.33.0
+>>
+>>
+
