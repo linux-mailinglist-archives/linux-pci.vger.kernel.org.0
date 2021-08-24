@@ -2,85 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7B813F6A6E
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 22:31:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A3B03F6A87
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 22:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235205AbhHXUcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Aug 2021 16:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
+        id S235097AbhHXUkB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Aug 2021 16:40:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49509 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234675AbhHXUcB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Aug 2021 16:32:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3738C610F7;
-        Tue, 24 Aug 2021 20:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629837076;
-        bh=u89RhbA1T4/YcegxqumOKFDZveULzg7IH3BXxWstXGA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E7gmG9cu+2X8EpSv9jHNw194dQ/bFH+W8S5CviPC+WEzgK9x1GqwxeKDnQA93Ubc6
-         pIROpW9mCbmFawlLNt183dkzLJG92jUie48vdct5nMY9KMIpav4jCN5vVtcBqt99IN
-         LlMRmUTD9hQbKroaOXlhVlrUixEOK798eHEQ6pmGyuqfJJo5J4wfidKynCvdtb3s37
-         PjcEO5DOcIPu3SLREF0Tt+IUZRL6NjCeGqQy3Vt+WmnxMDtnryxVfbjA5YVJAeYKm9
-         BpOJvSuNngQVXkAMINkK0ZwKmdIz+EDYyzVhKaDWPyJSTPhZYBRtaAf1VAW/wDK4NO
-         xT3mGvV5LJ4bA==
-Date:   Tue, 24 Aug 2021 15:31:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-Message-ID: <20210824203115.GA3492097@bjorn-Precision-5520>
+        id S234765AbhHXUkB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Aug 2021 16:40:01 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10086"; a="204530930"
+X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
+   d="scan'208";a="204530930"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 13:39:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,348,1620716400"; 
+   d="scan'208";a="526819945"
+Received: from anguy11-desk2.jf.intel.com ([10.166.244.147])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Aug 2021 13:39:15 -0700
+From:   Tony Nguyen <anthony.l.nguyen@intel.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        sasha.neftin@intel.com, vitaly.lifshits@intel.com,
+        richardcochran@gmail.com
+Subject: [PATCH net-next 0/4][pull request] 1GbE Intel Wired LAN Driver Updates 2021-08-24
+Date:   Tue, 24 Aug 2021 13:42:44 -0700
+Message-Id: <20210824204248.2957134-1-anthony.l.nguyen@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a80fc61a-bc55-b82c-354b-b57863ab03db@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 01:14:02PM -0700, Andi Kleen wrote:
-> 
-> On 8/24/2021 11:55 AM, Bjorn Helgaas wrote:
-> > [+cc Rajat; I still don't know what "shared memory with a hypervisor
-> > in a confidential guest" means,
-> 
-> A confidential guest is a guest which uses memory encryption to isolate
-> itself from the host. It doesn't trust the host. But it still needs to
-> communicate with the host for IO, so it has some special memory areas that
-> are explicitly marked shared. These are used to do IO with the host. All
-> their usage needs to be carefully hardened to avoid any security attacks on
-> the guest, that's why we want to limit this interaction only to a small set
-> of hardened drivers. For MMIO, the set is currently only virtio and MSI-X.
+Vinicius Costa Gomes says:
 
-Good material for the commit log next time around.  Thanks!
+This adds support for PCIe PTM (Precision Time Measurement) to the igc
+driver. PCIe PTM allows the NIC and Host clocks to be compared more
+precisely, improving the clock synchronization accuracy.
 
-Bjorn
+Patch 1/4 reverts a commit that made pci_enable_ptm() private to the
+PCI subsystem, reverting makes it possible for it to be called from
+the drivers.
+
+Patch 2/4 adds the pcie_ptm_enabled() helper.
+
+Patch 3/4 calls pci_enable_ptm() from the igc driver.
+
+Patch 4/4 implements the PCIe PTM support. Exposing it via the
+.getcrosststamp() API implies that the time measurements are made
+synchronously with the ioctl(). The hardware was implemented so the
+most convenient way to retrieve that information would be
+asynchronously. So, to follow the expectations of the ioctl() we have
+to use less convenient ways, triggering an PCIe PTM dialog every time
+a ioctl() is received.
+
+Some questions are raised (also pointed out in the commit message):
+
+1. Using convert_art_ns_to_tsc() is too x86 specific, there should be
+   a common way to create a 'system_counterval_t' from a timestamp.
+
+2. convert_art_ns_to_tsc() says that it should only be used when
+   X86_FEATURE_TSC_KNOWN_FREQ is true, but during tests it works even
+   when it returns false. Should that check be done?
+
+The following are changes since commit 3a62c333497b164868fdcd241842a1dd4e331825:
+  Merge branch 'ethtool-extend-coalesce-uapi'
+and are available in the git repository at:
+  git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue 1GbE
+
+Vinicius Costa Gomes (4):
+  Revert "PCI: Make pci_enable_ptm() private"
+  PCI: Add pcie_ptm_enabled()
+  igc: Enable PCIe PTM
+  igc: Add support for PTP getcrosststamp()
+
+ drivers/net/ethernet/intel/igc/igc.h         |   1 +
+ drivers/net/ethernet/intel/igc/igc_defines.h |  31 ++++
+ drivers/net/ethernet/intel/igc/igc_main.c    |   6 +
+ drivers/net/ethernet/intel/igc/igc_ptp.c     | 179 +++++++++++++++++++
+ drivers/net/ethernet/intel/igc/igc_regs.h    |  23 +++
+ drivers/pci/pci.h                            |   3 -
+ drivers/pci/pcie/ptm.c                       |   9 +
+ include/linux/pci.h                          |  10 ++
+ 8 files changed, 259 insertions(+), 3 deletions(-)
+
+-- 
+2.26.2
+
