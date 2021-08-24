@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEEED3F5629
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 04:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E95D93F5638
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Aug 2021 04:59:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234384AbhHXC70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Aug 2021 22:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55850 "EHLO mail.kernel.org"
+        id S234227AbhHXC76 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Aug 2021 22:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234532AbhHXC7S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Aug 2021 22:59:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 95852611C9;
-        Tue, 24 Aug 2021 02:58:33 +0000 (UTC)
+        id S234538AbhHXC7a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Aug 2021 22:59:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4FAAC61184;
+        Tue, 24 Aug 2021 02:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629773914;
-        bh=xrjxTxiP47ktHwX88wT7l7gjm0bbjdMe5v6kL5mz/sU=;
+        s=k20201202; t=1629773927;
+        bh=UyRARlJweOkjHxvoPTWAcnu50Xk5rdFv0q+RuWUBlWM=;
         h=From:To:Cc:Subject:Date:From;
-        b=ufWEMmHPa5PjwKXkQNw4c8WJOqPcQ4ZtpQcw8pTP69IOPpCGOGaQizEitqQrxjzl7
-         C3BoyzsP7Gr9v12uJWh962UqGA4DMUDXtUA2CZcU3JBzOdzh6l6VmYKgfKRjZ1LySs
-         MPb3FtzwkHX1/YQYv5knRi9I9VjD+2dNhmjyHkH1QKZkMw0qO4tdd2M6GIVjI/xnRn
-         nLGTf+GSU1zxaq0qJeR0pOaUqxs+j7K9KfEwAW5IkMekKdcjC748zJnU0xS9KSoh+T
-         eIlnKeCWUVu+bW1b6s4Bmj30JcwHqbCYE65Pty1LO/D8eyamgGeQobvehzYcZTGKI2
-         uDNWnhGqm5v6Q==
+        b=hWWGpVynmx5vk5BzTVoT63pbrxXOXp+mbniY7aSnGf/NUk0zDIEFsH3AKqyyEcbqv
+         PznIVwcGQviBqF2bZA/GZE1KPRH+5yZCw9y8MZ57zy3Z4UQuF0cyn1qF+un9BxTHtp
+         L9bxQK7n09iiiQFR2XdMSG0RzojhWkE5HG0GBOWPwitSvcDwI1P2WiZrDK59s8ym9i
+         QbcYF7EBmQG6iWXlFhy1rLJJ4SzjfFYog3x93aPXKyUnn5Jehf3BAfntH7qWNzNjEi
+         GBvjQu26IrgGbyW+Iy15EV2lTK0D3RgMdENkoo7M1IvTN/8kN1rpQhQEl7x8B2XsPz
+         CFVrNlOW1agnw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     stable@vger.kernel.org, hegel666@gmail.com
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
@@ -31,9 +31,9 @@ Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Prike Liang <prike.liang@amd.com>,
         Shyam Sundar S K <shyam-sundar.s-k@amd.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "PCI: Increase D3 delay for AMD Renoir/Cezanne XHCI" failed to apply to 4.14-stable tree
-Date:   Mon, 23 Aug 2021 22:58:32 -0400
-Message-Id: <20210824025832.659510-1-sashal@kernel.org>
+Subject: FAILED: Patch "PCI: Increase D3 delay for AMD Renoir/Cezanne XHCI" failed to apply to 4.9-stable tree
+Date:   Mon, 23 Aug 2021 22:58:45 -0400
+Message-Id: <20210824025845.659872-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 X-Patchwork-Hint: ignore
@@ -43,7 +43,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The patch below does not apply to the 4.14-stable tree.
+The patch below does not apply to the 4.9-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
