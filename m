@@ -2,148 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 311A23F77DD
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 16:58:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E003F77E7
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 17:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239939AbhHYO6v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 10:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55320 "EHLO mail.kernel.org"
+        id S241361AbhHYPA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 11:00:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231975AbhHYO6u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 10:58:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E54BC610E6;
-        Wed, 25 Aug 2021 14:58:04 +0000 (UTC)
+        id S240940AbhHYPA4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Aug 2021 11:00:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F2EB1610A3;
+        Wed, 25 Aug 2021 15:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629903484;
-        bh=XuKq1zIIMq/OtChRUdQ0vOQzAnhzbI0dxtVr4wcAgDA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YvV8UlOvjbvsB0RkZMgL4YbyeKBKjZqzYhbbkQKcATpLeGd2BrN9PpesAoyiWbIhC
-         GeWvz7A9Lb/XXxEkUf6+NTd9Cyfno/JEZLq8JHsx1KPe71/46buyRZqnUAc+sKZHRF
-         qEnJrMf1uWfNIsab9i7m2F0cK/tUCg+i+Gc1qoXekwpq/eJc8dqoH1XyL0jlDVoDmR
-         qgWgdHPfvxWvM7kSa8P+DQnWJuKXseZhaARLJRcmVp5109C0BVruamxYinLk8G6tRv
-         IhN41+5Q53W5fyLDDuxZKPE37LRWPtYdS+c8l7lDW6Ex0UmXG5RRXWca5lOhBSy2QE
-         s60AFQLQRsDig==
-Received: by mail-ed1-f45.google.com with SMTP id q3so37444789edt.5;
-        Wed, 25 Aug 2021 07:58:04 -0700 (PDT)
-X-Gm-Message-State: AOAM533OoH12hbMccK6ITunfktWPZQaXXfmOKYJGJd1EfQ9oiPwFyNIK
-        SqD5U9BNZw/E/78Yn+FrqHhRTNuD5GcKoo9bGw==
-X-Google-Smtp-Source: ABdhPJwPn9HhyJ/B+5FAoAdEgoxYV2mtd8rUO27aqvKNxs57ww2VmIrdKZuZXvoWjCyEPb5V7XMr2dA7WkL3ZPQqLek=
-X-Received: by 2002:a50:9b52:: with SMTP id a18mr49080750edj.165.1629903483580;
- Wed, 25 Aug 2021 07:58:03 -0700 (PDT)
+        s=k20201202; t=1629903610;
+        bh=z+SL1qSOKfX+EYIPWXgX+rkFU1mpn+MaH/WPx3ItD5k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=haULs6m9Hib8iBcIMIUE2K5Enk4k2cn217YxRia98FwxS2Wo2LJoisW26N/TUSj3n
+         VPEglMqx40cCesvZyhm3hUpCzsAmn8993v0cOxNnbZYfSI5GKz5/Ge/+33j8UUvUpY
+         hq4U6sKlFhD2BdqyO6hHXnSAPfn+VKx4uR4NC799FhnkUz2srBZbQn0ruAU7umf5u5
+         793EapZ32AKWzqOoHb+ZyCq1a+sbrTRbJFNNVcH9DI8XQRr1Im2q9t/HdOFCKEstQV
+         Qu2EN5vhYFmohMslKkqxJLeIIRCw84d9y2crwB2lhi+jskqDsL60XwNCjrlEgwazkj
+         mo394WMqwA+yw==
+Date:   Wed, 25 Aug 2021 10:00:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Wang, Wendy" <wendy.wang@intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Box <david.e.box@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: VMD: ACPI: Make ACPI companion lookup work for
+ VMD bus
+Message-ID: <20210825150008.GA3567157@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210820160023.3243-1-pali@kernel.org> <20210820160023.3243-2-pali@kernel.org>
- <YSURxtc7UAaSEfSy@robh.at.kernel.org> <20210824161409.2mxzpy5r32tm3kgu@pali>
-In-Reply-To: <20210824161409.2mxzpy5r32tm3kgu@pali>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Aug 2021 09:57:52 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL1NzTp8v+kw1M_aS5OmJMuRiuys4RKYTT2yYy4pKNzJA@mail.gmail.com>
-Message-ID: <CAL_JsqL1NzTp8v+kw1M_aS5OmJMuRiuys4RKYTT2yYy4pKNzJA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add 'slot-power-limit' PCIe port property
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB32449145A9E3779A480F01D69FC69@DM6PR11MB3244.namprd11.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 11:14 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> On Tuesday 24 August 2021 10:35:34 Rob Herring wrote:
-> > On Fri, Aug 20, 2021 at 06:00:21PM +0200, Pali Roh=C3=A1r wrote:
-> > > This property specifies slot power limit in mW unit. It is form-facto=
-r and
-> > > board specific value and must be initialized by hardware.
-> > >
-> > > Some PCIe controllers delegates this work to software to allow hardwa=
-re
-> > > flexibility and therefore this property basically specifies what shou=
-ld
-> > > host bridge programs into PCIe Slot Capabilities registers.
-> > >
-> > > Property needs to be specified in mW unit, and not in special format
-> > > defined by Slot Capabilities (which encodes scaling factor or differe=
-nt
-> > > unit). Host drivers should convert value from mW unit to their format=
-.
-> > >
-> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> >
-> > This needs to be in dtschema schemas/pci/pci-bus.yaml instead.
-> >
-> > (pci.txt is still here because it needs to be relicensed to move all th=
-e
-> > descriptions to pci-bus.yaml.)
->
-> Ok, this is just a proposal for a new DTS property. So documentation
-> issues will be fixed in real patch.
->
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Document=
-ation/devicetree/bindings/pci/pci.txt
-> > > index 6a8f2874a24d..e67d5db21514 100644
-> > > --- a/Documentation/devicetree/bindings/pci/pci.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> > > @@ -32,6 +32,12 @@ driver implementation may support the following pr=
-operties:
-> > >     root port to downstream device and host bridge drivers can do pro=
-gramming
-> > >     which depends on CLKREQ signal existence. For example, programmin=
-g root port
-> > >     not to advertise ASPM L1 Sub-States support if there is no CLKREQ=
- signal.
-> > > +- slot-power-limit:
-> > > +   If present this property specifies slot power limit in mW unit. H=
-ost drivers
-> >
-> > As mentioned, this should have a unit suffix. I'm not sure it is
-> > beneficial to share with SFP in this case though.
-> >
-> > > +   can parse this slot power limit and use it for programming Root P=
-ort or host
-> > > +   bridge, or for composing and sending PCIe Set_Slot_Power_Limit me=
-ssage
-> > > +   through the Root Port or host bridge when transitioning PCIe link=
- from a
-> > > +   non-DL_Up Status to a DL_Up Status.
-> >
-> > I no nothing about how this mechanism works, but I think this belongs i=
-n
-> > the next section as for PCIe, a slot is always below a PCI-PCI bridge.
-> > If we have N slots, then there's N bridges and needs to be N
-> > slot-power-limit properties, right?
-> >
-> > (The same is probably true for all the properties here except
-> > linux,pci-domain.) There's no distinction between host and PCI bridges
-> > in pci-bus.yaml though.
-> >
-> > Rob
->
-> This slot-power-limit property belongs to same place where are also
-> other slot properties (link speed, reset gpios, clkreq). So I put it in
-> place where others are.
->
-> But I'm not sure where it should be as it affects link/slot. Because
-> link has two sides. I guess that link speed and slot power limit could
-> belong to the root/downstream port and reset gpio to the endpoint card
-> or upstream port...
+On Wed, Aug 25, 2021 at 11:02:47AM +0000, Wang, Wendy wrote:
+> Hi Rafael,
+> 
+> Tested this PATCH v2 against intel next v5.12 kernel on ADL-S NVME and SATA storages:
+> 
+> cat /sys/devices/pci0000\:00/0000\:00\:0e.0/firmware_node/path
+> \_SB_.PC00.VMD0
+> 
+> 10000:e0:17.0 SATA controller: Intel Corporation Device 7ae2 (rev 11)
+> 10000:e0:1d.0 System peripheral: Intel Corporation Device 09ab
+> 10000:e0:1d.4 PCI bridge: Intel Corporation Device 7ab4 (rev 11)
+> 10000:e1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+> 
+> [ 6193.658074] ahci 10000:e0:17.0: PCI PM: Suspend power state: D3hot
+> [ 6193.658156] nvme 10000:e1:00.0: PCI PM: Suspend power state: D3hot
+> [ 6193.710883] pcieport 10000:e0:1d.4: PCI PM: Suspend power state: D3cold
+> [ 6193.730318] vmd 0000:00:0e.0: PCI PM: Suspend power state: D3hot
+> 
+> cat /sys/kernel/debug/pmc_core/substate_residencies
+> Substate   Residency
+> S0i2.0     0
+> S0i2.1     13862128
+> 
+> Thanks!
 
-I wasn't debating whether it goes upstream or downstream, but just
-that it can apply to more than just the host bridge or root port(s).
-We have that now already with reset-gpios. Look at the hikey970 case
-that's queued for 5.15. It's got RP -> switch -> slots/devices with
-reset gpio on each slot.
+I guess (given Rafael's response) that this is a positive test result,
+i.e., you see the desired behavior with this patch?
 
-As for upstream vs. downstream side, this is one of those cases where
-we didn't represent the downstream side in DT, so everything gets
-stuffed in the upstream side. As PCIe is point to point, it doesn't
-matter so much. It would be a bigger issue on old PCI.
+Bjorn
 
-Rob
+> -----Original Message-----
+> From: Rafael J. Wysocki <rjw@rjwysocki.net> 
+> Sent: Tuesday, August 24, 2021 10:44 PM
+> To: Linux PCI <linux-pci@vger.kernel.org>; Derrick, Jonathan <jonathan.derrick@intel.com>; Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Wang, Wendy <wendy.wang@intel.com>; Linux ACPI <linux-acpi@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Mika Westerberg <mika.westerberg@linux.intel.com>; David Box <david.e.box@linux.intel.com>
+> Subject: [PATCH v2] PCI: VMD: ACPI: Make ACPI companion lookup work for VMD bus
+> 
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> On some systems, in order to get to the deepest low-power state of the platform (which may be necessary to save significant enough amounts of energy while suspended to idle. for example), devices on the PCI bus exposed by the VMD driver need to be power-managed via ACPI.  However, the layout of the ACPI namespace below the VMD controller device object does not reflect the layout of the PCI bus under the VMD host bridge, so in order to identify the ACPI companion objects for the devices on that bus, it is necessary to use a special _ADR encoding on the ACPI side.  In other words, acpi_pci_find_companion() does not work for these devices, so it needs to be amended with a special lookup logic specific to the VMD bus.
+> 
+> Address this issue by allowing the VMD driver to temporarily install an ACPI companion lookup hook containing the code matching the devices on the VMD PCI bus with the corresponding objects in the ACPI namespace.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> -> v2:
+>    * Use a read-write semaphore for hook manipulation protection and
+>      get rid of the static key present in the previous version.
+>    * Add a busnr check in vmd_acpi_find_companion().
+> 
+> Wendy, David, please test this one!
+> 
+> ---
+>  drivers/pci/controller/vmd.c |   55 +++++++++++++++++++++++++++++++
+>  drivers/pci/host-bridge.c    |    1 
+>  drivers/pci/pci-acpi.c       |   74 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-acpi.h     |    3 +
+>  4 files changed, 133 insertions(+)
+> 
+> Index: linux-pm/drivers/pci/controller/vmd.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/controller/vmd.c
+> +++ linux-pm/drivers/pci/controller/vmd.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/module.h>
+>  #include <linux/msi.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-acpi.h>
+>  #include <linux/pci-ecam.h>
+>  #include <linux/srcu.h>
+>  #include <linux/rculist.h>
+> @@ -447,6 +448,56 @@ static struct pci_ops vmd_ops = {
+>  	.write		= vmd_pci_write,
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+> +static struct acpi_device *vmd_acpi_find_companion(struct pci_dev 
+> +*pci_dev) {
+> +	struct pci_host_bridge *bridge;
+> +	u32 busnr, addr;
+> +
+> +	if (pci_dev->bus->ops != &vmd_ops)
+> +		return NULL;
+> +
+> +	bridge = pci_find_host_bridge(pci_dev->bus);
+> +	busnr = pci_dev->bus->number - bridge->bus->number;
+> +	/*
+> +	 * The address computation below is only applicable to relative bus
+> +	 * numbers below 32.
+> +	 */
+> +	if (busnr > 31)
+> +		return NULL;
+> +
+> +	addr = (busnr << 24) | ((u32)pci_dev->devfn << 16) | 0x8000FFFFU;
+> +
+> +	dev_dbg(&pci_dev->dev, "Looking for ACPI companion (address 0x%x)\n",
+> +		addr);
+> +
+> +	return acpi_find_child_device(ACPI_COMPANION(bridge->dev.parent), addr,
+> +				      false);
+> +}
+> +
+> +static bool hook_installed;
+> +
+> +static void vmd_acpi_begin(void)
+> +{
+> +	if (pci_acpi_set_companion_lookup_hook(vmd_acpi_find_companion))
+> +		return;
+> +
+> +	hook_installed = true;
+> +}
+> +
+> +static void vmd_acpi_end(void)
+> +{
+> +	if (!hook_installed)
+> +		return;
+> +
+> +	pci_acpi_clear_companion_lookup_hook();
+> +	hook_installed = false;
+> +}
+> +#else
+> +static inline void vmd_acpi_begin(void) { } static inline void 
+> +vmd_acpi_end(void) { } #endif /* CONFIG_ACPI */
+> +
+>  static void vmd_attach_resources(struct vmd_dev *vmd)  {
+>  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1]; @@ -747,6 +798,8 @@ static int vmd_enable_domain(struct vmd_
+>  	if (vmd->irq_domain)
+>  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+>  
+> +	vmd_acpi_begin();
+> +
+>  	pci_scan_child_bus(vmd->bus);
+>  	pci_assign_unassigned_bus_resources(vmd->bus);
+>  
+> @@ -760,6 +813,8 @@ static int vmd_enable_domain(struct vmd_
+>  
+>  	pci_bus_add_devices(vmd->bus);
+>  
+> +	vmd_acpi_end();
+> +
+>  	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>  			       "domain"), "Can't create symlink to domain\n");
+>  	return 0;
+> Index: linux-pm/drivers/pci/host-bridge.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/host-bridge.c
+> +++ linux-pm/drivers/pci/host-bridge.c
+> @@ -23,6 +23,7 @@ struct pci_host_bridge *pci_find_host_br
+>  
+>  	return to_pci_host_bridge(root_bus->bridge);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_find_host_bridge);
+>  
+>  struct device *pci_get_host_bridge_device(struct pci_dev *dev)  {
+> Index: linux-pm/drivers/pci/pci-acpi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-acpi.c
+> +++ linux-pm/drivers/pci/pci-acpi.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/pci-acpi.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_qos.h>
+> +#include <linux/rwsem.h>
+>  #include "pci.h"
+>  
+>  /*
+> @@ -1159,6 +1160,69 @@ void acpi_pci_remove_bus(struct pci_bus  }
+>  
+>  /* ACPI bus type */
+> +
+> +
+> +static DECLARE_RWSEM(pci_acpi_companion_lookup_sem);
+> +static struct acpi_device *(*pci_acpi_find_companion_hook)(struct 
+> +pci_dev *);
+> +
+> +/**
+> + * pci_acpi_set_companion_lookup_hook - Set ACPI companion lookup callback.
+> + * @func: ACPI companion lookup callback pointer or NULL.
+> + *
+> + * Set a special ACPI companion lookup callback for PCI devices whose 
+> +companion
+> + * objects in the ACPI namespace have _ADR with non-standard 
+> +bus-device-function
+> + * encodings.
+> + *
+> + * Return 0 on success or a negative error code on failure (in which 
+> +case no
+> + * changes are made).
+> + *
+> + * The caller is responsible for the appropriate ordering of the 
+> +invocations of
+> + * this function with respect to the enumeration of the PCI devices 
+> +needing the
+> + * callback installed by it.
+> + */
+> +int pci_acpi_set_companion_lookup_hook(struct acpi_device 
+> +*(*func)(struct pci_dev *)) {
+> +	int ret;
+> +
+> +	if (!func)
+> +		return -EINVAL;
+> +
+> +	down_write(&pci_acpi_companion_lookup_sem);
+> +
+> +	if (pci_acpi_find_companion_hook) {
+> +		ret = -EBUSY;
+> +	} else {
+> +		pci_acpi_find_companion_hook = func;
+> +		ret = 0;
+> +	}
+> +
+> +	up_write(&pci_acpi_companion_lookup_sem);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_acpi_set_companion_lookup_hook);
+> +
+> +/**
+> + * pci_acpi_clear_companion_lookup_hook - Clear ACPI companion lookup callback.
+> + *
+> + * Clear the special ACPI companion lookup callback previously set by
+> + * pci_acpi_set_companion_lookup_hook().  Block until the last running 
+> +instance
+> + * of the callback returns before clearing it.
+> + *
+> + * The caller is responsible for the appropriate ordering of the 
+> +invocations of
+> + * this function with respect to the enumeration of the PCI devices 
+> +needing the
+> + * callback cleared by it.
+> + */
+> +void pci_acpi_clear_companion_lookup_hook(void)
+> +{
+> +	down_write(&pci_acpi_companion_lookup_sem);
+> +
+> +	pci_acpi_find_companion_hook = NULL;
+> +
+> +	up_write(&pci_acpi_companion_lookup_sem);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_acpi_clear_companion_lookup_hook);
+> +
+>  static struct acpi_device *acpi_pci_find_companion(struct device *dev)  {
+>  	struct pci_dev *pci_dev = to_pci_dev(dev); @@ -1166,6 +1230,16 @@ static struct acpi_device *acpi_pci_find
+>  	bool check_children;
+>  	u64 addr;
+>  
+> +	down_read(&pci_acpi_companion_lookup_sem);
+> +
+> +	adev = pci_acpi_find_companion_hook ?
+> +		pci_acpi_find_companion_hook(pci_dev) : NULL;
+> +
+> +	up_read(&pci_acpi_companion_lookup_sem);
+> +
+> +	if (adev)
+> +		return adev;
+> +
+>  	check_children = pci_is_bridge(pci_dev);
+>  	/* Please ref to ACPI spec for the syntax of _ADR */
+>  	addr = (PCI_SLOT(pci_dev->devfn) << 16) | PCI_FUNC(pci_dev->devfn);
+> Index: linux-pm/include/linux/pci-acpi.h ===================================================================
+> --- linux-pm.orig/include/linux/pci-acpi.h
+> +++ linux-pm/include/linux/pci-acpi.h
+> @@ -122,6 +122,9 @@ static inline void pci_acpi_add_edr_noti  static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }  #endif /* CONFIG_PCIE_EDR */
+>  
+> +int pci_acpi_set_companion_lookup_hook(struct acpi_device 
+> +*(*func)(struct pci_dev *)); void 
+> +pci_acpi_clear_companion_lookup_hook(void);
+> +
+>  #else	/* CONFIG_ACPI */
+>  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
+> 
+> 
+> 
