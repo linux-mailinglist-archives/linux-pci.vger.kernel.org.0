@@ -2,112 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB323F7DB7
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 23:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D41BE3F7E2A
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 00:19:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbhHYV0j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 17:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229923AbhHYV0h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 17:26:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 79419610A1;
-        Wed, 25 Aug 2021 21:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629926750;
-        bh=xQDrtgT6uthmEGov/Ldo+EaOEsSjtEqV6roEUR4U2co=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fASCj+Go18/tQH72Frrh86vQVUhFBKTCcQ9o3Ad3urEcD8hJY/IVjmN/1OlNCuXM4
-         7JHmj+5rcXAer/IJ5s5nNiWQN44+Wzp2sr83a87R1CCPRsMKBGBQIH+6UKRHirnyas
-         wPVtWIKNENPU02jJD6GFFXh1J0YuLxlengl+em2Gt5AdRTxcLXm3lq/u+SnHoFANyy
-         GAemNjEbynsA+w9EusA1aYNMqsnfKT/CgqIfBhQLMN3yeqoGmDtCXqtkzI8KNCv7iO
-         +a/vZ9eADe/hwGSLkGP6I/AoRwgMGYHBduxWGD42U57kaBGxpBic1W/I8SmgF28hOe
-         Vrciu66nkn5+g==
-Date:   Wed, 25 Aug 2021 16:25:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Prasad Malisetty <pmaliset@codeaurora.org>, agross@kernel.org,
-        bhelgaas@google.com, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        svarbanov@mm-sol.com, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dianders@chromium.org,
-        mka@chromium.org, vbadigan@codeaurora.org, sallenki@codeaurora.org,
-        manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] PCI: qcom: Switch pcie_1_pipe_clk_src after PHY
- init in SC7280
-Message-ID: <20210825212549.GA3609092@bjorn-Precision-5520>
+        id S234853AbhHYWGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 18:06:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45201 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231860AbhHYWGg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 18:06:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629929150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9bzdPdbfmLgeq8dXUQB3sYM02KhzqlIwyVi1sq5m3r8=;
+        b=VJnLL38O49XMrj/PZZfU+c/jwtb49k8r6PomE+zAC+S2KVaxs6HhvNrHfkF/iiRDsIhx9y
+        P9IWsfDcxOk7M3Vnl5l20LqPDmf9uwllO/1s+Zr05frF9fkEc+dJfXA0DKbnh/53F6hsyX
+        +Apx0njxoLM8snZOQDH30ZWI0pK/3sU=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-kpK581Y3P66akiCzFqp0dw-1; Wed, 25 Aug 2021 18:05:49 -0400
+X-MC-Unique: kpK581Y3P66akiCzFqp0dw-1
+Received: by mail-ot1-f72.google.com with SMTP id k21-20020a0568301bf500b0051b1dadc0a4so279731otb.15
+        for <linux-pci@vger.kernel.org>; Wed, 25 Aug 2021 15:05:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=9bzdPdbfmLgeq8dXUQB3sYM02KhzqlIwyVi1sq5m3r8=;
+        b=Gzpp8jHJNmo36K72jf7anCSnK1lnhDq9hdjt7iUI8sRJpXDSt7/GnMEs5uB+7ZgjYi
+         TZKphj+cr4dSsi5fYmiMFRVlj8zEhnoEWxc8mrQVn5i94xgx6biqiGsUYWw9Q98vx2Mh
+         0XMDzD+WFQth7Qujk6Sb27RNMqiG02bX6P6qoNPz3s0GgnIuVm1JZjz6AvjZ8h5140wb
+         4GJPilWIYDICFmhHq2jk4qTn80DgE0syY9V7KX7NBqkHDYHCENQonGg3OY2NIUqY1WI5
+         eGlpFsmtwbg7FR1AQfPodA0aQsTD0SDEUt0KO2G6GQbhcI1qMZpWTHr5JXc18WMCh86G
+         uHxA==
+X-Gm-Message-State: AOAM533lmoRw2wPOe4EBD3YU4fH7DMpYTPwvV0kIqWvGj52lcuqF69uF
+        VTj+sbkpqG5GxOLbjDQs5EoHT5zO9WC5YTUoInjnOSSJ6JsIl5xUQkl32fFAJsXhpam3mXEzAlZ
+        gD0BW57EN8bTkqSlmNCSP
+X-Received: by 2002:a54:450b:: with SMTP id l11mr8671647oil.116.1629929148301;
+        Wed, 25 Aug 2021 15:05:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxBPtV6CuqHqtqxC3bi9fduSn7Z2NGiUT0Qa4bHqAHrOYoWOX545z6m1qYxokoWHNK1MtiyiA==
+X-Received: by 2002:a54:450b:: with SMTP id l11mr8671630oil.116.1629929148116;
+        Wed, 25 Aug 2021 15:05:48 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id f3sm237418otc.49.2021.08.25.15.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Aug 2021 15:05:47 -0700 (PDT)
+Date:   Wed, 25 Aug 2021 16:05:46 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <corbet@lwn.net>,
+        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
+        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <mgurtovoy@nvidia.com>, <jgg@nvidia.com>, <maorg@nvidia.com>,
+        <leonro@nvidia.com>
+Subject: Re: [PATCH V4 10/13] PCI / VFIO: Add 'override_only' support for
+ VFIO PCI sub system
+Message-ID: <20210825160546.380c0137.alex.williamson@redhat.com>
+In-Reply-To: <20210825135139.79034-11-yishaih@nvidia.com>
+References: <20210825135139.79034-1-yishaih@nvidia.com>
+        <20210825135139.79034-11-yishaih@nvidia.com>
+Organization: Red Hat
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE-0n50cnWf_3LQ6P9KMaT4dnryWW9JemP95JDZt5WE1G4mZuQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci; patches to drivers/pci/ should always be cc'd there]
+On Wed, 25 Aug 2021 16:51:36 +0300
+Yishai Hadas <yishaih@nvidia.com> wrote:
+> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> index 7c97fa8e36bc..c3edbf73157e 100644
+> --- a/scripts/mod/file2alias.c
+> +++ b/scripts/mod/file2alias.c
+> @@ -426,7 +426,7 @@ static int do_ieee1394_entry(const char *filename,
+>  	return 1;
+>  }
+>  
+> -/* Looks like: pci:vNdNsvNsdNbcNscNiN. */
+> +/* Looks like: pci:vNdNsvNsdNbcNscNiN or <prefix>_pci:vNdNsvNsdNbcNscNiN. */
+>  static int do_pci_entry(const char *filename,
+>  			void *symval, char *alias)
+>  {
+> @@ -440,8 +440,12 @@ static int do_pci_entry(const char *filename,
+>  	DEF_FIELD(symval, pci_device_id, subdevice);
+>  	DEF_FIELD(symval, pci_device_id, class);
+>  	DEF_FIELD(symval, pci_device_id, class_mask);
+> +	DEF_FIELD(symval, pci_device_id, override_only);
+>  
+> -	strcpy(alias, "pci:");
+> +	if (override_only & PCI_ID_F_VFIO_DRIVER_OVERRIDE)
+> +		strcpy(alias, "vfio_pci:");
+> +	else
+> +		strcpy(alias, "pci:");
 
-On Wed, Aug 25, 2021 at 07:30:09PM +0000, Stephen Boyd wrote:
-> Quoting Prasad Malisetty (2021-08-24 01:10:48)
-> > On 2021-08-17 22:56, Prasad Malisetty wrote:
-> > > On 2021-08-10 09:38, Prasad Malisetty wrote:
-> > >> On the SC7280, By default the clock source for pcie_1_pipe is
-> > >> TCXO for gdsc enable. But after the PHY is initialized, the clock
-> > >> source must be switched to gcc_pcie_1_pipe_clk from TCXO.
-> > >>
-> > >> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> > >> ---
-> > >>  drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++++++++++++
-> > >>  1 file changed, 18 insertions(+)
-> > >>
-> > >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> > >> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > >> index 8a7a300..39e3b21 100644
-> > >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > >> @@ -166,6 +166,8 @@ struct qcom_pcie_resources_2_7_0 {
-> > >>      struct regulator_bulk_data supplies[2];
-> > >>      struct reset_control *pci_reset;
-> > >>      struct clk *pipe_clk;
-> > >> +    struct clk *gcc_pcie_1_pipe_clk_src;
-> > >> +    struct clk *phy_pipe_clk;
-> > >>  };
-> > >>
-> > >>  union qcom_pcie_resources {
-> > >> @@ -1167,6 +1169,16 @@ static int qcom_pcie_get_resources_2_7_0(struct
-> > >> qcom_pcie *pcie)
-> > >>      if (ret < 0)
-> > >>              return ret;
-> > >>
-> > >> +    if (of_device_is_compatible(dev->of_node, "qcom,pcie-sc7280")) {
-> > >> +            res->gcc_pcie_1_pipe_clk_src = devm_clk_get(dev, "pipe_mux");
-> > >> +            if (IS_ERR(res->gcc_pcie_1_pipe_clk_src))
-> > >> +                    return PTR_ERR(res->gcc_pcie_1_pipe_clk_src);
-> > >> +
-> > >> +            res->phy_pipe_clk = devm_clk_get(dev, "phy_pipe");
-> > >> +            if (IS_ERR(res->phy_pipe_clk))
-> > >> +                    return PTR_ERR(res->phy_pipe_clk);
-> > >> +    }
-> > >
-> > > I would like to check is there any other better approach instead of
-> > > compatible method here as well or is it fine to use compatible method.
-> 
-> I'd prefer the compatible method. If nobody is responding then it's best
-> to just resend the patches with the approach you prefer instead of
-> waiting for someone to respond to a review comment.
+I'm a little concerned that we're allowing unknown, non-zero
+override_only values to fall through to create "pci:" alias matches.
+Should this be something like:
 
-I'm missing some context here, so I'm not exactly sure what your
-question is, Prasad, but IMO drivers generally should not need to use
-of_device_is_compatible() if they've already called
-of_device_get_match_data() (as qcom_pcie_probe() has).
+	if (override_only & PCI_ID_F_VFIO_DRIVER_OVERRIDE) {
+		strcpy(alias, "vfio_pci:");
+	} else if (override_only) {
+		warn("Unknown PCI driver_override alias %08X\n",
+			driver_override);
+		return 0;
+	} else {
+		strcpy(alias, "pci:");
+	}
 
-of_device_is_compatible() does basically the same work of looking for
-a match in qcom_pcie_match[] that of_device_get_match_data() does, so
-it seems pointless to repeat it.
+And then if we can only have a single bit set in override_only (I
+can't think of a use case for a single entry to have multiple
+override options), should PCI_DEVICE_DRIVER_OVERRIDE() be defined to
+take a "driver_override_shift" value where .driver_override is assigned
+(1 << driver_override_shift)?  That would encode the semantics in the
+prototypes a little better.  Thanks,
 
-I am a little confused because while [1] adds "qcom,pcie-sc7280" to
-qcom,pcie.txt, I don't see a patch that adds it to qcom_pcie_match[].
+Alex
 
-Bjorn
+>  	ADD(alias, "v", vendor != PCI_ANY_ID, vendor);
+>  	ADD(alias, "d", device != PCI_ANY_ID, device);
+>  	ADD(alias, "sv", subvendor != PCI_ANY_ID, subvendor);
 
-[1] https://lore.kernel.org/linux-arm-msm/1628568516-24155-2-git-send-email-pmaliset@codeaurora.org/
