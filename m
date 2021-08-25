@@ -2,78 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5162D3F7AC3
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 18:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BA123F7B95
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 19:32:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231887AbhHYQi0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 12:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
+        id S233612AbhHYRc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 13:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229791AbhHYQi0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:38:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1563860F5C;
-        Wed, 25 Aug 2021 16:37:39 +0000 (UTC)
+        id S232053AbhHYRc5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Aug 2021 13:32:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 274586103E;
+        Wed, 25 Aug 2021 17:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629909460;
-        bh=N72KKszat2eurPq6Rq0lAoXAPysG/3U7/Mw/+e7I324=;
+        s=k20201202; t=1629912731;
+        bh=HaLu/S43XYiemHf6J5subhxzR2o2Ht+qoQXYJ3cD6J8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=omCp8M1WBd8MHOqFiIUGp0HkP5mgHlX3wnDg2GdzRdfC46d+zijrDdu+ZkgK7hVZI
-         iM/uog3O6yv+2UOR6CLYIyQ8WdIJDmGS/IzQmavks/9uW1xsFOENSuYW6mpBRnogJ+
-         C39dTfoEVo+iXeciXDYTaPqDhxNkfYQEx/IwtKC36aNpPBwaKiLVY3tKCdHyNDspwN
-         IcfMjgOqN5UVwM2+irGa+rAi/WRNDfSkY4q7j4tbyhi9yVuzyVgaXTVytICyMznu34
-         8ioVnYZdBqBzAW2BQK2fKAvPm8EhTeOtoZRqdbxxDGnG2qrLIRpmYJxQJEonFgSgcv
-         k/vh/srhvHd0Q==
-Date:   Wed, 25 Aug 2021 11:37:38 -0500
+        b=Q+3d8vEn6ZQ7cOg6uvyjfisHU1EJs3hnFvHkgY5pYK67mMd1ytB8nylwFiL5WHKX8
+         sp9lGKxtCRusY7E/oy+c4VwSLmYLRHBPaZk/VigEIAz9NUWxY1ls3T3UCbEhCd+eNY
+         xXIsNPxzpXg+ZQU14cr18pO8ZA/nJQ4HQxd5bu6pj7LSX/h5n9neXQQyma4fCyc99W
+         6UjznzBDIeRDiBPnGiGxfmp/bHvk7hWrAJm7ux6PbhgpyG0bRKOUHznDNbSHhKQmCV
+         TPAICt7aGnFytYnAVH0skgNUg9joqynB623JPc7OWF3amUcLQ64RigoE/aygOr0b/R
+         cBFFuZAi/9Tjw==
+Date:   Wed, 25 Aug 2021 12:32:09 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] PCI: qcom: add support for IPQ60xx PCIe controller
-Message-ID: <20210825163738.GA3576149@bjorn-Precision-5520>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V8 1/5] PCI: loongson: Use correct pci config access
+ operations
+Message-ID: <20210825173209.GA3585627@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e17461407cf4bb79fed5925ec81196a0b84e7827.1620203062.git.baruch@tkos.co.il>
+In-Reply-To: <20210825060724.3385929-2-chenhuacai@loongson.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject:
+Things like "Use correct ..." in subject lines are useless.  *Every*
+patch should do the "proper" or "correct" thing, so it should go
+without saying.  Repeating it doesn't make it more true.
 
-s/add support/Add support/ to match previous history.
+This doesn't apply to *all* loongson devices, so it would be useful to
+hint at the devices it *does* apply to.
 
-On Wed, May 05, 2021 at 12:18:30PM +0300, Baruch Siach wrote:
-> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Maybe something like:
+
+  PCI: loongson: Use generic 8/16/32-bit config ops on LS2K/LS7A
+
+On Wed, Aug 25, 2021 at 02:07:20PM +0800, Huacai Chen wrote:
+> LS2K/LS7A support 8/16/32-bits pci config access operations via CFG1, so
+> we can disable CFG0 for them and safely use pci_generic_config_read()/
+> pci_generic_config_write() instead of pci_generic_config_read32()/pci_
+> generic_config_write32().
+
+s/pci/PCI/
+
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++----------
+>  1 file changed, 23 insertions(+), 13 deletions(-)
 > 
-> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
-> platform.
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index 48169b1e3817..b2c81c762599 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -159,8 +159,15 @@ static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+>  	return val;
+>  }
+>  
+> -/* H/w only accept 32-bit PCI operations */
+> +/* LS2K/LS7A accept 8/16/32-bit PCI operations */
+
+*config* operations
+
+>  static struct pci_ops loongson_pci_ops = {
+> +	.map_bus = pci_loongson_map_bus,
+> +	.read	= pci_generic_config_read,
+> +	.write	= pci_generic_config_write,
+> +};
+> +
+> +/* RS780/SR5690 only accept 32-bit PCI operations */
+> +static struct pci_ops loongson_pci_ops32 = {
+>  	.map_bus = pci_loongson_map_bus,
+>  	.read	= pci_generic_config_read32,
+>  	.write	= pci_generic_config_write32,
+> @@ -168,9 +175,9 @@ static struct pci_ops loongson_pci_ops = {
+>  
+>  static const struct of_device_id loongson_pci_of_match[] = {
+>  	{ .compatible = "loongson,ls2k-pci",
+> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +		.data = (void *)(FLAG_CFG1 | FLAG_DEV_FIX), },
+>  	{ .compatible = "loongson,ls7a-pci",
+> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +		.data = (void *)(FLAG_CFG1 | FLAG_DEV_FIX), },
+>  	{ .compatible = "loongson,rs780e-pci",
+>  		.data = (void *)(FLAG_CFG0), },
+
+It'd be nice if you used the same strategy as most other drivers,
+e.g., ".data = &loongson_ls2k_data" or similar.
+
+>  	{}
+> @@ -195,17 +202,17 @@ static int loongson_pci_probe(struct platform_device *pdev)
+>  	priv->pdev = pdev;
+>  	priv->flags = (unsigned long)of_device_get_match_data(dev);
+>  
+> -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!regs) {
+> -		dev_err(dev, "missing mem resources for cfg0\n");
+> -		return -EINVAL;
+> +	if (priv->flags & FLAG_CFG0) {
+> +		regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!regs)
+> +			dev_err(dev, "missing mem resources for cfg0\n");
+> +		else {
+> +			priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> +			if (IS_ERR(priv->cfg0_base))
+> +				return PTR_ERR(priv->cfg0_base);
+> +		}
+>  	}
+>  
+> -	priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> -	if (IS_ERR(priv->cfg0_base))
+> -		return PTR_ERR(priv->cfg0_base);
+> -
+> -	/* CFG1 is optional */
+>  	if (priv->flags & FLAG_CFG1) {
+>  		regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  		if (!regs)
+> @@ -218,8 +225,11 @@ static int loongson_pci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	bridge->sysdata = priv;
+> -	bridge->ops = &loongson_pci_ops;
+>  	bridge->map_irq = loongson_map_irq;
+> +	if (!of_device_is_compatible(node, "loongson,rs780e-pci"))
+
+You already called of_device_get_match_data() above, which does
+essentially the same work as of_device_is_compatible().
+
+> +		bridge->ops = &loongson_pci_ops;
+> +	else
+> +		bridge->ops = &loongson_pci_ops32;
+>  
+>  	return pci_host_probe(bridge);
+>  }
+> -- 
+> 2.27.0
 > 
-> The code is based on downstream Codeaurora kernel v5.4. Split out the
-> DBI registers access part from .init into .post_init. DBI registers are
-> only accessible after phy_power_on().
-
-The "downstream Codeaurora kernel v5.4" reference would be more useful
-if there were a URL reference to that driver.
-
-> +#define AXI_CLK_RATE				200000000
-> +#define RCHNG_CLK_RATE				100000000
-
-These are unused.
-
-> +	for (i = 0;i < 256;i++)
-
-Add spaces after semicolons.
