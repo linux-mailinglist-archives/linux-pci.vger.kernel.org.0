@@ -2,203 +2,334 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A37113F7835
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 17:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3D7C3F783E
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 17:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240779AbhHYPYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 11:24:52 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:43269 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237885AbhHYPYw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 11:24:52 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id EBFB432009C8;
-        Wed, 25 Aug 2021 11:24:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 25 Aug 2021 11:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm3; bh=pzf5dy4nTAF2+w5eLed+KU37zwDC8
-        vtvZByWxoRUimg=; b=HBrbZMsl3xdHw9TIx+ZlNgWEefspwUTPrjbo4qJYFTHhR
-        xh1HFxLVO7Man6hKZZWY3vY9BVHW+Ao8pgs/7kTvVnJ8U6U+gd8mZHKwwlTutbf2
-        vFYgA+bJKPEIOIhnksBzLe3aB8+lAynIjGMyL9iXv3GVEQem6cyUUVx2g35x9hsG
-        TARb1Ge3UMql0cmzhG149ntVQXvwVgAGepm4U1xLFXS9rDGCHN7fx0GpU7xl/zHK
-        f5IMvg8lY8hCjymrSe8vgIkZtFZQdszqHkNrVPZm1aEYPxQJnLOIEw+RPxMBo6FT
-        J4v3OqGhFoalr2+B11IDBkgv+DUlgmcSASAfPhB0Q==
-X-ME-Sender: <xms:lWAmYZTl_Ljbt52yHtkNX27St99fzaBltSzbXrKpAwFSVYjVrqNq7w>
-    <xme:lWAmYSzUVj47s7HSeyqfe1rOnp1-XuBWrHYTMLnAGe5gtYqcWWLsNgOu-iiABO3Bw
-    SX6fPE3e07WJg>
-X-ME-Received: <xmr:lWAmYe02iEUqWp1ExnivSNTOU28Mp-4F_GWzKUGatP3Be6sonNuTKKErYWBH8Uc5_2AxiyOlvDhehoLGCnKmhyObtS8fMOcr>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddtledgkeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfggtggusehgtderredttdejnecuhfhrohhmpeforghrvghkucfo
-    rghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvhhish
-    hisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpedtudfgtedu
-    veduieevvefgteeujeelgffggffhhffhhedtffeffefgudeugeefhfenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhn
-    vhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
-X-ME-Proxy: <xmx:lWAmYRC9t2lW4IhYwF2sl8NdhHKmy7e3npMXHvoCqnD7Ls5lGoBCgw>
-    <xmx:lWAmYSikG35vAoApuFehGylVqOChAYhnpHasf99lXFuPsLF4JIMwCA>
-    <xmx:lWAmYVpxBw1_WG6u1I_2_h26fCv94GBA0T7u9bLpLS_zTFE51bPMqQ>
-    <xmx:lWAmYTvoBnsgUd4tK_Y4DwByeTqJxu3YsxRksMAa9kwtXqPPlRwd-A>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Aug 2021 11:24:04 -0400 (EDT)
-Date:   Wed, 25 Aug 2021 17:24:00 +0200
-From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-To:     xen-devel <xen-devel@lists.xenproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, stable@vger.kernel.org,
-        regressions@lists.kernel.dev
-Subject: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
- passthrough
-Message-ID: <YSZgkQY1B+WNH50r@mail-itl>
+        id S240995AbhHYP1c convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 25 Aug 2021 11:27:32 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:40873 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240735AbhHYP1c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 11:27:32 -0400
+Received: by mail-ot1-f54.google.com with SMTP id x9-20020a056830278900b0051b8be1192fso34643213otu.7;
+        Wed, 25 Aug 2021 08:26:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W36zyoTzeTKJ6RSOAnWzlGKgT0POyMc5YunB7c1pcVk=;
+        b=WVD18+lp7Mn/4s1o2rNJll/aUVCKoymX1fD8SYXsb8Ms+6oK9T9CxJFRX1q1bJeqrc
+         7RE8dxUp0IkWnj+D6Mk04R1T5RK14KwHFUU//VuelahMtH5xMm/oBuL6ujv2XHyY7h2w
+         YDclxcjOD+Kt2W2vQOVfDQquqA7aJW+GHg9CyK/an+mnZBpbmab0IP+aAkMM7l+BcAqU
+         MTDo6fR1Qfj4rCWObvkvFr2QQK36+9Ef1hp60pYA8cyLuyIr6fM2g6aXvyfCKmrAmQHj
+         1D8Lf/iOflmEpSPCcopA+J/CWBC6h9+twOLWvxzZyWroVjYiEBlwM6G27P5yEj7/VrAS
+         XnZA==
+X-Gm-Message-State: AOAM533K6ZlgPodaisLMs/c0HIoHBtsTct4PnvFYIgH8BtrU2HAevJuS
+        Rekw9Ua7KHKUnSXXvAnGPO9EY9JAZaMYzZYqw+Q=
+X-Google-Smtp-Source: ABdhPJx4RGkpABOb4oNaJWRg7MiX+sjCetnIlFC86Vt5Y1ocAs+Cw2UD7GW/13mhGfC7OWyHKYclXho3fG55Knr5TjA=
+X-Received: by 2002:a9d:a57:: with SMTP id 81mr24005724otg.260.1629905205982;
+ Wed, 25 Aug 2021 08:26:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="S94iANMFyPadWqU9"
-Content-Disposition: inline
+References: <DM6PR11MB32449145A9E3779A480F01D69FC69@DM6PR11MB3244.namprd11.prod.outlook.com>
+ <20210825150008.GA3567157@bjorn-Precision-5520>
+In-Reply-To: <20210825150008.GA3567157@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 25 Aug 2021 17:26:35 +0200
+Message-ID: <CAJZ5v0hNNfVyFoFbKb_r70oiHmOPjZONsFO__JbsaSgLSvB-kg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: VMD: ACPI: Make ACPI companion lookup work for
+ VMD bus
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Wang, Wendy" <wendy.wang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Box <david.e.box@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Aug 25, 2021 at 5:00 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Aug 25, 2021 at 11:02:47AM +0000, Wang, Wendy wrote:
+> > Hi Rafael,
+> >
+> > Tested this PATCH v2 against intel next v5.12 kernel on ADL-S NVME and SATA storages:
+> >
+> > cat /sys/devices/pci0000\:00/0000\:00\:0e.0/firmware_node/path
+> > \_SB_.PC00.VMD0
+> >
+> > 10000:e0:17.0 SATA controller: Intel Corporation Device 7ae2 (rev 11)
+> > 10000:e0:1d.0 System peripheral: Intel Corporation Device 09ab
+> > 10000:e0:1d.4 PCI bridge: Intel Corporation Device 7ab4 (rev 11)
+> > 10000:e1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+> >
+> > [ 6193.658074] ahci 10000:e0:17.0: PCI PM: Suspend power state: D3hot
+> > [ 6193.658156] nvme 10000:e1:00.0: PCI PM: Suspend power state: D3hot
+> > [ 6193.710883] pcieport 10000:e0:1d.4: PCI PM: Suspend power state: D3cold
 
---S94iANMFyPadWqU9
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Aug 2021 17:24:00 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: xen-devel <xen-devel@lists.xenproject.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	regressions@lists.kernel.dev
-Subject: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
- passthrough
+This doesn't happen without using the ACPI companion object (the
+deepest power state you can get then is D3hot) AFAICS.
 
-Hi,
+> > [ 6193.730318] vmd 0000:00:0e.0: PCI PM: Suspend power state: D3hot
+> >
+> > cat /sys/kernel/debug/pmc_core/substate_residencies
+> > Substate   Residency
+> > S0i2.0     0
+> > S0i2.1     13862128
+> >
+> > Thanks!
+>
+> I guess (given Rafael's response) that this is a positive test result,
+> i.e., you see the desired behavior with this patch?
 
-On recent kernel I get kernel panic when starting a Xen PV domain with
-PCI devices assigned. This happens on 5.10.60 (worked on .54) and
-5.4.142 (worked on .136):=20
+So yes.
 
-[   13.683009] pcifront pci-0: claiming resource 0000:00:00.0/0
-[   13.683042] pcifront pci-0: claiming resource 0000:00:00.0/1
-[   13.683049] pcifront pci-0: claiming resource 0000:00:00.0/2
-[   13.683055] pcifront pci-0: claiming resource 0000:00:00.0/3
-[   13.683061] pcifront pci-0: claiming resource 0000:00:00.0/6
-[   14.036142] e1000e: Intel(R) PRO/1000 Network Driver
-[   14.036179] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-[   14.036982] e1000e 0000:00:00.0: Xen PCI mapped GSI11 to IRQ13
-[   14.044561] e1000e 0000:00:00.0: Interrupt Throttling Rate (ints/sec) se=
-t to dynamic conservative mode
-[   14.045188] BUG: unable to handle page fault for address: ffffc900406910=
-0c
-[   14.045197] #PF: supervisor write access in kernel mode
-[   14.045202] #PF: error_code(0x0003) - permissions violation
-[   14.045211] PGD 18f1c067 P4D 18f1c067 PUD 4dbd067 PMD 4fba067 PTE 801000=
-00febd4075
-[   14.045227] Oops: 0003 [#1] SMP NOPTI
-[   14.045234] CPU: 0 PID: 234 Comm: kworker/0:2 Tainted: G        W       =
-  5.14.0-rc7-1.fc32.qubes.x86_64 #15
-[   14.045245] Workqueue: events work_for_cpu_fn
-[   14.045259] RIP: e030:__pci_enable_msix_range.part.0+0x26b/0x5f0
-[   14.045271] Code: 2f 96 ff 48 89 44 24 28 48 89 c7 48 85 c0 0f 84 f6 01 =
-00 00 45 0f b7 f6 48 8d 40 0c ba 01 00 00 00 49 c1 e6 04 4a 8d 4c 37 1c <89=
-> 10 48 83 c0 10 48 39 c1 75 f5 41 0f b6 44 24 6a 84 c0 0f 84 48
-[   14.045284] RSP: e02b:ffffc9004018bd50 EFLAGS: 00010212
-[   14.045290] RAX: ffffc9004069100c RBX: ffff88800ed412f8 RCX: ffffc900406=
-9105c
-[   14.045296] RDX: 0000000000000001 RSI: 00000000000febd4 RDI: ffffc900406=
-91000
-[   14.045302] RBP: 0000000000000003 R08: 0000000000000000 R09: 00000000feb=
-d404f
-[   14.045308] R10: 0000000000007ff0 R11: ffff88800ee8ae40 R12: ffff88800ed=
-41000
-[   14.045313] R13: 0000000000000000 R14: 0000000000000040 R15: 00000000feb=
-a0000
-[   14.045393] FS:  0000000000000000(0000) GS:ffff888018400000(0000) knlGS:=
-0000000000000000
-[   14.045401] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   14.045407] CR2: ffff8000007f5ea0 CR3: 0000000012f6a000 CR4: 00000000000=
-00660
-[   14.045420] Call Trace:
-[   14.045431]  e1000e_set_interrupt_capability+0xbf/0xd0 [e1000e]
-[   14.045479]  e1000_probe+0x41f/0xdb0 [e1000e]
-[   14.045506]  local_pci_probe+0x42/0x80
-[   14.045515]  work_for_cpu_fn+0x16/0x20
-[   14.045522]  process_one_work+0x1ec/0x390
-[   14.045529]  worker_thread+0x53/0x3e0
-[   14.045534]  ? process_one_work+0x390/0x390
-[   14.045540]  kthread+0x127/0x150
-[   14.045548]  ? set_kthread_struct+0x40/0x40
-[   14.045554]  ret_from_fork+0x22/0x30
-[   14.045565] Modules linked in: e1000e(+) edac_mce_amd rfkill xen_pcifron=
-t pcspkr xt_REDIRECT ip6table_filter ip6table_mangle ip6table_raw ip6_table=
-s ipt_REJECT nf_reject_ipv4 xt_state xt_conntrack iptable_filter iptable_ma=
-ngle iptable_raw xt_MASQUERADE iptable_nat nf_nat nf_conntrack nf_defrag_ip=
-v6 nf_defrag_ipv4 xen_scsiback target_core_mod xen_netback xen_privcmd xen_=
-gntdev xen_gntalloc xen_blkback xen_evtchn fuse drm bpf_preload ip_tables o=
-verlay xen_blkfront
-[   14.045620] CR2: ffffc9004069100c
-[   14.045627] ---[ end trace 307f5bb3bd9f30b4 ]---
-[   14.045632] RIP: e030:__pci_enable_msix_range.part.0+0x26b/0x5f0
-[   14.045640] Code: 2f 96 ff 48 89 44 24 28 48 89 c7 48 85 c0 0f 84 f6 01 =
-00 00 45 0f b7 f6 48 8d 40 0c ba 01 00 00 00 49 c1 e6 04 4a 8d 4c 37 1c <89=
-> 10 48 83 c0 10 48 39 c1 75 f5 41 0f b6 44 24 6a 84 c0 0f 84 48
-[   14.045652] RSP: e02b:ffffc9004018bd50 EFLAGS: 00010212
-[   14.045657] RAX: ffffc9004069100c RBX: ffff88800ed412f8 RCX: ffffc900406=
-9105c
-[   14.045663] RDX: 0000000000000001 RSI: 00000000000febd4 RDI: ffffc900406=
-91000
-[   14.045668] RBP: 0000000000000003 R08: 0000000000000000 R09: 00000000feb=
-d404f
-[   14.045674] R10: 0000000000007ff0 R11: ffff88800ee8ae40 R12: ffff88800ed=
-41000
-[   14.045679] R13: 0000000000000000 R14: 0000000000000040 R15: 00000000feb=
-a0000
-[   14.045698] FS:  0000000000000000(0000) GS:ffff888018400000(0000) knlGS:=
-0000000000000000
-[   14.045706] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   14.045711] CR2: ffff8000007f5ea0 CR3: 0000000012f6a000 CR4: 00000000000=
-00660
-[   14.045718] Kernel panic - not syncing: Fatal exception
-[   14.045726] Kernel Offset: disabled
-
-I've bisected it down to this commit:
-
-    commit 7d5ec3d3612396dc6d4b76366d20ab9fc06f399f
-    Author: Thomas Gleixner <tglx@linutronix.de>
-    Date:   Thu Jul 29 23:51:41 2021 +0200
-
-        PCI/MSI: Mask all unused MSI-X entries
-
-I can reliably reproduce it on Xen 4.14 and Xen 4.8, so I don't think
-Xen version matters here.
-
-Any idea how to fix it?
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---S94iANMFyPadWqU9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmEmYJEACgkQ24/THMrX
-1ywWwgf+IRlDcK/qRBb2AQfZhSFfm8ulkd5niXLYT0IX4JI6nD5BrL5nii278/e0
-pwelOA1DTS5468v1rGNc0QQ9IhQf4yOYCMloueldPiyeETHfE21TQVyRy4sv7r7T
-Jbawg+wJvgHOkwAxn3PDb5xlk8Cl1wuBCw8A7b6CcbF7tTgwxWIqvVemhOtUDft1
-hBD8HsH46tAhueDzhmmOn6A9Njj1YXhUnzFtLzwc8QL/3ow2VqUAhxRaa7VV31ov
-Zh14JfJ5+evQ7+v2twEOmrU9bvH8o+2DX7K3QiVOerIQXOPMl+xmMOOxv+nFnkPL
-wUUs2QnRfH9cs/vz+4YSWCGv0o6l7w==
-=FJ2V
------END PGP SIGNATURE-----
-
---S94iANMFyPadWqU9--
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > Sent: Tuesday, August 24, 2021 10:44 PM
+> > To: Linux PCI <linux-pci@vger.kernel.org>; Derrick, Jonathan <jonathan.derrick@intel.com>; Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Wang, Wendy <wendy.wang@intel.com>; Linux ACPI <linux-acpi@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Mika Westerberg <mika.westerberg@linux.intel.com>; David Box <david.e.box@linux.intel.com>
+> > Subject: [PATCH v2] PCI: VMD: ACPI: Make ACPI companion lookup work for VMD bus
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > On some systems, in order to get to the deepest low-power state of the platform (which may be necessary to save significant enough amounts of energy while suspended to idle. for example), devices on the PCI bus exposed by the VMD driver need to be power-managed via ACPI.  However, the layout of the ACPI namespace below the VMD controller device object does not reflect the layout of the PCI bus under the VMD host bridge, so in order to identify the ACPI companion objects for the devices on that bus, it is necessary to use a special _ADR encoding on the ACPI side.  In other words, acpi_pci_find_companion() does not work for these devices, so it needs to be amended with a special lookup logic specific to the VMD bus.
+> >
+> > Address this issue by allowing the VMD driver to temporarily install an ACPI companion lookup hook containing the code matching the devices on the VMD PCI bus with the corresponding objects in the ACPI namespace.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > -> v2:
+> >    * Use a read-write semaphore for hook manipulation protection and
+> >      get rid of the static key present in the previous version.
+> >    * Add a busnr check in vmd_acpi_find_companion().
+> >
+> > Wendy, David, please test this one!
+> >
+> > ---
+> >  drivers/pci/controller/vmd.c |   55 +++++++++++++++++++++++++++++++
+> >  drivers/pci/host-bridge.c    |    1
+> >  drivers/pci/pci-acpi.c       |   74 +++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci-acpi.h     |    3 +
+> >  4 files changed, 133 insertions(+)
+> >
+> > Index: linux-pm/drivers/pci/controller/vmd.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/controller/vmd.c
+> > +++ linux-pm/drivers/pci/controller/vmd.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/msi.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/pci-acpi.h>
+> >  #include <linux/pci-ecam.h>
+> >  #include <linux/srcu.h>
+> >  #include <linux/rculist.h>
+> > @@ -447,6 +448,56 @@ static struct pci_ops vmd_ops = {
+> >       .write          = vmd_pci_write,
+> >  };
+> >
+> > +#ifdef CONFIG_ACPI
+> > +static struct acpi_device *vmd_acpi_find_companion(struct pci_dev
+> > +*pci_dev) {
+> > +     struct pci_host_bridge *bridge;
+> > +     u32 busnr, addr;
+> > +
+> > +     if (pci_dev->bus->ops != &vmd_ops)
+> > +             return NULL;
+> > +
+> > +     bridge = pci_find_host_bridge(pci_dev->bus);
+> > +     busnr = pci_dev->bus->number - bridge->bus->number;
+> > +     /*
+> > +      * The address computation below is only applicable to relative bus
+> > +      * numbers below 32.
+> > +      */
+> > +     if (busnr > 31)
+> > +             return NULL;
+> > +
+> > +     addr = (busnr << 24) | ((u32)pci_dev->devfn << 16) | 0x8000FFFFU;
+> > +
+> > +     dev_dbg(&pci_dev->dev, "Looking for ACPI companion (address 0x%x)\n",
+> > +             addr);
+> > +
+> > +     return acpi_find_child_device(ACPI_COMPANION(bridge->dev.parent), addr,
+> > +                                   false);
+> > +}
+> > +
+> > +static bool hook_installed;
+> > +
+> > +static void vmd_acpi_begin(void)
+> > +{
+> > +     if (pci_acpi_set_companion_lookup_hook(vmd_acpi_find_companion))
+> > +             return;
+> > +
+> > +     hook_installed = true;
+> > +}
+> > +
+> > +static void vmd_acpi_end(void)
+> > +{
+> > +     if (!hook_installed)
+> > +             return;
+> > +
+> > +     pci_acpi_clear_companion_lookup_hook();
+> > +     hook_installed = false;
+> > +}
+> > +#else
+> > +static inline void vmd_acpi_begin(void) { } static inline void
+> > +vmd_acpi_end(void) { } #endif /* CONFIG_ACPI */
+> > +
+> >  static void vmd_attach_resources(struct vmd_dev *vmd)  {
+> >       vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1]; @@ -747,6 +798,8 @@ static int vmd_enable_domain(struct vmd_
+> >       if (vmd->irq_domain)
+> >               dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+> >
+> > +     vmd_acpi_begin();
+> > +
+> >       pci_scan_child_bus(vmd->bus);
+> >       pci_assign_unassigned_bus_resources(vmd->bus);
+> >
+> > @@ -760,6 +813,8 @@ static int vmd_enable_domain(struct vmd_
+> >
+> >       pci_bus_add_devices(vmd->bus);
+> >
+> > +     vmd_acpi_end();
+> > +
+> >       WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+> >                              "domain"), "Can't create symlink to domain\n");
+> >       return 0;
+> > Index: linux-pm/drivers/pci/host-bridge.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/host-bridge.c
+> > +++ linux-pm/drivers/pci/host-bridge.c
+> > @@ -23,6 +23,7 @@ struct pci_host_bridge *pci_find_host_br
+> >
+> >       return to_pci_host_bridge(root_bus->bridge);
+> >  }
+> > +EXPORT_SYMBOL_GPL(pci_find_host_bridge);
+> >
+> >  struct device *pci_get_host_bridge_device(struct pci_dev *dev)  {
+> > Index: linux-pm/drivers/pci/pci-acpi.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci-acpi.c
+> > +++ linux-pm/drivers/pci/pci-acpi.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/pci-acpi.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/pm_qos.h>
+> > +#include <linux/rwsem.h>
+> >  #include "pci.h"
+> >
+> >  /*
+> > @@ -1159,6 +1160,69 @@ void acpi_pci_remove_bus(struct pci_bus  }
+> >
+> >  /* ACPI bus type */
+> > +
+> > +
+> > +static DECLARE_RWSEM(pci_acpi_companion_lookup_sem);
+> > +static struct acpi_device *(*pci_acpi_find_companion_hook)(struct
+> > +pci_dev *);
+> > +
+> > +/**
+> > + * pci_acpi_set_companion_lookup_hook - Set ACPI companion lookup callback.
+> > + * @func: ACPI companion lookup callback pointer or NULL.
+> > + *
+> > + * Set a special ACPI companion lookup callback for PCI devices whose
+> > +companion
+> > + * objects in the ACPI namespace have _ADR with non-standard
+> > +bus-device-function
+> > + * encodings.
+> > + *
+> > + * Return 0 on success or a negative error code on failure (in which
+> > +case no
+> > + * changes are made).
+> > + *
+> > + * The caller is responsible for the appropriate ordering of the
+> > +invocations of
+> > + * this function with respect to the enumeration of the PCI devices
+> > +needing the
+> > + * callback installed by it.
+> > + */
+> > +int pci_acpi_set_companion_lookup_hook(struct acpi_device
+> > +*(*func)(struct pci_dev *)) {
+> > +     int ret;
+> > +
+> > +     if (!func)
+> > +             return -EINVAL;
+> > +
+> > +     down_write(&pci_acpi_companion_lookup_sem);
+> > +
+> > +     if (pci_acpi_find_companion_hook) {
+> > +             ret = -EBUSY;
+> > +     } else {
+> > +             pci_acpi_find_companion_hook = func;
+> > +             ret = 0;
+> > +     }
+> > +
+> > +     up_write(&pci_acpi_companion_lookup_sem);
+> > +
+> > +     return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_acpi_set_companion_lookup_hook);
+> > +
+> > +/**
+> > + * pci_acpi_clear_companion_lookup_hook - Clear ACPI companion lookup callback.
+> > + *
+> > + * Clear the special ACPI companion lookup callback previously set by
+> > + * pci_acpi_set_companion_lookup_hook().  Block until the last running
+> > +instance
+> > + * of the callback returns before clearing it.
+> > + *
+> > + * The caller is responsible for the appropriate ordering of the
+> > +invocations of
+> > + * this function with respect to the enumeration of the PCI devices
+> > +needing the
+> > + * callback cleared by it.
+> > + */
+> > +void pci_acpi_clear_companion_lookup_hook(void)
+> > +{
+> > +     down_write(&pci_acpi_companion_lookup_sem);
+> > +
+> > +     pci_acpi_find_companion_hook = NULL;
+> > +
+> > +     up_write(&pci_acpi_companion_lookup_sem);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_acpi_clear_companion_lookup_hook);
+> > +
+> >  static struct acpi_device *acpi_pci_find_companion(struct device *dev)  {
+> >       struct pci_dev *pci_dev = to_pci_dev(dev); @@ -1166,6 +1230,16 @@ static struct acpi_device *acpi_pci_find
+> >       bool check_children;
+> >       u64 addr;
+> >
+> > +     down_read(&pci_acpi_companion_lookup_sem);
+> > +
+> > +     adev = pci_acpi_find_companion_hook ?
+> > +             pci_acpi_find_companion_hook(pci_dev) : NULL;
+> > +
+> > +     up_read(&pci_acpi_companion_lookup_sem);
+> > +
+> > +     if (adev)
+> > +             return adev;
+> > +
+> >       check_children = pci_is_bridge(pci_dev);
+> >       /* Please ref to ACPI spec for the syntax of _ADR */
+> >       addr = (PCI_SLOT(pci_dev->devfn) << 16) | PCI_FUNC(pci_dev->devfn);
+> > Index: linux-pm/include/linux/pci-acpi.h ===================================================================
+> > --- linux-pm.orig/include/linux/pci-acpi.h
+> > +++ linux-pm/include/linux/pci-acpi.h
+> > @@ -122,6 +122,9 @@ static inline void pci_acpi_add_edr_noti  static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }  #endif /* CONFIG_PCIE_EDR */
+> >
+> > +int pci_acpi_set_companion_lookup_hook(struct acpi_device
+> > +*(*func)(struct pci_dev *)); void
+> > +pci_acpi_clear_companion_lookup_hook(void);
+> > +
+> >  #else        /* CONFIG_ACPI */
+> >  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
+> >
+> >
+> >
