@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBDA3F6F2B
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 08:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CF603F6F2F
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 08:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232442AbhHYGJj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 02:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44710 "EHLO mail.kernel.org"
+        id S238197AbhHYGLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 02:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238172AbhHYGJj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 02:09:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E0539613AB;
-        Wed, 25 Aug 2021 06:08:51 +0000 (UTC)
+        id S237908AbhHYGLG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Aug 2021 02:11:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 59011613A7;
+        Wed, 25 Aug 2021 06:10:19 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V8 2/5] PCI: loongson: Add ACPI init support
-Date:   Wed, 25 Aug 2021 14:07:21 +0800
-Message-Id: <20210825060724.3385929-3-chenhuacai@loongson.cn>
+Subject: [PATCH V8 3/5] PCI: Improve the MRRS quirk for LS7A
+Date:   Wed, 25 Aug 2021 14:07:22 +0800
+Message-Id: <20210825060724.3385929-4-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210825060724.3385929-1-chenhuacai@loongson.cn>
 References: <20210825060724.3385929-1-chenhuacai@loongson.cn>
@@ -31,171 +31,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Loongson PCH (LS7A chipset) will be used by both MIPS-based and
-LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
-while LoongArch-base Loongson uses ACPI, this patch add ACPI init
-support for the driver in drivers/pci/controller/pci-loongson.c
-because it is currently FDT-only.
+In new revision of LS7A, some PCIe ports support larger value than 256,
+but their maximum supported MRRS values are not detectable. Moreover,
+the current loongson_mrrs_quirk() cannot avoid devices increasing its
+MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+will actually set a big value in its driver. So the only possible way
+is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
 
-LoongArch is a new RISC ISA, mainline support will come soon, and
-documentations are here (in translation):
-
-https://github.com/loongson/LoongArch-Documentation
+However, according to PCIe Spec, it is legal for an OS to program any
+value for MRRS, and it is also legal for an endpoint to generate a Read
+Request with any size up to its MRRS. As the hardware engineers say, the
+root cause here is LS7A doesn't break up large read requests. In detail,
+LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+request with a size that's "too big" ("too big" means larger than the
+PCIe ports can handle, which means 256 for some ports and 4096 for the
+others, and of course this is a problem in the LS7A's hardware design).
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/acpi/pci_mcfg.c               | 13 +++++++
- drivers/pci/controller/Kconfig        |  2 +-
- drivers/pci/controller/pci-loongson.c | 54 ++++++++++++++++++++++++++-
- include/linux/pci-ecam.h              |  1 +
- 4 files changed, 67 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
+ drivers/pci/pci.c                     |  6 ++++
+ include/linux/pci.h                   |  1 +
+ 3 files changed, 25 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-index 53cab975f612..860014b89b8e 100644
---- a/drivers/acpi/pci_mcfg.c
-+++ b/drivers/acpi/pci_mcfg.c
-@@ -41,6 +41,8 @@ struct mcfg_fixup {
- static struct mcfg_fixup mcfg_quirks[] = {
- /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
- 
-+#ifdef CONFIG_ARM64
-+
- #define AL_ECAM(table_id, rev, seg, ops) \
- 	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
- 
-@@ -169,6 +171,17 @@ static struct mcfg_fixup mcfg_quirks[] = {
- 	ALTRA_ECAM_QUIRK(1, 13),
- 	ALTRA_ECAM_QUIRK(1, 14),
- 	ALTRA_ECAM_QUIRK(1, 15),
-+#endif /* ARM64 */
-+
-+#ifdef CONFIG_LOONGARCH
-+#define LOONGSON_ECAM_MCFG(table_id, seg) \
-+	{ "LOONGS", table_id, 1, seg, MCFG_BUS_ANY, &loongson_pci_ecam_ops }
-+
-+	LOONGSON_ECAM_MCFG("\0", 0),
-+	LOONGSON_ECAM_MCFG("LOONGSON", 0),
-+	LOONGSON_ECAM_MCFG("\0", 1),
-+	LOONGSON_ECAM_MCFG("LOONGSON", 1),
-+#endif /* LOONGARCH */
- };
- 
- static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 5e1e3796efa4..77aa7272425c 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -287,7 +287,7 @@ config PCI_HYPERV_INTERFACE
- config PCI_LOONGSON
- 	bool "LOONGSON PCI Controller"
- 	depends on MACH_LOONGSON64 || COMPILE_TEST
--	depends on OF
-+	depends on OF || ACPI
- 	depends on PCI_QUIRKS
- 	default MACH_LOONGSON64
- 	help
 diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index b2c81c762599..81361a056377 100644
+index 81361a056377..b249f46739ba 100644
 --- a/drivers/pci/controller/pci-loongson.c
 +++ b/drivers/pci/controller/pci-loongson.c
-@@ -9,6 +9,8 @@
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/pci_ids.h>
-+#include <linux/pci-acpi.h>
-+#include <linux/pci-ecam.h>
+@@ -62,37 +62,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_LS7A_LPC, system_bus_quirk);
  
- #include "../pci.h"
- 
-@@ -92,6 +94,18 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+-static void loongson_mrrs_quirk(struct pci_dev *dev)
++static void loongson_mrrs_quirk(struct pci_dev *pdev)
+ {
+-	struct pci_bus *bus = dev->bus;
+-	struct pci_dev *bridge;
+-	static const struct pci_device_id bridge_devids[] = {
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+-		{ 0, },
+-	};
+-
+-	/* look for the matching bridge */
+-	while (!pci_is_root_bus(bus)) {
+-		bridge = bus->self;
+-		bus = bus->parent;
+-		/*
+-		 * Some Loongson PCIe ports have a h/w limitation of
+-		 * 256 bytes maximum read request size. They can't handle
+-		 * anything larger than this. So force this limit on
+-		 * any devices attached under these ports.
+-		 */
+-		if (pci_match_id(bridge_devids, bridge)) {
+-			if (pcie_get_readrq(dev) > 256) {
+-				pci_info(dev, "limiting MRRS to 256\n");
+-				pcie_set_readrq(dev, 256);
+-			}
+-			break;
+-		}
+-	}
++	/*
++	 * Some Loongson PCIe ports have h/w limitations of maximum read
++	 * request size. They can't handle anything larger than this. So
++	 * force this limit on any devices attached under these ports.
++	 */
++	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
++
++	if (!bridge)
++		return;
++
++	bridge->no_inc_mrrs = 1;
  }
- DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+-DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
-+static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
-+{
-+	struct pci_config_window *cfg;
-+
-+	if (acpi_disabled)
-+		return (struct loongson_pci *)(bus->sysdata);
-+	else {
-+		cfg = bus->sysdata;
-+		return (struct loongson_pci *)(cfg->priv);
+ static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+ {
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index aacf575c15cf..3279da8ce2dd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5800,6 +5800,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ {
+ 	u16 v;
+ 	int ret;
++	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+ 
+ 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+ 		return -EINVAL;
+@@ -5818,6 +5819,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 
+ 	v = (ffs(rq) - 8) << 12;
+ 
++	if (bridge->no_inc_mrrs) {
++		if (rq > pcie_get_readrq(dev))
++			return -EINVAL;
 +	}
-+}
 +
- static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
- 				unsigned int devfn, int where)
- {
-@@ -119,8 +133,10 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
- 			       int where)
- {
- 	unsigned char busnum = bus->number;
--	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
--	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-+	struct loongson_pci *priv = pci_bus_to_loongson_pci(bus);
-+
-+	if (pci_is_root_bus(bus))
-+		busnum = 0;
+ 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+ 						  PCI_EXP_DEVCTL_READRQ, v);
  
- 	/*
- 	 * Do not read more than one device on the bus other than
-@@ -141,6 +157,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
- 	return NULL;
- }
- 
-+#ifdef CONFIG_OF
-+
- static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- {
- 	int irq;
-@@ -242,3 +260,35 @@ static struct platform_driver loongson_pci_driver = {
- 	.probe = loongson_pci_probe,
- };
- builtin_platform_driver(loongson_pci_driver);
-+
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+
-+static int loongson_pci_ecam_init(struct pci_config_window *cfg)
-+{
-+	struct device *dev = cfg->parent;
-+	struct loongson_pci *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	cfg->priv = priv;
-+	priv->flags = FLAG_CFG1 | FLAG_DEV_FIX,
-+	priv->cfg1_base = cfg->win - (cfg->busr.start << 16);
-+
-+	return 0;
-+}
-+
-+const struct pci_ecam_ops loongson_pci_ecam_ops = {
-+	.bus_shift = 16,
-+	.init	   = loongson_pci_ecam_init,
-+	.pci_ops   = {
-+		.map_bus = pci_loongson_map_bus,
-+		.read	 = pci_generic_config_read,
-+		.write	 = pci_generic_config_write,
-+	}
-+};
-+
-+#endif
-diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-index adea5a4771cf..6b1301e2498e 100644
---- a/include/linux/pci-ecam.h
-+++ b/include/linux/pci-ecam.h
-@@ -87,6 +87,7 @@ extern const struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 *
- extern const struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
- extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
- extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
-+extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
- #endif
- 
- #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 540b377ca8f6..e2583c2785e2 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -541,6 +541,7 @@ struct pci_host_bridge {
+ 	void		*release_data;
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
++	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+ 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+ 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 -- 
 2.27.0
 
