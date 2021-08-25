@@ -2,199 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 363BA3F7445
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 13:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 222533F7499
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 13:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238500AbhHYL0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 07:26:25 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:43653 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236784AbhHYL0Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 07:26:24 -0400
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id D860E440E17;
-        Wed, 25 Aug 2021 14:25:28 +0300 (IDT)
-References: <cover.1620203062.git.baruch@tkos.co.il>
- <e17461407cf4bb79fed5925ec81196a0b84e7827.1620203062.git.baruch@tkos.co.il>
- <CAL_JsqKOGo4eXKA7FZK7AQQ24MDDbg2-ngUQF9CJK=8eH_pxHQ@mail.gmail.com>
-User-agent: mu4e 1.6.3; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] PCI: qcom: add support for IPQ60xx PCIe controller
-Date:   Wed, 25 Aug 2021 14:15:38 +0300
-In-reply-to: <CAL_JsqKOGo4eXKA7FZK7AQQ24MDDbg2-ngUQF9CJK=8eH_pxHQ@mail.gmail.com>
-Message-ID: <87o89lahqp.fsf@tarshish>
+        id S232199AbhHYLw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 07:52:58 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:8928 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239257AbhHYLw5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 07:52:57 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GvkkT2Drsz8v8M;
+        Wed, 25 Aug 2021 19:48:01 +0800 (CST)
+Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Wed, 25 Aug 2021 19:52:10 +0800
+Received: from [127.0.0.1] (10.69.38.203) by dggema757-chm.china.huawei.com
+ (10.1.198.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 25
+ Aug 2021 19:52:09 +0800
+Subject: Re: [PATCH v9 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
+ PMU
+To:     Will Deacon <will@kernel.org>, Linuxarm <linuxarm@huawei.com>
+CC:     <mark.rutland@arm.com>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhangshaokun@hisilicon.com>
+References: <20210818051246.29545-1-liuqi115@huawei.com>
+ <20210818051246.29545-3-liuqi115@huawei.com>
+ <20210824143137.GA23146@willie-the-truck>
+From:   "liuqi (BA)" <liuqi115@huawei.com>
+Message-ID: <4050af8b-f9a7-6666-4a9d-d1c8f2b212e1@huawei.com>
+Date:   Wed, 25 Aug 2021 19:52:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20210824143137.GA23146@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.203]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggema757-chm.china.huawei.com (10.1.198.199)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
 
-On Fri, Aug 06 2021, Rob Herring wrote:
-> On Wed, May 5, 2021 at 3:18 AM Baruch Siach <baruch@tkos.co.il> wrote:
+Hi, Will
+On 2021/8/24 22:31, Will Deacon wrote:
+> Hi,
+> 
+> On Wed, Aug 18, 2021 at 01:12:46PM +0800, Qi Liu wrote:
+>> PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
+>> to sample bandwidth, latency, buffer occupation etc.
 >>
->> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
+>> registered as a PMU in /sys/bus/event_source/devices, so users can
+>> select target PMU, and use filter to do further sets.
 >>
->> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
->> platform.
->>
->> The code is based on downstream Codeaurora kernel v5.4. Split out the
->> DBI registers access part from .init into .post_init. DBI registers are
->> only accessible after phy_power_on().
->>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
->> ---
->> v2:
->>   * Drop ATU configuration; rely on common code instead
->>
->>   * Use more common register macros
->>
->>   * Use bulk clk and reset APIs
->> ---
->>  drivers/pci/controller/dwc/pcie-designware.h |   1 +
->>  drivers/pci/controller/dwc/pcie-qcom.c       | 150 +++++++++++++++++++
->>  2 files changed, 151 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index ceb359b6e6a6..346462c74a3e 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -76,6 +76,7 @@
->>
->>  #define GEN3_RELATED_OFF                       0x890
->>  #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL   BIT(0)
->> +#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS    BIT(13)
->>  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE       BIT(16)
->>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT 24
->>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK  GENMASK(25, 24)
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 8a7a300163e5..93766aee3e7c 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -52,6 +52,10 @@
->>  #define PCIE20_PARF_DBI_BASE_ADDR              0x168
->>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE                0x16C
->>  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL       0x174
->> +#define AHB_CLK_EN                             BIT(0)
->> +#define MSTR_AXI_CLK_EN                                BIT(1)
->> +#define BYPASS                                 BIT(4)
->> +
->>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT      0x178
->>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2   0x1A8
->>  #define PCIE20_PARF_LTSSM                      0x1B0
->> @@ -94,6 +98,12 @@
->>  #define SLV_ADDR_SPACE_SZ                      0x10000000
->>
->>  #define PCIE20_LNK_CONTROL2_LINK_STATUS2       0xa0
->> +#define PCIE_CAP_CURR_DEEMPHASIS               BIT(16)
->
-> Isn't this a standard register field?
-
-I don't know. I could not find any reference to this field or the
-registers it's part of.
-n
->> +#define SPEED_GEN1                             0x1
->> +#define SPEED_GEN2                             0x2
->> +#define SPEED_GEN3                             0x3
->
-> And these?
->
-> There's already some common DWC code for setting the link speed.
-
-dw_pcie_link_set_max_speed() deals with other registers, as far as I can
-see.
-
->> +#define AXI_CLK_RATE                           200000000
->> +#define RCHNG_CLK_RATE                         100000000
->>
->>  #define DEVICE_TYPE_RC                         0x4
-
-[snip]
-
->> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+>> Filtering options contains:
+>> event     - select the event.
+>> port      - select target Root Ports. Information of Root Ports are
+>>              shown under sysfs.
+>> bdf       - select requester_id of target EP device.
+>> trig_len  - set trigger condition for starting event statistics.
+>> trig_mode - set trigger mode. 0 means starting to statistic when bigger
+>>              than trigger condition, and 1 means smaller.
+>> thr_len   - set threshold for statistics.
+>> thr_mode  - set threshold mode. 0 means count when bigger than threshold,
+>>              and 1 means smaller.
+> 
+> I think this is getting there now, thanks for sticking with it. Just a
+> couple of comments below..
+> 
+>> +static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
 >> +{
->> +       struct dw_pcie *pci = pcie->pci;
->> +       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> +       u32 val;
->> +       int i;
+>> +	struct perf_event *sibling, *leader = event->group_leader;
+>> +	int counters = 1;
 >> +
->> +       writel(SLV_ADDR_SPACE_SZ,
->> +               pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+>> +	if (!is_software_event(leader)) {
+>> +		if (leader->pmu != event->pmu)
+>> +			return false;
 >> +
->> +       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
->> +       val &= ~BIT(0);
->> +       writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+>> +		if (leader != event)
+>> +			counters++;
+>> +	}
 >> +
->> +       writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+>> +	for_each_sibling_event(sibling, event->group_leader) {
+>> +		if (is_software_event(sibling))
+>> +			continue;
 >> +
->> +       writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
->> +       writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
->> +               pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
->> +       writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
->> +               | GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
->> +               pci->dbi_base + GEN3_RELATED_OFF);
+>> +		if (sibling->pmu != event->pmu)
+>> +			return false;
 >> +
->> +       writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
->> +               | SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
->> +               AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
->> +               pcie->parf + PCIE20_PARF_SYS_CTRL);
+>> +		counters++;
+>> +	}
 >> +
->> +       writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
->> +
->> +       dw_pcie_dbi_ro_wr_en(pci);
->> +       writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
->> +
->> +       /* Configure PCIe link capabilities for ASPM */
->> +       val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
->> +       val &= ~PCI_EXP_LNKCAP_ASPMS;
->> +       writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
->> +
->> +       writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
->> +                       PCI_EXP_DEVCTL2);
->> +
->> +       writel(PCIE_CAP_CURR_DEEMPHASIS | SPEED_GEN3,
->> +                       pci->dbi_base + offset + PCI_EXP_DEVCTL2);
->
-> Doesn't this overwrite the prior register write?
-
-It does. There are two mistakes here. The writel() above should set
-PCIE20_DEVICE_CONTROL2_STATUS2 (offset 0x98). This writel() should set
-PCIE20_LNK_CONTROL2_LINK_STATUS2 (offset 0xa0). So both are wrong.
-
->> +
->> +       for (i = 0;i < 256;i++)
->> +               writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
->> +                               + (4 * i));
->> +
->> +       return 0;
+>> +	return counters <= HISI_PCIE_MAX_COUNTERS;
 >> +}
+> 
+> Given that this function doesn't look at the event numbers, doesn't this
+> over-provision the counter registers? For example, if I create a group
+> containing 4 of the same event, then we'll allocate four counters but only
+> use one. Similarly, if I create a group containing two events, one for the
+> normal counter and one for the extended counter, then we'll again allocate
+> two counters instead of one.
+> 
+
+Yes, we should add some check in hisi_pcie_pmu_validate_event_group() 
+function to avoid over-provision. I'll use a array to record events and 
+do this check.
+
+Thanks for your review, I'll fix this.
+
+> Have I misunderstood?
+> 
+>> +static int hisi_pcie_pmu_event_init(struct perf_event *event)
+>> +{
+>> +	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
+>> +	struct hw_perf_event *hwc = &event->hw;
+>> +
+>> +	event->cpu = pcie_pmu->on_cpu;
+>> +
+>> +	if (EXT_COUNTER_IS_USED(hisi_pcie_get_event(event)))
+>> +		hwc->event_base = HISI_PCIE_EXT_CNT;
+>> +	else
+>> +		hwc->event_base = HISI_PCIE_CNT;
+>> +
+>> +	if (event->attr.type != event->pmu->type)
+>> +		return -ENOENT;
+>> +
+>> +	/* Sampling is not supported. */
+>> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (!hisi_pcie_pmu_valid_filter(event, pcie_pmu)) {
+>> +		pci_err(pcie_pmu->pdev, "Invalid filter!\n");
+> 
+> Please remove this message, as it's triggerable from userspace.
+> 
+got it, will remove this.
 
 Thanks,
-baruch
+Qi
+> Will
+> .
+> 
 
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
