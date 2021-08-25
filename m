@@ -2,173 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E931E3F7D32
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 22:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD0703F7D4A
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Aug 2021 22:44:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239086AbhHYUdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 16:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
+        id S242652AbhHYUoo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 16:44:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231745AbhHYUdc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Aug 2021 16:33:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 964E6610CF;
-        Wed, 25 Aug 2021 20:32:46 +0000 (UTC)
+        id S231873AbhHYUoo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Aug 2021 16:44:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 325DA61058;
+        Wed, 25 Aug 2021 20:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629923566;
-        bh=d3M9lANYL5a/udkmT2KhLMXNG+8ajitfC51a122X7IU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sQPa3uL4v6xEndBtg/BnVavcZCkLqtOeHVLlGqeIDSBB7FEHbAZmKIuOd7MbfdnRo
-         8cUG2E+XdvxWBz6e4iA4EsYVYfoHLcYnPoFvO0N3vUWS7n8P6sdTBW/hM0TVjWTmXG
-         pPegXoPytF6/wM1AvoNVKKSTG6ahJFTA2utLtOEfj5Mt6PNfNlCnnpjGdR1q33xHXR
-         aIEDoo2KqF7Up6viDCtEQAiHYNL7AICI7vz8fksKoGVyo7W4jra4ji2gHZxCOcV7gT
-         wW785z43g0WqTfSNELAfjq5h7OclkUGnYyETBJeTAvH9wxEizTk5pMrKX9UaRo/sB3
-         C3AjMxrmT3fpA==
-Received: by mail-ej1-f45.google.com with SMTP id mf2so1031973ejb.9;
-        Wed, 25 Aug 2021 13:32:46 -0700 (PDT)
-X-Gm-Message-State: AOAM5335cnPLDYx+MoY4myziBLNwNhMzyeMp+XbRzoGHqGV+2wf+3yFB
-        Ep3lWapIxBumjviIQCE6X3l+CIaYQ0jRP/LMYg==
-X-Google-Smtp-Source: ABdhPJwO8q64ruM37/4iZQI0+9NeIcY5OLDrxs/9RPpeE3IuY0avUuPPdxf6lUVHfvS4Bp1BJRRAv1LuU4CLD/QZVEc=
-X-Received: by 2002:a17:907:b06:: with SMTP id h6mr471070ejl.130.1629923565214;
- Wed, 25 Aug 2021 13:32:45 -0700 (PDT)
+        s=k20201202; t=1629924238;
+        bh=epmZVNLpdoNNDDzsLFMtPJJY8zT6fOFNdSrHyazfAFc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ra5IUkehvbZtQdm7W4WXEm0QjeczmOPSfqAsbPMSfRMwiXielKmUkivmu+qjOvX6t
+         MqRi1vlWCH2cLCvRGL9X67vUNfI5uh4KcODGIcrbWEZGBJhU2HNd61JKfiObOwGa30
+         AD0hYtLSKq7ys47y2O1whQQ5dpbFdAW97LB+zs36LCxjnKraCcnoFHx2v/HwJNXsvi
+         JHb3jiyU3ywhhUasoACqdakRAlcgZQlcd1EnndWwDK4gsEGki16Kmy/vYao4I2S8Xn
+         beSoinZSrlnyF0Z78y1WLAbrypZ9HOa8eVHyAIQq/DcPl1GETRXmsF52iDVDWDlxT0
+         9oEWkB4cTryiw==
+Date:   Wed, 25 Aug 2021 15:43:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergio =?iso-8859-1?Q?Migu=E9ns?= Iglesias <lonyelon@gmail.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, lenb@kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, konrad.wilk@oracle.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Sergio =?iso-8859-1?Q?Migu=E9ns?= Iglesias <sergio@lony.xyz>
+Subject: Re: [PATCH] PCI: Fix general code style
+Message-ID: <20210825204356.GA3601025@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
- <20210824110208.xd57oqm5rii4rr4n@liuwe-devbox-debian-v2> <BY5PR21MB1506270100DAE3BAFCA001E9CEC59@BY5PR21MB1506.namprd21.prod.outlook.com>
- <MWHPR21MB15935D5B518ECA1361F2EB1BD7C69@MWHPR21MB1593.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB15935D5B518ECA1361F2EB1BD7C69@MWHPR21MB1593.namprd21.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Aug 2021 15:32:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ2TTBhcTRHXNneVYFgTSUdwnK1OO+GLQRSRb_b75qhRA@mail.gmail.com>
-Message-ID: <CAL_JsqJ2TTBhcTRHXNneVYFgTSUdwnK1OO+GLQRSRb_b75qhRA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Long Li <longli@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210804222832.1023161-1-sergio@lony.xyz>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 2:11 PM Michael Kelley <mikelley@microsoft.com> wro=
-te:
->
-> From: Long Li <longli@microsoft.com> Sent: Tuesday, August 24, 2021 10:28=
- AM
-> >
-> > > Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on =
-the bus
-> > >
-> > > On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wr=
-ote:
-> > > > From: Long Li <longli@microsoft.com>
-> > > >
-> > > > In hv_pci_bus_exit, the code is holding a spinlock while calling
-> > > > pci_destroy_slot(), which takes a mutex.
-> > > >
-> > > > This is not safe for spinlock. Fix this by moving the children to b=
-e
-> > > > deleted to a list on the stack, and removing them after spinlock is
-> > > > released.
-> > > >
-> > > > Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing t=
-he
-> > > > device")
-> > > >
-> > > > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> > > > Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> > > > Cc: Wei Liu <wei.liu@kernel.org>
-> > > > Cc: Dexuan Cui <decui@microsoft.com>
-> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Cc: Rob Herring <robh@kernel.org>
-> > > > Cc: "Krzysztof Wilczy=C5=84ski" <kw@linux.com>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: Michael Kelley <mikelley@microsoft.com>
-> > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > Signed-off-by: Long Li <longli@microsoft.com>
-> > > > ---
-> > > >  drivers/pci/controller/pci-hyperv.c | 15 ++++++++++++---
-> > > >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > > > b/drivers/pci/controller/pci-hyperv.c
-> > > > index a53bd8728d0d..d4f3cce18957 100644
-> > > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > > @@ -3220,6 +3220,7 @@ static int hv_pci_bus_exit(struct hv_device *=
-hdev,
-> > > bool keep_devs)
-> > > >   struct hv_pci_dev *hpdev, *tmp;
-> > > >   unsigned long flags;
-> > > >   int ret;
-> > > > + struct list_head removed;
-> > >
-> > > This can be moved to where it is needed -- the if(!keep_dev) branch -=
-- to limit its
-> > > scope.
-> > >
-> > > >
-> > > >   /*
-> > > >    * After the host sends the RESCIND_CHANNEL message, it doesn't @=
-@
-> > > > -3229,9 +3230,18 @@ static int hv_pci_bus_exit(struct hv_device *hd=
-ev, bool
-> > > keep_devs)
-> > > >           return 0;
-> > > >
-> > > >   if (!keep_devs) {
-> > > > -         /* Delete any children which might still exist. */
-> > > > +         INIT_LIST_HEAD(&removed);
-> > > > +
-> > > > +         /* Move all present children to the list on stack */
-> > > >           spin_lock_irqsave(&hbus->device_list_lock, flags);
-> > > > -         list_for_each_entry_safe(hpdev, tmp, &hbus->children,
-> > > list_entry) {
-> > > > +         list_for_each_entry_safe(hpdev, tmp, &hbus->children,
-> > > list_entry)
-> > > > +                 list_move_tail(&hpdev->list_entry, &removed);
-> > > > +         spin_unlock_irqrestore(&hbus->device_list_lock, flags);
-> > > > +
-> > > > +         /* Remove all children in the list */
-> > > > +         while (!list_empty(&removed)) {
-> > > > +                 hpdev =3D list_first_entry(&removed, struct hv_pc=
-i_dev,
-> > > > +                                          list_entry);
-> > >
-> > > list_for_each_entry_safe can also be used here, right?
-> > >
-> > > Wei.
-> >
-> > I will address your comments.
-> >
-> > Long
->
-> I thought list_for_each_entry_safe() is for use when list manipulation
-> is *not* protected by a lock and you want to safely walk the list
-> even if an entry gets removed.  If the list is protected by a lock or
-> not subject to contention (as is the case here), then
-> list_for_each_entry() is the simpler implementation.  The original
-> implementation didn't need to use the _safe version because of
-> the spin lock.
->
-> Or do I have it backwards?
+On Thu, Aug 05, 2021 at 12:28:32AM +0200, Sergio Miguéns Iglesias wrote:
+> The code style for most files was fixed. This means that blank lines
+> were added when needed (normally after variable declarations), spaces
+> before tabs were removed, some code alignment issues were solved, block
+> comment style was fixed, every instance of "unsigned var" was replaced
+> with "unsigned int var"... Etc.
+> 
+> This commit does not change the logic of the code, it just fixes
+> aesthetic problems.
 
-"_safe" only means "safe against removal of list entry" as the
-kerneldoc says. But that means removal within the loop iteration, not
-any writer. A lock is needed in either case if there's another writer.
+I generally *like* this, and it does fix some annoying things, but I
+think it's a little too much all at once.  If we're working in a file
+and doing actual bug fixes or new functionality, and we want to fix
+some typos or something at the end, that might be OK, but I think the
+churn in the git history outweighs the benefit of this huge patch.
 
-Don't ask me about the RCU variant though...
+So I would encourage you to use some of the PCI expertise you've
+gained by looking at all this code to work on something with a little
+more impact.  Here are a couple ideas:
 
-Rob
+  - There are only two uses of __ref and __refdata in drivers/pci/.
+    The fact that they're so rare makes me suspect that we don't need
+    them.  But I haven't investigated these to see.  Somebody could
+    check that out and remove them if we don't need them.  Be aware
+    that I will want a clear argument for why they're not needed :)
+
+  - Coverity complains about several issues in drivers/pci/ [1].  Most
+    of the time these are false positives, but not always.  Sometimes
+    there's an actual bug, and sometimes there's a way to restructure
+    the code to avoid the warning (which usually means doing things
+    the same way they are done elsewhere).
+
+  - "make C=2 drivers/pci/" (sparse checker, [2]) complains about a
+    few things.  Leave the pci_power_t ones alone for now, but there
+    are a couple other type issues that could be cleaned up.
+
+[1] https://docs.google.com/spreadsheets/d/19eyNDou83JACzf44j0NRzEWysva6g44G2_Z9IEXGVNk/edit?usp=sharing
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/dev-tools/sparse.rst?id=v5.13
+
+> Signed-off-by: Sergio Miguéns Iglesias <sergio@lony.xyz>
+> ---
+>  drivers/pci/access.c       | 22 +++++++++++++---------
+>  drivers/pci/bus.c          |  3 ++-
+>  drivers/pci/msi.c          | 12 +++++++-----
+>  drivers/pci/pci-acpi.c     |  3 ++-
+>  drivers/pci/pci-driver.c   | 19 +++++++++++++------
+>  drivers/pci/pci-sysfs.c    | 14 ++++++++++++--
+>  drivers/pci/pci.c          | 16 ++++++++++++----
+>  drivers/pci/proc.c         | 15 +++++++++++++++
+>  drivers/pci/quirks.c       | 35 ++++++++++++++++++++++++-----------
+>  drivers/pci/remove.c       |  1 +
+>  drivers/pci/rom.c          |  2 +-
+>  drivers/pci/setup-bus.c    |  5 ++++-
+>  drivers/pci/setup-irq.c    | 12 +++++++-----
+>  drivers/pci/setup-res.c    |  2 +-
+>  drivers/pci/slot.c         |  5 ++++-
+>  drivers/pci/syscall.c      |  5 +++--
+>  drivers/pci/xen-pcifront.c | 20 ++++++++++++--------
+>  17 files changed, 133 insertions(+), 58 deletions(-)
