@@ -2,63 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B843F8E59
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 20:59:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C953F8E70
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 21:05:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243409AbhHZS73 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Aug 2021 14:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243432AbhHZS73 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Aug 2021 14:59:29 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C1BC061757
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 11:58:41 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id u15so2428762wmj.1
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 11:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=13raq/fbB+++wadaSwIhFLoGvj1KRluAlpxJAjLJwn4=;
-        b=ESVmdVVo2Xa6EHSkdCQwchiqtzPI4YunfVaLz8qFr1se8hh2O8LYcWc+SSrvtd5apj
-         7qD6gSBsX5M8Y6e/H5Qk58nd+Z3eaSKUAbAGYakVqyZii0HroKuStWrAmus5erRBcekK
-         KLGVu8d5cZub5u+O+yJ4JDSw+S5nelctuL8J1i9FWHx+EjhffIujgQsAUd+97069n1Qc
-         /WMRbGtWQaWBF/sD+wbDpyEnxkbAGFQdPsNzURgZdbaHttWy+7iW9or7MwMIxgTUSTQD
-         iervk3Ftq6YaYCgDL/5nrbTjGv5M/E81IcqfljmCLm7HTrCj87CopNiInt4PNCPtCZkN
-         8J3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=13raq/fbB+++wadaSwIhFLoGvj1KRluAlpxJAjLJwn4=;
-        b=ZSuCl6ZW3GjSGNi3mvsYGA8ByOTL0c1cj+4+eo2/mAXxhG51mgRJpC3TJ7guCuBT9H
-         gRmWNOPUEz8mlhaOCYDRJRhBCcSvmuzp4iB+otWbWZ+Fw6YiTLU4kY0viIKkFF8NIuGN
-         iz8V7LvYfkCTdxd45Ov9lh5wMuB/tIHp91B+W1fEm+HHygy5QdDASuz4mg7aaCmtJ8uW
-         TxdF1bS9QOx+C+Rt2bcgkXgpHUy5dC06l4nN/0YvjtzStlodcTJxePqrJerp3JOGFDEn
-         uvRz7snXTvGzA+kACvjlH4xecg9gbJh4B7QaNNsPLArETm0eFc40A3d7s4YCNztHzHnc
-         CfEw==
-X-Gm-Message-State: AOAM530C3C8ogBeIT6biD5R/OlDh+MBbs2bYH0uYMIfprnQnriOEIEi4
-        zslqYbyU35oB37o1zPD4R2z66bHGrDxH+w==
-X-Google-Smtp-Source: ABdhPJx2IJdgYg+m9iLF9oXwy2X7eQHtLvcUOQsPEmcRIJ/fLbnKqxCzRJons+DY1PHx5zF7N90yHw==
-X-Received: by 2002:a05:600c:1551:: with SMTP id f17mr15611235wmg.44.1630004320082;
-        Thu, 26 Aug 2021 11:58:40 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f08:4500:b5d8:a3dc:f88f:cae2? (p200300ea8f084500b5d8a3dcf88fcae2.dip0.t-ipconnect.de. [2003:ea:8f08:4500:b5d8:a3dc:f88f:cae2])
-        by smtp.googlemail.com with ESMTPSA id d4sm4065613wrz.35.2021.08.26.11.58.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Aug 2021 11:58:39 -0700 (PDT)
-Subject: [PATCH 7/7] PCI/VPD: Use unaligned access helpers
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <5fa6578d-1515-20d3-be5f-9e7dc7db4424@gmail.com>
-Message-ID: <0f1c7e21-5330-72ab-139d-f5ce3c65f04a@gmail.com>
-Date:   Thu, 26 Aug 2021 20:58:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S233147AbhHZTGQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Aug 2021 15:06:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58076 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230442AbhHZTGP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Aug 2021 15:06:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10088"; a="215973506"
+X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
+   d="scan'208";a="215973506"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 12:05:28 -0700
+X-IronPort-AV: E=Sophos;i="5.84,354,1620716400"; 
+   d="scan'208";a="528012643"
+Received: from mwsmith1-mobl.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.255.7.24])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2021 12:05:27 -0700
+Subject: Re: [PATCH v2] PCI: pciehp: Quirk to ignore spurious DLLSC when off
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>
+References: <20210823184919.3412-1-jonathan.derrick@intel.com>
+ <20210824004101.GA67273@otc-nc-03>
+From:   Jon Derrick <jonathan.derrick@intel.com>
+Message-ID: <8d75cd15-e1e5-986f-73e0-7fb991afb165@intel.com>
+Date:   Thu, 26 Aug 2021 13:05:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <5fa6578d-1515-20d3-be5f-9e7dc7db4424@gmail.com>
+In-Reply-To: <20210824004101.GA67273@otc-nc-03>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,60 +43,78 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use unaligned access helpers to simplify the code.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pci/vpd.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index ff600dff4..25557b272 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -9,6 +9,7 @@
- #include <linux/delay.h>
- #include <linux/export.h>
- #include <linux/sched/signal.h>
-+#include <asm/unaligned.h>
- #include "pci.h"
- 
- #define PCI_VPD_LRDT_TAG_SIZE		3
-@@ -19,7 +20,7 @@
- 
- static u16 pci_vpd_lrdt_size(const u8 *lrdt)
- {
--	return (u16)lrdt[1] + ((u16)lrdt[2] << 8);
-+	return get_unaligned_le16(lrdt + 1);
- }
- 
- static u8 pci_vpd_srdt_tag(const u8 *srdt)
-@@ -218,14 +219,8 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 		return -EINTR;
- 
- 	while (pos < end) {
--		u32 val;
--
--		val = *buf++;
--		val |= *buf++ << 8;
--		val |= *buf++ << 16;
--		val |= *buf++ << 24;
--
--		ret = pci_user_write_config_dword(dev, vpd->cap + PCI_VPD_DATA, val);
-+		ret = pci_user_write_config_dword(dev, vpd->cap + PCI_VPD_DATA,
-+						  get_unaligned_le32(buf));
- 		if (ret < 0)
- 			break;
- 		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
-@@ -237,6 +232,7 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 		if (ret < 0)
- 			break;
- 
-+		buf += sizeof(u32);
- 		pos += sizeof(u32);
- 	}
- 
--- 
-2.33.0
 
 
+On 8/23/21 6:41 PM, Raj, Ashok wrote:
+> On Mon, Aug 23, 2021 at 12:49:19PM -0600, Derrick, Jonathan wrote:
+>> From: James Puthukattukaran <james.puthukattukaran@oracle.com>
+>>
+>> When a specific x8 CEM card is bifurcated into x4x4 mode, and the
+>> upstream ports both support hotplugging on each respective x4 device, a
+>> slot management system for the CEM card requires both x4 devices to be
+>> sysfs removed from the OS before it can safely turn-off physical power.
+> 
+> sysfs removed from the OS seems a bit confusing.. Do you mean removed via
+> sysfs by echo 0 > power?
+Yes it seems to be related to slot power and not just virtual removal
+
+
+> 
+>> The implications are that Slot Control will display Powered Off status
+>> for the device where the device is actually powered until both ports
+>> have powered off.
+>>
+>> When power is removed from the first half, real power and link remains
+>> active while waiting for the second half to have power removed. When
+>> power is then removed from the second half, the first half starts
+>> shutdown sequence and will trigger a DLLSC event. This is misinterpreted
+>> as an enabling event and causes the first half to be re-enabled.
+>>
+>> The spurious enable can be resolved by ignoring link status change
+>> events when no link is active when in the off state. This patch adds a
+>> quirk for the card.
+>>
+>> Acked-by: Jon Derrick <jonathan.derrick@intel.com>
+>> Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
+>> ---
+>> v1->v2: Device-specific quirk
+>>
+>>  drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
+>>  drivers/pci/quirks.c              | 30 ++++++++++++++++++++++++++++++
+>>  include/linux/pci.h               |  1 +
+>>  3 files changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index 529c34808440..db41f78bfac8 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+>>  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>  {
+>>  	int present, link_active;
+>> +	struct pci_dev *pdev = ctrl->pcie->port;
+>>  
+>>  	/*
+>>  	 * If the slot is on and presence or link has changed, turn it off.
+>> @@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>  		cancel_delayed_work(&ctrl->button_work);
+>>  		fallthrough;
+>>  	case OFF_STATE:
+>> +		if (pdev->shared_pcc_and_link_slot &&
+>> +		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
+> 
+> Is it !link_active? Based on the explanation, until we turn off both slots
+> you would see link is still active correct? 
+My understanding is the internal link is active but link_active shows negative
+status while the one side is faking being 'powered off'.
+
+Then if a DLLSC occurs while the slot is already OFF_STATE and !link_active, I
+believe we can assume it was previously !link_active as well and it's an event
+from the other side.
+
+
+> 
+>> +			mutex_unlock(&ctrl->state_lock);
+>> +			break;
+>> +		}
+>> +
