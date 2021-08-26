@@ -2,125 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E48A93F7FE8
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 03:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37F113F8157
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 05:57:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235201AbhHZB3V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 21:29:21 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50399 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235917AbhHZB3V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 21:29:21 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 6BF9A320099D;
-        Wed, 25 Aug 2021 21:28:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 25 Aug 2021 21:28:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=l0Gosy
-        gefn48r4uTH2ZI2zwepXeC3xLJDbpSKDLCccs=; b=uTKRSDE1kl4E+amDRSWl+m
-        bzQXW29LSEZdugBn3LBxpHbhhxLbAFiTEv7CCQ1V+dUHqDvJJINnjiNYJSe0YBkJ
-        4NNDTbdPnyrTXnLn+aszAvlZdMScuPqIH28Hk3ENxABA5KzqusSaSg11woeqlcA6
-        QuHn321KgITvmRcvvwZfvGwgZw/SNdh35AKIvW/+blXQzzLZ7p2cCmtZ8mLwD/ff
-        yS8xTl4LifH0vmZSWcmnpyJgOJvVbeJkaAvoeS1XO2DU+SX2U2MAryXLi+/mBLw7
-        V8krRSUwd5b4haFzZFrf39IEM3pUs0JMa/OxJbF8GISiNLXzUOaR6c9j48aOCW0A
-        ==
-X-ME-Sender: <xms:QO4mYQbvWyMmZHpIWYog-D9GhK0ogDos0m0kdM5UMxgV6k7eNNwM3g>
-    <xme:QO4mYbZFYnyen2v2uAGpvC4_uLLMxT5vx89IsKFxtLaTWWxUum7ryFKqVGnnMkV5j
-    20TyNiQpdYdbw>
-X-ME-Received: <xmr:QO4mYa-KoU-OXuS_l7hodp4186juQn3Q7S8SURa6TKjcU4WOftuRIrHHv5IKBN35z_YHGNkLeqSq8sPzadn6SbbuCwLRXw5L>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddutddggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtdorredttdejnecuhfhrohhmpeforghrvghk
-    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
-    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeh
-    jeegteeggeeigffhkeekieefjeduhedvfffhiefgkefhvdevfeejffdvfeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhes
-    ihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
-X-ME-Proxy: <xmx:QO4mYaqymOorF9cRLSCbl9wd3o_mpeAJD5Zo37AKEU9JJpZi9MwS6Q>
-    <xmx:QO4mYbqShHDgdvGgFyCiFRMwWNk_hNgYGsMT2PRMHfS7yJXeV32thA>
-    <xmx:QO4mYYQxpBRJbe2-fHoovMaZQEGjJTsHnT2Qxs6h_iUi86AFnMa8Uw>
-    <xmx:Qe4mYaXDp62TzRdpSs5oZtS37xC_4f2vhvv-vAcD6TPNWQu92zqMEQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Aug 2021 21:28:31 -0400 (EDT)
-Date:   Thu, 26 Aug 2021 03:28:28 +0200
-From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-To:     Jan Beulich <jbeulich@suse.com>
-Cc:     linux-pci@vger.kernel.org, stable@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
- passthrough
-Message-ID: <YSbuPJSZxiKSSaqT@mail-itl>
-References: <YSZgkQY1B+WNH50r@mail-itl>
- <3e72345b-d0e1-7856-de51-e74714474724@suse.com>
- <YSZmFMeVeO4Bupn+@mail-itl>
- <24d47a06-a887-05e5-0e3f-ed3cdd19490b@suse.com>
+        id S232572AbhHZD6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 23:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229898AbhHZD63 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 23:58:29 -0400
+Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C39C061757;
+        Wed, 25 Aug 2021 20:57:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UaYlySroUKN3Byia"
-Content-Disposition: inline
-In-Reply-To: <24d47a06-a887-05e5-0e3f-ed3cdd19490b@suse.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1629950260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7SHT0aOimjTS8lAne1TD1ARTfnTJ/YEGCjr9e3NeCjM=;
+        b=lkvFotwGnseccRqAR9jDUvsLyk/ZDXKVQakcC8B/K6peBcOzMLJNbfIs+JjK72d68NxuZq
+        c2rb+1n24PULFYmp9uuZ6UBeOyX//BXrQrrFqX/kRT4gXCSy9JxxywE3Ar1hixl8RNti6U
+        YuLCxoLM+99P2Ur+V1UMGExzxUqzzZk=
+Date:   Thu, 26 Aug 2021 03:57:40 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   yajun.deng@linux.dev
+Message-ID: <63e1e9ea1e4b74b56aeafcc6695ecfa8@linux.dev>
+Subject: Re: [PATCH linux-next] PCI: Fix the order in unregister path
+To:     "Rob Herring" <robh@kernel.org>
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "PCI" <linux-pci@vger.kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <CAL_JsqJ4731w_0rYCSBC_Mma-rn4nUUbKnSwhymGZyh8E7xoWg@mail.gmail.com>
+References: <CAL_JsqJ4731w_0rYCSBC_Mma-rn4nUUbKnSwhymGZyh8E7xoWg@mail.gmail.com>
+ <20210825083425.32740-1-yajun.deng@linux.dev>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: yajun.deng@linux.dev
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---UaYlySroUKN3Byia
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Aug 2021 03:28:28 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Jan Beulich <jbeulich@suse.com>
-Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
- passthrough
-
-On Wed, Aug 25, 2021 at 05:55:09PM +0200, Jan Beulich wrote:
-> On 25.08.2021 17:47, Marek Marczykowski-G=C3=B3recki wrote:
-> > If so, I guess the issue is the kernel trying to write directly, instead
-> > of via some hypercall, right?
->=20
-> Indeed. Or to be precise - the kernel isn't supposed to be "writing" this
-> at all. It is supposed to make hypercalls which may result in such writes.
-> Such "mask everything" functionality imo is the job of the hypervisor
-> anyway when talking about PV environments; HVM is a different thing here.
-
-Ok, I dug a bit and found why it was working before: there is
-pci_mask_ignore_mask variable, that is set to 1 for Xen PV (and only
-then). This bypassed __pci_msi{x,}_desc_mask_irq(), but does not bypass the
-new msix_mask_all().
-Adding that check back fixes the issue - no crash, the device works,
-although the driver doesn't seem to enable MSI/MSI-X (but that wasn't
-the case before either).
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---UaYlySroUKN3Byia
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmEm7jwACgkQ24/THMrX
-1yyN/wf7BorSCX29k2HNQNmc90h4Hp54qa3SLXsTou5gLqJQXOwJAJz7saKR8UW1
-QOgM3+ui1fGz+x3UBynQ6MM53+2hwBsO7f4kVGG/nGvgz+2TcckJOjAZRUap/Exz
-8TCnIvcONjKKV7gMfc9Dg3JUSzvyqF3azpuiJQMZ7VWSHLpsMSenoKADIB+6EBHA
-/fxABG6KsY4Mv0I82bS2NJ0Nk0xO1Da2EPWzqmQgKnbl1dma5PlGt4p3wKAGxOCp
-Bozp7USuFSAvyHaq3+h1GV/2QIC/EMZxIw3jKlDgAnEi5bsIsb5y0rtYctqXULZy
-e9Lwr5SCNjOc05VQdT0tm0fgHwqm5g==
-=HlrS
------END PGP SIGNATURE-----
-
---UaYlySroUKN3Byia--
+August 25, 2021 9:55 PM, "Rob Herring" <robh@kernel.org> wrote:=0A=0A> On=
+ Wed, Aug 25, 2021 at 3:34 AM Yajun Deng <yajun.deng@linux.dev> wrote:=0A=
+> =0A>> device_del() should be called first and then called put_device() =
+in=0A>> unregister path, becase if that the final reference count, the de=
+vice=0A>> will be cleaned up via device_release() above. So use device_un=
+register()=0A>> instead.=0A>> =0A>> Fixes: 9885440b16b8 (PCI: Fix pci_hos=
+t_bridge struct device release/free handling)=0A>> Signed-off-by: Yajun D=
+eng <yajun.deng@linux.dev>=0A>> ---=0A>> drivers/pci/probe.c | 4 +---=0A>=
+> 1 file changed, 1 insertion(+), 3 deletions(-)=0A> =0A> NAK.=0A> =0A> T=
+he current code is correct. Go read the comments for device_add/device_de=
+l.=0A=0ABut the device_unregister() is only contains device_del() and put=
+_device(). It just put=0Adevice_del() before put_device().=0A=0A> =0A>> d=
+iff --git a/drivers/pci/probe.c b/drivers/pci/probe.c=0A>> index 0ec5c792=
+c27d..abd481a15a17 100644=0A>> --- a/drivers/pci/probe.c=0A>> +++ b/drive=
+rs/pci/probe.c=0A>> @@ -994,9 +994,7 @@ static int pci_register_host_brid=
+ge(struct pci_host_bridge *bridge)=0A>> return 0;=0A>> =0A>> unregister:=
+=0A> =0A> We get here if device_register() failed. Calling device_unregis=
+ter()=0A> in that case is never right.=0A> =0A>> - put_device(&bridge->de=
+v);=0A> =0A> This is for the get_device() we do above, not the get the dr=
+iver core does.=0A> =0A>> - device_del(&bridge->dev);=0A> =0A> This undoe=
+s the device_add() we do following the comment: "NOTE: this=0A> should be=
+ called manually _iff_ device_add() was also called=0A> manually."=0A> =
+=0A>> -=0A>> + device_unregister(&bridge->dev);=0A>> free:=0A>> kfree(bus=
+);=0A>> return err;=0A>> --=0A>> 2.32.0
