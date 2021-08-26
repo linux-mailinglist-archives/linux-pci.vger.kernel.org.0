@@ -2,126 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2010B3F90AC
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 01:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E88643F90FA
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 01:36:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243728AbhHZWXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Aug 2021 18:23:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30984 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243685AbhHZWXG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Aug 2021 18:23:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630016536;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZgK0Vzj/PyGVf287gkB5KcGajjxflHWYHigJAJkYE8o=;
-        b=eyvqtB6ibK55UwL17FL9G0pP/vNCxrC9xlzyLfTmm/0ulTZUPTLjjhfRaUTi5o+uZejaDH
-        CkWW5D7yqXuCCxTJqnROPlN32qctOuGIKadCTDzfsia4XaWwC04uAESB5g4PfxJHiOLQta
-        eWe/uDlb3Fzh0HGYoEx1QtjilxoxyKc=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-L5q3eovHM7uMQRvlyWzwZw-1; Thu, 26 Aug 2021 18:21:10 -0400
-X-MC-Unique: L5q3eovHM7uMQRvlyWzwZw-1
-Received: by mail-ot1-f71.google.com with SMTP id 8-20020a9d0588000000b0051defe13038so1838098otd.9
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 15:21:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZgK0Vzj/PyGVf287gkB5KcGajjxflHWYHigJAJkYE8o=;
-        b=JN/BkrbIXgiwtqh3ddSKYcE4SxoIiHKqkyP4ivL3jjkRVmgZfRFk/1F7F9xdQ58M0O
-         Y6AODrSU6kVOXr/7UO+9YW2teJbAriBiCgSSFRnVraPw84MmD0Gc/J01lr0zM2iSHbEm
-         FtgwWKjtDNb8JMJmdlSs5FB/bwH7EI4Ww5vkXPFW68otgcNJvhev9sBBcs1JQf8jLa4N
-         7hCkQZ78ByjWOftELDX3gJ+pRoVHUiy9fKCdfHcIdN6eUxmXS+P3ZcCfuX07V8aiGLcJ
-         v6TtsSsCh5seQyIO29pSUtjPNB2Vt6+0ThuJ0mczhm9IgaHYkpdYqGXX4g1U+Ukqt5qA
-         7D2w==
-X-Gm-Message-State: AOAM531wvLkwjsd44II6/TFObNbK1DYaUBIdvt7YL64EhrWys2M9LcF0
-        /wDLpcIr93bOmgaq6tI4nyGeQRyXIR4tJ+v6wHIbIBoDwxMGxYxA2ePChnXikNtrCVRURSW0TUa
-        iNp0OQR04+QbS/ErGQCem
-X-Received: by 2002:a05:6808:7:: with SMTP id u7mr12965323oic.63.1630016469674;
-        Thu, 26 Aug 2021 15:21:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz4wg/4PueI4scRfq8vf8o5WoWu5Cqwvs4cYyqbBPHaHmLY1mmgaQFiaPn6NoNF0UOWDizXew==
-X-Received: by 2002:a05:6808:7:: with SMTP id u7mr12965308oic.63.1630016469544;
-        Thu, 26 Aug 2021 15:21:09 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id s24sm840218otp.37.2021.08.26.15.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Aug 2021 15:21:09 -0700 (PDT)
-Date:   Thu, 26 Aug 2021 16:21:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     <bhelgaas@google.com>, <corbet@lwn.net>,
-        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
-        <michal.lkml@markovi.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <mgurtovoy@nvidia.com>, <jgg@nvidia.com>, <maorg@nvidia.com>,
-        <leonro@nvidia.com>
-Subject: Re: [PATCH V5 00/13] Introduce vfio_pci_core subsystem
-Message-ID: <20210826162108.4fc8b844.alex.williamson@redhat.com>
-In-Reply-To: <20210826103912.128972-1-yishaih@nvidia.com>
-References: <20210826103912.128972-1-yishaih@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S231251AbhHZXgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Aug 2021 19:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229710AbhHZXgY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 26 Aug 2021 19:36:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 367F960725;
+        Thu, 26 Aug 2021 23:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630020936;
+        bh=QGKyKynXxwlgHxHh8UEQ1gukhmkptrriCiW2BfTbel0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HFwG2THisnukF+Y1qGnMTw1jQ5NLGyYe1db+z3Sic8prok/bovcz9Od+LKN4M7ebo
+         b9zGO7GjkkfPDn4OzfAMtkSyBQV4ZTy7SRRnV4qr+5KCZI624SO/PEFL8Nd4XCZpiJ
+         aS9E1a6oXN81cynun2CLmqDbE/T3XMWfT9OvMoEvz2T3CAJLBnlqQ2y8ImO6ullX8K
+         NNNkl213geKsIAj6hOoz0IoxFcuqqtaV+Ae/M/UmpBPZDByxB0lPEyHyKyQg9Eruig
+         lK1mYoVdmdVlpDQA758hVDH1PuPXmh1RYMDF7ZMo5/XDuGbNJs3f4oDem2ifHTXCxe
+         11af0zOg5zVUQ==
+Date:   Thu, 26 Aug 2021 18:35:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/4] PCI/sysfs: Add pci_dev_resource_attr_is_visible()
+ helper
+Message-ID: <20210826233534.GA3726492@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210825212255.878043-2-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 26 Aug 2021 13:38:59 +0300
-Yishai Hadas <yishaih@nvidia.com> wrote:
-> 
-> Jason Gunthorpe (2):
->   vfio: Use select for eventfd
->   vfio: Use kconfig if XX/endif blocks instead of repeating 'depends on'
-> 
-> Max Gurtovoy (10):
->   vfio/pci: Rename vfio_pci.c to vfio_pci_core.c
->   vfio/pci: Rename vfio_pci_private.h to vfio_pci_core.h
->   vfio/pci: Rename vfio_pci_device to vfio_pci_core_device
->   vfio/pci: Rename ops functions to fit core namings
->   vfio/pci: Include vfio header in vfio_pci_core.h
->   vfio/pci: Split the pci_driver code out of vfio_pci_core.c
->   vfio/pci: Move igd initialization to vfio_pci.c
->   PCI: Add 'override_only' field to struct pci_device_id
->   PCI / VFIO: Add 'override_only' support for VFIO PCI sub system
->   vfio/pci: Introduce vfio_pci_core.ko
-> 
-> Yishai Hadas (1):
->   vfio/pci: Move module parameters to vfio_pci.c
-> 
->  Documentation/PCI/pci.rst                     |    1 +
->  MAINTAINERS                                   |    1 +
->  drivers/pci/pci-driver.c                      |   28 +-
->  drivers/vfio/Kconfig                          |   29 +-
->  drivers/vfio/fsl-mc/Kconfig                   |    3 +-
->  drivers/vfio/mdev/Kconfig                     |    1 -
->  drivers/vfio/pci/Kconfig                      |   40 +-
->  drivers/vfio/pci/Makefile                     |    8 +-
->  drivers/vfio/pci/vfio_pci.c                   | 2262 +----------------
->  drivers/vfio/pci/vfio_pci_config.c            |   70 +-
->  drivers/vfio/pci/vfio_pci_core.c              | 2158 ++++++++++++++++
->  drivers/vfio/pci/vfio_pci_igd.c               |   19 +-
->  drivers/vfio/pci/vfio_pci_intrs.c             |   42 +-
->  drivers/vfio/pci/vfio_pci_rdwr.c              |   18 +-
->  drivers/vfio/pci/vfio_pci_zdev.c              |    4 +-
->  drivers/vfio/platform/Kconfig                 |    6 +-
->  drivers/vfio/platform/reset/Kconfig           |    4 +-
->  include/linux/mod_devicetable.h               |    6 +
->  include/linux/pci.h                           |   29 +
->  .../linux/vfio_pci_core.h                     |   89 +-
->  scripts/mod/devicetable-offsets.c             |    1 +
->  scripts/mod/file2alias.c                      |   17 +-
->  22 files changed, 2525 insertions(+), 2311 deletions(-)
->  create mode 100644 drivers/vfio/pci/vfio_pci_core.c
->  rename drivers/vfio/pci/vfio_pci_private.h => include/linux/vfio_pci_core.h (56%)
+[+cc Greg, sorry for the ill-formed sysfs question below]
 
-Applied to vfio next branch for v5.15.  Thanks,
+On Wed, Aug 25, 2021 at 09:22:52PM +0000, Krzysztof Wilczyński wrote:
+> This helper aims to replace functions pci_create_resource_files() and
+> pci_create_attr() that are currently involved in the PCI resource sysfs
+> objects dynamic creation and set up once the.
+> 
+> After the conversion to use static sysfs objects when exposing the PCI
+> BAR address space this helper is to be called from the .is_bin_visible()
+> callback for each of the PCI resources attributes.
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index b70f61fbcd4b..c94ab9830932 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1237,6 +1237,46 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  	}
+>  	return 0;
+>  }
+> +
+> +static umode_t pci_dev_resource_attr_is_visible(struct kobject *kobj,
+> +						struct bin_attribute *attr,
+> +						int bar, bool write_combine)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> +	resource_size_t resource_size = pci_resource_len(pdev, bar);
+> +	unsigned long flags = pci_resource_flags(pdev, bar);
+> +
+> +	if (!resource_size)
+> +		return 0;
+> +
+> +	if (write_combine) {
+> +		if (arch_can_pci_mmap_wc() && (flags &
+> +		    (IORESOURCE_MEM | IORESOURCE_PREFETCH)) ==
+> +			(IORESOURCE_MEM | IORESOURCE_PREFETCH))
+> +			attr->mmap = pci_mmap_resource_wc;
 
-Alex 
+Is it legal to update attr here in an .is_visible() method?  Is attr
+the single static struct bin_attribute here, or is it a per-device
+copy?
 
+I'm assuming the static bin_attribute is a template and when we add a
+device that uses it, we alloc a new copy so each device has its own
+size, mapping function, etc.
+
+If that's the case, we only want to update the *copy*, not the
+template.  I don't see an alloc before the call in create_files(),
+so I'm worried that this .is_visible() method might get the template,
+in which case we'd be updating ->mmap for *all* devices.
+
+> +		else
+> +			return 0;
+> +	} else {
+> +		if (flags & IORESOURCE_MEM) {
+> +			attr->mmap = pci_mmap_resource_uc;
+> +		} else if (flags & IORESOURCE_IO) {
+> +			attr->read = pci_read_resource_io;
+> +			attr->write = pci_write_resource_io;
+> +			if (arch_can_pci_mmap_io())
+> +				attr->mmap = pci_mmap_resource_uc;
+> +		} else {
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	attr->size = resource_size;
+> +	if (attr->mmap)
+> +		attr->f_mapping = iomem_get_mapping;
+> +
+> +	attr->private = (void *)(unsigned long)bar;
+> +
+> +	return attr->attr.mode;
+> +}
+>  #else /* !(defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)) */
+>  int __weak pci_create_resource_files(struct pci_dev *dev) { return 0; }
+>  void __weak pci_remove_resource_files(struct pci_dev *dev) { return; }
+> -- 
+> 2.32.0
+> 
