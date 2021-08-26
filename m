@@ -2,78 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8343F7ED7
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 01:02:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E48A93F7FE8
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Aug 2021 03:28:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232727AbhHYXD3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Aug 2021 19:03:29 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:56019 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231535AbhHYXD3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 19:03:29 -0400
-Received: by mail-wm1-f43.google.com with SMTP id g135so575185wme.5
-        for <linux-pci@vger.kernel.org>; Wed, 25 Aug 2021 16:02:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3MAlH9Z3LPdNW3FhnK6IP8SPx5XEfdG4Gct/zDrdpqo=;
-        b=WI0b8YvFQs+K9VE8X+ijP74fOfZ0lX7Z9ezzFsPRrj2HB23UhKPx5hKsoOPg1CiMh/
-         7FHzg5FAGHxmRkRvG5twCUW7VLOjFJ7y5pKAxNIeIY5ErhJb2ajG9SqDVGUpShVAamZp
-         elJ1cFGVNnU4UaJFi9bxULgq1m8jPRebkz7zkl0dua0keT+iWE4xYg4oJCxM4kFTHsnZ
-         P8mUiB/Tb0OjcHGe1Prza5nBNQJASiDRwunM31m0z7V7SpHkS3mHyWixBnkXev2KiEEX
-         JRGWhncpZJ0yVlTtW57wQx2NTkYxtlRqXk05hFl2CNrWHEKgxn6rYNzpWDDYEIScqQNl
-         7ezw==
-X-Gm-Message-State: AOAM533NC0fd2ZOzAMk8S5tHHpvWHbCoWYJI9C+fHeLrlPzlTe6+0h8b
-        Cu+I16G5/vcuNmD+kkRj34M=
-X-Google-Smtp-Source: ABdhPJxSjf3hvZCJJMKdgbbtGu5WGtOsWlVZNdmNicuedgWCXmuy0y/2J14+pNKBbrq3Zzb+fXtLAw==
-X-Received: by 2002:a05:600c:1457:: with SMTP id h23mr5572645wmi.143.1629932562048;
-        Wed, 25 Aug 2021 16:02:42 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id o21sm859767wms.32.2021.08.25.16.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Aug 2021 16:02:41 -0700 (PDT)
-Date:   Thu, 26 Aug 2021 01:02:40 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>,
-        Sasha Levin <sashal@kernel.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/4] PCI: Convert dynamic PCI resources sysfs objects
- into static
-Message-ID: <20210825230240.GA439097@rocinante>
-References: <20210825212255.878043-1-kw@linux.com>
+        id S235201AbhHZB3V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Aug 2021 21:29:21 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50399 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235917AbhHZB3V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Aug 2021 21:29:21 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 6BF9A320099D;
+        Wed, 25 Aug 2021 21:28:33 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 25 Aug 2021 21:28:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=l0Gosy
+        gefn48r4uTH2ZI2zwepXeC3xLJDbpSKDLCccs=; b=uTKRSDE1kl4E+amDRSWl+m
+        bzQXW29LSEZdugBn3LBxpHbhhxLbAFiTEv7CCQ1V+dUHqDvJJINnjiNYJSe0YBkJ
+        4NNDTbdPnyrTXnLn+aszAvlZdMScuPqIH28Hk3ENxABA5KzqusSaSg11woeqlcA6
+        QuHn321KgITvmRcvvwZfvGwgZw/SNdh35AKIvW/+blXQzzLZ7p2cCmtZ8mLwD/ff
+        yS8xTl4LifH0vmZSWcmnpyJgOJvVbeJkaAvoeS1XO2DU+SX2U2MAryXLi+/mBLw7
+        V8krRSUwd5b4haFzZFrf39IEM3pUs0JMa/OxJbF8GISiNLXzUOaR6c9j48aOCW0A
+        ==
+X-ME-Sender: <xms:QO4mYQbvWyMmZHpIWYog-D9GhK0ogDos0m0kdM5UMxgV6k7eNNwM3g>
+    <xme:QO4mYbZFYnyen2v2uAGpvC4_uLLMxT5vx89IsKFxtLaTWWxUum7ryFKqVGnnMkV5j
+    20TyNiQpdYdbw>
+X-ME-Received: <xmr:QO4mYa-KoU-OXuS_l7hodp4186juQn3Q7S8SURa6TKjcU4WOftuRIrHHv5IKBN35z_YHGNkLeqSq8sPzadn6SbbuCwLRXw5L>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddutddggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtdorredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeh
+    jeegteeggeeigffhkeekieefjeduhedvfffhiefgkefhvdevfeejffdvfeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhes
+    ihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
+X-ME-Proxy: <xmx:QO4mYaqymOorF9cRLSCbl9wd3o_mpeAJD5Zo37AKEU9JJpZi9MwS6Q>
+    <xmx:QO4mYbqShHDgdvGgFyCiFRMwWNk_hNgYGsMT2PRMHfS7yJXeV32thA>
+    <xmx:QO4mYYQxpBRJbe2-fHoovMaZQEGjJTsHnT2Qxs6h_iUi86AFnMa8Uw>
+    <xmx:Qe4mYaXDp62TzRdpSs5oZtS37xC_4f2vhvv-vAcD6TPNWQu92zqMEQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Aug 2021 21:28:31 -0400 (EDT)
+Date:   Thu, 26 Aug 2021 03:28:28 +0200
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Jan Beulich <jbeulich@suse.com>
+Cc:     linux-pci@vger.kernel.org, stable@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
+ passthrough
+Message-ID: <YSbuPJSZxiKSSaqT@mail-itl>
+References: <YSZgkQY1B+WNH50r@mail-itl>
+ <3e72345b-d0e1-7856-de51-e74714474724@suse.com>
+ <YSZmFMeVeO4Bupn+@mail-itl>
+ <24d47a06-a887-05e5-0e3f-ed3cdd19490b@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UaYlySroUKN3Byia"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210825212255.878043-1-kw@linux.com>
+In-Reply-To: <24d47a06-a887-05e5-0e3f-ed3cdd19490b@suse.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Krzysztof Hałasa, Sasha and Pali for visibility]
 
-Hello Bjorn,
+--UaYlySroUKN3Byia
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 26 Aug 2021 03:28:28 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Kernel panic in __pci_enable_msix_range on Xen PV with PCI
+ passthrough
 
-I wanted to add that Krzysztof Hałasa was able to find a bit of spare
-time to test this series on his i.MX6 (Gateworks Ventana SBC), and
-completed a number of tests (such as power-cycling the SoC, etc.)
-without running into previous Oops and panic during boot.
+On Wed, Aug 25, 2021 at 05:55:09PM +0200, Jan Beulich wrote:
+> On 25.08.2021 17:47, Marek Marczykowski-G=C3=B3recki wrote:
+> > If so, I guess the issue is the kernel trying to write directly, instead
+> > of via some hypercall, right?
+>=20
+> Indeed. Or to be precise - the kernel isn't supposed to be "writing" this
+> at all. It is supposed to make hypercalls which may result in such writes.
+> Such "mask everything" functionality imo is the job of the hypervisor
+> anyway when talking about PV environments; HVM is a different thing here.
 
-The follow-up to this series will be changes specific to the Alpha
-platform and legacy PCI attributes.
+Ok, I dug a bit and found why it was working before: there is
+pci_mask_ignore_mask variable, that is set to 1 for Xen PV (and only
+then). This bypassed __pci_msi{x,}_desc_mask_irq(), but does not bypass the
+new msix_mask_all().
+Adding that check back fixes the issue - no crash, the device works,
+although the driver doesn't seem to enable MSI/MSI-X (but that wasn't
+the case before either).
 
-But since a majority of hardware platforms aren't really using legacy
-PCI attributes these days (unless I am mistaken) and Alpha is not widely
-used, fixing race condition in the PCI resource files converting them to
-static sysfs objects would be a priority.
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
 
-This will also make it easier to back-port this and other patches that
-paved the way prior to this one the stable and LTS releases, especially
-since these are widely used in popular distributions that tend to
-back-port a lot too into their stable releases.
+--UaYlySroUKN3Byia
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Krzysztof
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmEm7jwACgkQ24/THMrX
+1yyN/wf7BorSCX29k2HNQNmc90h4Hp54qa3SLXsTou5gLqJQXOwJAJz7saKR8UW1
+QOgM3+ui1fGz+x3UBynQ6MM53+2hwBsO7f4kVGG/nGvgz+2TcckJOjAZRUap/Exz
+8TCnIvcONjKKV7gMfc9Dg3JUSzvyqF3azpuiJQMZ7VWSHLpsMSenoKADIB+6EBHA
+/fxABG6KsY4Mv0I82bS2NJ0Nk0xO1Da2EPWzqmQgKnbl1dma5PlGt4p3wKAGxOCp
+Bozp7USuFSAvyHaq3+h1GV/2QIC/EMZxIw3jKlDgAnEi5bsIsb5y0rtYctqXULZy
+e9Lwr5SCNjOc05VQdT0tm0fgHwqm5g==
+=HlrS
+-----END PGP SIGNATURE-----
+
+--UaYlySroUKN3Byia--
