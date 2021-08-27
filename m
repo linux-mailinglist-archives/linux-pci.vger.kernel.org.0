@@ -2,74 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABCB3F990E
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 14:33:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76C7D3F9923
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 14:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbhH0MdH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 08:33:07 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:33749 "EHLO
+        id S245113AbhH0MoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 08:44:25 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35733 "EHLO
         wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245117AbhH0MdF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 08:33:05 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id A1BEA320092B;
-        Fri, 27 Aug 2021 08:32:16 -0400 (EDT)
+        by vger.kernel.org with ESMTP id S245120AbhH0MoZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 08:44:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 5EAB132003CE;
+        Fri, 27 Aug 2021 08:43:36 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 27 Aug 2021 08:32:17 -0400
+  by compute4.internal (MEProxy); Fri, 27 Aug 2021 08:43:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
         subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=T
-        QPZ1l9/n/aAKI5dFX0XaKSsdV7Pi7+J36UBSmDSPLQ=; b=yQAK4eo1ZO8AK95K1
-        q7HfbKKKXW/qcQNwvkhx2lKRgHbm02De+KDejEzXMvFQ/MAYgeEMkzDgaoPEbvhX
-        D6UecH9NwYewphyrrx5jZkhG2fbEfsWNduF2pWlmktMMJ2NQww2VmuxuCFBDtAHw
-        DPm4cOtguIXLEp3OWkLvEDa3XF/INpjh5BL11Wj0/Z5isV2o06gkxBEdAMcOotXY
-        1Pt8xFLHwsGb+5RuBSY/Qru68J0zaSa9FbnHa+kVx1rbJIPBj3HnbveHyig9Fhm6
-        WJQzmT6HW2Eyw40/anBU77xbDsMiGxbTUFWk/0An1anPMdYfk4fai634BMedvga7
-        lrnrA==
+        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=a
+        1Wyd0t+sG4CAOU++QCMkH6driePwZ8RJe50nnc1/rQ=; b=iw1nwiG6QU5FMZkxT
+        1QpBHw4f4uGgzTorra+kjA9i/2Il4ikTXSVPf/aFYoGjpukUkMmQFFHzps/rdIjj
+        n/Pu3gAEA/LMEsvkQvhMJQyNW5vgd0O4HZE2cihXzU4gzVGqAEKHcnP+OajA6rn5
+        5JI3Ekg0Kh+487plimhB/KmH7gwIuF8MbpGq7YjIIZRvt63A+i4u9v6Jjf/DAAxX
+        lqwLRFCLTBOeHF2LmEPzEC9+FN8ga2rSsTPtNHo1wDRasTMG6Bv2TgvTuy+S2Jbr
+        sbM91Jge3R/gQb/3W5l8fNUnYhb8O2qVfZi8Ix70U77OMaR/rXQcsWsIUczbjO3Z
+        IjvOw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:content-type
         :date:from:in-reply-to:message-id:mime-version:references
         :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=TQPZ1l9/n/aAKI5dFX0XaKSsdV7Pi7+J36UBSmDSP
-        LQ=; b=avc+xnSCCAQ8cu2rMcBTyzsjo7vTNCEha+fJtArU+eNyblY0d14axKVrv
-        FMHU9AY5FnC99bLOF+ZTXa1yYh5ptzcw1goP7tlHQQOpJ3Sq7td3xLC5AC5Rnf4r
-        QiUiVwrymNz8kZ8ia+fDde9LHIXPV03UAq6EOtLWNHOmCOf1xwK06r/FdlX6BJ5/
-        6tJ7dEq8qgaV7nsGUZJ9NU0pHM/CJ1t6/p4HtqhIiehOQ6zG/PrNo+fJxf/YuFBF
-        sH+zEkfEvXedMxLo8DqcUfzeacyOVrGgeOjCvqw12H9Y7ahU+EqRku9ksQhnDkRx
-        IayDkYeNsmAN6hVZqdkyPp/XvXrsg==
-X-ME-Sender: <xms:T9soYWhspszUsu1aXMJNeUJ7tZcMy-KB1onjXdK7Io0HzRGaztRTbA>
-    <xme:T9soYXC0FxCLZJ8Oe7CyqEPuJXKA1oudLeu63MLAFx5PMNLcjdAEm6379vKiSbsZY
-    CXWlCGj05aEOzFzRFU>
-X-ME-Received: <xmr:T9soYeHL1JSSTF2W3HmeNS8WHUTAXxH6nW9h58lv9WgbeV0WT9jOnyfTX0btF5exYfM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddufedgheegucetufdoteggodetrfdotf
+        :x-sasl-enc; s=fm3; bh=a1Wyd0t+sG4CAOU++QCMkH6driePwZ8RJe50nnc1/
+        rQ=; b=CXa12nV65dc93cZ8mn1qUZII2ptBMGi5B7tGjhdD0obCYvnxINV+rP9Yt
+        JulQYWpFBYG4f8GC2oNGYVfdE3XceCLCUzWXWxRbH5MIwZz9ArKS6BNfCaH5v8aP
+        o1rBehhBC7FBkKxVYt9udRx0b/4Amk42Ycs5PCp1046Y9mDrpjvBTRO3oHeJaJHE
+        Qx4WpQCzFt2YK0z/WbdLOJPglM1z7iAuGey7ca5a1qjqPOHgmOXNwGlelGfyvHYL
+        6r83VTgAJI57z2SO/o8ZM8e5/DvapFBsIXGV28ejPDqnyhjp6QUn2yfnAZKSSEyU
+        t86LmVE/RubsXqIOMAAT68Vn79qJw==
+X-ME-Sender: <xms:990oYU0U0yfHHL75W5DFFejeR4s6A5yitcDF3iIqsocwc9FuiqXL2g>
+    <xme:990oYfHuDl4YldVg3UPt6sO9ylADLkO6gIrwgTQllvVXuHLk89879ngT_J3_ksil2
+    C3mHYa14L5gDQhuAnA>
+X-ME-Received: <xmr:990oYc6alLJSfm7l14bYJAA0pXyUZl3a2xNea1lcflrVO8FozMNIMlYJfIjuNgm4ISw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddufedgheeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdeftfenucfhrhhomheplfhirgig
     uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpefggfeikeejhefgkeegudffudeftefhveejleelleegheevieff
-    udejudfgtedvjeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghes
-    fhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:T9soYfRgFuTOFBOFRbTtNMrczmr6UleKUQfC4GzxALN_Upf6SlAgnQ>
-    <xmx:T9soYTxE1m1JlvCW4bHcrwTvYA7YohBEf8xlPTodxVGuA-ACKEKGDQ>
-    <xmx:T9soYd6Rv7UsmqkjyTCmLCWOpiBqoVZDs8NqG1f4xqZgpCGHYagETw>
-    <xmx:UNsoYT8VCUYRBnEjyoJguD5qlKXYkOzUxqduc6R8MaUGG-QxIj9wNg>
+    ggtffrrghtthgvrhhnpeefleduiedtvdekffeggfeukeejgeeffeetlefghfekffeuteei
+    jeeghefhueffvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:990oYd1pJiueSofjJupGz8XqvG_olKcVF30u-5TrPUUJzmz-m9xuzA>
+    <xmx:990oYXFld1wxVkfcjTj4V0EKrQjEHBgO0ZW_gFBHtAPxx9W5o54Hsw>
+    <xmx:990oYW9TDKf0hq_H2f-fflRSaSYIXR-N-jgk0AUkm4cf-iOg64nKHA>
+    <xmx:-N0oYfAXHBZq-rwXrnABScjAn2wmyMogVk9GMV6C7UBwxFQ7TAXPWw>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Aug 2021 08:32:13 -0400 (EDT)
-Subject: Re: [PATCH V9 2/5] PCI: loongson: Add ACPI init support
+ 27 Aug 2021 08:43:31 -0400 (EDT)
+Subject: Re: [PATCH V9 3/5] PCI: Improve the MRRS quirk for LS7A
 To:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>
 References: <20210827082031.2777623-1-chenhuacai@loongson.cn>
- <20210827082031.2777623-3-chenhuacai@loongson.cn>
+ <20210827082031.2777623-4-chenhuacai@loongson.cn>
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <d83fa016-9ecc-4bf3-c004-137f77f710ee@flygoat.com>
-Date:   Fri, 27 Aug 2021 20:32:11 +0800
+Message-ID: <3f3682c9-b0a3-9776-b12a-625115d8eebc@flygoat.com>
+Date:   Fri, 27 Aug 2021 20:43:30 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20210827082031.2777623-3-chenhuacai@loongson.cn>
+In-Reply-To: <20210827082031.2777623-4-chenhuacai@loongson.cn>
 Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -78,180 +77,133 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 ÔÚ 2021/8/27 16:20, Huacai Chen Ð´µÀ:
-> Loongson PCH (LS7A chipset) will be used by both MIPS-based and
-> LoongArch-based Loongson processors. MIPS-based Loongson uses FDT
-> while LoongArch-base Loongson uses ACPI, this patch add ACPI init
-> support for the driver in drivers/pci/controller/pci-loongson.c
-> because it is currently FDT-only.
+> In new revision of LS7A, some PCIe ports support larger value than 256,
+> but their maximum supported MRRS values are not detectable. Moreover,
+> the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+> will actually set a big value in its driver. So the only possible way
+> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
 >
-> LoongArch is a new RISC ISA, mainline support will come soon, and
-> documentations are here (in translation):
->
-> https://github.com/loongson/LoongArch-Documentation
+> However, according to PCIe Spec, it is legal for an OS to program any
+> value for MRRS, and it is also legal for an endpoint to generate a Read
+> Request with any size up to its MRRS. As the hardware engineers say, the
+> root cause here is LS7A doesn't break up large read requests. In detail,
+> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+> request with a size that's "too big" ("too big" means larger than the
+> PCIe ports can handle, which means 256 for some ports and 4096 for the
+> others, and of course this is a problem in the LS7A's hardware design).
 >
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Revieded-by: <jiaxun.yang@flygoat.com>
+
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+I guess they got a improper value of CC_MSTR_BURST_LEN for deisgnware 
+pcie core.
+
+Thanks.
+
+- Jiaxun
+
 > ---
->   drivers/acpi/pci_mcfg.c               | 13 ++++++
->   drivers/pci/controller/Kconfig        |  2 +-
->   drivers/pci/controller/pci-loongson.c | 60 ++++++++++++++++++++++++++-
->   include/linux/pci-ecam.h              |  1 +
->   4 files changed, 73 insertions(+), 3 deletions(-)
+>   drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
+>   drivers/pci/pci.c                     |  6 ++++
+>   include/linux/pci.h                   |  1 +
+>   3 files changed, 25 insertions(+), 29 deletions(-)
 >
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index 53cab975f612..860014b89b8e 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -41,6 +41,8 @@ struct mcfg_fixup {
->   static struct mcfg_fixup mcfg_quirks[] = {
->   /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
->   
-> +#ifdef CONFIG_ARM64
-> +
->   #define AL_ECAM(table_id, rev, seg, ops) \
->   	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
->   
-> @@ -169,6 +171,17 @@ static struct mcfg_fixup mcfg_quirks[] = {
->   	ALTRA_ECAM_QUIRK(1, 13),
->   	ALTRA_ECAM_QUIRK(1, 14),
->   	ALTRA_ECAM_QUIRK(1, 15),
-> +#endif /* ARM64 */
-> +
-> +#ifdef CONFIG_LOONGARCH
-> +#define LOONGSON_ECAM_MCFG(table_id, seg) \
-> +	{ "LOONGS", table_id, 1, seg, MCFG_BUS_ANY, &loongson_pci_ecam_ops }
-> +
-> +	LOONGSON_ECAM_MCFG("\0", 0),
-> +	LOONGSON_ECAM_MCFG("LOONGSON", 0),
-> +	LOONGSON_ECAM_MCFG("\0", 1),
-> +	LOONGSON_ECAM_MCFG("LOONGSON", 1),
-> +#endif /* LOONGARCH */
->   };
->   
->   static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 5e1e3796efa4..77aa7272425c 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -287,7 +287,7 @@ config PCI_HYPERV_INTERFACE
->   config PCI_LOONGSON
->   	bool "LOONGSON PCI Controller"
->   	depends on MACH_LOONGSON64 || COMPILE_TEST
-> -	depends on OF
-> +	depends on OF || ACPI
->   	depends on PCI_QUIRKS
->   	default MACH_LOONGSON64
->   	help
 > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 433261c5f34c..164c0f6e419f 100644
+> index 164c0f6e419f..3aa98f9e94a8 100644
 > --- a/drivers/pci/controller/pci-loongson.c
 > +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -9,6 +9,8 @@
->   #include <linux/of_pci.h>
->   #include <linux/pci.h>
->   #include <linux/pci_ids.h>
-> +#include <linux/pci-acpi.h>
-> +#include <linux/pci-ecam.h>
+> @@ -67,37 +67,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>   			DEV_LS7A_LPC, system_bus_quirk);
 >   
->   #include "../pci.h"
->   
-> @@ -97,6 +99,18 @@ static void loongson_mrrs_quirk(struct pci_dev *dev)
+> -static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
+>   {
+> -	struct pci_bus *bus = dev->bus;
+> -	struct pci_dev *bridge;
+> -	static const struct pci_device_id bridge_devids[] = {
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> -		{ 0, },
+> -	};
+> -
+> -	/* look for the matching bridge */
+> -	while (!pci_is_root_bus(bus)) {
+> -		bridge = bus->self;
+> -		bus = bus->parent;
+> -		/*
+> -		 * Some Loongson PCIe ports have a h/w limitation of
+> -		 * 256 bytes maximum read request size. They can't handle
+> -		 * anything larger than this. So force this limit on
+> -		 * any devices attached under these ports.
+> -		 */
+> -		if (pci_match_id(bridge_devids, bridge)) {
+> -			if (pcie_get_readrq(dev) > 256) {
+> -				pci_info(dev, "limiting MRRS to 256\n");
+> -				pcie_set_readrq(dev, 256);
+> -			}
+> -			break;
+> -		}
+> -	}
+> +	/*
+> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
+> +	 * request size. They can't handle anything larger than this. So
+> +	 * force this limit on any devices attached under these ports.
+> +	 */
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> +
+> +	if (!bridge)
+> +		return;
+> +
+> +	bridge->no_inc_mrrs = 1;
 >   }
->   DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
 >   
-> +static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
-> +{
-> +	struct pci_config_window *cfg;
-> +
-> +	if (acpi_disabled)
-> +		return (struct loongson_pci *)(bus->sysdata);
-> +	else {
-> +		cfg = bus->sysdata;
-> +		return (struct loongson_pci *)(cfg->priv);
+>   static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>   {
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index aacf575c15cf..3279da8ce2dd 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5800,6 +5800,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>   {
+>   	u16 v;
+>   	int ret;
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>   
+>   	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+>   		return -EINVAL;
+> @@ -5818,6 +5819,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>   
+>   	v = (ffs(rq) - 8) << 12;
+>   
+> +	if (bridge->no_inc_mrrs) {
+> +		if (rq > pcie_get_readrq(dev))
+> +			return -EINVAL;
 > +	}
-> +}
 > +
->   static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
->   				unsigned int devfn, int where)
->   {
-> @@ -124,8 +138,10 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
->   			       int where)
->   {
->   	unsigned char busnum = bus->number;
-> -	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> -	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +	struct loongson_pci *priv = pci_bus_to_loongson_pci(bus);
-> +
-> +	if (pci_is_root_bus(bus))
-> +		busnum = 0;
+>   	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+>   						  PCI_EXP_DEVCTL_READRQ, v);
 >   
->   	/*
->   	 * Do not read more than one device on the bus other than
-> @@ -146,6 +162,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
->   	return NULL;
->   }
->   
-> +#ifdef CONFIG_OF
-> +
->   static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->   {
->   	int irq;
-> @@ -259,3 +277,41 @@ static struct platform_driver loongson_pci_driver = {
->   	.probe = loongson_pci_probe,
->   };
->   builtin_platform_driver(loongson_pci_driver);
-> +
-> +#endif
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static int loongson_pci_ecam_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct loongson_pci *priv;
-> +	struct pci_controller_data *data;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	cfg->priv = priv;
-> +	data->flags = FLAG_CFG1 | FLAG_DEV_FIX,
-
-FLAG_DEV_FIX still exists on ACPI based system£¿
-
-:-(
-
-> +	priv->data = data;
-> +	priv->cfg1_base = cfg->win - (cfg->busr.start << 16);
-> +
-> +	return 0;
-> +}
-> +
-> +const struct pci_ecam_ops loongson_pci_ecam_ops = {
-> +	.bus_shift = 16,
-> +	.init	   = loongson_pci_ecam_init,
-> +	.pci_ops   = {
-> +		.map_bus = pci_loongson_map_bus,
-> +		.read	 = pci_generic_config_read,
-> +		.write	 = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +#endif
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index adea5a4771cf..6b1301e2498e 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -87,6 +87,7 @@ extern const struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 *
->   extern const struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
->   extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
->   extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
-> +extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
->   #endif
->   
->   #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 540b377ca8f6..e2583c2785e2 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -541,6 +541,7 @@ struct pci_host_bridge {
+>   	void		*release_data;
+>   	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>   	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+> +	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+>   	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+>   	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+>   	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
