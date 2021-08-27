@@ -2,201 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFC733F9458
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 08:24:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9861E3F94B5
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 08:59:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244310AbhH0GYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 02:24:09 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:41294
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244304AbhH0GYI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 02:24:08 -0400
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8E0173F323
-        for <linux-pci@vger.kernel.org>; Fri, 27 Aug 2021 06:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1630045399;
-        bh=ohSVakcde5SU9A5Azhvp1T8TDHvhvAjJTMuWk8UJlQA=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=kjcS/05w3jqjmeCMVj/qv5Cv29NjGhhwEYQ0knwiu/Q5HR2w/jHJUEeOzFLL+2nTm
-         WsKcRLdqbWhEF/l3Q/qQEohkqxdQfDnb/zZN0Kh/u00x4NfTAbuFPv61vZA1ZLGbdW
-         izlUfuL6xJPKaVWVN+QHdmFriPINKYJuuMcYITpHzszLJ/qNMmPSC2J4Tjsyg62uiZ
-         Ga/EViqMMC/Vpcci/eyHOxaQSV/czxuEJ65yOr7MzbeE5UgNP62z1jxSVRXf9yjN7B
-         kKjzkjgS+F+3vks/SFbERVgui2NyDJ0TiRYUY6hxDdNBBUSOtXu92km7q+myPviljv
-         cdSB9x+3Ps8Tw==
-Received: by mail-ej1-f70.google.com with SMTP id gw26-20020a170906f15a00b005c48318c60eso2206326ejb.7
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 23:23:19 -0700 (PDT)
+        id S243142AbhH0HAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 03:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232463AbhH0G75 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 02:59:57 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63A3C0613CF;
+        Thu, 26 Aug 2021 23:59:08 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id j4-20020a17090a734400b0018f6dd1ec97so4160984pjs.3;
+        Thu, 26 Aug 2021 23:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Rqn+GrCddwb17438Eb7/acjTBeKWly1ebyK4GCadnFc=;
+        b=Ahob/aCaoxGGmBX3uT/2Oo+coR/T1tys8xgPUYlJZHQ+79x1W7tMhNYHihEb3g00Pw
+         m+dgL0BLb9DG6XuqQrGIlpqK11vUr+Y2ytYHZ7LdTBFa1tFBJE3STgSjF41FypNGQroh
+         EB33JFOQSvpQcvOA/KVG6FqtXl7O0+BT+q4qQg5vtIojCX29E2kJoRY1MRvb3ovAgDbp
+         aFXAm0ssP0g7n3TLr2XOHHUaLQbsPjFKeMCjJaff6OnyliY0dDUUm9ACwqxN5BizOny5
+         6o6R1k1p3THp4VGKPD1gPgbF9N5SJmHFccehHvyHptaqGZoYeq1bOsTJYfzYeYbXFcTi
+         n8+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ohSVakcde5SU9A5Azhvp1T8TDHvhvAjJTMuWk8UJlQA=;
-        b=XLgBQlivYulrrOTmE2e6V197PI/sq4LnSENvjRAQnOy3dUBttG5h5KxjDA3Xkn2RBT
-         /BstAj+8Jd/CDeZK6z2UBYnd6xsvM0mDlSwW3YJayfOaR6GilDk0IpLN7G85O+BbqQ3f
-         w2x2MfpMQ6lyOGIOHfXvBoIaOhN5DCTVyL3qtG7bJa2wveQmlqwdeJlDYMtrJrPhr8kJ
-         RioMYHEauCrSLVAN+WOd0AOQvVfhRzRRPSefg0kLNgO+0YxgEpqvQjaFGM+nGBNmQm3s
-         93I/wGxrISA0DtG6rkBnt3b3Xnd9fD+hMcWv5VaswjUnrVbKAFNylciwCxR1GjaiYPqL
-         7T7g==
-X-Gm-Message-State: AOAM5309dpIdvEoZjET/k5K1bJts16NdG7qVgK60MXULtvnR2vFKL/EW
-        Nt7Tzrc0b+coh5RyKfECS/qQcp/USOAbPjOUM9TWQjcd04sPhhFBxS7+Q2vQI6B/Y+nX3WuEVED
-        bfEzjdoJFpK4Ev8pduIvJ5DkTrUID525ahWdO2rym1E2yFD0+aC5U1Q==
-X-Received: by 2002:a17:907:2d8b:: with SMTP id gt11mr8486704ejc.432.1630045399169;
-        Thu, 26 Aug 2021 23:23:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwPW07mr7W5GhSow8wp/eSxl6XrHTu2nLBhPVJIML5dI1P2dUXQb8SwvbkQfC3LuSgHoRa+f3dhNXTcnF2j5Eo=
-X-Received: by 2002:a17:907:2d8b:: with SMTP id gt11mr8486677ejc.432.1630045398810;
- Thu, 26 Aug 2021 23:23:18 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rqn+GrCddwb17438Eb7/acjTBeKWly1ebyK4GCadnFc=;
+        b=ToFay4Mj171KSgAatRKbwrZRLxjM1j14IwtUx4af3DJaHCEo7VueRmcCerm9u0R0h7
+         zMCIJxbIoFyCGq1qzK4YABwtmkqF0PntLqY09nZRgYRD8RzB9A/X3p1GJhNsUc5RCKP6
+         uWk1J5WaqRFqUQCCUG5PzoZaZKipTGQmvXcn9XX0C8/ZNhuZUMwB4Dhj4ACyr4ZYdx2e
+         ymc/kiobx37ur98IjTzBoTdMD1xC6h9aVzW8ILceizEer8qFS6k9bbQK7p4aq2EPljxf
+         kruW11Lf/cldZpSMD+3+2JxfkC+7+PxuoFUxevHwltYku8u/woi7+Z9YNDIecECvB1h+
+         dTnw==
+X-Gm-Message-State: AOAM532go+s8Liqomo/NuCHFO1Ipw7T2YHTQsQ4tMwZ/Rsm+vHZFNOeq
+        +gL7u+jikXdELWQEo7dO/mZWzY4dfUMGg+NmOGw=
+X-Google-Smtp-Source: ABdhPJzbMPfKsiNwRsmJ6wf35o+bM3Vsllxj/xaKs1Zg3gEKi2+LtrBilr6TwQqyx2Jk+YbMtx83ULLwDM5rxvcqh8o=
+X-Received: by 2002:a17:902:bb81:b0:12d:a7ec:3d85 with SMTP id
+ m1-20020a170902bb8100b0012da7ec3d85mr7349833pls.17.1630047548297; Thu, 26 Aug
+ 2021 23:59:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210819054542.608745-1-kai.heng.feng@canonical.com>
- <20210819054542.608745-4-kai.heng.feng@canonical.com> <084b8ea3-99d8-3393-4b74-0779c92fde64@gmail.com>
- <CAAd53p4CYOOXjyNdTnBtsQ+2MW-Jar8fgEfPFZHSPrJde=HqVA@mail.gmail.com> <d3e4ec0b-2681-1b3c-f0ca-828b24b253e7@gmail.com>
-In-Reply-To: <d3e4ec0b-2681-1b3c-f0ca-828b24b253e7@gmail.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 27 Aug 2021 14:23:07 +0800
-Message-ID: <CAAd53p7JLemocM+rA-EyiuX=asYg5__J07+F9W7YZpUgWVMrPg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 3/3] r8169: Enable ASPM for selected NICs
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     nic_swsd <nic_swsd@realtek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20210624155526.2775863-1-tientzu@chromium.org> <20210624155526.2775863-11-tientzu@chromium.org>
+In-Reply-To: <20210624155526.2775863-11-tientzu@chromium.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 27 Aug 2021 09:58:32 +0300
+Message-ID: <CAHp75VfVhVGFEQGeUKajrUKmkx_et_KakDDgroC2BrMMhd62yg@mail.gmail.com>
+Subject: Re: [PATCH v15 10/12] swiotlb: Add restricted DMA pool initialization
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        benh@kernel.crashing.org, paulus@samba.org,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        grant.likely@arm.com, xypron.glpk@gmx.de,
+        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
+        bauerman@linux.ibm.com, peterz@infradead.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        heikki.krogerus@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
+        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+        jxgao@google.com, joonas.lahtinen@linux.intel.com,
+        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        matthew.auld@intel.com, rodrigo.vivi@intel.com,
+        thomas.hellstrom@linux.intel.com, thomas.lendacky@amd.com,
+        quic_qiancai@quicinc.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 5:56 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+On Thu, Jun 24, 2021 at 6:59 PM Claire Chang <tientzu@chromium.org> wrote:
 >
-> On 19.08.2021 08:50, Kai-Heng Feng wrote:
-> > On Thu, Aug 19, 2021 at 2:08 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> >>
-> >> On 19.08.2021 07:45, Kai-Heng Feng wrote:
-> >>> The latest vendor driver enables ASPM for more recent r8168 NICs, so
-> >>> disable ASPM on older chips and enable ASPM for the rest.
-> >>>
-> >>> Rename aspm_manageable to pcie_aspm_manageable to indicate it's ASPM
-> >>> from PCIe, and use rtl_aspm_supported for Realtek NIC's internal ASPM
-> >>> function.
-> >>>
-> >>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >>> ---
-> >>> v3:
-> >>>  - Use pcie_aspm_supported() to retrieve ASPM support status
-> >>>  - Use whitelist for r8169 internal ASPM status
-> >>>
-> >>> v2:
-> >>>  - No change
-> >>>
-> >>>  drivers/net/ethernet/realtek/r8169_main.c | 27 ++++++++++++++++-------
-> >>>  1 file changed, 19 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> >>> index 3359509c1c351..88e015d93e490 100644
-> >>> --- a/drivers/net/ethernet/realtek/r8169_main.c
-> >>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> >>> @@ -623,7 +623,8 @@ struct rtl8169_private {
-> >>>       } wk;
-> >>>
-> >>>       unsigned supports_gmii:1;
-> >>> -     unsigned aspm_manageable:1;
-> >>> +     unsigned pcie_aspm_manageable:1;
-> >>> +     unsigned rtl_aspm_supported:1;
-> >>>       unsigned rtl_aspm_enabled:1;
-> >>>       struct delayed_work aspm_toggle;
-> >>>       atomic_t aspm_packet_count;
-> >>> @@ -702,6 +703,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
-> >>>              tp->mac_version <= RTL_GIGA_MAC_VER_53;
-> >>>  }
-> >>>
-> >>> +static int rtl_supports_aspm(struct rtl8169_private *tp)
-> >>> +{
-> >>> +     switch (tp->mac_version) {
-> >>> +     case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
-> >>> +     case RTL_GIGA_MAC_VER_37:
-> >>> +     case RTL_GIGA_MAC_VER_39:
-> >>> +     case RTL_GIGA_MAC_VER_43:
-> >>> +     case RTL_GIGA_MAC_VER_47:
-> >>> +             return 0;
-> >>> +     default:
-> >>> +             return 1;
-> >>> +     }
-> >>> +}
-> >>> +
-> >>>  static bool rtl_supports_eee(struct rtl8169_private *tp)
-> >>>  {
-> >>>       return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
-> >>> @@ -2669,7 +2684,7 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
-> >>>
-> >>>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
-> >>>  {
-> >>> -     if (!tp->aspm_manageable && enable)
-> >>> +     if (!(tp->pcie_aspm_manageable && tp->rtl_aspm_supported) && enable)
-> >>>               return;
-> >>>
-> >>>       tp->rtl_aspm_enabled = enable;
-> >>> @@ -5319,12 +5334,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >>>       if (rc)
-> >>>               return rc;
-> >>>
-> >>> -     /* Disable ASPM completely as that cause random device stop working
-> >>> -      * problems as well as full system hangs for some PCIe devices users.
-> >>> -      */
-> >>> -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S |
-> >>> -                                       PCIE_LINK_STATE_L1);
-> >>> -     tp->aspm_manageable = !rc;
-> >>> +     tp->pcie_aspm_manageable = pcie_aspm_supported(pdev);
-> >>
-> >> That's not what I meant, and it's also not correct.
-> >
-> > In case I make another mistake in next series, let me ask it more clearly...
-> > What you meant was to check both link->aspm_enabled and link->aspm_support?
-> >
-> aspm_enabled can be changed by the user at any time.
-
-OK, will check that too.
-
-> pci_disable_link_state() also considers whether BIOS forbids that OS
-> mess with ASPM. See aspm_disabled.
-
-I think aspm_disabled means leave BIOS ASPM setting intact?
-So If PCIe ASPM is already enabled, we should also enable Realtek
-specific bits to make ASPM really work.
-
+> Add the initialization function to create restricted DMA pools from
+> matching reserved-memory nodes.
 >
-> >>
-> >>> +     tp->rtl_aspm_supported = rtl_supports_aspm(tp);
-> >
-> > Is rtl_supports_aspm() what you expect for the whitelist?
-> > And what else am I missing?
-> >
-> I meant use rtl_supports_aspm() to check when ASPM is relevant at all,
-
-I think that means the relevant bits are link->aspm_capable and
-pcie_aspm_support_enabled().
-ASPM can be already enabled by BIOS with aspm_disabled set.
-
-Then check link->aspm_enabled in aspm_toggle() routine because it can
-be enabled at runtime.
-
-> and in addition use a blacklist for chip versions where ASPM is
-> completely unusable.
-
-Thanks for your suggestion and review.
-
-Kai-Heng
-
+> Regardless of swiotlb setting, the restricted DMA pool is preferred if
+> available.
 >
-> > Kai-Heng
-> >
-> >>>
-> >>>       /* enable device (incl. PCI PM wakeup and hotplug setup) */
-> >>>       rc = pcim_enable_device(pdev);
-> >>>
-> >>
->
+> The restricted DMA pools provide a basic level of protection against the
+> DMA overwriting buffer contents at unexpected times. However, to protect
+> against general data leakage and system memory corruption, the system
+> needs to provide a way to lock down the memory access, e.g., MPU.
+
+
+
+
+
+> +static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
+> +                                   struct device *dev)
+> +{
+> +       struct io_tlb_mem *mem =3D rmem->priv;
+> +       unsigned long nslabs =3D rmem->size >> IO_TLB_SHIFT;
+> +
+> +       /*
+> +        * Since multiple devices can share the same pool, the private da=
+ta,
+> +        * io_tlb_mem struct, will be initialized by the first device att=
+ached
+> +        * to it.
+> +        */
+
+> +       if (!mem) {
+
+Can it be rather
+
+if (mem)
+  goto out_assign;
+
+or so?
+
+> +               mem =3D kzalloc(struct_size(mem, slots, nslabs), GFP_KERN=
+EL);
+> +               if (!mem)
+> +                       return -ENOMEM;
+> +
+> +               set_memory_decrypted((unsigned long)phys_to_virt(rmem->ba=
+se),
+> +                                    rmem->size >> PAGE_SHIFT);
+
+Below you are using a macro from pfn.h, but not here, I think it's PFN_DOWN=
+().
+
+> +               swiotlb_init_io_tlb_mem(mem, rmem->base, nslabs, false);
+> +               mem->force_bounce =3D true;
+> +               mem->for_alloc =3D true;
+> +
+> +               rmem->priv =3D mem;
+> +
+> +               if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+> +                       mem->debugfs =3D
+> +                               debugfs_create_dir(rmem->name, debugfs_di=
+r);
+> +                       swiotlb_create_debugfs_files(mem);
+> +               }
+> +       }
+> +
+> +       dev->dma_io_tlb_mem =3D mem;
+> +
+> +       return 0;
+> +}
+> +
+> +static void rmem_swiotlb_device_release(struct reserved_mem *rmem,
+> +                                       struct device *dev)
+> +{
+> +       dev->dma_io_tlb_mem =3D io_tlb_default_mem;
+> +}
+> +
+> +static const struct reserved_mem_ops rmem_swiotlb_ops =3D {
+> +       .device_init =3D rmem_swiotlb_device_init,
+> +       .device_release =3D rmem_swiotlb_device_release,
+> +};
+> +
+> +static int __init rmem_swiotlb_setup(struct reserved_mem *rmem)
+> +{
+> +       unsigned long node =3D rmem->fdt_node;
+> +
+> +       if (of_get_flat_dt_prop(node, "reusable", NULL) ||
+> +           of_get_flat_dt_prop(node, "linux,cma-default", NULL) ||
+> +           of_get_flat_dt_prop(node, "linux,dma-default", NULL) ||
+> +           of_get_flat_dt_prop(node, "no-map", NULL))
+> +               return -EINVAL;
+> +
+> +       if (PageHighMem(pfn_to_page(PHYS_PFN(rmem->base)))) {
+> +               pr_err("Restricted DMA pool must be accessible within the=
+ linear mapping.");
+> +               return -EINVAL;
+> +       }
+> +
+> +       rmem->ops =3D &rmem_swiotlb_ops;
+> +       pr_info("Reserved memory: created restricted DMA pool at %pa, siz=
+e %ld MiB\n",
+> +               &rmem->base, (unsigned long)rmem->size / SZ_1M);
+
+Oh l=C3=A0 l=C3=A0, besides explicit casting that I believe can be avoided,=
+ %ld
+!=3D unsigned long. Can you check the printk-formats.rst document?
+
+> +       return 0;
+> +}
+> +
+> +RESERVEDMEM_OF_DECLARE(dma, "restricted-dma-pool", rmem_swiotlb_setup);
+>  #endif /* CONFIG_DMA_RESTRICTED_POOL */
+
+--=20
+With Best Regards,
+Andy Shevchenko
