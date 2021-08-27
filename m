@@ -2,152 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3A873F9CBA
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 18:46:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BBA83F9D61
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 19:17:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231318AbhH0QrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 12:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229560AbhH0QrY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Aug 2021 12:47:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 67D0960FD8;
-        Fri, 27 Aug 2021 16:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630082795;
-        bh=hMhFii5SEnyesU+J3DnJAqd9NcCDRrvpJCnbR/n6FBY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=B/tcAg/jio1dncVSKclmFp0GAyYR0lBls+lVdKbgBAHYy6xLf3QSrst94KvbUbKbO
-         zgffjO0KvcZAqS1BibHrhskCc5wjfo2WbZvu7Y8k2NGzc6Yw+H2FuttJv7R23dLrZ4
-         EZfmEODkqHx/Xre09qo7Wf2QpY7rZLiQoV/S5hsmrIoRu4L+7xI1N3Sx/toGLRHEK9
-         btPWBH1NcHlU8uOiLkFLWxkGud9ccL/h0H4fAXwpBETCrcbcn921HenLA02jFjyYYa
-         IQgkiSunEAQGswpfPzZUD4RcN1oIMHls85ag4dybbvQmWQHWJXw4pqRPDAu1J1UrwZ
-         iEky6AUjHTZvw==
-Date:   Fri, 27 Aug 2021 11:46:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
-Cc:     robh+dt@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
-        lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com,
-        jianjun.wang@mediatek.com, yong.wu@mediatek.com,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
- pcie-cfg base address
-Message-ID: <20210827164634.GA3779223@bjorn-Precision-5520>
+        id S231325AbhH0RPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 13:15:55 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:55974
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234095AbhH0RPz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 13:15:55 -0400
+Received: from HP-EliteBook-840-G7.. (36-229-239-33.dynamic-ip.hinet.net [36.229.239.33])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 53EA43F365;
+        Fri, 27 Aug 2021 17:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1630084504;
+        bh=fw+JpHitxvUyKelv4NHJFKDV+k6YIUABn/njeLUjaJw=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=cUbcwXKl8n+9qZbXIeT/Lz8JxauKhlqwBpZ3FxznT64Fr778Wf5n3BCCCJy4nwEmc
+         07PL3diMS2/g3JMebdMc+iwgQx5gRxWD2YFNZoboYwjb2iCO8BMyADi9xGndAP+JmS
+         8EVGVw1e98I5C/Qp5RI7pT43cgZtd20+aCheZoZfYakMmAu4+r9rkOcbYOjezzo0W9
+         nb43n8y9E04TC4d9TRYzuvoKXuFz3OGnlXwOtloCPzwvnCNowen8+6LJE/cUvzzfTF
+         he85rVShBypRO7o4bqOsEyTLejmVrkIqjbt9ZUmBeO4+rylU3LoU7HGvTW4beA3f0j
+         zGEWbY3nJrBuA==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com
+Cc:     davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [RFC] [PATCH net-next v4 0/2] r8169: Implement dynamic ASPM mechanism for recent 1.0/2.5Gbps Realtek NICs
+Date:   Sat, 28 Aug 2021 01:14:50 +0800
+Message-Id: <20210827171452.217123-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210823032800.1660-3-chuanjia.liu@mediatek.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
-> For the new dts format, add a new method to get
-> shared pcie-cfg base address and use it to configure
-> the PCIECFG controller
+The purpose of the series is to get comments and reviews so we can merge
+and test the series in downstream kernel.
 
-Rewrap this to fill 75 columns.
+The latest Realtek vendor driver and its Windows driver implements a
+feature called "dynamic ASPM" which can improve performance on it's
+ethernet NICs.
 
-> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 25bee693834f..4296d9e04240 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -14,6 +14,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/msi.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> @@ -23,6 +24,7 @@
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
->  #include <linux/reset.h>
->  
->  #include "../pci.h"
-> @@ -207,6 +209,7 @@ struct mtk_pcie_port {
->   * struct mtk_pcie - PCIe host information
->   * @dev: pointer to PCIe device
->   * @base: IO mapped register base
-> + * @cfg: IO mapped register map for PCIe config
->   * @free_ck: free-run reference clock
->   * @mem: non-prefetchable memory resource
->   * @ports: pointer to PCIe port information
-> @@ -215,6 +218,7 @@ struct mtk_pcie_port {
->  struct mtk_pcie {
->  	struct device *dev;
->  	void __iomem *base;
-> +	struct regmap *cfg;
->  	struct clk *free_ck;
->  
->  	struct list_head ports;
-> @@ -682,6 +686,10 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
->  		       PCIE_CSR_ASPM_L1_EN(port->slot);
->  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-> +	} else if (pcie->cfg) {
-> +		val = PCIE_CSR_LTSSM_EN(port->slot) |
-> +		      PCIE_CSR_ASPM_L1_EN(port->slot);
-> +		regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
->  	}
->  
->  	/* Assert all reset signals */
-> @@ -985,6 +993,7 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
->  	struct device *dev = pcie->dev;
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct resource *regs;
-> +	struct device_node *cfg_node;
->  	int err;
->  
->  	/* get shared registers, which are optional */
-> @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
->  			return PTR_ERR(pcie->base);
->  	}
->  
-> +	cfg_node = of_find_compatible_node(NULL, NULL,
-> +					   "mediatek,generic-pciecfg");
+Heiner Kallweit pointed out the potential root cause can be that the
+buffer is to small for its ASPM exit latency.
 
-This looks wrong to me.  IIUC, since we start at NULL, this searches
-the entire device tree for any node with
+So bring the dynamic ASPM to r8169 so we can have both nice performance
+and powersaving at the same time.
 
-  compatible = "mediatek,generic-pciecfg"
+For the slow/fast alternating traffic pattern, we'll need some real
+world test to know if we need to lower the dynamic ASPM interval.
 
-but we should only care about the specific device/node this driver
-claimed.
+v3:
+https://lore.kernel.org/netdev/20210819054542.608745-1-kai.heng.feng@canonical.com/
 
-Should this be part of the match data, i.e., struct mtk_pcie_soc?
+v2:
+https://lore.kernel.org/netdev/20210812155341.817031-1-kai.heng.feng@canonical.com/
 
-> +	if (cfg_node) {
-> +		pcie->cfg = syscon_node_to_regmap(cfg_node);
+v1:
+https://lore.kernel.org/netdev/20210803152823.515849-1-kai.heng.feng@canonical.com/
 
-Other drivers in drivers/pci/controller/ use
-syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
-layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
-kirin, v3-semi).
+Kai-Heng Feng (2):
+  PCI/ASPM: Introduce a new helper to report ASPM capability
+  r8169: Implement dynamic ASPM mechanism
 
-You should do it the same way unless there's a need to be different.
-It's also nice if you can use the same struct member name
-("mtk_pcie.cfg") as other drivers.  They're not all consistent, but I
-don't see any other "cfg".
+ drivers/net/ethernet/realtek/r8169_main.c | 77 ++++++++++++++++++++---
+ drivers/pci/pcie/aspm.c                   | 11 ++++
+ include/linux/pci.h                       |  2 +
+ 3 files changed, 82 insertions(+), 8 deletions(-)
 
-> +		if (IS_ERR(pcie->cfg))
-> +			return PTR_ERR(pcie->cfg);
-> +	}
-> +
->  	pcie->free_ck = devm_clk_get(dev, "free_ck");
->  	if (IS_ERR(pcie->free_ck)) {
->  		if (PTR_ERR(pcie->free_ck) == -EPROBE_DEFER)
-> -- 
-> 2.18.0
-> 
+-- 
+2.32.0
+
