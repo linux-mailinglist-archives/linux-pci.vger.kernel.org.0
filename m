@@ -2,100 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53E683F95FD
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 10:23:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B113F9621
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 10:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244548AbhH0IYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 04:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42788 "EHLO mail.kernel.org"
+        id S232196AbhH0Icn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 04:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233066AbhH0IYd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Aug 2021 04:24:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EE96260F92;
-        Fri, 27 Aug 2021 08:23:42 +0000 (UTC)
+        id S231824AbhH0Icn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Aug 2021 04:32:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A85EE60F4F;
+        Fri, 27 Aug 2021 08:31:52 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V9 5/5] PCI: Add quirk for multifunction devices of LS7A
-Date:   Fri, 27 Aug 2021 16:20:31 +0800
-Message-Id: <20210827082031.2777623-6-chenhuacai@loongson.cn>
+Subject: [PATCH V4 00/10] PCI/VGA: Rework default VGA device selection
+Date:   Fri, 27 Aug 2021 16:31:19 +0800
+Message-Id: <20210827083129.2781420-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210827082031.2777623-1-chenhuacai@loongson.cn>
-References: <20210827082031.2777623-1-chenhuacai@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jianmin Lv <lvjianmin@loongson.cn>
+My original work is at [1].
 
-In LS7A, multifunction device use same PCI PIN (because the PIN register
-report the same INTx value to each function) but we need different IRQ
-for different functions, so add a quirk to fix it for standard PCI PIN
-usage.
+Bjorn do some rework and extension in V2. It moves the VGA arbiter to
+the PCI subsystem, fixes a few nits, and breaks a few pieces to make
+the main patch a little smaller.
 
-This patch only affect ACPI based systems (and only needed by ACPI based
-systems, too). For DT based systems, the irq mappings is defined in .dts
-files and be handled by of_irq_parse_pci().
+V3 rewrite the commit log of the last patch (which is also summarized
+by Bjorn).
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+V4 split the last patch to two steps.
+
+All comments welcome!
+
+[1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
+
+Bjorn Helgaas (4):
+  PCI/VGA: Move vgaarb to drivers/pci
+  PCI/VGA: Replace full MIT license text with SPDX identifier
+  PCI/VGA: Use unsigned format string to print lock counts
+  PCI/VGA: Remove empty vga_arb_device_card_gone()
+
+Huacai Chen (6):
+  PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
+  PCI/VGA: Prefer vga_default_device()
+  PCI/VGA: Split out vga_arb_update_default_device()
+  PCI/VGA: Log bridge control messages when adding devices
+  PCI/VGA: Rework default VGA device selection (Step 1)
+  PCI/VGA: Rework default VGA device selection (Step 2)
+
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com> 
 ---
- drivers/pci/controller/pci-loongson.c | 29 +++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index f90d4214e42f..36ad8e259126 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -22,6 +22,12 @@
- #define DEV_LS2K_APB	0x7a02
- #define DEV_LS7A_CONF	0x7a10
- #define DEV_LS7A_LPC	0x7a0c
-+#define DEV_LS7A_GMAC	0x7a03
-+#define DEV_LS7A_DC	0x7a06
-+#define DEV_LS7A_GPU	0x7a15
-+#define DEV_LS7A_AHCI	0x7a08
-+#define DEV_LS7A_EHCI	0x7a14
-+#define DEV_LS7A_OHCI	0x7a24
- 
- #define FLAG_CFG0	BIT(0)
- #define FLAG_CFG1	BIT(1)
-@@ -108,6 +114,29 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
- 
-+static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-+{
-+	pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_DC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GPU, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GMAC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_AHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_EHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_OHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
--- 
+ drivers/gpu/vga/Kconfig           |  19 ---
+ drivers/gpu/vga/Makefile          |   1 -
+ drivers/pci/Kconfig               |  19 +++
+ drivers/pci/Makefile              |   1 +
+ drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
+ 5 files changed, 126 insertions(+), 183 deletions(-)
+ rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
+--
 2.27.0
 
