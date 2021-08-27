@@ -2,172 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 440DC3F935A
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 06:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 160213F938D
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 06:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244339AbhH0D7b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Aug 2021 23:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
+        id S229731AbhH0EZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 00:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244306AbhH0D7b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Aug 2021 23:59:31 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC24C061757
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 20:58:42 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id y18so6900902ioc.1
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 20:58:42 -0700 (PDT)
+        with ESMTP id S229645AbhH0EZn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 00:25:43 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2414BC061757
+        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:24:55 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id m19so3636979vsj.10
+        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aO31d1ja5MAKunYUAZZRLdfg9N4l+qmRykC9m1jC/pQ=;
-        b=LHO3ECTKxrFvHrNircCd8rdZ+1fd28Cmb0yeGOAFZz7tvi23JfdsoKQlBQ/osBU2PS
-         uSjlHhkxT55kRAddmfXWJAAOEApdxidxxDW04W+WXtBEpgeVUzkf4uqWPWAg7OHZiZJx
-         7DqmkAUptTsy2yC8hMD6ce5SkESGfwW9yU/Tw=
+        bh=o2ac3WU5PKyDrLNw8DzbWnQu4UdRxnLFK3Sf2SVuZjc=;
+        b=ZJpjJB8hCd6jjLdHPQm0LFyuowgsoGG7LOtJzv/jHtQ6PvsHvDjrvXHMLZinBkqmor
+         xwwaGMxm+S8L4dCwz2Dk0Ms2PBpbiOq9CvyPEsFQ8v53+hwGgunJCLwVAVTQ4z3shH9Q
+         Ab2gqowA01OUSXqa29MK5l/PfuJURjgWnwoWSZ5BmYNMHub8yjRSyOGpQ5QdtcyIH1MP
+         T6oBEH8J1/X8OASLZcjfqrILi1J6dl/Yqmh6WQGKD1C/GPXbjFEmi3gbM09mm1+2wbOn
+         yjMI/x3DlvL6ANddhwh9wDcuhX6FjkfJLmlJuiAynD2NeeUX6cyo9vaLkxtvMO+3DRV5
+         SWNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aO31d1ja5MAKunYUAZZRLdfg9N4l+qmRykC9m1jC/pQ=;
-        b=f9osrTA7636VYzTvhMCncvc7s98zOvb+PT3VMKe7zcmzsX2tMq5sYIchsM9sNAJzP/
-         fKry5uTnxFSggu4opZiJVFWnEx+VrNs9EMzIcfN1YQ+mDg/Elf6WO/rPPjBFLZ/HDAI6
-         Ff+WwEKX4HhwAdydsua/miW6SAeI3c9wKmbwJNeJkRwgv73ZKyBFlNDFGuLOb/IYRrZA
-         OuNMULGtNGmMP7Nz56RagtB/8xz1V/XhrRPY79M1xTN1T7O2P3HABS8JfS1kgmvIpTHj
-         HmJixE9BgnNRtpJUIYUsRxRRL4zEyiG1A/X4ggps44vhwmOnvWsyK0X22DUz5QiQ8Izr
-         Xk6A==
-X-Gm-Message-State: AOAM533B1Dx833Oxtm5Qg/xVFfipKh4e9mxntv5VAZRiWwe8/LlKAOAR
-        FAzNoPCPCDIwCNq/p6aaaLV1iAyXBayD9Q==
-X-Google-Smtp-Source: ABdhPJxAqehLBT37ST4rypDolQzNPZxZSS1lxCvczGI7jQzJYwRw7AA+y657Ga5F1rChq8VOJaNwgA==
-X-Received: by 2002:a5d:928c:: with SMTP id s12mr5643034iom.151.1630036721914;
-        Thu, 26 Aug 2021 20:58:41 -0700 (PDT)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id b12sm2774694ios.0.2021.08.26.20.58.41
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Aug 2021 20:58:41 -0700 (PDT)
-Received: by mail-il1-f174.google.com with SMTP id r6so5698491ilt.13
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 20:58:41 -0700 (PDT)
-X-Received: by 2002:a5d:9ada:: with SMTP id x26mr5606315ion.50.1630036221774;
- Thu, 26 Aug 2021 20:50:21 -0700 (PDT)
+        bh=o2ac3WU5PKyDrLNw8DzbWnQu4UdRxnLFK3Sf2SVuZjc=;
+        b=YZmMlXbd89MhKdeQKfuPTGJGW4yFqSu3RPxqdJ6a4OGUasgG6UDelBorDhYxVH3TsL
+         ZWRCt0IpodI6826oWDdAJisiff9AOOQXmzbUNog/azCxkQIbfoD3WPw4YL+TGzDZL620
+         w+AHPIlbWs3sErWFCayrwejEchgYQ1xqsDRnkt67Cu58hNrawXzgDy4xtw+YaSBwX2VX
+         Z4dE3fUUEP9ifpvs9UT5mf2x8iKldqxv16wrtfn+VbNjCpnnb0J0tzTY8Yn0XeiGZF+L
+         vJLPH3QhIPU8Ef8l4Zt9Qp5zKhabNxpYA4cdIH4xFFhIlFuJm0k8A4W8l+4AoDEdPReG
+         qfbA==
+X-Gm-Message-State: AOAM532OsrmxGKNNssEGD63Etgz8gxQqAEwhibOktwOckGuwfJKTB1rS
+        KnDZI9WcNxZNRE6BI+BXMesGy8qQmpBfJH1j+xY=
+X-Google-Smtp-Source: ABdhPJxtyZ6SMAyzmkJxzuz5PxWwGUf9q/Y3aMHbXeelZOxgLf+T2DmyyCmrgp+MZ9NtAitoZlgUzCbJVExCWcdB+bI=
+X-Received: by 2002:a67:ef92:: with SMTP id r18mr5441407vsp.53.1630038294327;
+ Thu, 26 Aug 2021 21:24:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210624155526.2775863-1-tientzu@chromium.org>
- <20210624155526.2775863-11-tientzu@chromium.org> <20210824142601.GA3393158@roeck-us.net>
-In-Reply-To: <20210824142601.GA3393158@roeck-us.net>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Fri, 27 Aug 2021 11:50:10 +0800
-X-Gmail-Original-Message-ID: <CALiNf2_NoJwU7UUT4mNkbKWRKsTP9R9E=9qBZzjdjOduO5WZDQ@mail.gmail.com>
-Message-ID: <CALiNf2_NoJwU7UUT4mNkbKWRKsTP9R9E=9qBZzjdjOduO5WZDQ@mail.gmail.com>
-Subject: Re: [PATCH v15 10/12] swiotlb: Add restricted DMA pool initialization
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, mpe@ellerman.id.au,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, grant.likely@arm.com,
-        xypron.glpk@gmx.de, Thierry Reding <treding@nvidia.com>,
-        mingo@kernel.org, bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Tomasz Figa <tfiga@chromium.org>, bskeggs@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, chris@chris-wilson.co.uk,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, Jianxiong Gao <jxgao@google.com>,
-        joonas.lahtinen@linux.intel.com, linux-pci@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, matthew.auld@intel.com,
-        rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Qian Cai <quic_qiancai@quicinc.com>
+References: <20210820100832.663931-1-chenhuacai@loongson.cn> <20210825201704.GA3600046@bjorn-Precision-5520>
+In-Reply-To: <20210825201704.GA3600046@bjorn-Precision-5520>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Fri, 27 Aug 2021 12:24:39 +0800
+Message-ID: <CAAhV-H6NM2gdcaOFPgmV_fLcm=x8BSz28Gg2-hqZBRxpcVBOjw@mail.gmail.com>
+Subject: Re: [PATCH V3 0/9] PCI/VGA: Rework default VGA device selection
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 10:26 PM Guenter Roeck <linux@roeck-us.net> wrote:
+Hi, Bjorn,
+
+On Thu, Aug 26, 2021 at 4:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Hi Claire,
->
-> On Thu, Jun 24, 2021 at 11:55:24PM +0800, Claire Chang wrote:
-> > Add the initialization function to create restricted DMA pools from
-> > matching reserved-memory nodes.
+> On Fri, Aug 20, 2021 at 06:08:23PM +0800, Huacai Chen wrote:
+> > My original work is at [1].
 > >
-> > Regardless of swiotlb setting, the restricted DMA pool is preferred if
-> > available.
+> > Bjorn do some rework and extension in V2. It moves the VGA arbiter to
+> > the PCI subsystem, fixes a few nits, and breaks a few pieces to make
+> > the main patch a little smaller.
 > >
-> > The restricted DMA pools provide a basic level of protection against the
-> > DMA overwriting buffer contents at unexpected times. However, to protect
-> > against general data leakage and system memory corruption, the system
-> > needs to provide a way to lock down the memory access, e.g., MPU.
+> > V3 rewrite the commit log of the last patch (which is also summarized
+> > by Bjorn).
 > >
-> > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Tested-by: Stefano Stabellini <sstabellini@kernel.org>
-> > Tested-by: Will Deacon <will@kernel.org>
+> > All comments welcome!
+> >
+> > [1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
+> >
+> > Bjorn Helgaas (4):
+> >   PCI/VGA: Move vgaarb to drivers/pci
+> >   PCI/VGA: Replace full MIT license text with SPDX identifier
+> >   PCI/VGA: Use unsigned format string to print lock counts
+> >   PCI/VGA: Remove empty vga_arb_device_card_gone()
+> >
+> > Huacai Chen (5):
+> >   PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
+> >   PCI/VGA: Prefer vga_default_device()
+> >   PCI/VGA: Split out vga_arb_update_default_device()
+> >   PCI/VGA: Log bridge control messages when adding devices
+> >   PCI/VGA: Rework default VGA device selection
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > > ---
-> >  include/linux/swiotlb.h |  3 +-
-> >  kernel/dma/Kconfig      | 14 ++++++++
-> >  kernel/dma/swiotlb.c    | 76 +++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 92 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> > index 3b9454d1e498..39284ff2a6cd 100644
-> > --- a/include/linux/swiotlb.h
-> > +++ b/include/linux/swiotlb.h
-> > @@ -73,7 +73,8 @@ extern enum swiotlb_force swiotlb_force;
-> >   *           range check to see if the memory was in fact allocated by this
-> >   *           API.
-> >   * @nslabs:  The number of IO TLB blocks (in groups of 64) between @start and
-> > - *           @end. This is command line adjustable via setup_io_tlb_npages.
-> > + *           @end. For default swiotlb, this is command line adjustable via
-> > + *           setup_io_tlb_npages.
-> >   * @used:    The number of used IO TLB block.
-> >   * @list:    The free list describing the number of free entries available
-> >   *           from each index.
-> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> > index 77b405508743..3e961dc39634 100644
-> > --- a/kernel/dma/Kconfig
-> > +++ b/kernel/dma/Kconfig
-> > @@ -80,6 +80,20 @@ config SWIOTLB
-> >       bool
-> >       select NEED_DMA_MAP_STATE
-> >
-> > +config DMA_RESTRICTED_POOL
-> > +     bool "DMA Restricted Pool"
-> > +     depends on OF && OF_RESERVED_MEM
-> > +     select SWIOTLB
+> >  drivers/gpu/vga/Kconfig           |  19 ---
+> >  drivers/gpu/vga/Makefile          |   1 -
+> >  drivers/pci/Kconfig               |  19 +++
+> >  drivers/pci/Makefile              |   1 +
+> >  drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
+> >  5 files changed, 126 insertions(+), 183 deletions(-)
+> >  rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
 >
-> This makes SWIOTLB user configurable, which in turn results in
+> I'm open to merging this series but the v5.15 merge window will
+> probably open on Sunday, and that's too close for a series of this
+> size.
 >
-> mips64-linux-ld: arch/mips/kernel/setup.o: in function `arch_mem_init':
-> setup.c:(.init.text+0x19c8): undefined reference to `plat_swiotlb_setup'
-> make[1]: *** [Makefile:1280: vmlinux] Error 1
+> Moreover, the critical change is still buried in the middle of the
+> last patch ("PCI/VGA: Rework default VGA device selection").  There's
+> way too much going on in that single patch.
 >
-> when building mips:allmodconfig.
+> As I mentioned in [1], I think you can make a 1- or 2-line patch that
+> will fix your problem, and I think *that's* the first thing we should
+> do.
 >
-> Should this possibly be "depends on SWIOTLB" ?
+> That would be a patch against drivers/gpu/vga/vgaarb.c, so it would be
+> up to the DRM folks to decide whether to take it for v5.15, but at
+> least it would be small enough to review it easily.
+OK, let me try.
 
-Patch is sent here: https://lkml.org/lkml/2021/8/26/932
-
+Huacai
 >
-> Thanks,
-> Guenter
-
-Thanks,
-Claire
+> Bjorn
+>
+> [1] https://lore.kernel.org/r/20210724001043.GA448782@bjorn-Precision-5520
