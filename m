@@ -2,208 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76C7D3F9923
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 14:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3A873F9CBA
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 18:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245113AbhH0MoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 08:44:25 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35733 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245120AbhH0MoZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 08:44:25 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 5EAB132003CE;
-        Fri, 27 Aug 2021 08:43:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 27 Aug 2021 08:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=a
-        1Wyd0t+sG4CAOU++QCMkH6driePwZ8RJe50nnc1/rQ=; b=iw1nwiG6QU5FMZkxT
-        1QpBHw4f4uGgzTorra+kjA9i/2Il4ikTXSVPf/aFYoGjpukUkMmQFFHzps/rdIjj
-        n/Pu3gAEA/LMEsvkQvhMJQyNW5vgd0O4HZE2cihXzU4gzVGqAEKHcnP+OajA6rn5
-        5JI3Ekg0Kh+487plimhB/KmH7gwIuF8MbpGq7YjIIZRvt63A+i4u9v6Jjf/DAAxX
-        lqwLRFCLTBOeHF2LmEPzEC9+FN8ga2rSsTPtNHo1wDRasTMG6Bv2TgvTuy+S2Jbr
-        sbM91Jge3R/gQb/3W5l8fNUnYhb8O2qVfZi8Ix70U77OMaR/rXQcsWsIUczbjO3Z
-        IjvOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=a1Wyd0t+sG4CAOU++QCMkH6driePwZ8RJe50nnc1/
-        rQ=; b=CXa12nV65dc93cZ8mn1qUZII2ptBMGi5B7tGjhdD0obCYvnxINV+rP9Yt
-        JulQYWpFBYG4f8GC2oNGYVfdE3XceCLCUzWXWxRbH5MIwZz9ArKS6BNfCaH5v8aP
-        o1rBehhBC7FBkKxVYt9udRx0b/4Amk42Ycs5PCp1046Y9mDrpjvBTRO3oHeJaJHE
-        Qx4WpQCzFt2YK0z/WbdLOJPglM1z7iAuGey7ca5a1qjqPOHgmOXNwGlelGfyvHYL
-        6r83VTgAJI57z2SO/o8ZM8e5/DvapFBsIXGV28ejPDqnyhjp6QUn2yfnAZKSSEyU
-        t86LmVE/RubsXqIOMAAT68Vn79qJw==
-X-ME-Sender: <xms:990oYU0U0yfHHL75W5DFFejeR4s6A5yitcDF3iIqsocwc9FuiqXL2g>
-    <xme:990oYfHuDl4YldVg3UPt6sO9ylADLkO6gIrwgTQllvVXuHLk89879ngT_J3_ksil2
-    C3mHYa14L5gDQhuAnA>
-X-ME-Received: <xmr:990oYc6alLJSfm7l14bYJAA0pXyUZl3a2xNea1lcflrVO8FozMNIMlYJfIjuNgm4ISw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddufedgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdeftfenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeefleduiedtvdekffeggfeukeejgeeffeetlefghfekffeuteei
-    jeeghefhueffvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:990oYd1pJiueSofjJupGz8XqvG_olKcVF30u-5TrPUUJzmz-m9xuzA>
-    <xmx:990oYXFld1wxVkfcjTj4V0EKrQjEHBgO0ZW_gFBHtAPxx9W5o54Hsw>
-    <xmx:990oYW9TDKf0hq_H2f-fflRSaSYIXR-N-jgk0AUkm4cf-iOg64nKHA>
-    <xmx:-N0oYfAXHBZq-rwXrnABScjAn2wmyMogVk9GMV6C7UBwxFQ7TAXPWw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Aug 2021 08:43:31 -0400 (EDT)
-Subject: Re: [PATCH V9 3/5] PCI: Improve the MRRS quirk for LS7A
-To:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>
-References: <20210827082031.2777623-1-chenhuacai@loongson.cn>
- <20210827082031.2777623-4-chenhuacai@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <3f3682c9-b0a3-9776-b12a-625115d8eebc@flygoat.com>
-Date:   Fri, 27 Aug 2021 20:43:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S231318AbhH0QrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 12:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229560AbhH0QrY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Aug 2021 12:47:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 67D0960FD8;
+        Fri, 27 Aug 2021 16:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630082795;
+        bh=hMhFii5SEnyesU+J3DnJAqd9NcCDRrvpJCnbR/n6FBY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=B/tcAg/jio1dncVSKclmFp0GAyYR0lBls+lVdKbgBAHYy6xLf3QSrst94KvbUbKbO
+         zgffjO0KvcZAqS1BibHrhskCc5wjfo2WbZvu7Y8k2NGzc6Yw+H2FuttJv7R23dLrZ4
+         EZfmEODkqHx/Xre09qo7Wf2QpY7rZLiQoV/S5hsmrIoRu4L+7xI1N3Sx/toGLRHEK9
+         btPWBH1NcHlU8uOiLkFLWxkGud9ccL/h0H4fAXwpBETCrcbcn921HenLA02jFjyYYa
+         IQgkiSunEAQGswpfPzZUD4RcN1oIMHls85ag4dybbvQmWQHWJXw4pqRPDAu1J1UrwZ
+         iEky6AUjHTZvw==
+Date:   Fri, 27 Aug 2021 11:46:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     robh+dt@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
+        lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com,
+        jianjun.wang@mediatek.com, yong.wu@mediatek.com,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
+ pcie-cfg base address
+Message-ID: <20210827164634.GA3779223@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210827082031.2777623-4-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210823032800.1660-3-chuanjia.liu@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
+> For the new dts format, add a new method to get
+> shared pcie-cfg base address and use it to configure
+> the PCIECFG controller
 
-ÔÚ 2021/8/27 16:20, Huacai Chen Ð´µÀ:
-> In new revision of LS7A, some PCIe ports support larger value than 256,
-> but their maximum supported MRRS values are not detectable. Moreover,
-> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> will actually set a big value in its driver. So the only possible way
-> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
->
-> However, according to PCIe Spec, it is legal for an OS to program any
-> value for MRRS, and it is also legal for an endpoint to generate a Read
-> Request with any size up to its MRRS. As the hardware engineers say, the
-> root cause here is LS7A doesn't break up large read requests. In detail,
-> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> request with a size that's "too big" ("too big" means larger than the
-> PCIe ports can handle, which means 256 for some ports and 4096 for the
-> others, and of course this is a problem in the LS7A's hardware design).
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Rewrap this to fill 75 columns.
 
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-I guess they got a improper value of CC_MSTR_BURST_LEN for deisgnware 
-pcie core.
-
-Thanks.
-
-- Jiaxun
-
+> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->   drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
->   drivers/pci/pci.c                     |  6 ++++
->   include/linux/pci.h                   |  1 +
->   3 files changed, 25 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 164c0f6e419f..3aa98f9e94a8 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -67,37 +67,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->   			DEV_LS7A_LPC, system_bus_quirk);
->   
-> -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
->   {
-> -	struct pci_bus *bus = dev->bus;
-> -	struct pci_dev *bridge;
-> -	static const struct pci_device_id bridge_devids[] = {
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> -		{ 0, },
-> -	};
-> -
-> -	/* look for the matching bridge */
-> -	while (!pci_is_root_bus(bus)) {
-> -		bridge = bus->self;
-> -		bus = bus->parent;
-> -		/*
-> -		 * Some Loongson PCIe ports have a h/w limitation of
-> -		 * 256 bytes maximum read request size. They can't handle
-> -		 * anything larger than this. So force this limit on
-> -		 * any devices attached under these ports.
-> -		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> -			if (pcie_get_readrq(dev) > 256) {
-> -				pci_info(dev, "limiting MRRS to 256\n");
-> -				pcie_set_readrq(dev, 256);
-> -			}
-> -			break;
-> -		}
-> -	}
-> +	/*
-> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
-> +	 * request size. They can't handle anything larger than this. So
-> +	 * force this limit on any devices attached under these ports.
-> +	 */
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> +
-> +	if (!bridge)
-> +		return;
-> +
-> +	bridge->no_inc_mrrs = 1;
->   }
-> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
->   
->   static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
->   {
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index aacf575c15cf..3279da8ce2dd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5800,6 +5800,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->   {
->   	u16 v;
->   	int ret;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->   
->   	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
->   		return -EINVAL;
-> @@ -5818,6 +5819,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->   
->   	v = (ffs(rq) - 8) << 12;
->   
-> +	if (bridge->no_inc_mrrs) {
-> +		if (rq > pcie_get_readrq(dev))
-> +			return -EINVAL;
+>  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 25bee693834f..4296d9e04240 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/msi.h>
+>  #include <linux/module.h>
+>  #include <linux/of_address.h>
+> @@ -23,6 +24,7 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  
+>  #include "../pci.h"
+> @@ -207,6 +209,7 @@ struct mtk_pcie_port {
+>   * struct mtk_pcie - PCIe host information
+>   * @dev: pointer to PCIe device
+>   * @base: IO mapped register base
+> + * @cfg: IO mapped register map for PCIe config
+>   * @free_ck: free-run reference clock
+>   * @mem: non-prefetchable memory resource
+>   * @ports: pointer to PCIe port information
+> @@ -215,6 +218,7 @@ struct mtk_pcie_port {
+>  struct mtk_pcie {
+>  	struct device *dev;
+>  	void __iomem *base;
+> +	struct regmap *cfg;
+>  	struct clk *free_ck;
+>  
+>  	struct list_head ports;
+> @@ -682,6 +686,10 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+>  		       PCIE_CSR_ASPM_L1_EN(port->slot);
+>  		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> +	} else if (pcie->cfg) {
+> +		val = PCIE_CSR_LTSSM_EN(port->slot) |
+> +		      PCIE_CSR_ASPM_L1_EN(port->slot);
+> +		regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
+>  	}
+>  
+>  	/* Assert all reset signals */
+> @@ -985,6 +993,7 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
+>  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct resource *regs;
+> +	struct device_node *cfg_node;
+>  	int err;
+>  
+>  	/* get shared registers, which are optional */
+> @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
+>  			return PTR_ERR(pcie->base);
+>  	}
+>  
+> +	cfg_node = of_find_compatible_node(NULL, NULL,
+> +					   "mediatek,generic-pciecfg");
+
+This looks wrong to me.  IIUC, since we start at NULL, this searches
+the entire device tree for any node with
+
+  compatible = "mediatek,generic-pciecfg"
+
+but we should only care about the specific device/node this driver
+claimed.
+
+Should this be part of the match data, i.e., struct mtk_pcie_soc?
+
+> +	if (cfg_node) {
+> +		pcie->cfg = syscon_node_to_regmap(cfg_node);
+
+Other drivers in drivers/pci/controller/ use
+syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
+layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
+kirin, v3-semi).
+
+You should do it the same way unless there's a need to be different.
+It's also nice if you can use the same struct member name
+("mtk_pcie.cfg") as other drivers.  They're not all consistent, but I
+don't see any other "cfg".
+
+> +		if (IS_ERR(pcie->cfg))
+> +			return PTR_ERR(pcie->cfg);
 > +	}
 > +
->   	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
->   						  PCI_EXP_DEVCTL_READRQ, v);
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 540b377ca8f6..e2583c2785e2 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -541,6 +541,7 @@ struct pci_host_bridge {
->   	void		*release_data;
->   	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->   	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> +	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
->   	unsigned int	native_aer:1;		/* OS may use PCIe AER */
->   	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
->   	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+>  	pcie->free_ck = devm_clk_get(dev, "free_ck");
+>  	if (IS_ERR(pcie->free_ck)) {
+>  		if (PTR_ERR(pcie->free_ck) == -EPROBE_DEFER)
+> -- 
+> 2.18.0
+> 
