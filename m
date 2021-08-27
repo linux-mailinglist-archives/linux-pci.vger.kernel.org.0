@@ -2,94 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB323F97A9
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 11:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B3DC3F98E4
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 14:11:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245084AbhH0JtV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 05:49:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:38190 "EHLO foss.arm.com"
+        id S245100AbhH0ML7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 08:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245045AbhH0JtM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Aug 2021 05:49:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 418FC31B;
-        Fri, 27 Aug 2021 02:48:23 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8E5C3F766;
-        Fri, 27 Aug 2021 02:48:21 -0700 (PDT)
-Date:   Fri, 27 Aug 2021 10:48:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     nobuhiro1.iwamatsu@toshiba.co.jp
-Cc:     robh+dt@kernel.org, bhelgaas@google.com, kishon@ti.com,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, kw@linux.com,
-        punit1.agrawal@toshiba.co.jp, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] Visconti: Add Toshiba Visconti PCIe host
- controller driver
-Message-ID: <20210827094815.GA13112@lpieralisi>
-References: <20210811083830.784065-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <162998285902.30814.11206633831020646086.b4-ty@arm.com>
- <TYAPR01MB6252A29B56BBF8921822824F92C79@TYAPR01MB6252.jpnprd01.prod.outlook.com>
+        id S245089AbhH0ML7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Aug 2021 08:11:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F67360295;
+        Fri, 27 Aug 2021 12:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1630066270;
+        bh=lW7f6PhFOdBYcWJ8ZOZrGIhMpuHag2baM3yolu9JhKo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PoXLM73c0rY/R7LFb3m0Qk19LprIYC3yH+wGOOp8CpVdA7Bghye74xcVs9/IA4La7
+         k8lTdaZCcovdUu8skOfydAc3WTcf1jC8bG0NFNxHEeeeq9ng0RwLTvkcp7z23xY+gl
+         Z28FPFK7h1Dvbw473ZJQKbyDZQfDY36HR9Mmx5rQ=
+Date:   Fri, 27 Aug 2021 14:11:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI/sysfs: Add pci_dev_resource_attr_is_visible()
+ helper
+Message-ID: <YSjWWWVC6ImWA5Qe@kroah.com>
+References: <20210825212255.878043-2-kw@linux.com>
+ <20210826233534.GA3726492@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYAPR01MB6252A29B56BBF8921822824F92C79@TYAPR01MB6252.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210826233534.GA3726492@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 11:49:04PM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
-> Hi,
+On Thu, Aug 26, 2021 at 06:35:34PM -0500, Bjorn Helgaas wrote:
+> [+cc Greg, sorry for the ill-formed sysfs question below]
 > 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> > Sent: Thursday, August 26, 2021 10:01 PM
-> > To: iwamatsu nobuhiro(岩松 信洋 □ＳＷＣ◯ＡＣＴ) <nobuhiro1.iwamatsu@toshiba.co.jp>; Rob Herring
-> > <robh+dt@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>; Kishon Vijay Abraham I <kishon@ti.com>; ishikawa yuji(石川 悠司
-> > ○ＲＤＣ□ＡＩＴＣ○ＥＡ開) <yuji2.ishikawa@toshiba.co.jp>; linux-arm-kernel@lists.infradead.org;
-> > linux-pci@vger.kernel.org; Krzysztof Wilczyński <kw@linux.com>; agrawal punit(アグラワル プニト □ＳＷＣ◯ＡＣＴ)
-> > <punit1.agrawal@toshiba.co.jp>; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v6 0/3] Visconti: Add Toshiba Visconti PCIe host controller driver
+> On Wed, Aug 25, 2021 at 09:22:52PM +0000, Krzysztof Wilczyński wrote:
+> > This helper aims to replace functions pci_create_resource_files() and
+> > pci_create_attr() that are currently involved in the PCI resource sysfs
+> > objects dynamic creation and set up once the.
 > > 
-> > On Wed, 11 Aug 2021 17:38:27 +0900, Nobuhiro Iwamatsu wrote:
-> > > This series is the PCIe driver for Toshiba's ARM SoC, Visconti[0].
-> > > This provides DT binding documentation, device driver, MAINTAINER files.
-> > >
-> > > Best regards,
-> > >   Nobuhiro
-> > >
-> > > [0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
-> > >
-> > > [...]
+> > After the conversion to use static sysfs objects when exposing the PCI
+> > BAR address space this helper is to be called from the .is_bin_visible()
+> > callback for each of the PCI resources attributes.
 > > 
-> > Applied to pci/dwc, thanks!
+> > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> > ---
+> >  drivers/pci/pci-sysfs.c | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index b70f61fbcd4b..c94ab9830932 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -1237,6 +1237,46 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+> >  	}
+> >  	return 0;
+> >  }
+> > +
+> > +static umode_t pci_dev_resource_attr_is_visible(struct kobject *kobj,
+> > +						struct bin_attribute *attr,
+> > +						int bar, bool write_combine)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
+> > +	resource_size_t resource_size = pci_resource_len(pdev, bar);
+> > +	unsigned long flags = pci_resource_flags(pdev, bar);
+> > +
+> > +	if (!resource_size)
+> > +		return 0;
+> > +
+> > +	if (write_combine) {
+> > +		if (arch_can_pci_mmap_wc() && (flags &
+> > +		    (IORESOURCE_MEM | IORESOURCE_PREFETCH)) ==
+> > +			(IORESOURCE_MEM | IORESOURCE_PREFETCH))
+> > +			attr->mmap = pci_mmap_resource_wc;
 > 
-> Thanks! But...
-> > 
-> > [1/3] dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
-> >       https://git.kernel.org/lpieralisi/pci/c/a655ce4000
-> > [2/3] PCI: visconti: Add Toshiba Visconti PCIe host controller driver
-> >       https://git.kernel.org/lpieralisi/pci/c/09436f819c
-> 
-> Only drivers/pci/controller/dwc/Makefile is applied. Could you check this?	
+> Is it legal to update attr here in an .is_visible() method?  Is attr
+> the single static struct bin_attribute here, or is it a per-device
+> copy?
 
-I fixed this. Please don't write patch versions changes in the commit
-log - I had to delete those myself, I did not notice while applying
-them.
+It is whatever was registered with sysfs, that was up to the caller.
 
-Please let me know if the branch looks OK now.
+> I'm assuming the static bin_attribute is a template and when we add a
+> device that uses it, we alloc a new copy so each device has its own
+> size, mapping function, etc.
 
-Lorenzo
+Not that I recall, I think it's just a pointer to the structure that the
+driver passed to the sysfs code.
 
-> > [3/3] MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
-> >       https://git.kernel.org/lpieralisi/pci/c/34af7aace1
-> > 
-> > Thanks,
-> > Lorenzo
-> 
-> Best regards,
->   Nobuhiro
+> If that's the case, we only want to update the *copy*, not the
+> template.  I don't see an alloc before the call in create_files(),
+> so I'm worried that this .is_visible() method might get the template,
+> in which case we'd be updating ->mmap for *all* devices.
+
+Yes, I think that is what you are doing here.
+
+Generally, don't mess with attribute values in the is_visable callback
+if at all possible, as that's not what the callback is for.
+
+thanks,
+
+greg k-h
