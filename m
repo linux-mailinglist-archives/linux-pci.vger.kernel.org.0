@@ -2,129 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 160213F938D
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 06:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E94073F93D6
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 06:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbhH0EZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 00:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbhH0EZn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 00:25:43 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2414BC061757
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:24:55 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id m19so3636979vsj.10
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o2ac3WU5PKyDrLNw8DzbWnQu4UdRxnLFK3Sf2SVuZjc=;
-        b=ZJpjJB8hCd6jjLdHPQm0LFyuowgsoGG7LOtJzv/jHtQ6PvsHvDjrvXHMLZinBkqmor
-         xwwaGMxm+S8L4dCwz2Dk0Ms2PBpbiOq9CvyPEsFQ8v53+hwGgunJCLwVAVTQ4z3shH9Q
-         Ab2gqowA01OUSXqa29MK5l/PfuJURjgWnwoWSZ5BmYNMHub8yjRSyOGpQ5QdtcyIH1MP
-         T6oBEH8J1/X8OASLZcjfqrILi1J6dl/Yqmh6WQGKD1C/GPXbjFEmi3gbM09mm1+2wbOn
-         yjMI/x3DlvL6ANddhwh9wDcuhX6FjkfJLmlJuiAynD2NeeUX6cyo9vaLkxtvMO+3DRV5
-         SWNw==
+        id S231164AbhH0E5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 00:57:45 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:35458
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229645AbhH0E5p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 00:57:45 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D0E714076D
+        for <linux-pci@vger.kernel.org>; Fri, 27 Aug 2021 04:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1630040215;
+        bh=k2kXvQJzyGKPPRNtItos+fbwHILHlMCv9moNO8dHNrs=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=OUIXVPTiq4bw6kmhRfIUlWs0aLZ14JHqzXSMQJ1ofu+lPxJvM4wlzrWG6eFpclXaH
+         4BG+ZjJqzeqWHBxktrT4LodpwBvF5HzIEutFmtIG4+kzP/r/TZlYaaVYWOkqAHqrq+
+         W/vkRJiih2dO8Y+V1fEoOD/+F1r/OeDNG4iONh1F3qkVvx5yPuNuh5svyNKNe0aRcD
+         zl01UazvcmtW9oPHQcXNqSxBELAWb4ATwqlivZ7OJN6nb330uhiR9wLIyOXdXtrU7y
+         TaELptaKgeQz1YikzYW5gEAs3+w/jlRCCCLVmqrmzoQwhcN8TBM3Febs4dHnU2pzRQ
+         Hh2lNFBzKl3cQ==
+Received: by mail-ed1-f70.google.com with SMTP id s8-20020a508dc8000000b003c19f7fe952so2700877edh.7
+        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o2ac3WU5PKyDrLNw8DzbWnQu4UdRxnLFK3Sf2SVuZjc=;
-        b=YZmMlXbd89MhKdeQKfuPTGJGW4yFqSu3RPxqdJ6a4OGUasgG6UDelBorDhYxVH3TsL
-         ZWRCt0IpodI6826oWDdAJisiff9AOOQXmzbUNog/azCxkQIbfoD3WPw4YL+TGzDZL620
-         w+AHPIlbWs3sErWFCayrwejEchgYQ1xqsDRnkt67Cu58hNrawXzgDy4xtw+YaSBwX2VX
-         Z4dE3fUUEP9ifpvs9UT5mf2x8iKldqxv16wrtfn+VbNjCpnnb0J0tzTY8Yn0XeiGZF+L
-         vJLPH3QhIPU8Ef8l4Zt9Qp5zKhabNxpYA4cdIH4xFFhIlFuJm0k8A4W8l+4AoDEdPReG
-         qfbA==
-X-Gm-Message-State: AOAM532OsrmxGKNNssEGD63Etgz8gxQqAEwhibOktwOckGuwfJKTB1rS
-        KnDZI9WcNxZNRE6BI+BXMesGy8qQmpBfJH1j+xY=
-X-Google-Smtp-Source: ABdhPJxtyZ6SMAyzmkJxzuz5PxWwGUf9q/Y3aMHbXeelZOxgLf+T2DmyyCmrgp+MZ9NtAitoZlgUzCbJVExCWcdB+bI=
-X-Received: by 2002:a67:ef92:: with SMTP id r18mr5441407vsp.53.1630038294327;
- Thu, 26 Aug 2021 21:24:54 -0700 (PDT)
+        bh=k2kXvQJzyGKPPRNtItos+fbwHILHlMCv9moNO8dHNrs=;
+        b=Icpj4FT1EjIh6eIdJ112oNRsuoXimYYEvgH/0XC8oieFpnP3NfOBHPYuPvw7jFpsE3
+         XFgDOOy4Zj/PIffbA/iC4tV56hPgJuohPtinVZoLSFlVKa3jalKFLFbPsqczm7glePEq
+         Nuz762lNvE/HixjD3IOlAjBMYWUswudG2aLT9IfbHd/RCczGx/qA6kpzsQeei0wo+d95
+         SbAJ/CdZbKIGAA8oy1DPEupSarCvmByA24kOLVq5molL4YjmgKIJ/21F3MCS5Sq2x8L2
+         mRb1o24xO+QMhMm0LOGgsSdBiVd7Ya8c/QLIW73gQ4kDctBYWmsG68dqFA7gTJFxBQJT
+         4iFA==
+X-Gm-Message-State: AOAM533yebNj2ZmaFhVNarT+R12G7tehvR/aWXKoSnchJ4cvdnqka735
+        A6Mx1xIxWx4me2i+SN0rpVbApe7agq+BsNufb8qKAANUipR9c562lx77lXYZ3KobQHQTEgNQs/s
+        +de+EzMJnYFPwIRQMUhF9TCnNJwZSKV/zBVHMhPR4e3v5hMKaxeeSHA==
+X-Received: by 2002:a17:906:8a5a:: with SMTP id gx26mr5525801ejc.78.1630040215385;
+        Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxJ40BL0BSKF4QXHn3M+h3/4+Kn7L1h7Gb3l78NpvqKT/hZyQcIZAqUSaKQEU/3IQpRZUDrLXxv7LIun2nS/i0=
+X-Received: by 2002:a17:906:8a5a:: with SMTP id gx26mr5525782ejc.78.1630040215126;
+ Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210820100832.663931-1-chenhuacai@loongson.cn> <20210825201704.GA3600046@bjorn-Precision-5520>
-In-Reply-To: <20210825201704.GA3600046@bjorn-Precision-5520>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Fri, 27 Aug 2021 12:24:39 +0800
-Message-ID: <CAAhV-H6NM2gdcaOFPgmV_fLcm=x8BSz28Gg2-hqZBRxpcVBOjw@mail.gmail.com>
-Subject: Re: [PATCH V3 0/9] PCI/VGA: Rework default VGA device selection
+References: <CAAd53p5KH69NPMejM93STx3J+0WNBuXzaheWJJoURM39=DLvxg@mail.gmail.com>
+ <20210824145339.GA3453132@bjorn-Precision-5520>
+In-Reply-To: <20210824145339.GA3453132@bjorn-Precision-5520>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 27 Aug 2021 12:56:43 +0800
+Message-ID: <CAAd53p4icgipmdrdJxNR69n7DRRbLm9qTrBZyFySqty3qWv8uA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 1/3] r8169: Implement dynamic ASPM mechanism
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        nic_swsd <nic_swsd@realtek.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+On Tue, Aug 24, 2021 at 10:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Aug 24, 2021 at 03:39:35PM +0800, Kai-Heng Feng wrote:
+> > On Sat, Aug 21, 2021 at 5:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Thu, Aug 19, 2021 at 05:45:22PM +0200, Heiner Kallweit wrote:
+> > > > On 19.08.2021 13:42, Bjorn Helgaas wrote:
+> > > > > On Thu, Aug 19, 2021 at 01:45:40PM +0800, Kai-Heng Feng wrote:
+> > > > >> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
+> > > > >> Same issue can be observed with older vendor drivers.
+> > > > >
+> > > > > On some platforms but not on others?  Maybe the PCIe topology is a
+> > > > > factor?  Do you have bug reports with data, e.g., "lspci -vv" output?
+> > > > >
+> > > > >> The issue is however solved by the latest vendor driver. There's a new
+> > > > >> mechanism, which disables r8169's internal ASPM when the NIC traffic has
+> > > > >> more than 10 packets, and vice versa.
+> > > > >
+> > > > > Presumably there's a time interval related to the 10 packets?  For
+> > > > > example, do you want to disable ASPM if 10 packets are received (or
+> > > > > sent?) in a certain amount of time?
+> > > > >
+> > > > >> The possible reason for this is
+> > > > >> likely because the buffer on the chip is too small for its ASPM exit
+> > > > >> latency.
+> > > > >
+> > > > > Maybe this means the chip advertises incorrect exit latencies?  If so,
+> > > > > maybe a quirk could override that?
+> > > > >
+> > > > >> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
+> > > > >> use dynamic ASPM under Windows. So implement the same mechanism here to
+> > > > >> resolve the issue.
+> > > > >
+> > > > > What exactly is "dynamic ASPM"?
+> > > > >
+> > > > > I see Heiner's comment about this being intended only for a downstream
+> > > > > kernel.  But why?
+> > > > >
+> > > > We've seen various more or less obvious symptoms caused by the broken
+> > > > ASPM support on Realtek network chips. Unfortunately Realtek releases
+> > > > neither datasheets nor errata information.
+> > > > Last time we attempted to re-enable ASPM numerous problem reports came
+> > > > in. These Realtek chips are used on basically every consumer mainboard.
+> > > > The proposed workaround has potential side effects: In case of a
+> > > > congestion in the chip it may take up to a second until ASPM gets
+> > > > disabled, what may affect performance, especially in case of alternating
+> > > > traffic patterns. Also we can't expect support from Realtek.
+> > > > Having said that my decision was that it's too risky to re-enable ASPM
+> > > > in mainline even with this workaround in place. Kai-Heng weights the
+> > > > power saving higher and wants to take the risk in his downstream kernel.
+> > > > If there are no problems downstream after few months, then this
+> > > > workaround may make it to mainline.
+> > >
+> > > Since ASPM apparently works well on some platforms but not others, I'd
+> > > suspect some incorrect exit latencies.
+> >
+> > Can be, but if their dynamic ASPM mechanism can workaround the issue,
+> > maybe their hardware is just designed that way?
+>
+> Designed what way?  You mean the hardware uses the architected ASPM
+> control bits in the PCIe capability to control some ASPM functionality
+> that doesn't work like the spec says it should work?
 
-On Thu, Aug 26, 2021 at 4:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Aug 20, 2021 at 06:08:23PM +0800, Huacai Chen wrote:
-> > My original work is at [1].
-> >
-> > Bjorn do some rework and extension in V2. It moves the VGA arbiter to
-> > the PCI subsystem, fixes a few nits, and breaks a few pieces to make
-> > the main patch a little smaller.
-> >
-> > V3 rewrite the commit log of the last patch (which is also summarized
-> > by Bjorn).
-> >
-> > All comments welcome!
-> >
-> > [1] https://lore.kernel.org/dri-devel/20210705100503.1120643-1-chenhuacai@loongson.cn/
-> >
-> > Bjorn Helgaas (4):
-> >   PCI/VGA: Move vgaarb to drivers/pci
-> >   PCI/VGA: Replace full MIT license text with SPDX identifier
-> >   PCI/VGA: Use unsigned format string to print lock counts
-> >   PCI/VGA: Remove empty vga_arb_device_card_gone()
-> >
-> > Huacai Chen (5):
-> >   PCI/VGA: Move vga_arb_integrated_gpu() earlier in file
-> >   PCI/VGA: Prefer vga_default_device()
-> >   PCI/VGA: Split out vga_arb_update_default_device()
-> >   PCI/VGA: Log bridge control messages when adding devices
-> >   PCI/VGA: Rework default VGA device selection
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/gpu/vga/Kconfig           |  19 ---
-> >  drivers/gpu/vga/Makefile          |   1 -
-> >  drivers/pci/Kconfig               |  19 +++
-> >  drivers/pci/Makefile              |   1 +
-> >  drivers/{gpu/vga => pci}/vgaarb.c | 269 ++++++++++++------------------
-> >  5 files changed, 126 insertions(+), 183 deletions(-)
-> >  rename drivers/{gpu/vga => pci}/vgaarb.c (90%)
->
-> I'm open to merging this series but the v5.15 merge window will
-> probably open on Sunday, and that's too close for a series of this
-> size.
->
-> Moreover, the critical change is still buried in the middle of the
-> last patch ("PCI/VGA: Rework default VGA device selection").  There's
-> way too much going on in that single patch.
->
-> As I mentioned in [1], I think you can make a 1- or 2-line patch that
-> will fix your problem, and I think *that's* the first thing we should
-> do.
->
-> That would be a patch against drivers/gpu/vga/vgaarb.c, so it would be
-> up to the DRM folks to decide whether to take it for v5.15, but at
-> least it would be small enough to review it easily.
-OK, let me try.
+Yes, it requires both standard PCIe ASPM control bits and Realtek
+specific register bits to make ASPM really work.
+Does PCI spec mandates PCIe config space to be the only way to enable ASPM?
 
-Huacai
+>
+> > > Ideally we'd have some launchpad/bugzilla links, and a better
+> > > understanding of the problem, and maybe a quirk that makes this work
+> > > on all platforms without mucking up the driver with ASPM tweaks.
+> >
+> > The tweaks is OS-agnostic and is also implemented in Windows.
+>
+> I assume you mean these tweaks are also implemented in the Windows
+> *driver* from Realtek.  That's not a very convincing argument that
+> this is the way it should work.
+
+Since Realtek doesn't publish any erratum so following the driver
+tweaks is the most practical way to improve the situation under Linux.
+The same tweaks (i.e. dynamically enable/disable ASPM) can also be
+found in another driver, drivers/infiniband/hw/hfi1/aspm.c.
+
+>
+> If ASPM works well on some platforms, we should be able to make it
+> work well on other platforms, too.  The actual data ("lspci -vvxxx")
+> from working and problematic platforms might have hints.
+
+OK, I'll ask affected users' lspci data.
+
+>
+>
+> > > But I'm a little out of turn here because the only direct impact to
+> > > the PCI core is the pcie_aspm_supported() interface.  It *looks* like
+> > > these patches don't actually touch the PCIe architected ASPM controls
+> > > in Link Control; all I see is mucking with Realtek-specific registers.
+> >
+> > AFAICT, Realtek ethernet NIC and wireless NIC both have two layers of
+> > ASPM, one is the regular PCIe ASPM, and a Realtek specific internal
+> > ASPM.
+> > Both have to be enabled to really make ASPM work for them.
+>
+> It's common for devices to have chicken bits.  But when a feature is
+> enabled, it should work as defined by the PCIe spec so it will work
+> with other spec-compliant devices.
+
+I have no idea why they designed ASPM in two layers. Only Realtek
+knows the reason...
+
 >
 > Bjorn
->
-> [1] https://lore.kernel.org/r/20210724001043.GA448782@bjorn-Precision-5520
