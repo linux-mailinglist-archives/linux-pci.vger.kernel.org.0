@@ -2,211 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9861E3F94B5
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 08:59:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7472A3F956C
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 09:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243142AbhH0HAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 03:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbhH0G75 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 02:59:57 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63A3C0613CF;
-        Thu, 26 Aug 2021 23:59:08 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id j4-20020a17090a734400b0018f6dd1ec97so4160984pjs.3;
-        Thu, 26 Aug 2021 23:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Rqn+GrCddwb17438Eb7/acjTBeKWly1ebyK4GCadnFc=;
-        b=Ahob/aCaoxGGmBX3uT/2Oo+coR/T1tys8xgPUYlJZHQ+79x1W7tMhNYHihEb3g00Pw
-         m+dgL0BLb9DG6XuqQrGIlpqK11vUr+Y2ytYHZ7LdTBFa1tFBJE3STgSjF41FypNGQroh
-         EB33JFOQSvpQcvOA/KVG6FqtXl7O0+BT+q4qQg5vtIojCX29E2kJoRY1MRvb3ovAgDbp
-         aFXAm0ssP0g7n3TLr2XOHHUaLQbsPjFKeMCjJaff6OnyliY0dDUUm9ACwqxN5BizOny5
-         6o6R1k1p3THp4VGKPD1gPgbF9N5SJmHFccehHvyHptaqGZoYeq1bOsTJYfzYeYbXFcTi
-         n8+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Rqn+GrCddwb17438Eb7/acjTBeKWly1ebyK4GCadnFc=;
-        b=ToFay4Mj171KSgAatRKbwrZRLxjM1j14IwtUx4af3DJaHCEo7VueRmcCerm9u0R0h7
-         zMCIJxbIoFyCGq1qzK4YABwtmkqF0PntLqY09nZRgYRD8RzB9A/X3p1GJhNsUc5RCKP6
-         uWk1J5WaqRFqUQCCUG5PzoZaZKipTGQmvXcn9XX0C8/ZNhuZUMwB4Dhj4ACyr4ZYdx2e
-         ymc/kiobx37ur98IjTzBoTdMD1xC6h9aVzW8ILceizEer8qFS6k9bbQK7p4aq2EPljxf
-         kruW11Lf/cldZpSMD+3+2JxfkC+7+PxuoFUxevHwltYku8u/woi7+Z9YNDIecECvB1h+
-         dTnw==
-X-Gm-Message-State: AOAM532go+s8Liqomo/NuCHFO1Ipw7T2YHTQsQ4tMwZ/Rsm+vHZFNOeq
-        +gL7u+jikXdELWQEo7dO/mZWzY4dfUMGg+NmOGw=
-X-Google-Smtp-Source: ABdhPJzbMPfKsiNwRsmJ6wf35o+bM3Vsllxj/xaKs1Zg3gEKi2+LtrBilr6TwQqyx2Jk+YbMtx83ULLwDM5rxvcqh8o=
-X-Received: by 2002:a17:902:bb81:b0:12d:a7ec:3d85 with SMTP id
- m1-20020a170902bb8100b0012da7ec3d85mr7349833pls.17.1630047548297; Thu, 26 Aug
- 2021 23:59:08 -0700 (PDT)
+        id S244460AbhH0Hue (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 03:50:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59973 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244506AbhH0Hud (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Aug 2021 03:50:33 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10088"; a="216069872"
+X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
+   d="scan'208";a="216069872"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 00:49:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
+   d="scan'208";a="495564106"
+Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Aug 2021 00:49:42 -0700
+Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mJWcP-0002GW-Sb; Fri, 27 Aug 2021 07:49:41 +0000
+Date:   Fri, 27 Aug 2021 15:49:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/iommu] BUILD SUCCESS
+ 1c4af5fa63fd6f8e96ce1e6b4a2062eb1819cf72
+Message-ID: <612898f3.BsErvFboSvA7f6ME%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20210624155526.2775863-1-tientzu@chromium.org> <20210624155526.2775863-11-tientzu@chromium.org>
-In-Reply-To: <20210624155526.2775863-11-tientzu@chromium.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 27 Aug 2021 09:58:32 +0300
-Message-ID: <CAHp75VfVhVGFEQGeUKajrUKmkx_et_KakDDgroC2BrMMhd62yg@mail.gmail.com>
-Subject: Re: [PATCH v15 10/12] swiotlb: Add restricted DMA pool initialization
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        benh@kernel.crashing.org, paulus@samba.org,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        sstabellini@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        grant.likely@arm.com, xypron.glpk@gmx.de,
-        Thierry Reding <treding@nvidia.com>, mingo@kernel.org,
-        bauerman@linux.ibm.com, peterz@infradead.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        heikki.krogerus@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>, tfiga@chromium.org,
-        bskeggs@redhat.com, bhelgaas@google.com, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
-        jxgao@google.com, joonas.lahtinen@linux.intel.com,
-        linux-pci@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        matthew.auld@intel.com, rodrigo.vivi@intel.com,
-        thomas.hellstrom@linux.intel.com, thomas.lendacky@amd.com,
-        quic_qiancai@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 24, 2021 at 6:59 PM Claire Chang <tientzu@chromium.org> wrote:
->
-> Add the initialization function to create restricted DMA pools from
-> matching reserved-memory nodes.
->
-> Regardless of swiotlb setting, the restricted DMA pool is preferred if
-> available.
->
-> The restricted DMA pools provide a basic level of protection against the
-> DMA overwriting buffer contents at unexpected times. However, to protect
-> against general data leakage and system memory corruption, the system
-> needs to provide a way to lock down the memory access, e.g., MPU.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/iommu
+branch HEAD: 1c4af5fa63fd6f8e96ce1e6b4a2062eb1819cf72  PCI: Set dma-can-stall for HiSilicon chips
 
+elapsed time: 736m
 
+configs tested: 203
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20210827
+i386                 randconfig-c001-20210826
+powerpc              randconfig-c003-20210826
+sh                           se7722_defconfig
+powerpc                     powernv_defconfig
+um                             i386_defconfig
+powerpc                        warp_defconfig
+mips                      loongson3_defconfig
+arm                    vt8500_v6_v7_defconfig
+xtensa                    xip_kc705_defconfig
+mips                     loongson1b_defconfig
+powerpc                      ppc64e_defconfig
+parisc                generic-32bit_defconfig
+arm                          ep93xx_defconfig
+powerpc                         ps3_defconfig
+sh                               alldefconfig
+arm                            lart_defconfig
+sh                         apsh4a3a_defconfig
+arm                           viper_defconfig
+powerpc                    amigaone_defconfig
+m68k                       m5249evb_defconfig
+sh                         microdev_defconfig
+arm                            mmp2_defconfig
+powerpc                       eiger_defconfig
+powerpc                 canyonlands_defconfig
+arm                         cm_x300_defconfig
+mips                           ip27_defconfig
+powerpc                 mpc8313_rdb_defconfig
+s390                             alldefconfig
+nds32                            alldefconfig
+powerpc                    ge_imp3a_defconfig
+sh                          rsk7269_defconfig
+powerpc                 mpc837x_mds_defconfig
+arm                      integrator_defconfig
+um                           x86_64_defconfig
+powerpc                   lite5200b_defconfig
+riscv                    nommu_virt_defconfig
+arm                         vf610m4_defconfig
+arm                          collie_defconfig
+ia64                        generic_defconfig
+powerpc                 mpc834x_itx_defconfig
+sh                          landisk_defconfig
+sh                          rsk7264_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                    gamecube_defconfig
+arm                        spear3xx_defconfig
+arm                            zeus_defconfig
+h8300                     edosk2674_defconfig
+powerpc                     pq2fads_defconfig
+arm                         bcm2835_defconfig
+mips                        jmr3927_defconfig
+mips                       bmips_be_defconfig
+powerpc                      pcm030_defconfig
+openrisc                  or1klitex_defconfig
+arm                        realview_defconfig
+m68k                            mac_defconfig
+mips                      pistachio_defconfig
+s390                          debug_defconfig
+powerpc                 mpc8272_ads_defconfig
+arc                            hsdk_defconfig
+arm                           h5000_defconfig
+arm                            mps2_defconfig
+powerpc                 mpc836x_mds_defconfig
+sh                           se7712_defconfig
+m68k                        m5272c3_defconfig
+xtensa                  cadence_csp_defconfig
+m68k                           sun3_defconfig
+powerpc                           allnoconfig
+powerpc                     akebono_defconfig
+arm                             ezx_defconfig
+powerpc                 mpc85xx_cds_defconfig
+mips                           ip28_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                   microwatt_defconfig
+xtensa                  nommu_kc705_defconfig
+riscv                    nommu_k210_defconfig
+arm                           corgi_defconfig
+sh                ecovec24-romimage_defconfig
+mips                            e55_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                        fsp2_defconfig
+sparc                       sparc32_defconfig
+arm                        multi_v7_defconfig
+arc                          axs101_defconfig
+mips                         tb0219_defconfig
+nios2                         10m50_defconfig
+sh                   secureedge5410_defconfig
+powerpc                     pseries_defconfig
+arm                           omap1_defconfig
+powerpc                  storcenter_defconfig
+arm                       spear13xx_defconfig
+ia64                             alldefconfig
+arm                         shannon_defconfig
+arm                          pcm027_defconfig
+sparc                       sparc64_defconfig
+microblaze                      mmu_defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a005-20210826
+x86_64               randconfig-a006-20210826
+x86_64               randconfig-a001-20210826
+x86_64               randconfig-a003-20210826
+x86_64               randconfig-a004-20210826
+x86_64               randconfig-a002-20210826
+x86_64               randconfig-a014-20210827
+x86_64               randconfig-a015-20210827
+x86_64               randconfig-a016-20210827
+x86_64               randconfig-a013-20210827
+x86_64               randconfig-a012-20210827
+x86_64               randconfig-a011-20210827
+i386                 randconfig-a011-20210827
+i386                 randconfig-a016-20210827
+i386                 randconfig-a012-20210827
+i386                 randconfig-a014-20210827
+i386                 randconfig-a013-20210827
+i386                 randconfig-a015-20210827
+arc                  randconfig-r043-20210827
+riscv                randconfig-r042-20210827
+s390                 randconfig-r044-20210827
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-> +static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
-> +                                   struct device *dev)
-> +{
-> +       struct io_tlb_mem *mem =3D rmem->priv;
-> +       unsigned long nslabs =3D rmem->size >> IO_TLB_SHIFT;
-> +
-> +       /*
-> +        * Since multiple devices can share the same pool, the private da=
-ta,
-> +        * io_tlb_mem struct, will be initialized by the first device att=
-ached
-> +        * to it.
-> +        */
+clang tested configs:
+i386                 randconfig-c001-20210826
+s390                 randconfig-c005-20210826
+arm                  randconfig-c002-20210826
+riscv                randconfig-c006-20210826
+powerpc              randconfig-c003-20210826
+x86_64               randconfig-c007-20210826
+mips                 randconfig-c004-20210826
+s390                 randconfig-c005-20210827
+i386                 randconfig-c001-20210827
+arm                  randconfig-c002-20210827
+riscv                randconfig-c006-20210827
+powerpc              randconfig-c003-20210827
+x86_64               randconfig-c007-20210827
+mips                 randconfig-c004-20210827
+x86_64               randconfig-a005-20210827
+x86_64               randconfig-a001-20210827
+x86_64               randconfig-a006-20210827
+x86_64               randconfig-a003-20210827
+x86_64               randconfig-a004-20210827
+x86_64               randconfig-a002-20210827
+i386                 randconfig-a006-20210827
+i386                 randconfig-a001-20210827
+i386                 randconfig-a002-20210827
+i386                 randconfig-a005-20210827
+i386                 randconfig-a004-20210827
+i386                 randconfig-a003-20210827
+x86_64               randconfig-a014-20210826
+x86_64               randconfig-a015-20210826
+x86_64               randconfig-a016-20210826
+x86_64               randconfig-a013-20210826
+x86_64               randconfig-a012-20210826
+x86_64               randconfig-a011-20210826
+i386                 randconfig-a011-20210826
+i386                 randconfig-a016-20210826
+i386                 randconfig-a012-20210826
+i386                 randconfig-a014-20210826
+i386                 randconfig-a013-20210826
+i386                 randconfig-a015-20210826
+hexagon              randconfig-r041-20210826
+hexagon              randconfig-r045-20210826
+riscv                randconfig-r042-20210826
+s390                 randconfig-r044-20210826
 
-> +       if (!mem) {
-
-Can it be rather
-
-if (mem)
-  goto out_assign;
-
-or so?
-
-> +               mem =3D kzalloc(struct_size(mem, slots, nslabs), GFP_KERN=
-EL);
-> +               if (!mem)
-> +                       return -ENOMEM;
-> +
-> +               set_memory_decrypted((unsigned long)phys_to_virt(rmem->ba=
-se),
-> +                                    rmem->size >> PAGE_SHIFT);
-
-Below you are using a macro from pfn.h, but not here, I think it's PFN_DOWN=
-().
-
-> +               swiotlb_init_io_tlb_mem(mem, rmem->base, nslabs, false);
-> +               mem->force_bounce =3D true;
-> +               mem->for_alloc =3D true;
-> +
-> +               rmem->priv =3D mem;
-> +
-> +               if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> +                       mem->debugfs =3D
-> +                               debugfs_create_dir(rmem->name, debugfs_di=
-r);
-> +                       swiotlb_create_debugfs_files(mem);
-> +               }
-> +       }
-> +
-> +       dev->dma_io_tlb_mem =3D mem;
-> +
-> +       return 0;
-> +}
-> +
-> +static void rmem_swiotlb_device_release(struct reserved_mem *rmem,
-> +                                       struct device *dev)
-> +{
-> +       dev->dma_io_tlb_mem =3D io_tlb_default_mem;
-> +}
-> +
-> +static const struct reserved_mem_ops rmem_swiotlb_ops =3D {
-> +       .device_init =3D rmem_swiotlb_device_init,
-> +       .device_release =3D rmem_swiotlb_device_release,
-> +};
-> +
-> +static int __init rmem_swiotlb_setup(struct reserved_mem *rmem)
-> +{
-> +       unsigned long node =3D rmem->fdt_node;
-> +
-> +       if (of_get_flat_dt_prop(node, "reusable", NULL) ||
-> +           of_get_flat_dt_prop(node, "linux,cma-default", NULL) ||
-> +           of_get_flat_dt_prop(node, "linux,dma-default", NULL) ||
-> +           of_get_flat_dt_prop(node, "no-map", NULL))
-> +               return -EINVAL;
-> +
-> +       if (PageHighMem(pfn_to_page(PHYS_PFN(rmem->base)))) {
-> +               pr_err("Restricted DMA pool must be accessible within the=
- linear mapping.");
-> +               return -EINVAL;
-> +       }
-> +
-> +       rmem->ops =3D &rmem_swiotlb_ops;
-> +       pr_info("Reserved memory: created restricted DMA pool at %pa, siz=
-e %ld MiB\n",
-> +               &rmem->base, (unsigned long)rmem->size / SZ_1M);
-
-Oh l=C3=A0 l=C3=A0, besides explicit casting that I believe can be avoided,=
- %ld
-!=3D unsigned long. Can you check the printk-formats.rst document?
-
-> +       return 0;
-> +}
-> +
-> +RESERVEDMEM_OF_DECLARE(dma, "restricted-dma-pool", rmem_swiotlb_setup);
->  #endif /* CONFIG_DMA_RESTRICTED_POOL */
-
---=20
-With Best Regards,
-Andy Shevchenko
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
