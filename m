@@ -2,64 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E94073F93D6
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 06:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFC733F9458
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Aug 2021 08:24:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231164AbhH0E5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Aug 2021 00:57:45 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:35458
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229645AbhH0E5p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 00:57:45 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        id S244310AbhH0GYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Aug 2021 02:24:09 -0400
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:41294
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244304AbhH0GYI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Aug 2021 02:24:08 -0400
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D0E714076D
-        for <linux-pci@vger.kernel.org>; Fri, 27 Aug 2021 04:56:55 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8E0173F323
+        for <linux-pci@vger.kernel.org>; Fri, 27 Aug 2021 06:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1630040215;
-        bh=k2kXvQJzyGKPPRNtItos+fbwHILHlMCv9moNO8dHNrs=;
+        s=20210705; t=1630045399;
+        bh=ohSVakcde5SU9A5Azhvp1T8TDHvhvAjJTMuWk8UJlQA=;
         h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
          To:Cc:Content-Type;
-        b=OUIXVPTiq4bw6kmhRfIUlWs0aLZ14JHqzXSMQJ1ofu+lPxJvM4wlzrWG6eFpclXaH
-         4BG+ZjJqzeqWHBxktrT4LodpwBvF5HzIEutFmtIG4+kzP/r/TZlYaaVYWOkqAHqrq+
-         W/vkRJiih2dO8Y+V1fEoOD/+F1r/OeDNG4iONh1F3qkVvx5yPuNuh5svyNKNe0aRcD
-         zl01UazvcmtW9oPHQcXNqSxBELAWb4ATwqlivZ7OJN6nb330uhiR9wLIyOXdXtrU7y
-         TaELptaKgeQz1YikzYW5gEAs3+w/jlRCCCLVmqrmzoQwhcN8TBM3Febs4dHnU2pzRQ
-         Hh2lNFBzKl3cQ==
-Received: by mail-ed1-f70.google.com with SMTP id s8-20020a508dc8000000b003c19f7fe952so2700877edh.7
-        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
+        b=kjcS/05w3jqjmeCMVj/qv5Cv29NjGhhwEYQ0knwiu/Q5HR2w/jHJUEeOzFLL+2nTm
+         WsKcRLdqbWhEF/l3Q/qQEohkqxdQfDnb/zZN0Kh/u00x4NfTAbuFPv61vZA1ZLGbdW
+         izlUfuL6xJPKaVWVN+QHdmFriPINKYJuuMcYITpHzszLJ/qNMmPSC2J4Tjsyg62uiZ
+         Ga/EViqMMC/Vpcci/eyHOxaQSV/czxuEJ65yOr7MzbeE5UgNP62z1jxSVRXf9yjN7B
+         kKjzkjgS+F+3vks/SFbERVgui2NyDJ0TiRYUY6hxDdNBBUSOtXu92km7q+myPviljv
+         cdSB9x+3Ps8Tw==
+Received: by mail-ej1-f70.google.com with SMTP id gw26-20020a170906f15a00b005c48318c60eso2206326ejb.7
+        for <linux-pci@vger.kernel.org>; Thu, 26 Aug 2021 23:23:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=k2kXvQJzyGKPPRNtItos+fbwHILHlMCv9moNO8dHNrs=;
-        b=Icpj4FT1EjIh6eIdJ112oNRsuoXimYYEvgH/0XC8oieFpnP3NfOBHPYuPvw7jFpsE3
-         XFgDOOy4Zj/PIffbA/iC4tV56hPgJuohPtinVZoLSFlVKa3jalKFLFbPsqczm7glePEq
-         Nuz762lNvE/HixjD3IOlAjBMYWUswudG2aLT9IfbHd/RCczGx/qA6kpzsQeei0wo+d95
-         SbAJ/CdZbKIGAA8oy1DPEupSarCvmByA24kOLVq5molL4YjmgKIJ/21F3MCS5Sq2x8L2
-         mRb1o24xO+QMhMm0LOGgsSdBiVd7Ya8c/QLIW73gQ4kDctBYWmsG68dqFA7gTJFxBQJT
-         4iFA==
-X-Gm-Message-State: AOAM533yebNj2ZmaFhVNarT+R12G7tehvR/aWXKoSnchJ4cvdnqka735
-        A6Mx1xIxWx4me2i+SN0rpVbApe7agq+BsNufb8qKAANUipR9c562lx77lXYZ3KobQHQTEgNQs/s
-        +de+EzMJnYFPwIRQMUhF9TCnNJwZSKV/zBVHMhPR4e3v5hMKaxeeSHA==
-X-Received: by 2002:a17:906:8a5a:: with SMTP id gx26mr5525801ejc.78.1630040215385;
-        Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxJ40BL0BSKF4QXHn3M+h3/4+Kn7L1h7Gb3l78NpvqKT/hZyQcIZAqUSaKQEU/3IQpRZUDrLXxv7LIun2nS/i0=
-X-Received: by 2002:a17:906:8a5a:: with SMTP id gx26mr5525782ejc.78.1630040215126;
- Thu, 26 Aug 2021 21:56:55 -0700 (PDT)
+        bh=ohSVakcde5SU9A5Azhvp1T8TDHvhvAjJTMuWk8UJlQA=;
+        b=XLgBQlivYulrrOTmE2e6V197PI/sq4LnSENvjRAQnOy3dUBttG5h5KxjDA3Xkn2RBT
+         /BstAj+8Jd/CDeZK6z2UBYnd6xsvM0mDlSwW3YJayfOaR6GilDk0IpLN7G85O+BbqQ3f
+         w2x2MfpMQ6lyOGIOHfXvBoIaOhN5DCTVyL3qtG7bJa2wveQmlqwdeJlDYMtrJrPhr8kJ
+         RioMYHEauCrSLVAN+WOd0AOQvVfhRzRRPSefg0kLNgO+0YxgEpqvQjaFGM+nGBNmQm3s
+         93I/wGxrISA0DtG6rkBnt3b3Xnd9fD+hMcWv5VaswjUnrVbKAFNylciwCxR1GjaiYPqL
+         7T7g==
+X-Gm-Message-State: AOAM5309dpIdvEoZjET/k5K1bJts16NdG7qVgK60MXULtvnR2vFKL/EW
+        Nt7Tzrc0b+coh5RyKfECS/qQcp/USOAbPjOUM9TWQjcd04sPhhFBxS7+Q2vQI6B/Y+nX3WuEVED
+        bfEzjdoJFpK4Ev8pduIvJ5DkTrUID525ahWdO2rym1E2yFD0+aC5U1Q==
+X-Received: by 2002:a17:907:2d8b:: with SMTP id gt11mr8486704ejc.432.1630045399169;
+        Thu, 26 Aug 2021 23:23:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwPW07mr7W5GhSow8wp/eSxl6XrHTu2nLBhPVJIML5dI1P2dUXQb8SwvbkQfC3LuSgHoRa+f3dhNXTcnF2j5Eo=
+X-Received: by 2002:a17:907:2d8b:: with SMTP id gt11mr8486677ejc.432.1630045398810;
+ Thu, 26 Aug 2021 23:23:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAd53p5KH69NPMejM93STx3J+0WNBuXzaheWJJoURM39=DLvxg@mail.gmail.com>
- <20210824145339.GA3453132@bjorn-Precision-5520>
-In-Reply-To: <20210824145339.GA3453132@bjorn-Precision-5520>
+References: <20210819054542.608745-1-kai.heng.feng@canonical.com>
+ <20210819054542.608745-4-kai.heng.feng@canonical.com> <084b8ea3-99d8-3393-4b74-0779c92fde64@gmail.com>
+ <CAAd53p4CYOOXjyNdTnBtsQ+2MW-Jar8fgEfPFZHSPrJde=HqVA@mail.gmail.com> <d3e4ec0b-2681-1b3c-f0ca-828b24b253e7@gmail.com>
+In-Reply-To: <d3e4ec0b-2681-1b3c-f0ca-828b24b253e7@gmail.com>
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 27 Aug 2021 12:56:43 +0800
-Message-ID: <CAAd53p4icgipmdrdJxNR69n7DRRbLm9qTrBZyFySqty3qWv8uA@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 1/3] r8169: Implement dynamic ASPM mechanism
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        nic_swsd <nic_swsd@realtek.com>,
+Date:   Fri, 27 Aug 2021 14:23:07 +0800
+Message-ID: <CAAd53p7JLemocM+rA-EyiuX=asYg5__J07+F9W7YZpUgWVMrPg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 3/3] r8169: Enable ASPM for selected NICs
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     nic_swsd <nic_swsd@realtek.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         David Miller <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -71,114 +71,132 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 10:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Aug 19, 2021 at 5:56 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
 >
-> On Tue, Aug 24, 2021 at 03:39:35PM +0800, Kai-Heng Feng wrote:
-> > On Sat, Aug 21, 2021 at 5:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Thu, Aug 19, 2021 at 05:45:22PM +0200, Heiner Kallweit wrote:
-> > > > On 19.08.2021 13:42, Bjorn Helgaas wrote:
-> > > > > On Thu, Aug 19, 2021 at 01:45:40PM +0800, Kai-Heng Feng wrote:
-> > > > >> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> > > > >> Same issue can be observed with older vendor drivers.
-> > > > >
-> > > > > On some platforms but not on others?  Maybe the PCIe topology is a
-> > > > > factor?  Do you have bug reports with data, e.g., "lspci -vv" output?
-> > > > >
-> > > > >> The issue is however solved by the latest vendor driver. There's a new
-> > > > >> mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> > > > >> more than 10 packets, and vice versa.
-> > > > >
-> > > > > Presumably there's a time interval related to the 10 packets?  For
-> > > > > example, do you want to disable ASPM if 10 packets are received (or
-> > > > > sent?) in a certain amount of time?
-> > > > >
-> > > > >> The possible reason for this is
-> > > > >> likely because the buffer on the chip is too small for its ASPM exit
-> > > > >> latency.
-> > > > >
-> > > > > Maybe this means the chip advertises incorrect exit latencies?  If so,
-> > > > > maybe a quirk could override that?
-> > > > >
-> > > > >> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> > > > >> use dynamic ASPM under Windows. So implement the same mechanism here to
-> > > > >> resolve the issue.
-> > > > >
-> > > > > What exactly is "dynamic ASPM"?
-> > > > >
-> > > > > I see Heiner's comment about this being intended only for a downstream
-> > > > > kernel.  But why?
-> > > > >
-> > > > We've seen various more or less obvious symptoms caused by the broken
-> > > > ASPM support on Realtek network chips. Unfortunately Realtek releases
-> > > > neither datasheets nor errata information.
-> > > > Last time we attempted to re-enable ASPM numerous problem reports came
-> > > > in. These Realtek chips are used on basically every consumer mainboard.
-> > > > The proposed workaround has potential side effects: In case of a
-> > > > congestion in the chip it may take up to a second until ASPM gets
-> > > > disabled, what may affect performance, especially in case of alternating
-> > > > traffic patterns. Also we can't expect support from Realtek.
-> > > > Having said that my decision was that it's too risky to re-enable ASPM
-> > > > in mainline even with this workaround in place. Kai-Heng weights the
-> > > > power saving higher and wants to take the risk in his downstream kernel.
-> > > > If there are no problems downstream after few months, then this
-> > > > workaround may make it to mainline.
-> > >
-> > > Since ASPM apparently works well on some platforms but not others, I'd
-> > > suspect some incorrect exit latencies.
+> On 19.08.2021 08:50, Kai-Heng Feng wrote:
+> > On Thu, Aug 19, 2021 at 2:08 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >>
+> >> On 19.08.2021 07:45, Kai-Heng Feng wrote:
+> >>> The latest vendor driver enables ASPM for more recent r8168 NICs, so
+> >>> disable ASPM on older chips and enable ASPM for the rest.
+> >>>
+> >>> Rename aspm_manageable to pcie_aspm_manageable to indicate it's ASPM
+> >>> from PCIe, and use rtl_aspm_supported for Realtek NIC's internal ASPM
+> >>> function.
+> >>>
+> >>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>> ---
+> >>> v3:
+> >>>  - Use pcie_aspm_supported() to retrieve ASPM support status
+> >>>  - Use whitelist for r8169 internal ASPM status
+> >>>
+> >>> v2:
+> >>>  - No change
+> >>>
+> >>>  drivers/net/ethernet/realtek/r8169_main.c | 27 ++++++++++++++++-------
+> >>>  1 file changed, 19 insertions(+), 8 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> >>> index 3359509c1c351..88e015d93e490 100644
+> >>> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> >>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> >>> @@ -623,7 +623,8 @@ struct rtl8169_private {
+> >>>       } wk;
+> >>>
+> >>>       unsigned supports_gmii:1;
+> >>> -     unsigned aspm_manageable:1;
+> >>> +     unsigned pcie_aspm_manageable:1;
+> >>> +     unsigned rtl_aspm_supported:1;
+> >>>       unsigned rtl_aspm_enabled:1;
+> >>>       struct delayed_work aspm_toggle;
+> >>>       atomic_t aspm_packet_count;
+> >>> @@ -702,6 +703,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
+> >>>              tp->mac_version <= RTL_GIGA_MAC_VER_53;
+> >>>  }
+> >>>
+> >>> +static int rtl_supports_aspm(struct rtl8169_private *tp)
+> >>> +{
+> >>> +     switch (tp->mac_version) {
+> >>> +     case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
+> >>> +     case RTL_GIGA_MAC_VER_37:
+> >>> +     case RTL_GIGA_MAC_VER_39:
+> >>> +     case RTL_GIGA_MAC_VER_43:
+> >>> +     case RTL_GIGA_MAC_VER_47:
+> >>> +             return 0;
+> >>> +     default:
+> >>> +             return 1;
+> >>> +     }
+> >>> +}
+> >>> +
+> >>>  static bool rtl_supports_eee(struct rtl8169_private *tp)
+> >>>  {
+> >>>       return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
+> >>> @@ -2669,7 +2684,7 @@ static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
+> >>>
+> >>>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+> >>>  {
+> >>> -     if (!tp->aspm_manageable && enable)
+> >>> +     if (!(tp->pcie_aspm_manageable && tp->rtl_aspm_supported) && enable)
+> >>>               return;
+> >>>
+> >>>       tp->rtl_aspm_enabled = enable;
+> >>> @@ -5319,12 +5334,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >>>       if (rc)
+> >>>               return rc;
+> >>>
+> >>> -     /* Disable ASPM completely as that cause random device stop working
+> >>> -      * problems as well as full system hangs for some PCIe devices users.
+> >>> -      */
+> >>> -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S |
+> >>> -                                       PCIE_LINK_STATE_L1);
+> >>> -     tp->aspm_manageable = !rc;
+> >>> +     tp->pcie_aspm_manageable = pcie_aspm_supported(pdev);
+> >>
+> >> That's not what I meant, and it's also not correct.
 > >
-> > Can be, but if their dynamic ASPM mechanism can workaround the issue,
-> > maybe their hardware is just designed that way?
->
-> Designed what way?  You mean the hardware uses the architected ASPM
-> control bits in the PCIe capability to control some ASPM functionality
-> that doesn't work like the spec says it should work?
-
-Yes, it requires both standard PCIe ASPM control bits and Realtek
-specific register bits to make ASPM really work.
-Does PCI spec mandates PCIe config space to be the only way to enable ASPM?
-
->
-> > > Ideally we'd have some launchpad/bugzilla links, and a better
-> > > understanding of the problem, and maybe a quirk that makes this work
-> > > on all platforms without mucking up the driver with ASPM tweaks.
+> > In case I make another mistake in next series, let me ask it more clearly...
+> > What you meant was to check both link->aspm_enabled and link->aspm_support?
 > >
-> > The tweaks is OS-agnostic and is also implemented in Windows.
->
-> I assume you mean these tweaks are also implemented in the Windows
-> *driver* from Realtek.  That's not a very convincing argument that
-> this is the way it should work.
+> aspm_enabled can be changed by the user at any time.
 
-Since Realtek doesn't publish any erratum so following the driver
-tweaks is the most practical way to improve the situation under Linux.
-The same tweaks (i.e. dynamically enable/disable ASPM) can also be
-found in another driver, drivers/infiniband/hw/hfi1/aspm.c.
+OK, will check that too.
 
->
-> If ASPM works well on some platforms, we should be able to make it
-> work well on other platforms, too.  The actual data ("lspci -vvxxx")
-> from working and problematic platforms might have hints.
+> pci_disable_link_state() also considers whether BIOS forbids that OS
+> mess with ASPM. See aspm_disabled.
 
-OK, I'll ask affected users' lspci data.
+I think aspm_disabled means leave BIOS ASPM setting intact?
+So If PCIe ASPM is already enabled, we should also enable Realtek
+specific bits to make ASPM really work.
 
 >
->
-> > > But I'm a little out of turn here because the only direct impact to
-> > > the PCI core is the pcie_aspm_supported() interface.  It *looks* like
-> > > these patches don't actually touch the PCIe architected ASPM controls
-> > > in Link Control; all I see is mucking with Realtek-specific registers.
+> >>
+> >>> +     tp->rtl_aspm_supported = rtl_supports_aspm(tp);
 > >
-> > AFAICT, Realtek ethernet NIC and wireless NIC both have two layers of
-> > ASPM, one is the regular PCIe ASPM, and a Realtek specific internal
-> > ASPM.
-> > Both have to be enabled to really make ASPM work for them.
->
-> It's common for devices to have chicken bits.  But when a feature is
-> enabled, it should work as defined by the PCIe spec so it will work
-> with other spec-compliant devices.
+> > Is rtl_supports_aspm() what you expect for the whitelist?
+> > And what else am I missing?
+> >
+> I meant use rtl_supports_aspm() to check when ASPM is relevant at all,
 
-I have no idea why they designed ASPM in two layers. Only Realtek
-knows the reason...
+I think that means the relevant bits are link->aspm_capable and
+pcie_aspm_support_enabled().
+ASPM can be already enabled by BIOS with aspm_disabled set.
+
+Then check link->aspm_enabled in aspm_toggle() routine because it can
+be enabled at runtime.
+
+> and in addition use a blacklist for chip versions where ASPM is
+> completely unusable.
+
+Thanks for your suggestion and review.
+
+Kai-Heng
 
 >
-> Bjorn
+> > Kai-Heng
+> >
+> >>>
+> >>>       /* enable device (incl. PCI PM wakeup and hotplug setup) */
+> >>>       rc = pcim_enable_device(pdev);
+> >>>
+> >>
+>
