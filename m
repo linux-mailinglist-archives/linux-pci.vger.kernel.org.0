@@ -2,178 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 810563FA648
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Aug 2021 16:52:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E802B3FA788
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Aug 2021 22:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbhH1OxY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Aug 2021 10:53:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42417 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229525AbhH1OxY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 28 Aug 2021 10:53:24 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10090"; a="197667901"
-X-IronPort-AV: E=Sophos;i="5.84,359,1620716400"; 
-   d="scan'208";a="197667901"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2021 07:52:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,359,1620716400"; 
-   d="scan'208";a="458304411"
-Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2021 07:52:30 -0700
-Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mJzh8-0003VT-4r; Sat, 28 Aug 2021 14:52:30 +0000
-Date:   Sat, 28 Aug 2021 22:52:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:wip/amey-reset-v16] BUILD SUCCESS
- 1af889f521aa87afab0b7d6e0964cd16b1d1266f
-Message-ID: <612a4d9b.1X9++kpIFHsPCDZh%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S231982AbhH1UpH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Aug 2021 16:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230253AbhH1UpH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Aug 2021 16:45:07 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29249C061756;
+        Sat, 28 Aug 2021 13:44:12 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1630183450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jqn7wYgtWLIqZ9aye1ornYrsbRPpzBUqOlOGcb6SmI8=;
+        b=mqKN5AWhujtiGKZ6L81ViYtYwQZi+xkoocav2zijsXbog4utBtunya7RVvX83UM298WNU0
+        g6b4QTbT6X2D/Uxjb06CtP0EKazlp+YTAyDYgoBOOcdeT7XUEUfMPxo2B7bgda1BhRXo21
+        AZE5GrHgCMvNhfjGefKyXHemYvVxU8/PxkTF52lDqFLQoe9LgtmqcekJaGLc74ZOzZe+sz
+        KGP1In38tJbTvDk7FoNPwAsrM6I01dg1bgBWAU9jddoa2YuKRb8JaluRwun7nAZXcWBm1f
+        DAmPlfPDvhlKtwTNLFyxMdvDoH6M7EYHeohvn4MVVwk1vf0fNOyLfXDI4zifZg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1630183450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jqn7wYgtWLIqZ9aye1ornYrsbRPpzBUqOlOGcb6SmI8=;
+        b=ez+HiTr9a13KmBngRjTOOnKKW3JeJJIguEpv3Zlr6LZei7W2GH62vHq5OMOZAn3KN3JGx0
+        oEVaZ7hY/QX9bODA==
+To:     Dexuan Cui <decui@microsoft.com>,
+        'Saeed Mahameed' <saeed@kernel.org>,
+        'Leon Romanovsky' <leon@kernel.org>
+Cc:     "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'x86@kernel.org'" <x86@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: RE: [5.14-rc1] mlx5_core receives no interrupts with maxcpus=8
+In-Reply-To: <draft-87h7fa1m37.ffs@tglx>
+References: <draft-87h7fa1m37.ffs@tglx>
+Date:   Sat, 28 Aug 2021 22:44:09 +0200
+Message-ID: <87tuj9guzq.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git wip/amey-reset-v16
-branch HEAD: 1af889f521aa87afab0b7d6e0964cd16b1d1266f  PCI: Change the type of probe argument in reset functions
+Dexuan,
 
-elapsed time: 14170m
+On Sat, Aug 28 2021 at 01:53, Thomas Gleixner wrote:
+> On Thu, Aug 19 2021 at 20:41, Dexuan Cui wrote:
+>>> Sorry for the late response! I checked the below sys file, and the output is
+>>> exactly the same in the good/bad cases -- in both cases, I use maxcpus=8;
+>>> the only difference in the good case is that I online and then offline CPU 8~31:
+>>> for i in `seq 8 31`;  do echo 1 >  /sys/devices/system/cpu/cpu$i/online; done
+>>> for i in `seq 8 31`;  do echo 0 >  /sys/devices/system/cpu/cpu$i/online; done
+>>> 
+>>> # cat /sys/kernel/debug/irq/irqs/209
 
-configs tested: 120
-configs skipped: 3
+Yes, that looks correct.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>>
+>> I tried the kernel parameter "intremap=nosid,no_x2apic_optout,nopost" but
+>> it didn't help. Only "intremap=off" can work round the no interrupt issue.
+>>
+>> When the no interrupt issue happens, irq 209's effective_affinity_list is 5.
+>> I modified modify_irte() to print the irte->low, irte->high, and I also printed
+>> the irte_index for irq 209, and they were all normal to me, and they were
+>> exactly the same in the bad case and the good case -- it looks like, with
+>> "intremap=on maxcpus=8", MSI-X on CPU5 can't work for the NIC device
+>> (MSI-X on CPU5 works for other devices like a NVMe controller) , and somehow
+>> "onlining and then offlining CPU 8~31" can "fix" the issue, which is really weird.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210816
-i386                 randconfig-c001-20210819
-mips                         rt305x_defconfig
-powerpc                 linkstation_defconfig
-arm                       netwinder_defconfig
-powerpc                         ps3_defconfig
-arm                         hackkit_defconfig
-sh                           se7724_defconfig
-parisc                generic-32bit_defconfig
-powerpc                      pmac32_defconfig
-powerpc                    sam440ep_defconfig
-powerpc                     pq2fads_defconfig
-m68k                        m5407c3_defconfig
-sh                               j2_defconfig
-m68k                         amcore_defconfig
-arm                           viper_defconfig
-sh                          rsk7269_defconfig
-arm64                            alldefconfig
-sh                        apsh4ad0a_defconfig
-mips                       bmips_be_defconfig
-powerpc                 mpc837x_rdb_defconfig
-x86_64                           allyesconfig
-mips                          rm200_defconfig
-sh                   sh7770_generic_defconfig
-arm                          iop32x_defconfig
-powerpc                        icon_defconfig
-sh                          rsk7203_defconfig
-mips                     cu1000-neo_defconfig
-arm                            pleb_defconfig
-powerpc                          g5_defconfig
-h8300                     edosk2674_defconfig
-sh                           se7712_defconfig
-sh                        sh7785lcr_defconfig
-xtensa                  cadence_csp_defconfig
-powerpc                           allnoconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a004-20210818
-x86_64               randconfig-a006-20210818
-x86_64               randconfig-a003-20210818
-x86_64               randconfig-a005-20210818
-x86_64               randconfig-a002-20210818
-x86_64               randconfig-a001-20210818
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Just for the record: maxcpus=N is a dangerous boot option as it leaves
+the non brought up CPUs in a state where they can be hit by MCE
+broadcasting without being able to act on it. Which means you're
+operating the system out of spec.
 
-clang tested configs:
-riscv                randconfig-c006-20210818
-s390                 randconfig-c005-20210818
-powerpc              randconfig-c003-20210818
-mips                 randconfig-c004-20210818
-x86_64               randconfig-c007-20210818
-i386                 randconfig-c001-20210818
-arm                  randconfig-c002-20210818
-i386                 randconfig-a004-20210819
-i386                 randconfig-a006-20210819
-i386                 randconfig-a001-20210819
-i386                 randconfig-a002-20210819
-i386                 randconfig-a003-20210819
-i386                 randconfig-a005-20210819
-x86_64               randconfig-a013-20210818
-x86_64               randconfig-a011-20210818
-x86_64               randconfig-a012-20210818
-x86_64               randconfig-a016-20210818
-x86_64               randconfig-a014-20210818
-x86_64               randconfig-a015-20210818
-i386                 randconfig-a015-20210818
-i386                 randconfig-a011-20210818
-i386                 randconfig-a013-20210818
-i386                 randconfig-a014-20210818
-i386                 randconfig-a016-20210818
-i386                 randconfig-a012-20210818
-hexagon              randconfig-r041-20210818
-riscv                randconfig-r042-20210818
-s390                 randconfig-r044-20210818
-hexagon              randconfig-r045-20210818
+According to your debug output the interrupt in question belongs to the
+INTEL-IR-3 interrupt domain, which means it hangs of IOMMU3, aka DMAR
+unit 3.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+To which DMAR/remap unit are the other unaffected devices connected to?
+
+Thanks,
+
+        tglx
+
