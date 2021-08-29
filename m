@@ -2,99 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533403FAB2D
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 13:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51FD83FAC74
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 17:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235288AbhH2Lr6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Aug 2021 07:47:58 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:61299 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbhH2Lrx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Aug 2021 07:47:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1630237621; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=FrcsjeYEV4aD3jrH0YZK+LgW/bik9E8xvwieK0EEtzY=;
- b=m8PzL64UCzg8HozLNkKYVtOWE82rT/8KSYznRtTuI1iydhVPsNON3fJw0w6azYiYl6zxBNtA
- MjihDgHByyQBoBBj76gI9G2V7pex0Gpif8w/DgEiur9pg42UiZ0d1AIYOGIN0E2wnRgE22GO
- /ICjX95NgPGgwMOW3rfdxZXguJA=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 612b73b4825e13c54a3674b6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 29 Aug 2021 11:47:00
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 250C0C4338F; Sun, 29 Aug 2021 11:47:00 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        MISSING_DATE,MISSING_MID,SPF_FAIL autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3DF9AC4338F;
-        Sun, 29 Aug 2021 11:46:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 3DF9AC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S235511AbhH2PPd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Aug 2021 11:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231216AbhH2PPb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Aug 2021 11:15:31 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDE6C061575;
+        Sun, 29 Aug 2021 08:14:39 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id 37so6325830uau.13;
+        Sun, 29 Aug 2021 08:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CE5DJ6I0bkqbGScS9NHu7P+t4w7mOT4FbVurC5+UIKw=;
+        b=K3bPJ2wK1Ok8UQJoPWFjDCOt5KkMvjpWTPPSd9kxvWAMw+Nj4rDoLHfDJ0fbbOkvAe
+         4nWdOKLhtdcPZjm+XVRqzhVjbwCgHFH0FfycB1Gsv5uYILSKGJE0shs1IWZnX9HaFC6l
+         OWsz/iqcv8ei2cQ5PyNRRBIPlu2plTUnUhSBIkpl+GCChA5MTPJ5WKlK7pO5bNWvE1oA
+         2DcsUGoMzwh+tnuO26O5hK34zvoPauqqO+VvOA6kP1gWWR2p1v1uwr7GcnXJjKzNn3DW
+         QNxECArl3/9SL9vmAn/KkS3O2NyXCf8vB1Ud3hiKMRxk9mQu0C7HUV8SrtQXFPyZKBc0
+         BjcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CE5DJ6I0bkqbGScS9NHu7P+t4w7mOT4FbVurC5+UIKw=;
+        b=tPnX25dCSzxEfD92vvtvoMaYnAF7owfIznkvzMFsqnEKfSPlHiVen4R6mhjp3BWaf6
+         bBuMNduXc4uu7E3II7LaBjhLJpoFZNykZ9WkLZnA4Ou86EUpyAQivyxrcpSrdF33Ysar
+         nxtVNP2n3cINppdYgsTRGrTNBDruiRx7ctU4Py4FHtRZQ7udYVl1oEbOhldKqxAxv8o+
+         nOI4aYEFLu4Ze3ilvXdQMoF7ZfvVdrZ3mnGQgW1dx42FrvtmzfVMIjY45DrwqQGfsujM
+         TJp/2qS9RpWePjB08n/jTSZRjWLyT87E9p178R0Qyz7Gj5zOaeEkmQC2NcoS8bzFooQT
+         VXug==
+X-Gm-Message-State: AOAM532edVovH8sOm5aSvqUgNJMmGEXuNxhRZ2tz56QyU9P89WBJgFYK
+        G3xGudMQVOMXlBYtHDhthJL/t/J6emcb0FfpoZg=
+X-Google-Smtp-Source: ABdhPJxNSz5alZOAE48+fiABe+l62fCRif3TJvSSlHYrT6MwKcd1hDeR6n/NQU69bkZyVPpmgdcFW9QTxYeo0z62LWY=
+X-Received: by 2002:ab0:26cd:: with SMTP id b13mr12684124uap.98.1630250078925;
+ Sun, 29 Aug 2021 08:14:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 1/2] mwifiex: pcie: add DMI-based quirk implementation
- for
- Surface devices
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20210820142050.35741-2-verdre@v0yd.nl>
-References: <20210820142050.35741-2-verdre@v0yd.nl>
-To:     =?utf-8?q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        =?utf-8?q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20210822161005.22467-1-sergio.paracuellos@gmail.com>
+ <20210822161005.22467-4-sergio.paracuellos@gmail.com> <YSip4/kMNOG4uYC3@kroah.com>
+In-Reply-To: <YSip4/kMNOG4uYC3@kroah.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Sun, 29 Aug 2021 17:14:27 +0200
+Message-ID: <CAMhs-H_0ytYCoBLj9GJDjHSPPHLC6_oBsm-V9s4FjhE7NY8TCw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] staging: mt7621-pci: set end limit for 'ioport_resource'
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-Id: <20210829114700.250C0C4338F@smtp.codeaurora.org>
-Date:   Sun, 29 Aug 2021 11:47:00 +0000 (UTC)
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-staging@lists.linux.dev, NeilBrown <neil@brown.name>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonas Dreßler <verdre@v0yd.nl> wrote:
+On Fri, Aug 27, 2021 at 11:01 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Aug 22, 2021 at 06:10:05PM +0200, Sergio Paracuellos wrote:
+> > We have increase IO_SPACE_LIMIT for ralink platform to get PCI IO resources
+> > properly handled using PCI core APIs. To align those changes with driver
+> > code we have to set 'ioport_resource' end limit to IO_SPACE_LIMIT to avoid
+> > errors.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> This commit adds the ability to apply device-specific quirks to the
-> mwifiex driver. It uses DMI matching similar to the quirks brcmfmac uses
-> with dmi.c. We'll add identifiers to match various MS Surface devices,
-> which this is primarily meant for, later.
-> 
-> This commit is a slightly modified version of a previous patch sent in
-> by Tsuchiya Yuto.
-> 
-> Co-developed-by: Tsuchiya Yuto <kitakar@gmail.com>
-> Signed-off-by: Tsuchiya Yuto <kitakar@gmail.com>
-> Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Thanks. Since I am planning to move 'mt7621-pci' from staging to
+'drivers/pci/controller' and send v3 after the next merge window, I
+prefer this patch to go through the staging tree. For the other two I
+don't have any preference and it is ok for me to go through mips or
+pci trees. So, Bjorn and Thomas is up to you if you are ok with the
+changes.
 
-2 patches applied to wireless-drivers-next.git, thanks.
+Thanks in advance for your time.
 
-5448bc2a426c mwifiex: pcie: add DMI-based quirk implementation for Surface devices
-a847666accf2 mwifiex: pcie: add reset_d3cold quirk for Surface gen4+ devices
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20210820142050.35741-2-verdre@v0yd.nl/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Best regards,
+    Sergio Paracuellos
