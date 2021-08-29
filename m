@@ -2,230 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E083FAE9F
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 23:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBB023FAE5C
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 22:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233841AbhH2VHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Aug 2021 17:07:03 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34658 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232450AbhH2VG7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Aug 2021 17:06:59 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10091"; a="279191767"
-X-IronPort-AV: E=Sophos;i="5.84,362,1620716400"; 
-   d="scan'208";a="279191767"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2021 14:06:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,362,1620716400"; 
-   d="scan'208";a="518521357"
-Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Aug 2021 14:06:05 -0700
-Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mKS0D-0004aD-8W; Sun, 29 Aug 2021 21:06:05 +0000
-Date:   Mon, 30 Aug 2021 05:05:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/reset] BUILD SUCCESS
- 9bdc81ce440ec6ea899b236879aee470ec388020
-Message-ID: <612bf6af.jSFFMyQJWhMXoHBs%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233841AbhH2UPt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Aug 2021 16:15:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234517AbhH2UPs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Aug 2021 16:15:48 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C64EDC06175F;
+        Sun, 29 Aug 2021 13:14:55 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id dm15so18444757edb.10;
+        Sun, 29 Aug 2021 13:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gWowyDdx9hWadSykEaaEDUsjdIUvYH4g4UM8gIo6z+E=;
+        b=WABp1Rr1vQTvX0gXWSrVXWB0xAQBJ4gU8rKE5eyabfT+C+dYM0u0W453BSE+DXwvq7
+         gBNQBRWrb3QfO3JeY+fy0pt0+XpfD4fXDB4UkkGXA2Pg1bWuBrJCFeCKQbTEd826Ouky
+         RVh9U0Ox1okrLiaWD4QM8qEPFz2qLFvFl4ef2MQX0TVd78GQlJK+8tlXJXthkWVXiJVa
+         yF1EUBapi79W4zjhtYYo8H/aUKr59NCqTG9YajMIZwDhofMpGMZXkUnxwZenb0Bs5WQF
+         V7//SLpWqspo/hc3+VLyOLN5jNqlJICzqx29rfS6KOuoB/KXwjCsSLSS4hSxMHdJYGqs
+         jGBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gWowyDdx9hWadSykEaaEDUsjdIUvYH4g4UM8gIo6z+E=;
+        b=T4Yep8pVEVsFWosvgn1eWOPOeripUiHv56NZRnqSjlszYnnAC4pHrNTNqC/uWcc1RV
+         t37vKdXsNyQ9qS1912rD3sjUSKf8XEZwrD0kinbQz9O5VBYwuQX1OU6nGKKwMIvZQsuZ
+         dBGpMk3Ek8qFot1Kzk6Rq0SmU8LET1Olyvmai2ZzcX3gESL9fQrHBD+NYA5DTOWkd2xZ
+         3nIrci/fL7tZfysOTZC77sJS2ZZzpChMtyBjN/JM2lA3luuB0yTdOzcluVDgIILuO26j
+         YOH2nBukZMj0RHXbUXjOUfB9LpNUpI72JTVShP28Jcn6Ppp2AHlCVTIacm7JXBSukL3U
+         HmuA==
+X-Gm-Message-State: AOAM533nURHOX/27Tl0kdPLs9qx5UFMgKG7R9jHaaBWX3uXYBbEbxErV
+        2pUxJKPRkNUQuO922sh1Bvpwc5XJ6UUvwp+8uws=
+X-Google-Smtp-Source: ABdhPJz41yIvPb/YbMjwfkFtOsqUhztPX4oI1iWfCCpFeBdLPdblridSani8TW2bgMnV2wKFM5CAdA==
+X-Received: by 2002:aa7:d613:: with SMTP id c19mr20499558edr.196.1630268094235;
+        Sun, 29 Aug 2021 13:14:54 -0700 (PDT)
+Received: from localhost.localdomain (host-79-37-188-60.retail.telecomitalia.it. [79.37.188.60])
+        by smtp.gmail.com with ESMTPSA id mf2sm5750149ejb.76.2021.08.29.13.14.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Aug 2021 13:14:53 -0700 (PDT)
+From:   "=?UTF-8?q?Sergio=20Migu=C3=A9ns=20Iglesias?=" <lonyelon@gmail.com>
+X-Google-Original-From: =?UTF-8?q?Sergio=20Migu=C3=A9ns=20Iglesias?= <sergio@lony.xyz>
+To:     konrad.wilk@oracle.com
+Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, bhelgaas@google.com,
+        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Sergio=20Migu=C3=A9ns=20Iglesias?= <sergio@lony.xyz>
+Subject: [PATCH] xen/pcifront: Removed unnecessary __ref annotation
+Date:   Mon, 30 Aug 2021 00:14:15 +0200
+Message-Id: <20210829221415.647744-1-sergio@lony.xyz>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/reset
-branch HEAD: 9bdc81ce440ec6ea899b236879aee470ec388020  PCI: Change the type of probe argument in reset functions
+An unnecessary "__ref" annotation was removed from the
+"drivers/pci/xen_pcifront.c" file. The function where the annotation
+was used was "pcifront_backend_changed()", which does not call any
+functions annotated as "__*init" nor "__*exit". This makes "__ref"
+unnecessary since this annotation is used to make the compiler ignore
+section miss-matches when they are not happening here in the first
+place.
 
-elapsed time: 13230m
+In addition to the aforementioned change, some code style issues were
+fixed in the same file.
 
-configs tested: 172
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210826
-powerpc              randconfig-c003-20210826
-arm                         cm_x300_defconfig
-alpha                            alldefconfig
-m68k                         apollo_defconfig
-powerpc                      pmac32_defconfig
-powerpc                   bluestone_defconfig
-arm                         lpc18xx_defconfig
-arm                       multi_v4t_defconfig
-s390                                defconfig
-mips                        bcm63xx_defconfig
-arc                                 defconfig
-arm                        clps711x_defconfig
-mips                         tb0219_defconfig
-powerpc                 mpc8540_ads_defconfig
-arm                         palmz72_defconfig
-sh                             shx3_defconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                      chrp32_defconfig
-arm                          moxart_defconfig
-ia64                         bigsur_defconfig
-mips                      maltasmvp_defconfig
-xtensa                  nommu_kc705_defconfig
-riscv                            alldefconfig
-powerpc                     asp8347_defconfig
-arc                     nsimosci_hs_defconfig
-m68k                        mvme16x_defconfig
-arm                            xcep_defconfig
-sh                           se7780_defconfig
-arm                          imote2_defconfig
-powerpc                     tqm8541_defconfig
-arm                           h3600_defconfig
-parisc                generic-64bit_defconfig
-riscv                    nommu_virt_defconfig
-arm                       imx_v4_v5_defconfig
-mips                         bigsur_defconfig
-x86_64                           alldefconfig
-arm                          exynos_defconfig
-powerpc                      pasemi_defconfig
-mips                           ip32_defconfig
-arm                           tegra_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                        icon_defconfig
-m68k                          multi_defconfig
-arc                        vdk_hs38_defconfig
-powerpc                 mpc8313_rdb_defconfig
-mips                          rb532_defconfig
-ia64                      gensparse_defconfig
-mips                         cobalt_defconfig
-powerpc                    amigaone_defconfig
-arc                         haps_hs_defconfig
-arm                       aspeed_g5_defconfig
-arm                         s5pv210_defconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                 mpc8272_ads_defconfig
-arc                      axs103_smp_defconfig
-sh                ecovec24-romimage_defconfig
-arm                          badge4_defconfig
-sh                     sh7710voipgw_defconfig
-powerpc                     akebono_defconfig
-sh                          rsk7203_defconfig
-sh                               alldefconfig
-sh                               j2_defconfig
-s390                          debug_defconfig
-powerpc                 linkstation_defconfig
-mips                  decstation_64_defconfig
-microblaze                      mmu_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20210822
-i386                 randconfig-a001-20210822
-i386                 randconfig-a002-20210822
-i386                 randconfig-a005-20210822
-i386                 randconfig-a003-20210822
-i386                 randconfig-a004-20210822
-x86_64               randconfig-a014-20210821
-x86_64               randconfig-a016-20210821
-x86_64               randconfig-a015-20210821
-x86_64               randconfig-a013-20210821
-x86_64               randconfig-a012-20210821
-x86_64               randconfig-a011-20210821
-i386                 randconfig-a011-20210821
-i386                 randconfig-a016-20210821
-i386                 randconfig-a012-20210821
-i386                 randconfig-a014-20210821
-i386                 randconfig-a013-20210821
-i386                 randconfig-a015-20210821
-arc                  randconfig-r043-20210821
-riscv                randconfig-r042-20210821
-s390                 randconfig-r044-20210821
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-i386                 randconfig-c001-20210822
-s390                 randconfig-c005-20210822
-arm                  randconfig-c002-20210822
-riscv                randconfig-c006-20210822
-powerpc              randconfig-c003-20210822
-x86_64               randconfig-c007-20210822
-mips                 randconfig-c004-20210822
-s390                 randconfig-c005-20210821
-i386                 randconfig-c001-20210821
-arm                  randconfig-c002-20210821
-riscv                randconfig-c006-20210821
-powerpc              randconfig-c003-20210821
-x86_64               randconfig-c007-20210821
-x86_64               randconfig-a005-20210821
-x86_64               randconfig-a001-20210821
-x86_64               randconfig-a006-20210821
-x86_64               randconfig-a003-20210821
-x86_64               randconfig-a004-20210821
-x86_64               randconfig-a002-20210821
-i386                 randconfig-a006-20210821
-i386                 randconfig-a001-20210821
-i386                 randconfig-a002-20210821
-i386                 randconfig-a005-20210821
-i386                 randconfig-a004-20210821
-i386                 randconfig-a003-20210821
-i386                 randconfig-a011-20210822
-i386                 randconfig-a016-20210822
-i386                 randconfig-a012-20210822
-i386                 randconfig-a014-20210822
-i386                 randconfig-a013-20210822
-i386                 randconfig-a015-20210822
-hexagon              randconfig-r041-20210822
-hexagon              randconfig-r045-20210822
-riscv                randconfig-r042-20210822
-s390                 randconfig-r044-20210822
-
+Signed-off-by: Sergio Miguéns Iglesias <sergio@lony.xyz>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/pci/xen-pcifront.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+index b7a8f3a1921f..f06661704f3a 100644
+--- a/drivers/pci/xen-pcifront.c
++++ b/drivers/pci/xen-pcifront.c
+@@ -115,7 +115,7 @@ static int do_pci_op(struct pcifront_device *pdev, struct xen_pci_op *op)
+ 	struct xen_pci_op *active_op = &pdev->sh_info->op;
+ 	unsigned long irq_flags;
+ 	evtchn_port_t port = pdev->evtchn;
+-	unsigned irq = pdev->irq;
++	unsigned int irq = pdev->irq;
+ 	s64 ns, ns_timeout;
+ 
+ 	spin_lock_irqsave(&pdev->sh_info_lock, irq_flags);
+@@ -152,11 +152,10 @@ static int do_pci_op(struct pcifront_device *pdev, struct xen_pci_op *op)
+ 		}
+ 	}
+ 
+-	/*
+-	* We might lose backend service request since we
+-	* reuse same evtchn with pci_conf backend response. So re-schedule
+-	* aer pcifront service.
+-	*/
++	/* We might lose backend service request since we
++	 * reuse same evtchn with pci_conf backend response. So re-schedule
++	 * aer pcifront service.
++	 */
+ 	if (test_bit(_XEN_PCIB_active,
+ 			(unsigned long *)&pdev->sh_info->flags)) {
+ 		dev_err(&pdev->xdev->dev,
+@@ -493,7 +492,8 @@ static int pcifront_scan_root(struct pcifront_device *pdev,
+ 	list_add(&bus_entry->list, &pdev->root_buses);
+ 
+ 	/* pci_scan_root_bus skips devices which do not have a
+-	* devfn==0. The pcifront_scan_bus enumerates all devfn. */
++	 * devfn==0. The pcifront_scan_bus enumerates all devfn.
++	 */
+ 	err = pcifront_scan_bus(pdev, domain, bus, b);
+ 
+ 	/* Claim resources before going "live" with our devices */
+@@ -651,8 +651,9 @@ static void pcifront_do_aer(struct work_struct *data)
+ 	pci_channel_state_t state =
+ 		(pci_channel_state_t)pdev->sh_info->aer_op.err;
+ 
+-	/*If a pci_conf op is in progress,
+-		we have to wait until it is done before service aer op*/
++	/* If a pci_conf op is in progress, we have to wait until it is done
++	 * before service aer op
++	 */
+ 	dev_dbg(&pdev->xdev->dev,
+ 		"pcifront service aer bus %x devfn %x\n",
+ 		pdev->sh_info->aer_op.bus, pdev->sh_info->aer_op.devfn);
+@@ -676,6 +677,7 @@ static void pcifront_do_aer(struct work_struct *data)
+ static irqreturn_t pcifront_handler_aer(int irq, void *dev)
+ {
+ 	struct pcifront_device *pdev = dev;
++
+ 	schedule_pcifront_aer_op(pdev);
+ 	return IRQ_HANDLED;
+ }
+@@ -1027,6 +1029,7 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
+ 	/* Find devices being detached and remove them. */
+ 	for (i = 0; i < num_devs; i++) {
+ 		int l, state;
++
+ 		l = snprintf(str, sizeof(str), "state-%d", i);
+ 		if (unlikely(l >= (sizeof(str) - 1))) {
+ 			err = -ENOMEM;
+@@ -1078,7 +1081,7 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
+ 	return err;
+ }
+ 
+-static void __ref pcifront_backend_changed(struct xenbus_device *xdev,
++static void pcifront_backend_changed(struct xenbus_device *xdev,
+ 						  enum xenbus_state be_state)
+ {
+ 	struct pcifront_device *pdev = dev_get_drvdata(&xdev->dev);
+@@ -1137,6 +1140,7 @@ static int pcifront_xenbus_probe(struct xenbus_device *xdev,
+ static int pcifront_xenbus_remove(struct xenbus_device *xdev)
+ {
+ 	struct pcifront_device *pdev = dev_get_drvdata(&xdev->dev);
++
+ 	if (pdev)
+ 		free_pdev(pdev);
+ 
+-- 
+2.33.0
+
