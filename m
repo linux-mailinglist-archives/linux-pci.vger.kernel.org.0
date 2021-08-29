@@ -2,186 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C5E3FAAB7
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 12:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7BE53FAAFF
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Aug 2021 13:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235296AbhH2KEt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Aug 2021 06:04:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60686 "EHLO mga04.intel.com"
+        id S235126AbhH2LOZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Aug 2021 07:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234925AbhH2KEt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Aug 2021 06:04:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10090"; a="216301372"
-X-IronPort-AV: E=Sophos;i="5.84,361,1620716400"; 
-   d="scan'208";a="216301372"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2021 03:03:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,361,1620716400"; 
-   d="scan'208";a="458671362"
-Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2021 03:03:56 -0700
-Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mKHfP-0004C2-IQ; Sun, 29 Aug 2021 10:03:55 +0000
-Date:   Sun, 29 Aug 2021 18:03:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 045a9277b5615846c7b662ffaba84e781f08a172
-Message-ID: <612b5b73.o3Cyctd0jBcsKY99%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235019AbhH2LOZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Aug 2021 07:14:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CAC9160E76;
+        Sun, 29 Aug 2021 11:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630235613;
+        bh=BnBRwDN85ORCazfakESASJMzH9Wh5wWHlFpgiukx6N0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MeyUT6GkYuZ2V6mkbXH/j2Hiigw08YpVkRSP11el3KV59BTxV7vIUQKxwhdB2sSBg
+         04f72VrsvtipmXkkWi9vvqkg6ughOsagw8lSo2Q4K52c6Bt8MYw1QdRqcFhySFluzk
+         idCuZLsgvImxd8GtQiO+nUtFqlLU2CxIwA0fr28fjEBIptqdP7UH/LqLesTBtGN2MX
+         QuZMfBG11SlgGb22phSAHsUQW4QFCBYUvXtfLjtkDEyp/+WJ78iI+Qb3R7j3d1Bzt8
+         5nRInUvQs14X/sjFukFuY6y+GsZTjNI37YwYzItZcUXkm/OVDeyPzr2HZ4k9qknH0a
+         tcBRu4uw1cALg==
+Received: by pali.im (Postfix)
+        id 5A587B0F; Sun, 29 Aug 2021 13:13:30 +0200 (CEST)
+Date:   Sun, 29 Aug 2021 13:13:30 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     lorenzo.pieralisi@arm.com
+Cc:     Jeremy Linton <jeremy.linton@arm.com>, linux-pci@vger.kernel.org,
+        nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, sdonthineni@nvidia.com,
+        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] PCI: brcmstb: Add ACPI config space quirk
+Message-ID: <20210829111330.22f6n3tvmm246jzg@pali>
+References: <20210819215655.84866-1-jeremy.linton@arm.com>
+ <20210819215655.84866-3-jeremy.linton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210819215655.84866-3-jeremy.linton@arm.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 045a9277b5615846c7b662ffaba84e781f08a172  PCI/sysfs: Use correct variable for the legacy_mem sysfs object
+On Thursday 19 August 2021 16:56:53 Jeremy Linton wrote:
+> The PFTF CM4 is an ACPI platform that isn't ECAM compliant. Its config
+> space is in two parts. One part is for the root port registers and a
+> second moveable window pointing at a device's 4K config space. Thus it
+> doesn't have an MCFG, and any MCFG provided would be nonsense
+> anyway. Instead, a Linux specific host bridge _DSD selects a custom
+> ECAM ops and cfgres. The cfg op picks between those two regions while
+> disallowing problematic accesses.
 
-elapsed time: 14074m
+I'm not sure if Lorenzo would like this patch series...
 
-configs tested: 127
-configs skipped: 3
+In past there was a long discussion about ECAM compliance, MCFG quirks
+and usage of ACPI (on other platform), see long thread:
+https://lore.kernel.org/linux-pci/20200207183427.GA40158@google.com/
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+And I think it is not a good idea to extend MCFG quirks table as
+according to discussion it was just temporary plaster and if platform is
+not ACPI / ECAM compliant then it should use DT booting...
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20210820
-sparc                            allyesconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-arm                         lpc18xx_defconfig
-sh                         ap325rxa_defconfig
-mips                         db1xxx_defconfig
-arm                        vexpress_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                 mpc836x_mds_defconfig
-xtensa                    smp_lx200_defconfig
-alpha                               defconfig
-mips                         rt305x_defconfig
-arm                             pxa_defconfig
-powerpc                      chrp32_defconfig
-mips                     loongson2k_defconfig
-sh                         ecovec24_defconfig
-arm                              alldefconfig
-arc                     haps_hs_smp_defconfig
-powerpc                    klondike_defconfig
-powerpc                        fsp2_defconfig
-mips                       capcella_defconfig
-mips                          ath25_defconfig
-arm                           viper_defconfig
-x86_64                            allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-csky                                defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210818
-x86_64               randconfig-a006-20210818
-x86_64               randconfig-a003-20210818
-x86_64               randconfig-a005-20210818
-x86_64               randconfig-a002-20210818
-x86_64               randconfig-a001-20210818
-x86_64               randconfig-a005-20210820
-x86_64               randconfig-a006-20210820
-x86_64               randconfig-a001-20210820
-x86_64               randconfig-a003-20210820
-x86_64               randconfig-a004-20210820
-x86_64               randconfig-a002-20210820
-i386                 randconfig-a006-20210820
-i386                 randconfig-a001-20210820
-i386                 randconfig-a002-20210820
-i386                 randconfig-a005-20210820
-i386                 randconfig-a003-20210820
-i386                 randconfig-a004-20210820
-arc                  randconfig-r043-20210819
-riscv                randconfig-r042-20210819
-s390                 randconfig-r044-20210819
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Lorenzo, could you put any comment on this?
 
-clang tested configs:
-i386                 randconfig-c001-20210820
-s390                 randconfig-c005-20210820
-arm                  randconfig-c002-20210820
-riscv                randconfig-c006-20210820
-powerpc              randconfig-c003-20210820
-x86_64               randconfig-c007-20210820
-mips                 randconfig-c004-20210820
-i386                 randconfig-a004-20210819
-i386                 randconfig-a006-20210819
-i386                 randconfig-a001-20210819
-i386                 randconfig-a002-20210819
-i386                 randconfig-a003-20210819
-i386                 randconfig-a005-20210819
-x86_64               randconfig-a014-20210820
-x86_64               randconfig-a016-20210820
-x86_64               randconfig-a015-20210820
-x86_64               randconfig-a013-20210820
-x86_64               randconfig-a012-20210820
-x86_64               randconfig-a011-20210820
-x86_64               randconfig-a004-20210819
-x86_64               randconfig-a006-20210819
-x86_64               randconfig-a003-20210819
-x86_64               randconfig-a002-20210819
-x86_64               randconfig-a005-20210819
-x86_64               randconfig-a001-20210819
-hexagon              randconfig-r041-20210820
-hexagon              randconfig-r045-20210820
-riscv                randconfig-r042-20210820
-s390                 randconfig-r044-20210820
-hexagon              randconfig-r041-20210819
-hexagon              randconfig-r045-20210819
-hexagon              randconfig-r041-20210818
-riscv                randconfig-r042-20210818
-s390                 randconfig-r044-20210818
-hexagon              randconfig-r045-20210818
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>  drivers/pci/controller/Makefile            |  1 +
+>  drivers/pci/controller/pcie-brcmstb-acpi.c | 74 ++++++++++++++++++++++
+>  include/linux/pci-ecam.h                   |  1 +
+>  3 files changed, 76 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-brcmstb-acpi.c
+> 
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index aaf30b3dcc14..65aa6fd3ed89 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -57,5 +57,6 @@ ifdef CONFIG_PCI_QUIRKS
+>  obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+>  obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+>  obj-$(CONFIG_ARM64) += pci-xgene.o
+> +obj-$(CONFIG_ARM64) += pcie-brcmstb-acpi.o
+>  endif
+>  endif
+> diff --git a/drivers/pci/controller/pcie-brcmstb-acpi.c b/drivers/pci/controller/pcie-brcmstb-acpi.c
+> new file mode 100644
+> index 000000000000..71f6def3074c
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-brcmstb-acpi.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * ACPI quirks for Brcm2711 PCIe host controller
+> + * As used on the Raspberry Pi Compute Module 4
+> + *
+> + * Copyright (C) 2021 Arm Ltd.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include "../pci.h"
+> +#include "pcie-brcmstb.h"
+> +
+> +static int brcm_acpi_init(struct pci_config_window *cfg)
+> +{
+> +	/*
+> +	 * This platform doesn't technically have anything that could be called
+> +	 * ECAM. Its config region has root port specific registers between
+> +	 * standard PCIe defined config registers. Thus the region setup by the
+> +	 * generic ECAM code needs to be adjusted. The HW can access bus 0-ff
+> +	 * but the footprint isn't a nice power of 2 (40k). For purposes of
+> +	 * mapping the config region we are just going to squash the standard
+> +	 * and nonstandard registers together rather than mapping them separately.
+> +	 */
+> +	iounmap(cfg->win);
+> +	cfg->win = pci_remap_cfgspace(cfg->res.start, resource_size(&cfg->res));
+> +	if (!cfg->win)
+> +		goto err_exit;
+> +
+> +	/* MSI is nonstandard as well */
+> +	pci_no_msi();
+> +
+> +	return 0;
+> +err_exit:
+> +	dev_err(cfg->parent, "PCI: Failed to remap config\n");
+> +	return -ENOMEM;
+> +}
+> +
+> +static void __iomem *brcm_pcie_map_conf2(struct pci_bus *bus,
+> +					unsigned int devfn, int where)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +	void __iomem *base = cfg->win;
+> +	int idx;
+> +	u32 up;
+> +
+> +	/* Accesses to the RC go right to the RC registers if slot==0 */
+> +	if (pci_is_root_bus(bus))
+> +		return PCI_SLOT(devfn) ? NULL : base + where;
+> +
+> +	/* Assure link up before sending request */
+> +	up = readl(base + PCIE_MISC_PCIE_STATUS);
+> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK))
+> +		return NULL;
+> +
+> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK))
+> +		return NULL;
+> +
+> +	/* For devices, write to the config space index register */
+> +	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
+> +	writel(idx, base + PCIE_EXT_CFG_INDEX);
+> +	return base + PCIE_EXT_CFG_DATA + where;
+> +}
+> +
+> +const struct pci_ecam_ops bcm2711_pcie_ops = {
+> +	.init		= brcm_acpi_init,
+> +	.bus_shift	= 1,
+> +	.pci_ops	= {
+> +		.map_bus	= brcm_pcie_map_conf2,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+> +};
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index adea5a4771cf..a5de0285bb7f 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -87,6 +87,7 @@ extern const struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 *
+>  extern const struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+>  extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
+>  extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+> +extern const struct pci_ecam_ops bcm2711_pcie_ops; /* Bcm2711 PCIe */
+>  #endif
+>  
+>  #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
+> -- 
+> 2.31.1
+> 
