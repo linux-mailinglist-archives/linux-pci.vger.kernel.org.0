@@ -2,169 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BEBA3FBDC5
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 23:00:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A073FBE75
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 23:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236789AbhH3VAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 17:00:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42173 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236266AbhH3VAy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 17:00:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630357199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZDgZoaGxuF8+VxsBt8mWUj6L6RMapnQD42kDmE3TNZQ=;
-        b=GH03Om/445Kfh0spCpfgBXGkgopeKaJKIqsbbIqGNoDmAlnZTvAthA2tI2dz9Aq5cuTnHb
-        S/4bNzDF2aRH+g5BXDAau4HDRE6CwBE5H4ZiUVX0kxknRtFixsmYk2gTkESXfR+1kQusEc
-        NugrIp20O33foRVdV+QJ3G9RR3jW/9o=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-TOmUlp_kODy1F_nUZsEO0Q-1; Mon, 30 Aug 2021 16:59:57 -0400
-X-MC-Unique: TOmUlp_kODy1F_nUZsEO0Q-1
-Received: by mail-wm1-f70.google.com with SMTP id f19-20020a1c1f13000000b002e6bd83c344so452498wmf.3
-        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 13:59:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZDgZoaGxuF8+VxsBt8mWUj6L6RMapnQD42kDmE3TNZQ=;
-        b=FZeMn4MsuHd9V0g1M+UZi+Wh8t8XTUZ64Ucrs0gPSrukoTOwQw/I663WfMPQFOPe6n
-         QlilMrUaUwg12UBb3vKmdrxIPK8c/FvmCjoLpY2p3Y+eepON15Vky2QHHXhMm98CZ2Lw
-         4KCU0y/Anv8Fd1XOknPnK8x79gy1zZ4JRi2ricnR1/dhVbtdnmGPSMTIAB+B1sbzljgY
-         yIFuqeH+dv17XMzA1tddicVhwcto/w06kYneaYHBA2DteMF63goHxfNa5FbSPR0LyJ+/
-         TPxNeBM8MqFphwKW/wx75dWXvpofrHq07hYICrsJI1+194utQe1+TK1c5eePZ+EobIg7
-         qhkw==
-X-Gm-Message-State: AOAM5318tZU1YNAZLaLcjYTRd9xP9yeMlnDs5MAX5pjaRBNgBe92tXd+
-        4zAYhTHimPKRPIi+asZmu/1xK1C+VIX3+26E1Y2qb3fqF9WM4oD5JHFhAxhuPFzDWho691WQOXK
-        d5uxPOGEezph2s76UPNaq
-X-Received: by 2002:a1c:7f48:: with SMTP id a69mr887121wmd.166.1630357196518;
-        Mon, 30 Aug 2021 13:59:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxjS6eag15Cf7xmVDHk/qvmWoQLzIdnk7dLXkY7XjvOHcTw6SiXs3ksmYcUzh73pyrAtLIGDA==
-X-Received: by 2002:a1c:7f48:: with SMTP id a69mr887093wmd.166.1630357196296;
-        Mon, 30 Aug 2021 13:59:56 -0700 (PDT)
-Received: from redhat.com ([2.55.138.60])
-        by smtp.gmail.com with ESMTPSA id z9sm12277068wre.11.2021.08.30.13.59.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 13:59:55 -0700 (PDT)
-Date:   Mon, 30 Aug 2021 16:59:50 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-Message-ID: <20210830163723-mutt-send-email-mst@kernel.org>
-References: <20210823195409-mutt-send-email-mst@kernel.org>
- <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
- <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
- <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
- <20210824053830-mutt-send-email-mst@kernel.org>
- <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
- <20210829112105-mutt-send-email-mst@kernel.org>
- <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
- <20210829181635-mutt-send-email-mst@kernel.org>
- <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
+        id S238468AbhH3VoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 17:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238718AbhH3VoN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 17:44:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B5DBD60E90;
+        Mon, 30 Aug 2021 21:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630359799;
+        bh=zbF3yv3WsPc6wc8t9qfmmgZ/lsdWyqbDW8FcCrDPuyU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kBXWL/TQGLTNPzPT5D1t87Hd+gPPA12194U6gqUgTgOFjGN6ii3xJMWicLvkbRmgF
+         XVwshnvVeiN9iMrc4FFbRj59YUQk04lQi6bBCL+2GTo7D+lJfy4hNXsVD5TrAdsyFf
+         VxpmLP+Ct8VykrxQuK8Sheqhu0Ae+P/T6ewQr8vHeAxzwLHRExW+E7YZFwnUI48Ta/
+         WUlU3rCydCVeGmRmiDdW3Jx5N1ha0ke9S5ycXg3eVu2ramZcp9WMShG2qm1prMMBsF
+         kX1hbDVvP/WhP6SwQADep/x4y5OQWKTzrYG64YklfpHiGo9UOZT032NOZCDS6qibdw
+         Sj+Gr6a7gZQYQ==
+Date:   Mon, 30 Aug 2021 16:43:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     robh+dt@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
+        lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com,
+        jianjun.wang@mediatek.com, yong.wu@mediatek.com,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
+ pcie-cfg base address
+Message-ID: <20210830214317.GA27606@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
+In-Reply-To: <968266ecd5889721aa234c414361bedbe66b9539.camel@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 29, 2021 at 10:11:46PM -0700, Andi Kleen wrote:
-> 
-> On 8/29/2021 3:26 PM, Michael S. Tsirkin wrote:
-> > On Sun, Aug 29, 2021 at 09:17:53AM -0700, Andi Kleen wrote:
-> > > Also I changing this single call really that bad? It's not that we changing
-> > > anything drastic here, just give the low level subsystem a better hint about
-> > > the intention. If you don't like the function name, could make it an
-> > > argument instead?
-> > My point however is that the API should say that the
-> > driver has been audited,
-> 
-> We have that status in the struct device. If you want to tie the ioremap to
-> that we could define a ioremap_device() with a device argument and decide
-> based on that.
+On Mon, Aug 30, 2021 at 03:09:44PM +0800, Chuanjia Liu wrote:
+> On Fri, 2021-08-27 at 11:46 -0500, Bjorn Helgaas wrote:
+> > On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
 
-But it's not the device that is audited. And it's not the device
-that might be secure or insecure. It's the driver.
-
-> Or we can add _audited to the name. ioremap_shared_audited?
-
-But it's not the mapping that has to be done in handled special way.
-It's any data we get from device, not all of it coming from IO, e.g.
-there's DMA and interrupts that all have to be validated.
-Wouldn't you say that what is really wanted is just not running
-unaudited drivers in the first place?
-
-> 
-> > not that the mapping has been
-> > done in some special way. For example the mapping can be
-> > in some kind of wrapper, not directly in the driver.
-> > However you want the driver validated, not the wrapper.
+> > > @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct
+> > > mtk_pcie *pcie)
+> > >  			return PTR_ERR(pcie->base);
+> > >  	}
+> > >  
+> > > +	cfg_node = of_find_compatible_node(NULL, NULL,
+> > > +					   "mediatek,generic-pciecfg");
+> > > +	if (cfg_node) {
+> > > +		pcie->cfg = syscon_node_to_regmap(cfg_node);
 > > 
-> > Here's an idea:
-> 
-> 
-> I don't think magic differences of API behavior based on some define are a
-> good idea.  That's easy to miss.
+> > Other drivers in drivers/pci/controller/ use
+> > syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
+> > layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
+> > kirin, v3-semi).
+> > 
+> > You should do it the same way unless there's a need to be different.
+>
+> I have used phandle, but Rob suggested to search for the node by 
+> compatible.
 
-Well ... my point is that actually there is no difference in API
-behaviour. the map is the same map, exactly same data goes to device. If
-anything any non-shared map is special in that encrypted data goes to
-device.
+> The reason why syscon_regmap_lookup_by_compatible() is not 
+> used here is that the pciecfg node is optional, and there is no need to
+> return error when the node is not searched.
 
-> 
-> That's a "COME FROM" in API design.
-> 
-> Also it wouldn't handle the case that a driver has both private and shared
-> ioremaps, e.g. for BIOS structures.
+How about this?
 
-Hmm. Interesting.  It's bios maps that are unusual and need to be private though ...
-
-> And we've been avoiding that drivers can self declare auditing, we've been
-> trying to have a separate centralized list so that it's easier to enforce
-> and avoids any cut'n'paste mistakes.
-> 
-> -Andi
-
-Now I'm confused. What is proposed here seems to be basically that,
-drivers need to declare auditing by replacing ioremap with
-ioremap_shared.
-
--- 
-MST
-
+  regmap = syscon_regmap_lookup_by_compatible("mediatek,generic-pciecfg");
+  if (!IS_ERR(regmap))
+    pcie->cfg = regmap;
