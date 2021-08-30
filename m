@@ -2,77 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84A073FBE75
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 23:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 667343FBF51
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 01:16:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238468AbhH3VoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 17:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238718AbhH3VoN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 17:44:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5DBD60E90;
-        Mon, 30 Aug 2021 21:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630359799;
-        bh=zbF3yv3WsPc6wc8t9qfmmgZ/lsdWyqbDW8FcCrDPuyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kBXWL/TQGLTNPzPT5D1t87Hd+gPPA12194U6gqUgTgOFjGN6ii3xJMWicLvkbRmgF
-         XVwshnvVeiN9iMrc4FFbRj59YUQk04lQi6bBCL+2GTo7D+lJfy4hNXsVD5TrAdsyFf
-         VxpmLP+Ct8VykrxQuK8Sheqhu0Ae+P/T6ewQr8vHeAxzwLHRExW+E7YZFwnUI48Ta/
-         WUlU3rCydCVeGmRmiDdW3Jx5N1ha0ke9S5ycXg3eVu2ramZcp9WMShG2qm1prMMBsF
-         kX1hbDVvP/WhP6SwQADep/x4y5OQWKTzrYG64YklfpHiGo9UOZT032NOZCDS6qibdw
-         Sj+Gr6a7gZQYQ==
-Date:   Mon, 30 Aug 2021 16:43:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
-Cc:     robh+dt@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
-        lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com,
-        jianjun.wang@mediatek.com, yong.wu@mediatek.com,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
- pcie-cfg base address
-Message-ID: <20210830214317.GA27606@bjorn-Precision-5520>
+        id S239015AbhH3XO3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 19:14:29 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:48426 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238898AbhH3XO3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 19:14:29 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 24BE820B90FF; Mon, 30 Aug 2021 16:13:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 24BE820B90FF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1630365215;
+        bh=y8kbnU6wSCpgwXOq1MQQIkVnRwqj3xH6aJeaz2aubBY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sSkVi6OXSgiAj4hA98ukq34ASL/5U3pAIYzzvNkQswfVkKvxpySXEA+VX3YMrLCoP
+         T/JnEMwesI348tJ9hy53ZX/p4571zO7va6B2YqKgEIHRf7kGDWNscy0J0whfdNoVG4
+         yFIDkJzZ8RdZQMYlsUFSPb/JCmOYvXoh0TFGg6ME=
+From:   longli@linuxonhyperv.com
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [Patch v2] PCI: hv: Fix sleep while in non-sleep context when removing child devices from the bus
+Date:   Mon, 30 Aug 2021 16:13:27 -0700
+Message-Id: <1630365207-20616-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <968266ecd5889721aa234c414361bedbe66b9539.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 03:09:44PM +0800, Chuanjia Liu wrote:
-> On Fri, 2021-08-27 at 11:46 -0500, Bjorn Helgaas wrote:
-> > On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
+From: Long Li <longli@microsoft.com>
 
-> > > @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct
-> > > mtk_pcie *pcie)
-> > >  			return PTR_ERR(pcie->base);
-> > >  	}
-> > >  
-> > > +	cfg_node = of_find_compatible_node(NULL, NULL,
-> > > +					   "mediatek,generic-pciecfg");
-> > > +	if (cfg_node) {
-> > > +		pcie->cfg = syscon_node_to_regmap(cfg_node);
-> > 
-> > Other drivers in drivers/pci/controller/ use
-> > syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
-> > layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
-> > kirin, v3-semi).
-> > 
-> > You should do it the same way unless there's a need to be different.
->
-> I have used phandle, but Rob suggested to search for the node by 
-> compatible.
+In hv_pci_bus_exit, the code is holding a spinlock while calling
+pci_destroy_slot(), which takes a mutex.
 
-> The reason why syscon_regmap_lookup_by_compatible() is not 
-> used here is that the pciecfg node is optional, and there is no need to
-> return error when the node is not searched.
+This is not safe for spinlock. Fix this by moving the children to be
+deleted to a list on the stack, and removing them after spinlock is
+released.
 
-How about this?
+Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
 
-  regmap = syscon_regmap_lookup_by_compatible("mediatek,generic-pciecfg");
-  if (!IS_ERR(regmap))
-    pcie->cfg = regmap;
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/linux-hyperv/20210823152130.GA21501@kili/
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+Changes in v2:
+Made patch title more specific on what the patch does.
+Added link to the original bug report.
+Changed to list_for_each_entry_safe for iterating the removed list.
+
+ drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index a53bd8728d0d..fc1a29acadbb 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3229,9 +3229,17 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		return 0;
+ 
+ 	if (!keep_devs) {
+-		/* Delete any children which might still exist. */
++		struct list_head removed;
++
++		/* Move all present children to the list on stack */
++		INIT_LIST_HEAD(&removed);
+ 		spin_lock_irqsave(&hbus->device_list_lock, flags);
+-		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
++		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry)
++			list_move_tail(&hpdev->list_entry, &removed);
++		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
++
++		/* Remove all children in the list */
++		list_for_each_entry_safe(hpdev, tmp, &removed, list_entry) {
+ 			list_del(&hpdev->list_entry);
+ 			if (hpdev->pci_slot)
+ 				pci_destroy_slot(hpdev->pci_slot);
+@@ -3239,7 +3247,6 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 			put_pcichild(hpdev);
+ 			put_pcichild(hpdev);
+ 		}
+-		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+ 	}
+ 
+ 	ret = hv_send_resources_released(hdev);
+-- 
+2.25.1
+
