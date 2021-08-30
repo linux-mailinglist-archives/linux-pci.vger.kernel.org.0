@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC373FBB8C
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 20:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F823FBC20
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 20:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238463AbhH3SP2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 14:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        id S235482AbhH3SWg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 14:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238150AbhH3SP2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 14:15:28 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8EAC061575;
-        Mon, 30 Aug 2021 11:14:34 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id q3so22930993edt.5;
-        Mon, 30 Aug 2021 11:14:34 -0700 (PDT)
+        with ESMTP id S229839AbhH3SWf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 14:22:35 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B82C061575;
+        Mon, 30 Aug 2021 11:21:41 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id u14so32975820ejf.13;
+        Mon, 30 Aug 2021 11:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0j4HbXVAukqCvkqeiElajeZaQqhOfru+oix0tV+lQrI=;
-        b=QVUhEAZZ9HU15JpJ9CRyLHMIFOZ1jMD+Io0SA44k9zuJteTpy6xjFzlUQZVkkcSkAV
-         8THSnA5pErW9mh5pJyM+NbnYl7Pw651j82Rv9+L74mEpHDw71DdAC/F+7u9mhJOrEAVp
-         NajR+KTLYwgtN7wVhlmT8ko8uVqjccOkx8ogYtd9m7TZ809y5yL0WesSsInyR/yAeK28
-         eFRizHIseQzk1IK58Vs/HoFFHx2poJxRlKEsEqdJ+jKqtlRr8DK+2Oj+3H+0OX4mePK4
-         OB98P/mpsDnjicliInySQwE++/oZtWD2CEUUEBNwurI4C5HEa27VWGOOCPKWnWRtwBK4
-         4LaQ==
+        bh=wzZpQf8XnnBwyx6FVtKgKg1R+YJbNENRicsfxpeSOjg=;
+        b=s0Podc1xJLmrSH7zzIutVt5Z4MUPpsmSN4KM21NQzv/por9GG7uDnBp0vDYN5IDFr0
+         tGTK1FSLOK4m/ryvX546QsgOlZ7PZ1Wm5LKvCI98ewfFjrk3c5joi1W4Iukhr4nyXmfB
+         aDxqnYVraFAbjw7eVUkM6AboZGuzWJN7Yfx3VD/MaaxgfYke7TRn5UrRe27bjFIYO+cA
+         KI9MWtq7qXpJ8nA0epWWhMTwJDokyP8S+6jxa7mNRuJQ1oFy3JCgOYg0cbICb/E4wePb
+         8kVBBqXM+2+4hrhiSHrn/wkUDQBY7xnGJCWy8P8Z7x9ogXaSRzdCFT79F4EyknRaNWS3
+         x1Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=0j4HbXVAukqCvkqeiElajeZaQqhOfru+oix0tV+lQrI=;
-        b=KnIuTWBGZj2wUF0w6NNUjifJIpR1tWCa2QzRWG2/XsAGlu/4gfNtkz6dIMf4X2YI3C
-         +TFWClusR0BNbYTvhXZCGp3qKsoAKo6menxygUPYYyFSvL/VbV7ti5TbYRW5G3ZkW8op
-         uUIrrkl5eV4YXUrNuJbsKkB0tm3Iu1HYJN2R6t/b1i0CYSQ0pCBe55syIRXtv9TcfEyV
-         tS0GKi896FLMF3bw2+hz/eBDoVTuonHgsiBZnd7jyjlnJR+q6sOeFtHIzOVBc+DO3bkN
-         UNOvkS/8IhgCil9/cNpJgUlgg20Pq/IgHMxVdeWfQXALc3OcrdqJMWgugzlqJ+2foOTu
-         04jQ==
-X-Gm-Message-State: AOAM531GupWIqGOYVIAinp3jdRN8YR1L6xboueQlpzgZJ9aRPC3tyGLW
-        GoeGgAUN8fzhZs8zCdTHEkc=
-X-Google-Smtp-Source: ABdhPJw4A9PXJGNP++AeWzylFWjXO6a0PeDAh3ff0+0VYFa/9G5+yu5ZZ7PL5Fqs++aDAAtRkCC1sQ==
-X-Received: by 2002:a05:6402:5108:: with SMTP id m8mr25755510edd.367.1630347272917;
-        Mon, 30 Aug 2021 11:14:32 -0700 (PDT)
+        bh=wzZpQf8XnnBwyx6FVtKgKg1R+YJbNENRicsfxpeSOjg=;
+        b=Fcc91aBywAQxTjpDRJNAQTcbsT0E1+IR6jB9iDUmOmr3KHfejqx3nyXvNBJ8MluP8I
+         RYracJk95kppwh9+mRaLUtQjpXJmcc/z6hIC0PpKSkez7kmBNEs/gbKumDmQslzlpaGa
+         I2JzapPOu8aE4t6b8rTMTGp3WqW1AhKpfcOa03giZ33/3mLmJaXdu+aQ9obdIaImxGkz
+         a02gKJoWa9oBIqGnXRfnyeID3PYHIe5oVP0tockdz7RajWUEWUG82G1l7Vek9ry3SKcI
+         WnaQA0+QDhTmax76SX/h4zQazYm/KnE/tIA9FnquJEFeSwnnLdD/uog+sxoi9Wh9b8vX
+         3Wsw==
+X-Gm-Message-State: AOAM533J0evdb+4WDmHZuTyLn8M9wSYIVkgEJmdz88b5+s5U9OQJJz8u
+        W0eqDW7lmERB1U4fGNtEnMk=
+X-Google-Smtp-Source: ABdhPJyG0uLXjFltYZO0gomkV8AheRsZ9MRvMqjAOQIY90291rqGI8ghqsFOaePEiEUGvpiN1Y9nyQ==
+X-Received: by 2002:a17:906:3947:: with SMTP id g7mr27480038eje.87.1630347699997;
+        Mon, 30 Aug 2021 11:21:39 -0700 (PDT)
 Received: from localhost (host-79-37-188-60.retail.telecomitalia.it. [79.37.188.60])
-        by smtp.gmail.com with ESMTPSA id i6sm6987518ejr.68.2021.08.30.11.14.32
+        by smtp.gmail.com with ESMTPSA id h30sm8121250edz.40.2021.08.30.11.21.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Aug 2021 11:14:32 -0700 (PDT)
-Date:   Mon, 30 Aug 2021 22:14:26 +0200
+        Mon, 30 Aug 2021 11:21:39 -0700 (PDT)
+Date:   Mon, 30 Aug 2021 22:21:33 +0200
 From:   Sergio =?utf-8?Q?Migu=C3=A9ns?= Iglesias <lonyelon@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
@@ -57,7 +57,7 @@ Cc:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
         linux-kernel@vger.kernel.org,
         Sergio =?utf-8?Q?Migu=C3=A9ns?= Iglesias <sergio@lony.xyz>
 Subject: Re: [PATCH v2] xen/pcifront: Removed unnecessary __ref annotation
-Message-ID: <20210830201426.g2vaxh6chqnprual@archlap>
+Message-ID: <20210830202133.q6j2he5kijf2tgpy@archlap>
 References: <20210830175305.13370-1-sergio@lony.xyz>
  <20210830162922.GA4188989@bjorn-Precision-5520>
 MIME-Version: 1.0
@@ -69,15 +69,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks again for you answers!
-I am lerning a lot from your replys and I really appreciate it. Should I
-make a v3 patch and split that one into 2 different patches or would it
-be confusing?
+Never mind, it got accepted anyways, but I will 100% fix my commit
+messages for my future patches.
 
-I don't want to take more of your time with poor patches so I don't know
-if I should resend this one.
+I really appreciate your suggestions and the time you have put into
+writing them. I will improve in my next commits :)
 
-Thanks again,
 Sergio M. Iglesias.
 
 On 21/08/30 11:29, Bjorn Helgaas wrote:
