@@ -2,155 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C3CD3FB978
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4394E3FB989
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:59:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237690AbhH3P5b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 11:57:31 -0400
-Received: from mga12.intel.com ([192.55.52.136]:49629 "EHLO mga12.intel.com"
+        id S237716AbhH3P7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 11:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237646AbhH3P5b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 11:57:31 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="197863102"
-X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
-   d="scan'208";a="197863102"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 08:56:37 -0700
-X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
-   d="scan'208";a="530480613"
-Received: from wps-jon.lm.intel.com (HELO localhost.localdomain) ([10.232.117.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 08:56:37 -0700
-From:   Jon Derrick <jonathan.derrick@linux.dev>
-To:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ashok Raj <ashok.raj@intel.com>, Lukas Wunner <lukas@wunner.de>,
-        jonathan.derrick@linux.dev,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a x4x4 SSD
-Date:   Mon, 30 Aug 2021 09:56:28 -0600
-Message-Id: <20210830155628.130054-1-jonathan.derrick@linux.dev>
-X-Mailer: git-send-email 2.27.0
+        id S237735AbhH3P7H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 11:59:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3DCB460FD8;
+        Mon, 30 Aug 2021 15:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630339093;
+        bh=94GQfHWUxtTHx/+l6i92UggNWHytvmlkl4wPKFJaFiE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cMntF844dTL/rBrW/ozl8hJNGnQz4nclR45Brpr02jajmhmvqC4IN8OgKXFVrm+5i
+         CliEBSD4+ZH97rJ4duZf6NbUTy8eDU15/4ZBNbjc5EjEMG8TP7E7e8uQEI3kkRneIW
+         s23es8i1wM3B2UefnCRh7Axf/kEIv95kqQNaRxtXza/CwIfRD7t0i9QD04yUMUFjNt
+         VLwg0SKtc8IrlMHp+IfYQtJSp3clNh7eSwYgNUinPvyxgv/9ZlRXNMtFeRvc7gfF0/
+         Cd+QgH70JfVHOup9sHF9+Qj4JoFH1WERT5E/3SbKy11j7hhvSfof9m5S+sy0VFvc8N
+         F1JlcbPHnvjLA==
+Received: by mail-ej1-f46.google.com with SMTP id e21so32110789ejz.12;
+        Mon, 30 Aug 2021 08:58:13 -0700 (PDT)
+X-Gm-Message-State: AOAM533F3ta3mAooAkUXpQ+IQY/dw9t5R/AnK42t1rroEUvUDl7y7f4x
+        +Uz4tKB7WA7giXcxGVJEjm6g1r/WsizXFkHRrQ==
+X-Google-Smtp-Source: ABdhPJxdn0w1vnkBGUjO5dciyQYkquk0ijWzCAVg0wdsn4z3j1+X4UTTETS+FmnItD7/WXsSw60BVGvHjQN32sYA9ac=
+X-Received: by 2002:a17:906:25db:: with SMTP id n27mr25255293ejb.108.1630339091824;
+ Mon, 30 Aug 2021 08:58:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
+ <20210827171534.62380-5-mark.kettenis@xs4all.nl> <87pmtvcgec.wl-maz@kernel.org>
+In-Reply-To: <87pmtvcgec.wl-maz@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Aug 2021 10:57:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJC+FxiynFkkcB0amp3s4agsio5ggCrYiPbqoXroAJV4Q@mail.gmail.com>
+Message-ID: <CAL_JsqJC+FxiynFkkcB0amp3s4agsio5ggCrYiPbqoXroAJV4Q@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] arm64: apple: Add PCIe node
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
+        devicetree@vger.kernel.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: James Puthukattukaran <james.puthukattukaran@oracle.com>
+On Mon, Aug 30, 2021 at 6:37 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Hi Mark,
+>
+> On Fri, 27 Aug 2021 18:15:29 +0100,
+> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
+> >
+> > From: Mark Kettenis <kettenis@openbsd.org>
+> >
+> > Add node corresponding to the apcie,t8103 node in the
+> > Apple device tree for the Mac mini (M1, 2020).
+> >
+> > Clock references and DART (IOMMU) references are left out at the
+> > moment and will be added once the appropriate bindings have been
+> > settled upon.
+> >
+> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > ---
+> >  arch/arm64/boot/dts/apple/t8103.dtsi | 63 ++++++++++++++++++++++++++++
+> >  1 file changed, 63 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+> > index 503a76fc30e6..6e4677bdef44 100644
+> > --- a/arch/arm64/boot/dts/apple/t8103.dtsi
+> > +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+> > @@ -214,5 +214,68 @@ pinctrl_smc: pinctrl@23e820000 {
+> >                                    <AIC_IRQ 396 IRQ_TYPE_LEVEL_HIGH>,
+> >                                    <AIC_IRQ 397 IRQ_TYPE_LEVEL_HIGH>;
+> >               };
+> > +
+> > +             pcie0: pcie@690000000 {
+> > +                     compatible = "apple,t8103-pcie", "apple,pcie";
+> > +                     device_type = "pci";
+> > +
+> > +                     reg = <0x6 0x90000000 0x0 0x1000000>,
+> > +                           <0x6 0x80000000 0x0 0x4000>,
+> > +                           <0x6 0x81000000 0x0 0x8000>,
+> > +                           <0x6 0x82000000 0x0 0x8000>,
+> > +                           <0x6 0x83000000 0x0 0x8000>;
+> > +                     reg-names = "config", "rc", "port0", "port1", "port2";
+> > +
+> > +                     interrupt-parent = <&aic>;
+> > +                     interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                  <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                  <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +                     msi-controller;
+> > +                     msi-parent = <&pcie0>;
+> > +                     msi-ranges = <&aic AIC_IRQ 704 IRQ_TYPE_EDGE_RISING 32>;
+> > +
+> > +                     bus-range = <0 3>;
+> > +                     #address-cells = <3>;
+> > +                     #size-cells = <2>;
+> > +                     ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
+> > +                              <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
+> > +
+> > +                     pinctrl-0 = <&pcie_pins>;
+> > +                     pinctrl-names = "default";
+> > +
+> > +                     pci@0,0 {
+> > +                             device_type = "pci";
+> > +                             reg = <0x0 0x0 0x0 0x0 0x0>;
+> > +                             reset-gpios = <&pinctrl_ap 152 0>;
+> > +                             max-link-speed = <2>;
+> > +
+> > +                             #address-cells = <3>;
+> > +                             #size-cells = <2>;
+> > +                             ranges;
+> > +                     };
+> > +
+> > +                     pci@1,0 {
+> > +                             device_type = "pci";
+> > +                             reg = <0x800 0x0 0x0 0x0 0x0>;
+> > +                             reset-gpios = <&pinctrl_ap 153 0>;
+> > +                             max-link-speed = <2>;
+> > +
+> > +                             #address-cells = <3>;
+> > +                             #size-cells = <2>;
+> > +                             ranges;
+> > +                     };
+> > +
+> > +                     pci@2,0 {
+> > +                             device_type = "pci";
+> > +                             reg = <0x1000 0x0 0x0 0x0 0x0>;
+> > +                             reset-gpios = <&pinctrl_ap 33 0>;
+> > +                             max-link-speed = <1>;
+> > +
+> > +                             #address-cells = <3>;
+> > +                             #size-cells = <2>;
+> > +                             ranges;
+> > +                     };
+> > +             };
+> >       };
+> >  };
+>
+> I have now implemented the MSI change on the Linux driver side, and it
+> works nicely. So thumbs up from me on this front.
+>
+> I am now looking at the interrupts provided by each port:
+> (1) a bunch of port-private interrupts (link up/down...)
+> (2) INTx interrupts
 
-When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
-ports both support hotplugging on each respective x4 device, a slot
-management system for the SSD requires both x4 slots to have power
-removed via sysfs (echo 0 > slot/N/power), from the OS before it can
-safely turn-off physical power for the whole x8 device. The implications
-are that slot status will display powered off and link inactive statuses
-for the x4 devices where the devices are actually powered until both
-ports have powered off.
+So each port has an independent INTx space? Is that even something PCI
+defines or comprehends?
 
-The issue with the SSD manifests when power is removed from the
-first-half and then the second-half. During the first-half removal, slot
-status shows the slot as powered-down and link-inactive, while internal
-power and link remain active while waiting for the second-half to have
-power removed. When power is then removed from the second-half, the
-first-half starts shutdown sequence and will trigger a DLLSC event. This
-is misinterpreted as an enabling event and causes the first-half to be
-re-enabled.
+> Given that the programming is per-port, I've implemented this as a
+> per-port interrupt controller.
+>
+> (1) is dead easy to implement, and doesn't require any DT description.
+> (2) is unfortunately exposing the limits of my DT knowledge, and I'm
+> not clear how to model it. I came up with the following:
+>
+>         port00: pci@0,0 {
+>                 device_type = "pci";
+>                 reg = <0x0 0x0 0x0 0x0 0x0>;
+>                 reset-gpios = <&pinctrl_ap 152 0>;
+>                 max-link-speed = <2>;
+>
+>                 #address-cells = <3>;
+>                 #size-cells = <2>;
+>                 ranges;
+>
+>                 interrupt-controller;
+>                 #interrupt-cells = <1>;
+>                 interrupt-parent = <&port00>;
+>                 interrupt-map-mask = <0 0 0 7>;
+>                 interrupt-map = <0 0 0 1 &port00 0>,
+>                                 <0 0 0 2 &port00 1>,
+>                                 <0 0 0 3 &port00 2>,
+>                                 <0 0 0 4 &port00 3>;
 
-The spurious enable can be resolved by ignoring link status change
-events when no link is active when in the off state. This patch adds a
-quirk for specific P5608 SSDs which have been tested for compatibility.
+IIRC, I don't think the DT IRQ code handles a node having both
+'interrupt-controller' and 'interrupt-map' properties. I think that's
+why some PCI host bridge nodes have child interrupt-controller nodes.
+I don't really like that work-around, so if the above can be made to
+work, I'd be happy to see it. But the DT IRQ code is some ancient code
+for ancient platforms (PowerMacs being one of them).
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
----
-v2->v3: Clarified commit message and comment block
-	Added second supported subdevice ID
-	Added hotplug ifdef blocks
+>         };
+>
+> which vaguely seem to do the right thing for the devices behind root
+> ports, but doesn't seem to work for INTx generated by the root ports
+> themselves. Any clue? Alternatively, I could move it to something
+> global to the whole PCIe controller, but that doesn't seem completely
+> right.
+>
+> It also begs the question whether the per-port interrupt to the AIC
+> should be moved into each root port, should my per-port approach hold
+> any water.
 
- drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
- drivers/pci/quirks.c              | 34 +++++++++++++++++++++++++++++++
- include/linux/pci.h               |  1 +
- 3 files changed, 42 insertions(+)
+I tend to think per-port is the right thing to do. However, the child
+nodes are PCI devices, so that creates some restrictions. Such as the
+per port registers are in the host address space, not the PCI address
+space, so we can't move the registers into the child nodes. The
+interrupts may be okay. Certainly, being an 'interrupt-controller'
+without having an 'interrupts' property for an non root interrupt
+controller is odd.
 
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 529c34808440..db41f78bfac8 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
- void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- {
- 	int present, link_active;
-+	struct pci_dev *pdev = ctrl->pcie->port;
- 
- 	/*
- 	 * If the slot is on and presence or link has changed, turn it off.
-@@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 		cancel_delayed_work(&ctrl->button_work);
- 		fallthrough;
- 	case OFF_STATE:
-+		if (pdev->shared_pcc_and_link_slot &&
-+		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
-+			mutex_unlock(&ctrl->state_lock);
-+			break;
-+		}
-+
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
- 		if (present)
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 10122e3318cf..c6b48ddc5c3d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5750,3 +5750,37 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
- 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-+
-+#ifdef CONFIG_HOTPLUG_PCI_PCIE
-+/*
-+ * This is an Intel NVMe SSD which sits in a x8 pciehp slot but is bifurcated
-+ * as a x4x4 and manifests as two slots with respect to PCIe hot plug register
-+ * states. However, the hotplug controller treats these slots as a single x8
-+ * slot for link and power. Either one of the two slots can be powered down
-+ * separately and the slot status will show negative power and link states, but
-+ * internal power and link will be active until the last of the two slots is
-+ * powered down. When the last of the two x4 slots is turned off, power and
-+ * link will be turned off for the x8 slot by the HP controller. This
-+ * configuration causes some interesting behavior in bringup sequence
-+ *
-+ * When the second slot is powered off to remove the card, this will cause the
-+ * link to go down for both x4 slots. So, the x4 that is already powered down
-+ * earlier will see a DLLSC event and attempt to bring itself up (card present,
-+ * link change event, link state is down). Special handling is required in
-+ * pciehp_handle_presence_or_link_change to prevent this unintended bring up
-+ */
-+static void quirk_shared_pcc_and_link_slot(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent = pci_upstream_bridge(pdev);
-+
-+	if (parent && pdev->subsystem_vendor == 0x108e) {
-+		switch (pdev->subsystem_device) {
-+		/* P5608 */
-+		case 0x487d:
-+		case 0x488d:
-+			parent->shared_pcc_and_link_slot = 1;
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0b60, quirk_shared_pcc_and_link_slot);
-+#endif /* CONFIG_HOTPLUG_PCI_PCIE */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 7ed95f11c6bd..bcef73209487 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -463,6 +463,7 @@ struct pci_dev {
- 
- #ifdef CONFIG_HOTPLUG_PCI_PCIE
- 	unsigned int	broken_cmd_compl:1;	/* No compl for some cmds */
-+	unsigned int	shared_pcc_and_link_slot:1;
- #endif
- #ifdef CONFIG_PCIE_PTM
- 	unsigned int	ptm_root:1;
--- 
-2.27.0
-
+Rob
