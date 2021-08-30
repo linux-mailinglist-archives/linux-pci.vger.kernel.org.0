@@ -2,115 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 631C73FB0BA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 07:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 256243FB0EA
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 07:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231695AbhH3FMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 01:12:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7792 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230191AbhH3FMm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 01:12:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10091"; a="217926786"
-X-IronPort-AV: E=Sophos;i="5.84,362,1620716400"; 
-   d="scan'208";a="217926786"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2021 22:11:48 -0700
-X-IronPort-AV: E=Sophos;i="5.84,362,1620716400"; 
-   d="scan'208";a="497257549"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.238.58]) ([10.212.238.58])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2021 22:11:47 -0700
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-References: <20210805005218.2912076-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210805005218.2912076-12-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210823195409-mutt-send-email-mst@kernel.org>
- <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
- <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
- <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
- <20210824053830-mutt-send-email-mst@kernel.org>
- <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
- <20210829112105-mutt-send-email-mst@kernel.org>
- <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
- <20210829181635-mutt-send-email-mst@kernel.org>
-From:   Andi Kleen <ak@linux.intel.com>
-Message-ID: <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
-Date:   Sun, 29 Aug 2021 22:11:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S231911AbhH3Fvr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 01:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231695AbhH3Fvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 01:51:47 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E703AC061575
+        for <linux-pci@vger.kernel.org>; Sun, 29 Aug 2021 22:50:53 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id i21so28727963ejd.2
+        for <linux-pci@vger.kernel.org>; Sun, 29 Aug 2021 22:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=HTX9Qg+oTZ7qbYjJxOlnMfcCjzeO8PW543NLbRZpyHm61TfySy9Rj0KqzRh9w4m6Wf
+         QtjCBi43u1IBcRHU+M5A4iODbAGFMGXmaIQMFv2OVVh+xueJxCunaTRWb1sjPGsGw25k
+         Czo7DtmgVHlcv3bTXlS+Q1/C6LbICtkvE/71WLExZj5sblHkdYygk8T3YCpW9bV1UdxE
+         68vFLBVEv5Dt2Joo5lvrKlwKbndYW4MNmgk64zGEoTk6yLmh8BNEHzQ1yAnhxDOn/X9n
+         LLh4F0IONNwKor+2JHppGxkgDQZ3p+d8bGZZ34v/eVwxvOtQ4HBQJ0d0Pj+8WcV8qPYQ
+         2r2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=PtsiPGTe6BY60EvPpCR0N0KnODdxN1Hi53vNvQsxQs9wKTG9J3kJkV/ldI/yIEygoS
+         lSzNeuI+KVzhWgVdGUd1v+G0tlwhU/0FFtbkguCglTPUTxr+2/lKCvv9k6s5a2mBcaK9
+         gcyDLcTdET8nxnF5MoASYwRkrcSLblq7pWDSWtJaBTc7wbZEh5nA9o3pezh7v0bb+G+D
+         +3Lux9ReqCmV38QtqIFqP3aM6r2Kc2TRQmIlWRCa2Q7ceE3A/YYb9EDJsYdDXVwP2uuH
+         E4UI68z0yWh+2qnKgR+KqvrKok2NzCsn6bEtaENHgoE4XKvnpRfnv6Yq4ywzEb53cp/3
+         je+A==
+X-Gm-Message-State: AOAM5338/aErd/Hw9zNWRTMe1BV66v3gL6TnGdB3bz8dgyyQfuhPzOEn
+        i8uyuFuxQs+tAL/OXAdDAQ6o363IAEw51AguAlM=
+X-Google-Smtp-Source: ABdhPJxQhbtFJCkQSoXqmwjTh/Kw0WnS/s7JmnqI0L3/3PVW3yzdU0becNDNu5NM5KGtNjh6wLQsfomR+J2SJ3/fPs0=
+X-Received: by 2002:a17:906:1789:: with SMTP id t9mr23374412eje.61.1630302652444;
+ Sun, 29 Aug 2021 22:50:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210829181635-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Reply-To: godwinppter@gmail.com
+Sender: godwinpeter2401@gmail.com
+Received: by 2002:a54:3251:0:0:0:0:0 with HTTP; Sun, 29 Aug 2021 22:50:51
+ -0700 (PDT)
+From:   Godwin Pete <godwinnpeter@gmail.com>
+Date:   Mon, 30 Aug 2021 07:50:51 +0200
+X-Google-Sender-Auth: s7C7iPpagu-KvF61mzOLDaffwG4
+Message-ID: <CAGyeThARSPiLYmOOZO-tpA3acto5cEa4y9ebjxoSQabyCqLGiA@mail.gmail.com>
+Subject: For your information
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-On 8/29/2021 3:26 PM, Michael S. Tsirkin wrote:
-> On Sun, Aug 29, 2021 at 09:17:53AM -0700, Andi Kleen wrote:
->> Also I changing this single call really that bad? It's not that we changing
->> anything drastic here, just give the low level subsystem a better hint about
->> the intention. If you don't like the function name, could make it an
->> argument instead?
-> My point however is that the API should say that the
-> driver has been audited,
+I just want to use this little opportunity to inform you about my
+success towards the transfer. I'm currently out of the country for an
+investment with part of my share, after completing the transfer with
+an Indian business man. But i will visit your country, next year.
+After the completion of my project. Please, contact my secretary to
+send you the (ATM) card which I've already credited with the sum of
+($500,000.00). Just contact her to help you in receiving the (ATM)
+card. I've explained everything to her before my trip. This is what I
+can do for you because, you couldn't help in the transfer, but for the
+fact that you're the person whom I've contacted initially, for the
+transfer. I decided to give this ($500,000.00) as a compensation for
+being contacted initially for the transfer. I always try to make the
+difference, in dealing with people any time I come in contact with
+them. I'm also trying to show that I'm quite a different person from
+others whose may have a different purpose within them. I believe that
+you will render some help to me when I, will visit your country, for
+another investment there. So contact my secretary for the card, Her
+contact are as follows,
 
-We have that status in the struct device. If you want to tie the ioremap 
-to that we could define a ioremap_device() with a device argument and 
-decide based on that.
+Full name: Mrs, Jovita Dumuije,
+Country: Burkina Faso
+Email: jovitadumuije@gmail.com
 
-Or we can add _audited to the name. ioremap_shared_audited?
+Thanks, and hope for a good corporation with you in future.
 
-> not that the mapping has been
-> done in some special way. For example the mapping can be
-> in some kind of wrapper, not directly in the driver.
-> However you want the driver validated, not the wrapper.
->
-> Here's an idea:
-
-
-I don't think magic differences of API behavior based on some define are 
-a good idea.  That's easy to miss.
-
-That's a "COME FROM" in API design.
-
-Also it wouldn't handle the case that a driver has both private and 
-shared ioremaps, e.g. for BIOS structures.
-
-And we've been avoiding that drivers can self declare auditing, we've 
-been trying to have a separate centralized list so that it's easier to 
-enforce and avoids any cut'n'paste mistakes.
-
--Andi
-
+Godwin Peter,
