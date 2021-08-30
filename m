@@ -2,224 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4394E3FB989
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:59:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2D223FB943
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:51:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237716AbhH3P7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 11:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237735AbhH3P7H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 11:59:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3DCB460FD8;
-        Mon, 30 Aug 2021 15:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630339093;
-        bh=94GQfHWUxtTHx/+l6i92UggNWHytvmlkl4wPKFJaFiE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cMntF844dTL/rBrW/ozl8hJNGnQz4nclR45Brpr02jajmhmvqC4IN8OgKXFVrm+5i
-         CliEBSD4+ZH97rJ4duZf6NbUTy8eDU15/4ZBNbjc5EjEMG8TP7E7e8uQEI3kkRneIW
-         s23es8i1wM3B2UefnCRh7Axf/kEIv95kqQNaRxtXza/CwIfRD7t0i9QD04yUMUFjNt
-         VLwg0SKtc8IrlMHp+IfYQtJSp3clNh7eSwYgNUinPvyxgv/9ZlRXNMtFeRvc7gfF0/
-         Cd+QgH70JfVHOup9sHF9+Qj4JoFH1WERT5E/3SbKy11j7hhvSfof9m5S+sy0VFvc8N
-         F1JlcbPHnvjLA==
-Received: by mail-ej1-f46.google.com with SMTP id e21so32110789ejz.12;
-        Mon, 30 Aug 2021 08:58:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533F3ta3mAooAkUXpQ+IQY/dw9t5R/AnK42t1rroEUvUDl7y7f4x
-        +Uz4tKB7WA7giXcxGVJEjm6g1r/WsizXFkHRrQ==
-X-Google-Smtp-Source: ABdhPJxdn0w1vnkBGUjO5dciyQYkquk0ijWzCAVg0wdsn4z3j1+X4UTTETS+FmnItD7/WXsSw60BVGvHjQN32sYA9ac=
-X-Received: by 2002:a17:906:25db:: with SMTP id n27mr25255293ejb.108.1630339091824;
- Mon, 30 Aug 2021 08:58:11 -0700 (PDT)
+        id S237665AbhH3PvZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 11:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231725AbhH3PvX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 11:51:23 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315CBC061575;
+        Mon, 30 Aug 2021 08:50:29 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id e21so32062510ejz.12;
+        Mon, 30 Aug 2021 08:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZdQ2NYONUh/Mlj0X5zIsPhWrX6XBgDUXmU/jErZJywo=;
+        b=FJ6u+7ZmqzdbI/gyHRn72MAMt7fXnzhi32/cwtuYJ4y45E80lvafD0QAHLIWsE0AsB
+         vbH3nG8xMYE3rYDcNcCqI/ARxt5efWvfhJhhRwgvURvvHv1qsuPJ86PBf2NuyFWAFPSG
+         aXfpF64sSzKew+B8jhZiS5GgR3a3mGdBsr5DREG+exF17jVqcBTNX1zw8LRm/1/26Mne
+         xaFEPQQZUhlwkOGIxxVkLom0q/20yKjrqh08dZ+Qq2vwbh6B1HAclNGTBg07GsOLtu4e
+         okSSK4+c2tB3RQHMAiIVfLk8jYNYEAtNDWfkeUbRvE3OBn3RksYk5bPzVaDPdBWHScE9
+         Ixzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZdQ2NYONUh/Mlj0X5zIsPhWrX6XBgDUXmU/jErZJywo=;
+        b=apKP7CHy8BM6XHMtBx1rEjm2tZdkM8hPQbF0dHGvz0zYv4e/FoFGUq8nka8qRqprsM
+         ZzVxUBxyuDdH5QIUOnOhdSOr8JYVXv23BvlWZ2kaniie+O80FYFD/F6gInC4zcQ2Rxqm
+         BAUDdQByKXbGS2hnbGTWI1VPP5qiZ7Rtu7a+R+OhveRwNDHSa9lOe30GMLZN5G+GTk5B
+         VSgdZDavFnBR3/p3ekOHmqlQc5BGfG1VFBRsCx3XLxk8roxojupoyxr0Y7rFa/J8QViQ
+         GhtkdPIf3DWmSsuva3gI6AkmdDsX8LGjoDncbh8uElDx6IH0BBzm3eCwncaOxJfcOiL8
+         nrFA==
+X-Gm-Message-State: AOAM530dwTiprYvF22x4m7ZbTJgpKasbMNgJ4IFpRZ9Z7Z1S0nimGw7w
+        lP4VcYABefBL11EHG9u0U4M=
+X-Google-Smtp-Source: ABdhPJxzjhjWEcACIkXAOsASCgygWfARaMnw76vGOM8bIFhahPxmhp1H0I810MbvFr0ZdMuQBSl7Mg==
+X-Received: by 2002:a17:907:2677:: with SMTP id ci23mr25654080ejc.429.1630338627699;
+        Mon, 30 Aug 2021 08:50:27 -0700 (PDT)
+Received: from localhost (host-79-37-188-60.retail.telecomitalia.it. [79.37.188.60])
+        by smtp.gmail.com with ESMTPSA id n18sm6773671ejg.36.2021.08.30.08.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Aug 2021 08:50:27 -0700 (PDT)
+Date:   Mon, 30 Aug 2021 19:50:20 +0200
+From:   Sergio =?utf-8?Q?Migu=C3=A9ns?= Iglesias <lonyelon@gmail.com>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        sstabellini@kernel.org, bhelgaas@google.com,
+        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergio =?utf-8?Q?Migu=C3=A9ns?= Iglesias <sergio@lony.xyz>
+Subject: Re: [PATCH] xen/pcifront: Removed unnecessary __ref annotation
+Message-ID: <20210830175020.jymnt6uwhgmjlwyz@archlap>
+References: <20210829221415.647744-1-sergio@lony.xyz>
+ <2df006a3-d232-c356-3402-888739835967@suse.com>
 MIME-Version: 1.0
-References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
- <20210827171534.62380-5-mark.kettenis@xs4all.nl> <87pmtvcgec.wl-maz@kernel.org>
-In-Reply-To: <87pmtvcgec.wl-maz@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 30 Aug 2021 10:57:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJC+FxiynFkkcB0amp3s4agsio5ggCrYiPbqoXroAJV4Q@mail.gmail.com>
-Message-ID: <CAL_JsqJC+FxiynFkkcB0amp3s4agsio5ggCrYiPbqoXroAJV4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] arm64: apple: Add PCIe node
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
-        devicetree@vger.kernel.org,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hector Martin <marcan@marcan.st>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2df006a3-d232-c356-3402-888739835967@suse.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 6:37 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Mark,
->
-> On Fri, 27 Aug 2021 18:15:29 +0100,
-> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> >
-> > From: Mark Kettenis <kettenis@openbsd.org>
-> >
-> > Add node corresponding to the apcie,t8103 node in the
-> > Apple device tree for the Mac mini (M1, 2020).
-> >
-> > Clock references and DART (IOMMU) references are left out at the
-> > moment and will be added once the appropriate bindings have been
-> > settled upon.
-> >
-> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+Thanks a lot for your reply! I am sending a v2 patch to fix all the
+issues.
+
+Sergio M. Iglesias.
+
+On 21/08/30 06:55, Juergen Gross wrote:
+> On 30.08.21 00:14, Sergio Miguéns Iglesias wrote:
+> > An unnecessary "__ref" annotation was removed from the
+> > "drivers/pci/xen_pcifront.c" file. The function where the annotation
+> > was used was "pcifront_backend_changed()", which does not call any
+> > functions annotated as "__*init" nor "__*exit". This makes "__ref"
+> > unnecessary since this annotation is used to make the compiler ignore
+> > section miss-matches when they are not happening here in the first
+> > place.
+> > 
+> > In addition to the aforementioned change, some code style issues were
+> > fixed in the same file.
+> > 
+> > Signed-off-by: Sergio Miguéns Iglesias <sergio@lony.xyz>
 > > ---
-> >  arch/arm64/boot/dts/apple/t8103.dtsi | 63 ++++++++++++++++++++++++++++
-> >  1 file changed, 63 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-> > index 503a76fc30e6..6e4677bdef44 100644
-> > --- a/arch/arm64/boot/dts/apple/t8103.dtsi
-> > +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-> > @@ -214,5 +214,68 @@ pinctrl_smc: pinctrl@23e820000 {
-> >                                    <AIC_IRQ 396 IRQ_TYPE_LEVEL_HIGH>,
-> >                                    <AIC_IRQ 397 IRQ_TYPE_LEVEL_HIGH>;
-> >               };
+> >   drivers/pci/xen-pcifront.c | 24 ++++++++++++++----------
+> >   1 file changed, 14 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+> > index b7a8f3a1921f..f06661704f3a 100644
+> > --- a/drivers/pci/xen-pcifront.c
+> > +++ b/drivers/pci/xen-pcifront.c
+> > @@ -115,7 +115,7 @@ static int do_pci_op(struct pcifront_device *pdev, struct xen_pci_op *op)
+> >   	struct xen_pci_op *active_op = &pdev->sh_info->op;
+> >   	unsigned long irq_flags;
+> >   	evtchn_port_t port = pdev->evtchn;
+> > -	unsigned irq = pdev->irq;
+> > +	unsigned int irq = pdev->irq;
+> >   	s64 ns, ns_timeout;
+> >   	spin_lock_irqsave(&pdev->sh_info_lock, irq_flags);
+> > @@ -152,11 +152,10 @@ static int do_pci_op(struct pcifront_device *pdev, struct xen_pci_op *op)
+> >   		}
+> >   	}
+> > -	/*
+> > -	* We might lose backend service request since we
+> > -	* reuse same evtchn with pci_conf backend response. So re-schedule
+> > -	* aer pcifront service.
+> > -	*/
+> > +	/* We might lose backend service request since we
+> 
+> This is no net or drivers/net file, so please keep the initial "/*"
+> line and fixup the other multi-line comments accordingly.
+> 
+> > +	 * reuse same evtchn with pci_conf backend response. So re-schedule
+> > +	 * aer pcifront service.
+> > +	 */
+> >   	if (test_bit(_XEN_PCIB_active,
+> >   			(unsigned long *)&pdev->sh_info->flags)) {
+> >   		dev_err(&pdev->xdev->dev,
+> > @@ -493,7 +492,8 @@ static int pcifront_scan_root(struct pcifront_device *pdev,
+> >   	list_add(&bus_entry->list, &pdev->root_buses);
+> >   	/* pci_scan_root_bus skips devices which do not have a
+> > -	* devfn==0. The pcifront_scan_bus enumerates all devfn. */
+> > +	 * devfn==0. The pcifront_scan_bus enumerates all devfn.
+> > +	 */
+> >   	err = pcifront_scan_bus(pdev, domain, bus, b);
+> >   	/* Claim resources before going "live" with our devices */
+> > @@ -651,8 +651,9 @@ static void pcifront_do_aer(struct work_struct *data)
+> >   	pci_channel_state_t state =
+> >   		(pci_channel_state_t)pdev->sh_info->aer_op.err;
+> > -	/*If a pci_conf op is in progress,
+> > -		we have to wait until it is done before service aer op*/
+> > +	/* If a pci_conf op is in progress, we have to wait until it is done
+> > +	 * before service aer op
+> > +	 */
+> >   	dev_dbg(&pdev->xdev->dev,
+> >   		"pcifront service aer bus %x devfn %x\n",
+> >   		pdev->sh_info->aer_op.bus, pdev->sh_info->aer_op.devfn);
+> > @@ -676,6 +677,7 @@ static void pcifront_do_aer(struct work_struct *data)
+> >   static irqreturn_t pcifront_handler_aer(int irq, void *dev)
+> >   {
+> >   	struct pcifront_device *pdev = dev;
 > > +
-> > +             pcie0: pcie@690000000 {
-> > +                     compatible = "apple,t8103-pcie", "apple,pcie";
-> > +                     device_type = "pci";
+> >   	schedule_pcifront_aer_op(pdev);
+> >   	return IRQ_HANDLED;
+> >   }
+> > @@ -1027,6 +1029,7 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
+> >   	/* Find devices being detached and remove them. */
+> >   	for (i = 0; i < num_devs; i++) {
+> >   		int l, state;
 > > +
-> > +                     reg = <0x6 0x90000000 0x0 0x1000000>,
-> > +                           <0x6 0x80000000 0x0 0x4000>,
-> > +                           <0x6 0x81000000 0x0 0x8000>,
-> > +                           <0x6 0x82000000 0x0 0x8000>,
-> > +                           <0x6 0x83000000 0x0 0x8000>;
-> > +                     reg-names = "config", "rc", "port0", "port1", "port2";
+> >   		l = snprintf(str, sizeof(str), "state-%d", i);
+> >   		if (unlikely(l >= (sizeof(str) - 1))) {
+> >   			err = -ENOMEM;
+> > @@ -1078,7 +1081,7 @@ static int pcifront_detach_devices(struct pcifront_device *pdev)
+> >   	return err;
+> >   }
+> > -static void __ref pcifront_backend_changed(struct xenbus_device *xdev,
+> > +static void pcifront_backend_changed(struct xenbus_device *xdev,
+> >   						  enum xenbus_state be_state)
+> >   {
+> >   	struct pcifront_device *pdev = dev_get_drvdata(&xdev->dev);
+> > @@ -1137,6 +1140,7 @@ static int pcifront_xenbus_probe(struct xenbus_device *xdev,
+> >   static int pcifront_xenbus_remove(struct xenbus_device *xdev)
+> >   {
+> >   	struct pcifront_device *pdev = dev_get_drvdata(&xdev->dev);
 > > +
-> > +                     interrupt-parent = <&aic>;
-> > +                     interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                  <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                  <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +                     msi-controller;
-> > +                     msi-parent = <&pcie0>;
-> > +                     msi-ranges = <&aic AIC_IRQ 704 IRQ_TYPE_EDGE_RISING 32>;
-> > +
-> > +                     bus-range = <0 3>;
-> > +                     #address-cells = <3>;
-> > +                     #size-cells = <2>;
-> > +                     ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
-> > +                              <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
-> > +
-> > +                     pinctrl-0 = <&pcie_pins>;
-> > +                     pinctrl-names = "default";
-> > +
-> > +                     pci@0,0 {
-> > +                             device_type = "pci";
-> > +                             reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +                             reset-gpios = <&pinctrl_ap 152 0>;
-> > +                             max-link-speed = <2>;
-> > +
-> > +                             #address-cells = <3>;
-> > +                             #size-cells = <2>;
-> > +                             ranges;
-> > +                     };
-> > +
-> > +                     pci@1,0 {
-> > +                             device_type = "pci";
-> > +                             reg = <0x800 0x0 0x0 0x0 0x0>;
-> > +                             reset-gpios = <&pinctrl_ap 153 0>;
-> > +                             max-link-speed = <2>;
-> > +
-> > +                             #address-cells = <3>;
-> > +                             #size-cells = <2>;
-> > +                             ranges;
-> > +                     };
-> > +
-> > +                     pci@2,0 {
-> > +                             device_type = "pci";
-> > +                             reg = <0x1000 0x0 0x0 0x0 0x0>;
-> > +                             reset-gpios = <&pinctrl_ap 33 0>;
-> > +                             max-link-speed = <1>;
-> > +
-> > +                             #address-cells = <3>;
-> > +                             #size-cells = <2>;
-> > +                             ranges;
-> > +                     };
-> > +             };
-> >       };
-> >  };
->
-> I have now implemented the MSI change on the Linux driver side, and it
-> works nicely. So thumbs up from me on this front.
->
-> I am now looking at the interrupts provided by each port:
-> (1) a bunch of port-private interrupts (link up/down...)
-> (2) INTx interrupts
+> >   	if (pdev)
+> >   		free_pdev(pdev);
+> > 
+> 
+> Juergen
 
-So each port has an independent INTx space? Is that even something PCI
-defines or comprehends?
 
-> Given that the programming is per-port, I've implemented this as a
-> per-port interrupt controller.
->
-> (1) is dead easy to implement, and doesn't require any DT description.
-> (2) is unfortunately exposing the limits of my DT knowledge, and I'm
-> not clear how to model it. I came up with the following:
->
->         port00: pci@0,0 {
->                 device_type = "pci";
->                 reg = <0x0 0x0 0x0 0x0 0x0>;
->                 reset-gpios = <&pinctrl_ap 152 0>;
->                 max-link-speed = <2>;
->
->                 #address-cells = <3>;
->                 #size-cells = <2>;
->                 ranges;
->
->                 interrupt-controller;
->                 #interrupt-cells = <1>;
->                 interrupt-parent = <&port00>;
->                 interrupt-map-mask = <0 0 0 7>;
->                 interrupt-map = <0 0 0 1 &port00 0>,
->                                 <0 0 0 2 &port00 1>,
->                                 <0 0 0 3 &port00 2>,
->                                 <0 0 0 4 &port00 3>;
 
-IIRC, I don't think the DT IRQ code handles a node having both
-'interrupt-controller' and 'interrupt-map' properties. I think that's
-why some PCI host bridge nodes have child interrupt-controller nodes.
-I don't really like that work-around, so if the above can be made to
-work, I'd be happy to see it. But the DT IRQ code is some ancient code
-for ancient platforms (PowerMacs being one of them).
 
->         };
->
-> which vaguely seem to do the right thing for the devices behind root
-> ports, but doesn't seem to work for INTx generated by the root ports
-> themselves. Any clue? Alternatively, I could move it to something
-> global to the whole PCIe controller, but that doesn't seem completely
-> right.
->
-> It also begs the question whether the per-port interrupt to the AIC
-> should be moved into each root port, should my per-port approach hold
-> any water.
 
-I tend to think per-port is the right thing to do. However, the child
-nodes are PCI devices, so that creates some restrictions. Such as the
-per port registers are in the host address space, not the PCI address
-space, so we can't move the registers into the child nodes. The
-interrupts may be okay. Certainly, being an 'interrupt-controller'
-without having an 'interrupts' property for an non root interrupt
-controller is odd.
-
-Rob
