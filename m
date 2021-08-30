@@ -2,141 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96EF63FB1CC
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 09:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 820063FB258
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 10:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233109AbhH3HUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 03:20:24 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:48106 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232321AbhH3HUY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 03:20:24 -0400
-X-UUID: b0267178608846dbb5ee7e58d5c085de-20210830
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Date:MIME-Version:Content-Type:References:In-Reply-To:CC:To:From:Subject:Message-ID; bh=ZVvnYNULbD5MSjecvjFcT0NzWEVsC6S/jWzxqMKaweI=;
-        b=Shdtof7kPoEw9HTESWeHjWG4RhGfWrR+BaIHFeGu5DO4CwUVc+n9gd5Ux9Rxi1pdh9y7IZIxYOTRhmHdR1B/ZjeiUh9T5yOZWMUecTdHFFqJjRnMTAXfYmxU2lS/G7FiftFpcwWKgHg9yssTrxYPiYPOucbHdy1Ieq3RGucwTHg=;
-X-UUID: b0267178608846dbb5ee7e58d5c085de-20210830
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 363175480; Mon, 30 Aug 2021 15:19:28 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkexhb01.mediatek.inc
- (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 30 Aug
- 2021 15:19:27 +0800
-Received: from mhfsdcap04 (10.17.3.154) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 30 Aug 2021 15:19:26 +0800
-Message-ID: <968266ecd5889721aa234c414361bedbe66b9539.camel@mediatek.com>
-Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
- pcie-cfg base address
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
-        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>,
-        <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
-        <yong.wu@mediatek.com>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <20210827164634.GA3779223@bjorn-Precision-5520>
-References: <20210827164634.GA3779223@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
+        id S234732AbhH3IWL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 04:22:11 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:54694 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233318AbhH3IWK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 04:22:10 -0400
+X-Greylist: delayed 777 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Aug 2021 04:22:09 EDT
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 17U88BLP018646
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Aug 2021 10:08:11 +0200
+Received: from [167.87.2.75] ([167.87.2.75])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 17U88AWF007376;
+        Mon, 30 Aug 2021 10:08:11 +0200
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH v2] PCI/portdrv: Do not setup up IRQs if there are no users
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <8f9a13ac-8ab1-15ac-06cb-c131b488a36f@siemens.com>
+Date:   Mon, 30 Aug 2021 10:08:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Date:   Mon, 30 Aug 2021 15:09:44 +0800
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTA4LTI3IGF0IDExOjQ2IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBNb24sIEF1ZyAyMywgMjAyMSBhdCAxMToyNzo1NkFNICswODAwLCBDaHVhbmppYSBMaXUg
-d3JvdGU6DQo+ID4gRm9yIHRoZSBuZXcgZHRzIGZvcm1hdCwgYWRkIGEgbmV3IG1ldGhvZCB0byBn
-ZXQNCj4gPiBzaGFyZWQgcGNpZS1jZmcgYmFzZSBhZGRyZXNzIGFuZCB1c2UgaXQgdG8gY29uZmln
-dXJlDQo+ID4gdGhlIFBDSUVDRkcgY29udHJvbGxlcg0KPiANCj4gUmV3cmFwIHRoaXMgdG8gZmls
-bCA3NSBjb2x1bW5zLg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmppYSBMaXUgPGNodWFu
-amlhLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVl
-QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
-LW1lZGlhdGVrLmMgfCAxNyArKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MTcgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
-LW1lZGlhdGVrLmMNCj4gPiBpbmRleCAyNWJlZTY5MzgzNGYuLjQyOTZkOWUwNDI0MCAxMDA2NDQN
-Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiA+ICsr
-KyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jDQo+ID4gQEAgLTE0LDYg
-KzE0LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lycWNoaXAvY2hhaW5lZF9pcnEuaD4NCj4g
-PiAgI2luY2x1ZGUgPGxpbnV4L2lycWRvbWFpbi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgva2Vy
-bmVsLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+DQo+ID4gICNpbmNsdWRl
-IDxsaW51eC9tc2kuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICAjaW5j
-bHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiA+IEBAIC0yMyw2ICsyNCw3IEBADQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9k
-ZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiArI2luY2x1
-ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4NCj4gPiAg
-DQo+ID4gICNpbmNsdWRlICIuLi9wY2kuaCINCj4gPiBAQCAtMjA3LDYgKzIwOSw3IEBAIHN0cnVj
-dCBtdGtfcGNpZV9wb3J0IHsNCj4gPiAgICogc3RydWN0IG10a19wY2llIC0gUENJZSBob3N0IGlu
-Zm9ybWF0aW9uDQo+ID4gICAqIEBkZXY6IHBvaW50ZXIgdG8gUENJZSBkZXZpY2UNCj4gPiAgICog
-QGJhc2U6IElPIG1hcHBlZCByZWdpc3RlciBiYXNlDQo+ID4gKyAqIEBjZmc6IElPIG1hcHBlZCBy
-ZWdpc3RlciBtYXAgZm9yIFBDSWUgY29uZmlnDQo+ID4gICAqIEBmcmVlX2NrOiBmcmVlLXJ1biBy
-ZWZlcmVuY2UgY2xvY2sNCj4gPiAgICogQG1lbTogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgcmVz
-b3VyY2UNCj4gPiAgICogQHBvcnRzOiBwb2ludGVyIHRvIFBDSWUgcG9ydCBpbmZvcm1hdGlvbg0K
-PiA+IEBAIC0yMTUsNiArMjE4LDcgQEAgc3RydWN0IG10a19wY2llX3BvcnQgew0KPiA+ICBzdHJ1
-Y3QgbXRrX3BjaWUgew0KPiA+ICAJc3RydWN0IGRldmljZSAqZGV2Ow0KPiA+ICAJdm9pZCBfX2lv
-bWVtICpiYXNlOw0KPiA+ICsJc3RydWN0IHJlZ21hcCAqY2ZnOw0KPiA+ICAJc3RydWN0IGNsayAq
-ZnJlZV9jazsNCj4gPiAgDQo+ID4gIAlzdHJ1Y3QgbGlzdF9oZWFkIHBvcnRzOw0KPiA+IEBAIC02
-ODIsNiArNjg2LDEwIEBAIHN0YXRpYyBpbnQgbXRrX3BjaWVfc3RhcnR1cF9wb3J0X3YyKHN0cnVj
-dA0KPiA+IG10a19wY2llX3BvcnQgKnBvcnQpDQo+ID4gIAkJdmFsIHw9IFBDSUVfQ1NSX0xUU1NN
-X0VOKHBvcnQtPnNsb3QpIHwNCj4gPiAgCQkgICAgICAgUENJRV9DU1JfQVNQTV9MMV9FTihwb3J0
-LT5zbG90KTsNCj4gPiAgCQl3cml0ZWwodmFsLCBwY2llLT5iYXNlICsgUENJRV9TWVNfQ0ZHX1Yy
-KTsNCj4gPiArCX0gZWxzZSBpZiAocGNpZS0+Y2ZnKSB7DQo+ID4gKwkJdmFsID0gUENJRV9DU1Jf
-TFRTU01fRU4ocG9ydC0+c2xvdCkgfA0KPiA+ICsJCSAgICAgIFBDSUVfQ1NSX0FTUE1fTDFfRU4o
-cG9ydC0+c2xvdCk7DQo+ID4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKHBjaWUtPmNmZywgUENJRV9T
-WVNfQ0ZHX1YyLCB2YWwsDQo+ID4gdmFsKTsNCj4gPiAgCX0NCj4gPiAgDQo+ID4gIAkvKiBBc3Nl
-cnQgYWxsIHJlc2V0IHNpZ25hbHMgKi8NCj4gPiBAQCAtOTg1LDYgKzk5Myw3IEBAIHN0YXRpYyBp
-bnQgbXRrX3BjaWVfc3Vic3lzX3Bvd2VydXAoc3RydWN0DQo+ID4gbXRrX3BjaWUgKnBjaWUpDQo+
-ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBwY2llLT5kZXY7DQo+ID4gIAlzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7DQo+ID4gIAlzdHJ1Y3Qg
-cmVzb3VyY2UgKnJlZ3M7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNmZ19ub2RlOw0KPiA+
-ICAJaW50IGVycjsNCj4gPiAgDQo+ID4gIAkvKiBnZXQgc2hhcmVkIHJlZ2lzdGVycywgd2hpY2gg
-YXJlIG9wdGlvbmFsICovDQo+ID4gQEAgLTk5NSw2ICsxMDA0LDE0IEBAIHN0YXRpYyBpbnQgbXRr
-X3BjaWVfc3Vic3lzX3Bvd2VydXAoc3RydWN0DQo+ID4gbXRrX3BjaWUgKnBjaWUpDQo+ID4gIAkJ
-CXJldHVybiBQVFJfRVJSKHBjaWUtPmJhc2UpOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCWNmZ19u
-b2RlID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwNCj4gPiArCQkJCQkgICAi
-bWVkaWF0ZWssZ2VuZXJpYy1wY2llY2ZnIik7DQo+IA0KPiBUaGlzIGxvb2tzIHdyb25nIHRvIG1l
-LiAgSUlVQywgc2luY2Ugd2Ugc3RhcnQgYXQgTlVMTCwgdGhpcyBzZWFyY2hlcw0KPiB0aGUgZW50
-aXJlIGRldmljZSB0cmVlIGZvciBhbnkgbm9kZSB3aXRoDQo+IA0KPiAgIGNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssZ2VuZXJpYy1wY2llY2ZnIg0KPiANCj4gYnV0IHdlIHNob3VsZCBvbmx5IGNhcmUg
-YWJvdXQgdGhlIHNwZWNpZmljIGRldmljZS9ub2RlIHRoaXMgZHJpdmVyDQo+IGNsYWltZWQuDQo+
-IA0KPiBTaG91bGQgdGhpcyBiZSBwYXJ0IG9mIHRoZSBtYXRjaCBkYXRhLCBpLmUuLCBzdHJ1Y3Qg
-bXRrX3BjaWVfc29jPw0KSGkgQmpvcm4sDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCk1h
-bnkgZHJpdmVycyBpbiB0aGUgZHJpdmVycy8gZm9sZGVyIHVzZSBjb21wYXRpYmxlIHRvIHNlYXJj
-aCBkaXJlY3RseS4NCiANCkkgZ3Vlc3MgdGhhdCB3aGVuIGRpZmZlcmVudCBkZXZpY2VzIG5lZWQg
-dG8gc2VhcmNoIGZvciBkaWZmZXJlbnQgbm9kZXMsDQppdCBpcyBuZWNlc3NhcnkgdG8gdXNlIG1h
-dGNoIGRhdGEgdG8gZGV0ZXJtaW5lIHRoZSBjdXJyZW50IG5vZGUgDQppbmZvcm1hdGlvbiB0aGF0
-IG5lZWRzIHRvIGJlIHNlYXJjaGVkLg0KDQpCdXQgaW4gdGhlIGRldmljZXMgc3VwcG9ydGVkIGJ5
-IHRoaXMgZHJpdmVyLCBJIGd1ZXNzIGl0IG5vIG5lZWQgDQp0aHJvdWdoIG1hdGNoIGRhdGEgdG8g
-Y29uZmlybSB0aGUgY29tcGF0aWJsZSBpbmZvcm1hdGlvbu+8jGJlY2F1c2UgaXQgDQphbHdheXMg
-c2VhcmNoIHNhbWUgY29tcGF0aWJsZSAibWVkaWF0ZWssIGdlbmVyaWMtcGNpZWNmZyINCg0KPiAN
-Cj4gPiArCWlmIChjZmdfbm9kZSkgew0KPiA+ICsJCXBjaWUtPmNmZyA9IHN5c2Nvbl9ub2RlX3Rv
-X3JlZ21hcChjZmdfbm9kZSk7DQo+IA0KPiBPdGhlciBkcml2ZXJzIGluIGRyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvIHVzZQ0KPiBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKCkgKGo3MjFl
-LCBkcmE3eHgsIGtleXN0b25lLA0KPiBsYXllcnNjYXBlLCBhcnRwZWM2KSBvciBzeXNjb25fcmVn
-bWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCkgKGlteDYsDQo+IGtpcmluLCB2My1zZW1pKS4NCj4g
-DQo+IFlvdSBzaG91bGQgZG8gaXQgdGhlIHNhbWUgd2F5IHVubGVzcyB0aGVyZSdzIGEgbmVlZCB0
-byBiZSBkaWZmZXJlbnQuDQpJIGhhdmUgdXNlZCBwaGFuZGxlLCBidXQgUm9iIHN1Z2dlc3RlZCB0
-byBzZWFyY2ggZm9yIHRoZSBub2RlIGJ5IA0KY29tcGF0aWJsZS4gVGhlIHJlYXNvbiB3aHkgc3lz
-Y29uX3JlZ21hcF9sb29rdXBfYnlfY29tcGF0aWJsZSgpIGlzIG5vdCANCnVzZWQgaGVyZSBpcyB0
-aGF0IHRoZSBwY2llY2ZnIG5vZGUgaXMgb3B0aW9uYWwsIGFuZCB0aGVyZSBpcyBubyBuZWVkIHRv
-DQpyZXR1cm4gZXJyb3Igd2hlbiB0aGUgbm9kZSBpcyBub3Qgc2VhcmNoZWQuDQoNCj4gSXQncyBh
-bHNvIG5pY2UgaWYgeW91IGNhbiB1c2UgdGhlIHNhbWUgc3RydWN0IG1lbWJlciBuYW1lDQo+ICgi
-bXRrX3BjaWUuY2ZnIikgYXMgb3RoZXIgZHJpdmVycy4gIFRoZXkncmUgbm90IGFsbCBjb25zaXN0
-ZW50LCBidXQgSQ0KPiBkb24ndCBzZWUgYW55IG90aGVyICJjZmciLg0KT3RoZXIgZHJpdmVycyBz
-dHJ1Y3QgbWVtYmVyIG5hbWUgYXJlIGFsc28gZGlmZmVyZW50Lg0KRm9yIGV4YW1wbGUsIHNjZmco
-bGF5ZXJzY2FwZSnvvIxtYXAodjMtc2VtaSksIGNyZ2N0cmwoa2lyaW4pLA0KcmVnbWFwKGFydHBl
-YzYpLk9yIGp1c3QgdXNlIGxvY2FsIHZhcmlhYmxlcywgbmFtZWQgc3lzY29uIG9yIHJlZ21hcC4N
-ClNvIEkgY291bGRuJ3QgYmUgY29uc2lzdGVudCB3aXRoIG90aGVyIGRyaXZlcnMuDQoNClRoYW5r
-cw0KQ2h1YW5qaWENCj4gDQo+ID4gKwkJaWYgKElTX0VSUihwY2llLT5jZmcpKQ0KPiA+ICsJCQly
-ZXR1cm4gUFRSX0VSUihwY2llLT5jZmcpOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAgCXBjaWUtPmZy
-ZWVfY2sgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZnJlZV9jayIpOw0KPiA+ICAJaWYgKElTX0VSUihw
-Y2llLT5mcmVlX2NrKSkgew0KPiA+ICAJCWlmIChQVFJfRVJSKHBjaWUtPmZyZWVfY2spID09IC1F
-UFJPQkVfREVGRVIpDQo+ID4gLS0gDQo+ID4gMi4xOC4wDQo+ID4gDQo=
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
+Avoid registering service IRQs if there is no service that offers them
+or no driver to register a handler against them. This saves IRQ vectors
+when they are limited (e.g. on x86) and also avoids that spurious events
+could hit a missing handler. Such spurious events need to be generated
+by the Jailhouse hypervisor for active MSI vectors when enabling or
+disabling itself.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+
+Changes in v2:
+ - move initialization of irqs to address test bot finding
+
+ drivers/pci/pcie/portdrv_core.c | 47 +++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index e1fed6649c41..0e2556269429 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -166,9 +166,6 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+ {
+ 	int ret, i;
+ 
+-	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+-		irqs[i] = -1;
+-
+ 	/*
+ 	 * If we support PME but can't use MSI/MSI-X for it, we have to
+ 	 * fall back to INTx or other interrupts, e.g., a system shared
+@@ -312,8 +309,10 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
+  */
+ int pcie_port_device_register(struct pci_dev *dev)
+ {
+-	int status, capabilities, i, nr_service;
+-	int irqs[PCIE_PORT_DEVICE_MAXSERVICES];
++	int status, capabilities, irq_services, i, nr_service;
++	int irqs[PCIE_PORT_DEVICE_MAXSERVICES] = {
++		[0 ... PCIE_PORT_DEVICE_MAXSERVICES-1] = -1
++	};
+ 
+ 	/* Enable PCI Express port device */
+ 	status = pci_enable_device(dev);
+@@ -326,18 +325,32 @@ int pcie_port_device_register(struct pci_dev *dev)
+ 		return 0;
+ 
+ 	pci_set_master(dev);
+-	/*
+-	 * Initialize service irqs. Don't use service devices that
+-	 * require interrupts if there is no way to generate them.
+-	 * However, some drivers may have a polling mode (e.g. pciehp_poll_mode)
+-	 * that can be used in the absence of irqs.  Allow them to determine
+-	 * if that is to be used.
+-	 */
+-	status = pcie_init_service_irqs(dev, irqs, capabilities);
+-	if (status) {
+-		capabilities &= PCIE_PORT_SERVICE_HP;
+-		if (!capabilities)
+-			goto error_disable;
++
++	irq_services = 0;
++	if (IS_ENABLED(CONFIG_PCIE_PME))
++		irq_services |= PCIE_PORT_SERVICE_PME;
++	if (IS_ENABLED(CONFIG_PCIEAER))
++		irq_services |= PCIE_PORT_SERVICE_AER;
++	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
++		irq_services |= PCIE_PORT_SERVICE_HP;
++	if (IS_ENABLED(CONFIG_PCIE_DPC))
++		irq_services |= PCIE_PORT_SERVICE_DPC;
++	irq_services &= capabilities;
++
++	if (irq_services) {
++		/*
++		 * Initialize service irqs. Don't use service devices that
++		 * require interrupts if there is no way to generate them.
++		 * However, some drivers may have a polling mode (e.g.
++		 * pciehp_poll_mode) that can be used in the absence of irqs.
++		 * Allow them to determine if that is to be used.
++		 */
++		status = pcie_init_service_irqs(dev, irqs, irq_services);
++		if (status) {
++			irq_services &= PCIE_PORT_SERVICE_HP;
++			if (!irq_services)
++				goto error_disable;
++		}
+ 	}
+ 
+ 	/* Allocate child services if any */
+-- 
+2.31.1
