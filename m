@@ -2,87 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 256243FB0EA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 07:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96EF63FB1CC
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 09:19:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231911AbhH3Fvr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 01:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbhH3Fvr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 01:51:47 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E703AC061575
-        for <linux-pci@vger.kernel.org>; Sun, 29 Aug 2021 22:50:53 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id i21so28727963ejd.2
-        for <linux-pci@vger.kernel.org>; Sun, 29 Aug 2021 22:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=HTX9Qg+oTZ7qbYjJxOlnMfcCjzeO8PW543NLbRZpyHm61TfySy9Rj0KqzRh9w4m6Wf
-         QtjCBi43u1IBcRHU+M5A4iODbAGFMGXmaIQMFv2OVVh+xueJxCunaTRWb1sjPGsGw25k
-         Czo7DtmgVHlcv3bTXlS+Q1/C6LbICtkvE/71WLExZj5sblHkdYygk8T3YCpW9bV1UdxE
-         68vFLBVEv5Dt2Joo5lvrKlwKbndYW4MNmgk64zGEoTk6yLmh8BNEHzQ1yAnhxDOn/X9n
-         LLh4F0IONNwKor+2JHppGxkgDQZ3p+d8bGZZ34v/eVwxvOtQ4HBQJ0d0Pj+8WcV8qPYQ
-         2r2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=PtsiPGTe6BY60EvPpCR0N0KnODdxN1Hi53vNvQsxQs9wKTG9J3kJkV/ldI/yIEygoS
-         lSzNeuI+KVzhWgVdGUd1v+G0tlwhU/0FFtbkguCglTPUTxr+2/lKCvv9k6s5a2mBcaK9
-         gcyDLcTdET8nxnF5MoASYwRkrcSLblq7pWDSWtJaBTc7wbZEh5nA9o3pezh7v0bb+G+D
-         +3Lux9ReqCmV38QtqIFqP3aM6r2Kc2TRQmIlWRCa2Q7ceE3A/YYb9EDJsYdDXVwP2uuH
-         E4UI68z0yWh+2qnKgR+KqvrKok2NzCsn6bEtaENHgoE4XKvnpRfnv6Yq4ywzEb53cp/3
-         je+A==
-X-Gm-Message-State: AOAM5338/aErd/Hw9zNWRTMe1BV66v3gL6TnGdB3bz8dgyyQfuhPzOEn
-        i8uyuFuxQs+tAL/OXAdDAQ6o363IAEw51AguAlM=
-X-Google-Smtp-Source: ABdhPJxQhbtFJCkQSoXqmwjTh/Kw0WnS/s7JmnqI0L3/3PVW3yzdU0becNDNu5NM5KGtNjh6wLQsfomR+J2SJ3/fPs0=
-X-Received: by 2002:a17:906:1789:: with SMTP id t9mr23374412eje.61.1630302652444;
- Sun, 29 Aug 2021 22:50:52 -0700 (PDT)
-MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: godwinpeter2401@gmail.com
-Received: by 2002:a54:3251:0:0:0:0:0 with HTTP; Sun, 29 Aug 2021 22:50:51
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Mon, 30 Aug 2021 07:50:51 +0200
-X-Google-Sender-Auth: s7C7iPpagu-KvF61mzOLDaffwG4
-Message-ID: <CAGyeThARSPiLYmOOZO-tpA3acto5cEa4y9ebjxoSQabyCqLGiA@mail.gmail.com>
-Subject: For your information
-To:     undisclosed-recipients:;
+        id S233109AbhH3HUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 03:20:24 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:48106 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S232321AbhH3HUY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 03:20:24 -0400
+X-UUID: b0267178608846dbb5ee7e58d5c085de-20210830
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Date:MIME-Version:Content-Type:References:In-Reply-To:CC:To:From:Subject:Message-ID; bh=ZVvnYNULbD5MSjecvjFcT0NzWEVsC6S/jWzxqMKaweI=;
+        b=Shdtof7kPoEw9HTESWeHjWG4RhGfWrR+BaIHFeGu5DO4CwUVc+n9gd5Ux9Rxi1pdh9y7IZIxYOTRhmHdR1B/ZjeiUh9T5yOZWMUecTdHFFqJjRnMTAXfYmxU2lS/G7FiftFpcwWKgHg9yssTrxYPiYPOucbHdy1Ieq3RGucwTHg=;
+X-UUID: b0267178608846dbb5ee7e58d5c085de-20210830
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 363175480; Mon, 30 Aug 2021 15:19:28 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 30 Aug
+ 2021 15:19:27 +0800
+Received: from mhfsdcap04 (10.17.3.154) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 30 Aug 2021 15:19:26 +0800
+Message-ID: <968266ecd5889721aa234c414361bedbe66b9539.camel@mediatek.com>
+Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
+ pcie-cfg base address
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
+        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20210827164634.GA3779223@bjorn-Precision-5520>
+References: <20210827164634.GA3779223@bjorn-Precision-5520>
 Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Date:   Mon, 30 Aug 2021 15:09:44 +0800
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+T24gRnJpLCAyMDIxLTA4LTI3IGF0IDExOjQ2IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBNb24sIEF1ZyAyMywgMjAyMSBhdCAxMToyNzo1NkFNICswODAwLCBDaHVhbmppYSBMaXUg
+d3JvdGU6DQo+ID4gRm9yIHRoZSBuZXcgZHRzIGZvcm1hdCwgYWRkIGEgbmV3IG1ldGhvZCB0byBn
+ZXQNCj4gPiBzaGFyZWQgcGNpZS1jZmcgYmFzZSBhZGRyZXNzIGFuZCB1c2UgaXQgdG8gY29uZmln
+dXJlDQo+ID4gdGhlIFBDSUVDRkcgY29udHJvbGxlcg0KPiANCj4gUmV3cmFwIHRoaXMgdG8gZmls
+bCA3NSBjb2x1bW5zLg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmppYSBMaXUgPGNodWFu
+amlhLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVl
+QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
+LW1lZGlhdGVrLmMgfCAxNyArKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MTcgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
+LW1lZGlhdGVrLmMNCj4gPiBpbmRleCAyNWJlZTY5MzgzNGYuLjQyOTZkOWUwNDI0MCAxMDA2NDQN
+Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYw0KPiA+ICsr
+KyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jDQo+ID4gQEAgLTE0LDYg
+KzE0LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lycWNoaXAvY2hhaW5lZF9pcnEuaD4NCj4g
+PiAgI2luY2x1ZGUgPGxpbnV4L2lycWRvbWFpbi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgva2Vy
+bmVsLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+DQo+ID4gICNpbmNsdWRl
+IDxsaW51eC9tc2kuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICAjaW5j
+bHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiA+IEBAIC0yMyw2ICsyNCw3IEBADQo+ID4gICNp
+bmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9k
+ZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPiArI2luY2x1
+ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4NCj4gPiAg
+DQo+ID4gICNpbmNsdWRlICIuLi9wY2kuaCINCj4gPiBAQCAtMjA3LDYgKzIwOSw3IEBAIHN0cnVj
+dCBtdGtfcGNpZV9wb3J0IHsNCj4gPiAgICogc3RydWN0IG10a19wY2llIC0gUENJZSBob3N0IGlu
+Zm9ybWF0aW9uDQo+ID4gICAqIEBkZXY6IHBvaW50ZXIgdG8gUENJZSBkZXZpY2UNCj4gPiAgICog
+QGJhc2U6IElPIG1hcHBlZCByZWdpc3RlciBiYXNlDQo+ID4gKyAqIEBjZmc6IElPIG1hcHBlZCBy
+ZWdpc3RlciBtYXAgZm9yIFBDSWUgY29uZmlnDQo+ID4gICAqIEBmcmVlX2NrOiBmcmVlLXJ1biBy
+ZWZlcmVuY2UgY2xvY2sNCj4gPiAgICogQG1lbTogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgcmVz
+b3VyY2UNCj4gPiAgICogQHBvcnRzOiBwb2ludGVyIHRvIFBDSWUgcG9ydCBpbmZvcm1hdGlvbg0K
+PiA+IEBAIC0yMTUsNiArMjE4LDcgQEAgc3RydWN0IG10a19wY2llX3BvcnQgew0KPiA+ICBzdHJ1
+Y3QgbXRrX3BjaWUgew0KPiA+ICAJc3RydWN0IGRldmljZSAqZGV2Ow0KPiA+ICAJdm9pZCBfX2lv
+bWVtICpiYXNlOw0KPiA+ICsJc3RydWN0IHJlZ21hcCAqY2ZnOw0KPiA+ICAJc3RydWN0IGNsayAq
+ZnJlZV9jazsNCj4gPiAgDQo+ID4gIAlzdHJ1Y3QgbGlzdF9oZWFkIHBvcnRzOw0KPiA+IEBAIC02
+ODIsNiArNjg2LDEwIEBAIHN0YXRpYyBpbnQgbXRrX3BjaWVfc3RhcnR1cF9wb3J0X3YyKHN0cnVj
+dA0KPiA+IG10a19wY2llX3BvcnQgKnBvcnQpDQo+ID4gIAkJdmFsIHw9IFBDSUVfQ1NSX0xUU1NN
+X0VOKHBvcnQtPnNsb3QpIHwNCj4gPiAgCQkgICAgICAgUENJRV9DU1JfQVNQTV9MMV9FTihwb3J0
+LT5zbG90KTsNCj4gPiAgCQl3cml0ZWwodmFsLCBwY2llLT5iYXNlICsgUENJRV9TWVNfQ0ZHX1Yy
+KTsNCj4gPiArCX0gZWxzZSBpZiAocGNpZS0+Y2ZnKSB7DQo+ID4gKwkJdmFsID0gUENJRV9DU1Jf
+TFRTU01fRU4ocG9ydC0+c2xvdCkgfA0KPiA+ICsJCSAgICAgIFBDSUVfQ1NSX0FTUE1fTDFfRU4o
+cG9ydC0+c2xvdCk7DQo+ID4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKHBjaWUtPmNmZywgUENJRV9T
+WVNfQ0ZHX1YyLCB2YWwsDQo+ID4gdmFsKTsNCj4gPiAgCX0NCj4gPiAgDQo+ID4gIAkvKiBBc3Nl
+cnQgYWxsIHJlc2V0IHNpZ25hbHMgKi8NCj4gPiBAQCAtOTg1LDYgKzk5Myw3IEBAIHN0YXRpYyBp
+bnQgbXRrX3BjaWVfc3Vic3lzX3Bvd2VydXAoc3RydWN0DQo+ID4gbXRrX3BjaWUgKnBjaWUpDQo+
+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBwY2llLT5kZXY7DQo+ID4gIAlzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2ID0gdG9fcGxhdGZvcm1fZGV2aWNlKGRldik7DQo+ID4gIAlzdHJ1Y3Qg
+cmVzb3VyY2UgKnJlZ3M7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNmZ19ub2RlOw0KPiA+
+ICAJaW50IGVycjsNCj4gPiAgDQo+ID4gIAkvKiBnZXQgc2hhcmVkIHJlZ2lzdGVycywgd2hpY2gg
+YXJlIG9wdGlvbmFsICovDQo+ID4gQEAgLTk5NSw2ICsxMDA0LDE0IEBAIHN0YXRpYyBpbnQgbXRr
+X3BjaWVfc3Vic3lzX3Bvd2VydXAoc3RydWN0DQo+ID4gbXRrX3BjaWUgKnBjaWUpDQo+ID4gIAkJ
+CXJldHVybiBQVFJfRVJSKHBjaWUtPmJhc2UpOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCWNmZ19u
+b2RlID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwNCj4gPiArCQkJCQkgICAi
+bWVkaWF0ZWssZ2VuZXJpYy1wY2llY2ZnIik7DQo+IA0KPiBUaGlzIGxvb2tzIHdyb25nIHRvIG1l
+LiAgSUlVQywgc2luY2Ugd2Ugc3RhcnQgYXQgTlVMTCwgdGhpcyBzZWFyY2hlcw0KPiB0aGUgZW50
+aXJlIGRldmljZSB0cmVlIGZvciBhbnkgbm9kZSB3aXRoDQo+IA0KPiAgIGNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssZ2VuZXJpYy1wY2llY2ZnIg0KPiANCj4gYnV0IHdlIHNob3VsZCBvbmx5IGNhcmUg
+YWJvdXQgdGhlIHNwZWNpZmljIGRldmljZS9ub2RlIHRoaXMgZHJpdmVyDQo+IGNsYWltZWQuDQo+
+IA0KPiBTaG91bGQgdGhpcyBiZSBwYXJ0IG9mIHRoZSBtYXRjaCBkYXRhLCBpLmUuLCBzdHJ1Y3Qg
+bXRrX3BjaWVfc29jPw0KSGkgQmpvcm4sDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCk1h
+bnkgZHJpdmVycyBpbiB0aGUgZHJpdmVycy8gZm9sZGVyIHVzZSBjb21wYXRpYmxlIHRvIHNlYXJj
+aCBkaXJlY3RseS4NCiANCkkgZ3Vlc3MgdGhhdCB3aGVuIGRpZmZlcmVudCBkZXZpY2VzIG5lZWQg
+dG8gc2VhcmNoIGZvciBkaWZmZXJlbnQgbm9kZXMsDQppdCBpcyBuZWNlc3NhcnkgdG8gdXNlIG1h
+dGNoIGRhdGEgdG8gZGV0ZXJtaW5lIHRoZSBjdXJyZW50IG5vZGUgDQppbmZvcm1hdGlvbiB0aGF0
+IG5lZWRzIHRvIGJlIHNlYXJjaGVkLg0KDQpCdXQgaW4gdGhlIGRldmljZXMgc3VwcG9ydGVkIGJ5
+IHRoaXMgZHJpdmVyLCBJIGd1ZXNzIGl0IG5vIG5lZWQgDQp0aHJvdWdoIG1hdGNoIGRhdGEgdG8g
+Y29uZmlybSB0aGUgY29tcGF0aWJsZSBpbmZvcm1hdGlvbu+8jGJlY2F1c2UgaXQgDQphbHdheXMg
+c2VhcmNoIHNhbWUgY29tcGF0aWJsZSAibWVkaWF0ZWssIGdlbmVyaWMtcGNpZWNmZyINCg0KPiAN
+Cj4gPiArCWlmIChjZmdfbm9kZSkgew0KPiA+ICsJCXBjaWUtPmNmZyA9IHN5c2Nvbl9ub2RlX3Rv
+X3JlZ21hcChjZmdfbm9kZSk7DQo+IA0KPiBPdGhlciBkcml2ZXJzIGluIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvIHVzZQ0KPiBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKCkgKGo3MjFl
+LCBkcmE3eHgsIGtleXN0b25lLA0KPiBsYXllcnNjYXBlLCBhcnRwZWM2KSBvciBzeXNjb25fcmVn
+bWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCkgKGlteDYsDQo+IGtpcmluLCB2My1zZW1pKS4NCj4g
+DQo+IFlvdSBzaG91bGQgZG8gaXQgdGhlIHNhbWUgd2F5IHVubGVzcyB0aGVyZSdzIGEgbmVlZCB0
+byBiZSBkaWZmZXJlbnQuDQpJIGhhdmUgdXNlZCBwaGFuZGxlLCBidXQgUm9iIHN1Z2dlc3RlZCB0
+byBzZWFyY2ggZm9yIHRoZSBub2RlIGJ5IA0KY29tcGF0aWJsZS4gVGhlIHJlYXNvbiB3aHkgc3lz
+Y29uX3JlZ21hcF9sb29rdXBfYnlfY29tcGF0aWJsZSgpIGlzIG5vdCANCnVzZWQgaGVyZSBpcyB0
+aGF0IHRoZSBwY2llY2ZnIG5vZGUgaXMgb3B0aW9uYWwsIGFuZCB0aGVyZSBpcyBubyBuZWVkIHRv
+DQpyZXR1cm4gZXJyb3Igd2hlbiB0aGUgbm9kZSBpcyBub3Qgc2VhcmNoZWQuDQoNCj4gSXQncyBh
+bHNvIG5pY2UgaWYgeW91IGNhbiB1c2UgdGhlIHNhbWUgc3RydWN0IG1lbWJlciBuYW1lDQo+ICgi
+bXRrX3BjaWUuY2ZnIikgYXMgb3RoZXIgZHJpdmVycy4gIFRoZXkncmUgbm90IGFsbCBjb25zaXN0
+ZW50LCBidXQgSQ0KPiBkb24ndCBzZWUgYW55IG90aGVyICJjZmciLg0KT3RoZXIgZHJpdmVycyBz
+dHJ1Y3QgbWVtYmVyIG5hbWUgYXJlIGFsc28gZGlmZmVyZW50Lg0KRm9yIGV4YW1wbGUsIHNjZmco
+bGF5ZXJzY2FwZSnvvIxtYXAodjMtc2VtaSksIGNyZ2N0cmwoa2lyaW4pLA0KcmVnbWFwKGFydHBl
+YzYpLk9yIGp1c3QgdXNlIGxvY2FsIHZhcmlhYmxlcywgbmFtZWQgc3lzY29uIG9yIHJlZ21hcC4N
+ClNvIEkgY291bGRuJ3QgYmUgY29uc2lzdGVudCB3aXRoIG90aGVyIGRyaXZlcnMuDQoNClRoYW5r
+cw0KQ2h1YW5qaWENCj4gDQo+ID4gKwkJaWYgKElTX0VSUihwY2llLT5jZmcpKQ0KPiA+ICsJCQly
+ZXR1cm4gUFRSX0VSUihwY2llLT5jZmcpOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAgCXBjaWUtPmZy
+ZWVfY2sgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZnJlZV9jayIpOw0KPiA+ICAJaWYgKElTX0VSUihw
+Y2llLT5mcmVlX2NrKSkgew0KPiA+ICAJCWlmIChQVFJfRVJSKHBjaWUtPmZyZWVfY2spID09IC1F
+UFJPQkVfREVGRVIpDQo+ID4gLS0gDQo+ID4gMi4xOC4wDQo+ID4gDQo=
 
-I just want to use this little opportunity to inform you about my
-success towards the transfer. I'm currently out of the country for an
-investment with part of my share, after completing the transfer with
-an Indian business man. But i will visit your country, next year.
-After the completion of my project. Please, contact my secretary to
-send you the (ATM) card which I've already credited with the sum of
-($500,000.00). Just contact her to help you in receiving the (ATM)
-card. I've explained everything to her before my trip. This is what I
-can do for you because, you couldn't help in the transfer, but for the
-fact that you're the person whom I've contacted initially, for the
-transfer. I decided to give this ($500,000.00) as a compensation for
-being contacted initially for the transfer. I always try to make the
-difference, in dealing with people any time I come in contact with
-them. I'm also trying to show that I'm quite a different person from
-others whose may have a different purpose within them. I believe that
-you will render some help to me when I, will visit your country, for
-another investment there. So contact my secretary for the card, Her
-contact are as follows,
-
-Full name: Mrs, Jovita Dumuije,
-Country: Burkina Faso
-Email: jovitadumuije@gmail.com
-
-Thanks, and hope for a good corporation with you in future.
-
-Godwin Peter,
