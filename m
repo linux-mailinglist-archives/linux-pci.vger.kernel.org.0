@@ -2,197 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEA753FBB36
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 19:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A23C13FBB80
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 20:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234267AbhH3Rtv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 13:49:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29045 "EHLO mga09.intel.com"
+        id S238432AbhH3SKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 14:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234054AbhH3Rtu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 13:49:50 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="218331889"
-X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="218331889"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 10:48:57 -0700
-X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="475402302"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 10:48:56 -0700
-Date:   Mon, 30 Aug 2021 10:46:37 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jon Derrick <jonathan.derrick@linux.dev>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a
- x4x4 SSD
-Message-ID: <20210830174637.GA163187@otc-nc-03>
-References: <20210830155628.130054-1-jonathan.derrick@linux.dev>
+        id S238150AbhH3SKf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 14:10:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9080660F92;
+        Mon, 30 Aug 2021 18:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630346981;
+        bh=rDSGvuqVmtXFi7lKhzBU2WdstwpoxEJzkSUzSJNHfek=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oI+Y/+o8rEOW0VkHvEjnrKdjqyw43DrcKiC3ntX3slLm78rQZnBGsc3mVGjFs/Wvv
+         +Hev1Ynz8/GOLHoiVfbMo8V3HwRnatPqbWpxaq0Qa3szfG1o8tha3Lp/VfndJN/upt
+         /504wegVRz+/14EuQFXKjNQQF316isZ7PbSMRKlhiGWdGSgqfNvQqwXMTXvUvXaxuw
+         jzyMqRbA4Rfe8fWpCoGVjYORZixtckj+/xBIHIwllc9bf0mVTT9zt/QbmvZLP8906q
+         91/m3ted6WY8ID6z01byvBszYhvpl+i6B6j4/HmG1jVj7+cuS+C9hMREA87kKTkm2/
+         kmJSlVy66+F3Q==
+Date:   Mon, 30 Aug 2021 13:09:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
+        davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] [PATCH net-next v4] [PATCH 2/2] r8169: Implement dynamic
+ ASPM mechanism
+Message-ID: <20210830180940.GA4209@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210830155628.130054-1-jonathan.derrick@linux.dev>
+In-Reply-To: <20210827171452.217123-3-kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jonathan
-
-Looks mostly good. Thanks for the update. Reads better, but I'm still a bit
-confused .. sorry
-
-
-On Mon, Aug 30, 2021 at 09:56:28AM -0600, Jon Derrick wrote:
-> From: James Puthukattukaran <james.puthukattukaran@oracle.com>
+On Sat, Aug 28, 2021 at 01:14:52AM +0800, Kai-Heng Feng wrote:
+> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
+> Same issue can be observed with older vendor drivers.
 > 
-> When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
-> ports both support hotplugging on each respective x4 device, a slot
-> management system for the SSD requires both x4 slots to have power
-> removed via sysfs (echo 0 > slot/N/power), from the OS before it can
-> safely turn-off physical power for the whole x8 device. The implications
-> are that slot status will display powered off and link inactive statuses
-> for the x4 devices where the devices are actually powered until both
-> ports have powered off.
+> The issue is however solved by the latest vendor driver. There's a new
+> mechanism, which disables r8169's internal ASPM when the NIC traffic has
+> more than 10 packets, and vice versa. The possible reason for this is
+> likely because the buffer on the chip is too small for its ASPM exit
+> latency.
 
-This part is a bit muddy based on the description in the following writeup.
+This sounds like good speculation, but of course, it would be better
+to have the supporting data.
 
-slot1->power off->link1 DOWN (Should fire a DLLSC event?) or does the link
-stay active until slot2 is powered off?
+You say above that this problem affects r8169 on "some platforms."  I
+infer that ASPM works fine on other platforms.  It would be extremely
+interesting to have some data on both classes, e.g., "lspci -vv"
+output for the entire system.
 
-slot2->power off, looks like only now link1 is getting DLLSC which you are
-ignoring skipping to make sure you don't turn this into an ON event.
+If r8169 ASPM works well on some systems, we *should* be able to make
+it work well on *all* systems, because the device can't tell what
+system it's in.  All the device can see are the latencies for entry
+and exit for link states.
 
-slot2 will also receive DLLSC, and you would ignore it also for the same
-reasons.
+IIUC this patch makes the driver wake up every 1000ms.  If the NIC has
+sent or received more than 10 packets in the last 1000ms, it disables
+ASPM; otherwise it enables ASPM.
 
-Maybe this was discussed earlier and I didn't catch it. 
-When in OFF-state, and DLLSC is received but link is down while in OFF state,
-shoudn't that be the default handling? It almost looks like its a spurious
-DLLSC event that can be ignored for all cases without a specific quirk?
+I asked these same questions earlier, but nothing changed, so I won't
+raise them again if you don't think they're pertinent.  Some patch
+splitting comments below.
 
-Or is there a case we care about for normal devices?
-
+> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
+> use dynamic ASPM under Windows. So implement the same mechanism here to
+> resolve the issue.
 > 
-> The issue with the SSD manifests when power is removed from the
-> first-half and then the second-half. During the first-half removal, slot
-> status shows the slot as powered-down and link-inactive, while internal
-> power and link remain active while waiting for the second-half to have
-> power removed. When power is then removed from the second-half, the
-> first-half starts shutdown sequence and will trigger a DLLSC event. This
-> is misinterpreted as an enabling event and causes the first-half to be
-> re-enabled.
-
-Question is:
-
-when slot1 is powered off, do you get a DLLSC for that link that reports
-link_down? or does external link still report UP until both ports are
-powered off?
-
+> Because ASPM control may not be granted by BIOS while ASPM is enabled,
+> remove aspm_manageable and use pcie_aspm_capable() instead. If BIOS
+> enables ASPM for the device, we want to enable dynamic ASPM on it.
 > 
-> The spurious enable can be resolved by ignoring link status change
-> events when no link is active when in the off state. This patch adds a
-> quirk for specific P5608 SSDs which have been tested for compatibility.
+> In addition, since PCIe ASPM can be switched via sysfs, enable/disable
+> dynamic ASPM accordingly by checking pcie_aspm_enabled().
 > 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
-> v2->v3: Clarified commit message and comment block
-> 	Added second supported subdevice ID
-> 	Added hotplug ifdef blocks
+> v4:
+>  - Squash two patches
+>  - Remove aspm_manageable and use pcie_aspm_capable()
+>    pcie_aspm_enabled() accordingly
 > 
->  drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
->  drivers/pci/quirks.c              | 34 +++++++++++++++++++++++++++++++
->  include/linux/pci.h               |  1 +
->  3 files changed, 42 insertions(+)
+> v3:
+>  - Use msecs_to_jiffies() for delay time
+>  - Use atomic_t instead of mutex for bh
+>  - Mention the buffer size and ASPM exit latency in commit message
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..db41f78bfac8 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
->  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  {
->  	int present, link_active;
-> +	struct pci_dev *pdev = ctrl->pcie->port;
+> v2: 
+>  - Use delayed_work instead of timer_list to avoid interrupt context
+>  - Use mutex to serialize packet counter read/write
+>  - Wording change
+>  drivers/net/ethernet/realtek/r8169_main.c | 77 ++++++++++++++++++++---
+>  1 file changed, 69 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 46a6ff9a782d7..97dba8f437b78 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -623,7 +623,10 @@ struct rtl8169_private {
+>  	} wk;
 >  
->  	/*
->  	 * If the slot is on and presence or link has changed, turn it off.
-> @@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  		cancel_delayed_work(&ctrl->button_work);
->  		fallthrough;
->  	case OFF_STATE:
-> +		if (pdev->shared_pcc_and_link_slot &&
-> +		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
-> +			mutex_unlock(&ctrl->state_lock);
-> +			break;
-> +		}
+>  	unsigned supports_gmii:1;
+> -	unsigned aspm_manageable:1;
+> +	unsigned rtl_aspm_enabled:1;
+> +	struct delayed_work aspm_toggle;
+> +	atomic_t aspm_packet_count;
 > +
->  		ctrl->state = POWERON_STATE;
->  		mutex_unlock(&ctrl->state_lock);
->  		if (present)
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 10122e3318cf..c6b48ddc5c3d 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5750,3 +5750,37 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+>  	dma_addr_t counters_phys_addr;
+>  	struct rtl8169_counters *counters;
+>  	struct rtl8169_tc_offsets tc_offset;
+> @@ -698,6 +701,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
+>  	       tp->mac_version <= RTL_GIGA_MAC_VER_53;
 >  }
->  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
->  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> +
-> +#ifdef CONFIG_HOTPLUG_PCI_PCIE
-> +/*
-> + * This is an Intel NVMe SSD which sits in a x8 pciehp slot but is bifurcated
-> + * as a x4x4 and manifests as two slots with respect to PCIe hot plug register
-> + * states. However, the hotplug controller treats these slots as a single x8
-> + * slot for link and power. Either one of the two slots can be powered down
-> + * separately and the slot status will show negative power and link states, but
-> + * internal power and link will be active until the last of the two slots is
-> + * powered down. When the last of the two x4 slots is turned off, power and
-> + * link will be turned off for the x8 slot by the HP controller. This
-> + * configuration causes some interesting behavior in bringup sequence
-> + *
-> + * When the second slot is powered off to remove the card, this will cause the
-> + * link to go down for both x4 slots. So, the x4 that is already powered down
-> + * earlier will see a DLLSC event and attempt to bring itself up (card present,
-> + * link change event, link state is down). Special handling is required in
-> + * pciehp_handle_presence_or_link_change to prevent this unintended bring up
-> + */
-> +static void quirk_shared_pcc_and_link_slot(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *parent = pci_upstream_bridge(pdev);
-> +
-> +	if (parent && pdev->subsystem_vendor == 0x108e) {
-> +		switch (pdev->subsystem_device) {
-> +		/* P5608 */
-> +		case 0x487d:
-> +		case 0x488d:
-> +			parent->shared_pcc_and_link_slot = 1;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0b60, quirk_shared_pcc_and_link_slot);
-> +#endif /* CONFIG_HOTPLUG_PCI_PCIE */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 7ed95f11c6bd..bcef73209487 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -463,6 +463,7 @@ struct pci_dev {
 >  
->  #ifdef CONFIG_HOTPLUG_PCI_PCIE
->  	unsigned int	broken_cmd_compl:1;	/* No compl for some cmds */
-> +	unsigned int	shared_pcc_and_link_slot:1;
->  #endif
->  #ifdef CONFIG_PCIE_PTM
->  	unsigned int	ptm_root:1;
+> +static int rtl_supports_aspm(struct rtl8169_private *tp)
+> +{
+> +	switch (tp->mac_version) {
+> +	case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
+> +	case RTL_GIGA_MAC_VER_37:
+> +	case RTL_GIGA_MAC_VER_39:
+> +	case RTL_GIGA_MAC_VER_43:
+> +	case RTL_GIGA_MAC_VER_47:
+> +		return 0;
+> +	default:
+> +		return 1;
+> +	}
+
+This part looks like it should be a separate patch.  I would think
+rtl_init_one() could call this once and set a bit in rtl8169_private.
+Then rtl_hw_aspm_clkreq_enable() could just return without doing
+anything if the bit is not set.
+
+> +}
+> +
+>  static bool rtl_supports_eee(struct rtl8169_private *tp)
+>  {
+>  	return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
+> @@ -2699,8 +2716,15 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
+>  
+>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>  {
+> +	struct pci_dev *pdev = tp->pci_dev;
+> +
+> +	if (!pcie_aspm_enabled(pdev) && enable)
+> +		return;
+> +
+> +	tp->rtl_aspm_enabled = enable;
+> +
+>  	/* Don't enable ASPM in the chip if OS can't control ASPM */
+> -	if (enable && tp->aspm_manageable) {
+> +	if (enable) {
+
+This part also looks like it should be a separate patch, since it is
+strictly concerned with whether the OS can control ASPM and doesn't
+seem related to dynamic ASPM.
+
+>  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+>  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+>  	} else {
+> @@ -4440,6 +4464,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
+>  
+>  	dirty_tx = tp->dirty_tx;
+>  
+> +	atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
+>  	while (READ_ONCE(tp->cur_tx) != dirty_tx) {
+>  		unsigned int entry = dirty_tx % NUM_TX_DESC;
+>  		u32 status;
+> @@ -4584,6 +4609,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
+>  		rtl8169_mark_to_asic(desc);
+>  	}
+>  
+> +	atomic_add(count, &tp->aspm_packet_count);
+> +
+>  	return count;
+>  }
+>  
+> @@ -4691,8 +4718,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
+>  	return 0;
+>  }
+>  
+> +#define ASPM_PACKET_THRESHOLD 10
+> +#define ASPM_TOGGLE_INTERVAL 1000
+> +
+> +static void rtl8169_aspm_toggle(struct work_struct *work)
+> +{
+> +	struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
+> +						  aspm_toggle.work);
+> +	int packet_count;
+> +	bool enable;
+> +
+> +	packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
+> +
+> +	if (pcie_aspm_enabled(tp->pci_dev)) {
+> +		enable = packet_count <= ASPM_PACKET_THRESHOLD;
+> +
+> +		if (tp->rtl_aspm_enabled != enable) {
+> +			rtl_unlock_config_regs(tp);
+> +			rtl_hw_aspm_clkreq_enable(tp, enable);
+> +			rtl_lock_config_regs(tp);
+> +		}
+> +	} else if (tp->rtl_aspm_enabled) {
+> +		rtl_unlock_config_regs(tp);
+> +		rtl_hw_aspm_clkreq_enable(tp, false);
+> +		rtl_lock_config_regs(tp);
+> +	}
+> +
+> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
+> +}
+> +
+>  static void rtl8169_down(struct rtl8169_private *tp)
+>  {
+> +	cancel_delayed_work_sync(&tp->aspm_toggle);
+> +
+>  	/* Clear all task flags */
+>  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
+>  
+> @@ -4719,6 +4777,11 @@ static void rtl8169_up(struct rtl8169_private *tp)
+>  	rtl_reset_work(tp);
+>  
+>  	phy_start(tp->phydev);
+> +
+> +	/* pcie_aspm_capable may change after system resume */
+> +	if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev) &&
+> +	    rtl_supports_aspm(tp))
+> +		schedule_delayed_work(&tp->aspm_toggle, 0);
+>  }
+>  
+>  static int rtl8169_close(struct net_device *dev)
+> @@ -5306,12 +5369,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  	if (rc)
+>  		return rc;
+>  
+> -	/* Disable ASPM L1 as that cause random device stop working
+> -	 * problems as well as full system hangs for some PCIe devices users.
+> -	 */
+> -	rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+> -	tp->aspm_manageable = !rc;
+> -
+>  	/* enable device (incl. PCI PM wakeup and hotplug setup) */
+>  	rc = pcim_enable_device(pdev);
+>  	if (rc < 0) {
+> @@ -5378,6 +5435,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  
+>  	INIT_WORK(&tp->wk.work, rtl_task);
+>  
+> +	INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
+> +
+> +	atomic_set(&tp->aspm_packet_count, 0);
+> +
+>  	rtl_init_mac_address(tp);
+>  
+>  	dev->ethtool_ops = &rtl8169_ethtool_ops;
 > -- 
-> 2.27.0
+> 2.32.0
 > 
-
--- 
-Cheers,
-Ashok
-
