@@ -2,121 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 592153FB99D
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 18:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF32B3FB9A0
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 18:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237791AbhH3QAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 12:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36576 "EHLO mail.kernel.org"
+        id S237790AbhH3QBP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 12:01:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237857AbhH3QAm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 12:00:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D10A60F56;
-        Mon, 30 Aug 2021 15:59:48 +0000 (UTC)
+        id S237679AbhH3QBP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 12:01:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C3A260F5B;
+        Mon, 30 Aug 2021 16:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630339188;
-        bh=RKKJL2Oa462dloe2S2b4LJnqrOSFWbJ15BpzgjMEaKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XxR5WdMPVmngFeWeWo2gCYUQI+j4hJZNKUfhSAHJ5qMH+MD8/366tZOqAEVTd73gy
-         aj4IDHh+My+406/Zcu0nw6f2nx3DZJmwEz2dcqTAdsmtOY1Xr3/6LQK1D3+F1HhfKL
-         jzBv/27DFJ1cERXdkJXblORGMAk14ucEywveq7AOvfzBN7uS3U2hBR19MrkCSiJ6xM
-         u4uOrbieaCo+ecNfTo117zz7ii474eYRIC3px17mUrgDdyHIIPxzTI/0xDd+/TjmAA
-         Dlx3KOmpyUM9cURws+wVLTSljB18BoGsXBM1LvlbtUQplrdve3J9fVnHhEg3Oe0uU3
-         5agCrqJHMpXYw==
-Received: by pali.im (Postfix)
-        id C8A537B8; Mon, 30 Aug 2021 17:59:45 +0200 (CEST)
-Date:   Mon, 30 Aug 2021 17:59:45 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: uniphier: Fix INTx mask/unmask bit operation
- and remove ack function
-Message-ID: <20210830155945.yuirq5tsy2migovk@pali>
-References: <1630290158-31264-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1630290158-31264-2-git-send-email-hayashi.kunihiko@socionext.com>
+        s=k20201202; t=1630339221;
+        bh=z1IEwvfhSjn+56QDeFtNIaSWN2krwLg0dt1UipTWb2s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UnnV9s6rIAlqcfmIz9hEBA3/T4ygKXfYYR+Vpr7lbBdHsqJg5muv0OUd3yvmFXM4K
+         krNBDm5lpImNxlD+HONTXvBdY8M+5HrlOfqLcIluZHOQBhzbZBDBXFtuH7JkMtYOXb
+         /drWK8kE5tiH/xtORwO/K6SJEKdMlncCTDFlmLPOcXu+pbrLfpA/au+keGrKpm7t2c
+         6pLIEWtUi55syXW5A0vRHklTeTp8dTgfAZvbPmmj4zY87lxcWKAkGWtKQUgRFMINk5
+         ygEtF0rr0EJHcoX+sZuz+NgflJOeIY7RQeHOQxGN6qqbkajtszdJXqul8Qj75dMF+8
+         F8Mqjp7rashzQ==
+Received: by mail-ej1-f46.google.com with SMTP id h9so32218326ejs.4;
+        Mon, 30 Aug 2021 09:00:21 -0700 (PDT)
+X-Gm-Message-State: AOAM530Px5YmYdvSMoPUCj90+zsxxwx2pgozw18rvJDKNIxnw2sWySYn
+        vx+53mMyF2qeU9/AefBFk3piqMlZ1YOTgzZUbA==
+X-Google-Smtp-Source: ABdhPJwctdgaXMfxL0trVc6OLfq0ZI52SZQZ5BEq3QBJ0wZCkNN08fupxNdlfT0sGAqk9wGhVeudcv+VhfmISXJxI2Y=
+X-Received: by 2002:a17:906:25db:: with SMTP id n27mr25265053ejb.108.1630339220028;
+ Mon, 30 Aug 2021 09:00:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1630290158-31264-2-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: NeoMutt/20180716
+References: <20210811083830.784065-1-nobuhiro1.iwamatsu@toshiba.co.jp> <162998285902.30814.11206633831020646086.b4-ty@arm.com>
+In-Reply-To: <162998285902.30814.11206633831020646086.b4-ty@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Aug 2021 11:00:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK=e4cRHXV=ptFTrtt995arOjhNPmTJK8hWg-aDkU4dpQ@mail.gmail.com>
+Message-ID: <CAL_JsqK=e4cRHXV=ptFTrtt995arOjhNPmTJK8hWg-aDkU4dpQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] Visconti: Add Toshiba Visconti PCIe host
+ controller driver
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        yuji2.ishikawa@toshiba.co.jp,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 30 August 2021 11:22:37 Kunihiko Hayashi wrote:
-> INTX mask and unmask fields in PCL_RCV_INTX register should only be
-> set/reset for each bit. Clearing by PCL_RCV_INTX_ALL_MASK should be
-> removed.
-> 
-> INTX status fields in PCL_RCV_INTX register only indicates each INTX
-> interrupt status, so the handler can't clear by writing 1 to the field.
-> The status is expected to be cleared by the interrupt origin.
-> The ack function has no meaning, so should remove it.
-> 
-> Fixes: 7e6d5cd88a6f ("PCI: uniphier: Add UniPhier PCIe host controller support")
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+On Thu, Aug 26, 2021 at 8:01 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Wed, 11 Aug 2021 17:38:27 +0900, Nobuhiro Iwamatsu wrote:
+> > This series is the PCIe driver for Toshiba's ARM SoC, Visconti[0].
+> > This provides DT binding documentation, device driver, MAINTAINER files.
+> >
+> > Best regards,
+> >   Nobuhiro
+> >
+> > [0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
+> >
+> > [...]
+>
+> Applied to pci/dwc, thanks!
+>
+> [1/3] dt-bindings: pci: Add DT binding for Toshiba Visconti PCIe controller
+>       https://git.kernel.org/lpieralisi/pci/c/a655ce4000
 
-Acked-by: Pali Rohár <pali@kernel.org>
+This is already in my tree due to the DW schema conversion.
 
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 16 ----------------
->  1 file changed, 16 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index ebe43e9..26f630c 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -181,19 +181,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->  }
->  
-> -static void uniphier_pcie_irq_ack(struct irq_data *d)
-> -{
-> -	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> -	u32 val;
-> -
-> -	val = readl(priv->base + PCL_RCV_INTX);
-> -	val &= ~PCL_RCV_INTX_ALL_STATUS;
-> -	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_STATUS_SHIFT);
-> -	writel(val, priv->base + PCL_RCV_INTX);
-> -}
-> -
->  static void uniphier_pcie_irq_mask(struct irq_data *d)
->  {
->  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-> @@ -202,7 +189,6 @@ static void uniphier_pcie_irq_mask(struct irq_data *d)
->  	u32 val;
->  
->  	val = readl(priv->base + PCL_RCV_INTX);
-> -	val &= ~PCL_RCV_INTX_ALL_MASK;
->  	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
->  	writel(val, priv->base + PCL_RCV_INTX);
->  }
-> @@ -215,14 +201,12 @@ static void uniphier_pcie_irq_unmask(struct irq_data *d)
->  	u32 val;
->  
->  	val = readl(priv->base + PCL_RCV_INTX);
-> -	val &= ~PCL_RCV_INTX_ALL_MASK;
->  	val &= ~BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
->  	writel(val, priv->base + PCL_RCV_INTX);
->  }
->  
->  static struct irq_chip uniphier_pcie_irq_chip = {
->  	.name = "PCI",
-> -	.irq_ack = uniphier_pcie_irq_ack,
->  	.irq_mask = uniphier_pcie_irq_mask,
->  	.irq_unmask = uniphier_pcie_irq_unmask,
->  };
-> -- 
-> 2.7.4
-> 
+Rob
