@@ -2,264 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A23C13FBB80
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 20:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 255F33FBC87
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 20:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238432AbhH3SKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 14:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238150AbhH3SKf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 14:10:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9080660F92;
-        Mon, 30 Aug 2021 18:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630346981;
-        bh=rDSGvuqVmtXFi7lKhzBU2WdstwpoxEJzkSUzSJNHfek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oI+Y/+o8rEOW0VkHvEjnrKdjqyw43DrcKiC3ntX3slLm78rQZnBGsc3mVGjFs/Wvv
-         +Hev1Ynz8/GOLHoiVfbMo8V3HwRnatPqbWpxaq0Qa3szfG1o8tha3Lp/VfndJN/upt
-         /504wegVRz+/14EuQFXKjNQQF316isZ7PbSMRKlhiGWdGSgqfNvQqwXMTXvUvXaxuw
-         jzyMqRbA4Rfe8fWpCoGVjYORZixtckj+/xBIHIwllc9bf0mVTT9zt/QbmvZLP8906q
-         91/m3ted6WY8ID6z01byvBszYhvpl+i6B6j4/HmG1jVj7+cuS+C9hMREA87kKTkm2/
-         kmJSlVy66+F3Q==
-Date:   Mon, 30 Aug 2021 13:09:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
-        davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] [PATCH net-next v4] [PATCH 2/2] r8169: Implement dynamic
- ASPM mechanism
-Message-ID: <20210830180940.GA4209@bjorn-Precision-5520>
+        id S234040AbhH3SgL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 14:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233576AbhH3SgK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 14:36:10 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDC8C06175F
+        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 11:35:16 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id d3-20020a17090ae28300b0019629c96f25so598152pjz.2
+        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 11:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4lObGbOH7wYXLZts3Wjag1RVJ/fSvvfuumDMeXOvamY=;
+        b=Q7lSvLugEcsO6jz/dsvEvqZfD5CfuPaFmPsqDAtVPqSs20Jd/6dgCj3+ylqcIr1EnF
+         jwLepnTsPsP/+QPpe0p2M4mjvLGTJj0BWKxHTP9O7z1aO2tFiTY3aHcZlUOb+a6XlQXM
+         ATUXIgkDyHiUBCYrZWUoo8y35gJiW/5N5IyhGJ73fequBefUKl85zNfhuYdjRjOwkFFO
+         DMcbXDNdSqX8SPThW2njxQagVjwPbOA5wHbxiKMLnrCe3jWHierYYo0BcKop19CuPfp+
+         rkjM8Q2Fg/hZzBzo1IglI+E+uAlQI1OjhJFzgdnkDt7bDMl3n3HYnvg6BBlII8/6fxOb
+         eN4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4lObGbOH7wYXLZts3Wjag1RVJ/fSvvfuumDMeXOvamY=;
+        b=UIDm3Wyh7O32tmdew+s+h+dle85pvCS1e48tRJa4dZj8g5bj2uyYB2ZoTlb6ka3J26
+         hwQVXfv4dEW5i43VXweUQpok9hi0M/ATAXRALO8821QgGECwTDBsQxCteuvt7r6FKLs2
+         E4FepGmvDvdG0XyN1z9v9T2wA583hXu7To3qT9yi1P2+zjgOIooucjg3L0Kll5oWg2I4
+         A39VkajNrMORBV2THjJQ2SXYQ9U+1qoI2LCjIxQuf+13G/rTbhINtZKAo1hpvHuVWjSU
+         mnWBBtC3pfYlmbF0SHokm+72SLWIWWEGnFQYu8gnay7jKuA0vWXI4NiehuBjbV5sQFcK
+         Tkqw==
+X-Gm-Message-State: AOAM533u5NLfiY6Jh9EPzOjfS0HtdFYgWOf+sVzecysRoEgPowM5JP08
+        T0AWeqB4Gtp5C+HWCST5NbPL
+X-Google-Smtp-Source: ABdhPJymp1hhLxI4Bg+PenRAv5ZqZvFwlomKc4Z90s9V466OSSk/8nDL72VECdaY3v0GglRuL8taGg==
+X-Received: by 2002:a17:90a:940e:: with SMTP id r14mr497274pjo.208.1630348516218;
+        Mon, 30 Aug 2021 11:35:16 -0700 (PDT)
+Received: from thinkpad ([2409:4072:6e8f:10da:9c90:a2f4:77aa:6f51])
+        by smtp.gmail.com with ESMTPSA id n14sm208169pjm.5.2021.08.30.11.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Aug 2021 11:35:15 -0700 (PDT)
+Date:   Tue, 31 Aug 2021 00:05:08 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        hemantk@codeaurora.org, smohanad@codeaurora.org,
+        bjorn.andersson@linaro.org, sallenki@codeaurora.org,
+        skananth@codeaurora.org, vpernami@codeaurora.org,
+        vbadigan@codeaurora.org
+Subject: Re: [PATCH v7 0/3] Add Qualcomm PCIe Endpoint driver support
+Message-ID: <20210830183508.GA50238@thinkpad>
+References: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210827171452.217123-3-kai.heng.feng@canonical.com>
+In-Reply-To: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 28, 2021 at 01:14:52AM +0800, Kai-Heng Feng wrote:
-> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> Same issue can be observed with older vendor drivers.
+Hi,
+
+On Thu, Jul 22, 2021 at 05:42:39PM +0530, Manivannan Sadhasivam wrote:
+> Hello,
 > 
-> The issue is however solved by the latest vendor driver. There's a new
-> mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> more than 10 packets, and vice versa. The possible reason for this is
-> likely because the buffer on the chip is too small for its ASPM exit
-> latency.
-
-This sounds like good speculation, but of course, it would be better
-to have the supporting data.
-
-You say above that this problem affects r8169 on "some platforms."  I
-infer that ASPM works fine on other platforms.  It would be extremely
-interesting to have some data on both classes, e.g., "lspci -vv"
-output for the entire system.
-
-If r8169 ASPM works well on some systems, we *should* be able to make
-it work well on *all* systems, because the device can't tell what
-system it's in.  All the device can see are the latencies for entry
-and exit for link states.
-
-IIUC this patch makes the driver wake up every 1000ms.  If the NIC has
-sent or received more than 10 packets in the last 1000ms, it disables
-ASPM; otherwise it enables ASPM.
-
-I asked these same questions earlier, but nothing changed, so I won't
-raise them again if you don't think they're pertinent.  Some patch
-splitting comments below.
-
-> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> use dynamic ASPM under Windows. So implement the same mechanism here to
-> resolve the issue.
+> This series adds support for Qualcomm PCIe Endpoint controller found
+> in platforms like SDX55. The Endpoint controller is based on the designware
+> core with additional Qualcomm wrappers around the core.
 > 
-> Because ASPM control may not be granted by BIOS while ASPM is enabled,
-> remove aspm_manageable and use pcie_aspm_capable() instead. If BIOS
-> enables ASPM for the device, we want to enable dynamic ASPM on it.
+> The driver is added separately unlike other Designware based drivers that
+> combine RC and EP in a single driver. This is done to avoid complexity and
+> to maintain this driver autonomously.
 > 
-> In addition, since PCIe ASPM can be switched via sysfs, enable/disable
-> dynamic ASPM accordingly by checking pcie_aspm_enabled().
+> The driver has been validated with an out of tree MHI function driver on
+> SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v4:
->  - Squash two patches
->  - Remove aspm_manageable and use pcie_aspm_capable()
->    pcie_aspm_enabled() accordingly
-> 
-> v3:
->  - Use msecs_to_jiffies() for delay time
->  - Use atomic_t instead of mutex for bh
->  - Mention the buffer size and ASPM exit latency in commit message
-> 
-> v2: 
->  - Use delayed_work instead of timer_list to avoid interrupt context
->  - Use mutex to serialize packet counter read/write
->  - Wording change
->  drivers/net/ethernet/realtek/r8169_main.c | 77 ++++++++++++++++++++---
->  1 file changed, 69 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> index 46a6ff9a782d7..97dba8f437b78 100644
-> --- a/drivers/net/ethernet/realtek/r8169_main.c
-> +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> @@ -623,7 +623,10 @@ struct rtl8169_private {
->  	} wk;
->  
->  	unsigned supports_gmii:1;
-> -	unsigned aspm_manageable:1;
-> +	unsigned rtl_aspm_enabled:1;
-> +	struct delayed_work aspm_toggle;
-> +	atomic_t aspm_packet_count;
-> +
->  	dma_addr_t counters_phys_addr;
->  	struct rtl8169_counters *counters;
->  	struct rtl8169_tc_offsets tc_offset;
-> @@ -698,6 +701,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
->  	       tp->mac_version <= RTL_GIGA_MAC_VER_53;
->  }
->  
-> +static int rtl_supports_aspm(struct rtl8169_private *tp)
-> +{
-> +	switch (tp->mac_version) {
-> +	case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
-> +	case RTL_GIGA_MAC_VER_37:
-> +	case RTL_GIGA_MAC_VER_39:
-> +	case RTL_GIGA_MAC_VER_43:
-> +	case RTL_GIGA_MAC_VER_47:
-> +		return 0;
-> +	default:
-> +		return 1;
-> +	}
 
-This part looks like it should be a separate patch.  I would think
-rtl_init_one() could call this once and set a bit in rtl8169_private.
-Then rtl_hw_aspm_clkreq_enable() could just return without doing
-anything if the bit is not set.
+Any chance this driver could make v5.15?
 
-> +}
-> +
->  static bool rtl_supports_eee(struct rtl8169_private *tp)
->  {
->  	return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
-> @@ -2699,8 +2716,15 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
->  
->  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
->  {
-> +	struct pci_dev *pdev = tp->pci_dev;
-> +
-> +	if (!pcie_aspm_enabled(pdev) && enable)
-> +		return;
-> +
-> +	tp->rtl_aspm_enabled = enable;
-> +
->  	/* Don't enable ASPM in the chip if OS can't control ASPM */
-> -	if (enable && tp->aspm_manageable) {
-> +	if (enable) {
+Thanks,
+Mani
 
-This part also looks like it should be a separate patch, since it is
-strictly concerned with whether the OS can control ASPM and doesn't
-seem related to dynamic ASPM.
-
->  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
->  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
->  	} else {
-> @@ -4440,6 +4464,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
->  
->  	dirty_tx = tp->dirty_tx;
->  
-> +	atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
->  	while (READ_ONCE(tp->cur_tx) != dirty_tx) {
->  		unsigned int entry = dirty_tx % NUM_TX_DESC;
->  		u32 status;
-> @@ -4584,6 +4609,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
->  		rtl8169_mark_to_asic(desc);
->  	}
->  
-> +	atomic_add(count, &tp->aspm_packet_count);
-> +
->  	return count;
->  }
->  
-> @@ -4691,8 +4718,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
->  	return 0;
->  }
->  
-> +#define ASPM_PACKET_THRESHOLD 10
-> +#define ASPM_TOGGLE_INTERVAL 1000
-> +
-> +static void rtl8169_aspm_toggle(struct work_struct *work)
-> +{
-> +	struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
-> +						  aspm_toggle.work);
-> +	int packet_count;
-> +	bool enable;
-> +
-> +	packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
-> +
-> +	if (pcie_aspm_enabled(tp->pci_dev)) {
-> +		enable = packet_count <= ASPM_PACKET_THRESHOLD;
-> +
-> +		if (tp->rtl_aspm_enabled != enable) {
-> +			rtl_unlock_config_regs(tp);
-> +			rtl_hw_aspm_clkreq_enable(tp, enable);
-> +			rtl_lock_config_regs(tp);
-> +		}
-> +	} else if (tp->rtl_aspm_enabled) {
-> +		rtl_unlock_config_regs(tp);
-> +		rtl_hw_aspm_clkreq_enable(tp, false);
-> +		rtl_lock_config_regs(tp);
-> +	}
-> +
-> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
-> +}
-> +
->  static void rtl8169_down(struct rtl8169_private *tp)
->  {
-> +	cancel_delayed_work_sync(&tp->aspm_toggle);
-> +
->  	/* Clear all task flags */
->  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
->  
-> @@ -4719,6 +4777,11 @@ static void rtl8169_up(struct rtl8169_private *tp)
->  	rtl_reset_work(tp);
->  
->  	phy_start(tp->phydev);
-> +
-> +	/* pcie_aspm_capable may change after system resume */
-> +	if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev) &&
-> +	    rtl_supports_aspm(tp))
-> +		schedule_delayed_work(&tp->aspm_toggle, 0);
->  }
->  
->  static int rtl8169_close(struct net_device *dev)
-> @@ -5306,12 +5369,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	if (rc)
->  		return rc;
->  
-> -	/* Disable ASPM L1 as that cause random device stop working
-> -	 * problems as well as full system hangs for some PCIe devices users.
-> -	 */
-> -	rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> -	tp->aspm_manageable = !rc;
-> -
->  	/* enable device (incl. PCI PM wakeup and hotplug setup) */
->  	rc = pcim_enable_device(pdev);
->  	if (rc < 0) {
-> @@ -5378,6 +5435,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	INIT_WORK(&tp->wk.work, rtl_task);
->  
-> +	INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
-> +
-> +	atomic_set(&tp->aspm_packet_count, 0);
-> +
->  	rtl_init_mac_address(tp);
->  
->  	dev->ethtool_ops = &rtl8169_ethtool_ops;
+> Thanks,
+> Mani
+> 
+> Changes in v7:
+> 
+> * Used existing naming convention for callback functions
+> * Used active low state for PERST# gpio
+> 
+> Changes in v6:
+> 
+> * Removed status property in DT and added reviewed tag from Rob
+> * Switched to _relaxed variants as suggested by Rob
+> 
+> Changes in v5:
+> 
+> * Removed the DBI register settings that are not needed
+> * Used the standard definitions available in pci_regs.h
+> * Added defines for all the register fields
+> * Removed the left over code from previous iteration
+> 
+> Changes in v4:
+> 
+> * Removed the active_config settings needed for IPA integration
+> * Switched to writel for couple of relaxed versions that sneaked in
+> 
+> Changes in v3:
+> 
+> * Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
+> * Noticeable changes are:
+>   - Got rid of _relaxed calls and used readl/writel
+>   - Got rid of separate TCSR memory region and used syscon for getting the
+>     register offsets for Perst registers
+>   - Changed the wake gpio handling logic
+>   - Added remove() callback and removed "suppress_bind_attrs"
+>   - stop_link() callback now just disables PERST IRQ
+> * Added MMIO region and doorbell interrupt to the binding
+> * Added logic to write MMIO physicall address to MHI base address as it is
+>   for the function driver to work
+> 
+> Changes in v2:
+> 
+> * Addressed the comments from Rob on bindings patch
+> * Modified the driver as per binding change
+> * Fixed the warnings reported by Kbuild bot
+> * Removed the PERST# "enable_irq" call from probe()
+> 
+> Manivannan Sadhasivam (3):
+>   dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
+>     controller
+>   PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
+>   MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
+> 
+>  .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 158 ++++
+>  MAINTAINERS                                   |  10 +-
+>  drivers/pci/controller/dwc/Kconfig            |  10 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 710 ++++++++++++++++++
+>  5 files changed, 888 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
+> 
 > -- 
-> 2.32.0
+> 2.25.1
 > 
