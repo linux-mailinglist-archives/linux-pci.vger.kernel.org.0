@@ -2,200 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2278C3FB9DD
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 18:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030763FB9E4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 18:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237667AbhH3QLw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 12:11:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:44028 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237608AbhH3QLw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 12:11:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C4831FB;
-        Mon, 30 Aug 2021 09:10:58 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD57E3F766;
-        Mon, 30 Aug 2021 09:10:56 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] PCI: brcmstb: Add ACPI config space quirk
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
-        f.fainelli@gmail.com, sdonthineni@nvidia.com,
-        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20210819215655.84866-1-jeremy.linton@arm.com>
- <20210819215655.84866-3-jeremy.linton@arm.com>
- <20210829111330.22f6n3tvmm246jzg@pali>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <40bba0af-0a70-ab65-581e-e0c308c8f1d9@arm.com>
-Date:   Mon, 30 Aug 2021 11:10:55 -0500
+        id S237665AbhH3QN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 12:13:29 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:45032 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237523AbhH3QN2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 12:13:28 -0400
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id D7BC5200D7;
+        Mon, 30 Aug 2021 16:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1630339953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xBQ7FIg+6O9siSbKpK8EjSIbBKNvrFU9Ut9QehKS9a4=;
+        b=iovPIVz2Nx8Kf+6XMfuc0Gk1sBC6D+rmCHaclRSHk888d5KVTn/YmVq8i6D/aFbFxVx6WB
+        Qnx3Mu2LS7l/yHbpbJQmCFOugz0Zb4c3qLOx1kPRHkyU/T/7Tp8SyqqUwS46e029CGvo8t
+        8CZWdHRV3S6ir71UzFokDCd4RTC2sWg=
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 90CC3139BB;
+        Mon, 30 Aug 2021 16:12:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap1.suse-dmz.suse.de with ESMTPSA
+        id GdbNIXEDLWGsIAAAGKfGzw
+        (envelope-from <jgross@suse.com>); Mon, 30 Aug 2021 16:12:33 +0000
+Subject: Re: [PATCH v2] xen/pcifront: Removed unnecessary __ref annotation
+To:     =?UTF-8?Q?Sergio_Migu=c3=a9ns_Iglesias?= <lonyelon@gmail.com>,
+        konrad.wilk@oracle.com
+Cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        bhelgaas@google.com, xen-devel@lists.xenproject.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Sergio_Migu=c3=a9ns_Iglesias?= <sergio@lony.xyz>
+References: <20210830175305.13370-1-sergio@lony.xyz>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <c30a0835-e1c2-eca1-90d9-fcf8808c6510@suse.com>
+Date:   Mon, 30 Aug 2021 18:12:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210829111330.22f6n3tvmm246jzg@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210830175305.13370-1-sergio@lony.xyz>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="mSX3MV3pc7lCaHXzywjt4cM0ijUa0JFTe"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--mSX3MV3pc7lCaHXzywjt4cM0ijUa0JFTe
+Content-Type: multipart/mixed; boundary="wgqNTkARa6z9h1rsIpTkGELfWVqJ3Iy5l";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: =?UTF-8?Q?Sergio_Migu=c3=a9ns_Iglesias?= <lonyelon@gmail.com>,
+ konrad.wilk@oracle.com
+Cc: boris.ostrovsky@oracle.com, sstabellini@kernel.org, bhelgaas@google.com,
+ xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Sergio_Migu=c3=a9ns_Iglesias?=
+ <sergio@lony.xyz>
+Message-ID: <c30a0835-e1c2-eca1-90d9-fcf8808c6510@suse.com>
+Subject: Re: [PATCH v2] xen/pcifront: Removed unnecessary __ref annotation
+References: <20210830175305.13370-1-sergio@lony.xyz>
+In-Reply-To: <20210830175305.13370-1-sergio@lony.xyz>
 
-On 8/29/21 6:13 AM, Pali Rohár wrote:
-> On Thursday 19 August 2021 16:56:53 Jeremy Linton wrote:
->> The PFTF CM4 is an ACPI platform that isn't ECAM compliant. Its config
->> space is in two parts. One part is for the root port registers and a
->> second moveable window pointing at a device's 4K config space. Thus it
->> doesn't have an MCFG, and any MCFG provided would be nonsense
->> anyway. Instead, a Linux specific host bridge _DSD selects a custom
->> ECAM ops and cfgres. The cfg op picks between those two regions while
->> disallowing problematic accesses.
-> 
-> I'm not sure if Lorenzo would like this patch series...
+--wgqNTkARa6z9h1rsIpTkGELfWVqJ3Iy5l
+Content-Type: multipart/mixed;
+ boundary="------------4C62CBBA30041344696CEC9B"
+Content-Language: en-US
 
-That was sorta true since the arm64/ACPI/PCI patches landed. The 
-underlying reason is the desire for arm platforms to require less 
-one-off kernel patching in order to "just work". But, its become 
-apparent that there continue to be problems with PCIe IP and Arm 
-interconnect integration. So, a firmware interface was standardized 
-which solves most of the nonstandard ECAM issues. At that point it was 
-decided though that the kernel maintainers would prefer to have the 
-quirks visible to the kernel rather than hidden in the firmware, and 
-that they would be more open to merging these quirks. The Tegra patch 
-you listed above has been merged.
+This is a multi-part message in MIME format.
+--------------4C62CBBA30041344696CEC9B
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-More info about this: https://lkml.org/lkml/2021/3/25/777
+On 30.08.21 19:53, Sergio Migu=C3=A9ns Iglesias wrote:
+> An unnecessary "__ref" annotation was removed from the
+> "drivers/pci/xen_pcifront.c" file. The function where the annotation
+> was used was "pcifront_backend_changed()", which does not call any
+> functions annotated as "__*init" nor "__*exit". This makes "__ref"
+> unnecessary since this annotation is used to make the compiler ignore
+> section miss-matches when they are not happening here in the first
+> place.
+>=20
+> In addition to the aforementioned change, some code style issues were
+> fixed in the same file.
+>=20
+> Signed-off-by: Sergio Migu=C3=A9ns Iglesias <sergio@lony.xyz>
+
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
 
-Thanks,
+Juergen
 
-> 
-> In past there was a long discussion about ECAM compliance, MCFG quirks
-> and usage of ACPI (on other platform), see long thread:
-> https://lore.kernel.org/linux-pci/20200207183427.GA40158@google.com/
-> 
-> And I think it is not a good idea to extend MCFG quirks table as
-> according to discussion it was just temporary plaster and if platform is
-> not ACPI / ECAM compliant then it should use DT booting...
-> 
-> Lorenzo, could you put any comment on this?
-> 
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   drivers/pci/controller/Makefile            |  1 +
->>   drivers/pci/controller/pcie-brcmstb-acpi.c | 74 ++++++++++++++++++++++
->>   include/linux/pci-ecam.h                   |  1 +
->>   3 files changed, 76 insertions(+)
->>   create mode 100644 drivers/pci/controller/pcie-brcmstb-acpi.c
->>
->> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
->> index aaf30b3dcc14..65aa6fd3ed89 100644
->> --- a/drivers/pci/controller/Makefile
->> +++ b/drivers/pci/controller/Makefile
->> @@ -57,5 +57,6 @@ ifdef CONFIG_PCI_QUIRKS
->>   obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
->>   obj-$(CONFIG_ARM64) += pci-thunder-pem.o
->>   obj-$(CONFIG_ARM64) += pci-xgene.o
->> +obj-$(CONFIG_ARM64) += pcie-brcmstb-acpi.o
->>   endif
->>   endif
->> diff --git a/drivers/pci/controller/pcie-brcmstb-acpi.c b/drivers/pci/controller/pcie-brcmstb-acpi.c
->> new file mode 100644
->> index 000000000000..71f6def3074c
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-brcmstb-acpi.c
->> @@ -0,0 +1,74 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * ACPI quirks for Brcm2711 PCIe host controller
->> + * As used on the Raspberry Pi Compute Module 4
->> + *
->> + * Copyright (C) 2021 Arm Ltd.
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/pci.h>
->> +#include <linux/pci-ecam.h>
->> +#include "../pci.h"
->> +#include "pcie-brcmstb.h"
->> +
->> +static int brcm_acpi_init(struct pci_config_window *cfg)
->> +{
->> +	/*
->> +	 * This platform doesn't technically have anything that could be called
->> +	 * ECAM. Its config region has root port specific registers between
->> +	 * standard PCIe defined config registers. Thus the region setup by the
->> +	 * generic ECAM code needs to be adjusted. The HW can access bus 0-ff
->> +	 * but the footprint isn't a nice power of 2 (40k). For purposes of
->> +	 * mapping the config region we are just going to squash the standard
->> +	 * and nonstandard registers together rather than mapping them separately.
->> +	 */
->> +	iounmap(cfg->win);
->> +	cfg->win = pci_remap_cfgspace(cfg->res.start, resource_size(&cfg->res));
->> +	if (!cfg->win)
->> +		goto err_exit;
->> +
->> +	/* MSI is nonstandard as well */
->> +	pci_no_msi();
->> +
->> +	return 0;
->> +err_exit:
->> +	dev_err(cfg->parent, "PCI: Failed to remap config\n");
->> +	return -ENOMEM;
->> +}
->> +
->> +static void __iomem *brcm_pcie_map_conf2(struct pci_bus *bus,
->> +					unsigned int devfn, int where)
->> +{
->> +	struct pci_config_window *cfg = bus->sysdata;
->> +	void __iomem *base = cfg->win;
->> +	int idx;
->> +	u32 up;
->> +
->> +	/* Accesses to the RC go right to the RC registers if slot==0 */
->> +	if (pci_is_root_bus(bus))
->> +		return PCI_SLOT(devfn) ? NULL : base + where;
->> +
->> +	/* Assure link up before sending request */
->> +	up = readl(base + PCIE_MISC_PCIE_STATUS);
->> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK))
->> +		return NULL;
->> +
->> +	if (!(up & PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK))
->> +		return NULL;
->> +
->> +	/* For devices, write to the config space index register */
->> +	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
->> +	writel(idx, base + PCIE_EXT_CFG_INDEX);
->> +	return base + PCIE_EXT_CFG_DATA + where;
->> +}
->> +
->> +const struct pci_ecam_ops bcm2711_pcie_ops = {
->> +	.init		= brcm_acpi_init,
->> +	.bus_shift	= 1,
->> +	.pci_ops	= {
->> +		.map_bus	= brcm_pcie_map_conf2,
->> +		.read		= pci_generic_config_read,
->> +		.write		= pci_generic_config_write,
->> +	}
->> +};
->> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
->> index adea5a4771cf..a5de0285bb7f 100644
->> --- a/include/linux/pci-ecam.h
->> +++ b/include/linux/pci-ecam.h
->> @@ -87,6 +87,7 @@ extern const struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 *
->>   extern const struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
->>   extern const struct pci_ecam_ops al_pcie_ops;	/* Amazon Annapurna Labs PCIe */
->>   extern const struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
->> +extern const struct pci_ecam_ops bcm2711_pcie_ops; /* Bcm2711 PCIe */
->>   #endif
->>   
->>   #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
->> -- 
->> 2.31.1
->>
+--------------4C62CBBA30041344696CEC9B
+Content-Type: application/pgp-keys;
+ name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: OpenPGP public key
+Content-Disposition: attachment;
+ filename="OpenPGP_0xB0DE9DD628BF132F.asc"
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOBy=
+cWx
+w3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJvedYm8O=
+f8Z
+d621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y=
+9bf
+IhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xq=
+G7/
+377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR=
+3Jv
+c3MgPGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsEFgIDA=
+QIe
+AQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4FUGNQH2lvWAUy+dnyT=
+hpw
+dtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3TyevpB0CA3dbBQp0OW0fgCetToGIQrg0=
+MbD
+1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbv=
+oPH
+Z8SlM4KWm8rG+lIkGurqqu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v=
+5QL
++qHI3EIPtyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVyZ=
+2Vu
+IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJCAcDAgEGFQgCC=
+QoL
+BBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4RF7HoZhPVPogNVbC4YA6lW7Dr=
+Wf0
+teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz78X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC=
+/nu
+AFVGy+67q2DH8As3KPu0344TBDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0Lh=
+ITT
+d9jLzdDad1pQSToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLm=
+XBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkMnQfvUewRz=
+80h
+SnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMBAgAjBQJTjHDXAhsDBwsJC=
+AcD
+AgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJn=
+FOX
+gMLdBQgBlVPO3/D9R8LtF9DBAFPNhlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1=
+jnD
+kfJZr6jrbjgyoZHiw/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0=
+N51
+N5JfVRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwPOoE+l=
+otu
+fe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK/1xMI3/+8jbO0tsn1=
+tqS
+EUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuZGU+wsB5BBMBAgAjBQJTjHDrA=
+hsD
+BwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3=
+g3O
+ZUEBmDHVVbqMtzwlmNC4k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5=
+dM7
+wRqzgJpJwK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu5=
+D+j
+LRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzBTNh30FVKK1Evm=
+V2x
+AKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37IoN1EblHI//x/e2AaIHpzK5h88N=
+Eaw
+QsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpW=
+nHI
+s98ndPUDpnoxWQugJ6MpMncr0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZR=
+wgn
+BC5mVM6JjQ5xDk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNV=
+bVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mmwe0icXKLk=
+pEd
+IXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0Iv3OOImwTEe4co3c1mwARA=
+QAB
+wsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMvQ/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEw=
+Tbe
+8YFsw2V/Buv6Z4Mysln3nQK5ZadD534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1=
+vJz
+Q1fOU8lYFpZXTXIHb+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8=
+VGi
+wXvTyJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqcsuylW=
+svi
+uGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5BjR/i1DG86lem3iBDX=
+zXs
+ZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------4C62CBBA30041344696CEC9B--
+
+--wgqNTkARa6z9h1rsIpTkGELfWVqJ3Iy5l--
+
+--mSX3MV3pc7lCaHXzywjt4cM0ijUa0JFTe
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmEtA3EFAwAAAAAACgkQsN6d1ii/Ey8q
+TAf+MVn0lQXPCkA3G8XCakPAwOP+HEof7NLvoGaAVNv8XzHA48C+CoUEqV7ibOn0iNW/gkvheZLA
+fvXrAQqUi7P+n7YFcBV6xFCbbtFyCb6jgyZ7RUNpgd/YNmo3ZHc8Ae5KS0+uI4stXKBav6SvIXs9
+MWzaNOqhBR25Se9qaJvbO8JJ2tq2bzZWS1vsc4q7HTx5Uz9F3PUjtBdq//tD0pPTSyaA1SXtg+A2
+bmkbZ6cV9dK6A6rs1D8qyfUMQF+zL1gwbEU8SKA0XCsIGUk7AcLp8yvfLKDor+1zeAIc5cjMNjl/
+eviBfsf14LfRZ925sB2e/gdvmi0Wjo74tdQNSE+iMg==
+=Xg+X
+-----END PGP SIGNATURE-----
+
+--mSX3MV3pc7lCaHXzywjt4cM0ijUa0JFTe--
