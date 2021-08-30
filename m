@@ -2,152 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE7C3FB92A
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:42:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C3CD3FB978
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237608AbhH3PmH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 11:42:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47508 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237187AbhH3PmH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 11:42:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630338073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gPbQCANsnrrCdrVSn7eLIOlLURUqitfm5ZSQa5OvEPY=;
-        b=hwkGAMvltCShRNFr/8eg5GqBGI5iYBOKyH9wxL/M4pTQylnRc6ndwD2LRHBRdjuc5m8pUA
-        Y7OOQ64+D8zFCKNZyYvE1mI2VaZaMiSTOBWfnCKOQQpLQOpsXM9oq4rl5UazZ9M9F4qd0Y
-        s669b0bFG+7PI18p63a4aEKJp2JRFbU=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-weu_iOGQNyWjm0ddNgmw6A-1; Mon, 30 Aug 2021 11:41:11 -0400
-X-MC-Unique: weu_iOGQNyWjm0ddNgmw6A-1
-Received: by mail-lj1-f197.google.com with SMTP id x10-20020a05651c024a00b001cf8e423d60so6776502ljn.12
-        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 08:41:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gPbQCANsnrrCdrVSn7eLIOlLURUqitfm5ZSQa5OvEPY=;
-        b=jrKjs0C450TGjmQ3xA7Q0uyliRRB1GOErfw30fg5pTT794IiZDK5EqkmixQVSLek/P
-         E02FumaYlnJkdb0SxVOwvvcBOHzPAY3g6UcvmlisWeMFc7kMlINReA8tqlc/kJ76+W+s
-         KV77tZ7y/kJ2CycqXYIWs5WFnVK+3Z3urCvSHyuNJ45I+ZofhVhtkYDM21wb7mtvTYxs
-         BDQljWknGvlTB4r1fDFNk1lgSH2g4Hv3iyLFpn0hJoDnSij797Twd9/lXYZ6fGuetj0t
-         3kxRGtaTJU2SUnbHcYDNFqojacgiFapGTH1a5zAPCIwsTV+hV2hLoWA8y3M6OlKiXWNE
-         1BjA==
-X-Gm-Message-State: AOAM532oHz3qP6joyeuQ8RNdWEhZIObLBaCGbym+JkOnVr/1IGoaTSHr
-        Q1qJNeHMvnlk7ZJjPJ6loLMv1OKLbiLJYtHd8+PvobJoTT+NUAij3tMeRm7aF6ibyZg/C+d3G9b
-        NeoeW9jl5LHcpeH1YIR05fXeTNLIwE2MXf2TM
-X-Received: by 2002:a05:6512:31d1:: with SMTP id j17mr12619163lfe.252.1630338069516;
-        Mon, 30 Aug 2021 08:41:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyOA7eSQoAskt96OZEYv/uwT6xUpzuLtn/b7kPoWDczLLZXX82Grt6CyXuqBmavCZC7GNFgyKU16h8yzDCOqhU=
-X-Received: by 2002:a05:6512:31d1:: with SMTP id j17mr12619127lfe.252.1630338069329;
- Mon, 30 Aug 2021 08:41:09 -0700 (PDT)
+        id S237690AbhH3P5b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 11:57:31 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49629 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237646AbhH3P5b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 11:57:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="197863102"
+X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
+   d="scan'208";a="197863102"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 08:56:37 -0700
+X-IronPort-AV: E=Sophos;i="5.84,363,1620716400"; 
+   d="scan'208";a="530480613"
+Received: from wps-jon.lm.intel.com (HELO localhost.localdomain) ([10.232.117.157])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 08:56:37 -0700
+From:   Jon Derrick <jonathan.derrick@linux.dev>
+To:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>, Lukas Wunner <lukas@wunner.de>,
+        jonathan.derrick@linux.dev,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a x4x4 SSD
+Date:   Mon, 30 Aug 2021 09:56:28 -0600
+Message-Id: <20210830155628.130054-1-jonathan.derrick@linux.dev>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20210720232624.1493424-1-nitesh@redhat.com> <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
- <CAFki+LkyTNeorQ5e_6_Ud==X7dt27G38ZjhEewuhqGLfanjw_A@mail.gmail.com> <CAFki+Lmbw=02iaYKs_a0jR1KWLisXQa1B-s0hc-Ej-8F8ryWDQ@mail.gmail.com>
-In-Reply-To: <CAFki+Lmbw=02iaYKs_a0jR1KWLisXQa1B-s0hc-Ej-8F8ryWDQ@mail.gmail.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 30 Aug 2021 11:40:57 -0400
-Message-ID: <CAFki+LmcagVgj+rNJqAw-LwM=rZFq_AB5QwL5itXvm-bHU8QoA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/14] genirq: Cleanup the abuse of irq_set_affinity_hint()
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        huangguangbin2@huawei.com, huangdaode@huawei.com,
-        luobin9@huawei.com
-Cc:     linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Alex Belits <abelits@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
-        Stefan Assmann <sassmann@redhat.com>,
-        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com,
-        Alaa Hleihel <ahleihel@redhat.com>,
-        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
-        saeedm@nvidia.com,
-        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
-        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
-        Al Stone <ahs3@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
-        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
-        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        kabel@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>, kashyap.desai@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        suganath-prabu.subramani@broadcom.com,
-        Thomas Gleixner <tglx@linutronix.de>, ley.foon.tan@intel.com,
-        jbrunet@baylibre.com, johannes@sipsolutions.net,
-        snelson@pensando.io, lewis.hanly@microchip.com, benve@cisco.com,
-        _govind@gmx.com, jassisinghbrar@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 11:38 AM Nitesh Lal <nilal@redhat.com> wrote:
->
-> On Mon, Aug 16, 2021 at 11:50 AM Nitesh Lal <nilal@redhat.com> wrote:
-> >
-> > On Mon, Aug 2, 2021 at 11:26 AM Nitesh Lal <nilal@redhat.com> wrote:
-> > >
-> > > On Tue, Jul 20, 2021 at 7:26 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> > > >
-> > > > The drivers currently rely on irq_set_affinity_hint() to either set the
-> > > > affinity_hint that is consumed by the userspace and/or to enforce a custom
-> > > > affinity.
-> > > >
-> >
->
-> [...]
->
-> >
-> > Any comments on the following patches:
-> >
-> >   enic: Use irq_update_affinity_hint
-> >   be2net: Use irq_update_affinity_hint
-> >   mailbox: Use irq_update_affinity_hint
-> >   hinic: Use irq_set_affinity_and_hint
-> >
-> > or any other patches?
-> > Any help in testing will also be very useful.
-> >
->
-> Gentle ping.
-> Any comments on the following patches:
->
->   be2net: Use irq_update_affinity_hint
->   hinic: Use irq_set_affinity_and_hint
->
-> or any other patches?
+From: James Puthukattukaran <james.puthukattukaran@oracle.com>
 
+When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
+ports both support hotplugging on each respective x4 device, a slot
+management system for the SSD requires both x4 slots to have power
+removed via sysfs (echo 0 > slot/N/power), from the OS before it can
+safely turn-off physical power for the whole x8 device. The implications
+are that slot status will display powered off and link inactive statuses
+for the x4 devices where the devices are actually powered until both
+ports have powered off.
 
-Also, I have been trying to reach Bin Luo who maintains the hinic driver
-but it seems his email ID has changed so if someone else can help in
-reviewing/testing the hinic patch, it would be really helpful.
+The issue with the SSD manifests when power is removed from the
+first-half and then the second-half. During the first-half removal, slot
+status shows the slot as powered-down and link-inactive, while internal
+power and link remain active while waiting for the second-half to have
+power removed. When power is then removed from the second-half, the
+first-half starts shutdown sequence and will trigger a DLLSC event. This
+is misinterpreted as an enabling event and causes the first-half to be
+re-enabled.
 
+The spurious enable can be resolved by ignoring link status change
+events when no link is active when in the off state. This patch adds a
+quirk for specific P5608 SSDs which have been tested for compatibility.
+
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: James Puthukattukaran <james.puthukattukaran@oracle.com>
+---
+v2->v3: Clarified commit message and comment block
+	Added second supported subdevice ID
+	Added hotplug ifdef blocks
+
+ drivers/pci/hotplug/pciehp_ctrl.c |  7 +++++++
+ drivers/pci/quirks.c              | 34 +++++++++++++++++++++++++++++++
+ include/linux/pci.h               |  1 +
+ 3 files changed, 42 insertions(+)
+
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 529c34808440..db41f78bfac8 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ {
+ 	int present, link_active;
++	struct pci_dev *pdev = ctrl->pcie->port;
+ 
+ 	/*
+ 	 * If the slot is on and presence or link has changed, turn it off.
+@@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 		cancel_delayed_work(&ctrl->button_work);
+ 		fallthrough;
+ 	case OFF_STATE:
++		if (pdev->shared_pcc_and_link_slot &&
++		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
++			mutex_unlock(&ctrl->state_lock);
++			break;
++		}
++
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+ 		if (present)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 10122e3318cf..c6b48ddc5c3d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5750,3 +5750,37 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+ 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
++
++#ifdef CONFIG_HOTPLUG_PCI_PCIE
++/*
++ * This is an Intel NVMe SSD which sits in a x8 pciehp slot but is bifurcated
++ * as a x4x4 and manifests as two slots with respect to PCIe hot plug register
++ * states. However, the hotplug controller treats these slots as a single x8
++ * slot for link and power. Either one of the two slots can be powered down
++ * separately and the slot status will show negative power and link states, but
++ * internal power and link will be active until the last of the two slots is
++ * powered down. When the last of the two x4 slots is turned off, power and
++ * link will be turned off for the x8 slot by the HP controller. This
++ * configuration causes some interesting behavior in bringup sequence
++ *
++ * When the second slot is powered off to remove the card, this will cause the
++ * link to go down for both x4 slots. So, the x4 that is already powered down
++ * earlier will see a DLLSC event and attempt to bring itself up (card present,
++ * link change event, link state is down). Special handling is required in
++ * pciehp_handle_presence_or_link_change to prevent this unintended bring up
++ */
++static void quirk_shared_pcc_and_link_slot(struct pci_dev *pdev)
++{
++	struct pci_dev *parent = pci_upstream_bridge(pdev);
++
++	if (parent && pdev->subsystem_vendor == 0x108e) {
++		switch (pdev->subsystem_device) {
++		/* P5608 */
++		case 0x487d:
++		case 0x488d:
++			parent->shared_pcc_and_link_slot = 1;
++		}
++	}
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0b60, quirk_shared_pcc_and_link_slot);
++#endif /* CONFIG_HOTPLUG_PCI_PCIE */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7ed95f11c6bd..bcef73209487 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -463,6 +463,7 @@ struct pci_dev {
+ 
+ #ifdef CONFIG_HOTPLUG_PCI_PCIE
+ 	unsigned int	broken_cmd_compl:1;	/* No compl for some cmds */
++	unsigned int	shared_pcc_and_link_slot:1;
+ #endif
+ #ifdef CONFIG_PCIE_PTM
+ 	unsigned int	ptm_root:1;
 -- 
-Thanks
-Nitesh
+2.27.0
 
