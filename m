@@ -2,196 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 591673FB897
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 16:57:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE7BF3FB91E
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Aug 2021 17:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237245AbhH3O6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 10:58:00 -0400
-Received: from sibelius.xs4all.nl ([83.163.83.176]:56498 "EHLO
-        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233162AbhH3O57 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 10:57:59 -0400
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id ef38839b;
-        Mon, 30 Aug 2021 16:57:02 +0200 (CEST)
-Date:   Mon, 30 Aug 2021 16:57:02 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     devicetree@vger.kernel.org, alyssa@rosenzweig.io,
-        kettenis@openbsd.org, tglx@linutronix.de, robh+dt@kernel.org,
-        marcan@marcan.st, bhelgaas@google.com, nsaenz@kernel.org,
-        jim2101024@gmail.com, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        daire.mcnamara@microchip.com, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
-In-Reply-To: <87pmtvcgec.wl-maz@kernel.org> (message from Marc Zyngier on Mon,
-        30 Aug 2021 12:37:31 +0100)
-Subject: Re: [PATCH v4 4/4] arm64: apple: Add PCIe node
-References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
- <20210827171534.62380-5-mark.kettenis@xs4all.nl> <87pmtvcgec.wl-maz@kernel.org>
-Message-ID: <56142808ad64dd79@bloch.sibelius.xs4all.nl>
+        id S237624AbhH3Pjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 11:39:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49115 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237620AbhH3Pjm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 11:39:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630337928;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KdkFWUiTMvtMsWJ6cUiIqcTp0RGUHhxr67y9qLSh0yM=;
+        b=b/JbEq5lZIQ9ZuAu0pIuz23OjFu91j4AMnWL2PgWugtGSFJKpytLtjGJBFpDbY9d9tz3s8
+        erfjpvPWCmM7FCKcvsWFlzEAC57wFUShkyC1JNa9vDdVtLknS59sRTjZwwzxSqBSQ+jEa1
+        2spIbojk/6qvLQYf587hG5fJPmcXbyQ=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-528-0Lnu8AaYMcOtPMFYGz6pHA-1; Mon, 30 Aug 2021 11:38:47 -0400
+X-MC-Unique: 0Lnu8AaYMcOtPMFYGz6pHA-1
+Received: by mail-lj1-f199.google.com with SMTP id w22-20020a2e9596000000b001ba46d9e54cso5456910ljh.3
+        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 08:38:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KdkFWUiTMvtMsWJ6cUiIqcTp0RGUHhxr67y9qLSh0yM=;
+        b=IhEjlL9D7uH/v1BCBP8IvCbmwqD8KjLVmKr8Nswh4cuPjb90EiU+R6LadR/Xvap04z
+         JfXUP5KEd1D2MMnMnXH5b68KDY01vsYAh1IOu9E30EJEeKMswztNebC0Cfq1VZBUT6MH
+         jUp4/5Qkg1DQ7ayUPot/G+3CbbijpOTJhGRJABkdpM9Hlt+Mn4a3bfz830LsUBPDmBWp
+         M3/ICdUHmcfxZUhLOOU/o83/HLSYz4hY+35vnuKfcZL0fOD7FNNXsfVBQq5Ika9l092E
+         2nuqoeFgFD6wJmZo7zaiHhqHBv1rmU6ygt8cROXlm0EBkTdbxsTMV5rl567hj1UhmYZH
+         niYg==
+X-Gm-Message-State: AOAM533Morz+pcEMwRoR3vxSPBgG475H4v06kSbkTO7UL1LatGMkQBOw
+        J0eiqUfZiQwxNm2c+vz3xF40Ol8aD8szacMJkJO1AA/xZMOfU/sTcbEnJus6Q26mmlnwthy9T/d
+        ODcHBJ9ROQtLNln5SXB0rX0yikZCCbxY9Ck/v
+X-Received: by 2002:a05:6512:21cf:: with SMTP id d15mr17903771lft.548.1630337925478;
+        Mon, 30 Aug 2021 08:38:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw9UCmwncJUGf9asGfLpNrRUo6X+riRIyjnBb/d3K1U2TWNrP/KHaZL8T3ppdBz1Ul2raBoQYGI5rUOmsEZhUQ=
+X-Received: by 2002:a05:6512:21cf:: with SMTP id d15mr17903733lft.548.1630337925258;
+ Mon, 30 Aug 2021 08:38:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210720232624.1493424-1-nitesh@redhat.com> <CAFki+LkNzk0ajUeuBnJZ6mp1kxB0+zZf60tw1Vfq+nPy-bvftQ@mail.gmail.com>
+ <CAFki+LkyTNeorQ5e_6_Ud==X7dt27G38ZjhEewuhqGLfanjw_A@mail.gmail.com>
+In-Reply-To: <CAFki+LkyTNeorQ5e_6_Ud==X7dt27G38ZjhEewuhqGLfanjw_A@mail.gmail.com>
+From:   Nitesh Lal <nilal@redhat.com>
+Date:   Mon, 30 Aug 2021 11:38:34 -0400
+Message-ID: <CAFki+Lmbw=02iaYKs_a0jR1KWLisXQa1B-s0hc-Ej-8F8ryWDQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/14] genirq: Cleanup the abuse of irq_set_affinity_hint()
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        huangguangbin2@huawei.com, huangdaode@huawei.com,
+        luobin9@huawei.com
+Cc:     linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
+        Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com, Nitesh Lal <nilal@redhat.com>,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
+        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
+        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
+        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        kabel@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>, kashyap.desai@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        suganath-prabu.subramani@broadcom.com,
+        Thomas Gleixner <tglx@linutronix.de>, ley.foon.tan@intel.com,
+        jbrunet@baylibre.com, johannes@sipsolutions.net,
+        snelson@pensando.io, lewis.hanly@microchip.com, benve@cisco.com,
+        _govind@gmx.com, jassisinghbrar@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Date: Mon, 30 Aug 2021 12:37:31 +0100
-> From: Marc Zyngier <maz@kernel.org>
-> 
-> Hi Mark,
+On Mon, Aug 16, 2021 at 11:50 AM Nitesh Lal <nilal@redhat.com> wrote:
+>
+> On Mon, Aug 2, 2021 at 11:26 AM Nitesh Lal <nilal@redhat.com> wrote:
+> >
+> > On Tue, Jul 20, 2021 at 7:26 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> > >
+> > > The drivers currently rely on irq_set_affinity_hint() to either set the
+> > > affinity_hint that is consumed by the userspace and/or to enforce a custom
+> > > affinity.
+> > >
+>
 
-Hi Marc,
+[...]
 
-> On Fri, 27 Aug 2021 18:15:29 +0100,
-> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> > 
-> > From: Mark Kettenis <kettenis@openbsd.org>
-> > 
-> > Add node corresponding to the apcie,t8103 node in the
-> > Apple device tree for the Mac mini (M1, 2020).
-> > 
-> > Clock references and DART (IOMMU) references are left out at the
-> > moment and will be added once the appropriate bindings have been
-> > settled upon.
-> > 
-> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> > ---
-> >  arch/arm64/boot/dts/apple/t8103.dtsi | 63 ++++++++++++++++++++++++++++
-> >  1 file changed, 63 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-> > index 503a76fc30e6..6e4677bdef44 100644
-> > --- a/arch/arm64/boot/dts/apple/t8103.dtsi
-> > +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-> > @@ -214,5 +214,68 @@ pinctrl_smc: pinctrl@23e820000 {
-> >  				     <AIC_IRQ 396 IRQ_TYPE_LEVEL_HIGH>,
-> >  				     <AIC_IRQ 397 IRQ_TYPE_LEVEL_HIGH>;
-> >  		};
-> > +
-> > +		pcie0: pcie@690000000 {
-> > +			compatible = "apple,t8103-pcie", "apple,pcie";
-> > +			device_type = "pci";
-> > +
-> > +			reg = <0x6 0x90000000 0x0 0x1000000>,
-> > +			      <0x6 0x80000000 0x0 0x4000>,
-> > +			      <0x6 0x81000000 0x0 0x8000>,
-> > +			      <0x6 0x82000000 0x0 0x8000>,
-> > +			      <0x6 0x83000000 0x0 0x8000>;
-> > +			reg-names = "config", "rc", "port0", "port1", "port2";
-> > +
-> > +			interrupt-parent = <&aic>;
-> > +			interrupts = <AIC_IRQ 695 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <AIC_IRQ 698 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <AIC_IRQ 701 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +			msi-controller;
-> > +			msi-parent = <&pcie0>;
-> > +			msi-ranges = <&aic AIC_IRQ 704 IRQ_TYPE_EDGE_RISING 32>;
-> > +
-> > +			bus-range = <0 3>;
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			ranges = <0x43000000 0x6 0xa0000000 0x6 0xa0000000 0x0 0x20000000>,
-> > +				 <0x02000000 0x0 0xc0000000 0x6 0xc0000000 0x0 0x40000000>;
-> > +
-> > +			pinctrl-0 = <&pcie_pins>;
-> > +			pinctrl-names = "default";
-> > +
-> > +			pci@0,0 {
-> > +				device_type = "pci";
-> > +				reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +				reset-gpios = <&pinctrl_ap 152 0>;
-> > +				max-link-speed = <2>;
-> > +
-> > +				#address-cells = <3>;
-> > +				#size-cells = <2>;
-> > +				ranges;
-> > +			};
-> > +
-> > +			pci@1,0 {
-> > +				device_type = "pci";
-> > +				reg = <0x800 0x0 0x0 0x0 0x0>;
-> > +				reset-gpios = <&pinctrl_ap 153 0>;
-> > +				max-link-speed = <2>;
-> > +
-> > +				#address-cells = <3>;
-> > +				#size-cells = <2>;
-> > +				ranges;
-> > +			};
-> > +
-> > +			pci@2,0 {
-> > +				device_type = "pci";
-> > +				reg = <0x1000 0x0 0x0 0x0 0x0>;
-> > +				reset-gpios = <&pinctrl_ap 33 0>;
-> > +				max-link-speed = <1>;
-> > +
-> > +				#address-cells = <3>;
-> > +				#size-cells = <2>;
-> > +				ranges;
-> > +			};
-> > +		};
-> >  	};
-> >  };
-> 
-> I have now implemented the MSI change on the Linux driver side, and it
-> works nicely. So thumbs up from me on this front.
-> 
-> I am now looking at the interrupts provided by each port:
-> (1) a bunch of port-private interrupts (link up/down...)
-> (2) INTx interrupts
-> 
-> Given that the programming is per-port, I've implemented this as a
-> per-port interrupt controller.
-> 
-> (1) is dead easy to implement, and doesn't require any DT description.
-> (2) is unfortunately exposing the limits of my DT knowledge, and I'm
-> not clear how to model it. I came up with the following:
-> 
-> 	port00: pci@0,0 {
-> 		device_type = "pci";
-> 		reg = <0x0 0x0 0x0 0x0 0x0>;
-> 		reset-gpios = <&pinctrl_ap 152 0>;
-> 		max-link-speed = <2>;
-> 
-> 		#address-cells = <3>;
-> 		#size-cells = <2>;
-> 		ranges;
-> 
-> 		interrupt-controller;
-> 		#interrupt-cells = <1>;
-> 		interrupt-parent = <&port00>;
-> 		interrupt-map-mask = <0 0 0 7>;
-> 		interrupt-map = <0 0 0 1 &port00 0>,
-> 				<0 0 0 2 &port00 1>,
-> 				<0 0 0 3 &port00 2>,
-> 				<0 0 0 4 &port00 3>;
-> 	};
-> 
-> which vaguely seem to do the right thing for the devices behind root
-> ports, but doesn't seem to work for INTx generated by the root ports
-> themselves. Any clue? Alternatively, I could move it to something
-> global to the whole PCIe controller, but that doesn't seem completely
-> right.
-> 
-> It also begs the question whether the per-port interrupt to the AIC
-> should be moved into each root port, should my per-port approach hold
-> any water.
+>
+> Any comments on the following patches:
+>
+>   enic: Use irq_update_affinity_hint
+>   be2net: Use irq_update_affinity_hint
+>   mailbox: Use irq_update_affinity_hint
+>   hinic: Use irq_set_affinity_and_hint
+>
+> or any other patches?
+> Any help in testing will also be very useful.
+>
 
-Must admit that I didn't entirely thinkthrough this aspect fo the
-hardware.  MSIs work just fine for the built-in hardware of the
-current generation of M1 Macs so I ignored INTx for now.
+Gentle ping.
+Any comments on the following patches:
 
-It isn't entirely clear to me what properties are "allowed" on the
-individual pci device child nodes that correspond to the ports.  But
-"interrupt-map" and "interrupt-map-mask" are certainly among the
-allowed properties, so this approach makes sense to me.  I must say I
-don't see what the issue with the INTx generated by the root ports
-themselves would be.  
+  be2net: Use irq_update_affinity_hint
+  hinic: Use irq_set_affinity_and_hint
 
-I don't think we can move the interrupt property for the AIC to the
-ports though, since that property would actually represent the
-interrupt of the PCI bridge device according to the standard PCI
-bindings and that isn't the case here.
+or any other patches?
 
-So this makes sense to me and might not even need changing to the
-binding for the Apple PCIe controller itself.
+--
+Thanks
+Nitesh
+
