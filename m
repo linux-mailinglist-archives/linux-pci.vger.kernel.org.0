@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E8F3FCEDD
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 22:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA12C3FCEE1
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 22:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241262AbhHaU6J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 16:58:09 -0400
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:38408 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234503AbhHaU6I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Aug 2021 16:58:08 -0400
-Received: by mail-ot1-f47.google.com with SMTP id i8-20020a056830402800b0051afc3e373aso828702ots.5;
-        Tue, 31 Aug 2021 13:57:12 -0700 (PDT)
+        id S241266AbhHaU7M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Aug 2021 16:59:12 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:41896 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234503AbhHaU7L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Aug 2021 16:59:11 -0400
+Received: by mail-ot1-f41.google.com with SMTP id o16-20020a9d2210000000b0051b1e56c98fso806287ota.8;
+        Tue, 31 Aug 2021 13:58:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=V9SoZJoKiitq1u8ZN3GHpVYKyGQkP7ERaxx9gqUGTIc=;
-        b=c+t4E0Oyn6axGlennppbvBtgooayJ/hwTuTeRkOq5HLwHR72hNp8KFmip6+cUHcq29
-         94whYFXhHGSY871auLmL4MT2CrH8+96TFG5gf0v/JuH1np4pRaRlvQikgjXFaCkf1f2O
-         m1sCUfbw1pDheXCwRf/PyTlMO0SXkyvChzSOKWEuYT4Xl9xIYlqK42FA7eHthyfTNY/M
-         wrpqCic4J7ZAYXO2MGTpG0q4iBqKy1r03oEsaBSTt/PmdeNcLqVPGd2lqRD/vdKGnVV9
-         50Ophv9dDbZEzLFqrrOCkpIT5xpjIubxgHbKl++7U8hEGK/K/ewsK16CjFa+9uZ+JlvT
-         PwzQ==
-X-Gm-Message-State: AOAM531gW0E+S1Yt/GmbNrQcgUf12iA0d3FjKXS9NPXQ/7pn6b4eXJeF
-        AYt2RxVo66bGfJHCqak2oA==
-X-Google-Smtp-Source: ABdhPJw8tg9zBXdq43Opas4yOvgMpEeoLCoWvqxX0MLBbbRLQ0kd9i6hMb6doP19JQTUoXrSvMdcfw==
-X-Received: by 2002:a9d:6d02:: with SMTP id o2mr25604533otp.302.1630443432535;
-        Tue, 31 Aug 2021 13:57:12 -0700 (PDT)
+        bh=ttc6BFE8i2YohRGpw4NNDVy3AnnswlwsfciYjJziAtc=;
+        b=VcGCa11E0y7LyDzZ1vWjkwLfdaLXSEV1/CrY4hB2nky8xpI5pFr+wY9t2lxGUZJCdi
+         uuhKi7E6oQTWGQR8POuZ7hqbmA9QIMrq+1NqbTS1YZ+ltJ+QB56jnTWrzIGsKcvBWkJT
+         /Zg/xG3N8YFSyzhOC2Tigi7ONDu8MV1K2joos0Qo1PXVXrOuKG7jusHjGEkETrC3A97B
+         U6Xk7QI2FzGGP19jKwoTnIuu6EGTqk35IoOWJlrea1/JERrHOk6x4aMMNDkjQDcwKtYP
+         tv5tN78HtWqOVm2pQDRc8hE4n9wpRX8V5JWP+qYRA4h1+7soergL7qFaeb6Gi9F4XlSy
+         ipNw==
+X-Gm-Message-State: AOAM531yHo2vIhGN4RpKJa9QRUgpPgux7+qrdCeGOYZzSDJow+IQzwgu
+        vetaymXD8VxG8ryytXhSpg==
+X-Google-Smtp-Source: ABdhPJwlhiRBHpvmPeMO1vZFfVDFZfPcHNVAGNl/9PB9MSPKy8mRNVb81dKTg4NwstxUVpTItamSeg==
+X-Received: by 2002:a9d:6c04:: with SMTP id f4mr25909822otq.185.1630443495874;
+        Tue, 31 Aug 2021 13:58:15 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id x3sm3703482ooe.32.2021.08.31.13.57.11
+        by smtp.gmail.com with ESMTPSA id j8sm1586043ooc.21.2021.08.31.13.58.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Aug 2021 13:57:11 -0700 (PDT)
-Received: (nullmailer pid 634764 invoked by uid 1000);
-        Tue, 31 Aug 2021 20:57:10 -0000
-Date:   Tue, 31 Aug 2021 15:57:10 -0500
+        Tue, 31 Aug 2021 13:58:15 -0700 (PDT)
+Received: (nullmailer pid 636154 invoked by uid 1000);
+        Tue, 31 Aug 2021 20:58:14 -0000
+Date:   Tue, 31 Aug 2021 15:58:14 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Mark Kettenis <mark.kettenis@xs4all.nl>
 Cc:     devicetree@vger.kernel.org, alyssa@rosenzweig.io,
@@ -54,7 +54,7 @@ Cc:     devicetree@vger.kernel.org, alyssa@rosenzweig.io,
         linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 Subject: Re: [PATCH v4 1/4] dt-bindings: interrupt-controller: Convert MSI
  controller to json-schema
-Message-ID: <YS6XpkluSVRIvR6J@robh.at.kernel.org>
+Message-ID: <YS6X5kXw18/RBLLP@robh.at.kernel.org>
 References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
  <20210827171534.62380-2-mark.kettenis@xs4all.nl>
 MIME-Version: 1.0
@@ -95,6 +95,9 @@ On Fri, Aug 27, 2021 at 07:15:26PM +0200, Mark Kettenis wrote:
 > +
 > +maintainers:
 > +  - Marc Zyngier <marc.zyngier@arm.com>
+
+Not the current email for Marc.
+
 > +
 > +description: |
 > +  An MSI controller signals interrupts to a CPU when a write is made
@@ -112,24 +115,11 @@ On Fri, Aug 27, 2021 at 07:15:26PM +0200, Mark Kettenis wrote:
 > +
 > +      The meaning of the msi-specifier is defined by the device tree
 > +      binding of the specific MSI controller.
-
-I'd prefer we limit this to the maximum range. I'd like to know when 
-someone needs 2 cells (or 3000).
-
-enum: [ 0, 1 ]
-
-Though no one seems to use 0 (making it optional was probably a 
-mistake...)
-
 > +
 > +  msi-controller:
 > +    description:
 > +      Identifies the node as an MSI controller.
 > +    $ref: /schemas/types.yaml#/definitions/flag
-
-dependencies:
-  "#msi-cells": [ msi-controller ]
-
 > +
 > +additionalProperties: true
 > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
@@ -141,9 +131,6 @@ dependencies:
 >  allOf:
 >    - $ref: /schemas/pci/pci-bus.yaml#
 > +  - $ref: ../interrupt-controller/msi-controller.yaml#
-
-/schemas/interrupt-controller/msi-controller.yaml#
-
 >    - if:
 >        properties:
 >          compatible:
