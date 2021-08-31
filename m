@@ -2,132 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 046993FCD59
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 21:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD843FCD94
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 21:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239535AbhHaTAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 15:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239509AbhHaTAk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Aug 2021 15:00:40 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C0FC06179A
-        for <linux-pci@vger.kernel.org>; Tue, 31 Aug 2021 11:59:44 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id e21so890677ejz.12
-        for <linux-pci@vger.kernel.org>; Tue, 31 Aug 2021 11:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K4O58ZgiMsf0cCMtsvw/t7AJFM1T3tlDvm3uUGsU/to=;
-        b=m/p6PQxMro/Ee7fR7WvozEwx71BnscpCpL2xs1XR6unVL7bfCWki5mm/DL8tzkxtlv
-         IgmDAUJlZv7+KUUNuYAb3NRkVROzdUIxdGRwwrqEOUO0vD6Cu/HZq+bSFieTd9983AeD
-         YktyhmMz20Tq1h8uROtJTQQFwlHuUy+Bds8+ZIoQqHDYDTRBZ7xIrXRop6SBBaMcqz3D
-         KSsC4i4L46l25F26x2rXCk4fmowpOEt5kNPUpUjO3ZN5jtoqzJulRjdNVM64Yw8ZBWOt
-         rXYGE77kjE3hfKV3j/NE4j8c0xfhsFszf/XJGAR6u3atTQlztdBXyq7sYYSIi6VfUO2y
-         mhuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K4O58ZgiMsf0cCMtsvw/t7AJFM1T3tlDvm3uUGsU/to=;
-        b=AEhLJcTG08IKJUbX2vZTo0GkEDhdNXIugQNXQOxyTqkW800hVWwxhiWT8vWDCTwSJu
-         q7+PGghSPuxNSfqxOX/7PSYyxjT73WrsXV/fhs+imkXjV04AmnSMS7qiRZltD8LOT5sS
-         n/h8iGLI3Xju6Q2nSj+L6TLoG84aybDfolascBcNQ4moUpRWuR1Xtc2yY2jJ31Ntasvt
-         dFufA89444DeIV64IRJ8uLSt299AqEo3ItKIgcvb+3e9dogzk6I3Fqpq0MOQnvdYdgO3
-         +0tU8E/xOj261SDe8VPYMEK1FXGQp84jWyXv8Nj5dGtsZ/LEzljWAWZyQYA0nqCkd7sV
-         dY9Q==
-X-Gm-Message-State: AOAM533b5Mq8QBfE0GFtHUrB2f9uCozHyUQVEOKfNx07mwlgGf8n376x
-        2cZG8GtUEzEAEctu8XTf10b4yePvfsznbKdclLII
-X-Google-Smtp-Source: ABdhPJynhzjWiT5WygcinC1v/vpSrVXtKhAajoj91Y8oOaAf641QOi9pajzp20JXEjTMXZ2nBzK8acBfiZKG6sYGsHg=
-X-Received: by 2002:a17:906:2cd6:: with SMTP id r22mr31706715ejr.398.1630436382385;
- Tue, 31 Aug 2021 11:59:42 -0700 (PDT)
+        id S232759AbhHaTMZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Aug 2021 15:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239523AbhHaTMZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Aug 2021 15:12:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B96CC61041;
+        Tue, 31 Aug 2021 19:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630437090;
+        bh=yXGLJ89LVA1WEyeIl9eFXtaUf9sdbM507DJLnsBxFq4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hsFDVutCDHnJWyHitS49dVOYeWNSALX/ADFkzbsoy4UBxBetnvlGlLYX4XjIU1ka8
+         Xlxz1XCyLOEilhCgiv3C8P5GI2NSZXWl7Ij5wYcT6I1goeveVQwIoUegAbUVag/RLb
+         d8LHnEx7lnQLWFNaI+09ZlWvrw+x4oVDBWLxOpquewGmLNwujiFiL4SucunoD4qeeK
+         HaKgXbZH+w5OhsG4Ke7e5BXg17mtiNOzwxhvry2+DGLNrzOlxs8ZM/LYPS/ChWmkKj
+         xhfeUywDmhpSanqs8ptCKPaXkfdzQ4z77xVuUOVJRHt2r9I9q5tX57ggHLP229nC/o
+         kcz9mlPBfjSXQ==
+Date:   Tue, 31 Aug 2021 14:11:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Myron Stowe <myron.stowe@redhat.com>
+Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
+ capability bit
+Message-ID: <20210831191128.GA124802@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210616085118.1141101-1-omosnace@redhat.com> <CAPcyv4jvR8CT4rYODR5KUHNdiqMwQSwJZ+OkVf61kLT3JfjC_Q@mail.gmail.com>
- <CAFqZXNtuH0329Xvcb415Kar-=o6wwrkFuiP8BZ_2OQhHLqkkAg@mail.gmail.com>
- <CAHC9VhTGECM2p+Q8n48aSdfJzY6XrpXQ5tcFurjWc4A3n8Qxjg@mail.gmail.com> <CAPcyv4i8YXo=xOL2vO67KLABQRDNAxzrzT=a1xtwtrts5pVPKw@mail.gmail.com>
-In-Reply-To: <CAPcyv4i8YXo=xOL2vO67KLABQRDNAxzrzT=a1xtwtrts5pVPKw@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 31 Aug 2021 14:59:31 -0400
-Message-ID: <CAHC9VhReGcV=cngDMmAcEiS2NpkXZQ6b09go9m0omzxLdrUQXg@mail.gmail.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        X86 ML <x86@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210512213314.7778-1-stuart.w.hayes@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 2:58 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> On Tue, Aug 31, 2021 at 6:53 AM Paul Moore <paul@paul-moore.com> wrote:
-> > On Tue, Aug 31, 2021 at 5:09 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > > On Sat, Jun 19, 2021 at 12:18 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > On Wed, Jun 16, 2021 at 1:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> >
-> > ...
-> >
-> > > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > > index 2acc6173da36..c1747b6555c7 100644
-> > > > > --- a/drivers/cxl/mem.c
-> > > > > +++ b/drivers/cxl/mem.c
-> > > > > @@ -568,7 +568,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
-> > > > >         if (!IS_ENABLED(CONFIG_CXL_MEM_RAW_COMMANDS))
-> > > > >                 return false;
-> > > > >
-> > > > > -       if (security_locked_down(LOCKDOWN_NONE))
-> > > > > +       if (security_locked_down(current_cred(), LOCKDOWN_NONE))
-> > > >
-> > > > Acked-by: Dan Williams <dan.j.williams@intel.com>
-> > > >
-> > > > ...however that usage looks wrong. The expectation is that if kernel
-> > > > integrity protections are enabled then raw command access should be
-> > > > disabled. So I think that should be equivalent to LOCKDOWN_PCI_ACCESS
-> > > > in terms of the command capabilities to filter.
-> > >
-> > > Yes, the LOCKDOWN_NONE seems wrong here... but it's a pre-existing bug
-> > > and I didn't want to go down yet another rabbit hole trying to fix it.
-> > > I'll look at this again once this patch is settled - it may indeed be
-> > > as simple as replacing LOCKDOWN_NONE with LOCKDOWN_PCI_ACCESS.
-> >
-> > At this point you should be well aware of my distaste for merging
-> > patches that have known bugs in them.  Yes, this is a pre-existing
-> > condition, but it seems well within the scope of this work to address
-> > it as well.
-> >
-> > This isn't something that is going to get merged while the merge
-> > window is open, so at the very least you've got almost two weeks to
-> > sort this out - please do that.
->
-> Yes, apologies, I should have sent the fix shortly after noticing the
-> problem. I'll get the CXL bug fix out of the way so Ondrej can move
-> this along.
+[+cc Myron]
 
-Thanks Dan.
+On Thu, May 13, 2021 at 03:03:14AM +0530, Stuart Hayes wrote:
+> The pcieport driver can fail to attach to a downstream port that doesn't
+> support bandwidth notification.  This can happen when, in
+> pcie_port_device_register(), pci_init_service_irqs() tries (and fails) to
+> set up a bandwidth notification IRQ for a device that doesn't support it.
+> 
+> This patch changes get_port_device_capability() to look at the link
+> bandwidth notification capability bit in the link capabilities register of
+> the port, instead of assuming that all downstream ports have that
+> capability.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
--- 
-paul moore
-www.paul-moore.com
+Sorry, I totally dropped the ball on this.  I added a stable tag and
+put this on pci/portdrv and plan to try to squeeze it into v5.15.
+
+> ---
+> 
+> changes from v1:
+> 	- corrected spelling errors in commit message
+> 	- added Lukas' reviewed-by:
+> 
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e1fed6649c41..3ee63968deaa 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -257,8 +257,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> -	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> -		services |= PCIE_PORT_SERVICE_BWNOTIF;
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		u32 linkcap;
+> +
+> +		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
+> +		if (linkcap & PCI_EXP_LNKCAP_LBNC)
+> +			services |= PCIE_PORT_SERVICE_BWNOTIF;
+> +	}
+>  
+>  	return services;
+>  }
+> -- 
+> 2.27.0
+> 
