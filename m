@@ -2,97 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 379F33FCCFB
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 20:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E4F43FCD48
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 21:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233561AbhHaSbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 14:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232236AbhHaSbT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Aug 2021 14:31:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B68AD6103D;
-        Tue, 31 Aug 2021 18:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630434624;
-        bh=SkqXMQamgRCoEPdaEMQczTpsfjKyfyqiZUqYd3pqmGg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=daeKtIgxioFFhmdkjNA44T638KaBT0Kq+nyUwmpWbxBJ9Kk/VpSDFjHoPupul7CEK
-         lpTdFs7BTTzy6uh0bJQBQLQ48tA68LgZS3k/79Zd5kl1WM+KnbcDj04GbRnIpsnkfq
-         7GRZosccxUpc/dsyaK5q3fFhMkIzJpA4Xq0a92vpm3asIfV5dOjz0mYhrtZwLl/mRZ
-         C67hvJoqeA/ejWyYgVQTank50vM3QBayLrYptzdGL822M6iLzmMkGjNRgDd1RWSblc
-         2XEbj9de7t7DxnD0WEqYPLJQYQfwkwqKoKiQGwX2JBgVVqwpd/bkC1IKP45hqXUHY9
-         O3sXvUR5lhJRQ==
-Date:   Tue, 31 Aug 2021 13:30:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
-Cc:     robh+dt@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
-        lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com,
-        jianjun.wang@mediatek.com, yong.wu@mediatek.com,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 3/6] PCI: mediatek: Add new method to get irq number
-Message-ID: <20210831183022.GA120514@bjorn-Precision-5520>
+        id S239832AbhHaS7R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Aug 2021 14:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239367AbhHaS7M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Aug 2021 14:59:12 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAF6C061764
+        for <linux-pci@vger.kernel.org>; Tue, 31 Aug 2021 11:58:16 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d17so11197121plr.12
+        for <linux-pci@vger.kernel.org>; Tue, 31 Aug 2021 11:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hja3k4ZIoHMyQ4VMtlG5szRRbScDh1UjpE02C2d4Keg=;
+        b=kicsjtll2NsAKBfjPi48UpmCfWsb4FJEcTRGcrE5uks4vHLsX71gqk79m8Us/tamin
+         XNurIf+3NS5RgfXBPJDOh5b+AFFP3+H7hsFSxfL9Vwb+FBInOrB3bUMzGzI4HG1pv0yo
+         qByPbg69R4mh1iyiutn783XwUDEuViZZh+wWLzAxV8KNPAXLYMLnMQ7ZIC5dBF/jJ0Uf
+         ATOJBlEbDfKr49CyoQE3NS/wdpgXRK43XqUolPGY7v+/2iaZWnEhp4NxfHpSzOq8tAFY
+         KPm7dvp3HOyllOHPqJ3OaYwVF710GR7FGM2+FU87sCMEW7HnJZYMbvATrp2kicNQo/Lp
+         wZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hja3k4ZIoHMyQ4VMtlG5szRRbScDh1UjpE02C2d4Keg=;
+        b=g9nKBmbAnf3ZzE2Q/QKX+re68KuvM9ueHR9E2ReRL8NfKOjsqT29Wpx4xU2YhcXcJs
+         AzTcBqSykO25TU4frXNKd52HNSrCTrK4De1etLOe7hC2tuNoZHooTsjMMKr8y1eaU5Lz
+         lPgayrd4mfEVQeQ1pYwe6XGpClPnbDS3TcIqZZNkvvm0ZjgqGgmc0eQHrqmRQPQLvoc0
+         0/Q5iEdGZHbhVDEdTaFsFpdoIWZf1kVUewSMwVczK/Qrthspi54NtbIPP3Ul26tn+pHC
+         TmNfFOP900mrrAJKDyvrE8G9E//A04kiqR2AcUfqWp3jVd0MUYBuzQfhe4OqB0iDj7w2
+         ta+A==
+X-Gm-Message-State: AOAM532QSrSgXD8sVn+MNypk9MTJOjvUDOl1ZdqOVHCLjqFFFhWzZ3FQ
+        e4w5VGkLWsd5LnRww677FPmYc+iFyt1OzagpDD7rUg==
+X-Google-Smtp-Source: ABdhPJwoE2JSRabTcXsiA1AgYUTphGBwkKAbOMuVGJ2LSP+gzTcAsVPbn/x852sYGDfXxMDArhTShQzlDIpbLKeNN64=
+X-Received: by 2002:a17:90a:708c:: with SMTP id g12mr7220358pjk.13.1630436296443;
+ Tue, 31 Aug 2021 11:58:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210823032800.1660-4-chuanjia.liu@mediatek.com>
+References: <20210616085118.1141101-1-omosnace@redhat.com> <CAPcyv4jvR8CT4rYODR5KUHNdiqMwQSwJZ+OkVf61kLT3JfjC_Q@mail.gmail.com>
+ <CAFqZXNtuH0329Xvcb415Kar-=o6wwrkFuiP8BZ_2OQhHLqkkAg@mail.gmail.com> <CAHC9VhTGECM2p+Q8n48aSdfJzY6XrpXQ5tcFurjWc4A3n8Qxjg@mail.gmail.com>
+In-Reply-To: <CAHC9VhTGECM2p+Q8n48aSdfJzY6XrpXQ5tcFurjWc4A3n8Qxjg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 31 Aug 2021 11:58:05 -0700
+Message-ID: <CAPcyv4i8YXo=xOL2vO67KLABQRDNAxzrzT=a1xtwtrts5pVPKw@mail.gmail.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        X86 ML <x86@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 11:27:57AM +0800, Chuanjia Liu wrote:
-> Use platform_get_irq_byname() to get the irq number
-> if the property of "interrupt-names" is defined.
+On Tue, Aug 31, 2021 at 6:53 AM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Tue, Aug 31, 2021 at 5:09 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > On Sat, Jun 19, 2021 at 12:18 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > On Wed, Jun 16, 2021 at 1:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> ...
+>
+> > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > > > index 2acc6173da36..c1747b6555c7 100644
+> > > > --- a/drivers/cxl/mem.c
+> > > > +++ b/drivers/cxl/mem.c
+> > > > @@ -568,7 +568,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
+> > > >         if (!IS_ENABLED(CONFIG_CXL_MEM_RAW_COMMANDS))
+> > > >                 return false;
+> > > >
+> > > > -       if (security_locked_down(LOCKDOWN_NONE))
+> > > > +       if (security_locked_down(current_cred(), LOCKDOWN_NONE))
+> > >
+> > > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > ...however that usage looks wrong. The expectation is that if kernel
+> > > integrity protections are enabled then raw command access should be
+> > > disabled. So I think that should be equivalent to LOCKDOWN_PCI_ACCESS
+> > > in terms of the command capabilities to filter.
+> >
+> > Yes, the LOCKDOWN_NONE seems wrong here... but it's a pre-existing bug
+> > and I didn't want to go down yet another rabbit hole trying to fix it.
+> > I'll look at this again once this patch is settled - it may indeed be
+> > as simple as replacing LOCKDOWN_NONE with LOCKDOWN_PCI_ACCESS.
+>
+> At this point you should be well aware of my distaste for merging
+> patches that have known bugs in them.  Yes, this is a pre-existing
+> condition, but it seems well within the scope of this work to address
+> it as well.
+>
+> This isn't something that is going to get merged while the merge
+> window is open, so at the very least you've got almost two weeks to
+> sort this out - please do that.
 
-From patch 1/6, I have the impression that this patch is part of
-fixing an MSI issue.  If so, this commit log should mention that as
-well.
-
-> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 4296d9e04240..19e35ac62d43 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -654,7 +654,11 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
->  		return err;
->  	}
->  
-> -	port->irq = platform_get_irq(pdev, port->slot);
-> +	if (of_find_property(dev->of_node, "interrupt-names", NULL))
-> +		port->irq = platform_get_irq_byname(pdev, "pcie_irq");
-> +	else
-> +		port->irq = platform_get_irq(pdev, port->slot);
-
-This would be the only instance of this pattern, where we look for a
-property and use the result to decide how to look for the IRQ.
-
-dw_pcie_host_init() does something like this:
-
-  port->irq = platform_get_irq_byname_optional(pdev, "pcie_irq");
-  if (port->irq < 0) {
-    port->irq = platform_get_irq(pdev, port->slot);
-    if (port->irq < 0)
-      return port->irq;
-  }
-
-Would that work for you?  If not, the commit log should explain why
-you can't use the standard pattern.
-
-If you do things differently than other drivers, it makes things
-harder to review and slows things down.  If you *have* to do something
-differently and it adds real value to be different, that's fine.  But
-we should avoid unnecessary differences.
-
->  	if (port->irq < 0)
->  		return port->irq;
->  
-> -- 
-> 2.18.0
-> 
+Yes, apologies, I should have sent the fix shortly after noticing the
+problem. I'll get the CXL bug fix out of the way so Ondrej can move
+this along.
