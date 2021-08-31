@@ -2,116 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3554E3FBFF0
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 02:28:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF5203FC05C
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 03:11:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232996AbhHaAYP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 20:24:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4596 "EHLO mga18.intel.com"
+        id S233055AbhHaBMt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 21:12:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:23398 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230523AbhHaAYO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Aug 2021 20:24:14 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="205506671"
-X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="205506671"
+        id S231297AbhHaBMs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 21:12:48 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="282094271"
+X-IronPort-AV: E=Sophos;i="5.84,365,1620716400"; 
+   d="scan'208";a="282094271"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 17:23:19 -0700
-X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
-   d="scan'208";a="540780855"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.223.22]) ([10.212.223.22])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 17:23:18 -0700
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-References: <20210823195409-mutt-send-email-mst@kernel.org>
- <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
- <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
- <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
- <20210824053830-mutt-send-email-mst@kernel.org>
- <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
- <20210829112105-mutt-send-email-mst@kernel.org>
- <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
- <20210829181635-mutt-send-email-mst@kernel.org>
- <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
- <20210830163723-mutt-send-email-mst@kernel.org>
-From:   Andi Kleen <ak@linux.intel.com>
-Message-ID: <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
-Date:   Mon, 30 Aug 2021 17:23:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 18:11:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,365,1620716400"; 
+   d="scan'208";a="540791770"
+Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Aug 2021 18:11:53 -0700
+Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mKsJc-0005fN-FU; Tue, 31 Aug 2021 01:11:52 +0000
+Date:   Tue, 31 Aug 2021 09:10:50 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS ce3800c7f802e10e0496703706af4ff5d4a10554
+Message-ID: <612d819a.KZPocUYJiS+aXkSy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20210830163723-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: ce3800c7f802e10e0496703706af4ff5d4a10554  Merge branch 'remotes/lorenzo/pci/tools'
 
-On 8/30/2021 1:59 PM, Michael S. Tsirkin wrote:
->
->> Or we can add _audited to the name. ioremap_shared_audited?
-> But it's not the mapping that has to be done in handled special way.
-> It's any data we get from device, not all of it coming from IO, e.g.
-> there's DMA and interrupts that all have to be validated.
-> Wouldn't you say that what is really wanted is just not running
-> unaudited drivers in the first place?
+elapsed time: 7776m
 
+configs tested: 95
+configs skipped: 4
 
-Yes.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                          pxa3xx_defconfig
+powerpc                     tqm5200_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                         cobalt_defconfig
+mips                     loongson2k_defconfig
+powerpc                     redwood_defconfig
+sh                           se7724_defconfig
+arm                           stm32_defconfig
+s390                             alldefconfig
+arm                       omap2plus_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                     pseries_defconfig
+arm                   milbeaut_m10v_defconfig
+mips                          rb532_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+x86_64                            allnoconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a014-20210825
+x86_64               randconfig-a015-20210825
+x86_64               randconfig-a016-20210825
+x86_64               randconfig-a013-20210825
+x86_64               randconfig-a012-20210825
+x86_64               randconfig-a011-20210825
+arc                  randconfig-r043-20210826
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
->
->> And we've been avoiding that drivers can self declare auditing, we've been
->> trying to have a separate centralized list so that it's easier to enforce
->> and avoids any cut'n'paste mistakes.
->>
->> -Andi
-> Now I'm confused. What is proposed here seems to be basically that,
-> drivers need to declare auditing by replacing ioremap with
-> ioremap_shared.
+clang tested configs:
+x86_64               randconfig-a005-20210827
+x86_64               randconfig-a001-20210827
+x86_64               randconfig-a006-20210827
+x86_64               randconfig-a003-20210827
+x86_64               randconfig-a004-20210827
+x86_64               randconfig-a002-20210827
+i386                 randconfig-a006-20210827
+i386                 randconfig-a001-20210827
+i386                 randconfig-a002-20210827
+i386                 randconfig-a005-20210827
+i386                 randconfig-a004-20210827
+i386                 randconfig-a003-20210827
+i386                 randconfig-a011-20210826
+i386                 randconfig-a016-20210826
+i386                 randconfig-a012-20210826
+i386                 randconfig-a014-20210826
+i386                 randconfig-a013-20210826
+i386                 randconfig-a015-20210826
+hexagon              randconfig-r041-20210826
+hexagon              randconfig-r045-20210826
+riscv                randconfig-r042-20210826
+s390                 randconfig-r044-20210826
 
-Auditing is declared on the device model level using a central allow list.
-
-But this cannot do anything to initcalls that run before probe, that's 
-why an extra level of defense of ioremap opt-in is useful. But it's not 
-the primary mechanism to declare a driver audited, that's the allow 
-list. The ioremap is just another mechanism to avoid having to touch a 
-lot of legacy drivers.
-
-If we agree on that then the original proposed semantics of 
-"ioremap_shared" may be acceptable?
-
--Andi
-
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
