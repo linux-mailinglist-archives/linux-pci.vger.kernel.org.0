@@ -2,210 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D2E03FC086
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 03:37:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FA2C3FC09D
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 03:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239298AbhHaBh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 21:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33046 "EHLO
+        id S239273AbhHaCAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 22:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239228AbhHaBh0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 21:37:26 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A948EC061575;
-        Mon, 30 Aug 2021 18:36:31 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id u3so35032337ejz.1;
-        Mon, 30 Aug 2021 18:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LdqhhGt9Jh6CCITuOWPZLzeVPCuUPZ7w9EoNHMVp/Dc=;
-        b=FkMdnKk0/KgGmouLOKxXmCp1Bvj6IDCB/zLZUtcYsm3VR5Iaq/+LRjJjJoFFEDjm/X
-         CH5CbVZA4CF0Ld0RE8cnfFFk8mQRXJe9cGLxipH0JGRFmz1CEHlvq/Vnk7m4+419iqbf
-         iRxmQqCkter0zdcs1wDHEfI1hhWXxVATHWOk28awcJEWLGgr1xMmebSrbL61t/eaEwJm
-         mI4zqPUie58GdQ3bKyF6BOpqltrLyZepD6+EBr/IoVE6umwisK9lAhwAfS+X+oGCwZKJ
-         FUY1584x7S7oW6tDMpmVolk8vBr+XKp9Pj6Wz+yaY/pDpSR29Wo4MlDC+jz18FaZXlZT
-         ToYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LdqhhGt9Jh6CCITuOWPZLzeVPCuUPZ7w9EoNHMVp/Dc=;
-        b=JjRzLMZNR2PxOTWu31S2EtaksTJtjYULe3f0DipFh4RNcWN2vNyqj4IABrxTCNY0yb
-         FTK4wFcOLgW1v3neBJNjoT2TJlhHKSxuiol08m6SGb63SzmHKbF+mFaVuLRPWRNajMNg
-         PUybMOyx0WBzRaPlRokIoh8CKSwngLO6tEkhOTbt6e99pq0muIpfb/BK23WY72eN/eDi
-         7Xxb9BbJAeX/erhEnbJ4BTZA47GzoFqnjoNT50RlXSyJLNXAOs+6Cq4SkO7snsRhMECT
-         g1NbnDIJcx+Bz3S4Cwt36neM7qZEcH1wB/y2P9G+VSwMS6j0yzuYOSsr4L/GsflnStL8
-         TMlg==
-X-Gm-Message-State: AOAM532vUwYZIw6Firfgav1LvEzuv1ivj45z0A67dPc5ogwqzc1uFXwe
-        01ux+Zu7cGu9D6L8ONgljQQvGW7hjrlJmSNghSY=
-X-Google-Smtp-Source: ABdhPJxwY2/dd/BwAJuueNfpm/iMxhdZ+ltw9JJP9VVecUmNAA/Fi53f9n8qaL+u/WWPISMgdSnsn73w+80uCM+3EYU=
-X-Received: by 2002:a17:906:36d6:: with SMTP id b22mr28406975ejc.387.1630373790299;
- Mon, 30 Aug 2021 18:36:30 -0700 (PDT)
+        with ESMTP id S235217AbhHaCAj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 22:00:39 -0400
+Received: from out1.migadu.com (out1.migadu.com [IPv6:2001:41d0:2:863f::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D92C061575
+        for <linux-pci@vger.kernel.org>; Mon, 30 Aug 2021 18:59:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210825102636.52757-4-21cnbao@gmail.com> <20210829145552.GA11556@xsang-OptiPlex-9020>
- <CAGsJ_4yYwjuWsEeK3CvnOhc10mbBNYWXqxqp+mR5587R2FD3gQ@mail.gmail.com>
-In-Reply-To: <CAGsJ_4yYwjuWsEeK3CvnOhc10mbBNYWXqxqp+mR5587R2FD3gQ@mail.gmail.com>
-From:   Barry Song <21cnbao@gmail.com>
-Date:   Tue, 31 Aug 2021 13:36:19 +1200
-Message-ID: <CAGsJ_4zwRdR2QuoR0K0_J86w0=t=mFh=tAKRuP1+Tx8aLn4kKw@mail.gmail.com>
-Subject: Re: [PCI/MSI] a4fc4cf388: dmesg.genirq:Flags_mismatch_irq##(mei_me)vs.#(xhci_hcd)
-To:     kernel test robot <oliver.sang@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Cc:     0day robot <lkp@intel.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan.Cameron@huawei.com, bilbao@vt.edu,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        leon@kernel.org, linux-pci@vger.kernel.org,
-        Linuxarm <linuxarm@huawei.com>, luzmaximilian@gmail.com,
-        mchehab+huawei@kernel.org, schnelle@linux.ibm.com,
-        intel-wired-lan@lists.osuosl.org
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1630375182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lyhxQigXdSSToOuQU47jFer9fZBq96dKWurAhRLk83M=;
+        b=VZ8dKRWzDN/mQ2BXPpCIP/BZfgOFgkl1CHL7sG0qUkP7Tyt1RZr6Qt/1128/ACBO5E+oyP
+        0tBWkpyzQa6yAiizlOZwxsiQ+2daOKJBUnk6+m0CS7eFGPuYrzfEjGKaa5+ntDqzcV5KH4
+        gc2S6RDhjabpnAmUuliki/jtvr+IbeQ=
+Date:   Tue, 31 Aug 2021 01:59:41 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   jonathan.derrick@linux.dev
+Message-ID: <a23b21724b9dc31bb0c4f16207f280c8@linux.dev>
+Subject: Re: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on
+ a x4x4 SSD
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, "Bjorn Helgaas" <helgaas@kernel.org>,
+        "Lukas Wunner" <lukas@wunner.de>,
+        "James Puthukattukaran" <james.puthukattukaran@oracle.com>,
+        "Jon Derrick" <jonathan.derrick@intel.com>
+In-Reply-To: <20210830174637.GA163187@otc-nc-03>
+References: <20210830174637.GA163187@otc-nc-03>
+ <20210830155628.130054-1-jonathan.derrick@linux.dev>
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: jonathan.derrick@linux.dev
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 1:21 PM Barry Song <21cnbao@gmail.com> wrote:
->
-> On Mon, Aug 30, 2021 at 2:38 AM kernel test robot <oliver.sang@intel.com> wrote:
-> >
-> >
-> >
-> > Greeting,
-> >
-> > FYI, we noticed the following commit (built with gcc-9):
-> >
-> > commit: a4fc4cf388319ea957ffbdab5073bdd267de9082 ("[PATCH v3 3/3] PCI/MSI: remove msi_attrib.default_irq in msi_desc")
-> > url: https://github.com/0day-ci/linux/commits/Barry-Song/PCI-MSI-Clarify-the-IRQ-sysfs-ABI-for-PCI-devices/20210825-183018
-> > base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 6e764bcd1cf72a2846c0e53d3975a09b242c04c9
-> >
-> > in testcase: kernel-selftests
-> > version: kernel-selftests-x86_64-ebaa603b-1_20210825
-> > with following parameters:
-> >
-> >         group: pidfd
-> >         ucode: 0xe2
-> >
-> > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> >
-> >
-> > on test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz with 32G memory
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >
-> >
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <oliver.sang@intel.com>
-> >
-> >
-> >
-> > [  179.602028][   T34] genirq: Flags mismatch irq 16. 00002000 (mei_me) vs. 00000000 (xhci_hcd)
-> > [  179.614073][   T34] CPU: 2 PID: 34 Comm: kworker/u8:2 Not tainted 5.14.0-rc7-00014-ga4fc4cf38831 #1
-> > [  179.623225][   T34] Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS 1.8.1 12/05/2017
-> > [  179.631432][   T34] Workqueue: events_unbound async_run_entry_fn
-> > [  179.637543][   T34] Call Trace:
-> > [  179.640789][   T34]  dump_stack_lvl+0x45/0x59
-> > [  179.645253][   T34]  __setup_irq.cold+0x50/0xd4
-> > [  179.649893][   T34]  ? mei_me_pg_exit_sync+0x480/0x480 [mei_me]
-> > [  179.655923][   T34]  request_threaded_irq+0x10c/0x180
-> > [  179.661073][   T34]  ? mei_me_irq_quick_handler+0x240/0x240 [mei_me]
-> > [  179.667528][   T34]  mei_me_probe+0x131/0x300 [mei_me]
-> > [  179.672767][   T34]  local_pci_probe+0x42/0x80
-> > [  179.677313][   T34]  pci_device_probe+0x107/0x1c0
-> > [  179.682118][   T34]  really_probe+0xb6/0x380
-> > [  179.687094][   T34]  __driver_probe_device+0xfe/0x180
-> > [  179.692242][   T34]  driver_probe_device+0x1e/0xc0
-> > [  179.697133][   T34]  __driver_attach_async_helper+0x2b/0x80
-> > [  179.702802][   T34]  async_run_entry_fn+0x30/0x140
-> > [  179.707693][   T34]  process_one_work+0x274/0x5c0
-> > [  179.712503][   T34]  worker_thread+0x50/0x3c0
-> > [  179.716959][   T34]  ? process_one_work+0x5c0/0x5c0
-> > [  179.721936][   T34]  kthread+0x14f/0x180
-> > [  179.725958][   T34]  ? set_kthread_struct+0x40/0x40
-> > [  179.730935][   T34]  ret_from_fork+0x22/0x30
-> > [  179.735699][   T34] mei_me 0000:00:16.0: request_threaded_irq failure. irq = 16
-> > [  179.743125][   T34] mei_me 0000:00:16.0: initialization failed.
-> > [  179.749399][   T34] mei_me: probe of 0000:00:16.0 failed with error -16
-> >
-> >
->
-> it seems there is a direct reference to pdev->irq.
-> Hi Oliver, would you try if the below patch can fix the problem:
-
-+ Tomas
-
-sorry. after second looking, drivers/misc/mei/pci-me.c has many
-places using pdev->irq directly. We really need this driver's
-maintainers to address the problem.
-
-On the other hand, "struct mei_me_hw *hw" seems to be totally not
-used in this driver except here:
-164 static int mei_me_probe(struct pci_dev *pdev, const struct
-pci_device_id *ent)
-165 {
-166         const struct mei_cfg *cfg;
-167         struct mei_device *dev;
-168         struct mei_me_hw *hw;
-169         unsigned int irqflags;
-170         int err;
-.....
-219         hw->irq = pdev->irq;
-...
-
-this looks wrong. maybe we can leverage hw->irq in other places such as
-shutdown, suspend, resume.
-
-Thanks
-barry
-
-
->
-> diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-> index c3393b383e59..a45a2d4257a6 100644
-> --- a/drivers/misc/mei/pci-me.c
-> +++ b/drivers/misc/mei/pci-me.c
-> @@ -216,7 +216,7 @@ static int mei_me_probe(struct pci_dev *pdev,
-> const struct pci_device_id *ent)
->
->         pci_enable_msi(pdev);
->
-> -       hw->irq = pdev->irq;
-> +       hw->irq = pci_irq_vector(pdev, 0);
->
->          /* request and enable interrupt */
->         irqflags = pci_dev_msi_enabled(pdev) ? IRQF_ONESHOT : IRQF_SHARED;
->
->
-> I don't have any hardware to test.
->
-> >
-> > To reproduce:
-> >
-> >         git clone https://github.com/intel/lkp-tests.git
-> >         cd lkp-tests
-> >         bin/lkp install                job.yaml  # job file is attached in this email
-> >         bin/lkp split-job --compatible job.yaml  # generate the yaml file for lkp run
-> >         bin/lkp run                    generated-yaml-file
-> >
-> >
-> >
-> > ---
-> > 0DAY/LKP+ Test Infrastructure                   Open Source Technology Center
-> > https://lists.01.org/hyperkitty/list/lkp@lists.01.org       Intel Corporation
-> >
-> > Thanks,
-> > Oliver Sang
-> >
->
-> Thanks
-> barry
+Hi Ashok=0A=0AAugust 30, 2021 12:46 PM, "Raj, Ashok" <ashok.raj@intel.com=
+> wrote:=0A=0A> Hi Jonathan=0A> =0A> Looks mostly good. Thanks for the up=
+date. Reads better, but I'm still a bit=0A> confused .. sorry=0A> =0A> On=
+ Mon, Aug 30, 2021 at 09:56:28AM -0600, Jon Derrick wrote:=0A> =0A>> From=
+: James Puthukattukaran <james.puthukattukaran@oracle.com>=0A>> =0A>> Whe=
+n an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream=0A>> =
+ports both support hotplugging on each respective x4 device, a slot=0A>> =
+management system for the SSD requires both x4 slots to have power=0A>> r=
+emoved via sysfs (echo 0 > slot/N/power), from the OS before it can=0A>> =
+safely turn-off physical power for the whole x8 device. The implications=
+=0A>> are that slot status will display powered off and link inactive sta=
+tuses=0A>> for the x4 devices where the devices are actually powered unti=
+l both=0A>> ports have powered off.=0A> =0A> This part is a bit muddy bas=
+ed on the description in the following writeup.=0A> =0A> slot1->power off=
+->link1 DOWN (Should fire a DLLSC event?) or does the link=0A> stay activ=
+e until slot2 is powered off?=0A=0AInternal link is active but link is=0A=
+presented as down in the slot status register=0A=0A=0A> =0A> slot2->power=
+ off, looks like only now link1 is getting DLLSC which you are=0A> ignori=
+ng skipping to make sure you don't turn this into an ON event.=0A=0AI thi=
+nk the dllsc on slot 1 occurs when the=0Awhole complex powers down after =
+both slots=0Aare powered-off=0A=0A=0A=0A> =0A> slot2 will also receive DL=
+LSC, and you would ignore it also for the same=0A> reasons.=0A> =0A> Mayb=
+e this was discussed earlier and I didn't catch it.=0A> When in OFF-state=
+, and DLLSC is received but link is down while in OFF state,=0A> shoudn't=
+ that be the default handling? It almost looks like its a spurious=0A> DL=
+LSC event that can be ignored for all cases without a specific quirk?=0A>=
+ =0A> Or is there a case we care about for normal devices?=0A=0ALukas pre=
+sented a possible race [1] with a=0Aspurious surprise hotplug where you c=
+ould be=0Ain off state and link is still inactive,=0Aexpecting the state =
+machine to power on the slot.=0A=0AThis is avoided in this SSD because th=
+e=0Aindividual slots in the complex won=E2=80=99t be=0Asurprise hotplugge=
+d, avoiding spurious=0Aevents.=0A=0A[1] https://lore.kernel.org/linux-pci=
+/20210525192512.GA3450@wunner.de/=0A=0A=0A> =0A>> The issue with the SSD =
+manifests when power is removed from the=0A>> first-half and then the sec=
+ond-half. During the first-half removal, slot=0A>> status shows the slot =
+as powered-down and link-inactive, while internal=0A>> power and link rem=
+ain active while waiting for the second-half to have=0A>> power removed. =
+When power is then removed from the second-half, the=0A>> first-half star=
+ts shutdown sequence and will trigger a DLLSC event. This=0A>> is misinte=
+rpreted as an enabling event and causes the first-half to be=0A>> re-enab=
+led.=0A> =0A> Question is:=0A> =0A> when slot1 is powered off, do you get=
+ a DLLSC for that link that reports=0A> link_down? or does external link =
+still report UP until both ports are=0A> powered off?=0AAs far as the ker=
+nel knows by checking the=0Aslot status register, the link is inactive.=
+=0AInternally to the complex, link is still=0Aactive until both slots are=
+ powered off.=0A=0AIt=E2=80=99s the powering off of the whole complex=0At=
+hat causes slot 1 to throw dllsc, where=0Ainternally slot 1 is going from=
+ active to=0Ainactive, and externally the kernel sees it=0Astaying inacti=
+ve.=0A=0A=0A> =0A>> The spurious enable can be resolved by ignoring link =
+status change=0A>> events when no link is active when in the off state. T=
+his patch adds a=0A>> quirk for specific P5608 SSDs which have been teste=
+d for compatibility.=0A>> =0A>> Signed-off-by: Jon Derrick <jonathan.derr=
+ick@intel.com>=0A>> Signed-off-by: James Puthukattukaran <james.puthukatt=
+ukaran@oracle.com>=0A>> ---=0A>> v2->v3: Clarified commit message and com=
+ment block=0A>> Added second supported subdevice ID=0A>> Added hotplug if=
+def blocks=0A>> =0A>> drivers/pci/hotplug/pciehp_ctrl.c | 7 +++++++=0A>> =
+drivers/pci/quirks.c | 34 +++++++++++++++++++++++++++++++=0A>> include/li=
+nux/pci.h | 1 +=0A>> 3 files changed, 42 insertions(+)=0A>> =0A>> diff --=
+git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl=
+.c=0A>> index 529c34808440..db41f78bfac8 100644=0A>> --- a/drivers/pci/ho=
+tplug/pciehp_ctrl.c=0A>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c=0A>> @@ =
+-225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ct=
+rl)=0A>> void pciehp_handle_presence_or_link_change(struct controller *ct=
+rl, u32 events)=0A>> {=0A>> int present, link_active;=0A>> + struct pci_d=
+ev *pdev =3D ctrl->pcie->port;=0A>> =0A>> /*=0A>> * If the slot is on and=
+ presence or link has changed, turn it off.=0A>> @@ -265,6 +266,12 @@ voi=
+d pciehp_handle_presence_or_link_change(struct controller *ctrl, u32=0A>>=
+ events)=0A>> cancel_delayed_work(&ctrl->button_work);=0A>> fallthrough;=
+=0A>> case OFF_STATE:=0A>> + if (pdev->shared_pcc_and_link_slot &&=0A>> +=
+ (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {=0A>> + mutex_unlock(&=
+ctrl->state_lock);=0A>> + break;=0A>> + }=0A>> +=0A>> ctrl->state =3D POW=
+ERON_STATE;=0A>> mutex_unlock(&ctrl->state_lock);=0A>> if (present)=0A>> =
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c=0A>> index 10122=
+e3318cf..c6b48ddc5c3d 100644=0A>> --- a/drivers/pci/quirks.c=0A>> +++ b/d=
+rivers/pci/quirks.c=0A>> @@ -5750,3 +5750,37 @@ static void apex_pci_fixu=
+p_class(struct pci_dev *pdev)=0A>> }=0A>> DECLARE_PCI_FIXUP_CLASS_HEADER(=
+0x1ac1, 0x089a,=0A>> PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);=0A>=
+> +=0A>> +#ifdef CONFIG_HOTPLUG_PCI_PCIE=0A>> +/*=0A>> + * This is an Int=
+el NVMe SSD which sits in a x8 pciehp slot but is bifurcated=0A>> + * as =
+a x4x4 and manifests as two slots with respect to PCIe hot plug register=
+=0A>> + * states. However, the hotplug controller treats these slots as a=
+ single x8=0A>> + * slot for link and power. Either one of the two slots =
+can be powered down=0A>> + * separately and the slot status will show neg=
+ative power and link states, but=0A>> + * internal power and link will be=
+ active until the last of the two slots is=0A>> + * powered down. When th=
+e last of the two x4 slots is turned off, power and=0A>> + * link will be=
+ turned off for the x8 slot by the HP controller. This=0A>> + * configura=
+tion causes some interesting behavior in bringup sequence=0A>> + *=0A>> +=
+ * When the second slot is powered off to remove the card, this will caus=
+e the=0A>> + * link to go down for both x4 slots. So, the x4 that is alre=
+ady powered down=0A>> + * earlier will see a DLLSC event and attempt to b=
+ring itself up (card present,=0A>> + * link change event, link state is d=
+own). Special handling is required in=0A>> + * pciehp_handle_presence_or_=
+link_change to prevent this unintended bring up=0A>> + */=0A>> +static vo=
+id quirk_shared_pcc_and_link_slot(struct pci_dev *pdev)=0A>> +{=0A>> + st=
+ruct pci_dev *parent =3D pci_upstream_bridge(pdev);=0A>> +=0A>> + if (par=
+ent && pdev->subsystem_vendor =3D=3D 0x108e) {=0A>> + switch (pdev->subsy=
+stem_device) {=0A>> + /* P5608 */=0A>> + case 0x487d:=0A>> + case 0x488d:=
+=0A>> + parent->shared_pcc_and_link_slot =3D 1;=0A>> + }=0A>> + }=0A>> +}=
+=0A>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x0b60, quirk_shared_=
+pcc_and_link_slot);=0A>> +#endif /* CONFIG_HOTPLUG_PCI_PCIE */=0A>> diff =
+--git a/include/linux/pci.h b/include/linux/pci.h=0A>> index 7ed95f11c6bd=
+..bcef73209487 100644=0A>> --- a/include/linux/pci.h=0A>> +++ b/include/l=
+inux/pci.h=0A>> @@ -463,6 +463,7 @@ struct pci_dev {=0A>> =0A>> #ifdef CO=
+NFIG_HOTPLUG_PCI_PCIE=0A>> unsigned int broken_cmd_compl:1; /* No compl f=
+or some cmds */=0A>> + unsigned int shared_pcc_and_link_slot:1;=0A>> #end=
+if=0A>> #ifdef CONFIG_PCIE_PTM=0A>> unsigned int ptm_root:1;=0A>> --=0A>>=
+ 2.27.0=0A> =0A> --=0A> Cheers,=0A> Ashok
