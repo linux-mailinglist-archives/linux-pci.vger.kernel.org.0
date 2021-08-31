@@ -2,94 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 887913FC0DE
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 04:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FC383FC181
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 05:31:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239395AbhHaCmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 22:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236452AbhHaCmj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 22:42:39 -0400
-Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BBAC061575;
-        Mon, 30 Aug 2021 19:41:45 -0700 (PDT)
+        id S231959AbhHaDcY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 23:32:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57642 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229983AbhHaDcX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 23:32:23 -0400
+X-UUID: 28d8e3b791bd4d13a91a10de81bdef3a-20210831
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=i4ol5vbanD813f/B2tnhhHkAIPJlnC/VEEVt1TAFHhI=;
+        b=Nf9ll2G683B/PC68VzwDAXf23DlS16J6bAEC4tvJLaUk8r27D3V3DJcudrdqv/Omhb1+m/E9jLUMnrFXfVXE2wmXO0Yg+0fjbYdre+0dByF8RDlM1IkriZPPN4nfN+V1lUZ/+HKJtsmVOHuB+TV15Ceb/gzQRWBrVYiZogbKbcE=;
+X-UUID: 28d8e3b791bd4d13a91a10de81bdef3a-20210831
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 215663490; Tue, 31 Aug 2021 11:31:25 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 31 Aug
+ 2021 11:31:23 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 31 Aug 2021 11:31:22 +0800
+Message-ID: <ccf767340afe13a6d273ad8fbc29c6bc966d6314.camel@mediatek.com>
+Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
+ pcie-cfg base address
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <robh+dt@kernel.org>, <bhelgaas@google.com>,
+        <matthias.bgg@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <ryder.lee@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 31 Aug 2021 11:31:24 +0800
+In-Reply-To: <20210830214317.GA27606@bjorn-Precision-5520>
+References: <20210830214317.GA27606@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1630377703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VCGJByYqb4HN6aatcmB4jj13brXPega5RyBKIfzj7kE=;
-        b=nQ8zsSpfJM2alNO1z4AfYZt6AFj744+5h2Uxf+Ku+fWMlWFqfhNo25Pebus2tH8Xpcg6AU
-        JlYXEssqrxJYpbwEk8wQgHHOba2fh+olSu0yDWkZ0x3Wpw3Or0H3SfCBXc1l7aLfi7SQT4
-        G3vdqrzqP5nE59eqZ1r5Pp36LGJueYU=
-Date:   Tue, 31 Aug 2021 02:41:42 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   yajun.deng@linux.dev
-Message-ID: <4186a73958319066f76c8a7e2e833b2a@linux.dev>
-Subject: Re: [PATCH linux-next] PCI: Fix the order in unregister path
-To:     "Rob Herring" <robh@kernel.org>
-Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "PCI" <linux-pci@vger.kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <CAL_JsqKNOFhfs3=xpsLZRTaNKEnGPTKU58mDJU7AfuAwMdLrmw@mail.gmail.com>
-References: <CAL_JsqKNOFhfs3=xpsLZRTaNKEnGPTKU58mDJU7AfuAwMdLrmw@mail.gmail.com>
- <20210825083425.32740-1-yajun.deng@linux.dev>
- <CAL_JsqJ4731w_0rYCSBC_Mma-rn4nUUbKnSwhymGZyh8E7xoWg@mail.gmail.com>
- <63e1e9ea1e4b74b56aeafcc6695ecfa8@linux.dev>
- <CAL_Jsq+rRFJUO3SVLdkQV62dQPymPigiikM05Xipgfbvg_oeqw@mail.gmail.com>
- <d6cbd8d362ae84dde2ccde6698be0d3c@linux.dev>
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: yajun.deng@linux.dev
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-August 30, 2021 10:55 PM, "Rob Herring" <robh@kernel.org> wrote:=0A=0A> O=
-n Thu, Aug 26, 2021 at 9:39 PM <yajun.deng@linux.dev> wrote:=0A> =0A>> Au=
-gust 26, 2021 8:01 PM, "Rob Herring" <robh@kernel.org> wrote:=0A>> =0A>> =
-On Wed, Aug 25, 2021 at 10:57 PM <yajun.deng@linux.dev> wrote:=0A>> =0A>>=
- August 25, 2021 9:55 PM, "Rob Herring" <robh@kernel.org> wrote:=0A>> =0A=
->> On Wed, Aug 25, 2021 at 3:34 AM Yajun Deng <yajun.deng@linux.dev> wrot=
-e:=0A>> =0A>> device_del() should be called first and then called put_dev=
-ice() in=0A>> unregister path, becase if that the final reference count, =
-the device=0A>> will be cleaned up via device_release() above. So use dev=
-ice_unregister()=0A>> instead.=0A>> =0A>> Fixes: 9885440b16b8 (PCI: Fix p=
-ci_host_bridge struct device release/free handling)=0A>> Signed-off-by: Y=
-ajun Deng <yajun.deng@linux.dev>=0A>> ---=0A>> drivers/pci/probe.c | 4 +-=
---=0A>> 1 file changed, 1 insertion(+), 3 deletions(-)=0A>> =0A>> NAK.=0A=
->> =0A>> The current code is correct. Go read the comments for device_add=
-/device_del.=0A>> =0A>> But the device_unregister() is only contains devi=
-ce_del() and put_device(). It just put=0A>> device_del() before put_devic=
-e().=0A>> =0A>> And that is the wrong order as we want to undo what the c=
-ode above=0A>> did. The put_device here is for the get_device we did. The=
- put_device=0A>> in device_unregister is for the get_device that device_r=
-egister did=0A>> (on success only).=0A>> =0A>> Logically, it is wrong too=
- to call unregister if register failed. That=0A>> would be like doing thi=
-s:=0A> =0A> You are right that the register and unregister are different =
-devices.=0A> However, your change is still wrong. The device_register is =
-actually=0A> irrelevant.=0A> =0AOK, the original order is right, it was m=
-y mistake.=0A=0A>> p =3D malloc(1);=0A>> if (!p)=0A>> free(p);=0A>> =0A>>=
- This is the raw code:=0A>> err =3D device_register(&bus->dev);=0A>> if (=
-err)=0A>> goto unregister;=0A>> unregister:=0A>> put_device(&bridge->dev)=
-;=0A>> device_del(&bridge->dev);=0A> =0A> The pertinent parts are this:=
-=0A> =0A> err =3D device_add(&bridge->dev); // which calls get_device() i=
-tself,=0A> so there's the first ref=0A> if (err) {=0A> put_device(&bridge=
-->dev);=0A> goto free;=0A> }=0A> bus->bridge =3D get_device(&bridge->dev)=
-; // This is the 2nd ref which=0A> the PCI core holds=0A> ...=0A> unregis=
-ter:=0A> put_device(&bridge->dev); // This is the put for the get_device=
-=0A> just above here.=0A> device_del(&bridge->dev); // Then this does the=
- 2nd put.=0A> =0A> The get_device and put_device are paired, and the devi=
-ce_add and=0A> device_del are paired.=0A> =0A> As I said earlier, go read=
- the kerneldoc for device_add. For your=0A> convenience, here's the impor=
-tant part:=0A> =0A> device_add:=0A> * Rule of thumb is: if device_add() s=
-ucceeds, you should call=0A> * device_del() when you want to get rid of i=
-t. If device_add() has=0A> * *not* succeeded, use *only* put_device() to =
-drop the reference=0A> * count.=0A> =0A> device_del:=0A> * NOTE: this sho=
-uld be called manually _iff_ device_add() was=0A> * also called manually.=
-=0A> =0A> Rob
+T24gTW9uLCAyMDIxLTA4LTMwIGF0IDE2OjQzIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBNb24sIEF1ZyAzMCwgMjAyMSBhdCAwMzowOTo0NFBNICswODAwLCBDaHVhbmppYSBMaXUg
+d3JvdGU6DQo+ID4gT24gRnJpLCAyMDIxLTA4LTI3IGF0IDExOjQ2IC0wNTAwLCBCam9ybiBIZWxn
+YWFzIHdyb3RlOg0KPiA+ID4gT24gTW9uLCBBdWcgMjMsIDIwMjEgYXQgMTE6Mjc6NTZBTSArMDgw
+MCwgQ2h1YW5qaWEgTGl1IHdyb3RlOg0KPiA+ID4gPiBAQCAtOTk1LDYgKzEwMDQsMTQgQEAgc3Rh
+dGljIGludCBtdGtfcGNpZV9zdWJzeXNfcG93ZXJ1cChzdHJ1Y3QNCj4gPiA+ID4gbXRrX3BjaWUg
+KnBjaWUpDQo+ID4gPiA+ICAJCQlyZXR1cm4gUFRSX0VSUihwY2llLT5iYXNlKTsNCj4gPiA+ID4g
+IAl9DQo+ID4gPiA+ICANCj4gPiA+ID4gKwljZmdfbm9kZSA9IG9mX2ZpbmRfY29tcGF0aWJsZV9u
+b2RlKE5VTEwsIE5VTEwsDQo+ID4gPiA+ICsJCQkJCSAgICJtZWRpYXRlayxnZW5lcmljLQ0KPiA+
+ID4gPiBwY2llY2ZnIik7DQo+ID4gPiA+ICsJaWYgKGNmZ19ub2RlKSB7DQo+ID4gPiA+ICsJCXBj
+aWUtPmNmZyA9IHN5c2Nvbl9ub2RlX3RvX3JlZ21hcChjZmdfbm9kZSk7DQo+ID4gPiANCj4gPiA+
+IE90aGVyIGRyaXZlcnMgaW4gZHJpdmVycy9wY2kvY29udHJvbGxlci8gdXNlDQo+ID4gPiBzeXNj
+b25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKCkgKGo3MjFlLCBkcmE3eHgsIGtleXN0b25lLA0K
+PiA+ID4gbGF5ZXJzY2FwZSwgYXJ0cGVjNikgb3Igc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfY29t
+cGF0aWJsZSgpDQo+ID4gPiAoaW14NiwNCj4gPiA+IGtpcmluLCB2My1zZW1pKS4NCj4gPiA+IA0K
+PiA+ID4gWW91IHNob3VsZCBkbyBpdCB0aGUgc2FtZSB3YXkgdW5sZXNzIHRoZXJlJ3MgYSBuZWVk
+IHRvIGJlDQo+ID4gPiBkaWZmZXJlbnQuDQo+ID4gDQo+ID4gSSBoYXZlIHVzZWQgcGhhbmRsZSwg
+YnV0IFJvYiBzdWdnZXN0ZWQgdG8gc2VhcmNoIGZvciB0aGUgbm9kZSBieSANCj4gPiBjb21wYXRp
+YmxlLg0KPiA+IFRoZSByZWFzb24gd2h5IHN5c2Nvbl9yZWdtYXBfbG9va3VwX2J5X2NvbXBhdGli
+bGUoKSBpcyBub3QgDQo+ID4gdXNlZCBoZXJlIGlzIHRoYXQgdGhlIHBjaWVjZmcgbm9kZSBpcyBv
+cHRpb25hbCwgYW5kIHRoZXJlIGlzIG5vDQo+ID4gbmVlZCB0bw0KPiA+IHJldHVybiBlcnJvciB3
+aGVuIHRoZSBub2RlIGlzIG5vdCBzZWFyY2hlZC4NCj4gDQo+IEhvdyBhYm91dCB0aGlzPw0KPiAN
+Cj4gICByZWdtYXAgPSBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCJtZWRpYXRl
+ayxnZW5lcmljLQ0KPiBwY2llY2ZnIik7DQo+ICAgaWYgKCFJU19FUlIocmVnbWFwKSkNCj4gICAg
+IHBjaWUtPmNmZyA9IHJlZ21hcDsNCg0KSGkgQmpvcm4sDQoNCldlIG5lZWQgdG8gZGVhbCB3aXRo
+IHRocmVlIHNpdHVhdGlvbnMNCjEpIE5vIGVycm9yDQoyKSBUaGUgZXJyb3Igb2YgdGhlIG5vZGUg
+bm90IGZvdW5kLCBkb24ndCBkbyBhbnl0aGluZyANCjMpIE90aGVyIGVycm9ycywgcmV0dXJuIGVy
+cm9ycw0KDQpJIGd1ZXNzIHlvdSBtZWFuDQoNCnJlZ21hcCA9IHN5c2Nvbl9yZWdtYXBfbG9va3Vw
+X2J5X2NvbXBhdGlibGUoIm1lZGlhdGVrLGdlbmVyaWMtDQpwY2llY2ZnIik7DQogIGlmICghSVNf
+RVJSKHJlZ21hcCkpDQogICAgICBwY2llLT5jZmcgPSByZWdtYXA7DQogIGVsc2UgaWYgKElTX0VS
+UihyZWdtYXApICYmIFBUUl9FUlIocmVnbWFwKSAhPSAtRU5PREVWKQ0KICAgICAgcmV0dXJuIFBU
+Ul9FUlIocmVnbWFwKTsNCg0KSSdtIG5vdCBzdXJlIGlmIHdlIG5lZWQgdGhpcywgaXQgc2VlbXMg
+YSBsaXR0bGUgd2VpcmQgYW5kIHRoZXJlIGFyZQ0KbWFueSBkcml2ZXJzIGluIG90aGVyIHN1YnN5
+c3RlbXMgdGhhdCB1c2Ugc3lzY29uX25vZGVfdG9fcmVnbWFwKCkuDQoNClRoYW5rcw0KQ2h1YW5q
+aWENCg==
+
