@@ -2,114 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 667343FBF51
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 01:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3554E3FBFF0
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 02:28:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239015AbhH3XO3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Aug 2021 19:14:29 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48426 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238898AbhH3XO3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Aug 2021 19:14:29 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 24BE820B90FF; Mon, 30 Aug 2021 16:13:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 24BE820B90FF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1630365215;
-        bh=y8kbnU6wSCpgwXOq1MQQIkVnRwqj3xH6aJeaz2aubBY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sSkVi6OXSgiAj4hA98ukq34ASL/5U3pAIYzzvNkQswfVkKvxpySXEA+VX3YMrLCoP
-         T/JnEMwesI348tJ9hy53ZX/p4571zO7va6B2YqKgEIHRf7kGDWNscy0J0whfdNoVG4
-         yFIDkJzZ8RdZQMYlsUFSPb/JCmOYvXoh0TFGg6ME=
-From:   longli@linuxonhyperv.com
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        id S232996AbhHaAYP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Aug 2021 20:24:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4596 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230523AbhHaAYO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Aug 2021 20:24:14 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10092"; a="205506671"
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="205506671"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 17:23:19 -0700
+X-IronPort-AV: E=Sophos;i="5.84,364,1620716400"; 
+   d="scan'208";a="540780855"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.223.22]) ([10.212.223.22])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2021 17:23:18 -0700
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [Patch v2] PCI: hv: Fix sleep while in non-sleep context when removing child devices from the bus
-Date:   Mon, 30 Aug 2021 16:13:27 -0700
-Message-Id: <1630365207-20616-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+References: <20210823195409-mutt-send-email-mst@kernel.org>
+ <26a3cce5-ddf7-cbe6-a41e-58a2aea48f78@linux.intel.com>
+ <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
+ <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
+ <20210824053830-mutt-send-email-mst@kernel.org>
+ <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
+ <20210829112105-mutt-send-email-mst@kernel.org>
+ <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
+ <20210829181635-mutt-send-email-mst@kernel.org>
+ <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
+ <20210830163723-mutt-send-email-mst@kernel.org>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
+Date:   Mon, 30 Aug 2021 17:23:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210830163723-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
 
-In hv_pci_bus_exit, the code is holding a spinlock while calling
-pci_destroy_slot(), which takes a mutex.
+On 8/30/2021 1:59 PM, Michael S. Tsirkin wrote:
+>
+>> Or we can add _audited to the name. ioremap_shared_audited?
+> But it's not the mapping that has to be done in handled special way.
+> It's any data we get from device, not all of it coming from IO, e.g.
+> there's DMA and interrupts that all have to be validated.
+> Wouldn't you say that what is really wanted is just not running
+> unaudited drivers in the first place?
 
-This is not safe for spinlock. Fix this by moving the children to be
-deleted to a list on the stack, and removing them after spinlock is
-released.
 
-Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
+Yes.
 
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/linux-hyperv/20210823152130.GA21501@kili/
-Signed-off-by: Long Li <longli@microsoft.com>
----
-Changes in v2:
-Made patch title more specific on what the patch does.
-Added link to the original bug report.
-Changed to list_for_each_entry_safe for iterating the removed list.
 
- drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+>
+>> And we've been avoiding that drivers can self declare auditing, we've been
+>> trying to have a separate centralized list so that it's easier to enforce
+>> and avoids any cut'n'paste mistakes.
+>>
+>> -Andi
+> Now I'm confused. What is proposed here seems to be basically that,
+> drivers need to declare auditing by replacing ioremap with
+> ioremap_shared.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index a53bd8728d0d..fc1a29acadbb 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3229,9 +3229,17 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 		return 0;
- 
- 	if (!keep_devs) {
--		/* Delete any children which might still exist. */
-+		struct list_head removed;
-+
-+		/* Move all present children to the list on stack */
-+		INIT_LIST_HEAD(&removed);
- 		spin_lock_irqsave(&hbus->device_list_lock, flags);
--		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
-+		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry)
-+			list_move_tail(&hpdev->list_entry, &removed);
-+		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
-+
-+		/* Remove all children in the list */
-+		list_for_each_entry_safe(hpdev, tmp, &removed, list_entry) {
- 			list_del(&hpdev->list_entry);
- 			if (hpdev->pci_slot)
- 				pci_destroy_slot(hpdev->pci_slot);
-@@ -3239,7 +3247,6 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 			put_pcichild(hpdev);
- 			put_pcichild(hpdev);
- 		}
--		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 	}
- 
- 	ret = hv_send_resources_released(hdev);
--- 
-2.25.1
+Auditing is declared on the device model level using a central allow list.
+
+But this cannot do anything to initcalls that run before probe, that's 
+why an extra level of defense of ioremap opt-in is useful. But it's not 
+the primary mechanism to declare a driver audited, that's the allow 
+list. The ioremap is just another mechanism to avoid having to touch a 
+lot of legacy drivers.
+
+If we agree on that then the original proposed semantics of 
+"ioremap_shared" may be acceptable?
+
+-Andi
+
+
 
