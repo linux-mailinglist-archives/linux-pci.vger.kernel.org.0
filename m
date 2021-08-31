@@ -2,103 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 561FD3FC9EC
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 16:38:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D34E3FCA80
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 17:04:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbhHaOjh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 10:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
+        id S237158AbhHaPFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Aug 2021 11:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232016AbhHaOjh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Aug 2021 10:39:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C0C6F60F91;
-        Tue, 31 Aug 2021 14:38:39 +0000 (UTC)
+        id S230237AbhHaPFu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Aug 2021 11:05:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9935A61053;
+        Tue, 31 Aug 2021 15:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630420721;
-        bh=6obG3EWY8MJUaRtOjEQePHAgTbi/IVRVmFayceuFgCM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BZYavu6YjFg1t3BR4Zr8XkA/4j7Z4avQ85Hbzti7gbafz+rs7wqpf/Kjp3K/k7hS5
-         jBTFpCzrNVFCYd3gAEL7QayYgs4SDb7Be4u4lj+pxa8blm7gkwswM87ODsD3CwhWkg
-         WoYoPGrSEI3NMAYzY/XUjbU4lXuF6pGDk98hde/LeKGaUAOZZE67HLLcylEGo2j4Fa
-         p2BoMB3p8FZr5kDoNzmpwdw4zN0PzWPhpdjhgIRRxoJ/ZiOL2xgFCvA+ytThp/C57w
-         Oc9QkcaXiSeHHWBfzJHEpBSynjuPfR6APgBlXr1SHeE5iOj33d0i6+DpphviMxwZEN
-         VXgDqrKtSHAUg==
-Date:   Tue, 31 Aug 2021 15:38:36 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        jean-philippe <jean-philippe@linaro.org>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v5 3/3] PCI: Set dma-can-stall for HiSilicon chips
-Message-ID: <20210831143835.GA31947@willie-the-truck>
-References: <20210826182624.GA3694827@bjorn-Precision-5520>
- <225e905d-b7b2-c740-de94-2f4aece75f59@arm.com>
+        s=k20201202; t=1630422294;
+        bh=C3Xs7RdGLh2cMdjlr/NAo11NY+tlBUiaZVO0ueTSglQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GS3gtkoeV4qXKwQmd4bUMERgedQrUWTuFxSyAzmC7v96oqJUPBR0o6fcwM1vCb3Qh
+         isbVAVzB6yDvys72vXZdbHuZByy0ZLcTmKGrtb/QPVK0DPqUK6ME72GiLKjkW8Mt89
+         eh7YpcgaQRDGaDm1Q2CCInQw18tKM0ovSQc41bZd5ZTzRmM68MDeDv/6oSkgUga+nD
+         xgFT4puzZgUcQqdedzDKW/PY3Aaqfjl3+jXmlkq2xdH4nZgPLcy8nocTE9qxiyksXe
+         fPx9IMtOfHfeRZo/DmhfSnfTooXK9rL4kArxThL3RyYX/QfUAjc3k+yyzFO23Ur0si
+         eXCCt2qmaMO/w==
+Received: by mail-ed1-f44.google.com with SMTP id j13so21960372edv.13;
+        Tue, 31 Aug 2021 08:04:54 -0700 (PDT)
+X-Gm-Message-State: AOAM533SGucLKJ1jjqODaLX7NztTQGpLpg/6hjsLfw9z0x17AwMMMeTL
+        PAjyURhhwa+f2dFJMxGl7U3A9c3YnXlQZn3V5A==
+X-Google-Smtp-Source: ABdhPJzIMc1+WNRGq8elp8WiVQQ/QZvEnHKttYUctX+V3p0QWutbb1xjXyyvrpXfsncygsOskBw3nTY6jXKx0zawpjs=
+X-Received: by 2002:a50:eb8a:: with SMTP id y10mr30469814edr.137.1630422293211;
+ Tue, 31 Aug 2021 08:04:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <225e905d-b7b2-c740-de94-2f4aece75f59@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20210823032800.1660-3-chuanjia.liu@mediatek.com> <20210827164634.GA3779223@bjorn-Precision-5520>
+In-Reply-To: <20210827164634.GA3779223@bjorn-Precision-5520>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 31 Aug 2021 10:04:40 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKEvAypWhiaWMhxM7zVkLAFL9=eMU7_vr=ht+uyxYe0qg@mail.gmail.com>
+Message-ID: <CAL_JsqKEvAypWhiaWMhxM7zVkLAFL9=eMU7_vr=ht+uyxYe0qg@mail.gmail.com>
+Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
+ pcie-cfg base address
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Chuanjia Liu <chuanjia.liu@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 08:12:12PM +0100, Robin Murphy wrote:
-> On 2021-08-26 19:26, Bjorn Helgaas wrote:
-> > [+cc Will, Robin, Joerg, hoping for an ack]
-> > 
-> > On Tue, Jul 13, 2021 at 10:54:36AM +0800, Zhangfei Gao wrote:
-> > > HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-> > > actually on the AMBA bus. These fake PCI devices can support SVA via
-> > > SMMU stall feature, by setting dma-can-stall for ACPI platforms.
-> > > 
-> > > Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> > > ---
-> > >   drivers/pci/quirks.c | 13 +++++++++++++
-> > >   1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 5d46ac6..03b0f98 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -1823,10 +1823,23 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI
-> > >   static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
-> > >   {
-> > > +	struct property_entry properties[] = {
-> > > +		PROPERTY_ENTRY_BOOL("dma-can-stall"),
-> > 
-> > "dma-can-stall" is used in arm_smmu_probe_device() to help set
-> > master->stall_enabled.
-> > 
-> > I don't know the implications, so it'd be nice to get an ack from a
-> > maintainer of that code.
-> 
-> If it helps,
-> 
-> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> Normally stalling must not be enabled for PCI devices, since it would break
-> the PCI requirement for free-flowing writes and may lead to deadlock. We
-> expect PCI devices to support ATS and PRI if they want to be fault-tolerant,
-> so there's no ACPI binding to describe anything else, even when a "PCI"
-> device turns out to be a regular old SoC device dressed up as a RCiEP and
-> normal rules don't apply.
-> 
-> I'm taking it on trust that stalling really is safe for all possible
-> matching devices here (in general, deadlock may still be possible in the SoC
-> interconnect depending on topology, hence why it's an explicit opt-in even
-> for platform devices), but TBH either way I think I'd rather have this as a
-> quirk in the kernel under our control, than have vendors attempt to play
-> tricks with _DSD properties out in the field :)
+On Fri, Aug 27, 2021 at 11:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
+> > For the new dts format, add a new method to get
+> > shared pcie-cfg base address and use it to configure
+> > the PCIECFG controller
+>
+> Rewrap this to fill 75 columns.
+>
+> > Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index 25bee693834f..4296d9e04240 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/kernel.h>
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/msi.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_address.h>
+> > @@ -23,6 +24,7 @@
+> >  #include <linux/phy/phy.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/regmap.h>
+> >  #include <linux/reset.h>
+> >
+> >  #include "../pci.h"
+> > @@ -207,6 +209,7 @@ struct mtk_pcie_port {
+> >   * struct mtk_pcie - PCIe host information
+> >   * @dev: pointer to PCIe device
+> >   * @base: IO mapped register base
+> > + * @cfg: IO mapped register map for PCIe config
+> >   * @free_ck: free-run reference clock
+> >   * @mem: non-prefetchable memory resource
+> >   * @ports: pointer to PCIe port information
+> > @@ -215,6 +218,7 @@ struct mtk_pcie_port {
+> >  struct mtk_pcie {
+> >       struct device *dev;
+> >       void __iomem *base;
+> > +     struct regmap *cfg;
+> >       struct clk *free_ck;
+> >
+> >       struct list_head ports;
+> > @@ -682,6 +686,10 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >               val |= PCIE_CSR_LTSSM_EN(port->slot) |
+> >                      PCIE_CSR_ASPM_L1_EN(port->slot);
+> >               writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> > +     } else if (pcie->cfg) {
+> > +             val = PCIE_CSR_LTSSM_EN(port->slot) |
+> > +                   PCIE_CSR_ASPM_L1_EN(port->slot);
+> > +             regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
+> >       }
+> >
+> >       /* Assert all reset signals */
+> > @@ -985,6 +993,7 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
+> >       struct device *dev = pcie->dev;
+> >       struct platform_device *pdev = to_platform_device(dev);
+> >       struct resource *regs;
+> > +     struct device_node *cfg_node;
+> >       int err;
+> >
+> >       /* get shared registers, which are optional */
+> > @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
+> >                       return PTR_ERR(pcie->base);
+> >       }
+> >
+> > +     cfg_node = of_find_compatible_node(NULL, NULL,
+> > +                                        "mediatek,generic-pciecfg");
+>
+> This looks wrong to me.  IIUC, since we start at NULL, this searches
+> the entire device tree for any node with
+>
+>   compatible = "mediatek,generic-pciecfg"
+>
+> but we should only care about the specific device/node this driver
+> claimed.
+>
+> Should this be part of the match data, i.e., struct mtk_pcie_soc?
 
-I think a comment next to the quirk echoing the commit message and your
-first paragraph above would be really helpful here.
+What would you put in match data exactly?
 
-Will
+The other way to do this is to have a DT property with the phandle
+which people like to do (have everything in the node 'for their
+driver'). If there's only 1 possible node (which is almost always the
+case), then there is little benefit to having another property. It's
+just redundant data. A phandle lookup might be a bit faster with the
+caching we do, but on a miss it would still walk all nodes.
+
+The other thing with these 'extra register bits to twiddle' is that
+they tend to be SoC specific and change from chip to chip, so either
+way is not very portable. The real question to ask is should there be
+a standard interface used or created.
+
+>
+> > +     if (cfg_node) {
+> > +             pcie->cfg = syscon_node_to_regmap(cfg_node);
+>
+> Other drivers in drivers/pci/controller/ use
+> syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
+> layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
+> kirin, v3-semi).
+
+There's no phandle to use in this case. As above, I'm trying to break
+people of this habit.
+
+Rob
