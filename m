@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D34E3FCA80
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 17:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E12053FCAA2
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 17:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237158AbhHaPFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 11:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        id S233369AbhHaPTC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Aug 2021 11:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230237AbhHaPFu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Aug 2021 11:05:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9935A61053;
-        Tue, 31 Aug 2021 15:04:54 +0000 (UTC)
+        id S232559AbhHaPTC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 31 Aug 2021 11:19:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EBCB46103A;
+        Tue, 31 Aug 2021 15:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630422294;
-        bh=C3Xs7RdGLh2cMdjlr/NAo11NY+tlBUiaZVO0ueTSglQ=;
+        s=k20201202; t=1630423087;
+        bh=RJTxHIyrBUknplHV6hGq8g2EyXUUbu+8+pAvfCZtkMk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GS3gtkoeV4qXKwQmd4bUMERgedQrUWTuFxSyAzmC7v96oqJUPBR0o6fcwM1vCb3Qh
-         isbVAVzB6yDvys72vXZdbHuZByy0ZLcTmKGrtb/QPVK0DPqUK6ME72GiLKjkW8Mt89
-         eh7YpcgaQRDGaDm1Q2CCInQw18tKM0ovSQc41bZd5ZTzRmM68MDeDv/6oSkgUga+nD
-         xgFT4puzZgUcQqdedzDKW/PY3Aaqfjl3+jXmlkq2xdH4nZgPLcy8nocTE9qxiyksXe
-         fPx9IMtOfHfeRZo/DmhfSnfTooXK9rL4kArxThL3RyYX/QfUAjc3k+yyzFO23Ur0si
-         eXCCt2qmaMO/w==
-Received: by mail-ed1-f44.google.com with SMTP id j13so21960372edv.13;
-        Tue, 31 Aug 2021 08:04:54 -0700 (PDT)
-X-Gm-Message-State: AOAM533SGucLKJ1jjqODaLX7NztTQGpLpg/6hjsLfw9z0x17AwMMMeTL
-        PAjyURhhwa+f2dFJMxGl7U3A9c3YnXlQZn3V5A==
-X-Google-Smtp-Source: ABdhPJzIMc1+WNRGq8elp8WiVQQ/QZvEnHKttYUctX+V3p0QWutbb1xjXyyvrpXfsncygsOskBw3nTY6jXKx0zawpjs=
-X-Received: by 2002:a50:eb8a:: with SMTP id y10mr30469814edr.137.1630422293211;
- Tue, 31 Aug 2021 08:04:53 -0700 (PDT)
+        b=G0yMMTqHzwe0qELu/DoAveRwHUB13dr3KPJRkqxmmeotdjBerRgfbWfJzvi9M4w7j
+         R3d+skaMiYzBdMNJOfXm9IWujZ7afBwVsnt3mzrac3T8HNMuZFQm6btu2kyq11MD9l
+         NU0wxpysBolR1UlYFWOd3DdrfplB3FDtilgRYq9UbC1JXckD5jD+uXirhjfZ876WcO
+         cqkLBhbYdUEdxIO0Y3pu3KB4qCvNUYdQDdwG5VOgIGLiZCWlloej9IUto9KfnXma+I
+         CftbNTGohba7GqvjL/2RLJlsW3BEuUXuEVwcoNO1UjdzSkJ21YGcAF73la1USBO6cM
+         6J9E/lUdaDRTA==
+Received: by mail-ej1-f52.google.com with SMTP id e21so39507055ejz.12;
+        Tue, 31 Aug 2021 08:18:06 -0700 (PDT)
+X-Gm-Message-State: AOAM533EBAIN1HUAZg0/mQATQ8qqgXXGodmv2IfUN97ibNJZ9hbfx17i
+        HWNAvjWe1xztl4hw9M8chUknL8zsQLruroCGlQ==
+X-Google-Smtp-Source: ABdhPJy8LprSPFGyN9DqZEs0SFSzAWJ2ZV2nFyBr73KsmWA8/W5JGC4e+TWoma70T7sy/5hnC40loUZrlfZ4loNuCl4=
+X-Received: by 2002:a17:906:8cd:: with SMTP id o13mr32127271eje.341.1630423085544;
+ Tue, 31 Aug 2021 08:18:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210823032800.1660-3-chuanjia.liu@mediatek.com> <20210827164634.GA3779223@bjorn-Precision-5520>
-In-Reply-To: <20210827164634.GA3779223@bjorn-Precision-5520>
+References: <20210830214317.GA27606@bjorn-Precision-5520> <ccf767340afe13a6d273ad8fbc29c6bc966d6314.camel@mediatek.com>
+In-Reply-To: <ccf767340afe13a6d273ad8fbc29c6bc966d6314.camel@mediatek.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 31 Aug 2021 10:04:40 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKEvAypWhiaWMhxM7zVkLAFL9=eMU7_vr=ht+uyxYe0qg@mail.gmail.com>
-Message-ID: <CAL_JsqKEvAypWhiaWMhxM7zVkLAFL9=eMU7_vr=ht+uyxYe0qg@mail.gmail.com>
+Date:   Tue, 31 Aug 2021 10:17:53 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+dBi-XUDJD_STP=jWw+RLkRpX1U9XsRMhqK4U1H=0FHw@mail.gmail.com>
+Message-ID: <CAL_Jsq+dBi-XUDJD_STP=jWw+RLkRpX1U9XsRMhqK4U1H=0FHw@mail.gmail.com>
 Subject: Re: [PATCH v12 2/6] PCI: mediatek: Add new method to get shared
  pcie-cfg base address
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Chuanjia Liu <chuanjia.liu@mediatek.com>,
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -57,117 +57,78 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 27, 2021 at 11:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Mon, Aug 30, 2021 at 10:31 PM Chuanjia Liu <chuanjia.liu@mediatek.com> wrote:
 >
-> On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
-> > For the new dts format, add a new method to get
-> > shared pcie-cfg base address and use it to configure
-> > the PCIECFG controller
->
-> Rewrap this to fill 75 columns.
->
-> > Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
-> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
+> On Mon, 2021-08-30 at 16:43 -0500, Bjorn Helgaas wrote:
+> > On Mon, Aug 30, 2021 at 03:09:44PM +0800, Chuanjia Liu wrote:
+> > > On Fri, 2021-08-27 at 11:46 -0500, Bjorn Helgaas wrote:
+> > > > On Mon, Aug 23, 2021 at 11:27:56AM +0800, Chuanjia Liu wrote:
+> > > > > @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct
+> > > > > mtk_pcie *pcie)
+> > > > >                         return PTR_ERR(pcie->base);
+> > > > >         }
+> > > > >
+> > > > > +       cfg_node = of_find_compatible_node(NULL, NULL,
+> > > > > +                                          "mediatek,generic-
+> > > > > pciecfg");
+> > > > > +       if (cfg_node) {
+> > > > > +               pcie->cfg = syscon_node_to_regmap(cfg_node);
+> > > >
+> > > > Other drivers in drivers/pci/controller/ use
+> > > > syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
+> > > > layerscape, artpec6) or syscon_regmap_lookup_by_compatible()
+> > > > (imx6,
+> > > > kirin, v3-semi).
+> > > >
+> > > > You should do it the same way unless there's a need to be
+> > > > different.
+> > >
+> > > I have used phandle, but Rob suggested to search for the node by
+> > > compatible.
+> > > The reason why syscon_regmap_lookup_by_compatible() is not
+> > > used here is that the pciecfg node is optional, and there is no
+> > > need to
+> > > return error when the node is not searched.
 > >
-> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > index 25bee693834f..4296d9e04240 100644
-> > --- a/drivers/pci/controller/pcie-mediatek.c
-> > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/irqchip/chained_irq.h>
-> >  #include <linux/irqdomain.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> >  #include <linux/msi.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of_address.h>
-> > @@ -23,6 +24,7 @@
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regmap.h>
-> >  #include <linux/reset.h>
+> > How about this?
 > >
-> >  #include "../pci.h"
-> > @@ -207,6 +209,7 @@ struct mtk_pcie_port {
-> >   * struct mtk_pcie - PCIe host information
-> >   * @dev: pointer to PCIe device
-> >   * @base: IO mapped register base
-> > + * @cfg: IO mapped register map for PCIe config
-> >   * @free_ck: free-run reference clock
-> >   * @mem: non-prefetchable memory resource
-> >   * @ports: pointer to PCIe port information
-> > @@ -215,6 +218,7 @@ struct mtk_pcie_port {
-> >  struct mtk_pcie {
-> >       struct device *dev;
-> >       void __iomem *base;
-> > +     struct regmap *cfg;
-> >       struct clk *free_ck;
-> >
-> >       struct list_head ports;
-> > @@ -682,6 +686,10 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> >               val |= PCIE_CSR_LTSSM_EN(port->slot) |
-> >                      PCIE_CSR_ASPM_L1_EN(port->slot);
-> >               writel(val, pcie->base + PCIE_SYS_CFG_V2);
-> > +     } else if (pcie->cfg) {
-> > +             val = PCIE_CSR_LTSSM_EN(port->slot) |
-> > +                   PCIE_CSR_ASPM_L1_EN(port->slot);
-> > +             regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
-> >       }
-> >
-> >       /* Assert all reset signals */
-> > @@ -985,6 +993,7 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
-> >       struct device *dev = pcie->dev;
-> >       struct platform_device *pdev = to_platform_device(dev);
-> >       struct resource *regs;
-> > +     struct device_node *cfg_node;
-> >       int err;
-> >
-> >       /* get shared registers, which are optional */
-> > @@ -995,6 +1004,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
-> >                       return PTR_ERR(pcie->base);
-> >       }
-> >
-> > +     cfg_node = of_find_compatible_node(NULL, NULL,
-> > +                                        "mediatek,generic-pciecfg");
->
-> This looks wrong to me.  IIUC, since we start at NULL, this searches
-> the entire device tree for any node with
->
->   compatible = "mediatek,generic-pciecfg"
->
-> but we should only care about the specific device/node this driver
-> claimed.
->
-> Should this be part of the match data, i.e., struct mtk_pcie_soc?
+> >   regmap = syscon_regmap_lookup_by_compatible("mediatek,generic-
+> > pciecfg");
+> >   if (!IS_ERR(regmap))
+> >     pcie->cfg = regmap;
 
-What would you put in match data exactly?
-
-The other way to do this is to have a DT property with the phandle
-which people like to do (have everything in the node 'for their
-driver'). If there's only 1 possible node (which is almost always the
-case), then there is little benefit to having another property. It's
-just redundant data. A phandle lookup might be a bit faster with the
-caching we do, but on a miss it would still walk all nodes.
-
-The other thing with these 'extra register bits to twiddle' is that
-they tend to be SoC specific and change from chip to chip, so either
-way is not very portable. The real question to ask is should there be
-a standard interface used or created.
++1
 
 >
-> > +     if (cfg_node) {
-> > +             pcie->cfg = syscon_node_to_regmap(cfg_node);
+> Hi Bjorn,
 >
-> Other drivers in drivers/pci/controller/ use
-> syscon_regmap_lookup_by_phandle() (j721e, dra7xx, keystone,
-> layerscape, artpec6) or syscon_regmap_lookup_by_compatible() (imx6,
-> kirin, v3-semi).
+> We need to deal with three situations
+> 1) No error
+> 2) The error of the node not found, don't do anything
+> 3) Other errors, return errors
+>
+> I guess you mean
+>
+> regmap = syscon_regmap_lookup_by_compatible("mediatek,generic-
+> pciecfg");
+>   if (!IS_ERR(regmap))
+>       pcie->cfg = regmap;
+>   else if (IS_ERR(regmap) && PTR_ERR(regmap) != -ENODEV)
 
-There's no phandle to use in this case. As above, I'm trying to break
-people of this habit.
+You already know  IS_ERR is true here.
+
+>       return PTR_ERR(regmap);
+
+syscon_regmap_lookup_by_compatible_optional is the function you are
+looking for. The _optional flavor doesn't exist, so create it. There
+is one for the phandle lookup.
+
+>
+> I'm not sure if we need this, it seems a little weird and there are
+> many drivers in other subsystems that use syscon_node_to_regmap().
+
+You are implementing the exact same sequence that
+syscon_regmap_lookup_by_compatible() does, so clearly you should be
+using it. The one difference is you forgot the of_node_put().
 
 Rob
