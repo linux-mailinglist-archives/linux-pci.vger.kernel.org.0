@@ -2,100 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1E53FCF63
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Aug 2021 23:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA1DA3FD2B7
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 07:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbhHaV67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Aug 2021 17:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        id S241891AbhIAFKc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 01:10:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:3396 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230085AbhHaV67 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 31 Aug 2021 17:58:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EF5D560F46;
-        Tue, 31 Aug 2021 21:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630447083;
-        bh=9AAkpEaNY1prpXufEqhSyxiP7dv2In0i3i8yXV8B4AM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oDP39/M/4gyVssrMQf74uYWLKKOrC4hvymVVYXA7uEpSt0/TlyMmpl6pls/tBXRbU
-         jiUjjCKmpcYczBiXktzz1/xVd2R9G87OtzHt5a9ejFm3bCaY26CboogamiBzX9vxBO
-         WEb8ugi6twn4GKni8GFyJgFMAeq41YrFD550aOd0L5gaKdSWkLwgnxpxXd26raRwvo
-         09r6bFBAznH7dnfoIrp0BEEyd48EWMPfaJhCXksnXRKUX+oRGkY1Y1qkSsah3CA0Ud
-         jBCggD7iU8ZBXOB0HHlWdMolnGbF8faUUSlC5Up0KFInKJPK7YpyQw614GVw1WsiAG
-         buEYhCP9RwO4g==
-Date:   Tue, 31 Aug 2021 16:58:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     Krzysztof Wilczy??ski <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
- capability bit
-Message-ID: <20210831215801.GA152955@bjorn-Precision-5520>
+        id S230483AbhIAFKb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Sep 2021 01:10:31 -0400
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 01 Sep 2021 14:09:34 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id C50902059036;
+        Wed,  1 Sep 2021 14:09:34 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Sep 2021 14:09:34 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 8B530B62B7;
+        Wed,  1 Sep 2021 14:09:34 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] PCI: endpoint: Use sysfs_emit() in "show" functions
+Date:   Wed,  1 Sep 2021 14:09:17 +0900
+Message-Id: <1630472957-26857-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e31bae7-d7c7-d40a-9782-c59dcaf83798@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 04:39:44PM -0500, stuart hayes wrote:
-> On 8/31/2021 2:20 PM, Bjorn Helgaas wrote:
-> > On Wed, May 26, 2021 at 08:12:04PM -0500, stuart hayes wrote:
-> > > ...
-> > > I made the patch because it was causing the config space for a downstream
-> > > port to not get restored when a DPC event occurred, and all the NVMe drives
-> > > under it disappeared.  I found that myself, though--I'm not aware of anyone
-> > > else reporting the issue.
-> > 
-> > This niggles at me.  IIUC the problem you're reporting is that portdrv
-> > didn't claim a port because portdrv incorrectly assumed the port
-> > supported bandwidth notification interrupts.  That's all fine, and I
-> > think this is a good fix.
-> > 
-> > But why should it matter whether portdrv claims the port?  What if
-> > CONFIG_PCIEPORTBUS isn't even enabled?  I guess CONFIG_PCIE_DPC
-> > wouldn't be enabled then either.
-> > 
-> > In your situation, you have CONFIG_PCIEPORTBUS=y and (I assume)
-> > CONFIG_PCIE_DPC=y.  I guess you must have two levels of downstream
-> > ports, e.g.,
-> > 
-> >    Root Port -> Switch Upstream Port -> Switch Downstream Port -> NVMe
-> > 
-> > and portdrv claimed the Root Port and you enabled DPC there, but it
-> > didn't claim the Switch Downstream Port?
-> 
-> That's correct.  On the system I was using, there was another layer of
-> upstream/downstream ports, but I don't think that matters... I had:
-> 
-> Root Port -> Switch Upstream Port (portdrv claimed) -> Switch Downstream
-> Port (portdrv did NOT claim) -> Switch Upstream Port (portdrv claimed) ->
-> Switch Downstream Port (portdrv claimed) -> NVMe
-> 
-> > The failure to restore config space because portdrv didn't claim the
-> > port seems wrong to me.
-> 
-> When a DCP event is triggered on the root port, the downstream devices get
-> reset, and portdrv is what restores the switch downstream port's config
-> space (in pcie_portdrv_slot_reset).
-> 
-> So if portdrv doesn't claim the downstream port, the config space doesn't
-> get restored at all, so it won't forward anything to subordinate buses, and
-> everything below the port disappears once the DPC event happens.
+Convert sprintf() in sysfs "show" functions to sysfs_emit() in order to
+check for buffer overruns in sysfs outputs.
 
-Right.  That's what I assumed was happening.  I just think it's
-conceivable that one might *want* portdrv to not claim an intermediate
-switch like that.  Maybe that switch doesn't support any of the
-portdrv services.
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+---
+Changes since v1:
+- Add Reviewed-by line
 
-Or maybe you don't have portdrv configured at all.  Do we still
-save/restore config space for suspend/resume of the switch?  I guess
-this would probably have to be putting the switch into D3cold, since
-the device should preserve its config space in D3hot.
+---
+drivers/pci/endpoint/functions/pci-epf-ntb.c |  4 ++--
+ drivers/pci/endpoint/pci-ep-cfs.c            | 13 ++++++-------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-I think this kind of functionality ought to be built into the PCI core
-instead of being in the portdrv.
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index 8b47561..99266f05 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -1937,7 +1937,7 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+ 	struct config_group *group = to_config_group(item);		\
+ 	struct epf_ntb *ntb = to_epf_ntb(group);			\
+ 									\
+-	return sprintf(page, "%d\n", ntb->_name);			\
++	return sysfs_emit(page, "%d\n", ntb->_name);			\
+ }
+ 
+ #define EPF_NTB_W(_name)						\
+@@ -1968,7 +1968,7 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+ 									\
+ 	sscanf(#_name, "mw%d", &win_no);				\
+ 									\
+-	return sprintf(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
++	return sysfs_emit(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
+ }
+ 
+ #define EPF_NTB_MW_W(_name)						\
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 9999118..5a0394a 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -198,8 +198,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+ 
+ static ssize_t pci_epc_start_show(struct config_item *item, char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epc_group(item)->start);
++	return sysfs_emit(page, "%d\n", to_pci_epc_group(item)->start);
+ }
+ 
+ CONFIGFS_ATTR(pci_epc_, start);
+@@ -321,7 +320,7 @@ static ssize_t pci_epf_##_name##_show(struct config_item *item,	char *page)    \
+ 	struct pci_epf *epf = to_pci_epf_group(item)->epf;		       \
+ 	if (WARN_ON_ONCE(!epf->header))					       \
+ 		return -EINVAL;						       \
+-	return sprintf(page, "0x%04x\n", epf->header->_name);		       \
++	return sysfs_emit(page, "0x%04x\n", epf->header->_name);	       \
+ }
+ 
+ #define PCI_EPF_HEADER_W_u32(_name)					       \
+@@ -390,8 +389,8 @@ static ssize_t pci_epf_msi_interrupts_store(struct config_item *item,
+ static ssize_t pci_epf_msi_interrupts_show(struct config_item *item,
+ 					   char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epf_group(item)->epf->msi_interrupts);
++	return sysfs_emit(page, "%d\n",
++			  to_pci_epf_group(item)->epf->msi_interrupts);
+ }
+ 
+ static ssize_t pci_epf_msix_interrupts_store(struct config_item *item,
+@@ -412,8 +411,8 @@ static ssize_t pci_epf_msix_interrupts_store(struct config_item *item,
+ static ssize_t pci_epf_msix_interrupts_show(struct config_item *item,
+ 					    char *page)
+ {
+-	return sprintf(page, "%d\n",
+-		       to_pci_epf_group(item)->epf->msix_interrupts);
++	return sysfs_emit(page, "%d\n",
++			  to_pci_epf_group(item)->epf->msix_interrupts);
+ }
+ 
+ PCI_EPF_HEADER_R(vendorid)
+-- 
+2.7.4
 
-> I'm not really sure how else it would recover from a DPC event, I guess.
