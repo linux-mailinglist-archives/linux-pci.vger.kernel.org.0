@@ -2,186 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 389B23FDD0E
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 15:20:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 896243FDD12
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 15:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344126AbhIANKN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 09:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343918AbhIANKM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 09:10:12 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB1E961074;
-        Wed,  1 Sep 2021 13:09:15 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mLPzN-008RSi-NI; Wed, 01 Sep 2021 14:09:13 +0100
+        id S230109AbhIANNA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 09:13:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229767AbhIANM7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 09:12:59 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF332C061760
+        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 06:12:02 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id mf2so6501066ejb.9
+        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 06:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=fiIW5BwFHVQfOnx3kzFH7/JqAijaCrOLIYkPd+OSzXk=;
+        b=JQrjvUUJ4A9bJ/jgG2+/jLgEKE54NGvHoV09kJHigtQM+WevVyGzxUUKtyOMMesqYr
+         VygBHn6/BD/veKsdR/gygJ/ubee32KVzag+V7UwOzGrNJojvHXUyTviq4N0U89aGYW+o
+         FI6PiTzsgZcKYyYtbaRtJ4BaP3sh58+wmGeoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=fiIW5BwFHVQfOnx3kzFH7/JqAijaCrOLIYkPd+OSzXk=;
+        b=Dd5gx7Xu1031TCw1jFKulbiEvd1wmIQFZQQ5dHRhlaRm++YNTKAVjMjRdYUjisbzJg
+         uE2kdb0n/4ARqEeuER7SoaojmzRe9Em2FOYdX1KcBBJQ+YNUtRnkyH3x0LWQGCK6pP/V
+         0I/ZEKGgG2DX4hLyAcSagLw7lCkLpPmOBZvkXWzHZrUl48FGHWLhrZWRDBnrqTnUuIho
+         xvHXf8R+jLR8jordpkNjEPF/nuSdkTRnTOeeneuMsDirTqo61rf0dz8Gd+29ftOk4FF2
+         2X405IsmpMoYCUR52Z9rv2UMTae0DXmIJafdHpKlbwH48c3aEtTe49C2T2qcZsTntvIh
+         OqZg==
+X-Gm-Message-State: AOAM531OY2cDr2e5DI0nsRHXqunq+TsSFcRTvm/chGF7CsPS50YIsdTm
+        TyzR0mjJA+ttZLD6lQvC84wxK1FcQs//sZK8BndEtml/zyH0CQ==
+X-Google-Smtp-Source: ABdhPJzkqXjf1vN90JlN3WmG2abyueQeQNTS8iwOkIkLabmy/9SIdFTn7NgCDUki/hBR2gOfrb2+1LZ/+ZF8kjolJv4=
+X-Received: by 2002:a17:906:1146:: with SMTP id i6mr35866759eja.12.1630501921179;
+ Wed, 01 Sep 2021 06:12:01 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Wed, 01 Sep 2021 14:09:13 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Barry Song <21cnbao@gmail.com>
-Cc:     kernel test robot <oliver.sang@intel.com>,
-        0day robot <lkp@intel.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan.Cameron@huawei.com, bilbao@vt.edu,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        leon@kernel.org, linux-pci@vger.kernel.org,
-        Linuxarm <linuxarm@huawei.com>, luzmaximilian@gmail.com,
-        mchehab+huawei@kernel.org, schnelle@linux.ibm.com,
-        intel-wired-lan@lists.osuosl.org
-Subject: Re: [PCI/MSI] a4fc4cf388:
- dmesg.genirq:Flags_mismatch_irq##(mei_me)vs.#(xhci_hcd)
-In-Reply-To: <CAGsJ_4y45TyWibu0cOLbopO_k3RbwxQe0C2yp8v4=fF7etMOTg@mail.gmail.com>
-References: <20210825102636.52757-4-21cnbao@gmail.com>
- <20210829145552.GA11556@xsang-OptiPlex-9020>
- <CAGsJ_4yYwjuWsEeK3CvnOhc10mbBNYWXqxqp+mR5587R2FD3gQ@mail.gmail.com>
- <1132a536516f15ab6b338ab868ec3705@kernel.org>
- <CAGsJ_4y45TyWibu0cOLbopO_k3RbwxQe0C2yp8v4=fF7etMOTg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <04a0587a5d7854494e9ccfd1fdf39951@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: 21cnbao@gmail.com, oliver.sang@intel.com, lkp@intel.com, jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com, song.bao.hua@hisilicon.com, linux-kernel@vger.kernel.org, lkp@lists.01.org, bhelgaas@google.com, tglx@linutronix.de, Jonathan.Cameron@huawei.com, bilbao@vt.edu, corbet@lwn.net, gregkh@linuxfoundation.org, leon@kernel.org, linux-pci@vger.kernel.org, linuxarm@huawei.com, luzmaximilian@gmail.com, mchehab+huawei@kernel.org, schnelle@linux.ibm.com, intel-wired-lan@lists.osuosl.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+From:   Selvin Xavier <selvin.xavier@broadcom.com>
+Date:   Wed, 1 Sep 2021 18:41:50 +0530
+Message-ID: <CA+sbYW1hjkCkOOKynC+fGCk+Qo4xHMkxakw21sPEtV27k9T+MA@mail.gmail.com>
+Subject: crash observed with pci_enable_atomic_ops_to_root on VF devices.
+To:     linux-pci@vger.kernel.org
+Cc:     linux-rdma@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>,
+        Andrew Gospodarek <andrew.gospodarek@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000d6c81b05caeecf1f"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-08-31 22:36, Barry Song wrote:
-> On Tue, Aug 31, 2021 at 8:08 PM Marc Zyngier <maz@kernel.org> wrote:
->> 
->> On 2021-08-31 02:21, Barry Song wrote:
->> > On Mon, Aug 30, 2021 at 2:38 AM kernel test robot
->> > <oliver.sang@intel.com> wrote:
->> >>
->> >>
->> >>
->> >> Greeting,
->> >>
->> >> FYI, we noticed the following commit (built with gcc-9):
->> >>
->> >> commit: a4fc4cf388319ea957ffbdab5073bdd267de9082 ("[PATCH v3 3/3]
->> >> PCI/MSI: remove msi_attrib.default_irq in msi_desc")
->> >> url:
->> >> https://github.com/0day-ci/linux/commits/Barry-Song/PCI-MSI-Clarify-the-IRQ-sysfs-ABI-for-PCI-devices/20210825-183018
->> >> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
->> >> 6e764bcd1cf72a2846c0e53d3975a09b242c04c9
->> >>
->> >> in testcase: kernel-selftests
->> >> version: kernel-selftests-x86_64-ebaa603b-1_20210825
->> >> with following parameters:
->> >>
->> >>         group: pidfd
->> >>         ucode: 0xe2
->> >>
->> >> test-description: The kernel contains a set of "self tests" under the
->> >> tools/testing/selftests/ directory. These are intended to be small
->> >> unit tests to exercise individual code paths in the kernel.
->> >> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
->> >>
->> >>
->> >> on test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz
->> >> with 32G memory
->> >>
->> >> caused below changes (please refer to attached dmesg/kmsg for entire
->> >> log/backtrace):
->> >>
->> >>
->> >>
->> >> If you fix the issue, kindly add following tag
->> >> Reported-by: kernel test robot <oliver.sang@intel.com>
->> >>
->> >>
->> >>
->> >> [  179.602028][   T34] genirq: Flags mismatch irq 16. 00002000
->> >> (mei_me) vs. 00000000 (xhci_hcd)
->> >> [  179.614073][   T34] CPU: 2 PID: 34 Comm: kworker/u8:2 Not tainted
->> >> 5.14.0-rc7-00014-ga4fc4cf38831 #1
->> >> [  179.623225][   T34] Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT,
->> >> BIOS 1.8.1 12/05/2017
->> >> [  179.631432][   T34] Workqueue: events_unbound async_run_entry_fn
->> >> [  179.637543][   T34] Call Trace:
->> >> [  179.640789][   T34]  dump_stack_lvl+0x45/0x59
->> >> [  179.645253][   T34]  __setup_irq.cold+0x50/0xd4
->> >> [  179.649893][   T34]  ? mei_me_pg_exit_sync+0x480/0x480 [mei_me]
->> >> [  179.655923][   T34]  request_threaded_irq+0x10c/0x180
->> >> [  179.661073][   T34]  ? mei_me_irq_quick_handler+0x240/0x240
->> >> [mei_me]
->> >> [  179.667528][   T34]  mei_me_probe+0x131/0x300 [mei_me]
->> >> [  179.672767][   T34]  local_pci_probe+0x42/0x80
->> >> [  179.677313][   T34]  pci_device_probe+0x107/0x1c0
->> >> [  179.682118][   T34]  really_probe+0xb6/0x380
->> >> [  179.687094][   T34]  __driver_probe_device+0xfe/0x180
->> >> [  179.692242][   T34]  driver_probe_device+0x1e/0xc0
->> >> [  179.697133][   T34]  __driver_attach_async_helper+0x2b/0x80
->> >> [  179.702802][   T34]  async_run_entry_fn+0x30/0x140
->> >> [  179.707693][   T34]  process_one_work+0x274/0x5c0
->> >> [  179.712503][   T34]  worker_thread+0x50/0x3c0
->> >> [  179.716959][   T34]  ? process_one_work+0x5c0/0x5c0
->> >> [  179.721936][   T34]  kthread+0x14f/0x180
->> >> [  179.725958][   T34]  ? set_kthread_struct+0x40/0x40
->> >> [  179.730935][   T34]  ret_from_fork+0x22/0x30
->> >> [  179.735699][   T34] mei_me 0000:00:16.0: request_threaded_irq
->> >> failure. irq = 16
->> >> [  179.743125][   T34] mei_me 0000:00:16.0: initialization failed.
->> >> [  179.749399][   T34] mei_me: probe of 0000:00:16.0 failed with error
->> >> -16
->> >>
->> >>
->> >
->> > it seems there is a direct reference to pdev->irq.
->> > Hi Oliver, would you try if the below patch can fix the problem:
->> >
->> > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
->> > index c3393b383e59..a45a2d4257a6 100644
->> > --- a/drivers/misc/mei/pci-me.c
->> > +++ b/drivers/misc/mei/pci-me.c
->> > @@ -216,7 +216,7 @@ static int mei_me_probe(struct pci_dev *pdev,
->> > const struct pci_device_id *ent)
->> >
->> >         pci_enable_msi(pdev);
->> >
->> > -       hw->irq = pdev->irq;
->> > +       hw->irq = pci_irq_vector(pdev, 0);
->> >
->> >          /* request and enable interrupt */
->> >         irqflags = pci_dev_msi_enabled(pdev) ? IRQF_ONESHOT :
->> > IRQF_SHARED;
->> >
->> 
->> Ah! one victim, 3000 to go! :D
->> 
-> 
-> yep.
-> 
->> That's exactly the kind of stuff I was mentioning when we
->> discussed this patch. Exposing the MSI vector as the INTx
->> IRQ has led to all sorts of broken drivers.
-> 
-> I guess drivers should depend on int pci_irq_vector(struct pci_dev
-> *dev, unsigned int nr)
-> rather than hardcodely use pdev->irq.
-> 
-> pci_irq_vector() supports all cases(intx, msi, msi-x)
+--000000000000d6c81b05caeecf1f
+Content-Type: text/plain; charset="UTF-8"
 
-Yes, that'd be a sensible approach. Feels like a job for
-a coccinelle script!
+Hi all,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+A recent patch merged to 5.14 in the Broadcom RDMA driver  to call
+pci_enable_atomic_ops_to_root crashes the host while creating VFs. The
+crash is seen when pci_enable_atomic_ops_to_root is called with
+a VF pci device.  pdev->bus->self is NULL.  Is this expected for VF?
+
+Here is the stack trace for your reference.
+crash> bt
+PID: 4481   TASK: ffff89c6941b0000  CPU: 53  COMMAND: "bash"
+ #0 [ffff9a94817136d8] machine_kexec at ffffffffb90601a4
+ #1 [ffff9a9481713728] __crash_kexec at ffffffffb9190d5d
+ #2 [ffff9a94817137f0] crash_kexec at ffffffffb9191c4d
+ #3 [ffff9a9481713808] oops_end at ffffffffb9025cd6
+ #4 [ffff9a9481713828] page_fault_oops at ffffffffb906e417
+ #5 [ffff9a9481713888] exc_page_fault at ffffffffb9a0ad14
+ #6 [ffff9a94817138b0] asm_exc_page_fault at ffffffffb9c00ace
+    [exception RIP: pcie_capability_read_dword+28]
+    RIP: ffffffffb952fd5c  RSP: ffff9a9481713960  RFLAGS: 00010246
+    RAX: 0000000000000001  RBX: ffff89c6b1096000  RCX: 0000000000000000
+    RDX: ffff9a9481713990  RSI: 0000000000000024  RDI: 0000000000000000
+    RBP: 0000000000000080   R8: 0000000000000008   R9: ffff89c64341a2f8
+    R10: 0000000000000002  R11: 0000000000000000  R12: ffff89c648bab000
+    R13: 0000000000000000  R14: 0000000000000000  R15: ffff89c648bab0c8
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #7 [ffff9a9481713988] pci_enable_atomic_ops_to_root at ffffffffb95359a6
+ #8 [ffff9a94817139c0] bnxt_qplib_determine_atomics at
+ffffffffc08c1a33 [bnxt_re]
+ #9 [ffff9a94817139d0] bnxt_re_dev_init at ffffffffc08ba2d1 [bnxt_re]
+#10 [ffff9a9481713a78] bnxt_re_netdev_event at ffffffffc08bab8f [bnxt_re]
+#11 [ffff9a9481713aa8] raw_notifier_call_chain at ffffffffb9102cbe
+#12 [ffff9a9481713ad0] register_netdevice at ffffffffb9803ff3
+#13 [ffff9a9481713b08] register_netdev at ffffffffb980410a
+#14 [ffff9a9481713b18] bnxt_init_one at ffffffffc0349572 [bnxt_en]
+#15 [ffff9a9481713b70] local_pci_probe at ffffffffb953b92f
+#16 [ffff9a9481713ba0] pci_device_probe at ffffffffb953cf8f
+#17 [ffff9a9481713be8] really_probe at ffffffffb9659619
+#18 [ffff9a9481713c08] __driver_probe_device at ffffffffb96598fb
+#19 [ffff9a9481713c28] driver_probe_device at ffffffffb965998f
+#20 [ffff9a9481713c48] __device_attach_driver at ffffffffb9659cd2
+#21 [ffff9a9481713c70] bus_for_each_drv at ffffffffb9657307
+#22 [ffff9a9481713ca8] __device_attach at ffffffffb96593e0
+#23 [ffff9a9481713ce8] pci_bus_add_device at ffffffffb9530b7a
+#24 [ffff9a9481713d00] pci_iov_add_virtfn at ffffffffb955b1ca
+#25 [ffff9a9481713d40] sriov_enable at ffffffffb955b54b
+#26 [ffff9a9481713d90] bnxt_sriov_configure at ffffffffc034d913 [bnxt_en]
+#27 [ffff9a9481713dd8] sriov_numvfs_store at ffffffffb955acb4
+#28 [ffff9a9481713e10] kernfs_fop_write_iter at ffffffffb93f09ad
+#29 [ffff9a9481713e48] new_sync_write at ffffffffb933b82c
+#30 [ffff9a9481713ed0] vfs_write at ffffffffb933db64
+#31 [ffff9a9481713f00] ksys_write at ffffffffb933dd99
+#32 [ffff9a9481713f38] do_syscall_64 at ffffffffb9a07897
+#33 [ffff9a9481713f50] entry_SYSCALL_64_after_hwframe at ffffffffb9c0007c
+    RIP: 00007f450602f648  RSP: 00007ffe880869e8  RFLAGS: 00000246
+    RAX: ffffffffffffffda  RBX: 0000000000000002  RCX: 00007f450602f648
+    RDX: 0000000000000002  RSI: 0000555c566c4a60  RDI: 0000000000000001
+    RBP: 0000555c566c4a60   R8: 000000000000000a   R9: 00007f45060c2580
+    R10: 000000000000000a  R11: 0000000000000246  R12: 00007f45063026e0
+    R13: 0000000000000002  R14: 00007f45062fd880  R15: 0000000000000002
+    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+
+Please suggest a fix for solving this issue. Is adding a NULL check
+for bus->self sounds okay?
+
+Thanks,
+Selvin
+
+--000000000000d6c81b05caeecf1f
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+od7PzGNQ3SgTYKl5XslMq+gpy+K8+egxMxo3D07c8snwyfU7Y7NQ8I1M986gsj9RUcp3oo0N+T1W
+rwVchQXTGD/Hwqc11XBU1H3JKSRkn7cTa9bMFnp0Asr3Y4/kB+4t6PhYi50ORwIDAQABo4IB2zCC
+AdcwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDov
+L3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAu
+Y3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29u
+YWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0
+cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBA
+MD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
+MDIwLmNybDAlBgNVHREEHjAcgRpzZWx2aW4ueGF2aWVyQGJyb2FkY29tLmNvbTATBgNVHSUEDDAK
+BggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQU6uPX
+5eOTTGwUwIAAoXKF4qVZLfgwDQYJKoZIhvcNAQELBQADggEBAKAn7gHcWCrqvZPX7lw4FJEOMJ2s
+cPoLqoiJLhVttehI3r8nFmNe5WanBDnClSbn1WMa5fHtttEjxZkHOFZqWLHYRI/hnXtVBjF9YV/1
+Hs3HTO02pYpYyHue4CSXgBtj45ZVZ0FjQNxgoLFvJOq3iSsy/tS2uVH5Pe1AW495cxp8+p5b3VGe
+HRzGet524jE0vZx0A/6qrYo6C7z4Djrt/QU2MZDbPb+kwkkomwcn0Nvr91KWSrbhhHtZ/EfXi08L
+x3R3oHtWjbmIW1nYkwVk4pQZoaLkRWkfTSGpwDwilhrd2F+d5rhCbAbfACk4Oly51GV4SI7jUm0D
+VbZWyuIx85gxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWdu
+IG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIw
+Agxea+GNYSvtMZZyJzwwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIMTBfRksFG3b
+KJxmslG9mcn9xE8uTP8iRFGlR61foWSvMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIxMDkwMTEzMTIwMVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCugtDXnF1WouLbPVAH5ksUrfUen7LA
+WEPZNGdojqdh5C780tbAOgVoIxoitAToG1am9ilbAqPKYxRhXo3ls6wl+iXb7qwnNbXq4wngs1xX
+Yd7cNIXlDVzeiNVOm5d5U2bDL8eZQNCSFrOZfZaiy+ivQ/CskrzRdJ7E3nHDdZQcwaClojNbDQ/J
+SEG3V0/i/utVhhVmRG2l1LTzsTsSCjTlYv82T3inIDD67mVByBvBXIktfR9H10w5cqpbSFzlsNL1
+N7JO+Pm09MwKfMTdRKgkWFL5fnqk756A7U8RI0hIfQpUByjQBBf2ANlaqIKCeFiPqWXxkhpqFCV/
+aVfOTWaw
+--000000000000d6c81b05caeecf1f--
