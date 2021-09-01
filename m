@@ -2,151 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96F0D3FE48A
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 23:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6153D3FE4F2
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 23:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244893AbhIAVIp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 17:08:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244818AbhIAVIo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 17:08:44 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0DAC061575
-        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 14:07:46 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 17so791165pgp.4
-        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 14:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=F3dWNJGQ6LgTixBw5Hh1ZhQhsBBgIqvnsSvcWV7sabo=;
-        b=lu4uTeVnMam0bXo9mcKPeDuKOfRVDTfiH6BWi4vy3poSh8UcByMt63twfT2DJIaoo2
-         VZJphNN1ek6UohVofzeuFMF5h+EZ8Oalt0i793VAHLxtD9eacngJE3EW6keTQSbsO5CO
-         Q0lvzOO3B+3LcwjU1ZK33TYBUVhXx/vK5D968=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F3dWNJGQ6LgTixBw5Hh1ZhQhsBBgIqvnsSvcWV7sabo=;
-        b=mVqDvP7SD1nqVXb7Fv0yjucR88OgS02UonFMICuRvO791a5i9KmuiZILjbUWS+M92H
-         t3LunGmJqXxt7s2C7Fr+6Jvpf/uPoo2rKQIClYDhPwzKCaN7MiqpXtzm9dQGftu1wRU4
-         OhSmyVfqkA8WO4pde8q6YV36fJfnUDGM7Wmi15JfLrBdDajL4WBS/30FiIDSFxHSPPWi
-         mXu/p2Xgwrp55Ji7c2+kJkkEaG2l6uPA2zU44C0p07mbKaqoJ3wOTABoAE2Kr2ZIlvem
-         p+cDuWHNio8wQHEGtSkbwLoDMGH+RPpsgPVjRgNRR3t7ScGqeWna3zXKoEcg7WULkDw5
-         OMwg==
-X-Gm-Message-State: AOAM531n2H/qtuPx/HR9D5gy6pPNtda1tLgZDQOWVHn/tsk0msASelHa
-        9v6iJkENI5KlMWKC3mARpSWb8w==
-X-Google-Smtp-Source: ABdhPJzYhP2mOJxIUgf/e/cGXoHVfpmUo/dISx+WQIJjJ+h6LP97ULYgJE0691fKOlnRe4UELH7jBA==
-X-Received: by 2002:aa7:946e:0:b0:3fa:1317:f5b5 with SMTP id t14-20020aa7946e000000b003fa1317f5b5mr1329159pfq.25.1630530466226;
-        Wed, 01 Sep 2021 14:07:46 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:1b89:ff21:8208:947])
-        by smtp.gmail.com with ESMTPSA id s5sm599125pgp.81.2021.09.01.14.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Sep 2021 14:07:45 -0700 (PDT)
-Date:   Wed, 1 Sep 2021 14:07:43 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-Message-ID: <YS/rn8b0O3FPBbtm@google.com>
-References: <20210830123704.221494-1-verdre@v0yd.nl>
- <20210830123704.221494-2-verdre@v0yd.nl>
- <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
- <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
- <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+        id S1344714AbhIAV3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 17:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343833AbhIAV3s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Sep 2021 17:29:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C39860FDC;
+        Wed,  1 Sep 2021 21:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630531731;
+        bh=UR8lRt7r5o1AdrnpSQeDaU1+qPZXgI977j2FUJlT5pI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lgxt5eRS3ECJoAMKA2RyAKvXWFa3U8qaakjuzwQKaGZ35pFh1pkV8+mSk4t4VKeWJ
+         nv+CiSl9H6e++YiwBKSGuYP87n2UZcBM6fNLp/JQHBiplq+UIIq3OAzRM6pgCe+lrB
+         w65aVYjlKNfBNTXaGf/49FF/3n7wInexL/Er9GI0Dio4f0KeF4pSejoMbJjEp6/rEj
+         YM3Jk3BdcjSQAh6e6E1t/l1PyRW9tHg12unyFEwXNuzIWJ31Bvrwv7/yp8DfBFzmwm
+         EJ9qrLwPgJWQt/GeVJmZgv828/RwRc1tlikqtTppOA5I9TeNjPIZX0aJSd6Q2wlmQU
+         +nC7NgNjjKJeA==
+Date:   Wed, 1 Sep 2021 16:28:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     stuart hayes <stuart.w.hayes@gmail.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
+ capability bit
+Message-ID: <20210901212850.GA242902@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+In-Reply-To: <20210901054818.GA7877@wunner.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Apologies for the brain-dead mailer. I forget that I should only reply
-via web when I _want_ text wrapping:
-
-On Wed, Sep 01, 2021 at 02:04:04PM -0700, Brian Norris wrote:
-> (b) latency spikes to ~6ms:
-> # trace-cmd record -p function_graph -O funcgraph-abstime -l
-> mwifiex_pm_wakeup_card
-> # trace-cmd report
->    kworker/u13:0-199   [003]   348.987306: funcgraph_entry:      #
-> 6219.500 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:0-199   [003]   349.316312: funcgraph_entry:      #
-> 6267.625 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-4057  [001]   352.238530: funcgraph_entry:      #
-> 6184.250 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:0-199   [002]   356.626366: funcgraph_entry:      #
-> 6553.166 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-4057  [002]   356.709389: funcgraph_entry:      #
-> 6212.500 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-4057  [002]   356.847215: funcgraph_entry:      #
-> 6230.292 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-4057  [000]   356.897576: funcgraph_entry:      #
-> 6451.667 us |  mwifiex_pm_wakeup_card();
->    kworker/u13:0-199   [004]   357.175025: funcgraph_entry:      #
-> 6204.042 us |  mwifiex_pm_wakeup_card();
+On Wed, Sep 01, 2021 at 07:48:18AM +0200, Lukas Wunner wrote:
+> On Tue, Aug 31, 2021 at 04:58:01PM -0500, Bjorn Helgaas wrote:
+> > I just think it's
+> > conceivable that one might *want* portdrv to not claim an intermediate
+> > switch like that.
 > 
-> whereas it used to look more like:
+> It's possible to manually unbind portdrv from the device via sysfs
+> (because portdrv is a driver).  In that case the port will not restore
+> config space upon an error-induced reset and any devices downstream
+> of the port will be inaccessible after the reset.
 > 
->    kworker/u13:1-173   [005]   212.230542: funcgraph_entry:
-> 7.000 us   |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-1768  [005]   213.886063: funcgraph_entry:
-> 9.334 us   |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-1768  [002]   214.473273: funcgraph_entry:      +
-> 11.375 us  |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-1768  [005]   214.530705: funcgraph_entry:
-> 5.542 us   |  mwifiex_pm_wakeup_card();
->    kworker/u13:1-173   [002]   215.050168: funcgraph_entry:      +
-> 13.125 us  |  mwifiex_pm_wakeup_card();
->    kworker/u13:1-173   [002]   215.106492: funcgraph_entry:      +
-> 11.959 us  |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-1768  [005]   215.484807: funcgraph_entry:
-> 8.459 us   |  mwifiex_pm_wakeup_card();
->    kworker/u13:1-173   [003]   215.515238: funcgraph_entry:      +
-> 15.166 us  |  mwifiex_pm_wakeup_card();
->    kworker/u13:3-1768  [001]   217.175691: funcgraph_entry:      +
-> 11.083 us  |  mwifiex_pm_wakeup_card();
+> That's the only possible way to screw this up I think.
+> And it requires deliberate, manual action.  One *could* argue that's
+> not correct and the kernel shouldn't allow the incorrect behavior
+> in the first place.  The behavior follows from portdrv being a driver,
+> instead of its functionality being baked into the PCI core.
 
-That should read:
+Right.  I do think the overall PCI design would be significantly
+cleaner if the portdrv functionality were baked into the PCI core
+instead of being a driver.
 
-# trace-cmd record -p function_graph -O funcgraph-abstime -l mwifiex_pm_wakeup_card
-# trace-cmd report
-   kworker/u13:0-199   [003]   348.987306: funcgraph_entry:      # 6219.500 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:0-199   [003]   349.316312: funcgraph_entry:      # 6267.625 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-4057  [001]   352.238530: funcgraph_entry:      # 6184.250 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:0-199   [002]   356.626366: funcgraph_entry:      # 6553.166 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-4057  [002]   356.709389: funcgraph_entry:      # 6212.500 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-4057  [002]   356.847215: funcgraph_entry:      # 6230.292 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-4057  [000]   356.897576: funcgraph_entry:      # 6451.667 us |  mwifiex_pm_wakeup_card();
-   kworker/u13:0-199   [004]   357.175025: funcgraph_entry:      # 6204.042 us |  mwifiex_pm_wakeup_card();
+> > Or maybe you don't have portdrv configured at all.  Do we still
+> > save/restore config space for suspend/resume of the switch?
+> 
+> We do, because the PCI core takes care of that.  E.g. on resume
+> from system sleep:
+> 
+>   pci_pm_resume_noirq()
+>     pci_pm_default_resume_early()
+>       pci_restore_state()
+> 
+> However after an error-induced reset, it's the job of the device
+> driver's ->slot_reset() callback to restore config space.
+> That's a design decision that was made back in 2005 when EEH
+> was introduced.  See Documentation/PCI/pci-error-recovery.rst:
+> 
+>   It is important for the platform to restore the PCI config space
+>   to the "fresh poweron" state, rather than the "last state". After
+>   a slot reset, the device driver will almost always use its standard
+>   device initialization routines, and an unusual config space setup
+>   may result in hung devices, kernel panics, or silent data corruption.
+> 
+> I guess it would be possible to perform certain tasks such as
+> pci_restore_state() centrally in report_slot_reset() instead
+> (in drivers/pci/pcie/err.c) and alleviate each driver from doing that.
+> 
+> One has to bear in mind though that a device may require specific
+> steps before pci_restore_state() is called.  E.g. in the case of
+> portdrv, spurious hotplug DLLSC events need to be acknowledged
+> first:
+> 
+> https://patchwork.ozlabs.org/project/linux-pci/patch/251f4edcc04c14f873ff1c967bc686169cd07d2d.1627638184.git.lukas@wunner.de/
 
-vs.
+As far as I know, pci_restore_state() only restores things specified
+by the PCIe spec.  It doesn't restore any device-specific state, so
+I'm a little hesitant about inserting device-specific things in the
+middle of that flow.  I know you're solving a real problem with that
+patch, and I don't have any better suggestions, but it will take me a
+while to assimilate this.
 
-   kworker/u13:1-173   [005]   212.230542: funcgraph_entry:        7.000 us   |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-1768  [005]   213.886063: funcgraph_entry:        9.334 us   |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-1768  [002]   214.473273: funcgraph_entry:      + 11.375 us  |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-1768  [005]   214.530705: funcgraph_entry:        5.542 us   |  mwifiex_pm_wakeup_card();
-   kworker/u13:1-173   [002]   215.050168: funcgraph_entry:      + 13.125 us  |  mwifiex_pm_wakeup_card();
-   kworker/u13:1-173   [002]   215.106492: funcgraph_entry:      + 11.959 us  |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-1768  [005]   215.484807: funcgraph_entry:        8.459 us   |  mwifiex_pm_wakeup_card();
-   kworker/u13:1-173   [003]   215.515238: funcgraph_entry:      + 15.166 us  |  mwifiex_pm_wakeup_card();
-   kworker/u13:3-1768  [001]   217.175691: funcgraph_entry:      + 11.083 us  |  mwifiex_pm_wakeup_card();
+Thanks for all your analysis; it is very helpful!
 
-Brian
+> If portdrv isn't configured at all, AER and DPC support cannot be
+> configured either (because they depend on PCIEPORTBUS), and it's the
+> reset performed by AER or DPC which necessitates calling pci_restore_state().
+> 
+> If a port supports none of portdrv's services, portdrv still binds to
+> the port and is thus able to restore config space if a reset is performed
+> at a port further upstream.  That's because of ...
+> 
+> 	if (!capabilities)
+> 		return 0;
+> 
+> ... in pcie_port_device_register().  So that should be working correctly.
+> 
+> Thanks,
+> 
+> Lukas
