@@ -2,63 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD0913FE330
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 21:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC923FE42C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 22:41:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343607AbhIATmQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 15:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46350 "EHLO
+        id S231447AbhIAUmO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 16:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244663AbhIATmL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 15:42:11 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D64C061575
-        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 12:41:13 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id k12-20020a056830150c00b0051abe7f680bso1171895otp.1
-        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 12:41:13 -0700 (PDT)
+        with ESMTP id S231398AbhIAUmO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 16:42:14 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C512C061575;
+        Wed,  1 Sep 2021 13:41:17 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id m17so409591plc.6;
+        Wed, 01 Sep 2021 13:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=U/AS3qDXHpFaWx+ZJcvPtCtF+rnLf3zIt76sJF5yEGk=;
-        b=NkNxlikZUUM6eXRgFVXiPeq6YkDYPECZQBwyf07ee/u96b9SCgqsgH97bH+bHt18HA
-         aO6QTOY7TXnpAhL/AkGdB1ESkCA75/NRsntfNVmdAQVFYrOiMDVqdEXPUqvmabYQ0bu4
-         6fwk/eoEvHwqNAicmJQ7QKlfvMHN/EqkPATrA=
+        bh=NO/zd5PEh4sGso5loCQniKnDMB+CL8oSBEUV4F7LrXw=;
+        b=IP0mTBtq6mlacOZ39e0lYeKPTk+VrJ0ZQqRlm1T1+QNDaOlvcqYRPV8jm+803qYDl7
+         LY4ZXJsWOq+hbIlsbXpy6iNRIGf2Q1TF7o68nDz9wP41a0Qi2vHBy+eWiI8u6Hx0ifHk
+         ixOXbYG9jzZTr7QFpGbJ/H7QmmaWWFgbtHh3B8Wh6leVIAHm8+dsbahllR3BJHiFEPlY
+         pk+VVnObLh2Tq/ChZWHPsg8sGfqTHuVvRPzv/zTs+czN7mrfONq8O0n7skB9RzkYyXjU
+         CkM+Z1XN0DZVxaW89t+e1m2jWWMZME8O76qbDN2EaSMVIfmYoPo2wThKC6gPSkMERMaC
+         bSaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=U/AS3qDXHpFaWx+ZJcvPtCtF+rnLf3zIt76sJF5yEGk=;
-        b=rLnLaQnZE+tFWTQCF2Upko1U7dvhw7H+mf0d0+p69fmMuWXVLhfRe1HIdA5wLdCRzK
-         LLr3b0wX89cQ71aOqnJCyPJhoaWeRr8fI+AIyY0k1ElXHDQ9olA9J7E7jce/m49FOMKn
-         Jw4tO45ENwXce68mPQ/hh/NiGg+jlbluGTjyjBUExtdTkvS8FLN2hyXFdzqQ8K8eIQF+
-         bUp2MGyZX1jfl+xE56wk00X/RB0OzblPPJAwVD5ZU5rOvkW7Bzac8dBm5sLqs12aAPzW
-         DmKguPHlegJj4sB/Yn+9jyP3aAkv5HKVj0zAkvSlxnaxszsMLPk2TE29vhzTWvfoyiLt
-         o8ew==
-X-Gm-Message-State: AOAM531QyQUzqF3p5Szzsgjrh72HPUF1xpacQ+TE6jCbIfYaI1wRI/Ko
-        sraYPoLZ5uQar2jaFnq2jeHKRG8WnugqZw==
-X-Google-Smtp-Source: ABdhPJygOhCY+yZJFiZU2D0SXjxYwp39S4LnIla1H2dcC+PW5TT1D5ev74Mb5a6e854djKcorUoGww==
-X-Received: by 2002:a9d:2208:: with SMTP id o8mr981092ota.78.1630525272371;
-        Wed, 01 Sep 2021 12:41:12 -0700 (PDT)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id p81sm89148oia.48.2021.09.01.12.41.10
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Sep 2021 12:41:10 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id q39so743677oiw.12
-        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 12:41:10 -0700 (PDT)
-X-Received: by 2002:aca:5344:: with SMTP id h65mr992912oib.117.1630525269918;
- Wed, 01 Sep 2021 12:41:09 -0700 (PDT)
+        bh=NO/zd5PEh4sGso5loCQniKnDMB+CL8oSBEUV4F7LrXw=;
+        b=GWqqbfDvmE0c5TTLJ7Ue12iU09sx1xZLu/49uLd7uxwZURFtS8vcOTUx1SWaOvpdM9
+         ukGJzx2ZXXbciFsG2qpOArKUJ6bNq2FS0QcO4tgPjFUlXs62RPLVcILW7jDD93rZfbM0
+         2kQmQlEzf0nSq/2ZpOY5AqXvqjqqZyyLTq4uC4leKHZD0NzHgIZ9JJpHEgdOeAs0z53/
+         c86vfDq9kJCfnl8KFyLYlFdA1VsSyRU5JUEVDu85ulUAFUBiu6OwmaOWDfhqlL+ZCn0N
+         kKb8dUzaqETOqpTLb8vlKjLqEmKpM/1CaWeXLNSnZW1V8nmEHe+pV7S/zGVebuqJUQEy
+         VAzA==
+X-Gm-Message-State: AOAM531mceOYJGVf5pYlb59+So0aO6h4wOTnajSyoKyx75dis5jFBTeb
+        a9Xth/dNwem4m/e/5faVikBHnwMxDhS1B2ddfxQ=
+X-Google-Smtp-Source: ABdhPJyokH7tzWOv52uIscrHN+41KOxxtDBm9KGPkir22Mv0bLlWOv/nJud3iY+etysezBR/VQTmiUQ9iCOMiMV7vB4=
+X-Received: by 2002:a17:903:120e:b0:138:d732:3b01 with SMTP id
+ l14-20020a170903120e00b00138d7323b01mr877939plh.21.1630528876524; Wed, 01 Sep
+ 2021 13:41:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210830123704.221494-1-verdre@v0yd.nl> <20210830123704.221494-2-verdre@v0yd.nl>
-In-Reply-To: <20210830123704.221494-2-verdre@v0yd.nl>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 1 Sep 2021 12:40:58 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
-Message-ID: <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
+ <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
+In-Reply-To: <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Sep 2021 23:40:40 +0300
+Message-ID: <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
 Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-To:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
         Ganapathi Bhat <ganapathi017@gmail.com>,
         Xinming Hu <huxinming820@gmail.com>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -68,7 +64,7 @@ Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
         linux-wireless <linux-wireless@vger.kernel.org>,
         "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
         Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,44 +75,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 30, 2021 at 5:37 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote:
->
-> On the 88W8897 card it's very important the TX ring write pointer is
-> updated correctly to its new value before setting the TX ready
-> interrupt, otherwise the firmware appears to crash (probably because
-> it's trying to DMA-read from the wrong place).
->
-> Since PCI uses "posted writes" when writing to a register, it's not
-> guaranteed that a write will happen immediately. That means the pointer
-> might be outdated when setting the TX ready interrupt, leading to
-> firmware crashes especially when ASPM L1 and L1 substates are enabled
-> (because of the higher link latency, the write will probably take
-> longer).
->
-> So fix those firmware crashes by always forcing non-posted writes. We do
-> that by simply reading back the register after writing it, just as a lot
-> of other drivers do.
->
-> There are two reproducers that are fixed with this patch:
->
-> 1) During rx/tx traffic and with ASPM L1 substates enabled (the enabled
-> substates are platform dependent), the firmware crashes and eventually a
-> command timeout appears in the logs. That crash is fixed by using a
-> non-posted write in mwifiex_pcie_send_data().
->
-> 2) When sending lots of commands to the card, waking it up from sleep in
-> very quick intervals, the firmware eventually crashes. That crash
-> appears to be fixed by some other non-posted write included here.
->
-> Signed-off-by: Jonas Dre=C3=9Fler <verdre@v0yd.nl>
+On Wed, Sep 1, 2021 at 11:25 PM Brian Norris <briannorris@chromium.org> wro=
+te:
+> On Mon, Aug 30, 2021 at 5:37 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote=
+:
 
-This might be good for many cases, but please read this commit:
+...
 
-https://git.kernel.org/linus/062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3
-mwifiex: pcie: use posted write to wake up firmware
+> This might be good for many cases, but please read this commit:
+>
+> https://git.kernel.org/linus/062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3
+> mwifiex: pcie: use posted write to wake up firmware
+>
+> It's very much intentional that this is a posted write in some cases.
+>
+> Without ensuring this doesn't regress, NAK from me.
 
-It's very much intentional that this is a posted write in some cases.
+Can you ensure that from Chrome / Google perspective, please?
 
-Without ensuring this doesn't regress, NAK from me.
-
-Brian
+--=20
+With Best Regards,
+Andy Shevchenko
