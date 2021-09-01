@@ -2,91 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 237233FE216
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 20:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B6D03FE296
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 20:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344999AbhIASMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 14:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346803AbhIASMU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 14:12:20 -0400
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48691C0612AF
-        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 11:11:22 -0700 (PDT)
-Received: by mail-qv1-xf31.google.com with SMTP id dt3so311357qvb.6
-        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 11:11:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
-         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
-         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
-         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
-         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
-         0RlA==
+        id S244718AbhIAS4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 14:56:08 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:36550 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347184AbhIASyg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 14:54:36 -0400
+Received: by mail-oi1-f173.google.com with SMTP id s20so615461oiw.3;
+        Wed, 01 Sep 2021 11:53:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=FKJ3htoYTcrAV+QyueJD093iwmvuctHIvdvF7j0JVJM2AaxAaifkvWuj/OADG5jGkt
-         VY2uAleRvfKtUTMmJveSFFQnXYqI1fK4BpRg+tG6RRlv8QWrEV+oD190OBW5BB8zGfLK
-         sWmcD4Tz8zQVEHcy7wT3sIJBNgB/j/Yw26pjNG/Mmh428EaEFiQbs5BYhzlHczfmMD9d
-         k5ILAY55uRCaQsEc4K+7DR2+ZVS+CWHfnQUtYz1geZX3E9m4IyFlkMqsLthps9dfFFK6
-         L21v5ZlkZhtUUVz5HPZW7glR9Bo9FbX+6pyhhNkGQhZjfHBvsa53hoHrbJNqpXsBHCp8
-         QamA==
-X-Gm-Message-State: AOAM533AGz7L/kvLilojZdW4kMvMom7+A4y6ngk29fkH5NrJqo1BBEez
-        PTeDYibJlKuyPTJGuB6iJ9rs3UYKv7h2OaDcdcHsQSUdfPhp1Q==
-X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
-X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
- Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FQvE5qqZIT/3rySEUdT9VMQxZS5n7lBZyNfmVX8wxEM=;
+        b=PtYZ8+al/ZBJu/nXROEmwZwuLHdTU9D2gbFvxEq/1tHClDp1P7fSWCyMhxXf6btOlP
+         TXUMiSDJdGb1S/39cU9o6ejA8pqH+I9hG6P4wNM6IWLdnJL6nO4+Tj4I1f5wVJkuY2er
+         qHNXRGLpus6hUm+lP4xtRSvlH85EF/yAdRP5fSHxYNSB9j7bLGDuFNmdGL/qMbO43o/V
+         06qF0NUUGgIAdWzu6v2n8UUBc15vgWxdHb0XVjCz0G/uKBwOrnFzWmrqpTEXu7LgCGGu
+         i9z1+7SDQDgzHHD+i7OVY2eyhF+7poMXlfwEdQNRBxBdOh7T1FC2g3H9DTzA5Zj+PDLz
+         s3FA==
+X-Gm-Message-State: AOAM531dC+V1QYx4jetfQQvUIBoDuGa7zh20SbReTkEPV/J3srpfNefZ
+        kbvKJyAU5FAHiL3Zzv/Zs8WdNz+ygL/j/59ZJQZLP1XT
+X-Google-Smtp-Source: ABdhPJxw0UlgCiTAcLGipUkztf2JN2g4Gi7lcZcN8VThhrAl16F7OOiBE3tHOovk2C6OzqiGAtOUPHry+x5ARbXpgrk=
+X-Received: by 2002:aca:afcd:: with SMTP id y196mr776417oie.71.1630522417861;
+ Wed, 01 Sep 2021 11:53:37 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
-From:   CorisBank International <corisbankintlbf@gmail.com>
-Date:   Wed, 1 Sep 2021 11:11:10 -0700
-Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
-Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
-To:     undisclosed-recipients:;
+References: <20210824122054.29481-1-joro@8bytes.org> <20210824122054.29481-2-joro@8bytes.org>
+In-Reply-To: <20210824122054.29481-2-joro@8bytes.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 Sep 2021 20:53:26 +0200
+Message-ID: <CAJZ5v0iVKbL-4LngH7MeSZ69qArLC0488UR+kSnsPTsBD8qZnQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] PCI/ACPI: Remove OSC_PCI_SUPPORT_MASKS and OSC_PCI_CONTROL_MASKS
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Bjorn Helgaas <helgass@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Att: Client
+On Tue, Aug 24, 2021 at 2:21 PM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> These masks are only used internally in the PCI Host Bridge _OSC
+> negotiation code, which already makes sure nothing outside of these
+> masks is set. Remove the masks and simplify the code.
+>
+> Suggested-by: Bjorn Helgaas <helgass@kernel.org>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
 
-CORISBANK INTERNATIONAL URGENT NOTIFICATION
-
-Notification / Notification/ Notification
-
-Note, We are writing to inform you officially that Finally the Central
-Bank Financial Authority have approved to transfer your $8.2Million
-which was signed by late Mrs Rose Banneth the COVID.19 victim to
-transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
-transfer her fund in our bank to you for Orphanage work before she
-died by the COVID.19
-and as it is now, you will receive your fund through our corresponding
-bank in Dubai [Emirate Investment Bank ] for security reason. Please
-you should reconfirm your details to receive the $8.2Million.
-
-Name, Country, Address, occupations, Age, Telephone number, account
-Details so that we can immediately forward to the World Bank to
-transfer the fund.
-You are advised to comply on timely manner to permit this esteem bank
-transfer your fund as scheduled.
-
-We look forward to serving you better
-Your Financial Comfort Is A Priority
-Thank you for choosing Corisbank International.
-
-Sincerely,
-
-----
-
-Mr Diakarya Ouattara
-Managing Director
-Bank Coris
-Burkina Faso
-+226 556 163 37
-financial_bf_info@accountant.com
+> ---
+>  drivers/acpi/pci_root.c | 9 +++------
+>  include/linux/acpi.h    | 2 --
+>  2 files changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index d7deedf3548e..0c3030a58219 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -199,18 +199,15 @@ static acpi_status acpi_pci_query_osc(struct acpi_pci_root *root,
+>         acpi_status status;
+>         u32 result, capbuf[3];
+>
+> -       support &= OSC_PCI_SUPPORT_MASKS;
+>         support |= root->osc_support_set;
+>
+>         capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+>         capbuf[OSC_SUPPORT_DWORD] = support;
+> -       if (control) {
+> -               *control &= OSC_PCI_CONTROL_MASKS;
+> +       if (control)
+>                 capbuf[OSC_CONTROL_DWORD] = *control | root->osc_control_set;
+> -       } else {
+> +       else
+>                 /* Run _OSC query only with existing controls. */
+>                 capbuf[OSC_CONTROL_DWORD] = root->osc_control_set;
+> -       }
+>
+>         status = acpi_pci_run_osc(root->device->handle, capbuf, &result);
+>         if (ACPI_SUCCESS(status)) {
+> @@ -357,7 +354,7 @@ static acpi_status acpi_pci_osc_control_set(acpi_handle handle, u32 *mask, u32 r
+>         if (!mask)
+>                 return AE_BAD_PARAMETER;
+>
+> -       ctrl = *mask & OSC_PCI_CONTROL_MASKS;
+> +       ctrl = *mask;
+>         if ((ctrl & req) != req)
+>                 return AE_TYPE;
+>
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 72e4f7fd268c..c6dba5f21384 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -577,7 +577,6 @@ extern u32 osc_sb_native_usb4_control;
+>  #define OSC_PCI_MSI_SUPPORT                    0x00000010
+>  #define OSC_PCI_EDR_SUPPORT                    0x00000080
+>  #define OSC_PCI_HPX_TYPE_3_SUPPORT             0x00000100
+> -#define OSC_PCI_SUPPORT_MASKS                  0x0000019f
+>
+>  /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
+>  #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL      0x00000001
+> @@ -587,7 +586,6 @@ extern u32 osc_sb_native_usb4_control;
+>  #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL     0x00000010
+>  #define OSC_PCI_EXPRESS_LTR_CONTROL            0x00000020
+>  #define OSC_PCI_EXPRESS_DPC_CONTROL            0x00000080
+> -#define OSC_PCI_CONTROL_MASKS                  0x000000bf
+>
+>  #define ACPI_GSB_ACCESS_ATTRIB_QUICK           0x00000002
+>  #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
+> --
+> 2.32.0
+>
