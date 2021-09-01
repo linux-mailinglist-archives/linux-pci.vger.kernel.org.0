@@ -2,126 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9BB53FE42B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 22:40:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 686B83FE47C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 23:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbhIAUlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 16:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229653AbhIAUlo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 16:41:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 12DDE60EBB;
-        Wed,  1 Sep 2021 20:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630528847;
-        bh=v28mP6PoTgi7Xgq3oHoJto/kuqOc6c3EfIXanjA9ihY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ezYiM2Zj+uSUYZKzy6upkAMZlI8/PQNILS0i8boFOOvLMjQg8mKKkgmL7KxNd9ooY
-         X3Q+R04oRUuxiGaA2WZYIrnKq3GkcFcVVUodHk2UjR2OxJfZXlcYbpk1wUPfEOqqBN
-         ysT8HnjDjprExt71p5TYwJZCkLoKfbncp/WT9NVBFLZ/C47BI0zEfuVY5DBg+9Ehrj
-         4V8Zs9W2I7fEdavuQGvoP/zxNpgd7ZBQKuJp5ml2SMGwkwEykxLB03WwrClR2chF9P
-         rTiDWc1XTw4mEtlUnnGnhemh1E3mZrloaVLrrQSMth7DiXKJ/NbUNxtyAviqPmZeVv
-         +V/UrF14ev1jw==
-Date:   Wed, 1 Sep 2021 15:40:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, treding@nvidia.com,
-        swarren@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3] PCI: tegra: Enable Relaxed Ordering only for Tegra20
- & Tegra30
-Message-ID: <20210901204045.GA236987@bjorn-Precision-5520>
+        id S232634AbhIAVFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 17:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231724AbhIAVFP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 17:05:15 -0400
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BC4C061575
+        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 14:04:18 -0700 (PDT)
+Received: by mail-ot1-x32c.google.com with SMTP id i3-20020a056830210300b0051af5666070so1446122otc.4
+        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 14:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Er+bUfyfPvArhYuBPd9KcOdL9ky31FKA1apq9cDnwfk=;
+        b=jc108vPKn+qoC2+EtUZK7f8iWMtJBLiSI/k3pDpscWBvuMzAYdCnqmZ0tXum3oWpGa
+         GghPMV+NZld70nm9K8c3N/sytLAQDNSWHYZEt/gz0x+kXWmE+z8yq3a+I31qlZeTa6ad
+         Q8C11zOwXse34JREiZdLUgjbLseCYofrlEPlU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Er+bUfyfPvArhYuBPd9KcOdL9ky31FKA1apq9cDnwfk=;
+        b=RCyesGRH0UviUrKn0i9tTxWByqFVwg1qCQJ47nEQdanx7R4/MzgxHAkkVYqpt08oCx
+         kMPzEfyiboVSCg7huhjHSIaF7JwdLT1ceVdPFhBpIIYoGjE2atHFweLiRkIy/MWOR0Op
+         x6sshw56OhKc+s+OfjOB60NYcQ+e4UiDSMA4GZpYP78Lr5L+lTUkBhmCZKAS6h4o7d0n
+         0GhuN7EMSDs+AJDmAftIsTcRv1IfqG3G1L+8nbDrjKVkxSeem17w3TniWEWOiwysr9ig
+         ag4tvJ/z65TX+LQ6yDMwD33alKw7BBLWrNocc1bAuUtm1sGKHa+ee5OCKlq7dV0r0eUx
+         M70g==
+X-Gm-Message-State: AOAM5311rEsuoY4dR97Vql4/f3B/VW7wBbON5GKm4TRqS1NifGZx1GSL
+        L6B9vhHqFk9agGaFmO0P9q/rFwOlFwfs4A==
+X-Google-Smtp-Source: ABdhPJzG1ilW99BcWiFfY5POq0LxHSY9o6vEZa9w2TklQ+/IQTU29iXVBZuAA1PrfAKk6H6lTULSrA==
+X-Received: by 2002:a05:6830:156:: with SMTP id j22mr1220946otp.75.1630530257455;
+        Wed, 01 Sep 2021 14:04:17 -0700 (PDT)
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com. [209.85.161.42])
+        by smtp.gmail.com with ESMTPSA id w15sm140866oiw.19.2021.09.01.14.04.16
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Sep 2021 14:04:16 -0700 (PDT)
+Received: by mail-oo1-f42.google.com with SMTP id e206-20020a4a55d7000000b00291379cb2baso293997oob.9
+        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 14:04:16 -0700 (PDT)
+X-Received: by 2002:a4a:a2c5:: with SMTP id r5mr1141610ool.66.1630530255934;
+ Wed, 01 Sep 2021 14:04:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704150428.4035-1-vidyas@nvidia.com>
+References: <20210830123704.221494-1-verdre@v0yd.nl> <20210830123704.221494-2-verdre@v0yd.nl>
+ <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com> <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
+In-Reply-To: <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Wed, 1 Sep 2021 14:04:04 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+Message-ID: <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 08:34:28PM +0530, Vidya Sagar wrote:
-> Currently Relaxed Ordering bit in the configuration space is enabled for
-> all PCIe devices as the quirk uses PCI_ANY_ID for both Vendor-ID and
-> Device-ID, but, as per the Technical Reference Manual of Tegra20 which is
-> available at https://developer.nvidia.com/embedded/downloads#?search=tegra%202
-> in Sec 34.1, it is mentioned that Relaxed Ordering bit needs to be enabled in
-> its root ports to avoid deadlock in hardware. The same is applicable for
-> Tegra30 as well though it is not explicitly mentioned in Tegra30 TRM document,
-> but the same must not be extended to root ports of other Tegra SoCs or
-> other hosts as the same issue doesn't exist there.
+On Wed, Sep 1, 2021 at 1:41 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Sep 1, 2021 at 11:25 PM Brian Norris <briannorris@chromium.org> w=
+rote:
+> > On Mon, Aug 30, 2021 at 5:37 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wro=
+te:
+>
+> ...
+>
+> > This might be good for many cases, but please read this commit:
+> >
+> > https://git.kernel.org/linus/062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3
+> > mwifiex: pcie: use posted write to wake up firmware
+> >
+> > It's very much intentional that this is a posted write in some cases.
+> >
+> > Without ensuring this doesn't regress, NAK from me.
+>
+> Can you ensure that from Chrome / Google perspective, please?
 
-While researching another thread about RO [1], I got concerned about
-setting RO for root ports.
+I mean, the context link should be pretty obvious. But sure: with this patc=
+h:
 
-Setting RO for *endpoints* makes sense: that allows (but does not
-require) the endpoint to issue writes that don't require strong
-ordering.
+(a) all my least-favorite audio issues to debug return (audio is
+especially latency-sensitive on the Rockchip RK3399 systems I have)
+(b) latency spikes to ~6ms:
+# trace-cmd record -p function_graph -O funcgraph-abstime -l
+mwifiex_pm_wakeup_card
+# trace-cmd report
+   kworker/u13:0-199   [003]   348.987306: funcgraph_entry:      #
+6219.500 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:0-199   [003]   349.316312: funcgraph_entry:      #
+6267.625 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-4057  [001]   352.238530: funcgraph_entry:      #
+6184.250 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:0-199   [002]   356.626366: funcgraph_entry:      #
+6553.166 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-4057  [002]   356.709389: funcgraph_entry:      #
+6212.500 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-4057  [002]   356.847215: funcgraph_entry:      #
+6230.292 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-4057  [000]   356.897576: funcgraph_entry:      #
+6451.667 us |  mwifiex_pm_wakeup_card();
+   kworker/u13:0-199   [004]   357.175025: funcgraph_entry:      #
+6204.042 us |  mwifiex_pm_wakeup_card();
 
-Setting RO for *root ports* seems more problematic.  It allows the
-root port to issue PCIe writes that don't require strong ordering.
-These would be CPU MMIO writes to devices.  But Linux currently does
-not have a way for drivers to indicate that some MMIO writes need to
-be ordered while others do not, and I think drivers assume that all
-MMIO writes are performed in order. 
+whereas it used to look more like:
 
-We merged this patch as 7be142caabc4 ("PCI: tegra: Enable Relaxed
-Ordering only for Tegra20 & Tegra30") [2], so Tegra20 and Tegra30 root
-ports are allowed (but again, not required) to set the RO bit for MMIO
-writes initiated by a CPU.
+   kworker/u13:1-173   [005]   212.230542: funcgraph_entry:
+7.000 us   |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-1768  [005]   213.886063: funcgraph_entry:
+9.334 us   |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-1768  [002]   214.473273: funcgraph_entry:      +
+11.375 us  |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-1768  [005]   214.530705: funcgraph_entry:
+5.542 us   |  mwifiex_pm_wakeup_card();
+   kworker/u13:1-173   [002]   215.050168: funcgraph_entry:      +
+13.125 us  |  mwifiex_pm_wakeup_card();
+   kworker/u13:1-173   [002]   215.106492: funcgraph_entry:      +
+11.959 us  |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-1768  [005]   215.484807: funcgraph_entry:
+8.459 us   |  mwifiex_pm_wakeup_card();
+   kworker/u13:1-173   [003]   215.515238: funcgraph_entry:      +
+15.166 us  |  mwifiex_pm_wakeup_card();
+   kworker/u13:3-1768  [001]   217.175691: funcgraph_entry:      +
+11.083 us  |  mwifiex_pm_wakeup_card();
 
-Because I think drivers *rely* on MMIO writes being strongly ordered,
-this is a potential problem.  I think we should probably consider
-explicitly *disabling* RO in all root ports (with exceptions for
-quirks like this) in case it's set by any firmware.
+I think it would be enough to only modify mwifiex_pm_wakeup_card() to
+retain the posted version, but I'm not sure how that fits in with the
+rest of the author's work. I suppose I can give a later version a run
+if needed.
 
-So the question is, how do Tegra20 and Tegra30 actually work?  Do they
-ever actually set the RO bit for these MMIO writes?  If so, I think
-drivers are really at risk, and we probably should log some kind of
-warning.
-
-But if Tegra20 and Tegra30 just need "Enable Relaxed Ordering" set as
-a bug workaround and they never actually initiate PCIe writes with the
-RO bit set, maybe we should add a comment to that effect, but there
-should be no actual problem.
-
-[1] https://lore.kernel.org/r/20210830123704.221494-2-verdre@v0yd.nl
-[2] https://git.kernel.org/linus/7be142caabc4
-
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V3:
-> * Modified commit message to make it more precise and explicit
-> 
-> V2:
-> * Modified commit message to include reference to Tegra20 TRM document.
-> 
->  drivers/pci/controller/pci-tegra.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 9cc03a2549c0..241760aa15bd 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -787,12 +787,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
->  
-> -/* Tegra PCIE requires relaxed ordering */
-> +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
->  static void tegra_pcie_relax_enable(struct pci_dev *dev)
->  {
->  	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
->  }
-> -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
->  
->  static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
->  {
-> -- 
-> 2.17.1
-> 
+Brian
