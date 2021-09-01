@@ -2,119 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6153D3FE4F2
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 23:28:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705C13FE56C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Sep 2021 00:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344714AbhIAV3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 17:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        id S234983AbhIAWYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 18:24:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343833AbhIAV3s (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 17:29:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C39860FDC;
-        Wed,  1 Sep 2021 21:28:51 +0000 (UTC)
+        id S233632AbhIAWYw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Sep 2021 18:24:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D58260F6C;
+        Wed,  1 Sep 2021 22:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630531731;
-        bh=UR8lRt7r5o1AdrnpSQeDaU1+qPZXgI977j2FUJlT5pI=;
+        s=k20201202; t=1630535034;
+        bh=et0pqefooHZt84DSm1+89qLmXn83NjdrBVAloK6cwGU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lgxt5eRS3ECJoAMKA2RyAKvXWFa3U8qaakjuzwQKaGZ35pFh1pkV8+mSk4t4VKeWJ
-         nv+CiSl9H6e++YiwBKSGuYP87n2UZcBM6fNLp/JQHBiplq+UIIq3OAzRM6pgCe+lrB
-         w65aVYjlKNfBNTXaGf/49FF/3n7wInexL/Er9GI0Dio4f0KeF4pSejoMbJjEp6/rEj
-         YM3Jk3BdcjSQAh6e6E1t/l1PyRW9tHg12unyFEwXNuzIWJ31Bvrwv7/yp8DfBFzmwm
-         EJ9qrLwPgJWQt/GeVJmZgv828/RwRc1tlikqtTppOA5I9TeNjPIZX0aJSd6Q2wlmQU
-         +nC7NgNjjKJeA==
-Date:   Wed, 1 Sep 2021 16:28:50 -0500
+        b=oqpX7Pa2hJLFiGXzeVgn41RqJLno4uoJd1cbJCyumKhXM440OIKvXtnsTB7YYnTX/
+         UxzZglFrdb43vSqkgowjx0PX9Im/dvdPQ3G4HH5XBzmtRgMOZRVQO938+jOFKQccqj
+         mlRhKf06kxftg1DeJZZVED3aBTnapwmnJ3rtO8oewMtEPJbM65IorQXp/Gt2Hu9eD4
+         CTUePzR3FY+LLiS/UJgC9NZrtVPJ1fsjjyqCXV/1cy8P6LWHvorAytBlNOkIHLcUSg
+         C2DbGG5N24FDPHxXSh0RijTa+Jo93MK0KxmpMkRbLnbcxSZuy/SfdAgxpmrmgoJ2Ta
+         OYkCrCUeSUadQ==
+Date:   Wed, 1 Sep 2021 17:23:53 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     stuart hayes <stuart.w.hayes@gmail.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
- capability bit
-Message-ID: <20210901212850.GA242902@bjorn-Precision-5520>
+To:     Hariprasad Shenai <hariprasad@chelsio.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, leedom@chelsio.com,
+        nirranjan@chelsio.com
+Subject: Re: [PATCH] pci: Add pci quirk to turnoff Nosnoop and Relaxed
+ Ordering
+Message-ID: <20210901222353.GA251391@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210901054818.GA7877@wunner.de>
+In-Reply-To: <1445178304-14855-1-git-send-email-hariprasad@chelsio.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 07:48:18AM +0200, Lukas Wunner wrote:
-> On Tue, Aug 31, 2021 at 04:58:01PM -0500, Bjorn Helgaas wrote:
-> > I just think it's
-> > conceivable that one might *want* portdrv to not claim an intermediate
-> > switch like that.
+On Sun, Oct 18, 2015 at 07:55:04PM +0530, Hariprasad Shenai wrote:
+> Some devices violate the PCI Specification regarding echoing the Root
+> Port Transaction Layer Packet Request (TLP) No Snoop and Relaxed
+> Ordering Attributes into the TLP Response. The PCI Specification
+> "encourages" compliant Root Port implementation to drop such
+> malformed TLP Responses leading to device access timeouts. Many Root Port
+> implementations accept such malformed TLP Responses and a few more
+> strict implementations do drop them.
 > 
-> It's possible to manually unbind portdrv from the device via sysfs
-> (because portdrv is a driver).  In that case the port will not restore
-> config space upon an error-induced reset and any devices downstream
-> of the port will be inaccessible after the reset.
-> 
-> That's the only possible way to screw this up I think.
-> And it requires deliberate, manual action.  One *could* argue that's
-> not correct and the kernel shouldn't allow the incorrect behavior
-> in the first place.  The behavior follows from portdrv being a driver,
-> instead of its functionality being baked into the PCI core.
+> For devices which fail this part of the PCI Specification, we need to
+> traverse up the PCI Chain to the Root Port and turn off the Enable No
+> Snoop and Enable Relaxed Ordering bits in the Root Port's PCI-Express
+> Device Control register. This does affect all other devices which
+> are downstream of that Root Port.
 
-Right.  I do think the overall PCI design would be significantly
-cleaner if the portdrv functionality were baked into the PCI core
-instead of being a driver.
+While researching another thread about RO [1], I got concerned about
+setting RO for root ports.
 
-> > Or maybe you don't have portdrv configured at all.  Do we still
-> > save/restore config space for suspend/resume of the switch?
-> 
-> We do, because the PCI core takes care of that.  E.g. on resume
-> from system sleep:
-> 
->   pci_pm_resume_noirq()
->     pci_pm_default_resume_early()
->       pci_restore_state()
-> 
-> However after an error-induced reset, it's the job of the device
-> driver's ->slot_reset() callback to restore config space.
-> That's a design decision that was made back in 2005 when EEH
-> was introduced.  See Documentation/PCI/pci-error-recovery.rst:
-> 
->   It is important for the platform to restore the PCI config space
->   to the "fresh poweron" state, rather than the "last state". After
->   a slot reset, the device driver will almost always use its standard
->   device initialization routines, and an unusual config space setup
->   may result in hung devices, kernel panics, or silent data corruption.
-> 
-> I guess it would be possible to perform certain tasks such as
-> pci_restore_state() centrally in report_slot_reset() instead
-> (in drivers/pci/pcie/err.c) and alleviate each driver from doing that.
-> 
-> One has to bear in mind though that a device may require specific
-> steps before pci_restore_state() is called.  E.g. in the case of
-> portdrv, spurious hotplug DLLSC events need to be acknowledged
-> first:
-> 
-> https://patchwork.ozlabs.org/project/linux-pci/patch/251f4edcc04c14f873ff1c967bc686169cd07d2d.1627638184.git.lukas@wunner.de/
+Setting RO for *endpoints* makes sense: that allows (but does not
+require) the endpoint to issue writes that don't require strong
+ordering.
 
-As far as I know, pci_restore_state() only restores things specified
-by the PCIe spec.  It doesn't restore any device-specific state, so
-I'm a little hesitant about inserting device-specific things in the
-middle of that flow.  I know you're solving a real problem with that
-patch, and I don't have any better suggestions, but it will take me a
-while to assimilate this.
+Setting RO for *root ports* seems more problematic.  It allows the
+root port to issue PCIe writes that don't require strong ordering.
+These would be CPU MMIO writes to devices.  But Linux currently does
+not have a way for drivers to indicate that some MMIO writes need to
+be ordered while others do not, and I think drivers assume that all
+MMIO writes are performed in order.
 
-Thanks for all your analysis; it is very helpful!
+I don't think Linux ever enables RO in Root Ports, but this patch
+suggests that firmware might enable it.  I don't understand how that
+could *ever* be safe, unless we had some mechanism like a separate
+MMIO window that generated writes with relaxed ordering.
 
-> If portdrv isn't configured at all, AER and DPC support cannot be
-> configured either (because they depend on PCIEPORTBUS), and it's the
-> reset performed by AER or DPC which necessitates calling pci_restore_state().
+Did you trip over firmware that enables RO, or is this a preventive
+thing in case firmware or Linux ever *did* enable RO in the Root Port?
+
+[1] https://lore.kernel.org/r/20210830123704.221494-2-verdre@v0yd.nl
+
+> Note that Configuration Space accesses are never supposed to have TLP
+> Attributes, so we're safe waiting till after any Configuration Space
+> accesses to do the Root Port "fixup".
 > 
-> If a port supports none of portdrv's services, portdrv still binds to
-> the port and is thus able to restore config space if a reset is performed
-> at a port further upstream.  That's because of ...
+> Based on original work by Casey Leedom <leedom@chelsio.com>
 > 
-> 	if (!capabilities)
-> 		return 0;
+> Signed-off-by: Hariprasad Shenai <hariprasad@chelsio.com>
+> ---
+>  drivers/pci/pci.c    | 28 ++++++++++++++++++++++++++
+>  drivers/pci/quirks.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h  |  1 +
+>  3 files changed, 85 insertions(+)
 > 
-> ... in pcie_port_device_register().  So that should be working correctly.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6a9a111..3ce202b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -458,6 +458,34 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+>  EXPORT_SYMBOL(pci_find_parent_resource);
+>  
+>  /**
+> + * pci_find_root_pcie_port - return PCI-E Root Port
+> + * @dev: PCI device to query
+> + *
+> + * Traverses up the parent chain and return the PCI-E Root Port PCI Device
+> + * for a given PCI Device.
+> + */
+> +struct pci_dev *pci_find_root_pcie_port(const struct pci_dev *dev)
+> +{
+> +	struct pci_bus *bus = dev->bus;
+> +	struct pci_dev *highest_pcie_bridge = NULL;
+> +
+> +	while (bus) {
+> +		struct pci_dev *bridge = bus->self;
+> +
+> +		if (!bridge || !bridge->pcie_cap)
+> +			break;
+> +		highest_pcie_bridge = bridge;
+> +		bus = bus->parent;
+> +	}
+> +
+> +	if (!highest_pcie_bridge)
+> +		dev_warn(&dev->dev, "Can't find Root Port\n");
+> +
+> +	return highest_pcie_bridge;
+> +}
+> +EXPORT_SYMBOL(pci_find_root_pcie_port);
+> +
+> +/**
+>   * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
+>   * @dev: the PCI device to operate on
+>   * @pos: config space offset of status word
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 6a30252..f860956 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3692,6 +3692,62 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(0x1797, 0x6869, PCI_CLASS_NOT_DEFINED, 8,
+>  			      quirk_tw686x_class);
+>  
+>  /*
+> + * Some devices violate the PCI Specification regarding echoing the Root
+> + * Port Transaction Layer Packet Request (TLP) No Snoop and Relaxed
+> + * Ordering Attributes into the TLP Response.  The PCI Specification
+> + * "encourages" compliant Root Port implementation to drop such malformed
+> + * TLP Responses leading to device access timeouts.  Many Root Port
+> + * implementations accept such malformed TLP Responses and a few more strict
+> + * implementations do drop them.
+> + *
+> + * For devices which fail this part of the PCI Specification, we need to
+> + * traverse up the PCI Chain to the Root Port and turn off the Enable No
+> + * Snoop and Enable Relaxed Ordering bits in the Root Port's PCI-Express
+> + * Device Control register.  This does affect all other devices which are
+> + * downstream of that Root Port but since No Snoop and Relaxed ordering are
+> + * "Performance Hints," we're okay with that ...
+> + *
+> + * Note that Configuration Space accesses are never supposed to have TLP
+> + * Attributes, so we're safe waiting till after any Configuration Space
+> + * accesses to do the Root Port "fixup" ...
+> + */
+> +static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *root_port = pci_find_root_pcie_port(pdev);
+> +
+> +	if (!root_port) {
+> +		dev_warn(&pdev->dev, "Can't find Root Port to disable No Snoop/Relaxed Ordering\n");
+> +		return;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "Disabling No Snoop/Relaxed Ordering on Root Port %s\n",
+> +		 dev_name(&root_port->dev));
+> +	pcie_capability_clear_and_set_word(root_port,
+> +					   PCI_EXP_DEVCTL,
+> +					   PCI_EXP_DEVCTL_RELAX_EN |
+> +					   PCI_EXP_DEVCTL_NOSNOOP_EN,
+> +					   0);
+> +}
+> +
+> +/*
+> + * The Chelsio T5 chip fails to return the Root Port's TLP Attributes in
+> + * its TLP responses to the Root Port.
+> + */
+> +static void quirk_chelsio_T5_disable_root_port_attributes(struct pci_dev *pdev)
+> +{
+> +	/*
+> +	 * This mask/compare operation selects for Physical Function 4 on a
+> +	 * T5.  We only need to fix up the Root Port once for any of the
+> +	 * PFs.  PF[0..3] have PCI Device IDs of 0x50xx, but PF4 is uniquely
+> +	 * 0x54xx so we use that one,
+> +	 */
+> +	if ((pdev->device & 0xff00) == 0x5400)
+> +		quirk_disable_root_port_attributes(pdev);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> +			 quirk_chelsio_T5_disable_root_port_attributes);
+> +
+> +/*
+>   * AMD has indicated that the devices below do not support peer-to-peer
+>   * in any system where they are found in the southbridge with an AMD
+>   * IOMMU in the system.  Multifunction devices that do not support
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e90eb22..5b4d7cc 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -820,6 +820,7 @@ void pci_bus_add_device(struct pci_dev *dev);
+>  void pci_read_bridge_bases(struct pci_bus *child);
+>  struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+>  					  struct resource *res);
+> +struct pci_dev *pci_find_root_pcie_port(const struct pci_dev *dev);
+>  u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
+>  int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
+>  u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
+> -- 
+> 2.3.4
 > 
-> Thanks,
-> 
-> Lukas
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
