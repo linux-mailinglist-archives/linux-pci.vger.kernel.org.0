@@ -2,217 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 705C13FE56C
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Sep 2021 00:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3B43FE58C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Sep 2021 00:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234983AbhIAWYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 18:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42706 "EHLO mail.kernel.org"
+        id S245031AbhIAWmy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 18:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233632AbhIAWYw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 18:24:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D58260F6C;
-        Wed,  1 Sep 2021 22:23:54 +0000 (UTC)
+        id S244935AbhIAWmx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Sep 2021 18:42:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DEBD961074;
+        Wed,  1 Sep 2021 22:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630535034;
-        bh=et0pqefooHZt84DSm1+89qLmXn83NjdrBVAloK6cwGU=;
+        s=k20201202; t=1630536116;
+        bh=77MmJsqsUPuSG3h/bnm06TfCwbXA3EPH83b89+5uW2U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oqpX7Pa2hJLFiGXzeVgn41RqJLno4uoJd1cbJCyumKhXM440OIKvXtnsTB7YYnTX/
-         UxzZglFrdb43vSqkgowjx0PX9Im/dvdPQ3G4HH5XBzmtRgMOZRVQO938+jOFKQccqj
-         mlRhKf06kxftg1DeJZZVED3aBTnapwmnJ3rtO8oewMtEPJbM65IorQXp/Gt2Hu9eD4
-         CTUePzR3FY+LLiS/UJgC9NZrtVPJ1fsjjyqCXV/1cy8P6LWHvorAytBlNOkIHLcUSg
-         C2DbGG5N24FDPHxXSh0RijTa+Jo93MK0KxmpMkRbLnbcxSZuy/SfdAgxpmrmgoJ2Ta
-         OYkCrCUeSUadQ==
-Date:   Wed, 1 Sep 2021 17:23:53 -0500
+        b=dHI0LJk+dZT0xgWylN+Z8LTmxrxVvhsu0AbsTFI7fFAlwazcnAWHy6vN63t6/8G6c
+         6pNDmTea8P8WSmcE6dm4GzpzKaX+YuurwHH3n21y8rpPqjwEoYgryadtOXQ46igxyl
+         vMS6XZbd2QnXfO6fEO/+qFxx+/C17apOvMES3/lEsPvF97YsPcySswuUHM18DYnOJ0
+         klE0Tryzru9qi8FjpcsIzq6SqRcvZ/t8Zs4NyGiICuGcC7X3ZkZXLUzmnxPh1rJcps
+         ET0d6/6X8y6u27fA6zNy/1qCMZ9uiMM6RWQO8xE5CJ1e+rP2cUEMl5sAlBn0iYFNky
+         kvwUDj9VMLUtA==
+Date:   Wed, 1 Sep 2021 17:41:54 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hariprasad Shenai <hariprasad@chelsio.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, leedom@chelsio.com,
-        nirranjan@chelsio.com
-Subject: Re: [PATCH] pci: Add pci quirk to turnoff Nosnoop and Relaxed
- Ordering
-Message-ID: <20210901222353.GA251391@bjorn-Precision-5520>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
+Message-ID: <20210901224154.GA230445@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1445178304-14855-1-git-send-email-hariprasad@chelsio.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f293c619399ba8bd60240879a20ee34db1248255.camel@sipsolutions.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 18, 2015 at 07:55:04PM +0530, Hariprasad Shenai wrote:
-> Some devices violate the PCI Specification regarding echoing the Root
-> Port Transaction Layer Packet Request (TLP) No Snoop and Relaxed
-> Ordering Attributes into the TLP Response. The PCI Specification
-> "encourages" compliant Root Port implementation to drop such
-> malformed TLP Responses leading to device access timeouts. Many Root Port
-> implementations accept such malformed TLP Responses and a few more
-> strict implementations do drop them.
+On Wed, Sep 01, 2021 at 07:07:58PM +0200, Johannes Berg wrote:
+> On Wed, 2021-09-01 at 18:51 +0200, Heiner Kallweit wrote:
+> > On 01.09.2021 17:51, Pali Roh·r wrote:
+> > > On Wednesday 01 September 2021 16:01:54 Jonas Dreﬂler wrote:
+> > > > On 8/30/21 2:49 PM, Andy Shevchenko wrote:
+> > > > > On Mon, Aug 30, 2021 at 3:38 PM Jonas Dreﬂler <verdre@v0yd.nl> wrote:
+> > > > > > 
+> > > > > > On the 88W8897 card it's very important the TX ring write pointer is
+> > > > > > updated correctly to its new value before setting the TX ready
+> > > > > > interrupt, otherwise the firmware appears to crash (probably because
+> > > > > > it's trying to DMA-read from the wrong place).
+> > > > > > 
+> > 
+> > This sounds somehow like the typical case where you write DMA descriptors
+> > and then ring the doorbell. This normally requires a dma_wmb().
+> > Maybe something like that is missing here?
 > 
-> For devices which fail this part of the PCI Specification, we need to
-> traverse up the PCI Chain to the Root Port and turn off the Enable No
-> Snoop and Enable Relaxed Ordering bits in the Root Port's PCI-Express
-> Device Control register. This does affect all other devices which
-> are downstream of that Root Port.
-
-While researching another thread about RO [1], I got concerned about
-setting RO for root ports.
-
-Setting RO for *endpoints* makes sense: that allows (but does not
-require) the endpoint to issue writes that don't require strong
-ordering.
-
-Setting RO for *root ports* seems more problematic.  It allows the
-root port to issue PCIe writes that don't require strong ordering.
-These would be CPU MMIO writes to devices.  But Linux currently does
-not have a way for drivers to indicate that some MMIO writes need to
-be ordered while others do not, and I think drivers assume that all
-MMIO writes are performed in order.
-
-I don't think Linux ever enables RO in Root Ports, but this patch
-suggests that firmware might enable it.  I don't understand how that
-could *ever* be safe, unless we had some mechanism like a separate
-MMIO window that generated writes with relaxed ordering.
-
-Did you trip over firmware that enables RO, or is this a preventive
-thing in case firmware or Linux ever *did* enable RO in the Root Port?
-
-[1] https://lore.kernel.org/r/20210830123704.221494-2-verdre@v0yd.nl
-
-> Note that Configuration Space accesses are never supposed to have TLP
-> Attributes, so we're safe waiting till after any Configuration Space
-> accesses to do the Root Port "fixup".
+> But it looks like this "TX ring write pointer" is actually the register?
 > 
-> Based on original work by Casey Leedom <leedom@chelsio.com>
+> However, I would agree that doing it in mwifiex_write_reg() is possibly
+> too big a hammer - could be done only for reg->tx_wrptr, not all the
+> registers?
 > 
-> Signed-off-by: Hariprasad Shenai <hariprasad@chelsio.com>
-> ---
->  drivers/pci/pci.c    | 28 ++++++++++++++++++++++++++
->  drivers/pci/quirks.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h  |  1 +
->  3 files changed, 85 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6a9a111..3ce202b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -458,6 +458,34 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
->  EXPORT_SYMBOL(pci_find_parent_resource);
->  
->  /**
-> + * pci_find_root_pcie_port - return PCI-E Root Port
-> + * @dev: PCI device to query
-> + *
-> + * Traverses up the parent chain and return the PCI-E Root Port PCI Device
-> + * for a given PCI Device.
-> + */
-> +struct pci_dev *pci_find_root_pcie_port(const struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct pci_dev *highest_pcie_bridge = NULL;
-> +
-> +	while (bus) {
-> +		struct pci_dev *bridge = bus->self;
-> +
-> +		if (!bridge || !bridge->pcie_cap)
-> +			break;
-> +		highest_pcie_bridge = bridge;
-> +		bus = bus->parent;
-> +	}
-> +
-> +	if (!highest_pcie_bridge)
-> +		dev_warn(&dev->dev, "Can't find Root Port\n");
-> +
-> +	return highest_pcie_bridge;
-> +}
-> +EXPORT_SYMBOL(pci_find_root_pcie_port);
-> +
-> +/**
->   * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
->   * @dev: the PCI device to operate on
->   * @pos: config space offset of status word
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 6a30252..f860956 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3692,6 +3692,62 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(0x1797, 0x6869, PCI_CLASS_NOT_DEFINED, 8,
->  			      quirk_tw686x_class);
->  
->  /*
-> + * Some devices violate the PCI Specification regarding echoing the Root
-> + * Port Transaction Layer Packet Request (TLP) No Snoop and Relaxed
-> + * Ordering Attributes into the TLP Response.  The PCI Specification
-> + * "encourages" compliant Root Port implementation to drop such malformed
-> + * TLP Responses leading to device access timeouts.  Many Root Port
-> + * implementations accept such malformed TLP Responses and a few more strict
-> + * implementations do drop them.
-> + *
-> + * For devices which fail this part of the PCI Specification, we need to
-> + * traverse up the PCI Chain to the Root Port and turn off the Enable No
-> + * Snoop and Enable Relaxed Ordering bits in the Root Port's PCI-Express
-> + * Device Control register.  This does affect all other devices which are
-> + * downstream of that Root Port but since No Snoop and Relaxed ordering are
-> + * "Performance Hints," we're okay with that ...
-> + *
-> + * Note that Configuration Space accesses are never supposed to have TLP
-> + * Attributes, so we're safe waiting till after any Configuration Space
-> + * accesses to do the Root Port "fixup" ...
-> + */
-> +static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *root_port = pci_find_root_pcie_port(pdev);
-> +
-> +	if (!root_port) {
-> +		dev_warn(&pdev->dev, "Can't find Root Port to disable No Snoop/Relaxed Ordering\n");
-> +		return;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "Disabling No Snoop/Relaxed Ordering on Root Port %s\n",
-> +		 dev_name(&root_port->dev));
-> +	pcie_capability_clear_and_set_word(root_port,
-> +					   PCI_EXP_DEVCTL,
-> +					   PCI_EXP_DEVCTL_RELAX_EN |
-> +					   PCI_EXP_DEVCTL_NOSNOOP_EN,
-> +					   0);
-> +}
-> +
-> +/*
-> + * The Chelsio T5 chip fails to return the Root Port's TLP Attributes in
-> + * its TLP responses to the Root Port.
-> + */
-> +static void quirk_chelsio_T5_disable_root_port_attributes(struct pci_dev *pdev)
-> +{
-> +	/*
-> +	 * This mask/compare operation selects for Physical Function 4 on a
-> +	 * T5.  We only need to fix up the Root Port once for any of the
-> +	 * PFs.  PF[0..3] have PCI Device IDs of 0x50xx, but PF4 is uniquely
-> +	 * 0x54xx so we use that one,
-> +	 */
-> +	if ((pdev->device & 0xff00) == 0x5400)
-> +		quirk_disable_root_port_attributes(pdev);
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> +			 quirk_chelsio_T5_disable_root_port_attributes);
-> +
-> +/*
->   * AMD has indicated that the devices below do not support peer-to-peer
->   * in any system where they are found in the southbridge with an AMD
->   * IOMMU in the system.  Multifunction devices that do not support
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index e90eb22..5b4d7cc 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -820,6 +820,7 @@ void pci_bus_add_device(struct pci_dev *dev);
->  void pci_read_bridge_bases(struct pci_bus *child);
->  struct resource *pci_find_parent_resource(const struct pci_dev *dev,
->  					  struct resource *res);
-> +struct pci_dev *pci_find_root_pcie_port(const struct pci_dev *dev);
->  u8 pci_swizzle_interrupt_pin(const struct pci_dev *dev, u8 pin);
->  int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
->  u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
-> -- 
-> 2.3.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Actually, can two writes actually cross on PCI?
+
+Per PCIe r5.0, sec 2.4.1,
+
+  A2a  A Posted Request must not pass another Posted Request unless A2b
+       applies.
+
+  A2b  A Posted Request with RO Set is permitted to pass another
+       Posted Request.  A Posted Request with IDO Set is permitted to
+       pass another Posted Request if the two Requester IDs are
+       different or if both Requests contain a PASID TLP Prefix and
+       the two PASID values are different.
+
+A few drivers enable RO (Relaxed Ordering) for their devices, which
+means the *device* is permitted to set the RO bit in transactions it
+initiates.
+
+BUt IIUC we're talking about MMIO writes initiated by a CPU, and they
+won't have the RO bit set unless the Root Port has Relaxed Ordering
+enabled, and Linux generally does not enable that.  So A2a should
+apply, and writes should be ordered on PCI.
+
+There are a few wrinkles that I worry about:
+
+  d1e714db8129 ("mtip32xx: Fix ERO and NoSnoop values in PCIe upstream
+  on AMD systems") [1] turns off RO for some AMD Root Ports, which
+  makes me think BIOS might be enabling RO in these Root Ports.
+
+  c56d4450eb68 ("PCI: Turn off Request Attributes to avoid Chelsio T5
+  Completion erratum") [2] turns off RO for all Root Ports leading to
+  Chelsio T5 devices, which again makes me think there's firmware that
+  enables RO in Root Ports.  Follow-up [3].
+
+  77ffc1465cec ("tegra: add PCI Express support") [4] (see
+  tegra_pcie_relax_enable()) enables RO for Tegra Root Ports due to
+  some hardware issue.  I don't whether these Root Ports every
+  actually *set* RO in the PCIe transactions they generate.  Follow-up
+  [5].
+
+These concern me because I don't think we have a way for drivers to
+specify whether their writes should use strong ordering or relaxed
+ordering, and I think they depend on strong ordering.  If Root Ports
+have RO enabled, I think we are at risk, so I suspect Linux should
+actively *disable* RO for Root Ports.
+
+[1] https://git.kernel.org/linus/d1e714db8129
+[2] https://git.kernel.org/linus/c56d4450eb68
+[3] https://lore.kernel.org/r/20210901222353.GA251391@bjorn-Precision-5520
+[4] https://git.kernel.org/linus/77ffc1465cec
+[5] https://lore.kernel.org/r/20210901204045.GA236987@bjorn-Precision-5520
