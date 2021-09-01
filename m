@@ -2,93 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF373FE0E9
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 19:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 237233FE216
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 20:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235197AbhIARJP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 13:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38530 "EHLO
+        id S1344999AbhIASMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 14:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232491AbhIARJP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 13:09:15 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E4FC061575;
-        Wed,  1 Sep 2021 10:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=/eEATaSgxKUQuEI/VyWcCLd2zs8bwbYE3icsNkYYsmw=;
-        t=1630516098; x=1631725698; b=RtAtVXaduob7xiT7IHVqDf4yVm7hZDPfHF61IRzyCKEwmJX
-        mSK8vDdF7RHjaN0vmn/QjTZnro8PJfs3ruUBvowAJZ5Vo4AC4CQWoITgxNG1Gu45dSv5x1n/B6s5b
-        wnEa1PGC2XikPYykvpU1K79Z0UAeRNA5BIM8KuTxP8mgPn5YOar0Q+3bNG62yZOMF8uFvNSxL2Qe6
-        xTgYsnDsI9IKwEMoasdU1/l6SxvAdyZ5oh3Xckr9PXuhDvUEDt+WcjfHU9HkcluFjti2Q/C8sZokH
-        QRKOw4aWovo4GQmc1HNP3Y/LaU3OOtWD4jJsv2QpmrDMOjgLA01Bj0Fq/lv/0blA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1mLTiS-001Fyv-Ur; Wed, 01 Sep 2021 19:08:01 +0200
-Message-ID: <f293c619399ba8bd60240879a20ee34db1248255.camel@sipsolutions.net>
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Jonas =?ISO-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed, 01 Sep 2021 19:07:58 +0200
-In-Reply-To: <985049b8-bad7-6f18-c94f-368059dd6f95@gmail.com>
-References: <20210830123704.221494-1-verdre@v0yd.nl>
-         <20210830123704.221494-2-verdre@v0yd.nl>
-         <CAHp75VeAKs=nFw4E20etKc3C_Cszyz9AqN=mLsum7F-BdVK5Rg@mail.gmail.com>
-         <7e38931e-2f1c-066e-088e-b27b56c1245c@v0yd.nl>
-         <20210901155110.xgje2qrtq65loawh@pali>
-         <985049b8-bad7-6f18-c94f-368059dd6f95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        with ESMTP id S1346803AbhIASMU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 14:12:20 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48691C0612AF
+        for <linux-pci@vger.kernel.org>; Wed,  1 Sep 2021 11:11:22 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id dt3so311357qvb.6
+        for <linux-pci@vger.kernel.org>; Wed, 01 Sep 2021 11:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
+         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
+         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
+         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
+         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
+         0RlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=FKJ3htoYTcrAV+QyueJD093iwmvuctHIvdvF7j0JVJM2AaxAaifkvWuj/OADG5jGkt
+         VY2uAleRvfKtUTMmJveSFFQnXYqI1fK4BpRg+tG6RRlv8QWrEV+oD190OBW5BB8zGfLK
+         sWmcD4Tz8zQVEHcy7wT3sIJBNgB/j/Yw26pjNG/Mmh428EaEFiQbs5BYhzlHczfmMD9d
+         k5ILAY55uRCaQsEc4K+7DR2+ZVS+CWHfnQUtYz1geZX3E9m4IyFlkMqsLthps9dfFFK6
+         L21v5ZlkZhtUUVz5HPZW7glR9Bo9FbX+6pyhhNkGQhZjfHBvsa53hoHrbJNqpXsBHCp8
+         QamA==
+X-Gm-Message-State: AOAM533AGz7L/kvLilojZdW4kMvMom7+A4y6ngk29fkH5NrJqo1BBEez
+        PTeDYibJlKuyPTJGuB6iJ9rs3UYKv7h2OaDcdcHsQSUdfPhp1Q==
+X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
+X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
+ Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-malware-bazaar: not-scanned
+Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
+From:   CorisBank International <corisbankintlbf@gmail.com>
+Date:   Wed, 1 Sep 2021 11:11:10 -0700
+Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
+Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2021-09-01 at 18:51 +0200, Heiner Kallweit wrote:
-> On 01.09.2021 17:51, Pali Rohár wrote:
-> > On Wednesday 01 September 2021 16:01:54 Jonas Dreßler wrote:
-> > > On 8/30/21 2:49 PM, Andy Shevchenko wrote:
-> > > > On Mon, Aug 30, 2021 at 3:38 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
-> > > > > 
-> > > > > On the 88W8897 card it's very important the TX ring write pointer is
-> > > > > updated correctly to its new value before setting the TX ready
-> > > > > interrupt, otherwise the firmware appears to crash (probably because
-> > > > > it's trying to DMA-read from the wrong place).
-> > > > > 
-> 
-> This sounds somehow like the typical case where you write DMA descriptors
-> and then ring the doorbell. This normally requires a dma_wmb().
-> Maybe something like that is missing here?
+Att: Client
 
-But it looks like this "TX ring write pointer" is actually the register?
 
-However, I would agree that doing it in mwifiex_write_reg() is possibly
-too big a hammer - could be done only for reg->tx_wrptr, not all the
-registers?
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
 
-Actually, can two writes actually cross on PCI?
+Notification / Notification/ Notification
 
-johannes
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Rose Banneth the COVID.19 victim to
+transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
+transfer her fund in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
 
+Name, Country, Address, occupations, Age, Telephone number, account
+Details so that we can immediately forward to the World Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
+
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
+
+Sincerely,
+
+----
+
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 163 37
+financial_bf_info@accountant.com
