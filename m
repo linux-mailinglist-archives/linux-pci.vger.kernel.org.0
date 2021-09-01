@@ -2,223 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D0CE3FD2C9
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 07:17:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EF093FD33C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 07:48:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbhIAFRL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 01:17:11 -0400
-Received: from mx.socionext.com ([202.248.49.38]:39598 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241949AbhIAFRJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 01:17:09 -0400
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 01 Sep 2021 14:16:12 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id C74A22022042;
-        Wed,  1 Sep 2021 14:16:12 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Sep 2021 14:16:12 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 2C317B62B7;
-        Wed,  1 Sep 2021 14:16:12 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Om Prakash Singh <omp@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 2/2] PCI: designware-ep: Fix the access to DBI/iATU registers before enabling controller
-Date:   Wed,  1 Sep 2021 14:16:01 +0900
-Message-Id: <1630473361-27198-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1630473361-27198-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1630473361-27198-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S242156AbhIAFti (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 01:49:38 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:56331 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242161AbhIAFtW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 01:49:22 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id D7DE82801E519;
+        Wed,  1 Sep 2021 07:48:18 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id CBDEBFDCD6; Wed,  1 Sep 2021 07:48:18 +0200 (CEST)
+Date:   Wed, 1 Sep 2021 07:48:18 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     stuart hayes <stuart.w.hayes@gmail.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/portdrv: Use link bandwidth notification
+ capability bit
+Message-ID: <20210901054818.GA7877@wunner.de>
+References: <9e31bae7-d7c7-d40a-9782-c59dcaf83798@gmail.com>
+ <20210831215801.GA152955@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210831215801.GA152955@bjorn-Precision-5520>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver using core_init_notifier, e.g. pcie-tegra194.c, runs according
-to the following sequence:
+On Tue, Aug 31, 2021 at 04:58:01PM -0500, Bjorn Helgaas wrote:
+> I just think it's
+> conceivable that one might *want* portdrv to not claim an intermediate
+> switch like that.
 
-    probe()
-        dw_pcie_ep_init()
+It's possible to manually unbind portdrv from the device via sysfs
+(because portdrv is a driver).  In that case the port will not restore
+config space upon an error-induced reset and any devices downstream
+of the port will be inaccessible after the reset.
 
-    bind()
-        dw_pcie_ep_start()
-            enable_irq()
+That's the only possible way to screw this up I think.
+And it requires deliberate, manual action.  One *could* argue that's
+not correct and the kernel shouldn't allow the incorrect behavior
+in the first place.  The behavior follows from portdrv being a driver,
+instead of its functionality being baked into the PCI core.
 
-    (interrupt occurred)
-    handler()
-        [enable controller]
-        dw_pcie_ep_init_complete()
-        dw_pcie_ep_init_notify()
 
-After receiving an interrupt from RC, the handler enables the controller
-and the controller registers can be accessed.
-So accessing the registers should do in dw_pcie_ep_init_complete().
+> Or maybe you don't have portdrv configured at all.  Do we still
+> save/restore config space for suspend/resume of the switch?
 
-Currently dw_pcie_ep_init() has functions dw_iatu_detect() and
-dw_pcie_ep_find_capability() that include accesses to DWC registers.
-As a result, accessing the registers before enabling the controller,
-the access will fail.
+We do, because the PCI core takes care of that.  E.g. on resume
+from system sleep:
 
-The function dw_pcie_ep_init() shouldn't have any access to DWC registers
-if the controller is enabled after calling bind(). This moves access codes
-to DBI/iATU registers and depending variables from dw_pcie_ep_init() to
-dw_pcie_ep_init_complete().
+  pci_pm_resume_noirq()
+    pci_pm_default_resume_early()
+      pci_restore_state()
 
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>
-Fixes: 6bfc9c3a2c70 ("PCI: designware-ep: Move the function of getting MSI capability forward")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Om Prakash Singh <omp@nvidia.com>
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 81 +++++++++++++------------
- 1 file changed, 41 insertions(+), 40 deletions(-)
+However after an error-induced reset, it's the job of the device
+driver's ->slot_reset() callback to restore config space.
+That's a design decision that was made back in 2005 when EEH
+was introduced.  See Documentation/PCI/pci-error-recovery.rst:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 998b698..00ce83c 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -636,16 +636,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct dw_pcie_ep_func *ep_func;
-+	struct device *dev = pci->dev;
- 	unsigned int offset;
- 	unsigned int nbars;
- 	u8 hdr_type;
-+	u8 func_no;
-+	void *addr;
- 	u32 reg;
- 	int i;
- 
-+	dw_pcie_iatu_detect(pci);
-+
-+	ep->ib_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ib_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ob_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
-+
-+	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-+			    GFP_KERNEL);
-+	if (!addr)
-+		return -ENOMEM;
-+	ep->outbound_addr = addr;
-+
-+	for (func_no = 0; func_no < ep->epc->max_functions; func_no++) {
-+		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-+		if (!ep_func)
-+			return -ENOMEM;
-+
-+		ep_func->func_no = func_no;
-+		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-+							      PCI_CAP_ID_MSI);
-+		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-+							       PCI_CAP_ID_MSIX);
-+
-+		list_add_tail(&ep_func->list, &ep->func_list);
-+	}
-+
- 	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
- 		   PCI_HEADER_TYPE_MASK;
- 	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
--		dev_err(pci->dev,
-+		dev_err(dev,
- 			"PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
- 			hdr_type);
- 		return -EIO;
-@@ -674,8 +714,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
- 	int ret;
--	void *addr;
--	u8 func_no;
- 	struct resource *res;
- 	struct pci_epc *epc;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-@@ -683,7 +721,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *np = dev->of_node;
- 	const struct pci_epc_features *epc_features;
--	struct dw_pcie_ep_func *ep_func;
- 
- 	INIT_LIST_HEAD(&ep->func_list);
- 
-@@ -705,8 +742,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		}
- 	}
- 
--	dw_pcie_iatu_detect(pci);
--
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
- 	if (!res)
- 		return -EINVAL;
-@@ -714,26 +749,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
--	ep->ib_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ib_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ib_window_map)
--		return -ENOMEM;
--
--	ep->ob_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ob_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ob_window_map)
--		return -ENOMEM;
--
--	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
--			    GFP_KERNEL);
--	if (!addr)
--		return -ENOMEM;
--	ep->outbound_addr = addr;
--
- 	if (pci->link_gen < 1)
- 		pci->link_gen = of_pci_get_max_link_speed(np);
- 
-@@ -750,20 +765,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	if (ret < 0)
- 		epc->max_functions = 1;
- 
--	for (func_no = 0; func_no < epc->max_functions; func_no++) {
--		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
--		if (!ep_func)
--			return -ENOMEM;
--
--		ep_func->func_no = func_no;
--		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
--							      PCI_CAP_ID_MSI);
--		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
--							       PCI_CAP_ID_MSIX);
--
--		list_add_tail(&ep_func->list, &ep->func_list);
--	}
--
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
- 
--- 
-2.7.4
+  It is important for the platform to restore the PCI config space
+  to the "fresh poweron" state, rather than the "last state". After
+  a slot reset, the device driver will almost always use its standard
+  device initialization routines, and an unusual config space setup
+  may result in hung devices, kernel panics, or silent data corruption.
 
+I guess it would be possible to perform certain tasks such as
+pci_restore_state() centrally in report_slot_reset() instead
+(in drivers/pci/pcie/err.c) and alleviate each driver from doing that.
+
+One has to bear in mind though that a device may require specific
+steps before pci_restore_state() is called.  E.g. in the case of portdrv,
+spurious hotplug DLLSC events need to be acknowledged first:
+
+https://patchwork.ozlabs.org/project/linux-pci/patch/251f4edcc04c14f873ff1c967bc686169cd07d2d.1627638184.git.lukas@wunner.de/
+
+
+If portdrv isn't configured at all, AER and DPC support cannot be
+configured either (because they depend on PCIEPORTBUS), and it's the
+reset performed by AER or DPC which necessitates calling pci_restore_state().
+
+If a port supports none of portdrv's services, portdrv still binds to
+the port and is thus able to restore config space if a reset is performed
+at a port further upstream.  That's because of ...
+
+	if (!capabilities)
+		return 0;
+
+... in pcie_port_device_register().  So that should be working correctly.
+
+Thanks,
+
+Lukas
