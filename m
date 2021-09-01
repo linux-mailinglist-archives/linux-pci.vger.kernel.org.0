@@ -2,122 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EADD3FD74D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 11:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A5BF3FD840
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 12:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbhIAJ7d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 05:59:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:35330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229662AbhIAJ7c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Sep 2021 05:59:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 176E61042;
-        Wed,  1 Sep 2021 02:58:36 -0700 (PDT)
-Received: from [10.57.15.112] (unknown [10.57.15.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5AC3F766;
-        Wed,  1 Sep 2021 02:58:34 -0700 (PDT)
-Subject: Re: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating PCI
- devices
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Wang Xingang <wangxingang5@huawei.com>, robh@kernel.org,
-        will@kernel.org, joro@8bytes.org, helgaas@kernel.org
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, xieyingtai@huawei.com,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1621566204-37456-1-git-send-email-wangxingang5@huawei.com>
- <CGME20210901085937eucas1p2d02da65cac797706ca3a10b8a2eb8ba2@eucas1p2.samsung.com>
- <01314d70-41e6-70f9-e496-84091948701a@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f3087045-1f0e-aa1a-d3f7-9e88bccca925@arm.com>
-Date:   Wed, 1 Sep 2021 10:58:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <01314d70-41e6-70f9-e496-84091948701a@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S238755AbhIAK5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 06:57:39 -0400
+Received: from sibelius.xs4all.nl ([83.163.83.176]:63367 "EHLO
+        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230491AbhIAK5i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Sep 2021 06:57:38 -0400
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id bd1c1a08;
+        Wed, 1 Sep 2021 12:56:38 +0200 (CEST)
+Date:   Wed, 1 Sep 2021 12:56:38 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, alyssa@rosenzweig.io,
+        kettenis@openbsd.org, tglx@linutronix.de, maz@kernel.org,
+        marcan@marcan.st, bhelgaas@google.com, nsaenz@kernel.org,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        jim2101024@gmail.com, daire.mcnamara@microchip.com,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+In-Reply-To: <YS6XpkluSVRIvR6J@robh.at.kernel.org> (message from Rob Herring
+        on Tue, 31 Aug 2021 15:57:10 -0500)
+Subject: Re: [PATCH v4 1/4] dt-bindings: interrupt-controller: Convert MSI
+ controller to json-schema
+References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
+ <20210827171534.62380-2-mark.kettenis@xs4all.nl> <YS6XpkluSVRIvR6J@robh.at.kernel.org>
+Message-ID: <561431434bd7dfb9@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-09-01 09:59, Marek Szyprowski wrote:
-> On 21.05.2021 05:03, Wang Xingang wrote:
->> From: Xingang Wang <wangxingang5@huawei.com>
->>
->> When booting with devicetree, the pci_request_acs() is called after the
->> enumeration and initialization of PCI devices, thus the ACS is not
->> enabled. And ACS should be enabled when IOMMU is detected for the
->> PCI host bridge, so add check for IOMMU before probe of PCI host and call
->> pci_request_acs() to make sure ACS will be enabled when enumerating PCI
->> devices.
->>
->> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
->> configuring IOMMU linkage")
->> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+> Date: Tue, 31 Aug 2021 15:57:10 -0500
+> From: Rob Herring <robh@kernel.org>
 > 
-> This patch landed in linux-next as commit 57a4ab1584e6 ("iommu/of: Fix
-> pci_request_acs() before enumerating PCI devices"). Sadly it breaks PCI
-> operation on ARM Juno R1 board (arch/arm64/boot/dts/arm/juno-r1.dts). It
-> looks that the IOMMU controller is not probed for some reasons:
+> On Fri, Aug 27, 2021 at 07:15:26PM +0200, Mark Kettenis wrote:
+> > From: Mark Kettenis <kettenis@openbsd.org>
+> > 
+> > Split the MSI controller bindings from the MSI binding document
+> > into DT schema format using json-schema.
+> > 
+> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > ---
+> >  .../interrupt-controller/msi-controller.yaml  | 34 +++++++++++++++++++
+> >  .../bindings/pci/brcm,stb-pcie.yaml           |  1 +
+> >  .../bindings/pci/microchip,pcie-host.yaml     |  1 +
+> >  3 files changed, 36 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/msi-controller.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi-controller.yaml b/Documentation/devicetree/bindings/interrupt-controller/msi-controller.yaml
+> > new file mode 100644
+> > index 000000000000..5ed6cd46e2e0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/msi-controller.yaml
+> > @@ -0,0 +1,34 @@
+> > +# SPDX-License-Identifier: BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/msi-controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MSI controller
+> > +
+> > +maintainers:
+> > +  - Marc Zyngier <marc.zyngier@arm.com>
+> > +
+> > +description: |
+> > +  An MSI controller signals interrupts to a CPU when a write is made
+> > +  to an MMIO address by some master. An MSI controller may feature a
+> > +  number of doorbells.
+> > +
+> > +properties:
+> > +  "#msi-cells":
+> > +    description: |
+> > +      The number of cells in an msi-specifier, required if not zero.
+> > +
+> > +      Typically this will encode information related to sideband data,
+> > +      and will not encode doorbells or payloads as these can be
+> > +      configured dynamically.
+> > +
+> > +      The meaning of the msi-specifier is defined by the device tree
+> > +      binding of the specific MSI controller.
 > 
-> # cat /sys/kernel/debug/devices_deferred
-> 2b600000.iommu
+> I'd prefer we limit this to the maximum range. I'd like to know when 
+> someone needs 2 cells (or 3000).
+> 
+> enum: [ 0, 1 ]
+> 
+> Though no one seems to use 0 (making it optional was probably a 
+> mistake...)
+> 
+> > +
+> > +  msi-controller:
+> > +    description:
+> > +      Identifies the node as an MSI controller.
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+> 
+> dependencies:
+>   "#msi-cells": [ msi-controller ]
+> 
+> > +
+> > +additionalProperties: true
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > index b9589a0daa5c..5c67976a8dc2 100644
+> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -88,6 +88,7 @@ required:
+> >  
+> >  allOf:
+> >    - $ref: /schemas/pci/pci-bus.yaml#
+> > +  - $ref: ../interrupt-controller/msi-controller.yaml#
+> 
+> /schemas/interrupt-controller/msi-controller.yaml#
+> 
+> >    - if:
+> >        properties:
+> >          compatible:
+> > diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> > index fb95c276a986..684d9d036f48 100644
+> > --- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> > @@ -11,6 +11,7 @@ maintainers:
+> >  
+> >  allOf:
+> >    - $ref: /schemas/pci/pci-bus.yaml#
+> > +  - $ref: ../interrupt-controller/msi-controller.yaml#
+> >  
+> >  properties:
+> >    compatible:
 
-That IOMMU belongs to the CoreSight debug subsystem and often gets stuck 
-waiting for a power domain (especially if you have a mismatch of 
-SCPI/SCMI expectations between the DT and SCP firmware). Unless you're 
-trying to use CoreSight trace that shouldn't matter.
-
-The PCIe on Juno doesn't support ACS anyway, so I'm puzzled why this 
-should make any difference :/
-
-Robin.
-
-> Reverting this patch on top of current linux-next fixes this issue. If
-> you need more information to debug this issue, just let me know.
-> 
->> ---
->>    drivers/iommu/of_iommu.c | 1 -
->>    drivers/pci/of.c         | 8 +++++++-
->>    2 files changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index a9d2df001149..54a14da242cc 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->>    			.np = master_np,
->>    		};
->>    
->> -		pci_request_acs();
->>    		err = pci_for_each_dma_alias(to_pci_dev(dev),
->>    					     of_pci_iommu_init, &info);
->>    	} else {
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index da5b414d585a..2313c3f848b0 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -581,9 +581,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
->>    
->>    int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
->>    {
->> -	if (!dev->of_node)
->> +	struct device_node *node = dev->of_node;
->> +
->> +	if (!node)
->>    		return 0;
->>    
->> +	/* Detect IOMMU and make sure ACS will be enabled */
->> +	if (of_property_read_bool(node, "iommu-map"))
->> +		pci_request_acs();
->> +
->>    	bridge->swizzle_irq = pci_common_swizzle;
->>    	bridge->map_irq = of_irq_parse_and_map_pci;
->>    
-> 
-> Best regards
-> 
+Thanks Rob.  Makes sense to me, so I made these changes (and fixed
+Marc's mail address) for v5.
