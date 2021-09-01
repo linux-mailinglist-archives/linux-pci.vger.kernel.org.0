@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 904AF3FD603
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 10:55:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F36DF3FD601
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Sep 2021 10:55:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243274AbhIAI4o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Sep 2021 04:56:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:37495 "EHLO mga12.intel.com"
+        id S243277AbhIAI4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Sep 2021 04:56:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4458 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241376AbhIAI4m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S243267AbhIAI4m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 1 Sep 2021 04:56:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10093"; a="198244347"
+X-IronPort-AV: E=McAfee;i="6200,9189,10093"; a="205814732"
 X-IronPort-AV: E=Sophos;i="5.84,368,1620716400"; 
-   d="scan'208";a="198244347"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2021 01:55:45 -0700
+   d="scan'208";a="205814732"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2021 01:55:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,368,1620716400"; 
-   d="scan'208";a="520180575"
+   d="scan'208";a="690493700"
 Received: from lkp-server01.sh.intel.com (HELO 4fbc2b3ce5aa) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Sep 2021 01:55:44 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2021 01:55:44 -0700
 Received: from kbuild by 4fbc2b3ce5aa with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mLM23-0007lP-Kz; Wed, 01 Sep 2021 08:55:43 +0000
-Date:   Wed, 01 Sep 2021 16:55:18 +0800
+        id 1mLM23-0007lN-K0; Wed, 01 Sep 2021 08:55:43 +0000
+Date:   Wed, 01 Sep 2021 16:55:22 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/artpec6] BUILD SUCCESS
- 30492c12d2324e8bc9a35ef3f3c1d92a5bd7753d
-Message-ID: <612f3ff6.1RmtMNZDhcpjnF00%lkp@intel.com>
+Subject: [pci:pci/visconti] BUILD SUCCESS
+ 89761eefc7ad59ebe7d8436a4fe9a1830be9c3b0
+Message-ID: <612f3ffa.q1Bnk4tYa1RHAanf%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/artpec6
-branch HEAD: 30492c12d2324e8bc9a35ef3f3c1d92a5bd7753d  PCI: artpec6: Remove local code block from switch statement
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/visconti
+branch HEAD: 89761eefc7ad59ebe7d8436a4fe9a1830be9c3b0  MAINTAINERS: Add entries for Toshiba Visconti PCIe controller
 
 elapsed time: 720m
 
-configs tested: 166
+configs tested: 148
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -80,17 +80,6 @@ arc                           tb10x_defconfig
 riscv             nommu_k210_sdcard_defconfig
 arc                     nsimosci_hs_defconfig
 arm                        trizeps4_defconfig
-nds32                            alldefconfig
-mips                           ip27_defconfig
-powerpc                 xes_mpc85xx_defconfig
-mips                           jazz_defconfig
-arm                         vf610m4_defconfig
-mips                      maltaaprp_defconfig
-sh                           se7750_defconfig
-powerpc                   lite5200b_defconfig
-arm                            mmp2_defconfig
-arm                             rpc_defconfig
-csky                             alldefconfig
 arc                                 defconfig
 arm                         lpc32xx_defconfig
 powerpc                       eiger_defconfig
@@ -114,17 +103,16 @@ sh                        sh7757lcr_defconfig
 s390                       zfcpdump_defconfig
 powerpc               mpc834x_itxgp_defconfig
 arm                             mxs_defconfig
+arm                             rpc_defconfig
 arc                          axs101_defconfig
 openrisc                         alldefconfig
 mips                           ip32_defconfig
 mips                        bcm63xx_defconfig
-arc                        vdk_hs38_defconfig
-m68k                        mvme16x_defconfig
-sh                               j2_defconfig
-arm                       versatile_defconfig
-sh                            shmin_defconfig
-powerpc                  mpc866_ads_defconfig
 arm                        shmobile_defconfig
+m68k                       m5208evb_defconfig
+xtensa                  audio_kc705_defconfig
+sh                           se7780_defconfig
+powerpc                  mpc866_ads_defconfig
 mips                 decstation_r4k_defconfig
 x86_64                            allnoconfig
 ia64                             allmodconfig
@@ -133,14 +121,14 @@ ia64                             allyesconfig
 m68k                             allmodconfig
 m68k                                defconfig
 m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
 nds32                               defconfig
 nios2                            allyesconfig
 csky                                defconfig
 alpha                               defconfig
 alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
 sh                               allmodconfig
@@ -176,12 +164,6 @@ x86_64               randconfig-a012-20210901
 x86_64               randconfig-a015-20210901
 x86_64               randconfig-a014-20210901
 x86_64               randconfig-a013-20210901
-i386                 randconfig-a012-20210901
-i386                 randconfig-a015-20210901
-i386                 randconfig-a011-20210901
-i386                 randconfig-a013-20210901
-i386                 randconfig-a014-20210901
-i386                 randconfig-a016-20210901
 riscv                    nommu_k210_defconfig
 riscv                    nommu_virt_defconfig
 riscv                             allnoconfig
