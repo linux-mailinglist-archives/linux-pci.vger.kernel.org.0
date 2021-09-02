@@ -2,136 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E734B3FEF21
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Sep 2021 16:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0154D3FEFA9
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Sep 2021 16:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234422AbhIBOIk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Sep 2021 10:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38610 "EHLO mail.kernel.org"
+        id S1345642AbhIBOrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Sep 2021 10:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233793AbhIBOIj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Sep 2021 10:08:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6CD63610D2;
-        Thu,  2 Sep 2021 14:07:40 +0000 (UTC)
+        id S1345450AbhIBOrZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Sep 2021 10:47:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A548860F56;
+        Thu,  2 Sep 2021 14:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630591660;
-        bh=0uyA3zWrJBqd0weQzwpY3d7MB0WhyzhkRJg1uFwE5QU=;
+        s=k20201202; t=1630593987;
+        bh=LAjLVOuLv0GADfr79P6bjh2CHXkMV2kcfrQceNgLgGA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lGAj/66cvBAOYjLcuibikgSw71sXFUfVyijPWXoltptJaiAxGplIdREgBUDn5BTWa
-         2BWVGpk21En5mRMYEleyln73qM2QdBeKc1IvkFRXeoPJ4J4MOsoV67cVjbMiQrAjSj
-         oEtlpnY5PcCKlfolgTQz3nq1uGokO3frf7iISsHz5h7d2d0JXPcrhX0UCHAYbqBAma
-         4vLtKBeQkqPJoXTG0AM8r4sAj/5nnilXlwCoBPejFObJI201QsapWLfIpcTahv0CPM
-         cIdVEMds3DwPBDpoJ2QANc/CW3xFEzKj79atktTFVij9LzLiR4COE0t9QGjQvoeJoK
-         h2XONlv2YpZEw==
-Date:   Thu, 2 Sep 2021 09:07:39 -0500
+        b=qTaPzl2UzDiWc3uDLRhjDiwlZDv7imOhLc0wCpTT3WmFykB2Xsx8hv8cS6bfUofXM
+         0v/Mx1uahiNtoPMKy5az+unICvEMtyfSO1ENK+wBqynePZIL1O0jaKUoJlkLfji4gB
+         1E/CsVVdwJtfy/pY6V3C4Yh5R1LAoEJvc9/FcqwODusnGLX1/Uwba7XM0EI5fD0zCB
+         02gSxCl0FJAEBRvqRCS0qYjP816HfRHW3jt0MDop/SOnCZXBGqZMsWoKr+xtlry5LT
+         liN0eCRD4zunH1KENg2wBEtdJ1D/gEbzsy4xlaLn7ZqPeDyG9iL0uSfBRVS+rUjBac
+         Zm78O8uqoJILg==
+Date:   Thu, 2 Sep 2021 09:46:25 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, treding@nvidia.com,
-        swarren@nvidia.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH V3] PCI: tegra: Enable Relaxed Ordering only for Tegra20
- & Tegra30
-Message-ID: <20210902140739.GA321447@bjorn-Precision-5520>
+To:     Wang Xingang <wangxingang5@huawei.com>
+Cc:     robh@kernel.org, will@kernel.org, joro@8bytes.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, xieyingtai@huawei.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4] iommu/of: Fix pci_request_acs() before enumerating
+ PCI devices
+Message-ID: <20210902144625.GA328403@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210901204045.GA236987@bjorn-Precision-5520>
+In-Reply-To: <20210820195712.GA3342877@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Keith]
+[+cc Marek, Anders, Robin]
 
-On Wed, Sep 01, 2021 at 03:40:47PM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 04, 2019 at 08:34:28PM +0530, Vidya Sagar wrote:
-> > Currently Relaxed Ordering bit in the configuration space is enabled for
-> > all PCIe devices as the quirk uses PCI_ANY_ID for both Vendor-ID and
-> > Device-ID, but, as per the Technical Reference Manual of Tegra20 which is
-> > available at https://developer.nvidia.com/embedded/downloads#?search=tegra%202
-> > in Sec 34.1, it is mentioned that Relaxed Ordering bit needs to be enabled in
-> > its root ports to avoid deadlock in hardware. The same is applicable for
-> > Tegra30 as well though it is not explicitly mentioned in Tegra30 TRM document,
-> > but the same must not be extended to root ports of other Tegra SoCs or
-> > other hosts as the same issue doesn't exist there.
+On Fri, Aug 20, 2021 at 02:57:12PM -0500, Bjorn Helgaas wrote:
+> On Fri, May 21, 2021 at 03:03:24AM +0000, Wang Xingang wrote:
+> > From: Xingang Wang <wangxingang5@huawei.com>
+> > 
+> > When booting with devicetree, the pci_request_acs() is called after the
+> > enumeration and initialization of PCI devices, thus the ACS is not
+> > enabled. And ACS should be enabled when IOMMU is detected for the
+> > PCI host bridge, so add check for IOMMU before probe of PCI host and call
+> > pci_request_acs() to make sure ACS will be enabled when enumerating PCI
+> > devices.
+> > 
+> > Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when
+> > configuring IOMMU linkage")
+> > Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
 > 
-> While researching another thread about RO [1], I got concerned about
-> setting RO for root ports.
-> 
-> Setting RO for *endpoints* makes sense: that allows (but does not
-> require) the endpoint to issue writes that don't require strong
-> ordering.
-> 
-> Setting RO for *root ports* seems more problematic.  It allows the
-> root port to issue PCIe writes that don't require strong ordering.
-> These would be CPU MMIO writes to devices.  But Linux currently does
-> not have a way for drivers to indicate that some MMIO writes need to
-> be ordered while others do not, and I think drivers assume that all
-> MMIO writes are performed in order. 
-> 
-> We merged this patch as 7be142caabc4 ("PCI: tegra: Enable Relaxed
-> Ordering only for Tegra20 & Tegra30") [2], so Tegra20 and Tegra30 root
-> ports are allowed (but again, not required) to set the RO bit for MMIO
-> writes initiated by a CPU.
-> 
-> Because I think drivers *rely* on MMIO writes being strongly ordered,
-> this is a potential problem.  I think we should probably consider
-> explicitly *disabling* RO in all root ports (with exceptions for
-> quirks like this) in case it's set by any firmware.
-> 
-> So the question is, how do Tegra20 and Tegra30 actually work?  Do they
-> ever actually set the RO bit for these MMIO writes?  If so, I think
-> drivers are really at risk, and we probably should log some kind of
-> warning.
+> Applied to pci/virtualization for v5.15, thanks!
 
-Keith reminded me that writel_relaxed() is a way for drivers to
-specify that they don't need strong ordering.  So I think the question
-really is whether Tegra20 and Tegra30 set the RO bit for normal
-writel() writes.  If they set RO for writel_relaxed() writes, that
-should be perfectly fine.
+I dropped this for now, until the problems reported by Marek and
+Anders get sorted out.
 
-> But if Tegra20 and Tegra30 just need "Enable Relaxed Ordering" set as
-> a bug workaround and they never actually initiate PCIe writes with the
-> RO bit set, maybe we should add a comment to that effect, but there
-> should be no actual problem.
-> 
-> [1] https://lore.kernel.org/r/20210830123704.221494-2-verdre@v0yd.nl
-> [2] https://git.kernel.org/linus/7be142caabc4
-> 
-> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > > ---
-> > V3:
-> > * Modified commit message to make it more precise and explicit
+> >  drivers/iommu/of_iommu.c | 1 -
+> >  drivers/pci/of.c         | 8 +++++++-
+> >  2 files changed, 7 insertions(+), 2 deletions(-)
 > > 
-> > V2:
-> > * Modified commit message to include reference to Tegra20 TRM document.
-> > 
-> >  drivers/pci/controller/pci-tegra.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index 9cc03a2549c0..241760aa15bd 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -787,12 +787,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
-> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> > index a9d2df001149..54a14da242cc 100644
+> > --- a/drivers/iommu/of_iommu.c
+> > +++ b/drivers/iommu/of_iommu.c
+> > @@ -205,7 +205,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+> >  			.np = master_np,
+> >  		};
 > >  
-> > -/* Tegra PCIE requires relaxed ordering */
-> > +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
-> >  static void tegra_pcie_relax_enable(struct pci_dev *dev)
-> >  {
-> >  	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
-> >  }
-> > -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+> > -		pci_request_acs();
+> >  		err = pci_for_each_dma_alias(to_pci_dev(dev),
+> >  					     of_pci_iommu_init, &info);
+> >  	} else {
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index da5b414d585a..2313c3f848b0 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -581,9 +581,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
 > >  
-> >  static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
+> >  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
 > >  {
+> > -	if (!dev->of_node)
+> > +	struct device_node *node = dev->of_node;
+> > +
+> > +	if (!node)
+> >  		return 0;
+> >  
+> > +	/* Detect IOMMU and make sure ACS will be enabled */
+> > +	if (of_property_read_bool(node, "iommu-map"))
+> > +		pci_request_acs();
+> > +
+> >  	bridge->swizzle_irq = pci_common_swizzle;
+> >  	bridge->map_irq = of_irq_parse_and_map_pci;
+> >  
 > > -- 
-> > 2.17.1
+> > 2.19.1
 > > 
