@@ -2,132 +2,236 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 404603FF926
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 05:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC24F3FF9A9
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 06:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233734AbhICDlk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Sep 2021 23:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbhICDlj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Sep 2021 23:41:39 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE43C061575
-        for <linux-pci@vger.kernel.org>; Thu,  2 Sep 2021 20:40:40 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id t1so4266264pgv.3
-        for <linux-pci@vger.kernel.org>; Thu, 02 Sep 2021 20:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nathanrossi.com; s=google;
-        h=date:message-id:from:to:cc:subject:content-transfer-encoding
-         :mime-version;
-        bh=U0NNmang+93xJ9CRYg1HjleQnuQby/iUfCmqiHaIqdU=;
-        b=Izl1w15alYScT9KmnBbONV8fQPHmF+slJLCSGeA/43CKxMHKWoGk2FztBYAqHKj6ZN
-         mfk8w7G8fZG0PxGLPJp0eXSEU8g/r/7rlgEy4eMkrk+4pQqxprQhmqtmFG2mVBImgVCX
-         9Z/Up4+5lYSwRneyI9FIJaz2MH2t9KQohx3HfuDXAVc0rWn60mLKD0eALT0Jf3NDv5WL
-         ezmhRA2JI8mB1UDftZhDGFCROZehtCzhv87CekSO4fWbAj0OBHGio59VG2YnXZG+vvCe
-         UXg6hpsq+kiILcEUrgNGZYm+sTkVZPq0Uuq3yD4sAuk3IaYFioel4TuwwihRPJpyo6RM
-         4RFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject
-         :content-transfer-encoding:mime-version;
-        bh=U0NNmang+93xJ9CRYg1HjleQnuQby/iUfCmqiHaIqdU=;
-        b=MpDGFHDEUY67e8wg73+pgKIQT43wIJUrEHZvzW0X3n9ev/1yrDMrkA1rCi/F3d8mT1
-         bR5tTVtQqs2fRY8r+XdFkVjsc0/UiSLC4J6+01FHzEymSo+AdaeThNu7TcpG1gmj5AoS
-         VAfM5/UqhVyqO3MSKLKYDmzWqomdqiAmt/yGg38EEKX5xxDO96L0esAxpC9Ourj3usf/
-         vIf8bESfjP3/CsR49+O4VWI13f9cCjTUnIdlxJtO0wkHGD0ozxJDsIzBaP3lnzrz5ZFU
-         tJ2zWczviBRyLzI1SZKGFnbHpTmpEM4OqlG9zZWo9hg8uazCtgP8mTvKY097o2D6o285
-         CRXA==
-X-Gm-Message-State: AOAM530ydLmnLnu327cPv9yyUEmJ7QWPppZ8KS5HUEWV4GkCc9+9m2Kl
-        xMuv8fZPCIGpKzdrnf0CnvTcZkl5J/ii8fmY
-X-Google-Smtp-Source: ABdhPJzNy8cgtG5tUB+Yv0m0rYtBXMykDJcrqvvMe9MlLfbYhWpR5RcVw7s4j6VqAJixneo8Ty0Dew==
-X-Received: by 2002:a63:111f:: with SMTP id g31mr1684290pgl.80.1630640439455;
-        Thu, 02 Sep 2021 20:40:39 -0700 (PDT)
-Received: from [127.0.1.1] (117-20-69-24.751445.bne.nbn.aussiebb.net. [117.20.69.24])
-        by smtp.gmail.com with UTF8SMTPSA id x189sm325815pfx.30.2021.09.02.20.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Sep 2021 20:40:39 -0700 (PDT)
-Date:   Fri, 03 Sep 2021 03:40:29 +0000
-Message-Id: <20210903034029.306816-1-nathan@nathanrossi.com>
-From:   Nathan Rossi <nathan@nathanrossi.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Nathan Rossi <nathan@nathanrossi.com>,
-        Nathan Rossi <nathan.rossi@digi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Add ACS errata for Pericom PI7C9X2G404 switch
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        id S232024AbhICEoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Sep 2021 00:44:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11715 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229561AbhICEoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 Sep 2021 00:44:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10095"; a="280340506"
+X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
+   d="scan'208";a="280340506"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 21:43:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
+   d="scan'208";a="691819916"
+Received: from lkp-server01.sh.intel.com (HELO 2115029a3e5c) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2021 21:43:03 -0700
+Received: from kbuild by 2115029a3e5c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mM12c-00005B-Bm; Fri, 03 Sep 2021 04:43:02 +0000
+Date:   Fri, 03 Sep 2021 12:42:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/misc] BUILD SUCCESS
+ 0da14a19493da0f9b4c5ee5930ab05a4c61f5883
+Message-ID: <6131a7bf.l18qWQnYk+XzPGCj%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nathan Rossi <nathan.rossi@digi.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: 0da14a19493da0f9b4c5ee5930ab05a4c61f5883  x86/PCI: sta2x11: switch from 'pci_' to 'dma_' API
 
-The Pericom PI7C9X2G404 PCIe switch has an errata for ACS P2P Request
-Redirect behaviour when used in the cut-through forwarding mode. The
-recommended work around for this issue is to use the switch in store and
-forward mode.
+elapsed time: 721m
 
-This change adds a fixup specific to this switch that when enabling the
-downstream port it checks if it has enabled ACS P2P Request Redirect,
-and if so changes the device (via the upstream port) to use the store
-and forward operating mode.
+configs tested: 177
+configs skipped: 4
 
-Signed-off-by: Nathan Rossi <nathan.rossi@digi.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+i386                 randconfig-c001-20210903
+i386                 randconfig-c001-20210902
+arm                         shannon_defconfig
+powerpc                    mvme5100_defconfig
+powerpc                       ppc64_defconfig
+m68k                        m5272c3_defconfig
+xtensa                              defconfig
+um                                  defconfig
+arc                          axs101_defconfig
+powerpc                   motionpro_defconfig
+mips                          malta_defconfig
+mips                          ath25_defconfig
+mips                      fuloong2e_defconfig
+s390                             alldefconfig
+powerpc                       eiger_defconfig
+sh                        dreamcast_defconfig
+arm                           viper_defconfig
+powerpc                  mpc885_ads_defconfig
+sh                      rts7751r2d1_defconfig
+ia64                        generic_defconfig
+mips                         mpc30x_defconfig
+sh                           se7343_defconfig
+arm                          ixp4xx_defconfig
+mips                        maltaup_defconfig
+powerpc                     pseries_defconfig
+arm                        multi_v5_defconfig
+arm                            xcep_defconfig
+powerpc                   microwatt_defconfig
+arm                       multi_v4t_defconfig
+sh                            hp6xx_defconfig
+powerpc                         ps3_defconfig
+powerpc                      pcm030_defconfig
+sh                           se7751_defconfig
+mips                        jmr3927_defconfig
+powerpc                      pasemi_defconfig
+powerpc                      obs600_defconfig
+arm                           sama7_defconfig
+h8300                            alldefconfig
+nios2                            alldefconfig
+arm                           corgi_defconfig
+arm                         assabet_defconfig
+arm                           tegra_defconfig
+arm                        trizeps4_defconfig
+m68k                        m5307c3_defconfig
+arm                            lart_defconfig
+sh                   secureedge5410_defconfig
+powerpc                     mpc83xx_defconfig
+xtensa                       common_defconfig
+m68k                        stmark2_defconfig
+sh                   sh7770_generic_defconfig
+arm                         lpc32xx_defconfig
+arm                     davinci_all_defconfig
+mips                           gcw0_defconfig
+sh                           se7724_defconfig
+arm                          pcm027_defconfig
+nds32                               defconfig
+arm                          collie_defconfig
+arm                         socfpga_defconfig
+m68k                       m5475evb_defconfig
+riscv                            alldefconfig
+i386                             alldefconfig
+arm                       aspeed_g5_defconfig
+m68k                       m5275evb_defconfig
+mips                        bcm63xx_defconfig
+arm                         s3c6400_defconfig
+sh                             sh03_defconfig
+mips                           jazz_defconfig
+m68k                          multi_defconfig
+powerpc                     tqm8541_defconfig
+openrisc                  or1klitex_defconfig
+powerpc                    adder875_defconfig
+arm                           omap1_defconfig
+arm                           spitz_defconfig
+arm                        spear3xx_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                     redwood_defconfig
+nios2                            allyesconfig
+arm                         s3c2410_defconfig
+sh                           se7619_defconfig
+sh                        edosk7705_defconfig
+nios2                         10m50_defconfig
+powerpc                        cell_defconfig
+arm                              alldefconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20210902
+x86_64               randconfig-a006-20210902
+x86_64               randconfig-a003-20210902
+x86_64               randconfig-a005-20210902
+x86_64               randconfig-a001-20210902
+x86_64               randconfig-a002-20210902
+x86_64               randconfig-a016-20210903
+x86_64               randconfig-a011-20210903
+x86_64               randconfig-a012-20210903
+x86_64               randconfig-a015-20210903
+x86_64               randconfig-a014-20210903
+x86_64               randconfig-a013-20210903
+i386                 randconfig-a012-20210903
+i386                 randconfig-a015-20210903
+i386                 randconfig-a011-20210903
+i386                 randconfig-a013-20210903
+i386                 randconfig-a014-20210903
+i386                 randconfig-a016-20210903
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+s390                 randconfig-c005-20210903
+mips                 randconfig-c004-20210903
+x86_64               randconfig-c007-20210903
+powerpc              randconfig-c003-20210903
+i386                 randconfig-c001-20210903
+arm                  randconfig-c002-20210903
+riscv                randconfig-c006-20210903
+x86_64               randconfig-a004-20210903
+x86_64               randconfig-a006-20210903
+x86_64               randconfig-a003-20210903
+x86_64               randconfig-a005-20210903
+x86_64               randconfig-a001-20210903
+x86_64               randconfig-a002-20210903
+i386                 randconfig-a005-20210903
+i386                 randconfig-a004-20210903
+i386                 randconfig-a006-20210903
+i386                 randconfig-a002-20210903
+i386                 randconfig-a001-20210903
+i386                 randconfig-a003-20210903
+i386                 randconfig-a012-20210902
+i386                 randconfig-a015-20210902
+i386                 randconfig-a011-20210902
+i386                 randconfig-a013-20210902
+i386                 randconfig-a014-20210902
+i386                 randconfig-a016-20210902
+hexagon              randconfig-r045-20210903
+hexagon              randconfig-r041-20210903
+
 ---
- drivers/pci/quirks.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ab3de1551b..1ea6661d01 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5704,3 +5704,45 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
- 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-+
-+/*
-+ * Pericom PI7C9X2G404 switch errata E5 - ACS P2P Request Redirect is not
-+ * functional
-+ *
-+ * When ACS P2P Request Redirect is enabled and bandwidth is not balanced
-+ * between upstream and downstream ports, packets are queued in an internal
-+ * buffer until CPLD packet. The workaround is to use the switch in store and
-+ * forward mode.
-+ */
-+#define PI7C9X2G404_MODE_REG		0x74
-+#define PI7C9X2G404_STORE_FORWARD_MODE	BIT(0)
-+static void pci_fixup_pericom_acs_store_forward(struct pci_dev *pdev)
-+{
-+	struct pci_dev *upstream;
-+	u16 val;
-+
-+	/* Downstream ports only */
-+	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
-+		return;
-+
-+	/* Check for ACS P2P Request Redirect use */
-+	if (!pdev->acs_cap)
-+		return;
-+	pci_read_config_word(pdev, pdev->acs_cap + PCI_ACS_CTRL, &val);
-+	if (!(val & PCI_ACS_RR))
-+		return;
-+
-+	upstream = pci_upstream_bridge(pdev);
-+	if (!upstream)
-+		return;
-+
-+	pci_read_config_word(upstream, PI7C9X2G404_MODE_REG, &val);
-+	if (!(val & PI7C9X2G404_STORE_FORWARD_MODE)) {
-+		pci_info(upstream, "Setting PI7C9X2G404 store-forward mode\n");
-+		/* Enable store-foward mode */
-+		pci_write_config_word(upstream, PI7C9X2G404_MODE_REG, val |
-+				      PI7C9X2G404_STORE_FORWARD_MODE);
-+	}
-+}
-+DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2404,
-+			 pci_fixup_pericom_acs_store_forward);
----
-2.33.0
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
