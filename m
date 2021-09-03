@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC24F3FF9A9
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 06:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938F03FF9F5
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 07:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbhICEoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Sep 2021 00:44:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11715 "EHLO mga06.intel.com"
+        id S232553AbhICFVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Sep 2021 01:21:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44071 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229561AbhICEoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 Sep 2021 00:44:04 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10095"; a="280340506"
+        id S232270AbhICFVG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 Sep 2021 01:21:06 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10095"; a="241613544"
 X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
-   d="scan'208";a="280340506"
+   d="scan'208";a="241613544"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 21:43:04 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2021 22:20:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,264,1624345200"; 
-   d="scan'208";a="691819916"
+   d="scan'208";a="691837642"
 Received: from lkp-server01.sh.intel.com (HELO 2115029a3e5c) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2021 21:43:03 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2021 22:20:05 -0700
 Received: from kbuild by 2115029a3e5c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mM12c-00005B-Bm; Fri, 03 Sep 2021 04:43:02 +0000
-Date:   Fri, 03 Sep 2021 12:42:39 +0800
+        id 1mM1cT-00006i-5P; Fri, 03 Sep 2021 05:20:05 +0000
+Date:   Fri, 03 Sep 2021 13:19:29 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 0da14a19493da0f9b4c5ee5930ab05a4c61f5883
-Message-ID: <6131a7bf.l18qWQnYk+XzPGCj%lkp@intel.com>
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ faa2e05ad0dccf37f995bcfbb8d1980d66c02c11
+Message-ID: <6131b061.x/ZSUl4vvCQtS5cL%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: 0da14a19493da0f9b4c5ee5930ab05a4c61f5883  x86/PCI: sta2x11: switch from 'pci_' to 'dma_' API
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: faa2e05ad0dccf37f995bcfbb8d1980d66c02c11  PCI: ibmphp: Fix double unmap of io_mem
 
-elapsed time: 721m
+elapsed time: 728m
 
-configs tested: 177
+configs tested: 171
 configs skipped: 4
 
 The following configs have been built successfully.
@@ -124,12 +124,6 @@ arm                         s3c6400_defconfig
 sh                             sh03_defconfig
 mips                           jazz_defconfig
 m68k                          multi_defconfig
-powerpc                     tqm8541_defconfig
-openrisc                  or1klitex_defconfig
-powerpc                    adder875_defconfig
-arm                           omap1_defconfig
-arm                           spitz_defconfig
-arm                        spear3xx_defconfig
 arm                     eseries_pxa_defconfig
 powerpc                     redwood_defconfig
 nios2                            allyesconfig
