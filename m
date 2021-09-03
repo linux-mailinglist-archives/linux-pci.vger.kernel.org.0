@@ -2,318 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4AD34002B9
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 17:56:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4F36400639
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Sep 2021 21:55:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349807AbhICP52 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Sep 2021 11:57:28 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:60898
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349782AbhICP51 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Sep 2021 11:57:27 -0400
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B2E7540184
-        for <linux-pci@vger.kernel.org>; Fri,  3 Sep 2021 15:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1630684586;
-        bh=npwnkinRUjbWFwTW3lB4R+la4/oRddSoWvIxhax/+MA=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=TIJX/gByvIoxJtkAuV0LMVyhlJhGlXhqrHbuJgdkOS7xDH7FlIIpJXkyxxN4RzAkI
-         JHt+rE5vkJDdtX2wxyNHKbCtAcRFPUHsu61qTb7TJCxtlSvxn0H7RGGr8T1RikvMw+
-         EhdUYahTBcP6Xup10vusra+jvn7pqWWugvNJRBEf8Xx/hWlUFsQGeGSHW5jO4yt90+
-         o603Ub8fPghlLnqYV4O2/X4v8SXq8uBspVKHnh0vvxeAtOqxbNdCZPdD6Evpf5EPmj
-         /hFn37YeqX7sihe7m2JwbZEnJz4Yfx4A553ePOMJc5mf3rHQJLd8D8nBYVsKiqd1GJ
-         sL9U+z2qlyO0A==
-Received: by mail-ej1-f71.google.com with SMTP id x21-20020a170906135500b005d8d4900c5eso2926145ejb.4
-        for <linux-pci@vger.kernel.org>; Fri, 03 Sep 2021 08:56:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npwnkinRUjbWFwTW3lB4R+la4/oRddSoWvIxhax/+MA=;
-        b=mULJZFr+/Lkyph4eUgOM61DSAvtCXie0va8z0jb8XPUyqy6q4eZZ3YeNV82uy/G2MU
-         gp1Z1nv1vAjefJLLWIKzfj/tRyArnJ5bCY5AfwkyRJL9qIUPgGtPrDx6lE0zdHVzrAJQ
-         JmlzXFisd1IGRkWGSS6wCQoQ3gDzFnspnq91Ag71unDud2q38x/s5gYA7XuJpwJNqKXy
-         LDjgcKFmSC41ejn2Uh/+fcvW0ACwX5WZ8M1AqdRDnTP87msZ981YtQVttPJVG/kiZo12
-         Bv8j6idB/TtfHGS30SfyqN/e3xJVd18WiEjvHzLyvc4NajzqX/ADhqVf4nHlun9jJe4L
-         E3yA==
-X-Gm-Message-State: AOAM533Id26WD62g8uBr9CB2pZmQ9dcUk8vN20XndHEWPfU+11QRA+IP
-        FDJH9dpfAeQx7w3ELkkFrbQXHQrqfPwK6luTluGVaRvvzCZdeQq/kgcAiCRQC2pTeO+bpMJ9rbd
-        MoBVZntYBOr1Sm4iCzlz4p0hIisMivsdUzXbquhY9cL2bEvOCIiazqQ==
-X-Received: by 2002:a17:906:1e97:: with SMTP id e23mr5028248ejj.336.1630684586266;
-        Fri, 03 Sep 2021 08:56:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz74Mit3ppBvU+YFh7C9xWkgrlXdy5fNGbXmeIn7QL4VgeMdAZe15wp7j4zrXyllTOm33QeNf6TvEsrYscZ7L8=
-X-Received: by 2002:a17:906:1e97:: with SMTP id e23mr5028212ejj.336.1630684585878;
- Fri, 03 Sep 2021 08:56:25 -0700 (PDT)
+        id S1349849AbhICT41 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Sep 2021 15:56:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234588AbhICT41 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 3 Sep 2021 15:56:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E7C1860FD7;
+        Fri,  3 Sep 2021 19:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630698927;
+        bh=36yNiRor2maBsEgmJ0JujTWCIWZTI4VY7zC6LPi0DxM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=StE0vBgiBakEKwjlvpqKlg4vB1tzvy6Jk96ZJtV/8RKH0nOpdD8V9j4himZzZQ9tr
+         lE7AnkRJ0zs4qOTEUWa2aNJTes0FnI7hJ7uic4m2NAxGdfI4Ancm4CUOmX6DA+XNLd
+         uua5stoOMdm16vhB+gFmc1UTf6vLDXiK5AJi/1o9M7gZ7BZbiESllBQzyukky9zqxd
+         7y+pXKZjGW6aB1dcj8UVCIWyhF6iHuCQ0LgIW9Ds0XMoHaTVtP6arFnrAtaAfOhZyf
+         SjTLPa/JodPaS693K/HsfCQ6mO+i357mE5OKZFdi6IfrudRWmC04givLopMmgCIFJd
+         PO0sd9znZlGOw==
+Date:   Fri, 3 Sep 2021 14:55:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Evan Quan <evan.quan@amd.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Alexander.Deucher@amd.com, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: Create device links for AMD integrated USB xHCI and
+ UCSI controllers
+Message-ID: <20210903195525.GA485189@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210827171452.217123-3-kai.heng.feng@canonical.com> <20210830180940.GA4209@bjorn-Precision-5520>
-In-Reply-To: <20210830180940.GA4209@bjorn-Precision-5520>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 3 Sep 2021 23:56:14 +0800
-Message-ID: <CAAd53p634-nxEYYDbc69JEVev=cFkqtdCJv5UjAFCDUqdNAk_A@mail.gmail.com>
-Subject: Re: [RFC] [PATCH net-next v4] [PATCH 2/2] r8169: Implement dynamic
- ASPM mechanism
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        nic_swsd <nic_swsd@realtek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210903063311.3606226-1-evan.quan@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 2:09 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Aug 28, 2021 at 01:14:52AM +0800, Kai-Heng Feng wrote:
-> > r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> > Same issue can be observed with older vendor drivers.
-> >
-> > The issue is however solved by the latest vendor driver. There's a new
-> > mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> > more than 10 packets, and vice versa. The possible reason for this is
-> > likely because the buffer on the chip is too small for its ASPM exit
-> > latency.
->
-> This sounds like good speculation, but of course, it would be better
-> to have the supporting data.
->
-> You say above that this problem affects r8169 on "some platforms."  I
-> infer that ASPM works fine on other platforms.  It would be extremely
-> interesting to have some data on both classes, e.g., "lspci -vv"
-> output for the entire system.
+On Fri, Sep 03, 2021 at 02:33:11PM +0800, Evan Quan wrote:
+> Latest AMD GPUs have built-in USB xHCI and UCSI controllers. Add device
+> link support for them.
 
-lspci data collected from working and non-working system can be found here:
-https://bugzilla.kernel.org/show_bug.cgi?id=214307
+Please comment on https://git.kernel.org/linus/6d2e369f0d4c .
 
->
-> If r8169 ASPM works well on some systems, we *should* be able to make
-> it work well on *all* systems, because the device can't tell what
-> system it's in.  All the device can see are the latencies for entry
-> and exit for link states.
+Is there something the PCI core is missing here?  Or is there
+something that needs to be added to ACPI or the PCI firmware spec?
 
-That's definitely better if we can make r8169 ASPM work for all platforms.
+We want a generic way to discover dependencies like this.
 
->
-> IIUC this patch makes the driver wake up every 1000ms.  If the NIC has
-> sent or received more than 10 packets in the last 1000ms, it disables
-> ASPM; otherwise it enables ASPM.
+A quirk should not be necessary for spec-compliant devices.  Quirks
+are an ongoing maintenance burden, and they mean that new hardware
+won't work correctly until the OS is patched to know about it.  That's
+not what we want.
 
-Yes, that's correct.
+I expect we'll still need *this* quirk, but first I'd like to know
+whether there's a plan to handle this more generically in the future.
 
->
-> I asked these same questions earlier, but nothing changed, so I won't
-> raise them again if you don't think they're pertinent.  Some patch
-> splitting comments below.
+When you repost this, please follow the subject line style of
+6d2e369f0d4c ("PCI: Add NVIDIA GPU multi-function power
+dependencies") so similar patches look similar.
 
-Sorry about that. The lspci data is attached.
-
->
-> > Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> > use dynamic ASPM under Windows. So implement the same mechanism here to
-> > resolve the issue.
-> >
-> > Because ASPM control may not be granted by BIOS while ASPM is enabled,
-> > remove aspm_manageable and use pcie_aspm_capable() instead. If BIOS
-> > enables ASPM for the device, we want to enable dynamic ASPM on it.
-> >
-> > In addition, since PCIe ASPM can be switched via sysfs, enable/disable
-> > dynamic ASPM accordingly by checking pcie_aspm_enabled().
-> >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> > v4:
-> >  - Squash two patches
-> >  - Remove aspm_manageable and use pcie_aspm_capable()
-> >    pcie_aspm_enabled() accordingly
-> >
-> > v3:
-> >  - Use msecs_to_jiffies() for delay time
-> >  - Use atomic_t instead of mutex for bh
-> >  - Mention the buffer size and ASPM exit latency in commit message
-> >
-> > v2:
-> >  - Use delayed_work instead of timer_list to avoid interrupt context
-> >  - Use mutex to serialize packet counter read/write
-> >  - Wording change
-> >  drivers/net/ethernet/realtek/r8169_main.c | 77 ++++++++++++++++++++---
-> >  1 file changed, 69 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> > index 46a6ff9a782d7..97dba8f437b78 100644
-> > --- a/drivers/net/ethernet/realtek/r8169_main.c
-> > +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> > @@ -623,7 +623,10 @@ struct rtl8169_private {
-> >       } wk;
-> >
-> >       unsigned supports_gmii:1;
-> > -     unsigned aspm_manageable:1;
-> > +     unsigned rtl_aspm_enabled:1;
-> > +     struct delayed_work aspm_toggle;
-> > +     atomic_t aspm_packet_count;
-> > +
-> >       dma_addr_t counters_phys_addr;
-> >       struct rtl8169_counters *counters;
-> >       struct rtl8169_tc_offsets tc_offset;
-> > @@ -698,6 +701,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
-> >              tp->mac_version <= RTL_GIGA_MAC_VER_53;
-> >  }
-> >
-> > +static int rtl_supports_aspm(struct rtl8169_private *tp)
-> > +{
-> > +     switch (tp->mac_version) {
-> > +     case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
-> > +     case RTL_GIGA_MAC_VER_37:
-> > +     case RTL_GIGA_MAC_VER_39:
-> > +     case RTL_GIGA_MAC_VER_43:
-> > +     case RTL_GIGA_MAC_VER_47:
-> > +             return 0;
-> > +     default:
-> > +             return 1;
-> > +     }
->
-> This part looks like it should be a separate patch.  I would think
-> rtl_init_one() could call this once and set a bit in rtl8169_private.
-> Then rtl_hw_aspm_clkreq_enable() could just return without doing
-> anything if the bit is not set.
-
-OK, will do in next version.
-
->
-> > +}
-> > +
-> >  static bool rtl_supports_eee(struct rtl8169_private *tp)
-> >  {
-> >       return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
-> > @@ -2699,8 +2716,15 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
-> >
-> >  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
-> >  {
-> > +     struct pci_dev *pdev = tp->pci_dev;
-> > +
-> > +     if (!pcie_aspm_enabled(pdev) && enable)
-> > +             return;
-> > +
-> > +     tp->rtl_aspm_enabled = enable;
-> > +
-> >       /* Don't enable ASPM in the chip if OS can't control ASPM */
-> > -     if (enable && tp->aspm_manageable) {
-> > +     if (enable) {
->
-> This part also looks like it should be a separate patch, since it is
-> strictly concerned with whether the OS can control ASPM and doesn't
-> seem related to dynamic ASPM.
-
-OK, will tackle this in next version.
-
-Kai-Heng
-
->
-> >               RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
-> >               RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
-> >       } else {
-> > @@ -4440,6 +4464,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
-> >
-> >       dirty_tx = tp->dirty_tx;
-> >
-> > +     atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
-> >       while (READ_ONCE(tp->cur_tx) != dirty_tx) {
-> >               unsigned int entry = dirty_tx % NUM_TX_DESC;
-> >               u32 status;
-> > @@ -4584,6 +4609,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
-> >               rtl8169_mark_to_asic(desc);
-> >       }
-> >
-> > +     atomic_add(count, &tp->aspm_packet_count);
-> > +
-> >       return count;
-> >  }
-> >
-> > @@ -4691,8 +4718,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
-> >       return 0;
-> >  }
-> >
-> > +#define ASPM_PACKET_THRESHOLD 10
-> > +#define ASPM_TOGGLE_INTERVAL 1000
-> > +
-> > +static void rtl8169_aspm_toggle(struct work_struct *work)
-> > +{
-> > +     struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
-> > +                                               aspm_toggle.work);
-> > +     int packet_count;
-> > +     bool enable;
-> > +
-> > +     packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
-> > +
-> > +     if (pcie_aspm_enabled(tp->pci_dev)) {
-> > +             enable = packet_count <= ASPM_PACKET_THRESHOLD;
-> > +
-> > +             if (tp->rtl_aspm_enabled != enable) {
-> > +                     rtl_unlock_config_regs(tp);
-> > +                     rtl_hw_aspm_clkreq_enable(tp, enable);
-> > +                     rtl_lock_config_regs(tp);
-> > +             }
-> > +     } else if (tp->rtl_aspm_enabled) {
-> > +             rtl_unlock_config_regs(tp);
-> > +             rtl_hw_aspm_clkreq_enable(tp, false);
-> > +             rtl_lock_config_regs(tp);
-> > +     }
-> > +
-> > +     schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
-> > +}
-> > +
-> >  static void rtl8169_down(struct rtl8169_private *tp)
-> >  {
-> > +     cancel_delayed_work_sync(&tp->aspm_toggle);
-> > +
-> >       /* Clear all task flags */
-> >       bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
-> >
-> > @@ -4719,6 +4777,11 @@ static void rtl8169_up(struct rtl8169_private *tp)
-> >       rtl_reset_work(tp);
-> >
-> >       phy_start(tp->phydev);
-> > +
-> > +     /* pcie_aspm_capable may change after system resume */
-> > +     if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev) &&
-> > +         rtl_supports_aspm(tp))
-> > +             schedule_delayed_work(&tp->aspm_toggle, 0);
-> >  }
-> >
-> >  static int rtl8169_close(struct net_device *dev)
-> > @@ -5306,12 +5369,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >       if (rc)
-> >               return rc;
-> >
-> > -     /* Disable ASPM L1 as that cause random device stop working
-> > -      * problems as well as full system hangs for some PCIe devices users.
-> > -      */
-> > -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> > -     tp->aspm_manageable = !rc;
-> > -
-> >       /* enable device (incl. PCI PM wakeup and hotplug setup) */
-> >       rc = pcim_enable_device(pdev);
-> >       if (rc < 0) {
-> > @@ -5378,6 +5435,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >
-> >       INIT_WORK(&tp->wk.work, rtl_task);
-> >
-> > +     INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
-> > +
-> > +     atomic_set(&tp->aspm_packet_count, 0);
-> > +
-> >       rtl_init_mac_address(tp);
-> >
-> >       dev->ethtool_ops = &rtl8169_ethtool_ops;
-> > --
-> > 2.32.0
-> >
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Evan Quan <evan.quan@amd.com>
+> ---
+>  drivers/pci/quirks.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dea10d62d5b9..f0c5dd3406a1 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5338,7 +5338,7 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+>  
+>  /*
+> - * Create device link for NVIDIA GPU with integrated USB xHCI Host
+> + * Create device link for GPUs with integrated USB xHCI Host
+>   * controller to VGA.
+>   */
+>  static void quirk_gpu_usb(struct pci_dev *usb)
+> @@ -5347,9 +5347,11 @@ static void quirk_gpu_usb(struct pci_dev *usb)
+>  }
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+>  
+>  /*
+> - * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
+> + * Create device link for GPUs with integrated Type-C UCSI controller
+>   * to VGA. Currently there is no class code defined for UCSI device over PCI
+>   * so using UNKNOWN class for now and it will be updated when UCSI
+>   * over PCI gets a class code.
+> @@ -5362,6 +5364,9 @@ static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+>  			      quirk_gpu_usb_typec_ucsi);
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+> +			      quirk_gpu_usb_typec_ucsi);
+>  
+>  /*
+>   * Enable the NVIDIA GPU integrated HDA controller if the BIOS left it
+> -- 
+> 2.29.0
+> 
