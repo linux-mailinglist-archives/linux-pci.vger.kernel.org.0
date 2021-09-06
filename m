@@ -2,116 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDEE3401625
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Sep 2021 08:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7CB24018E0
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Sep 2021 11:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238906AbhIFGCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Sep 2021 02:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+        id S241522AbhIFJey (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Sep 2021 05:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238866AbhIFGCg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Sep 2021 02:02:36 -0400
-Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B132BC061575
-        for <linux-pci@vger.kernel.org>; Sun,  5 Sep 2021 23:01:32 -0700 (PDT)
-Received: by mail-ua1-x92c.google.com with SMTP id x23so3219408uav.3
-        for <linux-pci@vger.kernel.org>; Sun, 05 Sep 2021 23:01:32 -0700 (PDT)
+        with ESMTP id S241509AbhIFJes (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Sep 2021 05:34:48 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3413BC0613D9
+        for <linux-pci@vger.kernel.org>; Mon,  6 Sep 2021 02:33:44 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id i6so8874992wrv.2
+        for <linux-pci@vger.kernel.org>; Mon, 06 Sep 2021 02:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nathanrossi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ra13Dsxp/lFjQLeOJgt5Puq9qJBrmKS4Mb+LX2vvhx4=;
-        b=ClqmfZ0kHX74phmy+Ie+vc8TGY+lODHdeyA3bqDzXKasvoR18O3iEh+zC3U2UbZoMk
-         +PDMWNXpkf29isTTcFMhqsdXRDv49z5eyCl6gdahbRbTclvRG1/d4XHWWOT+aW/66Vhn
-         z4onP7xlv0g/fRPaXb8/JRvOh+7DHsA2dmMHjRygeyDYJTxl2C4k5/E30snEQH2lz1ze
-         gMv2VLS+cfYKnEM/TqC5Gzrhk4CUxt6niGwthQfMs8r0DWQDYw6IDlJ8e7gmQqZGD0a7
-         bf27RAr3wsk+JQhDBx51ghhI9mmGkIF6fC+jgrSCzGBRIgFIdzzoCinaaagiDQxkYq2E
-         O2Vw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=i2+NvsBgnBTOZ+uAcUxvlIaM13WedkLbcL6bup+H1UM=;
+        b=q9eDwDZxue+JjKYKIP+w/ygZ5RrOIy/6a/V0xWsuwzRdA+DY9pSefRgNpnnYpm5BQZ
+         jcdsEFl+fmxv1rv5K31l4dvYsDgRRwrUDRSzPK+5TxnLrRKkeZrRIMX8t00nTTDrCsNi
+         uf638hMv8OsnzcALsgDmG4mf5Gq7vuKLtqqOIWfbZSTBJC9+5AAZImMHCH6jbKGweNZY
+         0rFAtFa8MeWkgidZTVKx5NAsJxCv7TwpC8fsiZdr5uQa0ixm8d4bVKAPP52HXRvZ99cf
+         Q+yyT+iPmmajoU/79Hm6iTVhB2TuOulKMfd2QGm1q9pIns3NH7VucMIJue0cMY68rhls
+         XvRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ra13Dsxp/lFjQLeOJgt5Puq9qJBrmKS4Mb+LX2vvhx4=;
-        b=oRJQEmipcIZj+CrBuv+0YcX4u4qVgqGc4TY8TJgBA6TlTXU1CFL1+Qzl0r+33ivVk2
-         KiUwluQ4jOQQ50Y5YALel3VJJo6E9xZ8KROMpiLIfd1OSzTREImRv1Gdfd0ZGX5iUmQt
-         IwjZxvpc7tJ4QIGACY4JzaMLJYGnmueGU35cTJ/xWdwWz4ZKNvMkWsxEzAFz6Mp9r+xM
-         3LkxLUq/MMeHmQBtVQT5k3nFvbl7IJ2xfPzIsZ9i8/LokRXvvcA0KpsXDUj95Z8HnWYy
-         sKBTRggxDNlv7Lz5sqTzkbgl3eJw5Xp76URzXaDt5jBS+TEMiV/S24s8ohDPbdn5upgV
-         tzag==
-X-Gm-Message-State: AOAM532IFAo/atg4RvIoHXjgRHHpzALcpeYVBSZ8Fjzr1de2dITOCzYK
-        dNatlb8lRRRD9EK+UdYjiSJd3u/kr+BOxr5HB2rQKeS/AaM=
-X-Google-Smtp-Source: ABdhPJzCjiwoB/K8Guk6E/WcTiTnTKQT7rvkUT7YYhDZ/9eK274tqMjgevrPSTMu3MCHbbDFJT20JCvwYNFlsTT5BLM=
-X-Received: by 2002:ab0:6218:: with SMTP id m24mr4674118uao.7.1630908091852;
- Sun, 05 Sep 2021 23:01:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=i2+NvsBgnBTOZ+uAcUxvlIaM13WedkLbcL6bup+H1UM=;
+        b=PbZHC85eNwM3lwBh4L18/LKIQ9AT3zevPWYKvqd+dNzKfpPajzWu4SijFE65CBTDmN
+         1mYt9cw5MoJzw8BcZgXekhlRU1r2oKx/hnkM/UW1uvMcYONoq8qYHYa30U5KBgSv/MDq
+         SgJjCLKvEdvCGr/L48vvc7paNcvzZ4HeZh6sPGHtZJrpAUmcMXwwMrznvPF8RvIsXFED
+         1j2BUuaHAJTNbNdmpEUxiFx1m6CMhrmyLH2KfmiwjMR1WgTRoqfTFLXzJhO9AfpcNHFo
+         V/so9Ybox4UZmk6LiivZNtZaEgd+YDXAqENZ7irzzweSGFu+zzh8H4LKmUqNJVlwyOXT
+         0wyA==
+X-Gm-Message-State: AOAM532Wj5t8I+OamwqhiHxVL0ZxB+Yt9w3XSBLsybEt8aSZllpEvOy0
+        oMIL1WIeWCHTELWxBQWb39sr2Q==
+X-Google-Smtp-Source: ABdhPJzzIakAt8tQ+64AcWO9lDYlr4Dh32B1+kDEcgR0qe3zm7ry+opFn+4PQ93e0dV7eey6Ev0dkg==
+X-Received: by 2002:adf:8006:: with SMTP id 6mr12342436wrk.38.1630920822630;
+        Mon, 06 Sep 2021 02:33:42 -0700 (PDT)
+Received: from google.com ([31.124.24.187])
+        by smtp.gmail.com with ESMTPSA id i21sm7106080wrb.62.2021.09.06.02.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Sep 2021 02:33:42 -0700 (PDT)
+Date:   Mon, 6 Sep 2021 10:33:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vignesh R <vigneshr@ti.com>, Marc Zyngier <maz@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Use 'enum' instead of 'oneOf' plus 'const'
+ entries
+Message-ID: <YTXgc/GhZVKzJR9H@google.com>
+References: <20210824202014.978922-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20210903034029.306816-1-nathan@nathanrossi.com> <20210903061814.GA15994@wunner.de>
-In-Reply-To: <20210903061814.GA15994@wunner.de>
-From:   Nathan Rossi <nathan@nathanrossi.com>
-Date:   Mon, 6 Sep 2021 16:01:20 +1000
-Message-ID: <CA+aJhH1qagpz6qPEYLnO6UMuh_U5uCK3tzdoGJyR9Y73MOmneQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Add ACS errata for Pericom PI7C9X2G404 switch
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, Nathan Rossi <nathan.rossi@digi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210824202014.978922-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 3 Sept 2021 at 16:18, Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Fri, Sep 03, 2021 at 03:40:29AM +0000, Nathan Rossi wrote:
-> > The Pericom PI7C9X2G404 PCIe switch has an errata for ACS P2P Request
-> > Redirect behaviour when used in the cut-through forwarding mode. The
-> > recommended work around for this issue is to use the switch in store and
-> > forward mode.
-> >
-> > This change adds a fixup specific to this switch that when enabling the
-> > downstream port it checks if it has enabled ACS P2P Request Redirect,
-> > and if so changes the device (via the upstream port) to use the store
-> > and forward operating mode.
->
-> From a quick look at the datasheet, this switch seems to support
-> hot-plug on its Downstream Ports:
->
-> https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf
->
-> I think your quirk isn't executed if a device is hotplugged to an
-> initially-empty Downstream Port.
+On Tue, 24 Aug 2021, Rob Herring wrote:
 
-The device I am testing against has the ports wired directly to
-devices (though can be disconnected) without hotplug so I will see if
-I can find a development board with this switch to test the hotplug
-behaviour. However it should be noted that the downstream ports are
-probed with the switch, and are enabled with the ACS P2P Request
-Redirect configured regardless of the presence of a device connected
-to the downstream port.
+> 'enum' is equivalent to 'oneOf' with a list of 'const' entries, but 'enum'
+> is more concise and yields better error messages.
+> 
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Vignesh R <vigneshr@ti.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-phy@lists.infradead.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/msm/dsi-phy-10nm.yaml           |  6 +++---
+>  .../bindings/display/msm/dsi-phy-14nm.yaml           |  6 +++---
+>  .../bindings/display/msm/dsi-phy-28nm.yaml           |  8 ++++----
+>  .../bindings/dma/allwinner,sun6i-a31-dma.yaml        | 12 ++++++------
+>  .../devicetree/bindings/firmware/arm,scpi.yaml       |  6 +++---
+>  .../devicetree/bindings/i2c/ti,omap4-i2c.yaml        | 10 +++++-----
+>  .../interrupt-controller/loongson,liointc.yaml       |  8 ++++----
+>  .../devicetree/bindings/media/i2c/mipi-ccs.yaml      |  8 ++++----
+>  .../devicetree/bindings/mfd/ti,lp87565-q1.yaml       |  6 +++---
 
->
-> Also, if a device which triggered the quirk is hot-removed and none
-> of its siblings uses ACS P2P Request Redirect, cut-through forwarding
-> isn't reinstated.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-The quirk is enabled on the downstream port of the switch, using the
-state of the downstream port and not the device attached to it. My
-understanding is that the only path that enables/disables the ACS P2P
-Request Redirect on the downstream port is the initial pci_enable_acs.
-This means that devices attached to the downstream port either
-initially or with hotplugging should not change the ACS configuration
-of the switches downstream port.
+>  .../devicetree/bindings/net/realtek-bluetooth.yaml   |  8 ++++----
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml          |  8 ++++----
+>  .../devicetree/bindings/net/ti,k3-am654-cpts.yaml    |  6 +++---
+>  Documentation/devicetree/bindings/pci/loongson.yaml  |  8 ++++----
+>  .../devicetree/bindings/phy/intel,lgm-emmc-phy.yaml  |  6 +++---
+>  .../devicetree/bindings/serial/8250_omap.yaml        |  9 +++++----
+>  .../devicetree/bindings/sound/qcom,sm8250.yaml       |  6 +++---
+>  .../devicetree/bindings/sound/tlv320adcx140.yaml     |  8 ++++----
+>  .../devicetree/bindings/spi/realtek,rtl-spi.yaml     | 12 ++++++------
+>  .../devicetree/bindings/timer/arm,sp804.yaml         |  6 +++---
+>  19 files changed, 74 insertions(+), 73 deletions(-)
 
-Which means nothing can cause the switch to need to be reinstated with
-cut-through forwarding except the switch itself being hotplugged,
-which would cause reset of the switch and the enable fixup to be
-called again.
-
-Thanks,
-Nathan
-
->
-> Perhaps we need additional pci_fixup ELF sections which are used on
-> hot-add and hot-remove?
->
-> Thanks,
->
-> Lukas
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
