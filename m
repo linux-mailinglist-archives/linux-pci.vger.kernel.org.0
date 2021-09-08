@@ -2,86 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C5F54032C9
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Sep 2021 05:01:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30F3E403536
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Sep 2021 09:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347361AbhIHDCx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Sep 2021 23:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347302AbhIHDCw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Sep 2021 23:02:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DFBC061575
-        for <linux-pci@vger.kernel.org>; Tue,  7 Sep 2021 20:01:45 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b64so1139485qkg.0
-        for <linux-pci@vger.kernel.org>; Tue, 07 Sep 2021 20:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=kHMLUwcDDIiHXl7XY7UNMlwqzYswqBh9tLXANBqBxWCcEVowi4B0PnH61IUo/VF95A
-         LKZvOGG1RftXyBaHhaeG1cuHnqQq0dTp/pIev3d1Iar+AlBtcSeytUUlJvcyOm1DFl39
-         2tfo3NJilmfWxpleDtv81fJWs1WsjYr8gsS/S2p3tLH9J63bB5S48k6Cq4uHAkNqAFHF
-         L8pXqtpO2WkOXpkF3/3OCmWXtZRkA1DD6sNZAihrOC585BUQdujMhSYrhn5Oozxw/i5y
-         M/SDa48O2PKjPj3Jg3vhwWDHn94pmI/P5Bw38XU02zTQp32U9QezjUtYRyrkx6mz0G43
-         kHnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
-        b=a54mvl1CPRYtBkOG18awk1gbcHh5jCZSZ1xf9d4K0LZF3epF946HUbS8vhY2mfwuOE
-         WXjLHy/FZ6r2SooozGh1bVLElaXt74TzfgLDRLHlZ0Q8WOuVA4xAklUihWnhKhtRCD81
-         c3MWl1eOAtQnlp7Ulrzvh3Cw+0nmFhXP3nn0d6MWIRpADtrLIGWVwUDiDkFio6h0T7MS
-         D7PbleebMcwxczaDvIcok7H/cXoZ5onGjQ/Zu9Nnr3iSngm9Bistnk/0uEdUqPcusmQc
-         BdesEOJ8bf4wOORLR5scsYpT/6SsVWDBV405NQnfvNe2++G1FDWH1Etfvoa4jshPUmoO
-         Kk7A==
-X-Gm-Message-State: AOAM530sqGU39juQgG2H6uXIj406c/PfPMM0+QysgKMRqvhxFcjbkWwG
-        6n5s3OndMMHIOuJ/KSYHdpDj+oZK5pi9vVKpi1s=
-X-Google-Smtp-Source: ABdhPJxmSah3lU895Sr6dxhozHM1BT/isWjBlM1dQMGn+QqfSJY2XFbi/qD9QjIH7MgZvZO+tRwPpL2+zVJ7nOF1ydw=
-X-Received: by 2002:a37:a80c:: with SMTP id r12mr1460245qke.299.1631070104461;
- Tue, 07 Sep 2021 20:01:44 -0700 (PDT)
-MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: mrcsankara1@gmail.com
-Received: by 2002:ad4:5cc8:0:0:0:0:0 with HTTP; Tue, 7 Sep 2021 20:01:42 -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Wed, 8 Sep 2021 05:01:42 +0200
-X-Google-Sender-Auth: gMXMS2kQldoU-mN-REXm4KPZmsI
-Message-ID: <CACh3LKZ1_bQ=u6uWvRJKRT4teCahLYOWfRNpE59p3XZzVqH5Fg@mail.gmail.com>
-Subject: I just want to inform you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1345425AbhIHHX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Sep 2021 03:23:29 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47664 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229811AbhIHHX2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Sep 2021 03:23:28 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 065851A2E57;
+        Wed,  8 Sep 2021 09:22:20 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FE8B1A2E30;
+        Wed,  8 Sep 2021 09:22:19 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 3A71A183AC88;
+        Wed,  8 Sep 2021 15:22:18 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH 1/3] PCI: imx: encapsulate the clock enable into one standalone function
+Date:   Wed,  8 Sep 2021 14:59:24 +0800
+Message-Id: <1631084366-24785-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+No function changes, just encapsulate the i.MX PCIe clocks enable
+operations into one standalone function
 
-I just want to use this little opportunity to inform you about my
-success towards the transfer. I'm currently out of the country for an
-investment with part of my share, after completing the transfer with
-an Indian business man. But i will visit your country, next year.
-After the completion of my project. Please, contact my secretary to
-send you the (ATM) card which I've already credited with the sum of
-($500,000.00). Just contact her to help you in receiving the (ATM)
-card. I've explained everything to her before my trip. This is what I
-can do for you because, you couldn't help in the transfer, but for the
-fact that you're the person whom I've contacted initially, for the
-transfer. I decided to give this ($500,000.00) as a compensation for
-being contacted initially for the transfer. I always try to make the
-difference, in dealing with people any time I come in contact with
-them. I'm also trying to show that I'm quite a different person from
-others whose may have a different purpose within them. I believe that
-you will render some help to me when I, will visit your country, for
-another investment there. So contact my secretary for the card, Her
-contact are as follows,
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 82 +++++++++++++++++----------
+ 1 file changed, 51 insertions(+), 31 deletions(-)
 
-Full name: Mrs, Jovita Dumuije,
-Country: Burkina Faso
-Email: jovitadumuije@gmail.com
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 80fc98acf097..0264432e4c4a 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -143,6 +143,8 @@ struct imx6_pcie {
+ #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
+ #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
+ 
++static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie);
++
+ static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
+ {
+ 	struct dw_pcie *pci = imx6_pcie->pci;
+@@ -498,33 +500,12 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 		}
+ 	}
+ 
+-	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
+-	if (ret) {
+-		dev_err(dev, "unable to enable pcie_phy clock\n");
+-		goto err_pcie_phy;
+-	}
+-
+-	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
++	ret = imx6_pcie_clk_enable(imx6_pcie);
+ 	if (ret) {
+-		dev_err(dev, "unable to enable pcie_bus clock\n");
+-		goto err_pcie_bus;
++		dev_err(dev, "unable to enable pcie clocks\n");
++		goto err_clks;
+ 	}
+ 
+-	ret = clk_prepare_enable(imx6_pcie->pcie);
+-	if (ret) {
+-		dev_err(dev, "unable to enable pcie clock\n");
+-		goto err_pcie;
+-	}
+-
+-	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
+-	if (ret) {
+-		dev_err(dev, "unable to enable pcie ref clock\n");
+-		goto err_ref_clk;
+-	}
+-
+-	/* allow the clocks to stabilize */
+-	usleep_range(200, 500);
+-
+ 	/* Some boards don't have PCIe reset GPIO. */
+ 	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+ 		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+@@ -578,13 +559,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 
+ 	return;
+ 
+-err_ref_clk:
+-	clk_disable_unprepare(imx6_pcie->pcie);
+-err_pcie:
+-	clk_disable_unprepare(imx6_pcie->pcie_bus);
+-err_pcie_bus:
+-	clk_disable_unprepare(imx6_pcie->pcie_phy);
+-err_pcie_phy:
++err_clks:
+ 	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
+ 		ret = regulator_disable(imx6_pcie->vpcie);
+ 		if (ret)
+@@ -914,6 +889,51 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
+ 	usleep_range(1000, 10000);
+ }
+ 
++static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
++{
++	struct dw_pcie *pci = imx6_pcie->pci;
++	struct device *dev = pci->dev;
++	int ret;
++
++	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
++	if (ret) {
++		dev_err(dev, "unable to enable pcie_phy clock\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
++	if (ret) {
++		dev_err(dev, "unable to enable pcie_bus clock\n");
++		goto err_pcie_bus;
++	}
++
++	ret = clk_prepare_enable(imx6_pcie->pcie);
++	if (ret) {
++		dev_err(dev, "unable to enable pcie clock\n");
++		goto err_pcie;
++	}
++
++	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
++	if (ret) {
++		dev_err(dev, "unable to enable pcie ref clock\n");
++		goto err_ref_clk;
++	}
++
++	/* allow the clocks to stabilize */
++	usleep_range(200, 500);
++	return 0;
++
++err_ref_clk:
++	clk_disable_unprepare(imx6_pcie->pcie);
++err_pcie:
++	clk_disable_unprepare(imx6_pcie->pcie_bus);
++err_pcie_bus:
++	clk_disable_unprepare(imx6_pcie->pcie_phy);
++
++	return ret;
++
++}
++
+ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+ {
+ 	clk_disable_unprepare(imx6_pcie->pcie);
+-- 
+2.25.1
 
-Thanks, and hope for a good corporation with you in future.
-
-Godwin Peter,
