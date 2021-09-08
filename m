@@ -2,111 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A6E404033
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Sep 2021 22:36:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E754040F8
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 00:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243764AbhIHUhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Sep 2021 16:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
+        id S233502AbhIHWZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Sep 2021 18:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229677AbhIHUhK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Sep 2021 16:37:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 40AEB61041;
-        Wed,  8 Sep 2021 20:36:02 +0000 (UTC)
+        id S229997AbhIHWZd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Sep 2021 18:25:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E16BB60F23;
+        Wed,  8 Sep 2021 22:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631133362;
-        bh=bP3G6bAvac+s/34JTfHdHoXIMUenYwO/ZfeHNQIqd2Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=crEfVpzf2TgqQIBZnI19w3mvuasxNDyd2XG+OWwems3sMPNVbYtUMSe0E4J6NdAlU
-         CalIK/LnF8NwDkEwReWaVqcH/UPQ+lFnwKCqenEcZM1yKA1GQrFA1G6srWkqpjzoAm
-         4roHBemYLq/z4oiOplu0I9cMPCtI+Lo8CWKyyIjvuTzftLu7Vi8xQ9kiF+9UT1P8Uv
-         g0+G+UgQd3Fm2WOVaCuqKd7h2k5xRksquz+i5SKamfsZwN/J5A4s5Anh29tkCYqbTh
-         rHqmj96vpEg+4TktmDpCLOaJJNasdvOJM9Qf+nJ1FTVO2yzsF9QS9DAZXsBg75Ts9m
-         kAMSfBwXOn06w==
-Received: by pali.im (Postfix)
-        id C55D1708; Wed,  8 Sep 2021 22:35:59 +0200 (CEST)
-Date:   Wed, 8 Sep 2021 22:35:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ingmar Klein <ingmar_klein@web.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: QCA6174 pcie wifi: Add pci quirks
-Message-ID: <20210908203559.6k5clg3fzf5kctbw@pali>
-References: <20210415195338.icpo5644bo76rzuc@pali>
- <20210525221215.GA1235899@bjorn-Precision-5520>
- <20210721085453.aqd73h22j6clzcfs@pali>
- <20210820232217.vkx6x6dpxf73jjhs@pali>
- <408e5b45-3eaa-fa13-318d-48f7d1ecdacf@web.de>
+        s=k20201202; t=1631139864;
+        bh=lUuy1M9gczWX+77XX6OSC4WjGDl1dvvvOMoa7ctmFCc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rxx8ZX1lsBpGBltoVuurEpBDcyNxGxZNUMZnaWI9cOb6Op7O+sNqOG5lM5bO+aGJD
+         bfVYjmC5cCExfvhvJISfISjfoQ78bXY7ibHxbcE4NKoIGb8Q6XgDn0m3giaqSEq6nY
+         yCjQSbarTIDrgMVy09+8FlagCnN29hkqlsRAykYb6lpXdlLQZi+YLzZ/8aG5KBRIKx
+         xBxLVNz/kb8lav3LFqSMZvlqfL8bbbNdLfr5/o6jq4OQr+l+CTF7ZN0FlhsxJlp8FF
+         PKi/8OXAvZWnWYxRslrXJ3uuYLDUS9IXdp/j1ko3awOjtQ7BXYfxsAWrATfmbaBRUf
+         +FIyb1LKWbvnA==
+Date:   Wed, 8 Sep 2021 17:24:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nathan Rossi <nathan@nathanrossi.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        Nathan Rossi <nathan.rossi@digi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Add ACS errata for Pericom PI7C9X2G404 switch
+Message-ID: <20210908222422.GA911514@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <408e5b45-3eaa-fa13-318d-48f7d1ecdacf@web.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CA+aJhH1qagpz6qPEYLnO6UMuh_U5uCK3tzdoGJyR9Y73MOmneQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 08 September 2021 21:18:00 Ingmar Klein wrote:
-> Am 21.08.2021 um 01:22 schrieb Pali Rohár:
-> > On Wednesday 21 July 2021 10:54:53 Pali Rohár wrote:
-> > > On Tuesday 25 May 2021 17:12:15 Bjorn Helgaas wrote:
-> > > > On Thu, Apr 15, 2021 at 09:53:38PM +0200, Pali Rohár wrote:
-> > > > > Hello!
-> > > > > 
-> > > > > On Thursday 15 April 2021 13:01:19 Alex Williamson wrote:
-> > > > > > [cc +Pali]
-> > > > > > 
-> > > > > > On Thu, 15 Apr 2021 20:02:23 +0200
-> > > > > > Ingmar Klein <ingmar_klein@web.de> wrote:
-> > > > > > 
-> > > > > > > First thanks to you both, Alex and Bjorn!
-> > > > > > > I am in no way an expert on this topic, so I have to fully rely on your
-> > > > > > > feedback, concerning this issue.
-> > > > > > > 
-> > > > > > > If you should have any other solution approach, in form of patch-set, I
-> > > > > > > would be glad to test it out. Just let me know, what you think might
-> > > > > > > make sense.
-> > > > > > > I will wait for your further feedback on the issue. In the meantime I
-> > > > > > > have my current workaround via quirk entry.
-> > > > > > > 
-> > > > > > > By the way, my layman's question:
-> > > > > > > Do you think, that the following topic might also apply for the QCA6174?
-> > > > > > > https://www.spinics.net/lists/linux-pci/msg106395.html
-> > > > > I have been testing more ath cards and I'm going to send a new version
-> > > > > of this patch with including more PCI ids.
-> > > > Dropping this patch in favor of Pali's new version.
-> > > Hello Bjorn! Seems that it would take much more time to finish my
-> > > version of patch. So could you take Ingmar's patch with cc:stable tag
-> > > for now, which just adds PCI device id into list of problematic devices?
-> > Ping, gentle reminder...
-> 
-> Hi Pali and Bjorn,
-> 
-> here is the original trivial patch again.
-> For the moment, this could do.
-> 
-> Thank you!
-> Best regards,
-> Ingmar
-> 
-> Signed-off-by: Ingmar Klein <ingmar_klein@web.de>
+[+cc Alex, beginning of thread:
+https://lore.kernel.org/r/20210903034029.306816-1-nathan@nathanrossi.com]
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Cc: stable@vger.kernel.org
+On Mon, Sep 06, 2021 at 04:01:20PM +1000, Nathan Rossi wrote:
+> On Fri, 3 Sept 2021 at 16:18, Lukas Wunner <lukas@wunner.de> wrote:
+> >
+> > On Fri, Sep 03, 2021 at 03:40:29AM +0000, Nathan Rossi wrote:
+> > > The Pericom PI7C9X2G404 PCIe switch has an errata for ACS P2P Request
+> > > Redirect behaviour when used in the cut-through forwarding mode. The
+> > > recommended work around for this issue is to use the switch in store and
+> > > forward mode.
 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 706f27a86a8e..ecfe80ec5b9c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3584,6 +3584,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
->  
->  /*
->   * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+Is there a URL for this erratum?  What is the issue?  Does the switch
+fail to redirect P2P requests upstream?  How would someone recognize
+that they are affected by it?
 
+> > > This change adds a fixup specific to this switch that when enabling the
+> > > downstream port it checks if it has enabled ACS P2P Request Redirect,
+> > > and if so changes the device (via the upstream port) to use the store
+> > > and forward operating mode.
+> >
+> > From a quick look at the datasheet, this switch seems to support
+> > hot-plug on its Downstream Ports:
+> >
+> > https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf
+> >
+> > I think your quirk isn't executed if a device is hotplugged to an
+> > initially-empty Downstream Port.
+> 
+> The device I am testing against has the ports wired directly to
+> devices (though can be disconnected) without hotplug so I will see if
+> I can find a development board with this switch to test the hotplug
+> behaviour. However it should be noted that the downstream ports are
+> probed with the switch, and are enabled with the ACS P2P Request
+> Redirect configured regardless of the presence of a device connected
+> to the downstream port.
+> 
+> > Also, if a device which triggered the quirk is hot-removed and none
+> > of its siblings uses ACS P2P Request Redirect, cut-through forwarding
+> > isn't reinstated.
+> 
+> The quirk is enabled on the downstream port of the switch, using the
+> state of the downstream port and not the device attached to it. My
+> understanding is that the only path that enables/disables the ACS P2P
+> Request Redirect on the downstream port is the initial pci_enable_acs.
+
+pci_enable_acs() is called during enumeration of each device
+(including the switch, of course):
+
+  pci_init_capabilities
+    pci_acs_init
+      pci_enable_acs
+
+and your quirk is DECLARE_PCI_FIXUP_ENABLE(), so it runs later, during
+pci_enable_device().  I don't think we ever turn on ACS P2P Request
+Redirect after enumeration.
+
+But we do also call pci_enable_acs() from pci_restore_state(), so this
+happens during resume.  I assume your quirk would also need to run
+then?  Is there a pci_enable_device() somewhere in the resume path
+that will do this?
+
+> This means that devices attached to the downstream port either
+> initially or with hotplugging should not change the ACS configuration
+> of the switches downstream port.
+> 
+> Which means nothing can cause the switch to need to be reinstated with
+> cut-through forwarding except the switch itself being hotplugged,
+> which would cause reset of the switch and the enable fixup to be
+> called again.
+
+Seems right to me, since we enable ACS P2P Request Redirect regardless
+of whether any downstream device exists.
+
+> > Perhaps we need additional pci_fixup ELF sections which are used on
+> > hot-add and hot-remove?
+> >
+> > Thanks,
+> >
+> > Lukas
