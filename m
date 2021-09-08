@@ -2,182 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AED7403C53
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Sep 2021 17:12:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B21403C8A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Sep 2021 17:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbhIHPNP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Sep 2021 11:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236245AbhIHPNN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Sep 2021 11:13:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8A0B60F6C;
-        Wed,  8 Sep 2021 15:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631113925;
-        bh=o7VuLdGrXHcrpl5bQDSmuUmn5f+AOer4ij4tdURLidU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fCRgu1muZSxoXP4qDdmWGgZ3yFGW/Fe1VQDNg1QG0lHBBBhjRokT75BKgryysnXGb
-         /sR2GGmyk/xvdU9k5SOL3dHcYvCtqbB8H563baPfZ4VWOnvxCfn9+f94Y6FvTHIWas
-         d+8gF5zYn7A1jSsYdFnpxf20/YDvq5Di3YGpF5ZIu2YrrHOhJHTJuaSKoZexJsQAG2
-         zk8nOasZHtRmsZws4d+k867NsT2sbbEyTbMS6TyroxHaIh1YvTS92unzSSlvpoZTC0
-         5+zaOITlJRte2f6v5cIfD+EIUKATvni/ykEvk4SUoNFCRlYa3v363bQ3SMIZFZOWPO
-         Iue3dZhB+LmQQ==
-Date:   Wed, 8 Sep 2021 10:12:03 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 1/3] PCI: imx: encapsulate the clock enable into one
- standalone function
-Message-ID: <20210908151203.GA866207@bjorn-Precision-5520>
+        id S1352043AbhIHPdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Sep 2021 11:33:51 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:46935 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352096AbhIHPdv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Sep 2021 11:33:51 -0400
+Received: by mail-ot1-f51.google.com with SMTP id v33-20020a0568300921b0290517cd06302dso3441521ott.13;
+        Wed, 08 Sep 2021 08:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=wCpW8P/qcfUBAUP9yX0etIAnVGW4oa2u6cdb6qiSrnk=;
+        b=Sw/fTWu1Wl5t2ppekAGkn2VAi4O4pncaXfQ7swW/XpUK4q/mY0QA9UKTeVT4x1Uy4s
+         Lz/B+bwI9MAXVSil7c3T6l2fUThLaPqRSrFohB/wjG2us5+dGWnh2qXZ8k48q/AIKLXT
+         Tvmzj5THeof63lDWs/776kGmiVsLvKL29+3n5dg9OFLzVxwUnD2pKmfkB+YOZDcC+muo
+         DWN3ADt8OV5ZchWK1IiduiISFvXGiFq8c1vMh5mr4KyJbQwoL5/VqTREBYlR+79XoGZp
+         wq5KhQvT0B714JU4DlCs7yXX6zp+LrICEysFZp71AO7yamN5JOllpdhp3vicMgEC0RSp
+         XuHA==
+X-Gm-Message-State: AOAM533KBYUDTtbfyjHt4PMPyB6qkGmqUceEq10V1o6Zo/ugJg809lOA
+        dJWWxLUKpBv2rBL8x2IycfWzB6sZzLUewSUXv2RcCRlvEAE=
+X-Google-Smtp-Source: ABdhPJwjDpAIAa6bP74QWXIdmK708YE7bbnCkp4tIEYhFyLQniE/ez5UxX+qKhH/TJs2LKWkh4/oLpULx1N70TlCDVU=
+X-Received: by 2002:a9d:4d93:: with SMTP id u19mr3647281otk.86.1631115163066;
+ Wed, 08 Sep 2021 08:32:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1631084366-24785-1-git-send-email-hongxing.zhu@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 8 Sep 2021 17:32:32 +0200
+Message-ID: <CAJZ5v0isrxaOi_C50qO1S5t81xQZpnr-bunZp+Y_St+VuH6XxA@mail.gmail.com>
+Subject: [GIT PULL] More ACPI updates for v5.15-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 08, 2021 at 02:59:24PM +0800, Richard Zhu wrote:
-> No function changes, just encapsulate the i.MX PCIe clocks enable
-> operations into one standalone function
+Hi Linus,
 
-When you update this,
+Please pull from the tag
 
-  - it's helpful if you include a cover letter with a multi-patch
-    series, with the patches being replies to the cover letter, and
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.15-rc1-2
 
-  - please follow the sentence and formatting conventions for subject
-    lines and commit logs (driver name should match, capitalize
-    subject line, end sentences with periods, blank lines between
-    paragraphs, remove useless information like timestamps from log
-    messages, indent quoted material like logs by two spaces, etc).
+with top-most commit e543b10cd9d75309c820d2175200d09b2a62f249
 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 82 +++++++++++++++++----------
->  1 file changed, 51 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 80fc98acf097..0264432e4c4a 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -143,6 +143,8 @@ struct imx6_pcie {
->  #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
->  #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
->  
-> +static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie);
-> +
->  static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
->  {
->  	struct dw_pcie *pci = imx6_pcie->pci;
-> @@ -498,33 +500,12 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  		}
->  	}
->  
-> -	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
-> -	if (ret) {
-> -		dev_err(dev, "unable to enable pcie_phy clock\n");
-> -		goto err_pcie_phy;
-> -	}
-> -
-> -	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
-> +	ret = imx6_pcie_clk_enable(imx6_pcie);
->  	if (ret) {
-> -		dev_err(dev, "unable to enable pcie_bus clock\n");
-> -		goto err_pcie_bus;
-> +		dev_err(dev, "unable to enable pcie clocks\n");
-> +		goto err_clks;
->  	}
->  
-> -	ret = clk_prepare_enable(imx6_pcie->pcie);
-> -	if (ret) {
-> -		dev_err(dev, "unable to enable pcie clock\n");
-> -		goto err_pcie;
-> -	}
-> -
-> -	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
-> -	if (ret) {
-> -		dev_err(dev, "unable to enable pcie ref clock\n");
-> -		goto err_ref_clk;
-> -	}
-> -
-> -	/* allow the clocks to stabilize */
-> -	usleep_range(200, 500);
-> -
->  	/* Some boards don't have PCIe reset GPIO. */
->  	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
->  		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> @@ -578,13 +559,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  
->  	return;
->  
-> -err_ref_clk:
-> -	clk_disable_unprepare(imx6_pcie->pcie);
-> -err_pcie:
-> -	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> -err_pcie_bus:
-> -	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> -err_pcie_phy:
-> +err_clks:
->  	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
->  		ret = regulator_disable(imx6_pcie->vpcie);
->  		if (ret)
-> @@ -914,6 +889,51 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
->  	usleep_range(1000, 10000);
->  }
->  
-> +static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
-> +{
-> +	struct dw_pcie *pci = imx6_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable pcie_phy clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable pcie_bus clock\n");
-> +		goto err_pcie_bus;
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->pcie);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable pcie clock\n");
-> +		goto err_pcie;
-> +	}
-> +
-> +	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable pcie ref clock\n");
-> +		goto err_ref_clk;
-> +	}
-> +
-> +	/* allow the clocks to stabilize */
-> +	usleep_range(200, 500);
-> +	return 0;
-> +
-> +err_ref_clk:
-> +	clk_disable_unprepare(imx6_pcie->pcie);
-> +err_pcie:
-> +	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> +err_pcie_bus:
-> +	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> +
-> +	return ret;
-> +
-> +}
-> +
->  static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
->  {
->  	clk_disable_unprepare(imx6_pcie->pcie);
-> -- 
-> 2.25.1
-> 
+ Merge branches 'acpi-pm' and 'acpi-docs'
+
+on top of commit 6f1e8b12eec44ee047dc9e0a9544b2cfed739503
+
+ Merge tag 'acpi-5.15-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive more ACPI updates for 5.15-rc1.
+
+These add ACPI support to the PCI VMD driver, improve suspend-to-idle
+support for AMD platforms and update documentation.
+
+Specifics:
+
+ - Add ACPI support to the PCI VMD driver (Rafael Wysocki).
+
+ - Rearrange suspend-to-idle support code to reflect the platform
+   firmware expectations on some AMD platforms (Mario Limonciello).
+
+ - Make SSDT overlays documentation follow the code documented by it
+   more closely (Andy Shevchenko).
+
+Thanks!
+
+
+---------------
+
+Andy Shevchenko (1):
+      Documentation: ACPI: Align the SSDT overlays file with the code
+
+Mario Limonciello (1):
+      ACPI: PM: s2idle: Run both AMD and Microsoft methods if both are supported
+
+Rafael J. Wysocki (1):
+      PCI: VMD: ACPI: Make ACPI companion lookup work for VMD bus
+
+---------------
+
+ Documentation/admin-guide/acpi/ssdt-overlays.rst | 49 ++++++++--------
+ drivers/acpi/x86/s2idle.c                        | 67 ++++++++++++---------
+ drivers/pci/controller/vmd.c                     | 55 ++++++++++++++++++
+ drivers/pci/host-bridge.c                        |  1 +
+ drivers/pci/pci-acpi.c                           | 74 ++++++++++++++++++++++++
+ include/linux/pci-acpi.h                         |  3 +
+ 6 files changed, 197 insertions(+), 52 deletions(-)
