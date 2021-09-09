@@ -2,91 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 248E44056C9
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 15:38:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C88294058AE
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 16:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347869AbhIINXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Sep 2021 09:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        id S1348404AbhIIOMJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Sep 2021 10:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358452AbhIINLR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Sep 2021 09:11:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E35C8632C7;
-        Thu,  9 Sep 2021 12:01:18 +0000 (UTC)
+        id S242586AbhIIOMF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Sep 2021 10:12:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6FFF6120E;
+        Thu,  9 Sep 2021 14:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188879;
-        bh=nxEmhqXwkoygVpRjcjGTICkGMqDm8J3DhCUAHUyjG8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tCDmnON1cSVDEAJ5cC1q/iiWYo9D45njOiaxUmb3yB3FmsAY53n8mCMQDipArJRPG
-         jIpc9RLPD0drH4jWfEJVzbBNuw2W3BwE5gW64GaBCiPdSiS0dh4OKXa/6GJVbzA1cP
-         DeJ6WXqnC5z+r+LoeMBIRRJD9PT6nguRLaeU5m1CRiuhv4EoiWejqqoOeyp3jXuWQI
-         zYoQgpJFaAwXAejvYWj1dikiUlxmfE0bWkspPcepzfQq+Mpts/Zgvui/2rB1J2IO+g
-         O+2rrqqye6y9G2gzN88HsuWHp0VsqTk3fv8YEEq0abZ+UxyRnBdD/CYlB40zfFNs4E
-         VHsmn2CWIj1Jw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/35] PCI: Use pci_update_current_state() in pci_enable_device_flags()
-Date:   Thu,  9 Sep 2021 08:00:43 -0400
-Message-Id: <20210909120116.150912-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909120116.150912-1-sashal@kernel.org>
-References: <20210909120116.150912-1-sashal@kernel.org>
+        s=k20201202; t=1631196655;
+        bh=QnFWolxfZay1KMpuuJiy3t4+3J08Jw2jb7kKsRqKiRI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=s8OMagPIG0mUnQ7VETHmYD2RHn+VHA71FedeB9+SRUD+n47dhjv8EAjZzN5gxZXSF
+         FdkztBACksqPV5juPjY26iPjASI6s6kPY3WQh7pbw4T6ER8Klr02KYob4VfKAD4ZUg
+         +z4esWg7IKBGwHRaAWO10tein74R9UXIt4v7qsu+y6qkXopw+JaAQP+qar7Du9v1u/
+         tv6JZ9h2YeEhluZ00HS7l9zEBhtqulrkvr52U813OMocE9Am2eyXxWDnNy0cNLLLCm
+         H6wVjcz/euq6fVPlX9sGA5lkqRwCXd0grl0xbm/YkHeyxoP+ffoqlgRPlleXaQpx3q
+         6i2ZXqmFq2Gxw==
+Received: by mail-ej1-f48.google.com with SMTP id lc21so3882510ejc.7;
+        Thu, 09 Sep 2021 07:10:55 -0700 (PDT)
+X-Gm-Message-State: AOAM531FzKKcSYj2qWKWlcsCeWF95qNSksCHk0EXk2finC6PMGCehqNA
+        hr2XgOb3f8WK7vb0lWu/A7yjvYkQVZNDjdJyXQ==
+X-Google-Smtp-Source: ABdhPJx78xiZSPaticSCU5QeXk5UGX/qy1ALDt4dQ95ViMAZspsdbsMUPxdOKI8sScOzdKeEWTPe/Itcz6D9fMwrLU0=
+X-Received: by 2002:a17:907:50a1:: with SMTP id fv33mr3650324ejc.128.1631196654351;
+ Thu, 09 Sep 2021 07:10:54 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20210903095213.797973-1-chenhuacai@loongson.cn>
+ <20210903095213.797973-19-chenhuacai@loongson.cn> <YTjbaz7iea1kwGYb@robh.at.kernel.org>
+ <CAK8P3a3sY63WN6Mn6_xNqDYmdhv1PN6CFRfQGNDRO4dHtSjE7Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a3sY63WN6Mn6_xNqDYmdhv1PN6CFRfQGNDRO4dHtSjE7Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 9 Sep 2021 09:10:42 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJh3b9BxRU3ye=Qtmip+XE9gJxUKvPKuKNpxfOvmq08pg@mail.gmail.com>
+Message-ID: <CAL_JsqJh3b9BxRU3ye=Qtmip+XE9gJxUKvPKuKNpxfOvmq08pg@mail.gmail.com>
+Subject: Re: [PATCH V2 18/22] LoongArch: Add PCI controller support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Wed, Sep 8, 2021 at 11:39 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Sep 8, 2021 at 5:48 PM Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Sep 03, 2021 at 05:52:09PM +0800, Huacai Chen wrote:
+>
+> > > diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
+> > > new file mode 100644
+> > > index 000000000000..d6e2f69b9503
+> > > --- /dev/null
+> > > +++ b/arch/loongarch/pci/acpi.c
+> > > @@ -0,0 +1,174 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+>
+> A lot of this file appears to duplicate what we already have on other
+> architectures.
+> I would suggest moving the other architecture specific code into
+> drivers/acpi/pci*.c and share as much as possible to make it easier to
+> make modifications in the future.
 
-[ Upstream commit 14858dcc3b3587f4bb5c48e130ee7d68fc2b0a29 ]
+Yes. I was sad to see after I replied you already said this for v1.
 
-Updating the current_state field of struct pci_dev the way it is done
-in pci_enable_device_flags() before calling do_pci_enable_device() may
-not work.  For example, if the given PCI device depends on an ACPI
-power resource whose _STA method initially returns 0 ("off"), but the
-config space of the PCI device is accessible and the power state
-retrieved from the PCI_PM_CTRL register is D0, the current_state
-field in the struct pci_dev representing that device will get out of
-sync with the power.state of its ACPI companion object and that will
-lead to power management issues going forward.
+> > It might be time for default implementations here that can be shared
+> > with arm64. The functions look the same or similar to the arm64
+> > version in many cases and why they are different isn't that clear to me
+> > not being all that familar with the ACPI code.
+>
+> I think it can be simplified quite a bit if we restructure the acpi pci
+> code to behave like a normal pci host bridge driver.
 
-To avoid such issues, make pci_enable_device_flags() call
-pci_update_current_state() which takes ACPI device power management
-into account, if present, to retrieve the current power state of the
-device.
+That is exactly what I want to see happen! I'm not that familiar with
+the ACPI device probing piece of it or I probably would have done that
+by now. I gather there's not a normal acpi_device (or platform_device
+with ACPI matching?) so we'd have to create the device(s) based on the
+MCFG table.
 
-Link: https://lore.kernel.org/lkml/20210314000439.3138941-1-luzmaximilian@gmail.com/
-Reported-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pci.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b7f65fc54dc2..642694e31cb6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1334,11 +1334,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
- 	 * so that things like MSI message writing will behave as expected
- 	 * (e.g. if the device really is in D0 at enable time).
- 	 */
--	if (dev->pm_cap) {
--		u16 pmcsr;
--		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
--		dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
--	}
-+	pci_update_current_state(dev, dev->current_state);
- 
- 	if (atomic_inc_return(&dev->enable_cnt) > 1)
- 		return 0;		/* already enabled */
--- 
-2.30.2
-
+Rob
