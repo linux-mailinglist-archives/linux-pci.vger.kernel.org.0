@@ -2,115 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A751540593E
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 16:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3350B405A40
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 17:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241262AbhIIOkQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Sep 2021 10:40:16 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:36725 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345868AbhIIOkM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Sep 2021 10:40:12 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]) by
- mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MwQKp-1nGiPJ417l-00sMtQ; Thu, 09 Sep 2021 16:39:01 +0200
-Received: by mail-wr1-f48.google.com with SMTP id n5so2890226wro.12;
-        Thu, 09 Sep 2021 07:39:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532HtoxK1XpA+mTMgj665ydCxWcued8HQi65X6IhdunYFTg6jUXm
-        mj5KYquY9stAAqq3Qk+TpUazDfmjJn/iIWO3jjU=
-X-Google-Smtp-Source: ABdhPJzH5FTm4Ahmznq9ht5nhkowj4Zn4u5BlABEuGXnJNNsamOP9/btoCFXPbNmcqykva7+mI6cbFrg6KQkTPzWsbQ=
-X-Received: by 2002:adf:c10b:: with SMTP id r11mr3986816wre.336.1631198340414;
- Thu, 09 Sep 2021 07:39:00 -0700 (PDT)
+        id S232029AbhIIPk0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Sep 2021 11:40:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53778 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229745AbhIIPkZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Sep 2021 11:40:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631201956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NAoGWGPtsnAq49mA/RMrMqfbYA/9DWb9jHUJdmT/k/o=;
+        b=iO4nuWvrGN4ugOvW76OrfLkrNiAC0RsrIRaSAEwSoret1hYpujsZVgrYEkfmW72Uf6rwz2
+        4vJnBi4gFcAAEr3xHdI/ZFt0La/9s17yftv/yfw5L/GFV6wHcxNUqIAueYcemqYrUZ4YJd
+        ZuQcI8732ILSzgQjHxDtJnRA7TLxL9w=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-469-vbQ6EMJkOpaBWStlrCaxjA-1; Thu, 09 Sep 2021 11:39:14 -0400
+X-MC-Unique: vbQ6EMJkOpaBWStlrCaxjA-1
+Received: by mail-oi1-f198.google.com with SMTP id u23-20020acaab17000000b0026857819b52so1261574oie.1
+        for <linux-pci@vger.kernel.org>; Thu, 09 Sep 2021 08:39:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NAoGWGPtsnAq49mA/RMrMqfbYA/9DWb9jHUJdmT/k/o=;
+        b=V31VdISVQR3M44QIfmGQHFWGpLLc1ZRuYWYYhiXfZ7TfuvGHw9xJptCAVeFHFlXbnV
+         X3fhc2Ob5B6C8kE+m7wCp31yeN1McshlGNXsV/dgkvrCbUNjwFatWqMbsVwDPDfrU/FB
+         2iR5X7zk+c1wGPEPzqw0ZgKIja8s99ucd7HrVxjvHl6W8fuTAJW4leZbO0oPv0ex6P7L
+         hiyX6GviLU9pStwsVAMA/zHmhZsaWoJ3Lu7cpnP6WKBFjBAbfL+VVFZJCOyi6XTniJpH
+         uXbnVocAjPg6+/EJFdBcuSRz+Zcm4hY9eX+qMTNqRjDbRXCgc8okaxWmoIz3fa1kCcmF
+         SM3g==
+X-Gm-Message-State: AOAM530Wq3PcxJOgzbFQVSeeYjkoXPUgNoLQQCpDMagE2Q3MA376n/ID
+        +U+Fr0EQuq+l4zSrAcfAHm7h6mp4nmqJtSP3gSavXCDvifwtTKcIrlCySmBOzkOA77mhKUnlDdc
+        Tyfjz3aVmLYHfPEDxmwZR
+X-Received: by 2002:a9d:630e:: with SMTP id q14mr418227otk.316.1631201954139;
+        Thu, 09 Sep 2021 08:39:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzzzncNWg2v091gvZjadEV35dq8or54nXg1XSQmDjzvuWHq6fncTlgpM5zdL7kC5EKXQ+OwDw==
+X-Received: by 2002:a9d:630e:: with SMTP id q14mr418142otk.316.1631201953085;
+        Thu, 09 Sep 2021 08:39:13 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id a1sm525600otr.33.2021.09.09.08.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Sep 2021 08:39:12 -0700 (PDT)
+Date:   Thu, 9 Sep 2021 09:39:11 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Nathan Rossi <nathan@nathanrossi.com>
+Cc:     linux-pci@vger.kernel.org, Nathan Rossi <nathan.rossi@digi.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2] PCI: Add ACS errata for Pericom PI7C9X2G404 switch
+Message-ID: <20210909093911.03952664.alex.williamson@redhat.com>
+In-Reply-To: <20210909080927.164709-1-nathan@nathanrossi.com>
+References: <20210909080927.164709-1-nathan@nathanrossi.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20210903095213.797973-1-chenhuacai@loongson.cn>
- <20210903095213.797973-19-chenhuacai@loongson.cn> <YTjbaz7iea1kwGYb@robh.at.kernel.org>
- <CAK8P3a3sY63WN6Mn6_xNqDYmdhv1PN6CFRfQGNDRO4dHtSjE7Q@mail.gmail.com> <CAL_JsqJh3b9BxRU3ye=Qtmip+XE9gJxUKvPKuKNpxfOvmq08pg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJh3b9BxRU3ye=Qtmip+XE9gJxUKvPKuKNpxfOvmq08pg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Sep 2021 16:38:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0=D3XCqn5bGZOWYfM1WH355VgmoVevfwtz=ex4g6yj5Q@mail.gmail.com>
-Message-ID: <CAK8P3a0=D3XCqn5bGZOWYfM1WH355VgmoVevfwtz=ex4g6yj5Q@mail.gmail.com>
-Subject: Re: [PATCH V2 18/22] LoongArch: Add PCI controller support
-To:     Rob Herring <robh@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:svpU8AQp5Rd7CMD4hqLYblNGNirVWo0vDiZGy/XTBdaFQnEWAdg
- Gl8PDjtchE9W850Bev9rFP7PXEv5PrBHx8UCCIEzM3sbZZ7JRNswhdWOZBv82PeSeNnqnGI
- TYlpMTmqXqI0002RGiuPrjA4GddDvhsRbaYLnour4T+HMIrYfW547GCvq/kBrsS/DCfj853
- YF05cjPfcIiLnRB4CpmTg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8JEk7UuEk94=:qZVGbdCz5qGV/ZqeIbj893
- Ah6sbVLWhriE2BFPydbMdT3ox4eo0Xda7kd+SQ4m3slqz4I8pwj8E5p/asFTw9zzrjh5jsq58
- ffRKXvtxNyBj8tB1t2+dLFabxezgw2jrtyE1QsgAosobWPD1OWWgpGOa08BiX/JkaILiLzFuC
- zH4PtaLIw7LnEPxGMY3SsvACLZ1mk67NV0qb/62+ptPaa6WaM9lRpkHsIt0lLJ3eensBiCxV+
- UaCRd3CNLt90NVhvZzN6+zjGs1Osi8gJBMIglo5CkNjLofoRy5uNnnH0eXAj6ks6kz3+jp4dC
- 6v3UuQk8BCn1/b6iZ09Oveou/2ScdovVDudnpSMHGTlC6EqiTc0OJv86lmj/dL1nKXfI/kw1Q
- zD7jVMgMN6AU98/h/CJTn+erq+Rjcmoj/1Fo4ASfjkttTFGZlaOtElxeNKR6W+4kTJqpweQ+2
- ph2jJ1VNVKynItBOPYilPNq9ZZEvWPzv87RKvNxGxaWcDxawGTE/GKJMwK+QUK08WKqBhNItZ
- 8nTqcX3Xlg8U5sRL2ciEOIdatt2Twjop6/xVK6n+BNMzFi4A6mCNBF8IGKT2eVhQm3lHWx/Cm
- WMK6Wb2EKKnWWDklHnXW7weJeei6U+9aMB6e0vo2VB7iIOoMu28SNW8Ub+cz8lWDt0repg4Va
- lDtrm0ClYCJMtZbpD7NQbKD1SaBMJOoAZFCun3NUZKuQucRZHaic0lCp9/S+37rNvJvl37ZOy
- IlS+KxiXHKDflaAHSmAPtcrHt9v5hUPrnAnOU3np0pTTbB7unmLq+HQ+LQsDlNPMmklxH07mI
- 59rSnf72jIVkYgNl5vpHLsokQFYDwjjGX1h3AeWhDu2qKPu9CW1bzuLGDv5WM5GFqGI3lEiNV
- mkaDdbTQBodijznyb3sQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 9, 2021 at 4:10 PM Rob Herring <robh@kernel.org> wrote:
-> On Wed, Sep 8, 2021 at 11:39 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > > It might be time for default implementations here that can be shared
-> > > with arm64. The functions look the same or similar to the arm64
-> > > version in many cases and why they are different isn't that clear to me
-> > > not being all that familar with the ACPI code.
-> >
-> > I think it can be simplified quite a bit if we restructure the acpi pci
-> > code to behave like a normal pci host bridge driver.
->
-> That is exactly what I want to see happen! I'm not that familiar with
-> the ACPI device probing piece of it or I probably would have done that
-> by now. I gather there's not a normal acpi_device (or platform_device
-> with ACPI matching?) so we'd have to create the device(s) based on the
-> MCFG table.
+On Thu, 09 Sep 2021 08:09:27 +0000
+Nathan Rossi <nathan@nathanrossi.com> wrote:
 
-I have a patch that I did as part of a longer series to modernize
-some of the more unusual pci host bridges, it's only a small step
-but should help follow up for the rest:
+> From: Nathan Rossi <nathan.rossi@digi.com>
+> 
+> The Pericom PI7C9X2G404 PCIe switch has an errata for ACS P2P Request
+> Redirect behaviour when used in the cut-through forwarding mode. The
+> recommended work around for this issue is to use the switch in store and
+> forward mode. The errata results in packets being queued and not being
+> delivered upstream, this can be observed as very poor downstream device
+> performance and/or dropped device generated data/interrupts.
+> 
+> This change adds a fixup specific to this switch that when enabling or
+> resuming the downstream port it checks if it has enabled ACS P2P Request
+> Redirect, and if so changes the device (via the upstream port) to use
+> the store and forward operating mode.
+> 
+> Signed-off-by: Nathan Rossi <nathan.rossi@digi.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/commit/?h=pci-probe-rework-20210320&id=7346fbf1938e547833726ebdf25dfe0ef185cbff
 
-What I noticed is that there are a couple of data structures that each
-exist for every acpi host bridge:
+Thanks for pursuing this!  I took a stab at it[1] some time ago but I
+tried to pursue link balancing, I didn't have the datasheet to realize
+we could simply put the device in a different mode and blindly assumed
+the mode was inherit to the unbalanced link config.  Link balancing
+turned out to be more complicated than I cared or had time to pursue.
 
-struct acpi_pci_root
-struct acpi_pci_root_ops
-struct acpi_pci_root_info
-struct acpi_pci_generic_root_info
-struct pci_sysdata (arch specific, but includes data used by acpi)
-struct pci_host_bridge
+Also related to this device, there is a kernel bz for this issue that
+might provide more details[2], Bjorn will probably want to add that
+reference to the commit log.
 
-I think we can pretty much move all the struct members from those
-into the generic pci_host_bridge, removing the duplicates and
-adding #ifdef CONFIG_ACPI for some of them.
+I'll see if I can find the card from that bz to test here.  Thanks,
 
-Similarly, for the global functions from arch/arm64/kernel/pci.c etc,
-I think they should mostly get turned into callback handlers that
-get set by the probe function, replacing the __weak defaults.
+Alex
 
-       Arnd
+[1]https://lore.kernel.org/all/20161026175156.23495.12980.stgit@gimli.home/
+[2]https://bugzilla.kernel.org/show_bug.cgi?id=177471
+
+> ---
+> Changes in v2:
+> - Added DECLARE_PCI_FIXUP_RESUME to handle applying fixup upon resume as
+>   switch operation may have been reset or ACS configuration may have
+>   changed
+> ---
+>  drivers/pci/quirks.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index e5089af8ad..5849b7046b 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5790,3 +5790,51 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+>  }
+>  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+>  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
+> +
+> +/*
+> + * Pericom PI7C9X2G404 switch errata E5 - ACS P2P Request Redirect is not
+> + * functional
+> + *
+> + * When ACS P2P Request Redirect is enabled and bandwidth is not balanced
+> + * between upstream and downstream ports, packets are queued in an internal
+> + * buffer until CPLD packet. The workaround is to use the switch in store and
+> + * forward mode.
+> + */
+> +#define PI7C9X2G404_MODE_REG		0x74
+> +#define PI7C9X2G404_STORE_FORWARD_MODE	BIT(0)
+> +static void pci_fixup_pericom_acs_store_forward(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *upstream;
+> +	u16 val;
+> +
+> +	/* Downstream ports only */
+> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
+> +		return;
+> +
+> +	/* Check for ACS P2P Request Redirect use */
+> +	if (!pdev->acs_cap)
+> +		return;
+> +	pci_read_config_word(pdev, pdev->acs_cap + PCI_ACS_CTRL, &val);
+> +	if (!(val & PCI_ACS_RR))
+> +		return;
+> +
+> +	upstream = pci_upstream_bridge(pdev);
+> +	if (!upstream)
+> +		return;
+> +
+> +	pci_read_config_word(upstream, PI7C9X2G404_MODE_REG, &val);
+> +	if (!(val & PI7C9X2G404_STORE_FORWARD_MODE)) {
+> +		pci_info(upstream, "Setting PI7C9X2G404 store-forward mode\n");
+> +		/* Enable store-foward mode */
+> +		pci_write_config_word(upstream, PI7C9X2G404_MODE_REG, val |
+> +				      PI7C9X2G404_STORE_FORWARD_MODE);
+> +	}
+> +}
+> +/*
+> + * Apply fixup on enable and on resume, in order to apply the fix up whenever
+> + * ACS configuration changes or switch mode is reset
+> + */
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_PERICOM, 0x2404,
+> +			 pci_fixup_pericom_acs_store_forward);
+> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_PERICOM, 0x2404,
+> +			 pci_fixup_pericom_acs_store_forward);
+> ---
+> 2.33.0
+> 
+
