@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32935405193
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 14:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F60405351
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 14:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350341AbhIIMhK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Sep 2021 08:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
+        id S1346787AbhIIMvY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Sep 2021 08:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353755AbhIIMYs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Sep 2021 08:24:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55A8461B01;
-        Thu,  9 Sep 2021 11:51:28 +0000 (UTC)
+        id S1355157AbhIIMlo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Sep 2021 08:41:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1DD8E61BE6;
+        Thu,  9 Sep 2021 11:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188289;
-        bh=cU9PSdYY4xYV77BMmc2t29QuzezwuZebPFAyRME90CA=;
+        s=k20201202; t=1631188513;
+        bh=yPJYZgqJxNxEVRDvxlqf7dqm7sFFZsS9Mu/g6PLHJSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tM3+tHcD67Uh0kaz7UI3cFhJ05CQrAP066drS0p7S4AJ2zGaAVG6tTf1UZLQPN8cU
-         Pq+mCz1sozrJP9FAD9/7kNIBdqJKRSD1Le2vxxHQvU/SHK5DER4kKffydOMrw4ofSC
-         iiI9VDYch+lMUw5v5MNlF00/DzsutFeCzZmfrKRG6DCOuasI3XYaXisTyRMdjQMKai
-         cVd9T6x+xUw3yCxqau8mbIwVG8bPSjkU9g9H527D2Fdre6YfGDYaj/5EzDgbKkP9Gp
-         FBgKWJz7JY91OxDPWZiH9FWbfUkPi7iClfs4Ftu8Cl4pumYSw8iVFy8NgRoH9Mzb6y
-         4HaNJ1cMb5THQ==
+        b=qOYzyMGMkz+9q97NLjtZopDve2UVYUnX8dKmiPviXByINmGD1TkSIAxiOK6IGeMjK
+         OpgMs+0Q94Op49YmaZIR6QkmVEJSW9OIdMsMw9d2rcR1G0/QqmqW6/XOYEos63aZ01
+         WaSZjcjGvto22eF5MV6C1yKRoQxXhbWifF4BdGDgLYHi2h1/KHVw+GGwagJkclSB2p
+         RfrwKCNeVYmhme24UZxTl7Ie51SKZwnHxiWZzUKA5JSkhw7KyDLteSUuAtlZY2ib+P
+         qYglCds/lZXbxNKBjfgpiY2CKh3XAipunKAF5ITpctuz0HUll5iODi/zBFd9FxwyQg
+         cvImXTZOv4vUQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 008/176] PCI: Use pci_update_current_state() in pci_enable_device_flags()
-Date:   Thu,  9 Sep 2021 07:48:30 -0400
-Message-Id: <20210909115118.146181-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 005/109] PCI: Use pci_update_current_state() in pci_enable_device_flags()
+Date:   Thu,  9 Sep 2021 07:53:22 -0400
+Message-Id: <20210909115507.147917-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909115118.146181-1-sashal@kernel.org>
-References: <20210909115118.146181-1-sashal@kernel.org>
+In-Reply-To: <20210909115507.147917-1-sashal@kernel.org>
+References: <20210909115507.147917-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9e971fffeb6a..e30a70eda562 100644
+index 3c3bc9f58498..65db3aa0670a 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1880,11 +1880,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+@@ -1672,11 +1672,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
  	 * so that things like MSI message writing will behave as expected
  	 * (e.g. if the device really is in D0 at enable time).
  	 */
