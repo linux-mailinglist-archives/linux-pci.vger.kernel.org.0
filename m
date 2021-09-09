@@ -2,70 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAACE405B4F
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 18:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E47D1405C15
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 19:28:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238134AbhIIQw2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Sep 2021 12:52:28 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:53188 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240038AbhIIQwY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Sep 2021 12:52:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=YtcxtM2RbgTic/9NhzdoONL1C+9xeRtzN770QHck5PY=; b=Gq6aTGAg4XeCQAHjIOeJU6/6Ss
-        OUPL9qiZpS2odtm4q2meLIjIpvpj+gS0x7STykqChPo+osVFbChNL2F01ETE5W4MO5CFmJoMjsNOT
-        wbymCOHB9bqma2wTIyyQWO9nUtTzNJ0jSXQqHe0Ae+rmNHBmvRzc+d9oUvRgl392F3FO23KM5RQpw
-        X2dC6OOz/Qutclae9csQYT01pAb7FU1aHIhrpWGxQF28FzXGsSmkndnk+q+pRg3gOJgHbT//lC/pf
-        GDUw6rGYcdrbFqj2A7uOOwRpv06OcWFSG+qGPyrM9DEJnukPpRPcPI8k/e2RTOQda4lU64NhHaWaC
-        4am0y9Fw==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1mONGX-0006AA-Jj; Thu, 09 Sep 2021 10:51:11 -0600
-To:     Wang Lu <wanglu@dapustor.com>, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210909032528.24517-1-wanglu@dapustor.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8e3b718c-1a74-232c-0e4c-9cc76d3ae1ac@deltatee.com>
-Date:   Thu, 9 Sep 2021 10:51:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20210909032528.24517-1-wanglu@dapustor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, wanglu@dapustor.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.2
+        id S241121AbhIIRaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Sep 2021 13:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232940AbhIIRaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Sep 2021 13:30:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E05E361100;
+        Thu,  9 Sep 2021 17:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631208533;
+        bh=Umswx7+uonqXD36E95PpN0EL1S7smPEf/QAyAdE3hqU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Nui7oIhXJ+N/OsBXgzWi/sXccwelVq4VXDEKB5HeBUtJEnLK6n6Au580d63TXW51J
+         JAbdt6Swi1PO9pjMWFNnc2YG+Wr/Dgpa0pkvc3cKA18aa4NeDop+CQ3ybfzR0J1htv
+         +cIUisrmLfzaUBPLbg2yMuBK0xtsftPz7cSC/cUUK+vfW9M3d+XnpPhjcWog24BDeT
+         Rru6aOPYL/x5jODoZ+wyXa9dd2cdM0boDFx48/ReCLCPuZYIYAFxFXGe5FGvnVAqXt
+         s2w6r7lMh4rwmxAFuJVwwZiYyNyjmLQ38fBabqg4OzLj/4cGU18yQPnw/SKnPT7RB0
+         ipyRIdU4c47Hg==
+Date:   Thu, 9 Sep 2021 12:28:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Wang Lu <wanglu@dapustor.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>
 Subject: Re: [PATCH] PCI/P2PDMA: fix the wrong dma address calculation when
  map sg
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Message-ID: <20210909172851.GA993207@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210909032528.24517-1-wanglu@dapustor.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-
-On 2021-09-08 9:25 p.m., Wang Lu wrote:
+On Thu, Sep 09, 2021 at 11:25:28AM +0800, Wang Lu wrote:
 > The bus offset is bus address - physical address,
 > so the calculation in __pci_p2pdma_map_sg should be:
 > bus address = physical address + bus offset.
 > 
 > Signed-off-by: Wang Lu <wanglu@dapustor.com>
 
-Thanks, yes I believe my math was wrong here.
+Applied with Logan's reviewed-by to pci/p2pdma for v5.16, thanks!
 
-It was never tested on any machine that has a non-zero bus-offset.
+I fixed the subject line and commit log for you to follow the usual
+conventions.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/p2pdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 50cdde3e9a8b..327882638b30 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -874,7 +874,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+>  	int i;
+>  
+>  	for_each_sg(sg, s, nents, i) {
+> -		s->dma_address = sg_phys(s) - p2p_pgmap->bus_offset;
+> +		s->dma_address = sg_phys(s) + p2p_pgmap->bus_offset;
+>  		sg_dma_len(s) = s->length;
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
+> 
+> 
