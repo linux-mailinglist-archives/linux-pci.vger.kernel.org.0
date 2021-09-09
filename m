@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C244049AC
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 13:42:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CACBC404E15
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Sep 2021 14:16:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236940AbhIILnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Sep 2021 07:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46218 "EHLO mail.kernel.org"
+        id S237093AbhIIMIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Sep 2021 08:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236880AbhIILmo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Sep 2021 07:42:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AEB0C600AA;
-        Thu,  9 Sep 2021 11:41:33 +0000 (UTC)
+        id S1345240AbhIIMD4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Sep 2021 08:03:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E2FCF611CE;
+        Thu,  9 Sep 2021 11:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631187694;
-        bh=eJ+0Z+Qy9lkosvtqT6qKeWiN6BcKO7cj0ZFRvHyGApY=;
+        s=k20201202; t=1631188015;
+        bh=1vinlvUXtgfL/EpmdWI1KMt2cCHWQzb7uRU9eua1SiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mz4BAoLRUU22If6bvQwoNMxfHEtd66Ox1Dxe8evdke1f/DOplX9ebVojhWtR+de1w
-         ciBPBzEhWUcZ3XH/h4OfBpMy0u24lWXhI3NMuuFLfKaIQPg5zgwcee/8VO0RH2kOAH
-         whPVJZUjTgw0XbMNHNx+dCAlqfdeSmnNDFEcC2Uq+4UH7wkhyFRefDQRoYmp2y3icG
-         Kp+lGUdiJdolITUiYwHUnJFpDIIE8UPCf5bs3Y59YVao24tVBUsOKsXLA0llpI+aAs
-         M6PLqNfV9RjGAMSMUj/IY53H6KCECts5gFegr9+si9V0LBwYYJVVB19hCGYV3le2OW
-         j55+3yZKZFESw==
+        b=gdQnskx4bf8qxRSm42zn7NPLTxzPbQY87PN4fA5uClAToqfEkjxhhZf3FYWEfRRFd
+         qeeReaEgLJeLuemooYQN0G3nKN9W3g8laD3Rykt3yhFfK6w9GihKYPpKVRd2P9LK+M
+         NYYKCRnrL4ycFeWPo9p6sh5ePpiCbOq+YMN2/3T57a0Gn9kOk9E+0I9ScKtG7PJ/We
+         ODkIVhS6JTM0elOQxUvd+xMfNUVWP34lHWYCpT6EEG78X18Y4QA7A5GpfvRNPQTZQh
+         bkRI2oqwYJyfnQd+LEJQAzY++qiNB9KHV8x4iCs2y5IILlw+bTjkJ/THzVJ2b2k/2Z
+         BVvAHlf1yAJzw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.14 021/252] PCI: Use pci_update_current_state() in pci_enable_device_flags()
-Date:   Thu,  9 Sep 2021 07:37:15 -0400
-Message-Id: <20210909114106.141462-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 015/219] PCI: Use pci_update_current_state() in pci_enable_device_flags()
+Date:   Thu,  9 Sep 2021 07:43:11 -0400
+Message-Id: <20210909114635.143983-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909114106.141462-1-sashal@kernel.org>
-References: <20210909114106.141462-1-sashal@kernel.org>
+In-Reply-To: <20210909114635.143983-1-sashal@kernel.org>
+References: <20210909114635.143983-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,7 +71,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index aacf575c15cf..375d298659a4 100644
+index 8d4ebe095d0c..5ba136be4b50 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
 @@ -1906,11 +1906,7 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
