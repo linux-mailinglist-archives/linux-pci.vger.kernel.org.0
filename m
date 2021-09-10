@@ -2,201 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D885940691D
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Sep 2021 11:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CCDA406957
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Sep 2021 11:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbhIJJda (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Sep 2021 05:33:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231818AbhIJJd3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Sep 2021 05:33:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA189C061574
-        for <linux-pci@vger.kernel.org>; Fri, 10 Sep 2021 02:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=MIME-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nuSqD2vwifGtH2/hBbiDYPaHSatLdkbMylszZECNmsw=; b=W50Y9QnvBTM8ksbBqLQcrDatwh
-        Ocsjg/LxtjWA9TpkOwo7MtlL5Ju5v+KLgnMmTnqeQ0p8VYzG7Ui1OOH7gayLGtHCpo7Nb+qb0PsHJ
-        Ko9DkCrGBTPOt0BYd1xzAvOVllDVoJBhjeBKN312cprGdQ0B0XTXanNs17QEnlJI1U1zRiTyv5m65
-        d+5c3NXGo6XISCsdSecHZHhpgq5olPwnZj8Fns0Da1Xv+mle3bLulcFW91we8/UXNaEnZ/L+GwfBm
-        CL98RhVhpdQaSteAitiXSnRvi+rRQH94X1MkaSfZCIUH1KsdLYeEsVInQxUWWr1dkC39pzW/XyRo0
-        kLpq3q5A==;
-Received: from [2001:8b0:10b:1::3ae] (helo=u3832b3a9db3152.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mOctM-00CMC0-Il; Fri, 10 Sep 2021 09:32:17 +0000
-Message-ID: <0d113858778a53b0a89400a81f2a06bb4474351d.camel@infradead.org>
-Subject: Re: [PATCH v4 0/3] Improve PCI device post-reset readiness polling
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Stanislav Spassov <stanspas@amazon.com>, linux-pci@vger.kernel.org
-Cc:     Stanislav Spassov <stanspas@amazon.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S232157AbhIJJzv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Sep 2021 05:55:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46446 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232120AbhIJJzu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Sep 2021 05:55:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631267679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G3LlEYSRHK/bW1nfGLOGdZcifmv3HCR8Ukwhz+/9614=;
+        b=ikADgu7dsxj3oA0dObSy86XbT460Cqls7uMImgqDa3NDIq4PhSGyFOqkgfoyWMaH3FpotA
+        e5DP9lldq3+b5A+WADy70CoFl9nGd0tdMbr1SQ3fyWk9Wog8/7nL++nTqsQsw5I+EGCxcV
+        MCDiTpyK3gCb14WVuLu6Mtbq70stHa8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-473-b6XJ_O4HOm6scSo8eCOGwg-1; Fri, 10 Sep 2021 05:54:37 -0400
+X-MC-Unique: b6XJ_O4HOm6scSo8eCOGwg-1
+Received: by mail-wr1-f72.google.com with SMTP id m18-20020adfe952000000b0015b0aa32fd6so307285wrn.12
+        for <linux-pci@vger.kernel.org>; Fri, 10 Sep 2021 02:54:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G3LlEYSRHK/bW1nfGLOGdZcifmv3HCR8Ukwhz+/9614=;
+        b=l+6mJoPZdsUKJ/NB1O+a2PklEKC1MBoWW7AdEeCfWCeO4WEfMeAvxx1iqCTwX94g7s
+         TfWWqmouZiWmYduSQVzGvXGSAsgqP+usuxqsO/jDDyUwkKRkNjHMVcDSJAcP2sLMmd20
+         DqPCcC85bccTzztVGcT/Ac0QJKTd1A8zAlENiyFW/iAxbalYGPOPEUXB0KaYRYBBYcj9
+         vUT4pEQoBFhcAGa9x/N3bEj/TYpFC/f87mSP9GkGIlZjCpYYPbR0MjdpH8HZlFSQ+BRR
+         36oCcgUm2uBmml5NYqQaTrOKyMmIbrUa0pXCG8IHXuK2dd5wEA1OZJYQ9B5aVe2RjgPY
+         /0Sw==
+X-Gm-Message-State: AOAM533nqLTowNSr6IcqpBLfe4j5KEg7T0WeOctX80MT9EUB697w4IYV
+        3jdt8nl/G2HvYXAsiCrzHc59zjWj7fi/F3y4B7jAj8DJvTdM3lWhwLHK2UK+aOyB1L7G4xemxDR
+        kiM+BfiVYCnvOulojUAOO
+X-Received: by 2002:adf:eb81:: with SMTP id t1mr8840997wrn.245.1631267676748;
+        Fri, 10 Sep 2021 02:54:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzO0Y/+7P/8niNtl+CoPrjCVE7HuwDhOVv5eL0lpW28+D5kEKFv5EWjYMYsYF1r6EhbMvRO7w==
+X-Received: by 2002:adf:eb81:: with SMTP id t1mr8840971wrn.245.1631267676591;
+        Fri, 10 Sep 2021 02:54:36 -0700 (PDT)
+Received: from redhat.com ([2.55.145.189])
+        by smtp.gmail.com with ESMTPSA id o7sm3686409wmc.46.2021.09.10.02.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Sep 2021 02:54:34 -0700 (PDT)
+Date:   Fri, 10 Sep 2021 05:54:28 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Jan H ." =?ISO-8859-1?Q?Sch=F6nherr?= <jschoenh@amazon.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
         Jonathan Corbet <corbet@lwn.net>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sinan Kaya <okaya@kernel.org>, Rajat Jain <rajatja@google.com>
-Date:   Fri, 10 Sep 2021 10:32:12 +0100
-In-Reply-To: <8c9c45025b6130719d23c2fe151e2b6d3eef3baf.camel@infradead.org>
-References: <20200307172044.29645-1-stanspas@amazon.com>
-         <8c9c45025b6130719d23c2fe151e2b6d3eef3baf.camel@infradead.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-        boundary="=-MyHSPKApf9fMhhZ77wPA"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+Message-ID: <20210910054044-mutt-send-email-mst@kernel.org>
+References: <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
+ <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
+ <20210824053830-mutt-send-email-mst@kernel.org>
+ <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
+ <20210829112105-mutt-send-email-mst@kernel.org>
+ <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
+ <20210829181635-mutt-send-email-mst@kernel.org>
+ <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
+ <20210830163723-mutt-send-email-mst@kernel.org>
+ <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Aug 30, 2021 at 05:23:17PM -0700, Andi Kleen wrote:
+> 
+> On 8/30/2021 1:59 PM, Michael S. Tsirkin wrote:
+> > 
+> > > Or we can add _audited to the name. ioremap_shared_audited?
+> > But it's not the mapping that has to be done in handled special way.
+> > It's any data we get from device, not all of it coming from IO, e.g.
+> > there's DMA and interrupts that all have to be validated.
+> > Wouldn't you say that what is really wanted is just not running
+> > unaudited drivers in the first place?
+> 
+> 
+> Yes.
 
---=-MyHSPKApf9fMhhZ77wPA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Then ... let's do just that?
 
-On Fri, 2021-01-22 at 08:54 +0000, David Woodhouse wrote:
-> On Sat, 2020-03-07 at 18:20 +0100, Stanislav Spassov wrote:
-> > From: Stanislav Spassov <
-> > stanspas@amazon.de
-> > >
-> >=20
-> > The first version of this patch series can be found here:
-> > https://lore.kernel.org/linux-pci/20200223122057.6504-1-stanspas@amazon=
-.com
-> >=20
-> >=20
-> > The goal of this patch series is to solve an issue where pci_dev_wait
-> > can cause system crashes. After a reset, a hung device may keep
-> > responding with CRS completions indefinitely. If CRS Software Visibilit=
-y
-> > is enabled on the Root Port, attempting to read any register other than
-> > PCI_VENDOR_ID will cause the Root Port to autonomously retry the reques=
-t
-> > without reporting back to the CPU core. Unless the number of retries or
-> > the amount of time spent retrying is limited by platform-specific means=
-,
-> > this scenario leads to low-level platform timeouts (such as a TOR
-> > Timeout), which can easily escalate to a crash.
-> >=20
-> > Feedback on the v1 inspired a lot of additional improvements all around=
- the
-> > device reset codepaths and reducing post-reset delays. These improvemen=
-ts
-> > were published as part of v2 (v3 is just small build fixes).
-> >=20
-> > It looks like there is immediate demand specifically for the CRS work,
-> > so I am once again reducing the series to just that. The reset will be
-> > posted as a separate patch series that will likely require more time an=
-d
-> > iterations to stabilize.
->=20
-> Hm, what happened to this?
->=20
-> Bjorn?
+> 
+> > 
+> > > And we've been avoiding that drivers can self declare auditing, we've been
+> > > trying to have a separate centralized list so that it's easier to enforce
+> > > and avoids any cut'n'paste mistakes.
+> > > 
+> > > -Andi
+> > Now I'm confused. What is proposed here seems to be basically that,
+> > drivers need to declare auditing by replacing ioremap with
+> > ioremap_shared.
+> 
+> Auditing is declared on the device model level using a central allow list.
 
-Ping?
+Can we not have an init call allow list instead of, or in addition to, a
+device allow list?
 
---=-MyHSPKApf9fMhhZ77wPA
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+> But this cannot do anything to initcalls that run before probe,
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEw
-OTEwMDkzMjEyWjAvBgkqhkiG9w0BCQQxIgQg4EZMrOAvEwWT3jAu4AM6A+Ttwd1xkpRCyWj9RMy9
-v50wgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAI6dcB6FtqQZRzmjJX0n/nN+SbDTN0B9ZnUfWCsPnaTOsYuc/IA7DDjx6olE67Yl
-d867QPYCtKtGp1JE4yITnugE1J8gBHTOTAfm0C6TKtpGIDLKNld610NoX1p8ypSNZaqU2U64PT93
-qIXxYToJnaG1J+61S9JSC4auVrcdBYAZVIrQDaY0gNuxt1uzZFolUzQ2rQBDNmUORsOg3bXEPQb6
-BV+f1YuHSlaHnkFlD0jFMnnCc0oxbd+i3ruvI2se+6d9IoHXadug0q6b/u4sF8dc25BfMnwOj0Yk
-IfRfSTmg3T9EGfnxPOreF+NTFqffox6E0/JwDholhYwJWM/dIW4AAAAAAAA=
+Can't we extend module_init so init calls are validated against the
+allow list?
 
+> that's why
+> an extra level of defense of ioremap opt-in is useful.
 
---=-MyHSPKApf9fMhhZ77wPA--
+OK even assuming this, why is pci_iomap opt-in useful?
+That never happens before probe - there's simply no pci_device then.
+
+> But it's not the
+> primary mechanism to declare a driver audited, that's the allow list. The
+> ioremap is just another mechanism to avoid having to touch a lot of legacy
+> drivers.
+> 
+> If we agree on that then the original proposed semantics of "ioremap_shared"
+> may be acceptable?
+> 
+> -Andi
+> 
+
+It looks suspiciously like drivers self-declaring auditing to me which
+we both seem to agree is undesirable. What exactly is the difference?
+
+Or are you just trying to disable anything that runs before probe?
+In that case I don't see a reason to touch pci drivers though.
+These should be fine with just the device model list.
+
+-- 
+MST
 
