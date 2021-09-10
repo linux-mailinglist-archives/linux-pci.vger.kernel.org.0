@@ -2,158 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFF71406FBD
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Sep 2021 18:34:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B56407079
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Sep 2021 19:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbhIJQgA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Sep 2021 12:36:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41169 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229448AbhIJQf7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Sep 2021 12:35:59 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10103"; a="208226577"
-X-IronPort-AV: E=Sophos;i="5.85,283,1624345200"; 
-   d="scan'208";a="208226577"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2021 09:34:47 -0700
-X-IronPort-AV: E=Sophos;i="5.85,283,1624345200"; 
-   d="scan'208";a="581420171"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.255.212]) ([10.212.255.212])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2021 09:34:46 -0700
-Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-References: <CAPcyv4iJVQKJ3bVwZhD08c8GNEP0jW2gx=H504NXcYK5o2t01A@mail.gmail.com>
- <d992b5af-8d57-6aa6-bd49-8e2b8d832b19@linux.intel.com>
- <20210824053830-mutt-send-email-mst@kernel.org>
- <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
- <20210829112105-mutt-send-email-mst@kernel.org>
- <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
- <20210829181635-mutt-send-email-mst@kernel.org>
- <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
- <20210830163723-mutt-send-email-mst@kernel.org>
- <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
- <20210910054044-mutt-send-email-mst@kernel.org>
-From:   Andi Kleen <ak@linux.intel.com>
-Message-ID: <f672dc1c-5280-7bbc-7a56-7c7aab31725c@linux.intel.com>
-Date:   Fri, 10 Sep 2021 09:34:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S231190AbhIJRW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Sep 2021 13:22:26 -0400
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:40590 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230440AbhIJRWP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Sep 2021 13:22:15 -0400
+Received: by mail-lf1-f54.google.com with SMTP id k4so5477257lfj.7
+        for <linux-pci@vger.kernel.org>; Fri, 10 Sep 2021 10:21:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cqj7QL3Ud6tis7/wtb4CY9kC4CwM/wWtObr+fFS51ic=;
+        b=nFKOwi7z5FKLi6SEk1pkvP0ynqU3PMhuhUSMboCSyayNRe4rrw5j3m4B1hcGuFPaxo
+         hyhjZy2fgUI0wN/4GucPQlyYTUVYHdUMY5mex4Q1hD2/Y8BQdo5ZTqcJCuV+FYBzY4/i
+         zhVqdhn+NLy9L78bq1kMpIehLcFF23hksHAwD3jf2cCbarNQpK2nZdNG3jav/xJ67Zqd
+         spa68ubq76wksIuL1Q8YusUovDHHqbrjMCMWp9KEnOL/9th5x4IDfmXm9S/o2Od+rn6Z
+         rIhUey7zvRX/yWKrogTuNlQucup0Jp9wNjOck0DoV9mR1HdcZNTzTOzEFqz4mYaSZaSC
+         bKRg==
+X-Gm-Message-State: AOAM532uI1dkjI53lSneh42yArAytC02q09UnubOAnM7Geum+SGSbXtK
+        CM564eEhjmQz0yiiEEZsSSQ=
+X-Google-Smtp-Source: ABdhPJwA8cDi53DBG+97oQlGGL0emL8Aishx1srGjWsAp7G6E/PAJZU9v1gCZjAWeS19HVTHKiHfyA==
+X-Received: by 2002:ac2:5458:: with SMTP id d24mr599366lfn.385.1631294463297;
+        Fri, 10 Sep 2021 10:21:03 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id o21sm608013lfu.6.2021.09.10.10.21.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Sep 2021 10:21:02 -0700 (PDT)
+Date:   Fri, 10 Sep 2021 19:21:01 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI/sysfs: Add pci_dev_resource_attr_is_visible()
+ helper
+Message-ID: <20210910172101.GA1314672@rocinante>
+References: <YSjWWWVC6ImWA5Qe@kroah.com>
+ <20210827222331.GA3896976@bjorn-Precision-5520>
+ <YTtm4e9a/gS5Swga@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20210910054044-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <YTtm4e9a/gS5Swga@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Greg,
 
->>>> And we've been avoiding that drivers can self declare auditing, we've been
->>>> trying to have a separate centralized list so that it's easier to enforce
->>>> and avoids any cut'n'paste mistakes.
->>>>
->>>> -Andi
->>> Now I'm confused. What is proposed here seems to be basically that,
->>> drivers need to declare auditing by replacing ioremap with
->>> ioremap_shared.
->> Auditing is declared on the device model level using a central allow list.
-> Can we not have an init call allow list instead of, or in addition to, a
-> device allow list?
+[...]
+> >   pci_dev_config_attr_is_visible(..., struct bin_attribute *a, ...)
+> >   {
+> >     a->size = PCI_CFG_SPACE_SIZE;    # <-- set size in global attr
+> >     ...
+> >   }
+> > 
+> >   static struct bin_attribute *pci_dev_config_attrs[] = {
+> >     &bin_attr_config, NULL,
+> >   };
+> >   static const struct attribute_group pci_dev_config_attr_group = {
+> >     .bin_attrs = pci_dev_config_attrs,
+> >     .is_bin_visible = pci_dev_config_attr_is_visible,
+> >   };
+> > 
+> >   pci_device_add
+> >     device_add
+> >       device_add_attrs
+> >         device_add_groups
+> >           sysfs_create_groups
+> >             internal_create_groups
+> >               internal_create_group
+> >                 create_files
+> >                   grp->is_bin_visible()
+> >                   sysfs_add_file_mode_ns
+> >                     size = battr->size      # <-- copy size from attr
+> >                     __kernfs_create_file(..., size, ...)
+> >                       kernfs_new_node
+> >                         __kernfs_new_node
+> > 
+> 
+> You can create a dynamic attribute and register that.  I think some
+> drivers/busses do that today to handle this type of thing.
 
+Some static attributes users don't set size today or simply set it to 0, so
+then we report 0 bytes in userspace for each such attribute via the backing
+i-node.
 
-That would be quite complicated and intrusive. In fact I'm not even sure 
-how to do maintain something like this. There are a lot of needed 
-initcalls, they would all need to be marked. How can we distinguish 
-them? It would be a giant auditing project. And of course how would you 
-prevent it from bitrotting?
+Would you be open to the idea of adding a .size() callback so that static
+attributes users could set size using more proper channels, or do you think
+leaving it being set to 0 is fine?
 
-
-Basically it would be hundreds of changes all over the tree, just to 
-avoid two changes in virtio and MSI. Approach of just stopping the 
-initcalls from doing bad things is much less intrusive.
-
->
->> But this cannot do anything to initcalls that run before probe,
-> Can't we extend module_init so init calls are validated against the
-> allow list?
-
-See above.
-
-
-Also the problem isn't really with modules (we rely on udev not loading 
-them), but with builtin initcalls
-
-
->
->> that's why
->> an extra level of defense of ioremap opt-in is useful.
-> OK even assuming this, why is pci_iomap opt-in useful?
-> That never happens before probe - there's simply no pci_device then.
-
-
-Hmm, yes that's true. I guess we can make it default to opt-in for 
-pci_iomap.
-
-It only really matters for device less ioremaps.
-
->
-> It looks suspiciously like drivers self-declaring auditing to me which
-> we both seem to agree is undesirable. What exactly is the difference?
-
-
-Just allow listing the ioremaps is not self declaration because the 
-device will still not initialize due to the central device filter. If 
-you want to use it that has to be changed.
-
-It's just an additional safety net to contain code running before probe.
-
-
->
-> Or are you just trying to disable anything that runs before probe?
-
-
-Well anything that could do dangerous host interactions (like processing 
-ioremap data) A lot of things are harmless and can be allowed, or 
-already blocked elsewhere (e.g. we have a IO port filter). This just 
-handles the ioremap/MMIO case.
-
-> In that case I don't see a reason to touch pci drivers though.
-> These should be fine with just the device model list.
-
-
-That won't stop initcalls.
-
-
--Andi
-
-
->
+	Krzysztof
