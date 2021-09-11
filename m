@@ -2,107 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B32F407973
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Sep 2021 18:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD9B407AF9
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Sep 2021 01:54:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbhIKQGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Sep 2021 12:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbhIKQGw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Sep 2021 12:06:52 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C343CC061574;
-        Sat, 11 Sep 2021 09:05:39 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id i23so7374542wrb.2;
-        Sat, 11 Sep 2021 09:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zFN+kWQ8zZi7gQrxC+9TEC6NqA2P8LqFbiCzB4yXRIk=;
-        b=Q4YpBI9MrzcIsO1gXF09QBHwQ1msrFKTdO/BfjmQ0sY9BHlwUQVBlvYkJH/yzn6jcW
-         U92TDRFhOHaI0wJ0HGVo2b2IIES52GFh10Cp64rZ7pRBin/4H6ytzHio7aWxya7J9fPu
-         UruRkAM9BAUpThaL4jb4FJ7luNTphEXBpRhNSCCuO+v7uUEqCGbMKXuWDAvmziCu7Uq4
-         cyGbFndNo9uLfx8l9joJ8rPe0BhXUvu6N0az0p+44+U4dAvo2t2qYSvpSH8Sz3o0At1j
-         iC0HWY2mC7cLtgzYkhiJV4+rtdcM171KLWHbvkFil9t7PpvtHtW2qzboabi+TjvSVZRo
-         8sJA==
+        id S234664AbhIKX4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Sep 2021 19:56:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49642 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234598AbhIKXz7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Sep 2021 19:55:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631404485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XhzTiX0DZYV1X5ckSDoJZp4U7aZCZRTdTtc5atz14SI=;
+        b=HIYOtFgY4HxMNyU0nzLti5A8vG2pVu6p4v3N2hqr9VCqnSjvaEgH03c0xLylchB2XX6JhZ
+        MZja69E6+/mBnkFFoaH07qfH2BNOXewJXF/fF6FcQeepTpcoGIs0L1KGN//6havxYew7HX
+        7hUkBeY6or6zno1I58JXf2KSUB2lf60=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-YkRABu7ENqa4nnKiMbUSCA-1; Sat, 11 Sep 2021 19:54:44 -0400
+X-MC-Unique: YkRABu7ENqa4nnKiMbUSCA-1
+Received: by mail-ej1-f72.google.com with SMTP id c25-20020a170906341900b005eea9bf6f4aso793515ejb.12
+        for <linux-pci@vger.kernel.org>; Sat, 11 Sep 2021 16:54:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zFN+kWQ8zZi7gQrxC+9TEC6NqA2P8LqFbiCzB4yXRIk=;
-        b=E/WCfwXQ2lTypz8iVOyzsDyO7/g3N+DrttuF7ZhTH7FCOtS5qDOP4lC4lzKk3OH1dz
-         cvpjJrXxar9L9fHR3b3Vt3OPCiShZo2DRwki1RjJrdIntB+T/bAvxy0xDod1ikckx6zH
-         otFxp5hqeMWiQ6ahYvTIsW5XpshJBOaYNnTyMt+lC5i/kE+Qkj3Cott3coG98rsZCdj5
-         mRoCLF0EEfdw4ybanX28RN2RpbMsqSKcYGzL7cGgm2jI0GSq6GkOtXOu0CNHxuFJNdsN
-         El7OeL/GHC7aw6l94oMBGbl+iy25a4zJ1UxmAnxrm7lxn29nbo3yVsINQvXjuUh7xk+z
-         n7wg==
-X-Gm-Message-State: AOAM531sruooF5+IFD6D92Ob7oLVv/vANq5qGY5Pf+PfrwG6IvAqGedu
-        VMKitOqiivwk02MNO7OGTHd2YHRPS8hMFQ==
-X-Google-Smtp-Source: ABdhPJzS8kLQ/17qZ7RVEQ1eg8UJN+QVdEbQhSh+tTIn4zXyPnTG1Pxs4IjyN6qSM306XwiUJU0g7A==
-X-Received: by 2002:a05:6000:363:: with SMTP id f3mr3715913wrf.142.1631376338431;
-        Sat, 11 Sep 2021 09:05:38 -0700 (PDT)
-Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id i9sm1956466wmi.44.2021.09.11.09.05.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Sep 2021 09:05:37 -0700 (PDT)
-From:   Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.14 12/32] PCI: rcar: Add L1 link state fix into
- data abort hook
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XhzTiX0DZYV1X5ckSDoJZp4U7aZCZRTdTtc5atz14SI=;
+        b=N/CMsI13V1THNNV3cjFINODa0ugjxqcF4I6WtiJbtuRTVW4KRgPtskjj6HWU8mXHCU
+         LG0PGG6JOHcLO8QL8vmk4j+0cXvWK+3NrFCjJsBXfGk0Q7J50l4fFqiyFEJnjVGqSnA7
+         4gMRLrHEEcpF+r25qdJhhw+iK2kgsCtt6H/wNIEPQN6BVeTN3w40BrWh0wYC0+486n81
+         +bwnef/XovQJhNArRKMsyJuVbo8UvqrHExvB0nAPcnDUkp/cIcEDiOUAjX9OHGc7Vl9p
+         C1DUhwwnhPqWJ61aXiDsCok/cQ1TbGjdFKq6JV5t54a+CjmDAL/YdqmpnEMHOkOnm0+g
+         6puw==
+X-Gm-Message-State: AOAM532LGbF7bmD6mFJgxKTRel7DNyfsJpl4gcMbj3oZZCy/Pf4wDfhR
+        2fECXgRi4qfP1ZFFl9ZvF0gjljdV7FWd2meuovjSddqQt0Slhyu7icN+xql7ku67lNOXDD6u5Tl
+        LX0mbd3Mz/lAkkOUvz7Dm
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr4944819ejs.230.1631404482988;
+        Sat, 11 Sep 2021 16:54:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUJ/Dz7qpoDYQNg7a7mY8Cl7pe7fwOabdq++HQzqfzjVSc2KbxoH+7byBLBBXMvIdUmNqg2Q==
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr4944788ejs.230.1631404482774;
+        Sat, 11 Sep 2021 16:54:42 -0700 (PDT)
+Received: from redhat.com ([2.55.27.174])
+        by smtp.gmail.com with ESMTPSA id n13sm1309780ejk.97.2021.09.11.16.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Sep 2021 16:54:41 -0700 (PDT)
+Date:   Sat, 11 Sep 2021 19:54:36 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20210911131149.284397-1-sashal@kernel.org>
- <20210911131149.284397-12-sashal@kernel.org>
-Message-ID: <6cbfadee-0d74-fa4c-9ef3-a1bce55632bb@gmail.com>
-Date:   Sat, 11 Sep 2021 18:05:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 11/15] pci: Add pci_iomap_shared{,_range}
+Message-ID: <20210911195006-mutt-send-email-mst@kernel.org>
+References: <20210824053830-mutt-send-email-mst@kernel.org>
+ <d21a2a2d-4670-ba85-ce9a-fc8ea80ef1be@linux.intel.com>
+ <20210829112105-mutt-send-email-mst@kernel.org>
+ <09b340dd-c8a8-689c-4dad-4fe0e36d39ae@linux.intel.com>
+ <20210829181635-mutt-send-email-mst@kernel.org>
+ <3a88a255-a528-b00a-912b-e71198d5f58f@linux.intel.com>
+ <20210830163723-mutt-send-email-mst@kernel.org>
+ <69fc30f4-e3e2-add7-ec13-4db3b9cc0cbd@linux.intel.com>
+ <20210910054044-mutt-send-email-mst@kernel.org>
+ <f672dc1c-5280-7bbc-7a56-7c7aab31725c@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20210911131149.284397-12-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f672dc1c-5280-7bbc-7a56-7c7aab31725c@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/11/21 3:11 PM, Sasha Levin wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Fri, Sep 10, 2021 at 09:34:45AM -0700, Andi Kleen wrote:
+> > > that's why
+> > > an extra level of defense of ioremap opt-in is useful.
+> > OK even assuming this, why is pci_iomap opt-in useful?
+> > That never happens before probe - there's simply no pci_device then.
 > 
-> [ Upstream commit a115b1bd3af0c2963e72f6e47143724c59251be6 ]
 > 
-> When the link is in L1, hardware should return it to L0
-> automatically whenever a transaction targets a component on the
-> other end of the link (PCIe r5.0, sec 5.2).
+> Hmm, yes that's true. I guess we can make it default to opt-in for
+> pci_iomap.
 > 
-> The R-Car PCIe controller doesn't handle this transition correctly.
-> If the link is not in L0, an MMIO transaction targeting a downstream
-> device fails, and the controller reports an ARM imprecise external
-> abort.
-> 
-> Work around this by hooking the abort handler so the driver can
-> detect this situation and help the hardware complete the link state
-> transition.
-> 
-> When the R-Car controller receives a PM_ENTER_L1 DLLP from the
-> downstream component, it sets PMEL1RX bit in PMSR register, but then
-> the controller enters some sort of in-between state.  A subsequent
-> MMIO transaction will fail, resulting in the external abort.  The
-> abort handler detects this condition and completes the link state
-> transition by setting the L1IATN bit in PMCTLR and waiting for the
-> link state transition to complete.
+> It only really matters for device less ioremaps.
 
-You will also need the following patch, otherwise the build will fail on 
-configurations without COMMON_CLK (none where this driver is used, but 
-happened on one of the build bots). I'm waiting for PCIe maintainers to 
-pick it up:
-https://patchwork.kernel.org/project/linux-pci/patch/20210907144512.5238-1-marek.vasut@gmail.com/
+OK. And same thing for other things with device, such as
+devm_platform_ioremap_resource.
+If we agree on all that, this will basically remove virtio
+changes from the picture ;)
+
+-- 
+MST
+
