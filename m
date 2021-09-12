@@ -2,144 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F008D407DA9
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Sep 2021 15:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3F6407EAA
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Sep 2021 18:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235291AbhILNeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Sep 2021 09:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235178AbhILNeC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 12 Sep 2021 09:34:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8D8C60F5D;
-        Sun, 12 Sep 2021 13:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631453568;
-        bh=cKQEhXb0SCLU/htoFmTwh5ClJ7S0cV5ysGMhszIIQGg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r/ay00JuVXs+pr0XkMxfUyWIQ036lMKou+T+hkFtXAYpd97LJaJHSgxNthudT7yqe
-         3ObokYwDoTUplbENn8EvwT2Lb/tYV4QuxWzkwoH6k+6tmfpabw7fKgAEFmgfwhuAe8
-         KBEEuaxoW2KLDreUeAxYSrFqnb8wXZ6sll0rdlxBd9ReOTC94ympBpDAFxX7h3GZNa
-         NcEqrr6HQd++42V3oX74ZHBB80LPtb2FT4hKhw1OhkTqTkhvy33+uM4xvr73/U4NlX
-         IAV2pYzOicU5WMAk22c99FDQlifkNp+gxcYOhdXWpbBsDBEUfhpErQC6XHkhdNOwMg
-         1oD7f/n3An9LQ==
-Date:   Sun, 12 Sep 2021 08:32:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stanislav Spassov <stanspas@amazon.com>
-Cc:     linux-pci@vger.kernel.org, Stanislav Spassov <stanspas@amazon.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan H =?iso-8859-1?Q?=2E_Sch=F6nherr?= <jschoenh@amazon.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sinan Kaya <okaya@kernel.org>, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4 2/3] PCI: Cache CRS Software Visibiliy in struct
- pci_dev
-Message-ID: <20210912133246.GA1279483@bjorn-Precision-5520>
+        id S233339AbhILQjG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Sep 2021 12:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231138AbhILQjF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Sep 2021 12:39:05 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A138C061574
+        for <linux-pci@vger.kernel.org>; Sun, 12 Sep 2021 09:37:50 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id j12so12646559ljg.10
+        for <linux-pci@vger.kernel.org>; Sun, 12 Sep 2021 09:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=jWPI8FMHxpkjRRP2hW75gdsTWoBT12rosNOIrVTbCgA=;
+        b=TSKqZjVE8XvwqpDpY6xJx9q3cXlrukCXgz3Rk81BCdHfEwoUrlw9WUy67WJ8OpoqEW
+         GrsfefQx7ssMNnOXfUSl4tw5j8FXbce9g2+fEpxTRc8qpSKYom/gzJWElPskrOB4Bdej
+         b8EnURGPrQ3LgHfbSIKk42MvvBpkktQX20bpFwLIBTw8FD1A06RJ3+iygWmbQdkqsJ/i
+         q0yU7oEVVdR/Ayks4L9VV1r7VwY4vghuwq7fVd690TTQcX5o2NhNXL2gqu9Ul8Q04uq/
+         zlI6+Fexy1/HTg+1QiB7K4vFbikh0np52ticgRGj2XyCNunhjKE3VSTB9VcFLIM2buq4
+         hNBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=jWPI8FMHxpkjRRP2hW75gdsTWoBT12rosNOIrVTbCgA=;
+        b=RHxqgK2vyLfjF5fUZNI2HWGvEMGuSVHDcfXKu1/DO17W4WD6erarpW0w/xFFGk0vym
+         H9OdDG/uMgCch7g5hsotvH9QhyXAL37VUKfODXEgcHLhu4WPZHXjnHnaWh3//dijNNh8
+         9EjikRyR7m+iTS/g86SxdeTVZi+P8uuInfcw3g5A7PiyieVuDn/myIwXwbgFqHQcceeu
+         6CWYSKpke0+ZRNk9kxI3qMGotv/OKl+cnc17vJEu1EeKHnxgAxOXV7PoVAAgkYgR0Z7R
+         HXkIVkJn4x1LJE+exSz2sAVoxBtoi5CNMf9YcOrINAHH4x5dRaHiItHgO7zIsnFxOSZ6
+         F8Qg==
+X-Gm-Message-State: AOAM532nwhsAHksg64QEYSHs+BlMNFV4Xz9L5W2dGGRhqex1f6OIkBcV
+        0OqtCQSysbwI0QwlF3OjL4M=
+X-Google-Smtp-Source: ABdhPJxS6MbYC465rTlFA7MNlzs5R1COkTgPjTQpdcHZ8Asot+XtfaO06sqcsmVMATDaxDNk/krUng==
+X-Received: by 2002:a2e:8954:: with SMTP id b20mr6619343ljk.146.1631464668640;
+        Sun, 12 Sep 2021 09:37:48 -0700 (PDT)
+Received: from [192.168.0.91] ([188.242.181.97])
+        by smtp.googlemail.com with ESMTPSA id z16sm599241lfu.110.2021.09.12.09.37.47
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 12 Sep 2021 09:37:47 -0700 (PDT)
+Message-ID: <613E3009.4050007@gmail.com>
+Date:   Sun, 12 Sep 2021 19:51:21 +0300
+From:   Nikolai Zhubr <zhubr.2@gmail.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307172044.29645-3-stanspas@amazon.com>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/6] x86: PIRQ/ELCR-related fixes and updates
+References: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk> <611993B1.4070302@gmail.com> <alpine.DEB.2.21.2108160027350.45958@angie.orcam.me.uk> <61377A45.8030003@gmail.com> <613CCBE3.20802@gmail.com>
+In-Reply-To: <613CCBE3.20802@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 06:20:43PM +0100, Stanislav Spassov wrote:
-> From: Stanislav Spassov <stanspas@amazon.de>
-> 
-> Arguably, since CRS SV is a capability of Root Ports and determines
-> how Root Ports will handle incoming CRS Completions, it makes more
-> sense to store this flag in the struct pci_bus that represents the
-> port's secondary bus, and to cache it in any buses further down the
-> hierarchy.
-> 
-> However, storing the flag in struct pci_dev allows individual devices
-> to be marked as not supporting CRS properly even when CRS SV is enabled
-> on their parent Root Port. This way, future code that relies on the new
-> flag will not be misled that it is safe to probe a device by relying on
-> CRS SV to not cause platform timeouts (See the note on CRS SV on p. 553
-> of PCI Express Base Specification r5.0 from May 22, 2019).
+Hello Maciej,
 
-If we find devices that don't support CRS properly, I think we should
-quirk them directly with something other than "crssv_enabled".
+11.09.2021 18:31, I wrote:
+> this new table into a small unused ROM area. All looks good:
+> =====
+> [ 0.623757] 8139too: 8139too Fast Ethernet driver 0.9.28
+> [ 0.623757] 8139too 0000:00:03.0: PCI INT A -> PIRQ 01, mask def8, excl
+> 0000
+> [ 0.623757] 8139too 0000:00:03.0: PCI INT A -> newirq 11
+> [ 0.623757] PCI: setting IRQ 11 as level-triggered
+> =====
+> Dumping registers with a separate program then confirmed that settings
+> are correct indeed.
+> But I'd like to note that PIRQ values passed to pirq_finali_get/set
+> should better be somewhow checked for validity, as otherwise some
+> totally unrelated chipset registers are being unintentionally accessed.
+>
+> I'm now going to test IRQ sharing.
 
-> Note: Endpoints integrated into the Root Complex (RCiEP) may also be
-> capable of using CRS. In that case, the software visibility is
-> controlled using a Root Complex Register Block (RCRB). This is currently
-> not supported by the kernel. The code introduced here would simply not
-> set the newly introduced flag for RCiEP as for those bus->self is NULL.
-> 
-> Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
-> ---
->  drivers/pci/probe.c | 8 +++++++-
->  include/linux/pci.h | 3 +++
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 512cb4312ddd..eeff8a07f330 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1080,9 +1080,11 @@ static void pci_enable_crs(struct pci_dev *pdev)
->  
->  	/* Enable CRS Software Visibility if supported */
->  	pcie_capability_read_word(pdev, PCI_EXP_RTCAP, &root_cap);
-> -	if (root_cap & PCI_EXP_RTCAP_CRSVIS)
-> +	if (root_cap & PCI_EXP_RTCAP_CRSVIS) {
->  		pcie_capability_set_word(pdev, PCI_EXP_RTCTL,
->  					 PCI_EXP_RTCTL_CRSSVE);
-> +		pdev->crssv_enabled = true;
+I can confirm IRQ sharing works fine, too.
+I've inserted some PCI USB addon card and added "pci=usepirqmask 
+pci=irqmask=0x800" to force a collision, now /proc/interrups says:
 
-I'd use "crssv_enabled = 1" instead of mixing the "unsigned int" and
-"bool" ideas.
+11:      61350    XT-PIC      ehci_hcd:usb1, ohci_hcd:usb2, eth0
 
-> +	}
->  }
->  
->  static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> @@ -2414,6 +2416,10 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  	list_add_tail(&dev->bus_list, &bus->devices);
->  	up_write(&pci_bus_sem);
->  
-> +	/* Propagate CRS Software Visibility bit from the parent bridge */
-> +	if (bus->self)
-> +		dev->crssv_enabled = bus->self->crssv_enabled;
+Now doing USB stick reading and ethernet benchmarking in parallel shows 
+no problem whatsoever.
 
-I think we should use pcie_find_root_port() instead of propagating it.
-SV is a property of the Root Port, and devices below it have no idea
-whether it's enabled at the Root Port.
+Excellent work, Maciej!
 
->  	ret = pcibios_add_device(dev);
->  	WARN_ON(ret < 0);
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 3840a541a9de..1c222c7c2572 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -354,6 +354,9 @@ struct pci_dev {
->  						      user sysfs */
->  	unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
->  						   bit manually */
-> +	unsigned int	crssv_enabled:1;	/* Configuration Request Retry
-> +						   Status Software Visibility
-> +						   enabled on (parent) bridge */
->  	unsigned int	d3_delay;	/* D3->D0 transition time in ms */
->  	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
->  
-> -- 
-> 2.25.1
-> 
-> 
-> 
-> 
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
-> 
-> 
-> 
+
+Thank you,
+
+Regards,
+Nikolai
+
+>
+> Thank you,
+>
+> Regards,
+> Nikolai
+>
+>
+>> [ 0.630068] 8139too 0000:00:03.0: IRQ routing conflict: have IRQ 11,
+>> want IRQ 15
+>> [ 0.641901] 8139too 0000:00:03.0 eth0: RealTek RTL8139 at 0xc2582f00,
+>> 00:11:6b:32:85:74, IRQ 11
+>>
+>> First, INTA is apparently routed to IRQ11 (and the network card works
+>> just fine with that), whereas pci code wants IRQ15 for some reason.
+>>
+>> Second, dumping chipset reg 44 shows that INTA is still set to EDGE mode
+>> anyway, although dumping port 4D1 now shows IRQ15 was changed to LEVEL
+>> mode, exactly as indicated in the above output. I'm not sure, but the
+>> datasheet (page 77) seems to indicate that INTx mode set in reg 44
+>> should match the respective IRQx mode in port 4Dx (Although the ROM BIOS
+>> seems to only have code to change triggering mode in the 44 register and
+>> does not care about port 4Dx whatsoever, which kinda contradicts the
+>> datasheet)
+>>
+>> I'll do some more digging later, but any hints are appreciated anyway.
+>>
+>>
+>> Thank you,
+>>
+>> Regards,
+>> Nikolai
+>>
+>>>
+>>> I'm a little busy at the moment with other stuff and may not be able to
+>>> look into it properly right now. There may be no solution, not at least
+>>> an easy one. A DMI quirk is not possible, because:
+>>>
+>>> DMI not present or invalid.
+>>>
+>>> There is a PCI BIOS:
+>>>
+>>> PCI: PCI BIOS revision 2.10 entry at 0xf6f41, last bus=0
+>>>
+>>> however, so CONFIG_PCI_BIOS just might work. Please try that too, by
+>>> choosing CONFIG_PCI_GOANY or CONFIG_PCI_GOBIOS (it may break things
+>>> horribly though I imagine).
+>>>
+>>> Maciej
+>>>
+>>
+>
+
