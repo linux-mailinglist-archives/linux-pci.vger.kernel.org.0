@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24BE9409C0D
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 20:26:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B565D409C10
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 20:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236234AbhIMS1T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 14:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
+        id S238970AbhIMS1W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 14:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233133AbhIMS1T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S235943AbhIMS1T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Mon, 13 Sep 2021 14:27:19 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC4760F9F;
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5EC610CF;
         Mon, 13 Sep 2021 18:26:03 +0000 (UTC)
 Received: from [198.52.44.129] (helo=wait-a-minute.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mPqeX-00AYPD-3J; Mon, 13 Sep 2021 19:26:01 +0100
+        id 1mPqeY-00AYPD-0T; Mon, 13 Sep 2021 19:26:02 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
@@ -34,10 +34,12 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Sven Peter <sven@svenpeter.dev>,
         Hector Martin <marcan@marcan.st>,
         Robin Murphy <Robin.Murphy@arm.com>, kernel-team@android.com
-Subject: [PATCH v3 00/10] PCI: Add support for Apple M1
-Date:   Mon, 13 Sep 2021 19:25:40 +0100
-Message-Id: <20210913182550.264165-1-maz@kernel.org>
+Subject: [PATCH v3 01/10] irqdomain: Make of_phandle_args_to_fwspec generally available
+Date:   Mon, 13 Sep 2021 19:25:41 +0100
+Message-Id: <20210913182550.264165-2-maz@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210913182550.264165-1-maz@kernel.org>
+References: <20210913182550.264165-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 198.52.44.129
@@ -48,77 +50,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have resumed my earlier effort to bring the Apple-M1 into the world
-of living by equipping it with a PCIe controller driver. Huge thanks
-to Alyssa Rosenzweig for kicking it into shape and providing the first
-two versions of this series.
+of_phandle_args_to_fwspec() can be generally useful to code
+extracting a DT of_phandle and using an irq_fwspec to use the
+hierarchical irqdomain API.
 
-Much has changed since v2[2]. Mark Kettenis is doing a great job with
-the binding [0], so I have dropped that from the series, and strictly
-focused on the Linux side of thing. I am now using this binding as is,
-with the exception of a single line change, which I believe is a fix
-[1].
+Make it visible the the rest of the kernel, including modules.
 
-Supporting the per-port interrupt controller has brought in a couple
-of fixes for the core DT code.  Also, some work has gone into dealing
-with excluding the MSI page from the IOVA range, as well as
-programming the RID-to-SID mapper.
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ include/linux/irqdomain.h | 4 ++++
+ kernel/irq/irqdomain.c    | 6 +++---
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-Overall, the driver is now much cleaner and most probably feature
-complete when it comes to supporting internal devices (although I
-haven't investigated things like power management). TB support is
-another story, and will require some more hacking.
-
-This of course still depends on the clock and pinctrl drivers that are
-otherwise in flight, and will affect this driver one way or another.
-I have pushed a branch with all the dependencies (and more) at [3].
-
-* From v2 [2]:
-  - Refactor DT parsing to match the new version of the binding
-  - Add support for INTx and port-private interrupts
-  - Signal link-up/down using interrupts
-  - Export of_phandle_args_to_fwspec
-  - Fix generic parsing of interrupt map
-  - Rationalise port setup (data structure, self discovery)
-  - Tell DART to exclude MSI doorbell from the IOVA mappings
-  - Get rid of the setup bypass if the link was found up on boot
-  - Prevent the module from being removed
-  - Program the RID-to-SID mapper on device discovery
-  - Rebased on 5.15-rc1
-
-[0] https://lore.kernel.org/r/20210827171534.62380-1-mark.kettenis@xs4all.nl
-[1] https://lore.kernel.org/r/871r5tcwhp.wl-maz@kernel.org
-[2] https://lore.kernel.org/r/20210816031621.240268-1-alyssa@rosenzweig.io
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=hack/m1-pcie-v3
-
-Alyssa Rosenzweig (2):
-  PCI: apple: Add initial hardware bring-up
-  PCI: apple: Set up reference clocks when probing
-
-Marc Zyngier (8):
-  irqdomain: Make of_phandle_args_to_fwspec generally available
-  of/irq: Allow matching of an interrupt-map local to an interrupt
-    controller
-  PCI: of: Allow matching of an interrupt-map local to a pci device
-  PCI: apple: Add INTx and per-port interrupt support
-  arm64: apple: t8103: Add root port interrupt routing
-  PCI: apple: Implement MSI support
-  iommu/dart: Exclude MSI doorbell from PCIe device IOVA range
-  PCI: apple: Configure RID to SID mapper on device addition
-
- MAINTAINERS                          |   7 +
- arch/arm64/boot/dts/apple/t8103.dtsi |  33 +-
- drivers/iommu/apple-dart.c           |  25 +
- drivers/of/irq.c                     |  17 +-
- drivers/pci/controller/Kconfig       |  17 +
- drivers/pci/controller/Makefile      |   1 +
- drivers/pci/controller/pcie-apple.c  | 818 +++++++++++++++++++++++++++
- drivers/pci/of.c                     |  10 +-
- include/linux/irqdomain.h            |   4 +
- kernel/irq/irqdomain.c               |   6 +-
- 10 files changed, 925 insertions(+), 13 deletions(-)
- create mode 100644 drivers/pci/controller/pcie-apple.c
-
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 23e4ee523576..cfd442316f39 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -64,6 +64,10 @@ struct irq_fwspec {
+ 	u32 param[IRQ_DOMAIN_IRQ_SPEC_PARAMS];
+ };
+ 
++/* Conversion function from of_phandle_args fields to fwspec  */
++void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
++			       unsigned int count, struct irq_fwspec *fwspec);
++
+ /*
+  * Should several domains have the same device node, but serve
+  * different purposes (for example one domain is for PCI/MSI, and the
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 19e83e9b723c..5a698c1f6cc6 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -744,9 +744,8 @@ static int irq_domain_translate(struct irq_domain *d,
+ 	return 0;
+ }
+ 
+-static void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+-				      unsigned int count,
+-				      struct irq_fwspec *fwspec)
++void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
++			       unsigned int count, struct irq_fwspec *fwspec)
+ {
+ 	int i;
+ 
+@@ -756,6 +755,7 @@ static void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+ 	for (i = 0; i < count; i++)
+ 		fwspec->param[i] = args[i];
+ }
++EXPORT_SYMBOL_GPL(of_phandle_args_to_fwspec);
+ 
+ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ {
 -- 
 2.30.2
 
