@@ -2,260 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A100409E7D
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:51:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D75D3409EAA
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348252AbhIMUvl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 16:51:41 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58889 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347850AbhIMUvP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 16:51:15 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DEC27580E89;
-        Mon, 13 Sep 2021 16:49:58 -0400 (EDT)
-Received: from imap21 ([10.202.2.71])
-  by compute1.internal (MEProxy); Mon, 13 Sep 2021 16:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-         h=mime-version:message-id:in-reply-to:references:date:from:to
-        :cc:subject:content-type; s=fm2; bh=m0LGWP1WSCvGQ2DYDtucYeRXsxGz
-        LZXMe3rABFJpklM=; b=o9cvAVkJ9HSHlIF93zlZ1Wsoo35lnxHbsuY/jtrziE6n
-        0lRy3aCJ/c8WHH9gy4yLjZ1df3YHDjTu8cjxqPQQAmKK7MTgXJrA5G3TJaJIW9TO
-        1FlVrjjvs3NsYzuUUvmWiM9HkA8wLzvqTNAAhy8aUbOCtm7hKY6xPc6Q+NKSbs2U
-        zyWORD9F8N28eJfIVPzgV+srLPoREBPLCVzR8PH/18NL+go9RiUhVRcyOi0fMHcH
-        r8nmihe2Wio56U3rKPakZWd2KZM5e/DEPzCmIXlaFEzrfeR4aBZuKJGc4ynCj3/E
-        JCCBMGBHubAmwsgw6JBoz+DIB7hqvuq96nNq8CHVow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=m0LGWP
-        1WSCvGQ2DYDtucYeRXsxGzLZXMe3rABFJpklM=; b=XvMvLFtZFUuSJQpJ+CpmRN
-        MtRt2jQOzee2X4gWZf660Ub+lqSJopNqAeNk40S8nnRL3oWSWa6nHCfZVg7TsuQF
-        a+UZ/DW3oLe8Jy1k4eyOy9cZd7aFvcIemVOsGd+Bhpf3aUw8JGUR/oKsNUXVuu2g
-        mshQm0JAUaPFEXRbKGJfhiJzm52/3KJyYtBJjI1GNQRn3JUo5lvjcewP6WLtN8lj
-        MsN8ByUpdhGlQlvHhjD+wsP9dfTcBAmZlDNktY0pelBS5S5MQ8ZjRO5A/qfQJfo5
-        Ree/hgzLeG3bi40H6rPuktz1WGMQ/9NUo5CHiU8VeHLd572q51CC38QbQ7z3LVVw
-        ==
-X-ME-Sender: <xms:drk_YRLejLWCqpQGtvpjalrQP4ofXuygVE9K11u0IaJpUIdVEhtj8A>
-    <xme:drk_YdLVDHkRAybSaIV9VXQeBZQBP9GFZU4dzfFIiLa108WiYXtKDFN2FECBFtCHy
-    tco1PwBmpO3ooLOAX8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudegjedgudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedfufhv
-    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
-    grthhtvghrnhepvedvgeevuddvvedvgfelfeegiedvgeehieeutdelvedvieevveeljeef
-    vedtleehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdr
-    uggvvh
-X-ME-Proxy: <xmx:drk_YZsOikPLUyiDqSOOeW4ggfBMJfNopI_OunPiuorIY8VrxKtQ-w>
-    <xmx:drk_YSbmrvDly6HUE9Daf9yy2w_ft66TARBoXCsVQuLZzsVPNF2K8w>
-    <xmx:drk_YYbmifjRNLl6yRo-7oFCJMjskPYZVQ_NPOxt14p20_wbLWGERg>
-    <xmx:drk_YSDSMJvFYBXH2NjHeyMaQtR6hgkSeJXbemiQWqYcLuvT7PxAQA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id ED87B51C0060; Mon, 13 Sep 2021 16:49:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-1229-g7ca81dfce5-fm-20210908.005-g7ca81dfc
-Mime-Version: 1.0
-Message-Id: <6eb53661-e11e-4634-9fa5-5e7e62d57a15@www.fastmail.com>
-In-Reply-To: <20210913182550.264165-5-maz@kernel.org>
-References: <20210913182550.264165-1-maz@kernel.org>
- <20210913182550.264165-5-maz@kernel.org>
-Date:   Mon, 13 Sep 2021 22:48:47 +0200
-From:   "Sven Peter" <sven@svenpeter.dev>
-To:     "Marc Zyngier" <maz@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
-        "Stan Skowronek" <stan@corellium.com>,
-        "Mark Kettenis" <kettenis@openbsd.org>,
-        "Hector Martin" <marcan@marcan.st>,
-        "Robin Murphy" <Robin.Murphy@arm.com>, kernel-team@android.com
-Subject: Re: [PATCH v3 04/10] PCI: apple: Add initial hardware bring-up
-Content-Type: text/plain
+        id S244503AbhIMU53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 16:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240811AbhIMU52 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Sep 2021 16:57:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5BD306112D;
+        Mon, 13 Sep 2021 20:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631566572;
+        bh=u21F0Qc3W5xKzemF6XyCuLp0711VZEltghW2Zp/TzdM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f5xip+4uLk4XmoJ0loYaWM3ZvFn8qidx0SGsGoeSetL276JRq6TWW4RSS4ylDNa/H
+         127uDkDzo6f2g2G7YWaOdkcuYvzcSMGhN38cMucRjA2Gu0HOtJ4yXzAEQdzh1jU9NA
+         vPGXIsmgwc6sEdsAHfeLEtldgQSLsveFCpwj2fFKUqO+sjQfGsceSFwi00W8zHv7oY
+         yH98jkHuqlcEHEkVsHWsETBH0Lk3UArcgVCgsiDHsI60cdbIRZRoL3gX+6ibaT7T0k
+         c45bzI8nsM1TaIDb9YWaUiBdAwOpasglWftnXginlQJWZ9DmZ05v4Cjigjlq4Sy/RA
+         bTTNxUDF56vmw==
+Received: by mail-ej1-f41.google.com with SMTP id t19so23834034ejr.8;
+        Mon, 13 Sep 2021 13:56:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530vKFStB8757H7UJl3FY1pH5dlE3cpjLz0HPPo/avnw8G1KWrME
+        PsZqzkfbC9D9LVk3c4MJ0tKEzqjkYY1NEd0ERg==
+X-Google-Smtp-Source: ABdhPJxFNgqvcHf/mkvu2z/C3ttLRf+0xoy1kOg9AJ9EbIy/9D7CdlQfST9RTtZNOyeiSK7GBLZzjvJXBt2b2tTdmuM=
+X-Received: by 2002:a17:906:7250:: with SMTP id n16mr14644054ejk.147.1631566570779;
+ Mon, 13 Sep 2021 13:56:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210827171534.62380-1-mark.kettenis@xs4all.nl>
+ <20210827171534.62380-4-mark.kettenis@xs4all.nl> <YS6dWI4wwg7XkuNA@robh.at.kernel.org>
+ <561431b178447575@bloch.sibelius.xs4all.nl> <8735q9d02q.wl-maz@kernel.org>
+In-Reply-To: <8735q9d02q.wl-maz@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Sep 2021 15:55:59 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJYhrJxGCdUM8Fz50KN-AEARYzvfi3CcmyCVTkr8VCkjQ@mail.gmail.com>
+Message-ID: <CAL_JsqJYhrJxGCdUM8Fz50KN-AEARYzvfi3CcmyCVTkr8VCkjQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: pci: Add DT bindings for apple,pcie
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
+        devicetree@vger.kernel.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hector Martin <marcan@marcan.st>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+msi-On Sun, Sep 12, 2021 at 3:13 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Wed, 01 Sep 2021 12:29:22 +0100,
+> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
+> >
+> > > Date: Tue, 31 Aug 2021 16:21:28 -0500
+> > > From: Rob Herring <robh@kernel.org>
+> > >
+> > > On Fri, Aug 27, 2021 at 07:15:28PM +0200, Mark Kettenis wrote:
+> > > > From: Mark Kettenis <kettenis@openbsd.org>
+> > > >
+> > > > The Apple PCIe host controller is a PCIe host controller with
+> > > > multiple root ports present in Apple ARM SoC platforms, including
+> > > > various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > >
+> > > > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > > > ---
+> > > >  .../devicetree/bindings/pci/apple,pcie.yaml   | 165 ++++++++++++++++++
+> > > >  MAINTAINERS                                   |   1 +
+> > > >  2 files changed, 166 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..97a126db935a
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> > > > @@ -0,0 +1,165 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/pci/apple,pcie.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Apple PCIe host controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Mark Kettenis <kettenis@openbsd.org>
+> > > > +
+> > > > +description: |
+> > > > +  The Apple PCIe host controller is a PCIe host controller with
+> > > > +  multiple root ports present in Apple ARM SoC platforms, including
+> > > > +  various iPhone and iPad devices and the "Apple Silicon" Macs.
+> > > > +  The controller incorporates Synopsys DesigWare PCIe logic to
+> > > > +  implements its root ports.  But the ATU found on most DesignWare
+> > > > +  PCIe host bridges is absent.
+> > > > +
+> > > > +  All root ports share a single ECAM space, but separate GPIOs are
+> > > > +  used to take the PCI devices on those ports out of reset.  Therefore
+> > > > +  the standard "reset-gpios" and "max-link-speed" properties appear on
+> > > > +  the child nodes that represent the PCI bridges that correspond to
+> > > > +  the individual root ports.
+> > > > +
+> > > > +  MSIs are handled by the PCIe controller and translated into regular
+> > > > +  interrupts.  A range of 32 MSIs is provided.  These 32 MSIs can be
+> > > > +  distributed over the root ports as the OS sees fit by programming
+> > > > +  the PCIe controller's port registers.
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > > > +  - $ref: ../interrupt-controller/msi-controller.yaml#
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      - const: apple,t8103-pcie
+> > > > +      - const: apple,pcie
+> > > > +
+> > > > +  reg:
+> > > > +    minItems: 3
+> > > > +    maxItems: 5
+> > > > +
+> > > > +  reg-names:
+> > > > +    minItems: 3
+> > > > +    maxItems: 5
+> > > > +    items:
+> > > > +      - const: config
+> > > > +      - const: rc
+> > > > +      - const: port0
+> > > > +      - const: port1
+> > > > +      - const: port2
+> > > > +
+> > > > +  ranges:
+> > > > +    minItems: 2
+> > > > +    maxItems: 2
+> > > > +
+> > > > +  interrupts:
+> > > > +    description:
+> > > > +      Interrupt specifiers, one for each root port.
+> > > > +    minItems: 1
+> > > > +    maxItems: 3
+> > > > +
+> > > > +  msi-parent: true
+> > >
+> > > I still think this should be dropped as it is meaningless with
+> > > 'msi-controller' present.
+> >
+> > Hmm.  As far as I can tell all current arm64 device trees that
+> > describe hardware with an MSI controller integrated on the PCI host
+> > bridge have both the 'msi-controller' and 'msi-parent' properties.
+> > See arch/arm64/boot/dts/marvell/aramada-37xx.dtsi and
+> > arch/arm64/boot/dts/xilinx/zynqmp.dtsi.
 
+Humm, maybe it is the DWC based bindings and driver that are wrong
+here. All the ones with an 'msi' interrupt (i.e. the DWC built-in MSI
+controller) have neither 'msi-parent' nor 'msi-controller' property.
 
-On Mon, Sep 13, 2021, at 20:25, Marc Zyngier wrote:
-> From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> 
-> Add a minimal driver to bring up the PCIe bus on Apple system-on-chips,
-> particularly the Apple M1. This driver exposes the internal bus used for
-> the USB type-A ports, Ethernet, Wi-Fi, and Bluetooth. Bringing up the
-> radios requires additional drivers beyond what's necessary for PCIe
-> itself.
-> 
-> At this stage, nothing is functionnal.
-> 
-> Co-developed-by: Stan Skowronek <stan@corellium.com>
-> Signed-off-by: Stan Skowronek <stan@corellium.com>
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/r/20210816031621.240268-3-alyssa@rosenzweig.io
-> ---
->  MAINTAINERS                         |   7 +
->  drivers/pci/controller/Kconfig      |  12 ++
->  drivers/pci/controller/Makefile     |   1 +
->  drivers/pci/controller/pcie-apple.c | 243 ++++++++++++++++++++++++++++
->  4 files changed, 263 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-apple.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 813a847e2d64..9905cc48fed9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1280,6 +1280,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/iommu/apple,dart.yaml
->  F:	drivers/iommu/apple-dart.c
->  
-> +APPLE PCIE CONTROLLER DRIVER
-> +M:	Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> +M:	Marc Zyngier <maz@kernel.org>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/pci/controller/pcie-apple.c
-> +
->  APPLE SMC DRIVER
->  M:	Henrik Rydberg <rydberg@bitmath.org>
->  L:	linux-hwmon@vger.kernel.org
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 326f7d13024f..814833a8120d 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -312,6 +312,18 @@ config PCIE_HISI_ERR
->  	  Say Y here if you want error handling support
->  	  for the PCIe controller's errors on HiSilicon HIP SoCs
->  
-> +config PCIE_APPLE
-> +	tristate "Apple PCIe controller"
-> +	depends on ARCH_APPLE || COMPILE_TEST
-> +	depends on OF
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	help
-> +	  Say Y here if you want to enable PCIe controller support on Apple
-> +	  system-on-chips, like the Apple M1. This is required for the USB
-> +	  type-A ports, Ethernet, Wi-Fi, and Bluetooth.
-> +
-> +	  If unsure, say Y if you have an Apple Silicon system.
-> +
->  source "drivers/pci/controller/dwc/Kconfig"
->  source "drivers/pci/controller/mobiveil/Kconfig"
->  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile 
-> b/drivers/pci/controller/Makefile
-> index aaf30b3dcc14..f9d40bad932c 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
->  obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
->  obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
-> +obj-$(CONFIG_PCIE_APPLE) += pcie-apple.o
->  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->  obj-y				+= dwc/
->  obj-y				+= mobiveil/
-> diff --git a/drivers/pci/controller/pcie-apple.c 
-> b/drivers/pci/controller/pcie-apple.c
-> new file mode 100644
-> index 000000000000..f3c414950a10
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -0,0 +1,243 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host bridge driver for Apple system-on-chips.
-> + *
-> + * The HW is ECAM compliant, so once the controller is initialized,
-> + * the driver mostly deals MSI mapping and handling of per-port
-> + * interrupts (INTx, management and error signals).
-> + *
-> + * Initialization requires enabling power and clocks, along with a
-> + * number of register pokes.
-> + *
-> + * Copyright (C) 2021 Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> + * Copyright (C) 2021 Google LLC
-> + * Copyright (C) 2021 Corellium LLC
-> + * Copyright (C) 2021 Mark Kettenis <kettenis@openbsd.org>
-> + *
-> + * Author: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> + * Author: Marc Zyngier <maz@kernel.org>
-> + */
-> +
-> [...]
-> +
-> +static inline void rmwl(u32 clr, u32 set, void __iomem *addr)
-> +{
-> +	writel_relaxed((readl_relaxed(addr) & ~clr) | set, addr);
-> +}
+> > The current OpenBSD code will fail to map the MSIs if 'msi-parent'
+> > isn't there, although Linux seems to fall back on an MSI domain that's
+> > directly attached to the host bridge if the 'msi-parent' property is
+> > missing.  I think it makes sense to be explicit here, but if both you
+> > and Marc think it shouldn't be there, I probably can change the
+> > OpenBSD to do a similar fallback.
+>
+> I think this matches the behaviour we have for interrupt-controller vs
+> interrupt-parent. I fail to see why msi-controller/msi-parent should
+> behave differently. And since there is an established OS that actually
+> requires this, I don't see how we can today make it illegal.
 
-This helper is a bit strange, especially since it's always only used
-with either clr != 0 or set != 0 but never (clr = 0 and set = 0) afaict.
-Maybe create two instead for setting and clearing bits?
+Which behavior exactly? An interrupt-controller node with
+interrupt-parent pointing to itself? That makes little sense. As far
+as finding the parent, the behavior for interrupts is if
+'interrupt-controller' is found in a parent node, then that is the
+interrupt parent unless 'interrupt-parent' is found. That is the same
+behavior I'm suggesting here.
 
-> +
-> +static int apple_pcie_setup_port(struct apple_pcie *pcie,
-> +				 struct device_node *np)
-> +{
-> +	struct platform_device *platform = to_platform_device(pcie->dev);
-> +	struct apple_pcie_port *port;
-> +	struct gpio_desc *reset;
-> +	u32 stat, idx;
-> +	int ret;
-> +
-> +	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
-> +				       GPIOD_OUT_LOW, "#PERST");
-> +	if (IS_ERR(reset))
-> +		return PTR_ERR(reset);
-> +
-> +	port = devm_kzalloc(pcie->dev, sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +
-> +	ret = of_property_read_u32_index(np, "reg", 0, &idx);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Use the first reg entry to work out the port index */
-> +	port->idx = idx >> 11;
-> +	port->pcie = pcie;
-> +	port->np = np;
-> +
-> +	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
-> +	if (IS_ERR(port->base))
-> +		return -ENODEV;
-> +
-> +	rmwl(0, PORT_APPCLK_EN, port + PORT_APPCLK);
-> +
-> +	rmwl(0, PORT_PERST_OFF, port->base + PORT_PERST);
-> +	gpiod_set_value(reset, 1);
-> +
-> +	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
-> +					 stat & PORT_STATUS_READY, 100, 250000);
-> +	if (ret < 0) {
-> +		dev_err(pcie->dev, "port %pOF ready wait timeout\n", np);
-> +		return ret;
-> +	}
-> +
-> +	/* Flush writes and enable the link */
-> +	dma_wmb();
+But yes, if this is already needed, then we need to keep it. However,
+then my concern is other platforms working on OpenBSD if Linux allows
+something that OpenBSD does not.
 
-This is a DMA barrier but there's no DMA you need to order this against
-here. I think you can just drop it.
-
-> +
-> +	writel_relaxed(PORT_LTSSMCTL_START, port->base + PORT_LTSSMCTL);
-> +
-> +	return 0;
-> +}
-> +
-
-
-
-Sven
-
+Rob
