@@ -2,108 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4DE0409EB9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:59:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC37409EC5
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 23:05:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245276AbhIMVAd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 17:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52158 "EHLO
+        id S1347940AbhIMVGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 17:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244131AbhIMVAd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 17:00:33 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F083FC061574
-        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 13:59:16 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id q11so16667356wrr.9
-        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 13:59:16 -0700 (PDT)
+        with ESMTP id S1343642AbhIMVGd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 17:06:33 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01201C061762
+        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 14:05:16 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id c21so8531963edj.0
+        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 14:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:references:cc:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3Vk8QpZziBmUt20DKs53wgm7+uEyjOVwLFr+epORcRQ=;
-        b=mQOHTKdJXSwboI2ykP/b7PQNNbbnWECgAtqsWPNj5PpcnEvGKk9yCeEeaCgTFgDjMS
-         Hbqijf4DLGzJHeSslLCLeuu6OBIGlglxAYGeitWV6lvMddG85Xl5dch1VQXEdStOfELN
-         KJkvjXFRMmegGGf3DXmK7fy98PWffrha6Po1zWSBSpygpRoWoZvP0GdHcKBnpWTzs1fx
-         C6OTzfwb/rBDmk4wEEjdOLZaxauEHDc5ek+9qASUu3LI40cK6SYOsnls3kYyBxCdyH5B
-         mDN0apWDyUZGJXUdBzZYZKndxIvukH1ctaiSHq+NC8DE7QDjDUuQfiwgZVVadXN9Ielj
-         OsIA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
+        b=dZApan+/iH4NW1oyIBh56hyWC0xvVWqlTSK28qynQC4TgDjgqY/p3DDGCieGAdnE+I
+         0aAGZTbnqRM5fK3TAuLjdF7NMMeCiV0kCAfGdpzcWIOkp6sGMVlUrfxYCH3SD3gyogJC
+         4YUBZARL2myz4qpAuMZTGYV2rnkRZ9K57xrX/1azGmh55BtgXM4p6fR98t3Lj/TtI5og
+         R/GBhjg5GXvtd+GgOVsER1+uWOFoeaerYmB9DSE925/Yk+BqT4PYFMFnKhDH3tmHZ5eB
+         xUYs9eTg/9uBmvVggoWXp8e0Cnzsirc3guy7n646rKKVwHb6iHMN/jX2KPg7JseQr8+1
+         ToQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3Vk8QpZziBmUt20DKs53wgm7+uEyjOVwLFr+epORcRQ=;
-        b=jYvXgfJtpIIimBnqSvTjm1KBkz+twEyllfE+ySeP0FYtPg1dJAlr2BVchS1oX5Rdqi
-         9zpSsKAraMlHs7QJK4lRKEmevebZZap+VWlRAZxBgrTuej8LpYZkkVUDfPcPTuOlEWMS
-         pNiWnFGbjZdwY3gTvCGfc8Xb2OeeGwjS9yOctNl7YC/lMbeaZgkcB7JdgHfJd2yG3Pll
-         Pa1R9vSk2ek5NSvC5u3b5JEF48rw8b5kS49m1dwUbuHhRs59NDZyfwcIFABf6jg9QWKx
-         LI4zUsNpWNfAZpQ56CBQRhn8fWQcD55ao8xetSz5pK3UOVWhzuWsL64ZB5hOhfBIew/1
-         PN2Q==
-X-Gm-Message-State: AOAM532BkQdSZcJNN50H4PPR3da8W0tlpQyacTRNct5rmleGmtEOrax3
-        Ada8qmvZrBTwcTfwn0F1qoCGCtK8KcU=
-X-Google-Smtp-Source: ABdhPJyikxrz8Wd572Uk87xMOffCbWpqADcNgyZNOCN3byiKzqdn46UD/VLg7KH1lm1apteIgC2L2Q==
-X-Received: by 2002:a5d:4488:: with SMTP id j8mr14995293wrq.260.1631566755414;
-        Mon, 13 Sep 2021 13:59:15 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f08:4500:2517:8cca:49d8:dcdc? (p200300ea8f08450025178cca49d8dcdc.dip0.t-ipconnect.de. [2003:ea:8f08:4500:2517:8cca:49d8:dcdc])
-        by smtp.googlemail.com with ESMTPSA id n18sm7371793wmc.22.2021.09.13.13.59.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 13:59:15 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com>
- <20210913141818.GA27911@codemonkey.org.uk>
- <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com>
- <20210913201519.GA15726@codemonkey.org.uk>
- <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
- <20210913203234.GA6762@codemonkey.org.uk>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Linux 5.15-rc1
-Message-ID: <0a8e8186-741e-a92f-9507-448d574ae7ca@gmail.com>
-Date:   Mon, 13 Sep 2021 22:59:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
+        b=kgiLCb952z4N3JAsFIE9i1xQ7LxZWXp8Dg5rdRg/oGacDAf461En4Sx3l2u77o33ZM
+         W4bzRgrh9NSg2c+uugWSvWK3GYeJ5CX+Ll8+RazKj9GYkcT/7QqXwjMO9n70Ka9tRSfE
+         9s3A/FaqOQFaM+UP0NsuVSWupjGgMEWykTKmLHp+VBwURZx+9GNHFgEg/Dna5ebfgKij
+         /ZWobbUpTNgLncf4Wm+Ojj4eql3ELeTJduPwQzdOqOBp0Vx9t+EILouPDw7+G5pzONjL
+         +u22AKTu6YvpeeUDrd65y5a0/BqSsfrkpfylSKxc+OZEUZA0S7rMCoSZ4OSuF3XubEvu
+         8OTw==
+X-Gm-Message-State: AOAM531q5SJE7dWS5I+6icMmTs7EZihCrWqmNWhWMNKNqO8PwJHYJEqd
+        nH04vIdyCx+WDFq8O4yFhtYsnxaeBLfxjhqFS661
+X-Google-Smtp-Source: ABdhPJyhjptYpi0mwh96yMlLzxckfq2tRXqkGTb/ZQJf0dLr8KeUC8PkrIaOITSWhjWsL1Ai+gNDn5oE1rgV2wDOPdI=
+X-Received: by 2002:a05:6402:2810:: with SMTP id h16mr14507917ede.293.1631567115278;
+ Mon, 13 Sep 2021 14:05:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210913203234.GA6762@codemonkey.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210913140229.24797-1-omosnace@redhat.com>
+In-Reply-To: <20210913140229.24797-1-omosnace@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 13 Sep 2021 17:05:04 -0400
+Message-ID: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13.09.2021 22:32, Dave Jones wrote:
-> On Mon, Sep 13, 2021 at 10:22:57PM +0200, Heiner Kallweit wrote:
-> 
->  > > This didn't help I'm afraid :(
->  > > It changed the VPD warning, but that's about it...
->  > > 
->  > > [  184.235496] pci 0000:02:00.0: calling  quirk_blacklist_vpd+0x0/0x22 @ 1
->  > > [  184.235499] pci 0000:02:00.0: [Firmware Bug]: disabling VPD access (can't determine size of non-standard VPD format)                                                                                           
->  > > [  184.235501] pci 0000:02:00.0: quirk_blacklist_vpd+0x0/0x22 took 0 usecs
->  > > 
->  > With this patch there's no VPD access to this device any longer. So this can't be
->  > the root cause. Do you have any other PCI device that has VPD capability?
->  > -> Capabilities: [...] Vital Product Data
-> 
-> 
-> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
->         Subsystem: Device 1dcf:030a
-> 	...
-> 	        Capabilities: [e0] Vital Product Data
->                 Unknown small resource type 06, will not decode more.
-> 
+On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> lockdown") added an implementation of the locked_down LSM hook to
+> SELinux, with the aim to restrict which domains are allowed to perform
+> operations that would breach lockdown.
+>
+> However, in several places the security_locked_down() hook is called in
+> situations where the current task isn't doing any action that would
+> directly breach lockdown, leading to SELinux checks that are basically
+> bogus.
+>
+> To fix this, add an explicit struct cred pointer argument to
+> security_lockdown() and define NULL as a special value to pass instead
+> of current_cred() in such situations. LSMs that take the subject
+> credentials into account can then fall back to some default or ignore
+> such calls altogether. In the SELinux lockdown hook implementation, use
+> SECINITSID_KERNEL in case the cred argument is NULL.
+>
+> Most of the callers are updated to pass current_cred() as the cred
+> pointer, thus maintaining the same behavior. The following callers are
+> modified to pass NULL as the cred pointer instead:
+> 1. arch/powerpc/xmon/xmon.c
+>      Seems to be some interactive debugging facility. It appears that
+>      the lockdown hook is called from interrupt context here, so it
+>      should be more appropriate to request a global lockdown decision.
+> 2. fs/tracefs/inode.c:tracefs_create_file()
+>      Here the call is used to prevent creating new tracefs entries when
+>      the kernel is locked down. Assumes that locking down is one-way -
+>      i.e. if the hook returns non-zero once, it will never return zero
+>      again, thus no point in creating these files. Also, the hook is
+>      often called by a module's init function when it is loaded by
+>      userspace, where it doesn't make much sense to do a check against
+>      the current task's creds, since the task itself doesn't actually
+>      use the tracing functionality (i.e. doesn't breach lockdown), just
+>      indirectly makes some new tracepoints available to whoever is
+>      authorized to use them.
+> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+>      Here a cryptographic secret is redacted based on the value returned
+>      from the hook. There are two possible actions that may lead here:
+>      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+>         task context is relevant, since the dumped data is sent back to
+>         the current task.
+>      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+>         dumped SA is broadcasted to tasks subscribed to XFRM events -
+>         here the current task context is not relevant as it doesn't
+>         represent the tasks that could potentially see the secret.
+>      It doesn't seem worth it to try to keep using the current task's
+>      context in the a) case, since the eventual data leak can be
+>      circumvented anyway via b), plus there is no way for the task to
+>      indicate that it doesn't care about the actual key value, so the
+>      check could generate a lot of "false alert" denials with SELinux.
+>      Thus, let's pass NULL instead of current_cred() here faute de
+>      mieux.
+>
+> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
+> Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>
+> v4:
+> - rebase on top of TODO
+> - fix rebase conflicts:
+>   * drivers/cxl/pci.c
+>     - trivial: the lockdown reason was corrected in mainline
+>   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
+>     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
+>       in mainline
+>   * kernel/power/hibernate.c
+>     - trivial: !secretmem_active() was added to the condition in
+>       hibernation_available()
+> - cover new security_locked_down() call in kernel/bpf/helpers.c
+>   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
+>
+> v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
+> - add the cred argument to security_locked_down() and adapt all callers
+> - keep using current_cred() in BPF, as the hook calls have been shifted
+>   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+>   buggy SELinux lockdown permission checks"))
+> - in SELinux, don't ignore hook calls where cred == NULL, but use
+>   SECINITSID_KERNEL as the subject instead
+> - update explanations in the commit message
+>
+> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> - change to a single hook based on suggestions by Casey Schaufler
+>
+> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
 
-The stall being discussed would have been prevented by the VPD tag
-verification in pci_vpd_size(). It seems that now random data is
-interpreted as VPD tags what results in VPD access to an address
-that makes the device stall.
-I do not really follow Linus' argumentation that VPD shouldn't be
-accessed during boot because other slow "VPD-like" devices are
-accessed too, e.g. DDR SPD via I2C.
+The changes between v3 and v4 all seem sane to me, but I'm going to
+let this sit for a few days in hopes that we can collect a few more
+Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
+mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
+after it goes through a build/test cycle.
 
-> 
-> I'll add that to the quirk list and see if that helps.
-> 
-> 	Dave
-> 
-
+-- 
+paul moore
+www.paul-moore.com
