@@ -2,102 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE47409DE2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C871409DF2
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:10:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348005AbhIMUH7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 16:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
+        id S242370AbhIMULA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 16:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243686AbhIMUHv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Sep 2021 16:07:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C69B1603E7;
-        Mon, 13 Sep 2021 20:06:34 +0000 (UTC)
+        id S236133AbhIMUK7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Sep 2021 16:10:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7110E603E7;
+        Mon, 13 Sep 2021 20:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631563594;
-        bh=3yFwcmqPP0hoGNG3nmRXFMkzTerRnRmkpH0gswnmdnE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jW8jwgj1Tgrv8xzlVBul8jLuM0pvI1YI7V7Px60Pl0SaQ9zcRwVC7ONy/ysZ6+x90
-         cA1whEa1/KMcW5vbC/l4h2nELNE2RpZWmNKfP1etScZgia0GZZWa27V0VA1sw9hbOI
-         jBrhC2ydhEfmV0IHeBa5ohLZ1s2FfhX8NwIfgva1QkQyd+mC/6rXGFu9FScZhikhGG
-         GlpCW7AobGr+qZvuKHN81B7aO9wyLTIVeBaS0BQ3kTzwvVY5jqwWab/vLWy/GGv9Sh
-         YW8k4evAE2b0z3kqnLVGL3MFHA4vurMav8takMUMNOY+QYKibJo5cx8oH8oP9LSgnS
-         ZUhPELlZS8k/w==
-Received: by mail-ej1-f42.google.com with SMTP id i21so23660566ejd.2;
-        Mon, 13 Sep 2021 13:06:34 -0700 (PDT)
-X-Gm-Message-State: AOAM531p3LrvGMlZrApCh4PozkjDYAqzIBiN8LpDMlPz6pDJyX7m2Xc7
-        O4aXQ9ozm9H45ziSMGANMRFPWTzmnmZHlZCFMQ==
-X-Google-Smtp-Source: ABdhPJwN1MWGWOUgZkZ2lawCSXPX2nYnpWxKXQ3DsIeOIGZXLjOjxOCGLIMWEsevJxO3lFR0y54EVuySX4KmEDmXvkw=
-X-Received: by 2002:a17:906:7250:: with SMTP id n16mr14461348ejk.147.1631563593463;
- Mon, 13 Sep 2021 13:06:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210913172358.1775381-1-jean-philippe@linaro.org> <20210913192805.GA1347289@bjorn-Precision-5520>
-In-Reply-To: <20210913192805.GA1347289@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 Sep 2021 15:06:21 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq++G1JR15RMtDL8rsfB0i=Xu5xbC0LuAm3mGiVnbFwXtg@mail.gmail.com>
-Message-ID: <CAL_Jsq++G1JR15RMtDL8rsfB0i=Xu5xbC0LuAm3mGiVnbFwXtg@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ACPI: Don't reset a fwnode set by OF
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        s=k20201202; t=1631563783;
+        bh=XrR2dJ1N43olPr7nnlRqhoV64SDmyXAuDwHZVU/O6vI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YbaYOqbuTQt9lrVTCa/+FoDKb2QkTWvIqtfC9l+PNibrE3BUcte0l3/1PubUkuNAO
+         TtTppTzhT21EZyIrWAYqd0V+FFjyFQR8quAfSEEUuKVuKIJhQSjMDN1/WHyhwWQi1m
+         2MWx6gc1M1TGnC8Bkdhl2BCyc0z1bNtdmjMCx8hkU/4h2CUKg4amiFaUk7h7S5PEVZ
+         2txenvzrZxHmJUKG7xfLBU0OVceM18aHUljsCGWpRfsou1Iur0+Afiwp3jK0ZxPZlO
+         rSouBKYAmhhjMB5G488WJJGifLy625ZTw7MPMRPzUqA+oTgtRlu3V1ZLCe2gS7yFJJ
+         r1ljTGFeB7OkA==
+Date:   Mon, 13 Sep 2021 15:09:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Shanker Donthineni <sdonthineni@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Linux 5.15-rc1
+Message-ID: <20210913200942.GA1351739@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgUJe9rsM5kbmq7jLZc2E6N6XhYaeW9-zJgWaDC-wDiuw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 2:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rob]
->
-> On Mon, Sep 13, 2021 at 06:23:59PM +0100, Jean-Philippe Brucker wrote:
-> > Commit 375553a93201 ("PCI: Setup ACPI fwnode early and at the same time
-> > with OF") added a call to pci_set_acpi_fwnode() in pci_setup_device(),
-> > which unconditionally clears any fwnode previously set by
-> > pci_set_of_node().
+On Mon, Sep 13, 2021 at 12:51:30PM -0700, Linus Torvalds wrote:
+> On Mon, Sep 13, 2021 at 12:00 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
 > >
-> > pci_set_acpi_fwnode() looks for ACPI_COMPANION(), which only returns the
-> > existing fwnode if it was set by ACPI_COMPANION_SET(). If it was set by
-> > OF instead, ACPI_COMPANION() returns NULL and pci_set_acpi_fwnode()
-> > accidentally clears the fwnode. To fix this, look for any fwnode instead
-> > of just ACPI companions.
-> >
-> > Fixes: 375553a93201 ("PCI: Setup ACPI fwnode early and at the same time with OF")
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > ---
-> > This fixes boot of virtio-iommu under OF on v5.15-rc1
-> > ---
-> >  drivers/pci/pci-acpi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index a1b1e2a01632..483a9e50f6ca 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -937,7 +937,7 @@ static struct acpi_device *acpi_pci_find_companion(struct device *dev);
-> >
-> >  void pci_set_acpi_fwnode(struct pci_dev *dev)
-> >  {
-> > -     if (!ACPI_COMPANION(&dev->dev) && !pci_dev_is_added(dev))
-> > +     if (!dev->dev.fwnode && !pci_dev_is_added(dev))
->
-> I don't doubt that this is correct, but it seems excessively subtle,
-> like we're violating some layering or something.
+> > With an older kernel you may experience the stall when accessing the vpd
+> > attribute of this device in sysfs.
+> 
+> Honestly, that old behavior seems to be the *much* better behavior.
+> 
+> A synchronous stall at boot time is truly annoying, and a pain to deal
+> with (and debug).
+> 
+> That pci_vpd_read() function is clearly NOT designed to deal with
+> boot-time callers in the first place, so I think that commit is simply
+> wrong.
+> 
+> And yes, I see that "128ms timeout". If it was _one_ timeout, that
+> would be one thing,. But it looks like it's repeated over and over.
+> 
+> Not acceptable at boot time. Not at all.
+> 
+> Bjorn. Please revert. Or I can do it.
 
-That stems from DT and ACPI node handle handling being asymmetric in
-struct device. DT has its own node pointer plus the fwnode handle
-while ACPI only uses fwnode handle. It's that way because who is going
-to replace all the dev->of_node occurrences? Only ~7500 of them based
-on a quick grep.
+Sorry about this.
 
-> Rafael, Rob, is there anything better we can do here?
+Dave said it wasn't a trivial revert, but I'll be happy to work with
+Heiner and Dave to revert and test it.
 
-I don't think so. Using dev_fwnode() would be slightly better than
-direct access.
+I agree that we shouldn't read VPD at boot-time unless we actually
+need the data then.
 
-Rob
+Bjorn
