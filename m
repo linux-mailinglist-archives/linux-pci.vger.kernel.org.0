@@ -2,91 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 957D7409977
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 18:38:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA876409986
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 18:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238399AbhIMQkI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 12:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238336AbhIMQkF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Sep 2021 12:40:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 02B4460E8B;
-        Mon, 13 Sep 2021 16:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631551129;
-        bh=AUEyRDJgyMq2t1rioCfOWWwTjuqM7/i5dWb0hVpxMRQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ttlu7r2p76SUQ+mb9YL47+2thtgxFGpOlfeXOHYa83wB5m43VExqRLhHt4OzTGhol
-         xzho2CieHSSqEQ3B7SfmDPbHxFhd6qBXHKM2xNAX1+gooHans8grDQ652Oyj9DOKNG
-         IrEGh2Sij/6XQ//2xbLw9FVZA9p3LyjCZtPjDfR3Ih4tI17WT1Oz6vh+EU7dDsVGQY
-         Q3xpmEYwzZd4jBQn1OfTbq29GFmgVPk+HVOtEPDBa+3ND/xZm6sM7CvGX96faL7qhX
-         kKgmYu1FdU3WhIp2fpAWhxC6dr7OUGLnnshaWAkkVgtiRVyKy7tpDvvarKIOJJF64v
-         W2wojIsKQXw4Q==
-Date:   Mon, 13 Sep 2021 11:38:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Spassov, Stanislav" <stanspas@amazon.de>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        id S238043AbhIMQlD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 12:41:03 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:30018 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238386AbhIMQlC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 12:41:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1631551187; x=1663087187;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:mime-version:content-transfer-encoding:subject;
+  bh=aO9MkdtG4uMdRpVLf6WNEzZmQa1cvap0BYq+uvo4pSw=;
+  b=FhaxYQecdpLPe4c/pn982CYLV3wQ7rUDZXlNTaNxwZdJO2U8fepxJWRg
+   TKH4IBa2Svcz+1N9+FmHxFDIkVBPu+HTetM5Y4ptecC9dX0286q0E63am
+   TRe0KsBIeC49E2L2DauQMb3xyYGcrdrBc4PjCKitoonZu27ZLFLRcC7a7
+   8=;
+X-IronPort-AV: E=Sophos;i="5.85,290,1624320000"; 
+   d="scan'208";a="139920614"
+Subject: Re: [PATCH v4 3/3] PCI: Add CRS handling to pci_dev_wait()
+Thread-Topic: [PATCH v4 3/3] PCI: Add CRS handling to pci_dev_wait()
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP; 13 Sep 2021 16:39:39 +0000
+Received: from EX13D12EUC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 9084A1A0BFC;
+        Mon, 13 Sep 2021 16:39:37 +0000 (UTC)
+Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
+ EX13D12EUC001.ant.amazon.com (10.43.164.45) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.23; Mon, 13 Sep 2021 16:39:36 +0000
+Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
+ EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1497.023;
+ Mon, 13 Sep 2021 16:39:36 +0000
+From:   "Spassov, Stanislav" <stanspas@amazon.de>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
         "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
         "ashok.raj@intel.com" <ashok.raj@intel.com>,
         "okaya@kernel.org" <okaya@kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        =?iso-8859-1?Q?Sch=F6nherr=2C_Jan_H=2E?= <jschoenh@amazon.de>,
+        =?utf-8?B?U2Now7ZuaGVyciwgSmFuIEgu?= <jschoenh@amazon.de>,
         "rajatja@google.com" <rajatja@google.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: [PATCH v4 3/3] PCI: Add CRS handling to pci_dev_wait()
-Message-ID: <20210913163847.GA1335093@bjorn-Precision-5520>
+Thread-Index: AQHV9KTPukJAMq/z+UWtD4VToexxlKulibCAgAAI5YA=
+Date:   Mon, 13 Sep 2021 16:39:36 +0000
+Message-ID: <8368c438c88400ba12952b29f21cd9dec1dcd2d3.camel@amazon.de>
+References: <20210913160745.GA1329939@bjorn-Precision-5520>
+In-Reply-To: <20210913160745.GA1329939@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BC7951148EA77F4FA034BEC88D310E7B@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44cac41a02d0fd104b171e9a87b4699197224de4.camel@amazon.de>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 04:29:51PM +0000, Spassov, Stanislav wrote:
-> On Sat, 2021-09-11 at 09:03 -0500, Bjorn Helgaas wrote:
-> 
-> > I think the Root Complex may eventually complete the transaction as
-> > failed *regardless* of whether CRS SV is enabled.  This is unclear in
-> > PCIe r5.0, sec 2.3.2, because the text formatting was broken between
-> > r4.0 and r5.0.  [...]
-> >
-> >   A Root Complex implementation may choose to limit the number of
-> >   Configuration Request/CRS Completion Status loops before determining
-> >   that something is wrong with the target of the Request and taking
-> >   appropriate action, e.g., complete the Request to the host as a
-> >   failed transaction.
-> 
-> I can provide a bit more background:
-> 
-> The issue that prompted me to implement this patch involved a device that
-> used CRS Completions to signal post-reset (non-)readiness. In some cases,
-> the device would get stuck and continue issuing CRS Completions for all
-> requests indefinitely.
-> 
-> The device was attached directly to a Root Port on a server-grade Intel CPU,
-> and CRS SV was enabled on that Root Port. The original pci_dev_wait()
-> implementation, by virtue of polling the Command register rather than the
-> Vendor ID, would always cause a TOR timeout and associated host crash.
-> 
-> I later understood the specific CPU did have a proprietary register for
-> "limiting the number of loops" that the PCIe spec talks about, and indeed
-> that register was set to "no limit". Coupled with the stuck device, these
-> indefinite retries eventually triggered TOR timeout.
+T24gTW9uLCAyMDIxLTA5LTEzIGF0IDExOjA3IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiANCj4gMSkgSXQgc291bmRzIGxpa2UgdGhpcyAqbWlnaHQqIGJlIGEgd29ya2Fyb3VuZCBmb3Ig
+YSBkZXZpY2UgZGVmZWN0Pw0KPiAgICBTaG91bGQgd2UgaW5mZXIgdGhhdCB0aGVyZSdzIGEgZGV2
+aWNlIHdoZXJlOg0KPiANCj4gICAgIC0gV2UgcmVzZXQgdGhlIGRldmljZQ0KPiAgICAgLSBXZSBy
+ZWFkIFBDSV9DT01NQU5EIHVudGlsIGl0IGlzIG5vdCB+MCwgZm9yIHVwIHRvIDYwIHNlY29uZHMN
+Cj4gICAgIC0gVGhlIGRldmljZSByZXR1cm5zIENSUyBzdGF0dXMgZm9yIGVhY2ggcmVhZCwgdW50
+aWwgLi4uDQo+ICAgICAtIFRoZSBwbGF0Zm9ybSBoYXJkd2FyZSB0aW1lcyBvdXQgYmVmb3JlIDYw
+IHNlY29uZHMgYW5kIGZhaWxzIHRoZQ0KPiAgICAgICB0cmFuc2FjdGlvbiwgY2F1c2luZyBhIHN5
+c3RlbSBjcmFzaD8NCg0KWWVzLiBBcyBkZXRhaWxlZCBpbiBteSBvdGhlciByZXBseSAod2hpY2gg
+cmFjZWQgd2l0aCB0aGlzIG1haWwpLCBJDQppbXBsZW1lbnRlZCB0aGlzIHBhdGNoIGJlY2F1c2Ug
+SSBlbmNvdW50ZXJlZCBhIGRldmljZSAoYW5kIGEgcGxhdGZvcm0pDQp0aGF0IGJlaGF2ZWQgZXhh
+Y3RseSBhcyBkZXNjcmliZWQuDQoNCj4gICAgQnV0IHJlYWRpbmcgUENJX1ZFTkRPUl9JRCBpbnN0
+ZWFkIG9mIFBDSV9DT01NQU5EIHNvbWVob3cgYXZvaWRzIHRoZQ0KPiAgICBwbGF0Zm9ybSB0aW1l
+b3V0Pw0KDQpDb3JyZWN0LiBNb3JlIHNwZWNpZmljYWxseSwgdGhhdCAic29tZWhvdyIgaXMgdGhl
+IENSUyBTViBtZWNoYW5pc20NCnN0YW5kYXJkaXplZCBieSB0aGUgUENJZSBzcGVjaWZpY2F0aW9u
+LiBUaGlzIG1lY2hhbmlzbSByZWxpZXMNCnNwZWNpZmljYWxseSBvbiB0aGUgdGFyZ2V0IG9mZnNl
+dCBiZWluZyBQQ0lfVkVORE9SX0lELg0KDQo+IDIpIEkgdGhpbmsgdGhpcyBzaG91bGQgc29tZWhv
+dyBiZSBpbnRlZ3JhdGVkIHdpdGggcGNpX2J1c193YWl0X2NycygpLA0KPiAgICB3aGljaCBhbHNv
+IGxvb3BzIGxvb2tpbmcgZm9yIENSUyBzdGF0dXMuDQoNCkdvb2QgcG9pbnQuIEkgd2lsbCBzZWUg
+aWYgdGhhdCBjYW4gYmUgaW5jb3Jwb3JhdGVkIGluIG5leHQgdmVyc2lvbiwgb3INCmV4cGxhaW4g
+d2h5IG5vdCBpZiB0aGF0IHR1cm5zIG91dCB0byBiZSB0aGUgY2FzZS4NCg0KPiAzKSBwY2lfYnVz
+X3dhaXRfY3JzKCkgaXMgdXNlZCBpbiB0aGUgZW51bWVyYXRpb24gcGF0aCwgYW5kIHdlIGRvIGEN
+Cj4gICAgMzItYml0IHJlYWQgdGhlcmUsIHdoaWNoIHJlYWRzIGJvdGggdGhlIFZlbmRvciBJRCBh
+bmQgdGhlIERldmljZQ0KPiAgICBJRC4gIE1heWJlIHRoYXQncyBzb21lIHNvcnQgb2YgbWljcm8t
+b3B0aW1pemF0aW9uLCBidXQgYXBwYXJlbnRseQ0KPiAgICB0aGVyZSBhcmUgZGV2aWNlcyB0aGF0
+IGRvbid0IGltcGxlbWVudCBDUlMgU1YgY29ycmVjdGx5IChzZWUNCj4gICAgODk2NjVhNmE3MTQw
+ICgiUENJOiBDaGVjayBvbmx5IHRoZSBWZW5kb3IgSUQgdG8gaWRlbnRpZnkNCj4gICAgQ29uZmln
+dXJhdGlvbiBSZXF1ZXN0IFJldHJ5IiksIGFuZCBkb2luZyBhIDE2LWJpdCByZWFkIHdvdWxkIGF2
+b2lkDQo+ICAgIHRoYXQgaXNzdWUuDQo+IA0KPiAgICBGb3IgcGNpX2Rldl93YWl0KCksIEkgZG9u
+J3QgdGhpbmsgdGhlcmUncyBhbnkgcG9pbnQgaW4gZG9pbmcgYQ0KPiAgICAzMi1iaXQgcmVhZCwg
+c28gbWF5YmUgd2Ugc2hvdWxkIGp1c3QgZG8gYSAxNi1iaXQgcmVhZC4NCg0KSSBhZ3JlZSwgYW5k
+IHdpbGwgY2hhbmdlIGl0IHRvIGEgMTYtYml0IHJlYWQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4g
+U2lnbmVkLW9mZi1ieTogU3RhbmlzbGF2IFNwYXNzb3YgPHN0YW5zcGFzQGFtYXpvbi5kZT4NCj4g
+PiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvcGNpLmMgfCA1NSArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDcgaW5zZXJ0
+aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
+Y2kvcGNpLmMgYi9kcml2ZXJzL3BjaS9wY2kuYw0KPiA+IGluZGV4IDQ0ZjVkNDkwN2RiNi4uYTAy
+ODE0N2Y0NDcxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaS5jDQo+ID4gKysrIGIv
+ZHJpdmVycy9wY2kvcGNpLmMNCj4gPiBAQCAtMTA3MywxNyArMTA3Myw1NiBAQCBzdGF0aWMgaW5s
+aW5lIGludCBwY2lfZGV2X3BvbGxfdW50aWxfbm90X2VxdWFsKHN0cnVjdCBwY2lfZGV2ICpkZXYs
+IGludCB3aGVyZSwNCj4gPiANCj4gPiAgc3RhdGljIGludCBwY2lfZGV2X3dhaXQoc3RydWN0IHBj
+aV9kZXYgKmRldiwgY2hhciAqcmVzZXRfdHlwZSwgaW50IHRpbWVvdXQpDQo+ID4gIHsNCj4gPiAr
+ICAgICBpbnQgd2FpdGVkID0gMDsNCj4gPiArICAgICBpbnQgcmMgPSAwOw0KPiA+ICsNCj4gPiAr
+DQo+ID4gICAgICAgLyoNCj4gPiAgICAgICAgKiBBZnRlciByZXNldCwgdGhlIGRldmljZSBzaG91
+bGQgbm90IHNpbGVudGx5IGRpc2NhcmQgY29uZmlnDQo+ID4gICAgICAgICogcmVxdWVzdHMsIGJ1
+dCBpdCBtYXkgc3RpbGwgaW5kaWNhdGUgdGhhdCBpdCBuZWVkcyBtb3JlIHRpbWUgYnkNCj4gPiAt
+ICAgICAgKiByZXNwb25kaW5nIHRvIHRoZW0gd2l0aCBDUlMgY29tcGxldGlvbnMuICBUaGUgUm9v
+dCBQb3J0IHdpbGwNCj4gPiAtICAgICAgKiBnZW5lcmFsbHkgc3ludGhlc2l6ZSB+MCBkYXRhIHRv
+IGNvbXBsZXRlIHRoZSByZWFkIChleGNlcHQgd2hlbg0KPiA+IC0gICAgICAqIENSUyBTViBpcyBl
+bmFibGVkIGFuZCB0aGUgcmVhZCB3YXMgZm9yIHRoZSBWZW5kb3IgSUQ7IGluIHRoYXQNCj4gPiAt
+ICAgICAgKiBjYXNlIGl0IHN5bnRoZXNpemVzIDB4MDAwMSBkYXRhKS4NCj4gPiAtICAgICAgKg0K
+PiA+IC0gICAgICAqIFdhaXQgZm9yIHRoZSBkZXZpY2UgdG8gcmV0dXJuIGEgbm9uLUNSUyBjb21w
+bGV0aW9uLiAgUmVhZCB0aGUNCj4gPiAtICAgICAgKiBDb21tYW5kIHJlZ2lzdGVyIGluc3RlYWQg
+b2YgVmVuZG9yIElEIHNvIHdlIGRvbid0IGhhdmUgdG8NCj4gPiAtICAgICAgKiBjb250ZW5kIHdp
+dGggdGhlIENSUyBTViB2YWx1ZS4NCj4gPiArICAgICAgKiByZXNwb25kaW5nIHRvIHRoZW0gd2l0
+aCBDUlMgY29tcGxldGlvbnMuIEZvciBzdWNoIGNvbXBsZXRpb25zOg0KPiA+ICsgICAgICAqIC0g
+SWYgQ1JTIFNWIGlzIGVuYWJsZWQgb24gdGhlIFJvb3QgUG9ydCwgYW5kIHRoZSByZWFkIHJlcXVl
+c3QNCj4gPiArICAgICAgKiAgIGNvdmVycyBib3RoIGJ5dGVzIG9mIHRoZSBWZW5kb3IgSUQgcmVn
+aXN0ZXIsIHRoZSBSb290IFBvcnQNCj4gPiArICAgICAgKiAgIHdpbGwgc3ludGhlc2l6ZSB0aGUg
+dmFsdWUgMHgwMDAxIChhbmQgc2V0IGFueSBleHRyYSByZXF1ZXN0ZWQNCj4gPiArICAgICAgKiAg
+IGJ5dGVzIHRvIDB4ZmYpDQo+ID4gKyAgICAgICogLSBJZiBDUlMgU1YgaXMgbm90IGVuYWJsZWQg
+b24gdGhlIFJvb3QgUG9ydCwgdGhlIFJvb3QgUG9ydCBtdXN0DQo+ID4gKyAgICAgICogICByZS1p
+c3N1ZSB0aGUgQ29uZmlndXJhdGlvbiBSZXF1ZXN0IGFzIGEgbmV3IFJlcXVlc3QuDQo+ID4gKyAg
+ICAgICogICBEZXBlbmRpbmcgb24gcGxhdGZvcm0tc3BlY2lmaWMgUm9vdCBDb21wbGV4IGNvbmZp
+Z3VyYXRpb25zLA0KPiA+ICsgICAgICAqICAgdGhlIFJvb3QgUG9ydCBtYXkgc3RvcCByZXRyeWlu
+ZyBhZnRlciBhIHNldCBudW1iZXIgb2YgYXR0ZW1wdHMsDQo+ID4gKyAgICAgICogICBvciBhIGNv
+bmZpZ3VyZWQgdGltZW91dCBpcyBoaXQsIG9yIGNvbnRpbnVlIGluZGVmaW5pdGVseQ0KPiA+ICsg
+ICAgICAqICAgKHVsdGltYXRlbHkgcmVzdWx0aW5nIGluIG5vbi1QQ0ktc3BlY2lmaWMgcGxhdGZv
+cm0gZXJyb3JzLCBzdWNoIGFzDQo+ID4gKyAgICAgICogICBhIFRPUiB0aW1lb3V0KS4NCj4gPiAr
+ICAgICAgKi8NCj4gPiArICAgICBpZiAoZGV2LT5jcnNzdl9lbmFibGVkKSB7DQo+ID4gKyAgICAg
+ICAgICAgICB1MzIgaWQ7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgcmMgPSBwY2lfZGV2X3Bv
+bGxfdW50aWxfbm90X2VxdWFsKGRldiwgUENJX1ZFTkRPUl9JRCwgMHhmZmZmLA0KPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMSwgcmVzZXRf
+dHlwZSwgdGltZW91dCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAmd2FpdGVkLCAmaWQpOw0KPiA+ICsgICAgICAgICAgICAgaWYgKHJjKQ0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmM7DQo+ID4gKw0KPiA+ICsgICAgICAgICAg
+ICAgdGltZW91dCAtPSB3YWl0ZWQ7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgLyoNCj4gPiAr
+ICAgICAgICAgICAgICAqIElmIFZlbmRvci9EZXZpY2UgSUQgaXMgdmFsaWQsIHRoZSBkZXZpY2Ug
+bXVzdCBiZSByZWFkeS4NCj4gPiArICAgICAgICAgICAgICAqIE5vdGU6IFNSLUlPViBWRnMgcmV0
+dXJuIH4wIGZvciByZWFkcyB0byBWZW5kb3IvRGV2aWNlDQo+ID4gKyAgICAgICAgICAgICAgKiBJ
+RCBhbmQgd2lsbCBub3QgYmUgcmVjb2duaXplZCBhcyByZWFkeSBieSB0aGlzIGNoZWNrLg0KPiA+
+ICsgICAgICAgICAgICAgICovDQo+ID4gKyAgICAgICAgICAgICBpZiAoaWQgIT0gMHgwMDAwZmZm
+ZiAmJiBpZCAhPSAweGZmZmYwMDAwICYmDQo+ID4gKyAgICAgICAgICAgICAgICAgaWQgIT0gMHgw
+MDAwMDAwMCAmJiBpZCAhPSAweGZmZmZmZmZmKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBy
+ZXR1cm4gMDsNCj4gPiArICAgICB9DQo+ID4gKw0KPiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICog
+Um9vdCBQb3J0cyB3aWxsIGdlbmVyYWxseSBpbmRpY2F0ZSBlcnJvciBzY2VuYXJpb3MgKGUuZy4N
+Cj4gPiArICAgICAgKiBpbnRlcm5hbCB0aW1lb3V0cywgb3IgcmVjZWl2ZWQgQ29tcGxldGlvbiB3
+aXRoIENBL1VSKSBieQ0KPiA+ICsgICAgICAqIHN5bnRoZXNpemluZyBhbiAnYWxsIGJpdHMgc2V0
+JyB2YWx1ZSAofjApLg0KPiA+ICsgICAgICAqIEluIGNhc2UgQ1JTIGlzIG5vdCBzdXBwb3J0ZWQv
+ZW5hYmxlZCwgYXMgd2VsbCBhcyBmb3IgU1ItSU9WIFZGcywNCj4gPiArICAgICAgKiBmYWxsIGJh
+Y2sgdG8gcG9sbGluZyBhIGRpZmZlcmVudCByZWdpc3RlciB0aGF0IGNhbm5vdCB2YWxpZGx5DQo+
+ID4gKyAgICAgICogY29udGFpbiB+MC4gQXMgb2YgUENJZSA1LjAsIGJpdHMgMTEtMTUgb2YgQ09N
+TUFORCBhcmUgc3RpbGwgUnN2ZFANCj4gPiArICAgICAgKiBhbmQgbXVzdCByZXR1cm4gMCB3aGVu
+IHJlYWQuDQo+ID4gKyAgICAgICogWFhYOiBUaGVzZSBiaXRzIG1pZ2h0IGJlY29tZSBtZWFuaW5n
+ZnVsIGluIHRoZSBmdXR1cmUNCj4gPiAgICAgICAgKi8NCj4gPiAgICAgICByZXR1cm4gcGNpX2Rl
+dl9wb2xsX3VudGlsX25vdF9lcXVhbChkZXYsIFBDSV9DT01NQU5ELCB+MCwgfjAsDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzZXRfdHlwZSwgdGltZW91
+dCwgTlVMTCwNCj4gPiAtLQ0KPiA+IDIuMjUuMQ0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+
+IEFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJIDQo+ID4gS3JhdXNlbnN0ci4g
+MzgNCj4gPiAxMDExNyBCZXJsaW4NCj4gPiBHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBT
+Y2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzDQo+ID4gRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQg
+Q2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCDQo+ID4gU2l0ejogQmVybGluDQo+ID4g
+VXN0LUlEOiBERSAyODkgMjM3IDg3OQ0KPiA+IA0KPiA+IA0KPiA+IA0KCgoKQW1hem9uIERldmVs
+b3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdl
+c2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWlu
+Z2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBC
+ClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
-"No limit" sounds like a pretty bad choice, given that it means the
-CPU will essentially hang forever because of a defective I/O device.
-There should be a timeout so software can recover (the *device* may
-never recover, but that's no reason why the kernel must crash).
-
-> Granted, there are surely Root Complexes that behave differently, since the
-> PCIe spec leaves this up to the implementation. Still, this patch increases
-> robustness by polling the safer Vendor ID register, which is safer at least
-> in some situations, and not any less safe generally. However, it is not a
-> simple matter of switching which register is polled due to the SR-IOV
-> considerations that require a fallback to Command.
-
-Yes.
