@@ -2,202 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CC54408A0F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 13:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C18408B0C
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 14:28:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239220AbhIML04 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 07:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
+        id S236796AbhIMM3k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 08:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238684AbhIML04 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 07:26:56 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC93AC061574;
-        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d18so5564418pll.11;
-        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
+        with ESMTP id S240007AbhIMM3j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 08:29:39 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF296C061574
+        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 05:28:23 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id f3-20020a17090a638300b00199097ddf1aso6461043pjj.0
+        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 05:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=CVS3QmGjk4eY7kvmh+6J08F3fOLcHRlS/W30+bNz/bk=;
-        b=STWH0WpycHkA23I8MfwoDjRNXjwWDk+O3Xzzdhs9aEgn+zRdO1nGXT7v70luo/gedc
-         mQZSojeIlReTR1785w/488ghz/oYlnqjKGMM202GTg0RB93a5MQ/+uIEsk69jGuRWxjJ
-         3jJ2pQW2TikzXUNnqPz/0Pl3rZFYfhVox56dxPVzCq91iaR2j0S7JyiVFgBAlygSAq7g
-         V08orBFc12X5pknLDxPd84nfuDKRp7lnuWk3hXwnVuGgCxl2J3zfaKqaKZAnb/0SkFhF
-         IdeGm+wt9FeG5W3dmLtamGPCcAA+gH4Oj0+UasHJUgYUydRymVOdESjdh9tU6UbyCI2K
-         ryhw==
+        d=broadcom.com; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :in-reply-to;
+        bh=LtNbuNTHo/LIidf9N7tcKWanS9pcoNSdbOmP9kKdt8A=;
+        b=ADtZxkV48XCcewspvUTCsEkbRymkSEvwcddHlCefo70X8uuGOm3Mdg0lf0DgHejACU
+         9mxStJ8N9n8HMmaJbKDFwnfpxorAh32wbu4ZeyrqhMwcMgxrLoth0YQnI1PLEa+5g385
+         Jij77gNjgv35qcxuRgNN/E5y+xh4ShAO4ZyTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CVS3QmGjk4eY7kvmh+6J08F3fOLcHRlS/W30+bNz/bk=;
-        b=qlh7s5ejnb/zYDLXf7MukpCOVuhATjL6Ftr57D+siz7fBpXvMgBi24FuvFqVyxQpj8
-         2i9xXS60V9yGFg5yG/Nh0qyxJq5q1eIDfx2wrIDaw3Dj1neEpuUAgLN/BlC7kIHrWeqM
-         vjicuRqiAuadu0mOkbbbSS6Qa2hwdVpprimZTraiNzN7RhnnWLVD6bwqUHr/a1u7Y3AE
-         C27EihR+toHzk9hqyWfCEzrY+6v7cg9PlR8nIYA59j5Pnx94xfOz3IuHJpzW/SdjFX8B
-         wD2s5swoTp7c63QsBsr9t1DbtUcglOmkvGFFheOykUZxL6touUUQLtLhI3eIyl/tdy6F
-         XCiw==
-X-Gm-Message-State: AOAM5331lmaado0fD1v/LWMiz9gFCFTpkUxpUZx/NBkXgHK6swW/J2+L
-        hv/2xcBslIEbLXeqIwZQ6NtFRNZ+XM9jXQ==
-X-Google-Smtp-Source: ABdhPJwg59LUmj1lGjCOmhNlAFRY9/k17SCO9/paUktKjvnplmzCfQw5mvJNguVkBK8/k56VfzisHg==
-X-Received: by 2002:a17:90a:1d6:: with SMTP id 22mr9371574pjd.214.1631532340262;
-        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
-Received: from VM-0-3-centos.localdomain ([101.32.213.191])
-        by smtp.gmail.com with ESMTPSA id v17sm6627359pff.6.2021.09.13.04.25.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Sep 2021 04:25:39 -0700 (PDT)
-From:   brookxu <brookxu.cn@gmail.com>
-To:     jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] PCI: vmd: assign a number to each vmd controller
-Date:   Mon, 13 Sep 2021 19:25:37 +0800
-Message-Id: <1631532337-12473-1-git-send-email-brookxu.cn@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:in-reply-to;
+        bh=LtNbuNTHo/LIidf9N7tcKWanS9pcoNSdbOmP9kKdt8A=;
+        b=6IAqOiSO9FdlWAIxOXpoViysWGesVvLSwuLSZDoAG1N+TxAbnjL0qvC9Hfly9SLAFl
+         s9uibMeDh5nzMXcVng7RUgsAOzp0RHj1+vWZyLHQ8A+tmd7mO3NsuV5ZVxuFM1ZN3zOS
+         bURaplhbB91XPojyptv4kjB2FbtV4G490YSXgU6ZsEIIYPbERkiVk1C4N0xMQYAqyJgH
+         8CdmlCzuvaELq96/u5nGHJ+ZcpSKjL5fTiInskcrhEWyN8lfrSnGs/XmeFgCS+tSc+Yr
+         zdxYlorlVaWHX1yR/qg1hMQXayMP1xrhafJjDI/r0prgpxzR54ah0VPWjWdPQNDc+tk5
+         Dbcw==
+X-Gm-Message-State: AOAM530ZnxIFN8U9PHpMJqdNXE7TLIyBCL+tGpc2GLEloa5sywbH9eI+
+        vtxaHXKMNk9kxyPQDzFh1KG9eQ==
+X-Google-Smtp-Source: ABdhPJydyUrdgn2GkOaooDUqNmi5BiXG9Aad6nJKd9OkmSSDBR0CmT9FUSjiUokWBFOs2eF+mHQltA==
+X-Received: by 2002:a17:902:bd42:b0:138:d3ca:c387 with SMTP id b2-20020a170902bd4200b00138d3cac387mr10302804plx.51.1631536102943;
+        Mon, 13 Sep 2021 05:28:22 -0700 (PDT)
+Received: from C02YVCJELVCG.dhcp.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id x22sm7060823pfm.102.2021.09.13.05.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Sep 2021 05:28:22 -0700 (PDT)
+From:   Andy Gospodarek <andrew.gospodarek@broadcom.com>
+X-Google-Original-From: Andy Gospodarek <gospo@broadcom.com>
+Date:   Mon, 13 Sep 2021 08:28:11 -0400
+To:     Selvin Xavier <selvin.xavier@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        dledford@redhat.com, jgg@nvidia.com, linux-rdma@vger.kernel.org,
+        Felix.Kuehling@amd.com, Shaoyun.Liu@amd.com, Jay.Cornwall@amd.com,
+        andrew.gospodarek@broadcom.com, michael.chan@broadcom.com
+Subject: Re: [PATCH] PCI: Do not enable pci atomics on VFs
+Message-ID: <YT9D25ix7jCOkZ0T@C02YVCJELVCG.dhcp.broadcom.net>
+References: <1631354585-16597-1-git-send-email-selvin.xavier@broadcom.com>
+MIME-Version: 1.0
+In-Reply-To: <1631354585-16597-1-git-send-email-selvin.xavier@broadcom.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000e3196905cbdf99df"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+--000000000000e3196905cbdf99df
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If the system has multiple vmd controllers, the current vmd driver
-does not assign a number to each controller, so when analyzing the
-interrupt through /proc/interrupt, the names of all controllers are
-the same, which is not very convenient for problem analysis. Here,
-try to assign a number to each vmd controller.
+On Sat, Sep 11, 2021 at 03:03:05AM -0700, Selvin Xavier wrote:
+> Host crashes when pci_enable_atomic_ops_to_root is called for VFs
+> with virtual buses. The virtual buses added to SR-IOV has bus->self
+> set to  NULL and host crashes due to this.
+	^^ I _hate_ to say this, but the extra space isn't ideal.  Not
+sure if the maintainers will want to hold-up the submission for this (or
+if they can fix while committing), but something to look out for next
+time.
 
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
----
- drivers/pci/controller/vmd.c | 58 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 45 insertions(+), 13 deletions(-)
+> 
+> PID: 4481   TASK: ffff89c6941b0000  CPU: 53  COMMAND: "bash"
+>  #0 [ffff9a94817136d8] machine_kexec at ffffffffb90601a4
+>  #1 [ffff9a9481713728] __crash_kexec at ffffffffb9190d5d
+>  #2 [ffff9a94817137f0] crash_kexec at ffffffffb9191c4d
+>  #3 [ffff9a9481713808] oops_end at ffffffffb9025cd6
+>  #4 [ffff9a9481713828] page_fault_oops at ffffffffb906e417
+>  #5 [ffff9a9481713888] exc_page_fault at ffffffffb9a0ad14
+>  #6 [ffff9a94817138b0] asm_exc_page_fault at ffffffffb9c00ace
+>     [exception RIP: pcie_capability_read_dword+28]
+>     RIP: ffffffffb952fd5c  RSP: ffff9a9481713960  RFLAGS: 00010246
+>     RAX: 0000000000000001  RBX: ffff89c6b1096000  RCX: 0000000000000000
+>     RDX: ffff9a9481713990  RSI: 0000000000000024  RDI: 0000000000000000
+>     RBP: 0000000000000080   R8: 0000000000000008   R9: ffff89c64341a2f8
+>     R10: 0000000000000002  R11: 0000000000000000  R12: ffff89c648bab000
+>     R13: 0000000000000000  R14: 0000000000000000  R15: ffff89c648bab0c8
+>     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+>  #7 [ffff9a9481713988] pci_enable_atomic_ops_to_root at ffffffffb95359a6
+>  #8 [ffff9a94817139c0] bnxt_qplib_determine_atomics at ffffffffc08c1a33 [bnxt_re]
+>  #9 [ffff9a94817139d0] bnxt_re_dev_init at ffffffffc08ba2d1 [bnxt_re]
+>     RIP: 00007f450602f648  RSP: 00007ffe880869e8  RFLAGS: 00000246
+>     RAX: ffffffffffffffda  RBX: 0000000000000002  RCX: 00007f450602f648
+>     RDX: 0000000000000002  RSI: 0000555c566c4a60  RDI: 0000000000000001
+>     RBP: 0000555c566c4a60   R8: 000000000000000a   R9: 00007f45060c2580
+>     R10: 000000000000000a  R11: 0000000000000246  R12: 00007f45063026e0
+>     R13: 0000000000000002  R14: 00007f45062fd880  R15: 0000000000000002
+>     ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+> 
+> AtomicOp Requester Enable bit in the Device Control 2 register
+> is reserved for VFs and drivers shouldn't enable it for VFs.
+> Adding a check to return EINVAL if pci_enable_atomic_ops_to_root
+> is called with VF pci device.
+> 
+> Fixes: 35f5ace5dea4 ("RDMA/bnxt_re: Enable global atomic ops if platform supports")
+> Fixes: 430a23689dea ("PCI: Add pci_enable_atomic_ops_to_root()")
+> Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index e3fcdfe..c334396 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -69,6 +69,8 @@ enum vmd_features {
- 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
- };
- 
-+static DEFINE_IDA(vmd_instance_ida);
-+
- /*
-  * Lock for manipulating VMD IRQ lists.
-  */
-@@ -119,6 +121,8 @@ struct vmd_dev {
- 	struct pci_bus		*bus;
- 	u8			busn_start;
- 	u8			first_vec;
-+	char			*name;
-+	int			instance;
- };
- 
- static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
-@@ -599,7 +603,7 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
- 		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
- 		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
- 				       vmd_irq, IRQF_NO_THREAD,
--				       "vmd", &vmd->irqs[i]);
-+				       vmd->name, &vmd->irqs[i]);
- 		if (err)
- 			return err;
- 	}
-@@ -769,28 +773,48 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- {
- 	unsigned long features = (unsigned long) id->driver_data;
- 	struct vmd_dev *vmd;
--	int err;
-+	int err = 0;
- 
--	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
--		return -ENOMEM;
-+	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20)) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
- 
- 	vmd = devm_kzalloc(&dev->dev, sizeof(*vmd), GFP_KERNEL);
--	if (!vmd)
--		return -ENOMEM;
-+	if (!vmd) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
- 
- 	vmd->dev = dev;
-+	vmd->instance = ida_simple_get(&vmd_instance_ida, 0, 0, GFP_KERNEL);
-+	if (vmd->instance < 0) {
-+		err = vmd->instance;
-+		goto out;
-+	}
-+
-+	vmd->name = kasprintf(GFP_KERNEL, "vmd%d", vmd->instance);
-+	if (!vmd->name) {
-+		err = -ENOMEM;
-+		goto out_release_instance;
-+	}
-+
- 	err = pcim_enable_device(dev);
- 	if (err < 0)
--		return err;
-+		goto out_release_instance;
- 
- 	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
--	if (!vmd->cfgbar)
--		return -ENOMEM;
-+	if (!vmd->cfgbar) {
-+		err = -ENOMEM;
-+		goto out_release_instance;
-+	}
- 
- 	pci_set_master(dev);
- 	if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64)) &&
--	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32)))
--		return -ENODEV;
-+	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32))) {
-+		err = -ENODEV;
-+		goto out_release_instance;
-+	}
- 
- 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
- 		vmd->first_vec = 1;
-@@ -799,11 +823,17 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	pci_set_drvdata(dev, vmd);
- 	err = vmd_enable_domain(vmd, features);
- 	if (err)
--		return err;
-+		goto out_release_instance;
- 
- 	dev_info(&vmd->dev->dev, "Bound to PCI domain %04x\n",
- 		 vmd->sysdata.domain);
- 	return 0;
-+
-+ out_release_instance:
-+	ida_simple_remove(&vmd_instance_ida, vmd->instance);
-+	kfree(vmd->name);
-+ out:
-+	return err;
- }
- 
- static void vmd_cleanup_srcu(struct vmd_dev *vmd)
-@@ -824,6 +854,8 @@ static void vmd_remove(struct pci_dev *dev)
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
- 	vmd_remove_irq_domain(vmd);
-+	ida_simple_remove(&vmd_instance_ida, vmd->instance);
-+	kfree(vmd->name);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -848,7 +880,7 @@ static int vmd_resume(struct device *dev)
- 	for (i = 0; i < vmd->msix_count; i++) {
- 		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
- 				       vmd_irq, IRQF_NO_THREAD,
--				       "vmd", &vmd->irqs[i]);
-+				       vmd->name, &vmd->irqs[i]);
- 		if (err)
- 			return err;
- 	}
--- 
-1.8.3.1
+Thanks for this, Selvin.  Technically this looks like a good fix.
 
+Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
+
+> ---
+>  drivers/pci/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index aacf575..d968a36 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3702,6 +3702,14 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
+>  	struct pci_dev *bridge;
+>  	u32 cap, ctl2;
+>  
+> +	/*
+> +	 * As per PCIe r5.0, sec 9.3.5.10, the AtomicOp Requester Enable
+> +	 * bit in the Device Control 2 register is reserved in VFs and the PF
+> +	 * value applies to all associated VFs. Return -EINVAL if called for VFs.
+> +	 */
+> +	if (dev->is_virtfn)
+> +		return -EINVAL;
+> +
+>  	if (!pci_is_pcie(dev))
+>  		return -EINVAL;
+>  
+> -- 
+> 2.5.5
+> 
+
+--000000000000e3196905cbdf99df
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVkwggRBoAMCAQICDBPdG+g0KtOPKKsBCTANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMTAyMjIxNDAyMzhaFw0yMjA5MjIxNDExNTVaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGDAWBgNVBAMTD0FuZHkgR29zcG9kYXJlazEtMCsGCSqGSIb3
+DQEJARYeYW5kcmV3Lmdvc3BvZGFyZWtAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAp9JFtMqwgpbnvA3lNVCpnR5ehv0kWK9zMpw2VWslbEZq4WxlXr1zZLZEFo9Y
+rdIZ0jlxwJ4QGYCvxE093p9easqc7NMemeMg7JpF63hhjCksrGnsxb6jCVUreXPSpBDD0cjaE409
+9yo/J5OQORNPelDd4Ihod6g0XlcxOLtlTk1F0SOODSjBZvaDm0zteqiVZb+7xgle3NOSZm3kiCby
+iRuyS0gMTdQN3gdgwal9iC3cSXHMZFBXyQz+JGSHomhPC66L6j4t6dUqSTdSP07wg38ZPV6ct/Sv
+/O2HcK+E/yYkdMXrDBgcOelO4t8AYHhmedCIvFVp4pFb2oit9tBuFQIDAQABo4IB3zCCAdswDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDApBgNVHREEIjAggR5hbmRyZXcuZ29zcG9kYXJla0Bicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
+KwYBBQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFKARn7Ud
+RlGu+rBdUDirYE+Ee4TeMA0GCSqGSIb3DQEBCwUAA4IBAQAcWqh4fdwhDN0+MKyH7Mj0vS10E7xg
+mDetQhQ+twwKk5qPe3tJXrjD/NyZzrUgguNaE+X97jRsEbszO7BqdnM0j5vLDOmzb7d6qeNluJvk
+OYyzItlqZk9cJPoP9sD8w3lr2GRcajj5JCKV4pd2PX/i7r30Qco0VnloXpiesFmNTXQqD6lguUyn
+nb7IGM3v/Nb7NTFH8/KUVg33xw829ztuGrOvfrHfBbeVcUoOHEHObXoaofYOJjtmSOQdMeJIiBgP
+XEpJG8/HB8t4FF6A8W++4cHhv0+ayyEnznrbOCn6WUmIvV2WiJymRpvRG7Hhdlk0zA97MRpqK5yn
+ai3dQ6VvMYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
+di1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIM
+E90b6DQq048oqwEJMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDSimZqB73truhX
+IrP/ymjC4a2mg8o7hnr+PDzqW/Bk8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3
+DQEJBTEPFw0yMTA5MTMxMjI4MjNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCG
+SAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEB
+BzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAmtCv1mWbQwryzTm35CgNhPr5wtNu78lZ
+XIf4MYxtkSjShJ9Akdx8FOQuWJeEgkhV7bkT4xAQoxI0dyqViFEGx2N6So7CJOL5QxBD3wdFKsFa
+ku/g7xA/yzeZKjQUSDCm83MwSd1H6iz40c/fjA/7HNC/RufRW+T0VOqmsQj8M7kt/X+LQyL5K3pX
+fZMdvaxpbONMV9gWZKLVD6h56gibTe8nSRP3v/bwdNyt1WCIVFiFwgPTLZyAYkNLNIwVtlpyKERH
+2s9Z5OtoaBOam01V3tOmgD7EQdbGg2D9qwCcMeOJ52A9k+NndO0yw/pqj+8BBrddHoRat4thWQ/L
+JcJt9Q==
+--000000000000e3196905cbdf99df--
