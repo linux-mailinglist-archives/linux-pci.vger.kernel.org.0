@@ -2,114 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9AB0409E4D
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:44:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F27C7409E54
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 22:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240128AbhIMUpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 16:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240037AbhIMUpu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 16:45:50 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C9BC061574;
-        Mon, 13 Sep 2021 13:44:34 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id q26so16637740wrc.7;
-        Mon, 13 Sep 2021 13:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:references:cc:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uJ9c1gaOud7sGqjyc47QBp3YqMF6hd2J1/zaJtx/Ook=;
-        b=XraguzSr9PUzOKTgdLzhNj8bzEBq9hUewu56ASfelTOo9DNQsc1nWwYOs5NYIewkvP
-         PsAoxqVGfjQpWITjgfKcYI8AgwIsoX1j3ukVolOlSXtPJw8HmkNajioHlXq75HZZWK1j
-         b2GHBQTn+9ZefbYmulECych9NQtmrdkVw5JzaAkjEyq5W7zf1s8rSI8owf7vbg5oygiz
-         bOHWVZSW0o+GHrhSONWKMAEWx8+TZk0MwNCJCENFCanFANMGs7RyvaYzh3nGqOPvkRZ/
-         IEK9kiADTzdXfekuzq6i1LgIWyDeLUmRlNa9N6/qrxIJt4jS1J1SNU/H4ekmsgFjmUm7
-         usIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uJ9c1gaOud7sGqjyc47QBp3YqMF6hd2J1/zaJtx/Ook=;
-        b=3yiyD73OKIEXgUjVXFak9plMpvKBUuQWnjkM32qER1IGYOY0Go9WAUFx1RwdMCPMdo
-         /0/BveFy+sGgLTeWx8dM0gsut1GLVuIVWO+dzbvxE7qQja8L3kmnhoffQOP4bv2uQk2v
-         t6cMFllgdU260vlatSo/RqrZtem36t9rJSGvNe08ilUq+EC4q7F2iTpc+YkUccCbOdDy
-         Kfj0sgKmENeWgzioT26kTzFw+5iLtIZsoVAY9me9aNQCFZamJHl1/iGiWJ3cvMY8pxRH
-         LSoFGx7XKNMZtQ3YvZjVk+VewN4pLK7d7TGD9uD5iiPaIk9Hcu6iXgstcGn1VoP74gGh
-         DSPQ==
-X-Gm-Message-State: AOAM530HNvupOB+wurixZWXd7RUwKEaRDd9wX1Iqr+nFfF18az6bkDvN
-        QhoL3GMYXewrP1SabE6QsFc=
-X-Google-Smtp-Source: ABdhPJwwTDWKWy2rTddonQ03xI/9YwGXWx2yyaKiUz0pNEzkcRz9oJhzivq4zPD4my4WgsgDIi60OQ==
-X-Received: by 2002:adf:b785:: with SMTP id s5mr14648213wre.30.1631565873252;
-        Mon, 13 Sep 2021 13:44:33 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f08:4500:2517:8cca:49d8:dcdc? (p200300ea8f08450025178cca49d8dcdc.dip0.t-ipconnect.de. [2003:ea:8f08:4500:2517:8cca:49d8:dcdc])
-        by smtp.googlemail.com with ESMTPSA id g5sm8407167wrq.80.2021.09.13.13.44.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Sep 2021 13:44:32 -0700 (PDT)
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com>
- <20210913141818.GA27911@codemonkey.org.uk>
- <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com>
- <20210913201519.GA15726@codemonkey.org.uk>
- <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
- <20210913203234.GA6762@codemonkey.org.uk>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Linux 5.15-rc1 - 82599ES VPD access isue
-Message-ID: <b24d81e2-5a1e-3616-5a01-abd58c0712f7@gmail.com>
-Date:   Mon, 13 Sep 2021 22:44:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20210913203234.GA6762@codemonkey.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S243124AbhIMUrV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 16:47:21 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34997 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242818AbhIMUrU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 16:47:20 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 19635580DFD;
+        Mon, 13 Sep 2021 16:46:04 -0400 (EDT)
+Received: from imap21 ([10.202.2.71])
+  by compute1.internal (MEProxy); Mon, 13 Sep 2021 16:46:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm2; bh=PfoyBwEONGeRoetozh4VCrcWNl2W
+        CSyw2EgpFS0D5cI=; b=k1mMXwbiYYKILsn2bMLbgszknQRsbYl8plnufj6LOySp
+        6HazilS3iMP4mdZKQUXl7NGkrndHiaMXO5DmyPwjsX3Sd9EE603ZfkJK9RD5neY0
+        1PIzm9otjEK9m1PgswIfeCK1O/oNTY9dpuao00737PgzxbICzd9ydM2WMKULAMNf
+        +ALlHEsWBS1DTz+9Ng5Bgmqk0ScWxm6eGaKaI5bh6fDKZCf3JEzM1D+2l04wDJhw
+        LU7CPAYHz0Dy0WcJX84EczLugcJxQZVcdQTrvgrC8lc3x6/NnaG3EanVyxuqWMkv
+        0i5X2AmYBg2SN9MCk7751leNtahKNwRIZdrW/MXthg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=PfoyBw
+        EONGeRoetozh4VCrcWNl2WCSyw2EgpFS0D5cI=; b=YPDQgZUHQ2A5ycPuflPU0j
+        fNjm9aVJkyyeL8n0G0WbCTqBwGzlOJLUO06HjHM24+Rn8GdDDussHZ/Edi8UZdcd
+        cmM59uhX/D6rpIVRxvc0fvs9VIp7x2+hPIgRTjX50CubSnfDEPkWkLXTlM6lb1+p
+        b+AkJ2cy/XE3yheGu9kY1lRqVuAKDRWKoELlws6FzHceLVeyBR7jrH4JAd6AQJ2b
+        nkrRjnf4TRNBnE7GCjnYsV/AiJznhv7R6oQOLFVOzfJpQpBNroHtFr2mU7cm3rAO
+        tbdK/Cg24AL3filKekCBKZ4R9MWwQ+NkwAUvfa2bcw33cm+eivqAycXRTsfUwArw
+        ==
+X-ME-Sender: <xms:irg_Yb2YnMOcs-u5R2BCwC7xMkJOL4MOsZJTMGw6E5-1vGIQ3npi4Q>
+    <xme:irg_YaHyGPc4HQM8FlFhVYZacLvgCX_HTQYAtT88aOx98ME4OTaQ_UKrhXSFccjUo
+    lPN6XCQB1xpInmuVbo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudegjedgudehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedfufhv
+    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
+    grthhtvghrnhepheejgfdttdefleefteejieefudeuheelkedtgedtjeehieetueelheeu
+    hfegheegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
+X-ME-Proxy: <xmx:irg_Yb5MaOHGY-wC4_JCR-lQ_33Q4PjyZgGXPXB8b0oPIM3tF2soTA>
+    <xmx:irg_YQ3NZnbOQSKcqFEx_7bqkB8KvOMYAvWXr4IUS3vQvCEeXYpZrg>
+    <xmx:irg_YeHAPlDigLLTaEWNtGSzn8Kqt1Ngyltd6SbKISzGwN2LOW-MOQ>
+    <xmx:jLg_YZ-6842H3o-Ag_-Ql80arHOBU1hNuV5gqLOCnB-yo7g6Tumonw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 9509A51C0060; Mon, 13 Sep 2021 16:46:02 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1229-g7ca81dfce5-fm-20210908.005-g7ca81dfc
+Mime-Version: 1.0
+Message-Id: <b502383a-fe68-498a-b714-7832d3c8703e@www.fastmail.com>
+In-Reply-To: <20210913182550.264165-11-maz@kernel.org>
+References: <20210913182550.264165-1-maz@kernel.org>
+ <20210913182550.264165-11-maz@kernel.org>
+Date:   Mon, 13 Sep 2021 22:45:13 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Marc Zyngier" <maz@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Stan Skowronek" <stan@corellium.com>,
+        "Mark Kettenis" <kettenis@openbsd.org>,
+        "Hector Martin" <marcan@marcan.st>,
+        "Robin Murphy" <Robin.Murphy@arm.com>, kernel-team@android.com
+Subject: =?UTF-8?Q?Re:_[PATCH_v3_10/10]_PCI:_apple:_Configure_RID_to_SID_mapper_o?=
+ =?UTF-8?Q?n_device_addition?=
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13.09.2021 22:32, Dave Jones wrote:
 
-+ Jesse and Tony as Intel NIC maintainers
 
-> On Mon, Sep 13, 2021 at 10:22:57PM +0200, Heiner Kallweit wrote:
+On Mon, Sep 13, 2021, at 20:25, Marc Zyngier wrote:
+> The Apple PCIe controller doesn't directly feed the endpoint's
+> Requester ID to the IOMMU (DART), but instead maps RIDs onto
+> Stream IDs (SIDs). The DART and the PCIe controller must thus
+> agree on the SIDs that are used for translation (by using
+> the 'iommu-map' property).
 > 
->  > > This didn't help I'm afraid :(
->  > > It changed the VPD warning, but that's about it...
->  > > 
->  > > [  184.235496] pci 0000:02:00.0: calling  quirk_blacklist_vpd+0x0/0x22 @ 1
->  > > [  184.235499] pci 0000:02:00.0: [Firmware Bug]: disabling VPD access (can't determine size of non-standard VPD format)                                                                                           
->  > > [  184.235501] pci 0000:02:00.0: quirk_blacklist_vpd+0x0/0x22 took 0 usecs
->  > > 
->  > With this patch there's no VPD access to this device any longer. So this can't be
->  > the root cause. Do you have any other PCI device that has VPD capability?
->  > -> Capabilities: [...] Vital Product Data
+> For this purpose, parse the 'iommu-map' property each time a
+> device gets added, and use the resulting translation to configure
+> the PCIe RID-to-SID mapper. Similarily, remove the translation
+> if/when the device gets removed.
 > 
+> This is all driven from a bus notifier which gets registered at
+> probe time. Hopefully this is the only PCI controller driver
+> in the whole system.
 > 
-> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
->         Subsystem: Device 1dcf:030a
-> 	...
-> 	        Capabilities: [e0] Vital Product Data
->                 Unknown small resource type 06, will not decode more.
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/pci/controller/pcie-apple.c | 158 +++++++++++++++++++++++++++-
+>  1 file changed, 156 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/pci/controller/pcie-apple.c 
+> b/drivers/pci/controller/pcie-apple.c
+> index 76344223245d..68d71eabe708 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -23,8 +23,10 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/msi.h>
+> +#include <linux/notifier.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pci-ecam.h>
+>  
+> @@ -116,6 +118,8 @@
+>  #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
+>  #define PORT_PREFMEM_ENABLE		0x00994
+>  
+> +#define MAX_RID2SID			64
 
-When searching I found the same symptom of invalid VPD data for 82599EB.
-Do these adapters have non-VPD data in VPD address space? Or is the actual
-VPD data at another offset than 0? I know that few Chelsio devices have
-such a non-standard VPD structure.
+Do these actually have 64 slots? I thought that was only for
+the Thunderbolt controllers and that these only had 16.
+I never checked it myself though and it doesn't make much
+of a difference for now since only four different RIDs will
+ever be connected anyway.
 
-> 
-> I'll add that to the quirk list and see if that helps.
-> 
-> 	Dave
-> 
-Heiner
+
+
+Sven
