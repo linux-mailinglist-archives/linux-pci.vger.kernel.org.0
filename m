@@ -2,151 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 589AE409517
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 16:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0EB0409799
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 17:40:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345659AbhIMOhb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 10:37:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38297 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347856AbhIMOff (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 10:35:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631543659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZfryJxpK5ypx39qR3xTFVVXtpOzhn2v4T4s5MYbdHC0=;
-        b=LNaGNVx924mDiBKN0oMqFYMfrvXASpMNSiW7p/8oGrnNMWTNYtU4ozUohuXyZrrOZIDmUt
-        hKJO4DOeYEh8iFw1osbrldkH1quWeDRCL5V7+AqTC/bTS4+27l/e8qHQovoetRQkpsfTNz
-        TKZsK4kdHeAvOt3R8zAe1rWfu7LD1AM=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-iESQXJ5OOzmznZqiXN24yQ-1; Mon, 13 Sep 2021 10:34:18 -0400
-X-MC-Unique: iESQXJ5OOzmznZqiXN24yQ-1
-Received: by mail-lf1-f70.google.com with SMTP id s28-20020a056512203c00b003f42015e912so730422lfs.4
-        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 07:34:16 -0700 (PDT)
+        id S241230AbhIMPlm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 11:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229926AbhIMPlj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 11:41:39 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F8D0C0258D6;
+        Mon, 13 Sep 2021 07:58:32 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id c10so10766680qko.11;
+        Mon, 13 Sep 2021 07:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PFD9mJaBzJKTsxm4rXZDM/y2enE6R8R76CfOiZbw4HU=;
+        b=qnKybz0B5oVmKPyqgPGoezg+mvumei8Ol/qbWrUBL+z62ewI9zUSkCFC3ftaPqEqcc
+         gLXcRv87aSGCie0vaSkzGAl3kQXgkC4/cMVUpMQKuDFKsBoAS1IHqTdxQysnbdczJOs9
+         Pu4STzHY57inMcRXJrQE9hKsnpZnUcw1041ZMn2SnOmiKaSW4im8jgqnPDHDkRaS2hMO
+         FCbdndbc1iePtXhGd4fN5oN1itGrF+DfjK1T8umBrN34OGUzoiXQwF4C2w00P084yeq2
+         OrUAHxHaX2SdmfZ1QcojHh7rP7jANKFxLBSi96UHn/K2atcNAZ+bcklkrFxEjvEReeXV
+         MQ/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZfryJxpK5ypx39qR3xTFVVXtpOzhn2v4T4s5MYbdHC0=;
-        b=K47/DDhyy8E/RXSkf4jX/JkQJSS1qYkmyV3xWLcn4+AlyItXBA8gxAxzEG5C7m1iYZ
-         z1lJR8oueuWDgGlRtx+csgEuYU1DoqGOrjJ6kHbiWUme8Qlr/FKxBYf1hH6HkJShK5k3
-         C9a0WQIDSOkq7dEF3lgZxTSFIxTm8jcW3CwtGc4zN0yceKrWweRQUA5sRKQMXPnxtcin
-         aHgjK6sWzHo163xG94Y1tJAM8K7ntfMkWhn3/NHJ1t08Ki/A/AawOIT78e04cd/luQN1
-         GsH/aJytm31Y51skXKGy6pNCz478rvnrC47hoqUEJQCdNh8LY/kflbKU5bnihGpzX9/H
-         Ae3Q==
-X-Gm-Message-State: AOAM532vMasafHXQoP9My6UFXXs442BjaWnlnfHG1fW0BOPJC6LW6AeJ
-        7i+q4QPTMICemc+CxvbyNpEtWjdb/ZHbpBKXBU4nNLhetHqIYH2Cb0sIQW2CX0/qYur8Y+fiH3r
-        Gld5k6xBiabAdhPd/VYDkx5GvnZ4N7wJmWlr1
-X-Received: by 2002:a2e:8496:: with SMTP id b22mr10580088ljh.496.1631543655368;
-        Mon, 13 Sep 2021 07:34:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx5SXCQw8y9VkHHfq5++HMmDEHwpKWfarOYoyKiBkbH/mHk7DKQN7bm1Klq5kHtrFKCMkY+wbutOm0v72aYRO0=
-X-Received: by 2002:a2e:8496:: with SMTP id b22mr10580054ljh.496.1631543655145;
- Mon, 13 Sep 2021 07:34:15 -0700 (PDT)
+        bh=PFD9mJaBzJKTsxm4rXZDM/y2enE6R8R76CfOiZbw4HU=;
+        b=dRiqZO1h6Xn9sSBP1ewOghEj5BnEMyRuBLkJVpYoUuXgXRzIFpVxY8z6lvIOpi+Aoz
+         yGa85U7oZfF0a+mdpg0Nhe0hdPbdVcMrmMZITLJSJJj4yn6lkaQgjTHl7WRJETwO0QXq
+         eKxLNDQ5xeQ4lZvs/yqHY58eUFfGKZ9uEuYRGSuGKn9HYnt8awaey6vBhe6a2crUAIzk
+         2/RlhNmwTqahZkF+UH7W7nEM5ckvvze+MRg0jVVv4M/TCvAUsyko1KD3cQzgsx1ZUhyU
+         gTOqeTtdgxv8mXauzlNV5WNihZVOZTyjCfzTiPU9n3ra1wNPCiUjzl8k4lC3AcifcM54
+         0e6w==
+X-Gm-Message-State: AOAM530WiDdXFDwMoCkgOkFxIWQ2zOTcFSQy8j6YTmfiSH+vRmkGBmvY
+        XOoUuHiE3A9A+qlJowPflrSd5sjRwce0Ego4Kwc=
+X-Google-Smtp-Source: ABdhPJwh26MSRjVjkR7VkLGGkQY2c6BDDe1IfCUBySjVHMeGamtvhofk0Vh4g8ftw3wylX8g4u0wJNN4bwP+UgU/wSA=
+X-Received: by 2002:a05:620a:254d:: with SMTP id s13mr16048qko.264.1631545111542;
+ Mon, 13 Sep 2021 07:58:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210903152430.244937-1-nitesh@redhat.com>
-In-Reply-To: <20210903152430.244937-1-nitesh@redhat.com>
-From:   Nitesh Lal <nilal@redhat.com>
-Date:   Mon, 13 Sep 2021 10:34:03 -0400
-Message-ID: <CAFki+L=9Hw-2EONFEX6b7k6iRX_yLx1zcS+NmWsDSuBWg8w-Qw@mail.gmail.com>
-Subject: Re: [PATCH v6 00/14] genirq: Cleanup the abuse of irq_set_affinity_hint()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        davem@davemloft.net, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        huangguangbin2@huawei.com, huangdaode@huawei.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alex Belits <abelits@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
-        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
-        Stefan Assmann <sassmann@redhat.com>,
-        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com,
-        Alaa Hleihel <ahleihel@redhat.com>,
-        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
-        saeedm@nvidia.com,
-        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
-        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
-        Al Stone <ahs3@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
-        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
-        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        kabel@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>, kashyap.desai@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        suganath-prabu.subramani@broadcom.com, ley.foon.tan@intel.com,
-        jbrunet@baylibre.com, johannes@sipsolutions.net,
-        snelson@pensando.io, lewis.hanly@microchip.com, benve@cisco.com,
-        _govind@gmx.com, jassisinghbrar@gmail.com
+References: <20210910141940.2598035-1-schnelle@linux.ibm.com>
+ <20210910141940.2598035-2-schnelle@linux.ibm.com> <87wnnnl67a.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87wnnnl67a.fsf@mpe.ellerman.id.au>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Tue, 14 Sep 2021 00:58:20 +1000
+Message-ID: <CAOSf1CEQB_Fz_yF0pgs6xqJJ2Say1a2XFjOedO2mE=Qn_BgbnQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] powerpc: Drop superfluous pci_dev_is_added() calls
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 3, 2021 at 11:25 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+On Sat, Sep 11, 2021 at 9:09 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
 >
-> The drivers currently rely on irq_set_affinity_hint() to either set the
-> affinity_hint that is consumed by the userspace and/or to enforce a custom
-> affinity.
+> Niklas Schnelle <schnelle@linux.ibm.com> writes:
+> > On powerpc, pci_dev_is_added() is called as part of SR-IOV fixups
+> > that are done under pcibios_add_device() which in turn is only called in
+> > pci_device_add() whih is called when a PCI device is scanned.
 >
-> irq_set_affinity_hint() as the name suggests is originally introduced to
-> only set the affinity_hint to help the userspace in guiding the interrupts
-> and not the affinity itself. However, since the commit
+> Thanks for cleaning this up for us.
 >
->         e2e64a932556 "genirq: Set initial affinity in irq_set_affinity_hint()"
-
-[...]
-
+> > Now pci_dev_assign_added() is called in pci_bus_add_device() which is
+> > only called after scanning the device. Thus pci_dev_is_added() is always
+> > false and can be dropped.
 >
-> Nitesh Narayan Lal (13):
->   iavf: Use irq_update_affinity_hint
->   i40e: Use irq_update_affinity_hint
->   scsi: megaraid_sas: Use irq_set_affinity_and_hint
->   scsi: mpt3sas: Use irq_set_affinity_and_hint
->   RDMA/irdma: Use irq_update_affinity_hint
->   enic: Use irq_update_affinity_hint
->   be2net: Use irq_update_affinity_hint
->   ixgbe: Use irq_update_affinity_hint
->   mailbox: Use irq_update_affinity_hint
->   scsi: lpfc: Use irq_set_affinity
->   hinic: Use irq_set_affinity_and_hint
->   net/mlx5: Use irq_set_affinity_and_hint
->   net/mlx4: Use irq_update_affinity_hint
+> My only query is whether we can pin down when that changed.
 >
-> Thomas Gleixner (1):
->   genirq: Provide new interfaces for affinity hints
+> Oliver said:
 >
+>   The use of pci_dev_is_added() in arch/powerpc was because in the past
+>   pci_bus_add_device() could be called before pci_device_add(). That was
+>   fixed a while ago so It should be safe to remove those calls now.
+>
+> I trawled back through the history a bit but I can't remember/find which
+> commit changed that, Oliver can you remember?
 
-Any suggestions on what should be the next steps here? Unfortunately, I haven't
-been able to get any reviews on the following two patches:
-  be2net: Use irq_update_affinity_hint
-  hinic: Use irq_set_affinity_and_hint
+Yeah, on closer inspection that never happened. The re-ordering I was
+thinking of was when the boot-time BAR assignments were moved in
+3f068aae7a95 so they'd always occur before pci_bus_add_device() was
+called. I think I got that change mixed up with commit 30d87ef8b38d
+("powerpc/pci: Fix pcibios_setup_device() ordering") which moved some
+of what what pcibios_device_add() did into pcibios_bus_add_device() to
+harmonise the hot and coldplug paths.
 
-One option would be to proceed with the remaining patches and I can try
-posting these two again when I post patches for the remaining drivers?
+As far as I can tell the pci_dev_is_added() check has been pointless
+since the code was added in 6e628c7d33d9 ("powerpc/powernv: Reserve
+additional space for IOV BAR according to the number of total_pe").
+Even back then pci_device_add() was called first in both the normal
+and OF based PCI probing paths so there's no circumstance where that
+code would see the added flag set.
 
--- 
-Thanks
-Nitesh
+That patch was part of the PowerNV SRIOV support series which went
+through quite a few iterations. My best guess is that check might have
+been needed in an earlier version and was just carried forward until
+it got merged. I didn't dig too deeply into the history though.
 
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
