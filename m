@@ -2,128 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6464D408471
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 08:04:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC54408A0F
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 13:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237417AbhIMGFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 02:05:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56752 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237248AbhIMGFk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Sep 2021 02:05:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E92751A28B5;
-        Mon, 13 Sep 2021 08:04:23 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 86CE71A28AD;
-        Mon, 13 Sep 2021 08:04:23 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 331D5183AD29;
-        Mon, 13 Sep 2021 14:04:22 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v2 5/5] PCI: imx6: Add the compliance tests mode support
-Date:   Mon, 13 Sep 2021 13:41:10 +0800
-Message-Id: <1631511670-30164-6-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1631511670-30164-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1631511670-30164-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S239220AbhIML04 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 07:26:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238684AbhIML04 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 07:26:56 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC93AC061574;
+        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d18so5564418pll.11;
+        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=CVS3QmGjk4eY7kvmh+6J08F3fOLcHRlS/W30+bNz/bk=;
+        b=STWH0WpycHkA23I8MfwoDjRNXjwWDk+O3Xzzdhs9aEgn+zRdO1nGXT7v70luo/gedc
+         mQZSojeIlReTR1785w/488ghz/oYlnqjKGMM202GTg0RB93a5MQ/+uIEsk69jGuRWxjJ
+         3jJ2pQW2TikzXUNnqPz/0Pl3rZFYfhVox56dxPVzCq91iaR2j0S7JyiVFgBAlygSAq7g
+         V08orBFc12X5pknLDxPd84nfuDKRp7lnuWk3hXwnVuGgCxl2J3zfaKqaKZAnb/0SkFhF
+         IdeGm+wt9FeG5W3dmLtamGPCcAA+gH4Oj0+UasHJUgYUydRymVOdESjdh9tU6UbyCI2K
+         ryhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CVS3QmGjk4eY7kvmh+6J08F3fOLcHRlS/W30+bNz/bk=;
+        b=qlh7s5ejnb/zYDLXf7MukpCOVuhATjL6Ftr57D+siz7fBpXvMgBi24FuvFqVyxQpj8
+         2i9xXS60V9yGFg5yG/Nh0qyxJq5q1eIDfx2wrIDaw3Dj1neEpuUAgLN/BlC7kIHrWeqM
+         vjicuRqiAuadu0mOkbbbSS6Qa2hwdVpprimZTraiNzN7RhnnWLVD6bwqUHr/a1u7Y3AE
+         C27EihR+toHzk9hqyWfCEzrY+6v7cg9PlR8nIYA59j5Pnx94xfOz3IuHJpzW/SdjFX8B
+         wD2s5swoTp7c63QsBsr9t1DbtUcglOmkvGFFheOykUZxL6touUUQLtLhI3eIyl/tdy6F
+         XCiw==
+X-Gm-Message-State: AOAM5331lmaado0fD1v/LWMiz9gFCFTpkUxpUZx/NBkXgHK6swW/J2+L
+        hv/2xcBslIEbLXeqIwZQ6NtFRNZ+XM9jXQ==
+X-Google-Smtp-Source: ABdhPJwg59LUmj1lGjCOmhNlAFRY9/k17SCO9/paUktKjvnplmzCfQw5mvJNguVkBK8/k56VfzisHg==
+X-Received: by 2002:a17:90a:1d6:: with SMTP id 22mr9371574pjd.214.1631532340262;
+        Mon, 13 Sep 2021 04:25:40 -0700 (PDT)
+Received: from VM-0-3-centos.localdomain ([101.32.213.191])
+        by smtp.gmail.com with ESMTPSA id v17sm6627359pff.6.2021.09.13.04.25.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Sep 2021 04:25:39 -0700 (PDT)
+From:   brookxu <brookxu.cn@gmail.com>
+To:     jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] PCI: vmd: assign a number to each vmd controller
+Date:   Mon, 13 Sep 2021 19:25:37 +0800
+Message-Id: <1631532337-12473-1-git-send-email-brookxu.cn@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Refer to the system board signal Quality of PCIe archiecture PHY test
-specification. Signal quality tests(for example: jitters,  differential
-eye opening and so on ) can be executed with devices in the
-polling.compliance state.
+From: Chunguang Xu <brookxu@tencent.com>
 
-To let the device support polling.compliance stat, the clocks and powers
-shouldn't be turned off when the probe of device driver is failed.
+If the system has multiple vmd controllers, the current vmd driver
+does not assign a number to each controller, so when analyzing the
+interrupt through /proc/interrupt, the names of all controllers are
+the same, which is not very convenient for problem analysis. Here,
+try to assign a number to each vmd controller.
 
-Based on CLB(Compliance Load Board) Test Fixture and so on test
-equipments, the PHY link would be down during the compliance tests.
-Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-support, and keep the clocks and powers on, and finish the driver probe
-without error return.
-
-Use the "pci_imx6.compliance=1" in kernel command line to enable the
-compliance tests mode.
-
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 32 ++++++++++++++++++++-------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ drivers/pci/controller/vmd.c | 58 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 45 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index ab292d9cd528..39b6fe93f5e5 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -143,6 +143,10 @@ struct imx6_pcie {
- #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
- #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e3fcdfe..c334396 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -69,6 +69,8 @@ enum vmd_features {
+ 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
+ };
  
-+static bool imx6_pcie_cmp_mode;
-+module_param_named(compliance, imx6_pcie_cmp_mode, bool, 0644);
-+MODULE_PARM_DESC(compliance, "i.MX PCIe compliance test mode (1=compliance test mode enabled)");
++static DEFINE_IDA(vmd_instance_ida);
 +
- static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
+ /*
+  * Lock for manipulating VMD IRQ lists.
+  */
+@@ -119,6 +121,8 @@ struct vmd_dev {
+ 	struct pci_bus		*bus;
+ 	u8			busn_start;
+ 	u8			first_vec;
++	char			*name;
++	int			instance;
+ };
+ 
+ static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
+@@ -599,7 +603,7 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+ 		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
+ 		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
+ 				       vmd_irq, IRQF_NO_THREAD,
+-				       "vmd", &vmd->irqs[i]);
++				       vmd->name, &vmd->irqs[i]);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -769,28 +773,48 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
  {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -812,10 +816,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	 * started in Gen2 mode, there is a possibility the devices on the
- 	 * bus will not be detected at all.  This happens with PCIe switches.
- 	 */
--	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
--	tmp &= ~PCI_EXP_LNKCAP_SLS;
--	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	if (!imx6_pcie_cmp_mode) {
-+		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-+		tmp &= ~PCI_EXP_LNKCAP_SLS;
-+		tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-+		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+ 	unsigned long features = (unsigned long) id->driver_data;
+ 	struct vmd_dev *vmd;
+-	int err;
++	int err = 0;
+ 
+-	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+-		return -ENOMEM;
++	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20)) {
++		err = -ENOMEM;
++		goto out;
 +	}
  
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
-@@ -876,9 +882,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
- 	imx6_pcie_reset_phy(imx6_pcie);
--	imx6_pcie_clk_disable(imx6_pcie);
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0)
--		regulator_disable(imx6_pcie->vpcie);
-+	if (!imx6_pcie_cmp_mode) {
-+		imx6_pcie_clk_disable(imx6_pcie);
-+		if (imx6_pcie->vpcie
-+		    && regulator_is_enabled(imx6_pcie->vpcie) > 0)
-+			regulator_disable(imx6_pcie->vpcie);
+ 	vmd = devm_kzalloc(&dev->dev, sizeof(*vmd), GFP_KERNEL);
+-	if (!vmd)
+-		return -ENOMEM;
++	if (!vmd) {
++		err = -ENOMEM;
++		goto out;
 +	}
- 	return ret;
+ 
+ 	vmd->dev = dev;
++	vmd->instance = ida_simple_get(&vmd_instance_ida, 0, 0, GFP_KERNEL);
++	if (vmd->instance < 0) {
++		err = vmd->instance;
++		goto out;
++	}
++
++	vmd->name = kasprintf(GFP_KERNEL, "vmd%d", vmd->instance);
++	if (!vmd->name) {
++		err = -ENOMEM;
++		goto out_release_instance;
++	}
++
+ 	err = pcim_enable_device(dev);
+ 	if (err < 0)
+-		return err;
++		goto out_release_instance;
+ 
+ 	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
+-	if (!vmd->cfgbar)
+-		return -ENOMEM;
++	if (!vmd->cfgbar) {
++		err = -ENOMEM;
++		goto out_release_instance;
++	}
+ 
+ 	pci_set_master(dev);
+ 	if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64)) &&
+-	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32)))
+-		return -ENODEV;
++	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32))) {
++		err = -ENODEV;
++		goto out_release_instance;
++	}
+ 
+ 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+ 		vmd->first_vec = 1;
+@@ -799,11 +823,17 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	pci_set_drvdata(dev, vmd);
+ 	err = vmd_enable_domain(vmd, features);
+ 	if (err)
+-		return err;
++		goto out_release_instance;
+ 
+ 	dev_info(&vmd->dev->dev, "Bound to PCI domain %04x\n",
+ 		 vmd->sysdata.domain);
+ 	return 0;
++
++ out_release_instance:
++	ida_simple_remove(&vmd_instance_ida, vmd->instance);
++	kfree(vmd->name);
++ out:
++	return err;
  }
  
-@@ -1183,8 +1192,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return ret;
+ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
+@@ -824,6 +854,8 @@ static void vmd_remove(struct pci_dev *dev)
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_detach_resources(vmd);
+ 	vmd_remove_irq_domain(vmd);
++	ida_simple_remove(&vmd_instance_ida, vmd->instance);
++	kfree(vmd->name);
+ }
  
- 	ret = dw_pcie_host_init(&pci->pp);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (imx6_pcie_cmp_mode) {
-+			dev_info(dev, "Driver loaded with compliance test mode enabled.\n");
-+			ret = 0;
-+		} else {
-+			dev_err(dev, "Unable to add pcie port.\n");
-+		}
- 		return ret;
-+	}
- 
- 	if (pci_msi_enabled()) {
- 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+ #ifdef CONFIG_PM_SLEEP
+@@ -848,7 +880,7 @@ static int vmd_resume(struct device *dev)
+ 	for (i = 0; i < vmd->msix_count; i++) {
+ 		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
+ 				       vmd_irq, IRQF_NO_THREAD,
+-				       "vmd", &vmd->irqs[i]);
++				       vmd->name, &vmd->irqs[i]);
+ 		if (err)
+ 			return err;
+ 	}
 -- 
-2.25.1
+1.8.3.1
 
