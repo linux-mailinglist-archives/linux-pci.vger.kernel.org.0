@@ -2,175 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC37409EC5
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 23:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B2F0409ED3
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 23:07:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347940AbhIMVGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 17:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343642AbhIMVGd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 17:06:33 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01201C061762
-        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 14:05:16 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id c21so8531963edj.0
-        for <linux-pci@vger.kernel.org>; Mon, 13 Sep 2021 14:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
-        b=dZApan+/iH4NW1oyIBh56hyWC0xvVWqlTSK28qynQC4TgDjgqY/p3DDGCieGAdnE+I
-         0aAGZTbnqRM5fK3TAuLjdF7NMMeCiV0kCAfGdpzcWIOkp6sGMVlUrfxYCH3SD3gyogJC
-         4YUBZARL2myz4qpAuMZTGYV2rnkRZ9K57xrX/1azGmh55BtgXM4p6fR98t3Lj/TtI5og
-         R/GBhjg5GXvtd+GgOVsER1+uWOFoeaerYmB9DSE925/Yk+BqT4PYFMFnKhDH3tmHZ5eB
-         xUYs9eTg/9uBmvVggoWXp8e0Cnzsirc3guy7n646rKKVwHb6iHMN/jX2KPg7JseQr8+1
-         ToQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=373m7inPGNTCDOiEZsbke1WmzoymEFvAttGADuwHDDA=;
-        b=kgiLCb952z4N3JAsFIE9i1xQ7LxZWXp8Dg5rdRg/oGacDAf461En4Sx3l2u77o33ZM
-         W4bzRgrh9NSg2c+uugWSvWK3GYeJ5CX+Ll8+RazKj9GYkcT/7QqXwjMO9n70Ka9tRSfE
-         9s3A/FaqOQFaM+UP0NsuVSWupjGgMEWykTKmLHp+VBwURZx+9GNHFgEg/Dna5ebfgKij
-         /ZWobbUpTNgLncf4Wm+Ojj4eql3ELeTJduPwQzdOqOBp0Vx9t+EILouPDw7+G5pzONjL
-         +u22AKTu6YvpeeUDrd65y5a0/BqSsfrkpfylSKxc+OZEUZA0S7rMCoSZ4OSuF3XubEvu
-         8OTw==
-X-Gm-Message-State: AOAM531q5SJE7dWS5I+6icMmTs7EZihCrWqmNWhWMNKNqO8PwJHYJEqd
-        nH04vIdyCx+WDFq8O4yFhtYsnxaeBLfxjhqFS661
-X-Google-Smtp-Source: ABdhPJyhjptYpi0mwh96yMlLzxckfq2tRXqkGTb/ZQJf0dLr8KeUC8PkrIaOITSWhjWsL1Ai+gNDn5oE1rgV2wDOPdI=
-X-Received: by 2002:a05:6402:2810:: with SMTP id h16mr14507917ede.293.1631567115278;
- Mon, 13 Sep 2021 14:05:15 -0700 (PDT)
+        id S232859AbhIMVIu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 17:08:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29033 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231976AbhIMVIt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Sep 2021 17:08:49 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10106"; a="201971168"
+X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
+   d="scan'208";a="201971168"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 14:07:29 -0700
+X-IronPort-AV: E=Sophos;i="5.85,290,1624345200"; 
+   d="scan'208";a="543465759"
+Received: from greggjas-mobl.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.255.7.180])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2021 14:07:28 -0700
+Subject: Re: [PATCH v3] PCI: pciehp: Add quirk to handle spurious DLLSC on a
+ x4x4 SSD
+To:     Lukas Wunner <lukas@wunner.de>,
+        Jon Derrick <jonathan.derrick@linux.dev>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>
+References: <20210830155628.130054-1-jonathan.derrick@linux.dev>
+ <20210912084547.GA26678@wunner.de>
+From:   Jon Derrick <jonathan.derrick@intel.com>
+Message-ID: <91950e7a-68e9-9d35-ff0b-a2109de7a853@intel.com>
+Date:   Mon, 13 Sep 2021 16:07:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210913140229.24797-1-omosnace@redhat.com>
-In-Reply-To: <20210913140229.24797-1-omosnace@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 13 Sep 2021 17:05:04 -0400
-Message-ID: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
-Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210912084547.GA26678@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
->
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
->
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
->
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
->
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
-> Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->
-> v4:
-> - rebase on top of TODO
-> - fix rebase conflicts:
->   * drivers/cxl/pci.c
->     - trivial: the lockdown reason was corrected in mainline
->   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
->     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
->       in mainline
->   * kernel/power/hibernate.c
->     - trivial: !secretmem_active() was added to the condition in
->       hibernation_available()
-> - cover new security_locked_down() call in kernel/bpf/helpers.c
->   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
->
-> v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
-> - add the cred argument to security_locked_down() and adapt all callers
-> - keep using current_cred() in BPF, as the hook calls have been shifted
->   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
->   buggy SELinux lockdown permission checks"))
-> - in SELinux, don't ignore hook calls where cred == NULL, but use
->   SECINITSID_KERNEL as the subject instead
-> - update explanations in the commit message
->
-> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> - change to a single hook based on suggestions by Casey Schaufler
->
-> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
 
-The changes between v3 and v4 all seem sane to me, but I'm going to
-let this sit for a few days in hopes that we can collect a few more
-Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
-mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
-after it goes through a build/test cycle.
 
--- 
-paul moore
-www.paul-moore.com
+On 9/12/21 3:45 AM, Lukas Wunner wrote:
+> On Mon, Aug 30, 2021 at 09:56:28AM -0600, Jon Derrick wrote:
+>> When an Intel P5608 SSD is bifurcated into x4x4 mode, and the upstream
+>> ports both support hotplugging on each respective x4 device, a slot
+>> management system for the SSD requires both x4 slots to have power
+>> removed via sysfs (echo 0 > slot/N/power), from the OS before it can
+>> safely turn-off physical power for the whole x8 device. The implications
+>> are that slot status will display powered off and link inactive statuses
+>> for the x4 devices where the devices are actually powered until both
+>> ports have powered off.
+> 
+> Just to get a better understanding, does the P5608 have an internal
+> PCIe switch with hotplug capability on the Downstream Ports or
+> does it plug into two separate PCIe slots?  I recall previous patches
+> mentioned a CEM interposer?  (An lspci listing might be helpful.)
+
+It looks like 2 NVMe endpoints plugged into two different root ports, ex,
+80:00.0 Root port to [81-86]
+80:01.0 Root port to [87-8b]
+81:00.0 NVMe
+87:00.0 NVMe
+
+The x8 is bifurcated to x4x4. Physically they share the same slot
+power/clock/reset but are logically separate per root port.
+
+
+> 
+> 
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -225,6 +225,7 @@ void pciehp_handle_disable_request(struct controller *ctrl)
+>>  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>  {
+>>  	int present, link_active;
+>> +	struct pci_dev *pdev = ctrl->pcie->port;
+> 
+> Nit: Reverse christmas tree.
+Sure
+
+
+> 
+> 
+>> @@ -265,6 +266,12 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>  		cancel_delayed_work(&ctrl->button_work);
+>>  		fallthrough;
+>>  	case OFF_STATE:
+>> +		if (pdev->shared_pcc_and_link_slot &&
+>> +		    (events & PCI_EXP_SLTSTA_DLLSC) && !link_active) {
+>> +			mutex_unlock(&ctrl->state_lock);
+>> +			break;
+>> +		}
+>> +
+> 
+> I think you also need to add...
+> 
+> 			pdev->shared_pcc_and_link_slot = false;
+> 
+> ... here to reset the shared_pcc_and_link_slot attribute in case the
+> next card plugged into the slot doesn't have the quirk.
+> 
+> (This can't be done in pciehp_unconfigure_device() because the attribute
+> is queried *after* the slot has been brought down.)
+Agreed. I'll find a good spot for it.
+
+
+> 
+> 
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -5750,3 +5750,37 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+>>  }
+>>  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+>>  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
+>> +
+>> +#ifdef CONFIG_HOTPLUG_PCI_PCIE
+> 
+> It's possible to put the quirk at the bottom of pciehp_ctrl.c and
+> thus avoid the need for the #ifdef here.  (We've got another
+> pciehp-specific quirk at the bottom of pciehp_hpc.c.)
+Sure that would look fine
+
+
+> 
+> Otherwise LGTM.
+> 
+> Thanks,
+> 
+> Lukas
+> 
