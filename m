@@ -2,240 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44D984097BE
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 17:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB26840985C
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 18:06:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344418AbhIMPsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 11:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344280AbhIMPsh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 11:48:37 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D95C096555;
-        Mon, 13 Sep 2021 08:27:27 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id k23so6618115pji.0;
-        Mon, 13 Sep 2021 08:27:27 -0700 (PDT)
+        id S1345394AbhIMQHl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 12:07:41 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:25483 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345105AbhIMQHj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Sep 2021 12:07:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/tK5hxsL9MKG9mZXvZLPwX/0laXRMWVr+vDqTQ0On9o=;
-        b=iEd1ch44ADvzc7AnSXEjexg63fNl59NQecaaBa7kfUyi1h02BdQhzwcYN+6iOd8chn
-         9dgRf9MHYUvc1s484FH+SSqSqKZatgQwWf3Jgc5oJZfA1F2BQxXc+JO7zNWD0cirggxM
-         Y5R1LvVJZPZGdeRXa1ClwM7Lh4A7NyYB8I3JEfXmZncIz1RBrq2A/t/0ASSRuqrEEunJ
-         42rYEjeaUuaP962e1+M0wknqwHkctOePV8yJdk2alrbwl0hjNQ0WKJOI0AJY9C8nuhPS
-         4dUqYTpZ4mN0Ig2t4FTU8pqRo+S8DzrzU6z0lF1SDUiigSVIOxr+zo0PvVc/8hBxxGIA
-         vt6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/tK5hxsL9MKG9mZXvZLPwX/0laXRMWVr+vDqTQ0On9o=;
-        b=tbfgF2vluTTTOQ+JtAiRm4KoaF8SX/e8My7uykZ+c+caJ/JOqj0syXHneVIPoUkXN2
-         khIFc2YzbBH44W7R2Um1++U3/kE7N31pg3U+7oGHIggDvSVN1ddtIQ2ZrmPe+Q0WEa4g
-         6JBoKvS8FEiITX84ED463XBPY4YIbPjiEaI+t1v2t8f62OAg8o5ANjCR7yM2TGOr1M8g
-         Me25zQXwTcEJfqV1uyNKKZYWnoDzOTeYwa6uNARrHevE2/PiqkPAIALTzTCSEpn7dCjf
-         nUsp9uOn6v0KxEe2K1RsYBc/Ga+kwKKgb2Mes+4UOhaqbzCk7ioc6W/0fR1Fr3C5rlu7
-         evcg==
-X-Gm-Message-State: AOAM5326nXXKcj0uHaWtQJQuO3LlMa/N4yh2oeDuJ+EuBRitmTM9LDL1
-        5WQf02HdHbpaRnPl8lMh04o=
-X-Google-Smtp-Source: ABdhPJxKLqjOhkuORNZ3Up/yYXp3q7+GN3+gwvIWOUw2ecMs6Sg+9n/SUtp6aa6IAYZEAQhfuXcoRQ==
-X-Received: by 2002:a17:90b:3b84:: with SMTP id pc4mr54776pjb.220.1631546846505;
-        Mon, 13 Sep 2021 08:27:26 -0700 (PDT)
-Received: from localhost.localdomain (14-200-52-220.static.tpgi.com.au. [14.200.52.220])
-        by smtp.gmail.com with ESMTPSA id k127sm7597875pfd.1.2021.09.13.08.27.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Sep 2021 08:27:26 -0700 (PDT)
-From:   Oliver O'Halloran <oohall@gmail.com>
-To:     Michal Simek <monstr@monstr.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Oliver O'Halloran <oohall@gmail.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] pci: Rename pcibios_add_device to match
-Date:   Tue, 14 Sep 2021 01:27:08 +1000
-Message-Id: <20210913152709.48013-1-oohall@gmail.com>
-X-Mailer: git-send-email 2.31.1
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1631549184; x=1663085184;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:mime-version:content-transfer-encoding:subject;
+  bh=EVEqB68PoHNVDvJkveijv3LDziVsbwlkEeXfV6RUyK8=;
+  b=k7UbxDjY3BhNaAEERMbuVaXLHV7UHo5yQaV6BPE9NCKrUUElc0ZA0b1T
+   rf1+j7ZzwT14u7IZCRu5CPgZ8nfzHDTEvKR3J/gCEjD354WE7iqmx1dJE
+   JaiiyLlVq8v+4QjB/WL1j6AoCYVbzaF6rTJJBqPjfIxiIIJP68DG+leav
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.85,290,1624320000"; 
+   d="scan'208";a="159519690"
+Subject: Re: [PATCH v4 2/3] PCI: Cache CRS Software Visibiliy in struct pci_dev
+Thread-Topic: [PATCH v4 2/3] PCI: Cache CRS Software Visibiliy in struct pci_dev
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 13 Sep 2021 16:06:16 +0000
+Received: from EX13D12EUC001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id CD831A2C40;
+        Mon, 13 Sep 2021 16:06:12 +0000 (UTC)
+Received: from EX13D04EUB003.ant.amazon.com (10.43.166.235) by
+ EX13D12EUC001.ant.amazon.com (10.43.164.45) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.23; Mon, 13 Sep 2021 16:06:12 +0000
+Received: from EX13D04EUB003.ant.amazon.com ([10.43.166.235]) by
+ EX13D04EUB003.ant.amazon.com ([10.43.166.235]) with mapi id 15.00.1497.023;
+ Mon, 13 Sep 2021 16:06:12 +0000
+From:   "Spassov, Stanislav" <stanspas@amazon.de>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        =?utf-8?B?U2Now7ZuaGVyciwgSmFuIEgu?= <jschoenh@amazon.de>,
+        "rajatja@google.com" <rajatja@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Thread-Index: AQHV9KTNPzRIK6Q+/0Cb9RCo18YlmqujzA4AgAG9MoA=
+Date:   Mon, 13 Sep 2021 16:06:12 +0000
+Message-ID: <e0bc9f1409470a1e7c30fc92cd6938ebae1ac31a.camel@amazon.de>
+References: <20210912133246.GA1279483@bjorn-Precision-5520>
+In-Reply-To: <20210912133246.GA1279483@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <448BA2ED6AA89B44AE13048EAD36F01B@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The general convention for pcibios_* hooks is that they're named after
-the corresponding pci_* function they provide a hook for. The exception
-is pcibios_add_device() which provides a hook for pci_device_add(). This
-has been irritating me for years so rename it.
-
-Also, remove the export of the microblaze version. The only caller
-must be compiled as a built-in so there's no reason for the export.
-
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
----
- arch/microblaze/pci/pci-common.c           | 3 +--
- arch/powerpc/kernel/pci-common.c           | 2 +-
- arch/powerpc/platforms/powernv/pci-sriov.c | 2 +-
- arch/s390/pci/pci.c                        | 2 +-
- arch/sparc/kernel/pci.c                    | 2 +-
- arch/x86/pci/common.c                      | 2 +-
- drivers/pci/pci.c                          | 4 ++--
- drivers/pci/probe.c                        | 4 ++--
- include/linux/pci.h                        | 2 +-
- 9 files changed, 11 insertions(+), 12 deletions(-)
-
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 557585f1be41..622a4867f9e9 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -587,13 +587,12 @@ static void pcibios_fixup_resources(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID, pcibios_fixup_resources);
- 
--int pcibios_add_device(struct pci_dev *dev)
-+int pcibios_device_add(struct pci_dev *dev)
- {
- 	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
- 
- 	return 0;
- }
--EXPORT_SYMBOL(pcibios_add_device);
- 
- /*
-  * Reparent resource children of pr that conflict with res
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index c3573430919d..6749905932f4 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -1059,7 +1059,7 @@ void pcibios_bus_add_device(struct pci_dev *dev)
- 		ppc_md.pcibios_bus_add_device(dev);
- }
- 
--int pcibios_add_device(struct pci_dev *dev)
-+int pcibios_device_add(struct pci_dev *dev)
- {
- 	struct irq_domain *d;
- 
-diff --git a/arch/powerpc/platforms/powernv/pci-sriov.c b/arch/powerpc/platforms/powernv/pci-sriov.c
-index 28aac933a439..486c2937b159 100644
---- a/arch/powerpc/platforms/powernv/pci-sriov.c
-+++ b/arch/powerpc/platforms/powernv/pci-sriov.c
-@@ -54,7 +54,7 @@
-  * to "new_size", calculated above. Implementing this is a convoluted process
-  * which requires several hooks in the PCI core:
-  *
-- * 1. In pcibios_add_device() we call pnv_pci_ioda_fixup_iov().
-+ * 1. In pcibios_device_add() we call pnv_pci_ioda_fixup_iov().
-  *
-  *    At this point the device has been probed and the device's BARs are sized,
-  *    but no resource allocations have been done. The SR-IOV BARs are sized
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index e7e6788d75a8..ded3321b7208 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -561,7 +561,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
- 	zdev->has_resources = 0;
- }
- 
--int pcibios_add_device(struct pci_dev *pdev)
-+int pcibios_device_add(struct pci_dev *pdev)
- {
- 	struct zpci_dev *zdev = to_zpci(pdev);
- 	struct resource *res;
-diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index 9c2b720bfd20..31b0c1983286 100644
---- a/arch/sparc/kernel/pci.c
-+++ b/arch/sparc/kernel/pci.c
-@@ -1010,7 +1010,7 @@ void pcibios_set_master(struct pci_dev *dev)
- }
- 
- #ifdef CONFIG_PCI_IOV
--int pcibios_add_device(struct pci_dev *dev)
-+int pcibios_device_add(struct pci_dev *dev)
- {
- 	struct pci_dev *pdev;
- 
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 3507f456fcd0..9e1e6b8d8876 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -632,7 +632,7 @@ static void set_dev_domain_options(struct pci_dev *pdev)
- 		pdev->hotplug_user_indicators = 1;
- }
- 
--int pcibios_add_device(struct pci_dev *dev)
-+int pcibios_device_add(struct pci_dev *dev)
- {
- 	struct pci_setup_rom *rom;
- 	struct irq_domain *msidom;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce2ab62b64cf..c63598c1cdd8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2091,14 +2091,14 @@ void pcim_pin_device(struct pci_dev *pdev)
- EXPORT_SYMBOL(pcim_pin_device);
- 
- /*
-- * pcibios_add_device - provide arch specific hooks when adding device dev
-+ * pcibios_device_add - provide arch specific hooks when adding device dev
-  * @dev: the PCI device being added
-  *
-  * Permits the platform to provide architecture specific functionality when
-  * devices are added. This is the default implementation. Architecture
-  * implementations can override this.
-  */
--int __weak pcibios_add_device(struct pci_dev *dev)
-+int __weak pcibios_device_add(struct pci_dev *dev)
- {
- 	return 0;
- }
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index d9fc02a71baa..2ba43b6adf31 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2450,7 +2450,7 @@ static struct irq_domain *pci_dev_msi_domain(struct pci_dev *dev)
- 	struct irq_domain *d;
- 
- 	/*
--	 * If a domain has been set through the pcibios_add_device()
-+	 * If a domain has been set through the pcibios_device_add()
- 	 * callback, then this is the one (platform code knows best).
- 	 */
- 	d = dev_get_msi_domain(&dev->dev);
-@@ -2518,7 +2518,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	list_add_tail(&dev->bus_list, &bus->devices);
- 	up_write(&pci_bus_sem);
- 
--	ret = pcibios_add_device(dev);
-+	ret = pcibios_device_add(dev);
- 	WARN_ON(ret < 0);
- 
- 	/* Set up MSI IRQ domain */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cd8aa6fce204..7e0ce3a4d5a1 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2126,7 +2126,7 @@ void pcibios_disable_device(struct pci_dev *dev);
- void pcibios_set_master(struct pci_dev *dev);
- int pcibios_set_pcie_reset_state(struct pci_dev *dev,
- 				 enum pcie_reset_state state);
--int pcibios_add_device(struct pci_dev *dev);
-+int pcibios_device_add(struct pci_dev *dev);
- void pcibios_release_device(struct pci_dev *dev);
- #ifdef CONFIG_PCI
- void pcibios_penalize_isa_irq(int irq, int active);
--- 
-2.31.1
+T24gU3VuLCAyMDIxLTA5LTEyIGF0IDA4OjMyIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBTYXQsIE1hciAwNywgMjAyMCBhdCAwNjoyMDo0M1BNICswMTAwLCBTdGFuaXNsYXYgU3Bh
+c3NvdiB3cm90ZToNCj4gPiBIb3dldmVyLCBzdG9yaW5nIHRoZSBmbGFnIGluIHN0cnVjdCBwY2lf
+ZGV2IGFsbG93cyBpbmRpdmlkdWFsIGRldmljZXMNCj4gPiB0byBiZSBtYXJrZWQgYXMgbm90IHN1
+cHBvcnRpbmcgQ1JTIHByb3Blcmx5IGV2ZW4gd2hlbiBDUlMgU1YgaXMgZW5hYmxlZA0KPiA+IG9u
+IHRoZWlyIHBhcmVudCBSb290IFBvcnQuIFRoaXMgd2F5LCBmdXR1cmUgY29kZSB0aGF0IHJlbGll
+cyBvbiB0aGUgbmV3DQo+ID4gZmxhZyB3aWxsIG5vdCBiZSBtaXNsZWQgdGhhdCBpdCBpcyBzYWZl
+IHRvIHByb2JlIGEgZGV2aWNlIGJ5IHJlbHlpbmcgb24NCj4gPiBDUlMgU1YgdG8gbm90IGNhdXNl
+IHBsYXRmb3JtIHRpbWVvdXRzIChTZWUgdGhlIG5vdGUgb24gQ1JTIFNWIG9uIHAuIDU1Mw0KPiA+
+IG9mIFBDSSBFeHByZXNzIEJhc2UgU3BlY2lmaWNhdGlvbiByNS4wIGZyb20gTWF5IDIyLCAyMDE5
+KS4NCj4gDQo+IElmIHdlIGZpbmQgZGV2aWNlcyB0aGF0IGRvbid0IHN1cHBvcnQgQ1JTIHByb3Bl
+cmx5LCBJIHRoaW5rIHdlIHNob3VsZA0KPiBxdWlyayB0aGVtIGRpcmVjdGx5IHdpdGggc29tZXRo
+aW5nIG90aGVyIHRoYW4gImNyc3N2X2VuYWJsZWQiLg0KDQpJIGFtIGRlZmluaXRlbHkgb3BlbiB0
+byBzdWdnZXN0aW9ucyBoZXJlLiBCYXNlZCBvbiBwcmVjZWRlbnQgc3VjaCBhcyB0aGUNCmJyb2tl
+bl9pbnR4X21hc2tpbmcgZmllbGQgaW4gc3RydWN0IHBjaV9kZXYgYW5kIGhvdyBpdCBpcyBzZXQg
+ZnJvbQ0KcGNpL3F1aXJrcy5jLCB3ZSBjb3VsZCBoYXZlIGEgbmV3IGZpZWxkICJicm9rZW5fY3Jz
+Ii4NCg0KSW4gaGluZHNpZ2h0LCB0aGUgY29kZSBmcm9tIFBBVENIIDMvMyB3aGljaCBpcyBjb25k
+aXRpb25hbGx5IGV4ZWN1dGVkIGJhc2VkDQpvbiB0aGlzIGZsYWcsIHNob3VsZCBiZSBva2F5IHRv
+IGV4ZWN1dGUgdW5jb25kaXRpb25hbGx5OiBwb2xsaW5nIHRoZSBWZW5kb3INCklEIGlzIHNhZmVy
+IHRoYW4gcG9sbGluZyBDb21tYW5kIHdoZW4gQ1JTIFNWIGlzIGVuYWJsZWQgYnV0IGl0IGlzIHN0
+aWxsIG5vdA0KYW55IG1vcmUgZGFuZ2Vyb3VzIHdoZW4gQ1JTIFNWIGlzIGRpc2FibGVkLiBUaGlz
+IGNvbnNpZGVyYXRpb24gYWxsb3dzIHVzDQp0byBkcm9wIHRoZSBjdXJyZW50IFBBVENIIDIvMyBh
+bHRvZ2V0aGVyLiBJIHdpbGwgaW1wbGVtZW50IHRoaXMgYXBwcm9hY2ggaW4NCnRoZSBuZXh0IHJl
+dmVyc2lvbiBvZiB0aGUgc2VyaWVzIChpdCBpcyBvbGQgYW5kIG5lZWRzIHJlYmFzaW5nIGFueXdh
+eSkuDQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3Ry
+LiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2Vy
+LCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVy
+ZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkK
+Cgo=
 
