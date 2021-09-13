@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B67D409C28
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 20:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 531B3409C17
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Sep 2021 20:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347104AbhIMS1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Sep 2021 14:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59704 "EHLO mail.kernel.org"
+        id S239936AbhIMS10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Sep 2021 14:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239601AbhIMS1X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Sep 2021 14:27:23 -0400
+        id S239909AbhIMS1Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Sep 2021 14:27:24 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B6216108B;
-        Mon, 13 Sep 2021 18:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90592610CF;
+        Mon, 13 Sep 2021 18:26:08 +0000 (UTC)
 Received: from [198.52.44.129] (helo=wait-a-minute.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mPqeb-00AYPD-Vd; Mon, 13 Sep 2021 19:26:06 +0100
+        id 1mPqec-00AYPD-QT; Mon, 13 Sep 2021 19:26:06 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Sven Peter <sven@svenpeter.dev>,
         Hector Martin <marcan@marcan.st>,
         Robin Murphy <Robin.Murphy@arm.com>, kernel-team@android.com
-Subject: [PATCH v3 05/10] PCI: apple: Set up reference clocks when probing
-Date:   Mon, 13 Sep 2021 19:25:45 +0100
-Message-Id: <20210913182550.264165-6-maz@kernel.org>
+Subject: [PATCH v3 06/10] PCI: apple: Add INTx and per-port interrupt support
+Date:   Mon, 13 Sep 2021 19:25:46 +0100
+Message-Id: <20210913182550.264165-7-maz@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210913182550.264165-1-maz@kernel.org>
 References: <20210913182550.264165-1-maz@kernel.org>
@@ -50,83 +50,270 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Add support for the per-port interrupt controller that deals
+with both INTx signalling and management interrupts.
 
-Apple's PCIe controller requires clocks to be configured in order to
-bring up the hardware. Add the register pokes required to do so.
+This allows the Link-up/Link-down interrupts to be wired, allowing
+the bring-up to be synchronised (and provide debug information).
+The framework can further be used to handle the rest of the per
+port events if and when necessary.
 
-Adapted from Corellium's driver via Mark Kettenis's U-Boot patches.
+Likewise, INTx signalling is implemented so that end-points can
+actually be used.
 
-Co-developed-by: Stan Skowronek <stan@corellium.com>
-Signed-off-by: Stan Skowronek <stan@corellium.com>
-Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20210816031621.240268-4-alyssa@rosenzweig.io
 ---
- drivers/pci/controller/pcie-apple.c | 44 +++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/pci/controller/pcie-apple.c | 209 ++++++++++++++++++++++++++++
+ 1 file changed, 209 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index f3c414950a10..dabbfc2e1fb0 100644
+index dabbfc2e1fb0..d174a215a47d 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -132,6 +132,46 @@ static inline void rmwl(u32 clr, u32 set, void __iomem *addr)
+@@ -21,6 +21,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/iopoll.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+ #include <linux/msi.h>
+@@ -118,12 +119,14 @@
+ struct apple_pcie {
+ 	struct device		*dev;
+ 	void __iomem            *base;
++	struct completion	event;
+ };
+ 
+ struct apple_pcie_port {
+ 	struct apple_pcie	*pcie;
+ 	struct device_node	*np;
+ 	void __iomem		*base;
++	struct irq_domain	*domain;
+ 	int			idx;
+ };
+ 
+@@ -132,6 +135,200 @@ static inline void rmwl(u32 clr, u32 set, void __iomem *addr)
  	writel_relaxed((readl_relaxed(addr) & ~clr) | set, addr);
  }
  
-+static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
-+				   struct apple_pcie_port *port)
++static void apple_port_irq_mask(struct irq_data *data)
 +{
-+	u32 stat;
-+	int res;
++	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
 +
-+	res = readl_relaxed_poll_timeout(pcie->base + CORE_RC_PHYIF_STAT, stat,
-+					 stat & CORE_RC_PHYIF_STAT_REFCLK,
-+					 100, 50000);
-+	if (res < 0)
-+		return res;
++	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKSET);
++}
 +
-+	rmwl(0, CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
-+	rmwl(0, CORE_LANE_CFG_REFCLK0REQ, pcie->base + CORE_LANE_CFG(port->idx));
++static void apple_port_irq_unmask(struct irq_data *data)
++{
++	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
 +
-+	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
-+					 stat, stat & CORE_LANE_CFG_REFCLK0ACK,
-+					 100, 50000);
-+	if (res < 0)
-+		return res;
++	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKCLR);
++}
 +
-+	rmwl(0, CORE_LANE_CFG_REFCLK1, pcie->base + CORE_LANE_CFG(port->idx));
-+	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
-+					 stat, stat & CORE_LANE_CFG_REFCLK1,
-+					 100, 50000);
++static bool hwirq_is_intx(unsigned int hwirq)
++{
++	return BIT(hwirq) & PORT_INT_INTx_MASK;
++}
 +
-+	if (res < 0)
-+		return res;
++static void apple_port_irq_ack(struct irq_data *data)
++{
++	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
 +
-+	rmwl(CORE_LANE_CTL_CFGACC, 0, pcie->base + CORE_LANE_CTL(port->idx));
++	if (!hwirq_is_intx(data->hwirq))
++		writel_relaxed(BIT(data->hwirq), port->base + PORT_INTSTAT);
++}
 +
-+	/* Flush writes before enabling the clocks */
-+	dma_wmb();
++static int apple_port_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	/*
++	 * It doesn't seem that there is any way to configure the
++	 * trigger, so assume INTx have to be level (as per the spec),
++	 * and the rest is edge (which looks likely).
++	 */
++	if (hwirq_is_intx(data->hwirq) ^ !!(type & IRQ_TYPE_LEVEL_MASK))
++		return -EINVAL;
 +
-+	rmwl(0, CORE_LANE_CFG_REFCLKEN, pcie->base + CORE_LANE_CFG(port->idx));
-+	rmwl(0, PORT_REFCLK_EN, port->base + PORT_REFCLK);
++	irqd_set_trigger_type(data, type);
++	return 0;
++}
++
++static struct irq_chip apple_port_irqchip = {
++	.name		= "PCIe",
++	.irq_ack	= apple_port_irq_ack,
++	.irq_mask	= apple_port_irq_mask,
++	.irq_unmask	= apple_port_irq_unmask,
++	.irq_set_type	= apple_port_irq_set_type,
++};
++
++static int apple_port_irq_domain_alloc(struct irq_domain *domain,
++				       unsigned int virq, unsigned int nr_irqs,
++				       void *args)
++{
++	struct apple_pcie_port *port = domain->host_data;
++	struct irq_fwspec *fwspec = args;
++	int i;
++
++	for (i = 0; i < nr_irqs; i++) {
++		irq_flow_handler_t flow = handle_edge_irq;
++		unsigned int type = IRQ_TYPE_EDGE_RISING;
++
++		if (hwirq_is_intx(fwspec->param[0] + i)) {
++			flow = handle_level_irq;
++			type = IRQ_TYPE_LEVEL_HIGH;
++		}
++
++		irq_domain_set_info(domain, virq + i, fwspec->param[0] + i,
++				    &apple_port_irqchip, port, flow,
++				    NULL, NULL);
++
++		irq_set_irq_type(virq + i, type);
++	}
 +
 +	return 0;
 +}
 +
- static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 				 struct device_node *np)
++static void apple_port_irq_domain_free(struct irq_domain *domain,
++				       unsigned int virq, unsigned int nr_irqs)
++{
++	int i;
++
++	for (i = 0; i < nr_irqs; i++) {
++		struct irq_data *d = irq_domain_get_irq_data(domain, virq + i);
++		irq_set_handler(virq + i, NULL);
++		irq_domain_reset_irq_data(d);
++	}
++}
++
++static const struct irq_domain_ops apple_port_irq_domain_ops = {
++	.translate	= irq_domain_translate_onecell,
++	.alloc		= apple_port_irq_domain_alloc,
++	.free		= apple_port_irq_domain_free,
++};
++
++static void apple_port_irq_handler(struct irq_desc *desc)
++{
++	struct apple_pcie_port *port = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	unsigned long stat;
++	int i;
++
++	chained_irq_enter(chip, desc);
++
++	stat = readl_relaxed(port->base + PORT_INTSTAT);
++
++	for_each_set_bit(i, &stat, 32)
++		generic_handle_domain_irq(port->domain, i);
++
++	chained_irq_exit(chip, desc);
++}
++
++static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
++{
++	struct fwnode_handle *fwnode = &port->np->fwnode;
++	unsigned int irq;
++
++	/* FIXME: consider moving each interrupt under each port */
++	irq = irq_of_parse_and_map(to_of_node(dev_fwnode(port->pcie->dev)),
++				   port->idx);
++	if (!irq)
++		return -ENXIO;
++
++	port->domain = irq_domain_create_linear(fwnode, 32,
++						&apple_port_irq_domain_ops,
++						port);
++	if (!port->domain)
++		return -ENOMEM;
++
++	/* Disable all interrupts */
++	writel_relaxed(~0, port->base + PORT_INTMSKSET);
++	writel_relaxed(~0, port->base + PORT_INTSTAT);
++
++	irq_set_chained_handler_and_data(irq, apple_port_irq_handler, port);
++
++	return 0;
++}
++
++static irqreturn_t apple_pcie_port_irq(int irq, void *data)
++{
++	struct apple_pcie_port *port = data;
++	unsigned int hwirq = irq_domain_get_irq_data(port->domain, irq)->hwirq;
++
++	switch (hwirq) {
++	case PORT_INT_LINK_UP:
++		dev_info_ratelimited(port->pcie->dev, "Link up on %pOF\n",
++				     port->np);
++		complete_all(&port->pcie->event);
++		break;
++	case PORT_INT_LINK_DOWN:
++		dev_info_ratelimited(port->pcie->dev, "Link down on %pOF\n",
++				     port->np);
++		break;
++	default:
++		return IRQ_NONE;
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int apple_pcie_port_register_irqs(struct apple_pcie_port *port)
++{
++	static struct {
++		unsigned int	hwirq;
++		const char	*name;
++	} port_irqs[] = {
++		{ PORT_INT_LINK_UP,	"Link up",	},
++		{ PORT_INT_LINK_DOWN,	"Link down",	},
++	};
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port_irqs); i++) {
++		struct irq_fwspec fwspec = {
++			.fwnode		= &port->np->fwnode,
++			.param_count	= 1,
++			.param		= {
++				[0]	= port_irqs[i].hwirq,
++			},
++		};
++		unsigned int irq;
++		int ret;
++
++		irq = irq_domain_alloc_irqs(port->domain, 1, NUMA_NO_NODE,
++					    &fwspec);
++		if (WARN_ON(!irq))
++			continue;
++
++		ret = request_irq(irq, apple_pcie_port_irq, 0,
++				  port_irqs[i].name, port);
++		WARN_ON(ret);
++	}
++
++	return 0;
++}
++
+ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+ 				   struct apple_pcie_port *port)
  {
-@@ -165,6 +205,10 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+@@ -222,8 +419,20 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	/* Flush writes and enable the link */
+ 	dma_wmb();
  
- 	rmwl(0, PORT_APPCLK_EN, port + PORT_APPCLK);
- 
-+	ret = apple_pcie_setup_refclk(pcie, port);
-+	if (ret < 0)
++	ret = apple_pcie_port_setup_irq(port);
++	if (ret)
 +		return ret;
 +
- 	rmwl(0, PORT_PERST_OFF, port->base + PORT_PERST);
- 	gpiod_set_value(reset, 1);
++	init_completion(&pcie->event);
++
++	ret = apple_pcie_port_register_irqs(port);
++	WARN_ON(ret);
++
+ 	writel_relaxed(PORT_LTSSMCTL_START, port->base + PORT_LTSSMCTL);
+ 
++	if (!wait_for_completion_timeout(&pcie->event, HZ / 10))
++		dev_warn(pcie->dev, "%pOF link didn't come up\n", np);
++
+ 	return 0;
+ }
  
 -- 
 2.30.2
