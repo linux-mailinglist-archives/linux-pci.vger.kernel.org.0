@@ -2,58 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FB040AC62
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 13:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7134340ACB4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 13:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232022AbhINL1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 07:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231941AbhINL1r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Sep 2021 07:27:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 181086108B;
-        Tue, 14 Sep 2021 11:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631618790;
-        bh=z17rkFjIwbMfar/Gaqd/jjuffYq/yJJhF9L7K2YXTPM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=htNEbtOR8qIlDyRjbMOB9WHAN23xw30njyo4Z42xUf66tdcFROqF99j61kAILuWku
-         EEi7WY+kqZM0x4c9s0vRVj+qvX97IYAP7YCguzD7doP/d0i3WtzTNwiMZWCM1g1HFQ
-         h1C1FGtxXJolrKsVRIi2uMdxG/ItX9HWzsVhsYGZhe5Mc0D3rOH11ZlDjfE2jyvlV9
-         AylWfFbbnWCwxI4ElWshfq4Rjx8Bs7GgtCsGMgg/uefYgQ8V8gC7v0Fp34a4O/2ZTP
-         OO9l5SwILc7PDBXMizpfqhfgpbSUvUiuL6azvn9pqzh3X9Mxv9vg9mh1mCUO+tV5oS
-         7bowPvbgqGsBw==
-Date:   Tue, 14 Sep 2021 06:26:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: Linux 5.15-rc1
-Message-ID: <20210914112628.GA1412445@bjorn-Precision-5520>
+        id S232145AbhINLt5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 07:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232394AbhINLtz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 07:49:55 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79889C061574;
+        Tue, 14 Sep 2021 04:48:37 -0700 (PDT)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [80.241.60.233])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4H81nv4nfSzQlRK;
+        Tue, 14 Sep 2021 13:48:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v2 0/2] mwifiex: Work around firmware bugs on 88W8897 chip
+Date:   Tue, 14 Sep 2021 13:48:11 +0200
+Message-Id: <20210914114813.15404-1-verdre@v0yd.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <870c3332-db60-9cf5-0439-247f91ce7808@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C163426B
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 08:21:46AM +0200, Heiner Kallweit wrote:
-> On 14.09.2021 01:46, Bjorn Helgaas wrote:
+This is the second revision of the patch, the first one is here:
+https://lore.kernel.org/linux-wireless/20210830123704.221494-1-verdre@v0yd.nl/
 
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID, quirk_blacklist_vpd);
-> >  /*
-> 
-> Leaving the quirks in FIXUP_HEADER stage would have the advantage that for
-> blacklisted devices the vpd sysfs attribute isn't visibale. The needed
-> changes to the patch are minimal.
+Changes between v1 and v2:
+ - Only read-back the register write to the TX ring write pointer, not all writes
+ - Mention firmware version in commit message+code comment for future reference
+ - Use -EIO return value in second patch
+ - Use definitions for waiting intervals in second patch
 
-What do you have in mind?  The only thing I can think of would be to
-add a "pci_dev.no_vpd" bit.  "vpd.cap == 0" means the device has no
-VPD, and "vpd.len == 0" means we haven't determined the size yet.  All
-devices start off with vpd.cap == 0 and vpd.len == 0, so a
-FIXUP_HEADER quirk would have to set a sentinel value or some other
-bit.
+Jonas Dreßler (2):
+  mwifiex: Use non-posted PCI write when setting TX ring write pointer
+  mwifiex: Try waking the firmware until we get an interrupt
 
-Bjorn
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 59 +++++++++++++++++----
+ 1 file changed, 50 insertions(+), 9 deletions(-)
+
+-- 
+2.31.1
+
