@@ -2,72 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 871B340B95D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 22:38:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 028EA40B962
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 22:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbhINUjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 16:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
+        id S233416AbhINUld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 16:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233426AbhINUjs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Sep 2021 16:39:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8FFA560FED;
-        Tue, 14 Sep 2021 20:38:30 +0000 (UTC)
+        id S233145AbhINUld (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Sep 2021 16:41:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BED660FED;
+        Tue, 14 Sep 2021 20:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631651910;
-        bh=GwJPjD/GwPL/DwGjqr1yZKsemUFxl/JzTMaSJkQLQ4o=;
+        s=k20201202; t=1631652015;
+        bh=G6qy/eJfLrlW0dc677GgqYigdXmrXLbW1t4lBWM7zv4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=udVS1LWhWGEmrVCAlNg1T51i1QJ9fV7/V9+31rOEYM+TFo7bqzgQSJKftSiSnGquJ
-         bc7NkOA+RtugoEiW1JBRdCB6bugT99bspx1JipUa0A0HCeb+mpfXBcFKt4ZPtMakcM
-         n4tjSGw8E+RcZm5PzEYzsPJOsQMukpryPkkZyQBgchaWH9VgOt6ohWyiPbuKAIpkVC
-         ydz5F3bPI+lmiM73kKXqJ1lLMdoRIiFuT6Wk6EHcp4EqXgQJVE0pf/Fn2iCWZNQ7Oy
-         wfB/+pD0+rdJEyOIsk2e2ApXCtmvrzUmfwW0VIEI0be6Zp54b559VoNWjbYhRZtOyX
-         VqawGvTHrYXZQ==
-Date:   Tue, 14 Sep 2021 15:38:29 -0500
+        b=UNbSYbx0i5R0051TDoHxgucE7n/xl95iQ4B8XqrFHxrs3lPZtmUk73H9hxaL5R0oX
+         txN1opB9HYzZiyQV54Rqs813D9t+HUPI92kCBT5mbEA+MJaonNo83Xq57MU99wnnDU
+         VwVypsq4OxgOoazbi9ZCq+Fm/sbjwSS3Sf75wu/ZUcbXFj2y1u3iGGVpR6v7kErINy
+         +cLI9+8wALfugIz3lKoMz17J0JJ44Zqdk1wVgywFlciBwCl0DWABpp0n9NbJZw0C8T
+         J3ikmqoAfxGmDIRID06B+qbKtTq+/839jOTdjY2IpN/wtuPlM9mrMSRxds+tvBjoxL
+         yp2UjBbNjYZww==
+Date:   Tue, 14 Sep 2021 15:40:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] PCI/sysfs: Move to kstrtobool() to handle user
+Subject: Re: [PATCH 2/4] PCI/sysfs: Check CAP_SYS_ADMIN before parsing user
  input
-Message-ID: <20210914203829.GA1454594@bjorn-Precision-5520>
+Message-ID: <20210914204014.GA1455147@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210706010622.3058968-1-kw@linux.com>
+In-Reply-To: <20210705212308.3050976-2-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 01:06:19AM +0000, Krzysztof Wilczyński wrote:
-> A common use case for many PCI sysfs objects is to either enable some
-> functionality or trigger an action following a write to a given
-> attribute where the value is written would be simply either "1" or "0"
-> synonymous with either disabling or enabling something.
+On Mon, Jul 05, 2021 at 09:23:06PM +0000, Krzysztof Wilczyński wrote:
+> Check if the "CAP_SYS_ADMIN" capability flag is set before parsing user
+> input as it makes more sense to first check whether the current user
+> actually has the right permissions before accepting any input from such
+> user.
 > 
-> Parsing and validation of the input values are currently done using the
-> kstrtoul() function to convert anything in the string buffer into an
-> integer value - anything non-zero would be accepted as "enable" and zero
-> simply as "disable".
+> This will also make order in which enable_store() and msi_bus_store()
+> perform the "CAP_SYS_ADMIN" capability check consistent with other
+> PCI-related sysfs objects that first verify whether user has this
+> capability set.
+
+I like this one.  Can you rebase it to skip patch 1/4 (unless you
+convince me that 1/4 is safe)?
+
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> For a while now, the kernel offers another function called kstrtobool()
-> which was created to parse common user inputs into a boolean value, so
-> that a range of values such as "y", "n", "1", "0", "on" and "off"
-> handled in a case-insensitive manner would yield a boolean true or false
-> result accordingly after the input string has been parsed.
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 0f98c4843764..bc4c141e4c1c 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -275,13 +275,13 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  	ssize_t result = 0;
+>  
+> -	if (kstrtobool(buf, &enable) < 0)
+> -		return -EINVAL;
+> -
+>  	/* this can crash the machine when done on the "wrong" device */
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  
+> +	if (kstrtobool(buf, &enable) < 0)
+> +		return -EINVAL;
+> +
+>  	device_lock(dev);
+>  	if (dev->driver)
+>  		result = -EBUSY;
+> @@ -377,12 +377,12 @@ static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct pci_bus *subordinate = pdev->subordinate;
+>  
+> -	if (kstrtobool(buf, &enable) < 0)
+> -		return -EINVAL;
+> -
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  
+> +	if (kstrtobool(buf, &enable) < 0)
+> +		return -EINVAL;
+> +
+>  	/*
+>  	 * "no_msi" and "bus_flags" only affect what happens when a driver
+>  	 * requests MSI or MSI-X.  They don't affect any drivers that have
+> -- 
+> 2.32.0
 > 
-> Thus, move to kstrtobool() over kstrtoul() as it's a better fit for
-> parsing user input, and it also implicitly offers a range check as only
-> a finite amount of possible input values will be considered as valid.
-
-If I understand correctly, a user could enable things by writing "5"
-today, and if we switch to kstrbool(), that will no longer work.
-
-I'm sure everything is *documented* such that one should write "1" or
-other sensible values.  But I'm not sure there's benefit in adding new
-restrictions.
-
-Bjorn
