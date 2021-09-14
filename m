@@ -2,82 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDF8240B037
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 16:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C6B040B08B
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 16:24:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233464AbhINOFz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 10:05:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233438AbhINOFz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Sep 2021 10:05:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 48B5D6109E;
-        Tue, 14 Sep 2021 14:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631628277;
-        bh=iQJMVWDJXIz4+Xnw+Zmg2wTPTmdj6J/jGV1015/5YnY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sh0LzS3sjwfoLX0GTTG4bYX4blk6Ke37ZobsjjU36s3FXmpuukuAVFMlrgFE8TZhx
-         EeJTMn0gyT3HSSR4sdkvIe7StpiDB7V85s8j29p5SpXCMfl73qNxySVT8Ie60y2vcV
-         vpix8KeCPPe3P81A+ergZLI6GmhIf4aMDBVK6jpzZa3jwvCpze4fyg8qmaNhURy5Wf
-         aiHr6ir8zwQlRN1fT/mqpLFTqaLxoP/fDxYZ5qICbI5RjU8kbA9HYnpJsD8/cwosjB
-         jIfwjYdhrAcZvCqucxW3WWay2IaphC8JawlfMJP8AiOGLWbBeG+Fw3+RZR7Y1aDhJR
-         6oIELkkIGQ5Hw==
-Received: by mail-ed1-f47.google.com with SMTP id t6so18690146edi.9;
-        Tue, 14 Sep 2021 07:04:37 -0700 (PDT)
-X-Gm-Message-State: AOAM5310p/B6mj6bG67L2XaY/HsdqnmaocVzCvDZ9IrnxLOBCdONFl0S
-        W+sFC8mrsvUTDXFH5XlItBwpJl6xlzk4xm2Wbw==
-X-Google-Smtp-Source: ABdhPJwUbUy1IP1vgkqhQdfLkWfsy/Qq1h3BMnp5iQMqPnzVJ11nLcXtGK+gUd4ZWnMAlXCfmg09DjEmu8QfDA/aRZs=
-X-Received: by 2002:a05:6402:b23:: with SMTP id bo3mr16054495edb.145.1631628275923;
- Tue, 14 Sep 2021 07:04:35 -0700 (PDT)
+        id S233671AbhINOZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 10:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233437AbhINOZt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 10:25:49 -0400
+Received: from scorn.kernelslacker.org (scorn.kernelslacker.org [IPv6:2600:3c03:e000:2fb::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF85C061574;
+        Tue, 14 Sep 2021 07:24:31 -0700 (PDT)
+Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
+        by scorn.kernelslacker.org with esmtp (Exim 4.92)
+        (envelope-from <davej@codemonkey.org.uk>)
+        id 1mQ9MC-0003hi-5m; Tue, 14 Sep 2021 10:24:20 -0400
+Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
+        id D948856008F; Tue, 14 Sep 2021 10:24:19 -0400 (EDT)
+Date:   Tue, 14 Sep 2021 10:24:19 -0400
+From:   Dave Jones <davej@codemonkey.org.uk>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, todd.fujinaka@intel.com,
+        Hisashi T Fujinaka <htodd@twofifty.com>
+Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
+Message-ID: <20210914142419.GA32324@codemonkey.org.uk>
+Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, todd.fujinaka@intel.com,
+        Hisashi T Fujinaka <htodd@twofifty.com>
+References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com>
+ <20210913141818.GA27911@codemonkey.org.uk>
+ <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com>
+ <20210913201519.GA15726@codemonkey.org.uk>
+ <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
+ <20210913203234.GA6762@codemonkey.org.uk>
+ <b24d81e2-5a1e-3616-5a01-abd58c0712f7@gmail.com>
+ <b4b543d4-c0c5-3c56-46b7-e17ec579edcc@twofifty.com>
+ <367cc748-d411-8cf8-ff95-07715c55e899@gmail.com>
 MIME-Version: 1.0
-References: <20210722121242.47838-1-manivannan.sadhasivam@linaro.org> <20210722121242.47838-3-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20210722121242.47838-3-manivannan.sadhasivam@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Sep 2021 09:04:24 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKW+yCx5Hzgz0tFNcX0irhJ9aQ=TNeewLHsheoyMRFLjw@mail.gmail.com>
-Message-ID: <CAL_JsqKW+yCx5Hzgz0tFNcX0irhJ9aQ=TNeewLHsheoyMRFLjw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] PCI: qcom-ep: Add Qualcomm PCIe Endpoint
- controller driver
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        hemantk@codeaurora.org,
-        Siddartha Mohanadoss <smohanad@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        skananth@codeaurora.org, vpernami@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <367cc748-d411-8cf8-ff95-07715c55e899@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Note: SpamAssassin invocation failed
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 7:13 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> Add driver support for Qualcomm PCIe Endpoint controller driver based on
-> the Designware core with added Qualcomm specific wrapper around the
-> core. The driver support is very basic such that it supports only
-> enumeration, PCIe read/write, and MSI. There is no ASPM and PM support
-> for now but these will be added later.
->
-> The driver is capable of using the PERST# and WAKE# side-band GPIOs for
-> operation and written on top of the DWC PCI framework.
->
-> Co-developed-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> [mani: restructured the driver and fixed several bugs for upstream]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/Kconfig        |  10 +
->  drivers/pci/controller/dwc/Makefile       |   1 +
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 710 ++++++++++++++++++++++
->  3 files changed, 721 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
+On Tue, Sep 14, 2021 at 07:51:22AM +0200, Heiner Kallweit wrote:
+ 
+ > > Sorry to reply from my personal account. If I did it from my work
+ > > account I'd be top-posting because of Outlook and that goes over like a
+ > > lead balloon.
+ > > 
+ > > Anyway, can you send us a dump of your eeprom using ethtool -e? You can
+ > > either send it via a bug on e1000.sourceforge.net or try sending it to
+ > > todd.fujinaka@intel.com
+ > > 
+ > > The other thing is I'm wondering is what the subvendor device ID you
+ > > have is referring to because it's not in the pci database. Some ODMs
+ > > like getting creative with what they put in the NVM.
+ > > 
+ > > Todd Fujinaka (todd.fujinaka@intel.com)
+ > 
+ > Thanks for the prompt reply. Dave, could you please provide the requested
+ > information?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+sent off-list.
+
+	Dave
