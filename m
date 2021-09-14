@@ -2,102 +2,274 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 028EA40B962
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 22:40:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DD1440B96C
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 22:47:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbhINUld (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 16:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
+        id S233555AbhINUsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 16:48:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233145AbhINUld (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Sep 2021 16:41:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BED660FED;
-        Tue, 14 Sep 2021 20:40:15 +0000 (UTC)
+        id S233373AbhINUsT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Sep 2021 16:48:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6E2260187;
+        Tue, 14 Sep 2021 20:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631652015;
-        bh=G6qy/eJfLrlW0dc677GgqYigdXmrXLbW1t4lBWM7zv4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UNbSYbx0i5R0051TDoHxgucE7n/xl95iQ4B8XqrFHxrs3lPZtmUk73H9hxaL5R0oX
-         txN1opB9HYzZiyQV54Rqs813D9t+HUPI92kCBT5mbEA+MJaonNo83Xq57MU99wnnDU
-         VwVypsq4OxgOoazbi9ZCq+Fm/sbjwSS3Sf75wu/ZUcbXFj2y1u3iGGVpR6v7kErINy
-         +cLI9+8wALfugIz3lKoMz17J0JJ44Zqdk1wVgywFlciBwCl0DWABpp0n9NbJZw0C8T
-         J3ikmqoAfxGmDIRID06B+qbKtTq+/839jOTdjY2IpN/wtuPlM9mrMSRxds+tvBjoxL
-         yp2UjBbNjYZww==
-Date:   Tue, 14 Sep 2021 15:40:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/4] PCI/sysfs: Check CAP_SYS_ADMIN before parsing user
- input
-Message-ID: <20210914204014.GA1455147@bjorn-Precision-5520>
+        s=k20201202; t=1631652422;
+        bh=i1oCg/0TzFjJ8DdhzYxpYQet8rLvCyQpaM2G+FJ4ubY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bsEYIzEoKnJ6+UoYa6Kq6vOws/6IaHWEGY5hjKkjnOMo3aVdOKROYaPL0ycIZI27q
+         X9ZP33v21N5Q167DFFqXq+/+2Z6rcCBXfuSgNsXRhoVhA3UQgpgD0oCyTUg/J7SQ6H
+         k8jP/mIF7xeDgBYti7CIe9XnTGh6JviVgB9llqmOZC7/AQu9ffD0rQzD4RmKfbFd05
+         0lgoIb1xhoz48Sr1gAFhqUncAr4Rnetip2mXmmY1f6aT+eZe1J7PWELYXIn4Mepa6Z
+         9J+Q5/o1QfMe94iqaG0n2K6O9zjyU9smpyRRRiCXYLAn/RbXlDpB2pJ8oIkqZIfFVr
+         Rorv2HgOzpygQ==
+Received: by pali.im (Postfix)
+        id 95A45825; Tue, 14 Sep 2021 22:46:59 +0200 (CEST)
+Date:   Tue, 14 Sep 2021 22:46:59 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Implement re-issuing config requests on
+ CRS response
+Message-ID: <20210914204659.hmn22qbwa2fkft7k@pali>
+References: <20210823120214.24837-1-pali@kernel.org>
+ <20210914202656.GA1452540@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210705212308.3050976-2-kw@linux.com>
+In-Reply-To: <20210914202656.GA1452540@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 05, 2021 at 09:23:06PM +0000, Krzysztof Wilczyński wrote:
-> Check if the "CAP_SYS_ADMIN" capability flag is set before parsing user
-> input as it makes more sense to first check whether the current user
-> actually has the right permissions before accepting any input from such
-> user.
+On Tuesday 14 September 2021 15:26:56 Bjorn Helgaas wrote:
+> On Mon, Aug 23, 2021 at 02:02:14PM +0200, Pali Rohár wrote:
+> > Commit 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value") fixed
+> > handling of CRS response and when CRSSVE flag was not enabled it marked CRS
+> > response as failed transaction (due to simplicity).
+> > 
+> > But pci-aardvark.c driver is already waiting up to the PIO_RETRY_CNT count
+> > for PIO config response and implementation of re-issuing config requests
+> > according to PCIe base specification is therefore simple.
 > 
-> This will also make order in which enable_store() and msi_bus_store()
-> perform the "CAP_SYS_ADMIN" capability check consistent with other
-> PCI-related sysfs objects that first verify whether user has this
-> capability set.
+> I think the spec is confusingly worded.  It says (PCIe r5.0, sec
+> 2.3.2) that when handling a Completion with CRS status for a config
+> request (paraphrasing slightly),
+> 
+>   If CRS Software Visibility is enabled, for config reads of Vendor
+>   ID, the Root Complex returns 0x0001 for Vendor ID.
+> 
+>   Otherwise ... the Root Complex must re-issue the Configuration
+>   Request as a new Request.
+> 
+> BUT:
+> 
+>   A Root Complex implementation may choose to limit the number of
+>   Configuration Request/ CRS Completion Status loops before
+>   determining that something is wrong with the target of the Request
+>   and taking appropriate action, e.g., complete the Request to the
+>   host as a failed transaction.
+> 
+> So I think zero is a perfectly valid number of retries, and I'm pretty
+> sure there are RCs that never retry.
+> 
+> Is there a benefit to doing retry like this in the driver?  Can we not
+> simply rely on retries at a higher level?
 
-I like this one.  Can you rebase it to skip patch 1/4 (unless you
-convince me that 1/4 is safe)?
+I think that all drivers handle 0xFFFFFFFF read response as some kind of
+fatal error. And because every PCI error is mapped to value 0xFFFFFFFF
+it means that higher level has no chance to distinguish easily between
+unsupported request and completion retry status.
 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> ---
->  drivers/pci/pci-sysfs.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 0f98c4843764..bc4c141e4c1c 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -275,13 +275,13 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
->  	struct pci_dev *pdev = to_pci_dev(dev);
->  	ssize_t result = 0;
->  
-> -	if (kstrtobool(buf, &enable) < 0)
-> -		return -EINVAL;
-> -
->  	/* this can crash the machine when done on the "wrong" device */
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
->  	device_lock(dev);
->  	if (dev->driver)
->  		result = -EBUSY;
-> @@ -377,12 +377,12 @@ static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
->  	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct pci_bus *subordinate = pdev->subordinate;
->  
-> -	if (kstrtobool(buf, &enable) < 0)
-> -		return -EINVAL;
-> -
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * "no_msi" and "bus_flags" only affect what happens when a driver
->  	 * requests MSI or MSI-X.  They don't affect any drivers that have
-> -- 
-> 2.32.0
-> 
+And issue is there also with write requests. Is somebody checking return
+value of pci_bus_write_config function?
+
+I guess that zero retry count as you pointed is valid. But it is
+something which we want?
+
+I sent this patch because implementation of request retry was very
+simple. Driver already waits for response, so adding another loop around
+it does not increase code complexity.
+
+> > This change implements re-issuing of config requests when response is CRS.
+> > And to prevent infinite loop set upper bound to around PIO_RETRY_CNT value,
+> > after which is transaction marked as failed and 0xFFFFFFFF is returned like
+> > before.
+> > 
+> > Implementation is done by returning appropriate error codes from function
+> > advk_pcie_check_pio_status(). On CRS is returned -EAGAIN and caller then
+> > reissue transaction up to the PIO_RETRY_CNT count. As advk_pcie_wait_pio()
+> > function waits some cycles, return number of these cycles and add them to
+> > the retry count. So the total time for config request would be only linear
+> > O(PIO_RETRY_CNT) and not quadratic O(PIO_RETRY_CNT^2) in the worst case.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Fixes: 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value")
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 36 ++++++++++++++++++++++-----
+> >  1 file changed, 30 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index abc93225ba20..99f244190eae 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -470,6 +470,7 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  	u32 reg;
+> >  	unsigned int status;
+> >  	char *strcomp_status, *str_posted;
+> > +	int ret;
+> >  
+> >  	reg = advk_readl(pcie, PIO_STAT);
+> >  	status = (reg & PIO_COMPLETION_STATUS_MASK) >>
+> > @@ -494,6 +495,7 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  	case PIO_COMPLETION_STATUS_OK:
+> >  		if (reg & PIO_ERR_STATUS) {
+> >  			strcomp_status = "COMP_ERR";
+> > +			ret = -EFAULT;
+> >  			break;
+> >  		}
+> >  		/* Get the read result */
+> > @@ -501,9 +503,11 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  			*val = advk_readl(pcie, PIO_RD_DATA);
+> >  		/* No error */
+> >  		strcomp_status = NULL;
+> > +		ret = 0;
+> >  		break;
+> >  	case PIO_COMPLETION_STATUS_UR:
+> >  		strcomp_status = "UR";
+> > +		ret = -EOPNOTSUPP;
+> >  		break;
+> >  	case PIO_COMPLETION_STATUS_CRS:
+> >  		if (allow_crs && val) {
+> > @@ -521,6 +525,7 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  			 */
+> >  			*val = CFG_RD_CRS_VAL;
+> >  			strcomp_status = NULL;
+> > +			ret = 0;
+> >  			break;
+> >  		}
+> >  		/* PCIe r4.0, sec 2.3.2, says:
+> > @@ -536,21 +541,24 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  		 * Request and taking appropriate action, e.g., complete the
+> >  		 * Request to the host as a failed transaction.
+> >  		 *
+> > -		 * To simplify implementation do not re-issue the Configuration
+> > -		 * Request and complete the Request as a failed transaction.
+> > +		 * So return -EAGAIN and caller (pci-aardvark.c driver) will
+> > +		 * re-issue request again up to the PIO_RETRY_CNT retries.
+> >  		 */
+> >  		strcomp_status = "CRS";
+> > +		ret = -EAGAIN;
+> >  		break;
+> >  	case PIO_COMPLETION_STATUS_CA:
+> >  		strcomp_status = "CA";
+> > +		ret = -ECANCELED;
+> >  		break;
+> >  	default:
+> >  		strcomp_status = "Unknown";
+> > +		ret = -EINVAL;
+> >  		break;
+> >  	}
+> >  
+> >  	if (!strcomp_status)
+> > -		return 0;
+> > +		return ret;
+> >  
+> >  	if (reg & PIO_NON_POSTED_REQ)
+> >  		str_posted = "Non-posted";
+> > @@ -560,7 +568,7 @@ static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u3
+> >  	dev_err(dev, "%s PIO Response Status: %s, %#x @ %#x\n",
+> >  		str_posted, strcomp_status, reg, advk_readl(pcie, PIO_ADDR_LS));
+> >  
+> > -	return -EFAULT;
+> > +	return ret;
+> >  }
+> >  
+> >  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+> > @@ -568,13 +576,13 @@ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+> >  	struct device *dev = &pcie->pdev->dev;
+> >  	int i;
+> >  
+> > -	for (i = 0; i < PIO_RETRY_CNT; i++) {
+> > +	for (i = 1; i <= PIO_RETRY_CNT; i++) {
+> >  		u32 start, isr;
+> >  
+> >  		start = advk_readl(pcie, PIO_START);
+> >  		isr = advk_readl(pcie, PIO_ISR);
+> >  		if (!start && isr)
+> > -			return 0;
+> > +			return i;
+> >  		udelay(PIO_RETRY_DELAY);
+> >  	}
+> >  
+> > @@ -764,6 +772,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+> >  			     int where, int size, u32 *val)
+> >  {
+> >  	struct advk_pcie *pcie = bus->sysdata;
+> > +	int retry_count;
+> >  	bool allow_crs;
+> >  	u32 reg;
+> >  	int ret;
+> > @@ -816,6 +825,9 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+> >  	/* Program the data strobe */
+> >  	advk_writel(pcie, 0xf, PIO_WR_DATA_STRB);
+> >  
+> > +	retry_count = 0;
+> > +
+> > +retry:
+> >  	/* Clear PIO DONE ISR and start the transfer */
+> >  	advk_writel(pcie, 1, PIO_ISR);
+> >  	advk_writel(pcie, 1, PIO_START);
+> > @@ -834,8 +846,12 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+> >  		return PCIBIOS_SET_FAILED;
+> >  	}
+> >  
+> > +	retry_count += ret;
+> > +
+> >  	/* Check PIO status and get the read result */
+> >  	ret = advk_pcie_check_pio_status(pcie, allow_crs, val);
+> > +	if (ret == -EAGAIN && retry_count < PIO_RETRY_CNT)
+> > +		goto retry;
+> >  	if (ret < 0) {
+> >  		*val = 0xffffffff;
+> >  		return PCIBIOS_SET_FAILED;
+> > @@ -855,6 +871,7 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+> >  	struct advk_pcie *pcie = bus->sysdata;
+> >  	u32 reg;
+> >  	u32 data_strobe = 0x0;
+> > +	int retry_count;
+> >  	int offset;
+> >  	int ret;
+> >  
+> > @@ -896,6 +913,9 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+> >  	/* Program the data strobe */
+> >  	advk_writel(pcie, data_strobe, PIO_WR_DATA_STRB);
+> >  
+> > +	retry_count = 0;
+> > +
+> > +retry:
+> >  	/* Clear PIO DONE ISR and start the transfer */
+> >  	advk_writel(pcie, 1, PIO_ISR);
+> >  	advk_writel(pcie, 1, PIO_START);
+> > @@ -904,7 +924,11 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
+> >  	if (ret < 0)
+> >  		return PCIBIOS_SET_FAILED;
+> >  
+> > +	retry_count += ret;
+> > +
+> >  	ret = advk_pcie_check_pio_status(pcie, false, NULL);
+> > +	if (ret == -EAGAIN && retry_count < PIO_RETRY_CNT)
+> > +		goto retry;
+> >  	if (ret < 0)
+> >  		return PCIBIOS_SET_FAILED;
+> >  
+> > -- 
+> > 2.20.1
+> > 
