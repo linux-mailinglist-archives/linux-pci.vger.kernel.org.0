@@ -2,79 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8448940AFA0
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 15:52:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05E5740AFB4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 15:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233349AbhINNxk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 09:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233306AbhINNxi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 09:53:38 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CBEC061574;
-        Tue, 14 Sep 2021 06:52:21 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id nn5-20020a17090b38c500b0019af1c4b31fso2060157pjb.3;
-        Tue, 14 Sep 2021 06:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=OBuM8TqJ0Hiy++w0Eg3iCTeKL45+UH97Wc5WiqGlxYk=;
-        b=eEN/Cjx/RaHtIuifTzIWtuTNXKn8gN7MXFN1fkI/BBhKK6N8yNK1egUZx6Da0ngWPm
-         4CyFlthWnBdrVPGH5fxFgu6g6VUQH6THmXauJJaclzQFID3Pl9tghRPKFiTU2b+vAXjY
-         4wQS8Z3dv3uWNA8aW2T612eXFIiVHtj8zvmt5CkuuDOdsI94bnDB9Lz8ITLswRwz9YYJ
-         KGugdCwyd2t2b0XfFKZ7EXIeFO9Mhxpu7rxald7qSmyebUL8sMUjdQXjTkZWVLcDnxVS
-         W6U4CBI0RrTWjUbcWgpbwcfy8ZllzRSNNTlBna4UpU1ilh3mx80C67OXU86/9LAFygfQ
-         YUkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=OBuM8TqJ0Hiy++w0Eg3iCTeKL45+UH97Wc5WiqGlxYk=;
-        b=ED93Yvt1rORh9azeDQ6BB0lfXwSUO8e6cFBtWP1rosSwIyuIiuOkaTvIXRh5KSxg3G
-         mynN6gp82oNmpaunOY08sY3UovhAq91zUOQb4FPY0yvkp6N8iA0dN9LlRHmeXNDHmBYt
-         yQoQqxI5H9n7dNhPyC6h49Yzg8W7cwfTkL+/vQCUb01LRnBv4IEHSN3jfKiSD1K7QlMy
-         nN8QY+Js+oP5U/vhEDaP4rD+dRUZecPYStIycjZX52FoLDonf90FR2M99+GshrIVjELp
-         UG9Z3RzJmZNOCFx25eEJWD9jrAS9KQN3QbB2mLQIi+0AnzidhayevndzLefuhbinuYGv
-         OhHQ==
-X-Gm-Message-State: AOAM5320k94w8oiyr9sUKNkenn08XhKSZMjvraOn44ZXruCsBeDh00cS
-        OPZNkwUTyaY6LfYcaJoL2HBGF/MWCWWRPyIrd4Zxoh16
-X-Google-Smtp-Source: ABdhPJzi5Dur2NFQQ5T9iQZsUMijQaMGcr7v2R5hGtdc9r2AmXXaZFZAwG4BBUqObGzm+ZSWsJkvmPKgtEDaJpkN2U0=
-X-Received: by 2002:a17:902:8ec5:b0:13a:2789:cbb0 with SMTP id
- x5-20020a1709028ec500b0013a2789cbb0mr15236406plo.60.1631627540581; Tue, 14
- Sep 2021 06:52:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210824122054.29481-1-joro@8bytes.org> <CAJZ5v0jqwgvmRrRts4Nf4ySmrp5gwmv_iJWBh3OjN54ZU+qneQ@mail.gmail.com>
- <CAJZ5v0hn5EvwjPggCeUw+kjDNjdzx3eLP2PRBGKRAyo2eYECyQ@mail.gmail.com> <YUCodXHfHmap1+la@8bytes.org>
-In-Reply-To: <YUCodXHfHmap1+la@8bytes.org>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Tue, 14 Sep 2021 08:52:08 -0500
-Message-ID: <CABhMZUV50Tp6-UrRnm_E55QiwJvtLQ64qp7Tn2h+pw_uu7M=iA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] PCI/ACPI: Simplify PCIe _OSC feature negotiation
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        id S233337AbhINNzs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 09:55:48 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:35097 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233217AbhINNzr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 09:55:47 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E3E1D580339;
+        Tue, 14 Sep 2021 09:54:29 -0400 (EDT)
+Received: from imap21 ([10.202.2.71])
+  by compute1.internal (MEProxy); Tue, 14 Sep 2021 09:54:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm2; bh=o1rdGWrst3yz3l9o6PKhZvLFS00Y
+        bNnCxVpsc8+ZQ0Q=; b=Tkq2hX5SCFOnZrVbkgcBZ6C6zgNZnqwDeKDEAjc0NlUx
+        tw5bG6yUexZ4EiHLAk4a4XRv0dUTjluL6jp62KFZR+yzY5+2da7QpDhWFfra0FHZ
+        hx+JqOyJ2RaarqAY0q7ysbF7dQH0E7nAspoMq1+jKJhdON/rPKJeS8FKPjXvYN7p
+        AXx0GqctvFlNzuJFcACMJpAZdGaFX/neNQvEwM4Y7+OEuNSI0uiqQY+Xy7u/f/GW
+        gBtxBoQl9Yc5AQWZVZnQ8pFbgvs8ZJnXMm6Lz418NB7BpuS7knvr+VoZlNnBosJK
+        O2Uiwp3kLDlmYZSVbIXabkhOTb5T3gfAAwtD13h6xA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=o1rdGW
+        rst3yz3l9o6PKhZvLFS00YbNnCxVpsc8+ZQ0Q=; b=OTd+/B8/GhaKtCl5w+ORGZ
+        V1Sy7PpckAAeRXVr8xCe8GPuN9wSnI3MjtEPqP43BGveZZaRGDxpad8//sZ7YxFM
+        lO8caKEhcnCAtUsY2d+wzz4gAjlfF9HfvbkrCgdBlzg/VxsvXxmVPS5WO/d63i+f
+        51PPUsBAXUoEtCFNClwnWx7krafITnQN78kI+5gwiN0wvJvQWtNL5rHjDyKNcqMH
+        tuOGqLjWZ/tzYbxPiLelmUNlYMm6lDYh/7eWwP3LXbnjuftEZL7nOlBJdxrGtJcG
+        HVwCMP9cplCcwho7HNWCBbPFd/yDV3lfI/ttXy8RN5176rbt2H6h7v3qpnVXp8pg
+        ==
+X-ME-Sender: <xms:k6lAYdv7JqoISe3lrX5D0y4S16ThaQHVo_KrWlBV9OP8IJOp_dFNXg>
+    <xme:k6lAYWcauth90l5fAWQxijDbpHRN9IK-C1gDWGtoFFZ-nwh_Do6e6VR6OKHX6i7hE
+    3pzGEj0sVOUUl60Z9o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudegledgieekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdfuvhgv
+    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
+    htthgvrhhnpeehjefgtddtfeelfeetjeeifeduueehleektdegtdejheeiteeuleehuefh
+    geehgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:lKlAYQwgShuYZRz0nDGskuRWSkl7oNvRViw9Zj43VNfeJePf-eTYPA>
+    <xmx:lKlAYUPZTW9WZLQzjppIYv7a7iuVgDs5dSASbuc6DZKddu8KZlXNEA>
+    <xmx:lKlAYd93X_WmtOjDPurl38ReC6DvgqgDW80CvyTWXHqYGcWEei1eNA>
+    <xmx:lalAYUWubXw0R-fU5jlgsxl97F3gUCmqxtgmvOpoJ-YW2wRfr8qv8A>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C241151C0060; Tue, 14 Sep 2021 09:54:27 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1291-gc66fc0a3a2-fm-20210913.001-gc66fc0a3
+Mime-Version: 1.0
+Message-Id: <479322ce-b0e4-40e4-831e-387415b4e310@www.fastmail.com>
+In-Reply-To: <20210913182550.264165-10-maz@kernel.org>
+References: <20210913182550.264165-1-maz@kernel.org>
+ <20210913182550.264165-10-maz@kernel.org>
+Date:   Tue, 14 Sep 2021 15:54:07 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Marc Zyngier" <maz@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Stan Skowronek" <stan@corellium.com>,
+        "Mark Kettenis" <kettenis@openbsd.org>,
+        "Hector Martin" <marcan@marcan.st>,
+        "Robin Murphy" <Robin.Murphy@arm.com>, kernel-team@android.com
+Subject: =?UTF-8?Q?Re:_[PATCH_v3_09/10]_iommu/dart:_Exclude_MSI_doorbell_from_PCI?=
+ =?UTF-8?Q?e_device_IOVA_range?=
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 8:50 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> On Mon, Sep 13, 2021 at 06:14:38PM +0200, Rafael J. Wysocki wrote:
-> > Should I assume that Bjorn will be taking it?
->
-> No idea, checking git-log on the file shows mixed Signed-off-bys from
-> both of you. Bjorn?
 
-I'll merge it, hopefully this week.  Thanks!
 
-Bjorn
+On Mon, Sep 13, 2021, at 20:25, Marc Zyngier wrote:
+> The MSI doorbell on Apple HW can be any address in the low 4GB
+> range. However, the MSI write is matched by the PCIe block before
+> hitting the iommu. It must thus be excluded from the IOVA range
+> that is assigned to any PCIe device.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+It's not pretty but I'm not aware of any better solution and this should
+work as long as these two are always paired. With the small nit below
+addressed:
+
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
+
+> ---
+>  drivers/iommu/apple-dart.c          | 25 +++++++++++++++++++++++++
+>  drivers/pci/controller/Kconfig      |  5 +++++
+>  drivers/pci/controller/pcie-apple.c |  4 +++-
+>  3 files changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+> index 559db9259e65..d1456663688e 100644
+> --- a/drivers/iommu/apple-dart.c
+> +++ b/drivers/iommu/apple-dart.c
+> @@ -721,6 +721,29 @@ static int apple_dart_def_domain_type(struct device *dev)
+>  	return 0;
+>  }
+>  
+> +#define DOORBELL_ADDR	(CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR & PAGE_MASK)
+> +
+> +static void apple_dart_get_resv_regions(struct device *dev,
+> +					struct list_head *head)
+> +{
+> +#ifdef CONFIG_PCIE_APPLE
+
+I think using IS_ENABLED would be better here in case the pcie driver is built as
+a module which would then only define CONFIG_PCIE_APPLE_MODULE AIUI.
+
+
+Thanks,
+
+
+Sven
