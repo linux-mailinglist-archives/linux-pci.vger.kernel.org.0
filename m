@@ -2,93 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0365B40B26B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 17:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC91640B30D
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Sep 2021 17:28:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbhINPCu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 11:02:50 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:38647 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234455AbhINPCt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 11:02:49 -0400
-Received: by mail-ot1-f46.google.com with SMTP id i8-20020a056830402800b0051afc3e373aso18851905ots.5;
-        Tue, 14 Sep 2021 08:01:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a69f0p2LO5nM49i5w+9S50sCyKtjFMTTVJCoHsR1aRM=;
-        b=YkjeXHR+8j3ax7mjvYzbeSf1JAcmoFr83uzpN7//WlbX415E2YClaVuCRGYtsR1U6D
-         XHDB1iQ114EZ1AyuBBQSNM1v7FP982r41cRfMyDhe9G5gHRACcLoWsKysQoTXq2+QHK6
-         xmJXJdOaDIDyRo+9SthDXJOZJnr9oPVj40IXopIz1e4xvUjdr14eTp2h4RRv5GssGamx
-         giZ0nhV1iqNYZg3jjQw4i1KsxS2rmAAl4DG4fbJauKxWumWOP1nyS+t78xJmgFFkGaoN
-         PInmQDZqdw9ImzFzzvddl3i1agsYdWfSVb3HbLVS9j1j5amai3zi9wlB+p8wFpHwzjMW
-         yMGw==
-X-Gm-Message-State: AOAM531S8bkfZN/PTWy1JfIqieJ1kk4f5Ek7AU+BBpg/N0/x5gRDyL5u
-        vW53Rv9EL2tyLQPvfGFsRZL6hl9idwn8+xRsQqk=
-X-Google-Smtp-Source: ABdhPJy+bQzkn6kGRLipFnjyWkwhBd6ENe8CcNTE3CERDrwZUInvEkozWDR1E7HDcWNDT1RjJUftgDmyrR3vofRTVmI=
-X-Received: by 2002:a9d:4d93:: with SMTP id u19mr15006591otk.86.1631631692184;
- Tue, 14 Sep 2021 08:01:32 -0700 (PDT)
+        id S233642AbhINPaB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 11:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233202AbhINPaB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 14 Sep 2021 11:30:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 75E0C60234;
+        Tue, 14 Sep 2021 15:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631633323;
+        bh=x//Xq5RdCeQ+p5Rv8Opn4y5rHTYOJ9G5/f5Fp7RZXaE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Bzb8q6KEJeul99agG7vblZ4uPpwlW804qUp7KOEfS36zFt5jnKUTYvkXWL19QrDOC
+         TytJ69GLCrvKjYhJc+xbV1yfeXANabH3NjWgq3g4BxEaDxNHEN7RIm+h+KFoTU2TvW
+         biUaFQz+z6EWybB2yO6kTkfH2eIvV+Bz+vD0uR6mmxWRrmPCJRcGKugeEJvviyQFXo
+         gE2zxWXVYrWLDPrAyKm3slJvW8o4zoWP0QsaQ5TldeWsGhANMDEqBFcT0fIty2DD6o
+         6i/gT6+Qj/xh6mOTBf+dmPk0ZFx9cHE3gG1by9GmVjuyt6feDUgEBzoIxbKyZBGoum
+         NQOeakKfV36Rw==
+Date:   Tue, 14 Sep 2021 10:28:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Evan Quan <evan.quan@amd.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Alexander.Deucher@amd.com, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: Create device links for AMD integrated USB xHCI and
+ UCSI controllers
+Message-ID: <20210914152842.GA1429517@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210914095120.2132059-1-jean-philippe@linaro.org>
-In-Reply-To: <20210914095120.2132059-1-jean-philippe@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Sep 2021 17:01:21 +0200
-Message-ID: <CAJZ5v0g9v-0hPNMGdsSRsYq1BSiRGjcML3F3u8=vmjOfaPK87Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/ACPI: Don't reset a fwnode set by OF
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210903063311.3606226-1-evan.quan@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 11:55 AM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
->
-> Commit 375553a93201 ("PCI: Setup ACPI fwnode early and at the same time
-> with OF") added a call to pci_set_acpi_fwnode() in pci_setup_device(),
-> which unconditionally clears any fwnode previously set by
-> pci_set_of_node().
->
-> pci_set_acpi_fwnode() looks for ACPI_COMPANION(), which only returns the
-> existing fwnode if it was set by ACPI_COMPANION_SET(). If it was set by
-> OF instead, ACPI_COMPANION() returns NULL and pci_set_acpi_fwnode()
-> accidentally clears the fwnode. To fix this, look for any fwnode instead
-> of just ACPI companions.
->
-> Fixes: 375553a93201 ("PCI: Setup ACPI fwnode early and at the same time with OF")
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+On Fri, Sep 03, 2021 at 02:33:11PM +0800, Evan Quan wrote:
+> Latest AMD GPUs have built-in USB xHCI and UCSI controllers. Add device
+> link support for them.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Evan Quan <evan.quan@amd.com>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Applied to pci/pm for v5.16, thanks!
 
 > ---
-> v2: Use dev_fwnode()
-> v1: https://lore.kernel.org/linux-pci/20210913172358.1775381-1-jean-philippe@linaro.org/
-> This fixes boot of virtio-iommu under OF on v5.15-rc1
-> ---
->  drivers/pci/pci-acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index a1b1e2a01632..0f40943a9a18 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -937,7 +937,7 @@ static struct acpi_device *acpi_pci_find_companion(struct device *dev);
->
->  void pci_set_acpi_fwnode(struct pci_dev *dev)
->  {
-> -       if (!ACPI_COMPANION(&dev->dev) && !pci_dev_is_added(dev))
-> +       if (!dev_fwnode(&dev->dev) && !pci_dev_is_added(dev))
->                 ACPI_COMPANION_SET(&dev->dev,
->                                    acpi_pci_find_companion(&dev->dev));
+>  drivers/pci/quirks.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dea10d62d5b9..f0c5dd3406a1 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5338,7 +5338,7 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8, quirk_gpu_hda);
+>  
+>  /*
+> - * Create device link for NVIDIA GPU with integrated USB xHCI Host
+> + * Create device link for GPUs with integrated USB xHCI Host
+>   * controller to VGA.
+>   */
+>  static void quirk_gpu_usb(struct pci_dev *usb)
+> @@ -5347,9 +5347,11 @@ static void quirk_gpu_usb(struct pci_dev *usb)
 >  }
-> --
-> 2.33.0
->
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_USB, 8, quirk_gpu_usb);
+>  
+>  /*
+> - * Create device link for NVIDIA GPU with integrated Type-C UCSI controller
+> + * Create device link for GPUs with integrated Type-C UCSI controller
+>   * to VGA. Currently there is no class code defined for UCSI device over PCI
+>   * so using UNKNOWN class for now and it will be updated when UCSI
+>   * over PCI gets a class code.
+> @@ -5362,6 +5364,9 @@ static void quirk_gpu_usb_typec_ucsi(struct pci_dev *ucsi)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+>  			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+>  			      quirk_gpu_usb_typec_ucsi);
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+> +			      PCI_CLASS_SERIAL_UNKNOWN, 8,
+> +			      quirk_gpu_usb_typec_ucsi);
+>  
+>  /*
+>   * Enable the NVIDIA GPU integrated HDA controller if the BIOS left it
+> -- 
+> 2.29.0
+> 
