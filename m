@@ -2,119 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE57440CFC8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 01:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5063640D075
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 01:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232733AbhIOXCx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 19:02:53 -0400
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:35425 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231922AbhIOXCw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 19:02:52 -0400
-Received: by mail-lf1-f52.google.com with SMTP id m3so8870412lfu.2
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 16:01:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=26ouncjbdif/NlFpToD8aoYp3QL4ipoKM+I1PaYnEss=;
-        b=WtP9bVNmV/tRZXm/mEBJv71JzCCyZsvZq+T4vhzBZ8kcRJQhJlcsJlOz3c2x3A7BFr
-         4iflNNT8H+P/ODUGMshmSULojQPSJDvet5dcy0u2bj+PpdoQxrla5Kzn+sOgfqFGcKjA
-         Wd64jh4KMspilYYqoXc2lxihQbqISV3Ylw4qQOTvnnfpvekLF0OorRfqwWDgoafEMzCv
-         qVaxTjGNXUqxOaPOLtmeKt5eWzl9GD/qLS4DlVx7vcL23HkbPHo4ehCSt/xVvmykx7fO
-         rSd8twCj5wKijneJO9geRSaNOIoknqN19T8KkgMsYoQVn7N6SuLK+TxSPWwLML6O9Typ
-         vOlA==
-X-Gm-Message-State: AOAM532h9V/M4SIlNjlHzepZJz/S2QcbnQx1wKsxr5GgbO95WO7CBPsu
-        vZwDbpAM6gzGF/1yEeaxfAg=
-X-Google-Smtp-Source: ABdhPJwD2a49I/M0+MHGoSSxmz/EYyLS66FMKWZNMYEG9A1uuBJDucRNcJf4SKqdZbFTSTAcHqClYA==
-X-Received: by 2002:a05:6512:a82:: with SMTP id m2mr1845599lfu.66.1631746892193;
-        Wed, 15 Sep 2021 16:01:32 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id d15sm107386lfn.220.2021.09.15.16.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Sep 2021 16:01:31 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/3] PCI: Don't use the strtobool() wrapper for kstrtobool()
-Date:   Wed, 15 Sep 2021 23:01:27 +0000
-Message-Id: <20210915230127.2495723-3-kw@linux.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210915230127.2495723-1-kw@linux.com>
-References: <20210915230127.2495723-1-kw@linux.com>
+        id S233237AbhIOXsQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 19:48:16 -0400
+Received: from mail.i8u.org ([75.148.87.25]:63648 "EHLO chris.i8u.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232975AbhIOXsQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Sep 2021 19:48:16 -0400
+Received: by chris.i8u.org (Postfix, from userid 1000)
+        id 1609216C94F8; Wed, 15 Sep 2021 16:46:54 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by chris.i8u.org (Postfix) with ESMTP id 147C316C9353;
+        Wed, 15 Sep 2021 16:46:54 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 16:46:54 -0700 (PDT)
+From:   Hisashi T Fujinaka <htodd@twofifty.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Dave Jones <davej@codemonkey.org.uk>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
+In-Reply-To: <20210915223218.GA1542966@bjorn-Precision-5520>
+Message-ID: <e5518a29-efe7-1d84-1671-4dc170f6bc53@twofifty.com>
+References: <20210915223218.GA1542966@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The strtobool() function is a wrapper over the kstrtobool() function
-that has been added for backward compatibility.
+On Wed, 15 Sep 2021, Bjorn Helgaas wrote:
 
-There is no reason to use the old API, thus rather than using the
-wrapper use the kstrtobool() directly.
+> On Wed, Sep 15, 2021 at 09:16:47AM -0700, Hisashi T Fujinaka wrote:
+>> On Wed, 15 Sep 2021, Heiner Kallweit wrote:
+>>> On 15.09.2021 16:18, Hisashi T Fujinaka wrote:
+>>>> On Tue, 14 Sep 2021, Heiner Kallweit wrote:
+>>>>> On 14.09.2021 22:00, Hisashi T Fujinaka wrote:
+>
+>>>>>> I have confirmation that this should be a valid image. The
+>>>>>> VPD is just a series of 3's. There are changes to preboot
+>>>>>> header, flash and BAR size, and as far as I can tell, a
+>>>>>> nonsense subdevice ID, but this should work.
+>>>>>>
+>>>>>> What was the original question?
+>>>>>>
+>>>>> "lspci -vv" complains about an invalid short tag 0x06 and the
+>>>>> PCI VPD code resulted in a stall. So it seems the data doesn't
+>>>>> have valid VPD format as defined in PCI specification.
+>>>>>
+>>>>> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
+>>>>>        Subsystem: Device 1dcf:030a
+>>>>>     ...
+>>>>>             Capabilities: [e0] Vital Product Data
+>>>>>                *Unknown small resource type 06, will not decode more.*
+>>>>>
+>>>>> Not sure which method is used by the driver to get the EEPROM
+>>>>> content.  For the issue here is relevant what is exposed via
+>>>>> PCI VPD.
+>>>>>
+>>>>> The related kernel error message has been reported few times,
+>>>>> e.g. here: https://access.redhat.com/solutions/3001451 Only
+>>>>> due to a change in kernel code this became a more prominent
+>>>>> issue now.
+>>>>>
+>>>>> You say that VPD is just a series of 3's. This may explain why
+>>>>> kernel and tools complain about an invalid VPD format. VPD
+>>>>> misses the tag structure.
+>>>>
+>>>> I think I conflated two issues and yours may not be the one with the
+>>>> weird Amazon NIC. In any case, the VPD does not match the spec and two
+>>>> people have confirmed it's just full of 3's. With the bogus subvendor
+>>>> ID, I'm thinking this is not an Intel NIC.
+>
+> A series of 0x03 0x03 0x03 ... bytes would decode as "small items of
+> type 00", so I assume the VPD contains a series of 0x33 0x33 0x33 ...
+> bytes.  That would decode to a series of "small items of type 06",
+> each of length four (one byte for the tag, three bytes of data).
+>
+> Prior to v5.15, we would complain "invalid short VPD tag 06" and stop
+> reading.  As of v5.15, I think we'll just keep reading looking for a
+> valid "end" tag, but we'll never find one.
+>
+> I think in v5.15 there will be no error message because the series of
+> four-byte small data items happens to fit exactly in the maximum 32KB
+> size of VPD and is technically legal syntactic structure, even though
+> it makes no sense.
+>
+> But it will be much slower and might account for the boot slowdown
+> Dave reported.
+>
+>>> In an earlier mail in this thread was stated that subvendor id is unknown.
+>>> Checking here https://pcisig.com/membership/member-companies?combine=1dcf
+>>> it says: Beijing Sinead Technology Co., Ltd.
+>>
+>> Huh. I didn't realize there was an official list beyond pciids.ucw.cz.
+>>
+>> In any case, that's who you need to talk to about the unlisted (to
+>> Linux) vendor ID and also the odd VPD data.
+>
+> https://pci-ids.ucw.cz/ is definitely unofficial in the sense that it
+> is basically crowd-sourced data, not the "official" Vendor IDs
+> controlled by the PCI SIG.
+>
+> I submitted an addition to https://pci-ids.ucw.cz/
+>
+> Bjorn
 
-Related:
-  commit ef951599074b ("lib: move strtobool() to kstrtobool()")
+Just for my edumacation, do they keep track of device IDs, subvendor IDs
+(which are probably just the same as vendor IDs), and subdevice IDs in
+the PCI SIG? Or even the branding strings?
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/p2pdma.c    | 6 +++---
- drivers/pci/pcie/aspm.c | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 50cdde3e9a8b..4fccdcf9186f 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -943,7 +943,7 @@ EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
-  *
-  * Parses an attribute value to decide whether to enable p2pdma.
-  * The value can select a PCI device (using its full BDF device
-- * name) or a boolean (in any format strtobool() accepts). A false
-+ * name) or a boolean (in any format kstrtobool() accepts). A false
-  * value disables p2pdma, a true value expects the caller
-  * to automatically find a compatible device and specifying a PCI device
-  * expects the caller to use the specific provider.
-@@ -975,11 +975,11 @@ int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
- 	} else if ((page[0] == '0' || page[0] == '1') && !iscntrl(page[1])) {
- 		/*
- 		 * If the user enters a PCI device that  doesn't exist
--		 * like "0000:01:00.1", we don't want strtobool to think
-+		 * like "0000:01:00.1", we don't want kstrtobool to think
- 		 * it's a '0' when it's clearly not what the user wanted.
- 		 * So we require 0's and 1's to be exactly one character.
- 		 */
--	} else if (!strtobool(page, use_p2pdma)) {
-+	} else if (!kstrtobool(page, use_p2pdma)) {
- 		return 0;
- 	}
- 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 013a47f587ce..52c74682601a 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1219,7 +1219,7 @@ static ssize_t aspm_attr_store_common(struct device *dev,
- 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
- 	bool state_enable;
- 
--	if (strtobool(buf, &state_enable) < 0)
-+	if (kstrtobool(buf, &state_enable) < 0)
- 		return -EINVAL;
- 
- 	down_read(&pci_bus_sem);
-@@ -1276,7 +1276,7 @@ static ssize_t clkpm_store(struct device *dev,
- 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
- 	bool state_enable;
- 
--	if (strtobool(buf, &state_enable) < 0)
-+	if (kstrtobool(buf, &state_enable) < 0)
- 		return -EINVAL;
- 
- 	down_read(&pci_bus_sem);
--- 
-2.33.0
-
+Todd Fujinaka <todd.fujinaka@intel.com>
