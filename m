@@ -2,283 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0530040C90C
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 17:55:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA5540C9B5
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 18:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234472AbhIOP4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 11:56:00 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:41446
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234413AbhIOPz7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 11:55:59 -0400
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6C23A402CF
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 15:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1631721279;
-        bh=ueSFxhfWFil0IlgAFMYQeGjlmsHbDXN3YHC8WlG95pA=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=dIG/eA3YTMgGGojLtg6FU8xmRn5Lrk7p4zWOK45hrBzRz5jjAkd5fpFa4n1QCrf19
-         nne76emuKGBMNvWKa5325hAo+Xzgce9K7D4VjgGmMi/dqdKL3MzQvbu5ST1fH1lTi5
-         SHdRu0wmTQpkre6kMFyZ0ZS2WA4nY6MjmoZ6GD/ZN6mDgOzVhEN3zClpsJx3+cM0q5
-         JYQsdmtV3R+rhy2rSmJiuZEyn2P88ds6AOgYnXXGSmwrjcikR9yre7kfU+oCApwEFD
-         XNXh9D7Qmchk6S6AmvNKDDkA8D8AsIe8TJr4tjJVquVjmV7oiE296iRPg+jIfVhtzL
-         +w/FMsejK+usA==
-Received: by mail-ot1-f70.google.com with SMTP id m12-20020a9d400c000000b0051e956d39e7so3045866ote.17
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 08:54:39 -0700 (PDT)
+        id S234234AbhIOQHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 12:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234563AbhIOQHJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 12:07:09 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E089AC061574;
+        Wed, 15 Sep 2021 09:05:49 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id l18-20020a05600c4f1200b002f8cf606262so5218464wmq.1;
+        Wed, 15 Sep 2021 09:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pUEDn+wGVFuZIGgP7SMh1pO9rPToQCJ2HXOPEQfBxeM=;
+        b=kxIkdNsxQCClLdZT44Z1sBKv9y8euz2zes/UaPqWvKSTKO/wlfspE+KVQskDKPWG+G
+         oIoOS8by6DF1EGy6jjy9Vso3/8r3S4ctU39w1RhXJZ6RnV6mx5ofoThii1RfeyGMu8Jw
+         8aLusHRCacWIq5HkP3k+UT2YPpRbjCqnzBDnnI4cD6QqcMI6pBt1CO6msIJVrkMGySz7
+         RjUnEExFYS61wwRp/K5btLBtwzK1m58mnN4CgvEF0omgJw+yESzDITUYzTvWnEP3VphW
+         zp6mUYlUkDh4wO/MZV9PdoW6+KGofORVATctnneoZP1t34ynP0mzN7uEyxMm/lsHORvP
+         YOtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ueSFxhfWFil0IlgAFMYQeGjlmsHbDXN3YHC8WlG95pA=;
-        b=QP/7KdpjYmGj3LC8JhvKgdXUxzJCJE47YmtXRKAgDMWKwhTvc8HwSQlH5pFayM1OFa
-         RCQDbnhyWZ7u1hynG0ydsagVR3FPRrEMDiJqnPTKjACdB/bMiSXdrSjakMXo1V17PYSD
-         2qp+pzD82pZUpH5myiLx8gGR73eoUrZIT8en9LLDCLD3PS99OTWdi12aPEmk+1MylO0W
-         Xh6hkRhnUs+f+GtGySZ8Q8BSpIUqbSjaD8S0d15M2DInvFP5vBefUi7XuKvnvjr7stXm
-         +AN7KDCqhlzwP07tk8j2+9wEAasTQXiDWcEVgWPqd+hHkUFYW4g3iuzdzOtdssFmj9WO
-         VESQ==
-X-Gm-Message-State: AOAM533j/bXC3jSNyTahiJ+8USe2jE8dt/d5yQ5OmamgdLIftICs0u3z
-        0w3TJkYwf2fNY88v6hg9+hqJhelB5nZNrYQ1wynJggDHbQ+oPLjQ07nZf2qtlgyvfhkwPyOssp+
-        K64dxPMmPCIQNi5OaSZFJI8C4o07xnx9pk3wSlZWtGlaZTO1st6bu0Q==
-X-Received: by 2002:a05:6808:1243:: with SMTP id o3mr5780643oiv.146.1631721278077;
-        Wed, 15 Sep 2021 08:54:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyLkAq4LSefU34adzhJIvNH7MiMMnSbs5Q0CRchVTKMxYbv92jyFPoShrmQpnkNQIpzF7YbTxViqbCpqaoSoco=
-X-Received: by 2002:a05:6808:1243:: with SMTP id o3mr5780624oiv.146.1631721277728;
- Wed, 15 Sep 2021 08:54:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pUEDn+wGVFuZIGgP7SMh1pO9rPToQCJ2HXOPEQfBxeM=;
+        b=sKfeShpbpSC9xFgZmdtjaF37rdHYCXEc9z30/mEIY7h5Hqysx9B/+mXIO05GmX8YXN
+         87wB1mY4j7QprFOry8xhDlz1CqwA+J21exSNJTgb3rijJxgNCZo7M+fJcuhunTsBbxNF
+         AvQdVzC//BhvW4SDX27jHc9D+35FNkstYPQ8pp2+jD4ehJKCaLxjLVqm9PGxg+a42lIp
+         NDpxZqk8bMJVpfkKaFN2RwkwDjzYUXj0DXsExS7ZDfp75VIQ5jM8OTuQ1pVMpCY4Cjvv
+         wWHXNY4XMpq184MaL33yBvlRVhSnbIJD0GbW57EyTQtMeeEW9KtxSyayyjFPkA/qO2TZ
+         xuWA==
+X-Gm-Message-State: AOAM533N4weHyKNMreQtCa/F33PloIXeLxGKbxiKWcQ11YE4tw8SB5Am
+        vyvFEJ2pkG6gbbZZW8Z5nHaK2PDbCFg=
+X-Google-Smtp-Source: ABdhPJwq7e9x09s+3oaFDVBVCy7WaLr9skjRUIm4gGsRhnyhhmWNbe2zalWVuWq8F1iJTkXhZG9kzw==
+X-Received: by 2002:a7b:c142:: with SMTP id z2mr5494618wmi.10.1631721948396;
+        Wed, 15 Sep 2021 09:05:48 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f08:4500:619b:3ca6:ce93:7943? (p200300ea8f084500619b3ca6ce937943.dip0.t-ipconnect.de. [2003:ea:8f08:4500:619b:3ca6:ce93:7943])
+        by smtp.googlemail.com with ESMTPSA id j2sm387829wrq.35.2021.09.15.09.05.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Sep 2021 09:05:48 -0700 (PDT)
+Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
+To:     Hisashi T Fujinaka <htodd@twofifty.com>
+Cc:     Dave Jones <davej@codemonkey.org.uk>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com>
+ <20210913141818.GA27911@codemonkey.org.uk>
+ <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com>
+ <20210913201519.GA15726@codemonkey.org.uk>
+ <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
+ <20210913203234.GA6762@codemonkey.org.uk>
+ <b24d81e2-5a1e-3616-5a01-abd58c0712f7@gmail.com>
+ <b4b543d4-c0c5-3c56-46b7-e17ec579edcc@twofifty.com>
+ <367cc748-d411-8cf8-ff95-07715c55e899@gmail.com>
+ <20210914142419.GA32324@codemonkey.org.uk>
+ <c02876d7-c3f3-1953-334d-1248af919796@twofifty.com>
+ <80718d5e-a4d2-ff85-aa8f-cd790c951278@gmail.com>
+ <14f6d9e9-aca8-133-67f5-92effa2ea280@twofifty.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <d49182d6-15fe-15a1-c063-4808942a84c1@gmail.com>
+Date:   Wed, 15 Sep 2021 18:05:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <20210827171452.217123-1-kai.heng.feng@canonical.com>
- <20210827171452.217123-3-kai.heng.feng@canonical.com> <2839f04c-8d7b-b010-f7c4-540359037d38@gmail.com>
-In-Reply-To: <2839f04c-8d7b-b010-f7c4-540359037d38@gmail.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed, 15 Sep 2021 23:54:25 +0800
-Message-ID: <CAAd53p4fih84-jT-gpG+er=piArCR+VNx=Srr51CQyLd4Ogd8A@mail.gmail.com>
-Subject: Re: [RFC] [PATCH net-next v4] [PATCH 2/2] r8169: Implement dynamic
- ASPM mechanism
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     nic_swsd <nic_swsd@realtek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <14f6d9e9-aca8-133-67f5-92effa2ea280@twofifty.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 7, 2021 at 2:03 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> On 27.08.2021 19:14, Kai-Heng Feng wrote:
-> > r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> > Same issue can be observed with older vendor drivers.
-> >
-> > The issue is however solved by the latest vendor driver. There's a new
-> > mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> > more than 10 packets, and vice versa. The possible reason for this is
-> > likely because the buffer on the chip is too small for its ASPM exit
-> > latency.
-> >
-> > Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> > use dynamic ASPM under Windows. So implement the same mechanism here to
-> > resolve the issue.
-> >
-> > Because ASPM control may not be granted by BIOS while ASPM is enabled,
-> > remove aspm_manageable and use pcie_aspm_capable() instead. If BIOS
-> > enables ASPM for the device, we want to enable dynamic ASPM on it.
-> >
-> > In addition, since PCIe ASPM can be switched via sysfs, enable/disable
-> > dynamic ASPM accordingly by checking pcie_aspm_enabled().
-> >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> > v4:
-> >  - Squash two patches
-> >  - Remove aspm_manageable and use pcie_aspm_capable()
-> >    pcie_aspm_enabled() accordingly
-> >
-> > v3:
-> >  - Use msecs_to_jiffies() for delay time
-> >  - Use atomic_t instead of mutex for bh
-> >  - Mention the buffer size and ASPM exit latency in commit message
-> >
-> > v2:
-> >  - Use delayed_work instead of timer_list to avoid interrupt context
-> >  - Use mutex to serialize packet counter read/write
-> >  - Wording change
-> >  drivers/net/ethernet/realtek/r8169_main.c | 77 ++++++++++++++++++++---
-> >  1 file changed, 69 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> > index 46a6ff9a782d7..97dba8f437b78 100644
-> > --- a/drivers/net/ethernet/realtek/r8169_main.c
-> > +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> > @@ -623,7 +623,10 @@ struct rtl8169_private {
-> >       } wk;
-> >
-> >       unsigned supports_gmii:1;
-> > -     unsigned aspm_manageable:1;
-> > +     unsigned rtl_aspm_enabled:1;
-> > +     struct delayed_work aspm_toggle;
-> > +     atomic_t aspm_packet_count;
-> > +
-> >       dma_addr_t counters_phys_addr;
-> >       struct rtl8169_counters *counters;
-> >       struct rtl8169_tc_offsets tc_offset;
-> > @@ -698,6 +701,20 @@ static bool rtl_is_8168evl_up(struct rtl8169_private *tp)
-> >              tp->mac_version <= RTL_GIGA_MAC_VER_53;
-> >  }
-> >
-> > +static int rtl_supports_aspm(struct rtl8169_private *tp)
-> > +{
-> > +     switch (tp->mac_version) {
-> > +     case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_31:
-> > +     case RTL_GIGA_MAC_VER_37:
-> > +     case RTL_GIGA_MAC_VER_39:
-> > +     case RTL_GIGA_MAC_VER_43:
-> > +     case RTL_GIGA_MAC_VER_47:
-> > +             return 0;
-> > +     default:
-> > +             return 1;
-> > +     }
->
-> Why is this needed now that you have pcie_aspm_capable()?
+On 15.09.2021 16:18, Hisashi T Fujinaka wrote:
+> On Tue, 14 Sep 2021, Heiner Kallweit wrote:
+> 
+>> On 14.09.2021 22:00, Hisashi T Fujinaka wrote:
+>>> On Tue, 14 Sep 2021, Dave Jones wrote:
+>>>
+>>>> On Tue, Sep 14, 2021 at 07:51:22AM +0200, Heiner Kallweit wrote:
+>>>>
+>>>>>> Sorry to reply from my personal account. If I did it from my work
+>>>>>> account I'd be top-posting because of Outlook and that goes over like a
+>>>>>> lead balloon.
+>>>>>>
+>>>>>> Anyway, can you send us a dump of your eeprom using ethtool -e? You can
+>>>>>> either send it via a bug on e1000.sourceforge.net or try sending it to
+>>>>>> todd.fujinaka@intel.com
+>>>>>>
+>>>>>> The other thing is I'm wondering is what the subvendor device ID you
+>>>>>> have is referring to because it's not in the pci database. Some ODMs
+>>>>>> like getting creative with what they put in the NVM.
+>>>>>>
+>>>>>> Todd Fujinaka (todd.fujinaka@intel.com)
+>>>>>
+>>>>> Thanks for the prompt reply. Dave, could you please provide the requested
+>>>>> information?
+>>>>
+>>>> sent off-list.
+>>>>
+>>>>     Dave
+>>>
+>>> Whoops. I replied from outlook again.
+>>>
+>>> I have confirmation that this should be a valid image. The VPD is just a
+>>> series of 3's. There are changes to preboot header, flash and BAR size,
+>>> and as far as I can tell, a nonsense subdevice ID, but this should work.
+>>>
+>>> What was the original question?
+>>>
+>> "lspci -vv" complains about an invalid short tag 0x06 and the PCI VPD
+>> code resulted in a stall. So it seems the data doesn't have valid VPD
+>> format as defined in PCI specification.
+>>
+>> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
+>>        Subsystem: Device 1dcf:030a
+>>     ...
+>>             Capabilities: [e0] Vital Product Data
+>>                *Unknown small resource type 06, will not decode more.*
+>>
+>> Not sure which method is used by the driver to get the EEPROM content.
+>> For the issue here is relevant what is exposed via PCI VPD.
+>>
+>> The related kernel error message has been reported few times, e.g. here:
+>> https://access.redhat.com/solutions/3001451
+>> Only due to a change in kernel code this became a more prominent
+>> issue now.
+>>
+>> You say that VPD is just a series of 3's. This may explain why kernel and
+>> tools complain about an invalid VPD format. VPD misses the tag structure.
+> 
+> I think I conflated two issues and yours may not be the one with the
+> weird Amazon NIC. In any case, the VPD does not match the spec and two
+> people have confirmed it's just full of 3's. With the bogus subvendor
+> ID, I'm thinking this is not an Intel NIC.
+> 
+> Next step is to contact whoever made the NIC and ask them for guidance.
+> 
+In an earlier mail in this thread was stated that subvendor id is unknown.
+Checking here https://pcisig.com/membership/member-companies?combine=1dcf
+it says: Beijing Sinead Technology Co., Ltd.
 
-The black list is copied from vendor driver.
-Will remove it in next iteration and hopefully pcie_aspm_capable() is
-sufficient.
+> Todd Fujinaka <todd.fujinaka@intel.com>
 
->
-> > +}
-> > +
-> >  static bool rtl_supports_eee(struct rtl8169_private *tp)
-> >  {
-> >       return tp->mac_version >= RTL_GIGA_MAC_VER_34 &&
-> > @@ -2699,8 +2716,15 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
-> >
-> >  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
-> >  {
-> > +     struct pci_dev *pdev = tp->pci_dev;
-> > +
-> > +     if (!pcie_aspm_enabled(pdev) && enable)
-> > +             return;
-> > +
-> > +     tp->rtl_aspm_enabled = enable;
-> > +
-> >       /* Don't enable ASPM in the chip if OS can't control ASPM */
-> > -     if (enable && tp->aspm_manageable) {
-> > +     if (enable) {
-> >               RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
-> >               RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
-> >       } else {
-> > @@ -4440,6 +4464,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
-> >
-> >       dirty_tx = tp->dirty_tx;
-> >
-> > +     atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
-> >       while (READ_ONCE(tp->cur_tx) != dirty_tx) {
-> >               unsigned int entry = dirty_tx % NUM_TX_DESC;
-> >               u32 status;
-> > @@ -4584,6 +4609,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
-> >               rtl8169_mark_to_asic(desc);
-> >       }
-> >
-> > +     atomic_add(count, &tp->aspm_packet_count);
-> > +
-> >       return count;
-> >  }
-> >
-> > @@ -4691,8 +4718,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
-> >       return 0;
-> >  }
-> >
-> > +#define ASPM_PACKET_THRESHOLD 10
-> > +#define ASPM_TOGGLE_INTERVAL 1000
-> > +
-> > +static void rtl8169_aspm_toggle(struct work_struct *work)
-> > +{
-> > +     struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
-> > +                                               aspm_toggle.work);
-> > +     int packet_count;
-> > +     bool enable;
-> > +
-> > +     packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
-> > +
-> > +     if (pcie_aspm_enabled(tp->pci_dev)) {
-> > +             enable = packet_count <= ASPM_PACKET_THRESHOLD;
-> > +
-> > +             if (tp->rtl_aspm_enabled != enable) {
-> > +                     rtl_unlock_config_regs(tp);
->
-> This looks racy. Another unlock_config_regs/do_something/lock_config_regs
-> can run in parallel. And if such a parallel lock_config_regs is executed
-> exactly here, then rtl_hw_aspm_clkreq_enable() may fail.
-
-Yes this is racy.
-Will add a lock to prevent the race.
-
-Kai-Heng
-
->
-> > +                     rtl_hw_aspm_clkreq_enable(tp, enable);
-> > +                     rtl_lock_config_regs(tp);
-> > +             }
-> > +     } else if (tp->rtl_aspm_enabled) {
-> > +             rtl_unlock_config_regs(tp);
-> > +             rtl_hw_aspm_clkreq_enable(tp, false);
-> > +             rtl_lock_config_regs(tp);
-> > +     }
-> > +
-> > +     schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
-> > +}
-> > +
-> >  static void rtl8169_down(struct rtl8169_private *tp)
-> >  {
-> > +     cancel_delayed_work_sync(&tp->aspm_toggle);
-> > +
-> >       /* Clear all task flags */
-> >       bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
-> >
-> > @@ -4719,6 +4777,11 @@ static void rtl8169_up(struct rtl8169_private *tp)
-> >       rtl_reset_work(tp);
-> >
-> >       phy_start(tp->phydev);
-> > +
-> > +     /* pcie_aspm_capable may change after system resume */
-> > +     if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev) &&
-> > +         rtl_supports_aspm(tp))
-> > +             schedule_delayed_work(&tp->aspm_toggle, 0);
-> >  }
-> >
-> >  static int rtl8169_close(struct net_device *dev)
-> > @@ -5306,12 +5369,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >       if (rc)
-> >               return rc;
-> >
-> > -     /* Disable ASPM L1 as that cause random device stop working
-> > -      * problems as well as full system hangs for some PCIe devices users.
-> > -      */
-> > -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> > -     tp->aspm_manageable = !rc;
-> > -
-> >       /* enable device (incl. PCI PM wakeup and hotplug setup) */
-> >       rc = pcim_enable_device(pdev);
-> >       if (rc < 0) {
-> > @@ -5378,6 +5435,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >
-> >       INIT_WORK(&tp->wk.work, rtl_task);
-> >
-> > +     INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
-> > +
-> > +     atomic_set(&tp->aspm_packet_count, 0);
-> > +
-> >       rtl_init_mac_address(tp);
-> >
-> >       dev->ethtool_ops = &rtl8169_ethtool_ops;
-> >
->
