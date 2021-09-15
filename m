@@ -2,164 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B825C40C401
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 12:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5824D40C407
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 12:55:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232439AbhIOKyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 06:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232424AbhIOKyY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 06:54:24 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017C9C061574;
-        Wed, 15 Sep 2021 03:53:06 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id t26so1382571uao.12;
-        Wed, 15 Sep 2021 03:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2DxLgqizQr0ine5X3cyUxmPBVFhqUQ5aO+j4i2yYfMA=;
-        b=FzAc10Z7baOW+UULCNP6NMSylWwsYs1SFqJwalCSa0FZt44X7kxyQvyLyzxCq5uFNA
-         CRBiA8oZmxnXN2iFDx13gQEwPnpNlz7oZg5XnZSUnRTFR5objRsyr+rpm9PnoUN8w7xp
-         kxICYkm6RgDBcCfVdcPao4yEqC/PT4hbUU8SB3LByiu7UUovu+BQeJUPrWVu6yFY+kWA
-         AhOeKuFLQmfXQQgkL7JGuvn4KfXhrdT5SVPUui9Jlh4J0qfwWPyYPCsW9fb7SxAaweSh
-         1a7G31CR+z6VThE7fbDuSht86+mqbNZ97Pn7wk0ySHn/M1IwwuxY8zW7OH0I6EB5FDZQ
-         Qf4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2DxLgqizQr0ine5X3cyUxmPBVFhqUQ5aO+j4i2yYfMA=;
-        b=ZmZBIAObGkvWSFT8ck5jD1owgURqLrcy4DDwL+GFvgGuvALn7V3R20gRgZp5VsNWk1
-         Q0dHE9DcbQvYl0yuT+jeX8sj7a6pjQJd8h2e5sjKirx0tP4grv9ptBWRHPyJ+RN4Ap39
-         3wBkiRn+LopgkrifPeHtjxFyYbw4J90ppKXds82/H93ZyOrijwX8I5Q3+hYViWLLVgH4
-         4dQfU9Rtho4zMaPXOPm7vl0UWI6HGuQn7z3InH9uvaAUwFh6XiIQyOlSBBhy5KSt5UC7
-         suCkHOktoIySf1qQUqk1vIwQZW8YCq6ej7XHrVuAN/fiXpkJ7aETZehxZgZcQuRUZXtO
-         gpaw==
-X-Gm-Message-State: AOAM532cO/gZ6L4O8LarUZLROLMYhCn74hkimGckP0ChWLMDDTER8crJ
-        FD9UsTcO59My9u8eSyUg9g/66NMtzww7UnW3/fFt6CTS
-X-Google-Smtp-Source: ABdhPJxZRRtKNZ8EBn0tS7fDnEdUnUqirX17Gf6FaiL2W7nVMhhIIDa8PeLu9TBIagExJgt+PaaNg32YcE4KINP/uL8=
-X-Received: by 2002:ab0:72cc:: with SMTP id g12mr7768420uap.98.1631703184983;
- Wed, 15 Sep 2021 03:53:04 -0700 (PDT)
+        id S232424AbhIOK5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 06:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232313AbhIOK5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Sep 2021 06:57:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F46061279;
+        Wed, 15 Sep 2021 10:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631703356;
+        bh=3uN8eoZEpMvqTN9pQVcJIC73LmyfucBzqBXO6hWbINM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kG/H8yoeNfrVhUOIYEBFIvB5KpN7nv9kQkLD5o87J2JsjPTOW2nq6oR9kP9EBlbWi
+         70lEbOS927jyreJzvm+bFaYAGtPDqCHV0cNezsUiD78296K+D31UvPWqac3LIq2+1K
+         MoDlXmcKLsbDyhdNSb+O0hJQx0qoN82IKszx/J8QBYYCfK7MxdMdSJ/aXIcIfhRor7
+         jhEhtUMOL1eiOubKeVf4X45wbJL4iXVwTEIZZbrSNH8P3aO9zTGnGm/5ZWqh39EgJp
+         Jy02fRX5p+cSjWLtCp997gj5PsqxV/IyBiNBg7WNkDKdYPm9Z4UG2UpLEFwWAt/dFS
+         8vPlyeptmbKnw==
+Received: by pali.im (Postfix)
+        id 0EEC45E1; Wed, 15 Sep 2021 12:55:54 +0200 (CEST)
+Date:   Wed, 15 Sep 2021 12:55:53 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Implement re-issuing config requests on
+ CRS response
+Message-ID: <20210915105553.6eaqakvrmag6vxeq@pali>
+References: <20210914204659.hmn22qbwa2fkft7k@pali>
+ <20210914205526.GA1456139@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210822161005.22467-1-sergio.paracuellos@gmail.com> <20210822161005.22467-3-sergio.paracuellos@gmail.com>
-In-Reply-To: <20210822161005.22467-3-sergio.paracuellos@gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Wed, 15 Sep 2021 12:52:53 +0200
-Message-ID: <CAMhs-H-JW1aygOtSeWhRO-VYLVZkbj4Nhohj5r31PspjX3oTcA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] PCI: fix 'pci_remap_iospace' for architectures
- with PCI_IOBASE not defined
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-staging@lists.linux.dev, NeilBrown <neil@brown.name>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210914205526.GA1456139@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Aug 22, 2021 at 6:10 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> Request for I/O resources from device tree call 'pci_remap_iospace' from
-> 'devm_pci_remap_iospace' which is also called from device tree function
-> 'pci_parse_request_of_pci_ranges'. if PCI_IOBASE is not defined and I/O
-> resources are requested the following warning appears:
->
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 1 at ../drivers/pci/pci.c:4066 pci_remap_iospace+0x3c/0x54
-> This architecture does not support memory mapped I/O
-> Modules linked in:
-> CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.10.1+ #1228
-> Stack : 00000000 00000000 807fa974 00000000 827ffa80 80066b48 80710000 0000000b
->         00000000 00000000 81c59aac 7d06ddec 80850000 00000001 81c59a40 7d06ddec
->         00000000 00000000 807c909c 81c598f0 00000001 81c59904 00000000 0000000a
->         203a6d6d 80708880 0000000f 70617773 80850000 00000000 00000000 807d0000
->         807ffecc 1e160000 00000001 00000200 00000000 8054e920 00000008 815e0008
->         ...
-> Call Trace:
-> [<80008efc>] show_stack+0x8c/0x130
-> [<806e1674>] dump_stack+0x9c/0xc8
-> [<80024a3c>] __warn+0xc0/0xe8
-> [<80024ad0>] warn_slowpath_fmt+0x6c/0xbc
-> [<80410ca8>] pci_remap_iospace+0x3c/0x54
-> [<80410d20>] devm_pci_remap_iospace+0x58/0xa4
-> [<8042019c>] devm_of_pci_bridge_init+0x4dc/0x55c
-> [<80408de8>] devm_pci_alloc_host_bridge+0x78/0x88
-> [<80424e44>] mt7621_pci_probe+0x68/0x9a4
-> [<80464804>] platform_drv_probe+0x40/0x7c
-> [<804628bc>] really_probe+0x2fc/0x4e4
-> [<80463214>] device_driver_attach+0x4c/0x74
-> [<80463384>] __driver_attach+0x148/0x150
-> [<8046047c>] bus_for_each_dev+0x6c/0xb0
-> [<804614dc>] bus_add_driver+0x1b4/0x1fc
-> [<80463aa0>] driver_register+0xd0/0x110
-> [<80001714>] do_one_initcall+0x84/0x1c0
-> [<808e7fd0>] kernel_init_freeable+0x214/0x24c
-> [<806e4164>] kernel_init+0x14/0x118
-> [<80003358>] ret_from_kernel_thread+0x14/0x1c
->
-> ---[ end trace 1c9d4412bd51b53c ]---
-> mt7621-pci 1e140000.pcie: error -19: failed to map resource [io  0x1e160000-0x1e16ffff]
->
-> Since there are architectures (like MIPS ralink) that can request I/O
-> resources from device tree but have not mapeable I/O space and also PCI_IOBASE
-> not defined, avoid this warning and just return zero to make the I/O ranges
-> assignment work.
->
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  drivers/pci/pci.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+On Tuesday 14 September 2021 15:55:26 Bjorn Helgaas wrote:
+> On Tue, Sep 14, 2021 at 10:46:59PM +0200, Pali Rohár wrote:
+> > On Tuesday 14 September 2021 15:26:56 Bjorn Helgaas wrote:
+> > > On Mon, Aug 23, 2021 at 02:02:14PM +0200, Pali Rohár wrote:
+> > > > Commit 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value") fixed
+> > > > handling of CRS response and when CRSSVE flag was not enabled it marked CRS
+> > > > response as failed transaction (due to simplicity).
+> > > > 
+> > > > But pci-aardvark.c driver is already waiting up to the PIO_RETRY_CNT count
+> > > > for PIO config response and implementation of re-issuing config requests
+> > > > according to PCIe base specification is therefore simple.
+> > > 
+> > > I think the spec is confusingly worded.  It says (PCIe r5.0, sec
+> > > 2.3.2) that when handling a Completion with CRS status for a config
+> > > request (paraphrasing slightly),
+> > > 
+> > >   If CRS Software Visibility is enabled, for config reads of Vendor
+> > >   ID, the Root Complex returns 0x0001 for Vendor ID.
+> > > 
+> > >   Otherwise ... the Root Complex must re-issue the Configuration
+> > >   Request as a new Request.
+> > > 
+> > > BUT:
+> > > 
+> > >   A Root Complex implementation may choose to limit the number of
+> > >   Configuration Request/ CRS Completion Status loops before
+> > >   determining that something is wrong with the target of the Request
+> > >   and taking appropriate action, e.g., complete the Request to the
+> > >   host as a failed transaction.
+> > > 
+> > > So I think zero is a perfectly valid number of retries, and I'm pretty
+> > > sure there are RCs that never retry.
+> > > 
+> > > Is there a benefit to doing retry like this in the driver?  Can we not
+> > > simply rely on retries at a higher level?
+> > 
+> > I think that all drivers handle 0xFFFFFFFF read response as some kind of
+> > fatal error.
+> 
+> True.
+> 
+> > And because every PCI error is mapped to value 0xFFFFFFFF
+> > it means that higher level has no chance to distinguish easily between
+> > unsupported request and completion retry status.
+> 
+> Also true.  But we don't *want* higher-level code to distinguish
+> these.  The only place we should ever see CRS status is during
+> enumeration and after reset.  Those code paths should look for CRS
+> status and retry as needed.
+> 
+> It is illegal for a device to return CRS after it has returned a
+> successful completion unless an intervening reset has occurred, so
+> drivers and other code should never see it.
+> 
+> > And issue is there also with write requests. Is somebody checking return
+> > value of pci_bus_write_config function?
+> 
+> Similar case here.  The enumeration and wait-after-reset paths always
+> do *reads* until we get a successful completion, so I don't think we
+> ever issue a write that can get CRS.
 
-Hi Bjorn,
+Yes, in normal conditions we should not see it.
 
-Any comments on this patch? Are you ok with this one also going
-through the staging tree like the other two patches in the series?
+But for testing purposes (that emulated bridge works fine) I'm using
+setpci for changing some configuration.
 
-Thanks in advance for your time.
+And via setpci it is possible to turn off CRSSVE bit in which case then
+Root Complex should re-issue request again.
 
-Best regards,
-    Sergio Paracuellos
+I'm not sure how "legal" it is if userspace / setpci changes some of
+these bits. At least on a hardware with a real Root Port device it
+should be fully transparent. As hardware handles this re-issue and
+kernel then would see (reissued) response.
 
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index aacf575c15cf..10bb2191f376 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4102,9 +4102,9 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
->   * @phys_addr: physical address of range to be mapped
->   *
->   * Remap the memory mapped I/O space described by the @res and the CPU
-> - * physical address @phys_addr into virtual address space.  Only
-> - * architectures that have memory mapped IO functions defined (and the
-> - * PCI_IOBASE value defined) should call this function.
-> + * physical address @phys_addr into virtual address space. There
-> + * are architectures that don't define PCI_IOBASE but can have not
-> + * mapeable IO space. Return zero for those cases.
->   */
->  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
->  {
-> @@ -4122,10 +4122,10 @@ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
->  #else
->         /*
->          * This architecture does not have memory mapped I/O space,
-> -        * so this function should never be called
-> +        * but can have not mapeable I/O space, so just return ok
-> +        * here.
->          */
-> -       WARN_ONCE(1, "This architecture does not support memory mapped I/O\n");
-> -       return -ENODEV;
-> +       return 0;
->  #endif
->  }
->  EXPORT_SYMBOL(pci_remap_iospace);
-> --
-> 2.25.1
->
+Test case: Initialize device, then unbind it from sysfs, reset it (hot
+reset or warm reset) and then rescan / reinit it again. Here device is
+permitted to send CRS response.
+
+We know that more PCIe cards are buggy and sometimes firmware on cards
+crashes or resets card logic. Which may put card into initialization
+state when it is again permitted to send CRS response.
+
+> > I guess that zero retry count as you pointed is valid. But it is
+> > something which we want?
+> > 
+> > I sent this patch because implementation of request retry was very
+> > simple. Driver already waits for response, so adding another loop around
+> > it does not increase code complexity.
+> 
+> "Adding a loop does not increase code complexity"?  Well, maybe not
+> MUCH, but it is a little, and the analysis behind it is fairly
+> significant.
+
+I agree, it depends. For somebody it could be a little change which does
+not harm and for somebody else it can be bigger. Maybe I'm biased here
+as I patched pci-aardvark.c code more times and it could mean that patch
+complexity for me is smaller as I know this code.
