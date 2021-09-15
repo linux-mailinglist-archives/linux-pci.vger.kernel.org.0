@@ -2,76 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A14A340BD06
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 03:15:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F12C540BD1D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 03:23:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbhIOBQ5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Sep 2021 21:16:57 -0400
-Received: from mail-lf1-f42.google.com ([209.85.167.42]:35670 "EHLO
-        mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbhIOBQ5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 21:16:57 -0400
-Received: by mail-lf1-f42.google.com with SMTP id m3so621738lfu.2
-        for <linux-pci@vger.kernel.org>; Tue, 14 Sep 2021 18:15:38 -0700 (PDT)
+        id S231607AbhIOBYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Sep 2021 21:24:42 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:39529 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229548AbhIOBYm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Sep 2021 21:24:42 -0400
+Received: by mail-lj1-f169.google.com with SMTP id q21so2184848ljj.6;
+        Tue, 14 Sep 2021 18:23:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XfRXMjtlbOB9hT0VS81uKsSC2Ys4/4M5eqLtzjG70As=;
-        b=T8qr+BIvBFL7Ht28UYD6b9NsJ+VltjXJDw0xDxAO54DZIOO50Z/ewroXGD6WmvtDoo
-         SivmolnJNBIjjW8l94CdD6Qh8bDetITVF8y1Dz4ngm+Tg2ovYfdd+SfrRf3EVxYVD8rX
-         W1jRRl7VeeqRo/IvbgYzXGu8tifsM3jJ7ixb09IiWeh12HHypNoJyZYhsMR8Wyc2QKJy
-         1k3SywaSQ07j43Xf72BQLAai8QB7uLlten0PYqGtDVAXH1EOzjuiyBCso+lfELAWeLCh
-         amkVzmXRQGJCsxWk3FQG7AEzv7uzBEvtBi4s5X6oCZBnFmOI5s3FbjoauXyfadGjaOP1
-         JvWw==
-X-Gm-Message-State: AOAM533AN9gtH8pcmHVxxowiRN/oYsz+rAVuxf66XKvP03/xh/lZMPRo
-        MEqCdSB2QSgxzbw8H46wSdI=
-X-Google-Smtp-Source: ABdhPJyg7dtyki5Bdmx60v9NRMnnXSm+u0S+yKdAG/KRlRDd/+MErwJeSMCyAwxZBEhn22o1BqwDkQ==
-X-Received: by 2002:a05:6512:3991:: with SMTP id j17mr3914214lfu.280.1631668538069;
-        Tue, 14 Sep 2021 18:15:38 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=E5DtuXDkIx/JZIO78nFiru8su07OSjoiOTQuZskOqv4=;
+        b=lbSDgMaY7TeVevm/nbO17L8lRoj3s7WMprCxH/AETv/QDkkexROt5N+aXe8PshY9d0
+         aOTw2Yz81USy/ai870wUqGkOImHDW0eqj3kndIm5vFWHBYoKmsL+HLmF1t5PEWShFaWN
+         U2Xjk4Z8A+TNAzYkM1GdkQN2NveqveAYCmOyx+g4YnRU2NGsfgspbBsvexP6pcqzGJOQ
+         9wXY5Ti8E53KcbaO4TTvfmzepYFb05ZJmVoJLgWWj/5mFTYcn7H94OIxVauQ0VITp4SL
+         UQns4QQoyZQEKr9EzhhWrfwPxVpbP8vORqa4lW2zzBLNIO2jcKKq9ZGPMAW1Nh8fJBA9
+         BQnA==
+X-Gm-Message-State: AOAM533GOqU58+LofESTS5V7cjAkaskvS4yCZPZzlvbil4FlaLj+FoN5
+        ekcX4nM4b4wAqZXlTd+79+p18aK2KLFvDg==
+X-Google-Smtp-Source: ABdhPJzF7iVZCkXFvTvzk1q6t0KOZj+BiZ4WNEH8FwlfgGQ1rFn6sJzZSAWLYvRe0qJIiMWfawLxTA==
+X-Received: by 2002:a2e:988f:: with SMTP id b15mr18426710ljj.454.1631669002597;
+        Tue, 14 Sep 2021 18:23:22 -0700 (PDT)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id a15sm1616653ljb.18.2021.09.14.18.15.37
+        by smtp.gmail.com with ESMTPSA id w9sm1621256ljo.36.2021.09.14.18.23.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Sep 2021 18:15:37 -0700 (PDT)
-Date:   Wed, 15 Sep 2021 03:15:36 +0200
+        Tue, 14 Sep 2021 18:23:21 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 03:23:20 +0200
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/4] PCI/sysfs: Check CAP_SYS_ADMIN before parsing user
- input
-Message-ID: <20210915011536.GB1444093@rocinante>
-References: <20210705212308.3050976-2-kw@linux.com>
- <20210914204014.GA1455147@bjorn-Precision-5520>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Remove redundant initialization of variable rc
+Message-ID: <20210915012320.GC1444093@rocinante>
+References: <20210910161417.91001-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210914204014.GA1455147@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210910161417.91001-1-colin.king@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi Colin,
 
-[...]
-> > Check if the "CAP_SYS_ADMIN" capability flag is set before parsing user
-> > input as it makes more sense to first check whether the current user
-> > actually has the right permissions before accepting any input from such
-> > user.
-> > 
-> > This will also make order in which enable_store() and msi_bus_store()
-> > perform the "CAP_SYS_ADMIN" capability check consistent with other
-> > PCI-related sysfs objects that first verify whether user has this
-> > capability set.
+> The variable rc is being initialized with a value that is never read, it
+> is being updated later on. The assignment is redundant and can be removed.
 > 
-> I like this one.  Can you rebase it to skip patch 1/4 (unless you
-> convince me that 1/4 is safe)?
-
-I will remove it, as per:
-  https://lore.kernel.org/linux-pci/20210915011204.GA1444093@rocinante/T/#t
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..cd8cb94cc450 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5288,7 +5288,7 @@ const struct attribute_group pci_dev_reset_method_attr_group = {
+>   */
+>  int __pci_reset_function_locked(struct pci_dev *dev)
+>  {
+> -	int i, m, rc = -ENOTTY;
+> +	int i, m, rc;
 
 Thank you!
+
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
 	Krzysztof
