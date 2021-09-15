@@ -2,96 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FC9C40C219
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 10:55:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C6F40C423
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 13:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236987AbhIOI44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 04:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232971AbhIOI4z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 04:56:55 -0400
-Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A72EC061764;
-        Wed, 15 Sep 2021 01:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Bl1kBPvSTdMyBIGlR1G5uo2EOo9625GC4vDayfEE9KM=; b=hbtztxsQO9Vp+SLI1WvHgejddq
-        GZPEZ9BE0Fqt8LZxZZDRu2JxwTWZaz/zdZmVPmaANu4SCkHu0oUykIuIEhj1vS+IJ5Eyq/cRauQu5
-        qHWnNXf5OPsrB8eBERg2rXY2fLxKhT3GE40qOB6Fv9eoF/zP7Gq/AVs4p22yjtBo4vJmUIt+MAnAG
-        00QbaybQDGJ+/YNoVcUcJYYPwKu/ABAfqiuAzwN7dNV7KzWf/4Jd/1K/Ny1Sfh9UCUHMTWjQagssh
-        H8fqtif4OzESQXiDU/tNIF43eD5f6SAYEH3APnEQDaCMlfoNF53pdZst/7nQGacuPIsOdJtKPii5P
-        Km9eNREA==;
-Received: from dsl-hkibng22-54f986-236.dhcp.inet.fi ([84.249.134.236] helo=toshino.localdomain)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <mperttunen@nvidia.com>)
-        id 1mQQhR-000101-W0; Wed, 15 Sep 2021 11:55:26 +0300
-From:   Mikko Perttunen <mperttunen@nvidia.com>
-To:     rafael@kernel.org, viresh.kumar@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        krzysztof.kozlowski@canonical.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, p.zabel@pengutronix.de,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org, amitk@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH 5/5] PCI: tegra194: Handle errors in BPMP response
-Date:   Wed, 15 Sep 2021 11:55:17 +0300
-Message-Id: <20210915085517.1669675-5-mperttunen@nvidia.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210915085517.1669675-1-mperttunen@nvidia.com>
-References: <20210915085517.1669675-1-mperttunen@nvidia.com>
+        id S237473AbhIOLKk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 07:10:40 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:15422 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237449AbhIOLKi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 07:10:38 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4H8cnM4RVfzRCCx;
+        Wed, 15 Sep 2021 19:05:11 +0800 (CST)
+Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2308.8; Wed, 15 Sep 2021 19:09:17 +0800
+Received: from localhost.localdomain (10.67.165.2) by
+ dggema757-chm.china.huawei.com (10.1.198.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Wed, 15 Sep 2021 19:09:17 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <zhangshaokun@hisilicon.com>
+Subject: [PATCH v10 0/2]  drivers/perf: hisi: Add support for PCIe PMU
+Date:   Wed, 15 Sep 2021 15:45:22 +0800
+Message-ID: <20210915074524.18040-1-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 84.249.134.236
-X-SA-Exim-Mail-From: mperttunen@nvidia.com
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.2]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggema757-chm.china.huawei.com (10.1.198.199)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The return value from tegra_bpmp_transfer indicates the success or
-failure of the IPC transaction with BPMP. If the transaction
-succeeded, we also need to check the actual command's result code.
-Add code to do this.
+This patchset adds support for HiSilicon PCIe Performance Monitoring
+Unit(PMU). It is a PCIe Root Complex integrated End Point(RCiEP) device
+added on Hip09. Each PCIe Core has a PMU RCiEP to monitor multi root
+ports and all Endpoints downstream these root ports.
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+HiSilicon PCIe PMU is supported to collect performance data of PCIe bus,
+such as: bandwidth, latency etc.
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 904976913081..08afd2e72ec5 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1162,6 +1162,7 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
- 	struct mrq_uphy_response resp;
- 	struct tegra_bpmp_message msg;
- 	struct mrq_uphy_request req;
-+	int err;
- 
- 	/* Controller-5 doesn't need to have its state set by BPMP-FW */
- 	if (pcie->cid == 5)
-@@ -1181,7 +1182,13 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
- 	msg.rx.data = &resp;
- 	msg.rx.size = sizeof(resp);
- 
--	return tegra_bpmp_transfer(pcie->bpmp, &msg);
-+	err = tegra_bpmp_transfer(pcie->bpmp, &msg);
-+	if (err)
-+		return err;
-+	if (msg.rx.ret)
-+		return -EINVAL;
-+
-+	return 0;
- }
- 
- static int tegra_pcie_bpmp_set_pll_state(struct tegra_pcie_dw *pcie,
+Example usage of counting PCIe rx memory write latency::
+
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_latency/
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_cnt/
+  $# perf stat -g -e hisi_pcie0_core0/rx_mwr_latency/ -e hisi_pcie0_core0/rx_mwr_cnt/
+
+average rx memory write latency can be calculated like this:
+  latency = rx_mwr_latency / rx_mwr_cnt.
+
+Common PMU events and metrics will be described in JSON file, and will be add
+in userspace perf tool latter.
+
+Changes since v9:
+- Add check in hisi_pcie_pmu_validate_event_group to count counters accurently .
+- Link: https://lore.kernel.org/linux-arm-kernel/20210818051246.29545-1-liuqi115@huawei.com/
+
+Changes since v8:
+- Remove subevent parameter in attr->config.
+- Check the counter scheduling constraints when accepting an event group.
+- Link: https://lore.kernel.org/linux-arm-kernel/20210728080932.72515-1-liuqi115@huawei.com/
+
+Changes since v7:
+- Drop headerfile cpumask.h and cpuhotplug.h.
+- Rename events in perf list: bw->flux, lat->delay, as driver doesn't
+  process bandwidth and average latency data.
+- Link: https://lore.kernel.org/linux-arm-kernel/1624532384-43002-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v6:
+- Move the driver to drivers/perf/hisilicon.
+- Treat content in PMU counter and ext_counter as different PMU events, and
+  export them separately.
+- Address the comments from Will and Krzysztof.
+- Link: https://lore.kernel.org/linux-arm-kernel/1622467951-32114-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v5:
+- Fix some errors when build under ARCH=xtensa.
+- Link: https://lore.kernel.org/linux-arm-kernel/1621946795-14046-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v4:
+- Replace irq_set_affinity_hint() with irq_set_affinity().
+- Link: https://lore.kernel.org/linux-arm-kernel/1621417741-5229-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v3:
+- Fix some warnings when build under 32bits architecture.
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1618490885-44612-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v2:
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617959157-22956-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v1:
+- Drop the internal Reviewed-by tag.
+- Fix some build warnings when W=1.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617788943-52722-1-git-send-email-liuqi115@huawei.com/
+
+
+Qi Liu (2):
+  docs: perf: Add description for HiSilicon PCIe PMU driver
+  drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
+
+ .../admin-guide/perf/hisi-pcie-pmu.rst        | 106 ++
+ MAINTAINERS                                   |   2 +
+ drivers/perf/hisilicon/Kconfig                |   9 +
+ drivers/perf/hisilicon/Makefile               |   2 +
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 985 ++++++++++++++++++
+ include/linux/cpuhotplug.h                    |   1 +
+ 6 files changed, 1105 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+ create mode 100644 drivers/perf/hisilicon/hisi_pcie_pmu.c
+
 -- 
-2.32.0
+2.33.0
 
