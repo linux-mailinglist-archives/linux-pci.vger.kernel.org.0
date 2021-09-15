@@ -2,17 +2,17 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58A5F40C21E
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 10:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FC9C40C219
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 10:55:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbhIOI45 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 04:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39082 "EHLO
+        id S236987AbhIOI44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 04:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232929AbhIOI4z (ORCPT
+        with ESMTP id S232971AbhIOI4z (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 04:56:55 -0400
 Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AC1C061766;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A72EC061764;
         Wed, 15 Sep 2021 01:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
          s=20161220; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
@@ -20,17 +20,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=Nj98s3EHUx3iqSgi/bRE9TqLMNdwT/CPsJyFopIdi7s=; b=eRhSKVaX/dw5hjme5k8oHXopY6
-        46Wy+9J78T8H0iB3hHUiAIHDkfgCWrmfL0Dc5q/OZwwxgczw0y/l9YjFvXcU2az8IvzoUSdJTFC1V
-        GWDzz/ShDiWYfr4us5Xs3sDJGGwWnZouUib9D6+EkbbX8xgA/QC+ckOy+oBzDTTbt4FG885Xw22cm
-        U6JKNSp0vN9W19lBSFOJoqmqn746GbXPdCu+421UwXQitdyby96ueJzp+I9Esz7VHzvIm3LR78u76
-        V2Aw035ozcu6R38Sm8Bqi+eOEEnpH8RjmnzEz0k2cR9F3NSEnBj9CInXt0Sz0Kbm5bhRLa0hQ/Gu8
-        AhE+TB8A==;
+        bh=Bl1kBPvSTdMyBIGlR1G5uo2EOo9625GC4vDayfEE9KM=; b=hbtztxsQO9Vp+SLI1WvHgejddq
+        GZPEZ9BE0Fqt8LZxZZDRu2JxwTWZaz/zdZmVPmaANu4SCkHu0oUykIuIEhj1vS+IJ5Eyq/cRauQu5
+        qHWnNXf5OPsrB8eBERg2rXY2fLxKhT3GE40qOB6Fv9eoF/zP7Gq/AVs4p22yjtBo4vJmUIt+MAnAG
+        00QbaybQDGJ+/YNoVcUcJYYPwKu/ABAfqiuAzwN7dNV7KzWf/4Jd/1K/Ny1Sfh9UCUHMTWjQagssh
+        H8fqtif4OzESQXiDU/tNIF43eD5f6SAYEH3APnEQDaCMlfoNF53pdZst/7nQGacuPIsOdJtKPii5P
+        Km9eNREA==;
 Received: from dsl-hkibng22-54f986-236.dhcp.inet.fi ([84.249.134.236] helo=toshino.localdomain)
         by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <mperttunen@nvidia.com>)
-        id 1mQQhR-000101-SY; Wed, 15 Sep 2021 11:55:25 +0300
+        id 1mQQhR-000101-W0; Wed, 15 Sep 2021 11:55:26 +0300
 From:   Mikko Perttunen <mperttunen@nvidia.com>
 To:     rafael@kernel.org, viresh.kumar@linaro.org,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
@@ -40,9 +40,9 @@ To:     rafael@kernel.org, viresh.kumar@linaro.org,
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH 4/5] cpufreq: tegra186/tegra194: Handle errors in BPMP response
-Date:   Wed, 15 Sep 2021 11:55:16 +0300
-Message-Id: <20210915085517.1669675-4-mperttunen@nvidia.com>
+Subject: [PATCH 5/5] PCI: tegra194: Handle errors in BPMP response
+Date:   Wed, 15 Sep 2021 11:55:17 +0300
+Message-Id: <20210915085517.1669675-5-mperttunen@nvidia.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210915085517.1669675-1-mperttunen@nvidia.com>
 References: <20210915085517.1669675-1-mperttunen@nvidia.com>
@@ -60,57 +60,38 @@ failure of the IPC transaction with BPMP. If the transaction
 succeeded, we also need to check the actual command's result code.
 Add code to do this.
 
-While at it, explicitly handle missing CPU clusters, which can
-occur on floorswept chips. This worked before as well, but
-possibly only by accident.
-
 Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 ---
- drivers/cpufreq/tegra186-cpufreq.c | 4 ++++
- drivers/cpufreq/tegra194-cpufreq.c | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
-index 5d1943e787b0..6c88827f4e62 100644
---- a/drivers/cpufreq/tegra186-cpufreq.c
-+++ b/drivers/cpufreq/tegra186-cpufreq.c
-@@ -159,6 +159,10 @@ static struct cpufreq_frequency_table *init_vhint_table(
- 		table = ERR_PTR(err);
- 		goto free;
- 	}
-+	if (msg.rx.ret) {
-+		table = ERR_PTR(-EINVAL);
-+		goto free;
-+	}
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 904976913081..08afd2e72ec5 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1162,6 +1162,7 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+ 	struct mrq_uphy_response resp;
+ 	struct tegra_bpmp_message msg;
+ 	struct mrq_uphy_request req;
++	int err;
  
- 	for (i = data->vfloor; i <= data->vceil; i++) {
- 		u16 ndiv = data->ndiv[i];
-diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
-index a9620e4489ae..ac381db25dbe 100644
---- a/drivers/cpufreq/tegra194-cpufreq.c
-+++ b/drivers/cpufreq/tegra194-cpufreq.c
-@@ -242,7 +242,7 @@ static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+ 	/* Controller-5 doesn't need to have its state set by BPMP-FW */
+ 	if (pcie->cid == 5)
+@@ -1181,7 +1182,13 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+ 	msg.rx.data = &resp;
+ 	msg.rx.size = sizeof(resp);
  
- 	smp_call_function_single(policy->cpu, get_cpu_cluster, &cl, true);
- 
--	if (cl >= data->num_clusters)
-+	if (cl >= data->num_clusters || !data->tables[cl])
- 		return -EINVAL;
- 
- 	/* set same policy for all cpus in a cluster */
-@@ -310,6 +310,12 @@ init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
- 	err = tegra_bpmp_transfer(bpmp, &msg);
- 	if (err)
- 		return ERR_PTR(err);
-+	if (msg.rx.ret == -BPMP_EINVAL) {
-+		/* Cluster not available */
-+		return NULL;
-+	}
+-	return tegra_bpmp_transfer(pcie->bpmp, &msg);
++	err = tegra_bpmp_transfer(pcie->bpmp, &msg);
++	if (err)
++		return err;
 +	if (msg.rx.ret)
-+		return ERR_PTR(-EINVAL);
++		return -EINVAL;
++
++	return 0;
+ }
  
- 	/*
- 	 * Make sure frequency table step is a multiple of mdiv to match
+ static int tegra_pcie_bpmp_set_pll_state(struct tegra_pcie_dw *pcie,
 -- 
 2.32.0
 
