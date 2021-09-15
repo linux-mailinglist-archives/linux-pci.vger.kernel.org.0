@@ -2,147 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5824D40C407
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 12:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C18340C74B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 16:19:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbhIOK5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 06:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37552 "EHLO mail.kernel.org"
+        id S238050AbhIOOUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 10:20:20 -0400
+Received: from mail.i8u.org ([75.148.87.25]:64226 "EHLO chris.i8u.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232313AbhIOK5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Sep 2021 06:57:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F46061279;
-        Wed, 15 Sep 2021 10:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631703356;
-        bh=3uN8eoZEpMvqTN9pQVcJIC73LmyfucBzqBXO6hWbINM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kG/H8yoeNfrVhUOIYEBFIvB5KpN7nv9kQkLD5o87J2JsjPTOW2nq6oR9kP9EBlbWi
-         70lEbOS927jyreJzvm+bFaYAGtPDqCHV0cNezsUiD78296K+D31UvPWqac3LIq2+1K
-         MoDlXmcKLsbDyhdNSb+O0hJQx0qoN82IKszx/J8QBYYCfK7MxdMdSJ/aXIcIfhRor7
-         jhEhtUMOL1eiOubKeVf4X45wbJL4iXVwTEIZZbrSNH8P3aO9zTGnGm/5ZWqh39EgJp
-         Jy02fRX5p+cSjWLtCp997gj5PsqxV/IyBiNBg7WNkDKdYPm9Z4UG2UpLEFwWAt/dFS
-         8vPlyeptmbKnw==
-Received: by pali.im (Postfix)
-        id 0EEC45E1; Wed, 15 Sep 2021 12:55:54 +0200 (CEST)
-Date:   Wed, 15 Sep 2021 12:55:53 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Implement re-issuing config requests on
- CRS response
-Message-ID: <20210915105553.6eaqakvrmag6vxeq@pali>
-References: <20210914204659.hmn22qbwa2fkft7k@pali>
- <20210914205526.GA1456139@bjorn-Precision-5520>
+        id S238123AbhIOOUT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Sep 2021 10:20:19 -0400
+Received: by chris.i8u.org (Postfix, from userid 1000)
+        id 5F09C16C9432; Wed, 15 Sep 2021 07:18:56 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by chris.i8u.org (Postfix) with ESMTP id 5BCE716C92E7;
+        Wed, 15 Sep 2021 07:18:56 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 07:18:56 -0700 (PDT)
+From:   Hisashi T Fujinaka <htodd@twofifty.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+cc:     Dave Jones <davej@codemonkey.org.uk>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
+In-Reply-To: <80718d5e-a4d2-ff85-aa8f-cd790c951278@gmail.com>
+Message-ID: <14f6d9e9-aca8-133-67f5-92effa2ea280@twofifty.com>
+References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com> <20210913141818.GA27911@codemonkey.org.uk> <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com> <20210913201519.GA15726@codemonkey.org.uk> <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
+ <20210913203234.GA6762@codemonkey.org.uk> <b24d81e2-5a1e-3616-5a01-abd58c0712f7@gmail.com> <b4b543d4-c0c5-3c56-46b7-e17ec579edcc@twofifty.com> <367cc748-d411-8cf8-ff95-07715c55e899@gmail.com> <20210914142419.GA32324@codemonkey.org.uk>
+ <c02876d7-c3f3-1953-334d-1248af919796@twofifty.com> <80718d5e-a4d2-ff85-aa8f-cd790c951278@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210914205526.GA1456139@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 14 September 2021 15:55:26 Bjorn Helgaas wrote:
-> On Tue, Sep 14, 2021 at 10:46:59PM +0200, Pali Rohár wrote:
-> > On Tuesday 14 September 2021 15:26:56 Bjorn Helgaas wrote:
-> > > On Mon, Aug 23, 2021 at 02:02:14PM +0200, Pali Rohár wrote:
-> > > > Commit 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value") fixed
-> > > > handling of CRS response and when CRSSVE flag was not enabled it marked CRS
-> > > > response as failed transaction (due to simplicity).
-> > > > 
-> > > > But pci-aardvark.c driver is already waiting up to the PIO_RETRY_CNT count
-> > > > for PIO config response and implementation of re-issuing config requests
-> > > > according to PCIe base specification is therefore simple.
-> > > 
-> > > I think the spec is confusingly worded.  It says (PCIe r5.0, sec
-> > > 2.3.2) that when handling a Completion with CRS status for a config
-> > > request (paraphrasing slightly),
-> > > 
-> > >   If CRS Software Visibility is enabled, for config reads of Vendor
-> > >   ID, the Root Complex returns 0x0001 for Vendor ID.
-> > > 
-> > >   Otherwise ... the Root Complex must re-issue the Configuration
-> > >   Request as a new Request.
-> > > 
-> > > BUT:
-> > > 
-> > >   A Root Complex implementation may choose to limit the number of
-> > >   Configuration Request/ CRS Completion Status loops before
-> > >   determining that something is wrong with the target of the Request
-> > >   and taking appropriate action, e.g., complete the Request to the
-> > >   host as a failed transaction.
-> > > 
-> > > So I think zero is a perfectly valid number of retries, and I'm pretty
-> > > sure there are RCs that never retry.
-> > > 
-> > > Is there a benefit to doing retry like this in the driver?  Can we not
-> > > simply rely on retries at a higher level?
-> > 
-> > I think that all drivers handle 0xFFFFFFFF read response as some kind of
-> > fatal error.
-> 
-> True.
-> 
-> > And because every PCI error is mapped to value 0xFFFFFFFF
-> > it means that higher level has no chance to distinguish easily between
-> > unsupported request and completion retry status.
-> 
-> Also true.  But we don't *want* higher-level code to distinguish
-> these.  The only place we should ever see CRS status is during
-> enumeration and after reset.  Those code paths should look for CRS
-> status and retry as needed.
-> 
-> It is illegal for a device to return CRS after it has returned a
-> successful completion unless an intervening reset has occurred, so
-> drivers and other code should never see it.
-> 
-> > And issue is there also with write requests. Is somebody checking return
-> > value of pci_bus_write_config function?
-> 
-> Similar case here.  The enumeration and wait-after-reset paths always
-> do *reads* until we get a successful completion, so I don't think we
-> ever issue a write that can get CRS.
+On Tue, 14 Sep 2021, Heiner Kallweit wrote:
 
-Yes, in normal conditions we should not see it.
+> On 14.09.2021 22:00, Hisashi T Fujinaka wrote:
+>> On Tue, 14 Sep 2021, Dave Jones wrote:
+>>
+>>> On Tue, Sep 14, 2021 at 07:51:22AM +0200, Heiner Kallweit wrote:
+>>>
+>>>>> Sorry to reply from my personal account. If I did it from my work
+>>>>> account I'd be top-posting because of Outlook and that goes over like a
+>>>>> lead balloon.
+>>>>>
+>>>>> Anyway, can you send us a dump of your eeprom using ethtool -e? You can
+>>>>> either send it via a bug on e1000.sourceforge.net or try sending it to
+>>>>> todd.fujinaka@intel.com
+>>>>>
+>>>>> The other thing is I'm wondering is what the subvendor device ID you
+>>>>> have is referring to because it's not in the pci database. Some ODMs
+>>>>> like getting creative with what they put in the NVM.
+>>>>>
+>>>>> Todd Fujinaka (todd.fujinaka@intel.com)
+>>>>
+>>>> Thanks for the prompt reply. Dave, could you please provide the requested
+>>>> information?
+>>>
+>>> sent off-list.
+>>>
+>>>     Dave
+>>
+>> Whoops. I replied from outlook again.
+>>
+>> I have confirmation that this should be a valid image. The VPD is just a
+>> series of 3's. There are changes to preboot header, flash and BAR size,
+>> and as far as I can tell, a nonsense subdevice ID, but this should work.
+>>
+>> What was the original question?
+>>
+> "lspci -vv" complains about an invalid short tag 0x06 and the PCI VPD
+> code resulted in a stall. So it seems the data doesn't have valid VPD
+> format as defined in PCI specification.
+>
+> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
+>        Subsystem: Device 1dcf:030a
+> 	...
+> 	        Capabilities: [e0] Vital Product Data
+>                *Unknown small resource type 06, will not decode more.*
+>
+> Not sure which method is used by the driver to get the EEPROM content.
+> For the issue here is relevant what is exposed via PCI VPD.
+>
+> The related kernel error message has been reported few times, e.g. here:
+> https://access.redhat.com/solutions/3001451
+> Only due to a change in kernel code this became a more prominent
+> issue now.
+>
+> You say that VPD is just a series of 3's. This may explain why kernel and
+> tools complain about an invalid VPD format. VPD misses the tag structure.
 
-But for testing purposes (that emulated bridge works fine) I'm using
-setpci for changing some configuration.
+I think I conflated two issues and yours may not be the one with the
+weird Amazon NIC. In any case, the VPD does not match the spec and two
+people have confirmed it's just full of 3's. With the bogus subvendor
+ID, I'm thinking this is not an Intel NIC.
 
-And via setpci it is possible to turn off CRSSVE bit in which case then
-Root Complex should re-issue request again.
+Next step is to contact whoever made the NIC and ask them for guidance.
 
-I'm not sure how "legal" it is if userspace / setpci changes some of
-these bits. At least on a hardware with a real Root Port device it
-should be fully transparent. As hardware handles this re-issue and
-kernel then would see (reissued) response.
-
-Test case: Initialize device, then unbind it from sysfs, reset it (hot
-reset or warm reset) and then rescan / reinit it again. Here device is
-permitted to send CRS response.
-
-We know that more PCIe cards are buggy and sometimes firmware on cards
-crashes or resets card logic. Which may put card into initialization
-state when it is again permitted to send CRS response.
-
-> > I guess that zero retry count as you pointed is valid. But it is
-> > something which we want?
-> > 
-> > I sent this patch because implementation of request retry was very
-> > simple. Driver already waits for response, so adding another loop around
-> > it does not increase code complexity.
-> 
-> "Adding a loop does not increase code complexity"?  Well, maybe not
-> MUCH, but it is a little, and the analysis behind it is fairly
-> significant.
-
-I agree, it depends. For somebody it could be a little change which does
-not harm and for somebody else it can be bigger. Maybe I'm biased here
-as I patched pci-aardvark.c code more times and it could mean that patch
-complexity for me is smaller as I know this code.
+Todd Fujinaka <todd.fujinaka@intel.com>
