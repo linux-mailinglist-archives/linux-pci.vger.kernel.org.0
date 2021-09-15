@@ -2,116 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 683EA40C9E8
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 18:16:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CF640CA23
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Sep 2021 18:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbhIOQSJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 12:18:09 -0400
-Received: from mail.i8u.org ([75.148.87.25]:64119 "EHLO chris.i8u.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229506AbhIOQSI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 15 Sep 2021 12:18:08 -0400
-Received: by chris.i8u.org (Postfix, from userid 1000)
-        id 5B6FD16C94F8; Wed, 15 Sep 2021 09:16:47 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by chris.i8u.org (Postfix) with ESMTP id 59A6116C926A;
-        Wed, 15 Sep 2021 09:16:47 -0700 (PDT)
-Date:   Wed, 15 Sep 2021 09:16:47 -0700 (PDT)
-From:   Hisashi T Fujinaka <htodd@twofifty.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-cc:     Dave Jones <davej@codemonkey.org.uk>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
-In-Reply-To: <d49182d6-15fe-15a1-c063-4808942a84c1@gmail.com>
-Message-ID: <1eba46af-e9d1-36aa-4bb7-9968b92a932f@twofifty.com>
-References: <CAHk-=wgbygOb3hRV+7YOpVcMPTP2oQ=iw6tf09Ydspg7o7BsWQ@mail.gmail.com> <20210913141818.GA27911@codemonkey.org.uk> <ab571d7e-0cf5-ffb3-6bbe-478a4ed749dc@gmail.com> <20210913201519.GA15726@codemonkey.org.uk> <b84b799d-0aaa-c4e1-b61b-8e2316b62bd1@gmail.com>
- <20210913203234.GA6762@codemonkey.org.uk> <b24d81e2-5a1e-3616-5a01-abd58c0712f7@gmail.com> <b4b543d4-c0c5-3c56-46b7-e17ec579edcc@twofifty.com> <367cc748-d411-8cf8-ff95-07715c55e899@gmail.com> <20210914142419.GA32324@codemonkey.org.uk>
- <c02876d7-c3f3-1953-334d-1248af919796@twofifty.com> <80718d5e-a4d2-ff85-aa8f-cd790c951278@gmail.com> <14f6d9e9-aca8-133-67f5-92effa2ea280@twofifty.com> <d49182d6-15fe-15a1-c063-4808942a84c1@gmail.com>
+        id S229672AbhIOQeD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 12:34:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58236 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229652AbhIOQeC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 12:34:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631723563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YHkGOnRH445M1d9hLlLUWfMXPA2J8M8wItfcEOw5gl8=;
+        b=H58BILloeWUdLpi3dd7EBmiqxZsj2HXtYwWSd3C8+n1JV5kw7QDn1pdM3itUYYoYr+RfBy
+        on3W8H97vqljaH3pPsw3d/bCRXHP0sMfGbJqvUPivIQd0PqMRbzLI2hE7pypQ+ezHL0npC
+        4ASfoYSkzrt7AaIR1B8FksBPj5BXSQ4=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-557-ZhpAxA3KMXirI_7NoDFo6Q-1; Wed, 15 Sep 2021 12:32:42 -0400
+X-MC-Unique: ZhpAxA3KMXirI_7NoDFo6Q-1
+Received: by mail-oi1-f197.google.com with SMTP id bj30-20020a056808199e00b0026889aaacbfso3522980oib.2
+        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 09:32:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YHkGOnRH445M1d9hLlLUWfMXPA2J8M8wItfcEOw5gl8=;
+        b=iaUazLEgnH4NJiB2TnhvKZdMhH1TuTdK/XB3ybtnaE1yIh+1XU66nOQBlsFkQnYSTo
+         BjFlYV0B2lVcXPjYLkeUkaqKhSDW1+S56Hq4GDhZl4jQxm9TBZILSqvhywiE//PXDqXD
+         7gpuDV5JwF11tvw+VaQGn2Acm7EgL08B9nHXRCZAJhWPQCrVftj4gYX22ZwH6DF3yRYy
+         lcdV1H5s7qMejznFJpKyJE+0E9aDSTa9Cuxf91vMKAcFEsgIblgIt0EbqoERCls+c4nr
+         3LOL2X0QOgeUWnrrYluW5/Fa8XrbGuSlxCa3//B+TjorUoXGpqRqxKiPsg4xPJzrOZpJ
+         rjaQ==
+X-Gm-Message-State: AOAM532LPdqcwFsqlUXTwnbb4JEm8o3c+ZXh4v5z1SMV221GAwzBm1lH
+        DFde4LmiKeI8b6H4K4xBjhHxBpRMBybfNDZdEX5GL4a2iemW6bMmTSwzA9ZUJyPJvmtVgmPvQdL
+        rf/G9cMckcBDDX1VxDyZ1
+X-Received: by 2002:a9d:6398:: with SMTP id w24mr777168otk.140.1631723557704;
+        Wed, 15 Sep 2021 09:32:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyEqEMq5Emx3QGBfkQ0rbyCrZIePE3tj2f7Z2WEi4Rv/KLV4WT4gXmfCPEt+bUaapt3BePG7Q==
+X-Received: by 2002:a9d:6398:: with SMTP id w24mr777147otk.140.1631723557449;
+        Wed, 15 Sep 2021 09:32:37 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id q131sm122216oif.44.2021.09.15.09.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Sep 2021 09:32:37 -0700 (PDT)
+Date:   Wed, 15 Sep 2021 10:32:35 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Ruffell <matthew.ruffell@canonical.com>
+Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
+Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
+ through 2x GPUs that share same pci switch via vfio
+Message-ID: <20210915103235.097202d2.alex.williamson@redhat.com>
+In-Reply-To: <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
+References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
+        <20210914104301.48270518.alex.williamson@redhat.com>
+        <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Sep 2021, Heiner Kallweit wrote:
+On Wed, 15 Sep 2021 16:44:38 +1200
+Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
+> On 15/09/21 4:43 am, Alex Williamson wrote:
+> > 
+> > FWIW, I have access to a system with an NVIDIA K1 and M60, both use
+> > this same switch on-card and I've not experienced any issues assigning
+> > all the GPUs to a single VM.  Topo:
+> > 
+> >  +-[0000:40]-+-02.0-[42-47]----00.0-[43-47]--+-08.0-[44]----00.0
+> >  |                                           +-09.0-[45]----00.0
+> >  |                                           +-10.0-[46]----00.0
+> >  |                                           \-11.0-[47]----00.0
+> >  \-[0000:00]-+-03.0-[04-07]----00.0-[05-07]--+-08.0-[06]----00.0
+> >                                              \-10.0-[07]----00.0
 
-> On 15.09.2021 16:18, Hisashi T Fujinaka wrote:
->> On Tue, 14 Sep 2021, Heiner Kallweit wrote:
->>
->>> On 14.09.2021 22:00, Hisashi T Fujinaka wrote:
->>>> On Tue, 14 Sep 2021, Dave Jones wrote:
->>>>
->>>>> On Tue, Sep 14, 2021 at 07:51:22AM +0200, Heiner Kallweit wrote:
->>>>>
->>>>>>> Sorry to reply from my personal account. If I did it from my work
->>>>>>> account I'd be top-posting because of Outlook and that goes over like a
->>>>>>> lead balloon.
->>>>>>>
->>>>>>> Anyway, can you send us a dump of your eeprom using ethtool -e? You can
->>>>>>> either send it via a bug on e1000.sourceforge.net or try sending it to
->>>>>>> todd.fujinaka@intel.com
->>>>>>>
->>>>>>> The other thing is I'm wondering is what the subvendor device ID you
->>>>>>> have is referring to because it's not in the pci database. Some ODMs
->>>>>>> like getting creative with what they put in the NVM.
->>>>>>>
->>>>>>> Todd Fujinaka (todd.fujinaka@intel.com)
->>>>>>
->>>>>> Thanks for the prompt reply. Dave, could you please provide the requested
->>>>>> information?
->>>>>
->>>>> sent off-list.
->>>>>
->>>>>     Dave
->>>>
->>>> Whoops. I replied from outlook again.
->>>>
->>>> I have confirmation that this should be a valid image. The VPD is just a
->>>> series of 3's. There are changes to preboot header, flash and BAR size,
->>>> and as far as I can tell, a nonsense subdevice ID, but this should work.
->>>>
->>>> What was the original question?
->>>>
->>> "lspci -vv" complains about an invalid short tag 0x06 and the PCI VPD
->>> code resulted in a stall. So it seems the data doesn't have valid VPD
->>> format as defined in PCI specification.
->>>
->>> 01:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
->>>        Subsystem: Device 1dcf:030a
->>>     ...
->>>             Capabilities: [e0] Vital Product Data
->>>                *Unknown small resource type 06, will not decode more.*
->>>
->>> Not sure which method is used by the driver to get the EEPROM content.
->>> For the issue here is relevant what is exposed via PCI VPD.
->>>
->>> The related kernel error message has been reported few times, e.g. here:
->>> https://access.redhat.com/solutions/3001451
->>> Only due to a change in kernel code this became a more prominent
->>> issue now.
->>>
->>> You say that VPD is just a series of 3's. This may explain why kernel and
->>> tools complain about an invalid VPD format. VPD misses the tag structure.
->>
->> I think I conflated two issues and yours may not be the one with the
->> weird Amazon NIC. In any case, the VPD does not match the spec and two
->> people have confirmed it's just full of 3's. With the bogus subvendor
->> ID, I'm thinking this is not an Intel NIC.
->>
->> Next step is to contact whoever made the NIC and ask them for guidance.
->>
-> In an earlier mail in this thread was stated that subvendor id is unknown.
-> Checking here https://pcisig.com/membership/member-companies?combine=1dcf
-> it says: Beijing Sinead Technology Co., Ltd.
 
-Huh. I didn't realize there was an official list beyond pciids.ucw.cz.
+I've actually found that the above configuration, assigning all 6 GPUs
+to a VM reproduces this pretty readily by simply rebooting the VM.  In
+my case, I don't have the panic-on-warn/oops that must be set on your
+kernel, so the result is far more benign, the IRQ gets masked until
+it's re-registered.
 
-In any case, that's who you need to talk to about the unlisted (to
-Linux) vendor ID and also the odd VPD data.
+The fact that my upstream ports are using MSI seems irrelevant.
 
--- 
-Hisashi T Fujinaka - htodd@twofifty.com
-BSEE + BSChem + BAEnglish + MSCS + $2.50 = coffee
+Adding debugging to the vfio-pci interrupt handler, it's correctly
+deferring the interrupt as the GPU device is not identifying itself as
+the source of the interrupt via the status register.  In fact, setting
+the disable INTx bit in the GPU command register while the interrupt
+storm occurs does not stop the interrupts.
+
+The interrupt storm does seem to be related to the bus resets, but I
+can't figure out yet how multiple devices per switch factors into the
+issue.  Serializing all bus resets via a mutex doesn't seem to change
+the behavior.
+
+I'm still investigating, but if anyone knows how to get access to the
+Broadcom datasheet or errata for this switch, please let me know.
+Thanks,
+
+Alex
+
