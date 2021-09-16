@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E8D40D51E
+	by mail.lfdr.de (Postfix) with ESMTP id C64D340D520
 	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 10:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235416AbhIPIxe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 04:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
+        id S235374AbhIPIxf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 04:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235398AbhIPIxd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 04:53:33 -0400
+        with ESMTP id S235334AbhIPIxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 04:53:34 -0400
 Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FFBFC061574;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B85C061574;
         Thu, 16 Sep 2021 01:52:13 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id v22so9781075edd.11;
+Received: by mail-ed1-x533.google.com with SMTP id t6so13945937edi.9;
         Thu, 16 Sep 2021 01:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j8T7HGGnetyv+ccrok96ONK9Emz86upX7TCAIvuw9K0=;
-        b=qzWHHoKWiKeL+WqI56L4EhADlfpp30c0bQ22pTBCX7DJJr1vL9uMNyzMnNDD+Q+5hk
-         KQZoM5WnV410FE/hvSvXFKv8cWKYZUixB+sq8MoUmUlmpjxaUPyj1Mt/9LShAzr9CGYp
-         IasKpjxyut1a0HDbyFg83agphb06oG+UvE76+JiUM0Uqvbv8sNNpPzLMJN4L/C21r6l4
-         3i4tEWUg49Hl4breWi4nO5B6I4KgjQd1nYF6aDU8II0Wm06J9qZhP0+S22ggOVNCcDfg
-         qAkhokw3UArivb//wKZVyxkGvFvw+K6CRfhVBRW62eVfYq5B9Wf6S08S6UA6QTBed8Pk
-         jvMg==
+        bh=09cvxho43RAWdblupxJRryaRtzV/elqF+nv7ifw9kQ8=;
+        b=CvN7rj/255EtHNvJmNTL5+s29obenwbnR6jVfAG7usXquvZcNVqdItUsW7lzShm9wy
+         oYk56u81zKoS3Ss8usoY9SGx8R/xI3C8OXFIvvxl2UKdFrBsAcT4FT3MYhpchJfqXsL6
+         Ysw/SEC7pMMafjA+yp+iixxujQHEOKs1fHnVPavirRUfjzbShG85cM/nb7FYLyy3P/14
+         ruv98vAqUL3zTFqIh6gZN87lF8ZQ0uOljIPKCdXGOrf+WHTkx8nznSGIY+2OkUAfSYBS
+         6j7iWjO1/kHdHztIG75t68poO9lBYULv9FkFhTeW9Ay2Sbu/CCvjjgB4Y9iv4P+RlBDb
+         aMNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j8T7HGGnetyv+ccrok96ONK9Emz86upX7TCAIvuw9K0=;
-        b=ACPzKmoh57/hftu2ZQ4DTGY8+moaJjB+cX2Wx/V06/EIzTziRuV/gdfzMlOW65P72C
-         +jmOEE83gn6gvfePAz1g1Wqv7LN3/BetJ5lpbbOIEVKK2SrfTV3SsU7Tt2ZUKn8RQ66m
-         NUd2lBhxZh8CyEQILbZdilVciDg8LSSHV/6awbtcZxr2A+2l7Bj33UNkcsKrprqu9thi
-         h+dxMNPlctJnZE9Cdbo40jkFHLMqMkOPIXYrqckyfCtHEzbPPRj6J7XhVmbVUlFrJic6
-         hNEhtx21wn9+VbUUYBPq7K2lmV0XPohzlX8VnQSNHEE8HkN2XX+nBGcxGAnfmXXdWL9i
-         CcAA==
-X-Gm-Message-State: AOAM5337sEYreiSngtqsCeFzIqm+nE6f6xo+p146OORRFncqlOaWQ2ce
-        bwUuQLO7fNqyN5apOM09mrKZYc5eO6QG8A==
-X-Google-Smtp-Source: ABdhPJwlNOU1viWZUILzezi/S41RXofFODtIuaDQlbofavr6h3/YrkXFFMAP8BZ4dNqwuTzx4TI4pA==
-X-Received: by 2002:a17:906:60c2:: with SMTP id f2mr4881832ejk.531.1631782331715;
-        Thu, 16 Sep 2021 01:52:11 -0700 (PDT)
+        bh=09cvxho43RAWdblupxJRryaRtzV/elqF+nv7ifw9kQ8=;
+        b=7Nd6aQttrqgFYe90MUNzZDH8ZTFzS1aIJk+jIVPGHSE8DC0KELJX9/FA9Cgu52T7fV
+         XBJZSAlTp7hsGBHaRumwaUm8MLiGV6yhntS7B4WRVo3B+1UpfXKk7tk6k5tn9xtAe0qH
+         U3awurvNv78fqUzFAWudZ9RqE29R3bVTIU4mytJNXnsP7bpjYKXes9Db7P0VCacALkNo
+         EZzPv8ZDJKs8Rssb3Cxr/0l4dhszoLQHAtnN9qkw4K+7K6KWHBih6v8JEUch7YxqRJCj
+         uZGmK687wjI61gExgMSbHTNRije2qs7AKfGoMJWwxQDOL8sY1gJBmFf83i/QhDaPzXUn
+         wKeg==
+X-Gm-Message-State: AOAM530rAQFF0YGGBlOLTkxBFDJl7f/pWUGKewYZWNZi7wZib3MKK3xz
+        gO3hnG7dulbwpuBvXd/oPlMgYjooCfAHjw==
+X-Google-Smtp-Source: ABdhPJxF0TXr0A/pXX0ZXBozjDCGrvgkDMWhk/s5M0fGeRDj18rkNg9UC7znguF+MgWv5csOeEVIBQ==
+X-Received: by 2002:a17:906:d1d1:: with SMTP id bs17mr4932081ejb.198.1631782332570;
+        Thu, 16 Sep 2021 01:52:12 -0700 (PDT)
 Received: from localhost.localdomain (catv-176-63-0-115.catv.broadband.hu. [176.63.0.115])
-        by smtp.googlemail.com with ESMTPSA id t24sm1112961edr.84.2021.09.16.01.52.10
+        by smtp.googlemail.com with ESMTPSA id t24sm1112961edr.84.2021.09.16.01.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Sep 2021 01:52:11 -0700 (PDT)
+        Thu, 16 Sep 2021 01:52:12 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Bolarinwa O. Saheed" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kw@linux.com
-Subject: [RFC PATCH 2/4] PCI/ASPM: Remove struct pcie_link_state.root
-Date:   Thu, 16 Sep 2021 10:52:04 +0200
-Message-Id: <20210916085206.2268-3-refactormyself@gmail.com>
+Subject: [RFC PATCH 3/4] PCI/ASPM: Remove struct pcie_link_state.downstream
+Date:   Thu, 16 Sep 2021 10:52:05 +0200
+Message-Id: <20210916085206.2268-4-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210916085206.2268-1-refactormyself@gmail.com>
 References: <20210916085206.2268-1-refactormyself@gmail.com>
@@ -66,163 +66,80 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
 
-Information on the root device is cached in
-struct pcie_link_state.root it obtained within
-alloc_pcie_link_state().
+Information on the downstream component is cached in
+struct pcie_link_state.downstream it obtained within
+alloc_pcie_link_state() by calling pci_function_0()
 
 This patch:
- - creates *pcie_get_root()* which return the root pci_dev
-   of a pci_dev.
- - removes *root* from the *struct pcie_link_state*.
- - replaces references to struct pcie_link_state.root with
-   a call to pcie_get_root().
+ - removes *downstream* from *struct pcie_link_state*.
+ - replaces references to pcie_link_state.downstream with
+   a call to pci_function_0(pdev->subordinate).
 
 Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
 ---
- drivers/pci/pcie/aspm.c | 63 +++++++++++++++++++++--------------------
- 1 file changed, 32 insertions(+), 31 deletions(-)
+ drivers/pci/pcie/aspm.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 48b83048aa30..8772a4ea4365 100644
+index 8772a4ea4365..516a6f07ac6e 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -49,7 +49,6 @@ struct aspm_latency {
+@@ -48,7 +48,6 @@ struct aspm_latency {
+ 
  struct pcie_link_state {
  	struct pci_dev *pdev;		/* Upstream component of the Link */
- 	struct pci_dev *downstream;	/* Downstream component, function 0 */
--	struct pcie_link_state *root;	/* pointer to the root port link */
+-	struct pci_dev *downstream;	/* Downstream component, function 0 */
  	struct list_head sibling;	/* node in link_list */
  
  	/* ASPM state */
-@@ -843,6 +842,25 @@ static int pcie_aspm_sanity_check(struct pci_dev *pdev)
- 	return 0;
- }
- 
-+/*
-+ * Root Ports and PCI/PCI-X to PCIe Bridges are roots of PCIe
-+ * hierarchies.  Note that some PCIe host implementations omit
-+ * the root ports entirely, in which case a downstream port on
-+ * a switch may become the root of the link state chain for all
-+ * its subordinate endpoints.
-+ */
-+static struct pci_dev *pcie_get_root(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent = pdev->bus->parent->self;
-+
-+	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ||
-+	    pci_pcie_type(pdev) == PCI_EXP_TYPE_PCIE_BRIDGE || !parent) {
-+		return pdev;
-+	} else {
-+		return pcie_get_root(parent);
-+	}
-+}
-+
- static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
+@@ -452,7 +451,8 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
  {
- 	struct pcie_link_state *link;
-@@ -855,29 +873,6 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
- 	link->pdev = pdev;
- 	link->downstream = pci_function_0(pdev->subordinate);
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	u32 val1, val2, scale1, scale2;
+ 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+ 	u32 ctl1 = 0, ctl2 = 0;
+@@ -542,7 +542,8 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
  
--	/*
--	 * Root Ports and PCI/PCI-X to PCIe Bridges are roots of PCIe
--	 * hierarchies.  Note that some PCIe host implementations omit
--	 * the root ports entirely, in which case a downstream port on
--	 * a switch may become the root of the link state chain for all
--	 * its subordinate endpoints.
--	 */
--	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ||
--	    pci_pcie_type(pdev) == PCI_EXP_TYPE_PCIE_BRIDGE ||
--	    !pdev->bus->parent->self) {
--		link->root = link;
--	} else {
--		struct pcie_link_state *parent;
--
--		parent = pdev->bus->parent->self->link_state;
--		if (!parent) {
--			kfree(link);
--			return NULL;
--		}
--
--		link->root = parent->root;
--	}
--
+ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	u32 parent_lnkcap, child_lnkcap;
+ 	u16 parent_lnkctl, child_lnkctl;
+ 	u32 parent_l1ss_cap, child_l1ss_cap;
+@@ -684,7 +685,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+ 	u32 val, enable_req;
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 
+ 	enable_req = (link->aspm_enabled ^ state) & state;
+ 
+@@ -743,7 +745,8 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ {
+ 	u32 upstream = 0, dwstream = 0;
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 
+ 	/* Enable only the states that were not explicitly disabled */
+@@ -871,7 +874,6 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
+ 
+ 	INIT_LIST_HEAD(&link->sibling);
+ 	link->pdev = pdev;
+-	link->downstream = pci_function_0(pdev->subordinate);
+ 
  	list_add(&link->sibling, &link_list);
  	pdev->link_state = link;
- 	return link;
-@@ -963,18 +958,23 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
- /* Recheck latencies and update aspm_capable for links under the root */
- static void pcie_update_aspm_capable(struct pcie_link_state *root)
- {
-+	struct pci_dev *dev;
- 	struct pcie_link_state *link;
- 	BUG_ON(root->pdev->bus->parent->self);
- 	list_for_each_entry(link, &link_list, sibling) {
--		if (link->root != root)
-+		dev = pcie_get_root(link->pdev);
-+		if (dev->link_state != root)
- 			continue;
-+
- 		link->aspm_capable = link->aspm_support;
- 	}
- 	list_for_each_entry(link, &link_list, sibling) {
- 		struct pci_dev *child;
- 		struct pci_bus *linkbus = link->pdev->subordinate;
--		if (link->root != root)
-+		dev = pcie_get_root(link->pdev);
-+		if (dev->link_state != root)
- 			continue;
-+
- 		list_for_each_entry(child, &linkbus->devices, bus_list) {
- 			if ((pci_pcie_type(child) != PCI_EXP_TYPE_ENDPOINT) &&
- 			    (pci_pcie_type(child) != PCI_EXP_TYPE_LEG_END))
-@@ -987,9 +987,9 @@ static void pcie_update_aspm_capable(struct pcie_link_state *root)
- /* @pdev: the endpoint device */
- void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- {
--	struct pci_dev *parent_dev;
-+	struct pci_dev *parent_dev, *root_dev;
- 	struct pci_dev *parent = pdev->bus->self;
--	struct pcie_link_state *link, *root, *parent_link;
-+	struct pcie_link_state *link, *parent_link;
- 
- 	if (!parent || !parent->link_state)
- 		return;
-@@ -1004,7 +1004,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 		goto out;
- 
- 	link = parent->link_state;
--	root = link->root;
-+	root_dev = pcie_get_root(link->pdev);
- 	parent_dev = link->pdev->bus->parent->self;
- 	parent_link = !parent_dev ? NULL : parent_dev->link_state;
- 
-@@ -1016,7 +1016,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 
- 	/* Recheck latencies and configure upstream links */
- 	if (parent_link) {
--		pcie_update_aspm_capable(root);
-+		pcie_update_aspm_capable(root_dev->link_state);
- 		pcie_config_aspm_path(parent_link);
- 	}
- out:
-@@ -1028,6 +1028,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- void pcie_aspm_pm_state_change(struct pci_dev *pdev)
- {
- 	struct pcie_link_state *link = pdev->link_state;
-+	struct pci_dev *root = pcie_get_root(pdev);
- 
- 	if (aspm_disabled || !link)
- 		return;
-@@ -1037,7 +1038,7 @@ void pcie_aspm_pm_state_change(struct pci_dev *pdev)
- 	 */
- 	down_read(&pci_bus_sem);
- 	mutex_lock(&aspm_lock);
--	pcie_update_aspm_capable(link->root);
-+	pcie_update_aspm_capable(root->link_state);
- 	pcie_config_aspm_path(link);
- 	mutex_unlock(&aspm_lock);
- 	up_read(&pci_bus_sem);
 -- 
 2.20.1
 
