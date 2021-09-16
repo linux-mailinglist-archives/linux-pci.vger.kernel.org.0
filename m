@@ -2,107 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8171840E48D
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 19:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 795B140E802
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 20:00:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244035AbhIPREm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 13:04:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:6912 "EHLO mga11.intel.com"
+        id S1345087AbhIPRnk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 13:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348066AbhIPRBo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Sep 2021 13:01:44 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10109"; a="219423998"
-X-IronPort-AV: E=Sophos;i="5.85,299,1624345200"; 
-   d="scan'208";a="219423998"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2021 09:54:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,299,1624345200"; 
-   d="scan'208";a="554163871"
-Received: from lkp-server01.sh.intel.com (HELO 285e7b116627) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2021 09:54:50 -0700
-Received: from kbuild by 285e7b116627 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mQuev-0001Dm-Vb; Thu, 16 Sep 2021 16:54:49 +0000
-Date:   Fri, 17 Sep 2021 00:54:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
- cc4ec62460423eeddb9c41d5abc63cc4f0229845
-Message-ID: <614376d2.KXp4jo6F8D5NuRz1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1355819AbhIPRmK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Sep 2021 13:42:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 383E560F11;
+        Thu, 16 Sep 2021 17:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631812062;
+        bh=2DlbyUjSYEPcA1CMZ9Xj/nlxDT/ODrhL02P3+ejffBw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=c5nCEV/4NySYk2cRe22gcl1DZ7WShDxH6uPrunRQ1wDUKlITwE5b4D/XqMgvYoCGw
+         nO7WtMQBbNIJWSdWkagTA1pA4Uql5Ly5JqoXj4CkR+1YiD4GLe7IheiwfCtss9Fbnt
+         rL/njAfGrIuT6hUtZH60zMDTN4L6jaxB9tiZlSQ0sMzoZcesBRI9RiFXjSkUhvCH/e
+         Nxdy7kc37Gse82AxSz3r4emrLHv5YCoT4Ojg4hUq0t+6tpXpqA+56tDGlILmlSzC9K
+         rRpukdOhay2GDin+lY+pyGGVrSOQ927FMnis/cNgK6eRlCFA9NAvY3b2y0WbVWXuFU
+         kXquaGnCBnW/w==
+Date:   Thu, 16 Sep 2021 12:07:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
+        davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] [PATCH net-next v5 2/3] r8169: Use PCIe ASPM status for
+ NIC ASPM enablement
+Message-ID: <20210916170740.GA1624437@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210916154417.664323-3-kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: cc4ec62460423eeddb9c41d5abc63cc4f0229845  PCI: Do not enable AtomicOps on VFs
+On Thu, Sep 16, 2021 at 11:44:16PM +0800, Kai-Heng Feng wrote:
+> Because ASPM control may not be granted by BIOS while ASPM is enabled,
+> and ASPM can be enabled via sysfs, so use pcie_aspm_enabled() directly
+> to check current ASPM enable status.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v5:
+>  - New patch.
+> 
+>  drivers/net/ethernet/realtek/r8169_main.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 0199914440abc..6f1a9bec40c05 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -622,7 +622,6 @@ struct rtl8169_private {
+>  	} wk;
+>  
+>  	unsigned supports_gmii:1;
+> -	unsigned aspm_manageable:1;
+>  	dma_addr_t counters_phys_addr;
+>  	struct rtl8169_counters *counters;
+>  	struct rtl8169_tc_offsets tc_offset;
+> @@ -2664,8 +2663,13 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
+>  
+>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>  {
+> -	/* Don't enable ASPM in the chip if OS can't control ASPM */
+> -	if (enable && tp->aspm_manageable) {
+> +	struct pci_dev *pdev = tp->pci_dev;
+> +
+> +	/* Don't enable ASPM in the chip if PCIe ASPM isn't enabled */
+> +	if (!pcie_aspm_enabled(pdev) && enable)
+> +		return;
 
-elapsed time: 1450m
+What happens when the user enables or disables ASPM via sysfs (see
+https://git.kernel.org/linus/72ea91afbfb0)?
 
-configs tested: 51
-configs skipped: 3
+The driver is not going to know about that change.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-parisc                              defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +	if (enable) {
+>  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+>  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+>  	} else {
+> @@ -5272,8 +5276,7 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  	/* Disable ASPM L1 as that cause random device stop working
+>  	 * problems as well as full system hangs for some PCIe devices users.
+>  	 */
+> -	rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+> -	tp->aspm_manageable = !rc;
+> +	pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+>  
+>  	/* enable device (incl. PCI PM wakeup and hotplug setup) */
+>  	rc = pcim_enable_device(pdev);
+> -- 
+> 2.32.0
+> 
