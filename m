@@ -2,206 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8710940D2CF
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 07:13:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 944B640D384
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 08:57:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234289AbhIPFOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 01:14:52 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:60040
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234246AbhIPFOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 01:14:51 -0400
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 59F273F077
-        for <linux-pci@vger.kernel.org>; Thu, 16 Sep 2021 05:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1631769210;
-        bh=hSiD7I+b6Yuq8W+sJ8bufKGiKQgP8tTvc9YDJ5YkefU=;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=Ns7vLkOwDC4CWhDdYloFYk55l8ZGf3Ha/rGHPNmPBm+GzO3eczEVzsSSKj5GaMZpn
-         0I9vURCGKB5oqNVCTJuuVJzAywFKY6asrGcYWp/Xhl+X2oHTDkQO+IRuyYn1zz5mKQ
-         9YSTy/mEfVcAYnGP80uxUrBsgQ0i0i3PSe0XQeO8trA4ONcyQyzqfnEulCQeTIT0fC
-         Gk0nR2g9Jswfwk1FF34EFwBAjbjhK1j5+p56CsbcetFbmje9U1ezuaEbNU+10I2Hlp
-         6xSIbgDJhHwROwPIHT7Fi2F4X1mNB7fkT7nPUoq+ExWAbRNBRAGjIph67Rnzj33sNQ
-         LjZplmLgjaBhQ==
-Received: by mail-pl1-f197.google.com with SMTP id e2-20020a17090301c200b0013b8b16c22cso2467169plh.5
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 22:13:30 -0700 (PDT)
+        id S234694AbhIPG6i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 02:58:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45338 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234660AbhIPG6g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 02:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631775436;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8RB13z4WWFvpQhPAtaErfMzrxHDfvjm55tbgAkFGFds=;
+        b=ZBAJKGHeTQAAls0kn8k6LPMvXMKAHXMry7i+6tnxK7bO8TShzF/vDBg3Pro5mnPDaKfoso
+        2P/voGX3guUEqajPOHXVAaEOZpiXkPe6KJpAyuZy7iVISrGu0cKMJrIdKQA6fUsZz7PZny
+        hcW8Cyp1cns8fuUiUG7QHIfUf9e1W90=
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
+ [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-x4liQvQ0N_CJIxuHfHvISg-1; Thu, 16 Sep 2021 02:57:15 -0400
+X-MC-Unique: x4liQvQ0N_CJIxuHfHvISg-1
+Received: by mail-yb1-f198.google.com with SMTP id l11-20020a056902072b00b005a776eefb28so11436412ybt.5
+        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 23:57:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hSiD7I+b6Yuq8W+sJ8bufKGiKQgP8tTvc9YDJ5YkefU=;
-        b=Ia1q01OFmBvzA1Js5B5BEcJTljs9NU6vRtBdJCM81xZTbJ+IWaCj82b0Cd/BDOhltQ
-         qHQdkA83KL50d0vZu7DrclS3QXIeCB1DE7FZ0e8Ke6TATtX/xU/5cR42K8t+v4mCHZtk
-         YGmT97cxEEDAna4pXGXDAugdfYaLm77jl4oecQpMWVVGD1k87xoRMar62Os2hsLzKcrB
-         pb8u3iTRkMKiu2Hn5N0XHLGk1JK1+5qBH/stGyQjR5at/USDdW+Y8Cs+FekyOONgaV4l
-         H1Fhv8neUUQ1yCg48UrGX6S3mG7VtmdOJBdHkF7St8zRvURgWN9nnRckJ+cpwI8VkFD2
-         FonQ==
-X-Gm-Message-State: AOAM531evo4dlSIEqS81S1QzAcnOvrPU0OrIob08Vh6xaNxU02Qz+PVY
-        UCTeajHMSb/1ecy4hwZC6yDnQ9KgvSdIpszOamcXv1YHQrrrF2ffpAkdLkYsPB1fvNUlJRcy0/G
-        QvmwTZ8dOVdAbaPDlkKsQlFD3KLwMtmUHbHQ5HQ==
-X-Received: by 2002:a17:903:1208:b0:13a:8c8:8a33 with SMTP id l8-20020a170903120800b0013a08c88a33mr2955893plh.89.1631769208656;
-        Wed, 15 Sep 2021 22:13:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzL+9MLr7N9W7Q9KOrVaSyEil3UeLX/dMrujMKOIQ5bZoFKNvaH6rKNCaPbQBEkbICsbNCmXQ==
-X-Received: by 2002:a17:903:1208:b0:13a:8c8:8a33 with SMTP id l8-20020a170903120800b0013a08c88a33mr2955869plh.89.1631769208277;
-        Wed, 15 Sep 2021 22:13:28 -0700 (PDT)
-Received: from [192.168.1.107] (125-237-197-94-fibre.sparkbb.co.nz. [125.237.197.94])
-        by smtp.gmail.com with ESMTPSA id z9sm1443369pfn.22.2021.09.15.22.13.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Sep 2021 22:13:27 -0700 (PDT)
-Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
- through 2x GPUs that share same pci switch via vfio
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
-References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
- <20210914104301.48270518.alex.williamson@redhat.com>
- <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
- <20210915103235.097202d2.alex.williamson@redhat.com>
-From:   Matthew Ruffell <matthew.ruffell@canonical.com>
-Message-ID: <4d9d0366-1769-691f-fcb0-3b14d468e36e@canonical.com>
-Date:   Thu, 16 Sep 2021 17:13:21 +1200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8RB13z4WWFvpQhPAtaErfMzrxHDfvjm55tbgAkFGFds=;
+        b=EM9aKQ4vp1J3+zsLZjnyBa5E5sD0EZVaaoXWJcsuU6YhLGuzU8B0KXGuJ3e7e0nMcE
+         WW9yuUyq4DxNFH/I8OygjhIFEXVnjcwCSjf4482kcteEj5Twkb3FEWmNeX6qzKqxxKry
+         X3YfrVMthQqiOk7YSvWO/ghtNWJi6hgOUBY+p36ReOqAB7NRUhh/r0emoEyYnughnAVE
+         jELCI1ifC/l8fOksMHrS7iFsL++Iyf2NOMmriCOmUgOs2aAiH7Si7Em3a2lRJOerA4Ji
+         +EPKAp/s7TQ8yWHs1OKVIF2NX5/brxcA7ax6JkfcxzvwTRsQnRPL/c3zzLzU7B9lSgNM
+         AN6w==
+X-Gm-Message-State: AOAM5321tcE7ph0R38ga+EAiNeAXnlz1g5dQ0k6rV3gFOcY2rOO2FqBR
+        UGETJ4aQ/t6U8tJKtGfH8JTMC7fzobe5hM2+U8cPyy+23jAG56me6GXRvAGzA/F+Nce65L2YhyF
+        2L2AIJDFOr2MQuFIIK++GomdHPAmOr9EBlsQC
+X-Received: by 2002:a25:bb8b:: with SMTP id y11mr5374085ybg.384.1631775434454;
+        Wed, 15 Sep 2021 23:57:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwLucYeWhnPNQkeQVqS3EcyyweAYtvQL9fa++UxRdE70ZRSeCy7mhVRsSSA5lCGz3A636eqomK45lUsdY3V5KU=
+X-Received: by 2002:a25:bb8b:: with SMTP id y11mr5374044ybg.384.1631775434181;
+ Wed, 15 Sep 2021 23:57:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210915103235.097202d2.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210913140229.24797-1-omosnace@redhat.com> <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+ <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Thu, 16 Sep 2021 08:57:02 +0200
+Message-ID: <CAFqZXNsLZE18YugJYDzxUwjY36Gt2iX=KYtuuu-erY_+_mmvqg@mail.gmail.com>
+Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        X86 ML <x86@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 16/09/21 4:32 am, Alex Williamson wrote:
-> On Wed, 15 Sep 2021 16:44:38 +1200
-> Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
->> On 15/09/21 4:43 am, Alex Williamson wrote:
->>>
->>> FWIW, I have access to a system with an NVIDIA K1 and M60, both use
->>> this same switch on-card and I've not experienced any issues assigning
->>> all the GPUs to a single VM.  Topo:
->>>
->>>  +-[0000:40]-+-02.0-[42-47]----00.0-[43-47]--+-08.0-[44]----00.0
->>>  |                                           +-09.0-[45]----00.0
->>>  |                                           +-10.0-[46]----00.0
->>>  |                                           \-11.0-[47]----00.0
->>>  \-[0000:00]-+-03.0-[04-07]----00.0-[05-07]--+-08.0-[06]----00.0
->>>                                              \-10.0-[07]----00.0
-> 
-> 
-> I've actually found that the above configuration, assigning all 6 GPUs
-> to a VM reproduces this pretty readily by simply rebooting the VM.  In
-> my case, I don't have the panic-on-warn/oops that must be set on your
-> kernel, so the result is far more benign, the IRQ gets masked until
-> it's re-registered.
-> 
-> The fact that my upstream ports are using MSI seems irrelevant.
+On Thu, Sep 16, 2021 at 4:59 AM Paul Moore <paul@paul-moore.com> wrote:
+> On Mon, Sep 13, 2021 at 5:05 PM Paul Moore <paul@paul-moore.com> wrote:
+> >
+> > On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > >
+> > > Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> > > lockdown") added an implementation of the locked_down LSM hook to
+> > > SELinux, with the aim to restrict which domains are allowed to perform
+> > > operations that would breach lockdown.
+> > >
+> > > However, in several places the security_locked_down() hook is called in
+> > > situations where the current task isn't doing any action that would
+> > > directly breach lockdown, leading to SELinux checks that are basically
+> > > bogus.
+> > >
+> > > To fix this, add an explicit struct cred pointer argument to
+> > > security_lockdown() and define NULL as a special value to pass instead
+> > > of current_cred() in such situations. LSMs that take the subject
+> > > credentials into account can then fall back to some default or ignore
+> > > such calls altogether. In the SELinux lockdown hook implementation, use
+> > > SECINITSID_KERNEL in case the cred argument is NULL.
+> > >
+> > > Most of the callers are updated to pass current_cred() as the cred
+> > > pointer, thus maintaining the same behavior. The following callers are
+> > > modified to pass NULL as the cred pointer instead:
+> > > 1. arch/powerpc/xmon/xmon.c
+> > >      Seems to be some interactive debugging facility. It appears that
+> > >      the lockdown hook is called from interrupt context here, so it
+> > >      should be more appropriate to request a global lockdown decision.
+> > > 2. fs/tracefs/inode.c:tracefs_create_file()
+> > >      Here the call is used to prevent creating new tracefs entries when
+> > >      the kernel is locked down. Assumes that locking down is one-way -
+> > >      i.e. if the hook returns non-zero once, it will never return zero
+> > >      again, thus no point in creating these files. Also, the hook is
+> > >      often called by a module's init function when it is loaded by
+> > >      userspace, where it doesn't make much sense to do a check against
+> > >      the current task's creds, since the task itself doesn't actually
+> > >      use the tracing functionality (i.e. doesn't breach lockdown), just
+> > >      indirectly makes some new tracepoints available to whoever is
+> > >      authorized to use them.
+> > > 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+> > >      Here a cryptographic secret is redacted based on the value returned
+> > >      from the hook. There are two possible actions that may lead here:
+> > >      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+> > >         task context is relevant, since the dumped data is sent back to
+> > >         the current task.
+> > >      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+> > >         dumped SA is broadcasted to tasks subscribed to XFRM events -
+> > >         here the current task context is not relevant as it doesn't
+> > >         represent the tasks that could potentially see the secret.
+> > >      It doesn't seem worth it to try to keep using the current task's
+> > >      context in the a) case, since the eventual data leak can be
+> > >      circumvented anyway via b), plus there is no way for the task to
+> > >      indicate that it doesn't care about the actual key value, so the
+> > >      check could generate a lot of "false alert" denials with SELinux.
+> > >      Thus, let's pass NULL instead of current_cred() here faute de
+> > >      mieux.
+> > >
+> > > Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> > > Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> > > Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> > > Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
+> > > Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
+> > > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > ---
+> > >
+> > > v4:
+> > > - rebase on top of TODO
+> > > - fix rebase conflicts:
+> > >   * drivers/cxl/pci.c
+> > >     - trivial: the lockdown reason was corrected in mainline
+> > >   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
+> > >     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
+> > >       in mainline
+> > >   * kernel/power/hibernate.c
+> > >     - trivial: !secretmem_active() was added to the condition in
+> > >       hibernation_available()
+> > > - cover new security_locked_down() call in kernel/bpf/helpers.c
+> > >   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
+> > >
+> > > v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
+> > > - add the cred argument to security_locked_down() and adapt all callers
+> > > - keep using current_cred() in BPF, as the hook calls have been shifted
+> > >   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+> > >   buggy SELinux lockdown permission checks"))
+> > > - in SELinux, don't ignore hook calls where cred == NULL, but use
+> > >   SECINITSID_KERNEL as the subject instead
+> > > - update explanations in the commit message
+> > >
+> > > v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> > > - change to a single hook based on suggestions by Casey Schaufler
+> > >
+> > > v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
+> >
+> > The changes between v3 and v4 all seem sane to me, but I'm going to
+> > let this sit for a few days in hopes that we can collect a few more
+> > Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
+> > mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
+> > after it goes through a build/test cycle.
+>
+> Time's up, I just merged this into selinux/stable-5.15 and I'll send
+> this to Linus once it passes testing.
 
-Hi Alex,
+Thanks!
 
+-- 
+Ondrej Mosnacek
+Software Engineer, Linux Security - SELinux kernel
+Red Hat, Inc.
 
-
-It is good news that you can reproduce an interrupt storm locally. Did a single
-
-reboot trigger the storm, or did you have to loop the VM a few times?
-
-
-
-On our system, if we don't have panic-on-warn/oops set, the system will
-
-eventually grind to a halt and lock up, so we try to reset earlier on the first
-
-oops, but we still get stuck in the crashkernel copying the IR tables from dmar.
-
-> 
-> Adding debugging to the vfio-pci interrupt handler, it's correctly
-> deferring the interrupt as the GPU device is not identifying itself as
-> the source of the interrupt via the status register.  In fact, setting
-> the disable INTx bit in the GPU command register while the interrupt
-> storm occurs does not stop the interrupts.
-> 
-
-Interesting. So the source of the interrupts could be from the PEX switch
-
-itself?
-
-
-
-We did a run with DisIntx+ set on the PEX switches, but it didn't make any
-
-difference. Serial log showing DisIntx+ and full dmesg below:
-
-
-
-https://paste.ubuntu.com/p/n3XshCxPT8/
-
-> The interrupt storm does seem to be related to the bus resets, but I
-> can't figure out yet how multiple devices per switch factors into the
-> issue.  Serializing all bus resets via a mutex doesn't seem to change
-> the behavior.
-
-Very interesting indeed.
-
-> I'm still investigating, but if anyone knows how to get access to the
-> Broadcom datasheet or errata for this switch, please let me know.
-
-I have tried reaching out to Broadcom asking for the datasheet and errata, but
-
-I am unsure if they will get back to me.
-
-
-
-They list the errata as publicly available on their website, in the 
-
-Documentation > errata tab.
-
-https://www.broadcom.com/products/pcie-switches-bridges/pcie-switches/pex8749#documentation
-
-
-
-The file "PEX 8749/48/47/33/32/25/24/23/17/16/13/12 Errata" seems to be missing
-
-though.
-
-https://docs.broadcom.com/docs/PEX8749-48-47-33-32-25-24-23-17-16-13-12%20Errata-and-Cautions
-
-
-
-An Intel document talks about the errata for the PEX 8749:
-
-https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/rn/rn-ias-n3000-n.pdf
-
-It links to the following URL, also missing.
-
-https://docs.broadcom.com/docs/pub-005018
-
-
-
-I did however find an older errata document at:
-
-
-
-PEX 87xx Errata Version 1.14, September 25, 2015
-
-https://docs.broadcom.com/doc/pub-005017
-
-
-
-I will keep trying, and I will let you know if we manage to come across any
-
-documents.
-
-
-
-Thank you for your efforts.
-
-Matthew
-
-> Thanks,
-> Alex
-> 
