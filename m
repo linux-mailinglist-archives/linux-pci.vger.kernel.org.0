@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F07740EE1E
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 01:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99B7C40EE13
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 01:41:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241811AbhIPXmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 19:42:49 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:40788 "EHLO
+        id S241917AbhIPXms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 19:42:48 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:40774 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241747AbhIPXmj (ORCPT
+        with ESMTP id S241734AbhIPXmj (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 19:42:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=Yz7/Dg6RG5uFdKEWz7fCfOIaPt94X46Gov2AZcvx1yo=; b=Zs5M0NYfy/xXFIpoRhIv/Q09ZY
-        ZNc/ktEXRqFRUQ+RWdFANpv1kwCS8ebErssaGlf7W80S5v4VxCqpX8RXs9LKkKbngodxeBilCfs5e
-        CsjCMmoIudLnULI2ucZuyWZu1VJfOutGm7bhiIuXdjAXF8SnCtNM5TVY25JlXwPjkskE+Ks7mxijw
-        53vbhVCYOixN7WhIzEfOTo1VcRJet7jxCqs8dGnKkVqyx+aiA/RPQsEPYPPEWgn4+cGJ0kksM+vhV
-        fQjwR64UCzxdbE/QXaFFwtchbj0IzuJ8j8PuKTF3bP28hlTQS/NsojchbXUwKQn8+6YayRpq1UHsl
-        JEwRTA/Q==;
+        bh=hGAN7PsX7nCUkaGWKgSS7ihkI9wmA4pPKB/9Vt5A1Dc=; b=Bk9cEz8oLRi1CuoYYkNeOzBA0z
+        sTEMiMCRsKfzYBjLDSUI5SoM4HbeRKNbSv5sIhcSHqYDHb9KJEaNTHAHAstILIhKv5++sop8pJuT8
+        zTav0zFQrqJbZKq7nTEn4TE0obF/LT3hhVTmteixoxAGi1cegqAUdpnJqKMfu5+jLVJ57MnfGTG3l
+        zUwJTc5NC6DbIRnvz/MmcTaCFPWKiBPfPNvvyhaZbDVTz/xw/NZDiz1E5pnGvndc3CmYlYT3L+Axt
+        Bv3Y7wtem0+LTVRp7jl4JOMpLc38YTwlqp14GR+nNTAsW2hR8CQO75SqeDAYZURkrRBeLDN19OZ+Z
+        gDVNQg+w==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1mR10H-0008I1-GG; Thu, 16 Sep 2021 17:41:18 -0600
+        id 1mR10G-0008I0-Nl; Thu, 16 Sep 2021 17:41:17 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1mR104-000Vr1-5i; Thu, 16 Sep 2021 17:41:04 -0600
+        id 1mR104-000Vr4-9z; Thu, 16 Sep 2021 17:41:04 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -52,8 +52,8 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 16 Sep 2021 17:40:45 -0600
-Message-Id: <20210916234100.122368-6-logang@deltatee.com>
+Date:   Thu, 16 Sep 2021 17:40:46 -0600
+Message-Id: <20210916234100.122368-7-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210916234100.122368-1-logang@deltatee.com>
 References: <20210916234100.122368-1-logang@deltatee.com>
@@ -66,56 +66,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.2
-Subject: [PATCH v3 05/20] dma-mapping: allow EREMOTEIO return code for P2PDMA transfers
+Subject: [PATCH v3 06/20] dma-direct: support PCI P2PDMA pages in dma-direct map_sg
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add EREMOTEIO error return to dma_map_sgtable() which will be used
-by .map_sg() implementations that detect P2PDMA pages that the
-underlying DMA device cannot access.
+Add PCI P2PDMA support for dma_direct_map_sg() so that it can map
+PCI P2PDMA pages directly without a hack in the callers. This allows
+for heterogeneous SGLs that contain both P2PDMA and regular pages.
+
+A P2PDMA page may have three possible outcomes when being mapped:
+  1) If the data path between the two devices doesn't go through the
+     root port, then it should be mapped with a PCI bus address
+  2) If the data path goes through the host bridge, it should be mapped
+     normally, as though it were a CPU physical address
+  3) It is not possible for the two devices to communicate and thus
+     the mapping operation should fail (and it will return -EREMOTEIO).
+
+SGL segments that contain PCI bus addresses are marked with
+sg_dma_mark_pci_p2pdma() and are ignored when unmapped.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- kernel/dma/mapping.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ kernel/dma/direct.c | 44 ++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 7ee5284bff58..7315ae31cf1d 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -197,7 +197,7 @@ static int __dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
- 	if (ents > 0)
- 		debug_dma_map_sg(dev, sg, nents, ents, dir);
- 	else if (WARN_ON_ONCE(ents != -EINVAL && ents != -ENOMEM &&
--			      ents != -EIO))
-+			      ents != -EIO && ents != -EREMOTEIO))
- 		return -EIO;
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 4c6c5e0635e3..fa8317e8ff44 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -13,6 +13,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/set_memory.h>
+ #include <linux/slab.h>
++#include <linux/pci-p2pdma.h>
+ #include "direct.h"
  
- 	return ents;
-@@ -248,12 +248,14 @@ EXPORT_SYMBOL(dma_map_sg_attrs);
-  * Returns 0 on success or a negative error code on error. The following
-  * error codes are supported with the given meaning:
-  *
-- *   -EINVAL - An invalid argument, unaligned access or other error
-- *	       in usage. Will not succeed if retried.
-- *   -ENOMEM - Insufficient resources (like memory or IOVA space) to
-- *	       complete the mapping. Should succeed if retried later.
-- *   -EIO    - Legacy error code with an unknown meaning. eg. this is
-- *	       returned if a lower level call returned DMA_MAPPING_ERROR.
-+ *   -EINVAL	- An invalid argument, unaligned access or other error
-+ *		  in usage. Will not succeed if retried.
-+ *   -ENOMEM	- Insufficient resources (like memory or IOVA space) to
-+ *		  complete the mapping. Should succeed if retried later.
-+ *   -EIO	- Legacy error code with an unknown meaning. eg. this is
-+ *	          returned if a lower level call returned DMA_MAPPING_ERROR.
-+ *   -EREMOTEIO	- The DMA device cannot access P2PDMA memory specified in
-+ *		  the sg_table. This will not succeed if retried.
-  */
- int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
- 		    enum dma_data_direction dir, unsigned long attrs)
+ /*
+@@ -421,29 +422,60 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 		arch_sync_dma_for_cpu_all();
+ }
+ 
++/*
++ * Unmaps segments, except for ones marked as pci_p2pdma which do not
++ * require any further action as they contain a bus address.
++ */
+ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+ 		int nents, enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	struct scatterlist *sg;
+ 	int i;
+ 
+-	for_each_sg(sgl, sg, nents, i)
+-		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+-			     attrs);
++	for_each_sg(sgl, sg, nents, i) {
++		if (sg_is_dma_pci_p2pdma(sg)) {
++			sg_dma_unmark_pci_p2pdma(sg);
++		} else  {
++			dma_direct_unmap_page(dev, sg->dma_address,
++					      sg_dma_len(sg), dir, attrs);
++		}
++	}
+ }
+ #endif
+ 
+ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 		enum dma_data_direction dir, unsigned long attrs)
+ {
+-	int i;
++	struct pci_p2pdma_map_state p2pdma_state = {};
++	enum pci_p2pdma_map_type map;
+ 	struct scatterlist *sg;
++	int i, ret;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
++		if (is_pci_p2pdma_page(sg_page(sg))) {
++			map = pci_p2pdma_map_segment(&p2pdma_state, dev, sg);
++			switch (map) {
++			case PCI_P2PDMA_MAP_BUS_ADDR:
++				continue;
++			case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
++				/*
++				 * Mapping through host bridge should be
++				 * mapped normally, thus we do nothing
++				 * and continue below.
++				 */
++				break;
++			default:
++				ret = -EREMOTEIO;
++				goto out_unmap;
++			}
++		}
++
+ 		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+ 				sg->offset, sg->length, dir, attrs);
+-		if (sg->dma_address == DMA_MAPPING_ERROR)
++		if (sg->dma_address == DMA_MAPPING_ERROR) {
++			ret = -EIO;
+ 			goto out_unmap;
++		}
+ 		sg_dma_len(sg) = sg->length;
+ 	}
+ 
+@@ -451,7 +483,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 
+ out_unmap:
+ 	dma_direct_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
+-	return -EIO;
++	return ret;
+ }
+ 
+ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
 -- 
 2.30.2
 
