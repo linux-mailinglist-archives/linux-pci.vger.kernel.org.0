@@ -2,166 +2,247 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A658640D0A6
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 02:11:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E533B40D119
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 03:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232836AbhIPAMu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Sep 2021 20:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232465AbhIPAMr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Sep 2021 20:12:47 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2AEC061574
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 17:11:27 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id b18so10066811lfb.1
-        for <linux-pci@vger.kernel.org>; Wed, 15 Sep 2021 17:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:from:user-agent:mime-version:to:cc:subject
-         :references:in-reply-to:content-transfer-encoding;
-        bh=rhlwSjpYZQyHsd/Gkc+Bh2o21qGKlRrQkNZBT83/ADs=;
-        b=bvGj/rqEdTzJmRh3WXRLsj/QO7d24EggTLX7hfyjoPQKYreHU1vtsUmpA6LvBz4hIv
-         Hp/S+0XpRQbzMlzRuIvkecOCsk8lLmaYhf6bDuo6xsmyexbaxkJv4UFteA8NjTVVKglI
-         wmyZorYb9LptyLiojk1XEcksTym6PQbCyBZwjwclAxHvnDHgqKrz2wPtZWu9uYd1FS4c
-         /vUeZsk7Lg7Rr2hfF3Zt6JDEVTMhBE3AAp2vHuf4HU1LBKyjWyWhqveFW2gGvWKRwPQc
-         oyxPT2meLQQzWXr30LWUROyfkY03ePd9zm+a4dEyTo5ridFfjb3YD4s4LspxhJzS/Q3K
-         qD1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
-         :cc:subject:references:in-reply-to:content-transfer-encoding;
-        bh=rhlwSjpYZQyHsd/Gkc+Bh2o21qGKlRrQkNZBT83/ADs=;
-        b=DWLhf+srgINFKokldyqp896f9byVxlgIHzPJwshQqE2t7Mi6Haf1fD/NhZp9BBBNhG
-         D/07Fxx4pVSuoxgsJJzTlXw7BSNcWTouuOSi1MpWOuQ5+VZAIzRoZ8gbzGVDH4Q/y6qi
-         KVyXj2dIRjkWrHQF/bjbthAlfEwsqIAXnbnvE8jyso2wI8EFTgQxqqJWypHiEQl1d0NG
-         /e1f/8Z25G0JzFrZ8iGI4rCZNp4Hd3SzzmzaLlgebCSXrVJamGjyFdTob9HETnyA1nQc
-         6bXVpkCy5eNRplFSdZBrLsG3dfkEWgSchlgfvu0nDG0ouwqANzRAEur1t6sVdwdC+VPf
-         e5ZA==
-X-Gm-Message-State: AOAM5327ZvQIRLTHklUhX/h2utog8oCCr1GY8IuKsgEHmjKAklImGpGt
-        f352YPrvxoJLj43oCKeNQY4=
-X-Google-Smtp-Source: ABdhPJxPfrBGIvFu2rS2HY7enSwT6JD3wa5ZvUCFTvltCmU0EoUAr106vHWDKoU2cM6cgcvIJHTB4A==
-X-Received: by 2002:a2e:912:: with SMTP id 18mr2374278ljj.290.1631751085539;
-        Wed, 15 Sep 2021 17:11:25 -0700 (PDT)
-Received: from [192.168.0.91] ([188.242.181.97])
-        by smtp.googlemail.com with ESMTPSA id o7sm161720lji.17.2021.09.15.17.11.24
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 15 Sep 2021 17:11:24 -0700 (PDT)
-Message-ID: <61428EDF.9030203@gmail.com>
-Date:   Thu, 16 Sep 2021 03:25:03 +0300
-From:   Nikolai Zhubr <zhubr.2@gmail.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
+        id S233564AbhIPBNz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Sep 2021 21:13:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47173 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233429AbhIPBNv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 15 Sep 2021 21:13:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10108"; a="220579008"
+X-IronPort-AV: E=Sophos;i="5.85,297,1624345200"; 
+   d="scan'208";a="220579008"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2021 18:12:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,297,1624345200"; 
+   d="scan'208";a="482543205"
+Received: from lkp-server01.sh.intel.com (HELO 285e7b116627) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 15 Sep 2021 18:12:26 -0700
+Received: from kbuild by 285e7b116627 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mQfwv-0000ba-M6; Thu, 16 Sep 2021 01:12:25 +0000
+Date:   Thu, 16 Sep 2021 09:12:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/p2pdma] BUILD SUCCESS
+ 37900ec2a67c7561abaec8b3f88099db0f4e0bde
+Message-ID: <614299e3.jd0uov+Yv2Od5oyU%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/6] x86: PIRQ/ELCR-related fixes and updates
-References: <alpine.DEB.2.21.2107171813230.9461@angie.orcam.me.uk> <611993B1.4070302@gmail.com> <alpine.DEB.2.21.2108160027350.45958@angie.orcam.me.uk> <61377A45.8030003@gmail.com> <alpine.DEB.2.21.2109141102430.38267@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2109141102430.38267@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Maciej,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/p2pdma
+branch HEAD: 37900ec2a67c7561abaec8b3f88099db0f4e0bde  PCI/P2PDMA: Apply bus offset correctly in DMA address calculation
 
-14.09.2021 12:24, Maciej W. Rozycki:
->   Would you be able to share a disassembly of the piece of BIOS code in
-> question?  I can read x86 assembly, so maybe the interpretation of the
-> 10/28/41/89 cookie can be inferred from it.  The high nibble looks
-> remarkably like a bit lane selector and swizzling is clearly visible, but
+elapsed time: 3279m
 
-Ok, I've solved the puzzle.
-High nibble is a ready-to-use bitmask for chipset reg 0x44 (so indeed, 
-it is 1 << X).
-Now, in low nibble, bit 0 selects one of two (0x42 or 0x43) chipset 
-registers and further bit 3 selects one of two halves, and bits 1 and 2 
-are apparently ignored. So actually, 10-28-41-89 is then just a freaky 
-representation of simple 1-2-3-4 numbering. Good news it is exactly the 
-numbering I chose when converting from $IRT to the supported $PIR 
-format, and then it just worked (Some more details about my testing with 
-this converted table where reported in my followup messages a bit 
-earlier, you have probably seen them already).
+configs tested: 189
+configs skipped: 4
 
-Here is the relevant code with my remarks:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-f9c1d: test al, 0x01 // Here AL bit 0 = Edge/Level CMOS setting.
-f9c1f: pushf
-f9c20: mov ah, dh // Here DH = PIRQ from $IRT table.
-f9c22: shr ah, 4 // PIRQ's high nibble is a mask to set/clr E/L bit in 
-reg 44 (1 << X)
-f9c25: mov al, 0x44  // AH is ignored.
-f9c27: call read_chipset_reg_AL // Register value returned in AL
-f9c2a: or al, ah
-f9c2c: popf
-f9c2d: jnz .+4 (9c33)
-f9c2f: not ah
-f9c31: and al, ah
-f9c33: mov ah, al
-f9c35: mov al, 0x44 // Write AH to chipset register number 0x44.
-f9c37: call write_chipset_reg_AL
-f9c3a: mov al, 0x42
-f9c3c: mov ah, dh
-f9c3e: and ah, 0x01
-f9c41: add al, ah    // PIRQ's bit 0 is reg 42/43 selector (X >> 1)
-f9c43: mov ah, al    // AH is ignored
-f9c45: call read_chipset_reg_AL // Register value returned in AL
-f9c48: test dh, 0x08 // PIRQ's bit 3 is reg's nibble selector (X & 1)
-f9c4b: jz .+3 (9c50) // Here 0 value selects lower nibble.
-f9c4d: ror al, 0x04
-f9c50: and al, 0xf0
-f9c52: or al, dl     // Here DL contains wanted IRQ number to set.
-f9c54: test dh, 0x08
-f9c57: jz.+3 (9c5c)
-f9c59: ror al, 0x04
-f9c5c: xchg ah, al
-f9c5e: call write_chipset_reg_AL
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sh                   sh7724_generic_defconfig
+sh                          kfr2r09_defconfig
+sh                     sh7710voipgw_defconfig
+mips                 decstation_r4k_defconfig
+arm                           h3600_defconfig
+mips                          rb532_defconfig
+xtensa                          iss_defconfig
+ia64                         bigsur_defconfig
+arm                         nhk8815_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                         rt305x_defconfig
+mips                     loongson1b_defconfig
+powerpc                   lite5200b_defconfig
+powerpc                      acadia_defconfig
+powerpc                 xes_mpc85xx_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                             mxs_defconfig
+powerpc                    socrates_defconfig
+powerpc                      cm5200_defconfig
+arm                      jornada720_defconfig
+powerpc                  mpc866_ads_defconfig
+arm                         vf610m4_defconfig
+powerpc                 mpc834x_mds_defconfig
+mips                        workpad_defconfig
+sh                        edosk7760_defconfig
+sh                          r7785rp_defconfig
+powerpc                 mpc832x_mds_defconfig
+sparc                       sparc64_defconfig
+mips                      loongson3_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                     redwood_defconfig
+powerpc                      obs600_defconfig
+powerpc                      bamboo_defconfig
+m68k                       bvme6000_defconfig
+arm                           sunxi_defconfig
+arc                      axs103_smp_defconfig
+x86_64                           alldefconfig
+m68k                        m5272c3_defconfig
+ia64                          tiger_defconfig
+arm                      pxa255-idp_defconfig
+arc                           tb10x_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                 mpc8315_rdb_defconfig
+powerpc                 mpc836x_rdk_defconfig
+mips                  cavium_octeon_defconfig
+arm                         s5pv210_defconfig
+arm                         assabet_defconfig
+sh                           se7206_defconfig
+arm                            qcom_defconfig
+arc                         haps_hs_defconfig
+m68k                          sun3x_defconfig
+arm                        neponset_defconfig
+sh                          urquell_defconfig
+arm                         palmz72_defconfig
+arm                        multi_v7_defconfig
+s390                       zfcpdump_defconfig
+m68k                       m5249evb_defconfig
+m68k                       m5275evb_defconfig
+mips                         cobalt_defconfig
+arm                         shannon_defconfig
+arm                  colibri_pxa300_defconfig
+s390                             alldefconfig
+riscv                          rv32_defconfig
+x86_64               randconfig-c001-20210915
+arm                  randconfig-c002-20210915
+i386                 randconfig-c001-20210915
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a002-20210913
+x86_64               randconfig-a003-20210913
+x86_64               randconfig-a006-20210913
+x86_64               randconfig-a004-20210913
+x86_64               randconfig-a005-20210913
+x86_64               randconfig-a001-20210913
+i386                 randconfig-a004-20210915
+i386                 randconfig-a005-20210915
+i386                 randconfig-a006-20210915
+i386                 randconfig-a002-20210915
+i386                 randconfig-a001-20210915
+i386                 randconfig-a003-20210915
+x86_64               randconfig-a013-20210914
+x86_64               randconfig-a016-20210914
+x86_64               randconfig-a012-20210914
+x86_64               randconfig-a011-20210914
+x86_64               randconfig-a014-20210914
+x86_64               randconfig-a015-20210914
+x86_64               randconfig-a002-20210915
+x86_64               randconfig-a003-20210915
+x86_64               randconfig-a004-20210915
+x86_64               randconfig-a006-20210915
+x86_64               randconfig-a005-20210915
+x86_64               randconfig-a001-20210915
+i386                 randconfig-a016-20210914
+i386                 randconfig-a015-20210914
+i386                 randconfig-a011-20210914
+i386                 randconfig-a012-20210914
+i386                 randconfig-a013-20210914
+i386                 randconfig-a014-20210914
+arc                  randconfig-r043-20210913
+arc                  randconfig-r043-20210915
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-> I fail to guess the algorithm from this pattern.  Given that the PIRQ
-> routing handler is chipset-specific we could try interpreting just the
-> high nibble, but would it work for the next system with the same chipset?
+clang tested configs:
+x86_64               randconfig-a002-20210914
+x86_64               randconfig-a003-20210914
+x86_64               randconfig-a004-20210914
+x86_64               randconfig-a006-20210914
+x86_64               randconfig-a005-20210914
+x86_64               randconfig-a001-20210914
+i386                 randconfig-a004-20210914
+i386                 randconfig-a005-20210914
+i386                 randconfig-a006-20210914
+i386                 randconfig-a002-20210914
+i386                 randconfig-a001-20210914
+i386                 randconfig-a003-20210914
+x86_64               randconfig-a013-20210915
+x86_64               randconfig-a016-20210915
+x86_64               randconfig-a012-20210915
+x86_64               randconfig-a011-20210915
+x86_64               randconfig-a014-20210915
+x86_64               randconfig-a015-20210915
+x86_64               randconfig-a016-20210913
+x86_64               randconfig-a013-20210913
+x86_64               randconfig-a012-20210913
+x86_64               randconfig-a011-20210913
+x86_64               randconfig-a014-20210913
+x86_64               randconfig-a015-20210913
+i386                 randconfig-a016-20210915
+i386                 randconfig-a015-20210915
+i386                 randconfig-a011-20210915
+i386                 randconfig-a012-20210915
+i386                 randconfig-a013-20210915
+i386                 randconfig-a014-20210915
+hexagon              randconfig-r045-20210914
+hexagon              randconfig-r041-20210914
+riscv                randconfig-r042-20210915
+hexagon              randconfig-r045-20210915
+s390                 randconfig-r044-20210915
+hexagon              randconfig-r041-20210915
+riscv                randconfig-r042-20210913
+hexagon              randconfig-r045-20210913
+s390                 randconfig-r044-20210913
+hexagon              randconfig-r041-20210913
 
-This is certainly unclear. However, 10-28-41-89 can be arithmetically 
-verified for consistency against the numbering scheme described above. 
-So a respective test could be added somewhere. Also, prime numbers 1 to 
-4 could probably be treated as valid numbering, too. Everything else 
-should probably be refused unless some other numbering scheme pops up.
-
->   Also who is the BIOS vendor?  Maybe they would be able to tell us
-> something about the "$IRT" BIOS service.
-
-It is some regular AMIBIOS (American Megatrends) from 486 era, for 
-EXP8449 motherboard, here is a manual I found for it:
-
-https://www.elhvb.com/mobokive/Archive/Oldman.ixbt.com/mb/Expertboard_8449/exp84491.pdf 
-
-
->   Datasheets are not always right, but this one is the best source we have
-> for this chipset.
-
-Well, my testing has shown that practically, with your patch all works 
-fine, including IRQ sharing. So other than this unclear numbering 
-problem, I think it can be considered correct and usefull.
-
-
-Thank you,
-
-Regards,
-Nikolai
-
->
->    Maciej
->
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
