@@ -2,105 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3ECB40DE01
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 17:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5A840DE53
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 17:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239171AbhIPPcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 11:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239172AbhIPPcE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Sep 2021 11:32:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 431EA6121F;
-        Thu, 16 Sep 2021 15:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631806243;
-        bh=I0QaK/2rbPrDUqCwKDAgD9k9kSWTb+OYUzIOH/5tHyE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ahMad47Tp6ix1LHEXj8scA8cWHbqXa6tKiGjeK/GGxTwbxNOrsYFrAySpAj750Qwo
-         ZrfGbO7YyrSrRWkbBk3hUXdoQzavfQftNQsmEMqE4Ui4a4McaNS9z8mQ7YkfpyI1qv
-         x5cyj5ztgDYPxJCvPE4Xe8xUgwpV5lAIBVF2frjQtyujSuTuO6zpys+VHwm2so2BO9
-         P3YxnCptpn8ZPLCbbi2BRLAacxxiqPXYFgyWlHtVshJPfk1+O0+dqCsxZLPj8Kw+PJ
-         Yb7ytTSHc0CIYI49J8OXP5efmtrQVf29T0Nj9JrI1ZgTKf2G/4Td/xLCJbnCFJVkgm
-         pTthCaQScU9Kg==
-Date:   Thu, 16 Sep 2021 08:30:42 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     x86@kernel.org, jose.souza@intel.com, hpa@zytor.com, bp@alien8.de,
-        mingo@redhat.com, tglx@linutronix.de, kai.heng.feng@canonical.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com, stable@vger.kernel.org,
-        paulmck@kernel.org
-Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
- platform
-Message-ID: <20210916083042.5f63163a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210916150707.GA1611532@bjorn-Precision-5520>
-References: <20210916131739.1260552-1-kuba@kernel.org>
-        <20210916150707.GA1611532@bjorn-Precision-5520>
+        id S237149AbhIPPpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 11:45:49 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:33024
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231702AbhIPPps (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 11:45:48 -0400
+Received: from HP-EliteBook-840-G7.. (1-171-209-135.dynamic-ip.hinet.net [1.171.209.135])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 9328D40185;
+        Thu, 16 Sep 2021 15:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1631807066;
+        bh=D+6x42mV/eNHaJg6o/8m7nqSFdYIv9hJf3BQ21j7zcs=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=ri00jAUy9r6dPkWBuJUEzoYqptyPdG5gebAiAm55R/PCkcxPFYfLdc/J4za/sMNNs
+         +ANu94vpDQVCEIlLV4zZlOO0biSP1ZkCDUqh9FPWj5J4DLJMwhn2Hj+NKyYtubsZeq
+         mK+kyS/LaV8VnK6+64gLvr4SnEHNAKrmnBNIYGoVSOFUvLB/APWBc+5tISpi8XKUCm
+         NYcvJd2ggrjlsY6C8vhrU1/RG1ask+YObpDH96NHXTddhstAcAjHsCnx4b+z0Tfver
+         RAaadjezettzJT33lf31KRZqtVnB4rIC3SbzmjHgfNGfSBzLjshqYOTnXtlMk0t6hl
+         d4VbZGfoUjPSQ==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com
+Cc:     davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [RFC] [PATCH net-next v5 0/3] r8169: Implement dynamic ASPM mechanism for recent 1.0/2.5Gbps Realtek NICs
+Date:   Thu, 16 Sep 2021 23:44:14 +0800
+Message-Id: <20210916154417.664323-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 16 Sep 2021 10:07:07 -0500 Bjorn Helgaas wrote:
-> On Thu, Sep 16, 2021 at 06:17:39AM -0700, Jakub Kicinski wrote:
-> > My Lenovo T490s with i7-8665U had been marking TSC as unstable
-> > since v5.13, resulting in very sluggish desktop experience...  
-> 
-> Including the actual dmesg log line here might help others locate this
-> fix.
+The purpose of the series is to get comments and reviews so we can merge
+and test the series in downstream kernel.
 
-Good point, will add in v2.
+The latest Realtek vendor driver and its Windows driver implements a
+feature called "dynamic ASPM" which can improve performance on it's
+ethernet NICs.
 
-clocksource: timekeeping watchdog on CPU3: hpet read-back delay of 316000ns, attempt 4, marking unstable
-tsc: Marking TSC unstable due to clocksource watchdog
-TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
-sched_clock: Marking unstable (14539801827657, -530891666)<-(14539319241737, -48307500)
-clocksource: Checking clocksource tsc synchronization from CPU 3 to CPUs 0-2,6-7.
-clocksource: Switched to clocksource hpet
+Heiner Kallweit pointed out the potential root cause can be that the
+buffer is to small for its ASPM exit latency.
 
-> > I have a 8086:3e34 bridge, also known as "Host bridge: Intel
-> > Corporation Coffee Lake HOST and DRAM Controller (rev 0c)".
-> > Add it to the list.
-> > 
-> > We should perhaps consider applying this quirk more widely.
-> > The Intel documentation does not list my device [1], but
-> > linuxhw [2] does, and it seems to list a few more bridges
-> > we do not currently cover (3e31, 3ecc, 3e35, 3e0f).  
-> 
-> In the fine tradition of:
-> 
->   e0748539e3d5 ("x86/intel: Disable HPET on Intel Ice Lake platforms")
->   f8edbde885bb ("x86/intel: Disable HPET on Intel Coffee Lake H platforms")
->   fc5db58539b4 ("x86/quirks: Disable HPET on Intel Coffe Lake platforms")
->   62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail plat form")
-> 
-> This seems to be an ongoing issue, not just a point defect in a single
-> product, and I really hate the onesy-twosy nature of this.
+So bring the dynamic ASPM to r8169 so we can have both nice performance
+and powersaving at the same time.
 
-Indeed. Or at least cover all Coffee Lakes in one fell swoop.
+For the slow/fast alternating traffic pattern, we'll need some real
+world test to know if we need to lower the dynamic ASPM interval.
 
-> Is there really no way to detect this issue automatically or fix
-> whatever Linux bug makes us trip over this?  I am no clock expert, so
-> I have absolutely no idea whether this is possible.
+v4:
+https://lore.kernel.org/netdev/20210827171452.217123-1-kai.heng.feng@canonical.com/
 
-I'm deferring to clock experts. Paul mentioned he has some prototype
-patches that may help.
+v3:
+https://lore.kernel.org/netdev/20210819054542.608745-1-kai.heng.feng@canonical.com/
 
-> > [1] https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/8th-gen-core-family-datasheet-vol-2.pdf
-> > [2] https://github.com/linuxhw/DevicePopulation/blob/master/README.md
-> > 
-> > Cc: stable@vger.kernel.org # v5.13+  
-> 
-> How did you pick v5.13?  force_disable_hpet() was added by
-> 62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail
-> platform"), which appeared in v3.15.
+v2:
+https://lore.kernel.org/netdev/20210812155341.817031-1-kai.heng.feng@canonical.com/
 
-Erm, good question, it started happening for me (and others with the
-same laptop) with v5.13. I just sort of assumed it was 2e27e793e280
-("clocksource: Reduce clocksource-skew threshold"). 
+v1:
+https://lore.kernel.org/netdev/20210803152823.515849-1-kai.heng.feng@canonical.com/
 
-It usually takes  a day to repro (4 hours was the quickest repro I've
-seen) so bisection was kind of out of question.
+Kai-Heng Feng (3):
+  PCI/ASPM: Introduce a new helper to report ASPM capability
+  r8169: Use PCIe ASPM status for NIC ASPM enablement
+  r8169: Implement dynamic ASPM mechanism
+
+ drivers/net/ethernet/realtek/r8169_main.c | 69 ++++++++++++++++++++---
+ drivers/pci/pcie/aspm.c                   | 11 ++++
+ include/linux/pci.h                       |  2 +
+ 3 files changed, 73 insertions(+), 9 deletions(-)
+
+-- 
+2.32.0
+
