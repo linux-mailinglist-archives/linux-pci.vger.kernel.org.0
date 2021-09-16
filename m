@@ -2,69 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ED6740E809
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 20:00:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48BED40EA5A
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Sep 2021 20:56:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344929AbhIPRno (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 13:43:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355827AbhIPRmK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Sep 2021 13:42:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C93660EE9;
-        Thu, 16 Sep 2021 17:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631812354;
-        bh=rUp0AYw0+aYLGFQ+cIAh74/QQI3oJR2+BzOUg83Fjcw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jbjB5iNNoTrNjHrEmBNMiKJTorOFLwo4Tp+V/6fNPH/CItGdY01tm+VaXlVFpWAn7
-         lEHo01kntaYxgaHTOibufKp2HncGWyP2zTKjtUcHgI2I+D1WvWapdyLft8JH0v9Iek
-         4UQ05T73q89nEKkA40oFZbqnRmDhHtO1tP5LMR4X5r/rTEOa/mS9c2kLPfL07Vl8nR
-         SjENd4w9VIggalYj3IDojfzpq+VoC35zQ3vBoBELhcKKhpR+9yLognlzC3mUHBNI3F
-         zd5aAuptvfR6oaoObZ2z43rQjmV5L4IrEvA0FiYfeMSfhv246gZm3BJL9pzZKstvkp
-         vlvygPYgXgK4w==
-Date:   Thu, 16 Sep 2021 12:12:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
-        davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] [PATCH net-next v5 3/3] r8169: Implement dynamic ASPM
- mechanism
-Message-ID: <20210916171232.GA1624808@bjorn-Precision-5520>
+        id S245567AbhIPS53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 14:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245110AbhIPS5X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 14:57:23 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93127C04A141
+        for <linux-pci@vger.kernel.org>; Thu, 16 Sep 2021 11:13:26 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id v24so20031895eda.3
+        for <linux-pci@vger.kernel.org>; Thu, 16 Sep 2021 11:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=MdV3uB2PTVAYJMRgyah6H9ACzeHJFwYdk6XSh55HTrw=;
+        b=PuWEIMkg5L9wuMBrQZZFJjdYw6T9e7PE40zeBPox5tstfMI2ujFcvJnck0WhFaDR2+
+         ICLYUGFuQ+NhbYLZQYEeFc1HZBw5+j+PxekggOl+THFRpIQv0VQkCgoVbCO1hwiOYbVK
+         wZQiUBAMu01LBn6TSCoYMOW3SXhPIK/Le6ytQ9zwZyZXRDvgS52s38chUad1t17SCI8Q
+         UhhYAQYCY6jvAqu1/QVfhMdd239b1rBAAbCuNfK3m89Uo256Bwwteqa7YvT3QftGne2O
+         HeTE4ANZf+1M/M8MBSK+vV3Kj5cj+roK6b7RTu1TMYqNjDjJoSnLOdkt+X0gBBROv99s
+         gQSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=MdV3uB2PTVAYJMRgyah6H9ACzeHJFwYdk6XSh55HTrw=;
+        b=ePYdKy44Rx78vqYvTlbvkzHVR4bM+myx61IIyfsts23ZTthggHN2stKWVidzXhFj9L
+         fUSEKMwzLvfPW0g3xZMAxrd6gwiOqZGhURLQqUhnOb9yYGpUWf0aAQ8DriyHOABE4qdt
+         uiaYmTzl13UWzy0DGdVBX2Rbj/nr0io7cGMvReLjf+9j+NkL+EqzQwEqkflTZctxfMpn
+         ZsAiF1mhAzOZKMr9mpmhG20PgHMLUpnZJMs0pxNUSeoL6Qi56mVBN3rAGQkWaPQ0seGO
+         +fhpY3N1RrxksAD3M4sja8Lm3ElI90uR5mrGrfK1ki5AicyBNbCiSE7QcBOPAsKa0eEh
+         d+9w==
+X-Gm-Message-State: AOAM530DIUac8EdlcCorxyRwt+1gjt4BqHRQ7fUalYcx20iV8XB8q8d/
+        /LzLqpFe9Ky+S26r/jKMhEp367M/+tZqQFNQQwg=
+X-Google-Smtp-Source: ABdhPJxg4/PQr9clR0tQXlMAZQe63rZCbp5FT+VCk+t0mKYiLnlt/6GXqXZ7lSJ68hNXF4hrJRFIYwlp76ZHuDYprbs=
+X-Received: by 2002:a17:907:1df1:: with SMTP id og49mr7718778ejc.35.1631816004967;
+ Thu, 16 Sep 2021 11:13:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916154417.664323-4-kai.heng.feng@canonical.com>
+Received: by 2002:a17:906:3009:b0:600:48f0:2ecb with HTTP; Thu, 16 Sep 2021
+ 11:13:24 -0700 (PDT)
+Reply-To: legal.lawyers38@accountant.com
+From:   Barrister David Karl <maoils80@gmail.com>
+Date:   Thu, 16 Sep 2021 17:13:24 -0100
+Message-ID: <CAPGqKUx5mhH_+QwvExQG2Bg0cZm9GmD1EXqY8tHOQW4N238s_Q@mail.gmail.com>
+Subject: For Your Kind Attention
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 11:44:17PM +0800, Kai-Heng Feng wrote:
-> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> Same issue can be observed with older vendor drivers.
-> 
-> The issue is however solved by the latest vendor driver. There's a new
-> mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> more than 10 packets, and vice versa. 
+Hello
 
-Obviously this is a *rate*, not an absolute number.  I think you mean
-something like "10 packets in 1000ms".
+I know that this message might come to you as a surprise because We
+don't know each other nor have we ever met before. I am Barrister
+David Karl ,A solicitor at law, personal attorney to ( Late Mr.Alex
+Hiroko),who bears the same last name with you,who used to work with
+Shell Development Company in Benin.Here in after shall be referred to
+as my client.
 
-> The possible reason for this is
-> likely because the buffer on the chip is too small for its ASPM exit
-> latency.
-> 
-> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> use dynamic ASPM under Windows. So implement the same mechanism here to
-> resolve the issue.
-> 
-> Also introduce a lock to prevent race on accessing config registers.
+On the 21st of April 2009,my client, his wife and their only daughter
+were involved in a ghastly car accident along Porto Novo express
+road.All occupants of the vehicle unfortunately lost their lives.Since
+then, I have made several inquiries to locate any of my clients
+extended relatives, this has also proved unsuccessful. After these
+several unsuccessful attempts, In my disparate search for urgent
+assistance, I decided to track his last name over the foreign mission
+guestbook, to locate any member of his family hence I contacted you.
 
-Can you please include the bugzilla link where you attached lspci
-data?  I think it's this:
+I have contacted you to assist in repatriating the fund valued at
+6.5MillionUSD, left behind by my client before it gets confiscated or
+declared UN-serviceable by the (BANK) here in Benin, where this huge
+amount was deposited. And now the bank has issued me a notice to
+provide the next of kin or have his account confiscated within the
+next Few weeks. Since I have been unsuccessful in locating the
+relatives for up to 10 years now, I seek the consent to present you as
+the next of kin to the deceased since you have the same last names, so
+that the proceeds of this account can be paid to you.
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=214307
+Therefore, on receipt of your positive response, we shall then discuss
+the sharing ratio and modalities for transfer. I have all necessary
+information and legal documents needed to back you up for the claim.
+All I require from you is your honest cooperation to enable us to see
+this transaction through. I guarantee that this will be executed under
+legitimate arrangement that will protect you from any breach of the
+law. In your interest ,Let me hear from you. Urgent response to this
+letter will be proudly appreciated, Along with your direct Telephone
+Number For Easy Communications.
 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Note: This transaction must be kept confidential i.e Top Secret..
+E-mail:(legal.lawyers38@accountant.com)
+
+Best Regards,
+
+Barrister David Karl
+Ceo of Karl Legal Chambers
+Barristers and Solicitors Benin
+Tel+229 62 3545 03
