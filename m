@@ -2,80 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B5440F99F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 15:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF35640F9A0
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 15:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241549AbhIQNzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 09:55:08 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:33544 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241740AbhIQNzH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Sep 2021 09:55:07 -0400
-Received: by mail-wr1-f47.google.com with SMTP id t18so15392141wrb.0
-        for <linux-pci@vger.kernel.org>; Fri, 17 Sep 2021 06:53:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/Wu81rpeohFS7cNOKoLsTxbjwHv1IwKol2KMC+B4ipQ=;
-        b=zU6DYshztCm1XZeXKf7ZCFsjFC4CpECh5pccNJI5Wtv/RVD7+3IuEF0XQXgnkN5ywp
-         b4CvRE4J52R/AupPaWmMaeEiGng8AHzfMqsmhu3oZXjViU078+xQTI+vfwtQ7FHi5HaZ
-         xyeyv7IvdAwjJj0u4UUC+XhLYq0mci8ZLYP+E9UvG78qFHiLo0ybEd2PlZfa6QRRV8jE
-         Iwtl5xW9SfH8TnG8Gk0LIZrpE/fPJBj4+RxYik3oDmG4sGVzz05bi1BPmbMjpyLhExUw
-         KdmRZFsZb6z1e+noyMvB1fwlFsXajSspvQfgp1cEYtEbTl8NZ5FaIDsaL+Ma6pf2a5Qb
-         0C0Q==
-X-Gm-Message-State: AOAM533yQi9oz/fJn89usH2Fh2p7JRg4WaKuV0f4QEzkRXdE9aV1TptE
-        nzvy11abw/GR1FGiguoZ3RiBNzsvoYA=
-X-Google-Smtp-Source: ABdhPJyHrp0G4Z/qNF+F8ThCw5M50qZb1oM50ToVpPOGekEEGTx2/ZGMB+22om2WwUCC9xwvlqfz7g==
-X-Received: by 2002:a5d:630a:: with SMTP id i10mr12525863wru.178.1631886824446;
-        Fri, 17 Sep 2021 06:53:44 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id j7sm8527732wrr.27.2021.09.17.06.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Sep 2021 06:53:43 -0700 (PDT)
-Date:   Fri, 17 Sep 2021 15:53:42 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/VPD: Add simple sanity check to pci_vpd_size()
-Message-ID: <20210917135342.GB1518947@rocinante>
-References: <135abde5-dc5b-826e-e20d-0f53bf32d2dc@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <135abde5-dc5b-826e-e20d-0f53bf32d2dc@gmail.com>
+        id S241623AbhIQNzl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 09:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241589AbhIQNzk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Sep 2021 09:55:40 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E310C611C3;
+        Fri, 17 Sep 2021 13:54:18 +0000 (UTC)
+Received: from [198.52.44.129] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mREJl-00BNoO-0m; Fri, 17 Sep 2021 14:54:17 +0100
+Date:   Fri, 17 Sep 2021 14:54:11 +0100
+Message-ID: <87ee9nb94s.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] PCI: uniphier: Fix INTx masking/unmasking
+In-Reply-To: <64fd8ea9-1d78-5e3a-8097-6206f03e69de@socionext.com>
+References: <1630290158-31264-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <64fd8ea9-1d78-5e3a-8097-6206f03e69de@socionext.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 198.52.44.129
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, pali@kernel.org, mhiramat@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Heiner,
+On Thu, 16 Sep 2021 12:30:52 +0100,
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+> 
+> Gentle ping, are there any comments about this series?
+> 
+> Thank you,
+> 
+> On 2021/08/30 11:22, Kunihiko Hayashi wrote:
+> > This series includes some fixes to INTx masking/unmasking for UniPhier PCIe
+> > host controller driver.
+> > 
+> > - Remove unnecessary bit clears to INTX mask field
+> > - Remove unnecessary irq_ack() function because write access to status field
+> >    doesn't work
+> > - Add lock into callback functions to avoid race condition
+> > 
+> > Kunihiko Hayashi (2):
+> >    PCI: uniphier: Fix INTx mask/unmask bit operation and remove ack
+> >      function
+> >    PCI: uniphier: Serialize INTx masking/unmasking
+> > 
+> >   drivers/pci/controller/dwc/pcie-uniphier.c | 26 ++++++++++----------------
+> >   1 file changed, 10 insertions(+), 16 deletions(-)
+> > 
 
-[...]
-> Instead let's add a simple sanity check on the number of found tags.
-> A VPD image conforming to the PCI spec can have max. 4 tags:
-> id string, ro section, rw section, end tag.
+Patches look OK, although I would personally squash them into a single
+one (INTx masking never really worked before that). FWIW:
 
-It's always nice to check if something is compliant with the specification.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Would you be able to either cite this part of the official specification or
-mention where to find it?  Like we do in other such changes related to some
-official standards, mainly for posterity to benefit others that might look
-at this commit in the future.
+	N,
 
-[...]
-> +		/* We can have max 4 tags: STRING_ID, RO, RW, END */
-> +		if (++num_tags > 4)
-> +			goto error;
-
-Do we want to let someone know that their device (or a device they might
-have in the system) has non-compliant and/or malformed VPD which is why we
-decided to return an error?  I wonder if this would help with
-troubleshooting or just simply had some informative value.  So perhaps
-a warning or debug level message?  What do you think?
-
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-	Krzysztof
+-- 
+Without deviation from the norm, progress is not possible.
