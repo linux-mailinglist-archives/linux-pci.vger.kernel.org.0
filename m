@@ -2,131 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2498B40EED8
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 03:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21ED40EFCD
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 04:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242408AbhIQBiV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 21:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236351AbhIQBiV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 21:38:21 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44188C061574;
-        Thu, 16 Sep 2021 18:37:00 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id n13-20020a17090a4e0d00b0017946980d8dso8851023pjh.5;
-        Thu, 16 Sep 2021 18:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZJv0T0RMe21MF4kWcF0/B2W1/ozbKhtMFKhIRKl9ZMo=;
-        b=N/ot3EgDydF6p6/5n5AZkrhZktc26nOO0YKnIe1UIs+06S+gWNs69fqS1lOWK03WG9
-         ODaroI/6MJP8sjdjuAlPvMJQ5njetx+D+SmIrnNLBet/U1W1Arx2bdJLpsikWx+R5UUi
-         NRsNQ+RyEAUAEzkMdXIGsw6wh9BCrM5aT4ufsgh+IxvPbrKPf3MDofL7DFPqHyKImpVM
-         Yj3oRuA5WPxikyrBVxlcNj0R9y0fJrPNiRNyk2Jz31kptqtcItBybh6AWZUEe0KyL7sp
-         KeBIWUql0iJmpTznEp0QxYimonoNhHQHZoAHz4Wd25EPuOI4l9VggeIZeQgbM7blIfAY
-         D3gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZJv0T0RMe21MF4kWcF0/B2W1/ozbKhtMFKhIRKl9ZMo=;
-        b=KySWsRyLUDAVjYOnK7ftRL3g66URTrVPeU3FOTCc8JGZmOLcfRdOq2PpmlDe4llBVm
-         +SA0H4087bHudO7Je9e29tAgknsp9M4LFm1Bjv3wxPmgmokMd+TItLbQs/2VFc1Z1/nm
-         EUl0ZdM7At0R3nkQp0M5SzAoAGrlDGUbsqxpWVGx2uZld1BtaUhHU9OgdmZ/aWzelHmX
-         Wt2Uvf1ChviOZwOkOoZ91aq+ks0gfLRQ0t3TYYkwf5yKo2Hm8EnkA7FqbhizHzuZCbiQ
-         PyznU8IFgFkZFE4YrsJq4sBZyVkRoj6H13CTsl/Q+OYvaVtYFHuDskm+Gj4u+yN+2Ihz
-         Ga0w==
-X-Gm-Message-State: AOAM530XhQSSFyJ0+GlRoE9lH3z9zKAh4sdOonnr3Lt9aDhZNRYl0WV7
-        ChHZBVtj5f30t9orZZADTLNw35Uozhk=
-X-Google-Smtp-Source: ABdhPJwgmYnSHaM1HyOi/D04wtFhz3epJkyk/Oamgu87tZU4ZDV1ogTNRla9ogCm+ib0JPdBdRZ1jQ==
-X-Received: by 2002:a17:90b:224b:: with SMTP id hk11mr17871337pjb.231.1631842619577;
-        Thu, 16 Sep 2021 18:36:59 -0700 (PDT)
-Received: from [192.168.255.10] ([203.205.141.115])
-        by smtp.gmail.com with ESMTPSA id 132sm4176111pfy.190.2021.09.16.18.36.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Sep 2021 18:36:59 -0700 (PDT)
-Subject: Re: [PATCH v3] PCI: vmd: Assign a number to each VMD controller
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-Cc:     jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1631675273-1934-1-git-send-email-brookxu.cn@gmail.com>
- <20210916225755.GA1511623@rocinante>
-From:   brookxu <brookxu.cn@gmail.com>
-Message-ID: <b87f7a38-d147-3da6-0352-ad2df7a5f55f@gmail.com>
-Date:   Fri, 17 Sep 2021 09:36:08 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.13.0
+        id S232509AbhIQCsW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 22:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229981AbhIQCsV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Sep 2021 22:48:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2B9DE60FA0;
+        Fri, 17 Sep 2021 02:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631846820;
+        bh=Hj2m8sNTz+46nMvsPPI9fdpD/+2VPtdTbfYmLWxHZHM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T8Ndbe9alPrAWA49izz5m+WyLf6aqn3bU2JZRlzveipUHAARmr2YlWtz0WctrUSoN
+         kWb0whByoV06VZeBrNUrNqxGWJmDGLdDCdco6MnroQ8kV8SPfy7XjnblgrZohfrLIU
+         ZuxEbmD7ORzQ45/b2fYSHwDYg4D8EvFAqIoT5M4b7k9FtYe/bQao34bOS2kfbIgcrV
+         D3nr0bIVsAkyRBSD0HVUIgB3E4yRmDcGIzGoHSjyc6c5/IQSPBKkgg1BUJMZLm7xCO
+         OfP3fjB/l13wCpp3rl8WqoAV+BgLdSV6b+S7jKnUUn+8HhMMP1PKybIG+1Hl5rMUJy
+         Xso3Ttwan8vMg==
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     x86@kernel.org
+Cc:     jose.souza@intel.com, hpa@zytor.com, bp@alien8.de,
+        mingo@redhat.com, tglx@linutronix.de, kai.heng.feng@canonical.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com, paulmck@kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH v2] x86/intel: Disable HPET on another Intel Coffee Lake platform
+Date:   Thu, 16 Sep 2021 19:46:48 -0700
+Message-Id: <20210917024648.1383476-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20210916225755.GA1511623@rocinante>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+My Lenovo T490s with i7-8665U had been marking TSC as unstable
+since v5.13, resulting in very sluggish desktop experience...
 
+Kernel logs show:
 
-Krzysztof Wilczyński wrote on 2021/9/17 6:57 上午:
-> Hi Xu,
-> 
-> Thank you for sending the patch over!
-> 
-> A small nitpick below, so feel free to ignore it.
-> 
-> [...] 
->> @@ -769,28 +773,48 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->>  {
->>  	unsigned long features = (unsigned long) id->driver_data;
->>  	struct vmd_dev *vmd;
->> -	int err;
->> +	int err = 0;
->>  
->> -	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
->> -		return -ENOMEM;
->> +	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20)) {
->> +		err = -ENOMEM;
->> +		goto out;
->> +	}
->>  
->>  	vmd = devm_kzalloc(&dev->dev, sizeof(*vmd), GFP_KERNEL);
->> -	if (!vmd)
->> -		return -ENOMEM;
->> +	if (!vmd) {
->> +		err = -ENOMEM;
->> +		goto out;
->> +	}
-> 
-> I assume that you changed the above to use the newly added "out" label to
-> be consistent given that you also have the other label, but since there is
-> no clean-up to be done here, do we need this additional label?
-> 
->>  	vmd->dev = dev;
->> +	vmd->instance = ida_simple_get(&vmd_instance_ida, 0, 0, GFP_KERNEL);
->> +	if (vmd->instance < 0) {
->> +		err = vmd->instance;
->> +		goto out;
->> +	}
-> 
-> Similarly to here to the above, no clean-up to be done, and you could just
-> return immediately here.
-> 
-> What do you think?
-> 
+  clocksource: timekeeping watchdog on CPU3: hpet read-back delay of 316000ns, attempt 4, marking unstable
+  tsc: Marking TSC unstable due to clocksource watchdog
+  TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
+  sched_clock: Marking unstable (14539801827657, -530891666)<-(14539319241737, -48307500)
+  clocksource: Checking clocksource tsc synchronization from CPU 3 to CPUs 0-2,6-7.
+  clocksource: Switched to clocksource hpet
 
-Thanks, I think we can do this.
+I have a 8086:3e34 bridge, also known as "Host bridge: Intel
+Corporation Coffee Lake HOST and DRAM Controller (rev 0c)".
+Add it to the list.
 
-> Also, I think we might have lost a "Reviewed-by" from Jon Derrick somewhere
-> along the way.  Given that you only updated the commit log and the subject
-> like, it probably still applies (unless Jon would like to give his seal of
-> approval again).
-> 
+We should perhaps consider applying this quirk more widely.
+The Intel documentation does not list my device [1], but
+linuxhw [2] does, and it seems to list a few more bridges
+we do not currently cover (3e31, 3ecc, 3e35, 3e0f).
 
-Thanks, my mistake here.
+[1] https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/8th-gen-core-family-datasheet-vol-2.pdf
+[2] https://github.com/linuxhw/DevicePopulation/blob/master/README.md
 
-> 	Krzysztof
-> 
+Cc: stable@vger.kernel.org # v5.13+
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+v2: - add the dmesg output
+---
+ arch/x86/kernel/early-quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 38837dad46e6..7d2de04f8750 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -716,6 +716,8 @@ static struct chipset early_qrk[] __initdata = {
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3e20,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3e34,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x8a12,
+-- 
+2.31.1
+
