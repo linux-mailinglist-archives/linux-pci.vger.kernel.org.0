@@ -2,136 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D429540F4D4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 11:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCBC940F4E3
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 11:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240244AbhIQJcg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 05:32:36 -0400
-Received: from sibelius.xs4all.nl ([83.163.83.176]:57329 "EHLO
-        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239040AbhIQJcf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Sep 2021 05:32:35 -0400
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 4f816570;
-        Fri, 17 Sep 2021 11:31:10 +0200 (CEST)
-Date:   Fri, 17 Sep 2021 11:31:10 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     sven@svenpeter.dev, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com,
-        kettenis@openbsd.org, marcan@marcan.st, Robin.Murphy@arm.com,
-        kernel-team@android.com
-In-Reply-To: <87mtobblvd.wl-maz@kernel.org> (message from Marc Zyngier on Fri,
-        17 Sep 2021 10:19:02 +0100)
-Subject: Re: [PATCH v3 10/10] PCI: apple: Configure RID to SID mapper on device addition
-References: <20210913182550.264165-1-maz@kernel.org>
-        <20210913182550.264165-11-maz@kernel.org>
-        <b502383a-fe68-498a-b714-7832d3c8703e@www.fastmail.com>
-        <87y27zbiu3.wl-maz@kernel.org>
-        <56145a72aa978ebd@bloch.sibelius.xs4all.nl> <87mtobblvd.wl-maz@kernel.org>
-Message-ID: <56146608f4547f39@bloch.sibelius.xs4all.nl>
+        id S241240AbhIQJhx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 05:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241256AbhIQJhu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Sep 2021 05:37:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBE7C061764;
+        Fri, 17 Sep 2021 02:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=p4JKQZLvY28YAWtmOrT5h9vdEtIffVYjwaqM8dQlSuk=; b=QQ1aRlrpBKnxNb39uc5Qg3Q7Mr
+        mtZkjFZ5HTcmaUZIpBhEXzPz8Jnq6weWSkgUpL2ZOUKilOgIzFGCCQ2JsASe/UWeepzzTAjnuDSq/
+        d6jWrwALsAtBH8rcEhZ+gYCxsXuVXFUGJOMOaY7EEWS0badAoBtcsot+9NjjB9RUWHxdKrXSpyoWO
+        SsUpBM5dYmSkstVKdjvPRDnp/KwGbaSrzJz1ye5fIQ+BmZREMveigINbT/jf2nETmaC4DVkZTgQty
+        TBmtDdFa01zzoYOtyQRMOP/09HS+XUE9of6QOoTBGDhK6xQ/sDImSguyhQk0jy0WfDEywITFiV7p3
+        fsnyYQIg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mRAGX-00070u-2K; Fri, 17 Sep 2021 09:34:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C000300260;
+        Fri, 17 Sep 2021 11:34:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EF47A2083B0E0; Fri, 17 Sep 2021 11:34:39 +0200 (CEST)
+Date:   Fri, 17 Sep 2021 11:34:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>, x86@kernel.org,
+        jose.souza@intel.com, hpa@zytor.com, bp@alien8.de,
+        mingo@redhat.com, tglx@linutronix.de, kai.heng.feng@canonical.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
+ platform
+Message-ID: <YURhL33YyXRMkdC6@hirez.programming.kicks-ass.net>
+References: <20210916131739.1260552-1-kuba@kernel.org>
+ <20210916150707.GA1611532@bjorn-Precision-5520>
+ <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Date: Fri, 17 Sep 2021 10:19:02 +0100
-> From: Marc Zyngier <maz@kernel.org>
+On Fri, Sep 17, 2021 at 11:11:49AM +0200, Peter Zijlstra wrote:
+> On Thu, Sep 16, 2021 at 10:07:07AM -0500, Bjorn Helgaas wrote:
+> > This seems to be an ongoing issue, not just a point defect in a single
+> > product, and I really hate the onesy-twosy nature of this.  Is there
+> > really no way to detect this issue automatically or fix whatever Linux
+> > bug makes us trip over this?  I am no clock expert, so I have
+> > absolutely no idea whether this is possible.
 > 
-> On Tue, 14 Sep 2021 10:56:05 +0100,
-> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> > 
-> > > Date: Tue, 14 Sep 2021 10:35:32 +0100
-> > > From: Marc Zyngier <maz@kernel.org>
-> > > 
-> > > On Mon, 13 Sep 2021 21:45:13 +0100,
-> > > "Sven Peter" <sven@svenpeter.dev> wrote:
-> > > > 
-> > > > On Mon, Sep 13, 2021, at 20:25, Marc Zyngier wrote:
-> > > > > The Apple PCIe controller doesn't directly feed the endpoint's
-> > > > > Requester ID to the IOMMU (DART), but instead maps RIDs onto
-> > > > > Stream IDs (SIDs). The DART and the PCIe controller must thus
-> > > > > agree on the SIDs that are used for translation (by using
-> > > > > the 'iommu-map' property).
-> > > > > 
-> > > > > For this purpose, parse the 'iommu-map' property each time a
-> > > > > device gets added, and use the resulting translation to configure
-> > > > > the PCIe RID-to-SID mapper. Similarily, remove the translation
-> > > > > if/when the device gets removed.
-> > > > > 
-> > > > > This is all driven from a bus notifier which gets registered at
-> > > > > probe time. Hopefully this is the only PCI controller driver
-> > > > > in the whole system.
-> > > > > 
-> > > > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/pcie-apple.c | 158 +++++++++++++++++++++++++++-
-> > > > >  1 file changed, 156 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pcie-apple.c 
-> > > > > b/drivers/pci/controller/pcie-apple.c
-> > > > > index 76344223245d..68d71eabe708 100644
-> > > > > --- a/drivers/pci/controller/pcie-apple.c
-> > > > > +++ b/drivers/pci/controller/pcie-apple.c
-> > > > > @@ -23,8 +23,10 @@
-> > > > >  #include <linux/iopoll.h>
-> > > > >  #include <linux/irqchip/chained_irq.h>
-> > > > >  #include <linux/irqdomain.h>
-> > > > > +#include <linux/list.h>
-> > > > >  #include <linux/module.h>
-> > > > >  #include <linux/msi.h>
-> > > > > +#include <linux/notifier.h>
-> > > > >  #include <linux/of_irq.h>
-> > > > >  #include <linux/pci-ecam.h>
-> > > > >  
-> > > > > @@ -116,6 +118,8 @@
-> > > > >  #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
-> > > > >  #define PORT_PREFMEM_ENABLE		0x00994
-> > > > >  
-> > > > > +#define MAX_RID2SID			64
-> > > > 
-> > > > Do these actually have 64 slots? I thought that was only for
-> > > > the Thunderbolt controllers and that these only had 16.
-> > > 
-> > > You are indeed right, and I blindly used the limit used in the
-> > > Correlium driver. Using entries from 16 onward result in a non booting
-> > > system. The registers do not fault though, and simply ignore writes. I
-> > > came up with an simple fix for this, see below.
-> > 
-> > Or should be add a property to the DT binding to indicate the number
-> > of entries (using a default of 16)?  We don't have to add that
-> > property right away; we can delay that until we actually try to
-> > support the Thunderbolt ports.
+> X86 is gifted with the grant total of _0_ reliable clocks. Given no
+> accurate time, it is impossible to tell which one of them is broken
+> worst. Although I suppose we could attempt to synchronize against the
+> PMU or MPERF..
 > 
-> I'd rather only add a property for things we cannot discover
-> ourselves. And indeed, we don't have to decide on this right now.
+> We could possibly disable the tsc watchdog for
+> X86_FEATURE_TSC_KNOWN_FREQ && X86_FEATURE_TSC_ADJUST I suppose.
 > 
-> > In case you didn't know already, RIDs that have no mapping in the
-> > RID2SID table map to SID 0.  That's why I picked 1 as the SID in the
-> > iommu-map property for the port.
-> 
-> I sort-off guessed, as using 0 made everything work by 'magic', while
-> using your DT prevented the machine from booting. I tend to dislike
-> magic, hence this patch.
+> And then have people with 'creative' BIOS get to keep the pieces.
 
-Right.  I deliberately used SID 1 in the DT to make sure other devices
-on the bus couldn't accidentally use IOMMU mappings for a device that
-was mapped to SID 0.
- 
-> > > > I never checked it myself though and it doesn't make much
-> > > > of a difference for now since only four different RIDs will
-> > > > ever be connected anyway.
-> > > 
-> > > Four? I guess the radios expose more than a single RID?
-> > 
-> > At this point, on the M1 mini there is the Broadcom BCM4378 WiFi/BT
-> > device (which has two functions), the Fresco Logic FL1100 xHCI
-> > controller (single function) and the Broadcom BCM57765 Ethernet
-> > controller.  So yes, there are for RIDs.
-> 
-> But as far as I can see, the RID-to-SID mapping is per port. So at
-> most, we have two RIDs per port/DART, not four. Or am I missing
-> something altogether?
-
-No you're not missing anything.
+Alternatively, we can change what the TSC watchdog does for
+X86_FEATURE_TSC_ADJUST machines. Instead of checking time against HPET
+it can check if TSC_ADJUST changes. That should make it more resillient
+vs HPET time itself being off.
