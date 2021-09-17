@@ -2,171 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 108DA40FE32
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 18:55:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E658740FF96
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 20:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243269AbhIQQ4Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 12:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243102AbhIQQ4Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 12:56:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97AAF61108;
-        Fri, 17 Sep 2021 16:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631897701;
-        bh=gIN/1/UJ9KFOMMzT+R4qCGsl0N3O4XSWxGatfxzx4dc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GstmkVwl1605P/G9i50cL7p85qHP8Iyk2IMhCZ8dxd+PX9nRyrirBnIPfakhJHjJb
-         UndfnJAdTIIzPQX23o7ZIuCJLdUmwOh9LL2FCUlxH5OLoCG7NyK7dQLrfs995Y9QIK
-         AUz1THxXHlNFFArXZn5oxY6Yf3cFa42NFhNzARvsWwfOlXt8pDzSycne3mmt9BA7Ln
-         X/in+c1wMbiMO466tFyubRG+l5o63b9PYxxA6yL1O4q1WApo80Bi3JHO92quZI8q4m
-         gGlRgpP/lbKk+cEooMFWX9W0GyfW0a20JSGTBcx3wG07nq112b2Bg3ObpXRIHhkIF7
-         Hkxna/hyXqpoA==
-Date:   Fri, 17 Sep 2021 11:55:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        mripard@kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH] vgaarb: Use ACPI HID name to find integrated GPU
-Message-ID: <20210917165500.GA1723244@bjorn-Precision-5520>
+        id S1343496AbhIQSrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 14:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245733AbhIQSrm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Sep 2021 14:47:42 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E1CC061574
+        for <linux-pci@vger.kernel.org>; Fri, 17 Sep 2021 11:46:20 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id p29so35878401lfa.11
+        for <linux-pci@vger.kernel.org>; Fri, 17 Sep 2021 11:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NmA1sI+mOH+L74Z/ZCywczXpg8/UTn+pjaC69qTfoa8=;
+        b=a7GArknKjR7dZ10Erg99lW47r6IBK+3lGenkiI1HyBESPEq2XouXaBvFK/SHIlGnjA
+         qHJBx9g2tAR+7Ips1KIjq8SMDhDejuwFE2IN9xpdhgEPTv0YGB/kRg1Iai/qC6tGzgmg
+         9KSfjXly2AnQt433q8p7vGmT08svnU9GX43pQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NmA1sI+mOH+L74Z/ZCywczXpg8/UTn+pjaC69qTfoa8=;
+        b=NW7zCMAOJ2WPG8gQXqa0CKFt8uW1j5vsyg560egK9iRmcKPE/x4aN7pHNSpfV598mg
+         VllK62DvN1tk/GxlnpReQ2CTHQBJ4tsTItTHjmo6N4Yt5kInC0SVAxgV/nWCPZhUcH2F
+         sLmaaUUPKFgdDwRDvK7pyLBuPtk33W9LNL0mQ/tgpCD8PnXgnxJPyOjAzXAk/2DEosVI
+         2glKOXt4sQ0LwhJJwMqpSEIGq7F1XawKjaA10w7144JpItqc2idQa5+9CEmalxdyOQWh
+         yrVwzrKonBWgMfwBW70yttmvvemK+4gWGSsYO3cehhU9N2oNrW/Ld9AE9kUobCa1wxsH
+         JeXg==
+X-Gm-Message-State: AOAM532uY29+m/L1zY+yp8KUR8BhFUyButkQMkGPvBRytBOr54ToSzI7
+        DcQBCPHQ6znwfYEQSo1Kka/aPWq6F0PRtk75Yl0=
+X-Google-Smtp-Source: ABdhPJwGAvt6qFh3hBt/LVNuXS2w/aMWDS+62a4CO6ykJaYHLnh9PhKZbISHR/zoKIEjkLEZMJzSPg==
+X-Received: by 2002:a2e:5309:: with SMTP id h9mr8927171ljb.386.1631904377791;
+        Fri, 17 Sep 2021 11:46:17 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id a11sm584563lfj.166.2021.09.17.11.46.16
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Sep 2021 11:46:17 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id x27so36762795lfu.5
+        for <linux-pci@vger.kernel.org>; Fri, 17 Sep 2021 11:46:16 -0700 (PDT)
+X-Received: by 2002:a05:6512:94e:: with SMTP id u14mr9023953lft.173.1631904376131;
+ Fri, 17 Sep 2021 11:46:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p6XdeYcLNctghOi5VPy1YHEOaGoeo9Wc_T9P-RmYTJKzA@mail.gmail.com>
+References: <20210917151842.GA1716604@bjorn-Precision-5520>
+In-Reply-To: <20210917151842.GA1716604@bjorn-Precision-5520>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 17 Sep 2021 11:46:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgE+ngSaKxv1MW+un1f=N4QnC0jFC46b3nNZinQRnZj0g@mail.gmail.com>
+Message-ID: <CAHk-=wgE+ngSaKxv1MW+un1f=N4QnC0jFC46b3nNZinQRnZj0g@mail.gmail.com>
+Subject: Re: [GIT PULL] PCI fixes for v5.15
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <Alexander.Deucher@amd.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@linux.dev>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 11:49:45AM +0800, Kai-Heng Feng wrote:
-> On Fri, Sep 17, 2021 at 12:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Huacai, linux-pci]
-> >
-> > On Wed, May 19, 2021 at 09:57:23PM +0800, Kai-Heng Feng wrote:
-> > > Commit 3d42f1ddc47a ("vgaarb: Keep adding VGA device in queue") assumes
-> > > the first device is an integrated GPU. However, on AMD platforms an
-> > > integrated GPU can have higher PCI device number than a discrete GPU.
-> > >
-> > > Integrated GPU on ACPI platform generally has _DOD and _DOS method, so
-> > > use that as predicate to find integrated GPU. If the new strategy
-> > > doesn't work, fallback to use the first device as boot VGA.
-> > >
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > >  drivers/gpu/vga/vgaarb.c | 31 ++++++++++++++++++++++++++-----
-> > >  1 file changed, 26 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
-> > > index 5180c5687ee5..949fde433ea2 100644
-> > > --- a/drivers/gpu/vga/vgaarb.c
-> > > +++ b/drivers/gpu/vga/vgaarb.c
-> > > @@ -50,6 +50,7 @@
-> > >  #include <linux/screen_info.h>
-> > >  #include <linux/vt.h>
-> > >  #include <linux/console.h>
-> > > +#include <linux/acpi.h>
-> > >
-> > >  #include <linux/uaccess.h>
-> > >
-> > > @@ -1450,9 +1451,23 @@ static struct miscdevice vga_arb_device = {
-> > >       MISC_DYNAMIC_MINOR, "vga_arbiter", &vga_arb_device_fops
-> > >  };
-> > >
-> > > +#if defined(CONFIG_ACPI)
-> > > +static bool vga_arb_integrated_gpu(struct device *dev)
-> > > +{
-> > > +     struct acpi_device *adev = ACPI_COMPANION(dev);
-> > > +
-> > > +     return adev && !strcmp(acpi_device_hid(adev), ACPI_VIDEO_HID);
-> > > +}
-> > > +#else
-> > > +static bool vga_arb_integrated_gpu(struct device *dev)
-> > > +{
-> > > +     return false;
-> > > +}
-> > > +#endif
-> > > +
-> > >  static void __init vga_arb_select_default_device(void)
-> > >  {
-> > > -     struct pci_dev *pdev;
-> > > +     struct pci_dev *pdev, *found = NULL;
-> > >       struct vga_device *vgadev;
-> > >
-> > >  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
-> > > @@ -1505,20 +1520,26 @@ static void __init vga_arb_select_default_device(void)
-> > >  #endif
-> > >
-> > >       if (!vga_default_device()) {
-> > > -             list_for_each_entry(vgadev, &vga_list, list) {
-> > > +             list_for_each_entry_reverse(vgadev, &vga_list, list) {
-> >
-> > Hi Kai-Heng, do you remember why you changed the order of this list
-> > traversal?
-> 
-> The descending order is to keep the original behavior.
-> 
-> Before this patch, it breaks out of the loop as early as possible, so
-> the lower numbered device is picked.
-> This patch makes it only break out of the loop when ACPI_VIDEO_HID
-> device is found.
-> So if there are more than one device that meet "cmd & (PCI_COMMAND_IO
-> | PCI_COMMAND_MEMORY)", higher numbered device will be selected.
-> So the traverse order reversal is to keep the original behavior.
+On Fri, Sep 17, 2021 at 8:18 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+>   - Defer VPD sizing until we actually need the contents; fixes a
+>     boot-time slowdown reported by Dave Jones (Bjorn Helgaas)
 
-Can you give an example of what you mean?  I don't quite follow how it
-keeps the original behavior.
+This commit should have had the Reported-by: and Tested-by: tags from
+Dave Jones.
 
-If we have this:
+Yes, it has the link to discussion and report, but for basic credits
+people shouldn't have to go to some web browser.
 
-  0  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
-  1  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
+Pulled, but I wanted to point out how bug reporting and testing is a
+fundamental part of commit logs, not some secondary thing.
 
-Previously we didn't look for ACPI_VIDEO_HID, so we chose 0, now we
-choose 1, which seems wrong.  In the absence of other information, I
-would prefer the lower-numbered device.
-
-Or this:
-
-  0  PCI_COMMAND_MEMORY set
-  1  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
-
-Previously we chose 0; now we choose 1, which does seem right, but
-we'd choose 1 regardless of the order.
-
-Or this:
-
-  0  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
-  1  PCI_COMMAND_MEMORY set
-
-Previously we chose 0, now we still choose 0, which seems right but
-again doesn't depend on the order.
-
-The first case, where both devices are ACPI_VIDEO_HID, is the only one
-where the order matters, and I suggest that we should be using the
-original order, not the reversed order.
-
-> > I guess the list_add_tail() in vga_arbiter_add_pci_device() means
-> > vga_list is generally ordered with small device numbers first and
-> > large ones last.
-> >
-> > So you pick the integrated GPU with the largest device number.  Are
-> > there systems with more than one integrated GPU?  If so, I would
-> > naively expect that in the absence of an indication otherwise, we'd
-> > want the one with the *smallest* device number.
-> 
-> There's only one integrated GPU on the affected system.
-> 
-> The approach is to keep the list traversal in one pass.
-> Is there any regression introduce by this patch?
-> If that's the case, we can separate the logic and find the
-> ACPI_VIDEO_HID in second pass.
-
-No regression, I'm just looking at Huacai's VGA patches, which affect
-this area.
+          Linus
