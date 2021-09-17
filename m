@@ -2,125 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C4A40FC37
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 17:26:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B5340FDCC
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 18:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233943AbhIQP1g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 11:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230429AbhIQP1g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 11:27:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EFCE60E08;
-        Fri, 17 Sep 2021 15:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631892373;
-        bh=UZqfTYO7RI9M+7Vxrv3DWw7RCxWe7AbDW1byXQjcEYY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jjqePD6AzWn+Hen3UKqGFgCjQuKC561K7fvobsKR6kTj9I03GXn0dhABnk0/Dbj6m
-         Di870ru5X8c8V3GEdHcXzBjzq60KuxU/LMXL5jHJ/RFyaJQCOLh4dcitg2KsHmk2ID
-         yskcHVUTdnu8lJE//948lBkRGt9RdfX4lo/Ufx9hgnlz9R+LXS4SR+XqIcoAP2i+1c
-         bqkitcYuQgzKVqdNKiwXZY02UiSRw/MwY9q9MQFSblEowBf1lQJgvhqsXsEawDzg/Y
-         VMbMzjRSCvblIyse53ZzBViADeqllirMQwD87etmwyJakdSBbRNLGlcV3qbg8qpQ6A
-         HKy5tGL5v/Pkw==
-Date:   Fri, 17 Sep 2021 10:26:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        nic_swsd <nic_swsd@realtek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] [PATCH net-next v5 2/3] r8169: Use PCIe ASPM status for
- NIC ASPM enablement
-Message-ID: <20210917152612.GA1717817@bjorn-Precision-5520>
+        id S241383AbhIQQXc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 12:23:32 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3842 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229979AbhIQQXc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Sep 2021 12:23:32 -0400
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4H9zgV4FD9z67flB;
+        Sat, 18 Sep 2021 00:19:50 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Fri, 17 Sep 2021 18:22:07 +0200
+Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 17 Sep
+ 2021 17:22:07 +0100
+Date:   Fri, 17 Sep 2021 17:22:05 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
+        Chris Browy <cbrowy@avery-design.com>, <linuxarm@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>
+Subject: Re: [RFC PATCH 3/4] PCI/CMA: Initial support for Component
+ Measurement and Authentication ECN
+Message-ID: <20210917172205.00000684@huawei.com>
+In-Reply-To: <20210804161839.3492053-4-Jonathan.Cameron@huawei.com>
+References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
+        <20210804161839.3492053-4-Jonathan.Cameron@huawei.com>
+Organization: Huawei tech. R&D (UK)  Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p445rDeL1VFRYFA3QEbKZ6JtjzhCb9fxpR3eZ9E9NAETA@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.96.57]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 12:09:08PM +0800, Kai-Heng Feng wrote:
-> On Fri, Sep 17, 2021 at 1:07 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Sep 16, 2021 at 11:44:16PM +0800, Kai-Heng Feng wrote:
-> > > Because ASPM control may not be granted by BIOS while ASPM is enabled,
-> > > and ASPM can be enabled via sysfs, so use pcie_aspm_enabled() directly
-> > > to check current ASPM enable status.
-> > >
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > > v5:
-> > >  - New patch.
-> > >
-> > >  drivers/net/ethernet/realtek/r8169_main.c | 13 ++++++++-----
-> > >  1 file changed, 8 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> > > index 0199914440abc..6f1a9bec40c05 100644
-> > > --- a/drivers/net/ethernet/realtek/r8169_main.c
-> > > +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> > > @@ -622,7 +622,6 @@ struct rtl8169_private {
-> > >       } wk;
-> > >
-> > >       unsigned supports_gmii:1;
-> > > -     unsigned aspm_manageable:1;
-> > >       dma_addr_t counters_phys_addr;
-> > >       struct rtl8169_counters *counters;
-> > >       struct rtl8169_tc_offsets tc_offset;
-> > > @@ -2664,8 +2663,13 @@ static void rtl_enable_exit_l1(struct rtl8169_private *tp)
-> > >
-> > >  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
-> > >  {
-> > > -     /* Don't enable ASPM in the chip if OS can't control ASPM */
-> > > -     if (enable && tp->aspm_manageable) {
-> > > +     struct pci_dev *pdev = tp->pci_dev;
-> > > +
-> > > +     /* Don't enable ASPM in the chip if PCIe ASPM isn't enabled */
-> > > +     if (!pcie_aspm_enabled(pdev) && enable)
-> > > +             return;
-> >
-> > What happens when the user enables or disables ASPM via sysfs (see
-> > https://git.kernel.org/linus/72ea91afbfb0)?
-> >
-> > The driver is not going to know about that change.
+On Thu, 5 Aug 2021 00:18:38 +0800
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+
+> This currently very much a PoC.  Currently the SPDM library only provides
+> a single function to allow a challenge / authentication of the PCI EP.
 > 
-> So it's still better to fold this patch into next one? So the periodic
-> delayed_work can toggle ASPM accordingly.
+> SPDM exchanges must occur in one of a small set of valid squences over
+> which the message digest used in authentication is built up.
+> Placing that complexity in the SPDM library seems like a good way
+> to enforce that logic, without having to do it for each transport.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-No, my point is that the user can enable/disable ASPM via sysfs, and
-the driver will not know anything about it.  There's no callback that
-tells the driver when this happens.
+This is far more likely to work if I actually include the missing drivers/pci/cma.c
+I'll send a v2 next week, but in the meantime it should look like this.
 
-My question is whether this code works when that happens.  I doubt it
-works, because if ASPM is not enabled at this moment, you return
-without doing enabling ASPM in the chip below.
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <jonathan.cameron@huawei.com>
+Subject: [PATCH] pci/cma: Missing file
+Date: Sat, 18 Sep 2021 00:16:00 +0800
+X-Mailer: git-send-email 2.19.1
 
-If the user subsequently enables ASPM via sysfs, the chip setup below
-will not be done.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/pci/cma.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-If there's chip-specific setup to make ASPM work, I think the
-chip-specific part needs to be done unconditionally.
+diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
+new file mode 100644
+index 000000000000..58fef73674fe
+--- /dev/null
++++ b/drivers/pci/cma.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Component Measurement and Authentication was added as an ECN to the
++ * PCIe r5.0 spec.
++ *
++ * Copyright (C) 2021 Huawei
++ *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
++ */
++
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci-cma.h>
++#include <linux/pci-doe.h>
++#include <linux/spdm.h>
++
++/* Keyring that userspace can poke certs into */
++static struct key *cma_keyring;
++
++static int cma_spdm_ex(void *priv, struct spdm_exchange *spdm_ex)
++{
++	size_t request_padded_sz, response_padded_sz;
++	struct pci_doe_exchange ex = {
++		.vid = PCI_VENDOR_ID_PCI_SIG,
++		.protocol = PCI_DOE_PROTOCOL_CMA,
++	};
++	struct pci_doe *doe = priv;
++	int rc;
++
++	/* DOE requires that response and request are padded to a multiple of 4 bytes */
++	request_padded_sz = ALIGN(spdm_ex->request_pl_sz, sizeof(u32));
++	if (request_padded_sz != spdm_ex->request_pl_sz) {
++		ex.request_pl = kzalloc(request_padded_sz, GFP_KERNEL);
++		if (!ex.request_pl)
++			return -ENOMEM;
++		memcpy(ex.request_pl, spdm_ex->request_pl, spdm_ex->request_pl_sz);
++		ex.request_pl_sz = request_padded_sz;
++	} else {
++		ex.request_pl = (u32 *)spdm_ex->request_pl;
++		ex.request_pl_sz = spdm_ex->request_pl_sz;
++	}
++
++	response_padded_sz = ALIGN(spdm_ex->response_pl_sz, sizeof(u32));
++	if (response_padded_sz != spdm_ex->response_pl_sz) {
++		ex.response_pl = kzalloc(response_padded_sz, GFP_KERNEL);
++		if (!ex.response_pl) {
++			rc = -ENOMEM;
++			goto err_free_req;
++		}
++		ex.response_pl_sz = response_padded_sz;
++	} else {
++		ex.response_pl = (u32 *)spdm_ex->response_pl;
++		ex.response_pl_sz = spdm_ex->response_pl_sz;
++	}
++
++	rc = pci_doe_exchange_sync(doe, &ex);
++	if (rc < 0)
++		goto err_free_rsp;
++
++	if (response_padded_sz != spdm_ex->response_pl_sz)
++		memcpy(spdm_ex->response_pl, ex.response_pl, spdm_ex->response_pl_sz);
++
++err_free_rsp:
++	if (response_padded_sz != spdm_ex->response_pl_sz)
++		kfree(ex.response_pl);
++err_free_req:
++	if (request_padded_sz != spdm_ex->request_pl_sz)
++		kfree(ex.request_pl);
++
++	return rc;
++}
++
++void pci_cma_init(struct pci_doe *doe, struct spdm_state *spdm_state)
++{
++	memset(spdm_state, 0, sizeof(*spdm_state));
++	spdm_state->transport_ex = cma_spdm_ex;
++	spdm_state->transport_priv = doe;
++	spdm_state->dev = &doe->pdev->dev;
++	spdm_state->root_keyring = cma_keyring;
++}
++EXPORT_SYMBOL_GPL(pci_cma_init);
++
++int pci_cma_authenticate(struct spdm_state *spdm_state)
++{
++	return spdm_authenticate(spdm_state);
++}
++EXPORT_SYMBOL_GPL(pci_cma_authenticate);
++
++__init static int cma_keyring_init(void)
++{
++	cma_keyring = keyring_alloc("_cma",
++				    KUIDT_INIT(0), KGIDT_INIT(0),
++				    current_cred(),
++				    (KEY_POS_ALL & ~KEY_POS_SETATTR) |
++				    KEY_USR_VIEW | KEY_USR_READ | KEY_USR_WRITE | KEY_USR_SEARCH,
++				    KEY_ALLOC_NOT_IN_QUOTA | KEY_ALLOC_SET_KEEP, NULL, NULL);
++	if (IS_ERR(cma_keyring))
++		pr_err("Could not allocate cma keyring\n");
++
++	return 0;
++}
++device_initcall(cma_keyring_init);
++MODULE_LICENSE("GPL v2");
+-- 
+2.19.1
 
-> > > +     if (enable) {
-> > >               RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
-> > >               RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
-> > >       } else {
-> > > @@ -5272,8 +5276,7 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> > >       /* Disable ASPM L1 as that cause random device stop working
-> > >        * problems as well as full system hangs for some PCIe devices users.
-> > >        */
-> > > -     rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> > > -     tp->aspm_manageable = !rc;
-> > > +     pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> > >
-> > >       /* enable device (incl. PCI PM wakeup and hotplug setup) */
-> > >       rc = pcim_enable_device(pdev);
-> > > --
-> > > 2.32.0
-> > >
+
+
+> ---
+>  drivers/pci/Kconfig     | 9 +++++++++
+>  drivers/pci/Makefile    | 1 +
+>  drivers/pci/doe.c       | 2 --
+>  include/linux/pci-doe.h | 2 ++
+>  4 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index a30c59cf5e27..43e3b0d5e8cd 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -198,6 +198,15 @@ config PCI_DOE
+>  	  used by a number of different protocols.
+>  	  DOE is defined in the Data Object Exchange ECN to the PCIe r5.0 spec.
+>  
+> +config PCI_CMA
+> +	tristate
+> +	select PCI_DOE
+> +	select ASN1_ENCODER
+> +	select SPDM
+> +	help
+> +	  This enables library support for the PCI Component Measurement and
+> +	  Authentication ECN. This uses DMTF SPDM 1.1
+> +
+>  choice
+>  	prompt "PCI Express hierarchy optimization setting"
+>  	default PCIE_BUS_DEFAULT
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 1b61c1a1c232..3f6b3543d565 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_PCI_PF_STUB)	+= pci-pf-stub.o
+>  obj-$(CONFIG_PCI_ECAM)		+= ecam.o
+>  obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
+>  obj-$(CONFIG_PCI_DOE)		+= doe.o
+> +obj-$(CONFIG_PCI_CMA)		+= cma.o
+>  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+>  
+>  # Endpoint library must be initialized before its users
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 2d20f59e42c6..f6aaeed01010 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -20,8 +20,6 @@
+>  /* Maximum number of DOE instances in the system */
+>  #define PCI_DOE_MAX_CNT 65536
+>  
+> -#define PCI_DOE_PROTOCOL_DISCOVERY 0
+> -
+>  #define PCI_DOE_BUSY_MAX_RETRIES 16
+>  #define PCI_DOE_POLL_INTERVAL (HZ / 128)
+>  
+> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> index bdc5f15f14ab..1347c124ed70 100644
+> --- a/include/linux/pci-doe.h
+> +++ b/include/linux/pci-doe.h
+> @@ -19,6 +19,8 @@ struct pci_doe_prot {
+>  	u8 type;
+>  };
+>  
+> +#define PCI_DOE_PROTOCOL_DISCOVERY 0
+> +#define PCI_DOE_PROTOCOL_CMA 1
+>  struct workqueue_struct;
+>  
+>  enum pci_doe_state {
+
