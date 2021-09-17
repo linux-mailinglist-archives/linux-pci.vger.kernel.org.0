@@ -2,86 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82F4440FDDF
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 18:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 108DA40FE32
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 18:55:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbhIQQaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 12:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56652 "EHLO mail.kernel.org"
+        id S243269AbhIQQ4Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 12:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229925AbhIQQaI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 12:30:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D155160555;
-        Fri, 17 Sep 2021 16:28:45 +0000 (UTC)
+        id S243102AbhIQQ4Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Sep 2021 12:56:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 97AAF61108;
+        Fri, 17 Sep 2021 16:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631896126;
-        bh=RRE6NMda31/dIqqeP4g2Zg1MqUaKnLsM3Ro/I9LVt3w=;
+        s=k20201202; t=1631897701;
+        bh=gIN/1/UJ9KFOMMzT+R4qCGsl0N3O4XSWxGatfxzx4dc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IBbNMhquNK9liwy6lIWmdPIXzOZVsmIh3XmUdeu0OCTs9jMQRFZj4wNKUIerdiVKo
-         mBMDO993ITGHINd9RLo1DY66iD3VOGkNh0ua2l7uUucIPa9VgX2bJ3+P0Wr0K7/+HG
-         og0S6Mz5MOJn7XReD5EeUMdc7TA2gihk25XztwGh86GImWJqlCB0TDSX67KV04NaMv
-         p0osTnLc/lTsOfpedLQ+EjMmJ/gAqIX/e1CLxFaP52jp3kxgAwF0cddgUxqB22Gld3
-         JCAGcSeUs7Bd1NpgzoHU2PijOf49moRGDvKEylzevEZ2zsFtcDoaQ8cwiS5GKTUyN4
-         Jjblai00CbORg==
-Date:   Fri, 17 Sep 2021 11:28:44 -0500
+        b=GstmkVwl1605P/G9i50cL7p85qHP8Iyk2IMhCZ8dxd+PX9nRyrirBnIPfakhJHjJb
+         UndfnJAdTIIzPQX23o7ZIuCJLdUmwOh9LL2FCUlxH5OLoCG7NyK7dQLrfs995Y9QIK
+         AUz1THxXHlNFFArXZn5oxY6Yf3cFa42NFhNzARvsWwfOlXt8pDzSycne3mmt9BA7Ln
+         X/in+c1wMbiMO466tFyubRG+l5o63b9PYxxA6yL1O4q1WApo80Bi3JHO92quZI8q4m
+         gGlRgpP/lbKk+cEooMFWX9W0GyfW0a20JSGTBcx3wG07nq112b2Bg3ObpXRIHhkIF7
+         Hkxna/hyXqpoA==
+Date:   Fri, 17 Sep 2021 11:55:00 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jan Beulich <jbeulich@suse.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "hch@lst.de" <hch@lst.de>, Konrad Wilk <konrad.wilk@oracle.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] PCI: only build xen-pcifront in PV-enabled
- environments
-Message-ID: <20210917162844.GA1722208@bjorn-Precision-5520>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        mripard@kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>
+Subject: Re: [PATCH] vgaarb: Use ACPI HID name to find integrated GPU
+Message-ID: <20210917165500.GA1723244@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a7f6c9b-215d-b593-8056-b5fe605dafd7@suse.com>
+In-Reply-To: <CAAd53p6XdeYcLNctghOi5VPy1YHEOaGoeo9Wc_T9P-RmYTJKzA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-s/only/Only/ in subject
-
-On Fri, Sep 17, 2021 at 12:48:03PM +0200, Jan Beulich wrote:
-> The driver's module init function, pcifront_init(), invokes
-> xen_pv_domain() first thing. That construct produces constant "false"
-> when !CONFIG_XEN_PV. Hence there's no point building the driver in
-> non-PV configurations.
-
-Thanks for these bread crumbs.  xen_domain_type is set to
-XEN_PV_DOMAIN only by xen_start_kernel() in enlighten_pv.c, which is
-only built when CONFIG_XEN_PV=y, so even I can verify this :)
-
-> Drop the (now implicit and generally wrong) X86 dependency: At present,
-> XEN_PV con only be set when X86 is also enabled. In general an
-> architecture supporting Xen PV (and PCI) would want to have this driver
-> built.
-
-s/con only/can only/
-
-> Signed-off-by: Jan Beulich <jbeulich@suse.com>
-> Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
-> v2: Title and description redone.
+On Fri, Sep 17, 2021 at 11:49:45AM +0800, Kai-Heng Feng wrote:
+> On Fri, Sep 17, 2021 at 12:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Huacai, linux-pci]
+> >
+> > On Wed, May 19, 2021 at 09:57:23PM +0800, Kai-Heng Feng wrote:
+> > > Commit 3d42f1ddc47a ("vgaarb: Keep adding VGA device in queue") assumes
+> > > the first device is an integrated GPU. However, on AMD platforms an
+> > > integrated GPU can have higher PCI device number than a discrete GPU.
+> > >
+> > > Integrated GPU on ACPI platform generally has _DOD and _DOS method, so
+> > > use that as predicate to find integrated GPU. If the new strategy
+> > > doesn't work, fallback to use the first device as boot VGA.
+> > >
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > ---
+> > >  drivers/gpu/vga/vgaarb.c | 31 ++++++++++++++++++++++++++-----
+> > >  1 file changed, 26 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
+> > > index 5180c5687ee5..949fde433ea2 100644
+> > > --- a/drivers/gpu/vga/vgaarb.c
+> > > +++ b/drivers/gpu/vga/vgaarb.c
+> > > @@ -50,6 +50,7 @@
+> > >  #include <linux/screen_info.h>
+> > >  #include <linux/vt.h>
+> > >  #include <linux/console.h>
+> > > +#include <linux/acpi.h>
+> > >
+> > >  #include <linux/uaccess.h>
+> > >
+> > > @@ -1450,9 +1451,23 @@ static struct miscdevice vga_arb_device = {
+> > >       MISC_DYNAMIC_MINOR, "vga_arbiter", &vga_arb_device_fops
+> > >  };
+> > >
+> > > +#if defined(CONFIG_ACPI)
+> > > +static bool vga_arb_integrated_gpu(struct device *dev)
+> > > +{
+> > > +     struct acpi_device *adev = ACPI_COMPANION(dev);
+> > > +
+> > > +     return adev && !strcmp(acpi_device_hid(adev), ACPI_VIDEO_HID);
+> > > +}
+> > > +#else
+> > > +static bool vga_arb_integrated_gpu(struct device *dev)
+> > > +{
+> > > +     return false;
+> > > +}
+> > > +#endif
+> > > +
+> > >  static void __init vga_arb_select_default_device(void)
+> > >  {
+> > > -     struct pci_dev *pdev;
+> > > +     struct pci_dev *pdev, *found = NULL;
+> > >       struct vga_device *vgadev;
+> > >
+> > >  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
+> > > @@ -1505,20 +1520,26 @@ static void __init vga_arb_select_default_device(void)
+> > >  #endif
+> > >
+> > >       if (!vga_default_device()) {
+> > > -             list_for_each_entry(vgadev, &vga_list, list) {
+> > > +             list_for_each_entry_reverse(vgadev, &vga_list, list) {
+> >
+> > Hi Kai-Heng, do you remember why you changed the order of this list
+> > traversal?
 > 
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -110,7 +110,7 @@ config PCI_PF_STUB
->  
->  config XEN_PCIDEV_FRONTEND
->  	tristate "Xen PCI Frontend"
-> -	depends on X86 && XEN
-> +	depends on XEN_PV
->  	select PCI_XEN
->  	select XEN_XENBUS_FRONTEND
->  	default y
+> The descending order is to keep the original behavior.
 > 
+> Before this patch, it breaks out of the loop as early as possible, so
+> the lower numbered device is picked.
+> This patch makes it only break out of the loop when ACPI_VIDEO_HID
+> device is found.
+> So if there are more than one device that meet "cmd & (PCI_COMMAND_IO
+> | PCI_COMMAND_MEMORY)", higher numbered device will be selected.
+> So the traverse order reversal is to keep the original behavior.
+
+Can you give an example of what you mean?  I don't quite follow how it
+keeps the original behavior.
+
+If we have this:
+
+  0  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
+  1  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
+
+Previously we didn't look for ACPI_VIDEO_HID, so we chose 0, now we
+choose 1, which seems wrong.  In the absence of other information, I
+would prefer the lower-numbered device.
+
+Or this:
+
+  0  PCI_COMMAND_MEMORY set
+  1  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
+
+Previously we chose 0; now we choose 1, which does seem right, but
+we'd choose 1 regardless of the order.
+
+Or this:
+
+  0  PCI_COMMAND_MEMORY set   ACPI_VIDEO_HID
+  1  PCI_COMMAND_MEMORY set
+
+Previously we chose 0, now we still choose 0, which seems right but
+again doesn't depend on the order.
+
+The first case, where both devices are ACPI_VIDEO_HID, is the only one
+where the order matters, and I suggest that we should be using the
+original order, not the reversed order.
+
+> > I guess the list_add_tail() in vga_arbiter_add_pci_device() means
+> > vga_list is generally ordered with small device numbers first and
+> > large ones last.
+> >
+> > So you pick the integrated GPU with the largest device number.  Are
+> > there systems with more than one integrated GPU?  If so, I would
+> > naively expect that in the absence of an indication otherwise, we'd
+> > want the one with the *smallest* device number.
+> 
+> There's only one integrated GPU on the affected system.
+> 
+> The approach is to keep the list traversal in one pass.
+> Is there any regression introduce by this patch?
+> If that's the case, we can separate the logic and find the
+> ACPI_VIDEO_HID in second pass.
+
+No regression, I'm just looking at Huacai's VGA patches, which affect
+this area.
