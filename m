@@ -2,73 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8336E40FAF1
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 16:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0415B40FB60
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 17:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239071AbhIQO7d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 10:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
+        id S232633AbhIQPLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 11:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234100AbhIQO7c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 10:59:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 59F6F61152;
-        Fri, 17 Sep 2021 14:58:10 +0000 (UTC)
+        id S230429AbhIQPLQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Sep 2021 11:11:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B97A61216;
+        Fri, 17 Sep 2021 15:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631890690;
-        bh=k1/hzmBDrLSXqe7cEz4TFzwO14MoXt+0q1h/d+eWqz0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=moTC0OM5szfHIDBQSV8uet4K65UTTOzT8vvZIHCtG+nIYkUgqtYPKm3lS9A6YoDj5
-         J/nIgQAgzjwFCBg4tsCTRG3vWfWgdBixmI620/6XGm6aMc9L+NCbOjml7uo0+be5uS
-         i3+EuTrj6afkEYzpq8b92ZvFXlEA3rGViJrUiBcHyerg6AvN+RqnCLX4dkiqiH5Ta+
-         kYYnDfq6Vae+gFHxfxBwzc18eeZxXjnrWecEIZKGSFBD+RZmAuHHF2/SBM9ctx3FX5
-         P8JKXnI95Xd8Jvnjgxl6bbM9FnMA76UcXZyql1+IMapeyZ1k97dSa4B9K4mEy9k6v2
-         E0hUfA9u1+EhQ==
-Date:   Fri, 17 Sep 2021 07:58:09 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>
-Cc:     x86@kernel.org, jose.souza@intel.com, hpa@zytor.com, bp@alien8.de,
-        mingo@redhat.com, tglx@linutronix.de, kai.heng.feng@canonical.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
- platform
-Message-ID: <20210917075809.3c89cb92@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210917140003.GA1520823@rocinante>
-References: <20210916131739.1260552-1-kuba@kernel.org>
-        <20210917140003.GA1520823@rocinante>
+        s=k20201202; t=1631891394;
+        bh=vVYHpw21259JAe8ohVI/fRRsfMKpt2NkDlr6v0nyUzA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OmrECiTp474jCVtgT0DBEi1S+5l8rLOwFZyxwtFAh/Iw4Ki90XBZOwmXp+2mih90H
+         MpT0zf++l3LLalCxNNwGnQ1FLUW7fL7RfajR8OrRRb84A3cyEJBDY1Zndmwz9GTb7W
+         /9q8JcfNuUseHabAaPL8bkk1lqLTEYOmVfmNOrqR31PUy7wnPnbYHDxhKUHecL0E4n
+         gRjdX2nRvVzItkwtkriwfyS5XHnwCOX6MJ+zKfgLI1M7LYv2MC16sTZDXewRV5s2VT
+         WmgwOY5+td6/yZuylMq46kru3g5Hk1zhrjFMJeu0mA8O8+Ji5uiMwQwkp/RuT0SVN8
+         QIZotvvgnblPg==
+Date:   Fri, 17 Sep 2021 10:09:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hisashi T Fujinaka <htodd@twofifty.com>
+Cc:     Dave Jones <davej@codemonkey.org.uk>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
+Message-ID: <20210917150952.GA1716923@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5518a29-efe7-1d84-1671-4dc170f6bc53@twofifty.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Sep 2021 16:00:03 +0200 Krzysztof Wilczy=C5=84ski wrote:
-> > The Intel documentation does not list my device [1], but
-> > linuxhw [2] does, and it seems to list a few more bridges
-> > we do not currently cover (3e31, 3ecc, 3e35, 3e0f). =20
->=20
-> This might be out-of-scope for this particular patch, but it makes me
-> wonder - if we know that these other bridges were identified as having the
-> same issue, would it be prudent to add a quriks for them too?  It might
-> save some people a headache and such.
+On Wed, Sep 15, 2021 at 04:46:54PM -0700, Hisashi T Fujinaka wrote:
+> On Wed, 15 Sep 2021, Bjorn Helgaas wrote:
+> 
+> > On Wed, Sep 15, 2021 at 09:16:47AM -0700, Hisashi T Fujinaka wrote:
+> > > On Wed, 15 Sep 2021, Heiner Kallweit wrote:
 
-Indeed, I was about to do it but the disagreement between the Intel
-docs and the linuxhw device list discouraged me. It's confusing that
-the most popular SKU in the field (according to linuxhw, which is also
-the one I have and the one addressed by this patch) is not in the
-official Intel PDF. And what about the numbers that fall in between
-the known revisions? Perhaps we could use a mask instead of having
-10+ entries?
+> > > > In an earlier mail in this thread was stated that subvendor id is unknown.
+> > > > Checking here https://pcisig.com/membership/member-companies?combine=1dcf
+> > > > it says: Beijing Sinead Technology Co., Ltd.
+> > > 
+> > > Huh. I didn't realize there was an official list beyond pciids.ucw.cz.
+> > > 
+> > > In any case, that's who you need to talk to about the unlisted (to
+> > > Linux) vendor ID and also the odd VPD data.
+> > 
+> > https://pci-ids.ucw.cz/ is definitely unofficial in the sense that it
+> > is basically crowd-sourced data, not the "official" Vendor IDs
+> > controlled by the PCI SIG.
+> > 
+> > I submitted an addition to https://pci-ids.ucw.cz/
+> > 
+> > Bjorn
+> 
+> Just for my edumacation, do they keep track of device IDs, subvendor IDs
+> (which are probably just the same as vendor IDs), and subdevice IDs in
+> the PCI SIG? Or even the branding strings?
 
-Then there's also a precedent of adding them one by one in the patches
-quoted my Bjorn.
-
-All in all I thought I'd just mention this and let the people familiar
-with x86 platforms guide me.
-
-Or maybe we can wait for patches from Paul or Peter to fix the less
-popular devices?
-
-Not sure.. I'm happy to produce a patch that adds more entries, or=20
-for someone else to do it..
+The PCI SIG does not manage Device IDs.  That's the responsibility of
+the vendor.
