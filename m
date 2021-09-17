@@ -2,72 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0415B40FB60
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 17:09:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C2ED40FC15
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 17:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232633AbhIQPLR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 11:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
+        id S243906AbhIQPVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Sep 2021 11:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230429AbhIQPLQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 11:11:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B97A61216;
-        Fri, 17 Sep 2021 15:09:54 +0000 (UTC)
+        id S241474AbhIQPUG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 17 Sep 2021 11:20:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DBC08611F2;
+        Fri, 17 Sep 2021 15:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631891394;
-        bh=vVYHpw21259JAe8ohVI/fRRsfMKpt2NkDlr6v0nyUzA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OmrECiTp474jCVtgT0DBEi1S+5l8rLOwFZyxwtFAh/Iw4Ki90XBZOwmXp+2mih90H
-         MpT0zf++l3LLalCxNNwGnQ1FLUW7fL7RfajR8OrRRb84A3cyEJBDY1Zndmwz9GTb7W
-         /9q8JcfNuUseHabAaPL8bkk1lqLTEYOmVfmNOrqR31PUy7wnPnbYHDxhKUHecL0E4n
-         gRjdX2nRvVzItkwtkriwfyS5XHnwCOX6MJ+zKfgLI1M7LYv2MC16sTZDXewRV5s2VT
-         WmgwOY5+td6/yZuylMq46kru3g5Hk1zhrjFMJeu0mA8O8+Ji5uiMwQwkp/RuT0SVN8
-         QIZotvvgnblPg==
-Date:   Fri, 17 Sep 2021 10:09:52 -0500
+        s=k20201202; t=1631891924;
+        bh=PZIlRARynL4Z5ygeF1kzNhS47sHsh3d+I4skXXzHP7M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l7t7BNH9HwYaEvZw0oJ1vPtNqXyFCbI9OuQbRcwN8swq94h+uIkfrnyN7PvFtjk5f
+         xCmNTIprPjD6HIuA/O8KviU0O5FLStuvdVmOF/mQoug7UtdnALpMmKOi+AVgm5PiyO
+         224p5g7O7v6w0lMwChaPuth0D80JhKwcDhtxiyComwDL4fvSu7tnK0YPaCgsSyCe5I
+         n79Afjxq8N1aRPE7mu/YJVXa5vce23TWSln2pzKK4vS72vZGEAaKmHE0vmk76Jmv1I
+         NTvckExnxre96hHutweqwfdaSvZbqR98VoEfHLsjQDh8JI+JWbYW8YnUvNzWqmTfp/
+         0vnfe7rZPBYEA==
+Date:   Fri, 17 Sep 2021 10:18:42 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hisashi T Fujinaka <htodd@twofifty.com>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <Alexander.Deucher@amd.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jon Derrick <jonathan.derrick@linux.dev>,
+        Dave Jones <davej@codemonkey.org.uk>,
         Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [Intel-wired-lan] Linux 5.15-rc1 - 82599ES VPD access isue
-Message-ID: <20210917150952.GA1716923@bjorn-Precision-5520>
+Subject: [GIT PULL] PCI fixes for v5.15
+Message-ID: <20210917151842.GA1716604@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5518a29-efe7-1d84-1671-4dc170f6bc53@twofifty.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 04:46:54PM -0700, Hisashi T Fujinaka wrote:
-> On Wed, 15 Sep 2021, Bjorn Helgaas wrote:
-> 
-> > On Wed, Sep 15, 2021 at 09:16:47AM -0700, Hisashi T Fujinaka wrote:
-> > > On Wed, 15 Sep 2021, Heiner Kallweit wrote:
+The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
 
-> > > > In an earlier mail in this thread was stated that subvendor id is unknown.
-> > > > Checking here https://pcisig.com/membership/member-companies?combine=1dcf
-> > > > it says: Beijing Sinead Technology Co., Ltd.
-> > > 
-> > > Huh. I didn't realize there was an official list beyond pciids.ucw.cz.
-> > > 
-> > > In any case, that's who you need to talk to about the unlisted (to
-> > > Linux) vendor ID and also the odd VPD data.
-> > 
-> > https://pci-ids.ucw.cz/ is definitely unofficial in the sense that it
-> > is basically crowd-sourced data, not the "official" Vendor IDs
-> > controlled by the PCI SIG.
-> > 
-> > I submitted an addition to https://pci-ids.ucw.cz/
-> > 
-> > Bjorn
-> 
-> Just for my edumacation, do they keep track of device IDs, subvendor IDs
-> (which are probably just the same as vendor IDs), and subdevice IDs in
-> the PCI SIG? Or even the branding strings?
+  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
 
-The PCI SIG does not manage Device IDs.  That's the responsibility of
-the vendor.
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.15-fixes-1
+
+for you to fetch changes up to e042a4533fc346a655de7f1b8ac1fa01a2ed96e5:
+
+  MAINTAINERS: Add Nirmal Patel as VMD maintainer (2021-09-15 16:44:03 -0500)
+
+----------------------------------------------------------------
+PCI fixes:
+
+  - Defer VPD sizing until we actually need the contents; fixes a
+    boot-time slowdown reported by Dave Jones (Bjorn Helgaas)
+
+  - Stop clobbering OF fwnodes when we look for an ACPI fwnode; fixes
+    a virtio-iommu boot regression (Jean-Philippe Brucker)
+
+  - Add AMD GPU multi-function power dependencies; fixes runtime power
+    management, including GPU resume and temp and fan sensor issues
+    (Evan Quan)
+
+  - Update VMD maintainer to Nirmal Patel (Jon Derrick)
+
+----------------------------------------------------------------
+Bjorn Helgaas (1):
+      PCI/VPD: Defer VPD sizing until first access
+
+Evan Quan (1):
+      PCI: Add AMD GPU multi-function power dependencies
+
+Jean-Philippe Brucker (1):
+      PCI/ACPI: Don't reset a fwnode set by OF
+
+Jon Derrick (1):
+      MAINTAINERS: Add Nirmal Patel as VMD maintainer
+
+ MAINTAINERS            |  3 ++-
+ drivers/pci/pci-acpi.c |  2 +-
+ drivers/pci/quirks.c   |  9 +++++++--
+ drivers/pci/vpd.c      | 36 ++++++++++++++++++++++++++----------
+ 4 files changed, 36 insertions(+), 14 deletions(-)
