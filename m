@@ -2,88 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 128E540F06A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 05:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 198F240F07F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Sep 2021 05:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241526AbhIQDeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Sep 2021 23:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232440AbhIQDeh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Sep 2021 23:34:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9984B61056;
-        Fri, 17 Sep 2021 03:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631849595;
-        bh=Q9PGtU5xvpxOOFAIBeN38KDl83cB2YIXJ+mu/SnJDUo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bkXzkfwOGHvzs27DtLCuvclKLhbyfIft2aoHfdly7VwN+kQCfcBU1e69naYIX5kcd
-         y8r0Ny3F97DpN06jU+4bz3GAzQzx/EnURemOWq0N8KjHK+KJN1KWBqvGFmPXAS6KcP
-         CBUVQQVz5Nt4HlSEhpizojqo/87rNk9gCDTAVMufs0pxTFq/9zF6soPEPolrQqeFv0
-         XEKhC4RHLm7XjfDRtgy3JXJFJgnjOK/BpQNA9n1dgRgCmG6kuDwv6Clupw4X7ZlVif
-         z2XoMKdmZ6au0IiP9pb5LWoyrMg6aIpQmkolrPJdweQHqMXYtYkK2mmt0Ze5JNJti5
-         vthwAOCIbl2Yw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 704D45C08DB; Thu, 16 Sep 2021 20:33:15 -0700 (PDT)
-Date:   Thu, 16 Sep 2021 20:33:15 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, x86@kernel.org,
-        jose.souza@intel.com, hpa@zytor.com, bp@alien8.de,
-        mingo@redhat.com, tglx@linutronix.de, kai.heng.feng@canonical.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
- platform
-Message-ID: <20210917033315.GO4156@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20210916131739.1260552-1-kuba@kernel.org>
- <20210916150707.GA1611532@bjorn-Precision-5520>
- <20210916083042.5f63163a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20210916163547.GD4156@paulmck-ThinkPad-P17-Gen-1>
- <20210916195713.289a7889@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        id S244097AbhIQDv1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Sep 2021 23:51:27 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:40804
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230287AbhIQDv1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Sep 2021 23:51:27 -0400
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 40A2940260
+        for <linux-pci@vger.kernel.org>; Fri, 17 Sep 2021 03:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1631850598;
+        bh=o2WwArOaqXO510rowzIQD3yCaqD7PjB7l55ID7TA3xc=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=KC/wMMq6u4xVTIC9gWwtWw3qFPdmYtz6bE0+rjN44ZoRNnma/rFGmlEFwdE+tN1vu
+         IomElIncX/Wfo9BttVhsPysERGTi6sgoRZDtDaVpIGx8+dP75WV+wrpa+oRoBKMiKQ
+         lbtTSAJQ6UAwoWZtiXZ13JPJFNb8wCuGfQTgT/tGtEr/VcdBNmlzR1BCyjthRQZwcO
+         G6LeIy+gbZXkWoNL88gMLndA2hHOm44Hc4VA/qdwEg6tPjrsqXtjcl3azNgtzmN5wO
+         HRLszHr1z4BXuRjitmpzM7VQqcBb73I1tVFx06Z4miObasxZxclDOup3CXV58llczG
+         w8nLNVLFHrU4w==
+Received: by mail-oo1-f71.google.com with SMTP id i5-20020a4ad385000000b0028bd047a835so37968942oos.12
+        for <linux-pci@vger.kernel.org>; Thu, 16 Sep 2021 20:49:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o2WwArOaqXO510rowzIQD3yCaqD7PjB7l55ID7TA3xc=;
+        b=c6mmKVy67xe7VyRCX8674bldJTk7BhSvt8QI7ilVD83K39nqF9B1h9yG9cEDOUtw4T
+         2MAK+BiJIelIgtnGVRYmFxIfeTumpOS3xzKm6O9ajXJunPG5sHCdmyR35GBMkwcR2oQ2
+         w3dYVc7OVy9y6Gvvt0EThiAtm/8zGMb+wdhyFRO29ADUklN29YMrIbaDTCn+bRqObJb1
+         Ov0dWVILndbb4TSr7xOXjzgv5SDjVUleRd3DPzgUsV/IMRmSoVrMwLHb+Ca6YwH9MPBu
+         z4EsvbBoCduRpCXHZajTY7lIoCS8mxBxlNJKrcdN89tsy894d33zMSaNdKbeijsTnqVc
+         DOqw==
+X-Gm-Message-State: AOAM532NatUqga5rYgo1FvNdOPLUq86BHtxWrzQ7yLPC6iRXRZkDXp/R
+        vPJP4Q/k1YYN58/YsoG6gmT3eXMJyNb32HxSwdQRKe3xlQZhLM5Mo5QaWJgLrMJ2P5VQ3SkRstH
+        gADwi7Ofs6fjvcaSh1PLDhme7wC380bhIw0ycwhYJo70m1ggnFOmZJg==
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr37627ota.233.1631850596967;
+        Thu, 16 Sep 2021 20:49:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzw7/JqD91vFn6Wh+g3/wCVkduUO+JuLE1VRUyT5ut6P5TQKvgQDp/KcbJC9Gr75Lp89fxAxavZwAorE2CYMic=
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr37613ota.233.1631850596710;
+ Thu, 16 Sep 2021 20:49:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916195713.289a7889@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20210519135723.525997-1-kai.heng.feng@canonical.com> <20210916163755.GA1620802@bjorn-Precision-5520>
+In-Reply-To: <20210916163755.GA1620802@bjorn-Precision-5520>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 17 Sep 2021 11:49:45 +0800
+Message-ID: <CAAd53p6XdeYcLNctghOi5VPy1YHEOaGoeo9Wc_T9P-RmYTJKzA@mail.gmail.com>
+Subject: Re: [PATCH] vgaarb: Use ACPI HID name to find integrated GPU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        mripard@kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 07:57:13PM -0700, Jakub Kicinski wrote:
-> On Thu, 16 Sep 2021 09:35:47 -0700 Paul E. McKenney wrote:
-> > > > How did you pick v5.13?  force_disable_hpet() was added by
-> > > > 62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail
-> > > > platform"), which appeared in v3.15.  
-> > > 
-> > > Erm, good question, it started happening for me (and others with the
-> > > same laptop) with v5.13. I just sort of assumed it was 2e27e793e280
-> > > ("clocksource: Reduce clocksource-skew threshold"). 
-> > > 
-> > > It usually takes  a day to repro (4 hours was the quickest repro I've
-> > > seen) so bisection was kind of out of question.  
-> > 
-> > OK, so this is an intermittent condition where HPET is sometimes slow to
-> > access for a short period of time?  If that is the case, my thought is
-> > to set the clocksource to be reinitialized (without a splat and without
-> > marking the clocksource unstable), and to splat (and mark the clocksource
-> > unstable) if it is not get a good read after 100 subsequent attempts.
-> > 
-> > So as long as the period of slowness lasts for less than 50 seconds,
-> > things would work fine.
-> > 
-> > Seem reasonable?
-> 
-> Could well be. Initially I thought it was suspend/resume related, then
-> I looked closer and it did happen mostly after resume... but anywhere
-> between 20 minutes to few hours after the resume.
-> 
-> I'm here to test less crude patches but since that may take some time
-> I'd hope we can get this merged and into stable ASAP. Hopefully it can
-> make it to 5.13 while that branch is alive and into Fedora. It really
-> makes Coffee Lake machines pretty much unusable.
+On Fri, Sep 17, 2021 at 12:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Huacai, linux-pci]
+>
+> On Wed, May 19, 2021 at 09:57:23PM +0800, Kai-Heng Feng wrote:
+> > Commit 3d42f1ddc47a ("vgaarb: Keep adding VGA device in queue") assumes
+> > the first device is an integrated GPU. However, on AMD platforms an
+> > integrated GPU can have higher PCI device number than a discrete GPU.
+> >
+> > Integrated GPU on ACPI platform generally has _DOD and _DOS method, so
+> > use that as predicate to find integrated GPU. If the new strategy
+> > doesn't work, fallback to use the first device as boot VGA.
+> >
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >  drivers/gpu/vga/vgaarb.c | 31 ++++++++++++++++++++++++++-----
+> >  1 file changed, 26 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
+> > index 5180c5687ee5..949fde433ea2 100644
+> > --- a/drivers/gpu/vga/vgaarb.c
+> > +++ b/drivers/gpu/vga/vgaarb.c
+> > @@ -50,6 +50,7 @@
+> >  #include <linux/screen_info.h>
+> >  #include <linux/vt.h>
+> >  #include <linux/console.h>
+> > +#include <linux/acpi.h>
+> >
+> >  #include <linux/uaccess.h>
+> >
+> > @@ -1450,9 +1451,23 @@ static struct miscdevice vga_arb_device = {
+> >       MISC_DYNAMIC_MINOR, "vga_arbiter", &vga_arb_device_fops
+> >  };
+> >
+> > +#if defined(CONFIG_ACPI)
+> > +static bool vga_arb_integrated_gpu(struct device *dev)
+> > +{
+> > +     struct acpi_device *adev = ACPI_COMPANION(dev);
+> > +
+> > +     return adev && !strcmp(acpi_device_hid(adev), ACPI_VIDEO_HID);
+> > +}
+> > +#else
+> > +static bool vga_arb_integrated_gpu(struct device *dev)
+> > +{
+> > +     return false;
+> > +}
+> > +#endif
+> > +
+> >  static void __init vga_arb_select_default_device(void)
+> >  {
+> > -     struct pci_dev *pdev;
+> > +     struct pci_dev *pdev, *found = NULL;
+> >       struct vga_device *vgadev;
+> >
+> >  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
+> > @@ -1505,20 +1520,26 @@ static void __init vga_arb_select_default_device(void)
+> >  #endif
+> >
+> >       if (!vga_default_device()) {
+> > -             list_for_each_entry(vgadev, &vga_list, list) {
+> > +             list_for_each_entry_reverse(vgadev, &vga_list, list) {
+>
+> Hi Kai-Heng, do you remember why you changed the order of this list
+> traversal?
 
-Indeed, I could see where your reproducer is at best rather annoying.
-But a good data point for me either way, so thank you!
+The descending order is to keep the original behavior.
 
-							Thanx, Paul
+Before this patch, it breaks out of the loop as early as possible, so
+the lower numbered device is picked.
+This patch makes it only break out of the loop when ACPI_VIDEO_HID
+device is found.
+So if there are more than one device that meet "cmd & (PCI_COMMAND_IO
+| PCI_COMMAND_MEMORY)", higher numbered device will be selected.
+So the traverse order reversal is to keep the original behavior.
+
+>
+> I guess the list_add_tail() in vga_arbiter_add_pci_device() means
+> vga_list is generally ordered with small device numbers first and
+> large ones last.
+>
+> So you pick the integrated GPU with the largest device number.  Are
+> there systems with more than one integrated GPU?  If so, I would
+> naively expect that in the absence of an indication otherwise, we'd
+> want the one with the *smallest* device number.
+
+There's only one integrated GPU on the affected system.
+
+The approach is to keep the list traversal in one pass.
+Is there any regression introduce by this patch?
+If that's the case, we can separate the logic and find the
+ACPI_VIDEO_HID in second pass.
+
+Kai-Heng
+
+>
+> >                       struct device *dev = &vgadev->pdev->dev;
+> >                       u16 cmd;
+> >
+> >                       pdev = vgadev->pdev;
+> >                       pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+> >                       if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+> > -                             vgaarb_info(dev, "setting as boot device (VGA legacy resources not available)\n");
+> > -                             vga_set_default_device(pdev);
+> > -                             break;
+> > +                             found = pdev;
+> > +                             if (vga_arb_integrated_gpu(dev))
+> > +                                     break;
+> >                       }
+> >               }
+> >       }
+> >
+> > +     if (found) {
+> > +             vgaarb_info(&found->dev, "setting as boot device (VGA legacy resources not available)\n");
+> > +             vga_set_default_device(found);
+> > +             return;
+> > +     }
+> > +
+> >       if (!vga_default_device()) {
+> >               vgadev = list_first_entry_or_null(&vga_list,
+> >                                                 struct vga_device, list);
+> > --
+> > 2.31.1
+> >
