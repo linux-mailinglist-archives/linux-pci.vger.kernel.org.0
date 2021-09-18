@@ -2,67 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3B5C4106D7
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 15:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96C834106F9
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 16:01:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239193AbhIRNdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Sep 2021 09:33:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48762 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239009AbhIRNdR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 09:33:17 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id fac171cdf082cbb6; Sat, 18 Sep 2021 15:31:52 +0200
-Received: from kreacher.localnet (89-77-51-84.dynamic.chello.pl [89.77.51.84])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 690F666A569;
-        Sat, 18 Sep 2021 15:31:49 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        x86 Maintainers <x86@kernel.org>
-Subject: [PATCH v1 0/5] PCI: ACPI: Get rid of struct pci_platform_pm_ops and clean up code
-Date:   Sat, 18 Sep 2021 15:31:48 +0200
-Message-ID: <2341482.jE0xQCEvom@kreacher>
+        id S239998AbhIROCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Sep 2021 10:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239849AbhIROCM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 10:02:12 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A03EC061574
+        for <linux-pci@vger.kernel.org>; Sat, 18 Sep 2021 07:00:48 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id p4so26737529qki.3
+        for <linux-pci@vger.kernel.org>; Sat, 18 Sep 2021 07:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=pPIXMIXzw+jPzUpGYaFsSxdV28G6FALEDT6WjXM93B8=;
+        b=eLbK4MlE+g+dJvMUkGPuPRWUaGC81A9wUjrbGDfyj6TcKEHvecd1r29dS6ALZNKS/B
+         i89fjrDp6UcAEoONI9Hd3I/ajY/6vAr3eTpbOLM9Y9uFZRAhHlCJqDKnM0ZlxC11+zzj
+         aIMAOc8iJO/5/zUK2/ELJGHdohKBQxEyrORfs0fB/zw8PzWZDA7xaYxd0aWl2KOu/036
+         a9/s6Ka7NBuWzB8+ubePnpHbixocUvQ+EymuNmchFSo452WHkn0SFpa7fXziD+SE3l4U
+         /QsQacLbLulUqNzAzfTqqxgPa4rYcb/PeurJ7JJUYcn4UnzH2QJxd/V7p1Sd1xbW8r3h
+         BQ3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=pPIXMIXzw+jPzUpGYaFsSxdV28G6FALEDT6WjXM93B8=;
+        b=1DQMKSKUBfNjXOFUUOTuBvP7TNLgiO+4xDYe05O4lHt0hynou+uLNQarEyymuabMBG
+         YsFS2StGnTG3IaH6Gk3XyY9BYFMgBYpSe/fuu9QHBll587iLgjzSaJFU19TVNeXWE+lS
+         JN5zzL5Vsif5acxuLdpDANgFXuvf88Qpz6lfG14qGgsY1cNo+T5BQHI2IZEXA5Wxnfh1
+         NzJuRsqyayjZScuLeTDBQNNL669n0m8xKy1lj48+ZsnqNJwfJ4soBy/8MqT2nphNJOVY
+         cecS8Mg2/4KWr29MCSpuKKZO0USfRR//aC580A7oP0jv2rxO9eRbuxqCeNWQpMZlaZ1Y
+         DAGQ==
+X-Gm-Message-State: AOAM532e4JlBKuSbEhmWwpwSS13bw+AThQUilE3suf2G1U0EaHl16XT7
+        6YVW+FeRvVwtHmZlguohnw5RHFw2AOCIDqbwipw=
+X-Google-Smtp-Source: ABdhPJxXuv9hy7NItRXTtYp8tAtfRyCFoH9PaNwH1AUyqDnfuCJ/EMPafxRdjYt2A9ff3zgcKB50YR9Yvid7T56tAsg=
+X-Received: by 2002:a37:ea1a:: with SMTP id t26mr15449708qkj.504.1631973647585;
+ Sat, 18 Sep 2021 07:00:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+Received: by 2002:aed:3023:0:0:0:0:0 with HTTP; Sat, 18 Sep 2021 07:00:47
+ -0700 (PDT)
+Reply-To: mrsaishag45@gmail.com
+From:   Mrs Aisha Al-Qaddafi <mrsaishagaddafi960@gmail.com>
+Date:   Sat, 18 Sep 2021 07:00:47 -0700
+Message-ID: <CABELTfD+tQHDQ27XQGHx8wypmjWH7JjjMZmh5oq+y+hAeRrEzw@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 89.77.51.84
-X-CLIENT-HOSTNAME: 89-77-51-84.dynamic.chello.pl
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrudehkedgieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvffufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpefhgedtffejheekgeeljeevvedtuefgffeiieejuddutdekgfejvdehueejjeetvdenucfkphepkeelrdejjedrhedurdekgeenucfuphgrmhfkphepkeelrdejjedrhedurdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrjeejrdehuddrkeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgv
- lhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=56 Fuz1=56 Fuz2=56
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+Dear Friend,
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
 
-As explained in the changelog of patch [2/5], using struct pci_platform_pm_ops
-for ACPI is not particularly beneficial, so it is better to get rid of it and
-call the functions pointed to by it directly from the PCI core.
-
-However, struct pci_platform_pm_ops is also used by the Intel MID support code
-that basically is regarded as dead which is why the majority of it has been
-dropped already as of commit 4590d98f5a4f ("sfi: Remove framework for deprecated
-firmware").  Since it doesn't make much sense to update that code, patch [1/5]
-drops the PCI part of it along with some arch pieces that are only needed for
-the PCI stuff.
-
-The main modification is made by patch [2/5] (see the changelog thereof for
-details).
-
-The rest is just cleanups and some code consolidation on top of that.
-
-Thanks!
-
-
-
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country
+If you are willing to handle this project on my behalf kindly reply
+urgently to enable me to provide you more information about the
+investment
+funds.
+Best Regards
+Mrs Aisha Al-Qaddafi
