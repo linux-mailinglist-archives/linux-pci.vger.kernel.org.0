@@ -2,107 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA590410885
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 22:18:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F52C41088A
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 22:24:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232733AbhIRUTa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Sep 2021 16:19:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
+        id S234430AbhIRU0U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Sep 2021 16:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbhIRUT3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 16:19:29 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8CEC061574;
-        Sat, 18 Sep 2021 13:18:05 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id lb1-20020a17090b4a4100b001993f863df2so9832432pjb.5;
-        Sat, 18 Sep 2021 13:18:05 -0700 (PDT)
+        with ESMTP id S234491AbhIRU0T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 16:26:19 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94477C061574
+        for <linux-pci@vger.kernel.org>; Sat, 18 Sep 2021 13:24:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id bq5so48472016lfb.9
+        for <linux-pci@vger.kernel.org>; Sat, 18 Sep 2021 13:24:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=Rz+Q9TyMwNKKp3Zp/SmxkDCYSutReaKArS9DPZj1vGU=;
-        b=Vyqf0lTIGrmhvmmZbrcMnYNEUwfBUKo4E2Ov3rvEGvdmi1SIrO0nJJrSOzROA68kwH
-         BO8d+xe+rBxBX1PfC68J4fL+6Y9NQvh9ibo9dRpcw8wmygRB4SmO1r/GI+RMfOKKJjZV
-         xYCtLqT/SUI56+T9T1WO1doYn6BZ1l4b+GJ/vMAjSE9dSqxaEm2sKmFD8ABhAgVEKE+W
-         ZWMk+nSpBjsbLa+gX+4bxc3d7wqep5MRmmHlxtkv+u+8jdSoIwVLGo/HWv5Jw+NfJVAK
-         HbtGMbCv0odqj8Zi24s5AEMyXJcY0xqizA8wcXSX1QZJHTrS8RZUXxPS9EjwgcPZk2Yw
-         /Cgg==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=WHtdyJCcuGyloCfSaZGxPpf2216xBoaQMVwF0fPtVn8=;
+        b=J46J2HWe3ikt/uokc8OHaSh6eShTKbHS9GP17mQr1+7/R0fbY8GZMZQ2MRQhv36Go8
+         PmnbqNPNb+QM0hvL00cGMKgAlMnawcvnTCaDgiYEV2gw9dW+RMPLj5GHmtkqizYoqzmb
+         Unjw/3cWDKm9gHe7pJAFggjQrXFlwbqMWnMikRpGGOTQU9dMTV4MU0QPvvkpXeddRcvs
+         XwGXhCS+PooTxFJq+Gof2DhZI2At/tvr+IuFZhhxlg9eh7oM7aI6a/33DOzwRmdF0970
+         cAmLU/yMyO+L1fslpWQZno5qF8dxl+CpMagEWb6ptQlGi2TGVZ22S9dJkI01SIX8gHLS
+         Vj7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Rz+Q9TyMwNKKp3Zp/SmxkDCYSutReaKArS9DPZj1vGU=;
-        b=0lmkRJuWOVX+MCv+FcXknOj/OKZdnimg0n48ix1eUis9onNzIGHPdY9MFULKSgWXhd
-         jAveJTZXugnmgOWzm6TO0+ENRISv9xh3gFiad6osgmCJZD9WwCerLqDkqy4WsVvQkC6l
-         PbvcoFdomWV+2uYx0elRI5ncG27kGgaNSPAjJ8iFHik8uztl9pZxJhmSlB5S1c3tnKUp
-         hLN7iWhrhUJSiUSmC01+KSiLJ/cB8Eg/VIbpCR6qjQbbm9V+kEaXnthSO4yOSu0tUreK
-         y8KUw167QhL6gvOGiXaM8kigGhwi4O5/QmJLvfrj/P2nOrwTMfwum3D+CQ2iangqomx9
-         2KLg==
-X-Gm-Message-State: AOAM532BkPlBOyqecoVevWCdENZYAh/F5lXjkJqAH7venA9bS4qOBNsw
-        YinI65OrtZgRvQ3yxJeI5bp9MlFftL8=
-X-Google-Smtp-Source: ABdhPJzSq2utTH0VPA7Dkd+SyWYQFPaB8HjoaVstGsD0PWEELSZCeHQHDlSQBMDOwX83XtxK05I2Fw==
-X-Received: by 2002:a17:90a:b288:: with SMTP id c8mr4690410pjr.67.1631996285001;
-        Sat, 18 Sep 2021 13:18:05 -0700 (PDT)
-Received: from pranay-desktop (2603-8001-9300-332c-0000-0000-0000-092b.res6.spectrum.com. [2603:8001:9300:332c::92b])
-        by smtp.gmail.com with ESMTPSA id qe17sm8973154pjb.39.2021.09.18.13.18.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Sep 2021 13:18:04 -0700 (PDT)
-Date:   Sat, 18 Sep 2021 13:18:02 -0700
-From:   Pranay Sanghai <pranaysanghai@gmail.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/pci/setup-irq.c: Fix up comments.
-Message-ID: <YUZJenW2UCA4Qu0O@pranay-desktop>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=WHtdyJCcuGyloCfSaZGxPpf2216xBoaQMVwF0fPtVn8=;
+        b=LHnYXvuJtk5xatl/RiZ8dD4M6+0N8+f7MxR852qO3u7B+lJ1WmMMPubzdHMLWzG6h3
+         IQNgXUSnwkWYiYrikHhTyzXwxq2WgAwUMNpVw5cSIsa6VoCIT+esxrBve7idientCJ/j
+         YKUQBa4udTBjFeiUYOr5aDy9vgByS8dmsobJPDO8FvMsUpBiIpZeibNj/QpZZMQBhuU4
+         1A3UUv+YBHumXj3SF2OOHYynNyWgcNanRKVLT6ViIqQVFiFARxhK0bNf6l0wUU1creXl
+         t/6vBMDIoTbQt1SqzU1n33PKpDN5OpSM86ISCYgBmNG+oQhRajLGS1wHQn37C4FaFAfi
+         xBfA==
+X-Gm-Message-State: AOAM532oMaxUknLHIuqAJ0EOyu+dcglwW78ib76j2X3A5s+QqnpY4uIv
+        4Y1Cx4Ekosxp2IshP9AfVZhMA18qV8ropuLaamM=
+X-Google-Smtp-Source: ABdhPJxBQ5hwzNFXOCN6l72Br+x+Y/swXSZkVl26GDwpDpuC1pOWs/cwg2akhMuDE2Fj3EUjncsGH3IqyLuB0ofg3k0=
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr15794623ljg.396.1631996692919;
+ Sat, 18 Sep 2021 13:24:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Received: by 2002:a9a:740e:0:b0:145:43b3:c03 with HTTP; Sat, 18 Sep 2021
+ 13:24:52 -0700 (PDT)
+Reply-To: delivery.postoffice@post.com
+From:   "Ms.Fatiha Salatt" <neslon.johnson40@gmail.com>
+Date:   Sat, 18 Sep 2021 22:24:52 +0200
+Message-ID: <CA++4OV7Fdg8WtG5481GkkQGnP7X5FvNcOSSkfrTkD0agT3yonw@mail.gmail.com>
+Subject: Your visa debit card is working online
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Make comments follow multi-line comment conventions. No functional change intended.
+ATTN; DEAR,
 
-Signed-off-by: Pranay Sanghai <pranaysanghai@gmail.com>
+This is Ms.Fatiha Salatt ,I have registered your ATM CARD to the POST
+OFFICE BENIN REPUBLIC so that they will Post it to your home address
+and I believe your current address is still the same. Your total
+amount in the envelope is $3.2 Million USD and the POST OFFICE assured
+me that there will be no stoppage until it get to your hand. I want
+you to contact them and re- confirm your address where to Post it.
 
----
- drivers/pci/setup-irq.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+Contact Dr. Yunus Luqmani,
+03 BP 1000,COTONOU
+BENIN REPUBLIC.
+E-mail: (delivery.postoffice@post.com)
+Your full information for the Postal.
+PHONE NUMBER
+FULL NAME: ==============
+COUNTRY: ==============
+CITY: ==============
+CURRENT HOME ADDRESS: ===========
+TELEPHONE/CELL PHONE NUMBER.=========
+AGE/OCCUPATION: =============
+SEX/A COPY OF YOUR IDENTIFICATION: ===============
 
-diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-index 7129494754dd..ed628771250b 100644
---- a/drivers/pci/setup-irq.c
-+++ b/drivers/pci/setup-irq.c
-@@ -28,12 +28,13 @@ void pci_assign_irq(struct pci_dev *dev)
- 		return;
- 	}
- 
--	/* If this device is not on the primary bus, we need to figure out
--	   which interrupt pin it will come in on.   We know which slot it
--	   will come in on 'cos that slot is where the bridge is.   Each
--	   time the interrupt line passes through a PCI-PCI bridge we must
--	   apply the swizzle function.  */
--
-+	/*
-+	 * If this device is not on the primary bus, we need to figure out
-+	 * which interrupt pin it will come in on. We know which slot it
-+	 * will come in on 'cos that slot is where the bridge is. Each
-+	 * time the interrupt line passes through a PCI-PCI bridge we must
-+	 * apply the swizzle function.
-+	 */
- 	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
- 	/* Cope with illegal. */
- 	if (pin > 4)
-@@ -56,7 +57,9 @@ void pci_assign_irq(struct pci_dev *dev)
- 
- 	pci_dbg(dev, "assign IRQ: got %d\n", dev->irq);
- 
--	/* Always tell the device, so the driver knows what is
--	   the real IRQ to use; the device does not use it. */
-+	/*
-+	 * Always tell the device, so the driver knows what is
-+	 * the real IRQ to use; the device does not use it.
-+	 */
- 	pci_write_config_byte(dev, PCI_INTERRUPT_LINE, irq);
- }
--- 
-2.33.0
+The manager, informed me that it will take good 3 days to get to your
+house and your Envelope accumulate. Your Current address has to be
+reconfirmed when contacting the post office.
 
+Thanks & remain blessed.
+Ms.Fatiha Salatt
