@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 341E74106C9
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 15:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B12B94106C6
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 15:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237466AbhIRNa7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Sep 2021 09:30:59 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57356 "EHLO
+        id S237212AbhIRN3u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Sep 2021 09:29:50 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55028 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237235AbhIRNa6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 09:30:58 -0400
+        with ESMTP id S237235AbhIRN3u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 09:29:50 -0400
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id 58508a8780607b0b; Sat, 18 Sep 2021 15:29:33 +0200
+ id 5f1cbb66e24808ce; Sat, 18 Sep 2021 15:28:25 +0200
 Received: from kreacher.localnet (89-77-51-84.dynamic.chello.pl [89.77.51.84])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 60AD466A51F;
-        Sat, 18 Sep 2021 15:29:32 +0200 (CEST)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 2442D66A51F;
+        Sat, 18 Sep 2021 15:28:24 +0200 (CEST)
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>
@@ -28,9 +28,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         x86 Maintainers <x86@kernel.org>
-Subject: [PATCH v1 4/5] PCI: PM: Make pci_choose_state() call pci_target_state()
-Date:   Sat, 18 Sep 2021 15:26:08 +0200
-Message-ID: <3566670.MHq7AAxBmi@kreacher>
+Subject: [PATCH v1 5/5] PCI: PM: ACPI: Drop unnecessary acpi_pci_power_manageable() calls
+Date:   Sat, 18 Sep 2021 15:27:37 +0200
+Message-ID: <1769617.atdPhlSkOF@kreacher>
 In-Reply-To: <8003272.NyiUUSuA9g@kreacher>
 References: <8003272.NyiUUSuA9g@kreacher>
 MIME-Version: 1.0
@@ -41,113 +41,72 @@ X-CLIENT-HOSTNAME: 89-77-51-84.dynamic.chello.pl
 X-VADE-SPAMSTATE: spam:low
 X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrudehkedgiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvjeelgffhiedukedtleekkedvudfggefhgfegjefgueekjeelvefggfdvledutdenucfkphepkeelrdejjedrhedurdekgeenucfuphgrmhfkphepkeelrdejjedrhedurdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrjeejrdehuddrkeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghr
  nhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=14 Fuz1=14 Fuz2=14
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The pci_choose_state() and pci_target_state() implementations are
-somewhat divergent without a good reason, because they are used
-for similar purposes.
-
-Change the pci_choose_state() implementation to use pci_target_state()
-internally except for transitions to the working state of the system
-in which case it is expected to return D0.
+Simplify acpi_pci_power_manageable() and drop two invocations of it
+that are not necessary, because the functions called when it returns
+'true' do the requisite "power manageable" checks themselves.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/pci/pci-acpi.c |    3 --
- drivers/pci/pci.c      |   54 ++++++++++++++-----------------------------------
- 2 files changed, 16 insertions(+), 41 deletions(-)
+ drivers/pci/pci-acpi.c |    4 +---
+ drivers/pci/pci.c      |   16 +++++-----------
+ 2 files changed, 6 insertions(+), 14 deletions(-)
 
 Index: linux-pm/drivers/pci/pci.c
 ===================================================================
 --- linux-pm.orig/drivers/pci/pci.c
 +++ linux-pm/drivers/pci/pci.c
-@@ -1331,44 +1331,6 @@ int pci_set_power_state(struct pci_dev *
- }
- EXPORT_SYMBOL(pci_set_power_state);
- 
--/**
-- * pci_choose_state - Choose the power state of a PCI device
-- * @dev: PCI device to be suspended
-- * @state: target sleep state for the whole system. This is the value
-- *	   that is passed to suspend() function.
-- *
-- * Returns PCI power state suitable for given device and given system
-- * message.
-- */
--pci_power_t pci_choose_state(struct pci_dev *dev, pm_message_t state)
--{
--	pci_power_t ret;
--
--	if (!dev->pm_cap)
--		return PCI_D0;
--
--	ret = acpi_pci_choose_state(dev);
--	if (ret != PCI_POWER_ERROR)
--		return ret;
--
--	switch (state.event) {
--	case PM_EVENT_ON:
--		return PCI_D0;
--	case PM_EVENT_FREEZE:
--	case PM_EVENT_PRETHAW:
--		/* REVISIT both freeze and pre-thaw "should" use D0 */
--	case PM_EVENT_SUSPEND:
--	case PM_EVENT_HIBERNATE:
--		return PCI_D3hot;
--	default:
--		pci_info(dev, "unrecognized suspend event %d\n",
--			 state.event);
--		BUG();
--	}
--	return PCI_D0;
--}
--EXPORT_SYMBOL(pci_choose_state);
--
- #define PCI_EXP_SAVE_REGS	7
- 
- static struct pci_cap_saved_state *_pci_find_saved_cap(struct pci_dev *pci_dev,
-@@ -2782,6 +2744,22 @@ void pci_dev_complete_resume(struct pci_
- 	spin_unlock_irq(&dev->power.lock);
- }
- 
-+/**
-+ * pci_choose_state - Choose the power state for a PCI device.
-+ * @pci_dev: Target PCI device.
-+ * @state: Target state for the whole system.
-+ *
-+ * Returns PCI power state suitable for @pci_dev and @state.
-+ */
-+pci_power_t pci_choose_state(struct pci_dev *pci_dev, pm_message_t state)
-+{
-+	if (state.event == PM_EVENT_ON)
-+		return PCI_D0;
-+
-+	return pci_target_state(pci_dev, device_may_wakeup(&pci_dev->dev));
-+}
-+EXPORT_SYMBOL(pci_choose_state);
-+
- void pci_config_pm_runtime_get(struct pci_dev *pdev)
+@@ -1128,9 +1128,7 @@ void pci_update_current_state(struct pci
+  */
+ void pci_refresh_power_state(struct pci_dev *dev)
  {
- 	struct device *dev = &pdev->dev;
+-	if (acpi_pci_power_manageable(dev))
+-		acpi_pci_refresh_power_state(dev);
+-
++	acpi_pci_refresh_power_state(dev);
+ 	pci_update_current_state(dev, dev->current_state);
+ }
+ 
+@@ -1143,14 +1141,10 @@ int pci_platform_power_transition(struct
+ {
+ 	int error;
+ 
+-	if (acpi_pci_power_manageable(dev)) {
+-		error = acpi_pci_set_power_state(dev, state);
+-		if (!error)
+-			pci_update_current_state(dev, state);
+-	} else
+-		error = -ENODEV;
+-
+-	if (error && !dev->pm_cap) /* Fall back to PCI_D0 */
++	error = acpi_pci_set_power_state(dev, state);
++	if (!error)
++		pci_update_current_state(dev, state);
++	else if (!dev->pm_cap) /* Fall back to PCI_D0 */
+ 		dev->current_state = PCI_D0;
+ 
+ 	return error;
 Index: linux-pm/drivers/pci/pci-acpi.c
 ===================================================================
 --- linux-pm.orig/drivers/pci/pci-acpi.c
 +++ linux-pm/drivers/pci/pci-acpi.c
-@@ -910,9 +910,6 @@ pci_power_t acpi_pci_choose_state(struct
+@@ -969,9 +969,7 @@ bool acpi_pci_power_manageable(struct pc
  {
- 	int acpi_state, d_max;
+ 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
  
--	if (acpi_pci_disabled)
--		return PCI_POWER_ERROR;
--
- 	if (pdev->no_d3cold)
- 		d_max = ACPI_STATE_D3_HOT;
- 	else
+-	if (!adev)
+-		return false;
+-	return acpi_device_power_manageable(adev);
++	return adev && acpi_device_power_manageable(adev);
+ }
+ 
+ bool acpi_pci_bridge_d3(struct pci_dev *dev)
 
 
 
