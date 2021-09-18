@@ -2,139 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9AF3410262
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 02:23:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06F9F410466
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 08:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbhIRAYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Sep 2021 20:24:37 -0400
-Received: from mx.socionext.com ([202.248.49.38]:14927 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242364AbhIRAYh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Sep 2021 20:24:37 -0400
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 18 Sep 2021 09:23:13 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id ACA472059036;
-        Sat, 18 Sep 2021 09:23:13 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Sat, 18 Sep 2021 09:23:13 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 1C804AB192;
-        Sat, 18 Sep 2021 09:23:13 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3] PCI: uniphier: Serialize INTx masking/unmasking and fix the bit operation
-Date:   Sat, 18 Sep 2021 09:22:59 +0900
-Message-Id: <1631924579-24567-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S236588AbhIRG2d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Sep 2021 02:28:33 -0400
+Received: from [118.255.132.200] ([118.255.132.200]:38227 "EHLO kh57hq.top"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S229476AbhIRG2c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 18 Sep 2021 02:28:32 -0400
+X-Greylist: delayed 1204 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Sep 2021 02:28:30 EDT
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=kh57hq.top;
+ h=Message-ID:From:To:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=admin@kh57hq.top;
+ bh=TeYJ48ssNMaIJHygFEr//mz2ox4=;
+ b=X2Vri2FPyNfB54kcKuo9ggzon1ZAFS+Hm0NXjyPY8+6iXSpVMgllFzHvkpPPS4LClx9bnS1uVmUW
+   +43jXyEoYN7B69y90PQ7QfnaN9FHTsy8uLhi4do/+b6EQDiMP6wLUaEwDJxdYEetNBxOJ1e5MkBr
+   8VvTmxtOLe3E4PtqexQ=
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=kh57hq.top;
+ b=pMujsFAYy2CoJy+9Y4hqN9iipAb53fTjA8eTM2Sd7TR1NFQCECQ3cH7duLPdr7/TSU1lgYDlaCp1
+   kT9MasAprWrXUAF7CuYpsTBGIsly061AXcbzQuwd7K894q7Qnkh5LcFFnCn7JxQMFsGAQJz5Oknm
+   DGRGwTW7LYP1Fn3+UpY=;
+Message-ID: <20210918140552855761@kh57hq.top>
+From:   =?utf-8?B?77yl77y077yj44K144O844OT44K544Gu44GK55+l44KJ44Gb?= 
+        <admin@kh57hq.top>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?utf-8?B?RVRD44K144O844OT44K5?=
+Date:   Sat, 18 Sep 2021 14:05:45 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: base64
+X-mailer: Qfuzbov 0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The condition register PCI_RCV_INTX is used in irq_mask() and irq_unmask()
-callbacks. Accesses to register can occur at the same time without a lock.
-Add a lock into each callback to prevent the issue.
+RVRD44K144O844OT44K544KS44GU5Yip55So44Gu44GK5a6i5qeYOg0KDQpFVEPjgrXjg7zjg5Pj
+grnjga/nhKHlirnjgavjgarjgorjgb7jgZfjgZ/jgIINCuW8leOBjee2muOBjeOCteODvOODk+OC
+ueOCkuOBlOWIqeeUqOOBhOOBn+OBoOOBjeOBn+OBhOWgtOWQiOOBr+OAgeS4i+iomOODquODs+OC
+r+OCiOOCiuips+e0sOOCkuOBlOeiuuiqjeOBj+OBoOOBleOBhOOAgg0KDQrkuIvoqJjjga7mjqXn
+tprjgYvjgonlgZzmraLljp/lm6DjgpLnorroqo3jgZfjgabjgY/jgaDjgZXjgYQNCg0KaHR0cHM6
+Ly9ldGMtbWVpc2FpLmpwLmNvLWluZm8udG9wDQoNCijnm7TmjqXjgqLjgq/jgrvjgrnjgafjgY3j
+garjgYTloLTlkIjjga/jgIHmiYvli5Xjgafjg5bjg6njgqbjgrbjgavjgrPjg5Tjg7zjgZfjgabp
+lovjgYTjgabjgY/jgaDjgZXjgYQpDQoNCuKAu+OBk+OBruODoeODvOODq+OBr+mAgeS/oeWwgueU
+qOOBp+OBmeOAgg0K44CA44GT44Gu44Ki44OJ44Os44K544Gr6YCB5L+h44GE44Gf44Gg44GE44Gm
+44KC6L+U5L+h44GE44Gf44GX44GL44Gt44G+44GZ44Gu44Gn44CB44GC44KJ44GL44GY44KB44GU
+5LqG5om/6aGY44GE44G+44GZ44CCDQrigLvjgarjgYrjgIHjgZTkuI3mmI7jgarngrnjgavjgaTj
+gY3jgb7jgZfjgabjga/jgIHjgYrmiYvmlbDjgafjgZnjgYzjgIENCiAgRVRD44K144O844OT44K5
+5LqL5YuZ5bGA44Gr44GK5ZWP44GE5ZCI44KP44Gb44GP44Gg44GV44GE44CCDQoNCuKWoEVUQ+WI
+qeeUqOeFp+S8muOCteODvOODk+OCueS6i+WLmeWxgA0K5bm05Lit54Sh5LyR44CAOTowMO+9njE4
+OjAwDQrjg4rjg5Pjg4DjgqTjg6Tjg6vjgIAwNTcwLTAxMDEzOQ0K77yI44OK44OT44OA44Kk44Ok
+44Or44GM44GU5Yip55So44GE44Gf44Gg44GR44Gq44GE44GK5a6i44GV44G+44CAMDQ1LTc0NC0x
+Mzcy77yJDQowNDUtNzQ0LTY2Mw0K
 
-And INTX mask and unmask fields in PCL_RCV_INTX register should only be
-set/reset for each bit. Clearing by PCL_RCV_INTX_ALL_MASK should be
-removed.
-
-INTX status fields in PCL_RCV_INTX register only indicates each INTX
-interrupt status, so the handler can't clear by writing 1 to the field.
-The status is expected to be cleared by the interrupt origin.
-The ack function has no meaning, so should remove it.
-
-Fixes: 7e6d5cd88a6f ("PCI: uniphier: Add UniPhier PCIe host controller support")
-Suggested-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Pali Rohár <pali@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
----
-Changes in v3:
-- Squash two fix patches into one
-- Add Acked-by: line
-
-Changes in v2:
-- Add Acked-by: line to the first patch
-- Add a fix patch for bit operation
-
----
- drivers/pci/controller/dwc/pcie-uniphier.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index d95df02..d35501b 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -194,30 +194,21 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
- 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
- }
- 
--static void uniphier_pcie_irq_ack(struct irq_data *d)
--{
--	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
--	u32 val;
--
--	val = readl(priv->base + PCL_RCV_INTX);
--	val &= ~PCL_RCV_INTX_ALL_STATUS;
--	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_STATUS_SHIFT);
--	writel(val, priv->base + PCL_RCV_INTX);
--}
--
- static void uniphier_pcie_irq_mask(struct irq_data *d)
- {
- 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	unsigned long flags;
- 	u32 val;
- 
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
- 	val = readl(priv->base + PCL_RCV_INTX);
--	val &= ~PCL_RCV_INTX_ALL_MASK;
- 	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
- 	writel(val, priv->base + PCL_RCV_INTX);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
- }
- 
- static void uniphier_pcie_irq_unmask(struct irq_data *d)
-@@ -225,17 +216,20 @@ static void uniphier_pcie_irq_unmask(struct irq_data *d)
- 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	unsigned long flags;
- 	u32 val;
- 
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
- 	val = readl(priv->base + PCL_RCV_INTX);
--	val &= ~PCL_RCV_INTX_ALL_MASK;
- 	val &= ~BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
- 	writel(val, priv->base + PCL_RCV_INTX);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
- }
- 
- static struct irq_chip uniphier_pcie_irq_chip = {
- 	.name = "PCI",
--	.irq_ack = uniphier_pcie_irq_ack,
- 	.irq_mask = uniphier_pcie_irq_mask,
- 	.irq_unmask = uniphier_pcie_irq_unmask,
- };
--- 
-2.7.4
 
