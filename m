@@ -2,124 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D7B34104D3
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 09:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 904314104D5
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Sep 2021 09:37:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241904AbhIRHia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Sep 2021 03:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39252 "EHLO
+        id S243192AbhIRHih (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Sep 2021 03:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbhIRHi2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 03:38:28 -0400
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20894C061574;
-        Sat, 18 Sep 2021 00:37:05 -0700 (PDT)
-Received: by mail-ua1-x931.google.com with SMTP id v9so7572570uak.1;
-        Sat, 18 Sep 2021 00:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DzhfRJtsewrJy9gvg3PVALM7qiexBjbh/6ESbF9yAmQ=;
-        b=i1MTcAD9UnYWPlpu2z9dz7O9pjlQi/vuAb8G6J7B83k+RiE8sojZ6LvZ09CgoUK9n4
-         LczbRL08HgiCe6YvEYzMEkXDh1Q0J6Jk4GWLqVgxj1Zsl2mmDINOHcH8tljgjekYyuja
-         wbCP62A2N6pG33G7GTvW5WMKXBJcNSykuLc68szTgl3hBj0vHo3E9/Zrank8lIIdBfjG
-         oq7az9SaGonnHEdklABpvcpHh9cJebxCySh26hjrimvfq6LvmneliPGe0KzLyvCsp6eT
-         j/JPRVOpE7YO6zUAsiaElas3DlU350eVSGokG8rpu5d8vz5qH8YDH2eKKlIpOecW7U60
-         H3/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DzhfRJtsewrJy9gvg3PVALM7qiexBjbh/6ESbF9yAmQ=;
-        b=UaFj+DX7cbkzfu3IVa6RUpB2tvWMzJTrkTAmI+nZ8Wg6zPISx/+jDXpZf6gHfEZhEy
-         +Fdl/TtptrfqdAHQ+q8dtog9n22yzOLutBpADpWwU1ZuaVmlAzRvUcjbrCwVl63892AX
-         B4VpZ6aBTVvkkpDDRy87U5zAIw3dn83A23PUvSCteT3Fvx/VvwPdjqkt008VD/XKJxsI
-         pEVXhqB02VmHC5eKcoVEmuVN1RrI2y+iemTWdFVGG/UT74ju36SRvzXVSs6mpsU+Un4U
-         IZxHHugNSK6xMlldo7xJS99Nn/nTHRNe5lQrokhyMz/4Pa2yPqTcRtyp+eDVeucmAIZl
-         s5Ew==
-X-Gm-Message-State: AOAM531zpCIcGDoGMcljRfa5sNikGEf2Ca3sOomKnEFz8v+evbEOn+41
-        ZaW3deQSf12M64HhZI1nk73pupKF715JcxQqHjs=
-X-Google-Smtp-Source: ABdhPJwi5zes5aLNI68EPqG8s32AnHOL7SpWjSiidkZRKZ44MpDEG9d4/Z3v+a0xOXreS8EF7zbs/z9Lh4RJ9M+id+w=
-X-Received: by 2002:ab0:31c1:: with SMTP id e1mr7426551uan.132.1631950623485;
- Sat, 18 Sep 2021 00:37:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210917035736.3934017-1-chenhuacai@loongson.cn>
- <20210917035736.3934017-19-chenhuacai@loongson.cn> <CAK8P3a26CGyiZ9y7KxHGu6eHXZJ08X4mospr+3CL8g_qi=ACpg@mail.gmail.com>
-In-Reply-To: <CAK8P3a26CGyiZ9y7KxHGu6eHXZJ08X4mospr+3CL8g_qi=ACpg@mail.gmail.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 18 Sep 2021 15:36:52 +0800
-Message-ID: <CAAhV-H5=Ut+rymv1RH+1GVS2oVZogtuwY_Sk-dDosJh6=USr0Q@mail.gmail.com>
-Subject: Re: [PATCH V3 18/22] LoongArch: Add PCI controller support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        with ESMTP id S243245AbhIRHif (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Sep 2021 03:38:35 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039FDC061574;
+        Sat, 18 Sep 2021 00:37:11 -0700 (PDT)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:105:465:1:3:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4HBN1x4xwszQjf4;
+        Sat, 18 Sep 2021 09:37:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
+To:     Brian Norris <briannorris@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <20210830123704.221494-1-verdre@v0yd.nl>
+ <20210830123704.221494-2-verdre@v0yd.nl>
+ <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
+ <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
+ <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+ <YS/rn8b0O3FPBbtm@google.com>
+Message-ID: <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
+Date:   Sat, 18 Sep 2021 09:37:03 +0200
+MIME-Version: 1.0
+In-Reply-To: <YS/rn8b0O3FPBbtm@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: A83FB275
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Arnd,
+On 9/1/21 11:07 PM, Brian Norris wrote:
+> Apologies for the brain-dead mailer. I forget that I should only reply
+> via web when I _want_ text wrapping:
+> 
+> On Wed, Sep 01, 2021 at 02:04:04PM -0700, Brian Norris wrote:
+>> (b) latency spikes to ~6ms:
+>> # trace-cmd record -p function_graph -O funcgraph-abstime -l
+>> mwifiex_pm_wakeup_card
+>> # trace-cmd report
+>>     kworker/u13:0-199   [003]   348.987306: funcgraph_entry:      #
+>> 6219.500 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:0-199   [003]   349.316312: funcgraph_entry:      #
+>> 6267.625 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-4057  [001]   352.238530: funcgraph_entry:      #
+>> 6184.250 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:0-199   [002]   356.626366: funcgraph_entry:      #
+>> 6553.166 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-4057  [002]   356.709389: funcgraph_entry:      #
+>> 6212.500 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-4057  [002]   356.847215: funcgraph_entry:      #
+>> 6230.292 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-4057  [000]   356.897576: funcgraph_entry:      #
+>> 6451.667 us |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:0-199   [004]   357.175025: funcgraph_entry:      #
+>> 6204.042 us |  mwifiex_pm_wakeup_card();
+>>
+>> whereas it used to look more like:
+>>
+>>     kworker/u13:1-173   [005]   212.230542: funcgraph_entry:
+>> 7.000 us   |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-1768  [005]   213.886063: funcgraph_entry:
+>> 9.334 us   |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-1768  [002]   214.473273: funcgraph_entry:      +
+>> 11.375 us  |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-1768  [005]   214.530705: funcgraph_entry:
+>> 5.542 us   |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:1-173   [002]   215.050168: funcgraph_entry:      +
+>> 13.125 us  |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:1-173   [002]   215.106492: funcgraph_entry:      +
+>> 11.959 us  |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-1768  [005]   215.484807: funcgraph_entry:
+>> 8.459 us   |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:1-173   [003]   215.515238: funcgraph_entry:      +
+>> 15.166 us  |  mwifiex_pm_wakeup_card();
+>>     kworker/u13:3-1768  [001]   217.175691: funcgraph_entry:      +
+>> 11.083 us  |  mwifiex_pm_wakeup_card();
+> 
+> That should read:
+> 
+> # trace-cmd record -p function_graph -O funcgraph-abstime -l mwifiex_pm_wakeup_card
+> # trace-cmd report
+>     kworker/u13:0-199   [003]   348.987306: funcgraph_entry:      # 6219.500 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:0-199   [003]   349.316312: funcgraph_entry:      # 6267.625 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-4057  [001]   352.238530: funcgraph_entry:      # 6184.250 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:0-199   [002]   356.626366: funcgraph_entry:      # 6553.166 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-4057  [002]   356.709389: funcgraph_entry:      # 6212.500 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-4057  [002]   356.847215: funcgraph_entry:      # 6230.292 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-4057  [000]   356.897576: funcgraph_entry:      # 6451.667 us |  mwifiex_pm_wakeup_card();
+>     kworker/u13:0-199   [004]   357.175025: funcgraph_entry:      # 6204.042 us |  mwifiex_pm_wakeup_card();
+> 
+> vs.
+> 
+>     kworker/u13:1-173   [005]   212.230542: funcgraph_entry:        7.000 us   |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-1768  [005]   213.886063: funcgraph_entry:        9.334 us   |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-1768  [002]   214.473273: funcgraph_entry:      + 11.375 us  |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-1768  [005]   214.530705: funcgraph_entry:        5.542 us   |  mwifiex_pm_wakeup_card();
+>     kworker/u13:1-173   [002]   215.050168: funcgraph_entry:      + 13.125 us  |  mwifiex_pm_wakeup_card();
+>     kworker/u13:1-173   [002]   215.106492: funcgraph_entry:      + 11.959 us  |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-1768  [005]   215.484807: funcgraph_entry:        8.459 us   |  mwifiex_pm_wakeup_card();
+>     kworker/u13:1-173   [003]   215.515238: funcgraph_entry:      + 15.166 us  |  mwifiex_pm_wakeup_card();
+>     kworker/u13:3-1768  [001]   217.175691: funcgraph_entry:      + 11.083 us  |  mwifiex_pm_wakeup_card();
+> 
+> Brian
+> 
 
-On Fri, Sep 17, 2021 at 5:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Sep 17, 2021 at 5:57 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > Loongson64 based systems are PC-like systems which use PCI/PCIe as its
-> > I/O bus, This patch adds the PCI host controller support for LoongArch.
-> >
-> > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> As discussed before, I think the PCI support should not be part of the
-> architecture code or this patch series. The headers are ok, but the pci.c
-> and acpi.c files have nothing loongarch specific in them, and you clearly
-> just copied most of this from arm64 or x86.
-In V2 part of the PCI code (pci-loongson.c) has moved to
-drivers/pci/controllers. For pci.c and acpi.c, I agree that "the thing
-should be like that", but have some different ideas about "the way to
-arrive at that". In my opinion, we can let this series be merged at
-first, and then do another series to "restructure the files and move
-common parts to the drivers directory". That way looks more natural to
-me (doing the other series at first may block the whole thing).
+Thanks for the pointer to that commit Brian, it turns out this is 
+actually the change that causes the "Firmware wakeup failed" issues that 
+I'm trying to fix with the second patch here.
 
->
-> What I would suggest you do instead is:
->
-> - start a separate patch series, addressed to the ACPI, PCI host driver
->   and ARM64 maintainers.
->
-> - Move all the bits you need from arch/{arm64,ia64,x86} into
->   drivers/acpi/pci/pci_root.c, duplicating them with #if/#elif/#else
->   where they are too different, making the #else path the
->   default that can be shared with loongarch.
->
-> - Move the bits from pci_root_info/acpi_pci_root_info that are
->   always needed into struct pci_host_bridge, with an
->   #ifdef CONFIG_ACPI where appropriate.
->
-> - Simplify as much as you can easily do.
->
->         Arnd
+Also my approach is a lot messier than just reverting 
+062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3 and also appears to be blocking 
+even longer...
+
+Does anyone have an idea what could be the reason for the posted write 
+not going through, or could that also be a potential firmware bug in the 
+chip?
+
+Jonas
