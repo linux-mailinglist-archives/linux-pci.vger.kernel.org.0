@@ -2,82 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACD04112A2
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 12:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA17D41132E
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 12:57:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbhITKLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Sep 2021 06:11:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:45336 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233090AbhITKLB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Sep 2021 06:11:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C2C431B;
-        Mon, 20 Sep 2021 03:09:35 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF0AC3F59C;
-        Mon, 20 Sep 2021 03:09:33 -0700 (PDT)
-Date:   Mon, 20 Sep 2021 11:09:27 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Arnd Bergmann <arnd@kernel.org>, bhelgaas@google.com,
-        marek.vasut+renesas@gmail.com, sboyd@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rcar: add COMMON_CLK dependency
-Message-ID: <20210920100927.GA9284@lpieralisi>
-References: <20210920095730.1216692-1-arnd@kernel.org>
+        id S231889AbhITK7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Sep 2021 06:59:09 -0400
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:36387 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229999AbhITK7I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Sep 2021 06:59:08 -0400
+Received: by mail-oi1-f171.google.com with SMTP id y201so9433652oie.3;
+        Mon, 20 Sep 2021 03:57:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WnqyCun3sAWL/kGdiirlHdl/hDdczJ+E/CKgO6jqS38=;
+        b=y13OxS13paZpWBbe1U4KCYtnIbnAKe2g9EMnRb03Af4bYdd3IV9gpckGeN+KHUIdyC
+         tmKqmd+g9fNWFgsJ9llEhiPFuq1gMC9d5WNINqA7jjhuxzUr4VYdaxZ/UkzsZKhlDLMx
+         6aoZHvE3uAxt7LTiDzkstT+CNOO6wPmri/cS5u7HZVnr1EF/vpzFwFxEHNwM1guvQxsz
+         k5IUNsKDlMo6oeBc3LpCy/sidshDP3T93/k3mgBmofz686rzm61l1/m7IlgJASaJb51F
+         CQny8RlZr0t8YbSvvHjeho8SDyd+ZyZNNHiwAzNOZQQDgqML98eqHRBO9XX+o5cGJnbS
+         stlA==
+X-Gm-Message-State: AOAM531OJWDD0v30qNxX95uSgwNKnCQA+JOcFD++/4XPIgxg1S9+UPkg
+        jj4NLyRvahbQilfIkOI67/44Yfcj13VcCsSu0xM=
+X-Google-Smtp-Source: ABdhPJy0DFdqF/vT0dT9lSPmkutDMqGEzj0OeH9hqR4+zMIeJoE0khIv7pJ/76blozE0wYBPlmz98W2jw8cOaI1Au50=
+X-Received: by 2002:a05:6808:10ce:: with SMTP id s14mr22555906ois.157.1632135461660;
+ Mon, 20 Sep 2021 03:57:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210920095730.1216692-1-arnd@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <8003272.NyiUUSuA9g@kreacher> <1798761.CQOukoFCf9@kreacher> <CAHp75VdoFwH2sQT6dwz4BCorkgJgmYEBHq-+YpT18HZx2cpmrA@mail.gmail.com>
+In-Reply-To: <CAHp75VdoFwH2sQT6dwz4BCorkgJgmYEBHq-+YpT18HZx2cpmrA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 20 Sep 2021 12:57:27 +0200
+Message-ID: <CAJZ5v0iRviZkLzRP0t2f4q5oY9y6CxRotDnyBVBt-QBt-uYReQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] PCI: PM: x86: Drop Intel MID PCI PM support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        x86 Maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Len Brown <len.brown@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 11:57:10AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The __clk_is_enabled() interface is only available when building for
-> platforms using CONFIG_COMMON_CLK:
-> 
-> arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
-> pcie-rcar-host.c:(.text+0x8fc): undefined reference to `__clk_is_enabled'
-> 
-> Add the necessary dependency to the COMPILE_TEST path.
-> 
-> Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/pci/controller/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Sep 19, 2021 at 10:32 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Sun, Sep 19, 2021 at 9:01 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Support for Intel MID platforms has mostly gone away with the SFI
+> > support removal in commit 4590d98f5a4f ("sfi: Remove framework for
+> > deprecated firmware"), but there are some pieces of it still in the
+> > tree.  One of them is the MID PCI PM support code which gets in the
+> > way of subsequent PCI PM simplifications and trying to update it is
+> > rather pointless, so get rid of it completely along with the arch
+> > code pieces that are only used by it.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > I am going to post patches removing the rest of MID support from arch/x86/
+> > and elsewhere, but that is still quite a bit of stuff and I don't want this
+> > simple PCI PM series to depend on that work.
+>
+> This is still being used by MID with ACPI assisted (*) support.
+> Hence, not ack.
+>
+> *) ACPI layer is provided by U-Boot and can't fulfill all possible
+> features that ACPI may use in the Linux kernel.
 
-Marek already posted a fix for this:
+OK, good to know.
 
-https://lore.kernel.org/linux-pci/20210907144512.5238-1-marek.vasut@gmail.com
-
-and was waiting for Stephen to have a look to determine if this
-could be simplified (Arnd patch already does, btw).
-
-We should merge a fix for this asap.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 326f7d13024f..53e3648fe872 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -65,7 +65,7 @@ config PCI_RCAR_GEN2
->  
->  config PCIE_RCAR_HOST
->  	bool "Renesas R-Car PCIe host controller"
-> -	depends on ARCH_RENESAS || COMPILE_TEST
-> +	depends on ARCH_RENESAS || (COMMON_CLK && COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
->  	  Say Y here if you want PCIe controller support on R-Car SoCs in host
-> -- 
-> 2.29.2
-> 
+I'm not sure how this PCI PM stuff works with ACPI.  It looks like
+this relies on a specific ordering of arch_initcall() calls for
+correctness which is sort of fragile.
