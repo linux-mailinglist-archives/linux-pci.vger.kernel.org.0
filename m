@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F55411174
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 10:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 150194111C9
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 11:15:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236074AbhITI5g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Sep 2021 04:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48232 "EHLO mail.kernel.org"
+        id S236645AbhITJQO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Sep 2021 05:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236070AbhITI5g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 20 Sep 2021 04:57:36 -0400
+        id S229689AbhITJPd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Sep 2021 05:15:33 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA34560ED8;
-        Mon, 20 Sep 2021 08:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098F860ED7;
+        Mon, 20 Sep 2021 09:14:07 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mSF5r-00Bivk-Tp; Mon, 20 Sep 2021 09:56:07 +0100
-Date:   Mon, 20 Sep 2021 09:56:07 +0100
-Message-ID: <8735pzwrq0.wl-maz@kernel.org>
+        id 1mSFNE-00Bj7S-QY; Mon, 20 Sep 2021 10:14:05 +0100
+Date:   Mon, 20 Sep 2021 10:14:04 +0100
+Message-ID: <871r5jwqw3.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -30,10 +30,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         <lokeshvutla@ti.com>
-Subject: Re: [PATCH 1/3] PCI: Add support in pci_walk_bus() to invoke callback matching RID
-In-Reply-To: <20210920064133.14115-2-kishon@ti.com>
+Subject: Re: [PATCH 0/3] PCI/gic-v3-its: Add support for same ITS device ID for multiple PCIe devices
+In-Reply-To: <20210920064133.14115-1-kishon@ti.com>
 References: <20210920064133.14115-1-kishon@ti.com>
-        <20210920064133.14115-2-kishon@ti.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,101 +46,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 20 Sep 2021 07:41:31 +0100,
+On Mon, 20 Sep 2021 07:41:30 +0100,
 Kishon Vijay Abraham I <kishon@ti.com> wrote:
 > 
-> Add two arguments to pci_walk_bus() [requestorID and mask], and add
-> support in pci_walk_bus() to invoke the *callback* only for devices
-> whose RequestorID after applying *mask* matches with *requestorID*
-> passed as argument.
+> AM64 has an issue in that it doesn't trigger interrupt if the address
+> in the *pre_its_window* is not aligned to 8-bytes (this is due to an
+> invalid bridge configuration in HW).
 > 
-> This is done in preparation for calculating the total number of
-> interrupt vectors that has to be supported by a specific GIC ITS device ID,
-> specifically when "msi-map-mask" is populated in device tree.
+> This means there will not be interrupts for devices with PCIe
+> requestor ID 0x1, 0x3, 0x5..., as the address in the pre-ITS window
+> would be 4 (1 << 2), 12 (3 << 2), 20 (5 << 2) respectively which are
+> not aligned to 8-bytes.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/bus.c   | 13 +++++++++----
->  include/linux/pci.h |  7 +++++--
->  2 files changed, 14 insertions(+), 6 deletions(-)
+> The DT binding has specified "msi-map-mask" using which multiple PCIe
+> devices could be made to use the same ITS device ID.
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 3cef835b375f..e381e639ceaa 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -358,10 +358,12 @@ void pci_bus_add_devices(const struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pci_bus_add_devices);
->  
-> -/** pci_walk_bus - walk devices on/under bus, calling callback.
-> +/** __pci_walk_bus - walk devices on/under bus matching requestor ID, calling callback.
->   *  @top      bus whose devices should be walked
->   *  @cb       callback to be called for each device found
->   *  @userdata arbitrary pointer to be passed to callback.
-> + *  @rid      Requestor ID that has to be matched for the callback to be invoked
-> + *  @mask     Mask that has to be applied to pci_dev_id(), before compating it with @rid
->   *
->   *  Walk the given bus, including any bridged devices
->   *  on buses under this bus.  Call the provided callback
-> @@ -371,8 +373,8 @@ EXPORT_SYMBOL(pci_bus_add_devices);
->   *  other than 0, we break out.
->   *
->   */
-> -void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-> -		  void *userdata)
-> +void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata, u32 rid, u32 mask)
->  {
->  	struct pci_dev *dev;
->  	struct pci_bus *bus;
-> @@ -399,13 +401,16 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
->  		} else
->  			next = dev->bus_list.next;
->  
-> +		if (mask != 0xffff && ((pci_dev_id(dev) & mask) != rid))
+> Add support in irq-gic-v3-its-pci-msi.c for such cases where multiple
+> PCIe devices are using the same ITS device ID.
+> 
+> Kishon Vijay Abraham I (3):
+>   PCI: Add support in pci_walk_bus() to invoke callback matching RID
+>   PCI: Export find_pci_root_bus()
+>   irqchip/gic-v3-its: Include "msi-map-mask" for calculating nvecs
+> 
+>  drivers/irqchip/irq-gic-v3-its-pci-msi.c | 21 ++++++++++++++++++++-
+>  drivers/pci/bus.c                        | 13 +++++++++----
+>  drivers/pci/host-bridge.c                |  3 ++-
+>  include/linux/pci.h                      |  8 ++++++--
+>  4 files changed, 37 insertions(+), 8 deletions(-)
 
-Why the check for the mask? I also wonder whether the mask should apply
-to the rid as well:
-
-		if ((pci_dev_id(dev) & mask) != (rid & mask))
-
-> +			continue;
-> +
->  		retval = cb(dev, userdata);
->  		if (retval)
->  			break;
->  	}
->  	up_read(&pci_bus_sem);
->  }
-> -EXPORT_SYMBOL_GPL(pci_walk_bus);
-> +EXPORT_SYMBOL_GPL(__pci_walk_bus);
->  
->  struct pci_bus *pci_bus_get(struct pci_bus *bus)
->  {
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..8500fec56e50 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1473,14 +1473,17 @@ const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
->  int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max,
->  		    int pass);
->  
-> -void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-> -		  void *userdata);
-> +void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata, u32 rid, u32 mask);
->  int pci_cfg_space_size(struct pci_dev *dev);
->  unsigned char pci_bus_max_busnr(struct pci_bus *bus);
->  void pci_setup_bridge(struct pci_bus *bus);
->  resource_size_t pcibios_window_alignment(struct pci_bus *bus,
->  					 unsigned long type);
->  
-> +#define pci_walk_bus(top, cb, userdata) \
-> +	 __pci_walk_bus((top), (cb), (userdata), 0x0, 0xffff)
-
-Please keep this close to the helper it replaces. I also really
-dislike the use of this raw 0xffff. Don't we already have a named
-constant that represents the mask for a RID?
+What I don't see in this series is how you address the other part of
+the problem, which is your reuse of the Socionext hack. Please post a
+complete series addressing all the issues for this HW.
 
 Thanks,
 
