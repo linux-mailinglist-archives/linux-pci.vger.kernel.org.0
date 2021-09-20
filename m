@@ -2,107 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08B5C411375
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 13:23:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E49241139F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 13:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236675AbhITLY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Sep 2021 07:24:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50516 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbhITLY1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Sep 2021 07:24:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18KBMqGM075675;
-        Mon, 20 Sep 2021 06:22:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1632136972;
-        bh=j3vJELj0Rm/vFv9+zWZ74XoUk9PbZCKPUbY2twBH8o0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EeemYHWxpBqvXQJXDBTh+Oblvqw8ECBQHlzWaa77aJu5UqNQPfpZXWU/2YIpgaDkF
-         v9nDsYRGoKJ6v9aaJjxhGxdaaBdr9MxhErB2rZTIVnCH+KRlnrCr2R61YZAsZwhI3N
-         ZDIEiakKj8AY3GliYRSno44g/j77Y3Cs/TUvv+80=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18KBMq9g051430
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Sep 2021 06:22:52 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 20
- Sep 2021 06:22:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 20 Sep 2021 06:22:52 -0500
-Received: from [10.250.232.122] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 18KBMnaq116306;
-        Mon, 20 Sep 2021 06:22:50 -0500
-Subject: Re: [PATCH 0/3] PCI/gic-v3-its: Add support for same ITS device ID
- for multiple PCIe devices
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
+        id S230000AbhITLha (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Sep 2021 07:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229522AbhITLh3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Sep 2021 07:37:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2689E60F93;
+        Mon, 20 Sep 2021 11:36:03 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mSHab-00BkQY-8l; Mon, 20 Sep 2021 12:36:01 +0100
+Date:   Mon, 20 Sep 2021 12:36:00 +0100
+Message-ID: <87v92vv5r3.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         <lokeshvutla@ti.com>
+Subject: Re: [PATCH 0/3] PCI/gic-v3-its: Add support for same ITS device ID for multiple PCIe devices
+In-Reply-To: <96caa71f-2632-6eb7-e211-1c2f43a3be16@ti.com>
 References: <20210920064133.14115-1-kishon@ti.com>
- <871r5jwqw3.wl-maz@kernel.org>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <96caa71f-2632-6eb7-e211-1c2f43a3be16@ti.com>
-Date:   Mon, 20 Sep 2021 16:52:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <871r5jwqw3.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        <871r5jwqw3.wl-maz@kernel.org>
+        <96caa71f-2632-6eb7-e211-1c2f43a3be16@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kishon@ti.com, tglx@linutronix.de, bhelgaas@google.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com, lokeshvutla@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marc,
-
-On 20/09/21 2:44 pm, Marc Zyngier wrote:
-> On Mon, 20 Sep 2021 07:41:30 +0100,
-> Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> AM64 has an issue in that it doesn't trigger interrupt if the address
->> in the *pre_its_window* is not aligned to 8-bytes (this is due to an
->> invalid bridge configuration in HW).
->>
->> This means there will not be interrupts for devices with PCIe
->> requestor ID 0x1, 0x3, 0x5..., as the address in the pre-ITS window
->> would be 4 (1 << 2), 12 (3 << 2), 20 (5 << 2) respectively which are
->> not aligned to 8-bytes.
->>
->> The DT binding has specified "msi-map-mask" using which multiple PCIe
->> devices could be made to use the same ITS device ID.
->>
->> Add support in irq-gic-v3-its-pci-msi.c for such cases where multiple
->> PCIe devices are using the same ITS device ID.
->>
->> Kishon Vijay Abraham I (3):
->>   PCI: Add support in pci_walk_bus() to invoke callback matching RID
->>   PCI: Export find_pci_root_bus()
->>   irqchip/gic-v3-its: Include "msi-map-mask" for calculating nvecs
->>
->>  drivers/irqchip/irq-gic-v3-its-pci-msi.c | 21 ++++++++++++++++++++-
->>  drivers/pci/bus.c                        | 13 +++++++++----
->>  drivers/pci/host-bridge.c                |  3 ++-
->>  include/linux/pci.h                      |  8 ++++++--
->>  4 files changed, 37 insertions(+), 8 deletions(-)
+On Mon, 20 Sep 2021 12:22:48 +0100,
+Kishon Vijay Abraham I <kishon@ti.com> wrote:
 > 
-> What I don't see in this series is how you address the other part of
-> the problem, which is your reuse of the Socionext hack. Please post a
-> complete series addressing all the issues for this HW.
+> Hi Marc,
+> 
+> On 20/09/21 2:44 pm, Marc Zyngier wrote:
+> > On Mon, 20 Sep 2021 07:41:30 +0100,
+> > Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> AM64 has an issue in that it doesn't trigger interrupt if the address
+> >> in the *pre_its_window* is not aligned to 8-bytes (this is due to an
+> >> invalid bridge configuration in HW).
+> >>
+> >> This means there will not be interrupts for devices with PCIe
+> >> requestor ID 0x1, 0x3, 0x5..., as the address in the pre-ITS window
+> >> would be 4 (1 << 2), 12 (3 << 2), 20 (5 << 2) respectively which are
+> >> not aligned to 8-bytes.
+> >>
+> >> The DT binding has specified "msi-map-mask" using which multiple PCIe
+> >> devices could be made to use the same ITS device ID.
+> >>
+> >> Add support in irq-gic-v3-its-pci-msi.c for such cases where multiple
+> >> PCIe devices are using the same ITS device ID.
+> >>
+> >> Kishon Vijay Abraham I (3):
+> >>   PCI: Add support in pci_walk_bus() to invoke callback matching RID
+> >>   PCI: Export find_pci_root_bus()
+> >>   irqchip/gic-v3-its: Include "msi-map-mask" for calculating nvecs
+> >>
+> >>  drivers/irqchip/irq-gic-v3-its-pci-msi.c | 21 ++++++++++++++++++++-
+> >>  drivers/pci/bus.c                        | 13 +++++++++----
+> >>  drivers/pci/host-bridge.c                |  3 ++-
+> >>  include/linux/pci.h                      |  8 ++++++--
+> >>  4 files changed, 37 insertions(+), 8 deletions(-)
+> > 
+> > What I don't see in this series is how you address the other part of
+> > the problem, which is your reuse of the Socionext hack. Please post a
+> > complete series addressing all the issues for this HW.
+> 
+> No additional patches are pending. Socionext configuration is used as is
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/ti/k3-am64-main.dtsi#n72
 
-No additional patches are pending. Socionext configuration is used as is
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/ti/k3-am64-main.dtsi#n72
+Hmmm. You are pretty lucky that the Socionext machine is also using a
+GIC-500, and that your pre-ITS widget falls into the low 4GB...
 
-FWIW the issue that I address in this series is not observed with standalone USB
-cards or NVMe cards. The issue was observed when I tried with a multi-function
-PCIe card.
+> FWIW the issue that I address in this series is not observed with
+> standalone USB cards or NVMe cards. The issue was observed when I
+> tried with a multi-function PCIe card.
 
-Thank You,
-Kishon
+That's indeed what I understood of the bug.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
