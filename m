@@ -2,117 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4646410F93
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 08:42:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28A96410FB8
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 09:00:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233327AbhITGnb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Sep 2021 02:43:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48790 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233374AbhITGna (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Sep 2021 02:43:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18K6fnNH073492;
-        Mon, 20 Sep 2021 01:41:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1632120109;
-        bh=/4Zz3FNlBeAefxVx1iflggGljsIGocoijkMKMEhCHa8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iFrTV5T69RG37DgBBAFe7S2cGN4k2Vo32OxbM4eQP8/OabfOLgi/XiEPBqxDUmThz
-         b99kSHMwPSbdgeooIayfpomBASLh45lx4px5okM0UqQJpPgd6awTb5PYv3zHsbtX7f
-         fKoG2BjNc/Ksa2G5FrkTSCIWv25mAD2dlkO0HQqw=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18K6fnvh064834
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Sep 2021 01:41:49 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 20
- Sep 2021 01:41:48 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 20 Sep 2021 01:41:48 -0500
-Received: from a0393678-lt.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 18K6fYa8015912;
-        Mon, 20 Sep 2021 01:41:45 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <lokeshvutla@ti.com>
-Subject: [PATCH 3/3] irqchip/gic-v3-its: Include "msi-map-mask" for calculating nvecs
-Date:   Mon, 20 Sep 2021 12:11:33 +0530
-Message-ID: <20210920064133.14115-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210920064133.14115-1-kishon@ti.com>
-References: <20210920064133.14115-1-kishon@ti.com>
+        id S232742AbhITHBZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Sep 2021 03:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231410AbhITHBZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Sep 2021 03:01:25 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8BEC061762
+        for <linux-pci@vger.kernel.org>; Sun, 19 Sep 2021 23:59:58 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id y4so13814724pfe.5
+        for <linux-pci@vger.kernel.org>; Sun, 19 Sep 2021 23:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9f/uoH0k3kcTrJoBN4xkFEVn3LDPuL95GvB2FHHsCJY=;
+        b=nQh65a8mRcM96mOvKTtKO1GHdqpqYYHSImR7TUz+hO51elCwJPtoPE49ey40V++j4e
+         aD6Fedx+KRVpN9tWVWDID+dSoLEaetnh1EvRN/EPtownN/QN36JjkPcxmxCZIZgEiowu
+         KxUL90WiD2kvhEVM6dPEHYNZZ+H+U0hEiPZNGFANjaAym4WO7OvH+M5R+pYZKgktnNHV
+         xplrA8/u/fctvqjTuo0jOHjRLiKm6FENyWGqCF/wZIaKTApT9GYi9PpLa8eoBlPptHVa
+         iqlwPODsPUmiXmiStJ+ogWm2phq5vb2Glkkz9/oKfTLgphNBnfDMzIYkkNs409xOjW0x
+         QQnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9f/uoH0k3kcTrJoBN4xkFEVn3LDPuL95GvB2FHHsCJY=;
+        b=MCyW/HoKEpHbjPLHwWjNT/jCV3LSbsXsScbX0FQBPTiOiB9+exU/ZSPL4aEvEV3O1v
+         wAmxmw52xpQII8xsNzUCME6hoXjIUYAjuPFjqmiZvD5trpzPUKJRahe2ut+PAPSYXbar
+         5041nzEGFr0TeikUNZL0PxSX7DgC3oEd1cI0m7VhzLLR1hJ1R5KMTViGsAPeNAzF0ICE
+         /uIELp7oV1dyi7fOMgHTjYrw9uU4v7nfeidzvp5RU391WOEu6xCUSAHzSuUuzfDhfE//
+         ww39/gtz3jndVY/i4m6zDzXY2HjqTeCaLmesIr/PAm4XHjW0y3oaPCFEQtjQysFPugbW
+         ++Lg==
+X-Gm-Message-State: AOAM530b1TqVE4heaQwhLmTTl+4L2XlYtPUbVwvZl6yH6Acv+Sp4VtFK
+        rVJAnDEcKSRBIHqepEDSJfNg
+X-Google-Smtp-Source: ABdhPJzynZnY3/+qUe0q4BQT2fPVEv59drurXiTSvxUmqHifbHPK84m7SA2qsr/ZcAe5w0hwoW7JIw==
+X-Received: by 2002:a65:6398:: with SMTP id h24mr21590975pgv.367.1632121198220;
+        Sun, 19 Sep 2021 23:59:58 -0700 (PDT)
+Received: from localhost.localdomain ([59.92.98.104])
+        by smtp.gmail.com with ESMTPSA id p15sm12768349pff.194.2021.09.19.23.59.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Sep 2021 23:59:57 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        hemantk@codeaurora.org, bjorn.andersson@linaro.org,
+        sallenki@codeaurora.org, skananth@codeaurora.org,
+        vpernami@codeaurora.org, vbadigan@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v8 0/3] Add Qualcomm PCIe Endpoint driver support
+Date:   Mon, 20 Sep 2021 12:29:43 +0530
+Message-Id: <20210920065946.15090-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Using "msi-map-mask" in device tree lets multiple PCIe requestor ID to
-use the same GIC ITS device ID. So while creating the Interrupt
-Translation Table (ITT) for a specific GIC ITS device ID, the total number
-of interrupts required by all the PCIe requestor ID that maps to the
-same GIC ITS device ID should be calculated
+Hello,
 
-Add support for gic-v3-its to include "msi-map-mask" property in device
-tree for calculating the total number of MSI interrupts in
-its_pci_msi_prepare().
+This series adds support for Qualcomm PCIe Endpoint controller found
+in platforms like SDX55. The Endpoint controller is based on the designware
+core with additional Qualcomm wrappers around the core.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/irqchip/irq-gic-v3-its-pci-msi.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+The driver is added separately unlike other Designware based drivers that
+combine RC and EP in a single driver. This is done to avoid complexity and
+to maintain this driver autonomously.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-index ad2810c017ed..c79bca1a5787 100644
---- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-+++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-@@ -54,9 +54,13 @@ static int its_get_pci_alias(struct pci_dev *pdev, u16 alias, void *data)
- static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- 			       int nvec, msi_alloc_info_t *info)
- {
-+	int alias_count = 0, map_count = 0, minnvec = 1, ret;
- 	struct pci_dev *pdev, *alias_dev;
- 	struct msi_domain_info *msi_info;
--	int alias_count = 0, minnvec = 1;
-+	struct device *parent_dev;
-+	struct pci_bus *root_bus;
-+	struct device_node *np;
-+	u32 map_mask, rid;
- 
- 	if (!dev_is_pci(dev))
- 		return -EINVAL;
-@@ -78,6 +82,21 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- 		info->flags |= MSI_ALLOC_FLAGS_PROXY_DEVICE;
- 	}
- 
-+	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
-+		np = parent_dev->of_node;
-+		if (!np)
-+			continue;
-+
-+		ret = of_property_read_u32(np, "msi-map-mask", &map_mask);
-+		if (!ret && map_mask != 0xffff) {
-+			rid = pci_dev_id(pdev) & map_mask;
-+			root_bus = find_pci_root_bus(pdev->bus);
-+			__pci_walk_bus(root_bus, its_pci_msi_vec_count, &map_count, rid, map_mask);
-+			break;
-+		}
-+	}
-+	alias_count = max(map_count, alias_count);
-+
- 	/* ITS specific DeviceID, as the core ITS ignores dev. */
- 	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain, pdev);
- 
+The driver has been validated with an out of tree MHI function driver on
+SDX55 based Telit FN980 EVB connected to x86 host machine over PCIe.
+
+Thanks,
+Mani
+
+Changes in v8:
+
+* Added Reviewed-by tag from Rob for the driver patch
+* Rebased on top of v5.15-rc1
+
+Changes in v7:
+
+* Used existing naming convention for callback functions
+* Used active low state for PERST# gpio
+
+Changes in v6:
+
+* Removed status property in DT and added reviewed tag from Rob
+* Switched to _relaxed variants as suggested by Rob
+
+Changes in v5:
+
+* Removed the DBI register settings that are not needed
+* Used the standard definitions available in pci_regs.h
+* Added defines for all the register fields
+* Removed the left over code from previous iteration
+
+Changes in v4:
+
+* Removed the active_config settings needed for IPA integration
+* Switched to writel for couple of relaxed versions that sneaked in
+
+Changes in v3:
+
+* Lot of minor cleanups to the driver patch based on review from Bjorn and Stan.
+* Noticeable changes are:
+  - Got rid of _relaxed calls and used readl/writel
+  - Got rid of separate TCSR memory region and used syscon for getting the
+    register offsets for Perst registers
+  - Changed the wake gpio handling logic
+  - Added remove() callback and removed "suppress_bind_attrs"
+  - stop_link() callback now just disables PERST IRQ
+* Added MMIO region and doorbell interrupt to the binding
+* Added logic to write MMIO physicall address to MHI base address as it is
+  for the function driver to work
+
+Changes in v2:
+
+* Addressed the comments from Rob on bindings patch
+* Modified the driver as per binding change
+* Fixed the warnings reported by Kbuild bot
+* Removed the PERST# "enable_irq" call from probe()
+
+Manivannan Sadhasivam (3):
+  dt-bindings: pci: Add devicetree binding for Qualcomm PCIe EP
+    controller
+  PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
+  MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml | 158 ++++
+ MAINTAINERS                                   |  10 +-
+ drivers/pci/controller/dwc/Kconfig            |  10 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     | 710 ++++++++++++++++++
+ 5 files changed, 888 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-qcom-ep.c
+
 -- 
-2.17.1
+2.25.1
 
