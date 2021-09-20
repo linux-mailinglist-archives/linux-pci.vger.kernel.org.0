@@ -2,92 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D73141110B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 10:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18F441110F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Sep 2021 10:36:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235949AbhITIgC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Sep 2021 04:36:02 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:51714
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235913AbhITIgA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Sep 2021 04:36:00 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S229863AbhITIho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Sep 2021 04:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231446AbhITIhn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 20 Sep 2021 04:37:43 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6B09F40293
-        for <linux-pci@vger.kernel.org>; Mon, 20 Sep 2021 08:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632126873;
-        bh=GlnCPL/n2TbFZ5lKXBBdaGTEcyYQg+Xe+TKmdfu9J3o=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=KzVsOYcYyaUwr1qtgGbakLStLWseTMeWPywZ58v5Z83dPl4wdnSqLDknc3iUvfOxi
-         Z9CUFLvfmcB9US4rssXk5V6KA95I0oavaq/zDmP9qHqia8ENUB7zPvDkIPA55ruHKs
-         1rnuTnSXxxF3/7IU5o/4R+sDQiXRPydF/lGBnxPmHtjOm7uPqBZPRKktNbAWVE0MDt
-         6XJGbZvuqKZ2kfVXwiPa4N522igwo4Z/U13pHyg5trDdtpbf55gRMh0mrsDNdQq5UB
-         2wSY1doBnGleB7MaXXcIllewff+SXosI5Wao6cxTsZT4yV2kju6NvIXwiRFD7+RjA2
-         EgcRfL+wCAyTw==
-Received: by mail-wm1-f69.google.com with SMTP id y23-20020a05600c365700b003015b277f98so4484133wmq.2
-        for <linux-pci@vger.kernel.org>; Mon, 20 Sep 2021 01:34:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GlnCPL/n2TbFZ5lKXBBdaGTEcyYQg+Xe+TKmdfu9J3o=;
-        b=k+JzeSAxxC5iRfsipzUmwXkiaef5aN7xGoWHr8FpW7iJ7+t/hj8XMERSl5SHV8FriD
-         NDb+jvF/tHqVcGRX03R2d0klmmFCk/Ege3PS8kjI0VLK6+ZKjCduEz7XuoEiUYeaCHB7
-         SypN40/kmMorUMka/4qSAHqYIl3d+iSGsmxH13RXtexltGbDVa3HLUieheFxcwcgRA6G
-         9Z0/QuQfyu/Agtk3Fu/Y34CNwM3CdoFhH3RRkzEKlZDwHXBwbZPXCdXuE6BGbzEKG1Lo
-         Ks/JImRfDEN+vRUcpL2KugpbvL0dX0RbLsDwK51yDPGc26GKIs21WQIcnbRx722GhtHz
-         UcEA==
-X-Gm-Message-State: AOAM533jbX24o6qA0JY+AcPBtAIkt9nLBwy0JaXm1stkuMLOZnSIXmNN
-        qLCuuwLeGW0KuBNCNxXi7+Ow81GK6iwmrDVKFAgHN/ybP7iRiBhorqMaxsE/Gz0OZDviwLbV2V3
-        PcnCnG6SEsyz5lzd8aB8xkgKds2auEghJok4pXA==
-X-Received: by 2002:a1c:2056:: with SMTP id g83mr27578664wmg.27.1632126872640;
-        Mon, 20 Sep 2021 01:34:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxZ9ERCT7KUv6zwsHvcBjFyA/Y/awEBukLBanBzL4Ra5L9b9at0dRM9wxlTaF4DW/RU0R/XQw==
-X-Received: by 2002:a1c:2056:: with SMTP id g83mr27578645wmg.27.1632126872454;
-        Mon, 20 Sep 2021 01:34:32 -0700 (PDT)
-Received: from kozik-lap.lan (lk.84.20.244.219.dc.cable.static.lj-kabel.net. [84.20.244.219])
-        by smtp.gmail.com with ESMTPSA id v188sm4658891wme.38.2021.09.20.01.34.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Sep 2021 01:34:31 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     p.zabel@pengutronix.de, viresh.kumar@linaro.org, robh@kernel.org,
-        Mikko Perttunen <mperttunen@nvidia.com>, amitk@kernel.org,
-        kw@linux.com, rafael@kernel.org, thierry.reding@gmail.com,
-        lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org,
-        rui.zhang@intel.com, jonathanh@nvidia.com
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH 3/5] memory: tegra186-emc: Handle errors in BPMP response
-Date:   Mon, 20 Sep 2021 10:34:27 +0200
-Message-Id: <163212685894.112070.7948621267940223581.b4-ty@canonical.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210915085517.1669675-3-mperttunen@nvidia.com>
-References: <20210915085517.1669675-1-mperttunen@nvidia.com> <20210915085517.1669675-3-mperttunen@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F33B600AA;
+        Mon, 20 Sep 2021 08:36:17 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mSEmd-00BijS-7E; Mon, 20 Sep 2021 09:36:15 +0100
+Date:   Mon, 20 Sep 2021 09:36:14 +0100
+Message-ID: <875yuvwsn5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <lokeshvutla@ti.com>, Robin Murphy <Robin.Murphy@arm.com>
+Subject: Re: [PATCH 3/3] irqchip/gic-v3-its: Include "msi-map-mask" for calculating nvecs
+In-Reply-To: <20210920064133.14115-4-kishon@ti.com>
+References: <20210920064133.14115-1-kishon@ti.com>
+        <20210920064133.14115-4-kishon@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kishon@ti.com, tglx@linutronix.de, bhelgaas@google.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com, lokeshvutla@ti.com, Robin.Murphy@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Sep 2021 11:55:15 +0300, Mikko Perttunen wrote:
-> The return value from tegra_bpmp_transfer indicates the success or
-> failure of the IPC transaction with BPMP. If the transaction
-> succeeded, we also need to check the actual command's result code.
-> Add code to do this.
++ Robin, who has dealt with a lot of the stuff here.
+
+On Mon, 20 Sep 2021 07:41:33 +0100,
+Kishon Vijay Abraham I <kishon@ti.com> wrote:
 > 
+> Using "msi-map-mask" in device tree lets multiple PCIe requestor ID to
+> use the same GIC ITS device ID. So while creating the Interrupt
+> Translation Table (ITT) for a specific GIC ITS device ID, the total number
+> of interrupts required by all the PCIe requestor ID that maps to the
+> same GIC ITS device ID should be calculated
 > 
+> Add support for gic-v3-its to include "msi-map-mask" property in device
+> tree for calculating the total number of MSI interrupts in
+> its_pci_msi_prepare().
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its-pci-msi.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> index ad2810c017ed..c79bca1a5787 100644
+> --- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> +++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+> @@ -54,9 +54,13 @@ static int its_get_pci_alias(struct pci_dev *pdev, u16 alias, void *data)
+>  static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  			       int nvec, msi_alloc_info_t *info)
+>  {
+> +	int alias_count = 0, map_count = 0, minnvec = 1, ret;
+>  	struct pci_dev *pdev, *alias_dev;
+>  	struct msi_domain_info *msi_info;
+> -	int alias_count = 0, minnvec = 1;
+> +	struct device *parent_dev;
+> +	struct pci_bus *root_bus;
+> +	struct device_node *np;
+> +	u32 map_mask, rid;
+>  
+>  	if (!dev_is_pci(dev))
+>  		return -EINVAL;
+> @@ -78,6 +82,21 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  		info->flags |= MSI_ALLOC_FLAGS_PROXY_DEVICE;
+>  	}
+>  
+> +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
 
-Applied, thanks!
+Move the declaration of np, ret and map_count here.
 
-[3/5] memory: tegra186-emc: Handle errors in BPMP response
-      commit: 13324edbe9269e6fbca4d0f5146b18ef8478c958
+> +		np = parent_dev->of_node;
+> +		if (!np)
+> +			continue;
+> +
+> +		ret = of_property_read_u32(np, "msi-map-mask", &map_mask);
+> +		if (!ret && map_mask != 0xffff) {
+> +			rid = pci_dev_id(pdev) & map_mask;
+> +			root_bus = find_pci_root_bus(pdev->bus);
+> +			__pci_walk_bus(root_bus, its_pci_msi_vec_count, &map_count, rid, map_mask);
+> +			break;
+> +		}
+> +	}
+> +	alias_count = max(map_count, alias_count);
 
-Best regards,
+Move this after the call to __pci_walk_bus().
+
+> +
+>  	/* ITS specific DeviceID, as the core ITS ignores dev. */
+>  	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain, pdev);
+
+If you don't set the PROXY_DEVICE flag, bad thing will happen when the
+canonical device is removed.
+
+Ultimately, this should be moved into a separate helper, along the
+line of pci_for_each_dma_alias(). It probably also needs to have an
+ACPI counterpart.
+
+Thanks,
+
+	M.
+
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Without deviation from the norm, progress is not possible.
