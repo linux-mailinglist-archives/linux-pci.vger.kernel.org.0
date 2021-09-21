@@ -2,107 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83C29413D8A
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 00:28:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C109F413DA2
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 00:36:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235958AbhIUWaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Sep 2021 18:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbhIUWaC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Sep 2021 18:30:02 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05718C061574
-        for <linux-pci@vger.kernel.org>; Tue, 21 Sep 2021 15:28:33 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id e16so925256pfc.6
-        for <linux-pci@vger.kernel.org>; Tue, 21 Sep 2021 15:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xYHhkXmeAvv+RY+cKqcor3N4uuoLNJlnXiEQlSjFsqU=;
-        b=Da7pK6yz4uDmfwgTxVCMuOmJbOAbU8yl7DvPGaO4REDOmKxFKjiZ6fYNzWaxgCnJlj
-         B8tZlVv48PdL266f7kYazi+9TxivKTKDtc/gWUxURHPqGBEPmSEsoV7/Aft6gPCxKUIK
-         BnFMFw+iZZ1TMQuJ1U+T1RaI1BC/MEYoR+fF8Imtan0GYsv7IOm15ldHU+t3zcDZqwMw
-         Pu3pG7VXdIIX5dOrAxr8U/0k9Bq9mj0XryxPRkEz7C/EGEjPHBBbssLemB7XKG5exm0Q
-         f4u6kpv94gAhLhqfq1fyVnzc+nXo4WY4QaH8VvtDCpTnc+y0DTLm+tM2102gRHYDjjU3
-         7pqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xYHhkXmeAvv+RY+cKqcor3N4uuoLNJlnXiEQlSjFsqU=;
-        b=yFH33UionCE/LxW3eSqu/RZ5/pwU6HuOdqfSAJJrt2dY05GFApGynoGEV6SctHHm0z
-         2Aeg12PJAb2fgf8rKcGw4xmlsmVEd9k8lt0oARyO2WcAQDguZDzXwzpb4PWolg3kvCvk
-         2bK/wk2ZzptS/c0Prn08+XW0NQYwZ+s6fztpBEWNztzRuLjEsgCw29EFfVmEu6fW7Lww
-         Fvd8cpkT/sn8uDeM+Z8TGspBmY4anjxhI+IMLpf1/s4szlgaVE9SNatVimpTrwl6UiLH
-         sQ/F64glAFCM6hujZNRtoRJ7bXLI+UR4EebTlSqK4DiHmZQxzl+ISTbTo6ocosKAr2Y0
-         w0Lw==
-X-Gm-Message-State: AOAM531g9auL0qCbeNUC6MRTgeKK5vi8vHTZ7ygV7ktPq/1VdPXgBggJ
-        D6mJ5s5bJb0ucJNqE0+fgshQxLohhudd91a3dobONw==
-X-Google-Smtp-Source: ABdhPJwk34nzb0W2HUoVAKlIDBHKPa3Z5iX5LW3la4BVxDEwamNN3EVylrWns1SpDPC0evltrHTDcPEqM8F5wWORoII=
-X-Received: by 2002:a62:1b92:0:b0:3eb:3f92:724 with SMTP id
- b140-20020a621b92000000b003eb3f920724mr32904283pfb.3.1632263312473; Tue, 21
- Sep 2021 15:28:32 -0700 (PDT)
+        id S232124AbhIUWhq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Sep 2021 18:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229775AbhIUWhq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Sep 2021 18:37:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 054F06044F;
+        Tue, 21 Sep 2021 22:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632263777;
+        bh=th3qmPaUNQjiJHw2074qzi6M8+lsZxz3EyRRcE77AdI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=N3V50aLck3umR7T+IFg91Ni1G4xICympd/f/PRvUvUoF83JyMq/4G+7D0GMPML6JN
+         DoRL+w1+pA3sM38+COOT5MX5ugR8+G47LsMljgSS5eui3gBWevytzp/jybvykkizaQ
+         NGZXppqWkILz6E93KrUFYrIL0wVxfxIO2NCJGRQ27YDNp3SzWEHV8WEHsTu/txHRpo
+         g+i1+/YtUZQNQin3jZL61KKNA0lWR/dZBFpRfbCneKNbJ9bzEDOggrmptg5nv0932Z
+         aolA0H92iCs/oK3SVA21xsJ99K6CHmXsETUsH6KiJyHYzB6iWV0pqUr/D9LlohLxB0
+         YDE/kD/1nY3vg==
+Date:   Tue, 21 Sep 2021 17:36:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@gmail.com>, a@bhelgaas
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH V3 18/22] LoongArch: Add PCI controller support
+Message-ID: <20210921223615.GA137894@bhelgaas>
 MIME-Version: 1.0
-References: <20210921220459.2437386-1-ben.widawsky@intel.com>
-In-Reply-To: <20210921220459.2437386-1-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 21 Sep 2021 15:28:21 -0700
-Message-ID: <CAPcyv4jyTDWGAUOmkumHBAN6K9t1c9hcCt6hCTo4POSybMOMSQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] cxl_pci refactor for reusability
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H5=Ut+rymv1RH+1GVS2oVZogtuwY_Sk-dDosJh6=USr0Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 3:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Sat, Sep 18, 2021 at 03:36:52PM +0800, Huacai Chen wrote:
+> On Fri, Sep 17, 2021 at 5:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Fri, Sep 17, 2021 at 5:57 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > >
+> > > Loongson64 based systems are PC-like systems which use PCI/PCIe as its
+> > > I/O bus, This patch adds the PCI host controller support for LoongArch.
+> > >
+> > > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> >
+> > As discussed before, I think the PCI support should not be part of the
+> > architecture code or this patch series. The headers are ok, but the pci.c
+> > and acpi.c files have nothing loongarch specific in them, and you clearly
+> > just copied most of this from arm64 or x86.
 >
-> Provide the ability to obtain CXL register blocks as discrete functionality.
-> This functionality will become useful for other CXL drivers that need access to
-> CXL register blocks. It is also in line with other additions to core which moves
-> register mapping functionality.
->
-> At the introduction of the CXL driver the only user of CXL MMIO was cxl_pci
-> (then known as cxl_mem). As the driver has evolved it is clear that cxl_pci will
-> not be the only entity that needs access to CXL MMIO. This series stops short of
-> moving the generalized functionality into cxl_core for the sake of getting eyes
-> on the important foundational bits sooner rather than later. The ultimate plan
-> is to move much of the code into cxl_core.
->
-> Via review of two previous patches [1] & [2] it has been suggested that the bits
-> which are being used for DVSEC enumeration move into PCI core. As CXL core is
-> soon going to require these, let's try to get the ball rolling now on making
-> that happen.
->
-> [1]: https://lore.kernel.org/linux-cxl/20210920225638.1729482-1-ben.widawsky@intel.com/
-> [2]: https://lore.kernel.org/linux-cxl/20210920225638.1729482-1-ben.widawsky@intel.com/
->
-> Ben Widawsky (7):
->   cxl: Convert "RBI" to enum
->   cxl/pci: Remove dev_dbg for unknown register blocks
->   cxl/pci: Refactor cxl_pci_setup_regs
->   cxl/pci: Make more use of cxl_register_map
->   PCI: Add pci_find_dvsec_capability to find designated VSEC
->   cxl/pci: Use pci core's DVSEC functionality
->   ocxl: Use pci core's DVSEC functionality
+> In V2 part of the PCI code (pci-loongson.c) has moved to
+> drivers/pci/controllers. For pci.c and acpi.c, I agree that "the thing
+> should be like that", but have some different ideas about "the way to
+> arrive at that". In my opinion, we can let this series be merged at
+> first, and then do another series to "restructure the files and move
+> common parts to the drivers directory". That way looks more natural to
+> me (doing the other series at first may block the whole thing).
+> 
+> > What I would suggest you do instead is:
+> >
+> > - start a separate patch series, addressed to the ACPI, PCI host driver
+> >   and ARM64 maintainers.
+> >
+> > - Move all the bits you need from arch/{arm64,ia64,x86} into
+> >   drivers/acpi/pci/pci_root.c, duplicating them with #if/#elif/#else
+> >   where they are too different, making the #else path the
+> >   default that can be shared with loongarch.
+> >
+> > - Move the bits from pci_root_info/acpi_pci_root_info that are
+> >   always needed into struct pci_host_bridge, with an
+> >   #ifdef CONFIG_ACPI where appropriate.
+> >
+> > - Simplify as much as you can easily do.
 
-I also found:
+I would love to see this done.
 
-siov_find_pci_dvsec()
+But we already have this kind of redundant code for arm64/ia64/x86.
+Arguably, we should have refactored it for ia64 or arm64.  It's
+unfortunate to add loongarch to that list, but why should we penalize
+loongarch more than arm64 and ia64?
 
-...and an open coded one in:
-
-drivers/mfd/intel_pmt.c::pmt_pci_probe()
-
-This one looks too weird to replace:
-
-arch/x86/events/intel/uncore_discovery.c::intel_uncore_has_discovery_tables()
-
-In any event I'd expect this cover to also be cc'd to those folks.
+Bjorn
