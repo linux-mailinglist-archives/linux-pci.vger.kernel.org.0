@@ -2,90 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDD4F414481
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 11:05:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8850414535
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 11:33:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234203AbhIVJHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 05:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234233AbhIVJHI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 05:07:08 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4CFC061756;
-        Wed, 22 Sep 2021 02:05:37 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id y28so9446929lfb.0;
-        Wed, 22 Sep 2021 02:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=slTV8Z+Iv2BeDlB5S8f95ONxlbcf+1pDh0QE8l9nOEQ=;
-        b=i9ybnsQOHqvEQtNO8h8rCxJSYZ2KdpWaRkkklCBkdcnv2uAiGeCZTdps5AZ9IdLD+6
-         fUgJEM/xTy+OYkQCWikMkOj1VEz0eGkRqlacxozWV8TgQLnHKbfynB3S0ZZh9EmZMOIB
-         kHfKY+x4d+Unto9hAHYs9EbtHAvm2AQb8a8pPuSrAvITP7zONZIJyNcDM7eAj10Axlqy
-         /2kg1DlfX3YZlu80orQZy0/Svk2ewGFtIcAj7k89HY1jKl0YIGOoNQ9C0ez4sAyzgH1B
-         bYlR+1aj3Z6zWw9QTZMGUwr8zetRnFtxOjxdJAMd7CSXCvjzP3bWJEqtsDF4s3JJzUWQ
-         GmWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=slTV8Z+Iv2BeDlB5S8f95ONxlbcf+1pDh0QE8l9nOEQ=;
-        b=rOJBdD3LxkUiQuzFd/kr+76C/bYg/Hiux8V5xdWpiq5R0aRjzH5E4BzfdUvCECME1Z
-         yDkmS3KWS8j6dGNK3jtDdL3mK7TabEodpuZmMq6k85n/FQXXe3/TZFtU3YziGthEN6wF
-         avmgrz+Ut2Ho5GnF5+MkDjNWaQTlB3NJMcbO02FNdPhpEpwIVTOXaK85Br9052I4CCIP
-         EJFqk8jb5+MdTLuzkyk/0H/jAiMYOJQMyA13HstWNfpnHvoKP7/N3mdCBtbBjs/M3vsV
-         kGoFlmfFpd/AorFpSWQVJxxxkMKNqTAKsVLkRTBwKnAXN1PVC/0wEYtWRl3f9x+3jNGg
-         EJSQ==
-X-Gm-Message-State: AOAM530mlrWZYEXjN5viq5cek1qFcGfQcpu2yjomG1JsGRCAK9BJP24t
-        18Nhu2lvR9uEKa/1ResQMiVVLkOhF4A=
-X-Google-Smtp-Source: ABdhPJwL3StTJaATi8gW/oPBglzRA+pg+wjzoIU2iSmykApHc1N/aLAA8Z8OAG+eKmfCXrr0WzYbbw==
-X-Received: by 2002:a05:6512:3a8d:: with SMTP id q13mr11428478lfu.198.1632301535369;
-        Wed, 22 Sep 2021 02:05:35 -0700 (PDT)
-Received: from [192.168.1.100] ([178.176.79.80])
-        by smtp.gmail.com with ESMTPSA id v12sm184574ljp.124.2021.09.22.02.05.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Sep 2021 02:05:34 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: add myself as maintainer of the
- MT7621 PCI controller driver
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, john@phrozen.org,
-        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
-        bhelgaas@google.com, matthias.bgg@gmail.com,
-        gregkh@linuxfoundation.org, linux-mips@vger.kernel.org,
-        linux-staging@lists.linux.dev, neil@brown.name,
-        linux-kernel@vger.kernel.org
-References: <20210922050035.18162-1-sergio.paracuellos@gmail.com>
- <20210922050035.18162-4-sergio.paracuellos@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <06500d9d-4156-f9df-956c-7306a2984a3e@gmail.com>
-Date:   Wed, 22 Sep 2021 12:05:22 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S234387AbhIVJfE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 05:35:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24262 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234421AbhIVJfD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 05:35:03 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18M9UTCK005562;
+        Wed, 22 Sep 2021 05:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=IwZ64YTIE0jF4hfEg0vkl89m3KgfRRaEAQHRFBtAXQ8=;
+ b=EBiltKHv3nX9LGFp9DYGIiiqGeQesUe3CT9mT9yUdbVvuAsSRbuTaUS2VZa0uOlGVtun
+ a23YBS8QMr/75o8Z4SmevcwQDiAaL82R7FpDyr2ZSl8daF8Wiw+3HOSuPr+R7LfMVaqx
+ 0cqVK5ytOwIoYSgCMXdNOM8Ot9DdBuomcvoAsHrO8j9vO00l27vtqh/iDJcafFrEopAW
+ PEqRCnBXr3/xdLUOh+gssOEQeAAWgooxOxidnbN2WEPmavzgEdJh/TbtS/jWDcgQRg+4
+ N5LHH9NRC+u1HH3ZipjjiG85aC66F64nNmLBl4XSLF9o3uWwqy5vb04l5lXMANMiiJoO Bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3b81wt81k8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Sep 2021 05:33:20 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18M9XJ7i011394;
+        Wed, 22 Sep 2021 05:33:19 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3b81wt81js-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Sep 2021 05:33:19 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18M9VvXL007983;
+        Wed, 22 Sep 2021 09:33:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 3b7q6pmupc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Sep 2021 09:33:17 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18M9XESj43188586
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Sep 2021 09:33:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9A264C05A;
+        Wed, 22 Sep 2021 09:33:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2079F4C044;
+        Wed, 22 Sep 2021 09:33:14 +0000 (GMT)
+Received: from [9.145.158.122] (unknown [9.145.158.122])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Sep 2021 09:33:13 +0000 (GMT)
+Message-ID: <2ec319f5-1cc3-0452-31f7-79125646218e@linux.ibm.com>
+Date:   Wed, 22 Sep 2021 11:33:13 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210922050035.18162-4-sergio.paracuellos@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH 5/7] PCI: Add pci_find_dvsec_capability to find designated
+ VSEC
 Content-Language: en-US
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+References: <20210921220459.2437386-1-ben.widawsky@intel.com>
+ <20210921220459.2437386-6-ben.widawsky@intel.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+In-Reply-To: <20210921220459.2437386-6-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: h7mUwWrn_daai9WsqVOl4RccbuMZlXl4
+X-Proofpoint-ORIG-GUID: eHnk2Q4Qimf29OFM6CsdE5RGWJfXuYLR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-22_03,2021-09-20_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1011 bulkscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109200000 definitions=main-2109220066
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22.09.2021 8:00, Sergio Paracuellos wrote:
 
-> Add myself as maintainer of the PCie Controlller driver for
 
-     PCIe Controller. :-)
-
-> MT7621 SoCs.
+On 22/09/2021 00:04, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
 > 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-[...]
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
+> 
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
 
-MBR, Sergei
 
+LGTM
+Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+>   drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
+>   include/linux/pci.h |  1 +
+>   2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..94ac86ff28b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
+>   }
+>   EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
+>   
+> +/**
+> + * pci_find_dvsec_capability - Find DVSEC for vendor
+> + * @dev: PCI device to query
+> + * @vendor: Vendor ID to match for the DVSEC
+> + * @dvsec: Designated Vendor-specific capability ID
+> + *
+> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
+> + * offset in config space; otherwise return 0.
+> + */
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 v, id;
+> +
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == v && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+> +
+>   /**
+>    * pci_find_parent_resource - return resource region of parent bus of given
+>    *			      region
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c93ccfa4571b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+>   u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+>   struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>   u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
+>   
+>   u64 pci_get_dsn(struct pci_dev *dev);
+>   
+> 
