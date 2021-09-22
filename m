@@ -2,106 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12DF8414BD9
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 16:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D84414D09
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 17:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234359AbhIVO27 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 10:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232401AbhIVO27 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Sep 2021 10:28:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DFC7C6115A;
-        Wed, 22 Sep 2021 14:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632320849;
-        bh=MI1Hxxt1PKNl805MXTEJBDy5ctnXY0oGXIIdLmke1Cs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PUrIy4Wn0Ga/a+KMqN6Ulc89rup5WGb4IwIRSHGtCYjkvK+fuBPTz+4hGYfzg42Vq
-         HK7rfR27HCcqjpuULHFSSQsQ8KkVxFP5pBhcoEODA58CzuiwMpIaeD2jSXX//6ByDy
-         Ms+8cSvSwapGlP1E018F8RMrWI4/53rd94KP0RWz1TrBp5ABcyemgnAcTmDK+4s5lm
-         LbsLNemGh5LrNdDNyRosvhfDXTBUaPA9HHxuueNx2oNS3qNAYkzcYyg+tRFMIvUhRo
-         KZ7vRqTFq4SaReIxWKE5eyRRK3vOlc2eSN2oJT52NbMh6K96SF9lF+8O0vOgDs22UU
-         s/fhr6dgKgLww==
-Received: by pali.im (Postfix)
-        id 75D7179F; Wed, 22 Sep 2021 16:27:26 +0200 (CEST)
-Date:   Wed, 22 Sep 2021 16:27:26 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Jonas =?utf-8?B?RHJlw59sZXIn?= <verdre@v0yd.nl>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] mwifiex: Use non-posted PCI write when setting TX
- ring write pointer
-Message-ID: <20210922142726.guviqler5k7wnm52@pali>
-References: <20210914114813.15404-1-verdre@v0yd.nl>
- <20210914114813.15404-2-verdre@v0yd.nl>
- <8f65f41a807c46d496bf1b45816077e4@AcuMS.aculab.com>
+        id S236419AbhIVPew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 11:34:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:54015 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231712AbhIVPew (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 11:34:52 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]) by
+ mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MjjGV-1n8Cpn1WPb-00lEIy; Wed, 22 Sep 2021 17:33:20 +0200
+Received: by mail-wr1-f42.google.com with SMTP id d6so7967845wrc.11;
+        Wed, 22 Sep 2021 08:33:20 -0700 (PDT)
+X-Gm-Message-State: AOAM530v2GmQKYCsSGP6oijS2DC1xsDz6zyavVV3CW5uhtxV+gq1IjyV
+        ygBV2XVd1aS5HLndmejUxAeVutaoYlzEGK6mQJE=
+X-Google-Smtp-Source: ABdhPJwhV4sn6QbfZmtuFNVQ/C8ICqs5ozmWe9OsEUK5Bilrb7V6OfquRyS7totZd68AXJE2K2qjsuaRkmP6Fh4XNro=
+X-Received: by 2002:adf:f481:: with SMTP id l1mr147043wro.411.1632324799917;
+ Wed, 22 Sep 2021 08:33:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f65f41a807c46d496bf1b45816077e4@AcuMS.aculab.com>
-User-Agent: NeoMutt/20180716
+References: <CAAhV-H5=Ut+rymv1RH+1GVS2oVZogtuwY_Sk-dDosJh6=USr0Q@mail.gmail.com>
+ <20210921223615.GA137894@bhelgaas>
+In-Reply-To: <20210921223615.GA137894@bhelgaas>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Sep 2021 17:33:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3SaRTJ_a6tJOHjBeCqwyQTe39-1_2bkD71ZzhJQWCM1Q@mail.gmail.com>
+Message-ID: <CAK8P3a3SaRTJ_a6tJOHjBeCqwyQTe39-1_2bkD71ZzhJQWCM1Q@mail.gmail.com>
+Subject: Re: [PATCH V3 18/22] LoongArch: Add PCI controller support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wdgOelx+a64SdpfMN4aZ6qUDa8IDqDSysuSrPJzqu4rnd8bRF5K
+ aDMS98KGDkdxtuY4ffTRTby4drzsRuUe8JvHJtU6BSTtdGWVI6O9ivf75fXUW8QzmheO/pD
+ 5+pHyHmJIt+deDkBAQVIu+Yb9j1NNxyczt81JjPPeE+tjF6fWfKBjcsz06bzE50O2zvQVvx
+ SSUqGc0Uw+5dEFId3uT7g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1kZ/sHYy8Ic=:tY8a6z5+zmV8wFXQ0m/igB
+ lT9pNTIn7G9oLObifows2Agv8olkdUBnvtX4FAerKMAEFUJYm1E7wScpgye3wSdyX+yHQvN6T
+ FpjkIFbndeDdGee2BQYZtwD7bgnIaMctHqxcAYF5pQ65QgjlMkWLNSGh2uEW2kylJ4adrV7EP
+ qyPgCPr7GG7GDcMxsjxSvX36hV6nKRJWkYfsGGOFFXLMeYDzWPSsINRg5klKyFEtxNzs4qjZd
+ HTMerU3x+f+FHuyGQvAw5Q9ZmmpFENzbH1yunVFkwAzIPoEn9GiiQk/x4q7j+23wCq6R4epi0
+ 5dFXd0hP+hQ2OTxBG+QrYDBhSm2tJu29rrpmWaruAGjs5OHo3WdtZqW8HHU4uNSDv0h/QusQs
+ Y+Frqdd+15pH3IkBhh1/MxjwBHyArJEQqhFAeeASTYu1SCnvZ5/68H3P3bqAQojyMU5fHGdhf
+ Ug9IAeqXTINVJmxy2hyFE0cKwlmczhPiKSqqw8wbno/NPo1jWKkiA7gxbY4ZbVrrP2UWhC6+h
+ GUMNNz0owsb0oKfi9gNKxnTENVi/VNZDhFJNefAE9TunOhXuDkdapYlE98uY6PivKFV/JTv0T
+ j3lJZe49AqutjLzLfIVcEhaf/JhGB3w6jcoQjAtI0bYksARalI7op94cvQP4TjGH0vsqurEeq
+ dT/UFms5B92xqfcpIpBvbcyfA58H4wDHHFa5nZZC4rX94S5kOE+z9dMKtQ7BSMfjiAKHu3elY
+ /cNYKx2mLCXF8eU8YWw3C7WY0+v5tDdiPq2VI4i2T9OuKLV78+7UYxxQ2Ge/jleUtdzJfg93a
+ K8fV7HYl9FvBVolL68U1gxJA7gcLoKqBe2jmzXi3Nwqohe8TFpfKf0XThIOk9ThzawmPoBLb8
+ 1xvKtJi27CP319FcvAwA==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 22 September 2021 14:03:25 David Laight wrote:
-> From: Jonas Dreßler
-> > Sent: 14 September 2021 12:48
-> > 
-> > On the 88W8897 card it's very important the TX ring write pointer is
-> > updated correctly to its new value before setting the TX ready
-> > interrupt, otherwise the firmware appears to crash (probably because
-> > it's trying to DMA-read from the wrong place). The issue is present in
-> > the latest firmware version 15.68.19.p21 of the pcie+usb card.
-> > 
-> > Since PCI uses "posted writes" when writing to a register, it's not
-> > guaranteed that a write will happen immediately. That means the pointer
-> > might be outdated when setting the TX ready interrupt, leading to
-> > firmware crashes especially when ASPM L1 and L1 substates are enabled
-> > (because of the higher link latency, the write will probably take
-> > longer).
-> > 
-> > So fix those firmware crashes by always using a non-posted write for
-> > this specific register write. We do that by simply reading back the
-> > register after writing it, just as a few other PCI drivers do.
-> > 
-> > This fixes a bug where during rx/tx traffic and with ASPM L1 substates
-> > enabled (the enabled substates are platform dependent), the firmware
-> > crashes and eventually a command timeout appears in the logs.
-> 
-> I think you need to change your terminology.
-> PCIe does have some non-posted write transactions - but I can't
-> remember when they are used.
+On Wed, Sep 22, 2021 at 12:36 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sat, Sep 18, 2021 at 03:36:52PM +0800, Huacai Chen wrote:
+> > On Fri, Sep 17, 2021 at 5:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Fri, Sep 17, 2021 at 5:57 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > > >
+> > > > Loongson64 based systems are PC-like systems which use PCI/PCIe as its
+> > > > I/O bus, This patch adds the PCI host controller support for LoongArch.
+> > > >
+> > > > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > >
+> > > As discussed before, I think the PCI support should not be part of the
+> > > architecture code or this patch series. The headers are ok, but the pci.c
+> > > and acpi.c files have nothing loongarch specific in them, and you clearly
+> > > just copied most of this from arm64 or x86.
+> >
+> > In V2 part of the PCI code (pci-loongson.c) has moved to
+> > drivers/pci/controllers. For pci.c and acpi.c, I agree that "the thing
+> > should be like that", but have some different ideas about "the way to
+> > arrive at that". In my opinion, we can let this series be merged at
+> > first, and then do another series to "restructure the files and move
+> > common parts to the drivers directory". That way looks more natural to
+> > me (doing the other series at first may block the whole thing).
 
-In PCIe are all memory write requests as posted.
+It should not hold up the current series, but I think you should be able
+to do both sides (architecture code and pci support) independently
+at the same time.
 
-Non-posted writes in PCIe are used only for IO and config requests. But
-this is not case for proposed patch change as it access only card's
-memory space.
+> > > What I would suggest you do instead is:
+> > >
+> > > - start a separate patch series, addressed to the ACPI, PCI host driver
+> > >   and ARM64 maintainers.
+> > >
+> > > - Move all the bits you need from arch/{arm64,ia64,x86} into
+> > >   drivers/acpi/pci/pci_root.c, duplicating them with #if/#elif/#else
+> > >   where they are too different, making the #else path the
+> > >   default that can be shared with loongarch.
+> > >
+> > > - Move the bits from pci_root_info/acpi_pci_root_info that are
+> > >   always needed into struct pci_host_bridge, with an
+> > >   #ifdef CONFIG_ACPI where appropriate.
+> > >
+> > > - Simplify as much as you can easily do.
+>
+> I would love to see this done.
+>
+> But we already have this kind of redundant code for arm64/ia64/x86.
+> Arguably, we should have refactored it for ia64 or arm64.  It's
+> unfortunate to add loongarch to that list, but why should we penalize
+> loongarch more than arm64 and ia64?
 
-Technically this patch does not use non-posted memory write (as PCIe
-does not support / provide it), just adds something like a barrier and
-I'm not sure if it is really correct (you already wrote more details
-about it, so I will let it be).
+There is usually something like this that comes up when support for a
+new architecture gets posted and it duplicates some code from other
+architectures.
 
-I'm not sure what is the correct terminology, I do not know how this
-kind of write-followed-by-read "trick" is correctly called.
+When I review the port, I try to come to a reasonable balance asking
+the submitters to clean up some aspect of the common code base
+so they and everyone afterwards is able to use more shared
+infrastructure without duplication. This is clearly a different area
+every time, but I think the ACPI PCI code is an obvious thing to
+ask for cleaning up this time, as there are only three existing users.
+
+We could probably have done a better job for the arm64 version,
+but even getting that working was enough of a mess (initially
+you had only ACPI or PCI but not both together), and there
+were other problems with the architecture port that needed sorting
+out at the time.
+
+I can definitely offer to help plan this part a little bit better, but
+I actually hope it's not all that much work.
+
+        Arnd
