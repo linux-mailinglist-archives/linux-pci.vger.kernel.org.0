@@ -2,97 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E98C415350
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 00:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC99A4153EB
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 01:32:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238290AbhIVWXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 18:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238293AbhIVWXK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 18:23:10 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B33C061574;
-        Wed, 22 Sep 2021 15:21:39 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1632349298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0A6qByAjupG5ZLznnStIKLY1X8Qel1/Sug5VuQBE2dA=;
-        b=FAC6stJzb16S5VN9VA4cYLEPKiuJ7YST9bvrH7P/nTQyc1a945nwPe5w0JdcdIimC42aAx
-        na5h3WSbyuqP2qXbOiZexv6sd6CDjXaykK6U6TaZ2Tggf00yp/tXXxO31SVTXfJgnGslMP
-        UskPRaNQaiyzxPsCNlNiBgKvQ3CrhyzPnhmYSdPuaf2f9ANa1S+vtLnrZX2GcY7AWZJMEo
-        Wckz0X+XHumePRBRTI40zq2Zf4PKCWqUgvoGuMyK5sYd8ohbTWf2ilcv+uIwrqAYxMxwKh
-        r1teJ5+OVdurfHwV9YEIzs2tKWRXhTCfk8IMBfmarnONrxMHzWj9Rrs3tQtpMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1632349298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0A6qByAjupG5ZLznnStIKLY1X8Qel1/Sug5VuQBE2dA=;
-        b=qTQwlYwfvHFWjde9GzRO44+mLYwFzGtg/y8pgV0QMduMbpkKkr7I/iGZA00lCEzfWPEFJg
-        EAJLfoO6zE/c6JDw==
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        jose.souza@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com, Stable <stable@vger.kernel.org>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "rafael@kernel.org" <rafael@kernel.org>
-Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
- platform
-In-Reply-To: <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
-References: <20210916131739.1260552-1-kuba@kernel.org>
- <20210916150707.GA1611532@bjorn-Precision-5520>
- <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net>
- <YURhL33YyXRMkdC6@hirez.programming.kicks-ass.net> <87v92x775x.ffs@tglx>
- <82c1b753-586d-dadf-54de-6509e70a00ea@intel.com> <87y27p65tz.ffs@tglx>
- <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
-Date:   Thu, 23 Sep 2021 00:21:37 +0200
-Message-ID: <87sfxwgsjy.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S238481AbhIVXeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 19:34:19 -0400
+Received: from sibelius.xs4all.nl ([83.163.83.176]:56277 "EHLO
+        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238480AbhIVXeS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 19:34:18 -0400
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id f6097b85;
+        Thu, 23 Sep 2021 01:32:45 +0200 (CEST)
+Date:   Thu, 23 Sep 2021 01:32:45 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org,
+        lorenzo.pieralisi@arm.com, kw@linux.com, alyssa@rosenzweig.io,
+        stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev,
+        marcan@marcan.st, Robin.Murphy@arm.com, kernel-team@android.com
+In-Reply-To: <20210922205458.358517-1-maz@kernel.org> (message from Marc
+        Zyngier on Wed, 22 Sep 2021 21:54:48 +0100)
+Subject: Re: [PATCH v4 00/10] PCI: Add support for Apple M1
+References: <20210922205458.358517-1-maz@kernel.org>
+Message-ID: <56147a3cb0fae762@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 22 2021 at 22:27, Rafael J. Wysocki wrote:
-> On Tue, Sep 21, 2021 at 10:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> On Tue, Sep 21 2021 at 20:05, Rafael J. Wysocki wrote:
->> > On 9/19/2021 2:14 AM, Thomas Gleixner wrote:
->> >> What's the proper way to figure out whether PC10 is supported?
->> >
->> > I can't say without research.  I think it'd be sufficient to check if
->> > C10 is supported, because asking for it is the only way to get PC10.
->>
->> Do we have a common function for that or do I need to implement the
->> gazillionst CPUID query for that?
->
-> intel_idle has intel_idle_verify_cstate() that works on MWAIT
-> substates from CPUID.  It looks like this could be reused.
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Wed, 22 Sep 2021 21:54:48 +0100
+> 
+> This is v4 of the series adding PCIe support for the M1 SoC. Not a lot
+> has changed this time around, and most of what I was saying in [1] is
+> still valid.
+> 
+> The most important change is that the driver now probes for the number
+> of RID-SID mapping registers instead of assuming 64 entries. The rest
+> is a bunch of limited cleanups and minor fixes.
+> 
+> This should now be in a state that makes it mergeable, although I
+> expect that some of the clock bits may have to be adapted (I haven't
+> followed the recent developments on that front).
 
-Not to me. That's some cpuidle/intel_idle specific check which depends
-on cpuidle_state_table being set up which is not available during early
-boot.
+The current understanding is that the M1 SoC really only has power
+domains.  Fortunately power domains are handled automagically by the
+Linux kernel (and U-Boot) so this driver doesn't have to worry about
+this.
 
-The question I was asking whether we have a central place where we can
-retrieve such information w/o invoking CPUID over and over again and
-applying voodoo checks on it.
+I already changed the 4/4 diff of my DT bindings series to add a
+"power-domains" property instead of a "clocks" property.  So once
+marcan's power manager driver lands everything should just work.  Some
+coordination on the patch that changes the DT itself is probably
+required.  But we could simply leave out the "power-domains" property
+until the power manager driver lands as m1n1 currently already turns
+on the power domain.
 
-Obviously we don't, which sucks.
+Cheers,
 
-Thanks,
+Mark
 
-        tglx
-
+> As always, comments welcome.
+> 
+> [1] https://lore.kernel.org/r/20210913182550.264165-1-maz@kernel.org
+> 
+> Alyssa Rosenzweig (2):
+>   PCI: apple: Add initial hardware bring-up
+>   PCI: apple: Set up reference clocks when probing
+> 
+> Marc Zyngier (8):
+>   irqdomain: Make of_phandle_args_to_fwspec generally available
+>   of/irq: Allow matching of an interrupt-map local to an interrupt
+>     controller
+>   PCI: of: Allow matching of an interrupt-map local to a PCI device
+>   PCI: apple: Add INTx and per-port interrupt support
+>   arm64: apple: t8103: Add root port interrupt routing
+>   PCI: apple: Implement MSI support
+>   iommu/dart: Exclude MSI doorbell from PCIe device IOVA range
+>   PCI: apple: Configure RID to SID mapper on device addition
+> 
+>  MAINTAINERS                          |   7 +
+>  arch/arm64/boot/dts/apple/t8103.dtsi |  33 +-
+>  drivers/iommu/apple-dart.c           |  27 +
+>  drivers/of/irq.c                     |  17 +-
+>  drivers/pci/controller/Kconfig       |  17 +
+>  drivers/pci/controller/Makefile      |   1 +
+>  drivers/pci/controller/pcie-apple.c  | 826 +++++++++++++++++++++++++++
+>  drivers/pci/of.c                     |  10 +-
+>  include/linux/irqdomain.h            |   4 +
+>  kernel/irq/irqdomain.c               |   6 +-
+>  10 files changed, 935 insertions(+), 13 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-apple.c
+> 
+> -- 
+> 2.30.2
+> 
+> 
