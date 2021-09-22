@@ -2,78 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A8C4149FC
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 15:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB273414A6E
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 15:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbhIVNBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 09:01:48 -0400
-Received: from mx22.baidu.com ([220.181.50.185]:55404 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230526AbhIVNBs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Sep 2021 09:01:48 -0400
-Received: from BC-Mail-Ex17.internal.baidu.com (unknown [172.31.51.11])
-        by Forcepoint Email with ESMTPS id 7BF62C79B3EBB7B23A67;
-        Wed, 22 Sep 2021 21:00:16 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BC-Mail-Ex17.internal.baidu.com (172.31.51.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2242.12; Wed, 22 Sep 2021 21:00:16 +0800
-Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Wed, 22 Sep 2021 21:00:15 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     <caihuoqing@baidu.com>
-CC:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        id S231701AbhIVNXz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 09:23:55 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64818 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230413AbhIVNXz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Sep 2021 09:23:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10114"; a="203083836"
+X-IronPort-AV: E=Sophos;i="5.85,314,1624345200"; 
+   d="scan'208";a="203083836"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2021 06:22:23 -0700
+X-IronPort-AV: E=Sophos;i="5.85,314,1624345200"; 
+   d="scan'208";a="435432088"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2021 06:22:19 -0700
+Received: from andy by smile with local (Exim 4.95-RC2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mT2CW-004Bgc-2C;
+        Wed, 22 Sep 2021 16:22:16 +0300
+Date:   Wed, 22 Sep 2021 16:22:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: mvebu: Make use of the helper function devm_add_action_or_reset()
-Date:   Wed, 22 Sep 2021 21:00:08 +0800
-Message-ID: <20210922130009.639-1-caihuoqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] mwifiex: Use non-posted PCI write when setting TX
+ ring write pointer
+Message-ID: <YUsuCPSYsRhlCxwD@smile.fi.intel.com>
+References: <20210914114813.15404-1-verdre@v0yd.nl>
+ <20210914114813.15404-2-verdre@v0yd.nl>
+ <YUsQ3jU1RuThUYn8@smile.fi.intel.com>
+ <9293504f-f70d-61ac-b221-dd466f01b5df@v0yd.nl>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BJHW-Mail-Ex09.internal.baidu.com (10.127.64.32) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9293504f-f70d-61ac-b221-dd466f01b5df@v0yd.nl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The helper function devm_add_action_or_reset() will internally
-call devm_add_action(), and if devm_add_action() fails then it will
-execute the action mentioned and return the error code. So
-use devm_add_action_or_reset() instead of devm_add_action()
-to simplify the error handling, reduce the code.
+On Wed, Sep 22, 2021 at 02:08:39PM +0200, Jonas Dreﬂler wrote:
+> On 9/22/21 1:17 PM, Andy Shevchenko wrote:
+> > On Tue, Sep 14, 2021 at 01:48:12PM +0200, Jonas Dreﬂler wrote:
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
----
- drivers/pci/controller/pci-mvebu.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+...
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index ed13e81cd691..cd387f235b7f 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -897,11 +897,9 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- 		goto skip;
- 	}
- 
--	ret = devm_add_action(dev, mvebu_pcie_port_clk_put, port);
--	if (ret < 0) {
--		clk_put(port->clk);
-+	ret = devm_add_action_or_reset(dev, mvebu_pcie_port_clk_put, port);
-+	if (ret < 0)
- 		goto err;
--	}
- 
- 	return 1;
- 
+> > Should it have a Fixes tag?
+> > 
+> 
+> Don't think so, there's the infamous
+> (https://bugzilla.kernel.org/show_bug.cgi?id=109681) Bugzilla bug it fixes
+> though, I'll mention that in v3.
+
+Good idea, use BugLink tag for that!
+
+...
+
+> Interesting, I haven't noticed that mwifiex_write_reg() always returns 0. So
+> are you suggesting to remove that return value and get rid of all the "if
+> (mwifiex_write_reg()) {}" checks in a separate commit?
+
+Something like this, yes.
+
+> As for why the dummy read/write functions exist, I have no idea. Looking at
+> git history it seems they were always there (only change is that
+> mwifiex_read_reg() started to handle read errors with commit
+> af05148392f50490c662dccee6c502d9fcba33e2). My bet would be that they were
+> created to be consistent with sdio.c which is the oldest supported bus type
+> in mwifiex.
+
+It has a check against all ones. Also your another patch mentioned wake up.
+Perhaps the purpose is to wake up and return if device was/is in power off mode
+(D3hot).
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
