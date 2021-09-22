@@ -2,112 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D40413EAC
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 02:45:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CBD413EF5
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 03:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbhIVAqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Sep 2021 20:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbhIVAqk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Sep 2021 20:46:40 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB649C061575
-        for <linux-pci@vger.kernel.org>; Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id x33-20020a9d37a4000000b0054733a85462so1058874otb.10
-        for <linux-pci@vger.kernel.org>; Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q1iP5KefHqJWJ5qGAUDoYDJOyAD6pRFAZFOdaM0VUL4=;
-        b=jEV6CpbXyr07JLXO1bp0yl7i+yms+T5LIGT6MwHF6pP/qG0RKnqzaXHP3PbaieYwko
-         eiScBzgb/WsN+NvJnLl4t8FPVlcFSgH/ZYjXW0/dbKO8sDVbmqypt0rMXr/wg/O17Tkw
-         VCUIukQzVQgK1p7wiXp5KbANB4eSFvjqbS6OufBZMTspLK6VKofrcLONrnjzcIffavOC
-         sNTa24qsbj2zFf23cxhht8n9gEF7RhZZo41SmCRXkMlwxpqSt58N/iAWCoubiKQXzd6R
-         P/Cfteln8igvgHe402qPDEmVCaUsIYLBxJvVa7PNvlpLnWka4d7kIA4Xvn0Ali7BjTJS
-         KdGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q1iP5KefHqJWJ5qGAUDoYDJOyAD6pRFAZFOdaM0VUL4=;
-        b=DKXugHWFxVJiSrs0U6w6TqWeX0PX+eWkcQw8K/0pPXsgQ15pJSwGH33bBguiCil+He
-         Pygxk57OdksRSb59sP/CYR+t8zKtTXTPu9Feq7/SOgB2HZ4M3T6uTfi6Wb32ztlNdEIV
-         pGxw94TWzSKo6A5kaYKFrR5v0k7/6XujsUWbMyo3Goa/UaSI9qT/Ck/UuJ1c/m/RjTUz
-         r5HDhO7Vvui5eFZBrzBxDgPSIrqHhQiauQUM/YDBtm+RvEpnz2CVa5wn/gjmIaMPLTft
-         tSEwrL+G+8+CBLT3Kihk8uJ7WXUMsStIVqn4ULpoOoLnQ7bKhg2SRWA2QxM3APBkz47L
-         SrQA==
-X-Gm-Message-State: AOAM530qXi0B0gS+Wr32WOvbM95O/RnOWOUM9lWvT7FyJa0ozM5lROHK
-        RMnmXkLNmldep2CG5z8gvJQHc2YxDzZM8lkY21lXf8kipRWvfQ==
-X-Google-Smtp-Source: ABdhPJwmYVkzrdW65h9xNSUrnW1faCzIMwKQt+WpaGKLoqWCC3rgZnXMLk+Dnzi5GMg1Owh3toA9VWsUpQuh0BoWQos=
-X-Received: by 2002:a9d:6359:: with SMTP id y25mr28065477otk.274.1632271510013;
- Tue, 21 Sep 2021 17:45:10 -0700 (PDT)
+        id S232374AbhIVB2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Sep 2021 21:28:01 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37632 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230469AbhIVB2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Sep 2021 21:28:01 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18M1QELt117977;
+        Tue, 21 Sep 2021 20:26:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1632273974;
+        bh=/FOZxTvTqWhnvJg7vtSaRyToCaRqGzH5F9PQnDTzVPs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Wv28Mx82yvWkuPCUXABJX64Crctr5jsjPLUrk1aYrYfvQegl0c4syY2f+gJE9W5DW
+         bs8mQNAJweTwZflJvHKXR+8Adu9jQ3IlR77LTyT0ihtbfpyUMLb/9gL0f1mgNzvCcp
+         uieirrDaaNPylWXTa1Klwl5LTbKNlZ2U/MJpGla0=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18M1QEc5114507
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Sep 2021 20:26:14 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 21
+ Sep 2021 20:26:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Tue, 21 Sep 2021 20:26:13 -0500
+Received: from [10.250.233.80] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 18M1QAbP074771;
+        Tue, 21 Sep 2021 20:26:11 -0500
+Subject: Re: [PATCH 1/3] PCI: Add support in pci_walk_bus() to invoke callback
+ matching RID
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <lokeshvutla@ti.com>
+References: <20210920064133.14115-1-kishon@ti.com>
+ <20210920064133.14115-2-kishon@ti.com> <8735pzwrq0.wl-maz@kernel.org>
+ <49b2ba0c-c69d-266c-5db6-549fab031ffd@ti.com> <87mto7unw1.wl-maz@kernel.org>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <4c6d6b57-d868-eccb-7cfb-66008af530bb@ti.com>
+Date:   Wed, 22 Sep 2021 06:56:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210921220459.2437386-1-ben.widawsky@intel.com> <20210921220459.2437386-8-ben.widawsky@intel.com>
-In-Reply-To: <20210921220459.2437386-8-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 21 Sep 2021 17:44:58 -0700
-Message-ID: <CAPcyv4h4QHAQF+ogMvOXrkdyR5Jceo8yp7TQNN+836=v0QwdDw@mail.gmail.com>
-Subject: Re: [PATCH 7/7] ocxl: Use pci core's DVSEC functionality
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87mto7unw1.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 3:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Reduce maintenance burden of DVSEC query implementation by using the
-> centralized PCI core implementation.
->
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-> Cc: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/misc/ocxl/config.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
->
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index a68738f38252..e401a51596b9 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -33,18 +33,7 @@
->
->  static int find_dvsec(struct pci_dev *dev, int dvsec_id)
->  {
-> -       int vsec = 0;
-> -       u16 vendor, id;
-> -
-> -       while ((vsec = pci_find_next_ext_capability(dev, vsec,
-> -                                                   OCXL_EXT_CAP_ID_DVSEC))) {
-> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
-> -                               &vendor);
-> -               pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
-> -               if (vendor == PCI_VENDOR_ID_IBM && id == dvsec_id)
-> -                       return vsec;
-> -       }
-> -       return 0;
-> +       return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM, dvsec_id);
->  }
+Hi Marc,
 
-What about:
+On 20/09/21 11:31 pm, Marc Zyngier wrote:
+> On Mon, 20 Sep 2021 15:28:52 +0100,
+> Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Marc,
+>>
+>> On 20/09/21 2:26 pm, Marc Zyngier wrote:
+>>> On Mon, 20 Sep 2021 07:41:31 +0100,
+>>> Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>
+>>>> Add two arguments to pci_walk_bus() [requestorID and mask], and add
+>>>> support in pci_walk_bus() to invoke the *callback* only for devices
+>>>> whose RequestorID after applying *mask* matches with *requestorID*
+>>>> passed as argument.
+>>>>
+>>>> This is done in preparation for calculating the total number of
+>>>> interrupt vectors that has to be supported by a specific GIC ITS device ID,
+>>>> specifically when "msi-map-mask" is populated in device tree.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  drivers/pci/bus.c   | 13 +++++++++----
+>>>>  include/linux/pci.h |  7 +++++--
+>>>>  2 files changed, 14 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+>>>> index 3cef835b375f..e381e639ceaa 100644
+>>>> --- a/drivers/pci/bus.c
+>>>> +++ b/drivers/pci/bus.c
+>>>> @@ -358,10 +358,12 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+>>>>  }
+>>>>  EXPORT_SYMBOL(pci_bus_add_devices);
+>>>>  
+>>>> -/** pci_walk_bus - walk devices on/under bus, calling callback.
+>>>> +/** __pci_walk_bus - walk devices on/under bus matching requestor ID, calling callback.
+>>>>   *  @top      bus whose devices should be walked
+>>>>   *  @cb       callback to be called for each device found
+>>>>   *  @userdata arbitrary pointer to be passed to callback.
+>>>> + *  @rid      Requestor ID that has to be matched for the callback to be invoked
+>>>> + *  @mask     Mask that has to be applied to pci_dev_id(), before compating it with @rid
+>>>>   *
+>>>>   *  Walk the given bus, including any bridged devices
+>>>>   *  on buses under this bus.  Call the provided callback
+>>>> @@ -371,8 +373,8 @@ EXPORT_SYMBOL(pci_bus_add_devices);
+>>>>   *  other than 0, we break out.
+>>>>   *
+>>>>   */
+>>>> -void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+>>>> -		  void *userdata)
+>>>> +void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+>>>> +		    void *userdata, u32 rid, u32 mask)
+>>>>  {
+>>>>  	struct pci_dev *dev;
+>>>>  	struct pci_bus *bus;
+>>>> @@ -399,13 +401,16 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+>>>>  		} else
+>>>>  			next = dev->bus_list.next;
+>>>>  
+>>>> +		if (mask != 0xffff && ((pci_dev_id(dev) & mask) != rid))
+>>>
+>>> Why the check for the mask? I also wonder whether the mask should apply
+>>> to the rid as well:
+>>
+>> If the mask is set for all 16bits, then there is not going to be two PCIe
+>> devices which gets the same ITS device ID right? So no need for calculating
+>> total number of vectors?
+> 
+> Are we really arguing about the cost of a compare+branch vs some
+> readability? Or is there an actual correctness issue here?
 
-arch/powerpc/platforms/powernv/ocxl.c::find_dvsec_from_pos()
+It is for correctness. So existing pci_walk_bus() doesn't invoke cb based on
+rid. So when we convert to __pci_walk_bus(), existing callers of pci_walk_bus()
+might not invoke cb for some devices without the check.
+> 
+>>>
+>>> 		if ((pci_dev_id(dev) & mask) != (rid & mask))
+> 
+> Because I think the above expression is a lot more readable (and
+> likely more correct) than what you are suggesting.
 
-...?  With that converted the redundant definitions below:
+That would result in existing pci_walk_bus() behave differently from what was
+before this patch no?
 
-OCXL_EXT_CAP_ID_DVSEC
-OCXL_DVSEC_VENDOR_OFFSET
-OCXL_DVSEC_ID_OFFSET
+I'm having something like this below
+	+#define pci_walk_bus(top, cb, userdata) \
+	+	 __pci_walk_bus((top), (cb), (userdata), 0x0, 0xffff)
 
-...can be cleaned up in favor of the core definitions.
+So if we add only "if ((pci_dev_id(dev) & mask) != (rid & mask))", the callback
+will not be invoked for any devices (other than one with rid = 0)
+
+> 
+>>>
+>>>> +			continue;
+>>>> +
+>>>>  		retval = cb(dev, userdata);
+>>>>  		if (retval)
+>>>>  			break;
+>>>>  	}
+>>>>  	up_read(&pci_bus_sem);
+>>>>  }
+>>>> -EXPORT_SYMBOL_GPL(pci_walk_bus);
+>>>> +EXPORT_SYMBOL_GPL(__pci_walk_bus);
+>>>>  
+>>>>  struct pci_bus *pci_bus_get(struct pci_bus *bus)
+>>>>  {
+>>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>>> index cd8aa6fce204..8500fec56e50 100644
+>>>> --- a/include/linux/pci.h
+>>>> +++ b/include/linux/pci.h
+>>>> @@ -1473,14 +1473,17 @@ const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
+>>>>  int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max,
+>>>>  		    int pass);
+>>>>  
+>>>> -void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+>>>> -		  void *userdata);
+>>>> +void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+>>>> +		    void *userdata, u32 rid, u32 mask);
+>>>>  int pci_cfg_space_size(struct pci_dev *dev);
+>>>>  unsigned char pci_bus_max_busnr(struct pci_bus *bus);
+>>>>  void pci_setup_bridge(struct pci_bus *bus);
+>>>>  resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+>>>>  					 unsigned long type);
+>>>>  
+>>>> +#define pci_walk_bus(top, cb, userdata) \
+>>>> +	 __pci_walk_bus((top), (cb), (userdata), 0x0, 0xffff)
+>>>
+>>> Please keep this close to the helper it replaces. I also really
+>>> dislike the use of this raw 0xffff. Don't we already have a named
+>>> constant that represents the mask for a RID?
+>>
+>> I didn't find one on quick look but let me check.
+> 
+> Worse case, you could create your own.
+
+sure.
+
+Thanks,
+Kishon
