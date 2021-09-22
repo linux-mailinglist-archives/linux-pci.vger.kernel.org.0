@@ -2,89 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57408415282
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 23:15:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94CB14152B8
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 23:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237903AbhIVVQc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 17:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
+        id S238064AbhIVVZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 17:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237820AbhIVVQc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Sep 2021 17:16:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 02B97611CA;
-        Wed, 22 Sep 2021 21:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632345302;
-        bh=p2kf8f9SneDcF5cbddfOin1pAOfAoaUXJFS9kC9C3RY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bwUiztR0HsputfFsZxeMu/pQezk4drxXmTvr/3WfsPockfj60nlyScjJ9nWdo5z1I
-         Rs+ykRZIXW9MoO/wTLJuREfe7sf/57xjJBXRYUM7GjGF2dS4pXH6hAMkSG/IkTDHt9
-         61QGdTTnMkyhP6XAAKkdxKmAInAkQN1LQjiTNZZsQqYIgY9WcHl5UtzE+de1Z8p+dU
-         lmYlvXp7oFXZlHU40/jmzV1S+gfW8Oz/AUahWoCsB0g3nVyakT061ujLlZzCRRyKY/
-         zrxcIB7fhsQdmSYAG66gt/AeiRp44y0ARk08r5j+3ykpqQoHZojKdPhYNW1RnXZQt2
-         FgCQpgZQm4Z5g==
-Received: by mail-ed1-f53.google.com with SMTP id eg28so15351880edb.1;
-        Wed, 22 Sep 2021 14:15:01 -0700 (PDT)
-X-Gm-Message-State: AOAM532hE1AqSrRPwTMmAMKfjpdHH4hagCmjk1I8fMl2o1sk1ej5/9PC
-        Xt4SxV3eFJhB84B7tMJngDUjrhPzz50/j5yFQw==
-X-Google-Smtp-Source: ABdhPJxrpLWQHpAgZoTQC8bgND1fLrIs/KgZqALZ/fVCHcWTBnba7fvpklnQazlOWx41I7YqFT9oJqTjd14BRcus5GY=
-X-Received: by 2002:a17:906:7145:: with SMTP id z5mr1367273ejj.363.1632345300554;
- Wed, 22 Sep 2021 14:15:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210922205458.358517-1-maz@kernel.org> <20210922205458.358517-5-maz@kernel.org>
- <86507f22-d824-4f7c-ba94-d3105c5206c2@www.fastmail.com>
-In-Reply-To: <86507f22-d824-4f7c-ba94-d3105c5206c2@www.fastmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Sep 2021 16:14:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKL2fb+PObe_Soopf2JDFbaQZyu-k_CQrQTGU4tONQvUA@mail.gmail.com>
-Message-ID: <CAL_JsqKL2fb+PObe_Soopf2JDFbaQZyu-k_CQrQTGU4tONQvUA@mail.gmail.com>
+        id S237802AbhIVVZv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Sep 2021 17:25:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E65B60F44;
+        Wed, 22 Sep 2021 21:24:20 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mT9iz-00CPab-Qw; Wed, 22 Sep 2021 22:24:18 +0100
+Date:   Wed, 22 Sep 2021 22:24:17 +0100
+Message-ID: <87czp0b8xq.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Sven Peter" <sven@svenpeter.dev>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Stan Skowronek" <stan@corellium.com>,
+        "Mark Kettenis" <kettenis@openbsd.org>,
+        "Hector Martin" <marcan@marcan.st>,
+        "Robin Murphy" <Robin.Murphy@arm.com>, kernel-team@android.com
 Subject: Re: [PATCH v4 04/10] PCI: apple: Add initial hardware bring-up
-To:     Sven Peter <sven@svenpeter.dev>
-Cc:     Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Stan Skowronek <stan@corellium.com>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Hector Martin <marcan@marcan.st>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <86507f22-d824-4f7c-ba94-d3105c5206c2@www.fastmail.com>
+References: <20210922205458.358517-1-maz@kernel.org>
+        <20210922205458.358517-5-maz@kernel.org>
+        <86507f22-d824-4f7c-ba94-d3105c5206c2@www.fastmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sven@svenpeter.dev, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com, kettenis@openbsd.org, marcan@marcan.st, Robin.Murphy@arm.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 4:08 PM Sven Peter <sven@svenpeter.dev> wrote:
->
+On Wed, 22 Sep 2021 22:08:33 +0100,
+"Sven Peter" <sven@svenpeter.dev> wrote:
+> 
 > Hi,
->
->
+> 
+> 
 > On Wed, Sep 22, 2021, at 22:54, Marc Zyngier wrote:
 > > From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 > >
 > [...]
 > > +
-> > +     /* Use the first reg entry to work out the port index */
-> > +     port->idx = idx >> 11;
-> > +     port->pcie = pcie;
-> > +     port->np = np;
+> > +	/* Use the first reg entry to work out the port index */
+> > +	port->idx = idx >> 11;
+> > +	port->pcie = pcie;
+> > +	port->np = np;
 > > +
-> > +     port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
-> > +     if (IS_ERR(port->base))
-> > +             return -ENODEV;
-
-Don't change error codes.
-
+> > +	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
+> > +	if (IS_ERR(port->base))
+> > +		return -ENODEV;
 > > +
-> > +     rmw_set(PORT_APPCLK_EN, port + PORT_APPCLK);
->
+> > +	rmw_set(PORT_APPCLK_EN, port + PORT_APPCLK);
+> 
 > I think this should be
->
+> 
 >     rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
 
-Or just removed if this was tested and worked.
+Ouch. Well caught. I wonder how many of these I introduced...:-/
 
-Rob
+> 
+> > +
+> > +	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+> > +	gpiod_set_value(reset, 1);
+> > +
+> > +	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
+> > +					 stat & PORT_STATUS_READY, 100, 250000);
+> > +	if (ret < 0) {
+> > +		dev_err(pcie->dev, "port %pOF ready wait timeout\n", np);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Flush writes and enable the link */
+> > +	dma_wmb();
+> 
+> I don't think this barrier is required.
+
+It really isn't, and I though I had removed it. I now wonder whether I
+have pushed out the right branch, or messed up by moving from one
+machine to another...
+
+> > +
+> > +	writel_relaxed(PORT_LTSSMCTL_START, port->base + PORT_LTSSMCTL);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> [...]
+> 
+> 
+> Looks good to me otherwise,
+> 
+> Reviewed-by: Sven Peter <sven@svenpeter.dev>
+
+Thanks. Hopefully I'll manage to post a non broken series next time...
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
