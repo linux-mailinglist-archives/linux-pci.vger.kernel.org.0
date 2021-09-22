@@ -2,136 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6097B4149A4
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 14:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0A8C4149FC
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 15:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236064AbhIVMwV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 08:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236101AbhIVMwP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 08:52:15 -0400
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C22C061574;
-        Wed, 22 Sep 2021 05:50:45 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4HDynv2hbMzQk9R;
-        Wed, 22 Sep 2021 14:50:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S229969AbhIVNBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 09:01:48 -0400
+Received: from mx22.baidu.com ([220.181.50.185]:55404 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230526AbhIVNBs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Sep 2021 09:01:48 -0400
+Received: from BC-Mail-Ex17.internal.baidu.com (unknown [172.31.51.11])
+        by Forcepoint Email with ESMTPS id 7BF62C79B3EBB7B23A67;
+        Wed, 22 Sep 2021 21:00:16 +0800 (CST)
+Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
+ BC-Mail-Ex17.internal.baidu.com (172.31.51.11) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2242.12; Wed, 22 Sep 2021 21:00:16 +0800
+Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.14; Wed, 22 Sep 2021 21:00:15 +0800
+From:   Cai Huoqing <caihuoqing@baidu.com>
+To:     <caihuoqing@baidu.com>
+CC:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <20210830123704.221494-1-verdre@v0yd.nl>
- <20210830123704.221494-2-verdre@v0yd.nl>
- <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
- <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
- <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
- <YS/rn8b0O3FPBbtm@google.com> <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
- <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-Message-ID: <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl>
-Date:   Wed, 22 Sep 2021 14:50:33 +0200
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PCI: mvebu: Make use of the helper function devm_add_action_or_reset()
+Date:   Wed, 22 Sep 2021 21:00:08 +0800
+Message-ID: <20210922130009.639-1-caihuoqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5C450188F
+Content-Type: text/plain
+X-Originating-IP: [172.31.63.8]
+X-ClientProxiedBy: BJHW-Mail-Ex09.internal.baidu.com (10.127.64.32) To
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/20/21 7:48 PM, Brian Norris wrote:
-> On Sat, Sep 18, 2021 at 12:37 AM Jonas Dreßler <verdre@v0yd.nl> wrote:
->> Thanks for the pointer to that commit Brian, it turns out this is
->> actually the change that causes the "Firmware wakeup failed" issues that
->> I'm trying to fix with the second patch here.
-> 
-> Huh. That's interesting, although I guess it makes some sense given
-> your theory of "dropped writes". FWIW, this strategy (post a single
-> write, then wait for wakeup) is the same used by some other
-> chips/drivers too (e.g., ath10k/pci), although in those cases card
-> wakeup is much much faster. But if the bus was dropping writes
-> somehow, those strategies would fail too.
-> 
->> Also my approach is a lot messier than just reverting
->> 062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3 and also appears to be blocking
->> even longer...
-> 
-> For the record, in case you're talking about my data ("blocking even
-> longer"): I was only testing patch 1. Patch 2 isn't really relevant to
-> my particular systems (Rockchip RK3399 + Marvell 8997/PCIe), because
-> (a) I'm pretty sure my system isn't "dropping" any reads or writes
-> (b) all my delay is in the read-back; the Rockchip PCIe bus is waiting
-> indefinitely for the card to wake up, instead of timing out and
-> reporting all-1's like many x86 systems appear to do (I've tested
-> this).
-> 
-> So, the 6ms delay is entirely sitting in the ioread32(), not a delay loop.
-> 
-> I haven't yet tried your version 2 (which avoids the blocking read to
-> wake up; good!), but it sounds like in theory it could solve your
-> problem while avoiding 6ms delays for me. I intend to test your v2
-> this week.
-> 
+The helper function devm_add_action_or_reset() will internally
+call devm_add_action(), and if devm_add_action() fails then it will
+execute the action mentioned and return the error code. So
+use devm_add_action_or_reset() instead of devm_add_action()
+to simplify the error handling, reduce the code.
 
-With "blocking even longer" I meant that (on my system) the delay-loop 
-blocks even longer than waking up the card via mwifiex_read_reg() (both 
-are in the orders of milliseconds). And given that in certain cases the 
-card wakeup (or a write getting through to the card, I have no idea) can 
-take extremely long, I'd feel more confident going with the 
-mwifiex_read_reg() method to wake up the card.
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+---
+ drivers/pci/controller/pci-mvebu.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Anyway, you know what's even weirder with all this: I've been testing 
-the first commit of patch v2 (so just the single read-back instead of 
-the big hammer) together with 062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3 
-reverted for a good week now and haven't seen any wakeup failure yet. 
-Otoh I'm fairly sure the big hammer with reading back every write wasn't 
-enough to fix the wakeup failures, otherwise I wouldn't even have 
-started working on the second commit.
-
-So that would mean there's a difference between writing and then reading 
-back vs only reading to wake up the card: Only the latter fixes the 
-wakeup failures.
-
->> Does anyone have an idea what could be the reason for the posted write
->> not going through, or could that also be a potential firmware bug in the
->> chip?
-> 
-> I have no clue about that. That does sound downright horrible, but so
-> are many things when dealing with this family of hardware/firmware.
-> I'm not sure how to prove out whether this is a host bus problem, or
-> an endpoint/firmware problem, other than perhaps trying the same
-> module/firmware on another system, if that's possible.
-> 
-> Anyway, to reiterate: I'm not fundamentally opposed to v2 (pending a
-> test run here), even if it is a bit ugly and perhaps not 100%
-> understood.
-> 
-
-I'm not 100% sure about all this yet, I think I'm gonna try to confirm 
-my older findings once again now and then we'll see. FTR, would you be 
-fine with using the mwifiex_read_reg() method to wake up the card and 
-somehow quirking your system to use write_reg()?
-
-> Brian
-> 
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index ed13e81cd691..cd387f235b7f 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -897,11 +897,9 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
+ 		goto skip;
+ 	}
+ 
+-	ret = devm_add_action(dev, mvebu_pcie_port_clk_put, port);
+-	if (ret < 0) {
+-		clk_put(port->clk);
++	ret = devm_add_action_or_reset(dev, mvebu_pcie_port_clk_put, port);
++	if (ret < 0)
+ 		goto err;
+-	}
+ 
+ 	return 1;
+ 
+-- 
+2.25.1
 
