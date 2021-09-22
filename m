@@ -2,134 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29385415321
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 23:59:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E98C415350
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 00:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232918AbhIVWBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 18:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232149AbhIVWBC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Sep 2021 18:01:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EDE7D60FA0;
-        Wed, 22 Sep 2021 21:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632347972;
-        bh=ngjmm4cmMiMIEt95rrv698WM+E37o6Vz7k4Cz4Cp860=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WRahBnhh2n5TtOHLfkI2yKoMFBFM6uv28SVms/qst3AmMm7Xxb6n1r+BgKIryPtWW
-         49nFZ3LsP4KsyXIjtXSFeaX+EVzUnSZroxam9q4uoJ6WBhKspYNgdiFuQsGcM+M/87
-         2yBIG+UO9twSZhNisZM+bepJYB//HhYK3Lzcc5WMKFCppJQ4s5EPH0hrB0QnHcZUOL
-         N3up/PKxaas5DDt25escY15N1HgYShl2M/99oPZgYKnsk6LHZgFzSeeWCYlz+f1Bt+
-         vdjXllmIFpz/7MTwUFOdxM9IqYrk2JrHz+m9aBbCjmYWBmqGjEO/39s/qRqlhrzKYp
-         eVpS5ZJsssdUQ==
-Date:   Wed, 22 Sep 2021 16:59:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S238290AbhIVWXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 18:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238293AbhIVWXK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 18:23:10 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B33C061574;
+        Wed, 22 Sep 2021 15:21:39 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1632349298;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0A6qByAjupG5ZLznnStIKLY1X8Qel1/Sug5VuQBE2dA=;
+        b=FAC6stJzb16S5VN9VA4cYLEPKiuJ7YST9bvrH7P/nTQyc1a945nwPe5w0JdcdIimC42aAx
+        na5h3WSbyuqP2qXbOiZexv6sd6CDjXaykK6U6TaZ2Tggf00yp/tXXxO31SVTXfJgnGslMP
+        UskPRaNQaiyzxPsCNlNiBgKvQ3CrhyzPnhmYSdPuaf2f9ANa1S+vtLnrZX2GcY7AWZJMEo
+        Wckz0X+XHumePRBRTI40zq2Zf4PKCWqUgvoGuMyK5sYd8ohbTWf2ilcv+uIwrqAYxMxwKh
+        r1teJ5+OVdurfHwV9YEIzs2tKWRXhTCfk8IMBfmarnONrxMHzWj9Rrs3tQtpMw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1632349298;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0A6qByAjupG5ZLznnStIKLY1X8Qel1/Sug5VuQBE2dA=;
+        b=qTQwlYwfvHFWjde9GzRO44+mLYwFzGtg/y8pgV0QMduMbpkKkr7I/iGZA00lCEzfWPEFJg
+        EAJLfoO6zE/c6JDw==
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        jose.souza@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
-Message-ID: <20210922215930.GA231505@bhelgaas>
+        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com, Stable <stable@vger.kernel.org>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "rafael@kernel.org" <rafael@kernel.org>
+Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake
+ platform
+In-Reply-To: <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
+References: <20210916131739.1260552-1-kuba@kernel.org>
+ <20210916150707.GA1611532@bjorn-Precision-5520>
+ <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net>
+ <YURhL33YyXRMkdC6@hirez.programming.kicks-ass.net> <87v92x775x.ffs@tglx>
+ <82c1b753-586d-dadf-54de-6509e70a00ea@intel.com> <87y27p65tz.ffs@tglx>
+ <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
+Date:   Thu, 23 Sep 2021 00:21:37 +0200
+Message-ID: <87sfxwgsjy.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d5bba9a6a1067989c3291fa2929528578812334.1632305919.git.leonro@nvidia.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> The PCI core uses the VF index internally, often called the vf_id,
-> during the setup of the VF, eg pci_iov_add_virtfn().
-> 
-> This index is needed for device drivers that implement live migration
-> for their internal operations that configure/control their VFs.
+On Wed, Sep 22 2021 at 22:27, Rafael J. Wysocki wrote:
+> On Tue, Sep 21, 2021 at 10:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> On Tue, Sep 21 2021 at 20:05, Rafael J. Wysocki wrote:
+>> > On 9/19/2021 2:14 AM, Thomas Gleixner wrote:
+>> >> What's the proper way to figure out whether PC10 is supported?
+>> >
+>> > I can't say without research.  I think it'd be sufficient to check if
+>> > C10 is supported, because asking for it is the only way to get PC10.
+>>
+>> Do we have a common function for that or do I need to implement the
+>> gazillionst CPUID query for that?
 >
-> Specifically, mlx5_vfio_pci driver that is introduced in coming patches
-> from this series needs it and not the bus/device/function which is
-> exposed today.
-> 
-> Add pci_iov_vf_id() which computes the vf_id by reversing the math that
-> was used to create the bus/device/function.
-> 
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> intel_idle has intel_idle_verify_cstate() that works on MWAIT
+> substates from CPUID.  It looks like this could be reused.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Not to me. That's some cpuidle/intel_idle specific check which depends
+on cpuidle_state_table being set up which is not available during early
+boot.
 
-mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
-same thing as pci_iov_vf_id() by iterating through VFs until it finds
-one with a matching devfn (although it *doesn't* check for a matching
-bus number, which seems like a bug).
+The question I was asking whether we have a central place where we can
+retrieve such information w/o invoking CPUID over and over again and
+applying voodoo checks on it.
 
-Maybe that should use pci_iov_vf_id()?
+Obviously we don't, which sucks.
 
-> ---
->  drivers/pci/iov.c   | 14 ++++++++++++++
->  include/linux/pci.h |  7 ++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index dafdc652fcd0..e7751fa3fe0b 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -33,6 +33,20 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id)
->  }
->  EXPORT_SYMBOL_GPL(pci_iov_virtfn_devfn);
->  
-> +int pci_iov_vf_id(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *pf;
-> +
-> +	if (!dev->is_virtfn)
-> +		return -EINVAL;
-> +
-> +	pf = pci_physfn(dev);
-> +	return (((dev->bus->number << 8) + dev->devfn) -
-> +		((pf->bus->number << 8) + pf->devfn + pf->sriov->offset)) /
-> +	       pf->sriov->stride;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_vf_id);
-> +
->  /*
->   * Per SR-IOV spec sec 3.3.10 and 3.3.11, First VF Offset and VF Stride may
->   * change when NumVFs changes.
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..4d6c73506e18 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2153,7 +2153,7 @@ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
->  #ifdef CONFIG_PCI_IOV
->  int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
->  int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
-> -
-> +int pci_iov_vf_id(struct pci_dev *dev);
->  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
->  void pci_disable_sriov(struct pci_dev *dev);
->  
-> @@ -2181,6 +2181,11 @@ static inline int pci_iov_virtfn_devfn(struct pci_dev *dev, int id)
->  {
->  	return -ENOSYS;
->  }
-> +static inline int pci_iov_vf_id(struct pci_dev *dev)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
+Thanks,
 
-Drop the blank line to match the surrounding stubs.
-
->  static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
->  { return -ENODEV; }
+        tglx
 
