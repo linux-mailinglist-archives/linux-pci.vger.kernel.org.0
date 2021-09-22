@@ -2,96 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482ED4140FD
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 07:01:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27024414176
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Sep 2021 08:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231896AbhIVFCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Sep 2021 01:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231908AbhIVFCM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 01:02:12 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E881EC061574;
-        Tue, 21 Sep 2021 22:00:42 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id t18so3201070wrb.0;
-        Tue, 21 Sep 2021 22:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uLV1H8lOUqllhWhMWtTAgHCu5bS8aT/YHsgKcThPqTo=;
-        b=hc7YsC+KdwME/FdU9dBYKerpWNTd36HebU7kzGoHCb+v9NITrk4VBHlGJvNybmu2NV
-         HgE8Mf/5sNZF40dlkEq1WNn/bQXmZaQ8GE+1DwvvCVLJN6Vh4+EwzVF+uVaAAsUXh78F
-         +pek75WzITpMDasRDOWC9VZaEw1ofuCHUhYEVjWY4njIvlhTUnaqp0U2KDfhyiZMigEv
-         rMY4ocfnD3d5grfgbOERKJpYe/SqoefgRwTF20fZm8JLp9nRpXXylHeJ3C+9xf4GOj1D
-         6ABRyEjeu4AMiIT4p+dO4FzrU1DmYLHV33Ja4mYGzE93h2w4nLKFlkx9+l4NX/i6TFl1
-         FWdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uLV1H8lOUqllhWhMWtTAgHCu5bS8aT/YHsgKcThPqTo=;
-        b=hQnGceXScVSpM1M7fcljWBrK++TNvsCC9z7VRip+7XazOFk/IPZ4zI5YASa4mB3Qmw
-         YC1Ibo818Zt5MzYCeas2kzll5xF0PQyjuqcP+TyzfZegxqMZ+/t44DVPl9MmDQLfZkys
-         AYKxjZb8IXE4ux+FnGI0U8xO2K4R3rlFAeggKyix0dycnSPyzWb7yIo3sLESY08hp0hl
-         IsCFKVWLChPom/SbEbA+zjlGUuxLBZ26F35iafL61VT2aZxPAYlJgpruaIoykxOaXZ1Q
-         ZMitWCnvSqz4bM8KrsDVXgmtXccnRu1PZZI2+11etBUfIAjmS8leASoAAknk6ljagVSC
-         EYXg==
-X-Gm-Message-State: AOAM5330AXt0WrQ4B0WC5HhVQL+SOKSKH84xh+0Y2Tn86gh0RPXq29rT
-        NrD5BeQRmZELXeVTsmQZgJUuvqk3CDw=
-X-Google-Smtp-Source: ABdhPJydVjWKiS4HM+M6BTpD6DBcjrGFUBfUfGlobfx9VO3CWDAwnpe828DpeeusVa6m6HrEob5EuA==
-X-Received: by 2002:a5d:64e2:: with SMTP id g2mr36130452wri.20.1632286841330;
-        Tue, 21 Sep 2021 22:00:41 -0700 (PDT)
-Received: from localhost.localdomain (252.red-83-54-181.dynamicip.rima-tde.net. [83.54.181.252])
-        by smtp.gmail.com with ESMTPSA id b187sm4811625wmd.33.2021.09.21.22.00.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Sep 2021 22:00:40 -0700 (PDT)
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, john@phrozen.org,
-        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
-        bhelgaas@google.com, matthias.bgg@gmail.com,
-        gregkh@linuxfoundation.org, linux-mips@vger.kernel.org,
-        linux-staging@lists.linux.dev, neil@brown.name,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] MAINTAINERS: add myself as maintainer of the MT7621 PCI controller driver
-Date:   Wed, 22 Sep 2021 07:00:35 +0200
-Message-Id: <20210922050035.18162-4-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210922050035.18162-1-sergio.paracuellos@gmail.com>
-References: <20210922050035.18162-1-sergio.paracuellos@gmail.com>
+        id S232542AbhIVGE1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Sep 2021 02:04:27 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:36166 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231908AbhIVGE0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Sep 2021 02:04:26 -0400
+X-UUID: 2d782b43a5f4428d84e324231b85b436-20210922
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=b7TgjdaX90/kAMrw3hlB4boxdIs0VONZSRH+hU5Jk6c=;
+        b=l1j2ZcdGx/96BEIjtoj5Fw62k9jzPBlK2XC0CmoeLaYoAXEE2yyDH0NPJP1An7F6jMZlfODanh/077ULVt1UB++cryvTph7jfuM/sKng7tEUAhYVlkBrBk9P0qEoyATbyLguIWzSjXprs849OcaQtmAWtE0W8bTF08iTuDsdVAg=;
+X-UUID: 2d782b43a5f4428d84e324231b85b436-20210922
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 485543766; Wed, 22 Sep 2021 14:02:55 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Wed, 22 Sep 2021 14:02:54 +0800
+Received: from mhfsdcap04 (10.17.3.154) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Sep 2021 14:02:53 +0800
+Message-ID: <1942744399e4817f778f43528b22b82b1d422b4a.camel@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek-gen3: Disable DVFSRC voltage request
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Wilczyski" <kw@linux.com>,
+        Tzung-Bi Shih <tzungbi@google.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <qizhong.cheng@mediatek.com>, <Ryan-JH.Yu@mediatek.com>
+Date:   Wed, 22 Sep 2021 14:02:55 +0800
+In-Reply-To: <53b79201135690800f3c97d861af9567b6f2a40d.camel@mediatek.com>
+References: <20210819125939.21253-1-jianjun.wang@mediatek.com>
+         <YR8go1l0Xnvvqn5E@google.com>
+         <53b79201135690800f3c97d861af9567b6f2a40d.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add myself as maintainer of the PCie Controlller driver for
-MT7621 SoCs.
-
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eeb4c70b3d5b..a7f0cbad7ac5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11842,6 +11842,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/i2c-mt7621.txt
- F:	drivers/i2c/busses/i2c-mt7621.c
- 
-+MEDIATEK MT7621 PCI CONTROLLER DRIVER
-+M:	Sergio Paracuellos <sergio.paracuellos@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-+F:	drivers/pci/controller/pci-mt7621.c
-+
- MEDIATEK MT7621 PHY PCI DRIVER
- M:	Sergio Paracuellos <sergio.paracuellos@gmail.com>
- S:	Maintained
--- 
-2.25.1
+SGkgQmpvcm4sIExvcmVuem8sDQoNCkp1c3QgZ2VudGxlIHBpbmcgZm9yIHRoaXMgcGF0Y2gsIHBs
+ZWFzZSBraW5kbHkgbGV0IG1lIGtub3cgeW91cg0KY29tbWVudHMgYWJvdXQgdGhpcyBwYXRjaC4N
+Cg0KVGhhbmtzLg0KDQpPbiBUaHUsIDIwMjEtMDktMDIgYXQgMTA6MjcgKzA4MDAsIEppYW5qdW4g
+V2FuZyB3cm90ZToNCj4gSGkgTWFpbnRhaW5lcnMsDQo+IA0KPiBKdXN0IGdlbnRsZSBwaW5nIGZv
+ciB0aGlzIHBhdGNoLCBpZiB0aGVyZSBpcyBhbnl0aGluZyBJIG5lZWQgdG8NCj4gbW9kaWZ5LA0K
+PiBwbGVhc2Uga2luZGx5IGxldCBtZSBrbm93Lg0KPiANCj4gVGhhbmtzLg0KPiANCj4gT24gRnJp
+LCAyMDIxLTA4LTIwIGF0IDExOjI1ICswODAwLCBUenVuZy1CaSBTaGloIHdyb3RlOg0KPiA+IE9u
+IFRodSwgQXVnIDE5LCAyMDIxIGF0IDA4OjU5OjM5UE0gKzA4MDAsIEppYW5qdW4gV2FuZyB3cm90
+ZToNCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5nQG1lZGlh
+dGVrLmNvbT4NCj4gPiANCj4gPiBSZXZpZXdlZC1ieTogVHp1bmctQmkgU2hpaCA8dHp1bmdiaUBn
+b29nbGUuY29tPg0K
 
