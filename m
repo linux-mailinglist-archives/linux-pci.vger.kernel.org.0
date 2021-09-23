@@ -2,97 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88F6441626C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 17:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95F31416255
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 17:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242268AbhIWPvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Sep 2021 11:51:20 -0400
-Received: from mga05.intel.com ([192.55.52.43]:33993 "EHLO mga05.intel.com"
+        id S234723AbhIWPsf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Sep 2021 11:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242288AbhIWPvG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 23 Sep 2021 11:51:06 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="309431278"
-X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="309431278"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 08:44:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="455159545"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 23 Sep 2021 08:44:17 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 52936580890;
-        Thu, 23 Sep 2021 08:44:17 -0700 (PDT)
-Message-ID: <49c93d8b83d668873fbe6dd5798db7a7e9fb5b61.camel@linux.intel.com>
-Subject: Re: [PATCH v3 0/5] Add general DVSEC/VSEC support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>, lee.jones@linaro.org,
-        bhelgaas@google.com, andy.shevchenko@gmail.com
-Cc:     mgross@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Thu, 23 Sep 2021 08:44:17 -0700
-In-Reply-To: <da8d9c79-d041-b7fa-6ee3-3abfcfcb0ef6@redhat.com>
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
-         <da8d9c79-d041-b7fa-6ee3-3abfcfcb0ef6@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S241995AbhIWPsU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Sep 2021 11:48:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B531E611C6;
+        Thu, 23 Sep 2021 15:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632411911;
+        bh=tRebfobguUkhm+TtIpFBE2sYYMQgs5iL2mj88sXA5Qk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KNQt8u73VmwldWhvgVep8ELnoN0JwHSmjdnNw3TO4lty2kbXYLj1tyOSMpWaXDTWX
+         94Fy7aWT+k0fV8rV8a1i+Ompwj4gGr69zEsSC4F6AG/Td5BMA6eL/4UX2ZxddlQ7Oe
+         lU5Lxt0eZCTLuIqHSd0/uL6jfr1xYxwxe8BtOLEMmGB1snjVl0hp8exyUhOmv2Pvt5
+         RmZag4AwrRNRZ95FpXJNxQQgBGt/SXr8XieXv6vg6BzQcreAxzXYF5/Db94+Vc9Wp1
+         282zfY230xmlJ1tpsleDPS24p3eO70gdHmtAbXmKo8PZT8Al2LNW1LlXKKqrPSBaoq
+         WxoIVH4xQpEyA==
+Received: by mail-ej1-f52.google.com with SMTP id x11so116391ejv.0;
+        Thu, 23 Sep 2021 08:45:11 -0700 (PDT)
+X-Gm-Message-State: AOAM530vYcgjYdszZ/7VmDVGH9odWUJZZfD7t9uEydCwgWFqNhwYmrD5
+        Zau5ImaBLaWQELWaepJ1MALuH6r0W8c8P3CqHQ==
+X-Google-Smtp-Source: ABdhPJzW9Q+u1kOp8EsMy8AIW1G+psMo8rKJnH3nfvU4j/Fig0hxqVDbPZLyfZj+snYbimSLZFC2ugeiN1nbnXj1830=
+X-Received: by 2002:a17:907:33ce:: with SMTP id zk14mr5810785ejb.84.1632411910279;
+ Thu, 23 Sep 2021 08:45:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210804132912.30685-1-kishon@ti.com> <20210804132912.30685-2-kishon@ti.com>
+ <YRapMFNb63MSPJ1E@robh.at.kernel.org> <d0f83129-4c9a-d9ff-380a-cab37a86e29e@ti.com>
+ <220bbd3c-304a-ba6a-d20e-634f23f4eed2@ti.com>
+In-Reply-To: <220bbd3c-304a-ba6a-d20e-634f23f4eed2@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 23 Sep 2021 10:44:57 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKTn8G1HiyBySOY-_SvX0NKzbZnpykDAjCpnEdb7GM6Sg@mail.gmail.com>
+Message-ID: <CAL_JsqKTn8G1HiyBySOY-_SvX0NKzbZnpykDAjCpnEdb7GM6Sg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: ti,j721e: Add bindings to
+ specify legacy interrupts
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2021-09-23 at 11:04 +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/22/21 11:30 PM, David E. Box wrote:
-> > This patch enables general support for Intel defined PCIe VSEC and DVSEC
-> > capabilities in the Intel Platform Monitoring Technology (PMT) driver.
-> > Though the driver was written exclusively for PMT capabilities, newer DVSEC
-> > and VSEC IDs for other capabilities can exist on the same device requiring
-> > that the driver handle them.
-> > 
-> > V3 is mostly a resend of V2. It drops a platform/x86 patch that was picked
-> > up separately by Hans in the last cycle. It also adds a new patch to
-> > support an upcoming capability.
-> > 
-> > David E. Box (5):
-> >   PCI: Add #defines for accessing PCIE DVSEC fields
-> >   MFD: intel_pmt: Support non-PMT capabilities
-> >   MFD: intel_pmt: Add support for PCIe VSEC structures
-> >   MFD: intel_pmt: Add DG2 support
-> >   MFD: intel_extended_cap: Add support for Intel SDSi
-> 
-> Since this mostly touches drivers/mfd/intel_pmt.c, I assume this is
-> going to get merged through the MFD trees.
+On Wed, Sep 22, 2021 at 11:33 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 18/08/21 7:28 pm, Kishon Vijay Abraham I wrote:
+> > Hi Rob,
+> >
+> > On 13/08/21 10:47 pm, Rob Herring wrote:
+> >> On Wed, Aug 04, 2021 at 06:59:10PM +0530, Kishon Vijay Abraham I wrote:
+> >>> Add bindings to specify interrupt controller for legacy interrupts.
+> >>>
+> >>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>> ---
+> >>>  .../bindings/pci/ti,j721e-pci-host.yaml           | 15 +++++++++++++++
+> >>>  1 file changed, 15 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> >>> index cc900202df29..f461d7b4c0cc 100644
+> >>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> >>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> >>> @@ -74,6 +74,11 @@ properties:
+> >>>
+> >>>    msi-map: true
+> >>>
+> >>> +patternProperties:
+> >>> +  "interrupt-controller":
+> >>
+> >> Not a pattern unless you meant for foo-interrupt-controller-bar to be
+> >> valid.
+> >>
+> >> Anything is allowed in the node?
+> >
+> > It's same as whatever is defined in schemas/interrupt-controller.yaml,
+> > just that it should be a subnode of pcie@. Should I add whatever is
+> > present in schemas/interrupt-controller.yaml here?
+>
+> Can you suggest how to include this?
 
-Yes. Thanks.
+You don't. List the properties you are using. You need to define the
+#interrupt-cells value for example. I'm sure there's already examples
+in the tree doing this same child node.
 
-> 
-> For the few small drivers/platform/x86 changes:
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> 
-> > 
-> >  drivers/mfd/intel_pmt.c                    | 258 +++++++++++++++------
-> >  drivers/platform/x86/intel/pmt/class.c     |   2 +
-> >  drivers/platform/x86/intel/pmt/crashlog.c  |   2 +-
-> >  drivers/platform/x86/intel/pmt/telemetry.c |   2 +-
-> >  include/uapi/linux/pci_regs.h              |   4 +
-> >  5 files changed, 191 insertions(+), 77 deletions(-)
-> > 
-> 
-
-
+Rob
