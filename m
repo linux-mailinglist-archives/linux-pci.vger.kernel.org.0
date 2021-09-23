@@ -2,184 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB13415BFE
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 12:33:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E52E415C2C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 12:46:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240314AbhIWKeo convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 23 Sep 2021 06:34:44 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3852 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231392AbhIWKeo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 06:34:44 -0400
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HFWdw4R79z67bWP;
-        Thu, 23 Sep 2021 18:30:44 +0800 (CST)
-Received: from lhreml717-chm.china.huawei.com (10.201.108.68) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 23 Sep 2021 12:33:10 +0200
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml717-chm.china.huawei.com (10.201.108.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 23 Sep 2021 11:33:10 +0100
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.008; Thu, 23 Sep 2021 11:33:10 +0100
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-CC:     Yishai Hadas <yishaih@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Kirti Wankhede" <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>
-Subject: RE: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Thread-Topic: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Thread-Index: AQHXr54pt96rmXk0YUaXSN2Kf89+2auxakgA
-Date:   Thu, 23 Sep 2021 10:33:10 +0000
-Message-ID: <42729adc4df649f7b3ce5dc95e66e2dc@huawei.com>
-References: <cover.1632305919.git.leonro@nvidia.com>
- <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
-In-Reply-To: <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.85.235]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S240400AbhIWKsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Sep 2021 06:48:19 -0400
+Received: from mail-ot1-f43.google.com ([209.85.210.43]:40761 "EHLO
+        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236299AbhIWKsT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 06:48:19 -0400
+Received: by mail-ot1-f43.google.com with SMTP id l16-20020a9d6a90000000b0053b71f7dc83so7905046otq.7;
+        Thu, 23 Sep 2021 03:46:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8FDqbPPfgY3pejKZetLrTHwXBJAmfhHC9zFdI7YO2gg=;
+        b=eELZEFCPIeNtaX8+OExCAYrdIsIbaAJpfI6PSkOcKYQkCGMtSHXZHt0Eu9lWftFmO4
+         mUlyFd0jQTU8yW8CqC7tL9oKSBEuXgyDRfhb1+Acrc4pV4YS4s2xxrMOzV1fht2M/uKt
+         tiN4qKlGzSzfTmxbLexlwf80uCVT/UrZ7GqIi4wyJ3b00+iMei3q/nx3xsgQWu2O0gay
+         bhu1HroC/zubEslp9oVORDLxnS99/QMKtBQYyUq7uHBrPM7m33N6c+npryvUrCCyHb1T
+         bZdu13jdB1aD0sNAclrftxMdWBHiXACVxBkELiA12AtaVZt2W6tGmALo5EitOdK2ymHT
+         AOaQ==
+X-Gm-Message-State: AOAM533eKgKaX8ZxGbaxqCQjpuooXaLuDh3029j8cafiBGf6Gts/vkHe
+        xIPvhoKxIZKZvPf3WLLZvvyzIsoo2zdp4h909XXbjYL6rEg=
+X-Google-Smtp-Source: ABdhPJz0pZcCTAPVYvqlS6jADguPIMCnyOId+dZCfiR7WnAoAofa60SkwdI2macPlm7ZJcg1N2DkCwotwpFasCNQHZY=
+X-Received: by 2002:a05:6830:165a:: with SMTP id h26mr3770156otr.301.1632394007773;
+ Thu, 23 Sep 2021 03:46:47 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20210916131739.1260552-1-kuba@kernel.org> <20210916150707.GA1611532@bjorn-Precision-5520>
+ <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net> <YURhL33YyXRMkdC6@hirez.programming.kicks-ass.net>
+ <87v92x775x.ffs@tglx> <82c1b753-586d-dadf-54de-6509e70a00ea@intel.com>
+ <87y27p65tz.ffs@tglx> <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
+ <87sfxwgsjy.ffs@tglx>
+In-Reply-To: <87sfxwgsjy.ffs@tglx>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Sep 2021 12:46:36 +0200
+Message-ID: <CAJZ5v0g2nNHSpckhx=KHpk1OAX0sHKpjh3hHmKbK9cPDQLH1vw@mail.gmail.com>
+Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake platform
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>, jose.souza@intel.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com, Stable <stable@vger.kernel.org>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Sep 23, 2021 at 12:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Wed, Sep 22 2021 at 22:27, Rafael J. Wysocki wrote:
+> > On Tue, Sep 21, 2021 at 10:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>
+> >> On Tue, Sep 21 2021 at 20:05, Rafael J. Wysocki wrote:
+> >> > On 9/19/2021 2:14 AM, Thomas Gleixner wrote:
+> >> >> What's the proper way to figure out whether PC10 is supported?
+> >> >
+> >> > I can't say without research.  I think it'd be sufficient to check if
+> >> > C10 is supported, because asking for it is the only way to get PC10.
+> >>
+> >> Do we have a common function for that or do I need to implement the
+> >> gazillionst CPUID query for that?
+> >
+> > intel_idle has intel_idle_verify_cstate() that works on MWAIT
+> > substates from CPUID.  It looks like this could be reused.
+>
+> Not to me. That's some cpuidle/intel_idle specific check which depends
+> on cpuidle_state_table
 
+No, it doesn't.  The only thing this depends on is mwait_substates
+which directly comes from the CPUID evaluation in intel_idle_init().
+The argument is an MWAIT hint, but it doesn't have to be one, it could
+be a state number.
 
-> -----Original Message-----
-> From: Leon Romanovsky [mailto:leon@kernel.org]
-> Sent: 22 September 2021 11:39
-> To: Doug Ledford <dledford@redhat.com>; Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Yishai Hadas <yishaih@nvidia.com>; Alex Williamson
-> <alex.williamson@redhat.com>; Bjorn Helgaas <bhelgaas@google.com>; David
-> S. Miller <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; Kirti
-> Wankhede <kwankhede@nvidia.com>; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
-> linux-rdma@vger.kernel.org; netdev@vger.kernel.org; Saeed Mahameed
-> <saeedm@nvidia.com>
-> Subject: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
-> transition validity
-> 
-> From: Yishai Hadas <yishaih@nvidia.com>
-> 
-> Add an API in the core layer to check migration state transition validity
-> as part of a migration flow.
-> 
-> The valid transitions follow the expected usage as described in
-> uapi/vfio.h and triggered by QEMU.
-> 
-> This ensures that all migration implementations follow a consistent
-> migration state machine.
-> 
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/vfio/vfio.c  | 41 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/vfio.h |  1 +
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index 3c034fe14ccb..c3ca33e513c8 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -1664,6 +1664,47 @@ static int vfio_device_fops_release(struct inode
-> *inode, struct file *filep)
->  	return 0;
->  }
-> 
-> +/**
-> + * vfio_change_migration_state_allowed - Checks whether a migration state
-> + *   transition is valid.
-> + * @new_state: The new state to move to.
-> + * @old_state: The old state.
-> + * Return: true if the transition is valid.
-> + */
-> +bool vfio_change_migration_state_allowed(u32 new_state, u32 old_state)
-> +{
-> +	enum { MAX_STATE = VFIO_DEVICE_STATE_RESUMING };
-> +	static const u8 vfio_from_state_table[MAX_STATE + 1][MAX_STATE + 1] = {
-> +		[VFIO_DEVICE_STATE_STOP] = {
-> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
-> +			[VFIO_DEVICE_STATE_RESUMING] = 1,
-> +		},
-> +		[VFIO_DEVICE_STATE_RUNNING] = {
-> +			[VFIO_DEVICE_STATE_STOP] = 1,
-> +			[VFIO_DEVICE_STATE_SAVING] = 1,
-> +			[VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RUNNING]
-> = 1,
+Anyway, this is just part of what is needed.
 
-Do we need to allow _RESUMING state here or not? As per the "State transitions"
-section from uapi/linux/vfio.h, 
+So the way to check the PC10 support is to get the mask of MWAIT
+substates from CPUID (like in intel_idle_init()) and check if there
+are any substates for C10 in that mask and check if PC10 is enabled in
+MSR_PKG_CST_CONFIG_CONTROL (like in sklh_idle_state_table_update()).
 
-" * 4. To start the resuming phase, the device state should be transitioned from
- *    the _RUNNING to the _RESUMING state."
+The MWAIT substates checking part could then be used by intel_idle
+(and maybe by ACPI idle too).
 
-IIRC, I have seen that transition happening on the destination dev while testing the 
-HiSilicon ACC dev migration. 
+> being set up which is not available during early boot.
 
-Thanks,
-Shameer
+> The question I was asking whether we have a central place where we can
+> retrieve such information w/o invoking CPUID over and over again and
+> applying voodoo checks on it.
+>
+> Obviously we don't, which sucks.
 
-> +		},
-> +		[VFIO_DEVICE_STATE_SAVING] = {
-> +			[VFIO_DEVICE_STATE_STOP] = 1,
-> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
-> +		},
-> +		[VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RUNNING] = {
-> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
-> +			[VFIO_DEVICE_STATE_SAVING] = 1,
-> +		},
-> +		[VFIO_DEVICE_STATE_RESUMING] = {
-> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
-> +			[VFIO_DEVICE_STATE_STOP] = 1,
-> +		},
-> +	};
-> +
-> +	if (new_state > MAX_STATE || old_state > MAX_STATE)
-> +		return false;
-> +
-> +	return vfio_from_state_table[old_state][new_state];
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_change_migration_state_allowed);
-> +
->  static long vfio_device_fops_unl_ioctl(struct file *filep,
->  				       unsigned int cmd, unsigned long arg)
->  {
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index b53a9557884a..e65137a708f1 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -83,6 +83,7 @@ extern struct vfio_device
-> *vfio_device_get_from_dev(struct device *dev);
->  extern void vfio_device_put(struct vfio_device *device);
-> 
->  int vfio_assign_device_set(struct vfio_device *device, void *set_id);
-> +bool vfio_change_migration_state_allowed(u32 new_state, u32 old_state);
-> 
->  /* events for the backend driver notify callback */
->  enum vfio_iommu_notify_type {
-> --
-> 2.31.1
-
+Well, nobody except for intel_idle wanted it, so there was not much
+point doing it centrally for just one user.
