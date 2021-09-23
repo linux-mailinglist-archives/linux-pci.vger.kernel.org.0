@@ -2,107 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E52E415C2C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 12:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 044ED415C83
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 13:06:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240400AbhIWKsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Sep 2021 06:48:19 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:40761 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236299AbhIWKsT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 06:48:19 -0400
-Received: by mail-ot1-f43.google.com with SMTP id l16-20020a9d6a90000000b0053b71f7dc83so7905046otq.7;
-        Thu, 23 Sep 2021 03:46:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8FDqbPPfgY3pejKZetLrTHwXBJAmfhHC9zFdI7YO2gg=;
-        b=eELZEFCPIeNtaX8+OExCAYrdIsIbaAJpfI6PSkOcKYQkCGMtSHXZHt0Eu9lWftFmO4
-         mUlyFd0jQTU8yW8CqC7tL9oKSBEuXgyDRfhb1+Acrc4pV4YS4s2xxrMOzV1fht2M/uKt
-         tiN4qKlGzSzfTmxbLexlwf80uCVT/UrZ7GqIi4wyJ3b00+iMei3q/nx3xsgQWu2O0gay
-         bhu1HroC/zubEslp9oVORDLxnS99/QMKtBQYyUq7uHBrPM7m33N6c+npryvUrCCyHb1T
-         bZdu13jdB1aD0sNAclrftxMdWBHiXACVxBkELiA12AtaVZt2W6tGmALo5EitOdK2ymHT
-         AOaQ==
-X-Gm-Message-State: AOAM533eKgKaX8ZxGbaxqCQjpuooXaLuDh3029j8cafiBGf6Gts/vkHe
-        xIPvhoKxIZKZvPf3WLLZvvyzIsoo2zdp4h909XXbjYL6rEg=
-X-Google-Smtp-Source: ABdhPJz0pZcCTAPVYvqlS6jADguPIMCnyOId+dZCfiR7WnAoAofa60SkwdI2macPlm7ZJcg1N2DkCwotwpFasCNQHZY=
-X-Received: by 2002:a05:6830:165a:: with SMTP id h26mr3770156otr.301.1632394007773;
- Thu, 23 Sep 2021 03:46:47 -0700 (PDT)
+        id S240491AbhIWLIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Sep 2021 07:08:06 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:9761 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240448AbhIWLIF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 07:08:05 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HFXPp6GcLzWN6B;
+        Thu, 23 Sep 2021 19:05:18 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Thu, 23 Sep 2021 19:06:30 +0800
+Subject: Re: [PATCH V9 4/8] PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe
+ Endpoint devices
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+References: <20210922133655.51811-1-liudongdong3@huawei.com>
+ <20210922133655.51811-5-liudongdong3@huawei.com> <YUwA5eC7wiDoHy0F@rocinante>
+CC:     <helgaas@kernel.org>, <hch@infradead.org>, <logang@deltatee.com>,
+        <leon@kernel.org>, <linux-pci@vger.kernel.org>,
+        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <cdd4b942-a9c3-9646-05fc-f55f587e3456@huawei.com>
+Date:   Thu, 23 Sep 2021 19:06:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20210916131739.1260552-1-kuba@kernel.org> <20210916150707.GA1611532@bjorn-Precision-5520>
- <YURb1bzc3L4gNI9Q@hirez.programming.kicks-ass.net> <YURhL33YyXRMkdC6@hirez.programming.kicks-ass.net>
- <87v92x775x.ffs@tglx> <82c1b753-586d-dadf-54de-6509e70a00ea@intel.com>
- <87y27p65tz.ffs@tglx> <CAJZ5v0iFoz=mjkMmtM3knUAVsbAnAb1RSr4WQ1jLHXSJa4R2Nw@mail.gmail.com>
- <87sfxwgsjy.ffs@tglx>
-In-Reply-To: <87sfxwgsjy.ffs@tglx>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 23 Sep 2021 12:46:36 +0200
-Message-ID: <CAJZ5v0g2nNHSpckhx=KHpk1OAX0sHKpjh3hHmKbK9cPDQLH1vw@mail.gmail.com>
-Subject: Re: [PATCH] x86/intel: Disable HPET on another Intel Coffee Lake platform
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>, jose.souza@intel.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com, Stable <stable@vger.kernel.org>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YUwA5eC7wiDoHy0F@rocinante>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 12:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+Hi Krzysztof
+
+Many thanks for your review.
+On 2021/9/23 12:21, Krzysztof Wilczyński wrote:
+> Hi,
 >
-> On Wed, Sep 22 2021 at 22:27, Rafael J. Wysocki wrote:
-> > On Tue, Sep 21, 2021 at 10:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> On Tue, Sep 21 2021 at 20:05, Rafael J. Wysocki wrote:
-> >> > On 9/19/2021 2:14 AM, Thomas Gleixner wrote:
-> >> >> What's the proper way to figure out whether PC10 is supported?
-> >> >
-> >> > I can't say without research.  I think it'd be sufficient to check if
-> >> > C10 is supported, because asking for it is the only way to get PC10.
-> >>
-> >> Do we have a common function for that or do I need to implement the
-> >> gazillionst CPUID query for that?
-> >
-> > intel_idle has intel_idle_verify_cstate() that works on MWAIT
-> > substates from CPUID.  It looks like this could be reused.
+> Thank you for sending the patch over!  A few small comments below.
 >
-> Not to me. That's some cpuidle/intel_idle specific check which depends
-> on cpuidle_state_table
-
-No, it doesn't.  The only thing this depends on is mwait_substates
-which directly comes from the CPUID evaluation in intel_idle_init().
-The argument is an MWAIT hint, but it doesn't have to be one, it could
-be a state number.
-
-Anyway, this is just part of what is needed.
-
-So the way to check the PC10 support is to get the mask of MWAIT
-substates from CPUID (like in intel_idle_init()) and check if there
-are any substates for C10 in that mask and check if PC10 is enabled in
-MSR_PKG_CST_CONFIG_CONTROL (like in sklh_idle_state_table_update()).
-
-The MWAIT substates checking part could then be used by intel_idle
-(and maybe by ACPI idle too).
-
-> being set up which is not available during early boot.
-
-> The question I was asking whether we have a central place where we can
-> retrieve such information w/o invoking CPUID over and over again and
-> applying voodoo checks on it.
+> [...]
+>> +static ssize_t pci_10bit_tag_store(struct device *dev,
+>> +				   struct device_attribute *attr,
+>> +				   const char *buf, size_t count)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	bool enable;
 >
-> Obviously we don't, which sucks.
+> Would you mind adding the following capabilities check here?
+OK, will do.
+>
+> 	if (!capable(CAP_SYS_ADMIN))
+> 		return -EPERM;
+>
+> This is so we make sure that whatever user is going to use this sysfs
+> attribute actually has enough permissions to update this value safely.
+>
+>> +	if (kstrtobool(buf, &enable) < 0)
+>> +		return -EINVAL;
+>> +
+>> +	if (pdev->driver)
+>> +		return -EBUSY;
+>> +
+>> +	if (enable) {
+>> +		if (!pcie_rp_10bit_tag_cmp_supported(pdev))
+>> +			return -EPERM;
+>
+> Would it make sense to also verify 10-Bit Tag Completer support on the
+> "disable" path too?   We won't be able to set a value if there is no
+> support, but nothing will stop us from clearing it regardless - unless
+> this would be safe to do?  What do you think?
+Seems make sense, Will do. It is better do the same thing on the
+"disable" path too.
+>
+>> +		pcie_capability_set_word(pdev, PCI_EXP_DEVCTL2,
+>> +				PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+>> +	} else {
+>> +		pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
+>> +				   PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+>> +	}
+>> +
+>> +	return count;
+>> +}
+>
+> [...]
+>> +> +static umode_t pcie_dev_10bit_tag_attrs_are_visible(struct kobject *kobj,
+>> +					  struct attribute *a, int n)
+>
+> The preferred function name for the .is_visible() callback in a case when
+> there is only a single sysfs attribute being added would be:
+>
+>   pcie_dev_10bit_tag_attr_is_visible()
+Will fix.
 
-Well, nobody except for intel_idle wanted it, so there was not much
-point doing it centrally for just one user.
+Thanks,
+Dongdong
+>
+> Albeit, I appreciate that you followed the existing naming pattern.
+>
+> 	Krzysztof
+> .
+>
