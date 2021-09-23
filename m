@@ -2,186 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19EEB4165A7
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 21:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2F54165FF
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 21:38:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242861AbhIWTJc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Sep 2021 15:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
+        id S242889AbhIWTkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Sep 2021 15:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242842AbhIWTJ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 15:09:27 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805F5C0613C1
-        for <linux-pci@vger.kernel.org>; Thu, 23 Sep 2021 12:07:54 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id x7so12187524edd.6
-        for <linux-pci@vger.kernel.org>; Thu, 23 Sep 2021 12:07:54 -0700 (PDT)
+        with ESMTP id S242796AbhIWTkN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 15:40:13 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA1FC061574;
+        Thu, 23 Sep 2021 12:38:41 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id eg28so27208597edb.1;
+        Thu, 23 Sep 2021 12:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wPA6Pkqk/8ab9RW5HZw193jEL/3tz5PDXJBPjTVJtdU=;
-        b=t1rPCUcoa8HEEbAcar5GeFzOJfqI7UfROKcFgIGMv00KZqB4bGNj1yz/Io6IQtZ9+Z
-         NusuDSgjdkYMBVPbv2Vf3ap3Dbmry0u8fptJLN2cjl3LD0YJiwSIuBvYwnbH0rpaioQF
-         s88qN4rAhn2A6bjocX70mp+3vXylM59wSuZYYWLOfUKeLAaAxF3Zwk8fzDO06/nV0A9+
-         HsVgP4O9uIzFx80rDBeCkIGHcNp1EPBKoNORwSEOCOnT2lOJA5lLnJNU7gfbyJ+41Gti
-         zD8XRqIUaiJOWJBUAoo8PMoRjsXYVqkGOPgNVTuehmVHE3E5VSK+CrreHU4ugQScViDj
-         7cjQ==
+         :cc:content-transfer-encoding;
+        bh=Crfq7oYAoG8JFMvE676pL0/iUOz+9stc+tHZex6JUT8=;
+        b=cTwmisMFk6jl3/R1y3X+8Z5iyEHo2ZdRB1yMYKKM+o2149w/B1kEX5riLeICq7Cfm7
+         6WlRbCQ8r8P+BkEODJukPxf71p8KudEYRpOWie6unCSIRQeqyPtYsjY7t4beiIx+7KW+
+         jD5CBYiJd/2380IvVnPLFudYD/JTWSsD736bTkmZcrttSPstI8dos/fKhMd0CIPOUi3t
+         gVQX5V3NLCXpvbRlrRIxsr8kQJ+QePWN5LRwY4XR1ruYGmFexwWpGK5QMvdZRRUUgeK7
+         /Z3TxXh38C1rMh9gMsHMavaqQG2pMpo60YaIk5KzkYqARy81mjTgUBtFqNuRoJNEH9kS
+         uRmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wPA6Pkqk/8ab9RW5HZw193jEL/3tz5PDXJBPjTVJtdU=;
-        b=oxW1N4uHShFGYD7Uwo6G+UlRTSfp1mdb7cfiWOlF3g+SqcjFrUt++s9lvXPbIi0Hne
-         xlNef20PB9pZWx3rMHnGTabDGO07KTw2eoB/Hitz/vejPxkBVvFSedkeSGBzpRt+X/7J
-         WVYWHiWXj9NHysQhR7VRRx/LmfDvpWWc9KS44bQOOGpovTXpATPEzsjCGcoWj/BESkTL
-         BZMfMRHINzd/kLkQuGuIBEcfjyXRgvXdIlnEvXiCBuX7ZYr/PqjcyViEWc/qWTYs9evP
-         GpOL2lFV26ewdETvzk0PtpjyfkzsLq2LQABzSrKLWVS4XpRctye+akKPdvUS2/yUtbt+
-         FCag==
-X-Gm-Message-State: AOAM532oHKNeZ0EZcxCEHHGWHnuT4H5rNjbRLEd/PxD4VaRguqcasWkB
-        nxVvsAtB/uEhVFh423Hc4EuCbhE4Yl7bMMUTdBsI
-X-Google-Smtp-Source: ABdhPJyHqn4EAltoJO7dd9O2Dz9oZ7VSNs98CCkrk2Tu48ZH4l2ycuGj+3CiT1FgWeVjeG1GWQpOD1Ti5aR3sTkLnrk=
-X-Received: by 2002:a50:cf48:: with SMTP id d8mr377146edk.293.1632424072663;
- Thu, 23 Sep 2021 12:07:52 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Crfq7oYAoG8JFMvE676pL0/iUOz+9stc+tHZex6JUT8=;
+        b=P1RYhtVPzkcgrdkmStDfoxPq/Vlh/VD8h3IT+X7KFSwSRRz7/lIGiIAt2iVbYOCxEH
+         7jTrRGExzvGgwrMNXvgeOr9VuioaOuBx//f+LxDIEqNIGhfwbZBNrQ2B0p64btmghlfK
+         lS4KUf2iNtLgPqR0ektD2ljVppMoQ4uBnBg8e/hkSq2+JHtY9Dx4WjgS4iBz+F6Fcv2g
+         VtUgo+av3Fxvg7Ply3yDe0lpP5e43MIRl8WUxLskIGcaclY4jG00f+8MCyPDGM5GAYbu
+         OKhbscbI6fUnYWd68lkUOTksYcQKFMPIkfmUL2k1f30qp5ae5bTuKIaHYMKbXolAZOqd
+         PvkQ==
+X-Gm-Message-State: AOAM531M6o5d0hrjouMEDkmrMsE9jmMNpeNzCb92kPoBXrNc2em1XMuS
+        A/tZIUUYEXFliPm1E0r2u6BXoazfGVAEaJ7YMhg=
+X-Google-Smtp-Source: ABdhPJwyduLxYBBHBlpBM0b3Dvma9HOOm0+aDOcKahAlaet7awvdEC8JhTHGJRUUIw/qqtvgoDJUZw+wkVxNjdjdLuM=
+X-Received: by 2002:a17:906:2887:: with SMTP id o7mr7053776ejd.425.1632425920308;
+ Thu, 23 Sep 2021 12:38:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210913140229.24797-1-omosnace@redhat.com> <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
- <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhQyejnmLn0NHQiWzikHs8ZdzAUdZ2WqNxgGM6xhJ4mvMQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 23 Sep 2021 15:07:41 -0400
-Message-ID: <CAHC9VhSzh90kFR8wzkmwR-YZNtHGAvYyATc2R1UDaBzZ944OFg@mail.gmail.com>
-Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Dan Williams <dan.j.williams@intel.com>
+References: <20210830123704.221494-1-verdre@v0yd.nl> <20210830123704.221494-2-verdre@v0yd.nl>
+ <CA+ASDXPKZ0i5Bi11Q=qqppY8OCgw=7m0dnPn0s+y+GAvvQodog@mail.gmail.com>
+ <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
+ <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+ <YS/rn8b0O3FPBbtm@google.com> <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
+ <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
+ <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl> <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
+In-Reply-To: <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Sep 2021 22:37:40 +0300
+Message-ID: <CAHp75VdRWd9Oj_68BqewAdjtzhRz406eh=4M7FmjRvqhkaWaOw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
+To:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 15, 2021 at 10:59 PM Paul Moore <paul@paul-moore.com> wrote:
+On Thu, Sep 23, 2021 at 6:28 PM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote:
 >
-> On Mon, Sep 13, 2021 at 5:05 PM Paul Moore <paul@paul-moore.com> wrote:
+> On 9/22/21 2:50 PM, Jonas Dre=C3=9Fler wrote:
+> > On 9/20/21 7:48 PM, Brian Norris wrote:
+> >> On Sat, Sep 18, 2021 at 12:37 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> w=
+rote:
+> >>> Thanks for the pointer to that commit Brian, it turns out this is
+> >>> actually the change that causes the "Firmware wakeup failed" issues t=
+hat
+> >>> I'm trying to fix with the second patch here.
+> >>
+> >> Huh. That's interesting, although I guess it makes some sense given
+> >> your theory of "dropped writes". FWIW, this strategy (post a single
+> >> write, then wait for wakeup) is the same used by some other
+> >> chips/drivers too (e.g., ath10k/pci), although in those cases card
+> >> wakeup is much much faster. But if the bus was dropping writes
+> >> somehow, those strategies would fail too.
+> >>
+> >>> Also my approach is a lot messier than just reverting
+> >>> 062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3 and also appears to be block=
+ing
+> >>> even longer...
+> >>
+> >> For the record, in case you're talking about my data ("blocking even
+> >> longer"): I was only testing patch 1. Patch 2 isn't really relevant to
+> >> my particular systems (Rockchip RK3399 + Marvell 8997/PCIe), because
+> >> (a) I'm pretty sure my system isn't "dropping" any reads or writes
+> >> (b) all my delay is in the read-back; the Rockchip PCIe bus is waiting
+> >> indefinitely for the card to wake up, instead of timing out and
+> >> reporting all-1's like many x86 systems appear to do (I've tested
+> >> this).
+> >>
+> >> So, the 6ms delay is entirely sitting in the ioread32(), not a delay
+> >> loop.
+> >>
+> >> I haven't yet tried your version 2 (which avoids the blocking read to
+> >> wake up; good!), but it sounds like in theory it could solve your
+> >> problem while avoiding 6ms delays for me. I intend to test your v2
+> >> this week.
+> >>
 > >
-> > On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > >
-> > > Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> > > lockdown") added an implementation of the locked_down LSM hook to
-> > > SELinux, with the aim to restrict which domains are allowed to perform
-> > > operations that would breach lockdown.
-> > >
-> > > However, in several places the security_locked_down() hook is called in
-> > > situations where the current task isn't doing any action that would
-> > > directly breach lockdown, leading to SELinux checks that are basically
-> > > bogus.
-> > >
-> > > To fix this, add an explicit struct cred pointer argument to
-> > > security_lockdown() and define NULL as a special value to pass instead
-> > > of current_cred() in such situations. LSMs that take the subject
-> > > credentials into account can then fall back to some default or ignore
-> > > such calls altogether. In the SELinux lockdown hook implementation, use
-> > > SECINITSID_KERNEL in case the cred argument is NULL.
-> > >
-> > > Most of the callers are updated to pass current_cred() as the cred
-> > > pointer, thus maintaining the same behavior. The following callers are
-> > > modified to pass NULL as the cred pointer instead:
-> > > 1. arch/powerpc/xmon/xmon.c
-> > >      Seems to be some interactive debugging facility. It appears that
-> > >      the lockdown hook is called from interrupt context here, so it
-> > >      should be more appropriate to request a global lockdown decision.
-> > > 2. fs/tracefs/inode.c:tracefs_create_file()
-> > >      Here the call is used to prevent creating new tracefs entries when
-> > >      the kernel is locked down. Assumes that locking down is one-way -
-> > >      i.e. if the hook returns non-zero once, it will never return zero
-> > >      again, thus no point in creating these files. Also, the hook is
-> > >      often called by a module's init function when it is loaded by
-> > >      userspace, where it doesn't make much sense to do a check against
-> > >      the current task's creds, since the task itself doesn't actually
-> > >      use the tracing functionality (i.e. doesn't breach lockdown), just
-> > >      indirectly makes some new tracepoints available to whoever is
-> > >      authorized to use them.
-> > > 3. net/xfrm/xfrm_user.c:copy_to_user_*()
-> > >      Here a cryptographic secret is redacted based on the value returned
-> > >      from the hook. There are two possible actions that may lead here:
-> > >      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
-> > >         task context is relevant, since the dumped data is sent back to
-> > >         the current task.
-> > >      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
-> > >         dumped SA is broadcasted to tasks subscribed to XFRM events -
-> > >         here the current task context is not relevant as it doesn't
-> > >         represent the tasks that could potentially see the secret.
-> > >      It doesn't seem worth it to try to keep using the current task's
-> > >      context in the a) case, since the eventual data leak can be
-> > >      circumvented anyway via b), plus there is no way for the task to
-> > >      indicate that it doesn't care about the actual key value, so the
-> > >      check could generate a lot of "false alert" denials with SELinux.
-> > >      Thus, let's pass NULL instead of current_cred() here faute de
-> > >      mieux.
-> > >
-> > > Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> > > Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> > > Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
-> > > Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
-> > > Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >
-> > > v4:
-> > > - rebase on top of TODO
-> > > - fix rebase conflicts:
-> > >   * drivers/cxl/pci.c
-> > >     - trivial: the lockdown reason was corrected in mainline
-> > >   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
-> > >     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
-> > >       in mainline
-> > >   * kernel/power/hibernate.c
-> > >     - trivial: !secretmem_active() was added to the condition in
-> > >       hibernation_available()
-> > > - cover new security_locked_down() call in kernel/bpf/helpers.c
-> > >   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
-> > >
-> > > v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
-> > > - add the cred argument to security_locked_down() and adapt all callers
-> > > - keep using current_cred() in BPF, as the hook calls have been shifted
-> > >   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
-> > >   buggy SELinux lockdown permission checks"))
-> > > - in SELinux, don't ignore hook calls where cred == NULL, but use
-> > >   SECINITSID_KERNEL as the subject instead
-> > > - update explanations in the commit message
-> > >
-> > > v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> > > - change to a single hook based on suggestions by Casey Schaufler
-> > >
-> > > v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
+> > With "blocking even longer" I meant that (on my system) the delay-loop
+> > blocks even longer than waking up the card via mwifiex_read_reg() (both
+> > are in the orders of milliseconds). And given that in certain cases the
+> > card wakeup (or a write getting through to the card, I have no idea) ca=
+n
+> > take extremely long, I'd feel more confident going with the
+> > mwifiex_read_reg() method to wake up the card.
 > >
-> > The changes between v3 and v4 all seem sane to me, but I'm going to
-> > let this sit for a few days in hopes that we can collect a few more
-> > Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
-> > mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
-> > after it goes through a build/test cycle.
+> > Anyway, you know what's even weirder with all this: I've been testing
+> > the first commit of patch v2 (so just the single read-back instead of
+> > the big hammer) together with 062e008a6e83e7c4da7df0a9c6aefdbc849e2bb3
+> > reverted for a good week now and haven't seen any wakeup failure yet.
+> > Otoh I'm fairly sure the big hammer with reading back every write wasn'=
+t
+> > enough to fix the wakeup failures, otherwise I wouldn't even have
+> > started working on the second commit.
+> >
+> > So that would mean there's a difference between writing and then readin=
+g
+> > back vs only reading to wake up the card: Only the latter fixes the
+> > wakeup failures.
+> >
+> >>> Does anyone have an idea what could be the reason for the posted writ=
+e
+> >>> not going through, or could that also be a potential firmware bug in =
+the
+> >>> chip?
+> >>
+> >> I have no clue about that. That does sound downright horrible, but so
+> >> are many things when dealing with this family of hardware/firmware.
+> >> I'm not sure how to prove out whether this is a host bus problem, or
+> >> an endpoint/firmware problem, other than perhaps trying the same
+> >> module/firmware on another system, if that's possible.
+> >>
+> >> Anyway, to reiterate: I'm not fundamentally opposed to v2 (pending a
+> >> test run here), even if it is a bit ugly and perhaps not 100%
+> >> understood.
+> >>
+> >
+> > I'm not 100% sure about all this yet, I think I'm gonna try to confirm
+> > my older findings once again now and then we'll see. FTR, would you be
+> > fine with using the mwifiex_read_reg() method to wake up the card and
+> > somehow quirking your system to use write_reg()?
+> >
+> >> Brian
+> >>
+> >
 >
-> Time's up, I just merged this into selinux/stable-5.15 and I'll send
-> this to Linus once it passes testing.
+> Okay, so I finally managed to find my exact reproducer for the bug again:
+>
+> 1) Make sure wifi powersaving is enabled (iw dev wlp1s0 set power_save on=
+)
+> 2) Connect to any wifi network (makes firmware go into wifi powersaving
+> mode, not deep sleep)
+> 3) Make sure bluetooth is turned off (to ensure the firmware actually
+> enters powersave mode and doesn't keep the radio active doing bluetooth
+> stuff)
+> 4) To confirm that wifi powersaving is entered ping a device on the LAN,
+> pings should be a few ms higher than without powersaving
+> 5) Run "while true; do iwconfig; sleep 0.0001; done", this wakes and
+> suspends the firmware extremely often
+> 6) Wait until things explode, for me it consistently takes <5 minutes
+>
+> Using this reproducer I was able to clear things up a bit:
+>
+> - There still are wakeup failures when using (only) mwifiex_read_reg()
+> to wake the card, so there's no weird difference between waking up using
+> read vs write+read-back
+>
+> - Just calling mwifiex_write_reg() once and then blocking until the card
+> wakes up using my delay-loop doesn't fix the issue, it's actually
+> writing multiple times that fixes the issue
+>
+> These observations sound a lot like writes (and even reads) are actually
+> being dropped, don't they?
 
-... and it's back out of selinux/stable-5.15 in spectacular fashion.
-I'll be following up with another SELinux patch today or tomorrow.
 
--- 
-paul moore
-www.paul-moore.com
+
+--=20
+With Best Regards,
+Andy Shevchenko
