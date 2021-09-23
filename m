@@ -2,111 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 811AE415760
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 06:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D625415794
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Sep 2021 06:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbhIWEXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Sep 2021 00:23:33 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:36509 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbhIWEXa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 00:23:30 -0400
-Received: by mail-wr1-f44.google.com with SMTP id g16so13238364wrb.3;
-        Wed, 22 Sep 2021 21:21:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lz+dbdxsH1ZK2pJhZeOXoDpDI3RmHY4duyLP2ZtdPes=;
-        b=niROZRJZblJAKdI37jP2F2K37/sABAL9P2ptilWWr2Eb9o/B/0PyRJUswriK4MnMWu
-         ecK9Q/+naf4fjAeNvJkGQ8gw+8UeRS8HSSBRQ8mBCBSMW9IVNF0Fvys9wkM2hXBC27fm
-         VNVKn6rEr5qWM0FPXRDDeCMiUU336Y7hgHpdtZb3PIZSDWTzRKvzY/9vpU23XatoAizm
-         R1SYrEIk2vp7boHs81qjN63AsDSVYRsCUNyPpq3u1f1R4IBnbw8a6/Dx8iWKwj3J72ZL
-         X9i1wSGsNcnNEZ/iNFOLU663qjjx0sqoTSChEjluDqwW8x6cKaLFKtmiK7n7SYC++lKN
-         JhjA==
-X-Gm-Message-State: AOAM530Nn/yUuoOyu9CL6qSfHnnN1e5w1qOAFkP9vVZCpnsW4EzLgXiQ
-        COtqjacZzLx6G2PneGVB/yrR+sAlrU1zew==
-X-Google-Smtp-Source: ABdhPJz2YNKJT1U4yPmQDRoWT5cGQdrgZF6UEz/a9GlZwZUP4EthrMuQMXmFEee07caR0m4083vX1w==
-X-Received: by 2002:adf:f789:: with SMTP id q9mr2497783wrp.367.1632370918780;
-        Wed, 22 Sep 2021 21:21:58 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f19sm3765545wmf.11.2021.09.22.21.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Sep 2021 21:21:58 -0700 (PDT)
-Date:   Thu, 23 Sep 2021 06:21:57 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     helgaas@kernel.org, hch@infradead.org, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V9 4/8] PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe
- Endpoint devices
-Message-ID: <YUwA5eC7wiDoHy0F@rocinante>
-References: <20210922133655.51811-1-liudongdong3@huawei.com>
- <20210922133655.51811-5-liudongdong3@huawei.com>
+        id S232159AbhIWEfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Sep 2021 00:35:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59286 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229504AbhIWEfd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Sep 2021 00:35:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18N4Xp8h080818;
+        Wed, 22 Sep 2021 23:33:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1632371631;
+        bh=PEu1m0OtQZTIGJy7M0ri4vULRx7aaNibAq8x1p3ykys=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=xU0q1WSYv4UZuKeHK3get+fip2OY+Kq9GofTMfKAmFEpSMBoAOVKphjWSglrhb45i
+         P33cbunfqZzZdsBL/zXtbzq9JdwIJtWxZAhxUQqnDWhH9hMIhWqoztEiUD6uByFPLA
+         rt6QRV9i/PT5oVdsafjEyR4xXOUfdffqImz3cdDo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18N4Xpa5052074
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Sep 2021 23:33:51 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Wed, 22
+ Sep 2021 23:33:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Wed, 22 Sep 2021 23:33:50 -0500
+Received: from [10.250.234.35] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 18N4XkHc080721;
+        Wed, 22 Sep 2021 23:33:47 -0500
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: ti,j721e: Add bindings to
+ specify legacy interrupts
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>, <linux-omap@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+References: <20210804132912.30685-1-kishon@ti.com>
+ <20210804132912.30685-2-kishon@ti.com> <YRapMFNb63MSPJ1E@robh.at.kernel.org>
+ <d0f83129-4c9a-d9ff-380a-cab37a86e29e@ti.com>
+Message-ID: <220bbd3c-304a-ba6a-d20e-634f23f4eed2@ti.com>
+Date:   Thu, 23 Sep 2021 10:03:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210922133655.51811-5-liudongdong3@huawei.com>
+In-Reply-To: <d0f83129-4c9a-d9ff-380a-cab37a86e29e@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-Thank you for sending the patch over!  A few small comments below.
+On 18/08/21 7:28 pm, Kishon Vijay Abraham I wrote:
+> Hi Rob,
+> 
+> On 13/08/21 10:47 pm, Rob Herring wrote:
+>> On Wed, Aug 04, 2021 at 06:59:10PM +0530, Kishon Vijay Abraham I wrote:
+>>> Add bindings to specify interrupt controller for legacy interrupts.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  .../bindings/pci/ti,j721e-pci-host.yaml           | 15 +++++++++++++++
+>>>  1 file changed, 15 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>>> index cc900202df29..f461d7b4c0cc 100644
+>>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>>> @@ -74,6 +74,11 @@ properties:
+>>>  
+>>>    msi-map: true
+>>>  
+>>> +patternProperties:
+>>> +  "interrupt-controller":
+>>
+>> Not a pattern unless you meant for foo-interrupt-controller-bar to be 
+>> valid.
+>>
+>> Anything is allowed in the node?
+> 
+> It's same as whatever is defined in schemas/interrupt-controller.yaml,
+> just that it should be a subnode of pcie@. Should I add whatever is
+> present in schemas/interrupt-controller.yaml here?
 
-[...]
-> +static ssize_t pci_10bit_tag_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enable;
+Can you suggest how to include this?
 
-Would you mind adding the following capabilities check here?
+Thanks,
+Kishon
 
-	if (!capable(CAP_SYS_ADMIN))
-		return -EPERM;
-
-This is so we make sure that whatever user is going to use this sysfs
-attribute actually has enough permissions to update this value safely.
-
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	if (pdev->driver)
-> +		return -EBUSY;
-> +
-> +	if (enable) {
-> +		if (!pcie_rp_10bit_tag_cmp_supported(pdev))
-> +			return -EPERM;
-
-Would it make sense to also verify 10-Bit Tag Completer support on the
-"disable" path too?   We won't be able to set a value if there is no
-support, but nothing will stop us from clearing it regardless - unless
-this would be safe to do?  What do you think?
-
-> +		pcie_capability_set_word(pdev, PCI_EXP_DEVCTL2,
-> +				PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-> +	} else {
-> +		pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
-> +				   PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
-> +	}
-> +
-> +	return count;
-> +}
-
-[...]
-> +> +static umode_t pcie_dev_10bit_tag_attrs_are_visible(struct kobject *kobj,
-> +					  struct attribute *a, int n)
-
-The preferred function name for the .is_visible() callback in a case when
-there is only a single sysfs attribute being added would be:
-
-  pcie_dev_10bit_tag_attr_is_visible()
-
-Albeit, I appreciate that you followed the existing naming pattern.
-
-	Krzysztof
+> 
+> Thanks
+> Kishon
+>>
+>>> +    type: object
+>>> +    description: interrupt controller to handle legacy interrupts.
+>>> +
+>>>  required:
+>>>    - compatible
+>>>    - reg
+>>> @@ -97,6 +102,8 @@ unevaluatedProperties: false
+>>>  
+>>>  examples:
+>>>    - |
+>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>>>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>>>      #include <dt-bindings/gpio/gpio.h>
+>>>  
+>>> @@ -131,5 +138,13 @@ examples:
+>>>              ranges = <0x01000000 0x0 0x10001000  0x00 0x10001000  0x0 0x0010000>,
+>>>                       <0x02000000 0x0 0x10011000  0x00 0x10011000  0x0 0x7fef000>;
+>>>              dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+>>> +
+>>> +
+>>> +            pcie0_intc: interrupt-controller {
+>>> +                    interrupt-controller;
+>>> +                    #interrupt-cells = <1>;
+>>> +                    interrupt-parent = <&gic500>;
+>>> +                    interrupts = <GIC_SPI 312 IRQ_TYPE_EDGE_RISING>;
+>>> +            };
+>>>          };
+>>>      };
+>>> -- 
+>>> 2.17.1
+>>>
+>>>
