@@ -2,186 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 827CA416D04
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 09:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4257416D7B
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 10:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244450AbhIXHqN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Sep 2021 03:46:13 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:9919 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235134AbhIXHqM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Sep 2021 03:46:12 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HG3pW0xk5z8ymX;
-        Fri, 24 Sep 2021 15:40:03 +0800 (CST)
-Received: from kwepemm000008.china.huawei.com (7.193.23.125) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 24 Sep 2021 15:44:37 +0800
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- kwepemm000008.china.huawei.com (7.193.23.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 24 Sep 2021 15:44:36 +0800
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.008; Fri, 24 Sep 2021 08:44:34 +0100
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S236281AbhIXIOS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Sep 2021 04:14:18 -0400
+Received: from mx1.tq-group.com ([93.104.207.81]:36044 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234880AbhIXIOR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Sep 2021 04:14:17 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Sep 2021 04:14:17 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1632471165; x=1664007165;
+  h=from:to:cc:subject:date:message-id;
+  bh=qJ9EaKrEBGYgsWxnX3MhIVjCcoom979TP/eYeQZJVsI=;
+  b=DFxsgM6lHkbUGJCM813dQBx/G7mG/tNbZzQG215bO65sK4tdoSMVCveg
+   JysmJZKBvJYZA8pLw0VolxxPB853HxyJ6ikK/F3NmrUIzeHHoe/kWArnO
+   IkIKZKMrsAp4rp/dP9FzDQlYEeZy2hkHSCuoe1JZJZkvZxXKwrb4Q7J83
+   b6i7dKYEFDvo99oAEpEJ8DMXi4IQiVT5kVDhbqHzLv7hGvuWrR/g7vy6n
+   DOoo/LicCQkBeSuYoXXksKzxbT2lqBoM4wv9YqrXN+uzg0j3BNCkcS55S
+   IJhXbrMyhPK2Nlh5V57mgH5HInGZSYZkMZm5JTLqm7hVI9+JLwG4xv8ZR
+   A==;
+X-IronPort-AV: E=Sophos;i="5.85,319,1624312800"; 
+   d="scan'208";a="19688819"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 24 Sep 2021 10:05:36 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 24 Sep 2021 10:05:36 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 24 Sep 2021 10:05:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1632470736; x=1664006736;
+  h=from:to:cc:subject:date:message-id;
+  bh=qJ9EaKrEBGYgsWxnX3MhIVjCcoom979TP/eYeQZJVsI=;
+  b=G+K+9oePcnlrWNSApGGgorKYm/XRgB96idXqguVWevM+PMP/4j5VT+sp
+   wupae+BbV1GttIDMJFizskDq/22u2gqBEHql24nn5xtwq3Btb/9nZR494
+   OZRv9KG0l4mpJiZai0FCPc7HmpJ8k87rJM0eGHf7Lt9WWkoSszw+UduOY
+   GES2xpzhrfOM3mF8GRrcuTw1p8yB64o2gBE9JKbeX9TexfzDuNdgfbB3o
+   gzkI570Rg9pE+kWE5BCN1o//itdZTPhhdvjevbI+ALNIVzjWRFGgqWt7A
+   W/lMzbAnyfpF0c462Cd2GA+sZw3MnNGmCATAnHL8tKCh/y2Ou3/Kgsslh
+   w==;
+X-IronPort-AV: E=Sophos;i="5.85,319,1624312800"; 
+   d="scan'208";a="19688818"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 24 Sep 2021 10:05:36 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.121.48.12])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 3DC38280070;
+        Fri, 24 Sep 2021 10:05:36 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Kirti Wankhede" <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        liulongfang <liulongfang@huawei.com>
-Subject: RE: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Thread-Topic: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Thread-Index: AQHXr54pt96rmXk0YUaXSN2Kf89+2auxakgA///+2wCAACw6gIABM1JQ
-Date:   Fri, 24 Sep 2021 07:44:34 +0000
-Message-ID: <164439bb579d41639edf9a01a538a5ef@huawei.com>
-References: <cover.1632305919.git.leonro@nvidia.com>
- <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
- <42729adc4df649f7b3ce5dc95e66e2dc@huawei.com> <YUxiPqShZT4bk0uL@unreal>
- <60989aa8-4231-0cdf-47bb-1e2026bd1f17@nvidia.com>
-In-Reply-To: <60989aa8-4231-0cdf-47bb-1e2026bd1f17@nvidia.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.91.242]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Subject: [RFC] PCI: imx6: add support for internal oscillator on i.MX7D
+Date:   Fri, 24 Sep 2021 10:05:15 +0200
+Message-Id: <81c77a29362433fc5629ada442f0489046ce1051.1632319151.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF4IEd1cnRvdm95IFtt
-YWlsdG86bWd1cnRvdm95QG52aWRpYS5jb21dDQo+IFNlbnQ6IDIzIFNlcHRlbWJlciAyMDIxIDE0
-OjU2DQo+IFRvOiBMZW9uIFJvbWFub3Zza3kgPGxlb25Aa2VybmVsLm9yZz47IFNoYW1lZXJhbGkg
-S29sb3RodW0gVGhvZGkNCj4gPHNoYW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT4N
-Cj4gQ2M6IERvdWcgTGVkZm9yZCA8ZGxlZGZvcmRAcmVkaGF0LmNvbT47IEphc29uIEd1bnRob3Jw
-ZQ0KPiA8amdnQG52aWRpYS5jb20+OyBZaXNoYWkgSGFkYXMgPHlpc2hhaWhAbnZpZGlhLmNvbT47
-IEFsZXggV2lsbGlhbXNvbg0KPiA8YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb20+OyBCam9ybiBI
-ZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPjsgRGF2aWQNCj4gUy4gTWlsbGVyIDxkYXZlbUBk
-YXZlbWxvZnQubmV0PjsgSmFrdWIgS2ljaW5za2kgPGt1YmFAa2VybmVsLm9yZz47IEtpcnRpDQo+
-IFdhbmtoZWRlIDxrd2Fua2hlZGVAbnZpZGlhLmNvbT47IGt2bUB2Z2VyLmtlcm5lbC5vcmc7DQo+
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LXJkbWFAdmdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBT
-YWVlZCBNYWhhbWVlZA0KPiA8c2FlZWRtQG52aWRpYS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggbWx4NS1uZXh0IDIvN10gdmZpbzogQWRkIGFuIEFQSSB0byBjaGVjayBtaWdyYXRpb24gc3Rh
-dGUNCj4gdHJhbnNpdGlvbiB2YWxpZGl0eQ0KPiANCj4gDQo+IE9uIDkvMjMvMjAyMSAyOjE3IFBN
-LCBMZW9uIFJvbWFub3Zza3kgd3JvdGU6DQo+ID4gT24gVGh1LCBTZXAgMjMsIDIwMjEgYXQgMTA6
-MzM6MTBBTSArMDAwMCwgU2hhbWVlcmFsaSBLb2xvdGh1bSBUaG9kaQ0KPiB3cm90ZToNCj4gPj4N
-Cj4gPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+PiBGcm9tOiBMZW9uIFJvbWFu
-b3Zza3kgW21haWx0bzpsZW9uQGtlcm5lbC5vcmddDQo+ID4+PiBTZW50OiAyMiBTZXB0ZW1iZXIg
-MjAyMSAxMTozOQ0KPiA+Pj4gVG86IERvdWcgTGVkZm9yZCA8ZGxlZGZvcmRAcmVkaGF0LmNvbT47
-IEphc29uIEd1bnRob3JwZQ0KPiA8amdnQG52aWRpYS5jb20+DQo+ID4+PiBDYzogWWlzaGFpIEhh
-ZGFzIDx5aXNoYWloQG52aWRpYS5jb20+OyBBbGV4IFdpbGxpYW1zb24NCj4gPj4+IDxhbGV4Lndp
-bGxpYW1zb25AcmVkaGF0LmNvbT47IEJqb3JuIEhlbGdhYXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+
-Ow0KPiBEYXZpZA0KPiA+Pj4gUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgSmFrdWIg
-S2ljaW5za2kgPGt1YmFAa2VybmVsLm9yZz47IEtpcnRpDQo+ID4+PiBXYW5raGVkZSA8a3dhbmto
-ZWRlQG52aWRpYS5jb20+OyBrdm1Admdlci5rZXJuZWwub3JnOw0KPiA+Pj4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gPj4+IGxpbnV4
-LXJkbWFAdmdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBTYWVlZCBNYWhh
-bWVlZA0KPiA+Pj4gPHNhZWVkbUBudmlkaWEuY29tPg0KPiA+Pj4gU3ViamVjdDogW1BBVENIIG1s
-eDUtbmV4dCAyLzddIHZmaW86IEFkZCBhbiBBUEkgdG8gY2hlY2sgbWlncmF0aW9uIHN0YXRlDQo+
-ID4+PiB0cmFuc2l0aW9uIHZhbGlkaXR5DQo+ID4+Pg0KPiA+Pj4gRnJvbTogWWlzaGFpIEhhZGFz
-IDx5aXNoYWloQG52aWRpYS5jb20+DQo+ID4+Pg0KPiA+Pj4gQWRkIGFuIEFQSSBpbiB0aGUgY29y
-ZSBsYXllciB0byBjaGVjayBtaWdyYXRpb24gc3RhdGUgdHJhbnNpdGlvbiB2YWxpZGl0eQ0KPiA+
-Pj4gYXMgcGFydCBvZiBhIG1pZ3JhdGlvbiBmbG93Lg0KPiA+Pj4NCj4gPj4+IFRoZSB2YWxpZCB0
-cmFuc2l0aW9ucyBmb2xsb3cgdGhlIGV4cGVjdGVkIHVzYWdlIGFzIGRlc2NyaWJlZCBpbg0KPiA+
-Pj4gdWFwaS92ZmlvLmggYW5kIHRyaWdnZXJlZCBieSBRRU1VLg0KPiA+Pj4NCj4gPj4+IFRoaXMg
-ZW5zdXJlcyB0aGF0IGFsbCBtaWdyYXRpb24gaW1wbGVtZW50YXRpb25zIGZvbGxvdyBhIGNvbnNp
-c3RlbnQNCj4gPj4+IG1pZ3JhdGlvbiBzdGF0ZSBtYWNoaW5lLg0KPiA+Pj4NCj4gPj4+IFNpZ25l
-ZC1vZmYtYnk6IFlpc2hhaSBIYWRhcyA8eWlzaGFpaEBudmlkaWEuY29tPg0KPiA+Pj4gUmV2aWV3
-ZWQtYnk6IEtpcnRpIFdhbmtoZWRlIDxrd2Fua2hlZGVAbnZpZGlhLmNvbT4NCj4gPj4+IFNpZ25l
-ZC1vZmYtYnk6IEphc29uIEd1bnRob3JwZSA8amdnQG52aWRpYS5jb20+DQo+ID4+PiBTaWduZWQt
-b2ZmLWJ5OiBMZW9uIFJvbWFub3Zza3kgPGxlb25yb0BudmlkaWEuY29tPg0KPiA+Pj4gLS0tDQo+
-ID4+PiAgIGRyaXZlcnMvdmZpby92ZmlvLmMgIHwgNDENCj4gKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysNCj4gPj4+ICAgaW5jbHVkZS9saW51eC92ZmlvLmggfCAgMSAr
-DQo+ID4+PiAgIDIgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4NCj4gPj4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZmaW8vdmZpby5jIGIvZHJpdmVycy92ZmlvL3ZmaW8uYw0K
-PiA+Pj4gaW5kZXggM2MwMzRmZTE0Y2NiLi5jM2NhMzNlNTEzYzggMTAwNjQ0DQo+ID4+PiAtLS0g
-YS9kcml2ZXJzL3ZmaW8vdmZpby5jDQo+ID4+PiArKysgYi9kcml2ZXJzL3ZmaW8vdmZpby5jDQo+
-ID4+PiBAQCAtMTY2NCw2ICsxNjY0LDQ3IEBAIHN0YXRpYyBpbnQgdmZpb19kZXZpY2VfZm9wc19y
-ZWxlYXNlKHN0cnVjdA0KPiBpbm9kZQ0KPiA+Pj4gKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlsZXAp
-DQo+ID4+PiAgIAlyZXR1cm4gMDsNCj4gPj4+ICAgfQ0KPiA+Pj4NCj4gPj4+ICsvKioNCj4gPj4+
-ICsgKiB2ZmlvX2NoYW5nZV9taWdyYXRpb25fc3RhdGVfYWxsb3dlZCAtIENoZWNrcyB3aGV0aGVy
-IGEgbWlncmF0aW9uDQo+IHN0YXRlDQo+ID4+PiArICogICB0cmFuc2l0aW9uIGlzIHZhbGlkLg0K
-PiA+Pj4gKyAqIEBuZXdfc3RhdGU6IFRoZSBuZXcgc3RhdGUgdG8gbW92ZSB0by4NCj4gPj4+ICsg
-KiBAb2xkX3N0YXRlOiBUaGUgb2xkIHN0YXRlLg0KPiA+Pj4gKyAqIFJldHVybjogdHJ1ZSBpZiB0
-aGUgdHJhbnNpdGlvbiBpcyB2YWxpZC4NCj4gPj4+ICsgKi8NCj4gPj4+ICtib29sIHZmaW9fY2hh
-bmdlX21pZ3JhdGlvbl9zdGF0ZV9hbGxvd2VkKHUzMiBuZXdfc3RhdGUsIHUzMg0KPiBvbGRfc3Rh
-dGUpDQo+ID4+PiArew0KPiA+Pj4gKwllbnVtIHsgTUFYX1NUQVRFID0gVkZJT19ERVZJQ0VfU1RB
-VEVfUkVTVU1JTkcgfTsNCj4gPj4+ICsJc3RhdGljIGNvbnN0IHU4IHZmaW9fZnJvbV9zdGF0ZV90
-YWJsZVtNQVhfU1RBVEUgKyAxXVtNQVhfU1RBVEUgKw0KPiAxXSA9IHsNCj4gPj4+ICsJCVtWRklP
-X0RFVklDRV9TVEFURV9TVE9QXSA9IHsNCj4gPj4+ICsJCQlbVkZJT19ERVZJQ0VfU1RBVEVfUlVO
-TklOR10gPSAxLA0KPiA+Pj4gKwkJCVtWRklPX0RFVklDRV9TVEFURV9SRVNVTUlOR10gPSAxLA0K
-PiA+Pj4gKwkJfSwNCj4gPj4+ICsJCVtWRklPX0RFVklDRV9TVEFURV9SVU5OSU5HXSA9IHsNCj4g
-Pj4+ICsJCQlbVkZJT19ERVZJQ0VfU1RBVEVfU1RPUF0gPSAxLA0KPiA+Pj4gKwkJCVtWRklPX0RF
-VklDRV9TVEFURV9TQVZJTkddID0gMSwNCj4gPj4+ICsJCQlbVkZJT19ERVZJQ0VfU1RBVEVfU0FW
-SU5HIHwNCj4gVkZJT19ERVZJQ0VfU1RBVEVfUlVOTklOR10NCj4gPj4+ID0gMSwNCj4gPj4gRG8g
-d2UgbmVlZCB0byBhbGxvdyBfUkVTVU1JTkcgc3RhdGUgaGVyZSBvciBub3Q/IEFzIHBlciB0aGUg
-IlN0YXRlDQo+IHRyYW5zaXRpb25zIg0KPiA+PiBzZWN0aW9uIGZyb20gdWFwaS9saW51eC92Zmlv
-LmgsDQo+ID4gSXQgbG9va3MgbGlrZSB3ZSBtaXNzZWQgdGhpcyBzdGF0ZSB0cmFuc2l0aW9uLg0K
-PiA+DQo+ID4gVGhhbmtzDQo+IA0KPiBJJ20gbm90IHN1cmUgdGhpcyBzdGF0ZSB0cmFuc2l0aW9u
-IGlzIHZhbGlkLg0KPiANCj4gS2lydGksIFdoZW4gd2Ugd291bGQgbGlrZSB0byBtb3ZlIGZyb20g
-UlVOTklORyB0byBSRVNVTUlORyA/DQoNCkkgZ3Vlc3MgaXQgZGVwZW5kcyBvbiB3aGF0IHlvdSBy
-ZXBvcnQgYXMgeW91ciBkZXYgZGVmYXVsdCBzdGF0ZS4gDQoNCkZvciBIaVNpbGljb24gQUNDIG1p
-Z3JhdGlvbiBkcml2ZXIsIHdlIHNldCB0aGUgZGVmYXVsdCB0byBfUlVOTklORy4NCg0KQW5kIHdo
-ZW4gdGhlIG1pZ3JhdGlvbiBzdGFydHMsIHRoZSBkZXN0aW5hdGlvbiBzaWRlIFFlbXUsIHNldCB0
-aGUgDQpkZXZpY2Ugc3RhdGUgdG8gX1JFU1VNSU5HKHZmaW9fbG9hZF9zdGF0ZSgpKS4NCg0KRnJv
-bSB0aGUgZG9jdW1lbnRhdGlvbiwgaXQgbG9va3MgbGlrZSB0aGUgYXNzdW1wdGlvbiBvbiBkZWZh
-dWx0IHN0YXRlIG9mDQp0aGUgVkZJTyBkZXYgaXMgX1JVTk5JTkcuDQoNCiINCiogIDAwMWIgPT4g
-RGV2aWNlIHJ1bm5pbmcsIHdoaWNoIGlzIHRoZSBkZWZhdWx0IHN0YXRlDQoiDQoNCj4gDQo+IFNh
-bWVlcmFsaSwgY2FuIHlvdSBwbGVhc2UgcmUtdGVzdCBhbmQgdXBkYXRlIGlmIHlvdSBzZWUgdGhp
-cyB0cmFuc2l0aW9uID8NCg0KWWVzLiBBbmQgaWYgSSBjaGFuZ2UgdGhlIGRlZmF1bHQgc3RhdGUg
-dG8gX1NUT1AsIHRoZW4gdGhlIHRyYW5zaXRpb24NCmlzIGZyb20gX1NUT1AgLS0+IF9SRVNVTUlO
-Ry4NCg0KQnV0IHRoZSBkb2N1bWVudGF0aW9uIG9uIFN0YXRlIHRyYW5zaXRpb25zIGRvZXNuJ3Qg
-aGF2ZSBfU1RPUCAtLT4gX1JFU1VNSU5HDQp0cmFuc2l0aW9uIGFzIHZhbGlkLg0KDQpUaGFua3Ms
-DQpTaGFtZWVyIA0KDQo+IA0KPiANCj4gPg0KPiA+PiAiICogNC4gVG8gc3RhcnQgdGhlIHJlc3Vt
-aW5nIHBoYXNlLCB0aGUgZGV2aWNlIHN0YXRlIHNob3VsZCBiZSB0cmFuc2l0aW9uZWQNCj4gZnJv
-bQ0KPiA+PiAgICogICAgdGhlIF9SVU5OSU5HIHRvIHRoZSBfUkVTVU1JTkcgc3RhdGUuIg0KPiA+
-Pg0KPiA+PiBJSVJDLCBJIGhhdmUgc2VlbiB0aGF0IHRyYW5zaXRpb24gaGFwcGVuaW5nIG9uIHRo
-ZSBkZXN0aW5hdGlvbiBkZXYgd2hpbGUNCj4gdGVzdGluZyB0aGUNCj4gPj4gSGlTaWxpY29uIEFD
-QyBkZXYgbWlncmF0aW9uLg0KPiA+Pg0KPiA+PiBUaGFua3MsDQo+ID4+IFNoYW1lZXINCj4gPj4N
-Cj4gPj4+ICsJCX0sDQo+ID4+PiArCQlbVkZJT19ERVZJQ0VfU1RBVEVfU0FWSU5HXSA9IHsNCj4g
-Pj4+ICsJCQlbVkZJT19ERVZJQ0VfU1RBVEVfU1RPUF0gPSAxLA0KPiA+Pj4gKwkJCVtWRklPX0RF
-VklDRV9TVEFURV9SVU5OSU5HXSA9IDEsDQo+ID4+PiArCQl9LA0KPiA+Pj4gKwkJW1ZGSU9fREVW
-SUNFX1NUQVRFX1NBVklORyB8IFZGSU9fREVWSUNFX1NUQVRFX1JVTk5JTkddDQo+ID0gew0KPiA+
-Pj4gKwkJCVtWRklPX0RFVklDRV9TVEFURV9SVU5OSU5HXSA9IDEsDQo+ID4+PiArCQkJW1ZGSU9f
-REVWSUNFX1NUQVRFX1NBVklOR10gPSAxLA0KPiA+Pj4gKwkJfSwNCj4gPj4+ICsJCVtWRklPX0RF
-VklDRV9TVEFURV9SRVNVTUlOR10gPSB7DQo+ID4+PiArCQkJW1ZGSU9fREVWSUNFX1NUQVRFX1JV
-Tk5JTkddID0gMSwNCj4gPj4+ICsJCQlbVkZJT19ERVZJQ0VfU1RBVEVfU1RPUF0gPSAxLA0KPiA+
-Pj4gKwkJfSwNCj4gPj4+ICsJfTsNCj4gPj4+ICsNCj4gPj4+ICsJaWYgKG5ld19zdGF0ZSA+IE1B
-WF9TVEFURSB8fCBvbGRfc3RhdGUgPiBNQVhfU1RBVEUpDQo+ID4+PiArCQlyZXR1cm4gZmFsc2U7
-DQo+ID4+PiArDQo+ID4+PiArCXJldHVybiB2ZmlvX2Zyb21fc3RhdGVfdGFibGVbb2xkX3N0YXRl
-XVtuZXdfc3RhdGVdOw0KPiA+Pj4gK30NCj4gPj4+ICtFWFBPUlRfU1lNQk9MX0dQTCh2ZmlvX2No
-YW5nZV9taWdyYXRpb25fc3RhdGVfYWxsb3dlZCk7DQo+ID4+PiArDQo+ID4+PiAgIHN0YXRpYyBs
-b25nIHZmaW9fZGV2aWNlX2ZvcHNfdW5sX2lvY3RsKHN0cnVjdCBmaWxlICpmaWxlcCwNCj4gPj4+
-ICAgCQkJCSAgICAgICB1bnNpZ25lZCBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFyZykNCj4gPj4+
-ICAgew0KPiA+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdmZpby5oIGIvaW5jbHVkZS9s
-aW51eC92ZmlvLmgNCj4gPj4+IGluZGV4IGI1M2E5NTU3ODg0YS4uZTY1MTM3YTcwOGYxIDEwMDY0
-NA0KPiA+Pj4gLS0tIGEvaW5jbHVkZS9saW51eC92ZmlvLmgNCj4gPj4+ICsrKyBiL2luY2x1ZGUv
-bGludXgvdmZpby5oDQo+ID4+PiBAQCAtODMsNiArODMsNyBAQCBleHRlcm4gc3RydWN0IHZmaW9f
-ZGV2aWNlDQo+ID4+PiAqdmZpb19kZXZpY2VfZ2V0X2Zyb21fZGV2KHN0cnVjdCBkZXZpY2UgKmRl
-dik7DQo+ID4+PiAgIGV4dGVybiB2b2lkIHZmaW9fZGV2aWNlX3B1dChzdHJ1Y3QgdmZpb19kZXZp
-Y2UgKmRldmljZSk7DQo+ID4+Pg0KPiA+Pj4gICBpbnQgdmZpb19hc3NpZ25fZGV2aWNlX3NldChz
-dHJ1Y3QgdmZpb19kZXZpY2UgKmRldmljZSwgdm9pZCAqc2V0X2lkKTsNCj4gPj4+ICtib29sIHZm
-aW9fY2hhbmdlX21pZ3JhdGlvbl9zdGF0ZV9hbGxvd2VkKHUzMiBuZXdfc3RhdGUsIHUzMg0KPiBv
-bGRfc3RhdGUpOw0KPiA+Pj4NCj4gPj4+ICAgLyogZXZlbnRzIGZvciB0aGUgYmFja2VuZCBkcml2
-ZXIgbm90aWZ5IGNhbGxiYWNrICovDQo+ID4+PiAgIGVudW0gdmZpb19pb21tdV9ub3RpZnlfdHlw
-ZSB7DQo+ID4+PiAtLQ0KPiA+Pj4gMi4zMS4xDQo=
+Adds support for a DT property fsl,internal-osc to select the internal
+oscillator for the PCIe PHY.
+
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+---
+
+Okay, so while this patch is nice and short, I'm note sure if it's a good
+solution, hence I submit it as an RFC. It is roughly based on code from
+older linux-imx versions [1] - although it seems this feature was never
+supported on i.MX7D even by linux-imx (possibly because of compliance
+issues with the internal clock, however I haven't found a definitive
+erratum backing this), but only on other SoC like i.MX6QP.
+
+The device tree binding docs of the driver are somewhat lacking, but
+looking at [1] it seems that an external reference clock takes the place of
+the "pcie_bus" clock - various pieces of the driver skip enabling/disabling
+this clock when an external clock is configured.
+
+From this I've come to the conclusion that the clock settings in
+imx7d.dtsi do not really make sense: The pcie_bus clock is configured to
+PLL_ENET_MAIN_100M_CLK, but this seems wrong for both internal and
+external reference clocks:
+
+- For the internal clock, the correct clock should be PCIE_PHY_ROOT_CLK
+  according to the reference manual
+- The external clocks, this should refer to an actual external clock, or
+  possibly a fixed-clock node
+
+I would be great if someone with more insight into this could chime in
+and tell me if my reasoning here is correct or not.
+
+Unfortunately I only have our MBa7x at my disposal for further
+experimentation. This board does not have an external reference clock for
+the PCIe PHY, so I cannot test the behaviour for settings that use an
+external clock. Without this patch (and adding the new flag to the MBa7x
+DTS), the boot will hang while waiting for the PCIe link to come up.
+
+So, for the actual question (given that my thoughts above make any sense):
+How do we want to implement this?
+
+1. A simple boolean flag, like this patch provides
+2. Allow Device Trees not to specify a "pcie_bus" clock at all, meaning
+   it should use the internal clock
+3. Special handling when the "pcie_bus" clock is configured to
+   PCIE_PHY_ROOT_CLK - is such a thing even possible, or is this
+   breaking the clock driver's abstraction too much?
+4. Something more involved, with a proper clock sel as the source for
+   "pcie_bus"
+
+Solution 4. seems difficult to implement nicely, as the PCIe driver
+also fiddles with IMX7D_GPR12_PCIE_PHY_REFCLK_SEL for power management:
+the clock selection is switched back to the internal clock in
+imx6_pcie_clk_disable(), which also disables its source PCIE_PHY_ROOT_CLK,
+effectively gating the clock.
+
+Regards,
+Matthias
+
+
+[1] https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/pci/host/pci-imx6.c?h=imx_4.1.15_2.0.0_ga
+
+ drivers/pci/controller/dwc/pci-imx6.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 80fc98acf097..021499b9ee7c 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -83,6 +83,7 @@ struct imx6_pcie {
+ 	struct regulator	*vpcie;
+ 	struct regulator	*vph;
+ 	void __iomem		*phy_base;
++	bool			internal_osc;
+ 
+ 	/* power domain for pcie */
+ 	struct device		*pd_pcie;
+@@ -637,7 +638,9 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 		break;
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
++				   imx6_pcie->internal_osc ?
++					IMX7D_GPR12_PCIE_PHY_REFCLK_SEL : 0);
+ 		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+@@ -1130,6 +1133,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 				 &imx6_pcie->tx_swing_low))
+ 		imx6_pcie->tx_swing_low = 127;
+ 
++	if (of_property_read_bool(node, "fsl,internal-osc"))
++		imx6_pcie->internal_osc = true;
++
+ 	/* Limit link speed */
+ 	pci->link_gen = 1;
+ 	ret = of_property_read_u32(node, "fsl,max-link-speed", &pci->link_gen);
+-- 
+2.17.1
+
