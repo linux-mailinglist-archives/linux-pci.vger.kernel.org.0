@@ -2,104 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A665417718
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 16:52:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0037B417808
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 17:53:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346847AbhIXOx5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Sep 2021 10:53:57 -0400
-Received: from smtp.radex.nl ([178.250.146.7]:34377 "EHLO radex-web.radex.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346845AbhIXOx5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 24 Sep 2021 10:53:57 -0400
-Received: from [192.168.1.35] (cust-178-250-146-69.breedbanddelft.nl [178.250.146.69])
-        by radex-web.radex.nl (Postfix) with ESMTPS id C8F902406A;
-        Fri, 24 Sep 2021 16:52:21 +0200 (CEST)
-Subject: Re: [PATCH v2 2/7] PCI: ACPI: PM: Do not use pci_platform_pm_ops for
- ACPI
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <1800633.tdWV9SEqCh@kreacher> <8879480.rMLUfLXkoz@kreacher>
- <069444f7-d623-fae2-5cd0-83cbbc919aff@gmail.com>
- <CAJZ5v0gpodPPXTagy5gFFf6mp_jCAdc864CE_giaue72ke7UyQ@mail.gmail.com>
- <ab803fb5-045d-98dd-2754-688a916f8944@gmail.com>
- <d151c91c-cb65-2830-2453-a02057137400@gmail.com>
- <CAJZ5v0howP_PudCf-43_HqgW48ydc29SeFVRC-wCm_RNKPBMtA@mail.gmail.com>
-From:   Ferry Toth <fntoth@gmail.com>
-Message-ID: <f04d0f93-64d8-d6c8-3742-13f7a6eef739@gmail.com>
-Date:   Fri, 24 Sep 2021 16:52:21 +0200
+        id S234418AbhIXPzD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Sep 2021 11:55:03 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:53020 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233562AbhIXPzD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Sep 2021 11:55:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=tAgQKd+z6vxXxFs5ulgzOt5cmHdcRxTc9c4Q2BUTN1Y=; b=tlOK9L0rG+fTlPqVqnwykYitCN
+        dY9kNPdfoSudMSZQ8hUgbAIN0UHkaoAHTJRFYKDrnXk0iV6BHGDmlBrXijq1U11dgI0z762tlItbG
+        FcgGRDM4jbiUb8emw1Tn9GTEXZNJPQgEusc7vif2WsPZBsCPObLlQPG/izr8/z7u6p2uvt27/3qVB
+        wItHDZmyeJw6NQTjgSUir6CoLo5dnIfej7JOCtFNzbcLMe7qyLxwnzc+2nBng9DN3sjNdHZCsTTSI
+        p03YwaZCZ2BTKP8Poj5PdrEo5B2NUH+yP7iO7LRL6LNu/cGlWIPXu/e6jlMlZjcsu23Fepx1f5/H/
+        ic8N/Iig==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1mTnVw-0003GP-DX; Fri, 24 Sep 2021 09:53:29 -0600
+To:     kelvin.cao@microchip.com, kurt.schwemmer@microsemi.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kelvincao@outlook.com
+References: <20210924110842.6323-1-kelvin.cao@microchip.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <b4908c93-fb43-001b-b3eb-d3da0bb377c9@deltatee.com>
+Date:   Fri, 24 Sep 2021 09:53:27 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0howP_PudCf-43_HqgW48ydc29SeFVRC-wCm_RNKPBMtA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20210924110842.6323-1-kelvin.cao@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: kelvincao@outlook.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, kelvin.cao@microchip.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH 0/5] Switchtec Fixes and Improvements
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-Op 24-09-2021 om 14:02 schreef Rafael J. Wysocki:
-> On Thu, Sep 23, 2021 at 10:32 PM Ferry Toth <fntoth@gmail.com> wrote:
->> Hi
->>
->> Op 23-09-2021 om 15:51 schreef Ferry Toth:
->>> Repost (with formatting removed, sorry for the noise)
->>> Op 23-09-2021 om 13:30 schreef Rafael J. Wysocki:
->>>> On Wed, Sep 22, 2021 at 11:31 PM Ferry Toth<fntoth@gmail.com>  wrote:
->>>>> Hi,
->>>>> Op 20-09-2021 om 21:17 schreef Rafael J. Wysocki:
->>>>>> From: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
->>>>>>
->>>>>> Using struct pci_platform_pm_ops for ACPI adds unnecessary
->>>>>> indirection to the interactions between the PCI core and ACPI PM,
->>>>>> which is also subject to retpolines.
->>>>>>
->>>>>> Moreover, it is not particularly clear from the current code that,
->>>>>> as far as PCI PM is concerned, "platform" really means just ACPI
->>>>>> except for the special casess when Intel MID PCI PM is used or when
->>>>>> ACPI support is disabled (through the kernel config or command line,
->>>>>> or because there are no usable ACPI tables on the system).
->>>>>>
->>>>>> To address the above, rework the PCI PM code to invoke ACPI PM
->>>>>> functions directly as needed and drop the acpi_pci_platform_pm
->>>>>> object that is not necessary any more.
->>>>>>
->>>>>> Accordingly, update some of the ACPI PM functions in question to do
->>>>>> extra checks in case the ACPI support is disabled (which previously
->>>>>> was taken care of by avoiding to set the pci_platform_ops pointer
->>>>>> in those cases).
->>>>>>
->>>>>> Signed-off-by: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
->>>>>> ---
->>>>>>
->>>>>> v1 -> v2:
->>>>>>        * Rebase on top of the new [1/7] and move dropping struct
->>>>>>          pci_platform_pm_ops to a separate patch.
->>>>> I wanted to test this series on 5.15-rc2 but this patch 2/7 doesn't
->>>>> apply (after 1/7 applied). Should I apply this on another tree?
->>>> This is on top of
->>>> https://patchwork.kernel.org/project/linux-acpi/patch/2793105.e9J7NaK4W3@kreacher/
->>>>
->>>> which is not yet in any tree.
->>>>
->>>> Sorry for the confusion.
->>> No problem at all. If I can I will try to report back tonight. Else,
->>> will be delayed 2 due to a short break.
->> With those 3 extra patches followed by 7 from this series it builds. But
->> on boot I get:
->> dwc3 dwc3.0.auto: this is not a DesignWare USB3 DRD Core
->> Then after this it reboots. Nothing in the logs. Nothing else on
->> console, I guess something goes wrong early.
-> It appears so.
->
-> Can you please try just the 3 extra patches this series is on top of?
-> The problem is more likely to be located in one of them.
-Yes, I hope to be able to that this evening.
+
+On 2021-09-24 5:08 a.m., kelvin.cao@microchip.com wrote:
+> From: Kelvin Cao <kelvin.cao@microchip.com>
+> 
+> Hi,
+> 
+> Please find a bunch of patches for the switchtec driver collected over the
+> last few months.
+> 
+> The first 2 patches fix two minor bugs. Patch 3 updates the method of
+> getting management VEP instance ID based on a new firmware change. Patch
+> 4 replaces ENOTSUPP with EOPNOTSUPP to follow the preference of kernel.
+> And the last patch adds check of event support to align with new firmware
+> implementation.
+> 
+> This patchset is based on v5.15-rc2.
+> 
+> Thanks,
+> Kelvin
+> 
+> Kelvin Cao (4):
+>   PCI/switchtec: Error out MRPC execution when no GAS access
+>   PCI/switchtec: Fix a MRPC error status handling issue
+>   PCI/switchtec: Update the way of getting management VEP instance ID
+>   PCI/switchtec: Replace ENOTSUPP with EOPNOTSUPP
+> 
+> Logan Gunthorpe (1):
+>   PCI/switchtec: Add check of event support
+> 
+>  drivers/pci/switch/switchtec.c | 87 +++++++++++++++++++++++++++-------
+>  include/linux/switchtec.h      |  1 +
+>  2 files changed, 71 insertions(+), 17 deletions(-)
+
+Thanks Kelvin! This all looks good to me.
+
+For the entire series (except the last patch which I wrote):
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
