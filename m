@@ -2,166 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76433416E47
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 10:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0317416EBE
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Sep 2021 11:19:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244916AbhIXIzQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Sep 2021 04:55:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:58615 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244623AbhIXIzQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Sep 2021 04:55:16 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1Mlejs-1nC8Oq0bru-00ingt; Fri, 24 Sep 2021 10:53:42 +0200
-Received: by mail-wr1-f43.google.com with SMTP id t18so25188473wrb.0;
-        Fri, 24 Sep 2021 01:53:41 -0700 (PDT)
-X-Gm-Message-State: AOAM531iOe9kJ2vjqmruq///xI5DyfBXi5RlmCRogIv2/iMQxWxBirU0
-        KFLONE1BtsoSH/GIr2wSY4qraDfMOCd/LNPY1jY=
-X-Google-Smtp-Source: ABdhPJyPu1kIql0u17xRVgQRJGaYD/zgnJdUJvEsA5NSxOXpHQrUJVnFrpQxg44ZwAOpD5GkNjOPsUJijumnxYh7HtA=
-X-Received: by 2002:a1c:7413:: with SMTP id p19mr868659wmc.98.1632473621615;
- Fri, 24 Sep 2021 01:53:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210922042041.16326-1-sergio.paracuellos@gmail.com>
- <CAK8P3a2WPOYS7ra_epyZ_bBBpPK8+AgEynK0pKOUZ6ajubcHew@mail.gmail.com>
- <CAMhs-H8EyBmahhLsx+a0aoy+znY=PCm4BT97UBg4xcAy3x2oXg@mail.gmail.com>
- <CAK8P3a0fQZvpNCKF7OUy_krC_YPyigtd5Ak_AMXXpx84HKMswA@mail.gmail.com>
- <CAMhs-H-OCm1p6mTTV6s=vPx7FV8+1UMzx0X00wvXkW=5OgFQBQ@mail.gmail.com>
- <CAK8P3a1iN76A5ahTTQ6rCS4LjKHz8grkNGHGehLJnd0xQSnHXA@mail.gmail.com>
- <CAMhs-H_hZk3hruCaWRjKjUSj6vhVE+JZfk9nT7v1=mcc-H9wnw@mail.gmail.com>
- <CAK8P3a3C0rG_JWWCU6T4B=+j2-+6S6Gq+aw_9e6XeVun9LoF0w@mail.gmail.com>
- <CAMhs-H8kH7CMXENqDW_6GLTjeMMyk+ynehMmyBr=kFZPFHpM0A@mail.gmail.com>
- <CAK8P3a2WmNsV9fhSEjqwHZAGkwGc9HOurhQsza7JOM2Scts2XQ@mail.gmail.com>
- <CAMhs-H8fRnLavLfdw7jZO0tb8rWqdF81cGHhYT6gGp4UY1gChg@mail.gmail.com>
- <CAK8P3a2MJO--xmAZ_71h1QQ5_b8WXgyo-=LaT7r7yMMBUHoPfQ@mail.gmail.com>
- <CAMhs-H_xdkpinyj-Y1u==ievpGWZ2Ze-_U7aCUcfu0=NKBq2xQ@mail.gmail.com>
- <CAK8P3a0OWyW9Wk0kHXsj_7qTd0fVXQnszzun+HacHeTKYETXhw@mail.gmail.com> <CAMhs-H9xrXgbuwYe2STzuq0aBwj0onJGc0Oka6+pzgoHb0j8rA@mail.gmail.com>
-In-Reply-To: <CAMhs-H9xrXgbuwYe2STzuq0aBwj0onJGc0Oka6+pzgoHb0j8rA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 Sep 2021 10:53:25 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1AwaSi_J9p4tKwNKxENHhwofDu=Ma=F29ajSmMXoC7RA@mail.gmail.com>
-Message-ID: <CAK8P3a1AwaSi_J9p4tKwNKxENHhwofDu=Ma=F29ajSmMXoC7RA@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: of: Avoid pci_remap_iospace() when PCI_IOBASE not defined
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-staging@lists.linux.dev, gregkh <gregkh@linuxfoundation.org>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
+        id S244505AbhIXJVJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Sep 2021 05:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244462AbhIXJVJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Sep 2021 05:21:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70218C061574
+        for <linux-pci@vger.kernel.org>; Fri, 24 Sep 2021 02:19:36 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1mThMd-00010f-Nw; Fri, 24 Sep 2021 11:19:27 +0200
+Message-ID: <7f1fc1b299f79077b5da0bc914a7500f723ee153.camel@pengutronix.de>
+Subject: Re: [RFC] PCI: imx6: add support for internal oscillator on i.MX7D
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Date:   Fri, 24 Sep 2021 11:19:25 +0200
+In-Reply-To: <b4b4955e7aa3a0566840f5ae1f15f8c27874d13d.camel@ew.tq-group.com>
+References: <81c77a29362433fc5629ada442f0489046ce1051.1632319151.git.matthias.schiffer@ew.tq-group.com>
+         <64913eca4ded0803a7e839902ff6d70c924c71c8.camel@pengutronix.de>
+         <b4b4955e7aa3a0566840f5ae1f15f8c27874d13d.camel@ew.tq-group.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ay4g2+3AJgVOETtusywny6EJchnreCvAVq31S4h/oehRuBJaACo
- C1b6Oc1vju5qQcFJQYYdQFUoLcv97c4naVZDVqv30uDC9zEDzaw1LQzats6VJxgaUmMU7Zs
- wJw/lY5sC3hAj32C0YMQfpYhOOxnBC4zgBiK15Cyf4LziP6GeAxhqVhyg91neuUyJHBfKdA
- lkKGlL5vHfEiavjGSIdPg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WYl4GQ0a/MU=:xiuKBHyLgSKHmKnikUjhMT
- pUX5FfVNi9FT/w4Uw3Z9shzkQutNCBgYRYLGp9HDokR4i3Wwg31f0UpAS+AwqbfMAKeN7Q15N
- 5gaQavVm/RSCqpngdxLOup+kDnRqXe58bRS7vkfZ9p6uPSXtV6BCPc9onTGxwM0QmToky1exu
- RXpVjOrgx+FtKNwApN4Or22gneHdQqUOFufEyz2/9XfEC773LTnKNtA76ESo/YUCIGx3U/BVL
- hePvZaUVMJW0F67ZcQu8/Zakle8poZtBzAqePpLRWckMfIV2WnB1Su0ySag1OWQ9763oLy/Cz
- 4QFxyemBDlywPXm4tRA7+b6mDwCaNObGXvBnj0pFju1VQUVXG6FajSUtkY8mvMxCZQwlL3UxT
- m2Nd2XSD4Hpk2CZWBxG+oHwN3AToG/WX4pdBkFjAz1RjSwPkqA05NK1XWrX2lWr9lsSiiSGEs
- JZOaBC4DFfk8f3PWAqpNejVgLlxKaml1Y6Fo/yaV3WJOT0wG2VMQd7VOzPyQSdDrqc2tZ0WTK
- dmn3FUemclognK4ylK38C3paq6JPthPez4/ULcLA0dKlK1ITZeffJk8q54FUiKNLcEPBoxSRw
- I+8h8GAc4CC7nPzWgbi2j22NdcHQVgzVC7Yd5EdwR//FWe1Btrw1zzb/Lnu7DLBVvsjjs4PLx
- oQ2ICqxm3NiC497x+hgfxj6+yU7smFxjSnjvIwQITa11QxzmDFZE7pVo88MmBbIrloTVjrEFb
- alNIUJyxhlBgqeUQVjqj7uzCcTD6mSGzdGi3uA==
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 10:33 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
-> On Thu, Sep 23, 2021 at 7:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Sep 23, 2021 at 4:55 PM Sergio Paracuellos
-> >
-> > Ok, got it. So the memory space uses a normal zero offset with cpu address
-> > equal to bus address, but the I/O space has a rather usual mapping of
-> > bus address equal to the window into the mmio space, with an offset of
-> > 0x1e160000.
-> >
-> > The normal way to do this would be map the PCI port range 0-0x10000
-> > into CPU address 0x1e160000, like:
-> >
-> > ranges = <0x02000000 0 0x60000000 0x60000000 0 0x10000000>,  /* pci memory */
-> >                <0x01000000 0 0x1e160000 0 0 0x00010000>;
->
-> This change as it is got into the same behaviour:
->
-> mt7621-pci 1e140000.pcie: host bridge /pcie@1e140000 ranges:
-> mt7621-pci 1e140000.pcie:   No bus range found for /pcie@1e140000,
-> using [bus 00-ff]
-> mt7621-pci 1e140000.pcie:      MEM 0x0060000000..0x006fffffff -> 0x0060000000
-> mt7621-pci 1e140000.pcie:       IO 0x0000000000..0x000000ffff -> 0x001e160000
->                                                    ^^^^^^
->                                                     This is the only
-> change I appreciate in all the trace with the range change.
+Am Freitag, dem 24.09.2021 um 10:44 +0200 schrieb Matthias Schiffer:
+> On Fri, 2021-09-24 at 10:24 +0200, Lucas Stach wrote:
+> > Hi Matthias,
+> > 
+> > Am Freitag, dem 24.09.2021 um 10:05 +0200 schrieb Matthias Schiffer:
+> > > Adds support for a DT property fsl,internal-osc to select the internal
+> > > oscillator for the PCIe PHY.
+> > > 
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> > > ---
+> > > 
+> > > Okay, so while this patch is nice and short, I'm note sure if it's a good
+> > > solution, hence I submit it as an RFC. It is roughly based on code from
+> > > older linux-imx versions [1] - although it seems this feature was never
+> > > supported on i.MX7D even by linux-imx (possibly because of compliance
+> > > issues with the internal clock, however I haven't found a definitive
+> > > erratum backing this), but only on other SoC like i.MX6QP.
+> > > 
+> > > The device tree binding docs of the driver are somewhat lacking, but
+> > > looking at [1] it seems that an external reference clock takes the place of
+> > > the "pcie_bus" clock - various pieces of the driver skip enabling/disabling
+> > > this clock when an external clock is configured.
+> > > 
+> > > From this I've come to the conclusion that the clock settings in
+> > > imx7d.dtsi do not really make sense: The pcie_bus clock is configured to
+> > > PLL_ENET_MAIN_100M_CLK, but this seems wrong for both internal and
+> > > external reference clocks:
+> > > 
+> > > - For the internal clock, the correct clock should be PCIE_PHY_ROOT_CLK
+> > >   according to the reference manual
+> > 
+> > The pcie_bus clock should be the reference clock for the peripherals
+> > and depends on the board design. I don't think it would typically be
+> > the PCIE_PHY_ROOT_CLK, but a clock derived from the same parent PLL, if
+> > a SoC clock is used for that purpose.
+> 
+> The i.MX7D reference manual states the following:
+> 
+> - IMX7D_GPR12_PCIE_PHY_REFCLK_SEL enables internal sourcing of the PHY
+>   reference clock from a signal with the somewhat confusing name
+>   REFCLK_EXT
+> - The root of pcie_phy.REFCLK_EXT is PCIE_PHY_CLK_ROOT
+> 
+> As I understand it, "internal reference clock" means precisely that
+> this is handled entirely internal to the SoC and does not depend on the
+> board design. It may differ between different SoCs implementing this
+> PCIe controller though.
+> 
+That's the clock referenced in DT as pcie_phy.
 
-Oops, my mistake, I mixed up the CPU address and the PCI address.
+pcie_bus is whatever clock is used to drive the reference clock of the
+PCIe devices on the bus, which may be an internal or external clock,
+which might be shared between the the devices and the PHY (common
+clock) or may also be a totally different clock (split clock topology).
+The clock topology and the sourcing of those clocks is board dependent.
 
-The correct notation should be
+> 
+> > 
+> > > - The external clocks, this should refer to an actual external clock, or
+> > >   possibly a fixed-clock node
+> > > 
+> > 
+> > That's correct and the i.MX8MQ board DTs all point to a external clock
+> > node, as we currently default to external clocking there.
+> > 
+> > > I would be great if someone with more insight into this could chime in
+> > > and tell me if my reasoning here is correct or not.
+> > > 
+> > > Unfortunately I only have our MBa7x at my disposal for further
+> > > experimentation. This board does not have an external reference clock for
+> > > the PCIe PHY, so I cannot test the behaviour for settings that use an
+> > > external clock. Without this patch (and adding the new flag to the MBa7x
+> > > DTS), the boot will hang while waiting for the PCIe link to come up.
+> > > 
+> > > So, for the actual question (given that my thoughts above make any sense):
+> > > How do we want to implement this?
+> > > 
+> > > 1. A simple boolean flag, like this patch provides
+> > > 2. Allow Device Trees not to specify a "pcie_bus" clock at all, meaning
+> > >    it should use the internal clock
+> > 
+> > The internal clock is a bus clock that needs to be enabled as all other
+> > clocks, so this is not an option.
+> > 
+> > > 3. Special handling when the "pcie_bus" clock is configured to
+> > >    PCIE_PHY_ROOT_CLK - is such a thing even possible, or is this
+> > >    breaking the clock driver's abstraction too much?
+> > > 4. Something more involved, with a proper clock sel as the source for
+> > >    "pcie_bus"
+> > > 
+> > > Solution 4. seems difficult to implement nicely, as the PCIe driver
+> > > also fiddles with IMX7D_GPR12_PCIE_PHY_REFCLK_SEL for power management:
+> > > the clock selection is switched back to the internal clock in
+> > > imx6_pcie_clk_disable(), which also disables its source PCIE_PHY_ROOT_CLK,
+> > > effectively gating the clock.
+> > > 
+> > 
+> > There is currently work under way to support this case properly. The
+> > first step is to actually abstract the PCIe PHY in the right way,
+> > Richard has already sent some patches for this.
+> > 
+> > Then we can add support for the different possibilities of using the
+> > refclock pad, as this isn't a simple choice between using the internal
+> > clock or a externally supplied one. The options are:
+> > 
+> > 1. Use internal clock to drive the PHY, if there isn't some other path
+> > to output this clock to the board this is effectively a split clocking
+> > setup.
+> > 2. Use externally supplied clock provided to the PHY via the refclock
+> > pad.
+> > 3. Use internal clock to driver the PHY, but output this clock on the
+> > refclock pad, which is known to be possible with the i.MX8MM PCIe PHY.
+> 
+> What is the plan here for configuring which of these options to use?
+> 
+The plan is to have a DT property to configure the refclock pad
+function.
 
-<0x01000000 0 0  0 0x1e160000 0x00010000>;
+Regards,
+Lucas
 
-i.e. bus address 0 to cpu address 0x1e160000, rather than the other
-way around as I wrote it.
+> 
+> > 
+> > Regards,
+> > Lucas
+> > 
+> > > Regards,
+> > > Matthias
+> > > 
+> > > 
+> > > [1] https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/pci/host/pci-imx6.c?h=imx_4.1.15_2.0.0_ga
+> > > 
+> > >  drivers/pci/controller/dwc/pci-imx6.c | 8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > > index 80fc98acf097..021499b9ee7c 100644
+> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > @@ -83,6 +83,7 @@ struct imx6_pcie {
+> > >  	struct regulator	*vpcie;
+> > >  	struct regulator	*vph;
+> > >  	void __iomem		*phy_base;
+> > > +	bool			internal_osc;
+> > >  
+> > >  	/* power domain for pcie */
+> > >  	struct device		*pd_pcie;
+> > > @@ -637,7 +638,9 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+> > >  		break;
+> > >  	case IMX7D:
+> > >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > > -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
+> > > +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+> > > +				   imx6_pcie->internal_osc ?
+> > > +					IMX7D_GPR12_PCIE_PHY_REFCLK_SEL : 0);
+> > >  		break;
+> > >  	case IMX6SX:
+> > >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > > @@ -1130,6 +1133,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> > >  				 &imx6_pcie->tx_swing_low))
+> > >  		imx6_pcie->tx_swing_low = 127;
+> > >  
+> > > +	if (of_property_read_bool(node, "fsl,internal-osc"))
+> > > +		imx6_pcie->internal_osc = true;
+> > > +
+> > >  	/* Limit link speed */
+> > >  	pci->link_gen = 1;
+> > >  	ret = of_property_read_u32(node, "fsl,max-link-speed", &pci->link_gen);
+> > 
+> > 
+> 
 
-> pci 0000:00:02.0: PCI bridge to [bus 03-ff]
-> pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
-> pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff]
-> pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff pref]
-...
-> pci 0000:00:02.0: PCI bridge to [bus 03]
-> pci 0000:00:02.0:   bridge window [io  0x2000-0x2fff]
-> pci 0000:00:02.0:   bridge window [mem 0x60400000-0x604fffff]
-> pci 0000:00:02.0:   bridge window [mem 0x60500000-0x605fffff pref
->
-> # cat /proc/ioports
-> 00000000-0000ffff : pcie@1e140000
->   00000000-00000fff : PCI Bus 0000:01
->     00000000-0000000f : 0000:01:00.0
->       00000000-0000000f : ahci
->     00000010-00000017 : 0000:01:00.0
-...
 
-These are all what I would expect, but that should just be
-based on the PCI_IOBASE value, not the mapping behind that.
-
-> > Do you know where that mapping is set up? Is this a hardware setting,
-> > or is there a way to change the inbound I/O port ranges to the
-> > normal mapping?
->
-> The only thing related is the IOBASE register which is the base
-> address for the IO space window. Driver code is setting this up to pci
-> IO resource start address [0].
-
-So this line:
-      pcie_write(pcie, entry->res->start, RALINK_PCI_IOBASE);
-
-That does sound like it is the bus address you are writing, not
-the CPU address. Some host bridges allow you to configure both,
-some only one of them, but the sensible assumption here would
-be that this is the bus address if only one is configurable.
-
-If my assumption is correct here, then you must write the value
-that you have read from the DT property, which would be
-0x001e160000 or 0 in the two versions of the DT property we
-have listed, but in theory any (properly aligned) number ought
-to work here, as long as the BAR values, the RALINK_PCI_IOBASE
-and the io_offset all agree what it is.
-
-The line just before this is
-
-pcie_write(pcie, 0xffffffff, RALINK_PCI_MEMBASE)
-
-Can you clarify what this does? I would have expected an
-identity-map for the memory space, which would mean writing
-the third cell from the ranges property (0x60000000)
-into this. Is -1 a special value for identity mapping, or does
-this register do something else?
-
-          Arnd
