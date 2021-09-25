@@ -2,110 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2ADD4180F5
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 12:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F26F3418281
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 16:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237469AbhIYKMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Sep 2021 06:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235805AbhIYKMS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 25 Sep 2021 06:12:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D64C7610C9;
-        Sat, 25 Sep 2021 10:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632564643;
-        bh=7g5nUt6S+63DfyoI33cOS6neqOn00oZEYSazRW7icKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e87ZqnKl688T/SQGcH9+jwjV014Tulyt7Hb3OxSjdxnCIm7oEZ/EpJ73lS0FYFky+
-         w/MwitlU/UyQB3xXw7YZVKNcVS1KmP9X01uvgwDkuwXB3yUvmCneQ2EumdVqaGD+I7
-         oibmJ1i0v7DyUubmNeADkZerUZmsr3tXNZMwt0s8MRMAeW7hHPrw4A+cQuh+Lqyp70
-         RjO6S23V10pYJOBLZ5Kht/XmdgA0nn9Dt2OR+EqVL/1QjYUirI/PZ/Zx+ct6/4fNyT
-         QALmldECZr9nyTMlqDDYKWOytn11twX33WlFOnstjzbJUB9Lv9EIXUppsidnGUqccs
-         g6W9kC9yAb3ew==
-Date:   Sat, 25 Sep 2021 13:10:39 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
-Message-ID: <YU71n4WSIztOdpbw@unreal>
-References: <YUwgNPL++APsFJ49@unreal>
- <20210924130845.GA410176@bhelgaas>
+        id S237777AbhIYOK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Sep 2021 10:10:57 -0400
+Received: from mx24.baidu.com ([111.206.215.185]:42324 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233738AbhIYOK4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 25 Sep 2021 10:10:56 -0400
+Received: from BC-Mail-HQEX01.internal.baidu.com (unknown [172.31.51.57])
+        by Forcepoint Email with ESMTPS id B930C88C7835BA9E5ECE;
+        Sat, 25 Sep 2021 21:53:01 +0800 (CST)
+Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
+ BC-Mail-HQEX01.internal.baidu.com (172.31.51.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2242.12; Sat, 25 Sep 2021 21:53:01 +0800
+Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.14; Sat, 25 Sep 2021 21:53:01 +0800
+From:   Cai Huoqing <caihuoqing@baidu.com>
+To:     <caihuoqing@baidu.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PCI: Remove the unused pci wrappers
+Date:   Sat, 25 Sep 2021 21:52:54 +0800
+Message-ID: <20210925135255.328-1-caihuoqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210924130845.GA410176@bhelgaas>
+Content-Type: text/plain
+X-Originating-IP: [172.31.63.8]
+X-ClientProxiedBy: BJHW-MAIL-EX04.internal.baidu.com (10.127.64.14) To
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 08:08:45AM -0500, Bjorn Helgaas wrote:
-> On Thu, Sep 23, 2021 at 09:35:32AM +0300, Leon Romanovsky wrote:
-> > On Wed, Sep 22, 2021 at 04:59:30PM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
-> > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > 
-> > > > The PCI core uses the VF index internally, often called the vf_id,
-> > > > during the setup of the VF, eg pci_iov_add_virtfn().
-> > > > 
-> > > > This index is needed for device drivers that implement live migration
-> > > > for their internal operations that configure/control their VFs.
-> > > >
-> > > > Specifically, mlx5_vfio_pci driver that is introduced in coming patches
-> > > > from this series needs it and not the bus/device/function which is
-> > > > exposed today.
-> > > > 
-> > > > Add pci_iov_vf_id() which computes the vf_id by reversing the math that
-> > > > was used to create the bus/device/function.
-> > > > 
-> > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > 
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
-> > > same thing as pci_iov_vf_id() by iterating through VFs until it finds
-> > > one with a matching devfn (although it *doesn't* check for a matching
-> > > bus number, which seems like a bug).
-> > > 
-> > > Maybe that should use pci_iov_vf_id()?
-> > 
-> > Yes, I gave same comment internally and we decided to simply reduce the
-> > amount of changes in mlx5_core to have less distractions and submit as a
-> > followup. Most likely will add this hunk in v1.
-> 
-> I guess it backfired as far as reducing distractions, because now it
-> just looks like a job half-done.
+The wrappers in include/linux/pci-dma-compat.h should go away,
+so remove the unused pci wrappers.
+Prefer using dma_xxx() instead of the pci wrappers pci_xxx().
 
-Partially :)
-I didn't expect to see acceptance of this series in v0, we wanted to
-gather feedback as early as possible.
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+---
+ include/linux/pci-dma-compat.h | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
-> 
-> And it still looks like the existing code is buggy.  This is called
-> via sysfs, so if the PF is on bus X and the user writes to
-> sriov_vf_msix_count for a VF on bus X+1, it looks like
-> mlx5_core_sriov_set_msix_vec_count() will set the count for the wrong
-> VF.
+diff --git a/include/linux/pci-dma-compat.h b/include/linux/pci-dma-compat.h
+index 249d4d7fbf18..33b316f38e1d 100644
+--- a/include/linux/pci-dma-compat.h
++++ b/include/linux/pci-dma-compat.h
+@@ -20,13 +20,6 @@ pci_alloc_consistent(struct pci_dev *hwdev, size_t size,
+ 	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
+ }
+ 
+-static inline void *
+-pci_zalloc_consistent(struct pci_dev *hwdev, size_t size,
+-		      dma_addr_t *dma_handle)
+-{
+-	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
+-}
+-
+ static inline void
+ pci_free_consistent(struct pci_dev *hwdev, size_t size,
+ 		    void *vaddr, dma_addr_t dma_handle)
+@@ -89,26 +82,6 @@ pci_dma_sync_single_for_device(struct pci_dev *hwdev, dma_addr_t dma_handle,
+ 	dma_sync_single_for_device(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
+ }
+ 
+-static inline void
+-pci_dma_sync_sg_for_cpu(struct pci_dev *hwdev, struct scatterlist *sg,
+-		int nelems, int direction)
+-{
+-	dma_sync_sg_for_cpu(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
+-}
+-
+-static inline void
+-pci_dma_sync_sg_for_device(struct pci_dev *hwdev, struct scatterlist *sg,
+-		int nelems, int direction)
+-{
+-	dma_sync_sg_for_device(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
+-}
+-
+-static inline int
+-pci_dma_mapping_error(struct pci_dev *pdev, dma_addr_t dma_addr)
+-{
+-	return dma_mapping_error(&pdev->dev, dma_addr);
+-}
+-
+ #ifdef CONFIG_PCI
+ static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
+ {
+-- 
+2.25.1
 
-In mlx5_core_sriov_set_msix_vec_count(), we receive VF that is connected
-to PF which has "struct mlx5_core_dev". My expectation is that they share
-same bus as that PF was the one who created VFs. The mlx5 devices supports
-upto 256 VFs and it is far below the bus split mentioned in PCI spec.
-
-How can VF and their respective PF have different bus numbers?
-
-Thanks
-
-> 
-> Bjorn
