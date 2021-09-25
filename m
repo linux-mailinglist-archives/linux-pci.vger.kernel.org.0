@@ -2,34 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB5F841839B
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 19:33:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 727614183A1
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 19:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbhIYRe7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Sep 2021 13:34:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:56305 "EHLO
+        id S229608AbhIYRf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Sep 2021 13:35:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:54679 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbhIYRe6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 13:34:58 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1M76jv-1mUQo92PS3-008eqj; Sat, 25 Sep 2021 19:33:22 +0200
-Received: by mail-wr1-f41.google.com with SMTP id t8so37511493wri.1;
-        Sat, 25 Sep 2021 10:33:22 -0700 (PDT)
-X-Gm-Message-State: AOAM532WNakjyL3ZvQX8Bu0q+nKLKEoLLsBcs1qGxaP5y5f8K8gut0Z7
-        3qxvJ34QfBfMcjzQjy0ErPzZsaN8kBOjQv9WYQE=
-X-Google-Smtp-Source: ABdhPJz71+W5QKw02u9tzKycAUfeIQyFgilizU1qNL0MVKu7i8r/pw9Qp17Rg7H+KND57HeXcwT7x94QOx8SGQmJwGI=
-X-Received: by 2002:a1c:7413:: with SMTP id p19mr7959099wmc.98.1632591202155;
- Sat, 25 Sep 2021 10:33:22 -0700 (PDT)
+        with ESMTP id S229549AbhIYRf3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 13:35:29 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]) by
+ mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MA844-1maGNO3dJC-00BgBI; Sat, 25 Sep 2021 19:33:52 +0200
+Received: by mail-wr1-f45.google.com with SMTP id w17so37285832wrv.10;
+        Sat, 25 Sep 2021 10:33:52 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZxIXgn+94K8OkUS3qgxpNjXaw1PECyK32l9rK61LMql4g20ss
+        OEvlSJIpdQ0rVJ2CwLaWAyH2do7aDi8DcX+DuzA=
+X-Google-Smtp-Source: ABdhPJxHilNyrhkKldS3YRZ1E4Ye2gk1OmIUNcWp41Uyl1sY+smAmPNinSd9bb4kF6SjiPUsqd5p9aU8s9o12e2ei/c=
+X-Received: by 2002:a5d:6a08:: with SMTP id m8mr17718929wru.336.1632591232505;
+ Sat, 25 Sep 2021 10:33:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210924211139.3477-1-sergio.paracuellos@gmail.com> <20210924211139.3477-7-sergio.paracuellos@gmail.com>
-In-Reply-To: <20210924211139.3477-7-sergio.paracuellos@gmail.com>
+References: <20210924211139.3477-1-sergio.paracuellos@gmail.com> <20210924211139.3477-3-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210924211139.3477-3-sergio.paracuellos@gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 25 Sep 2021 19:33:06 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0LXzyC1y4QapdjvtC2WRu8hU_0hENzZrz14ufoVP3ceQ@mail.gmail.com>
-Message-ID: <CAK8P3a0LXzyC1y4QapdjvtC2WRu8hU_0hENzZrz14ufoVP3ceQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] staging: mt7621-pci: properly adjust base address for
- the IO window
+Date:   Sat, 25 Sep 2021 19:33:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3gHsNoyaNjyn3e8=+4YqnAM6YHNna_yKUxf7k8O_od=Q@mail.gmail.com>
+Message-ID: <CAK8P3a3gHsNoyaNjyn3e8=+4YqnAM6YHNna_yKUxf7k8O_od=Q@mail.gmail.com>
+Subject: Re: [PATCH 2/6] Revert "staging: mt7621-pci: set end limit for 'ioport_resource'"
 To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
@@ -43,25 +42,25 @@ Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         linux-staging@lists.linux.dev, neil@brown.name,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:jrQkC6XM1UQQPxoAghMY4Q2F/h1sU5wN/PVN6YbA4qAq0PYAFGx
- Yhx1wWTzgkwSmL/NcvP9NomZASc3xBzsHfc5tfswikNQIgx8FujqZ7Ofpw2LvYbRPTJXHFA
- 9RGnymj6aYew/Lg7hFw5yxg8Xmok8yHedhVfL856tuRLq57ywjr869T492UHgGCXW650Eo8
- MYU01jEH3dq/BqGKe+cBQ==
+X-Provags-ID: V03:K1:qr3SJ2McwjGt/CKAiShOSBztgFfRRYKJbfdyfSItsPnPikDwzvc
+ zpWWw2tj7R4dDxv2UfswJ7YvwYk1U6/DL4gNNsZDAEvBBuuNrrrGTtyG2/T9Kn4K28/xBll
+ wvUpeuohTOdvkE2+20NwvfQzjPLdlvK3F7/HklpBoaL3ePW22O4JbnDQEwyPR93hdhPa/Uv
+ k+V0MipXtYHKOTNPrufYg==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3QApOtBy+IM=:iH1RqHz9NUzJKyDtzn8evv
- kIXGIYG2ubQYOPWHZ+Ex1+bDSidDlfOiHCHXvJijVVR0sWkosuf5fKpZy2bxo5fg5jlkujG/2
- KbMq9wqlmYhNMT4cB7l2Tdmk8d4koKTJsdCtSvvKxP+zv6S1roFMDXqD7Uc3vQY9XH8NJK9mh
- VFaCcpjys/2heH6Xa0kbQhPyQv9Lcv08WyV5HH2mVKZZG+tyW5KMjh6HkDQUWmTNJlRN74ikD
- Juf9jk9Bf/kWgfzgWps/tWXC4QA5Tqgp6zKZDdiEIKWkwhrxJZLR8GkgsE7TklFvZok/bICL0
- k62jO5dMFmqvp+EtWNsymZs3nsbxpzIYRie+LmhYwlYte8YOsZ4D3X5y24FafqmSdy4JBnoEX
- fC8cT2NWQTl6UQMobVxPzxDpiXbnuE6N9P0sjNv9rWbgoFMKzeMGFBWMcL21hAFlCxAVN2Lh6
- BoolaKDT1m+00R3kIyTUH2BcAKd2HHaPJdqoEfKQQimhctjF0w+EP9J5z9IVIVZCsvBdtgAxE
- 54kM9fjR0i7iYFv8mj/5Jmn1UdZkK++SVPTlcyl3cmtdasZFwlzF/g+uGBXpZKRsio5ZeBicB
- rliQhXPJC7l3EIQ6gtWwgkTayc0eOKOgU7iWwlYthrX9MAEIIVD+Or4CrAtAReWbKsZXkeZqg
- LZgZnQPX76nHcvxraRIuASKgcweH7nZY65oaAVvIbErXRVQOmUqoAUQKvME+2fAM7jRMV8geS
- AVw8KVRsk8+q86M5SVsd009pHOVBILa07YA/0Bm/bCa+NbU3rngvb7xt20ZCErc0u04Q4YLiI
- tlcsmQPyeanZL4HzDjo0vMgRkp6cRQF1OeyhlobkQlL9SaHz0BAEnD/xX6M0O9S4JVA3YCYuU
- AdrGAplyfj+HIjhV1QIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2PEUUVajbpg=:BcGZEcdYDoOMjMUT4ApLMI
+ OkqVxKKxPHfPZ/XRjng2Tjh2VMt0TEx/P7xU5Bi+gc/45jURFiudicTK2YXetlgTYsHNKyoSx
+ 0Sr0U+5paTkl17qe6Ag1Wb5j5+tk4hQQ3KMVObhMCkF9i8S/PCJHk7tQDAI+CkEZyc2YjRtPy
+ tsstaehQ7rCuxRuZlJXBQGfwgHM6UvvFDvAqMdsS5ROQU3Ax6dXSz2928/GXiJaIDRpycnz5H
+ 841BAZ3Ox3QIFpVfIzIGKvVt31+H8aV8y+VoiK67IrLpD2fR5/sjpFKCHjF+Ge9R6q0fBpcgs
+ nOzkCofEEvwSIxYZkUeAlhXt9A+aUPLd6xZA95jLmmqnH37UBKUiDuNp8eh0H2p2w55TxzLng
+ qWrZGW2EVXilLeq8k9zmjr+OrLTuYdF+gqKJdwO+x6XiaATllwhL8HBhSW1IM5RI4pyvdB3yV
+ jKxk7EHM38szl+hPqX+HXqj2icRGxzaLjaD4NRZKSOj2kb8SXp2uYJzaCs8C1zOQ24ThR+URx
+ 9T0LEs99r7j6DQYrsAHH53HY2nh2reVRaAJW9MnPsk8cYozhfwgCt11aIyzFOcmBr+cy/AVgS
+ fWcVe6CmHWXz9WZZcJPMbKk4S0OeVfuuRPgA1f98RRpfJN7U04bEsi/3Z/MkJA0nTMTP7kebE
+ uHnbYCMml3QKeBRq1IgXB2RoWX9AZ+NlsaZV/59ZRL+7d2DWRjrStFmqvbufOOrJUrUqituj5
+ KNANRNOFBTaFkNC25PwDS6T7gHWKFJLNjUzDbhsNeiKT7/OmxZpMTDPvdQXj9DaCqJIj1INIg
+ HfEnHUzp8mAAWTlDBv6/3TrvddPe65/D1ht8u0Nq0jYBPl8mbtMvOlWa4DNGdBr0goqZm1SYK
+ 86VFg3b0ejVAd2SsMonw==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -69,13 +68,10 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Fri, Sep 24, 2021 at 11:11 PM Sergio Paracuellos
 <sergio.paracuellos@gmail.com> wrote:
 >
-> The value to adjust in the bridge register RALINK_PCI_IOBASE must take into
-> account the raw value from DT, not only the translated linux port number.
-> As long as io_offset is zero, the two are the same, but if you were to use
-> multiple host bridge in the system, or pick a different bus address in DT,
-> you can have a nonzero io_offset. At this means to take into account the
-> bus address which is used to calculate this offset, substracting it from
-> the IO resource start address.
+> This reverts commit 50fb34eca2944fd67493717c9fbda125336f1655.
+>
+> Since IO_SPACE_LIMIT is not really being changed there is no
+> real need to adjust the ioport_resource end limit.
 >
 > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
