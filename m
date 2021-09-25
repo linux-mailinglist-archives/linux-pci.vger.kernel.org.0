@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84AE4418465
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 22:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 126A341846A
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 22:32:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbhIYUeG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Sep 2021 16:34:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
+        id S230029AbhIYUeQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Sep 2021 16:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbhIYUeG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 16:34:06 -0400
+        with ESMTP id S229971AbhIYUeH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 16:34:07 -0400
 Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC403C061570;
-        Sat, 25 Sep 2021 13:32:30 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id t8so38336755wrq.4;
-        Sat, 25 Sep 2021 13:32:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142B3C061575;
+        Sat, 25 Sep 2021 13:32:32 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id i23so38360502wrb.2;
+        Sat, 25 Sep 2021 13:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uSEYmLllNjJftf9n5AprTfaaSYD64ry9qHpFZHlSP5E=;
-        b=mK9eDOopE4EeNRjuJv79Vfu0yg1xqvz1s1EEyvjCOHsg5UuI90jlrsxHA0ICR0xRZi
-         Advw48cgO/XZjkSf/CP1jzDIAi5R+VgbDKMoQjGnAZOq+UDSP1itc/QHbNeC/npV/fyX
-         y4QSZJuf7xRmpFiLoO1Il5dAyyrjE3I0eN5JEYbSA8eVMvRVzzbYsVJzcclDtNhO+uGi
-         EvqhX5msauPSAJ/yTRpXc2yx2Ecosw1GMTsGpJeC3vx3Tw5mkC0zO1sTlpkcGdRd2mXX
-         pA3CRybJs0ZbWCDrNPBtj3sTSYW1eTUqPSbkQ+ZstrYYIPmlrsDp5LaBrtJa22CfnjG6
-         Ab+A==
+        bh=tk71Ha065utVNVLOH6SmaYvA7yXp/Uoif9kGNCMKFO4=;
+        b=oQ9MnWyOtTbvghYiZ0b8FFRNGb8c2o10uU5v985hfBjn8BOI0+5qphvBnU1rFmI53D
+         zRTi/xqH+ckeulaQwJVICjodLX+bMH7wGH9IFzNRSPCv1I9UYlWYu5iMhOLXD+M7vDc6
+         IqF1BgFZWXuAN45uyfhc5xLy03VPWJiCGokiNwnWQLrWrKkvPYl7hLqC2En3sYtDFlx4
+         JMhlzEh31NPOX751fPKHkJBjexUt1Xfk53Nj6l3S1BeEonPeQ0n8uF6KZNjaVxwWbtPU
+         F4YSupZhOBDgm6LgiySw7pLRZlysdW7sEj7froIkry1zPJSaiuqiarSMamKA7zpmCa7b
+         44TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uSEYmLllNjJftf9n5AprTfaaSYD64ry9qHpFZHlSP5E=;
-        b=eU6qN0Oz9bOwX1tuYscQieTpGduLpmbYuvNv5Lp/70Gnyf4BtvOC3vVL+JVvSYgoal
-         27T3HaZS1dIULA3hLMT4tIhXEf+1tDFME7z5bqADT6jiNbZdpQlnyg2ffxdJFbkhRSv2
-         4kchozXADAUbcRvTmLMQPRZ6PzibjIh98XdbAX0KAB1GSX/FfjWVHNV/gSDSFRPPYeZK
-         xiBpV2ZnhC5r8XNI1/hbUMvOMCxFSfyr85GtPA1TJGOWDPgGM2V0oQtHlnoyXfqho7Vi
-         Ep7ZIQhUbIeoxRor0FOZu/jnP9Yt7uuaSBqkEdxRb+wplkk6kdEpoHUCreylv+hdd7vM
-         0pJg==
-X-Gm-Message-State: AOAM532wZCltz5eYGgeQMr27RtUqeXM4LFit1CDR5O2evx80cx3I/lab
-        47PMaXoMSVBLXcLJ/AUaAAE=
-X-Google-Smtp-Source: ABdhPJw1wJuIcSQdsCcNqDifiu5l3xy9TQ+mGAYLfv7U7/t0+L1QAKHkglr6WgQuix7pkZUZy2pmnA==
-X-Received: by 2002:a5d:4388:: with SMTP id i8mr18259416wrq.340.1632601949390;
-        Sat, 25 Sep 2021 13:32:29 -0700 (PDT)
+        bh=tk71Ha065utVNVLOH6SmaYvA7yXp/Uoif9kGNCMKFO4=;
+        b=w6lYm4PS+9DVE564Za1ZYGRa8BiOAeRjri12p3ViNItJXbuod9hweVl3J5eV/a7u1e
+         Hvflx8OtTmwCRYNHjusdOULX1EoSRdmwRXgiyWIMiv8eGxs+9MxlgEMClpGaaojEMYnK
+         bEHXppgCJaA18rOuQkqvtacckhVIing7kWOUkPCIVBjHFTZ2I6D1HC054Dz5Wemviere
+         i+rQqJncVTa/LIe5820dGDI4zPxHBbISL14O2BueD7WWFAwkdhopeBVak+lpEBWsYres
+         M6qyWmpVJ1VjL2lXXSqhzP2BXYOMSh3HDaVwU0J0WxJzxyvGnngU8uIMIfDplxf2ZNIB
+         8+eQ==
+X-Gm-Message-State: AOAM531wp0L//rE7TG1esjKDnQp2PnSlVeSNiyeZJTTvGteLcS3kg5Dr
+        zKr80gKA3nfPtmBWMbgS62e4gMdJPS0=
+X-Google-Smtp-Source: ABdhPJzI3fdOjvJi6rSKVa4OVIP23IVjo8NUZi2jfEe976T7EWHYlU2C+s4vJR2g6bsltRRGIm3Bbg==
+X-Received: by 2002:a5d:47a4:: with SMTP id 4mr18493619wrb.274.1632601950717;
+        Sat, 25 Sep 2021 13:32:30 -0700 (PDT)
 Received: from localhost.localdomain (252.red-83-54-181.dynamicip.rima-tde.net. [83.54.181.252])
-        by smtp.gmail.com with ESMTPSA id a202sm16703279wmd.15.2021.09.25.13.32.28
+        by smtp.gmail.com with ESMTPSA id a202sm16703279wmd.15.2021.09.25.13.32.29
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 Sep 2021 13:32:29 -0700 (PDT)
+        Sat, 25 Sep 2021 13:32:30 -0700 (PDT)
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
 To:     tsbogend@alpha.franken.de
 Cc:     robh@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
@@ -54,9 +54,9 @@ Cc:     robh@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
         gregkh@linuxfoundation.org, linux-mips@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-staging@lists.linux.dev,
         neil@brown.name, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] MIPS: ralink: set PCI_IOBASE to 'mips_io_port_base'
-Date:   Sat, 25 Sep 2021 22:32:21 +0200
-Message-Id: <20210925203224.10419-4-sergio.paracuellos@gmail.com>
+Subject: [PATCH v3 4/6] PCI: Allow architecture-specific pci_remap_iospace()
+Date:   Sat, 25 Sep 2021 22:32:22 +0200
+Message-Id: <20210925203224.10419-5-sergio.paracuellos@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210925203224.10419-1-sergio.paracuellos@gmail.com>
 References: <20210925203224.10419-1-sergio.paracuellos@gmail.com>
@@ -66,34 +66,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-By default MIPS architecture use function 'set_io_port_base()' to set the
-virtual address of the first IO port. This function at the end sets variable
-'mips_io_port_base' with the desired address. To align things and allow
-to change first IO port location address for PCI, set PCI_IOBASE definition
-as 'mips_io_port_base'.
+pci_remap_iospace() was originally meant as an architecture specific helper
+but it moved into generic code after all architectures had the same
+requirements. MIPS has different requirements so it should not be shared.
 
-Fixes: 222b27713d7f ("MIPS: ralink: Define PCI_IOBASE")
+The way for doing this will be using a macro 'pci_remap_iospace' defined
+for those architectures that need a special treatment. Hence, put core API
+function inside preprocesor conditional code for 'pci_remap_iospace'
+definition.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Acked-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 ---
- arch/mips/include/asm/mach-ralink/spaces.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/include/asm/mach-ralink/spaces.h b/arch/mips/include/asm/mach-ralink/spaces.h
-index 87d085c9ad61..05d14c21c417 100644
---- a/arch/mips/include/asm/mach-ralink/spaces.h
-+++ b/arch/mips/include/asm/mach-ralink/spaces.h
-@@ -2,8 +2,8 @@
- #ifndef __ASM_MACH_RALINK_SPACES_H_
- #define __ASM_MACH_RALINK_SPACES_H_
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce2ab62b64cf..0ec57bb01a88 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4123,6 +4123,7 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+  * architectures that have memory mapped IO functions defined (and the
+  * PCI_IOBASE value defined) should call this function.
+  */
++#ifndef pci_remap_iospace
+ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+ {
+ #if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+@@ -4146,6 +4147,7 @@ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+ #endif
+ }
+ EXPORT_SYMBOL(pci_remap_iospace);
++#endif
  
--#define PCI_IOBASE	_AC(0xa0000000, UL)
--#define PCI_IOSIZE	SZ_16M
-+#define PCI_IOBASE	mips_io_port_base
-+#define PCI_IOSIZE	SZ_64K
- #define IO_SPACE_LIMIT	(PCI_IOSIZE - 1)
- 
- #include <asm/mach-generic/spaces.h>
+ /**
+  * pci_unmap_iospace - Unmap the memory mapped I/O space
 -- 
 2.25.1
 
