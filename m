@@ -2,122 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17133418315
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 17:14:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C0F9418390
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Sep 2021 19:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343802AbhIYPPo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Sep 2021 11:15:44 -0400
-Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:20947 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343799AbhIYPPo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 11:15:44 -0400
-Received: from [192.168.1.18] ([90.126.248.220])
-        by mwinf5d25 with ME
-        id yFE52500P4m3Hzu03FE6GX; Sat, 25 Sep 2021 17:14:07 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 25 Sep 2021 17:14:07 +0200
-X-ME-IP: 90.126.248.220
-Subject: Re: [PATCH] PCI: Remove the unused pci wrappers
-To:     Cai Huoqing <caihuoqing@baidu.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210925135255.328-1-caihuoqing@baidu.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <3bf6cee5-a55b-5a6e-26d5-35002b36a2d2@wanadoo.fr>
-Date:   Sat, 25 Sep 2021 17:14:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S229549AbhIYReF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Sep 2021 13:34:05 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:37389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229542AbhIYReF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 13:34:05 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MxUfn-1mnker1G6j-00xqPp; Sat, 25 Sep 2021 19:32:28 +0200
+Received: by mail-wr1-f47.google.com with SMTP id t18so37441161wrb.0;
+        Sat, 25 Sep 2021 10:32:28 -0700 (PDT)
+X-Gm-Message-State: AOAM532VW9e3tSTXVFytoQOU+xOIztS6vPebbvsQ+0iznf2cd9EAOhk9
+        Z5ujwgzoynTyLZw0DQp3RKTPgCTzAv3q4eEOqHY=
+X-Google-Smtp-Source: ABdhPJwATFoMtLfM82dbiwbfY0GKoVgPll7guJJPZ4SlMDyVpnybiZOiHpV2yuRbCNlpS7w6kjrpn7CdgtMxMmMrKi0=
+X-Received: by 2002:adf:f481:: with SMTP id l1mr18158744wro.411.1632591147944;
+ Sat, 25 Sep 2021 10:32:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210925135255.328-1-caihuoqing@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210924211139.3477-1-sergio.paracuellos@gmail.com> <20210924211139.3477-6-sergio.paracuellos@gmail.com>
+In-Reply-To: <20210924211139.3477-6-sergio.paracuellos@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 25 Sep 2021 19:32:12 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3SpuioCVBfQpHFGuNQoXG7g8w9VL+V8rYd8Q80Od89HA@mail.gmail.com>
+Message-ID: <CAK8P3a3SpuioCVBfQpHFGuNQoXG7g8w9VL+V8rYd8Q80Od89HA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] MIPS: implement architecture dependent 'pci_remap_iospace()'
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-staging@lists.linux.dev, neil@brown.name,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:z1A2KwAlDVKgQ9R2BTxeV0qDqwwnA6UG2aXvSweb+1hWygHPTf2
+ AnBx/YyA+/aCuzOWBAWKXEcvIlKAlmiYjFcFlenk8lGJdjqv7mP0U1q5WA0PngXOcsT21Ic
+ g+XGEKSmGhcbMtS2OTlKpFBYicSW/R05F1UVipkeZDPAMi4W/LjLIJfwXDcj6liLCJajaE1
+ snpu0joEB9Lbcu1JZejGw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rDk+CQ70ebI=:qVrEYAsiT3PSydjldOOVBZ
+ olzrxDKovhFmI2TFws3jCi1d9YtIUSk8l5ADig0QasAdu8VBOxwYfvhF5qCuTOeX5bv94c8Oz
+ vmo8bYlgMrxJmCPQDeqO2fDF34CVabUNmhHsN9JRq462OVeJEOwoSIwkJ+u7R6aeKJFVqjoeZ
+ HqRuu3gne8me+HWX9nAsHb2cifDWqOOlR8YiFuO2w/fhZFDKbHr7fThHQkVV/5CwQHJU89nb2
+ 6aI68Nuhu/QhYFZbWDwdJaPEW/FCDxtcrTTgkL4HlHclI+rH8UQwWX3zrheplEF+/6McBG6KD
+ xFwAEBBT0H4qj34Z5/c80LpSy8Ld2JZbdRjLU4XF4ZGFFIFGqR0jmGgW14q7mhJuaDDTFZbo5
+ 1ukdeKyjpE79XKLbRGfm5ZeU/QsXhEKaU1F/Mmp6LlNIi4HQAIfpL1Z3u8Dbjtw6rMOXT4l1N
+ qpxE0tqJ8gLFscnNKKwIYme0zcDgwmVxsuVYS9s1/652vbvhik2yKpSGnurnu1qv2oMpLJDET
+ 5d4u/P8s7nRtTTKlX7vVM9lSFvWp2POG6H56CRTbv2iMUL16bIoTvrNveJaKW4PjNllKJN4aB
+ oV9ndXw9U0e34D/jM7bSZwyHlGRfQr0B3MFtjoqshsDIX4ps+h7dWztGOSCeV+KnEqScz+ZAT
+ Kbqyl9FirEY5FXkNut2qM3kUa9vU5l6s1+cA35+otweVhaHf9Ug3FsnopnU5KQ+J2ZzZ6QwGl
+ nAepfokNeJWYl11hQha+NwQVg3CBPBdStZUgHRVKhYEZ+m48MR/j0Y/jBgmqMmKmRghSlXOOP
+ pyCBHeLHm0hQXyEgOnA/OrsO2Q8T4Ug9DE3eH/9gMmqImYkhf6yNYUoCy64txZtn1cuV/9okb
+ ft14OfoWfDWgjrXBhbDQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le 25/09/2021 à 15:52, Cai Huoqing a écrit :
-> The wrappers in include/linux/pci-dma-compat.h should go away,
-> so remove the unused pci wrappers.
-> Prefer using dma_xxx() instead of the pci wrappers pci_xxx().
-> 
-> Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
-> ---
->   include/linux/pci-dma-compat.h | 27 ---------------------------
->   1 file changed, 27 deletions(-)
-> 
-> diff --git a/include/linux/pci-dma-compat.h b/include/linux/pci-dma-compat.h
-> index 249d4d7fbf18..33b316f38e1d 100644
-> --- a/include/linux/pci-dma-compat.h
-> +++ b/include/linux/pci-dma-compat.h
-> @@ -20,13 +20,6 @@ pci_alloc_consistent(struct pci_dev *hwdev, size_t size,
->   	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
->   }
->   
-> -static inline void *
-> -pci_zalloc_consistent(struct pci_dev *hwdev, size_t size,
-> -		      dma_addr_t *dma_handle)
-> -{
-> -	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
-> -}
-> -
->   static inline void
->   pci_free_consistent(struct pci_dev *hwdev, size_t size,
->   		    void *vaddr, dma_addr_t dma_handle)
-> @@ -89,26 +82,6 @@ pci_dma_sync_single_for_device(struct pci_dev *hwdev, dma_addr_t dma_handle,
->   	dma_sync_single_for_device(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
->   }
->   
-> -static inline void
-> -pci_dma_sync_sg_for_cpu(struct pci_dev *hwdev, struct scatterlist *sg,
-> -		int nelems, int direction)
-> -{
-> -	dma_sync_sg_for_cpu(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_dma_sync_sg_for_device(struct pci_dev *hwdev, struct scatterlist *sg,
-> -		int nelems, int direction)
-> -{
-> -	dma_sync_sg_for_device(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline int
-> -pci_dma_mapping_error(struct pci_dev *pdev, dma_addr_t dma_addr)
-> -{
-> -	return dma_mapping_error(&pdev->dev, dma_addr);
-> -}
-> -
->   #ifdef CONFIG_PCI
->   static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
->   {
-> 
+On Fri, Sep 24, 2021 at 11:11 PM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
+>
+> To make PCI IO work we need to properly virtually map IO cpu physical address
+> and set this virtual address as the address of the first PCI IO port which
+> is set using function 'set_io_port_base()'.
+>
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-Hi,
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-I'm not sure that this step is needed.
-The whole pci-dma-compat.h is close to be obsolete. So axing just a part 
-of it now is not that really useful.
+> +int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+> +{
+> +       size_t size = (res->end - res->start) + 1;
+> +       unsigned long vaddr = (unsigned long)ioremap(phys_addr, size);
+> +
+> +       set_io_port_base(vaddr);
+> +       return 0;
+> +}
 
-After many patches, there is now just a few users of this deprecated 
-API. All steps to finalize the job have already been posted [1] and a 
-plan has been proposed by Arnd Bergmann to have the remaining ones 
-merged in the tree [2].
+It might be good to check that res->start is zero here, otherwise
+the io_port_base would be off. That could happen if you ever have more
+than one bridge.
 
-Some of the message/fusion patches have been re-sent yesterday and today 
-to the scsi maintainer in order to have them merged.
-
-BTW, Cai Huoqing, thanks a lot for taking care and proposing the needed 
-clean-ups in comments and log messages.
-Looking at it was the next item of my to-do list, but I'm really pleased 
-to get some help here to finalize the job once and for all.
-
-CJ
-
-[1]: 
-https://lore.kernel.org/kernel-janitors/4cb6f731-7f4d-21d0-c88d-37664ea35002@wanadoo.fr/
-
-[2]: 
-https://lore.kernel.org/kernel-janitors/CAK8P3a2CBvw_GP372R+p8f4_pa82sMuQ5iHk4Nb2dJCzm_Fivw@mail.gmail.com/ 
-
+        Arnd
