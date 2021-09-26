@@ -2,104 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 912C8418AEF
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:20:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ED29418AF7
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbhIZUWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Sep 2021 16:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
+        id S230017AbhIZUZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Sep 2021 16:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229894AbhIZUWG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Sep 2021 16:22:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B0E260EE4;
-        Sun, 26 Sep 2021 20:20:29 +0000 (UTC)
+        id S229894AbhIZUZU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Sep 2021 16:25:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AD45B60EE4;
+        Sun, 26 Sep 2021 20:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632687629;
-        bh=fYActKnvqIC6C0UMKyCJGxHn3OhDINtVGdhnfr6ur2M=;
+        s=k20201202; t=1632687824;
+        bh=UyDa7RcM8FAe1YGnTgWQsVLHnoPiMluibSBU3LwwEYc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=abhuI3VQ1tNOuIx30bg2goY/rh+objBay00QU0OCi7QRGPpuWR7v3cky/PY3MVt2Y
-         sUYZ5GkYphogzHYIVsoUKQgLzSM1GPo+7Awvq7wQHJq6GLMUj6lZH3ZHDUoCa5i411
-         83mtA43kqeWKoIr7wFLgqC+zsGVeJD5kMxMPpBE68AGp2Cu5+7gqyoJttu5WP3p9/F
-         h48sLNA/9m97XuHeB4xlShmTHk9W42yV4EP3yRAKadaJQ0f1S6UvEPPKmIv62+D3K+
-         ZbkIMuUtzNgxfDofh+jJyuqcuO6I0gwX2qFsWx3EpnxanF7DDCPt7DCSgTjTjdZIEq
-         DFJPJJCalmw/g==
-Date:   Sun, 26 Sep 2021 15:20:27 -0500
+        b=E/WwhkU8QrirBHQB4gV+UmUP+1owZhhMt1FjHYxZVijY/PLiLZR45z/AznYyTrhdT
+         Dw5AkXWayukNM9G3BVDs8e6xBAso0arLQIEK0KePkyDQYVLNSIlZ02aZ/6nW2MMSY7
+         T8g283jfeQOhP7NPdUBuNr4fCMk2jQIkdJT366X1LNJVaoh+bXQEhiKKZoi3YAn3ZK
+         9SWDWaRBIcK/Dd6hLYzUA8WIOIhZjqpdyjWdmikI185j2jYLXWanKK5EKaIaZSz7yM
+         BYUi+/RPnMoGqp4BV1pI4dBMH/fqM1Hb0FVhSKBWMd/OxwEusX1iM8RXLrlZZQ5avh
+         Z1lLzxrLjb5OQ==
+Date:   Sun, 26 Sep 2021 15:23:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhenneng Li <lizhenneng@kylinos.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/sysfs: add write attribute for boot_vga
-Message-ID: <20210926202027.GA588220@bhelgaas>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
+Message-ID: <20210926202341.GA588922@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210926071539.636644-1-lizhenneng@kylinos.cn>
+In-Reply-To: <YVAVAfU3aL6JJg3i@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 03:15:39PM +0800, Zhenneng Li wrote:
-> Add writing attribute for boot_vga sys node,
-> so we can config default video display
-> output dynamically when there are two video
-> cards on a machine.
+On Sun, Sep 26, 2021 at 09:36:49AM +0300, Leon Romanovsky wrote:
+> On Sat, Sep 25, 2021 at 12:41:15PM -0500, Bjorn Helgaas wrote:
+> > On Sat, Sep 25, 2021 at 01:10:39PM +0300, Leon Romanovsky wrote:
+> > > On Fri, Sep 24, 2021 at 08:08:45AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Sep 23, 2021 at 09:35:32AM +0300, Leon Romanovsky wrote:
+> > > > > On Wed, Sep 22, 2021 at 04:59:30PM -0500, Bjorn Helgaas wrote:
+> > > > > > On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
+> > > > > > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > > > 
+> > > > > > > The PCI core uses the VF index internally, often called the vf_id,
+> > > > > > > during the setup of the VF, eg pci_iov_add_virtfn().
+> > > > > > > 
+> > > > > > > This index is needed for device drivers that implement live migration
+> > > > > > > for their internal operations that configure/control their VFs.
+> > > > > > >
+> > > > > > > Specifically, mlx5_vfio_pci driver that is introduced in coming patches
+> > > > > > > from this series needs it and not the bus/device/function which is
+> > > > > > > exposed today.
+> > > > > > > 
+> > > > > > > Add pci_iov_vf_id() which computes the vf_id by reversing the math that
+> > > > > > > was used to create the bus/device/function.
+> > > > > > > 
+> > > > > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> > > > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > > > > 
+> > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > 
+> > > > > > mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
+> > > > > > same thing as pci_iov_vf_id() by iterating through VFs until it finds
+> > > > > > one with a matching devfn (although it *doesn't* check for a matching
+> > > > > > bus number, which seems like a bug).
+> > > ...
+> > 
+> > > > And it still looks like the existing code is buggy.  This is called
+> > > > via sysfs, so if the PF is on bus X and the user writes to
+> > > > sriov_vf_msix_count for a VF on bus X+1, it looks like
+> > > > mlx5_core_sriov_set_msix_vec_count() will set the count for the wrong
+> > > > VF.
+> > > 
+> > > In mlx5_core_sriov_set_msix_vec_count(), we receive VF that is connected
+> > > to PF which has "struct mlx5_core_dev". My expectation is that they share
+> > > same bus as that PF was the one who created VFs. The mlx5 devices supports
+> > > upto 256 VFs and it is far below the bus split mentioned in PCI spec.
+> > > 
+> > > How can VF and their respective PF have different bus numbers?
+> > 
+> > See PCIe r5.0, sec 9.2.1.2.  For example,
+> > 
+> >   PF 0 on bus 20
+> >     First VF Offset   1
+> >     VF Stride         1
+> >     NumVFs          511
+> >   VF 0,1   through VF 0,255 on bus 20
+> >   VF 0,256 through VF 0,511 on bus 21
+> > 
+> > This is implemented in pci_iov_add_virtfn(), which computes the bus
+> > number and devfn from the VF ID.
+> > 
+> > pci_iov_virtfn_devfn(VF 0,1) == pci_iov_virtfn_devfn(VF 0,256), so if
+> > the user writes to sriov_vf_msix_count for VF 0,256, it looks like
+> > we'll call mlx5_set_msix_vec_count() for VF 0,1 instead of VF 0,256.
 > 
-> Xorg server will determine running on which
-> video card based on boot_vga node's value.
+> This is PCI spec split that I mentioned.
+> 
+> > 
+> > The spec encourages devices that require no more than 256 devices to
+> > locate them all on the same bus number (PCIe r5.0, sec 9.1), so if you
+> > only have 255 VFs, you may avoid the problem.
+> > 
+> > But in mlx5_core_sriov_set_msix_vec_count(), it's not obvious that it
+> > is safe to assume the bus number is the same.
+> 
+> No problem, we will make it more clear.
 
-When you repost this, please take a look at the git commit log history
-and make yours similar.  Specifically, the subject should start with a
-capital letter, and the body should be rewrapped to fill 75
-characters.
-
-Please contrast this with the existing VGA arbiter.  See
-Documentation/gpu/vgaarbiter.rst.  It sounds like this may overlap
-with the VGA arbiter functionality, so this should explain why we need
-both and how they interact.
-
-> Signed-off-by: Zhenneng Li <lizhenneng@kylinos.cn>
-> ---
->  drivers/pci/pci-sysfs.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 7bbf2673c7f2..a6ba19ce7adb 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -664,7 +664,29 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
->  			  !!(pdev->resource[PCI_ROM_RESOURCE].flags &
->  			     IORESOURCE_ROM_SHADOW));
->  }
-> -static DEVICE_ATTR_RO(boot_vga);
-> +
-> +static ssize_t boot_vga_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	unsigned long val;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct pci_dev *vga_dev = vga_default_device();
-> +
-> +	if (kstrtoul(buf, 0, &val) < 0)
-> +		return -EINVAL;
-> +
-> +	if (val != 1)
-> +		return -EINVAL;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	if (pdev != vga_dev)
-> +		vga_set_default_device(pdev);
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(boot_vga);
->  
->  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->  			       struct bin_attribute *bin_attr, char *buf,
-> -- 
-> 2.25.1
-> 
-> 
-> No virus found
-> 		Checked by Hillstone Network AntiVirus
+IMHO you should resolve it by using the new interface.  Better
+performing, unambiguous regardless of how many VFs the device
+supports.  What's the down side?
