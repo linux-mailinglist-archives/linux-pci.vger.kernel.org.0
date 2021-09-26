@@ -2,188 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FF9B4185CD
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 05:08:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72F384186BB
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 08:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230349AbhIZDJo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Sep 2021 23:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbhIZDJn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Sep 2021 23:09:43 -0400
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE03C061570
-        for <linux-pci@vger.kernel.org>; Sat, 25 Sep 2021 20:08:08 -0700 (PDT)
-Received: by mail-vk1-xa32.google.com with SMTP id g15so5571226vke.5
-        for <linux-pci@vger.kernel.org>; Sat, 25 Sep 2021 20:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WqXuaStqzW2k6Y+KAwDOJKIdc7qvxlmEHiAvkJLv1lw=;
-        b=p6X5uDXsCwnvw+UredCv8ToXFlg/Q+svmF+xilD58syDPnCaQMmsePbPV2+Gl6u57j
-         H7bvMCuZ0pRNRGnNHw23V2WqTyyyoUFZjdazR/KvC4SvLOAxATB1clMxDyz+xbUcW95t
-         wDQYHL6hLrQrvkQvr8HDWVzOHQEb2n56EIdCCUPzVOVpG7fvPJyQ/s5c7lqKAd1vB/3r
-         +89iQsSnl8KtR1pj8xG0FrewUZMU2apnwbHRYbGFazYSFEzt0DrDKqWD90wvpCEnlJCe
-         5nh+QV/sfNneL5pBqmilaRrzeC4aKjRMVqdfsH1k9/7U+3pSBehVT1HdEB1I/ypcdqf/
-         4eRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WqXuaStqzW2k6Y+KAwDOJKIdc7qvxlmEHiAvkJLv1lw=;
-        b=qTKdYyNqNpkwMKKxyiZnHKspzceDAlYph1MYG/j9tHbLdHxvBOg255UA+SqprFa7Ky
-         o9Vy6xqm3ps1DOG4Xi/rKSYd7YXrD12z3YtLTncFJ1MAvKbTmRfxfnaj4HDXiaRmEuES
-         EfPJDaWU/L1M2TMTOvK+42rsPl9kNg5BFFzorlV8RFTBiY0RxUeNn8FE0TsrpR78+RB8
-         eKqaX9I91hmhanB8ojREMfd8+XCsmj/Qre1VIlZUGqhEMNiPEIgOrtF+LLX6WzmSWCBT
-         bSnT+0wZxX5sY4+iM3Nm/6Owg4Ynbl1R/jDKRY3fotuPOTUh8FQ5RyL6GUXUUU8eRpEN
-         h46A==
-X-Gm-Message-State: AOAM530i9v78vOPveSmpGnCWCrkOmZcvmYrkt0aIpaaQphWaa2mgMppb
-        UdJJWNde7wBujiBFHr6jtUb5p1RkOv4dsNfMAf8=
-X-Google-Smtp-Source: ABdhPJy86U1AJnxzaAoVmtlkXN7RGuJ9JK+AMP0Cz73L1yzso3LXeO67IoPdTVCicGAcKq0rtUgXyJ8dJWHPBqXQ0qM=
-X-Received: by 2002:a1f:1283:: with SMTP id 125mr13231359vks.2.1632625687202;
- Sat, 25 Sep 2021 20:08:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210916082941.3421838-1-chenhuacai@loongson.cn> <20210916082941.3421838-13-chenhuacai@loongson.cn>
-In-Reply-To: <20210916082941.3421838-13-chenhuacai@loongson.cn>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sun, 26 Sep 2021 11:07:37 +0800
-Message-ID: <CAAhV-H7FhAjM-Ha42Z1dLrE4PvC9frfyeU27KHWcyWKkMftEsA@mail.gmail.com>
-Subject: Re: [PATCH V6 12/12] PCI/VGA: Move vgaarb to drivers/pci
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        id S230507AbhIZGi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Sep 2021 02:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229578AbhIZGi2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Sep 2021 02:38:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 48DE660F93;
+        Sun, 26 Sep 2021 06:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632638213;
+        bh=28oArhi0u0AmWqG/AavBH4MgxWMN2/sjbeEH/mw3iKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=alEjSWcDpCdzhQkOkBFYOPhQNwQERF9Tn/YsFDW8gnRwmMD+pV9bW5cH5Neq2KOKG
+         feKkdg4nYEaqHCdzrSBmjudBlqrHfUNzqA/NBZacoIuPCnOCNnEZZJaOmDfhXiGdRp
+         cjfrnBdpDn+fpbdHb3QBlYVip6+jiXHavCTr3ZKe2I2FT/IsWmceILP/hl8WaxWaar
+         621N16CbPuOt11ohNfn2B8Zqfh1doNB9mx1SJBFTljQOTpUxqX4zcW1wKqJaf650Ul
+         +BEjjEc7RNPpoBXJZDWU6uMW4HXRRNu/JIKh14FmoCK1LTis+0vc5W4socNPC5BeOq
+         Jd1mXdW/1pYvA==
+Date:   Sun, 26 Sep 2021 09:36:49 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
+Message-ID: <YVAVAfU3aL6JJg3i@unreal>
+References: <YU71n4WSIztOdpbw@unreal>
+ <20210925174115.GA511131@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210925174115.GA511131@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+On Sat, Sep 25, 2021 at 12:41:15PM -0500, Bjorn Helgaas wrote:
+> On Sat, Sep 25, 2021 at 01:10:39PM +0300, Leon Romanovsky wrote:
+> > On Fri, Sep 24, 2021 at 08:08:45AM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Sep 23, 2021 at 09:35:32AM +0300, Leon Romanovsky wrote:
+> > > > On Wed, Sep 22, 2021 at 04:59:30PM -0500, Bjorn Helgaas wrote:
+> > > > > On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
+> > > > > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > > 
+> > > > > > The PCI core uses the VF index internally, often called the vf_id,
+> > > > > > during the setup of the VF, eg pci_iov_add_virtfn().
+> > > > > > 
+> > > > > > This index is needed for device drivers that implement live migration
+> > > > > > for their internal operations that configure/control their VFs.
+> > > > > >
+> > > > > > Specifically, mlx5_vfio_pci driver that is introduced in coming patches
+> > > > > > from this series needs it and not the bus/device/function which is
+> > > > > > exposed today.
+> > > > > > 
+> > > > > > Add pci_iov_vf_id() which computes the vf_id by reversing the math that
+> > > > > > was used to create the bus/device/function.
+> > > > > > 
+> > > > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> > > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > > > 
+> > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > 
+> > > > > mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
+> > > > > same thing as pci_iov_vf_id() by iterating through VFs until it finds
+> > > > > one with a matching devfn (although it *doesn't* check for a matching
+> > > > > bus number, which seems like a bug).
+> > ...
+> 
+> > > And it still looks like the existing code is buggy.  This is called
+> > > via sysfs, so if the PF is on bus X and the user writes to
+> > > sriov_vf_msix_count for a VF on bus X+1, it looks like
+> > > mlx5_core_sriov_set_msix_vec_count() will set the count for the wrong
+> > > VF.
+> > 
+> > In mlx5_core_sriov_set_msix_vec_count(), we receive VF that is connected
+> > to PF which has "struct mlx5_core_dev". My expectation is that they share
+> > same bus as that PF was the one who created VFs. The mlx5 devices supports
+> > upto 256 VFs and it is far below the bus split mentioned in PCI spec.
+> > 
+> > How can VF and their respective PF have different bus numbers?
+> 
+> See PCIe r5.0, sec 9.2.1.2.  For example,
+> 
+>   PF 0 on bus 20
+>     First VF Offset   1
+>     VF Stride         1
+>     NumVFs          511
+>   VF 0,1   through VF 0,255 on bus 20
+>   VF 0,256 through VF 0,511 on bus 21
+> 
+> This is implemented in pci_iov_add_virtfn(), which computes the bus
+> number and devfn from the VF ID.
+> 
+> pci_iov_virtfn_devfn(VF 0,1) == pci_iov_virtfn_devfn(VF 0,256), so if
+> the user writes to sriov_vf_msix_count for VF 0,256, it looks like
+> we'll call mlx5_set_msix_vec_count() for VF 0,1 instead of VF 0,256.
 
-On Thu, Sep 16, 2021 at 4:39 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> The VGA arbiter is really PCI-specific and doesn't depend on any GPU
-> things.  Move it to the PCI subsystem.
-I found a new problem, after moving vgaarb.c to drivers/pci,
-misc_register() in vga_arb_device_init() fails with -ENODEV, the root
-cause is still initcall order. Both vga_arb_device_init() and
-misc_init() are subsys_initcall(), and drivers/Makefile looks like
-this:
-obj-y                           += pci/
-......
-obj-y                           += char/
-......
-obj-y                           += gpu/
+This is PCI spec split that I mentioned.
 
-So vga_arb_device_init() in the pci directory runs before misc_init()
-in the char directory, and misc_register() fails.
+> 
+> The spec encourages devices that require no more than 256 devices to
+> locate them all on the same bus number (PCIe r5.0, sec 9.1), so if you
+> only have 255 VFs, you may avoid the problem.
+> 
+> But in mlx5_core_sriov_set_msix_vec_count(), it's not obvious that it
+> is safe to assume the bus number is the same.
 
-There are two methods to resolve: 1, keep vgaarb.c in drivers/gpu; 2,
-make vga_arb_device_init() to be subsys_initcall_sync(). I prefer the
-first one, but it seems you don't like both of them.
+No problem, we will make it more clear.
 
-Huacai
-
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/gpu/vga/Kconfig           | 19 -------------------
->  drivers/gpu/vga/Makefile          |  1 -
->  drivers/pci/Kconfig               | 19 +++++++++++++++++++
->  drivers/pci/Makefile              |  1 +
->  drivers/{gpu/vga => pci}/vgaarb.c |  0
->  5 files changed, 20 insertions(+), 20 deletions(-)
->  rename drivers/{gpu/vga => pci}/vgaarb.c (100%)
->
-> diff --git a/drivers/gpu/vga/Kconfig b/drivers/gpu/vga/Kconfig
-> index 1ad4c4ef0b5e..eb8b14ab22c3 100644
-> --- a/drivers/gpu/vga/Kconfig
-> +++ b/drivers/gpu/vga/Kconfig
-> @@ -1,23 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -config VGA_ARB
-> -       bool "VGA Arbitration" if EXPERT
-> -       default y
-> -       depends on (PCI && !S390)
-> -       help
-> -         Some "legacy" VGA devices implemented on PCI typically have the same
-> -         hard-decoded addresses as they did on ISA. When multiple PCI devices
-> -         are accessed at same time they need some kind of coordination. Please
-> -         see Documentation/gpu/vgaarbiter.rst for more details. Select this to
-> -         enable VGA arbiter.
-> -
-> -config VGA_ARB_MAX_GPUS
-> -       int "Maximum number of GPUs"
-> -       default 16
-> -       depends on VGA_ARB
-> -       help
-> -         Reserves space in the kernel to maintain resource locking for
-> -         multiple GPUS.  The overhead for each GPU is very small.
-> -
->  config VGA_SWITCHEROO
->         bool "Laptop Hybrid Graphics - GPU switching support"
->         depends on X86
-> diff --git a/drivers/gpu/vga/Makefile b/drivers/gpu/vga/Makefile
-> index e92064442d60..9800620deda3 100644
-> --- a/drivers/gpu/vga/Makefile
-> +++ b/drivers/gpu/vga/Makefile
-> @@ -1,3 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-$(CONFIG_VGA_ARB)  += vgaarb.o
->  obj-$(CONFIG_VGA_SWITCHEROO) += vga_switcheroo.o
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 0c473d75e625..7c9e56d7b857 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -252,6 +252,25 @@ config PCIE_BUS_PEER2PEER
->
->  endchoice
->
-> +config VGA_ARB
-> +       bool "VGA Arbitration" if EXPERT
-> +       default y
-> +       depends on (PCI && !S390)
-> +       help
-> +         Some "legacy" VGA devices implemented on PCI typically have the same
-> +         hard-decoded addresses as they did on ISA. When multiple PCI devices
-> +         are accessed at same time they need some kind of coordination. Please
-> +         see Documentation/gpu/vgaarbiter.rst for more details. Select this to
-> +         enable VGA arbiter.
-> +
-> +config VGA_ARB_MAX_GPUS
-> +       int "Maximum number of GPUs"
-> +       default 16
-> +       depends on VGA_ARB
-> +       help
-> +         Reserves space in the kernel to maintain resource locking for
-> +         multiple GPUS.  The overhead for each GPU is very small.
-> +
->  source "drivers/pci/hotplug/Kconfig"
->  source "drivers/pci/controller/Kconfig"
->  source "drivers/pci/endpoint/Kconfig"
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index d62c4ac4ae1b..ebe720f69b15 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_PCI_PF_STUB)     += pci-pf-stub.o
->  obj-$(CONFIG_PCI_ECAM)         += ecam.o
->  obj-$(CONFIG_PCI_P2PDMA)       += p2pdma.o
->  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
-> +obj-$(CONFIG_VGA_ARB)          += vgaarb.o
->
->  # Endpoint library must be initialized before its users
->  obj-$(CONFIG_PCI_ENDPOINT)     += endpoint/
-> diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/pci/vgaarb.c
-> similarity index 100%
-> rename from drivers/gpu/vga/vgaarb.c
-> rename to drivers/pci/vgaarb.c
-> --
-> 2.27.0
->
+> 
+> Bjorn
