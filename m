@@ -2,125 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ED29418AF7
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42271418B00
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbhIZUZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Sep 2021 16:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
+        id S230032AbhIZUcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Sep 2021 16:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229894AbhIZUZU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Sep 2021 16:25:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AD45B60EE4;
-        Sun, 26 Sep 2021 20:23:43 +0000 (UTC)
+        id S229894AbhIZUcy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Sep 2021 16:32:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 86FB960EE4;
+        Sun, 26 Sep 2021 20:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632687824;
-        bh=UyDa7RcM8FAe1YGnTgWQsVLHnoPiMluibSBU3LwwEYc=;
+        s=k20201202; t=1632688278;
+        bh=/Hozk0nopGOayKv1poFzF4SX10bl8yXGfpVd9ZMgpbw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E/WwhkU8QrirBHQB4gV+UmUP+1owZhhMt1FjHYxZVijY/PLiLZR45z/AznYyTrhdT
-         Dw5AkXWayukNM9G3BVDs8e6xBAso0arLQIEK0KePkyDQYVLNSIlZ02aZ/6nW2MMSY7
-         T8g283jfeQOhP7NPdUBuNr4fCMk2jQIkdJT366X1LNJVaoh+bXQEhiKKZoi3YAn3ZK
-         9SWDWaRBIcK/Dd6hLYzUA8WIOIhZjqpdyjWdmikI185j2jYLXWanKK5EKaIaZSz7yM
-         BYUi+/RPnMoGqp4BV1pI4dBMH/fqM1Hb0FVhSKBWMd/OxwEusX1iM8RXLrlZZQ5avh
-         Z1lLzxrLjb5OQ==
-Date:   Sun, 26 Sep 2021 15:23:41 -0500
+        b=oIfDfZ78BGVWE8VEN926yEFIgkl53MnJTumWTfaHOth2W5Q6dQM5Zge4ySu7Acxx2
+         pz8ex/V3CFgkGWAfqJaBda6ImMOMkDkZzgFUbhJxI+xES9oRK1RvwKjwPAoFCxh3j+
+         RsV+cr3r9+6Blu6CavEw5DQCis4sICzd4JgdmP5bULy2ZdcT1G2mKtStZAjuuuPZ07
+         x7xGYc8XrPMmRiYJ3EPeSGFtU+QXOoNdxZsYGpWCzWROczQ0bohMCPAFWKOqKr+b2/
+         QATnJPbvW3eRa+tBpZv3o3bNIGcoAnpwV+BIvSXaJjaharLaL5g75LOmcpec0OtP8T
+         C9xCakQrHJoZQ==
+Date:   Sun, 26 Sep 2021 15:31:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
-Message-ID: <20210926202341.GA588922@bhelgaas>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com
+Subject: Re: [RFC PATCH 0/3 v2] PCI/ASPM: Remove struct aspm_latency
+Message-ID: <20210926203115.GA590101@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YVAVAfU3aL6JJg3i@unreal>
+In-Reply-To: <20210916084926.32614-1-refactormyself@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 09:36:49AM +0300, Leon Romanovsky wrote:
-> On Sat, Sep 25, 2021 at 12:41:15PM -0500, Bjorn Helgaas wrote:
-> > On Sat, Sep 25, 2021 at 01:10:39PM +0300, Leon Romanovsky wrote:
-> > > On Fri, Sep 24, 2021 at 08:08:45AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Sep 23, 2021 at 09:35:32AM +0300, Leon Romanovsky wrote:
-> > > > > On Wed, Sep 22, 2021 at 04:59:30PM -0500, Bjorn Helgaas wrote:
-> > > > > > On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
-> > > > > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > > > 
-> > > > > > > The PCI core uses the VF index internally, often called the vf_id,
-> > > > > > > during the setup of the VF, eg pci_iov_add_virtfn().
-> > > > > > > 
-> > > > > > > This index is needed for device drivers that implement live migration
-> > > > > > > for their internal operations that configure/control their VFs.
-> > > > > > >
-> > > > > > > Specifically, mlx5_vfio_pci driver that is introduced in coming patches
-> > > > > > > from this series needs it and not the bus/device/function which is
-> > > > > > > exposed today.
-> > > > > > > 
-> > > > > > > Add pci_iov_vf_id() which computes the vf_id by reversing the math that
-> > > > > > > was used to create the bus/device/function.
-> > > > > > > 
-> > > > > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> > > > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > > > > 
-> > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > 
-> > > > > > mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
-> > > > > > same thing as pci_iov_vf_id() by iterating through VFs until it finds
-> > > > > > one with a matching devfn (although it *doesn't* check for a matching
-> > > > > > bus number, which seems like a bug).
-> > > ...
-> > 
-> > > > And it still looks like the existing code is buggy.  This is called
-> > > > via sysfs, so if the PF is on bus X and the user writes to
-> > > > sriov_vf_msix_count for a VF on bus X+1, it looks like
-> > > > mlx5_core_sriov_set_msix_vec_count() will set the count for the wrong
-> > > > VF.
-> > > 
-> > > In mlx5_core_sriov_set_msix_vec_count(), we receive VF that is connected
-> > > to PF which has "struct mlx5_core_dev". My expectation is that they share
-> > > same bus as that PF was the one who created VFs. The mlx5 devices supports
-> > > upto 256 VFs and it is far below the bus split mentioned in PCI spec.
-> > > 
-> > > How can VF and their respective PF have different bus numbers?
-> > 
-> > See PCIe r5.0, sec 9.2.1.2.  For example,
-> > 
-> >   PF 0 on bus 20
-> >     First VF Offset   1
-> >     VF Stride         1
-> >     NumVFs          511
-> >   VF 0,1   through VF 0,255 on bus 20
-> >   VF 0,256 through VF 0,511 on bus 21
-> > 
-> > This is implemented in pci_iov_add_virtfn(), which computes the bus
-> > number and devfn from the VF ID.
-> > 
-> > pci_iov_virtfn_devfn(VF 0,1) == pci_iov_virtfn_devfn(VF 0,256), so if
-> > the user writes to sriov_vf_msix_count for VF 0,256, it looks like
-> > we'll call mlx5_set_msix_vec_count() for VF 0,1 instead of VF 0,256.
+On Thu, Sep 16, 2021 at 10:49:23AM +0200, Saheed O. Bolarinwa wrote:
+> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
 > 
-> This is PCI spec split that I mentioned.
+> To validate and set link latency capability, `struct aspm_latency` and
+> related members defined within `struct pcie_link_state` are used.
+> However, since there are not many access to theses values, it is possible
+> to directly access and compute these values.
+> Doing this will also reduce the dependency on `struct pcie_link_state`.
 > 
-> > 
-> > The spec encourages devices that require no more than 256 devices to
-> > locate them all on the same bus number (PCIe r5.0, sec 9.1), so if you
-> > only have 255 VFs, you may avoid the problem.
-> > 
-> > But in mlx5_core_sriov_set_msix_vec_count(), it's not obvious that it
-> > is safe to assume the bus number is the same.
+> The series removes `struct aspm_latency` and related members within 
+> `struct pcie_link_state`. All latencies are now calculated when needed.
 > 
-> No problem, we will make it more clear.
+> Changes in this version:
+>  - directly access downstream by calling `pci_function_0()` instead of
+>    used the `struct pcie_link_state`
+> 
+> Saheed O. Bolarinwa (3):
+>   PCI/ASPM: Remove link latencies cached within struct pcie_link_state
+>   PCI/ASPM: Remove struct pcie_link_state.acceptable
+>   PCI/ASPM: Remove struct aspm_latency
+> 
+>  drivers/pci/pcie/aspm.c | 89 ++++++++++++++++++-----------------------
+>  1 file changed, 38 insertions(+), 51 deletions(-)
 
-IMHO you should resolve it by using the new interface.  Better
-performing, unambiguous regardless of how many VFs the device
-supports.  What's the down side?
+Hi Saheed, what is this series based on?  The other series
+(https://lore.kernel.org/r/20210916085206.2268-1-refactormyself@gmail.com)
+aplies cleanly to my "main" branch (v5.15-rc2), but this one doesn't
+apply either there or on top of the other.
+
+Bjorn
