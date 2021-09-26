@@ -2,79 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F37418ADD
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:00:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 912C8418AEF
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Sep 2021 22:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbhIZUCZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Sep 2021 16:02:25 -0400
-Received: from mail-lf1-f50.google.com ([209.85.167.50]:36811 "EHLO
-        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbhIZUCZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Sep 2021 16:02:25 -0400
-Received: by mail-lf1-f50.google.com with SMTP id b20so67527815lfv.3;
-        Sun, 26 Sep 2021 13:00:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l3obkGQ+XpY0Vr97E+TyMlZ4RsCgsk4oyb1ai412+Ag=;
-        b=8H2qK8f9ZNk8XEdBKeMUt/UfTtoGJ5y0YYE5jav6dQUqJoeSIEpzl2clcEzJXZjzyR
-         bLbKCYLqI2j7ughnhBtcXnFOqeYBt0KcbTfH0vIaTGUlGY4loqJWlW/eci3pLWFhHZv6
-         4hhWJDiWgCAuH9WDrJnl5TZis7fPHHmBr8izuZWdZ2yUwGXJ6LBSFZxrtjLvdw0pPhok
-         FNFTzHHON/ED4rjDduwL9tSo5hzhNFgIUmdB8KnIGeFjrCdq+rJ5/bt7zL21X4o0dJB6
-         vSVrMHE5CLdVSFyKWHrhqaIrLY/cabqfEwFAOcBB3EJBXQKVoO9ILj5JaiNAXNWb8MJq
-         inlQ==
-X-Gm-Message-State: AOAM530RjHA9vkJ/ANWmotWQxh6qRPlAyWPYU++1R5T3lFgqjhGNM/7j
-        89IHtgPwY0QWHLCnvbyL0eo=
-X-Google-Smtp-Source: ABdhPJxcm3fL6YxDm0G2Ib4EFFXmfP0Dzirpyzk6SLisVl/uyN1ODO7vehPfeTEzaJt11+BWGOY99w==
-X-Received: by 2002:a2e:70a:: with SMTP id 10mr24301038ljh.187.1632686447374;
-        Sun, 26 Sep 2021 13:00:47 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id y14sm1373236lfk.237.2021.09.26.13.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Sep 2021 13:00:46 -0700 (PDT)
-Date:   Sun, 26 Sep 2021 22:00:45 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+        id S230042AbhIZUWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Sep 2021 16:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229894AbhIZUWG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Sep 2021 16:22:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B0E260EE4;
+        Sun, 26 Sep 2021 20:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632687629;
+        bh=fYActKnvqIC6C0UMKyCJGxHn3OhDINtVGdhnfr6ur2M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=abhuI3VQ1tNOuIx30bg2goY/rh+objBay00QU0OCi7QRGPpuWR7v3cky/PY3MVt2Y
+         sUYZ5GkYphogzHYIVsoUKQgLzSM1GPo+7Awvq7wQHJq6GLMUj6lZH3ZHDUoCa5i411
+         83mtA43kqeWKoIr7wFLgqC+zsGVeJD5kMxMPpBE68AGp2Cu5+7gqyoJttu5WP3p9/F
+         h48sLNA/9m97XuHeB4xlShmTHk9W42yV4EP3yRAKadaJQ0f1S6UvEPPKmIv62+D3K+
+         ZbkIMuUtzNgxfDofh+jJyuqcuO6I0gwX2qFsWx3EpnxanF7DDCPt7DCSgTjTjdZIEq
+         DFJPJJCalmw/g==
+Date:   Sun, 26 Sep 2021 15:20:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Zhenneng Li <lizhenneng@kylinos.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] PCI/sysfs: add write attribute for boot_vga
-Message-ID: <YVDRbRF5wbcJmTtb@rocinante>
-References: <20210926071539.636644-1-lizhenneng@kylinos.cn>
+Message-ID: <20210926202027.GA588220@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20210926071539.636644-1-lizhenneng@kylinos.cn>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Huacai and Kai-Heng as they are working in this area] 
-
-Hi,
-
-Thank you for sending the patch over.
-
-I assume this is simply a resend (rather than a v2), as I see no code
-changes from the previous version you sent some time ago.
-
+On Sun, Sep 26, 2021 at 03:15:39PM +0800, Zhenneng Li wrote:
 > Add writing attribute for boot_vga sys node,
 > so we can config default video display
 > output dynamically when there are two video
 > cards on a machine.
+> 
+> Xorg server will determine running on which
+> video card based on boot_vga node's value.
 
-That's OK, but why are you adding this?  What problem does it solve and
-what is the intended user here?  Might be worth adding a little bit more
-details about why this new sysfs attribute is needed.
+When you repost this, please take a look at the git commit log history
+and make yours similar.  Specifically, the subject should start with a
+capital letter, and the body should be rewrapped to fill 75
+characters.
 
-I also need to ask, as I am not sure myself, whether this is OK to do after
-booting during runtime?  What do you think Bjorn, Huacai and Kai-Heng?
+Please contrast this with the existing VGA arbiter.  See
+Documentation/gpu/vgaarbiter.rst.  It sounds like this may overlap
+with the VGA arbiter functionality, so this should explain why we need
+both and how they interact.
 
-Also, please correctly capitalise the subject - have a look at previous
-commit messages to see how it should look like.
-
+> Signed-off-by: Zhenneng Li <lizhenneng@kylinos.cn>
+> ---
+>  drivers/pci/pci-sysfs.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 7bbf2673c7f2..a6ba19ce7adb 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -664,7 +664,29 @@ static ssize_t boot_vga_show(struct device *dev, struct device_attribute *attr,
+>  			  !!(pdev->resource[PCI_ROM_RESOURCE].flags &
+>  			     IORESOURCE_ROM_SHADOW));
+>  }
+> -static DEVICE_ATTR_RO(boot_vga);
+> +
 > +static ssize_t boot_vga_store(struct device *dev, struct device_attribute *attr,
 > +			      const char *buf, size_t count)
 > +{
@@ -87,16 +84,22 @@ commit messages to see how it should look like.
 > +
 > +	if (val != 1)
 > +		return -EINVAL;
-
-Since this is a completely new API have a look at kstrtobool() over
-kstrtoul() as the former was created to handle user input more
-consistently.
-
+> +
 > +	if (!capable(CAP_SYS_ADMIN))
 > +		return -EPERM;
 > +
-
-Check for CAP_SYS_ADMIN is a good idea, but it has to take place before you
-attempt to accept and parse a input from the user.
-
-	Krzysztof
+> +	if (pdev != vga_dev)
+> +		vga_set_default_device(pdev);
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(boot_vga);
+>  
+>  static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+>  			       struct bin_attribute *bin_attr, char *buf,
+> -- 
+> 2.25.1
+> 
+> 
+> No virus found
+> 		Checked by Hillstone Network AntiVirus
