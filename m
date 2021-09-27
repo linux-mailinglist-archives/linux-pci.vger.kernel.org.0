@@ -2,142 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A74F441A0F3
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 23:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3680241A1F9
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 00:01:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237094AbhI0VDA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 17:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233122AbhI0VC7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 17:02:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2E8C061575
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 14:01:21 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUxik-0003sZ-Tr; Mon, 27 Sep 2021 22:59:30 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUxia-0001cX-8M; Mon, 27 Sep 2021 22:59:20 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mUxia-0001SG-3t; Mon, 27 Sep 2021 22:59:20 +0200
-Date:   Mon, 27 Sep 2021 22:59:17 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
-        qat-linux@intel.com, oss-drivers@corigine.com,
-        Oliver O'Halloran <oohall@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jack Xu <jack.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Michael Buesch <m@bues.ch>, Jiri Pirko <jiri@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v4 0/8] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210927205917.e763q5mojkwk6per@pengutronix.de>
-References: <20210927204326.612555-1-uwe@kleine-koenig.org>
+        id S237626AbhI0WDU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 18:03:20 -0400
+Received: from mail-pg1-f177.google.com ([209.85.215.177]:37836 "EHLO
+        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237937AbhI0WC7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 18:02:59 -0400
+Received: by mail-pg1-f177.google.com with SMTP id 17so19082646pgp.4;
+        Mon, 27 Sep 2021 15:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=g1utYXq+wY57RZcAhHq5AQl/UkdCz6MKvlIxZEz54ak=;
+        b=vL7YwdfyPtWYT8Su5mHNpBkcRCQK80kGzIn2OqTWowxMb0FWsig9bSFnLmfXtDMJsK
+         zj4TScJrvo06WrKiSQCVeEXc7lFpLhaPTqMiPCunHCljHGqQ1UxG8QclhJ1876NzQsId
+         SZw/Hgv1aeB/6lbR4XwX11F4GUkQfBa9qdb7mHJ5NhVE/WMl4DTfvWnU1Fab7/zpkiI+
+         X1ZciS2lJE66J+tXKerBWVLL1gkSwd16QoKi5hunUC7RklfkutfTKGV8Qt9aDo+7t1O5
+         ZTyF8LZCccLvlbgmg9/eFKmjO/3cSe9jO62TUB0d2kcNLVIBhTWbPObBJpyfmylODUT5
+         /Adg==
+X-Gm-Message-State: AOAM532G87R5FVMcagzNs710dnY6xT2puNyuv1foQtb3XK1Oj7QAlnVy
+        GvR6GDZZ50S/7Bo6bw0MrC8=
+X-Google-Smtp-Source: ABdhPJz1xurkGC+wCDH4v9Y7JT2IpZnvZhGN8PoGQxC4xdO7GrNl6OJ8UKZUL0iotz+UiqG6zJ6RkQ==
+X-Received: by 2002:a62:641:0:b0:44b:74bb:294c with SMTP id 62-20020a620641000000b0044b74bb294cmr1956387pfg.12.1632780081012;
+        Mon, 27 Sep 2021 15:01:21 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c9sm19427778pgq.58.2021.09.27.15.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Sep 2021 15:01:20 -0700 (PDT)
+Date:   Tue, 28 Sep 2021 00:01:09 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: xgene: Use PCI_VENDOR_ID_AMCC macro
+Message-ID: <YVI/JUBsn5wDFaPo@rocinante>
+References: <20210927134356.11799-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="upxcpc44c7obtcwt"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210927204326.612555-1-uwe@kleine-koenig.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210927134356.11799-1-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Pali,
 
---upxcpc44c7obtcwt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Header file linux/pci_ids.h defines AMCC vendor id (0x10e8) macro named
+> PCI_VENDOR_ID_AMCC. So use this macro instead of driver custom macro.
 
-Hello,
+[...]
+> -#define XGENE_PCIE_VENDORID		0x10E8
 
-On Mon, Sep 27, 2021 at 10:43:18PM +0200, Uwe Kleine-K=F6nig wrote:
-> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Another possible way of doing this might have been to alias the macro:
 
-I sent the series from the wrong email address :-\ I should have used
-the above address as sender. Also I failed to add Christoph Hellwig to
-Cc: (fixed for this mail). I guess I'll have to send a v5, but I will
-wait a bit until the build bots are done with this series.
+	#define XGENE_PCIE_VENDORID		PCI_VENDOR_ID_AMCC
 
-Best regards
-Uwe
+Not sure if this would be more or less confusing - I certainly had to go
+and look up what "AMCC" was.  Only to found out they got sold few years
+ago, and such...
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Nothing to change here, though.
 
---upxcpc44c7obtcwt
-Content-Type: application/pgp-signature; name="signature.asc"
+>  #define XGENE_PCIE_DEVICEID		0xE004
+>  #define SZ_1T				(SZ_1G*1024ULL)
+>  #define PIPE_PHY_RATE_RD(src)		((0xc000 & (u32)(src)) >> 0xe)
+> @@ -560,7 +559,7 @@ static int xgene_pcie_setup(struct xgene_pcie_port *port)
+>  	xgene_pcie_clear_config(port);
+>  
+>  	/* setup the vendor and device IDs correctly */
+> -	val = (XGENE_PCIE_DEVICEID << 16) | XGENE_PCIE_VENDORID;
+> +	val = (XGENE_PCIE_DEVICEID << 16) | PCI_VENDOR_ID_AMCC;
+>  	xgene_pcie_writel(port, BRIDGE_CFG_0, val);
 
------BEGIN PGP SIGNATURE-----
+Thank you!
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFSMKIACgkQwfwUeK3K
-7AnalQgAlpBrfIgHu7fEFcJYkSR/33uv+V4CLZsCsu9MNXsSeds9vT38r8/y0bJl
-rOEKhsH1blIcq3bsV8/AulLrFkmjYRkkih/gA/y9CeoqpbV0/NzhrS4Xo9kMos8z
-n+0f+PzRO1qg1RVWyPL7K4pkXR5cMkqWGoie07ihkt3Y9mVY8ItYl9ny3oDxCRcU
-r8KFjr7Jw0Vo8eI3Kr9lu62KyFZFByf1DDBurR5crF8ZcWM7e9kOezvJrxOQxGPP
-Z82uFafVCkhtIkKaks/6/y9pMmJF9hzDd91ubgKfbkPIMvBjpL7n07Y/Sk4S34vM
-5wdHQGNinogsdgdebn8YdZCULLmXSQ==
-=/nd3
------END PGP SIGNATURE-----
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
---upxcpc44c7obtcwt--
+	Krzysztof
