@@ -2,60 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7EC9419EDF
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 21:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 219C3419FA7
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 21:59:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236136AbhI0TIO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 15:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236092AbhI0TIO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 15:08:14 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1358BC061575
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 12:06:36 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id w19so16708249pfn.12
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 12:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=YgFVac5s4hDZxYTvclw9f7Krc1uJHShWT9sPyKb2QzwM8e6KrmHDB2roVw7M9ErBPo
-         vG7qSN2BI4rL7SHPH3nBnBCBf75W6MJy2qrR9Ld7qVdkwml5kTKzsJHSs240w8XDGPg0
-         AM20smadozpfsmycY6txHOaz4uCat/LXJ3KMcZF0K0WBknEiw3wE+c9DwGjgpEejXGJN
-         7pDaYP/TBlOiktkK0NNZatbVsIN+WcYZjzTwA0XbnBocaGiwxbp3fLTsd/iYc62h4d8H
-         h8zQNvHxoz+fO3tx2+X+E0zvwW3lchTavF9IFXXsC85bOugj357qlfV5qwBWcsMMztLS
-         spPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=gbOxEw/vwdvWEeNzC7rqwNyiko8tkHJnQRMF2TGzvMaZaalBbW4SYM/v5OrPbaDXOY
-         OgJnNRVOtXZJywDo5YvfW+5p9UyXnVW6xE39elyj4zyCt2CaGxBu9xJgeo9pgtoCa/WW
-         2bt8HHORE+zDe3ZIZTdaHo0/ZUZpkUCXY+vFHGAcPYc1Y7qCHbFk1KsdiiEvw3qX1sps
-         of22tdsyzew0DWui4ztTO9xwET4Jfxtwa6Q8VtiaXqwhAuBSEFGmEq2xNIDIkPOSKBpv
-         XbQSX7BO5ZEhJJ6cs5AVRYHcgrKIs7cyzgttg4GYqYFO6eEfoFhygXKAvI4kjhY2djwl
-         +t6Q==
-X-Gm-Message-State: AOAM5336pviq7emsnzlsxBLZoShSQXUrAu+EP39JkHjtjrWl/UkHTCeQ
-        KgHHKXT4dkjleux8e0NlCKELlcL6SHZJ3jFitlw=
-X-Google-Smtp-Source: ABdhPJzNZRCFnizravSMgQ/GnWM87WbsIgiQ3hTKwvSK4/4eCxMHdoaVClaN/hkKOBK3isG/fW5jErV3UKY3X5QbmpQ=
-X-Received: by 2002:a65:47c6:: with SMTP id f6mr1065490pgs.450.1632769595464;
- Mon, 27 Sep 2021 12:06:35 -0700 (PDT)
+        id S236724AbhI0UBW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 16:01:22 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:49918 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236656AbhI0UBW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 16:01:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=nFEeN0ujMiWdqCQg1tqJRECutZ61Fc29BGC8Ude8l7g=; b=HYTSUNK2m6vrGXoe7SbsnxxGxe
+        UQhGMqvZ/3e0mwmIFqbh3/n3ys2rpANTZZ08LPv9vUH+eRel9L/vzT/IV52IDaRD8cbIVcNhkde4Y
+        BjPnJkoG3FgF8gieIcEetEXupBiv03MzpOEGqmyAIxf/kUOigsbkdwvNJIlqLB2iU3DSGdnb4zcSb
+        bFvSDuFQkjonU4Kfg53nhrYhkbKPbtnaiMtkFHIF3SWjAy7qk4+miKMdzHmkmmFDGNkPtqyrV2uK2
+        zrS2ECxQknjsTZ93JZDzAAansVKP85mqOC5PGL6qdXlqF6jxkLQOPblVFCO//uAc3RMqAr4PZHfhC
+        YakW+B5A==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1mUwmL-0003kf-0f; Mon, 27 Sep 2021 13:59:09 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+References: <20210927185348.GA668256@bhelgaas>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <863fcca6-e1e7-38f4-2f67-b52d33eb3aab@deltatee.com>
+Date:   Mon, 27 Sep 2021 13:59:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:5c89:0:0:0:0 with HTTP; Mon, 27 Sep 2021 12:06:35
- -0700 (PDT)
-Reply-To: robertskevin3310@gmail.com
-From:   Kevin Roberts <cananevie@gmail.com>
-Date:   Mon, 27 Sep 2021 19:06:35 +0000
-Message-ID: <CAGyGXh=NfO6t-AEX_U0DR+QkCSqALBK7FEfG=3UDdj4cNM8iCg@mail.gmail.com>
-Subject: I sent you a mail earlier but not sure if you received it, kindly
- check your email and get back to me for I have very urgent information to
- pass to you.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210927185348.GA668256@bhelgaas>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-12.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v3 04/20] PCI/P2PDMA: introduce helpers for dma_map_sg
+ implementations
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+
+On 2021-09-27 12:53 p.m., Bjorn Helgaas wrote:
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Ditto.
+
+Thanks Bjorn, I'll make these changes and add your Acks for subsequent
+postings.
+
+Logan
