@@ -2,118 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D9D541A03B
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 22:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFC641A06A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 22:45:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236734AbhI0UjE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 16:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
+        id S236893AbhI0Uqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 16:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236712AbhI0UjE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 16:39:04 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058ACC061575
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 13:37:26 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id 77-20020a9d0ed3000000b00546e10e6699so26178492otj.2
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 13:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TRuVFJezgwN1Idjgpz4O0hFQqZueH291tcl1IF5+cgc=;
-        b=iQNtNnFwObQlhz+wFxru4JWkG2kphRipmJodEdulqbsoyzNSwj+/FPb9Fu0EAj97v3
-         zoyagzdQm58H9623FC/TQC8mcz3eZqf+afXSavGJ7R4+S/BaahJhN5eS5XPVOB85fKtz
-         MZ14aHWwuOvvSgPITXXi+b7NKe90aAkaOcbXg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TRuVFJezgwN1Idjgpz4O0hFQqZueH291tcl1IF5+cgc=;
-        b=Q2FdzrpXfY3bbdXC6p674EcKTnvtbD7RmdDNEl6B+haeT7A86wZ0hX63IsItakNud1
-         A9kBMsd1MENN+J/RsaFOAcQxN1tOaOZ15e/D/eJonQMsYcLp7O6lcwrjWYwj9YcXBW1W
-         wtSxE926ufzxR+Oz82iQ+vfu7xyOPo4VuOgwvgG10sfB4qDDNOM9XPLZYr8nZYOpMG1/
-         dpzZnyOX9aM985/IV6E+TMc2B/9tiVJF0eww9JO75Lf0X8pGFGL9o+xPOzKjApxkFhlg
-         /LzBk/Wb7pL5OlVCTHV1hURNc6p1nvc4J0iHz6ht7nwtv07cCaNq+4wnjhpH2Is2swUW
-         tgxA==
-X-Gm-Message-State: AOAM532CpYOuthMQXg+kuohQor7EFt9tdO7JXMQcdLUs+d6Tllek6H27
-        ZLT1jXjpT9j1/4NAEMD2muprESWcO+Ivsg==
-X-Google-Smtp-Source: ABdhPJyOkwmU3T1oeqB3GpQLMyedEnOUGyzkuu223Xo8aqLTD30SWmyFA7XBcP4nIN1FWKZS7iF49w==
-X-Received: by 2002:a05:6830:24b8:: with SMTP id v24mr1801644ots.100.1632775045127;
-        Mon, 27 Sep 2021 13:37:25 -0700 (PDT)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id h17sm335242oog.17.2021.09.27.13.37.24
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Sep 2021 13:37:24 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id l16-20020a9d6a90000000b0053b71f7dc83so26120023otq.7
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 13:37:24 -0700 (PDT)
-X-Received: by 2002:a4a:c18d:: with SMTP id w13mr1560416oop.15.1632774614785;
- Mon, 27 Sep 2021 13:30:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210914114813.15404-1-verdre@v0yd.nl>
-In-Reply-To: <20210914114813.15404-1-verdre@v0yd.nl>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 27 Sep 2021 13:30:03 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXN34u8mAVdhbfSK14pG_9qUcPvK4tFEywN4s2grqyu9=g@mail.gmail.com>
-Message-ID: <CA+ASDXN34u8mAVdhbfSK14pG_9qUcPvK4tFEywN4s2grqyu9=g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] mwifiex: Work around firmware bugs on 88W8897 chip
-To:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+        with ESMTP id S236868AbhI0Uqi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 16:46:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF02C061575
+        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 13:45:00 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mUxTe-0001jl-FQ; Mon, 27 Sep 2021 22:43:54 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mUxTX-0001YL-VH; Mon, 27 Sep 2021 22:43:47 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mUxTX-0001Li-Pk; Mon, 27 Sep 2021 22:43:47 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org,
+        kernel@pengutronix.de, Alexander Duyck <alexanderduyck@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
+        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Vadym Kochan <vkochan@marvell.com>,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        netdev@vger.kernel.org, oss-drivers@corigine.com,
+        qat-linux@intel.com, x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: [PATCH v4 0/8] PCI: Drop duplicated tracking of a pci_dev's bound driver
+Date:   Mon, 27 Sep 2021 22:43:18 +0200
+Message-Id: <20210927204326.612555-1-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 14, 2021 at 4:48 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote:
->
-> This is the second revision of the patch, the first one is here:
-> https://lore.kernel.org/linux-wireless/20210830123704.221494-1-verdre@v0y=
-d.nl/
->
-> Changes between v1 and v2:
->  - Only read-back the register write to the TX ring write pointer, not al=
-l writes
->  - Mention firmware version in commit message+code comment for future ref=
-erence
->  - Use -EIO return value in second patch
->  - Use definitions for waiting intervals in second patch
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I tested this version, and it doesn't have the same issues v1 had
-(regarding long-blocking reads, causing audio dropouts, etc.), so:
+Hello,
 
-Tested-by: Brian Norris <briannorris@chromium.org>
+this is v4 of the quest to drop the "driver" member from struct pci_dev
+which tracks the same data (apart from a constant offset) as dev.driver.
 
-As suggested elsewhere, this polling loop approach is a little slower
-than just waiting for an interrupt instead (and that proves out; the
-wakeup latency seems to increase by ~1 "short" polling interval; so
-about half a millisecond). It seems like that could be optimized if
-needed, because you *are* still waiting for an interrupt anyway. But I
-haven't tried benchmarking anything that would really matter for this;
-when we're already waiting 6+ ms, another 0.5ms isn't the end of the
-world.
+Changes since v3:
+ - Add some Reviewed-by and Acked-by tags
+ - Rebase to v5.15-rc3 (no conflicts)
+ - Changes in patch #4 addressing review comments by Christoph Hellwig
 
-This doesn't really count as Reviewed-by. There are probably better
-improvements to the poling loop (e.g., Andy's existing suggestions);
-and frankly, I'd rather see if the dropped writes can be fixed
-somehow. But I'm not holding my breath for the latter, and don't have
-any good suggestions. So if this is the best we can do, so be it.
+I didn't do extensive build tests, so I might have missed a build
+problem. I have some builds running, but want to get some feedback on
+the changes suggested by Christoph.
 
-Regards,
-Brian
+Best regards
+Uwe
+
+Uwe Kleine-König (8):
+  PCI: Simplify pci_device_remove()
+  PCI: Drop useless check from pci_device_probe()
+  xen/pci: Drop some checks that are always true
+  PCI: replace pci_dev::driver usage that gets the driver name
+  scsi: message: fusion: Remove unused parameter of mpt_pci driver's
+    probe()
+  crypto: qat - simplify adf_enable_aer()
+  PCI: Replace pci_dev::driver usage by pci_dev::dev.driver
+  PCI: Drop duplicated tracking of a pci_dev's bound driver
+
+ arch/powerpc/include/asm/ppc-pci.h            |  9 ++-
+ arch/powerpc/kernel/eeh_driver.c              | 10 +--
+ arch/x86/events/intel/uncore.c                |  2 +-
+ arch/x86/kernel/probe_roms.c                  |  2 +-
+ drivers/bcma/host_pci.c                       |  7 ++-
+ drivers/crypto/hisilicon/qm.c                 |  2 +-
+ drivers/crypto/qat/qat_4xxx/adf_drv.c         |  7 +--
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c        |  7 +--
+ drivers/crypto/qat/qat_c62x/adf_drv.c         |  7 +--
+ drivers/crypto/qat/qat_common/adf_aer.c       | 10 +--
+ .../crypto/qat/qat_common/adf_common_drv.h    |  2 +-
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c     |  7 +--
+ drivers/message/fusion/mptbase.c              |  7 +--
+ drivers/message/fusion/mptbase.h              |  2 +-
+ drivers/message/fusion/mptctl.c               |  4 +-
+ drivers/message/fusion/mptlan.c               |  2 +-
+ drivers/misc/cxl/guest.c                      | 24 ++++---
+ drivers/misc/cxl/pci.c                        | 30 +++++----
+ .../ethernet/hisilicon/hns3/hns3_ethtool.c    |  2 +-
+ .../ethernet/marvell/prestera/prestera_pci.c  |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/pci.c     |  2 +-
+ .../ethernet/netronome/nfp/nfp_net_ethtool.c  |  2 +-
+ drivers/pci/iov.c                             | 25 +++++---
+ drivers/pci/pci-driver.c                      | 45 ++++++-------
+ drivers/pci/pci.c                             |  4 +-
+ drivers/pci/pcie/err.c                        | 36 ++++++-----
+ drivers/pci/xen-pcifront.c                    | 63 +++++++++----------
+ drivers/ssb/pcihost_wrapper.c                 |  8 ++-
+ drivers/usb/host/xhci-pci.c                   |  2 +-
+ include/linux/pci.h                           |  1 -
+ 30 files changed, 166 insertions(+), 167 deletions(-)
+
+
+base-commit: 5816b3e6577eaa676ceb00a848f0fd65fe2adc29
+-- 
+2.30.2
+
