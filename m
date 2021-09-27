@@ -2,133 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B73FF4193B3
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 13:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7362741954E
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 15:44:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234160AbhI0L5G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 07:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
+        id S234580AbhI0NqA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 09:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234051AbhI0L5F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Sep 2021 07:57:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A39560F6C;
-        Mon, 27 Sep 2021 11:55:27 +0000 (UTC)
+        id S234560AbhI0Np7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Sep 2021 09:45:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 043D960240;
+        Mon, 27 Sep 2021 13:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632743728;
-        bh=ftp5e/Z+bgMoB8q+w6BD3W3PyXq/J5hOEt/FeFtg5iw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cLW1ZttLbuD8ca0mc7zREupyRk157igHo9VdiTVDhaf3Onjc0pcD/HvNPg7YbmCsn
-         LW/EATH3aCX2igPQ4OO8LiviYoPdGtFHVah24g3WvF0SLoWgRp9qG4NWSqXjvdeRF3
-         D+J+hjRPsIX5QAaVxMJGiZ+53icrKUmCg30kNuBBUoanCuNs+xAGsRt0DJsaXqsRbw
-         AOYpGw+FxTB9urNvntdLGc0cII98syp37ruqfkMb7f1GLuvSSpL0qC6PmXjx8EN3sx
-         OLWaYzi+rkD46JQOXBu8cswQQJwdeaHY0K15F4/315PoY7ERvyJfUQJsXa65Kf+fUe
-         QbtbjunK8uFcw==
-Date:   Mon, 27 Sep 2021 14:55:24 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH mlx5-next 1/7] PCI/IOV: Provide internal VF index
-Message-ID: <YVGxLH+hi1NN0oq5@unreal>
-References: <YVAVAfU3aL6JJg3i@unreal>
- <20210926202341.GA588922@bhelgaas>
+        s=k20201202; t=1632750262;
+        bh=SN7I+ERVyd1zo0MptDUz1h+P5y2dPIG6f3EW36wPgUs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sp9BW5sguJIuS0QPYWJie/Qr8MZXEXTJaWijlO4wWUuzhW+G3kLBX22VR5//0bS/g
+         71DTJJpEqkajb47YXH+8h/Y7p8XIYMFc6iCgnxwD1rLy7STaWWSWJD/uG1xjNZekVl
+         e0d9Yuqnl4cISD9IWikPH4IB3DSAlJ5xn82hnPDgzsz/dazBGvlLtP5wsK+abQRaHL
+         al2GjUX33+wnOvA8aA3E5qq/5gvEIChz6bVkoqQCeVaFlWX08fqkD9USYlQi6UmfD+
+         L3vcuxaUwodnoKKKC97qybRJoNGIDbpw37BL7wb4qbBTMJTCqI2dgciL68RCF57eBT
+         Q5920axH1kr5w==
+Received: by pali.im (Postfix)
+        id 7357BC83; Mon, 27 Sep 2021 15:44:19 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: xgene: Use PCI_VENDOR_ID_AMCC macro
+Date:   Mon, 27 Sep 2021 15:43:56 +0200
+Message-Id: <20210927134356.11799-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210926202341.GA588922@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 03:23:41PM -0500, Bjorn Helgaas wrote:
-> On Sun, Sep 26, 2021 at 09:36:49AM +0300, Leon Romanovsky wrote:
-> > On Sat, Sep 25, 2021 at 12:41:15PM -0500, Bjorn Helgaas wrote:
-> > > On Sat, Sep 25, 2021 at 01:10:39PM +0300, Leon Romanovsky wrote:
-> > > > On Fri, Sep 24, 2021 at 08:08:45AM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, Sep 23, 2021 at 09:35:32AM +0300, Leon Romanovsky wrote:
-> > > > > > On Wed, Sep 22, 2021 at 04:59:30PM -0500, Bjorn Helgaas wrote:
-> > > > > > > On Wed, Sep 22, 2021 at 01:38:50PM +0300, Leon Romanovsky wrote:
-> > > > > > > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > > > > 
-> > > > > > > > The PCI core uses the VF index internally, often called the vf_id,
-> > > > > > > > during the setup of the VF, eg pci_iov_add_virtfn().
-> > > > > > > > 
-> > > > > > > > This index is needed for device drivers that implement live migration
-> > > > > > > > for their internal operations that configure/control their VFs.
-> > > > > > > >
-> > > > > > > > Specifically, mlx5_vfio_pci driver that is introduced in coming patches
-> > > > > > > > from this series needs it and not the bus/device/function which is
-> > > > > > > > exposed today.
-> > > > > > > > 
-> > > > > > > > Add pci_iov_vf_id() which computes the vf_id by reversing the math that
-> > > > > > > > was used to create the bus/device/function.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> > > > > > > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > > > > > 
-> > > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > > 
-> > > > > > > mlx5_core_sriov_set_msix_vec_count() looks like it does basically the
-> > > > > > > same thing as pci_iov_vf_id() by iterating through VFs until it finds
-> > > > > > > one with a matching devfn (although it *doesn't* check for a matching
-> > > > > > > bus number, which seems like a bug).
-> > > > ...
-> > > 
-> > > > > And it still looks like the existing code is buggy.  This is called
-> > > > > via sysfs, so if the PF is on bus X and the user writes to
-> > > > > sriov_vf_msix_count for a VF on bus X+1, it looks like
-> > > > > mlx5_core_sriov_set_msix_vec_count() will set the count for the wrong
-> > > > > VF.
-> > > > 
-> > > > In mlx5_core_sriov_set_msix_vec_count(), we receive VF that is connected
-> > > > to PF which has "struct mlx5_core_dev". My expectation is that they share
-> > > > same bus as that PF was the one who created VFs. The mlx5 devices supports
-> > > > upto 256 VFs and it is far below the bus split mentioned in PCI spec.
-> > > > 
-> > > > How can VF and their respective PF have different bus numbers?
-> > > 
-> > > See PCIe r5.0, sec 9.2.1.2.  For example,
-> > > 
-> > >   PF 0 on bus 20
-> > >     First VF Offset   1
-> > >     VF Stride         1
-> > >     NumVFs          511
-> > >   VF 0,1   through VF 0,255 on bus 20
-> > >   VF 0,256 through VF 0,511 on bus 21
-> > > 
-> > > This is implemented in pci_iov_add_virtfn(), which computes the bus
-> > > number and devfn from the VF ID.
-> > > 
-> > > pci_iov_virtfn_devfn(VF 0,1) == pci_iov_virtfn_devfn(VF 0,256), so if
-> > > the user writes to sriov_vf_msix_count for VF 0,256, it looks like
-> > > we'll call mlx5_set_msix_vec_count() for VF 0,1 instead of VF 0,256.
-> > 
-> > This is PCI spec split that I mentioned.
-> > 
-> > > 
-> > > The spec encourages devices that require no more than 256 devices to
-> > > locate them all on the same bus number (PCIe r5.0, sec 9.1), so if you
-> > > only have 255 VFs, you may avoid the problem.
-> > > 
-> > > But in mlx5_core_sriov_set_msix_vec_count(), it's not obvious that it
-> > > is safe to assume the bus number is the same.
-> > 
-> > No problem, we will make it more clear.
-> 
-> IMHO you should resolve it by using the new interface.  Better
-> performing, unambiguous regardless of how many VFs the device
-> supports.  What's the down side?
+Header file linux/pci_ids.h defines AMCC vendor id (0x10e8) macro named
+PCI_VENDOR_ID_AMCC. So use this macro instead of driver custom macro.
 
-I don't see any. My previous answer worth to be written.
-"No problem, we will make it more clear with this new function".
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/pci/controller/pci-xgene.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index e64536047b65..56d0d50338c8 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -48,7 +48,6 @@
+ #define EN_COHERENCY			0xF0000000
+ #define EN_REG				0x00000001
+ #define OB_LO_IO			0x00000002
+-#define XGENE_PCIE_VENDORID		0x10E8
+ #define XGENE_PCIE_DEVICEID		0xE004
+ #define SZ_1T				(SZ_1G*1024ULL)
+ #define PIPE_PHY_RATE_RD(src)		((0xc000 & (u32)(src)) >> 0xe)
+@@ -560,7 +559,7 @@ static int xgene_pcie_setup(struct xgene_pcie_port *port)
+ 	xgene_pcie_clear_config(port);
+ 
+ 	/* setup the vendor and device IDs correctly */
+-	val = (XGENE_PCIE_DEVICEID << 16) | XGENE_PCIE_VENDORID;
++	val = (XGENE_PCIE_DEVICEID << 16) | PCI_VENDOR_ID_AMCC;
+ 	xgene_pcie_writel(port, BRIDGE_CFG_0, val);
+ 
+ 	ret = xgene_pcie_map_ranges(port);
+-- 
+2.20.1
+
