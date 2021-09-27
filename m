@@ -2,82 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6A394198D2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 18:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ABFA419958
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 18:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235461AbhI0QZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 12:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        id S235716AbhI0Qlw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 12:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235338AbhI0QZ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Sep 2021 12:25:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6806161058;
-        Mon, 27 Sep 2021 16:23:49 +0000 (UTC)
+        id S235678AbhI0Qlb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Sep 2021 12:41:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AD72E6108E;
+        Mon, 27 Sep 2021 16:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632759829;
-        bh=ahbLyZ8Wv5gvxyTSBNy6NXQAnOFTP57heCOScjz9m8I=;
+        s=k20201202; t=1632760793;
+        bh=qhd2opmqQR1JXSq/kmZFfX/7R9p2kQSzkv4HY2mjKJQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hTkybTtCve3N/NOAkASYAmrf0pxHRVSX9uIBlvrWeo3qQ01O30yCvXfCbfXXYHDiC
-         avWfGXzY8Squww313qv1uvj6Z5P5Xf0nzBijyK3CFXA8fW8WGFb/3DLGrdNAVdyWWn
-         yd2Zi9vLtaGfS1BaigLTKRWnaVyvvzrcQziDFFuqnViqfSEbBhSKXfaeeFgw1RFecX
-         OTI5jZof+bBHXM4fguZsTLVE2MtPIufg5CPdCpIGh9lcaNBfC1BAtCS/4LkxtI4Syj
-         Hc6tEeemjDsYUihr1ClsWwIdbdX0PF8/BnXSjAFhunmwoPVJO0FqENYiWUjnzY3/Xr
-         1Ua02QS+pvb6A==
-Date:   Mon, 27 Sep 2021 11:23:48 -0500
+        b=sTE2w4NvSeYdbjhqo9RIAFOqGXLhUoFCuor+mtKEECfeOYMgK/GI/GLfb8SIQfwGt
+         LntffaHhVq40GK6IJMafuHn1KFpiRRNbHLIRF0soVsukusLLqHsRb2q7q4VA8xjjU6
+         QqxZJ5QcODPt6LpR90HmWQ+o0X0QaaV9aPsJw83LVFoCDzPBNgu2KV6tYaQfj/owSQ
+         gMU5kXdmGl3iINQjGvZ5pSJ43mprz16p4jctADPaIpNyC+QlXfYhIiBI/vYh/OMQZE
+         7vTbMZ/0n7xmii/68HBT+HJcEZESFnXk4jYTBdgRHdytP9nY0KQFGVeR4sMiDtBJnV
+         /eEgrXtV2vZyg==
+Date:   Mon, 27 Sep 2021 11:39:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Implement re-issuing config requests on
- CRS response
-Message-ID: <20210927162348.GA650225@bhelgaas>
+To:     kelvin.cao@microchip.com
+Cc:     kurt.schwemmer@microsemi.com, logang@deltatee.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kelvincao@outlook.com
+Subject: Re: [PATCH 0/5] Switchtec Fixes and Improvements
+Message-ID: <20210927163951.GA655671@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210926111319.sgtfsjovkhfkh4qs@pali>
+In-Reply-To: <20210924110842.6323-1-kelvin.cao@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 01:13:19PM +0200, Pali Rohár wrote:
-> On Wednesday 22 September 2021 11:48:03 Bjorn Helgaas wrote:
-
-> > The config read of Vendor ID after a reset should be done by the PCI
-> > core, not a device driver.
+On Fri, Sep 24, 2021 at 11:08:37AM +0000, kelvin.cao@microchip.com wrote:
+> From: Kelvin Cao <kelvin.cao@microchip.com>
 > 
-> Of course. But in case of unexpected reset (which PCI code does not
-> detect), card driver at the same time could issue some config read/write
-> request.
-
-By "unexpected reset", you mean a reset performed autonomously by the
-device, or a reset initiated by the driver without help from the PCI
-core?  Either way, I think the PCI core is pretty much out of the
-picture and the driver is on its own.
-
-> > If we disable CRS SV, the only outcomes of
-> > that read are:
-> > 
-> >   1) Valid Vendor ID data, or
-> > 
-> >   2) Failed transaction, typically reported as 0xffff data (and, I
-> >      expect, an Unsupported Request or similar error logged)
+> Hi,
 > 
-> Yes. And I think it should apply also for any other config register, not
-> just vendor id.
+> Please find a bunch of patches for the switchtec driver collected over the
+> last few months.
+> 
+> The first 2 patches fix two minor bugs. Patch 3 updates the method of
+> getting management VEP instance ID based on a new firmware change. Patch
+> 4 replaces ENOTSUPP with EOPNOTSUPP to follow the preference of kernel.
+> And the last patch adds check of event support to align with new firmware
+> implementation.
+> 
+> This patchset is based on v5.15-rc2.
+> 
+> Thanks,
+> Kelvin
+> 
+> Kelvin Cao (4):
+>   PCI/switchtec: Error out MRPC execution when no GAS access
+>   PCI/switchtec: Fix a MRPC error status handling issue
+>   PCI/switchtec: Update the way of getting management VEP instance ID
+>   PCI/switchtec: Replace ENOTSUPP with EOPNOTSUPP
+> 
+> Logan Gunthorpe (1):
+>   PCI/switchtec: Add check of event support
+> 
+>  drivers/pci/switch/switchtec.c | 87 +++++++++++++++++++++++++++-------
+>  include/linux/switchtec.h      |  1 +
+>  2 files changed, 71 insertions(+), 17 deletions(-)
 
-Yes.
+Applied with Logan's reviewed-by to pci/switchtec for v5.16, thanks!
 
-> In case error reporting or AER functionality is not supported then there
-> would be no error logged. And PCI core / kernel does not have to know
-> that such thing happened.
-
-There *should* be at least the logging in Device Status for all PCIe
-devices, though I'm not sure the PCI core handles that nicely.  I'm
-looking at PCIe r5.0, sec 6.2.5: https://imgur.com/a/0yqygiM
-
-Bjorn
+I tweaked the comment spacing in "PCI/switchtec: Error out MRPC
+execution when no GAS access" so it matches the existing similar
+comments.
