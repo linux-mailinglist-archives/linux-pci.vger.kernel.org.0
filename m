@@ -2,169 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16E0A418B61
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 00:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0113418DDD
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 05:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230307AbhIZWHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Sep 2021 18:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230075AbhIZWHQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 26 Sep 2021 18:07:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 178B161100;
-        Sun, 26 Sep 2021 22:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632693939;
-        bh=tS1/crAEA80D5CGqe8i59AVp9KB33+js3SpvHBXPsl0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iZmH58jSpDQNmsmfnobzjpvDgVQKstAkCgWwC9bCMQ55qX/ElpLFE/uQXcqJukZhM
-         8PbcaUBesc60f3FhVpMYzkQfdzysSd7fWmErKnkdRMEk8ycZDLT2XSKmgdEP8pFTFY
-         45dILmh7RHQFYceO7eQoygm5IPmM66Ccrk5T3+Wr1dpLkB4WD4TrQeJ9zyMV4osuAv
-         J9lrni7dcyeR8YfH/PpTQ42DhzNCWmP89sNB31jVAnZaLK6nLpW8X5dvfDQh/pkDR+
-         XEqZ0tYeE8k0MMYRhYkn1hodQW/u5V58JAh/EPBqcGZPGSGTbSEsP+//h/dntNR8GQ
-         WaLSLStpG+K1A==
-Date:   Sun, 26 Sep 2021 17:05:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kw@linux.com
-Subject: Re: [RFC PATCH 1/4] PCI/ASPM: Remove struct pcie_link_state.parent
-Message-ID: <20210926220537.GA591345@bhelgaas>
+        id S232541AbhI0DIX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Sep 2021 23:08:23 -0400
+Received: from mailgw.kylinos.cn ([123.150.8.42]:19660 "EHLO nksmu.kylinos.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232526AbhI0DIU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 26 Sep 2021 23:08:20 -0400
+X-UUID: 210ab987e7ee4120a6f881761a7c795a-20210927
+X-CPASD-INFO: 17c0c1b8280543bc86431ceff58f605f@eoedUJBjkGheWHKBg3atnVhnZGNhj4W
+        1qG9YlmRgYYaVhH5xTWJsXVKBfG5QZWNdYVN_eGpQYl9gZFB5i3-XblBgXoZgUZB3gHmdUJNfkg==
+X-CPASD-FEATURE: 0.0
+X-CLOUD-ID: 17c0c1b8280543bc86431ceff58f605f
+X-CPASD-SUMMARY: SIP:-1,APTIP:-2.0,KEY:0.0,FROMBLOCK:1,EXT:0.0,OB:0.0,URL:-5,T
+        VAL:168.0,ESV:0.0,ECOM:-5.0,ML:0.0,FD:0.0,CUTS:186.0,IP:-2.0,MAL:0.0,ATTNUM:0
+        .0,PHF:-5.0,PHC:-5.0,SPF:4.0,EDMS:-3,IPLABEL:4480.0,FROMTO:0,AD:0,FFOB:0.0,CF
+        OB:0.0,SPC:0.0,SIG:-5,AUF:4,DUF:14797,ACD:54,DCD:156,SL:0,AG:0,CFC:0.624,CFSR
+        :0.051,UAT:0,RAF:2,VERSION:2.3.4
+X-CPASD-ID: 210ab987e7ee4120a6f881761a7c795a-20210927
+X-CPASD-BLOCK: 1000
+X-CPASD-STAGE: 1, 1
+X-UUID: 210ab987e7ee4120a6f881761a7c795a-20210927
+X-User: lizhenneng@kylinos.cn
+Received: from [172.20.108.41] [(116.128.244.169)] by nksmu.kylinos.cn
+        (envelope-from <lizhenneng@kylinos.cn>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 128/128)
+        with ESMTP id 679021459; Mon, 27 Sep 2021 11:03:53 +0800
+Subject: Re: [PATCH] PCI/sysfs: add write attribute for boot_vga
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210926071539.636644-1-lizhenneng@kylinos.cn>
+ <YVDRbRF5wbcJmTtb@rocinante>
+From:   =?UTF-8?B?5p2O55yf6IO9?= <lizhenneng@kylinos.cn>
+Message-ID: <ca55d0ac-3127-9993-5d43-3bc97738cfbb@kylinos.cn>
+Date:   Mon, 27 Sep 2021 11:06:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916085206.2268-2-refactormyself@gmail.com>
+In-Reply-To: <YVDRbRF5wbcJmTtb@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 10:52:03AM +0200, Saheed O. Bolarinwa wrote:
-> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
-> 
-> Information cached in struct pcie_link_state.parent is accessible
-> via struct pci_dev.
-> 
-> This patch:
->  - removes *parent* from the *struct pcie_link_state*
->  - adjusts all references to it to access the information directly
-> 
-> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
-> ---
-> OPINION: the checkpatch.pl scring warns on this line:
-> 	`BUG_ON(root->pdev->bus->parent->self);`
-> however, I think if a root device reports a parent, that is serious!
 
-Do you mean this warning?
+在 2021/9/27 上午4:00, Krzysztof Wilczyński 写道:
+> [+cc Huacai and Kai-Heng as they are working in this area]
+>
+> Hi,
+>
+> Thank you for sending the patch over.
+>
+> I assume this is simply a resend (rather than a v2), as I see no code
+> changes from the previous version you sent some time ago.
+Sorry, I haven't receive any reply about this email, so I resend this.
+>
+>> Add writing attribute for boot_vga sys node,
+>> so we can config default video display
+>> output dynamically when there are two video
+>> cards on a machine.
+> That's OK, but why are you adding this?  What problem does it solve and
+> what is the intended user here?  Might be worth adding a little bit more
+> details about why this new sysfs attribute is needed.
+Xorg will detemine which graphics is prime output device according 
+boot_vga, if there are two graphics card, and we want xorg output 
+display to diffent graphics card, we can echo 1 to boot_vga.
+>
+> I also need to ask, as I am not sure myself, whether this is OK to do after
+> booting during runtime?  What do you think Bjorn, Huacai and Kai-Heng?
 
-  WARNING: Missing a blank line after declarations
-  #967: FILE: drivers/pci/pcie/aspm.c:967:
-  +	struct pcie_link_state *link;
-  +	BUG_ON(root->pdev->bus->parent->self);
+I have test this function, during runtime, if xorg's graphics output 
+device is card A, then we echo 1 to boot_vga of card B, and then restart 
+xorg, xorg will output to card B, if we want xorg always output to card 
+B, we can echo 1 to boot_vga of card B before xorg started in daemon 
+process.
 
-That's just complaining about a blank line, so no big deal.  You could
-resolve that by adding the blank line in this patch.
-
-The fact that we use BUG_ON() at all *is* a real problem.  See the
-comments at the BUG() definition.  We should rework this so that
-condition is either impossible and we can just remove the BUG_ON(), or
-we can deal with it gracefully.  But this would be material for a
-different patch.
-
->  drivers/pci/pcie/aspm.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 013a47f587ce..48b83048aa30 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -50,7 +50,6 @@ struct pcie_link_state {
->  	struct pci_dev *pdev;		/* Upstream component of the Link */
->  	struct pci_dev *downstream;	/* Downstream component, function 0 */
->  	struct pcie_link_state *root;	/* pointer to the root port link */
-> -	struct pcie_link_state *parent;	/* pointer to the parent Link state */
->  	struct list_head sibling;	/* node in link_list */
->  
->  	/* ASPM state */
-> @@ -379,6 +378,7 @@ static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
->  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  {
->  	u32 latency, l1_switch_latency = 0;
-> +	struct pci_dev *parent;
->  	struct aspm_latency *acceptable;
->  	struct pcie_link_state *link;
->  
-> @@ -419,7 +419,8 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  			link->aspm_capable &= ~ASPM_STATE_L1;
->  		l1_switch_latency += 1000;
->  
-> -		link = link->parent;
-> +		parent = link->pdev->bus->parent->self;
-> +		link = !parent ? NULL : parent->link_state;
-
-I love the direction of this patch, but this chain of pointers
-(link->pdev->bus->parent->self) is a little over the top and is
-repeated several times here.
-
-Can we simplify it a bit by making a helper function?  It's similar
-but not quite the same as pci_upstream_bridge().
-
-And maybe reverse the condition to avoid the negation?
-
-  link = parent ? parent->link_state : NULL;
-
->  	}
->  }
->  
-> @@ -793,9 +794,11 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
->  
->  static void pcie_config_aspm_path(struct pcie_link_state *link)
->  {
-> +	struct pci_dev *parent;
->  	while (link) {
->  		pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> -		link = link->parent;
-> +		parent = link->pdev->bus->parent->self;
-> +		link = !parent ? NULL : parent->link_state;
->  	}
->  }
->  
-> @@ -872,8 +875,7 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
->  			return NULL;
->  		}
->  
-> -		link->parent = parent;
-> -		link->root = link->parent->root;
-> +		link->root = parent->root;
->  	}
->  
->  	list_add(&link->sibling, &link_list);
-> @@ -962,7 +964,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
->  static void pcie_update_aspm_capable(struct pcie_link_state *root)
->  {
->  	struct pcie_link_state *link;
-> -	BUG_ON(root->parent);
-> +	BUG_ON(root->pdev->bus->parent->self);
->  	list_for_each_entry(link, &link_list, sibling) {
->  		if (link->root != root)
->  			continue;
-> @@ -985,6 +987,7 @@ static void pcie_update_aspm_capable(struct pcie_link_state *root)
->  /* @pdev: the endpoint device */
->  void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->  {
-> +	struct pci_dev *parent_dev;
->  	struct pci_dev *parent = pdev->bus->self;
->  	struct pcie_link_state *link, *root, *parent_link;
->  
-> @@ -1002,7 +1005,8 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->  
->  	link = parent->link_state;
->  	root = link->root;
-> -	parent_link = link->parent;
-> +	parent_dev = link->pdev->bus->parent->self;
-> +	parent_link = !parent_dev ? NULL : parent_dev->link_state;
->  
->  	/* All functions are removed, so just disable ASPM for the link */
->  	pcie_config_aspm_link(link, 0);
-> -- 
-> 2.20.1
-> 
+> Also, please correctly capitalise the subject - have a look at previous
+> commit messages to see how it should look like.
+>
+>> +static ssize_t boot_vga_store(struct device *dev, struct device_attribute *attr,
+>> +			      const char *buf, size_t count)
+>> +{
+>> +	unsigned long val;
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct pci_dev *vga_dev = vga_default_device();
+>> +
+>> +	if (kstrtoul(buf, 0, &val) < 0)
+>> +		return -EINVAL;
+>> +
+>> +	if (val != 1)
+>> +		return -EINVAL;
+> Since this is a completely new API have a look at kstrtobool() over
+> kstrtoul() as the former was created to handle user input more
+> consistently.
+As I want restrict available value  to 1, if we use  kstrtobool(), it 
+will be available when user input other value.
+>
+>> +	if (!capable(CAP_SYS_ADMIN))
+>> +		return -EPERM;
+>> +
+> Check for CAP_SYS_ADMIN is a good idea, but it has to take place before you
+> attempt to accept and parse a input from the user.
+>
+> 	Krzysztof
