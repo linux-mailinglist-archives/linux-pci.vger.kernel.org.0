@@ -2,66 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F7A0419D0D
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 19:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B27C7419D5E
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 19:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237430AbhI0Rjz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 13:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52726 "EHLO mail.kernel.org"
+        id S237940AbhI0RtN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 13:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238738AbhI0RiQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Sep 2021 13:38:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6F66860F46;
-        Mon, 27 Sep 2021 17:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1632764198;
-        bh=cP3s6aDUKuJ74VUE2WurSFHqrO+qVFHHxo5OhXp17R4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MctZJzQgcuxlGwAs8FLPaxQ7FBicQIe0pm6Rzbh5NhzW/KR3M13WYt6x8sT9zsuvS
-         1ri6rDbQ1SHtnYf8p1bJz1kypnaDlueV1kqm9zcSua8Qx3hN4WT6VMPDyngLtIEmT6
-         JskxNOb2ykkg8F9smUzKNFUqHG6c+0s8EEOCkk/w=
-Date:   Mon, 27 Sep 2021 19:36:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, bhelgaas@google.com,
-        andy.shevchenko@gmail.com, mgross@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
-Message-ID: <YVIBI6TQrD/rehli@kroah.com>
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
- <20210922213007.2738388-3-david.e.box@linux.intel.com>
+        id S238171AbhI0RsW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Sep 2021 13:48:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D90CF60FBF;
+        Mon, 27 Sep 2021 17:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632764804;
+        bh=H8Mj81WyvY+HesKTc7Fr+jbrmn+2nM8SxLPaQtOgGIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZittX7dsrCxpUqN8o37oZKbtwhDDRSMGteLP7htIcE97ezSL5hLEWtgtFTfMftD4e
+         CYwr2z84HijxnJHnlx2Vr2XnnnUzJnIHQBlphYKAODAoFWl2WYj56rnXzj1UAcmrvA
+         1jlqXZrF6dDHlMQ2+bXx4Iinc4r6Hy4KkHIBwTcgeRtx+LXtO2yw8W1A3qGL+pMzx6
+         cMEZDA5ncBnXfuv1FmQRVuR7TMh1aiOkPpFQXGM3BmoRWzKuKqw+UVVGa3SQ/ddu5A
+         yBrQyDHe//KBx0FqVPhl76WYY/CsBta3w+VoXlryUBMj4/yxoHSpV15GYjV8aQ/7BF
+         r1L7xhiACVKEQ==
+Date:   Mon, 27 Sep 2021 12:46:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+Message-ID: <20210927174642.GA661147@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210922213007.2738388-3-david.e.box@linux.intel.com>
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> structures may also be used by Intel to indicate support for other
-> capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
-> and non-PMT capabilities. In order to support these capabilities it is
-> necessary to modify the intel_pmt driver to handle the creation of platform
-> devices more generically.
+s/pci_find_dvsec_capability/pci_find_dvsec_capability()/ in subject
+and commit log.
 
-I said this on your other driver submission, but why are you turning a
-PCIe device into a set of platform devices and craming it into the MFD
-subsystem?
+On Thu, Sep 23, 2021 at 10:26:44AM -0700, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
 
-PCIe devices are NOT platform devices.
+"specified Vendor ID and Capability ID".
 
-Why not use the auxiliary bus for this thing if you have individual
-drivers that need to "bind" to the different attributes that this single
-PCIe device is exporting.
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
 
-Or why not just fix the hardware to report individual PCIe devices, like
-a sane system would do?  Has this shipped in any devices yet?  If not,
-can that be fixed first?  It's just a firmware change, right?
+Strictly speaking, not really relevant for the commit log.
 
-thanks,
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-greg k-h
+If you want to merge this with the series,
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Or if you want me to merge this on a branch, let me know.
+
+> ---
+>  drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  1 +
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..94ac86ff28b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
+>  
+> +/**
+> + * pci_find_dvsec_capability - Find DVSEC for vendor
+> + * @dev: PCI device to query
+> + * @vendor: Vendor ID to match for the DVSEC
+> + * @dvsec: Designated Vendor-specific capability ID
+> + *
+> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
+> + * offset in config space; otherwise return 0.
+> + */
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 v, id;
+> +
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == v && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+> +
+>  /**
+>   * pci_find_parent_resource - return resource region of parent bus of given
+>   *			      region
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c93ccfa4571b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>  u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
+>  
+>  u64 pci_get_dsn(struct pci_dev *dev);
+>  
+> -- 
+> 2.33.0
+> 
