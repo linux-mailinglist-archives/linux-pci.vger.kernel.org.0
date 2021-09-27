@@ -2,46 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FB2341A05C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 22:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74F441A0F3
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 23:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236582AbhI0Upd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 16:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
+        id S237094AbhI0VDA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 17:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236843AbhI0Upd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 16:45:33 -0400
+        with ESMTP id S233122AbhI0VC7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 17:02:59 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E90C061575
-        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 13:43:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2E8C061575
+        for <linux-pci@vger.kernel.org>; Mon, 27 Sep 2021 14:01:21 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mUxTc-0001kl-VU; Mon, 27 Sep 2021 22:43:53 +0200
+        id 1mUxik-0003sZ-Tr; Mon, 27 Sep 2021 22:59:30 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mUxTc-0001ZM-C4; Mon, 27 Sep 2021 22:43:52 +0200
+        id 1mUxia-0001cX-8M; Mon, 27 Sep 2021 22:59:20 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mUxTZ-0001OK-Am; Mon, 27 Sep 2021 22:43:49 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v4 8/8] PCI: Drop duplicated tracking of a pci_dev's bound driver
-Date:   Mon, 27 Sep 2021 22:43:26 +0200
-Message-Id: <20210927204326.612555-9-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210927204326.612555-1-uwe@kleine-koenig.org>
+        id 1mUxia-0001SG-3t; Mon, 27 Sep 2021 22:59:20 +0200
+Date:   Mon, 27 Sep 2021 22:59:17 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
+        qat-linux@intel.com, oss-drivers@corigine.com,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jack Xu <jack.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Michael Buesch <m@bues.ch>, Jiri Pirko <jiri@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v4 0/8] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20210927205917.e763q5mojkwk6per@pengutronix.de>
 References: <20210927204326.612555-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=yGEodBYjARp1eJPqP9/n/KpfKo6ALJzXr+t0LDtBUZM=; m=JRVTmu6nPliiiBslnXnYAnMTr94GnCwSSGQey1Vdrcw=; p=9+/PFAXEYW2hem5edV2imyuahCWyj6ieFC0M508CIVc=; g=f3b7d22ed7c914b1939595bea1dcb198b436a8ca
-X-Patch-Sig: m=pgp; i=uwe@kleine-koenig.org; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFSLOUACgkQwfwUeK3K7AmR9wgAnQ8 ljk2w7Ez7n4O2q5CPU/hh+MO2IRhH4mA4YVeKzV7Yu36VsXLqDcNenZjBzdLjGE3XJ5irxPf/S2n1 ZrM1SCYykvMFZZWd1E4t/jq0+CUpC4XFvQORTPEN+L2hsiSen1LOsj2ePl9g+Q1d51FB7OdNUuVyw 9P+n+palg0A6yIkWPdF480dSiPVnF0IBfISg5e/rMNLhWwuhkujVC+fPFKbSnrk+BOyrV6QpJmB8Y 3OgnFKLD7hp/SNdPxBwn/unDMY87fMxxteAY3Pgrw9fEZA/a3pSf/u9QwfWX2aA8Tx+eV7ynSYIBD 3LJeikGs17Qi4mRzQjeAOnH5z4AkGcw==
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="upxcpc44c7obtcwt"
+Content-Disposition: inline
+In-Reply-To: <20210927204326.612555-1-uwe@kleine-koenig.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -50,65 +102,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Currently it's tracked twice which driver is bound to a given pci
-device. Now that all users of the pci specific one (struct
-pci_dev::driver) are updated to use an access macro
-(pci_driver_of_dev()), change the macro to use the information from the
-driver core and remove the driver member from struct pci_dev.
+--upxcpc44c7obtcwt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pci/pci-driver.c | 4 ----
- include/linux/pci.h      | 1 -
- 2 files changed, 5 deletions(-)
+Hello,
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 4d20022b8631..e70cd432de06 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -319,12 +319,10 @@ static long local_pci_probe(void *_ddi)
- 	 * its remove routine.
- 	 */
- 	pm_runtime_get_sync(dev);
--	pci_dev->driver = pci_drv;
- 	rc = pci_drv->probe(pci_dev, ddi->id);
- 	if (!rc)
- 		return rc;
- 	if (rc < 0) {
--		pci_dev->driver = NULL;
- 		pm_runtime_put_sync(dev);
- 		return rc;
- 	}
-@@ -390,7 +388,6 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
-  * @pci_dev: PCI device being probed
-  *
-  * returns 0 on success, else error.
-- * side-effect: pci_dev->driver is set to drv when drv claims pci_dev.
-  */
- static int __pci_device_probe(struct pci_driver *drv, struct pci_dev *pci_dev)
- {
-@@ -465,7 +462,6 @@ static void pci_device_remove(struct device *dev)
- 		pm_runtime_put_noidle(dev);
- 	}
- 	pcibios_free_irq(pci_dev);
--	pci_dev->driver = NULL;
- 	pci_iov_remove(pci_dev);
- 
- 	/* Undo the runtime PM settings in local_pci_probe() */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cd8aa6fce204..7c1ceb39035c 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -342,7 +342,6 @@ struct pci_dev {
- 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
- 	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
- 
--	struct pci_driver *driver;	/* Driver bound to this device */
- 	u64		dma_mask;	/* Mask of the bits of bus address this
- 					   device implements.  Normally this is
- 					   0xffffffff.  You only need to change
--- 
-2.30.2
+On Mon, Sep 27, 2021 at 10:43:18PM +0200, Uwe Kleine-K=F6nig wrote:
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+I sent the series from the wrong email address :-\ I should have used
+the above address as sender. Also I failed to add Christoph Hellwig to
+Cc: (fixed for this mail). I guess I'll have to send a v5, but I will
+wait a bit until the build bots are done with this series.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--upxcpc44c7obtcwt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFSMKIACgkQwfwUeK3K
+7AnalQgAlpBrfIgHu7fEFcJYkSR/33uv+V4CLZsCsu9MNXsSeds9vT38r8/y0bJl
+rOEKhsH1blIcq3bsV8/AulLrFkmjYRkkih/gA/y9CeoqpbV0/NzhrS4Xo9kMos8z
+n+0f+PzRO1qg1RVWyPL7K4pkXR5cMkqWGoie07ihkt3Y9mVY8ItYl9ny3oDxCRcU
+r8KFjr7Jw0Vo8eI3Kr9lu62KyFZFByf1DDBurR5crF8ZcWM7e9kOezvJrxOQxGPP
+Z82uFafVCkhtIkKaks/6/y9pMmJF9hzDd91ubgKfbkPIMvBjpL7n07Y/Sk4S34vM
+5wdHQGNinogsdgdebn8YdZCULLmXSQ==
+=/nd3
+-----END PGP SIGNATURE-----
+
+--upxcpc44c7obtcwt--
