@@ -2,96 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75EF7419E71
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 20:40:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E263419E8A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 20:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236294AbhI0SmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 14:42:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45371 "EHLO mga12.intel.com"
+        id S236274AbhI0Ss3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 14:48:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236238AbhI0SmQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Sep 2021 14:42:16 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10120"; a="204029831"
-X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
-   d="scan'208";a="204029831"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2021 11:40:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,327,1624345200"; 
-   d="scan'208";a="586882043"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 27 Sep 2021 11:40:37 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
-        by linux.intel.com (Postfix) with ESMTP id 9239A580677;
-        Mon, 27 Sep 2021 11:40:37 -0700 (PDT)
-Message-ID: <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
-Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, bhelgaas@google.com,
-        andy.shevchenko@gmail.com, mgross@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Mon, 27 Sep 2021 11:40:37 -0700
-In-Reply-To: <YVIBI6TQrD/rehli@kroah.com>
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
-         <20210922213007.2738388-3-david.e.box@linux.intel.com>
-         <YVIBI6TQrD/rehli@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S234211AbhI0Ss2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Sep 2021 14:48:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 351AC60F70;
+        Mon, 27 Sep 2021 18:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632768410;
+        bh=aAUpJLAvxQ+tHaQKvkiHUoC8zvr3SDhJ8uiCDNoeqXs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qzynkof5Gd1zNVPHo3jVrAnP115kuAFhtBukKFpONdjp87NprCm91HDbrE/owxdhZ
+         xxo+KOoGVV8xi+r/xixAGATY/mdBwwFHbvwyMTntL/h4E9NIije4CwzKImO+Ft2TkT
+         esRYtMPRx+sjIdI+yAhG+ZMuViJGWjFRbn/mUsDAUOmzw+aAGycJPSGKcxVsrEIzp8
+         X0mn6JIfspomXpax77aqWhehi+1mnH/vQ4jhS6hEKe6Mz0SIuDNSMiJKjScDPZ41Nq
+         qTUq0ayObtqPUirRQM9z42nmYatHl4UCiTIAydz4MMVW/EurQNGzuSW/wTRFFDwp+A
+         k19lzCPqTmXVQ==
+Date:   Mon, 27 Sep 2021 13:46:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Subject: Re: [PATCH v3 03/20] PCI/P2PDMA: make pci_p2pdma_map_type()
+ non-static
+Message-ID: <20210927184648.GA667259@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210916234100.122368-4-logang@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
-> On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
-> > Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> > structures may also be used by Intel to indicate support for other
-> > capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
-> > and non-PMT capabilities. In order to support these capabilities it is
-> > necessary to modify the intel_pmt driver to handle the creation of platform
-> > devices more generically.
+On Thu, Sep 16, 2021 at 05:40:43PM -0600, Logan Gunthorpe wrote:
+> pci_p2pdma_map_type() will be needed by the dma-iommu map_sg
+> implementation because it will need to determine the mapping type
+> ahead of actually doing the mapping to create the actual iommu mapping.
+
+I don't expect this to go via the PCI tree, but if it did I would
+silently:
+
+  s/PCI/P2PDMA: make pci_p2pdma_map_type() non-static/
+    PCI/P2PDMA: Expose pci_p2pdma_map_type()/
+  s/iommu/IOMMU/
+
+and mention what this patch does in the commit log (in addition to the
+subject) and fix a couple minor typos below.
+
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/p2pdma.c       | 24 +++++++++++++---------
+>  include/linux/pci-p2pdma.h | 41 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 9 deletions(-)
 > 
-> I said this on your other driver submission, but why are you turning a
-> PCIe device into a set of platform devices and craming it into the MFD
-> subsystem?
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 1192c465ba6d..b656d8c801a7 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -20,13 +20,6 @@
+>  #include <linux/seq_buf.h>
+>  #include <linux/xarray.h>
+>  
+> -enum pci_p2pdma_map_type {
+> -	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> -	PCI_P2PDMA_MAP_NOT_SUPPORTED,
+> -	PCI_P2PDMA_MAP_BUS_ADDR,
+> -	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE,
+> -};
+> -
+>  struct pci_p2pdma {
+>  	struct gen_pool *pool;
+>  	bool p2pmem_published;
+> @@ -841,8 +834,21 @@ void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_p2pmem_publish);
+>  
+> -static enum pci_p2pdma_map_type pci_p2pdma_map_type(struct dev_pagemap *pgmap,
+> -						    struct device *dev)
+> +/**
+> + * pci_p2pdma_map_type - return the type of mapping that should be used for
+> + *	a given device and pgmap
+> + * @pgmap: the pagemap of a page to determine the mapping type for
+> + * @dev: device that is mapping the page
+> + *
+> + * Returns one of:
+> + *	PCI_P2PDMA_MAP_NOT_SUPPORTED - The mapping should not be done
+> + *	PCI_P2PDMA_MAP_BUS_ADDR - The mapping should use the PCI bus address
+> + *	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE - The mapping should be done normally
+> + *		using the CPU physical address (in dma-direct) or an IOVA
+> + *		mapping for the IOMMU.
+> + */
+> +enum pci_p2pdma_map_type pci_p2pdma_map_type(struct dev_pagemap *pgmap,
+> +					     struct device *dev)
+>  {
+>  	enum pci_p2pdma_map_type type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>  	struct pci_dev *provider = to_p2p_pgmap(pgmap)->provider;
+> diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+> index 8318a97c9c61..caac2d023f8f 100644
+> --- a/include/linux/pci-p2pdma.h
+> +++ b/include/linux/pci-p2pdma.h
+> @@ -16,6 +16,40 @@
+>  struct block_device;
+>  struct scatterlist;
+>  
+> +enum pci_p2pdma_map_type {
+> +	/*
+> +	 * PCI_P2PDMA_MAP_UNKNOWN: Used internally for indicating the mapping
+> +	 * type hasn't been calculated yet. Functions that return this enum
+> +	 * never return this value.
+> +	 */
+> +	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_MAP_NOT_SUPPORTED: Indicates the transaction will
+> +	 * traverse the host bridge and the host bridge is not in the
+> +	 * whitelist. DMA Mapping routines should return an error when
+> +	 * this is returned.
+> +	 */
+> +	PCI_P2PDMA_MAP_NOT_SUPPORTED,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_BUS_ADDR: Indicates that two devices can talk to
+> +	 * eachother directly through a PCI switch and the transaction will
+> +	 * not traverse the host bridge. Such a mapping should program
+> +	 * the DMA engine with PCI bus addresses.
+
+s/eachother/each other/
+
+> +	 */
+> +	PCI_P2PDMA_MAP_BUS_ADDR,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE: Indicates two devices can talk
+> +	 * to eachother, but the transaction traverses a host bridge on the
+> +	 * whitelist. In this case, a normal mapping either with CPU physical
+> +	 * addresses (in the case of dma-direct) or IOVA addresses (in the
+> +	 * case of IOMMUs) should be used to program the DMA engine.
+
+s/eachother/each other/
+
+> +	 */
+> +	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE,
+> +};
+> +
+>  #ifdef CONFIG_PCI_P2PDMA
+>  int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  		u64 offset);
+> @@ -30,6 +64,8 @@ struct scatterlist *pci_p2pmem_alloc_sgl(struct pci_dev *pdev,
+>  					 unsigned int *nents, u32 length);
+>  void pci_p2pmem_free_sgl(struct pci_dev *pdev, struct scatterlist *sgl);
+>  void pci_p2pmem_publish(struct pci_dev *pdev, bool publish);
+> +enum pci_p2pdma_map_type pci_p2pdma_map_type(struct dev_pagemap *pgmap,
+> +					     struct device *dev);
+>  int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>  		int nents, enum dma_data_direction dir, unsigned long attrs);
+>  void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+> @@ -83,6 +119,11 @@ static inline void pci_p2pmem_free_sgl(struct pci_dev *pdev,
+>  static inline void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
+>  {
+>  }
+> +static inline enum pci_p2pdma_map_type
+> +pci_p2pdma_map_type(struct dev_pagemap *pgmap, struct device *dev)
+> +{
+> +	return PCI_P2PDMA_MAP_NOT_SUPPORTED;
+> +}
+>  static inline int pci_p2pdma_map_sg_attrs(struct device *dev,
+>  		struct scatterlist *sg, int nents, enum dma_data_direction dir,
+>  		unsigned long attrs)
+> -- 
+> 2.30.2
 > 
-> PCIe devices are NOT platform devices.
-
-But they *are* used to create platform devices when the PCIe device is multi-functional, which is
-what intel_pmt is.
-
-> 
-> Why not use the auxiliary bus for this thing if you have individual
-> drivers that need to "bind" to the different attributes that this single
-> PCIe device is exporting.
-
-It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
-monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
-like lpss. But the same IP is now being used for other features too like SDSi. We could work on
-converting this to the auxiliary bus and then covert the cell drivers.
-
-> 
-> Or why not just fix the hardware to report individual PCIe devices, like
-> a sane system would do?
-
-We have some systems with 1000+ PCIe devices. Each PCIe device adds cost to HW. So increasingly
-VSEC/DVSEC is used to expose features which are handled by the same micro-controller in the HW.
-
->   Has this shipped in any devices yet?  If not,
-> can that be fixed first?  It's just a firmware change, right?
-
-PMT has been shipped for over a year. It's not just a firmware change.
-
-David 
-> 
-> thanks,
-> 
-> greg k-h
-
-
