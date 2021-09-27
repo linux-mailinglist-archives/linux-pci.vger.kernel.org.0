@@ -2,83 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DAC4197F9
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 17:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6A394198D2
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Sep 2021 18:23:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235087AbhI0PdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 11:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        id S235461AbhI0QZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Sep 2021 12:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234158AbhI0PdI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 27 Sep 2021 11:33:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 282FA60E94;
-        Mon, 27 Sep 2021 15:31:29 +0000 (UTC)
+        id S235338AbhI0QZ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 27 Sep 2021 12:25:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6806161058;
+        Mon, 27 Sep 2021 16:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632756690;
-        bh=BSIQbhcTAO8ZPgbB9YoTkX4id04un2WWtaUv2/wWqfg=;
+        s=k20201202; t=1632759829;
+        bh=ahbLyZ8Wv5gvxyTSBNy6NXQAnOFTP57heCOScjz9m8I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EyH4WRLrHmQ3FMOjdcXuaJQ5cGQUSUth95nwzt9aZ7C5tThMZQJypMc1I8l8OpDo/
-         kKTUj4kaiPwcxsF32qHpvBCkT12SZujArnHLfiIo2ihLFFCoyzUFSUz3GffjRuzytk
-         j+GMZsU3FvIU2RnErdUk4FiY+jux7YSQuiSXp4JP+KrcJgISiEzFfTfQa1lbKpyvof
-         StMbBxOMGulaAOPggrSlfFeK4KZpsYnJj1h58T5cfxnR0ZK/a71NX0FKvbLc0IgM1t
-         fuaI6MelcpS95lsaPbKes+jx3wxPRqcxtnn8i+9Ky2fXwpV+5QhXbVKP5wJk3Vvx9W
-         XbqUDIX+iePXQ==
-Date:   Mon, 27 Sep 2021 10:31:28 -0500
+        b=hTkybTtCve3N/NOAkASYAmrf0pxHRVSX9uIBlvrWeo3qQ01O30yCvXfCbfXXYHDiC
+         avWfGXzY8Squww313qv1uvj6Z5P5Xf0nzBijyK3CFXA8fW8WGFb/3DLGrdNAVdyWWn
+         yd2Zi9vLtaGfS1BaigLTKRWnaVyvvzrcQziDFFuqnViqfSEbBhSKXfaeeFgw1RFecX
+         OTI5jZof+bBHXM4fguZsTLVE2MtPIufg5CPdCpIGh9lcaNBfC1BAtCS/4LkxtI4Syj
+         Hc6tEeemjDsYUihr1ClsWwIdbdX0PF8/BnXSjAFhunmwoPVJO0FqENYiWUjnzY3/Xr
+         1Ua02QS+pvb6A==
+Date:   Mon, 27 Sep 2021 11:23:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Sergio M. Iglesias" <sergio@lony.xyz>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: About the "__refdata" tag in pci-keystone.c
-Message-ID: <20210927153128.GA646260@bhelgaas>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Implement re-issuing config requests on
+ CRS response
+Message-ID: <20210927162348.GA650225@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210927103321.v4kod7xfiv5sreet@lony.xyz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210926111319.sgtfsjovkhfkh4qs@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 12:33:21PM +0200, Sergio M. Iglesias wrote:
-> Hello!
+On Sun, Sep 26, 2021 at 01:13:19PM +0200, Pali Rohár wrote:
+> On Wednesday 22 September 2021 11:48:03 Bjorn Helgaas wrote:
+
+> > The config read of Vendor ID after a reset should be done by the PCI
+> > core, not a device driver.
 > 
-> I have checked the "__refdata" tag that appears in the file
-> "drivers/pci/controller/dwc/pci-keystone.c" and it is needed. The tag has
-> been there since the creation of the file on commit 6e0832fa432e and
-> nothing has changed since that would make it redundant.
+> Of course. But in case of unexpected reset (which PCI code does not
+> detect), card driver at the same time could issue some config read/write
+> request.
+
+By "unexpected reset", you mean a reset performed autonomously by the
+device, or a reset initiated by the driver without help from the PCI
+core?  Either way, I think the PCI core is pretty much out of the
+picture and the driver is on its own.
+
+> > If we disable CRS SV, the only outcomes of
+> > that read are:
+> > 
+> >   1) Valid Vendor ID data, or
+> > 
+> >   2) Failed transaction, typically reported as 0xffff data (and, I
+> >      expect, an Unsupported Request or similar error logged)
 > 
-> The reason it is needed is because the struct references "ks_pcie_probe",
-> which is a function tagged as "__init", so the compiler will most likely
-> complain about the "__refdata" being removed.
-> 
-> Should I send a patch to add a comment explaining why it is a necessary
-> tag as recommended in "include/linux/init.h"?
-> > [...] so optimally document why the __ref is needed and why it's OK).
+> Yes. And I think it should apply also for any other config register, not
+> just vendor id.
 
-Thanks a lot for looking into this.
+Yes.
 
-I'm not yet convinced that either the __init or the __refdata is
-necessary.  If there is a reason, it would not be "to silence a
-compiler complaint"; it would be something like "the keystone platform
-is different from all the other platforms because the other platforms
-support X but keystone does not."
+> In case error reporting or AER functionality is not supported then there
+> would be no error logged. And PCI core / kernel does not have to know
+> that such thing happened.
 
-Also, there are a couple other .probe() functions that are marked
-__init:
-
-  $ git grep "static int .*_pci.*_probe" drivers/pci | grep __init
-  drivers/pci/controller/dwc/pci-keystone.c:static int __init ks_pcie_probe(struct platform_device *pdev)
-  drivers/pci/controller/dwc/pci-layerscape-ep.c:static int __init ls_pcie_ep_probe(struct platform_device *pdev)
-  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c:static int __init ls_pcie_g4_probe(struct platform_device *pdev)
-  drivers/pci/controller/pci-ixp4xx.c:static int __init ixp4xx_pci_probe(struct platform_device *pdev)
-
-and their platform_driver structs are not marked __refdata:
-
-  $ git grep "static struct platform_driver" drivers/pci | grep __refdata
-  drivers/pci/controller/dwc/pci-keystone.c:static struct platform_driver ks_pcie_driver __refdata = {
-
-I think this should all be more consistent: either all these __init
-and __refdata annotations should be removed, or they should be used by
-many more drivers.
+There *should* be at least the logging in Device Status for all PCIe
+devices, though I'm not sure the PCI core handles that nicely.  I'm
+looking at PCIe r5.0, sec 6.2.5: https://imgur.com/a/0yqygiM
 
 Bjorn
