@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44DB741B73B
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:12:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1F341B74E
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:15:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242435AbhI1TN0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 15:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33486 "EHLO
+        id S242358AbhI1TR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 15:17:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242417AbhI1TNT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:13:19 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CF5C061767
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:11:11 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id 134so28748571iou.12
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:11:11 -0700 (PDT)
+        with ESMTP id S240547AbhI1TR3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:17:29 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E6FC061745
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:15:49 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id gs10so14097615qvb.13
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=dAXGT1q19wzeDZuDAAKylN0FjSdSatuZU8qbovqANdw=;
-        b=NIsddmzY0SYPds0DsYkmoKZofq4uefBOl/rEvHgX2wf4Sq0Q/kPfCr88FedGCk72x4
-         M85CSii4YgqgeM0qNeZZf3HW2JP2y18v42D5jWWJxvBa620My0qz75JLiIxzKFePaec2
-         fhlmmNtBIFu07KD16S0Ue2uzNiDFkv4tUm/ROVOWgsufiRUPYkqXwQJynXHEpPzfeWNl
-         lT9KnR8RE94I6VBQwgECcNJi86FzLxVTZHjBXlz92yIisi+ep1Kytv6n7liUaJT+LBIn
-         HQ3MgYljZM9zacpI6dVo9OhsLwET/JAbBNrnWr1DQI5h4ySl49sjVWB2ztyrVHrLwEzy
-         Inxw==
+        bh=tcyMivDSSj98xjcYfl0Ss83FFw70+B/UboxWuutjjDI=;
+        b=ZXqOBoW2zcRY/XCsYnDKUJm0jeVb6g6QynSlK5Ml/gYsHIPYVyWznW28IH/m39nrRs
+         rG+j+z/VkkqSaLLAsjs0lqXyt+KgS2pwIFFxGvKOTpp6OskwVnUll7c0SZ88LW5r3udd
+         0x2by8/0zgW10HXmR0atwW5ZveJ3LbAJ7dsEEUr2Gu8vBnEg7aKaIp30t+n3dbCJEhXZ
+         2aFI7yDiqqERTNEfaySqTNHIuhyRB286ED8KYrDS7lbzOda3vmUboyfsyK3esMfGV4a8
+         lPty5Chcgd6dyRXlzNl6IVGzK8Mh2KFiv4dYejeXY92N3QfzHRKzIOavZpEbU+UISfzK
+         CNNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dAXGT1q19wzeDZuDAAKylN0FjSdSatuZU8qbovqANdw=;
-        b=cONpzd+QNUNNDJd+sGVJPAL09gtdzwIi4rhVrcwfudDa+r1sk9t6nBhD7mrsWRYLlZ
-         ApjA1n7xZ8USHA4dIo+n96lkRbT6MTrbLwxwLHHjnJC2yIqYB1w0s+FK8KxQBe8EXFdp
-         9mQurT1Fx/b4NoChrT1V9lCTXZdGEgHt5cXa9/iueLJe3x42Zlr/A31V0ziXVN/GeFYI
-         h1NQZyTArBeX1qoqubRzOshdskFGSF17Ztjgzq/Z3/JEExDwleJW44bkFeJhzgNFO52o
-         jLNCa77N9fjwuQ2s9YVU668z53zJH42jHhaVdi3O6ok+qujgSo2BRgbnLOfQU7IVgJSc
-         aV6Q==
-X-Gm-Message-State: AOAM531Zg6qu6yB9jF8l4pEwgQcklR/oo+LSWGWXGdtg23FigZs3ljg9
-        USSTfShNhgX3auW7LMeKjEwALA==
-X-Google-Smtp-Source: ABdhPJyf8mt18AlEnK05TMnL1sFZAfxIPVyMiQRw0bFkerbSvSvkBso11/Xmw8q6+HkK6ya/0EoZuA==
-X-Received: by 2002:a6b:5b14:: with SMTP id v20mr5202033ioh.142.1632856270563;
-        Tue, 28 Sep 2021 12:11:10 -0700 (PDT)
+        bh=tcyMivDSSj98xjcYfl0Ss83FFw70+B/UboxWuutjjDI=;
+        b=GbMzLftI6pSsGcnU7ims2cbd2+b4NLtlEdGehfkuvLq9aLYc4ja2CVvSJPgSMSd7hc
+         agt8wpGkTEo1uwsyDz7y6ZA88gF2w3D0iu4u9ZCuF+DnafXZnhPejNzkC6537Cm9Q2Bu
+         P0JJ5KWBqwCUOGrjQa9en9vLDdX24YkqWFBMVvWcnI3UsLrPAgdQTc1Ku+SekQmE1eXW
+         ezKkhI9QDeF0vllHHyrGaIEcI8KBDH2zykaN0TjTTAXjajyy79GD5xjypAyQ4Q8KLXwV
+         JeXFKO/ozKJ0Ri54DC17+fLrQTJ9f6bEMBnG2QPkqXT1wvNbluowNBfmj+KgmY0juvYi
+         7Vmg==
+X-Gm-Message-State: AOAM533e0uzf2XQ6jkVhZJOrUaRgO144lSAc62POy4E+fVKz8kl2onZ6
+        ++82wP5i2jEycJp0t2HaehBkP4aZ28cfdA==
+X-Google-Smtp-Source: ABdhPJwurJl1S4rZ2pOn1DTdiP6TavgJzB4eTygZmyEB+s55pljNt5t0RfW6XCRuHe8/1mcYm0z9gQ==
+X-Received: by 2002:a0c:dd92:: with SMTP id v18mr7551030qvk.41.1632856548504;
+        Tue, 28 Sep 2021 12:15:48 -0700 (PDT)
 Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id b14sm1785849ilc.63.2021.09.28.12.11.09
+        by smtp.gmail.com with ESMTPSA id p9sm6469qkm.23.2021.09.28.12.15.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 12:11:10 -0700 (PDT)
+        Tue, 28 Sep 2021 12:15:48 -0700 (PDT)
 Received: from jgg by mlx with local (Exim 4.94)
         (envelope-from <jgg@ziepe.ca>)
-        id 1mVIVR-007Fxh-2M; Tue, 28 Sep 2021 16:11:09 -0300
-Date:   Tue, 28 Sep 2021 16:11:09 -0300
+        id 1mVIZv-007G30-3V; Tue, 28 Sep 2021 16:15:47 -0300
+Date:   Tue, 28 Sep 2021 16:15:47 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -74,31 +74,44 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Robin Murphy <robin.murphy@arm.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 07/20] dma-mapping: add flags to dma_map_ops to
- indicate PCI P2PDMA support
-Message-ID: <20210928191109.GO3544071@ziepe.ca>
+Subject: Re: [PATCH v3 08/20] iommu/dma: support PCI P2PDMA pages in
+ dma-iommu map_sg
+Message-ID: <20210928191547.GP3544071@ziepe.ca>
 References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-8-logang@deltatee.com>
+ <20210916234100.122368-9-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210916234100.122368-8-logang@deltatee.com>
+In-Reply-To: <20210916234100.122368-9-logang@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 05:40:47PM -0600, Logan Gunthorpe wrote:
-> Add a flags member to the dma_map_ops structure with one flag to
-> indicate support for PCI P2PDMA.
+On Thu, Sep 16, 2021 at 05:40:48PM -0600, Logan Gunthorpe wrote:
+> When a PCI P2PDMA page is seen, set the IOVA length of the segment
+> to zero so that it is not mapped into the IOVA. Then, in finalise_sg(),
+> apply the appropriate bus address to the segment. The IOVA is not
+> created if the scatterlist only consists of P2PDMA pages.
 > 
-> Also, add a helper to check if a device supports PCI P2PDMA.
+> A P2PDMA page may have three possible outcomes when being mapped:
+>   1) If the data path between the two devices doesn't go through
+>      the root port, then it should be mapped with a PCI bus address
+>   2) If the data path goes through the host bridge, it should be mapped
+>      normally with an IOMMU IOVA.
+>   3) It is not possible for the two devices to communicate and thus
+>      the mapping operation should fail (and it will return -EREMOTEIO).
+> 
+> Similar to dma-direct, the sg_dma_mark_pci_p2pdma() flag is used to
+> indicate bus address segments. On unmap, P2PDMA segments are skipped
+> over when determining the start and end IOVA addresses.
+> 
+> With this change, the flags variable in the dma_map_ops is set to
+> DMA_F_PCI_P2PDMA_SUPPORTED to indicate support for P2PDMA pages.
 > 
 > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 > ---
->  include/linux/dma-map-ops.h | 10 ++++++++++
->  include/linux/dma-mapping.h |  5 +++++
->  kernel/dma/mapping.c        | 18 ++++++++++++++++++
->  3 files changed, 33 insertions(+)
+>  drivers/iommu/dma-iommu.c | 68 +++++++++++++++++++++++++++++++++++----
+>  1 file changed, 61 insertions(+), 7 deletions(-)
 
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
