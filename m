@@ -2,254 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 879D641B4D5
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 19:18:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5FE141B535
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 19:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241994AbhI1RTk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 13:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233219AbhI1RTk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Sep 2021 13:19:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A06F6128B;
-        Tue, 28 Sep 2021 17:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632849480;
-        bh=typQyCd3SNK3k7UUCXoQOKeKV93Xkib4KN6PGEcMTdE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uGa9mwTlXnwIr5Kf6wCoNyN+BvhLq2l4vkpXGqv/vS/rHf4O+J1eFo/5GtF1QHbkM
-         StGDGaAjkcQ/njgTon/aUGA2HmaHZOHzGTnFrsugbMdHGZvk/8cfeCgN6bfBTzOE9X
-         5GfNMNqfWK1Xpb27EpyY+SBx0vh7SXfN6qkj0NtoYqrWgG4yrCeWDl5UtXg6Tzxl5A
-         hlF8o9dBlHkyHu5hHR0rNqL1fUsfSZt4dX5cvyVVJ95MOdYOrgy27tXHH4e77YHy+o
-         iFOf0sEpA9glBJabKt2NK1cd8+bSQx3yGF/wXpAOBTN3HzjG8lEB84rMRq7qqWicCT
-         XeK5V44uMMx5g==
-Date:   Tue, 28 Sep 2021 12:17:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Russell Currey <ruscur@russell.cc>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org,
-        kernel@pengutronix.de, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Michael Buesch <m@bues.ch>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com
-Subject: Re: [PATCH v4 4/8] PCI: replace pci_dev::driver usage that gets the
- driver name
-Message-ID: <20210928171759.GA704204@bhelgaas>
+        id S242183AbhI1Rh2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 13:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242162AbhI1Rh2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 13:37:28 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B0CC06161C
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 10:35:48 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id k23-20020a17090a591700b001976d2db364so3409478pji.2
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 10:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z4rpZbh5fY0GJmvqTpqKPOJUU3/CkuLxZ3x2vaW47gs=;
+        b=wZ2qK0vDwa/x+WmO54A8bVqDnaE4MxcyOEaPNfghMs0xFBaF5wolp8j+kq8NVd53dl
+         rsImtXgdg957L8wghBAufVSqgLyC4EmLedX89tGCu9hdbwa/j0bK+igN5QxEz+2sSMn4
+         Jkpzph4lS6pupyWbeuUVoT7QYa/faQ1K5gWMxS69D0LVU584l+LYqEdHM36t5UUJP8KZ
+         Ox8vtfVgQGLnLqDI7aAS7eftEkVJGtu441BAiHEGfxU6S8AyhzXUAUXd3857Wfq2hmsT
+         U/DpbWTh0lWZxkH3nJrhEHTL0R210cPEJQldelq0QNJ765EUoU+wh6cTG8Wqc7Jl6mzu
+         QXyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4rpZbh5fY0GJmvqTpqKPOJUU3/CkuLxZ3x2vaW47gs=;
+        b=VvZw1/eGesnvPrqLjckeVuw2APUBoa9LMSqtrpqcmW2y5s7sN/M4cswJ21Yh8lBmF1
+         qAloMg0WQAx6evk3UUSH+mLaHmGrB595Bi8eYiCp5KWT7hxzjtIjvNW8pKZ3578OX7Rl
+         Wlh3yATfqHYcZ/ZiePHOWbtLnReT+MOSuQ3I07Mr8zjANyohYpkfSsDeKj2EH+g7wWnc
+         DNVFWXI9kv4yGhDAo550g/gA94JZ4LKWtu+LkE19WJHM0eUhYc2szN/3u7Gjpe1W7uwN
+         zouthjKtnTvsvbjidDbYjFljCwivdT7W3A1UjghB6WebLdW8MXMyoDyFAlaXe94WuwPW
+         RlhA==
+X-Gm-Message-State: AOAM532R24ZYGpCog0vbiEZJYcmsgMOebSF1gFIbmkyCHwpe2gfQqOTb
+        /rqsouqR+wgaHs27s3y2WqrezvbOaZDroIkgwRTrrg==
+X-Google-Smtp-Source: ABdhPJw3YufFCASrMQKrr5qR62jfqEobEWU5JH/XKYq1dn6X8ous0KD9EnMyS9mGmOC2Zwa4E1WW3YScKPZdcYfFVq8=
+X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr1302865pju.8.1632850547865;
+ Tue, 28 Sep 2021 10:35:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210927204326.612555-5-uwe@kleine-koenig.org>
+References: <20210923172647.72738-1-ben.widawsky@intel.com> <20210923172647.72738-5-ben.widawsky@intel.com>
+In-Reply-To: <20210923172647.72738-5-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 28 Sep 2021 10:35:34 -0700
+Message-ID: <CAPcyv4i7Dytarp3Hxi_ECtCU+Ve985dNCh07a8wJX0sTgCnR0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] cxl/pci: Refactor cxl_pci_setup_regs
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Andrew Donnellan <ajd@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Oliver, Russell for eeh_driver_name() question below]
-
-On Mon, Sep 27, 2021 at 10:43:22PM +0200, Uwe Kleine-König wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> struct pci_dev::driver holds (apart from a constant offset) the same
-> data as struct pci_dev::dev->driver. With the goal to remove struct
-> pci_dev::driver to get rid of data duplication replace getting the
-> driver name by dev_driver_string() which implicitly makes use of struct
-> pci_dev::dev->driver.
-
-When you repost to fix the build issue, can you capitalize the subject
-line to match the other?
-
-Also, would you mind using "pci_dev.driver" instead of
-"pci_dev::driver"?  AFAIK, the "::" operator is not actually part of
-C, so I think it's more confusing than useful.
-
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Thu, Sep 23, 2021 at 10:27 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> In preparation for moving parts of register mapping to cxl_core, the
+> cxl_pci driver is refactored to utilize a new helper to find register
+> blocks by type.
+>
+> cxl_pci scanned through all register blocks and mapping the ones that
+> the driver will use. This logic is inverted so that the driver
+> specifically requests the register blocks from a new helper. Under the
+> hood, the same implementation of scanning through all register locator
+> DVSEC entries exists.
+>
+> There are 2 behavioral changes (#2 is arguable):
+> 1. A dev_err is introduced if cxl_map_regs fails.
+> 2. The previous logic would try to map component registers and device
+>    registers multiple times if there were present and keep the mapping
+>    of the last one found (furthest offset in the register locator).
+>    While this is disallowed in the spec, CXL 2.0 8.1.9: "Each register
+>    block identifier shall only occur once in the Register Locator DVSEC
+>    structure" it was how the driver would respond to the spec violation.
+>    The new logic will take the first found register block by type and
+>    move on.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
 > ---
->  arch/powerpc/include/asm/ppc-pci.h                   | 9 ++++++++-
->  drivers/bcma/host_pci.c                              | 7 ++++---
->  drivers/crypto/hisilicon/qm.c                        | 2 +-
->  drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 2 +-
->  drivers/net/ethernet/marvell/prestera/prestera_pci.c | 2 +-
->  drivers/net/ethernet/mellanox/mlxsw/pci.c            | 2 +-
->  drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 2 +-
->  drivers/ssb/pcihost_wrapper.c                        | 8 +++++---
->  8 files changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-> index 2b9edbf6e929..e8f1795a2acf 100644
-> --- a/arch/powerpc/include/asm/ppc-pci.h
-> +++ b/arch/powerpc/include/asm/ppc-pci.h
-> @@ -57,7 +57,14 @@ void eeh_sysfs_remove_device(struct pci_dev *pdev);
->  
->  static inline const char *eeh_driver_name(struct pci_dev *pdev)
->  {
-> -	return (pdev && pdev->driver) ? pdev->driver->name : "<null>";
-> +	if (pdev) {
-> +		const char *drvstr = dev_driver_string(&pdev->dev);
-> +
-> +		if (strcmp(drvstr, ""))
-> +			return drvstr;
-> +	}
-> +
-> +	return "<null>";
+> Changes since v1:
 
-Can we just do this?
+No changes? Luckily git am strips this section...
 
-  if (pdev)
-    return dev_driver_string(&pdev->dev);
-
-  return "<null>";
-
-I think it's more complicated than it's worth to include a strcmp().
-It's possible this will change those error messages about "Might be
-infinite loop in %s driver", but that doesn't seem like a huge deal.
-
-I moved Oliver to "to:" and added Russell in case they object.
-
->  }
->  
->  #endif /* CONFIG_EEH */
-> diff --git a/drivers/bcma/host_pci.c b/drivers/bcma/host_pci.c
-> index 69c10a7b7c61..0973022d4b13 100644
-> --- a/drivers/bcma/host_pci.c
-> +++ b/drivers/bcma/host_pci.c
-> @@ -175,9 +175,10 @@ static int bcma_host_pci_probe(struct pci_dev *dev,
->  	if (err)
->  		goto err_kfree_bus;
->  
-> -	name = dev_name(&dev->dev);
-> -	if (dev->driver && dev->driver->name)
-> -		name = dev->driver->name;
-> +	name = dev_driver_string(&dev->dev);
-> +	if (!strcmp(name, ""))
-> +		name = dev_name(&dev->dev);
->  	err = pci_request_regions(dev, name);
-
-Again seems more complicated than it's worth to me.  This is in the
-driver's .probe() method, so really_probe() has already set
-"dev->driver = drv", which means dev->driver is always set to
-&bcma_pci_bridge_driver here, and bcma_pci_bridge_driver.name is
-always "bcma-pci-bridge".
-
-Almost all callers of pci_request_regions() just hardcode the driver
-name or use a DRV_NAME #define
-
-So I think we should just do:
-
-  err = pci_request_regions(dev, "bcma-pci-bridge");
-
->  	if (err)
->  		goto err_pci_disable;
-> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-> index 369562d34d66..8f361e54e524 100644
-> --- a/drivers/crypto/hisilicon/qm.c
-> +++ b/drivers/crypto/hisilicon/qm.c
-> @@ -3085,7 +3085,7 @@ static int qm_alloc_uacce(struct hisi_qm *qm)
->  	};
->  	int ret;
->  
-> -	ret = strscpy(interface.name, pdev->driver->name,
-> +	ret = strscpy(interface.name, dev_driver_string(&pdev->dev),
->  		      sizeof(interface.name));
->  	if (ret < 0)
->  		return -ENAMETOOLONG;
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-> index 7ea511d59e91..f279edfce3f1 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-> @@ -606,7 +606,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
->  		return;
->  	}
->  
-> -	strncpy(drvinfo->driver, h->pdev->driver->name,
-> +	strncpy(drvinfo->driver, dev_driver_string(&h->pdev->dev),
->  		sizeof(drvinfo->driver));
->  	drvinfo->driver[sizeof(drvinfo->driver) - 1] = '\0';
->  
-> diff --git a/drivers/net/ethernet/marvell/prestera/prestera_pci.c b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-> index a250d394da38..a8f007f6dad2 100644
-> --- a/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-> +++ b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
-> @@ -720,7 +720,7 @@ static int prestera_fw_load(struct prestera_fw *fw)
->  static int prestera_pci_probe(struct pci_dev *pdev,
->  			      const struct pci_device_id *id)
->  {
-> -	const char *driver_name = pdev->driver->name;
-> +	const char *driver_name = dev_driver_string(&pdev->dev);
->  	struct prestera_fw *fw;
->  	int err;
->  
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci.c b/drivers/net/ethernet/mellanox/mlxsw/pci.c
-> index 13b0259f7ea6..8f306364f7bf 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
-> @@ -1876,7 +1876,7 @@ static void mlxsw_pci_cmd_fini(struct mlxsw_pci *mlxsw_pci)
->  
->  static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> -	const char *driver_name = pdev->driver->name;
-> +	const char *driver_name = dev_driver_string(&pdev->dev);
->  	struct mlxsw_pci *mlxsw_pci;
->  	int err;
->  
-> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c b/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
-> index 0685ece1f155..23dfb599c828 100644
-> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
-> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
-> @@ -202,7 +202,7 @@ nfp_get_drvinfo(struct nfp_app *app, struct pci_dev *pdev,
->  {
->  	char nsp_version[ETHTOOL_FWVERS_LEN] = {};
->  
-> -	strlcpy(drvinfo->driver, pdev->driver->name, sizeof(drvinfo->driver));
-> +	strlcpy(drvinfo->driver, dev_driver_string(&pdev->dev), sizeof(drvinfo->driver));
->  	nfp_net_get_nspinfo(app, nsp_version);
->  	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
->  		 "%s %s %s %s", vnic_version, nsp_version,
-> diff --git a/drivers/ssb/pcihost_wrapper.c b/drivers/ssb/pcihost_wrapper.c
-> index 410215c16920..4938ed5cfae5 100644
-> --- a/drivers/ssb/pcihost_wrapper.c
-> +++ b/drivers/ssb/pcihost_wrapper.c
-> @@ -78,9 +78,11 @@ static int ssb_pcihost_probe(struct pci_dev *dev,
->  	err = pci_enable_device(dev);
->  	if (err)
->  		goto err_kfree_ssb;
-> -	name = dev_name(&dev->dev);
-> -	if (dev->driver && dev->driver->name)
-> -		name = dev->driver->name;
-> +
-> +	name = dev_driver_string(&dev->dev);
-> +	if (*name == '\0')
-> +		name = dev_name(&dev->dev);
-> +
->  	err = pci_request_regions(dev, name);
-
-Also seems like more trouble than it's worth.  This one is a little
-strange but is always called for either b43_pci_bridge_driver or
-b44_pci_driver, both of which have .name set, so I think we should
-simply do:
-
-  err = pci_request_regions(dev, dev_driver_string(&dev->dev));
-
->  	if (err)
->  		goto err_pci_disable;
-> -- 
-> 2.30.2
-> 
+Overall I think this refactor can be broken down further for
+readability and cleanup the long standing problem that the driver maps
+component registers for no reason. The main contributing factor to
+readability is that cxl_setup_pci_regs() still exists after the
+refactor, which also contributes to the component register problem. If
+the register mapping is up leveled to the caller of
+cxl_setup_pci_regs() (and drops mapping component registers) then a
+follow-on patch to rename cxl_setup_pci_regs to find_register_block
+becomes easier to read. Moving the cxl_register_map array out of
+cxl_setup_pci_regs() also makes a later patch to pass component
+register enumeration details to the endpoint-port that much cleaner.
