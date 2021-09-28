@@ -2,119 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE2DA41B75C
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AB5641B770
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242449AbhI1TTY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 15:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237134AbhI1TTX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:19:23 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5F8C061745
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:17:43 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id x9so45863qtv.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7f1QZiONeDrfm8AhTnbc53U7HhkzQ840mRRtmUewnCI=;
-        b=jv2OU4dRonKtBmDWObStEgucOWtPlJyqGW207XvuQpqOpfcn92InOEODzxDn3983J8
-         NWUMSihLuwJkDTW1ES/IWD1pW4f1IgZWhUtRjvhMkDyUbQyYUzTcg2auWALiBpPMh6T5
-         o6Y/op/SaG0z9lus3Le6nGPTcAsbC0wYw1OmeasBeOOIc0Unh8ixnfIYVGFTDQvdWUf7
-         ejnTvxk5F1g8wMgxUrGGmpVnriP2WtOERNRAu+rKxEr8b83QkHsd4GVA2mxfZkrmQHOF
-         YHUBTillHF8tNjol2rYAKfciv/4RCk/9bFro7e8E17vrA8nf9zNDkX9XT7E2zrdw+Kvq
-         T7bw==
+        id S242485AbhI1TVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 15:21:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38297 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242493AbhI1TVn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:21:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632856803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Za4UIa1i/i1OBgAuhO+2BMEIFPExsbIEIdBHDtNVqsI=;
+        b=RyAiQ9C1fZlGABvh/tDHEbHwS8y/EBv8avx0NdMrZoGkHIV1RN6h5XzY/tPbsMl17k1G9Y
+        yhjRtshLj1CNwzJ7aKgcwz4vqFwaPX/Su+jRTT0XfI76TuOJfzy7QmUzmA2GpLHdoHNOfz
+        l6SUt3FXQACkEdhpU+Xj/bOLlaNfx0w=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-aGJO8CcXOrCYex5Oe3i8nQ-1; Tue, 28 Sep 2021 15:20:01 -0400
+X-MC-Unique: aGJO8CcXOrCYex5Oe3i8nQ-1
+Received: by mail-oo1-f72.google.com with SMTP id i1-20020a4a9001000000b002a9c41e0eabso25285075oog.3
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7f1QZiONeDrfm8AhTnbc53U7HhkzQ840mRRtmUewnCI=;
-        b=FIfCwPDKfZOl7hBxS6LizqWU+SLlIEgmTyKZqFaR3lm6gYPXL7nZcMOyt5GGQtAecL
-         xXvG8ml8Y9FAU09pQMlb/GPTwZEEGe3O/B+ncvctLmqQzEFryo3x4omklo8hpDXzbWXx
-         aYzttHiRDuyTyMTd/TV8FYDEV2VGsa6dDaF2Nt9CNp0ESsFij13BVfr3sA+4hcC2thUe
-         EFKlFJPhfeycvMp83p+UxzfhjlQDEELEBiDArBiyLYj6zTthJHVgy5+oaNh/lVE6F58l
-         mmFuwFWa9X0BAqpvTJxVikNJzsLuLAaJ9WLT8v9Jnvgr0lQ8nM8LGmKAALedIDlOGMGA
-         ykQQ==
-X-Gm-Message-State: AOAM5303diTzOHtcwHiXOPMgoM8XcbYz00P28eT3gpH8NSNeRK0OB8Bx
-        lQHmWvwJ9zd/cj7fAxfjdrXgZA==
-X-Google-Smtp-Source: ABdhPJzuCBFM9bapdOvbnZSM2ycmiyqPK8ZUR9G41TIe6DE91xtbhVAs4nO11mNSn8qAAkRHmlWp7A==
-X-Received: by 2002:ac8:7d4b:: with SMTP id h11mr7542407qtb.333.1632856663191;
-        Tue, 28 Sep 2021 12:17:43 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id c6sm5387224qtx.72.2021.09.28.12.17.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Za4UIa1i/i1OBgAuhO+2BMEIFPExsbIEIdBHDtNVqsI=;
+        b=FLxvrIAiB2/FXHFge/8RqcyaZcvzFVOCY4JFrCm1eK0uLnAScV7ETN2gNDu0llpsVL
+         KCJ9evXJYZuOFsi5wE2OyPEDCVsjdgpfb4ineFH/L5UJLGX87pxsB92HhD+Z+CJvL7wk
+         LmxEf/KUYWeCGOVjcvXk6EewB2JNLQDF41f8AGdG3NBRGMa5WvWzbl6WvTTeth1NJnv9
+         zvCVotZJW3UwixKLzoGTHeVCTMsr29ozRCuzrh+Kx8rTO7Wt0eJZIt8yHST4VwxAwqLY
+         pobUbqtQKKf9/uUlXkxWIbAqQ6/UZS1FfQcX2XM6bGsolnv0ntISPcZ4u5c0sqWcYreH
+         62cw==
+X-Gm-Message-State: AOAM530xfvsTrRarQ/yRwylxjY4CccG2TbOIbU1EPn/tdkiDE77JnMpZ
+        Tpk7USeeIsuQcw2l8dKtxroR+sECDOuK6bpzgdmzVpadKn1KAKOcNcDu5wwnrbV4YSoFZV3hI/R
+        oS0PPIPX/LEatRmGzJf66
+X-Received: by 2002:a54:410b:: with SMTP id l11mr4950323oic.74.1632856800917;
+        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNb7SJKsY1fAhfMc6h0vwSeXSkbF/My4fjrvTWCd7Z2VSqxK1ptej7nonv6fRLJYXuWORlyA==
+X-Received: by 2002:a54:410b:: with SMTP id l11mr4950299oic.74.1632856800685;
+        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id u15sm5269230oon.35.2021.09.28.12.19.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 12:17:42 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mVIbl-007G4o-JW; Tue, 28 Sep 2021 16:17:41 -0300
-Date:   Tue, 28 Sep 2021 16:17:41 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 11/20] RDMA/core: introduce
- ib_dma_pci_p2p_dma_supported()
-Message-ID: <20210928191741.GQ3544071@ziepe.ca>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-12-logang@deltatee.com>
+        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
+Date:   Tue, 28 Sep 2021 13:19:58 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+Message-ID: <20210928131958.61b3abec.alex.williamson@redhat.com>
+In-Reply-To: <20210927231239.GE3544071@ziepe.ca>
+References: <cover.1632305919.git.leonro@nvidia.com>
+        <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
+        <20210927164648.1e2d49ac.alex.williamson@redhat.com>
+        <20210927231239.GE3544071@ziepe.ca>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210916234100.122368-12-logang@deltatee.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 05:40:51PM -0600, Logan Gunthorpe wrote:
-> Introduce the helper function ib_dma_pci_p2p_dma_supported() to check
-> if a given ib_device can be used in P2PDMA transfers. This ensures
-> the ib_device is not using virt_dma and also that the underlying
-> dma_device supports P2PDMA.
+On Mon, 27 Sep 2021 20:12:39 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
+
+> On Mon, Sep 27, 2021 at 04:46:48PM -0600, Alex Williamson wrote:
+> > > +	enum { MAX_STATE = VFIO_DEVICE_STATE_RESUMING };
+> > > +	static const u8 vfio_from_state_table[MAX_STATE + 1][MAX_STATE + 1] = {
+> > > +		[VFIO_DEVICE_STATE_STOP] = {
+> > > +			[VFIO_DEVICE_STATE_RUNNING] = 1,
+> > > +			[VFIO_DEVICE_STATE_RESUMING] = 1,
+> > > +		},  
+> > 
+> > Our state transition diagram is pretty weak on reachable transitions
+> > out of the _STOP state, why do we select only these two as valid?  
 > 
-> Use the new helper in nvme-rdma to replace the existing check for
-> ib_uses_virt_dma(). Adding the dma_pci_p2pdma_supported() check allows
-> switching away from pci_p2pdma_[un]map_sg().
+> I have no particular opinion on specific states here, however adding
+> more states means more stuff for drivers to implement and more risk
+> driver writers will mess up this uAPI.
+
+It looks like state transitions were largely discussed in v9 and v10 of
+the migration proposals:
+
+https://lore.kernel.org/all/1573578220-7530-2-git-send-email-kwankhede@nvidia.com/
+https://lore.kernel.org/all/1576527700-21805-2-git-send-email-kwankhede@nvidia.com/
+
+I'm not seeing that we really excluded many transitions there.
+
+> So only on those grounds I'd suggest to keep this to the minimum
+> needed instead of the maximum logically possible..
 > 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  drivers/nvme/target/rdma.c |  2 +-
->  include/rdma/ib_verbs.h    | 11 +++++++++++
->  2 files changed, 12 insertions(+), 1 deletion(-)
+> Also, probably the FSM comment from the uapi header file should be
+> moved into a function comment above this function?
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+It's not clear this function shouldn't be anything more than:
 
-> +/*
-> + * Check if a IB device's underlying DMA mapping supports P2PDMA transfers.
-> + */
-> +static inline bool ib_dma_pci_p2p_dma_supported(struct ib_device *dev)
-> +{
-> +	if (ib_uses_virt_dma(dev))
-> +		return false;
+	if (new_state > MAX_STATE || old_state > MAX_STATE)
+		return false;	/* exited via device reset, */
+				/* entered via transition fault */
 
-If someone wants to make rxe/hfi/qib use this stuff then they will
-have to teach the the driver to do all the p2p checks and add some
-struct ib_device flag
+	return true;
 
-Jason
+That's still only 5 fully interconnected states to work between, and
+potentially a 6th if we decide _RESUMING|_RUNNING is valid for a device
+supporting post-copy.
+
+In defining the device state, we tried to steer away from defining it
+in terms of the QEMU migration API, but rather as a set of controls
+that could be used to support that API to leave us some degree of
+independence that QEMU implementation might evolve.
+
+To that extent, it actually seems easier for a device implementation to
+focus on bit definition rather than the state machine node.
+
+I'd also vote that any clarification of state validity and transitions
+belongs in the uAPI header and a transition test function should
+reference that header as the source of truth, rather than the other way
+around.  Thanks,
+
+Alex
+
