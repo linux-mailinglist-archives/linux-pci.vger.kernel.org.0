@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25FC441A9C6
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 09:34:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 243D741A9C8
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 09:34:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239379AbhI1HgK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 03:36:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
+        id S239391AbhI1HgL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 03:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239330AbhI1HgF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S239341AbhI1HgF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 28 Sep 2021 03:36:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 66C776120C;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 798C061262;
         Tue, 28 Sep 2021 07:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1632814466;
-        bh=axmn1RnvxQeX7oiXKGGbEvgu9vfWyq+RGPWvhaUey2s=;
+        bh=ZR153dlsffpuvbTBi41fuDDqLuxRSHu2PWaUvSPkF4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7QooksZ9xbXAWiH9BwBfivTHzDafWYPMbMffrdqWorujFZjpXSWhlqGwPBGh3SoZ
-         Lyz+QT2v6zxQSX2ZPqBpKX2pczkJPs9SXXgifPNIwsZfZTqFS9P+dBMC7VyPu0Prj3
-         0uAUa8yZ8z1+M/i19IH79NSSfwYN9/0U+7506JbzN4IzVd5WhyddVzY6p2hGSX8oZ/
-         YtLcO2tPPLmNOsCXQ3lt8NqUSVQCTfnloZr6zfVeI+jXra3WdIEWMRjAnGxgIiGEpn
-         ytAIDo/JR/fNaQyIBIPvQdU5E0l54fUOLr8qQPcnO9uLrtC4f19i0oG4len2agpnCy
-         Xr83CKcvcHIJA==
+        b=cmFH6pKHHiVCuIdHpsTFq3hOqogHtHLKwztlsIcvi2SqdtWkaVuDC9BlPFah1dlmh
+         s3K/hAnNaBecn1Ax8qgzIzJYbFI2stFquHy1SZdOsm69lm9l3e+Dwx+pkSITreEGGe
+         sVrFxciWo7TlB6Ef47XyaQ9FvPc1PeUKwafM5NG8XhJZQDnWV3z7mbkfvjSlstikzQ
+         bb7nPpPc9f1jGrTocvC3Dc6z32IXm73aVSM21PhMgxS6D0alI1H/sv0bBJU16BGOQN
+         byuIDTQchQ1kOSD73qaAzLtm6FtPKlJB8lg4x5VdwgAb4M5U110gk1DGjlGNjENntO
+         or2NcVBvsYybQ==
 Received: by mail.kernel.org with local (Exim 4.94.2)
         (envelope-from <mchehab@kernel.org>)
-        id 1mV7dA-000RQ7-Np; Tue, 28 Sep 2021 09:34:24 +0200
+        id 1mV7dA-000RQB-PA; Tue, 28 Sep 2021 09:34:24 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -36,9 +36,9 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Rob Herring <robh@kernel.org>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v12 09/11] PCI: kirin: Add power_off support for Kirin 960 PHY
-Date:   Tue, 28 Sep 2021 09:34:19 +0200
-Message-Id: <81c6d2d0efca06a3a6bcd73033013365f22d8e0a.1632814194.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v12 10/11] PCI: kirin: fix poweroff sequence
+Date:   Tue, 28 Sep 2021 09:34:20 +0200
+Message-Id: <45076a6d1934590a6434a37346cb5d2b938014ed.1632814194.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1632814194.git.mchehab+huawei@kernel.org>
 References: <cover.1632814194.git.mchehab+huawei@kernel.org>
@@ -49,8 +49,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In order to prepare for module unload, add a power_off method
-for HiKey 960.
+This driver currently doesn't call dw_pcie_host_deinit()
+at the .remove() callback. This can cause an OOPS if the driver
+is unbound.
+
+While here, add a poweroff function, in order to abstract
+between the internal and external PHY logic.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
@@ -58,63 +62,65 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To mailbombing on a large number of people, only mailing lists were C/C on the cover.
 See [PATCH v12 00/11] at: https://lore.kernel.org/all/cover.1632814194.git.mchehab+huawei@kernel.org/
 
- drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-kirin.c | 30 ++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index d5c29a266756..b17a194cf78d 100644
+index b17a194cf78d..ffc63d12f8ed 100644
 --- a/drivers/pci/controller/dwc/pcie-kirin.c
 +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -343,6 +343,18 @@ static int hi3660_pcie_phy_init(struct platform_device *pdev,
- 	return hi3660_pcie_phy_get_resource(phy);
- }
+@@ -680,6 +680,23 @@ static const struct dw_pcie_host_ops kirin_pcie_host_ops = {
+ 	.host_init = kirin_pcie_host_init,
+ };
  
-+static int hi3660_pcie_phy_power_off(struct kirin_pcie *pcie)
++static int kirin_pcie_power_off(struct kirin_pcie *kirin_pcie)
 +{
-+	struct hi3660_pcie_phy *phy = pcie->phy_priv;
++	int i;
 +
-+	/* Drop power supply for Host */
-+	regmap_write(phy->sysctrl, SCTRL_PCIE_CMOS_OFFSET, 0x00);
++	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY)
++		return hi3660_pcie_phy_power_off(kirin_pcie);
 +
-+	hi3660_pcie_phy_clk_ctrl(phy, false);
++	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
++		gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 1);
++	}
++
++	phy_power_off(kirin_pcie->phy);
++	phy_exit(kirin_pcie->phy);
 +
 +	return 0;
 +}
 +
- /*
-  * The non-PHY part starts here
-  */
-@@ -560,7 +572,6 @@ static int kirin_pcie_add_bus(struct pci_bus *bus)
- 	return 0;
- }
- 
--
- static struct pci_ops kirin_pci_ops = {
- 	.read = kirin_pcie_rd_own_conf,
- 	.write = kirin_pcie_wr_own_conf,
-@@ -714,8 +725,12 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
+ static int kirin_pcie_power_on(struct platform_device *pdev,
+ 			       struct kirin_pcie *kirin_pcie)
+ {
+@@ -725,12 +742,7 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
  
  	return 0;
  err:
--	if (kirin_pcie->type != PCIE_KIRIN_INTERNAL_PHY)
-+	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY) {
-+		hi3660_pcie_phy_power_off(kirin_pcie);
-+	} else {
-+		phy_power_off(kirin_pcie->phy);
- 		phy_exit(kirin_pcie->phy);
-+	}
+-	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY) {
+-		hi3660_pcie_phy_power_off(kirin_pcie);
+-	} else {
+-		phy_power_off(kirin_pcie->phy);
+-		phy_exit(kirin_pcie->phy);
+-	}
++	kirin_pcie_power_off(kirin_pcie);
  
  	return ret;
  }
-@@ -725,7 +740,7 @@ static int __exit kirin_pcie_remove(struct platform_device *pdev)
+@@ -739,11 +751,9 @@ static int __exit kirin_pcie_remove(struct platform_device *pdev)
+ {
  	struct kirin_pcie *kirin_pcie = platform_get_drvdata(pdev);
  
- 	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY)
--		return 0;
-+		return hi3660_pcie_phy_power_off(kirin_pcie);
+-	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY)
+-		return hi3660_pcie_phy_power_off(kirin_pcie);
++	dw_pcie_host_deinit(&kirin_pcie->pci->pp);
  
- 	phy_power_off(kirin_pcie->phy);
- 	phy_exit(kirin_pcie->phy);
+-	phy_power_off(kirin_pcie->phy);
+-	phy_exit(kirin_pcie->phy);
++	kirin_pcie_power_off(kirin_pcie);
+ 
+ 	return 0;
+ }
 -- 
 2.31.1
 
