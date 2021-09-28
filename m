@@ -2,123 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2881A41AC98
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 12:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84DF941AD01
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 12:32:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240147AbhI1KFF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 06:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
+        id S240235AbhI1Kdz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 06:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240154AbhI1KFE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 06:05:04 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F9EC061740
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 03:03:16 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id t16-20020a1c7710000000b003049690d882so1698761wmi.5
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 03:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=yz7OSxKrs5tDs3iPjdQ84SnbqujRTE3B+86PcByyECI=;
-        b=ccy5lOzpyBKsENGgU3HIS0chBhX6A/t8rSbAwK/u0Rx6pM6GJWJb+0Oubyy7wlqtpT
-         kR7Z4v5O/T/JAUPSWWCQmkMP0SKtpsgzbjmaA6fdvlzAQjzV4FWxgSyENfxXl4IcJD4p
-         509+WTfEDbHXYTADcotWB6cacZbX4m/gaLI5q83CDkKWNZcCa1VSpJZYKTYCXbiAnPzh
-         q378NkglDcDVIzPny7hgwXkw+pjtvygClmArk3YCWvKY0h9nvuQGElefYNrf93rL510u
-         Hc52apND0kR6oeHAy3EWI3QPQCLKEu9ThHJfOaDIQ/Y1YoQO8a5Z7QIlZbi5qX9sEPMi
-         v4AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yz7OSxKrs5tDs3iPjdQ84SnbqujRTE3B+86PcByyECI=;
-        b=1L01o0Zd463Zbbw5/xP3eSmcdSHYr0yaFZvZTHC1OIXTfyrOz4Rpwo/th4mwpv2YRY
-         U2Zi8g3aTDW0EfQoH3QU3w5Ue8fEdAAc107aphp+QmuOA7wPMangMefbPVMgMGfOT7+Q
-         UrdB08CIFYtFIq1fgN7eN7MYtBj0milEn1s+wzvhxx51AK6icRPgfmJ3/O1za8a3uKxJ
-         gGLddL7ZPLbNyP4aH3hAtcZ/f8UmhGjanLEL3aWVzNo7A9mrIiNEcDXzwffSEfzyzLnJ
-         q7tEUxyVM4hutC/eDP69RH5zfEqNR+XgOyo4NpoEI7zjtENuct85Jx5muOLlodvDQPb6
-         AdrQ==
-X-Gm-Message-State: AOAM532sF1lEI1GZ8/FuVuMOpWb/8cpyaJ2OyZUFBgSdEMgWrF2DCr2h
-        /brpIelNqIjShrwWrZJR9+2GxQ==
-X-Google-Smtp-Source: ABdhPJwdbB0131GO5e9RXgw7jZajpVoD+s7BqbYj4LRTMgnSJC90hHj+bS2xwaNZ7M3DVBRF0okusQ==
-X-Received: by 2002:a1c:22d5:: with SMTP id i204mr3680039wmi.145.1632823395493;
-        Tue, 28 Sep 2021 03:03:15 -0700 (PDT)
-Received: from google.com ([95.148.6.233])
-        by smtp.gmail.com with ESMTPSA id 8sm2139893wmj.18.2021.09.28.03.03.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 03:03:15 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 11:03:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, bhelgaas@google.com,
-        andy.shevchenko@gmail.com, mgross@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
-Message-ID: <YVLoYZQ1fYLeEYXt@google.com>
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
- <20210922213007.2738388-3-david.e.box@linux.intel.com>
- <YVIBI6TQrD/rehli@kroah.com>
- <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
- <YVLKRSQx01vB4N77@google.com>
- <YVLb/GrePEKNDdtb@kroah.com>
+        with ESMTP id S240229AbhI1Kdy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 06:33:54 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AC1C061575
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 03:32:14 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVAOh-0007IU-GX; Tue, 28 Sep 2021 12:31:39 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVAOX-0002lF-WD; Tue, 28 Sep 2021 12:31:30 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVAOX-0003v8-Tx; Tue, 28 Sep 2021 12:31:29 +0200
+Date:   Tue, 28 Sep 2021 12:31:29 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Simon Horman <simon.horman@corigine.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Salil Mehta <salil.mehta@huawei.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 4/8] PCI: replace pci_dev::driver usage that gets the
+ driver name
+Message-ID: <20210928103129.c3gcbnfbarezr3mm@pengutronix.de>
+References: <20210927204326.612555-1-uwe@kleine-koenig.org>
+ <20210927204326.612555-5-uwe@kleine-koenig.org>
+ <20210928100127.GA16801@corigine.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="65t344eghsh2eaox"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YVLb/GrePEKNDdtb@kroah.com>
+In-Reply-To: <20210928100127.GA16801@corigine.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 28 Sep 2021, Greg KH wrote:
 
-> On Tue, Sep 28, 2021 at 08:54:45AM +0100, Lee Jones wrote:
-> > On Mon, 27 Sep 2021, David E. Box wrote:
-> > 
-> > > On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
-> > > > On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
-> > > > > Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> > > > > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> > > > > structures may also be used by Intel to indicate support for other
-> > > > > capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
-> > > > > and non-PMT capabilities. In order to support these capabilities it is
-> > > > > necessary to modify the intel_pmt driver to handle the creation of platform
-> > > > > devices more generically.
-> > > > 
-> > > > I said this on your other driver submission, but why are you turning a
-> > > > PCIe device into a set of platform devices and craming it into the MFD
-> > > > subsystem?
-> > > > 
-> > > > PCIe devices are NOT platform devices.
-> > > 
-> > > But they *are* used to create platform devices when the PCIe device is multi-functional, which is
-> > > what intel_pmt is.
-> > > 
-> > > > 
-> > > > Why not use the auxiliary bus for this thing if you have individual
-> > > > drivers that need to "bind" to the different attributes that this single
-> > > > PCIe device is exporting.
-> > > 
-> > > It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
-> > > monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
-> > > like lpss. But the same IP is now being used for other features too like SDSi. We could work on
-> > > converting this to the auxiliary bus and then covert the cell drivers.
-> > 
-> > I see this as subsequent work.  It should not affect this submission.
-> > 
-> > FWIW, I still plan to review this set for inclusion into MFD.
-> 
-> That's fine, but as the add-on submission that builds on top of this is
-> a broken mess (which is what caused me to have to review this series), I
-> can't recommend that be taken yet as it needs work to prevent systems
-> from doing bad things.
+--65t344eghsh2eaox
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Understood.  Deferred.
+On Tue, Sep 28, 2021 at 12:01:28PM +0200, Simon Horman wrote:
+> On Mon, Sep 27, 2021 at 10:43:22PM +0200, Uwe Kleine-K=F6nig wrote:
+> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > struct pci_dev::driver holds (apart from a constant offset) the same
+> > data as struct pci_dev::dev->driver. With the goal to remove struct
+> > pci_dev::driver to get rid of data duplication replace getting the
+> > driver name by dev_driver_string() which implicitly makes use of struct
+> > pci_dev::dev->driver.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> ...
+>=20
+> > diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c b/dri=
+vers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
+> > index 0685ece1f155..23dfb599c828 100644
+> > --- a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
+> > +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
+> > @@ -202,7 +202,7 @@ nfp_get_drvinfo(struct nfp_app *app, struct pci_dev=
+ *pdev,
+> >  {
+> >  	char nsp_version[ETHTOOL_FWVERS_LEN] =3D {};
+> > =20
+> > -	strlcpy(drvinfo->driver, pdev->driver->name, sizeof(drvinfo->driver));
+> > +	strlcpy(drvinfo->driver, dev_driver_string(&pdev->dev), sizeof(drvinf=
+o->driver));
+>=20
+> I'd slightly prefer to maintain lines under 80 columns wide.
+> But not nearly strongly enough to engage in a long debate about it.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+:-)
+
+Looking at the output of
+
+	git grep strlcpy.\*sizeof
+
+I wonder if it would be sensible to introduce something like
+
+	#define strlcpy_array(arr, src) (strlcpy(arr, src, sizeof(arr)) + __must_b=
+e_array(arr))
+
+but not sure this is possible without a long debate either (and this
+line is over 80 chars wide, too :-).
+
+> In any case, for the NFP portion of this patch.
+>=20
+> Acked-by: Simon Horman <simon.horman@corigine.com>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--65t344eghsh2eaox
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFS7v4ACgkQwfwUeK3K
+7Al9pwf+I6TDjUNhtsTqkV/J+f3tcMtnjPMZH0hCqv+jXSkmBqkwvn8wxEQXGFBL
+q6aNbMpy8LUCK3yn4+yes6FhZOK+CkMC6LgAv+Kzr43plzOCOvWTSDTi/nKx8sYf
+JqmAcctxmEA1hkAuort6dCBezIVcHHCpWrnsUuokesFvURNzLkytUGekUAkR5NNj
+g1aF021oqz88PJwyABeyfgrnCgwMSk8VlL39MdNJPUZewreVGija36YlIh/pFUyk
+3TvYaY4JrCgqq7AfYcZbZwiqCpi1AxWWY+ACJOQlG4IDCzQr2I7c8IWI+8yxow5o
+9j9Z8N/LPOHLfPGUNx5Cj8qLUoDiIw==
+=IxWL
+-----END PGP SIGNATURE-----
+
+--65t344eghsh2eaox--
