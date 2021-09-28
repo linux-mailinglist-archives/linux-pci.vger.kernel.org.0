@@ -2,99 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA0841B690
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 20:47:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24FC141B6A8
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 20:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242122AbhI1StE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 14:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236720AbhI1StE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Sep 2021 14:49:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 684BF60ED7;
-        Tue, 28 Sep 2021 18:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632854844;
-        bh=pFigxhX2RA6De4xqi56TGE6YxgO2OiuJ5+7X8oiZJBM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tA/OqfgZOke9o0eqgm6nl5BHAZvMAOVJ+kfEmfxXZu9tnRzHw/vJm8pqPNtH0MR3m
-         3RcCwgryE5dpIAAlTLAMJ3dRosFZatM0xyvF6T7hwJZOhkDnmmo4QEk5tOLM/pJ3G3
-         VcmSDfzFcC3hNvI4Nw7C6dkuY4+wp4eSM8Ow5RziB6cIjbhTfr3pTX17W0nnFW3QJa
-         MIRdplNPZPeKElhPkBPIIUPXtF9qitExNX+Xp1jUoxzBx1fCx2ZBISH8pIhDALk8xR
-         tOpC82y6NUPBv53EnFdpOV4wGU8W4UwdYHKUFcFeMj8QhZWU5UJCAEhWxZxJByG00E
-         6n/k7TgFU6u0Q==
-Date:   Tue, 28 Sep 2021 13:47:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pranay Sanghai <pranaysanghai@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/pci/setup-irq.c: Fix up comments.
-Message-ID: <20210928184723.GA717133@bhelgaas>
+        id S242317AbhI1Sua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 14:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242313AbhI1Sua (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 14:50:30 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D63C061746
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 11:48:50 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id t2so14321812qtx.8
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 11:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V9OdhKHkz+bDWOgw519ym53HGQqRyLuvFdP/XrS7z5w=;
+        b=U6Cle1ar5YMOX4vRLBQAyCUIzflL0rP5DDqpOBJE+YXNQaN+2OCi9d0Iy1j+ZqEb0q
+         ldJaiLHkalWypayZHQx3L3YPO9DcOqCmj/7fnNa9sm7+IILMYJgnEeoBHOfV3+5sIA1G
+         7PoT13IhlGy54nJMnWjX2JC+DO7VxjDE7MqR0TIZG4kkDyH5MeFimp+WrD7+H8fZcSrr
+         rjU6GjV1RHVgJefkq1bsjD7HjG42edUR2AMuNMVNVDWGsf2VmvclfT7eJ7t5/82dwAMV
+         kHPwsALEwDASPTTgXVp7pyVtxMvNs1y+xdofJ6ktmPZVIieklzttcPQ7dqgixshVYpDP
+         cjwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V9OdhKHkz+bDWOgw519ym53HGQqRyLuvFdP/XrS7z5w=;
+        b=o2Oee7dhjymuzK8YILqxH9VG8itz7h4P/rl/xdnmhWEw6N56oN7EDzorEYytXi1HTj
+         gX0YEKjcBDDtcSeUbdQvoh9GnMdBek3hgMltyvQL9/73hDjZU4oVBeRRWvFP1th0yETu
+         EdnVww8wZwOPx/4kvvmwV9IvGWwlw4B8PQeVGcgE5pGSQlIFAIKnLWyIoCY92Oan8+hz
+         V4v9jwJ+jC0ot4tc/8x5htSyznm6BdJh5QeXWOk0p2qv/a5mcccjvyYfa2TZ0iQXs9sA
+         RYK7zbLAnQyUVjVcOYlI36JZ5CrTGODp0V0S48xdyHkWUwBq7iuD4nE7tJzSGf6vrE5t
+         WtYA==
+X-Gm-Message-State: AOAM533xwXNd0kbLjJd+UQ5KT2DYVFdjWjR/HtAV57nuDyVrEztLVLDA
+        RaOx/pLuk8RHCPiDE6Ydw9IKkw==
+X-Google-Smtp-Source: ABdhPJxMh4uLV/Co2Bi0Uj4NMD1oETxTUQz1ehKuaeVQOMiXGKhC5tKssJhY1an+RZ/0cNTGVGgAwg==
+X-Received: by 2002:ac8:46c8:: with SMTP id h8mr7389965qto.341.1632854929767;
+        Tue, 28 Sep 2021 11:48:49 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id b65sm15601470qkc.46.2021.09.28.11.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Sep 2021 11:48:49 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mVI9o-007FZ4-5q; Tue, 28 Sep 2021 15:48:48 -0300
+Date:   Tue, 28 Sep 2021 15:48:48 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Subject: Re: [PATCH v3 03/20] PCI/P2PDMA: make pci_p2pdma_map_type()
+ non-static
+Message-ID: <20210928184848.GK3544071@ziepe.ca>
+References: <20210916234100.122368-1-logang@deltatee.com>
+ <20210916234100.122368-4-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YUZJenW2UCA4Qu0O@pranay-desktop>
+In-Reply-To: <20210916234100.122368-4-logang@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 18, 2021 at 01:18:02PM -0700, Pranay Sanghai wrote:
-> Make comments follow multi-line comment conventions. No functional change intended.
-> 
-> Signed-off-by: Pranay Sanghai <pranaysanghai@gmail.com>
-
-Applied to pci/misc for v5.16, with the changes below, thanks!
-
-  - Updated subject line to follow the convention (see "git log
-    --oneline drivers/pci/setup-irq.c").
-
-  - Rewrapped commit log to fit in 75 columns so it fits in 80 when
-    "git log" indents it.
-
-  - Rewrapped comments to fill 80 columns like the rest of the file.
-
-  - Replaced "'cos" with "because".
-
-> ---
->  drivers/pci/setup-irq.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-> index 7129494754dd..ed628771250b 100644
-> --- a/drivers/pci/setup-irq.c
-> +++ b/drivers/pci/setup-irq.c
-> @@ -28,12 +28,13 @@ void pci_assign_irq(struct pci_dev *dev)
->  		return;
->  	}
->  
-> -	/* If this device is not on the primary bus, we need to figure out
-> -	   which interrupt pin it will come in on.   We know which slot it
-> -	   will come in on 'cos that slot is where the bridge is.   Each
-> -	   time the interrupt line passes through a PCI-PCI bridge we must
-> -	   apply the swizzle function.  */
-> -
+On Thu, Sep 16, 2021 at 05:40:43PM -0600, Logan Gunthorpe wrote:
+> +enum pci_p2pdma_map_type {
 > +	/*
-> +	 * If this device is not on the primary bus, we need to figure out
-> +	 * which interrupt pin it will come in on. We know which slot it
-> +	 * will come in on 'cos that slot is where the bridge is. Each
-> +	 * time the interrupt line passes through a PCI-PCI bridge we must
-> +	 * apply the swizzle function.
+> +	 * PCI_P2PDMA_MAP_UNKNOWN: Used internally for indicating the mapping
+> +	 * type hasn't been calculated yet. Functions that return this enum
+> +	 * never return this value.
 > +	 */
->  	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
->  	/* Cope with illegal. */
->  	if (pin > 4)
-> @@ -56,7 +57,9 @@ void pci_assign_irq(struct pci_dev *dev)
->  
->  	pci_dbg(dev, "assign IRQ: got %d\n", dev->irq);
->  
-> -	/* Always tell the device, so the driver knows what is
-> -	   the real IRQ to use; the device does not use it. */
+> +	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> +
 > +	/*
-> +	 * Always tell the device, so the driver knows what is
-> +	 * the real IRQ to use; the device does not use it.
+> +	 * PCI_P2PDMA_MAP_NOT_SUPPORTED: Indicates the transaction will
+> +	 * traverse the host bridge and the host bridge is not in the
+> +	 * whitelist. DMA Mapping routines should return an error when
+
+I gather we are supposed to type allowlist now
+
+> +	 * this is returned.
 > +	 */
->  	pci_write_config_byte(dev, PCI_INTERRUPT_LINE, irq);
->  }
-> -- 
-> 2.33.0
-> 
+> +	PCI_P2PDMA_MAP_NOT_SUPPORTED,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_BUS_ADDR: Indicates that two devices can talk to
+> +	 * eachother directly through a PCI switch and the transaction will
+
+'each other'
+
+> +	 * not traverse the host bridge. Such a mapping should program
+> +	 * the DMA engine with PCI bus addresses.
+> +	 */
+> +	PCI_P2PDMA_MAP_BUS_ADDR,
+> +
+> +	/*
+> +	 * PCI_P2PDMA_MAP_THRU_HOST_BRIDGE: Indicates two devices can talk
+> +	 * to eachother, but the transaction traverses a host bridge on the
+
+'each other'
+
+> +	 * whitelist. In this case, a normal mapping either with CPU physical
+> +	 * addresses (in the case of dma-direct) or IOVA addresses (in the
+> +	 * case of IOMMUs) should be used to program the DMA engine.
+> +	 */
+> +	PCI_P2PDMA_MAP_THRU_HOST_BRIDGE,
+> +};
+
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason
