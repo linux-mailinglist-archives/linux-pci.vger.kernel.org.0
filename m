@@ -2,108 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3BA541B571
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 19:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7898C41B5B0
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 20:10:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241873AbhI1R4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 13:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241520AbhI1R4O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 13:56:14 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CD4C06161C
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 10:54:34 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id d4-20020a17090ad98400b0019ece228690so2264769pjv.5
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 10:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=orLVhujXuv2LS5anVE9u/slnGdTOgg9Wqn1uh5hqGWw=;
-        b=m9sdz73zrjMRDNHc22Gye23uo5ygGPs1cs0mwoNlJ8VUnRLj8voa2vDhgXj2bS9aj2
-         aFhf//KoZX796AfWAxpvTXYans8OImGiqCnRmi3Sk6Ml+QvEusKyfBHiXH1VyjA/4sAj
-         UeJfSWxx/AfUAAGtCDiw7qNfVTwlszxzNkutU2boB4mHGNl+IVnbL6EhEyS0Cbiztu0L
-         JVqp+cBc6JyoHQsLuIcU0LZ6aCx3k+4ofEprD7f3HduGu0V2uJP+PxCitVTzo0PLQ7RZ
-         AxHnDX37k0hreucdd5P9XUEzif8rbactBU8SMjoIo1axW/j7y7ez4LhcbOiIdS/8XM3N
-         3iqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=orLVhujXuv2LS5anVE9u/slnGdTOgg9Wqn1uh5hqGWw=;
-        b=WrOgl82DXgAdRlbTPaXfYL0XYwmZdiSOTW0C3yG1ezQBf5g8KofTJUU7uhMj2YPxy4
-         jXubiI0tx964//o2wlHfH3ejXtO5Di/HiHDRXxR6aD0MPNj/Oitc4NtO/hQ4OOQy6eKY
-         vaupX2vemW6tSiiCyQNzL+USWqv7+Gr0ZPgTOQxN3abcVKnvlXB1kM/MOU+KcBqpnVH4
-         h+SS8OUfX9H2LCd/J2orCEit23EIlQ3oUtVaiNdYBi3k0ILSdlrOX6zWKBVhQbSwyXm6
-         Kfn7JS2WExUozLSZMuB1p545fmcyBxITMVPGTDJ5TWeqP8vWt7dLyHDZwsDu5MLYcDGG
-         oOkA==
-X-Gm-Message-State: AOAM531GLm5pHlikAzYe/aAo0Vv12TQ5+m/pMsrrX1Wha4f64TJpSUHK
-        Znkh9VsMaqX4b8HTlHSzyIw5wT5QKdAIOMB1NlTymg==
-X-Google-Smtp-Source: ABdhPJzAafw90qw6GNR9KOTGCaZVcRyonxJQDUdkiFkRD78TDB31Hda8XvnX+oGdm1yTApwMPKKhgoUwD7Dy3t2YpxQ=
-X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr1390645pju.8.1632851674343;
- Tue, 28 Sep 2021 10:54:34 -0700 (PDT)
+        id S241839AbhI1SL4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 14:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239306AbhI1SLz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Sep 2021 14:11:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8FE4061352;
+        Tue, 28 Sep 2021 18:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632852615;
+        bh=cT8cQ5HY5tOYrLBIoP7JCa0vC1JePSFeWXunFeRb30U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nG8lgqF5GIuVvbIdVUn94n/g0w4MbsgK4azBFTrnPmt2+QCIpE3Cm0URumB0fXGT9
+         1x2VOnrG1M3AkBpFK3G0P1uq2WP4qOpp22jnxpXjcgg14/OxA8heum5Ij9reQRnW/o
+         O5IkJkgCteYHCy7h5zZNu23QlZQOtHvYQVGEA8MxJ7BQQwfoKoP2AdpfBwxL25KhWG
+         D2vPV+LE51LxW5kGR65Gm202oDAHKlXLtTqVVc2+45CnZ/N2AGaGvC0bVRMgrUtOVT
+         uFjQpQepfCZwSgNMBE6RXEvRJYkg1SOMqY3iVotcQFwLdHsIk0MsOHxWHeVftH65y+
+         9j3UJaTZbYLbw==
+Date:   Tue, 28 Sep 2021 13:10:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linas Vepstas <linasvepstas@gmail.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v2 3/4] PCI: Export pci_dev_lock()
+Message-ID: <20210928181014.GA713179@bhelgaas>
 MIME-Version: 1.0
-References: <20210923172647.72738-1-ben.widawsky@intel.com> <20210923172647.72738-10-ben.widawsky@intel.com>
-In-Reply-To: <20210923172647.72738-10-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 28 Sep 2021 10:54:21 -0700
-Message-ID: <CAPcyv4i4T4XLW-P=CzdO47mZ8+_Mih7GMeDEXAtgEE+gO9JQHw@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] iommu/vt-d: Use pci core's DVSEC functionality
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210916093336.2895602-4-schnelle@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 10:27 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Reduce maintenance burden of DVSEC query implementation by using the
-> centralized PCI core implementation.
->
-> Cc: iommu@lists.linux-foundation.org
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/iommu/intel/iommu.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
->
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index d75f59ae28e6..30c97181f0ae 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5398,20 +5398,7 @@ static int intel_iommu_disable_sva(struct device *dev)
->   */
->  static int siov_find_pci_dvsec(struct pci_dev *pdev)
->  {
-> -       int pos;
-> -       u16 vendor, id;
-> -
-> -       pos = pci_find_next_ext_capability(pdev, 0, 0x23);
-> -       while (pos) {
-> -               pci_read_config_word(pdev, pos + 4, &vendor);
-> -               pci_read_config_word(pdev, pos + 8, &id);
-> -               if (vendor == PCI_VENDOR_ID_INTEL && id == 5)
-> -                       return pos;
-> -
-> -               pos = pci_find_next_ext_capability(pdev, pos, 0x23);
-> -       }
-> -
-> -       return 0;
-> +       return pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_INTEL, 5);
->  }
+On Thu, Sep 16, 2021 at 11:33:35AM +0200, Niklas Schnelle wrote:
+> Commit e3a9b1212b9d ("PCI: Export pci_dev_trylock() and pci_dev_unlock()")
+> already exported pci_dev_trylock()/pci_dev_unlock() however in some
+> circumstances such as during error recovery it makes sense to block
+> waiting to get full access to the device so also export pci_dev_lock().
+> 
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-Same comments as the CXL patch, siov_find_pci_dvsec() doesn't seem to
-have a reason to exist anymore. What is 5?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/pci.c   | 3 ++-
+>  include/linux/pci.h | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..6fe810fdb796 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5059,12 +5059,13 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+>  	return pci_parent_bus_reset(dev, probe);
+>  }
+>  
+> -static void pci_dev_lock(struct pci_dev *dev)
+> +void pci_dev_lock(struct pci_dev *dev)
+>  {
+>  	pci_cfg_access_lock(dev);
+>  	/* block PM suspend, driver probe, etc. */
+>  	device_lock(&dev->dev);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_dev_lock);
+>  
+>  /* Return 1 on successful lock, 0 on contention */
+>  int pci_dev_trylock(struct pci_dev *dev)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c27c8fd1d30c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1671,6 +1671,7 @@ void pci_cfg_access_lock(struct pci_dev *dev);
+>  bool pci_cfg_access_trylock(struct pci_dev *dev);
+>  void pci_cfg_access_unlock(struct pci_dev *dev);
+>  
+> +void pci_dev_lock(struct pci_dev *dev);
+>  int pci_dev_trylock(struct pci_dev *dev);
+>  void pci_dev_unlock(struct pci_dev *dev);
+>  
+> -- 
+> 2.25.1
+> 
