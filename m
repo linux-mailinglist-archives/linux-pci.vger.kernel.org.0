@@ -2,201 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 472C641B65D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 20:33:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BAD441B673
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 20:39:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241724AbhI1Sek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 14:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242550AbhI1SeO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 14:34:14 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB481C061762
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 11:32:21 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id a9so14102386qvf.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 11:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bg5/FXYy6+0jcxwwe7U26Md8Qo1QDW6vkKmJYeX4i1Y=;
-        b=Hl/E00tVRRsG4VyZTxHCUyfFppftH6aDIraQlh7Zo4b85gvTNF+AYqXgzSNwc5/npf
-         l06458g+lvnyddemEzX90uBn/bHB8RYcKfeo1e7FpLjMI+74Dzz/0g/94z+f7GzW+0Zd
-         CfpRY5E+W8e1NS+sbJ1/ugjuNMbciPIgxXLMQk1vyLzXxq0uHenjiyziZ6R3dyiq9JVL
-         p4sfE2H5q8AjNru6j9eT1fchBVmabhTgc0UQSbcACR3kakx5Tj48HjTa5txeDIwD47Yn
-         QqR/fi/0MROMXY9kXIbtoFfIdbEtX3H3w3iXU5cvYHfX3miyrcJhnWwRC/Xh64nSBvuk
-         yGrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bg5/FXYy6+0jcxwwe7U26Md8Qo1QDW6vkKmJYeX4i1Y=;
-        b=rfJIowaCr/RGQANT2UAVPJlu48v9VGtqA3fohl+dlM5AzYureOFoAokQeZVEe80LwV
-         UuVKwaJjAad71xkocD80p8nxqHcaOWZUstUu1Sdv2BEWUmo/X8283oG896gNbn5vY/hq
-         9t1PM6JnDdId76WHLOi8/tNfpd8muf5WOs2nIiSD9S1Xu7LBTapIKW6FyDVD0uJH57yw
-         k/HakkMGBNP8fwTnyyGFi0wn7vOAHHz0f01qfMXePT0f0bul8PKs61pg2Z69OqeYXcnS
-         tTFro0OnsmOnG0dN1qQZtOrqqObTlWH8N0IxXiLJG5pwRXVHnerxcSB4F1a8M1r2BuT2
-         GuzQ==
-X-Gm-Message-State: AOAM530KHU6gzogyL2lOWZoDmTsXDwBN1/Y3pneyktGJPd8KKt5E6xXC
-        pGs//c+v4db0VxOP959nko//NQ==
-X-Google-Smtp-Source: ABdhPJzfCJn9TE545S5oPvfgJD/DrRXSPKUbE0avVhY8SKIQnFw2dHzYLn+zJmKsF3kZryoXkBtS0Q==
-X-Received: by 2002:ad4:4652:: with SMTP id y18mr7157907qvv.2.1632853940961;
-        Tue, 28 Sep 2021 11:32:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id w185sm16014000qkd.30.2021.09.28.11.32.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 11:32:20 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mVHtr-007FEl-RE; Tue, 28 Sep 2021 15:32:19 -0300
-Date:   Tue, 28 Sep 2021 15:32:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 01/20] lib/scatterlist: add flag for indicating P2PDMA
- segments in an SGL
-Message-ID: <20210928183219.GJ3544071@ziepe.ca>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-2-logang@deltatee.com>
+        id S233874AbhI1SlB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 14:41:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230095AbhI1SlB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Sep 2021 14:41:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2A16160F9D;
+        Tue, 28 Sep 2021 18:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632854361;
+        bh=jvbn6ZFxjCfma38b/vyndAGQTEngi9bv2Mbj2/OPw+o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TtOLxyIhP8Qg+oRJj5meNYt5+TvS5epOVefzqiPW9PAnOvxhu/w1YK+GLBT3pJq8A
+         CloudKe9UQDsOSCqcELQzVotH5l011dIZTfN1VeAXUSA7O3qTZcUkWr0yOrylxEqL5
+         i3Icru+zGAK6Ywpwi/Ezf2HHWAHJeDolAAJMhmUG5bzTMRa0rBkAsKtYR3bSig2nK1
+         cGmp1V3EVDDIyMcPicvV/V7pRyVKzVF90JAjDIBynvEuW2QIoucY1JRn4oduQXhO2K
+         VrwSR/tYra8xwxr2SL406JZNEoU6zmieOQcFMxi6EFyPk2JUlMetASkax1cRkN04Ju
+         fYN6M8VQGlMVA==
+Date:   Tue, 28 Sep 2021 13:39:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linas Vepstas <linasvepstas@gmail.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v2 4/4] s390/pci: implement minimal PCI error recovery
+Message-ID: <20210928183919.GA716407@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210916234100.122368-2-logang@deltatee.com>
+In-Reply-To: <efdab70e1050e2f7a7d7e7c5983c0eef794d9181.camel@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 05:40:41PM -0600, Logan Gunthorpe wrote:
-> Make use of the third free LSB in scatterlist's page_link on 64bit systems.
+On Tue, Sep 28, 2021 at 08:30:44PM +0200, Niklas Schnelle wrote:
+> On Tue, 2021-09-28 at 13:11 -0500, Bjorn Helgaas wrote:
+> > On Thu, Sep 16, 2021 at 11:33:36AM +0200, Niklas Schnelle wrote:
+> > > When the platform detects an error on a PCI function or a service action
+> > > has been performed it is put in the error state and an error event
+> > > notification is provided to the OS.
+> > > 
+> > > Currently we treat all error event notifications the same and simply set
+> > > pdev->error_state = pci_channel_io_perm_failure requiring user
+> > > intervention such as use of the recover attribute to get the device
+> > > usable again. Despite requiring a manual step this also has the
+> > > disadvantage that the device is completely torn down and recreated
+> > > resulting in higher level devices such as a block or network device
+> > > being recreated. In case of a block device this also means that it may
+> > > need to be removed and added to a software raid even if that could
+> > > otherwise survive with a temporary degradation.
+> > > 
+> > > This is of course not ideal more so since an error notification with PEC
+> > > 0x3A indicates that the platform already performed error recovery
+> > > successfully or that the error state was caused by a service action that
+> > > is now finished.
+> > > 
+> > > At least in this case we can assume that the error state can be reset
+> > > and the function made usable again. So as not to have the disadvantage
+> > > of a full tear down and recreation we need to coordinate this recovery
+> > > with the driver. Thankfully there is already a well defined recovery
+> > > flow for this described in Documentation/PCI/pci-error-recovery.rst.
+> > > 
+> > > The implementation of this is somewhat straight forward and simplified
+> > > by the fact that our recovery flow is defined per PCI function. As
+> > > a reset we use the newly introduced zpci_hot_reset_device() which also
+> > > takes the PCI function out of the error state.
+> > > 
+> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > > ---
+> > > v1 -> v2:
+> > > - Dropped use of pci_dev_is_added(), pdev->driver check is enough
+> > > - Improved some comments and messages
+> > > 
+> > >  arch/s390/include/asm/pci.h |   4 +-
+> > >  arch/s390/pci/pci.c         |  49 ++++++++++
+> > >  arch/s390/pci/pci_event.c   | 182 +++++++++++++++++++++++++++++++++++-
+> > >  3 files changed, 233 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> > > index 2a2ed165a270..558877aff2e5 100644
+> > > --- a/arch/s390/include/asm/pci.h
+> > > +++ b/arch/s390/include/asm/pci.h
+> > > @@ -294,8 +294,10 @@ void zpci_debug_exit(void);
+> > >  void zpci_debug_init_device(struct zpci_dev *, const char *);
+> > >  void zpci_debug_exit_device(struct zpci_dev *);
+> > >  
+> > > -/* Error reporting */
+> > > +/* Error handling */
+> > >  int zpci_report_error(struct pci_dev *, struct zpci_report_error_header *);
+> > > +int zpci_clear_error_state(struct zpci_dev *zdev);
+> > > +int zpci_reset_load_store_blocked(struct zpci_dev *zdev);
+> > >  
+> > >  #ifdef CONFIG_NUMA
+> > >  
+> > > diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+> > > index dce60f16e94a..b987c9d76510 100644
+> > > --- a/arch/s390/pci/pci.c
+> > > +++ b/arch/s390/pci/pci.c
+> > > @@ -954,6 +954,55 @@ int zpci_report_error(struct pci_dev *pdev,
+> > >  }
+> > >  EXPORT_SYMBOL(zpci_report_error);
+> > >  
+> > > +/**
+> > > + * zpci_clear_error_state() - Clears the zPCI error state of the device
+> > > + * @zdev: The zdev for which the zPCI error state should be reset
+> > > + *
+> > > + * Clear the zPCI error state of the device. If clearing the zPCI error state
+> > > + * fails the device is left in the error state. In this case it may make sense
+> > > + * to call zpci_io_perm_failure() on the associated pdev if it exists.
+> > > + *
+> > > + * Returns: 0 on success, -EIO otherwise
+> > > + */
+> > > +int zpci_clear_error_state(struct zpci_dev *zdev)
+> > > +{
+> > > +	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_RESET_ERROR);
+> > > +	struct zpci_fib fib = {0};
+> > > +	u8 status;
+> > > +	int rc;
+> > > +
+> > > +	rc = zpci_mod_fc(req, &fib, &status);
+> > > +	if (rc)
+> > > +		return -EIO;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * zpci_reset_load_store_blocked() - Re-enables L/S from error state
+> > > + * @zdev: The zdev for which to unblock load/store access
+> > > + *
+> > > + * R-eenables load/store access for a PCI function in the error state while
+> > > + * keeping DMA blocked. In this state drivers can poke MMIO space to determine
+> > > + * if error recovery is possible while catching any rogue DMA access from the
+> > > + * device.
+> > > + *
+> > > + * Returns: 0 on success, -EIO otherwise
+> > > + */
+> > > +int zpci_reset_load_store_blocked(struct zpci_dev *zdev)
+> > > +{
+> > > +	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_RESET_BLOCK);
+> > > +	struct zpci_fib fib = {0};
+> > > +	u8 status;
+> > > +	int rc;
+> > > +
+> > > +	rc = zpci_mod_fc(req, &fib, &status);
+> > > +	if (rc)
+> > > +		return -EIO;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int zpci_mem_init(void)
+> > >  {
+> > >  	BUILD_BUG_ON(!is_power_of_2(__alignof__(struct zpci_fmb)) ||
+> > > diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
+> > > index e868d996ec5b..73389e161872 100644
+> > > --- a/arch/s390/pci/pci_event.c
+> > > +++ b/arch/s390/pci/pci_event.c
+> > > @@ -47,15 +47,182 @@ struct zpci_ccdf_avail {
+> > >  	u16 pec;			/* PCI event code */
+> > >  } __packed;
+> > >  
+> > > +static inline bool ers_result_indicates_abort(pci_ers_result_t ers_res)
+> > > +{
+> > > +	switch (ers_res) {
+> > > +	case PCI_ERS_RESULT_CAN_RECOVER:
+> > > +	case PCI_ERS_RESULT_RECOVERED:
+> > > +	case PCI_ERS_RESULT_NEED_RESET:
+> > > +		return false;
+> > > +	default:
+> > > +		return true;
+> > > +	}
+> > > +}
+> > > +
+> > > +static pci_ers_result_t zpci_event_notify_error_detected(struct pci_dev *pdev)
+> > > +{
+> > > +	pci_ers_result_t ers_res = PCI_ERS_RESULT_DISCONNECT;
+> > > +	struct pci_driver *driver = pdev->driver;
+> > > +
+> > > +	pr_debug("%s: asking driver to determine recoverability\n", pci_name(pdev));
+> > > +	ers_res = driver->err_handler->error_detected(pdev,  pdev->error_state);
+> > > +	if (ers_result_indicates_abort(ers_res))
+> > > +		pr_info("%s: driver can't recover\n", pci_name(pdev));
+> > > +	else if (ers_res == PCI_ERS_RESULT_NEED_RESET)
+> > > +		pr_debug("%s: driver needs reset to recover\n", pci_name(pdev));
+> > 
+> > Are you following a convention of using pr_info(), etc here?  I try to
+> > use the pci_info() family (wrappers around dev_info()) whenever I can.
 > 
-> The extra bit will be used by dma_[un]map_sg_p2pdma() to determine when a
-> given SGL segments dma_address points to a PCI bus address.
-> dma_unmap_sg_p2pdma() will need to perform different cleanup when a
-> segment is marked as P2PDMA.
+> A convention in the sense that so far all code under arch/s390/pci/
+> uses pr_info()  which comes out as "zpci: ..". It seems that similar
+> pr_info() constructs are also common in other arch/s390/ and
+> drivers/s390 code.
+
+That sounds like a convention to me.  As long as it exists, I would
+follow it.  Maybe somebody will decide someday to convert them all at
+once, but that would be a separate project.
+
+> On the other hand we already agreed that some of the s390 specific PCI
+> code is more like a PCI controller. So I'm open to suggestions.
 > 
-> Using this bit requires adding an additional dependency on CONFIG_64BIT to
-> CONFIG_PCI_P2PDMA. This should be acceptable as the majority of P2PDMA
-> use cases are restricted to newer root complexes and roughly require the
-> extra address space for memory BARs used in the transactions.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
->  drivers/pci/Kconfig         |  2 +-
->  include/linux/scatterlist.h | 50 ++++++++++++++++++++++++++++++++++---
->  2 files changed, 47 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 0c473d75e625..90b4bddb3300 100644
-> +++ b/drivers/pci/Kconfig
-> @@ -163,7 +163,7 @@ config PCI_PASID
->  
->  config PCI_P2PDMA
->  	bool "PCI peer-to-peer transfer support"
-> -	depends on ZONE_DEVICE
-> +	depends on ZONE_DEVICE && 64BIT
-
-Perhaps a comment to explain what the 64bit is doing?
-
->  	select GENERIC_ALLOCATOR
->  	help
->  	  Enableѕ drivers to do PCI peer-to-peer transactions to and from
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index 266754a55327..e62b1cf6386f 100644
-> +++ b/include/linux/scatterlist.h
-> @@ -64,6 +64,21 @@ struct sg_append_table {
->  #define SG_CHAIN	0x01UL
->  #define SG_END		0x02UL
->  
-> +/*
-> + * bit 2 is the third free bit in the page_link on 64bit systems which
-> + * is used by dma_unmap_sg() to determine if the dma_address is a PCI
-> + * bus address when doing P2PDMA.
-> + * Note: CONFIG_PCI_P2PDMA depends on CONFIG_64BIT because of this.
-> + */
-> +
-> +#ifdef CONFIG_PCI_P2PDMA
-> +#define SG_DMA_PCI_P2PDMA	0x04UL
-
-Add a 
-	static_assert(__alignof__(void *) == 8);
-
-?
-
-> +#else
-> +#define SG_DMA_PCI_P2PDMA	0x00UL
-> +#endif
-> +
-> +#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END | SG_DMA_PCI_P2PDMA)
-> +
->  /*
->   * We overload the LSB of the page pointer to indicate whether it's
->   * a valid sg entry, or whether it points to the start of a new scatterlist.
-> @@ -72,7 +87,9 @@ struct sg_append_table {
->  #define sg_is_chain(sg)		((sg)->page_link & SG_CHAIN)
->  #define sg_is_last(sg)		((sg)->page_link & SG_END)
->  #define sg_chain_ptr(sg)	\
-> -	((struct scatterlist *) ((sg)->page_link & ~(SG_CHAIN | SG_END)))
-> +	((struct scatterlist *)((sg)->page_link & ~SG_PAGE_LINK_MASK))
-> +
-> +#define sg_is_dma_pci_p2pdma(sg) ((sg)->page_link & SG_DMA_PCI_P2PDMA)
-
-I've been encouraging people to use static inlines more..
-
-static inline unsigned int __sg_flags(struct scatterlist *sg)
-{
-	return sg->page_link & SG_PAGE_LINK_MASK;
-}
-static inline bool sg_is_chain(struct scatterlist *sg)
-{
-	return __sg_flags(sg) & SG_CHAIN;
-}
-static inline bool sg_is_last(struct scatterlist *sg)
-{
-	return __sg_flags(sg) & SG_END;
-}
-static inline bool sg_is_dma_pci_p2pdma(struct scatterlist *sg)
-{
-	return __sg_flags(sg) & SG_DMA_PCI_P2PDMA;
-}
-
->  /**
->   * sg_assign_page - Assign a given page to an SG entry
-> @@ -86,13 +103,13 @@ struct sg_append_table {
->   **/
->  static inline void sg_assign_page(struct scatterlist *sg, struct page *page)
->  {
-> -	unsigned long page_link = sg->page_link & (SG_CHAIN | SG_END);
-> +	unsigned long page_link = sg->page_link & SG_PAGE_LINK_MASK;
-
-I think this should just be '& SG_END', sg_assign_page() doesn't look
-like it should ever be used on a sg_chain entry, so this is just
-trying to preserve the end stamp.
-
-Anyway, this looks OK
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Jason
