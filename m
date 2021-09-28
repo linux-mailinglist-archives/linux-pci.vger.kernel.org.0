@@ -2,97 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBEF541A451
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 02:54:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57A8441A6DC
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 07:01:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238319AbhI1A4b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Sep 2021 20:56:31 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:41943 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbhI1A4b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Sep 2021 20:56:31 -0400
-Received: by mail-wr1-f51.google.com with SMTP id w29so54849231wra.8;
-        Mon, 27 Sep 2021 17:54:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=n2sXzJg2SsfZ8S0g5MG0HaM4hrj/bpFvf9vFQzLvc0c=;
-        b=l86AfC1ibMKeztbexCfDC77rPbyK2bLAvHzDXr+LGcAfQ6sqrC+gT2zoMCVoF/5WNW
-         0iO016vOQV9UBR9sopUKldg6W6Qx8ThJ1s00aj3s8m1NdfZsKhvDbDSboOC/yoXIxXRH
-         LO1fPg7gNzU2Elnx96CRqCZzeJstKnblsixHSxTgZPfxLHqz9Eec6pJNMqHTaDPv0+sn
-         LiJWpv5KtOqI4S4x9grapbl47/oPNwQsFgPXjBTTdytT8rgNQM8NXey3RuOdEQj8Lklx
-         tQl3TKVlIQDaAZC1OP2LG+WkuwQJCdabJyrIl+LwtXDOKWcEVdRNsguOb/bnLSOt9U6n
-         Otag==
-X-Gm-Message-State: AOAM530bGkmbRPCUjVWKm9+cFaTbQ6zYZ1ORXBZuyHJQ9MCp8eJngDJZ
-        sQlZjiukZ1bxpJnTZlgdTRE0RHweLeSSY3s2
-X-Google-Smtp-Source: ABdhPJwqkd5w1g7BZXopwb7Al1e5soWrw9CirT8+m0wKI1sd2xp4RmW6QW5X/6NfauELjq4AiwASKg==
-X-Received: by 2002:a05:6000:46:: with SMTP id k6mr3227667wrx.104.1632790491627;
-        Mon, 27 Sep 2021 17:54:51 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id l25sm988037wmi.29.2021.09.27.17.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 17:54:50 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 02:54:49 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     kishon@ti.com, tjoseph@cadence.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: j721e: Fix an error handling path in
- 'j721e_pcie_probe()'
-Message-ID: <YVJn2SHvRcTO2tY5@rocinante>
-References: <db477b0cb444891a17c4bb424467667dc30d0bab.1624794264.git.christophe.jaillet@wanadoo.fr>
+        id S229700AbhI1FCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 01:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229493AbhI1FCw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Sep 2021 01:02:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D86561157;
+        Tue, 28 Sep 2021 05:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1632805273;
+        bh=zsQk0tlFBx4r/np/dpdue6p/eJJfxXfQU+IrfF5+Bhw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tmy2YODD81AfnYlUzCWGvxSes7alPN10gAmsR7FPADYzq1nE85XE5OaS6xPRTIeZJ
+         snqyTguLpEYvV67F+ah2/9xAU3ulKQR/jWBL/ffXkUfRX71RkHFkPTAXlutaE+padl
+         LzStgM8WEz4HgDCy5v18gGr70esGI7awFcq2wLV0=
+Date:   Tue, 28 Sep 2021 07:01:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, bhelgaas@google.com,
+        andy.shevchenko@gmail.com, mgross@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
+Message-ID: <YVKhlWSb3pdMLCEk@kroah.com>
+References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
+ <20210922213007.2738388-3-david.e.box@linux.intel.com>
+ <YVIBI6TQrD/rehli@kroah.com>
+ <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <db477b0cb444891a17c4bb424467667dc30d0bab.1624794264.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christophe,
-
-Thank you for sending the patch over!
-
-Just a tiny nit-pick: there is no need to surround function names in single
-quotes in the subject and in the commit message.
-
-> If an error occurs after a successful 'cdns_pcie_init_phy()' call, it must
-> be undone by a 'cdns_pcie_disable_phy()' call, as already done above and
-> below.
-
-Here, in the above sentence, you could simply mention that this is needed
-for the device to be correctly powered down should there be an error, and
-reference to the "above" and "below" code.
-
-> Update the 'goto' to branch at the correct place of the error handling
-> path.
+On Mon, Sep 27, 2021 at 11:40:37AM -0700, David E. Box wrote:
+> On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
+> > On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
+> > > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > > structures may also be used by Intel to indicate support for other
+> > > capabilities unrelated to PMT.† OOBMSM is a device that can have both PMT
+> > > and non-PMT capabilities. In order to support these capabilities it is
+> > > necessary to modify the intel_pmt driver to handle the creation of platform
+> > > devices more generically.
+> > 
+> > I said this on your other driver submission, but why are you turning a
+> > PCIe device into a set of platform devices and craming it into the MFD
+> > subsystem?
+> > 
+> > PCIe devices are NOT platform devices.
 > 
-> Fixes: 49e0efdce791 ("PCI: j721e: Add support to provide refclk to PCIe connector")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> But they *are* used to create platform devices when the PCIe device is multi-functional, which is
+> what intel_pmt is.
+
+That is an abuse of platform devices, as that is not what they are for.
+
+> > Why not use the auxiliary bus for this thing if you have individual
+> > drivers that need to "bind" to the different attributes that this single
+> > PCIe device is exporting.
 > 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 35e61048e133..8933db6ab1af 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -424,7 +424,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  		ret = clk_prepare_enable(clk);
->  		if (ret) {
->  			dev_err(dev, "failed to enable pcie_refclk\n");
-> -			goto err_get_sync;
-> +			goto err_pcie_setup;
->  		}
->  		pcie->refclk = clk;
+> It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
+> monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
+> like lpss. But the same IP is now being used for other features too like SDSi. We could work on
+> converting this to the auxiliary bus and then covert the cell drivers.
 
-Thank you!
+Please do so.
 
-Reviewed-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
+> > Or why not just fix the hardware to report individual PCIe devices, like
+> > a sane system would do?
+> 
+> We have some systems with 1000+ PCIe devices. Each PCIe device adds cost to HW. So increasingly
+> VSEC/DVSEC is used to expose features which are handled by the same micro-controller in the HW.
 
-	Krzysztof
+A PCIe device is a virtual thing, what HW cost do they have?
+
+Anyway, a platform device should NOT ever be a child of a PCI device,
+that is not ok and should be fixed here please.
+
+A platform device is just that, something that the platform provides on
+a non-discoverable bus.  A PCIe device is NOT that type of device at
+all and never has been.
+
+thanks,
+
+greg k-h
