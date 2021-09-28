@@ -2,140 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB5641B770
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33DE641B791
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 21:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242485AbhI1TVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 15:21:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38297 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242493AbhI1TVn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:21:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632856803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Za4UIa1i/i1OBgAuhO+2BMEIFPExsbIEIdBHDtNVqsI=;
-        b=RyAiQ9C1fZlGABvh/tDHEbHwS8y/EBv8avx0NdMrZoGkHIV1RN6h5XzY/tPbsMl17k1G9Y
-        yhjRtshLj1CNwzJ7aKgcwz4vqFwaPX/Su+jRTT0XfI76TuOJfzy7QmUzmA2GpLHdoHNOfz
-        l6SUt3FXQACkEdhpU+Xj/bOLlaNfx0w=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-aGJO8CcXOrCYex5Oe3i8nQ-1; Tue, 28 Sep 2021 15:20:01 -0400
-X-MC-Unique: aGJO8CcXOrCYex5Oe3i8nQ-1
-Received: by mail-oo1-f72.google.com with SMTP id i1-20020a4a9001000000b002a9c41e0eabso25285075oog.3
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:20:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Za4UIa1i/i1OBgAuhO+2BMEIFPExsbIEIdBHDtNVqsI=;
-        b=FLxvrIAiB2/FXHFge/8RqcyaZcvzFVOCY4JFrCm1eK0uLnAScV7ETN2gNDu0llpsVL
-         KCJ9evXJYZuOFsi5wE2OyPEDCVsjdgpfb4ineFH/L5UJLGX87pxsB92HhD+Z+CJvL7wk
-         LmxEf/KUYWeCGOVjcvXk6EewB2JNLQDF41f8AGdG3NBRGMa5WvWzbl6WvTTeth1NJnv9
-         zvCVotZJW3UwixKLzoGTHeVCTMsr29ozRCuzrh+Kx8rTO7Wt0eJZIt8yHST4VwxAwqLY
-         pobUbqtQKKf9/uUlXkxWIbAqQ6/UZS1FfQcX2XM6bGsolnv0ntISPcZ4u5c0sqWcYreH
-         62cw==
-X-Gm-Message-State: AOAM530xfvsTrRarQ/yRwylxjY4CccG2TbOIbU1EPn/tdkiDE77JnMpZ
-        Tpk7USeeIsuQcw2l8dKtxroR+sECDOuK6bpzgdmzVpadKn1KAKOcNcDu5wwnrbV4YSoFZV3hI/R
-        oS0PPIPX/LEatRmGzJf66
-X-Received: by 2002:a54:410b:: with SMTP id l11mr4950323oic.74.1632856800917;
-        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNb7SJKsY1fAhfMc6h0vwSeXSkbF/My4fjrvTWCd7Z2VSqxK1ptej7nonv6fRLJYXuWORlyA==
-X-Received: by 2002:a54:410b:: with SMTP id l11mr4950299oic.74.1632856800685;
-        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id u15sm5269230oon.35.2021.09.28.12.19.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 12:20:00 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 13:19:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        id S234442AbhI1TcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 15:32:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229678AbhI1TcE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 15:32:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D9EC06161C
+        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 12:30:24 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVInV-0002NN-Sw; Tue, 28 Sep 2021 21:29:49 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVInI-0003R4-Vh; Tue, 28 Sep 2021 21:29:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mVInI-00068D-TU; Tue, 28 Sep 2021 21:29:36 +0200
+Date:   Tue, 28 Sep 2021 21:29:36 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Ido Schimmel <idosch@nvidia.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Message-ID: <20210928131958.61b3abec.alex.williamson@redhat.com>
-In-Reply-To: <20210927231239.GE3544071@ziepe.ca>
-References: <cover.1632305919.git.leonro@nvidia.com>
-        <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
-        <20210927164648.1e2d49ac.alex.williamson@redhat.com>
-        <20210927231239.GE3544071@ziepe.ca>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Salil Mehta <salil.mehta@huawei.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        Simon Horman <simon.horman@corigine.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 4/8] PCI: replace pci_dev::driver usage that gets the
+ driver name
+Message-ID: <20210928192936.w5umyzivi4hs6q3r@pengutronix.de>
+References: <20210927204326.612555-5-uwe@kleine-koenig.org>
+ <20210928171759.GA704204@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3jbimpqsr3sfse6m"
+Content-Disposition: inline
+In-Reply-To: <20210928171759.GA704204@bhelgaas>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 27 Sep 2021 20:12:39 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-> On Mon, Sep 27, 2021 at 04:46:48PM -0600, Alex Williamson wrote:
-> > > +	enum { MAX_STATE = VFIO_DEVICE_STATE_RESUMING };
-> > > +	static const u8 vfio_from_state_table[MAX_STATE + 1][MAX_STATE + 1] = {
-> > > +		[VFIO_DEVICE_STATE_STOP] = {
-> > > +			[VFIO_DEVICE_STATE_RUNNING] = 1,
-> > > +			[VFIO_DEVICE_STATE_RESUMING] = 1,
-> > > +		},  
-> > 
-> > Our state transition diagram is pretty weak on reachable transitions
-> > out of the _STOP state, why do we select only these two as valid?  
-> 
-> I have no particular opinion on specific states here, however adding
-> more states means more stuff for drivers to implement and more risk
-> driver writers will mess up this uAPI.
+--3jbimpqsr3sfse6m
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It looks like state transitions were largely discussed in v9 and v10 of
-the migration proposals:
+Hello,
 
-https://lore.kernel.org/all/1573578220-7530-2-git-send-email-kwankhede@nvidia.com/
-https://lore.kernel.org/all/1576527700-21805-2-git-send-email-kwankhede@nvidia.com/
+On Tue, Sep 28, 2021 at 12:17:59PM -0500, Bjorn Helgaas wrote:
+> [+to Oliver, Russell for eeh_driver_name() question below]
+>=20
+> On Mon, Sep 27, 2021 at 10:43:22PM +0200, Uwe Kleine-K=F6nig wrote:
+> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > struct pci_dev::driver holds (apart from a constant offset) the same
+> > data as struct pci_dev::dev->driver. With the goal to remove struct
+> > pci_dev::driver to get rid of data duplication replace getting the
+> > driver name by dev_driver_string() which implicitly makes use of struct
+> > pci_dev::dev->driver.
+>=20
+> When you repost to fix the build issue, can you capitalize the subject
+> line to match the other?
 
-I'm not seeing that we really excluded many transitions there.
+Yes, sure.
 
-> So only on those grounds I'd suggest to keep this to the minimum
-> needed instead of the maximum logically possible..
-> 
-> Also, probably the FSM comment from the uapi header file should be
-> moved into a function comment above this function?
+> Also, would you mind using "pci_dev.driver" instead of
+> "pci_dev::driver"?  AFAIK, the "::" operator is not actually part of
+> C, so I think it's more confusing than useful.
 
-It's not clear this function shouldn't be anything more than:
+pci_dev.driver doesn't work either in C because pci_dev is a type and
+not a variable. This is probably subjective, but for me pci_dev.driver
+looks definitively stranger than pci_dev::driver. And :: is at least not
+unseen in the kernel commit logs. (git log --grep=3D::)
+But if you insist I can change to .
 
-	if (new_state > MAX_STATE || old_state > MAX_STATE)
-		return false;	/* exited via device reset, */
-				/* entered via transition fault */
+> > diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/=
+asm/ppc-pci.h
+> > index 2b9edbf6e929..e8f1795a2acf 100644
+> > --- a/arch/powerpc/include/asm/ppc-pci.h
+> > +++ b/arch/powerpc/include/asm/ppc-pci.h
+> > @@ -57,7 +57,14 @@ void eeh_sysfs_remove_device(struct pci_dev *pdev);
+> > =20
+> >  static inline const char *eeh_driver_name(struct pci_dev *pdev)
+> >  {
+> > -	return (pdev && pdev->driver) ? pdev->driver->name : "<null>";
+> > +	if (pdev) {
+> > +		const char *drvstr =3D dev_driver_string(&pdev->dev);
+> > +
+> > +		if (strcmp(drvstr, ""))
+> > +			return drvstr;
+> > +	}
+> > +
+> > +	return "<null>";
+>=20
+> Can we just do this?
+>=20
+>   if (pdev)
+>     return dev_driver_string(&pdev->dev);
+>=20
+>   return "<null>";
 
-	return true;
+Works for me, too. It behaves a bit differerently than my suggestion
+(which nearly behaves identical to the status quo), but only in some
+degenerated cases.
 
-That's still only 5 fully interconnected states to work between, and
-potentially a 6th if we decide _RESUMING|_RUNNING is valid for a device
-supporting post-copy.
+> I think it's more complicated than it's worth to include a strcmp().
+> It's possible this will change those error messages about "Might be
+> infinite loop in %s driver", but that doesn't seem like a huge deal.
+>=20
+> I moved Oliver to "to:" and added Russell in case they object.
+>=20
+> >  }
+> > =20
+> >  #endif /* CONFIG_EEH */
+> > diff --git a/drivers/bcma/host_pci.c b/drivers/bcma/host_pci.c
+> > index 69c10a7b7c61..0973022d4b13 100644
+> > --- a/drivers/bcma/host_pci.c
+> > +++ b/drivers/bcma/host_pci.c
+> > @@ -175,9 +175,10 @@ static int bcma_host_pci_probe(struct pci_dev *dev,
+> >  	if (err)
+> >  		goto err_kfree_bus;
+> > =20
+> > -	name =3D dev_name(&dev->dev);
+> > -	if (dev->driver && dev->driver->name)
+> > -		name =3D dev->driver->name;
+> > +	name =3D dev_driver_string(&dev->dev);
+> > +	if (!strcmp(name, ""))
+> > +		name =3D dev_name(&dev->dev);
+> >  	err =3D pci_request_regions(dev, name);
+>=20
+> Again seems more complicated than it's worth to me.  This is in the
+> driver's .probe() method, so really_probe() has already set
+> "dev->driver =3D drv", which means dev->driver is always set to
+> &bcma_pci_bridge_driver here, and bcma_pci_bridge_driver.name is
+> always "bcma-pci-bridge".
+>=20
+> Almost all callers of pci_request_regions() just hardcode the driver
+> name or use a DRV_NAME #define
+>=20
+> So I think we should just do:
+>=20
+>   err =3D pci_request_regions(dev, "bcma-pci-bridge");
 
-In defining the device state, we tried to steer away from defining it
-in terms of the QEMU migration API, but rather as a set of controls
-that could be used to support that API to leave us some degree of
-independence that QEMU implementation might evolve.
+Yes, looks right. I'd put this in a separate patch.
 
-To that extent, it actually seems easier for a device implementation to
-focus on bit definition rather than the state machine node.
+> >  	if (err)
+> >  		goto err_pci_disable;
+> > [...]
+> > diff --git a/drivers/ssb/pcihost_wrapper.c b/drivers/ssb/pcihost_wrappe=
+r.c
+> > index 410215c16920..4938ed5cfae5 100644
+> > --- a/drivers/ssb/pcihost_wrapper.c
+> > +++ b/drivers/ssb/pcihost_wrapper.c
+> > @@ -78,9 +78,11 @@ static int ssb_pcihost_probe(struct pci_dev *dev,
+> >  	err =3D pci_enable_device(dev);
+> >  	if (err)
+> >  		goto err_kfree_ssb;
+> > -	name =3D dev_name(&dev->dev);
+> > -	if (dev->driver && dev->driver->name)
+> > -		name =3D dev->driver->name;
+> > +
+> > +	name =3D dev_driver_string(&dev->dev);
+> > +	if (*name =3D=3D '\0')
+> > +		name =3D dev_name(&dev->dev);
+> > +
+> >  	err =3D pci_request_regions(dev, name);
+>=20
+> Also seems like more trouble than it's worth.  This one is a little
+> strange but is always called for either b43_pci_bridge_driver or
+> b44_pci_driver, both of which have .name set, so I think we should
+> simply do:
+>=20
+>   err =3D pci_request_regions(dev, dev_driver_string(&dev->dev));
 
-I'd also vote that any clarification of state validity and transitions
-belongs in the uAPI header and a transition test function should
-reference that header as the source of truth, rather than the other way
-around.  Thanks,
+yes, agreed, too.
 
-Alex
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3jbimpqsr3sfse6m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFTbR0ACgkQwfwUeK3K
+7AkC6Af/ZPcvEOEpmwUpNE9viOQkpwE5r7inA2n8+IzHLf0m7dP7WazFs81CvS6i
+HZGQD4L2Ry5WlRHlPAXPVD6fMnoM5OT8vhqQKktvBdtYQ9wlPJlrdQHuIk9ifD/z
+YfkGM/W3gd2V9nA+yxomM57MDRBHhFkjK05VcBnGFO5hXGIyV3gSS/RgIWKPGXuW
+mYyO5SgEEQrK5uOf8gnokzmOE5aHgYZ9bhMUZKk01a1d5vI44/QZf1cLlrHRyamS
+3jeLoyS7nE9+wcMnKG67Qir5YuB99CLu21yGHqDMOQLzZ9FNjVUO682GRS/gnblZ
+IJlg24PzVAR9Feb4374crlRgTrq3+w==
+=LLP8
+-----END PGP SIGNATURE-----
+
+--3jbimpqsr3sfse6m--
