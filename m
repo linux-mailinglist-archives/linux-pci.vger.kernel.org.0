@@ -2,111 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4046941B7F4
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 22:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11E9141B7FB
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 22:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242607AbhI1UGt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 16:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242593AbhI1UGt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 16:06:49 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E955C061746
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 13:05:09 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id r18so73081qvy.8
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 13:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cW8g3RMiiX7YozMyBpzJQ3i0X8a1a6uo52SxjKINHuA=;
-        b=mXg4nC/0EIy5mcGZgRBdVGh4+PtQ/R7qKfJdIHvckLXvlCgA6RG20VZtoVAC7XwA0/
-         1Q9jV1hRPeuiqNHTfiF2xEDf/GmdCrABm9VW4FZUzunFeWsbqWbu0OIpkB0K7pTzfgbd
-         6AZsXvNDXNRBaOqQHwB6uloUHcpht9y8ZbZWcpcNkXzVJmyDxhAzyVOeTC4gm52ORmXN
-         mB9dfyB6upC6rckPem/56kkVq6mMDb0monvwsJpjKud0G8lLORhrGaRbWZcJi7ULZ9Wj
-         5fjO0VyJ8XxtZ4Gi+c3kBFto+M+PTYIof3BPLlQNFsws5BUO2HFuvQyKhOfpgnkZotGZ
-         sdyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cW8g3RMiiX7YozMyBpzJQ3i0X8a1a6uo52SxjKINHuA=;
-        b=y8TV7AqHcOnleiFQtwXnnOVr9zA86M1mDc/KKCrXidbDYrORttFg8vA7je+W8ZIqt9
-         6jIIPcZTnsIp4ZeagTD7aNpFmIqtOtdD/bvR41RjVwh8L5bwi+sUV7+Wh5T7iYNFl8fm
-         fiId5cFA+HC9Im9ABjcWUeNALkHSFUyRtGM8s3PFcUS4GMutYxCLslrNVHhBYYAjZGW5
-         bIgLbQ71gLLW1Sz5xYy8OOGE8ZOJXs0UhG47EAqQLRuHPbsVfDYboP9URq91Ee7fIy/c
-         w+yo/gdQy+v0/tAHxnMp/GrK2RQQxTKly+pUBwD+PW0gOVgXnw+yYC7jipTq5oWijqeL
-         b6Tw==
-X-Gm-Message-State: AOAM5339cuouemLl1gRIj1S+mVAxDlrfrVi/ugDGq1wFQvyK85JbCRKZ
-        +OnT15/9tgu6gro/1N6n0PeX9A==
-X-Google-Smtp-Source: ABdhPJzKbJYaBmt9+b2JfarRag3/wc7athe6CPjiFKF1JovwH1BSJxbPc5yOuJ/qnsZmJUt2zTx5pQ==
-X-Received: by 2002:a0c:9043:: with SMTP id o61mr7850968qvo.54.1632859508704;
-        Tue, 28 Sep 2021 13:05:08 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id x125sm118440qkd.8.2021.09.28.13.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 13:05:07 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mVJLe-007GuE-T8; Tue, 28 Sep 2021 17:05:06 -0300
-Date:   Tue, 28 Sep 2021 17:05:06 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
-Message-ID: <20210928200506.GX3544071@ziepe.ca>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-20-logang@deltatee.com>
+        id S242573AbhI1UJx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 16:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242120AbhI1UJx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Sep 2021 16:09:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 13EEA61157;
+        Tue, 28 Sep 2021 20:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632859693;
+        bh=2q54bLyOqMkKWDejBRp+5bRZfTrKTSWJcV2n/WM7O5I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SJlILrO3fJ9ue8UvYpapX4ojkALIQWP0IhyvgGUEnmc2bU4/eR9Oz1WHf91TFCvXA
+         +AvaFLotNIk6GNVMTzMiHUmE0SECnG/DaFsMeYfbeJ4HnUD4sgFtdp1R5TXABKq/V5
+         4Gltdrd5KbjraDvTp7Dojw2UaOlvPdW7DYea08nUCxmciYyaMtdgK79OJikk1fI3dS
+         IQxjaLHV0wfoBer0BAfg32is1dAvMuIslQlV94SxW032Uh3Itk0NL7NQX8SiKEicB1
+         kZRIFonoYbzHfn7L/mtYQNU1K3C/vNR3V9ujP6yh2gmx56PtY428rmLhwG6a55K51M
+         NJoYyJGhopiig==
+Date:   Tue, 28 Sep 2021 15:08:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Vadym Kochan <vkochan@marvell.com>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Salil Mehta <salil.mehta@huawei.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        Simon Horman <simon.horman@corigine.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 4/8] PCI: replace pci_dev::driver usage that gets the
+ driver name
+Message-ID: <20210928200811.GA724823@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210916234100.122368-20-logang@deltatee.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210928192936.w5umyzivi4hs6q3r@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 05:40:59PM -0600, Logan Gunthorpe wrote:
+On Tue, Sep 28, 2021 at 09:29:36PM +0200, Uwe Kleine-König wrote:
+> On Tue, Sep 28, 2021 at 12:17:59PM -0500, Bjorn Helgaas wrote:
+> > [+to Oliver, Russell for eeh_driver_name() question below]
+> > 
+> > On Mon, Sep 27, 2021 at 10:43:22PM +0200, Uwe Kleine-König wrote:
+> > > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > 
+> > > struct pci_dev::driver holds (apart from a constant offset) the same
+> > > data as struct pci_dev::dev->driver. With the goal to remove struct
+> > > pci_dev::driver to get rid of data duplication replace getting the
+> > > driver name by dev_driver_string() which implicitly makes use of struct
+> > > pci_dev::dev->driver.
 
-> +static void pci_p2pdma_unmap_mappings(void *data)
-> +{
-> +	struct pci_dev *pdev = data;
-> +	struct pci_p2pdma *p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
-> +
-> +	p2pdma->active = false;
-> +	synchronize_rcu();
-> +	unmap_mapping_range(p2pdma->inode->i_mapping, 0, 0, 1);
-> +	pci_p2pdma_free_mappings(p2pdma->inode->i_mapping);
-> +}
+> > Also, would you mind using "pci_dev.driver" instead of
+> > "pci_dev::driver"?  AFAIK, the "::" operator is not actually part of
+> > C, so I think it's more confusing than useful.
+> 
+> pci_dev.driver doesn't work either in C because pci_dev is a type and
+> not a variable.
 
-If this is going to rely on unmap_mapping_range then GUP should also
-reject this memory for FOLL_LONGTERM..
-
-What along this control flow:
-
-> +       error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_unmap_mappings,
-> +                                        pdev);
-
-Waits for all the page refcounts to go to zero?
-
-Jason
+Sure, "pci_dev.driver" is not strictly acceptable C unless you have a
+"struct pci_dev pci_dev", but it's pretty common.
