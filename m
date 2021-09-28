@@ -2,94 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A8441A6DC
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 07:01:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F8B741A744
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Sep 2021 07:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbhI1FCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 01:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229493AbhI1FCw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 28 Sep 2021 01:02:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D86561157;
-        Tue, 28 Sep 2021 05:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1632805273;
-        bh=zsQk0tlFBx4r/np/dpdue6p/eJJfxXfQU+IrfF5+Bhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tmy2YODD81AfnYlUzCWGvxSes7alPN10gAmsR7FPADYzq1nE85XE5OaS6xPRTIeZJ
-         snqyTguLpEYvV67F+ah2/9xAU3ulKQR/jWBL/ffXkUfRX71RkHFkPTAXlutaE+padl
-         LzStgM8WEz4HgDCy5v18gGr70esGI7awFcq2wLV0=
-Date:   Tue, 28 Sep 2021 07:01:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, bhelgaas@google.com,
-        andy.shevchenko@gmail.com, mgross@linux.intel.com,
-        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] MFD: intel_pmt: Support non-PMT capabilities
-Message-ID: <YVKhlWSb3pdMLCEk@kroah.com>
-References: <20210922213007.2738388-1-david.e.box@linux.intel.com>
- <20210922213007.2738388-3-david.e.box@linux.intel.com>
- <YVIBI6TQrD/rehli@kroah.com>
- <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
+        id S236098AbhI1Fwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 01:52:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10118 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234207AbhI1Fw3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 01:52:29 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18S25neO015213;
+        Tue, 28 Sep 2021 01:50:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=u/08SgPZUwisKxBCFBopTGT1FXF/KS3DrgTJNKvfsWw=;
+ b=Su1MyId/zfXElDfwKdQFm+aBb51QNJQ0llIlvG0W9oPYZewfCBfzCqB8LF8zgaJbjzGg
+ IFmx2ZTi01oLGM1jc7Yh0pwFaOW+1S/gJPlE2rK93Ud/JEnJ0HxucSL/0Jr3K1y67go0
+ oy61Z556Buw8Yn3W6YnyhdrgKtcF0z9NAhiq3HwFska7do/b6tSi+4Cmz9wh/8yyUpWz
+ kw/L6CgGLCEJEJETCtPB11LXPWtL0F77Y4Tt7jJyNPIq7KDoBp4ETwu2sS5uI3x4VAKM
+ 2IMhPsq6auxqAG0FFP5vu+gk/kOirFim8WibJ+OF66Bbc8gcSGaWj9/4ELhYqRiZ4izv rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagubdr29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 01:50:35 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18S5RsNX018217;
+        Tue, 28 Sep 2021 01:50:35 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagubdr1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 01:50:34 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18S5RqA7030074;
+        Tue, 28 Sep 2021 05:50:32 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3b9ud9rt90-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 05:50:32 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18S5oTUI64356782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Sep 2021 05:50:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8344152063;
+        Tue, 28 Sep 2021 05:50:29 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2A2EF52052;
+        Tue, 28 Sep 2021 05:50:29 +0000 (GMT)
+Received: from [9.81.209.82] (unknown [9.81.209.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id ADAB66013C;
+        Tue, 28 Sep 2021 15:50:27 +1000 (AEST)
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
+Cc:     "David E . Box" <david.e.box@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        iommu@lists.linux-foundation.org
+References: <20210923172647.72738-1-ben.widawsky@intel.com>
+ <20210923172647.72738-7-ben.widawsky@intel.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Message-ID: <6009c15f-af28-d7ab-4518-ae34f32626a2@linux.ibm.com>
+Date:   Tue, 28 Sep 2021 15:50:27 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d540894d3d8c05722bd924c21bd9dd9c2b9def53.camel@linux.intel.com>
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dfjx1jSiH5q1BslcZoUIy5Fe623U8B_f
+X-Proofpoint-GUID: qfYn4FdH2rSoMQJWiL29ItmLOGF8Nqca
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-28_03,2021-09-24_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 clxscore=1011 phishscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2109230001 definitions=main-2109280033
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 11:40:37AM -0700, David E. Box wrote:
-> On Mon, 2021-09-27 at 19:36 +0200, Greg KH wrote:
-> > On Wed, Sep 22, 2021 at 02:30:04PM -0700, David E. Box wrote:
-> > > Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> > > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> > > structures may also be used by Intel to indicate support for other
-> > > capabilities unrelated to PMT.  OOBMSM is a device that can have both PMT
-> > > and non-PMT capabilities. In order to support these capabilities it is
-> > > necessary to modify the intel_pmt driver to handle the creation of platform
-> > > devices more generically.
-> > 
-> > I said this on your other driver submission, but why are you turning a
-> > PCIe device into a set of platform devices and craming it into the MFD
-> > subsystem?
-> > 
-> > PCIe devices are NOT platform devices.
+On 24/9/21 3:26 am, Ben Widawsky wrote:
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
 > 
-> But they *are* used to create platform devices when the PCIe device is multi-functional, which is
-> what intel_pmt is.
-
-That is an abuse of platform devices, as that is not what they are for.
-
-> > Why not use the auxiliary bus for this thing if you have individual
-> > drivers that need to "bind" to the different attributes that this single
-> > PCIe device is exporting.
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
 > 
-> It wasn't clear in the beginning how this would evolve. MFD made sense for the PMT (platform
-> monitoring technology) driver. PMT has 3 related but individually enumerable devices on the same IP,
-> like lpss. But the same IP is now being used for other features too like SDSi. We could work on
-> converting this to the auxiliary bus and then covert the cell drivers.
-
-Please do so.
-
-> > Or why not just fix the hardware to report individual PCIe devices, like
-> > a sane system would do?
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
 > 
-> We have some systems with 1000+ PCIe devices. Each PCIe device adds cost to HW. So increasingly
-> VSEC/DVSEC is used to expose features which are handled by the same micro-controller in the HW.
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-A PCIe device is a virtual thing, what HW cost do they have?
+Looks good to me, it's essentially identical to the existing 
+implementation in ocxl.
 
-Anyway, a platform device should NOT ever be a child of a PCI device,
-that is not ok and should be fixed here please.
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-A platform device is just that, something that the platform provides on
-a non-discoverable bus.  A PCIe device is NOT that type of device at
-all and never has been.
-
-thanks,
-
-greg k-h
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
