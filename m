@@ -2,108 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F5741CC2D
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 20:55:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9496A41CC4A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 21:06:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344589AbhI2S5i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 14:57:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:56631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344867AbhI2S5h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 14:57:37 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1N5mOZ-1muZAt2JRr-017B1I; Wed, 29 Sep 2021 20:55:48 +0200
-Received: by mail-wm1-f48.google.com with SMTP id t16-20020a1c7710000000b003049690d882so6134192wmi.5;
-        Wed, 29 Sep 2021 11:55:48 -0700 (PDT)
-X-Gm-Message-State: AOAM5330isn3L2+dLEzJqtUf/mK4C/0YiZiATI9m4L/dpZUXiIxr6oXe
-        P/b17eJUp/bP0d6ODod++PyL21q1/fanZvVrpuo=
-X-Google-Smtp-Source: ABdhPJyNr2bT33THpfX31NWdajTXoFODpWUSSIGCIGnzpeNbFByDEF2nWlPnzGst8L4huwqWgk1NBgXJlWWqHjP0joM=
-X-Received: by 2002:a05:600c:22d4:: with SMTP id 20mr12273979wmg.82.1632941748177;
- Wed, 29 Sep 2021 11:55:48 -0700 (PDT)
+        id S1346397AbhI2THi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 15:07:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346388AbhI2THh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 15:07:37 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F005C061765
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 12:05:56 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id e15so14948931lfr.10
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 12:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ny2+77Uus4H/nPXbEE4fOfi5YTib/j8MfG7t5iU/Qjk=;
+        b=u6OGwlgD9IMdZ2HdoL8lkGBaqUb5DoK6/ym/uunK23jP7PeZNuys4OF0DfZjcc71mS
+         wSaga3Tz+eoQfYV0I77DEE+PbtHypvTZ/hqRMk541PeMfXxMoxuGqlNVo6GKIhgqBbtm
+         w4CE6GxIgsoXcTdf0P78xhEPcZsN2n4qskMRL9Pso9qTEa0nE66xFL/I5iPwRYB5XEyZ
+         ZI8Rbt2eumS1xSR4toHy0Z7Aqwi84+S12v0eY3n9N7BiGO3yEUodzVmc6BbfSI3q3Syx
+         EhFNtc07A3S93kgvOonDkfZaLwDimfeSFWceB/mxA5hxY8a6ldJ3f52N3kCwWFaHdbDI
+         bpLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ny2+77Uus4H/nPXbEE4fOfi5YTib/j8MfG7t5iU/Qjk=;
+        b=PsuJRxdVDsniEbuVVxyDDL9qOe+J+ETKlxc2eSHdgdbcYQStjv0ZCXCvxDNyAny89g
+         9G0ptVZsuHuKAOuPaCXj/S5OgRgHde/rwv11XCoDWwHERe0pEHiLvZ+5wmlh+b4VXFG5
+         kh6OrbGhNGCousHT3fWTopdQiRjobBQp1Wfxi6P3Kj9oCr4oN+6V66ru/OxRbDyGkEC/
+         cKVsoy+gc+AY1y2VRoVFl6JZQtJM0r/e6tHT1pVhLR/pM7IKXRbqSEziOcVg5y+y61mn
+         6/nM2NaOS29YgmHfrPTgTy5eX7huo5byNU7z75iCuzHbhdQ5NqAlnIE3zfXQeB5c9bf+
+         4wXw==
+X-Gm-Message-State: AOAM531pGZxjVyQXohzJI5qIf7nKAJ07Yq3igX1MKRKdC6QaXu3qYzP/
+        4nLrFKddtN3RATxnH1wXa7fVHBU3UiJiNnRL7lgitg==
+X-Google-Smtp-Source: ABdhPJyqcID0Rhrbbe0OvfTzDp/RzSDgD4HnmlSaEBRo17fjtzsvHgiue0dF/BTOtdBw+Qj5ZU01/pfPX32AilRT4+s=
+X-Received: by 2002:a2e:8011:: with SMTP id j17mr1513715ljg.145.1632942354388;
+ Wed, 29 Sep 2021 12:05:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210929145509.GA20495@lpieralisi> <20210929163250.GA773921@bhelgaas>
-In-Reply-To: <20210929163250.GA773921@bhelgaas>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Sep 2021 20:55:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0Z=w6CK3EKG5LjMan3R04bO9BshLxqU1J_gm8+OLuU+Q@mail.gmail.com>
-Message-ID: <CAK8P3a0Z=w6CK3EKG5LjMan3R04bO9BshLxqU1J_gm8+OLuU+Q@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+References: <20210929163847.2807812-1-maz@kernel.org> <20210929163847.2807812-11-maz@kernel.org>
+In-Reply-To: <20210929163847.2807812-11-maz@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Sep 2021 21:05:42 +0200
+Message-ID: <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com>
+Subject: Re: [PATCH v5 10/14] arm64: apple: Add pinctrl nodes
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2sI4t1kquHRXToBYin4c4sxBBOAKypc4c9LnUldSTiYpDDY51Dq
- q5nl6RZQq6TTpXm8/Ab2vUmjzErW1NozgqcSEqFW2Fez8VrHgzOIybJ2haslSyOidTnbzEy
- jEJwNBvs1ANtpyo3bwtY95p2H/Ya2iOvriU6HhWULKtyBNrU0fMgBRqMkCvlr64OkObJmCY
- bC4lsjgoJDg5qb3ej2Zdw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Jx8pGPzoWAY=:iwwqGlG9wm+t+CFcakRREx
- MlQVKFgSWWI2kv8kWqqv86Ap8vjyxf5tCO/eXQGdFqbLUuc6E3hRYO8v3uZmlA6Z83v5jxDbd
- jw1528+wOuvYmsPZPAoXCRAOriejIdKvoPX5ixQA2Et4Z2Qm0AKUK4EQxFEsi5z0jOyN8GnML
- s1UkQ5HM6TZZ5dqm+EhJBA7UAQKvvy9C8cPbPAMYlBEKxtXBTIVVIvb4MGSc4g6wgYL/gj95U
- 9Gu6VX23ZqNN28W2OGusqVkFUK4+DYNO1BiMhL6Wl5G705fbTZcybsLkuRFeG2Pc4hCXwU+qS
- lG7Pr5zMPgZtvttdFF/kdCQIEaYSl+2cwX4ETneNJ6qtBEmXJwSkyeJs4TlcSZbxua1fHgk9F
- cbXy5SwfCmtwwd7kgXZK2wEBC3QLg7bAx7vX1BBVnhF3jidbUNHm09hAC2uIKloYGTn5HTW+t
- WiiNeEy03QeY6HkK7nYZEoMVdbNOUFMgV2sRaeAzOs30RabcQuD9ZAgGhF0FABOnGPKgPRe+w
- pKbRkywbO4cco5JTUUjV/T+wbHKA03UM8Q3hsNotI/RYAc9e1LPNe2sWOE1sHHBIMoN64pjHP
- zv+WIqqKxU9Cky4xXICsQOdH+iiUPfRgxBKsqLzyQZgrPcfBbkegzjTcNBRP+Oefg9k/28VNO
- DsoBckpva3TDNcy4LabNmMeU49+yYEBEMuV6WuL3eADgsdLYjWUY04FjbrZNza6WN46LLdD7o
- x8GY2Q4Hhx6evyapVJuvGDWpmIg6Tk/qRzxTcQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 6:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Wed, Sep 29, 2021 at 03:55:09PM +0100, Lorenzo Pieralisi wrote:
-> > On Wed, Sep 22, 2021 at 01:13:11AM +0200, Marek Vasut wrote:
-> > > On 9/21/21 6:08 PM, Geert Uytterhoeven wrote:
-> > >
-> > > [...]
-> > >
-> > > > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > > > index 326f7d13024f..ee6f5e525d3a 100644
-> > > > > --- a/drivers/pci/controller/Kconfig
-> > > > > +++ b/drivers/pci/controller/Kconfig
-> > > > > @@ -66,6 +66,7 @@ config PCI_RCAR_GEN2
-> > > > >   config PCIE_RCAR_HOST
-> > > > >          bool "Renesas R-Car PCIe host controller"
-> > > > >          depends on ARCH_RENESAS || COMPILE_TEST
-> > > > > +       depends on COMMON_CLK
-> > > >
-> >
-> > Bjorn, shall we pick Arnd's patch up then ? We should be fixing this in
-> > one of the upcoming -rcs since we introduced it in the last merge
-> > window.
->
-> IIUC, a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort
-> hook") appeared in v5.15-rc1 and added a use of __clk_is_enabled(),
-> which is only available when COMMON_CLK=y.
->
-> PCIE_RCAR_HOST depends on ARCH_RENESAS || COMPILE_TEST.  ARCH_RENESAS
-> is an ARM64 platform, so when COMPILE_TEST is not set, I think we get
-> COMMON_CLK=y via this:
->
->   config ARM64
->     select COMMON_CLK
->
-> But when ARCH_RENESAS is not set and COMPILE_TEST=y, there's nothing
-> that enforces the dependency on COMMON_CLK.  Personally I like the
-> first hunk of Marek's patch at [1] because the dependency on
-> COMMON_CLK is explicit:
->
->   config PCIE_RCAR_HOST
->     depends on ARCH_RENESAS || COMPILE_TEST
->     depends on COMMON_CLK
+On Wed, Sep 29, 2021 at 6:56 PM Marc Zyngier <maz@kernel.org> wrote:
 
-Agreed, Marek's version is clearer than mine, please use that.
+> From: Mark Kettenis <kettenis@openbsd.org>
+>
+> Add pinctrl nodes corresponding to the gpio,t8101 nodes in the
+> Apple device tree for the Mac mini (M1, 2020).
+>
+> Clock references are left out at the moment and will be added once
+> the appropriate bindings have been settled upon.
+>
+> Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Link: https://lore.kernel.org/r/20210520171310.772-3-mark.kettenis@xs4all.nl
+(...)
+> +               pinctrl_ap: pinctrl@23c100000 {
+> +                       compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+> +                       reg = <0x2 0x3c100000 0x0 0x100000>;
+> +
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&pinctrl_ap 0 0 212>;
 
-       Arnd
+In other discussions it turns out that the driver is abusing these gpio-ranges
+to find out how many pins are in each pinctrl instance. This is not the
+idea with gpio-ranges, these can be multiple and map different sets,
+so we need something like
+
+apple,npins = <212>;
+(+ bindings)
+
+or so...
+
+Yours,
+Linus Walleij
