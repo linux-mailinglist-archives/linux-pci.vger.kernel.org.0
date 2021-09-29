@@ -2,279 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3280641CBC9
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 20:26:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B34641CC21
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 20:50:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345808AbhI2S21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 14:28:27 -0400
-Received: from mail-dm6nam10on2078.outbound.protection.outlook.com ([40.107.93.78]:52417
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244341AbhI2S21 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 14:28:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VZxtCazgrGicd0BO3DU+g4nGW7tSSAYtLQzTz3KBE+fvAItAz9a56JHi3ac4ZIMKpr9FweflqVJJvWtwMJHdeg/gf6K+ILvAS6FEDzrf3re7j7oh8GHBABTfMhJQh02Xq+6jMMH4ZBZNR9TOf8CkJRt9I5LIINKJcfFlPMy/z/baYDEs1ytc65oOfneWo6GG+0Y9BkrNhv2iamS5D0Zw/VTpR7xRvUdv5GVKh37gVhZlDpi9adA0etimZrClXOv9rr/1fQuTUcuE1wUD2p2PXzGI2KVyT9haAC+UW0FSdmbwyeTC4hAyI9hyAz7EFd/lpcBPGFW67vHkh+7yp6Nq0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=+unT1saw24HGZctLPemyH5FTXidrSoVe8MnnmqM/uFQ=;
- b=KoAgsFibIgY1cr1gR0A8mf37QFU1d+HRRfjfO3hVPEGd+bhqHQjEjn9STQlw01QIVL3U6uhNZHjcVch0j9llPgSTXDWklNsv32Qay/f8DsbGYbPzKf4CdhD0kugEYosXuoUCmtXjQM6/EpM3k7AI/qvAytJrmA9PUTIOLE2Tgxq30Revlm4HKATWdUIiBAu4gfhfH6kayMBtgnmNxnVhkZPbGYNzS0TDLcWxYo2ZUkQbSn+KxL5oFSA/yDPbUdIpqfXcq05EfOUk3OT6+QwlmE3CRlddIsNXBbF8h2wV66U5JedTyRiQlYcMgRmUHn2eg635aKg/JY3RIOs1aktijQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+unT1saw24HGZctLPemyH5FTXidrSoVe8MnnmqM/uFQ=;
- b=rt1O9BM0MrW+790SKvOx6e/LkijFC2AVKFyduEfCpHwHwCTVkPuAOJsZT57vF/YvyC/HNXlB/YyJ2TWtIqPbtkPf/+kbRQ06XKReR9fB7D1q0uqWGh0SUgd20daumgd+jtK57YmhwDodi3n2kixNUE+xejls/04VsMVWt8Sb7VC/DKK59Lj0h88LDp4XjtGaFWSDbn3C3d/WLEKccEffTiZAgQHbtYIh32O0KMSt/6a9D4n1fZXCrFpavAXI48mAvXfemwpbvTsCFEQvAHljS0v43DwoiEJbCrrpO9UKlSqnOYPUIkIQ49p3U26l8egxIE1/g7Xkj8gDzAt4J8XzUg==
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5207.namprd12.prod.outlook.com (2603:10b6:208:318::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Wed, 29 Sep
- 2021 18:26:43 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4566.015; Wed, 29 Sep 2021
- 18:26:43 +0000
-Date:   Wed, 29 Sep 2021 15:26:42 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
+        id S1346272AbhI2SwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 14:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346078AbhI2SwM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 14:52:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 885B461502;
+        Wed, 29 Sep 2021 18:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632941430;
+        bh=HFsxaMSiLKNo+Dqe9i1EiJyv7r0mW/XFSQEuJWKpmKg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bc+rhkx3e9OyCbRc8z8P41i56BEzbbf3Az7/Rv/+leYcYqHLlHavJZ7ByotZsfsak
+         yzdN7caUlOIf2RWreenhJyJ5+HmHdyQK9l8UaBYcX4afz2Y3Crjc759sGWGTrLJKdI
+         Oa0CfnuR1UpUCKiYJ+zFYQ1ypqH0UXa01EjXquwMzVj2ZovTWvaUrSvHVa1atPuiwu
+         M/OK7CKHMSHckRe7VwbVZfzK+Bh2lpPxjXDsDBaYa5eCI2cyQvAIl0OKpUrrnQBMz/
+         Z/az74mg9JcG6JAvZCyUTmmoyKFhfzEAG57kRMAxGhjG+SaAD5y1YLF7mXAHBb2nbP
+         qXgLADAWCKe5Q==
+Date:   Wed, 29 Sep 2021 13:50:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Message-ID: <20210929182642.GV964074@nvidia.com>
-References: <cover.1632305919.git.leonro@nvidia.com>
- <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
- <20210927164648.1e2d49ac.alex.williamson@redhat.com>
- <20210927231239.GE3544071@ziepe.ca>
- <20210928131958.61b3abec.alex.williamson@redhat.com>
- <20210928193550.GR3544071@ziepe.ca>
- <20210928141844.15cea787.alex.williamson@redhat.com>
- <20210929161602.GA1805739@nvidia.com>
- <20210929120655.28e0b3a6.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210929120655.28e0b3a6.alex.williamson@redhat.com>
-X-ClientProxiedBy: MN2PR18CA0016.namprd18.prod.outlook.com
- (2603:10b6:208:23c::21) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+Cc:     David Jaundrew <david@jaundrew.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Nehal-bakulchandra Shah <Nehal-bakulchandra.Shah@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] Avoid FLR for AMD Starship/Matisse Cryptographic
+ Coprocessor
+Message-ID: <20210929185029.GA790241@bhelgaas>
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR18CA0016.namprd18.prod.outlook.com (2603:10b6:208:23c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend Transport; Wed, 29 Sep 2021 18:26:43 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mVeHy-007dsJ-6j; Wed, 29 Sep 2021 15:26:42 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5a23037b-c773-41f4-a13b-08d98376b02e
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5207:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BL1PR12MB52072F63A0685C50F7B0BC7EC2A99@BL1PR12MB5207.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vZBJJiUpZ15g9ncFRwmvW8SgSlu2vdNiMhSE4kDrDcRbgW5iYiVcdLQnaZHfaU+5lvFXQlVmo80Ftp4a11x8iVVdHXv4136YufKq7kdYu1PiLmb8c2zLr6NosamD4I6p8ezoUkikNWa5fgXogCsNZIWJnMg8jTPVOTnuOINC/2d9UUJHmFuOHwtAzaJnQ308kS6CPhGTGw6jne+fwD+P2RNU4QeWJ/HLk9PZU/gKCytDtcxc8pUq8+I3pUd5S73mgnjHMbo3xtiFY8yYDaaaC0/xGe/QijwQOTp06OWHLBYC/VCxkSYzZb4Wip34lsyOQFbs4oxR5eOTha3MCnvCIN+TXJjvdafnO0jDjkpFQ8LwzgA5eaNRCEjtNWxkhc2yDQJBg4/3457nDVTj10LJ7OEMSA/B8pFyrvYAST1bhC1HgKXJ7pRZE6lauwSF9ZdHuud0FKStstqckfVzratsEZ1+FBeDgxXOQlj6E9eQpEEQ3GE395vQzORHhsw8SzqcEyCRnNnAIh5W2t0Zwl17VRiDAgDM5VvdQ9RNVLCqFXvfV2BAeO76qqAma3t+JsuO9lP2Qx4Ck1vRrniJRRmW9pFq/6XQ/we8ugBsW3NdCnDg96gI0YnENY0cBnPltSfmYSH8R9zIUsg5EtFn76uepsrzyOQOn9PpTm54wli4sidpsPqEZLqy2SwLbRQfuQKI
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2616005)(7416002)(6916009)(86362001)(83380400001)(508600001)(36756003)(1076003)(9786002)(33656002)(9746002)(186003)(426003)(38100700002)(26005)(4326008)(54906003)(316002)(8676002)(66946007)(2906002)(66556008)(66476007)(8936002)(5660300002)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uoB6jI/WzW6+wd+IWRE8fTkD9g7tnzeRj+dKl+vtOD3eszdSt6W45gPOCPb6?=
- =?us-ascii?Q?9LHsGFAmoRjtWLoRIqLciazINR14WQOWBueIPbcCdVPaCsgdoTrztlpMUPHj?=
- =?us-ascii?Q?vNc6mnopiiYgw3pBi5Rhc14Kj/hfuF3jHiuBgK2f9CCExEme5ozZkQage35L?=
- =?us-ascii?Q?zKwFEoxNpZUUJ/m7B8u5hi7i05yx4xYP1Np6u087x6TP7CT2eIxjtWClcAdP?=
- =?us-ascii?Q?JdgCYEokUNYr69Eb5uB/vT0SOfYfKz8jaeT/L8ZV6yok8fBp3UarE2dKE/dQ?=
- =?us-ascii?Q?6k5IYQxNB+FlcyakhRq3TxosPEwILEGMM3FnKbLMgqX7WpdoJ4R/JLrKQdVM?=
- =?us-ascii?Q?IkXDYMxH/HZANIUYImZrEe0sapX/OPg2f+TlMhggrhXAObOn2PzEL14JIECF?=
- =?us-ascii?Q?oOtxWEnjDoSmzTr/3LSq/gdesxR64NhHiasw0YeroKHf73w7wa1myzAt9zDS?=
- =?us-ascii?Q?PxfNDU6wpPCuE1Jtj+0PbCs2+j7w0nNZWeVYXWLnYg+1t5nWV/S2/fTLmDt8?=
- =?us-ascii?Q?xEtwSLoSt4aShFpyP962+W1wdUXc1eCu0R2jDlvn/to9QOGOLuCR35EA2Dvy?=
- =?us-ascii?Q?JMF484OAGvSiE7Bu1YrWwa0hylhVVEznxbAXdG/iOi00G8CjABQ1x5Hy9ZvI?=
- =?us-ascii?Q?y1uZGevfHoeuFZX/vc/Ms5AECcxTdRKcAyV74eedATEDqFNhvMx5A0NCODgf?=
- =?us-ascii?Q?LL7Xse4Qh3KPsDoxUg50lK/DeyvQ0NtEz1WtJhbhurn2TZpiXITDT5SljVFY?=
- =?us-ascii?Q?pG9BWpjDqkPn33hPS1ChsyRK0tCApkoNqZPo4zmbkbVVpfgbBnbzamshFa+K?=
- =?us-ascii?Q?8pkptL2kkb+8+g9tT0uBnki6OPE2C54lhsJU4wTW5tzFZwe16Qzq5QLaeNfn?=
- =?us-ascii?Q?wHwSm91ojfkB3keQ7+XbXYFrK40vjOxGTV8FlbDAftkyF99O/S4yPBuTdOtd?=
- =?us-ascii?Q?kcu1HetYPE1HxPZcjOWtQJTZ03pKgFuiCwh7wt7iF+JegU7LSwxw2plyKaXl?=
- =?us-ascii?Q?nB/8NlSCvA03U7KJyTtpMawylcNjaivjm/OpDLawEN3j9l4EXZTQjT0uZYJ4?=
- =?us-ascii?Q?aQh7ac9s3PkQbOjpNW8HOuVW75KsRonjlvtvvaCrjWOkIHGmUKjzCzb/kv9a?=
- =?us-ascii?Q?aAvrhQrcWZ7qyjAN0Y8tpuuTmCdOhFX6VTOG7IAZpoO/yFFyXt4GWujfWs7z?=
- =?us-ascii?Q?JPi1CPAd7aoAqm2rDpYHtd4WkX+nFXdTCwxi3gVOSE614L+DzQGTOikoFZjS?=
- =?us-ascii?Q?4gd4YSPd04/bbKSh4VH+nS1WLSi1d28xavwjEik3rKcRfWC3fvLowcaokLcH?=
- =?us-ascii?Q?cvsRL1oii6UeTzgGyygpeYE0?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a23037b-c773-41f4-a13b-08d98376b02e
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 18:26:43.6673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9mv2YyptJMLikFD+jyFFgmJlKPXXgufo5uVfAZJaXoIbbUAbqzmTrjOaUkBQBLwn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5207
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210929122612.02e54434.alex.williamson@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 12:06:55PM -0600, Alex Williamson wrote:
-> On Wed, 29 Sep 2021 13:16:02 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Wed, Sep 29, 2021 at 12:26:12PM -0600, Alex Williamson wrote:
+> On Tue, 28 Sep 2021 20:59:02 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 > 
-> > On Tue, Sep 28, 2021 at 02:18:44PM -0600, Alex Williamson wrote:
-> > > On Tue, 28 Sep 2021 16:35:50 -0300
-> > > Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >   
-> > > > On Tue, Sep 28, 2021 at 01:19:58PM -0600, Alex Williamson wrote:
-> > > >   
-> > > > > In defining the device state, we tried to steer away from defining it
-> > > > > in terms of the QEMU migration API, but rather as a set of controls
-> > > > > that could be used to support that API to leave us some degree of
-> > > > > independence that QEMU implementation might evolve.    
-> > > > 
-> > > > That is certainly a different perspective, it would have been
-> > > > better to not express this idea as a FSM in that case...
-> > > > 
-> > > > So each state in mlx5vf_pci_set_device_state() should call the correct
-> > > > combination of (un)freeze, (un)quiesce and so on so each state
-> > > > reflects a defined operation of the device?  
+> > [+cc Alex, Krzysztof, AMD folks]
+> > 
+> > On Tue, Sep 28, 2021 at 05:16:49PM -0700, David Jaundrew wrote:
+> > > This patch fixes another FLR bug for the Starship/Matisse controller:
 > > > 
-> > > I'd expect so, for instance the implementation of entering the _STOP
-> > > state presumes a previous state that where the device is apparently
-> > > already quiesced.  That doesn't support a direct _RUNNING -> _STOP
-> > > transition where I argued in the linked threads that those states
-> > > should be reachable from any other state.  Thanks,  
+> > > AMD Starship/Matisse Cryptogrpahic Coprocessor PSPCPP
+> > > 
+> > > This patch allows functions on the same Starship/Matisse device (such as
+> > > USB controller,sound card) to properly pass through to a guest OS using
+> > > vfio-pc. Without this patch, the virtual machine does not boot and
+> > > eventually times out.  
 > > 
-> > If we focus on mlx5 there are two device 'flags' to manage:
-> >  - Device cannot issue DMAs
-> >  - Device internal state cannot change (ie cannot receive DMAs)
+> > Apparently yet another AMD device that advertises FLR support, but it
+> > doesn't work?
 > > 
-> > This is necessary to co-ordinate across multiple devices that might be
-> > doing peer to peer DMA between them. The whole multi-device complex
-> > should be moved to "cannot issue DMA's" then the whole complex would
-> > go to "state cannot change" and be serialized.
+> > I don't have a problem avoiding the FLR, but I *would* like some
+> > indication that:
+> > 
+> >   - This is a known erratum and AMD has some plan to fix this in
+> >     future devices so we don't have to trip over them all
+> >     individually, and
+> > 
+> >   - This is not a security issue.  Part of the reason VFIO resets
+> >     pass-through devices is to avoid leaking state from one guest to
+> >     another.  If reset doesn't work, that makes me wonder, especially
+> >     since this is a cryptographic coprocessor that sounds like it
+> >     might be full of secrets.  So I *assume* VFIO will use a different
+> >     type of reset instead of FLR, but I'm just double-checking.
 > 
-> Are you anticipating p2p from outside the VM?  The typical scenario
-> here would be that p2p occurs only intra-VM, so all the devices would
-> stop issuing DMA (modulo trying to quiesce devices simultaneously).
+> It depends on what's available, chances are not good that we have
+> another means of function level reset, so this probably means it's
+> exposed as-is.  I agree, not great for a device managing something to
+> do with cryptography.  It's potentially a better security measure to
+> let the device wedge itself.  Thanks,
 
-Inside the VM.
+OK, I think that means I need to ignore this patch until we have some
+evidence that it's actually safe to allow VFIO to pass the device
+through to another guest.
 
-Your 'modulo trying to quiesce devices simultaneously' is correct -
-this is a real issue that needs to be solved.
+And I guess we are making the assumption that the audio, USB, and
+ethernet controllers [1] are safe to hand off between guests?  I don't
+know enough about those controllers to even have an opinion about
+that.  Surely there is config space and MMIO space that could leak
+data between guests?
 
-If we put one device in a state where it's internal state is immutable
-it can no longer accept DMA messages from the other devices. So there
-are two states in the HW model - do not generate DMAs and finally the
-immutable internal state where even external DMAs are refused.
+Is there anything that tracks whether the device has been reset after
+being passed through to a guest?  For example, I assume the following
+would be safe if we could tell the reset had been done:
 
-> > The expected sequence at the device is thus
+  - Pass through to guest A
+  - Guest A exits
+  - User resets all devices on bus (including this one)
+  - Pass through to guest B
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/quirks.c?id=v5.14#n5212
+
+> > > Excerpt from lspci -nn showing crypto function on same device as USB and
+> > > sound card (which are already listed in quirks.c):
+> > > 
+> > > 0e:00.1 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD]
+> > >   Starship/Matisse Cryptographic Coprocessor PSPCPP [1022:1486]
+> > > 0e:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD]
+> > >   Matisse USB 3.0 Host Controller [1022:149c]
+> > > 0e:00.4 Audio device [0403]: Advanced Micro Devices, Inc. [AMD]
+> > >   Starship/Matisse HD Audio Controller [1022:1487]
+> > > 
+> > > Fix tested successfully on an Asus ROG STRIX X570-E GAMING motherboard
+> > > with AMD Ryzen 9 3900X.
+> > > 
+> > > Signed-off-by: David Jaundrew <david@jaundrew.com>  
 > > 
-> > Resuming
-> >  full stop -> does not issue DMAs -> full operation
-> > Suspend
-> >  full operation -> does not issue DMAs -> full stop
+> > The patch below still doesn't apply.  Looks like maybe it was pasted
+> > into the email and the tabs got changed to space?  No worries, I can
+> > apply it manually if appropriate.
 > > 
-> > Further the device has two actions
-> >  - Trigger serializating the device state
-> >  - Trigger de-serializing the device state
-> > 
-> > So, what is the behavior upon each state:
-> > 
-> >  *  000b => Device Stopped, not saving or resuming
-> >      Does not issue DMAs
-> >      Internal state cannot change
-> > 
-> >  *  001b => Device running, which is the default state
-> >      Neither flags
-> > 
-> >  *  010b => Stop the device & save the device state, stop-and-copy state
-> >      Does not issue DMAs
-> >      Internal state cannot change
-> > 
-> >  *  011b => Device running and save the device state, pre-copy state
-> >      Neither flags
-> >      (future, DMA tracking turned on)
-> > 
-> >  *  100b => Device stopped and the device state is resuming
-> >      Does not issue DMAs
-> >      Internal state cannot change
-> 
-> cannot change... other that as loaded via migration region.
-
-Yes
-
-> The expected protocol is that if the user write to the device_state
-> register returns an errno, the user reevaluates the device_state to
-> determine if the desired transition is unavailable (previous state
-> value is returned) or generated a fault (error state value
-> returned).
-
-Hmm, interesting, mlx5 should be doing this as well. Eg resuming with
-corrupt state should fail and cannot be recovered except via reset.
-
-> The 101b state indicates _RUNNING while _RESUMING, which is simply not
-> a mode that has been spec'd at this time as it would require some
-> mechanism for the device to fault in state on demand.
-
-So lets error on these requests since we don't know what state to put
-the device into.
-
-> > The two actions:
-> >  trigger serializing the device state
-> >    Done when asked to go to 010b ?
-> 
-> When the _SAVING bit is set.  The exact mechanics depends on the size
-> and volatility of the device state.  A GPU might begin in pre-copy
-> (011b) to transmit chunks of framebuffer data, recording hashes of
-> blocks read by the user to avoid re-sending them during the
-> stop-and-copy (010b) phase.  
-
-Here I am talking specifically about mlx5 which does not have a state
-capture in pre-copy. So mlx5 should capture state on 010b only, and
-the 011b is a NOP.
-
-> >  trigger de-serializing the device state
-> >    Done when transition from 100b -> 000b ?
-> 
-> 100b -> 000b is not a required transition, generally this would be 100b
-> -> 001b, ie. end state of _RUNNING vs _STOP.
-
-Sorry, I typo'd it, yes to _RUNNING
-
-> I think the requirement is that de-serialization is complete when the
-> _RESUMING bit is cleared.  Whether the driver chooses to de-serialize
-> piece-wise as each block of data is written to the device or in bulk
-> from a buffer is left to the implementation.  In either case, the
-> driver can fail the transition to !_RESUMING if the state is incomplete
-> or otherwise corrupt.  It would again be the driver's discretion if
-> the device enters the error state or remains in _RESUMING.  If the user
-> has no valid state with which to exit the _RESUMING phase, a device
-> reset should return the device to _RUNNING with a default initial state.
-
-That makes sense enough.
-
-> > There is a missing state "Stop Active Transactions" which would be
-> > only "does not issue DMAs". I've seen a proposal to add that.
-> 
-> This would be to get all devices to stop issuing DMA while internal
-> state can be modified to avoid the synchronization issue of trying to
-> stop devices concurrently?  
-
-Yes, as above
-
-> For PCI devices we obviously have the bus master bit to manage that,
-> but I could see how a migration extension for such support (perhaps
-> even just wired through to BM for PCI) could be useful.  Thanks,
-
-I'm nervous to override the BM bit for something like this, the BM bit
-isn't a gentle "please coherently stop what you are doing" it is a
-hanbrake the OS pulls to ensure any PCI device becomes quiet.
-
-Thanks,
-Jason
+> > > ---
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index 6d74386eadc2..0d19e7aa219a 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -5208,6 +5208,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+> > >  /*
+> > >   * FLR may cause the following to devices to hang:
+> > >   *
+> > > + * AMD Starship/Matisse Cryptographic Coprocessor PSPCPP 0x1486
+> > >   * AMD Starship/Matisse HD Audio Controller 0x1487
+> > >   * AMD Starship USB 3.0 Host Controller 0x148c
+> > >   * AMD Matisse USB 3.0 Host Controller 0x149c
+> > > @@ -5219,6 +5220,7 @@ static void quirk_no_flr(struct pci_dev *dev)
+> > >  {
+> > >         dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+> > >  }
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1486, quirk_no_flr);
+> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
+> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
+> > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
