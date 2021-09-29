@@ -2,109 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C74B41CA2A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A88941CA57
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:39:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344657AbhI2Qee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 12:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
+        id S1345992AbhI2Qkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 12:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244930AbhI2Qee (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 12:34:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6772613D0;
-        Wed, 29 Sep 2021 16:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632933173;
-        bh=Pu4A65olMNr8uqiYaOhp03+vuksr93kEdd96A8SFaRk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pdk3OySzKuPz8fIbttjoqJAj0rqGKe6CNPZ7UzWkt3bAoZ+68rcATEDR0fYmuZJ+D
-         P7u49ahZAkcmssAVBsS0EXTbdTzP+gKN5vqJqOicK0eQGOWGffBWcNcgOM0FiAnEzi
-         yUslt58mrcB43UBHTYBnnL/8Huk+sGHv7EvoYVIa613YkEFWYVyFwjbGiTAUu0NTWX
-         r3b1A6+AMpRXaJrwhewp0jXiaxMW+UC6VpKWoq7hWlck4FEJhBnKw0Po33Da2sfbWe
-         ztBfDByMyzMx1tuc1TZPKFoO1ZKVyniUrl8vYAEwtL3xzSRzfQZ0til87n4spz1SRN
-         Kz1+SD3jfVCng==
-Date:   Wed, 29 Sep 2021 11:32:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
-Message-ID: <20210929163250.GA773921@bhelgaas>
+        id S1345899AbhI2Qkg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 12:40:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE03B61411;
+        Wed, 29 Sep 2021 16:38:55 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mVcbd-00DmcL-LG; Wed, 29 Sep 2021 17:38:53 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, kernel-team@android.com
+Subject: [PATCH v5 00/14] PCI: Add support for Apple M1
+Date:   Wed, 29 Sep 2021 17:38:33 +0100
+Message-Id: <20210929163847.2807812-1-maz@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210929145509.GA20495@lpieralisi>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev, marcan@marcan.st, Robin.Murphy@arm.com, joey.gouly@arm.com, joro@8bytes.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 03:55:09PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Sep 22, 2021 at 01:13:11AM +0200, Marek Vasut wrote:
-> > On 9/21/21 6:08 PM, Geert Uytterhoeven wrote:
-> > 
-> > [...]
-> > 
-> > > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > > index 326f7d13024f..ee6f5e525d3a 100644
-> > > > --- a/drivers/pci/controller/Kconfig
-> > > > +++ b/drivers/pci/controller/Kconfig
-> > > > @@ -66,6 +66,7 @@ config PCI_RCAR_GEN2
-> > > >   config PCIE_RCAR_HOST
-> > > >          bool "Renesas R-Car PCIe host controller"
-> > > >          depends on ARCH_RENESAS || COMPILE_TEST
-> > > > +       depends on COMMON_CLK
-> > > 
-> > > This part is OK.
-> > 
-> > This part is also identical in the patch from Arnd, so you can just pick
-> > that one as a fix and be done with it:
-> > 
-> > [PATCH] PCI: rcar: add COMMON_CLK dependency
-> > https://patchwork.kernel.org/project/linux-pci/patch/20210920095730.1216692-1-arnd@kernel.org/
-> 
-> It is not strictly identical (Arnd's patch only touches the COMPILE_TEST
-> option).
-> 
-> Bjorn, shall we pick Arnd's patch up then ? We should be fixing this in
-> one of the upcoming -rcs since we introduced it in the last merge
-> window.
+This is v5 of the series adding PCIe support for the M1 SoC. Not a lot
+has changed this time around, and most of what I was saying in [1] is
+still valid.
 
-IIUC, a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort
-hook") appeared in v5.15-rc1 and added a use of __clk_is_enabled(),
-which is only available when COMMON_CLK=y.
+Very little has changed code wise (a couple of bug fixes). The series
+however now carries a bunch of DT updates so that people can actually
+make use of PCIe on an M1 box (OK, not quite, you will still need [2],
+or whatever version replaces it). The corresponding bindings are
+either already merged, or queued for 5.16 (this is the case for the
+PCI binding).
 
-PCIE_RCAR_HOST depends on ARCH_RENESAS || COMPILE_TEST.  ARCH_RENESAS
-is an ARM64 platform, so when COMPILE_TEST is not set, I think we get
-COMMON_CLK=y via this:
+It all should be in a state that makes it mergeable (yeah, I said that
+last time... I mean it this time! ;-).
 
-  config ARM64
-    select COMMON_CLK
+As always, comments welcome.
 
-But when ARCH_RENESAS is not set and COMPILE_TEST=y, there's nothing
-that enforces the dependency on COMMON_CLK.  Personally I like the
-first hunk of Marek's patch at [1] because the dependency on
-COMMON_CLK is explicit:
+	M.
 
-  config PCIE_RCAR_HOST
-    depends on ARCH_RENESAS || COMPILE_TEST
-    depends on COMMON_CLK
+[1] https://lore.kernel.org/r/20210922205458.358517-1-maz@kernel.org
+[2] https://lore.kernel.org/r/20210921222956.40719-2-joey.gouly@arm.com
 
-Whereas Arnd's patch [2] implicitly depends on the fact that the platform
-selects COMMON_CLK:
+Alyssa Rosenzweig (2):
+  PCI: apple: Add initial hardware bring-up
+  PCI: apple: Set up reference clocks when probing
 
-  config PCIE_RCAR_HOST
-    depends on ARCH_RENESAS || (COMMON_CLK && COMPILE_TEST)
+Marc Zyngier (10):
+  irqdomain: Make of_phandle_args_to_fwspec generally available
+  of/irq: Allow matching of an interrupt-map local to an interrupt
+    controller
+  PCI: of: Allow matching of an interrupt-map local to a PCI device
+  PCI: apple: Add INTx and per-port interrupt support
+  PCI: apple: Implement MSI support
+  iommu/dart: Exclude MSI doorbell from PCIe device IOVA range
+  PCI: apple: Configure RID to SID mapper on device addition
+  arm64: dts: apple: t8103: Add PCIe DARTs
+  arm64: dts: apple: t8103: Add root port interrupt routing
+  arm64: dts: apple: j274: Expose PCI node for the Ethernet MAC address
 
-But either is fine and I agree we should fix it soonish.
+Mark Kettenis (2):
+  arm64: apple: Add pinctrl nodes
+  arm64: apple: Add PCIe node
 
-Bjorn
+ MAINTAINERS                              |   7 +
+ arch/arm64/boot/dts/apple/t8103-j274.dts |  23 +
+ arch/arm64/boot/dts/apple/t8103.dtsi     | 203 ++++++
+ drivers/iommu/apple-dart.c               |  27 +
+ drivers/of/irq.c                         |  17 +-
+ drivers/pci/controller/Kconfig           |  17 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-apple.c      | 822 +++++++++++++++++++++++
+ drivers/pci/of.c                         |  10 +-
+ include/linux/irqdomain.h                |   4 +
+ kernel/irq/irqdomain.c                   |   6 +-
+ 11 files changed, 1127 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-apple.c
 
-[1] https://lore.kernel.org/all/20210907144512.5238-1-marek.vasut@gmail.com/
-[2] https://lore.kernel.org/all/20210920095730.1216692-1-arnd@kernel.org/
+-- 
+2.30.2
+
