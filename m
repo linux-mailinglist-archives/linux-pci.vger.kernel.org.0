@@ -2,45 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1790441C103
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 10:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1EC341C102
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 10:53:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244892AbhI2IzE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S244914AbhI2IzE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 29 Sep 2021 04:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244875AbhI2IzD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 04:55:03 -0400
+        with ESMTP id S244827AbhI2IzC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 04:55:02 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5A4C06174E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EE7C06161C
         for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 01:53:22 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL3-0001ih-UZ; Wed, 29 Sep 2021 10:53:18 +0200
+        id 1mVVL4-0001ii-CE; Wed, 29 Sep 2021 10:53:18 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL1-0004fg-MH; Wed, 29 Sep 2021 10:53:15 +0200
+        id 1mVVL1-0004fj-Sj; Wed, 29 Sep 2021 10:53:15 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL1-0000QD-LU; Wed, 29 Sep 2021 10:53:15 +0200
+        id 1mVVL1-0000QL-Rd; Wed, 29 Sep 2021 10:53:15 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v5 02/11] PCI: Drop useless check from pci_device_probe()
-Date:   Wed, 29 Sep 2021 10:52:57 +0200
-Message-Id: <20210929085306.2203850-3-u.kleine-koenig@pengutronix.de>
+        kernel@pengutronix.de, Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v5 03/11] xen/pci: Drop some checks that are always true
+Date:   Wed, 29 Sep 2021 10:52:58 +0200
+Message-Id: <20210929085306.2203850-4-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
 References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=DxD2f+xPNtLjHiGujpupqv/4IuiZwGoM96HIM+GP4wQ=; m=brxsOJEmtbcToFhdbpQjJIJkUf3JUm4RRkRbChGXUkY=; p=mHFEUbsSOr1Fwea+VtNTtvy2knf9bNjYTh9sfkoxZLA=; g=4751c79fba41d79e9c1c5a83a7197e81fb2ff22e
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUKUkACgkQwfwUeK3K7Am5AQf+KM0 Mfym0HRr+uDi4qXs58ElPSlFPxpDzejCTsg5bHGW45oI4R4t+fZdr5JNt40YoknJBsVELmQg9iOmk yzepsZ4k9oGoMDhYYqSln9hypxqAo3iAKiNm7LppO/d5P7k/grypNXpSmyQkkViqq1/UOzBiV52kX GUb00DAhSuBQKlX5JQktsc5aFH9j6/P9oDQaqLhvufZNz5A5obtLyWf4q1VLTkaqJKgOJElhgiY2V flM7uUg4swES7t6s/kOmlf/x1cPvMBWy+kKdskcXgUizAzT9DfzKzfkUL39blSzyN3lndhhT1dLUA bIRaKcAC5Iru2L+a7ItIqdd9s1h+1lA==
+X-Patch-Hashes: v=1; h=sha256; i=7QOFRnoxyPrPqaGt2Yf8oJvx3xwgCvlMdm130sPrxr8=; m=Ixh7t2kv5MnS1JaJxFtVrqNhjBtz3xQyoCGo2anqbI0=; p=dOfuuSLv1l/M9DCuxyIBdCuX9kCH+yUzno229EZfUDs=; g=9e481f95a51887868b05f8a86c3e5a9f8aff47c6
+X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUKUwACgkQwfwUeK3K7AlyQAf9Gjp TCADTkJE36ON9dioloBuG0iVyAvFHq07aALxCH74D0NK9kgDK47u4JVyMBhswUfFEriH9thGirCW/ Sx6wuhA9gbPQtOzLKitgpb6Kq2+LIr7e28Ht5lwu9rQKdL7iybpKHPL0Ydr65XKY87CyOIIEfyUXm Byf0jInzlMfR1aCRec4WfMUdCEAsfUldp4k6pqUVfe/LemxULqopkQSf1oQawlTaPEKn/UEo/P/Qd 51uPnQ7NnWP80mPyCMNFDBq5HS/AyHyimwYuRfZWdSKDahmfequCzVKFmwqzGgzMVNUdqUsU7AooA 9gZhAzE3K9TTpQQYi+AgIZpi5f2MsiQ==
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -50,28 +54,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the device core calls the probe callback for a device the device is
-never bound and so !pci_dev->driver is always true.
+pcifront_common_process() has a check at the start that exits early if
+pcidev or pdidev->driver are NULL. So simplify the following code by not
+checking these two again.
 
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pci/pci-driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/xen-pcifront.c | 57 +++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 8fb6418c93e8..50449ec622a3 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -397,7 +397,7 @@ static int __pci_device_probe(struct pci_driver *drv, struct pci_dev *pci_dev)
- 	const struct pci_device_id *id;
- 	int error = 0;
+diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
+index 2156c632524d..f2d7f70a7a10 100644
+--- a/drivers/pci/xen-pcifront.c
++++ b/drivers/pci/xen-pcifront.c
+@@ -594,7 +594,6 @@ static pci_ers_result_t pcifront_common_process(int cmd,
+ 	int devfn = pdev->sh_info->aer_op.devfn;
+ 	int domain = pdev->sh_info->aer_op.domain;
+ 	struct pci_dev *pcidev;
+-	int flag = 0;
  
--	if (!pci_dev->driver && drv->probe) {
-+	if (drv->probe) {
- 		error = -ENODEV;
+ 	dev_dbg(&pdev->xdev->dev,
+ 		"pcifront AER process: cmd %x (bus:%x, devfn%x)",
+@@ -609,40 +608,34 @@ static pci_ers_result_t pcifront_common_process(int cmd,
+ 	}
+ 	pdrv = pcidev->driver;
  
- 		id = pci_match_device(drv, pci_dev);
+-	if (pdrv) {
+-		if (pdrv->err_handler && pdrv->err_handler->error_detected) {
+-			pci_dbg(pcidev, "trying to call AER service\n");
+-			if (pcidev) {
+-				flag = 1;
+-				switch (cmd) {
+-				case XEN_PCI_OP_aer_detected:
+-					result = pdrv->err_handler->
+-						 error_detected(pcidev, state);
+-					break;
+-				case XEN_PCI_OP_aer_mmio:
+-					result = pdrv->err_handler->
+-						 mmio_enabled(pcidev);
+-					break;
+-				case XEN_PCI_OP_aer_slotreset:
+-					result = pdrv->err_handler->
+-						 slot_reset(pcidev);
+-					break;
+-				case XEN_PCI_OP_aer_resume:
+-					pdrv->err_handler->resume(pcidev);
+-					break;
+-				default:
+-					dev_err(&pdev->xdev->dev,
+-						"bad request in aer recovery "
+-						"operation!\n");
+-
+-				}
+-			}
++	if (pdrv->err_handler && pdrv->err_handler->error_detected) {
++		pci_dbg(pcidev, "trying to call AER service\n");
++		switch (cmd) {
++		case XEN_PCI_OP_aer_detected:
++			result = pdrv->err_handler->
++				 error_detected(pcidev, state);
++			break;
++		case XEN_PCI_OP_aer_mmio:
++			result = pdrv->err_handler->
++				 mmio_enabled(pcidev);
++			break;
++		case XEN_PCI_OP_aer_slotreset:
++			result = pdrv->err_handler->
++				 slot_reset(pcidev);
++			break;
++		case XEN_PCI_OP_aer_resume:
++			pdrv->err_handler->resume(pcidev);
++			break;
++		default:
++			dev_err(&pdev->xdev->dev,
++				"bad request in aer recovery "
++				"operation!\n");
+ 		}
++
++		return result;
+ 	}
+-	if (!flag)
+-		result = PCI_ERS_RESULT_NONE;
+ 
+-	return result;
++	return PCI_ERS_RESULT_NONE;
+ }
+ 
+ 
 -- 
 2.30.2
 
