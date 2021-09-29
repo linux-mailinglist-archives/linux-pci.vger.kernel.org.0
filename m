@@ -2,161 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1237141C28C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 12:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDF241C2EC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 12:44:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245452AbhI2KTQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 06:19:16 -0400
-Received: from mail-mw2nam12on2102.outbound.protection.outlook.com ([40.107.244.102]:53985
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        id S244808AbhI2KqD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 06:46:03 -0400
+Received: from mail-dm6nam11on2041.outbound.protection.outlook.com ([40.107.223.41]:36609
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S245493AbhI2KS4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 06:18:56 -0400
+        id S244849AbhI2KqB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 06:46:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JHy/HzQLyC5taefBYnRzN5CDLHLEC4wub233PE0dS1csKDdTD4m2aL1yKAk3g0zuyMANYBlldPH62u8gtTUaYskZurrFwcaxXgSjX24iCgJA9/aS863o72TOaVZnoLx9qCKZbzfftBtKqKPv3daDituA18wSfV+hfRIGcjds5r+LzLt43MrI1Xo93gX1YnanWn0SA/MW/qdjm5HiLWdIBk9zvY5fmWFOSlQwisy7tDBawdVGiaY8mz47Us4q6x114ekWSzG9mMKt1usAhJi1n5uf/dKLYHTW7WDi9NSq0QWizeJsNfzEmcsWHs6o9rneV2E0NUI45TpMVgRtJIRw3w==
+ b=dqzEisxO6uYWiptTNUMz7gmDR1Rc4eEh/c34byGR56JxAhcUCplYpNPOWLwnAIQCx6rOGpY+FZwQVsmW99W9ISyvJwRMpCCVhUb7eoeb2zy5y1xnwb+SjnRG5OQB+iU+Hic9VYQurFreRsmR81aGeYLpE0W9OBG9Mrb9ffuwx6VxsSW3M65SeimS5MziAYiy08/JpbYK/FvqlEEOAkO1kFXgE7umnZEhEhYoYGehfAy2YiPs34HsL89HTemrtEt70+XOl/BazR7kHLOV8hlbR2rDX3q1pYowDAC7HfkoJ4KRDutRHcGwKwl6m1heipbDA025SXfdfb+gncL5e8M/7Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jyqPAoKXGoqzpWfcWDQA0QwX4xHbYvKVNyPoyY7h72Q=;
- b=kWg++jg03mMjgRVM+vPlBgD4sjtUMfAwIUJq0JiHvTjQrZssLStA7SHHtCEnWcbyLhIv/6YTMK78xFHR2S/a+GccKEzislngQCzRPuH5AzfMUiB6YC9Aa4gx1ptEWymt18cHCpkapUGDQ0GfjE/RK97znUrmQm2JbPkjl3tNnrjL939lGiaN8efR5SxvEy3YQxzMditmCZGVYm3ROWiTtkPzamLWHGISGtSEG85etwxDAkD3MbhUzTMlNzVrs5/SLBdCZfoE6mpc3nf+n4A2Q2bUJAUd870q/33NKzocn0BVgVg1xpERqj1Ti/NnZNvMsbRnqezmmgr8jD0U5UGnGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=rl8gDfxZd2jhU04r3sMO1Dg1CuWd6z9hLshx3hPVyts=;
+ b=URyHMAoBkP9gLTfy4cu5CcMuWIQCXgWDdPObqDgfs5r1+/MxfrT8N1qnuLcaWnWPmQcG5AG4JH/4Pt84jUADM+0go0b/r/wc9VqJxnxU3Pyj96t/YXxm9tLQBD1QFFmLfsOLNBW1us+6VDhSLV5i7aXGYRi6jZ55Niv/ChUlkW7oh2GiIYoweclNuJanE3IZ/m0GZBCLXWSy5bBnaCBqEex/HcIhqq+zYw2SPbhOaK1Op4FDBqCZ/LDpN+0sz456xPjRCHVgZY65MZ0hfUtqgj2VaFTu5E5pxLSEz7oXmzSJzoXWhWrfYT8XgcBZswNP76+cFaVLRbfWnO+t5FNI4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jyqPAoKXGoqzpWfcWDQA0QwX4xHbYvKVNyPoyY7h72Q=;
- b=AseZ8Y/f5Q3D2JFsjs3t/qCuRdo5v/ugyaDugSgCGc+6LamTeHB8Cn22eypA3E9Ofe+Pqyu3UNuavFNsLvCXDoA8QB7W98ExunO4ljSq40qYYkVJNgfREtVLQC0Rophu80VzjYLpUjinQQahAkGuDNdt7lg2CsfClvVbR3ivysU=
-Authentication-Results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none
- header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by PH0PR13MB4794.namprd13.prod.outlook.com (2603:10b6:510:96::17) with
+ bh=rl8gDfxZd2jhU04r3sMO1Dg1CuWd6z9hLshx3hPVyts=;
+ b=jV6pRZvhuzRk0AyHX2sEFqWm2kpcq8r4iTvsk+epT/Xq7C3hTM1F9XR5XzEanuFQhRFRJf031HToz3S5hoX9oLycfSGQErOa5ETJMQmoErR60Pfuen3kCW+NAExpEIrY3cYPosPAz6Sh4vzyiqlSGtmAcJRyKsj5MxtBKeYY6alYD1VTI4BwG2XTOIsAEy32yQ2w3RNL/9AzOFBw29YEG/1/aYb4xET2ShFO6wLF3mBPhFQZfU5gFtL+34IxBOoat78tHhkjQsyLza3c23t/GNMecZMauRJZxKQkgPAHKjd2MKxeQ5snVCMIVIsyIm4mPdrL0yIDvxar35lhed10FA==
+Received: from MW4P222CA0018.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::23)
+ by BN6PR12MB1122.namprd12.prod.outlook.com (2603:10b6:404:20::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.8; Wed, 29 Sep
- 2021 10:17:13 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::e1d9:64d0:cb4f:3e90]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::e1d9:64d0:cb4f:3e90%9]) with mapi id 15.20.4566.014; Wed, 29 Sep 2021
- 10:17:13 +0000
-Date:   Wed, 29 Sep 2021 12:17:03 +0200
-From:   Simon Horman <simon.horman@corigine.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        linux-pci@vger.kernel.org, kernel@pengutronix.de,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.13; Wed, 29 Sep
+ 2021 10:44:19 +0000
+Received: from CO1NAM11FT011.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:114:cafe::41) by MW4P222CA0018.outlook.office365.com
+ (2603:10b6:303:114::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15 via Frontend
+ Transport; Wed, 29 Sep 2021 10:44:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT011.mail.protection.outlook.com (10.13.175.186) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4566.14 via Frontend Transport; Wed, 29 Sep 2021 10:44:18 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 29 Sep
+ 2021 10:44:17 +0000
+Received: from [172.27.14.186] (172.20.187.6) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 29 Sep
+ 2021 10:44:13 +0000
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
-        Michael Buesch <m@bues.ch>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com
-Subject: Re: [PATCH v5 07/11] PCI: Replace pci_dev::driver usage that gets
- the driver name
-Message-ID: <20210929101702.GD13506@corigine.com>
-References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
- <20210929085306.2203850-8-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210929085306.2203850-8-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: AM0PR08CA0026.eurprd08.prod.outlook.com
- (2603:10a6:208:d2::39) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        Kirti Wankhede <kwankhede@nvidia.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+References: <cover.1632305919.git.leonro@nvidia.com>
+ <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
+ <20210927164648.1e2d49ac.alex.williamson@redhat.com>
+ <20210927231239.GE3544071@ziepe.ca>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+Message-ID: <25c97be6-eb4a-fdc8-3ac1-5628073f0214@nvidia.com>
+Date:   Wed, 29 Sep 2021 13:44:10 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: from corigine.com (2001:982:7ed1:403:201:8eff:fe22:8fea) by AM0PR08CA0026.eurprd08.prod.outlook.com (2603:10a6:208:d2::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend Transport; Wed, 29 Sep 2021 10:17:08 +0000
+In-Reply-To: <20210927231239.GE3544071@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ae53e499-2baf-4888-966a-08d983324dec
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4794:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PH0PR13MB4794052F35552891F4D9EA28E8A99@PH0PR13MB4794.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:751;
+X-MS-Office365-Filtering-Correlation-Id: f712be06-5225-4198-cbc6-08d9833616f1
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1122:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1122E8C59F5F942CA448AE17DEA99@BN6PR12MB1122.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2woKV4HKG64SPX5X09IWvfN9MJjcMKLiccyCSNNbpi5SXBR80DUgmbO3bcGUkNgQsWYyUK7aFq4caJKLKe+uohhUdK+4SsDPipTF1dG9UlV5xiqAHuC2s51WZiYCjvl053pSjl2OcoA66YdXS5gJStSr+TGo/unGtQJ5gOAWxp6PwBLd1IuLW12QwYEbzsUitqUYISrWOdhps+dqK5DqpiqJWQ8+VkRc9L+7p3TMJ2V6hB+tsVSo3zJrJ2/abO4nKuOHi1rX6c0yrn2u7vB+MwRFCWLnnkRR5Kde7tfGCWTdgYyKX+kDsHB3tSsRnFHzbGg7n6j50mDYK92eQsrXFASzJoD7L1QyLpRG/5kIBbqpnBTkOhPPrsBW3tReAgbWunAq8NqJzv8fSLFjjWA7jZr29qRGaI7anpj81ZDZmsiw4yuqJsAdbHdjxHCNh9NPV1wiedg2hmjtIY/D9oygroAgrH7a5ssAdlE5QVK4QBMc57NKKpzA066Hrl2zLbZkCUY86X8Vae7o4bU19hQ6TOWSdWwy1v7CIykDA4U5li8kbzNxKwb9FMgLv3CnyZXqGGoZmjwr41SMu+2YG11sC+dxQHoPjbHbIA4ZCyrMyv0R+DsYJcFsLn4N4c7AJs7Em1/mLdZZ0KAMVIa4PozoRg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(396003)(39830400003)(366004)(376002)(33656002)(186003)(36756003)(6916009)(44832011)(508600001)(86362001)(38100700002)(5660300002)(8886007)(55016002)(8936002)(52116002)(316002)(83380400001)(7696005)(54906003)(8676002)(2616005)(66556008)(4326008)(6666004)(66476007)(2906002)(66946007)(107886003)(4744005)(1076003)(7416002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Yi9ObWFiUzV6bDdYOFpDMEFXc3Bncm53U3F0M2JWYnNrQWFQZGpXWkhkbkxo?=
- =?utf-8?B?Y3JsUUpDeGczcHQxMGFwSXloMUtOWGRMQzhUd1p2WTVqK1NucmVRblFvSGVx?=
- =?utf-8?B?cmN2RnVJaGVqWjVFYmhnT1FROHUvcmg0OW5OZUFzZ1JRVjlvTGRkOTlCZzUw?=
- =?utf-8?B?Y3VoMDJSQk1pSngwekQvYTE2TlJpclRwWXBoSmFqbXllRzNDS0xHK2VTMEhM?=
- =?utf-8?B?QkZzMTQrV2tJQm1SWjBOc0FKYm5VTW15S1UwcVZyRTBrT0lzS3h0ejE0eDhY?=
- =?utf-8?B?ZndSb3pEMndUL21NSEt4cmg5V1N4WlhzVHc0RlM0clNHRFBiam1GQTREZkRt?=
- =?utf-8?B?R3NmVWtGaXgrTmZ3T2RLbGpobU9uVHhPT0ozY0xIR2VKN3NzWUpSbFJONjhK?=
- =?utf-8?B?V0dIR21lWkZZemJ4RlE3OEY0NkJGbi94L1ZKdVZ2MUNxUm5vZGRZelVVMHdB?=
- =?utf-8?B?RlNkeWZCVVNKMTZ2QTlYOTA5bE9zcVNYcmRIM3hkd00vTWRrWHZJc1QxMlRX?=
- =?utf-8?B?YTVKMmtIUzBnTDl3NDVSVDdGNW15eWNENEVGMWlnNlU4cVd1aGtDT0lLK1l2?=
- =?utf-8?B?ei9oRHkwWVFwYWYxbUZGN2VoZERDMk5zWTZsOXRSTUQrY1ZMeFRqamNWS2ZB?=
- =?utf-8?B?c09nc2hnYjdSbWI5NUlVWUlJK2czd1BncjFibEliOVhuNXRWS3FzMURPaW5s?=
- =?utf-8?B?eFgzZXdTdm9DMWc4T2phaHQyMVVVN3VHaFZVNjZHZ0p2bjhwakZSWHVNRkVP?=
- =?utf-8?B?UlVHT29SZHNPa3hPVFQrRjZzVXY2RXhncE1LSXBqOE9xUWROZnRBQndjMWor?=
- =?utf-8?B?MVB0UVZqN1BTZjZTVG1LYXVMVGRRc3QzVmdsQ1hFZFAwWjR0NFFMNGlBRWE4?=
- =?utf-8?B?SXF1eVNCem91WGpKTExHSlQyREQzRnJjcmJaYnNoOVkrL2d2ZDVYdjJ6M25w?=
- =?utf-8?B?ODBTbTNZZzRsbVZyTlY3NUl4dklHeGhMK1cwWURzQmMxbXprd29EaEx5TGRP?=
- =?utf-8?B?TWlZM2F3NGd6L2ZHSUhkdFlwQktYVk1NeThRM2h2OVdKc3Z3SFlOQ0d2d1Fk?=
- =?utf-8?B?TzBhaldlbVp6TlVSNzJwaDhZSjZXUXpPL2xneG1GcHczRXM4WXJZM08zZHBa?=
- =?utf-8?B?NDdsb3B6ekxxc0ZTZ1ZpN21URk04NnpVTEpPVVBocmtQUzM2a1VHS3cwZURX?=
- =?utf-8?B?MGVFdFg3M0JJR2prcFprMVVqUk1WQTE5OEYwTjdiZlNLZGZkaDQ5THdXMmc5?=
- =?utf-8?B?TW5ZSXpOK2doV2xSZVkrS2c3bmdrSndUT09aMWpUYWErZno1S0w5RHZ2ZWNN?=
- =?utf-8?B?NmQzbThxYXlKOE15aGt5b0pyVGExdEFpdU8vYy9oazBRTTZzdllTUUdsSDJu?=
- =?utf-8?B?OVZBN0t2Mkg0eC9hd0hsdFA3cUdvSUxCVXVlWmx4ZDN6dkRtNWpET2ltaXJI?=
- =?utf-8?B?bldpbVBFRC9kNmloOVlGVmMxQmF0MUFneFFzZXpZWXpzZndoNm0vZTRESkMx?=
- =?utf-8?B?dUZlRzQxZjFFQm9Xcy8vQ3ZzZEFSQzJtNVY5MjF5WUhNOVRlR3MyMng4MHI5?=
- =?utf-8?B?VUtRTFVpQUtHaUY5L2ZZMml5aFM4c292NjVsc2JsMitsZlk0bDZZejF4SDlU?=
- =?utf-8?B?WFkySkJKUjJrbnpsR2RhdFgrM1JQOTR0aDBNT3VZbFkzY1hxT0dOVmh4QUpD?=
- =?utf-8?B?Zy8yRkZLYjEvREJjS3dZWm54TDVmZktCR2ZkMWR6L1lWQk5LcUltdG5wT3g2?=
- =?utf-8?B?UE9Bamhha1dUTFg5bDBGakVWbGI5T3A4M2lHMnYwLzNPM2pxOU9ZRVc5OFpN?=
- =?utf-8?B?eVRRR2xMaHFtcXBLL0c3ZFgwaTJRb3RHTVNwc0o0d2h6RGtQdk5LK2FGbFYz?=
- =?utf-8?Q?H62UPyy2H8Shc?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae53e499-2baf-4888-966a-08d983324dec
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 10:17:13.1546
+X-Microsoft-Antispam-Message-Info: fU4KJqFLGoFWFBAM153mthjjlJlPKhtF9tvftCUQyUx1BE1RIi8tBummXWia/oix0yoIhlZcslS4TP6+THv72D0LlpIaxmtbdnK+0rG17SmYs04YtFFZEZomf7ZZxp+deyBAQK3iziOLJ2JvO7EYvofmpYJToagvgMp6YZZGUrEVVIuSUH0/PLL/Hb9wbPLBV0IHn0KvRkMN8/vVCISFn3EftRtAv4h1pkNIImLxVjnYRmhkbQVO4PurGg9Q3/OrrOLlXPEqSbM/OBge5vZ8JCZ1i7srmlyz0w1MSH2Tusp4FJ9DgUlKmQJZ3cKt32+2J3UUe2YMaYAXpmKSeOhiPeXD6EOL/21D+LYZJy3dEaD6N+M/GvQ/A6SZre01G7D9kGTAgpVZ3psUWNhI9S+OP7oWM+MiY3SmE5t+onLGNqwVEkb0fZ5iozvwu2Foc1rC+Nb8Q54fCZDmNUqUGxAyeaoNK7aPlXKmnOmU8PT5674rFOT5FdS5M3L4sE9sFUykH+AldItM6LdNT9kdDsT2jAXyM8f1RBEtOo8sAiyRUIRf8oRxeqzNFkyxtM0RmAZZUGrczNoMpSAi6QeBLWAhXj8Qagua9Fzq8IOIkWMXZ13J1tmF7vkSXVZBAoG9siqWOAluMg+Xa1JVLUii0yV5v8f8nYD2lgw5Kr0CRLmiHfVrpLyvS+CSSpeV5avBgzlLPpP+TKYxgVJ5rjsFuraFiRq0BzkBf/D/xdlWW9WRKK8=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(26005)(110136005)(54906003)(31696002)(53546011)(82310400003)(47076005)(508600001)(16576012)(316002)(5660300002)(31686004)(2906002)(336012)(36756003)(7416002)(356005)(186003)(7636003)(4326008)(8936002)(16526019)(8676002)(70206006)(2616005)(70586007)(83380400001)(36860700001)(426003)(86362001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 10:44:18.5015
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 83M4CGyBYqSrVCFUH5E4wuUsm79KJB3+U8Y+LE+7kTxGcmB6HjBddsjB4+LvLnNP36y2wZZYatZg89+LHLjQkk+cPcB2ykuOEbbZDTiAbHo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB4794
+X-MS-Exchange-CrossTenant-Network-Message-Id: f712be06-5225-4198-cbc6-08d9833616f1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT011.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1122
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 10:53:02AM +0200, Uwe Kleine-König wrote:
-> struct pci_dev::driver holds (apart from a constant offset) the same
-> data as struct pci_dev::dev->driver. With the goal to remove struct
-> pci_dev::driver to get rid of data duplication replace getting the
-> driver name by dev_driver_string() which implicitly makes use of struct
-> pci_dev::dev->driver.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/crypto/hisilicon/qm.c                        | 2 +-
->  drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 2 +-
->  drivers/net/ethernet/marvell/prestera/prestera_pci.c | 2 +-
->  drivers/net/ethernet/mellanox/mlxsw/pci.c            | 2 +-
->  drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 3 ++-
->  5 files changed, 6 insertions(+), 5 deletions(-)
 
-Thanks Uwe.
+On 9/28/2021 2:12 AM, Jason Gunthorpe wrote:
+> On Mon, Sep 27, 2021 at 04:46:48PM -0600, Alex Williamson wrote:
+>>> +	enum { MAX_STATE = VFIO_DEVICE_STATE_RESUMING };
+>>> +	static const u8 vfio_from_state_table[MAX_STATE + 1][MAX_STATE + 1] = {
+>>> +		[VFIO_DEVICE_STATE_STOP] = {
+>>> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
+>>> +			[VFIO_DEVICE_STATE_RESUMING] = 1,
+>>> +		},
+>> Our state transition diagram is pretty weak on reachable transitions
+>> out of the _STOP state, why do we select only these two as valid?
+> I have no particular opinion on specific states here, however adding
+> more states means more stuff for drivers to implement and more risk
+> driver writers will mess up this uAPI.
 
-For NFP:
+_STOP == 000b => Device Stopped, not saving or resuming (from UAPI).
 
-Acked-by: Simon Horman <simon.horman@corigine.com>
+This is the default initial state and not RUNNING.
 
+The user application should move device from STOP => RUNNING or STOP => 
+RESUMING.
+
+Maybe we need to extend the comment in the UAPI file.
+
+>
+> So only on those grounds I'd suggest to keep this to the minimum
+> needed instead of the maximum logically possible..
+>
+> Also, probably the FSM comment from the uapi header file should be
+> moved into a function comment above this function?
+>
+> Jason
