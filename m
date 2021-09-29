@@ -2,45 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EFEA41C104
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 10:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42CEF41C113
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 10:54:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244827AbhI2IzF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 04:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50378 "EHLO
+        id S244911AbhI2I4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 04:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244875AbhI2IzF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 04:55:05 -0400
+        with ESMTP id S244640AbhI2I4I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 04:56:08 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B492C06174E
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 01:53:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68070C06161C
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 01:54:27 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL6-0001nC-Fk; Wed, 29 Sep 2021 10:53:20 +0200
+        id 1mVVLB-0001rf-2C; Wed, 29 Sep 2021 10:53:25 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL5-0004gh-Su; Wed, 29 Sep 2021 10:53:19 +0200
+        id 1mVVLA-0004ip-CK; Wed, 29 Sep 2021 10:53:24 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1mVVL2-0000Qw-R7; Wed, 29 Sep 2021 10:53:16 +0200
+        id 1mVVL3-0000Qz-47; Wed, 29 Sep 2021 10:53:17 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Michael Buesch <m@bues.ch>
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
-        kernel@pengutronix.de, linux-wireless@vger.kernel.org
-Subject: [PATCH v5 06/11] ssb: Simplify determination of driver name
-Date:   Wed, 29 Sep 2021 10:53:01 +0200
-Message-Id: <20210929085306.2203850-7-u.kleine-koenig@pengutronix.de>
+        kernel@pengutronix.de, Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vadym Kochan <vkochan@marvell.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Michael Buesch <m@bues.ch>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Alexander Duyck <alexanderduyck@fb.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
+        netdev@vger.kernel.org, oss-drivers@corigine.com
+Subject: [PATCH v5 07/11] PCI: Replace pci_dev::driver usage that gets the driver name
+Date:   Wed, 29 Sep 2021 10:53:02 +0200
+Message-Id: <20210929085306.2203850-8-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
 References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Patch-Hashes: v=1; h=sha256; i=98LA6DtO6x3YHoo9xrdF6tAQFUIynO6p1dMjF9yjRwA=; m=mHJAli6xdY7uFbp6iELfW4sNedbhs2KUAXIov4fr+Ac=; p=Pkc23pm1s8AeZXLg9vN/Ugj7OZ/vul9MFPqunUCTCFQ=; g=a63fc551b59edb3ff3251a4c4f7afaada4cebafa
-X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUKVYACgkQwfwUeK3K7Am8SwgAnFm 8idVPWDFDmSLPZApFB/vIZzKwC+hgEIT4TxV5iSWIQ4CvQJfJ91xoygxlYqpuCc/KEzd4TDGkI2jw Y3WpkA4JNC8weZTJxkEdP3SdUugm7HziSF66CQXRyx2hwImI5O4vAqS7mZyMkBMCqkN7XWKKxtB4S ctbBsceZsBO1d1ra/fCU8+qVwLg3FAEbr2B+dV1v/S++1CrZiVFRaC5ozeGBVV+sRF0o152LXynUs CmEF/dU3ivEvjreraxMsC5h9SVt+90fJeZkrDwB1nuAP8Yfnk+QVWEdE7Q1vM0QcKSn0m3jxlwsoC XoALB+6CUXbDlTxH2VA8LuEtkJTodbg==
+X-Patch-Hashes: v=1; h=sha256; i=x5Y9j5QPtBpKPfcAJK/OT7BRgKvI7pSChd5/rmmq6Xw=; m=uiYraG79NtpzJXVYTkT2krJ2oKsGebV/4PDlvGFyew0=; p=P030KPvGBgn0wACiWmlhwa6Q6u7mafsHSYpCChEQFbg=; g=d855fa8a2569029e17368da8c0bf9fc2e6496586
+X-Patch-Sig: m=pgp; i=u.kleine-koenig@pengutronix.de; s=0x0D2511F322BFAB1C1580266BE2DCDD9132669BD6; b=iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFUKVkACgkQwfwUeK3K7AnywQf/YyT M2KQv0iVpRpzsG16PpDNiEPC9rdggnY7dQr4kG+ZVuebrIwmozRFQNmzB3qStmdKmTYQNIYAN9aZT N57ua890gfP8RZLIdmzppS+R3scVm4qrAaYlrVQMLOeX1u2eGpoBbCFQhJt59S10BFpDe3yqXTeG7 iZw077F8icBm71e+fBqLbUTd8h46H1Isc4UskBU/VpSKdwyWHMVsmYfUi/f7m69IrYQ1eCV7PlNHH qk3a52EUxda9B6gfEYuy2qbSX57hIL5sXTW4dGuLi0d/xNs9Q/h8x4XpbnUV7b1/8xKnmYiy8qzZq Fx3d9cNhk25gOKOiAcc1UbnVl/xHP7Q==
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
@@ -50,44 +70,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For all drivers that make use of ssb_pcihost_probe() (i.e.
-b43_pci_bridge_driver and b44_pci_driver) the driver name is set.
-As at the time for the function is called __pci_register_driver() already
-assigned drv->driver.name to hold the same value, use
-dev_driver_string() with the same result.
-
-This has the upside of not requiring the driver member of struct pci_dev
-which is about to be removed and being simpler.
+struct pci_dev::driver holds (apart from a constant offset) the same
+data as struct pci_dev::dev->driver. With the goal to remove struct
+pci_dev::driver to get rid of data duplication replace getting the
+driver name by dev_driver_string() which implicitly makes use of struct
+pci_dev::dev->driver.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/ssb/pcihost_wrapper.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/crypto/hisilicon/qm.c                        | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 2 +-
+ drivers/net/ethernet/marvell/prestera/prestera_pci.c | 2 +-
+ drivers/net/ethernet/mellanox/mlxsw/pci.c            | 2 +-
+ drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 3 ++-
+ 5 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ssb/pcihost_wrapper.c b/drivers/ssb/pcihost_wrapper.c
-index 410215c16920..dd70fd41c77d 100644
---- a/drivers/ssb/pcihost_wrapper.c
-+++ b/drivers/ssb/pcihost_wrapper.c
-@@ -69,7 +69,6 @@ static int ssb_pcihost_probe(struct pci_dev *dev,
- {
- 	struct ssb_bus *ssb;
- 	int err = -ENOMEM;
--	const char *name;
- 	u32 val;
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index 369562d34d66..8f361e54e524 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -3085,7 +3085,7 @@ static int qm_alloc_uacce(struct hisi_qm *qm)
+ 	};
+ 	int ret;
  
- 	ssb = kzalloc(sizeof(*ssb), GFP_KERNEL);
-@@ -78,10 +77,7 @@ static int ssb_pcihost_probe(struct pci_dev *dev,
- 	err = pci_enable_device(dev);
- 	if (err)
- 		goto err_kfree_ssb;
--	name = dev_name(&dev->dev);
--	if (dev->driver && dev->driver->name)
--		name = dev->driver->name;
--	err = pci_request_regions(dev, name);
-+	err = pci_request_regions(dev, dev_driver_string(&dev->dev));
- 	if (err)
- 		goto err_pci_disable;
- 	pci_set_master(dev);
+-	ret = strscpy(interface.name, pdev->driver->name,
++	ret = strscpy(interface.name, dev_driver_string(&pdev->dev),
+ 		      sizeof(interface.name));
+ 	if (ret < 0)
+ 		return -ENAMETOOLONG;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 7ea511d59e91..f279edfce3f1 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -606,7 +606,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
+ 		return;
+ 	}
+ 
+-	strncpy(drvinfo->driver, h->pdev->driver->name,
++	strncpy(drvinfo->driver, dev_driver_string(&h->pdev->dev),
+ 		sizeof(drvinfo->driver));
+ 	drvinfo->driver[sizeof(drvinfo->driver) - 1] = '\0';
+ 
+diff --git a/drivers/net/ethernet/marvell/prestera/prestera_pci.c b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
+index a250d394da38..a8f007f6dad2 100644
+--- a/drivers/net/ethernet/marvell/prestera/prestera_pci.c
++++ b/drivers/net/ethernet/marvell/prestera/prestera_pci.c
+@@ -720,7 +720,7 @@ static int prestera_fw_load(struct prestera_fw *fw)
+ static int prestera_pci_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *id)
+ {
+-	const char *driver_name = pdev->driver->name;
++	const char *driver_name = dev_driver_string(&pdev->dev);
+ 	struct prestera_fw *fw;
+ 	int err;
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci.c b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+index 13b0259f7ea6..8f306364f7bf 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+@@ -1876,7 +1876,7 @@ static void mlxsw_pci_cmd_fini(struct mlxsw_pci *mlxsw_pci)
+ 
+ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+-	const char *driver_name = pdev->driver->name;
++	const char *driver_name = dev_driver_string(&pdev->dev);
+ 	struct mlxsw_pci *mlxsw_pci;
+ 	int err;
+ 
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c b/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
+index 0685ece1f155..1de076f55740 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c
+@@ -202,7 +202,8 @@ nfp_get_drvinfo(struct nfp_app *app, struct pci_dev *pdev,
+ {
+ 	char nsp_version[ETHTOOL_FWVERS_LEN] = {};
+ 
+-	strlcpy(drvinfo->driver, pdev->driver->name, sizeof(drvinfo->driver));
++	strlcpy(drvinfo->driver, dev_driver_string(&pdev->dev),
++		sizeof(drvinfo->driver));
+ 	nfp_net_get_nspinfo(app, nsp_version);
+ 	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
+ 		 "%s %s %s %s", vnic_version, nsp_version,
 -- 
 2.30.2
 
