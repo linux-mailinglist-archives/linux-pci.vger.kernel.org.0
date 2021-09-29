@@ -2,147 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C5641CF5A
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 00:44:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E72C41CF66
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 00:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347003AbhI2Wp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 18:45:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29313 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346393AbhI2Wp6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 18:45:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632955453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yDnZg0/6giW9XllEqIndueSNzorfdQE2gNriGLCrs+s=;
-        b=PV7kY0JHbqRzJy5V0K5Y6wpr/SmJ8JQ6BKg+AaHZzxnKSNIyerDzyvf4JUWHX0FRRY2C9m
-        XfFMQHEIiz8XOyOpexXqszNUETFKD9z0aktvP0z8HwVHlAW7vYD2Lu+D6vuOsyKlwzgfO/
-        O0vHw6yfCNXELo9Pm5OpytuVaEPzzOE=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-dFHSGzPxMQ6err-4re9tRQ-1; Wed, 29 Sep 2021 18:44:12 -0400
-X-MC-Unique: dFHSGzPxMQ6err-4re9tRQ-1
-Received: by mail-ot1-f71.google.com with SMTP id a19-20020a9d3e13000000b0054d67e67b64so2918346otd.22
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 15:44:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yDnZg0/6giW9XllEqIndueSNzorfdQE2gNriGLCrs+s=;
-        b=WiARVxHD0tztY4Ry6YwGWHOgYZfKJ4FiDgcxqft4pIfpTiceIAqoRTYr7UVZGXW+eE
-         /nfJOzsi6C+NIwEI4oh4ooaZhEijy0LskgzANoAxjQ1PCTII8is0i5NvT8y8kfWWkU4n
-         HcJpW4QyujiUnBsjsC7EFQGVj+gvAcuVlGdOQo8Wp6wyNW4lLtEJLxnqjp7rPTUbgUEx
-         6EE8hsmgCLV64kxH3BWdTIOmewXvwS9C7foHJQPE9Ike863Xluf2jXCflaMNPeJqum2y
-         J1oFVK8AwpnW4AzgeNYY5rb+EL7CubVBP8CnVPiCe8+xEkKbcr09W2MlEzfmXWHC0kMN
-         Vkcg==
-X-Gm-Message-State: AOAM533j1zfTr+TEidAvoRTPJAXT9FKliw9KgN2ASYn6mPOp1AdwvcoA
-        6wFF7FviDziGaL2UJELQ86FefbSka5TEH/Xy2kZvY2Ah6SmIr+RDZ7X8XgsVvJlAMoOJ0Zg+j/4
-        8F9n7J407EQUapBbOKk9t
-X-Received: by 2002:a05:6808:1595:: with SMTP id t21mr78471oiw.98.1632955451621;
-        Wed, 29 Sep 2021 15:44:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyVU6jEU+ZG3AcZVTtnnVZT8dq+yX76s5pQMOm4ir4e1zUDW6chJsiIv463tHWR/ZUtQthMIQ==
-X-Received: by 2002:a05:6808:1595:: with SMTP id t21mr78446oiw.98.1632955451416;
-        Wed, 29 Sep 2021 15:44:11 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id d21sm229884ooh.43.2021.09.29.15.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 15:44:10 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 16:44:09 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Message-ID: <20210929164409.3c33e311.alex.williamson@redhat.com>
-In-Reply-To: <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
-References: <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
-        <20210927164648.1e2d49ac.alex.williamson@redhat.com>
-        <20210927231239.GE3544071@ziepe.ca>
-        <25c97be6-eb4a-fdc8-3ac1-5628073f0214@nvidia.com>
-        <20210929063551.47590fbb.alex.williamson@redhat.com>
-        <1eba059c-4743-4675-9f72-1a26b8f3c0f6@nvidia.com>
-        <20210929075019.48d07deb.alex.williamson@redhat.com>
-        <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
-        <20210929091712.6390141c.alex.williamson@redhat.com>
-        <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
-        <20210929161433.GA1808627@ziepe.ca>
-        <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S1347134AbhI2Wsj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 18:48:39 -0400
+Received: from mail-mw2nam10on2081.outbound.protection.outlook.com ([40.107.94.81]:24570
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1346734AbhI2Wsj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 18:48:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ChD1BCuurnMQ61llboNRMK3lAtyuVwAuq045CJjXZ++N3nAs/XLUdUh0PvN/zwxE60vLo50bEBqEgrDsVIg0dJuA9RxNRaKBRVIz1T+STfhQeI9nrQxUudloyEOztktGpUO71wLqC/OtoTpiKPhXqndOX0azoFOpp8oTjQh/STUcZvBSV3d8LfGk5ZvH9q/sDqyEK388i5pljitkp3wsFLZrWyNV+V9Na/Ad7XU+2uJyNGtM2BgmefdZKstA8F+NMz7u+n0sf5WLFWl1pXc8ayeY31WZ2vj8HIkLi1L8ELxpYzzShq6Nc4xE4///SWqX2weJWgG+IPas8gRdUVjzJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=39hkb7d82Oah1HBIAxb7+aO9nkxSWCSKn8ZZmqRbEvM=;
+ b=GFwhAABN0LvQid/wkIH8bKZcNb6+T+XXlI/qKHNiDOqoxVLnxbLAjoCBHJ5rhcvUu9/QY9kIHGlzahgECbkBRr7RnfCMdbqCMWf6v80LTeTz6CMEY6V19sgh6pCpzX5ZWU3Vlhk1tiMmURId0nO0+/J4O8H+S+gITj4ME0Z6Uh8hfWooe0MBt4VHnSx2s4Ks95I4R2Uf0pVFG4jRJAQQG6ZKHBE5fCSz8rX5sAzopB0d/GwFZ67hNq5ktCaYgmzkiaGN5ukmcplRLKQHy8MwA0UzeYX3TuFudVBBey6tQ8kd+bGxGnydumzAjP+1vJqaLyysRjyXINROfBf792D5zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=39hkb7d82Oah1HBIAxb7+aO9nkxSWCSKn8ZZmqRbEvM=;
+ b=JWR3uLYRE/3DeWezsZlSd8XZlUsZddvZoyLTLJ1fr/orVH8zsubYuOpdk+Y8kgOaRq5jDWDS+R3twq9nd1swcRlAynvmcVFcQYtgBsqvuZidX6W7jafgLSQZNnVmus+KU3hNAGptRa5S+gctjcAboUSHuJJqjrD36X2qY5G8SFW3sYOEec0v11TXEarNQEK1ks3OnbRwPM+ZDETIsWYaBljpCqx7YKEV6pM5tG05THd8z/fEy19t7VnEAPQ+bpG9EpEb3uLQHWNZjz7QM7nQrC+tr9h5ulvip0gWlzYgjk2mcatVLQEbPfDkvffHiPbRQfpIVraxsCJ1WU3ZnNdUjg==
+Authentication-Results: deltatee.com; dkim=none (message not signed)
+ header.d=none;deltatee.com; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.13; Wed, 29 Sep
+ 2021 22:46:55 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4566.015; Wed, 29 Sep 2021
+ 22:46:55 +0000
+Date:   Wed, 29 Sep 2021 19:46:53 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+Subject: Re: [PATCH v3 4/20] PCI/P2PDMA: introduce helpers for dma_map_sg
+ implementations
+Message-ID: <20210929224653.GZ964074@nvidia.com>
+References: <20210916234100.122368-1-logang@deltatee.com>
+ <20210916234100.122368-5-logang@deltatee.com>
+ <20210928220502.GA1738588@nvidia.com>
+ <91469404-fd20-effa-2e01-aa79d9d4b9b5@deltatee.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91469404-fd20-effa-2e01-aa79d9d4b9b5@deltatee.com>
+X-ClientProxiedBy: MN2PR10CA0020.namprd10.prod.outlook.com
+ (2603:10b6:208:120::33) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR10CA0020.namprd10.prod.outlook.com (2603:10b6:208:120::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend Transport; Wed, 29 Sep 2021 22:46:54 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mViLm-007i5Y-04; Wed, 29 Sep 2021 19:46:54 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 86646f6c-c955-45f7-e900-08d9839b0949
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5157:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB51571279ADB2ADD84B5C9884C2A99@BL1PR12MB5157.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: szMCIkVvPV6YaCm20ltVLy9ZbbM6N+ebTlQaq0EcIABKILrhF/iF9hLYS4Nmh5k06AYZoQo8cFRnV0BEMdZuyEvnuorcHomLglTWCBGGSESse/Lu2m/OJC3FnZGc8at6EDard0s0h2xAtjLirdpCu9zi6DU3rqQIln9A2p8iTBFVQed9T1MS2HnP5FlrvilqAIxUthJXKSuJOy1a/C988soUfWM3+bOI0mj/8W+jkMiANOc7IqOtZ36rCeAjyb2ANX0Tw4XtS6p5WbutNNnVX7vydPxQUjccXTLBBW9bpFKJHx9I4vDIL9WfUASjqkPSkc8vCNbQ5A4YnNQ30TVbVkcX2jd6omtFLovLH72+jHhhsu7Gp2qh6OsBizx3pKlLFXcVkuPQ8wDriUux0Odb/OEJtwSC0USL2nVvSCOe9iTJJxgUxAeKt/1P+2w8urjsPc0wmYe/gyrNzdCottnzThIuC07DrRvS3OeiSoiM7/4fL0cFDqeQvOEmclh+WJPapEGvi/Cq/NhliG4Nk6H6kWwXrajCNt1OqXh06q31jytzGMkVxGnwkUmCNqy+PQ+sCzksJQJ/G6zM8KOI2nZDOyYh7cMxsjJtZA6BcCbvuafZclaoBMQLy3XK/yqbJXwjAexUrs5h42cE5DdEwPme84efvvgsC3rndUra5GQRQbSh1MkWBKqNkM1Pek+rVq6g
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(508600001)(86362001)(83380400001)(186003)(53546011)(8936002)(5660300002)(8676002)(7416002)(2906002)(6916009)(66476007)(2616005)(9746002)(9786002)(36756003)(54906003)(33656002)(4326008)(66946007)(1076003)(66556008)(38100700002)(426003)(316002)(26005)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zAKSAGwOF/+LXcf4KA8i8AVc8xa4Jqrwwju9dHHATNug4j3UPBhs5KB5PXKX?=
+ =?us-ascii?Q?pZGSOnqP0+/+vZNM3BAhMdGIDu2I/91rk22YlWNZ7JaQx9u9H3CnN2pAi1if?=
+ =?us-ascii?Q?C3VVwo7JaDTcbpS6tSbPq5XUXpsfpUvs1ecDY2Hg7BddRJ3i/CD6XYaGcjmd?=
+ =?us-ascii?Q?shR13ESMQaaosqUbGgDIYXdGwp7BzeSqp6cWuFCYrsIcZM5p5BC9DAU01x6B?=
+ =?us-ascii?Q?gV2vFrPe5mHXqr3KYmAyxWIzgTmooRLhuhBXeCluSACk5UWT9If4RSZH8mev?=
+ =?us-ascii?Q?cp9x4eZHrb7Jax0rotty+dR1tcEsRlC5zZwILIeORVBdWlhlEVWh/sSL2srd?=
+ =?us-ascii?Q?wsbquuwIMdlTIHaAjI9jvQSOL+R+a2YsoftlvP/LbnlRVhioC9tfQtZJNyVc?=
+ =?us-ascii?Q?k3JsZ1+z/PpVurhFmvieDcz878cPNEL5Fl7p1SVw+pCoSjpXOslFQc3ZeAsL?=
+ =?us-ascii?Q?yrzxwp8CQYjsL2ho8rU4caP6HP8CIHNSPhkSYPruYKi0LNl3Cln+WU8rHEyv?=
+ =?us-ascii?Q?/v5PMXi+YPt2zQuIUOfkf/HUQq2slOHaHJqu2NClcZ7ru5rW8goG0mOJ239t?=
+ =?us-ascii?Q?v/BngBMhEQjtP4CkKajORFMkF1xXRvCAvFBGPA0+xMA+4IAp1BsPjMFUB11y?=
+ =?us-ascii?Q?wSpsrICRUB5+L09AtoOuWGv0r7grgeho38xTpPbimtyC8ckmuyVLtW6DlPno?=
+ =?us-ascii?Q?YUJ25A6yIh/jekmp4JDxOCAAB3OHgdWxNlKM0UnWyEFR8tVoksww6T24MPO7?=
+ =?us-ascii?Q?6Wu5Y7Ih5CbWU0dHtIhezJiOe43PZgvLbkI+QCpoTpC376IrD0cyel0ni7Dd?=
+ =?us-ascii?Q?loeeiN7nXBsbFfgcdMJWWTBHjKgxAo1WNgqNg+Sy28fP3XNo5Kr/j+z5DY4S?=
+ =?us-ascii?Q?QK+qoCB2QcjQisAImek7k9q9Y4taPbTe0i544yCHcx94e5Z21nOfenMDrJfr?=
+ =?us-ascii?Q?WXPO8NEzKLYzkqPCPNZfoh/0vO6IMAWY7E1PUvHMmQyCYaIEtGvgmcrGzitU?=
+ =?us-ascii?Q?zbFVciDi2nC2UDBpuLbWsJ9f3qBbM/sLs5colTR+fSBj0Wll2JwnhJt6XeHI?=
+ =?us-ascii?Q?k3TKk3hbeXSQA8KKaZ8GFZdVa9S1GA/GLASZq5cAqMqG7D2GaZis/isZurCJ?=
+ =?us-ascii?Q?fa5YW4fzWaCGOtTRI4tx8gd4SvFWvfscZlRWduOhklzs+VdnFr3conYBJ6sr?=
+ =?us-ascii?Q?psxND7BjeuxleHra6pyS188jXUxlHMG+RpYQMAnq9OexxgIRQ1OCLv0TQlrm?=
+ =?us-ascii?Q?X4yGrg9wCs3wKivwQ7I8Bdb4Z31wv4EHqSYqh4DeeCtnq6iYmPJ865OG9+Aq?=
+ =?us-ascii?Q?GNw/ruqwiL9z1qc3XR/qHn3h?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86646f6c-c955-45f7-e900-08d9839b0949
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 22:46:55.0844
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 43/FGkTgZXWuO3F5uG4GQReo5Is3MkCg2Tv+zIOVk9Eeo0+gT1HsqIzoi3s1qxKC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5157
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 Sep 2021 00:48:55 +0300
-Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
-
-> On 9/29/2021 7:14 PM, Jason Gunthorpe wrote:
-> > On Wed, Sep 29, 2021 at 06:28:44PM +0300, Max Gurtovoy wrote:
-> >  
-> >>> So you have a device that's actively modifying its internal state,
-> >>> performing I/O, including DMA (thereby dirtying VM memory), all while
-> >>> in the _STOP state?  And you don't see this as a problem?  
-> >> I don't see how is it different from vfio-pci situation.  
-> > vfio-pci provides no way to observe the migration state. It isn't
-> > "000b"  
+On Wed, Sep 29, 2021 at 03:30:42PM -0600, Logan Gunthorpe wrote:
 > 
-> Alex said that there is a problem of compatibility.
 > 
-> I migration SW is not involved, nobody will read this migration state.
-
-The _STOP state has a specific meaning regardless of whether userspace
-reads the device state value.  I think what you're suggesting is that
-the device reports itself as _STOP'd but it's actually _RUNNING.  Is
-that the compatibility workaround, create a self inconsistency?
-
-We cannot impose on userspace to move a device from _STOP to _RUNNING
-simply because the device supports the migration region, nor should we
-report a device state that is inconsistent with the actual device state.
-
-> >> Maybe we need to rename STOP state. We can call it READY or LIVE or
-> >> NON_MIGRATION_STATE.  
-> > It was a poor choice to use 000b as stop, but it doesn't really
-> > matter. The mlx5 driver should just pre-init this readable to running.  
 > 
-> I guess we can do it for this reason. There is no functional problem nor 
-> compatibility issue here as was mentioned.
+> On 2021-09-28 4:05 p.m., Jason Gunthorpe wrote:
+> > On Thu, Sep 16, 2021 at 05:40:44PM -0600, Logan Gunthorpe wrote:
+> > 
+> >> +enum pci_p2pdma_map_type
+> >> +pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state, struct device *dev,
+> >> +		       struct scatterlist *sg)
+> >> +{
+> >> +	if (state->pgmap != sg_page(sg)->pgmap) {
+> >> +		state->pgmap = sg_page(sg)->pgmap;
+> > 
+> > This has built into it an assumption that every page in the sg element
+> > has the same pgmap, but AFAIK nothing enforces this rule? There is no
+> > requirement that the HW has pfn gaps between the pgmaps linux decides
+> > to create over it.
 > 
-> But still we need the kernel to track transitions. We don't want to 
-> allow moving from RESUMING to SAVING state for example. How this 
-> transition can be allowed ?
+> No, that's not a correct reading of the code. Every time there is a new
+> pagemap, this code calculates the mapping type and bus offset. If a page
+> comes along with a different page map,f it recalculates. This just
+> reduces the overhead so that the calculation is done only every time a
+> page with a different pgmap comes along and not doing it for every
+> single page.
+
+Each 'struct scatterlist *sg' refers to a range of contiguous pfns
+starting at page_to_pfn(sg_page()) and going for approx sg->length/PAGE_SIZE
+pfns long.
+
+sg_page() returns the first page, but nothing says that sg_page()+1
+has the same pgmap.
+
+The code in this patch does check the first page of each sg in a
+larger sgl.
+
+> > At least sg_alloc_append_table_from_pages() and probably something in
+> > the block world should be updated to not combine struct pages with
+> > different pgmaps, and this should be documented in scatterlist.*
+> > someplace.
 > 
-> In this case we need to fail the request from the migration SW...
+> There's no sane place to do this check. The code is designed to support
+> mappings with different pgmaps.
 
-_RESUMING to _SAVING seems like a good way to test round trip migration
-without running the device to modify the state.  Potentially it's a
-means to update a saved device migration data stream to a newer format
-using an intermediate driver version.
+All places that generate compound sg's by aggregating multiple pages
+need to include this check along side the check for physical
+contiguity. There are not that many places but
+sg_alloc_append_table_from_pages() is one of them:
 
-If a driver is written such that it simply sees clearing the _RESUME
-bit as an indicator to de-serialize the data stream to the device, and
-setting the _SAVING flag as an indicator to re-serialize that data
-stream from the device, then this is just a means to make use of
-existing data paths.
+@@ -470,7 +470,8 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+ 
+                /* Merge contiguous pages into the last SG */
+                prv_len = sgt_append->prv->length;
+-               while (n_pages && page_to_pfn(pages[0]) == paddr) {
++               while (n_pages && page_to_pfn(pages[0]) == paddr &&
++                      sg_page(sgt_append->prv)->pgmap == pages[0]->pgmap) {
+                        if (sgt_append->prv->length + PAGE_SIZE > max_segment)
+                                break;
+                        sgt_append->prv->length += PAGE_SIZE;
+@@ -488,7 +489,8 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+        for (i = 1; i < n_pages; i++) {
+                seg_len += PAGE_SIZE;
+                if (seg_len >= max_segment ||
+-                   page_to_pfn(pages[i]) != page_to_pfn(pages[i - 1]) + 1) {
++                   page_to_pfn(pages[i]) != page_to_pfn(pages[i - 1]) + 1 ||
++                   pages[i]->pgmap != pages[i - 1]->pgmap) {
+                        chunks++;
+                        seg_len = 0;
+                }
+@@ -505,9 +507,10 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+                        seg_len += PAGE_SIZE;
+                        if (seg_len >= max_segment ||
+                            page_to_pfn(pages[j]) !=
+-                           page_to_pfn(pages[j - 1]) + 1)
++                                   page_to_pfn(pages[j - 1]) + 1 ||
++                           pages[i]->pgmap != pages[i - 1]->pgmap) {
+                                break;
+-               }
++                       }
+ 
+                /* Pass how many chunks might be left */
+                s = get_next_sg(sgt_append, s, chunks - i + left_pages,
 
-The uAPI specifies a means for drivers to reject a state change, but
-that risks failing to support a transition which might find mainstream
-use cases.  I don't think common code should be responsible for
-filtering out viable transitions.  Thanks,
-
-Alex
 
