@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3042A41BBCB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 02:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C225E41BBCE
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 02:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243475AbhI2AnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 20:43:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        id S243490AbhI2AnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 20:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243471AbhI2AnF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 20:43:05 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1D6C06161C;
-        Tue, 28 Sep 2021 17:41:25 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id g8so1901503edt.7;
-        Tue, 28 Sep 2021 17:41:25 -0700 (PDT)
+        with ESMTP id S243483AbhI2AnH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 20:43:07 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B540DC061749;
+        Tue, 28 Sep 2021 17:41:26 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id s17so1889856edd.8;
+        Tue, 28 Sep 2021 17:41:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zBaxdjR458Cms2rk+PE1YK0Xhx5uxYTQbasRo/1RH8s=;
-        b=kAi7RnTYzsJw+xBNyo7tVSdA1R74ghjgx9CsY1SC3iVw5HcqooLIxFafkG4rW688zc
-         DRme2z4pLza4ozX1s9g459KNL3eXe+HgxQiQf2i3wkR1JQH2x5MynMc+VVT7n24rom+I
-         +p8KaGNR0PTjGGJKU7bCOEaYzGWbInIzoX9ERqDpTWwmXf6Jq2UCMCz/zF0KRB4iqPz/
-         NcP/n6FK9Yxh9KSVGJbQQCNsMFqGBiCTvD5I4Axo2znnB/plzsGCHTThUOp58sIB/30s
-         q2eJZAiNV1PgqVmDbzu6ywDjb8ukvQf/PUKt2gXaHSKTlcsMZjXHf5BHdWzknpGYWlwW
-         a97A==
+        bh=XuDX1fjPxUMaCX2fPXgHk2QJqjD/rlL/TYuS7K5aiyY=;
+        b=pW4Twil7mHU8/OsScaGIbf9FWpgLKQgPOxLKFH5t0z3atxj72qO488OY8sebRVrElx
+         sehpyEyLmRNrBAZ5O+T4cyTXjnpGC1wTMJ9NPMZe/OuifGom56I0CKzoOR2wTPf6RcvK
+         9GVzSAVPJA1PDzHi+27GmnoKMA+neDvwPunbnT0gur9/uSLQci01QvZQgAdKRfNbyW2L
+         3KL2Omn3INz6Q2+oJb8rZJwycX7MDAxNFudX3XMXNvCrlZN+9Of+MaUP/xjhnC7YDsXS
+         wdf5jEXdHSm/hz0zK8oDPbQ2k5UoKQBb1ZfFQKWyza8itC57JO+x0ERCjDY9plBfEKrR
+         GSZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zBaxdjR458Cms2rk+PE1YK0Xhx5uxYTQbasRo/1RH8s=;
-        b=ym/Au0uZ8Pqa1mDOKASHf26KplAIB/3lD04uaAkZBscfJRm61PAzbqYrUXsGkhI7Mv
-         +w6l9K5ur55jGeFWyN2HHsOZmy7PsKOT3DZasJpJ4TW499NFwQmqvo3Cgye7QOp+pYxj
-         m/Bb4SkVC0gU2Spyy3XTp+Qxx+8V7Gq6MdeEX5GAnZ9ek5in1YnF1BLtHWvcuNuTc16t
-         qYdMMuIIM3ayrmX13SPYqLlfm6slKGVQoGtXtyq42DuvESUZqOrLb8MdvZ2WI01q/g1U
-         eOA9AlX7MqBGvF9zECUo2iuCP3tTxmGrGvzptRjF+IiZlEXx0tK9fIb+qFqFDOkixCze
-         /9mA==
-X-Gm-Message-State: AOAM532NCzdKliCORNIB8pwO9jxxLNtNBkufsMmTUXea7HYIcOb7j0TV
-        aWjcj+m28IkC+lGMh905Ysc=
-X-Google-Smtp-Source: ABdhPJz72n7t7ggRbMU/mxGc0sdAdt5XmtpU/sLNfJp3ce8zz9o9+fn37H3qdiJfweDcRM29/74gOw==
-X-Received: by 2002:a50:d8c5:: with SMTP id y5mr11265142edj.370.1632876083805;
-        Tue, 28 Sep 2021 17:41:23 -0700 (PDT)
+        bh=XuDX1fjPxUMaCX2fPXgHk2QJqjD/rlL/TYuS7K5aiyY=;
+        b=ZTXD5J5bJ0mjlH2WV5EFTbOy8ROWNKsSOYy7KlTXqdENrGBSxmpJMgRE9ZY2ELcT4j
+         BTDAEFbFd4LdOrijE3hfbWEBgx77feTRWkhhPm6NHBXGOh+li7Gebp4AOlS1X5iNSiaL
+         UvEvdEdlDbpixMUQ64xZ0DfyUsyTm9YZkvskJXcj8sAFbDBrDQlooV9kzoK8TiAnUTdp
+         3mjZ2y0AlC8wTFGEUdvyepsqwADHRMJtFrIeqEtqTf7iRJanDVtp2ZbuuDAXWBTvd3De
+         3vRr1s0Cp06RPjEa9XU6b4oZ1ZHXXLbgP28sxCeJF9NJvaxaSWCYuj8N+9JRycfnurrJ
+         5FYA==
+X-Gm-Message-State: AOAM531S6WzBxnTuGqSPEcUYrY2M1ayFahQLATxl9M5oxu5u98ca283s
+        lzwyM/d3yWak5yxxyI1lbzI=
+X-Google-Smtp-Source: ABdhPJzOvL7/8vtL8wqWHEyHwhsV86lAPaxatggaIgdcEOUmTrSl5m5KtuUbZSjCBfFjxj/86pnNbA==
+X-Received: by 2002:a17:906:ff51:: with SMTP id zo17mr10532703ejb.193.1632876084702;
+        Tue, 28 Sep 2021 17:41:24 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:ab88:10f:c9f0:35c7:3af0:a197:61d0])
-        by smtp.googlemail.com with ESMTPSA id y1sm372727edv.79.2021.09.28.17.41.22
+        by smtp.googlemail.com with ESMTPSA id y1sm372727edv.79.2021.09.28.17.41.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 17:41:23 -0700 (PDT)
+        Tue, 28 Sep 2021 17:41:24 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 2/3] PCI/ASPM: Remove struct pcie_link_state.acceptable
-Date:   Wed, 29 Sep 2021 02:41:15 +0200
-Message-Id: <20210929004116.20650-3-refactormyself@gmail.com>
+Subject: [RFC v3 PATCH 3/3] PCI/ASPM: Remove struct aspm_latency
+Date:   Wed, 29 Sep 2021 02:41:16 +0200
+Message-Id: <20210929004116.20650-4-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210929004116.20650-1-refactormyself@gmail.com>
 References: <20210929004116.20650-1-refactormyself@gmail.com>
@@ -63,85 +63,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The acceptable latencies for each device on the bus are calculated within
-pcie_aspm_cap_init() and cached in struct pcie_link_state.acceptable.
-They are only used within pcie_aspm_check_latency() to validate actual
-latencies. Thus, it is possible to avoid caching these values.
+The struct aspm_latency is now used only inside pcie_aspm_check_latency().
 
-This patch:
- - removes `acceptable` from struct pcie_link_state
- - calculates the acceptable latency for each device directly
- - removes the calculations done within pcie_aspm_cap_init()
+Since this struct is trivial, this patch:
+  - replaces struct aspm_latency variables with u32 variables
+  - removes struct aspm_latency
 
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/pci/pcie/aspm.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+ drivers/pci/pcie/aspm.c | 30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 9e85dfc56657..0c0c055823f1 100644
+index 0c0c055823f1..8093c9335e1f 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -65,12 +65,6 @@ struct pcie_link_state {
- 	u32 clkpm_enabled:1;		/* Current Clock PM state */
- 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
- 	u32 clkpm_disable:1;		/* Clock PM disabled */
+@@ -41,11 +41,6 @@
+ #define ASPM_STATE_ALL		(ASPM_STATE_L0S | ASPM_STATE_L1 |	\
+ 				 ASPM_STATE_L1SS)
+ 
+-struct aspm_latency {
+-	u32 l0s;			/* L0s latency (nsec) */
+-	u32 l1;				/* L1 latency (nsec) */
+-};
 -
--	/*
--	 * Endpoint acceptable latencies. A pcie downstream port only
--	 * has one slot under it, so at most there are 8 functions.
--	 */
--	struct aspm_latency acceptable[8];
- };
- 
- static int aspm_disabled, aspm_force;
-@@ -389,7 +383,7 @@ static struct pci_dev *pci_function_0(struct pci_bus *linkbus)
- 
+ struct pcie_link_state {
+ 	struct pci_dev *pdev;		/* Upstream component of the Link */
+ 	struct pci_dev *downstream;	/* Downstream component, function 0 */
+@@ -384,9 +379,9 @@ static struct pci_dev *pci_function_0(struct pci_bus *linkbus)
  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
  {
--	u32 latency, lnkcap_up, lnkcap_dw, l1_switch_latency = 0;
-+	u32 reg32, latency, encoding, lnkcap_up, lnkcap_dw, l1_switch_latency = 0;
+ 	u32 reg32, latency, encoding, lnkcap_up, lnkcap_dw, l1_switch_latency = 0;
++	u32 latency_up_l0s, latency_up_l1, latency_dw_l0s, latency_dw_l1;
++	u32 acceptable_l0s, acceptable_l1;
  	struct pci_dev *downstream;
- 	struct aspm_latency latency_up, latency_dw;
- 	struct aspm_latency *acceptable;
-@@ -402,7 +396,13 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+-	struct aspm_latency latency_up, latency_dw;
+-	struct aspm_latency *acceptable;
+ 	struct pcie_link_state *link;
  
- 	link = endpoint->bus->self->link_state;
- 	downstream = pci_function_0(link->pdev->subordinate);
--	acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
-+	pcie_capability_read_dword(endpoint, PCI_EXP_DEVCAP, &reg32);
-+	/* Calculate endpoint L0s acceptable latency */
-+	encoding = (reg32 & PCI_EXP_DEVCAP_L0S) >> 6;
-+	acceptable->l0s = calc_l0s_acceptable(encoding);
-+	/* Calculate endpoint L1 acceptable latency */
-+	encoding = (reg32 & PCI_EXP_DEVCAP_L1) >> 9;
-+	acceptable->l1 = calc_l1_acceptable(encoding);
+ 	/* Device not in D0 doesn't need latency check */
+@@ -399,28 +394,28 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 	pcie_capability_read_dword(endpoint, PCI_EXP_DEVCAP, &reg32);
+ 	/* Calculate endpoint L0s acceptable latency */
+ 	encoding = (reg32 & PCI_EXP_DEVCAP_L0S) >> 6;
+-	acceptable->l0s = calc_l0s_acceptable(encoding);
++	acceptable_l0s = calc_l0s_acceptable(encoding);
+ 	/* Calculate endpoint L1 acceptable latency */
+ 	encoding = (reg32 & PCI_EXP_DEVCAP_L1) >> 9;
+-	acceptable->l1 = calc_l1_acceptable(encoding);
++	acceptable_l1 = calc_l1_acceptable(encoding);
  
  	while (link) {
  		/* Read direction exit latencies */
-@@ -664,22 +664,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 		pcie_capability_read_dword(link->pdev, PCI_EXP_LNKCAP, &lnkcap_up);
+ 		pcie_capability_read_dword(downstream, PCI_EXP_LNKCAP, &lnkcap_dw);
+-		latency_up.l0s = calc_l0s_latency(lnkcap_up);
+-		latency_up.l1 = calc_l1_latency(lnkcap_up);
+-		latency_dw.l0s = calc_l0s_latency(lnkcap_dw);
+-		latency_dw.l1 = calc_l1_latency(lnkcap_dw);
++		latency_up_l0s = calc_l0s_latency(lnkcap_up);
++		latency_up_l1 = calc_l1_latency(lnkcap_up);
++		latency_dw_l0s = calc_l0s_latency(lnkcap_dw);
++		latency_dw_l1 = calc_l1_latency(lnkcap_dw);
+ 
+ 		/* Check upstream direction L0s latency */
+ 		if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
+-		    (latency_up.l0s > acceptable->l0s))
++		    (latency_up_l0s > acceptable_l0s))
+ 			link->aspm_capable &= ~ASPM_STATE_L0S_UP;
+ 
+ 		/* Check downstream direction L0s latency */
+ 		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+-		    (latency_dw.l0s > acceptable->l0s))
++		    (latency_dw_l0s > acceptable_l0s))
+ 			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+ 		/*
+ 		 * Check L1 latency.
+@@ -435,9 +430,9 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		 * L1 exit latencies advertised by a device include L1
+ 		 * substate latencies (and hence do not do any check).
+ 		 */
+-		latency = max_t(u32, latency_up.l1, latency_dw.l1);
++		latency = max_t(u32, latency_up_l1, latency_dw_l1);
+ 		if ((link->aspm_capable & ASPM_STATE_L1) &&
+-		    (latency + l1_switch_latency > acceptable->l1))
++		    (latency + l1_switch_latency > acceptable_l1))
+ 			link->aspm_capable &= ~ASPM_STATE_L1;
+ 		l1_switch_latency += 1000;
+ 
+@@ -664,7 +659,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
  
  	/* Get and check endpoint acceptable latencies */
  	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		u32 reg32, encoding;
--		struct aspm_latency *acceptable =
--			&link->acceptable[PCI_FUNC(child->devfn)];
- 
+-
  		if (pci_pcie_type(child) != PCI_EXP_TYPE_ENDPOINT &&
  		    pci_pcie_type(child) != PCI_EXP_TYPE_LEG_END)
  			continue;
- 
--		pcie_capability_read_dword(child, PCI_EXP_DEVCAP, &reg32);
--		/* Calculate endpoint L0s acceptable latency */
--		encoding = (reg32 & PCI_EXP_DEVCAP_L0S) >> 6;
--		acceptable->l0s = calc_l0s_acceptable(encoding);
--		/* Calculate endpoint L1 acceptable latency */
--		encoding = (reg32 & PCI_EXP_DEVCAP_L1) >> 9;
--		acceptable->l1 = calc_l1_acceptable(encoding);
--
- 		pcie_aspm_check_latency(child);
- 	}
- }
 -- 
 2.20.1
 
