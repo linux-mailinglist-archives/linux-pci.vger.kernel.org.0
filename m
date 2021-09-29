@@ -2,95 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3636B41CADD
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 19:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EBD841CAF1
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 19:14:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344114AbhI2RJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 13:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343495AbhI2RJs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 13:09:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E5D4D61288;
-        Wed, 29 Sep 2021 17:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632935287;
-        bh=4TDyXkm6HcwC6k6GyuEZvi2ohAEIeZOw8SSV0h8L20E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SE+b343AcXe0oP3G69lICNMkltnJJzCELhskvBsS2T0cyLD9/AjBSw1uNL6kIuic7
-         raDZ9rtMpsOVr1tKBoxUr2cwJysupdV7FKwFOJXnJMlqRmMz0UZVuFwJMZqIY8FBwz
-         a4xM0NL5Irdokqat6kDhSyZzfxuKQD41fruJsj46YKgnMfkvVUFoBPkHhEFCQBiJI0
-         BQDe1cqbahFwSb2m7p9n2WsL5+i2IQYtZiqjsN9DB3jfrIET0nCETIpgSaKq7mupaW
-         p/HTzTUEf3KwCK2wOCg5fPGRRHwl4J5Hl/bK+i93WEl040YVHH67yPIZm6Ts+teBld
-         b9f4IHslssTJg==
-Date:   Wed, 29 Sep 2021 12:08:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1345499AbhI2RQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 13:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345497AbhI2RQ3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 13:16:29 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4ECC06161C;
+        Wed, 29 Sep 2021 10:14:48 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id bd28so11234796edb.9;
+        Wed, 29 Sep 2021 10:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OQKF+RLkOKzo9hZLWlJSlFW0i6TdEuGYzqVjwQH02LE=;
+        b=eG0HL3t+blVG+2HjIgZmO04iNkhYAM8BXnHAM6Om9vEp012pWtJmYZPsqy5Z+hEQ9G
+         sZP6Cz5xzHbhB2uL8xmzgk82e0hHJysUBWeyf0UWLUHmTvZbJBrQ5BmfDuN0Cl7XSGN1
+         Tns2oU+fzP/r2SiZWC3Eu51wMAYpUxENh4Vxj1Us27aG7BbFSh+TXLtYE4Nf0I1a+CxP
+         HMEhgVr49xOG1pFet4UzHMbdEH+bQntBcmdiRQkXWVLAXJ8zWIuGB85ii5bwVdaBaAIO
+         dzr72iTbqsWRAqZVsypkmAiAgACKt/ukjAYlc9dVJdQeMueyuB8TRm5pmMC3ZIVWMjZ9
+         Sm/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OQKF+RLkOKzo9hZLWlJSlFW0i6TdEuGYzqVjwQH02LE=;
+        b=3S3JL03lNM90Fmjy2UU76lkU3ForEymKS3MMQAJt3ljcVGBZUGPPK+LabgIgtxYQh5
+         chfGdkzqdVBFzNafqwIgLfcCeYHiTp5q15B+jK+qOAaqG16CHRkp/tN46RA3kMkHNAxv
+         +YKAOTgfkOWcVvXhVgIUM8XZC92GIhdgyX5Omsrgd6YHyh89ioxDC0tmdoaSE2kY/D7j
+         wMUqvbZn6yAj06A0aRH3oFUSkRPyOK+V0Zh/Ri57fyy1UGVvQVDPkzaKAG1CKB2I8w4c
+         V8Aoz81Rau0vA2++B9XGyAlo4NpyQqoZ/AI/5GeNSGLUgtDik461rH6MrFxK7sVw+rn1
+         C+2g==
+X-Gm-Message-State: AOAM531iNZs8yGokVBen8pwWmpZ7nziD1DRcZs6QIfpedpwXDPQfcFhL
+        EoWW48SxcOsiC2E4djQZJKw=
+X-Google-Smtp-Source: ABdhPJyuMSo2XG3S9Q6rcz0SPuJjiu4vfEzdQ0SoiodnSquZ+zn4DQXuVy3riDPoxBDKiT416+vGOw==
+X-Received: by 2002:a17:906:564e:: with SMTP id v14mr1006746ejr.424.1632935687100;
+        Wed, 29 Sep 2021 10:14:47 -0700 (PDT)
+Received: from [192.168.1.97] ([49.236.51.203])
+        by smtp.gmail.com with ESMTPSA id cr9sm266282edb.17.2021.09.29.10.14.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Sep 2021 10:14:46 -0700 (PDT)
+Subject: Re: [PATCH v2 0/7] PCI: ACPI: Get rid of struct pci_platform_pm_ops
+ and clean up code
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 1/2] PCI: Use software node API with additional device
- properties
-Message-ID: <20210929170804.GA778424@bhelgaas>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20210928232823.GA748352@bhelgaas>
+From:   Ferry Toth <fntoth@gmail.com>
+Message-ID: <f6be0339-5b11-8c3b-ef5c-47e50e878e2d@gmail.com>
+Date:   Wed, 29 Sep 2021 19:14:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210929133729.9427-2-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20210928232823.GA748352@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Zhangfei, author of 8304a3a199ee ("PCI: Set dma-can-stall for
-HiSilicon chips"), which added this]
+Hi
 
-On Wed, Sep 29, 2021 at 04:37:28PM +0300, Heikki Krogerus wrote:
-> Using device_create_managed_software_node() to inject the
-> properties in quirk_huawei_pcie_sva() instead of with the
-> old device_add_properties() API.
+Op 29-09-2021 om 01:28 schreef Bjorn Helgaas:
+> [+cc Ferry]
 > 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-This is fine with me, but please update the subject line and commit
-log something like this:
-
-  PCI: Convert to device_create_managed_software_node()
-
-  In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
-  instead of device_add_properties() to set the "dma-can-stall"
-  property.
-
-  This resolves a software node lifetime issue (see 151f6ff78cdf
-  ("software node: Provide replacement for device_add_properties()"))
-  and paves the way for removing device_add_properties() completely.
-
-Actually, 8304a3a199ee was merged during the v5.15 merge window, so if
-this does in fact fix a lifetime issue, I can merge this before
-v5.15-final.
-
-I know *this* quirk applies to AMBA devices, and I assume they cannot
-be removed, so there's no actual lifetime problem in this particular
-case, but in general it looks like a problem for PCI devices.
-
-> ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, Sep 20, 2021 at 08:52:19PM +0200, Rafael J. Wysocki wrote:
+>> Hi All,
+>>
+>> As explained in the changelog of patch [2/7], using struct pci_platform_pm_ops
+>> for ACPI is not particularly beneficial, so it is better to get rid of it and
+>> call the functions pointed to by it directly from the PCI core.
+>>
+>> However, struct pci_platform_pm_ops is also used by the Intel MID support code,
+>> but it is actually better to call the MID PM function directly from the PCI
+>> core either, which is done in patch [1/7].
+>>
+>> After these changes, patch [3/7] removes struct pci_platform_pm_ops and the
+>> rest is just cleanups and some code consolidation on top of that.
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b6b4c803bdc94..fe5eedba47908 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -1850,7 +1850,7 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
->  	 * can set it directly.
->  	 */
->  	if (!pdev->dev.of_node &&
-> -	    device_add_properties(&pdev->dev, properties))
-> +	    device_create_managed_software_node(&pdev->dev, properties, NULL))
->  		pci_warn(pdev, "could not add stall property");
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
-> -- 
-> 2.33.0
+> I like these a lot.  Not sure exactly where everything is after the
+> conversation with Ferry.  Let me know if I should be doing anything.
 > 
+I will happily retest likely on Sunday after I return from short holiday 
+and report back here.
