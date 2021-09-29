@@ -2,64 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A35E41CFDB
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 01:21:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2D3741CFEE
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 01:27:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347551AbhI2XXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 19:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347539AbhI2XXb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 19:23:31 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75375C061769
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 16:21:49 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id 138so4000424qko.10
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 16:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1Hmlahc/i9658U3YzBDCjabD8lk1Mv+/ZOzt2omk2Ho=;
-        b=SJtWHdnGo9L4mdll+qKaZsmtvpn7ds7Jqf9UErLrQmOsqRP3sxU8o3aw5o2MvhL5Mj
-         lM03toh8ImPud8H7vh/AGGkl+3vURvGKxRBh5yeP3iqYJ3RXD4HkzTzjBF6Mgc3CyYL4
-         NPwaDU2c+i54bQ4atNBSa63XnbDUvexvPwjoCQkmNEdCUAl1T+QvgnRV98lCDddMEe7S
-         LVFALRCv3M02kPjD9ocMpxen45b3XXJIbEyj72HfycWLiBpEdaWRxZc5TzgjO4IW95ia
-         6tYGEjCfhjevDUh3QKMgzT1YEh/Dp9tLfgFk0cHBocInRv2rBNOuuogJ3/Vn3OANJNLH
-         kWlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1Hmlahc/i9658U3YzBDCjabD8lk1Mv+/ZOzt2omk2Ho=;
-        b=Tm7WcpIV+jLiq+RFbdP8TjERMMLKqq8WgqUIlo4Wm6z9luRPSrtX7hYrEPFAEa9KFd
-         QmWumLgCogrP/GarjNARwHP1Pz2Tw/o9wXJC8eBz0sxvzfJFnQFJw274FtpUqclwo+hD
-         fz4851nPgeKVTtVV/TmGQo/7PmuIkeb2lbBfkh/zmvwTxG6JRJLJvnf4gIF3Kh5Ahkel
-         VeV3ucrJIzK/7yS31Q3xa1AE591n+h9Fow13nlKuBZ6eivnUoZyWw2uhS9Ee8P8d0E53
-         ptgwOrw66OL0gENUutpdb4GahJsIVuclSe1hbtiXXdRROM/W25ZMDGRQQSJRLO6UG3s1
-         R8Sg==
-X-Gm-Message-State: AOAM533jtHifI8cYSzXECW/RsBwgjDrPti6q2HkBJhSVoxxapDyQv80z
-        fc2iMQHiBVFt1J0pU5SA2TpF4Q==
-X-Google-Smtp-Source: ABdhPJxjfksXX9RBzjsealxa+5cO5Ph50HuUSNxxHRV+6R5kI7btDIJAlC0cqyNxWaWuBVsQ1jP8wA==
-X-Received: by 2002:a37:b386:: with SMTP id c128mr2193672qkf.426.1632957708587;
-        Wed, 29 Sep 2021 16:21:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id x3sm631017qkl.107.2021.09.29.16.21.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 16:21:48 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mVitX-007ii8-Gm; Wed, 29 Sep 2021 20:21:47 -0300
-Date:   Wed, 29 Sep 2021 20:21:47 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
+        id S1346988AbhI2X3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 19:29:22 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60476 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245025AbhI2X3V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 19:29:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=3N3yWbCA1BRvhNZ5T1BUDhQCEJio0lSzQF1CfQAvAUQ=; b=FBroEG9pUbwP7nRlQb79EAX5Wp
+        u2PPJZxMpxIX2WALiV7aZzAjZuxpuGJZ7QRPxSfo8vfyDkiULTkoBOi+vz/qqAHf6/pVcsnsMQn+K
+        uuulJ3BevdgH6KKh+DWtfbdN8LgTFDgLk0Nyc7T0MEFUDnGIrUXX1QVessQCpt7MvtI3CUUlABp+L
+        YSgDnr67ZeuuwVVORoBt5CCNbvryPi8r6APUwD7wJmrc4F628yRlWwVnD7seJmYTMKIHmFcRREhzI
+        wCXESOP6NbuwJiCrOH2a3zB0QZBPZUhxswWS6emCPUo5tlj2jpELb9RvT5tWCninOBF3AaRKP/5OB
+        irc2r4Sw==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1mViz1-0008DF-MF; Wed, 29 Sep 2021 17:27:28 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
@@ -74,47 +47,79 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Robin Murphy <robin.murphy@arm.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 00/20] Userspace P2PDMA with O_DIRECT NVMe devices
-Message-ID: <20210929232147.GD3544071@ziepe.ca>
 References: <20210916234100.122368-1-logang@deltatee.com>
- <20210928200216.GW3544071@ziepe.ca>
- <06d75fcb-ce8b-30a5-db36-b6c108460d3d@deltatee.com>
+ <20210916234100.122368-20-logang@deltatee.com>
+ <20210928195518.GV3544071@ziepe.ca>
+ <8d386273-c721-c919-9749-fc0a7dc1ed8b@deltatee.com>
+ <20210929230543.GB3544071@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
+Date:   Wed, 29 Sep 2021 17:27:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06d75fcb-ce8b-30a5-db36-b6c108460d3d@deltatee.com>
+In-Reply-To: <20210929230543.GB3544071@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-11.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 03:50:02PM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2021-09-28 2:02 p.m., Jason Gunthorpe wrote:
-> > On Thu, Sep 16, 2021 at 05:40:40PM -0600, Logan Gunthorpe wrote:
-> >> Hi,
-> >>
-> >> This patchset continues my work to add userspace P2PDMA access using
-> >> O_DIRECT NVMe devices. My last posting[1] just included the first 13
-> >> patches in this series, but the early P2PDMA cleanup and map_sg error
-> >> changes from that series have been merged into v5.15-rc1. To address
-> >> concerns that that series did not add any new functionality, I've added
-> >> back the userspcae functionality from the original RFC[2] (but improved
-> >> based on the original feedback).
-> > 
-> > I really think this is the best series yet, it really looks nice
-> > overall. I know the sg flag was a bit of a debate at the start, but it
-> > serves an undeniable purpose and the resulting standard DMA APIs 'just
-> > working' is really clean.
-> 
-> Actually, so far, nobody has said anything negative about using the SG flag.
-> 
-> > There is more possible here, we could also pass the new GUP flag in the
-> > ib_umem code..
-> 
-> Yes, that would be very useful.
 
-You might actually prefer to do that then the bio changes to get the
-infrastructur merged as it seems less "core"
 
-Jason
+
+On 2021-09-29 5:05 p.m., Jason Gunthorpe wrote:
+> On Wed, Sep 29, 2021 at 03:42:00PM -0600, Logan Gunthorpe wrote:
+> 
+>> The main reason is probably this: if we don't use VM_MIXEDMAP, then we
+>> can't set pte_devmap(). 
+> 
+> I think that is an API limitation in the fault routines..
+> 
+> finish_fault() should set the pte_devmap - eg by passing the
+> PFN_DEV|PFN_MAP somehow through the vma->vm_page_prot to mk_pte() or
+> otherwise signaling do_set_pte() that it should set those PTE bits
+> when it creates the entry.
+> 
+> (or there should be a vmf_* helper for this special case, but using
+> the vmf->page seems righter to me)
+
+I'm not opposed to this. Though I'm not sure what's best here.
+
+>> If we don't set pte_devmap(), then every single page that GUP
+>> processes needs to check if it's a ZONE_DEVICE page and also if it's
+>> a P2PDMA page (thus dereferencing pgmap) in order to satisfy the
+>> requirements of FOLL_PCI_P2PDMA.
+> 
+> Definately not suggesting not to set pte_devmap(), only that
+> VM_MIXEDMAP should not be set on VMAs that only contain struct
+> pages. That is an abuse of what it is intended for.
+> 
+> At the very least there should be a big comment above the usage
+> explaining that this is just working around a limitation in
+> finish_fault() where it cannot set the PFN_DEV|PFN_MAP bits today.
+
+Is it? Documentation on vmf_insert_mixed() and VM_MIXEDMAP is not good
+and the intention is not clear. I got the impression that mm people
+wanted those interfaces used for users of pte_devmap().
+
+device-dax uses these interfaces and as far as I can see it also only
+contains struct pages (or at least  dev_dax_huge_fault() calls
+pfn_to_page() on every page when VM_FAULT_NOPAGE happens).
+
+So it would be nice to get some direction here from mm developers on
+what they'd prefer.
+
+Logan
