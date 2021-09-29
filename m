@@ -2,113 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABAFD41CE6F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 23:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C5641CF5A
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 00:44:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345387AbhI2Vv5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 17:51:57 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:59324 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344935AbhI2Vv4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 17:51:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=Lipa8/ALS8oYFWfVY3pT4Pn+zABFEEx9dAykyQxwk8c=; b=ZVGFFP4651Y+5v4vLGLSOBAG3u
-        H7RYE6QhfamhFneKZKQ46Cdxhog5vCjEN2jyHQk352gkYme97nOILO16hJfYgB8pwnxGID0dD+4bp
-        uKOjwDhYnmRn1YxZ9ijxPw3d6j2nob2qHXT3/hVBlTIJjrjSqk6e9vYclG32v5THrImHW+UFoopI3
-        ZzdJ+zzfA0DgzHxmT5UmAM1OiTEzmh3wlZStvhwtuZMP57Jib8jry/niE9TJuTsaKLSEhdNUr2SVM
-        iwIAM3961udGLD7JgI5mtAgrNS2qHEzwTHjiwyinIc/K3UBui85RG8KKHo4If+3VO4rRxbMOxeTK7
-        5Z3GTKVQ==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1mVhSl-0006bf-Ep; Wed, 29 Sep 2021 15:50:04 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210928200216.GW3544071@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <06d75fcb-ce8b-30a5-db36-b6c108460d3d@deltatee.com>
-Date:   Wed, 29 Sep 2021 15:50:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1347003AbhI2Wp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 18:45:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29313 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1346393AbhI2Wp6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 18:45:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632955453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yDnZg0/6giW9XllEqIndueSNzorfdQE2gNriGLCrs+s=;
+        b=PV7kY0JHbqRzJy5V0K5Y6wpr/SmJ8JQ6BKg+AaHZzxnKSNIyerDzyvf4JUWHX0FRRY2C9m
+        XfFMQHEIiz8XOyOpexXqszNUETFKD9z0aktvP0z8HwVHlAW7vYD2Lu+D6vuOsyKlwzgfO/
+        O0vHw6yfCNXELo9Pm5OpytuVaEPzzOE=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-238-dFHSGzPxMQ6err-4re9tRQ-1; Wed, 29 Sep 2021 18:44:12 -0400
+X-MC-Unique: dFHSGzPxMQ6err-4re9tRQ-1
+Received: by mail-ot1-f71.google.com with SMTP id a19-20020a9d3e13000000b0054d67e67b64so2918346otd.22
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 15:44:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yDnZg0/6giW9XllEqIndueSNzorfdQE2gNriGLCrs+s=;
+        b=WiARVxHD0tztY4Ry6YwGWHOgYZfKJ4FiDgcxqft4pIfpTiceIAqoRTYr7UVZGXW+eE
+         /nfJOzsi6C+NIwEI4oh4ooaZhEijy0LskgzANoAxjQ1PCTII8is0i5NvT8y8kfWWkU4n
+         HcJpW4QyujiUnBsjsC7EFQGVj+gvAcuVlGdOQo8Wp6wyNW4lLtEJLxnqjp7rPTUbgUEx
+         6EE8hsmgCLV64kxH3BWdTIOmewXvwS9C7foHJQPE9Ike863Xluf2jXCflaMNPeJqum2y
+         J1oFVK8AwpnW4AzgeNYY5rb+EL7CubVBP8CnVPiCe8+xEkKbcr09W2MlEzfmXWHC0kMN
+         Vkcg==
+X-Gm-Message-State: AOAM533j1zfTr+TEidAvoRTPJAXT9FKliw9KgN2ASYn6mPOp1AdwvcoA
+        6wFF7FviDziGaL2UJELQ86FefbSka5TEH/Xy2kZvY2Ah6SmIr+RDZ7X8XgsVvJlAMoOJ0Zg+j/4
+        8F9n7J407EQUapBbOKk9t
+X-Received: by 2002:a05:6808:1595:: with SMTP id t21mr78471oiw.98.1632955451621;
+        Wed, 29 Sep 2021 15:44:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyVU6jEU+ZG3AcZVTtnnVZT8dq+yX76s5pQMOm4ir4e1zUDW6chJsiIv463tHWR/ZUtQthMIQ==
+X-Received: by 2002:a05:6808:1595:: with SMTP id t21mr78446oiw.98.1632955451416;
+        Wed, 29 Sep 2021 15:44:11 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id d21sm229884ooh.43.2021.09.29.15.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 15:44:10 -0700 (PDT)
+Date:   Wed, 29 Sep 2021 16:44:09 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+Message-ID: <20210929164409.3c33e311.alex.williamson@redhat.com>
+In-Reply-To: <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
+References: <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
+        <20210927164648.1e2d49ac.alex.williamson@redhat.com>
+        <20210927231239.GE3544071@ziepe.ca>
+        <25c97be6-eb4a-fdc8-3ac1-5628073f0214@nvidia.com>
+        <20210929063551.47590fbb.alex.williamson@redhat.com>
+        <1eba059c-4743-4675-9f72-1a26b8f3c0f6@nvidia.com>
+        <20210929075019.48d07deb.alex.williamson@redhat.com>
+        <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
+        <20210929091712.6390141c.alex.williamson@redhat.com>
+        <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
+        <20210929161433.GA1808627@ziepe.ca>
+        <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20210928200216.GW3544071@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [PATCH v3 00/20] Userspace P2PDMA with O_DIRECT NVMe devices
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, 30 Sep 2021 00:48:55 +0300
+Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
 
-
-On 2021-09-28 2:02 p.m., Jason Gunthorpe wrote:
-> On Thu, Sep 16, 2021 at 05:40:40PM -0600, Logan Gunthorpe wrote:
->> Hi,
->>
->> This patchset continues my work to add userspace P2PDMA access using
->> O_DIRECT NVMe devices. My last posting[1] just included the first 13
->> patches in this series, but the early P2PDMA cleanup and map_sg error
->> changes from that series have been merged into v5.15-rc1. To address
->> concerns that that series did not add any new functionality, I've added
->> back the userspcae functionality from the original RFC[2] (but improved
->> based on the original feedback).
+> On 9/29/2021 7:14 PM, Jason Gunthorpe wrote:
+> > On Wed, Sep 29, 2021 at 06:28:44PM +0300, Max Gurtovoy wrote:
+> >  
+> >>> So you have a device that's actively modifying its internal state,
+> >>> performing I/O, including DMA (thereby dirtying VM memory), all while
+> >>> in the _STOP state?  And you don't see this as a problem?  
+> >> I don't see how is it different from vfio-pci situation.  
+> > vfio-pci provides no way to observe the migration state. It isn't
+> > "000b"  
 > 
-> I really think this is the best series yet, it really looks nice
-> overall. I know the sg flag was a bit of a debate at the start, but it
-> serves an undeniable purpose and the resulting standard DMA APIs 'just
-> working' is really clean.
+> Alex said that there is a problem of compatibility.
+> 
+> I migration SW is not involved, nobody will read this migration state.
 
-Actually, so far, nobody has said anything negative about using the SG flag.
+The _STOP state has a specific meaning regardless of whether userspace
+reads the device state value.  I think what you're suggesting is that
+the device reports itself as _STOP'd but it's actually _RUNNING.  Is
+that the compatibility workaround, create a self inconsistency?
 
-> There is more possible here, we could also pass the new GUP flag in the
-> ib_umem code..
+We cannot impose on userspace to move a device from _STOP to _RUNNING
+simply because the device supports the migration region, nor should we
+report a device state that is inconsistent with the actual device state.
 
-Yes, that would be very useful.
+> >> Maybe we need to rename STOP state. We can call it READY or LIVE or
+> >> NON_MIGRATION_STATE.  
+> > It was a poor choice to use 000b as stop, but it doesn't really
+> > matter. The mlx5 driver should just pre-init this readable to running.  
+> 
+> I guess we can do it for this reason. There is no functional problem nor 
+> compatibility issue here as was mentioned.
+> 
+> But still we need the kernel to track transitions. We don't want to 
+> allow moving from RESUMING to SAVING state for example. How this 
+> transition can be allowed ?
+> 
+> In this case we need to fail the request from the migration SW...
 
-> After this gets merged I would make a series to split out the CMD
-> genalloc related stuff and try and probably get something like VFIO to
-> export this kind of memory as well, then it would have pretty nice
-> coverage.
+_RESUMING to _SAVING seems like a good way to test round trip migration
+without running the device to modify the state.  Potentially it's a
+means to update a saved device migration data stream to a newer format
+using an intermediate driver version.
 
-Yup!
+If a driver is written such that it simply sees clearing the _RESUME
+bit as an indicator to de-serialize the data stream to the device, and
+setting the _SAVING flag as an indicator to re-serialize that data
+stream from the device, then this is just a means to make use of
+existing data paths.
 
-Thanks for the review. Anything I didn't respond to I've either made
-changes for, or am still working on and will be addressed for subsequent
-postings.
+The uAPI specifies a means for drivers to reject a state change, but
+that risks failing to support a transition which might find mainstream
+use cases.  I don't think common code should be responsible for
+filtering out viable transitions.  Thanks,
 
-Logan
+Alex
+
