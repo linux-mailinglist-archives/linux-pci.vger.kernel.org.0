@@ -2,75 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A636441C776
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 16:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4F4641C7DB
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 17:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344737AbhI2O46 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 10:56:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:46826 "EHLO foss.arm.com"
+        id S1345039AbhI2PJW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 11:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344740AbhI2O46 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 10:56:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B60EE6D;
-        Wed, 29 Sep 2021 07:55:16 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F5AD3F793;
-        Wed, 29 Sep 2021 07:55:15 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 15:55:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek Vasut <marek.vasut@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
-Message-ID: <20210929145509.GA20495@lpieralisi>
-References: <20210907144512.5238-1-marek.vasut@gmail.com>
- <CAMuHMdU+QteYhw6xuhuPrX5DVfmPnBgM8JfQoTk-KOP7+fSCWQ@mail.gmail.com>
- <d720b758-109a-434e-b1a4-f49649dd34e9@gmail.com>
+        id S1345023AbhI2PJU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 11:09:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7F65261381;
+        Wed, 29 Sep 2021 15:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632928059;
+        bh=AJdCkz19tywpmnE6ujJZhJvh7reuETtJGcGdRabZHzU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sSi0SwCzz8C8cKBXIeVi1NcyJcpU537ENlt8iQzOUSnqS8+ED615JqakwctIbkSgy
+         rZXaUQlzrjdBXkFpBsaHiehZhyH3I2Vb/Tq7yO2jedOSKY6N9B/dzxMrk0o8IiIh5V
+         O8f2t9SEgU1GTX763aihLZgzFGicGLLv0x7jntXqh33drGtu5YMw7c1HyiCD/PyC9T
+         PuM2yckWmapkQ1NlyzPERhk9NqVhDLC/nUr4ECZjGeRMsnIMoLBaEDGU4NwEsdb3GI
+         OYQCV+s7OfNLAdKq0t4LjKHXHkIvz31S6jM0r4JwG6l/s+09GS3T2iGWM2Sj+gJ4EB
+         fe9iWjqBF3U1g==
+Date:   Wed, 29 Sep 2021 10:07:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ferry Toth <fntoth@gmail.com>
+Subject: Re: [PATCH v2 0/7] PCI: ACPI: Get rid of struct pci_platform_pm_ops
+ and clean up code
+Message-ID: <20210929150737.GA766999@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d720b758-109a-434e-b1a4-f49649dd34e9@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJZ5v0gr+o_AO7-EGRofU2UN_8aXivh5c-VQ9VKz7o4ZNq=VQw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 01:13:11AM +0200, Marek Vasut wrote:
-> On 9/21/21 6:08 PM, Geert Uytterhoeven wrote:
+On Wed, Sep 29, 2021 at 02:00:59PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Sep 29, 2021 at 1:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Ferry]
+> >
+> > On Mon, Sep 20, 2021 at 08:52:19PM +0200, Rafael J. Wysocki wrote:
+> > > Hi All,
+> > >
+> > > As explained in the changelog of patch [2/7], using struct pci_platform_pm_ops
+> > > for ACPI is not particularly beneficial, so it is better to get rid of it and
+> > > call the functions pointed to by it directly from the PCI core.
+> > >
+> > > However, struct pci_platform_pm_ops is also used by the Intel MID support code,
+> > > but it is actually better to call the MID PM function directly from the PCI
+> > > core either, which is done in patch [1/7].
+> > >
+> > > After these changes, patch [3/7] removes struct pci_platform_pm_ops and the
+> > > rest is just cleanups and some code consolidation on top of that.
+> >
+> > I like these a lot.  Not sure exactly where everything is after the
+> > conversation with Ferry.
 > 
-> [...]
+> It's mostly OK, the problem was in one of the "tail" patches that was
+> not rebased properly.
 > 
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > index 326f7d13024f..ee6f5e525d3a 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -66,6 +66,7 @@ config PCI_RCAR_GEN2
-> > >   config PCIE_RCAR_HOST
-> > >          bool "Renesas R-Car PCIe host controller"
-> > >          depends on ARCH_RENESAS || COMPILE_TEST
-> > > +       depends on COMMON_CLK
-> > 
-> > This part is OK.
+> There will be a follow-up series to test for Ferry (later today).
 > 
-> This part is also identical in the patch from Arnd, so you can just pick
-> that one as a fix and be done with it:
+> >  Let me know if I should be doing anything.
 > 
-> [PATCH] PCI: rcar: add COMMON_CLK dependency
-> https://patchwork.kernel.org/project/linux-pci/patch/20210920095730.1216692-1-arnd@kernel.org/
+> I'm going to take this lot if that's not a problem.  If I need
+> anything from you, I'll let you know.
 
-It is not strictly identical (Arnd's patch only touches the COMPILE_TEST
-option).
+Sounds good, thanks, Rafael!
 
-Bjorn, shall we pick Arnd's patch up then ? We should be fixing this in
-one of the upcoming -rcs since we introduced it in the last merge
-window.
-
-Thanks,
-Lorenzo
+Bjorn
