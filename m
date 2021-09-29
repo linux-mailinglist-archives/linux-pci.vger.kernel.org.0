@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 830D041CE30
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 23:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9171741CE41
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 23:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344300AbhI2Vcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 17:32:46 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:58952 "EHLO
+        id S1346199AbhI2VgT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 17:36:19 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:59044 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237351AbhI2Vcp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 17:32:45 -0400
+        with ESMTP id S1345930AbhI2VgS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 17:36:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
         Message-ID:From:References:Cc:To:content-disposition;
-        bh=6tw6VIf8QZ1mlsWGh+KwACIkxOMm5AZtflXeMzWKDvQ=; b=G14JPhTMh4902E+4gQOpPCi3NE
-        bFxLHYjwVMdykIibHNGwwk/pfJGXatmfFScbRKqP5T+6cgkMlic66K1TnPj/+BC8j/maeAvLYRotG
-        ORzZWzrzAW3Hz0kwwzy5NnyxHGwS6X410iNmK/7XOdakgXOPRmnlXQX4li117R5c5NTEe5AyXJctp
-        I447GFVyTPVitNyLXfV4nNhxBdpafdYHIClVsnA/j/MQ6D+TDBXc8NapePSVE7WVhVJYba8tP0aDK
-        j2NQQUrSiYHc+pbO0I+HvFF472sYp9bNn/BqdE6Soub7pluqmdrMQykwOElaEYZym+pT6Ga9TEQYr
-        5xy7m3uQ==;
+        bh=Bs8bMhC7bQAuNPOpZEH0zniuEdm9NW/YrFeZImeIfOA=; b=I2EoSXtUtxxE6I7rRXNlaQi1Cr
+        26y7kb5TT5Pm2pY5KxdBM9XFbLlCc1/rp6B788hVTB6/j0GiBnouY+POEQdum7NZv9aXHc5gg45iF
+        yDAL1n2pfsNdyOEb90H2C4R4SoWew8wSXqeMJiwcAExoJRoh6co1C/CZ0YGaO2ofnpKtpl9BhvsIt
+        n2teiyqjsDdWHRe3V8sdAM1Oxu9gQupPSVaReSA3KUwu7+sZf+t5nMdzuSACvG6+2YM5krqC8RIUR
+        dFiVhA4xErhytJnA9uXt2A1tDoLp4et4Tm1Ld8W02rwrG6hBlPYYC+mPAn/D7qJpK5zLNDI85nLXB
+        zO+aoKCA==;
 Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
         by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
         (envelope-from <logang@deltatee.com>)
-        id 1mVhAB-0006Lf-1O; Wed, 29 Sep 2021 15:30:51 -0600
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        id 1mVhDc-0006Oe-EH; Wed, 29 Sep 2021 15:34:25 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
@@ -48,27 +48,28 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
 References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-5-logang@deltatee.com>
- <20210928220502.GA1738588@nvidia.com>
+ <20210916234100.122368-15-logang@deltatee.com>
+ <20210928194707.GU3544071@ziepe.ca>
 From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <91469404-fd20-effa-2e01-aa79d9d4b9b5@deltatee.com>
-Date:   Wed, 29 Sep 2021 15:30:42 -0600
+Message-ID: <9c40347c-f9a8-af86-71a5-2156359e15ce@deltatee.com>
+Date:   Wed, 29 Sep 2021 15:34:22 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20210928220502.GA1738588@nvidia.com>
+In-Reply-To: <20210928194707.GU3544071@ziepe.ca>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@nvidia.com
+X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
 X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v3 4/20] PCI/P2PDMA: introduce helpers for dma_map_sg
- implementations
+X-Spam-Status: No, score=-11.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v3 14/20] mm: introduce FOLL_PCI_P2PDMA to gate getting
+ PCI P2PDMA pages
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
@@ -78,34 +79,23 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2021-09-28 4:05 p.m., Jason Gunthorpe wrote:
-> On Thu, Sep 16, 2021 at 05:40:44PM -0600, Logan Gunthorpe wrote:
+On 2021-09-28 1:47 p.m., Jason Gunthorpe wrote:
+> On Thu, Sep 16, 2021 at 05:40:54PM -0600, Logan Gunthorpe wrote:
+>> Callers that expect PCI P2PDMA pages can now set FOLL_PCI_P2PDMA to
+>> allow obtaining P2PDMA pages. If a caller does not set this flag
+>> and tries to map P2PDMA pages it will fail.
+>>
+>> This is implemented by adding a flag and a check to get_dev_pagemap().
 > 
->> +enum pci_p2pdma_map_type
->> +pci_p2pdma_map_segment(struct pci_p2pdma_map_state *state, struct device *dev,
->> +		       struct scatterlist *sg)
->> +{
->> +	if (state->pgmap != sg_page(sg)->pgmap) {
->> +		state->pgmap = sg_page(sg)->pgmap;
+> I would like to see the get_dev_pagemap() deleted from GUP in the
+> first place.
 > 
-> This has built into it an assumption that every page in the sg element
-> has the same pgmap, but AFAIK nothing enforces this rule? There is no
-> requirement that the HW has pfn gaps between the pgmaps linux decides
-> to create over it.
+> Why isn't this just a simple check of the page->pgmap type after
+> acquiring a valid page reference? See my prior note
 
-No, that's not a correct reading of the code. Every time there is a new
-pagemap, this code calculates the mapping type and bus offset. If a page
-comes along with a different page map,f it recalculates. This just
-reduces the overhead so that the calculation is done only every time a
-page with a different pgmap comes along and not doing it for every
-single page.
+It could be, but that will mean dereferencing the pgmap for every page
+to determine the type of page and then comparing with FOLL_PCI_P2PDMA.
 
-> At least sg_alloc_append_table_from_pages() and probably something in
-> the block world should be updated to not combine struct pages with
-> different pgmaps, and this should be documented in scatterlist.*
-> someplace.
-
-There's no sane place to do this check. The code is designed to support
-mappings with different pgmaps.
+Probably not terrible to go this way.
 
 Logan
