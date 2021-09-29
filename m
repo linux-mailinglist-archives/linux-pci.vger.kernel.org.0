@@ -2,89 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA28741CC53
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 21:08:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D56F141CC59
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 21:09:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346402AbhI2TJw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 15:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245276AbhI2TJt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 15:09:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9228B61506;
-        Wed, 29 Sep 2021 19:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632942488;
-        bh=V7P9Dpo+mgUjVW9uQztKl7TPFTOtCqIlyiXw//J0a4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=btPVSf5x7vMYBcmJQXGjDQufdGB7+wjOy/1iDEdfKVnUipcgeBnw5JU7jBFyK00ix
-         YZoR4thoCZKqiMIguMmT04BdtlIVeF0i3IsuPSPzK0aNLoWDjY/aDUwO2XO21kL+E0
-         5rholWmLqPj33VWKR3nhyfnjV7RNcquGdMWDstNsYDp+GSkqGFjfPgJmu6OKpd12sW
-         akiKTy3ioJNpkN8aD1VAppF4Jbxa+qT5g5Vv+lRspuIdB2vVn9OO9sfVFcKQQmZJ5Z
-         p0SfNbILnawfWuUYyqu/+385V8bJI7UH9Ph5R0uRpjsXig0t2etVtN9Ggsb1K8One2
-         dlXiBwC5dsmgA==
-Date:   Wed, 29 Sep 2021 12:08:03 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/7] PCI: ACPI: PM: Do not use pci_platform_pm_ops for
- ACPI
-Message-ID: <YVS5k1H8KyVAk/h8@archlinux-ax161>
-References: <1800633.tdWV9SEqCh@kreacher>
- <8879480.rMLUfLXkoz@kreacher>
+        id S1346444AbhI2TKm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 15:10:42 -0400
+Received: from mail-vs1-f50.google.com ([209.85.217.50]:33572 "EHLO
+        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346427AbhI2TKm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 15:10:42 -0400
+Received: by mail-vs1-f50.google.com with SMTP id 188so4373518vsv.0;
+        Wed, 29 Sep 2021 12:09:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4DvMiED0Nj39LGv5hIz7wQKjAf2wRBS1r0Gep2K3eNY=;
+        b=T/6aSzM/sThrenFcJ8J3m+WyG6NJKY6GKzMrFrsLlIindJF7Kjs1WMFGoIcTfOl1+V
+         GbIdKST93z2nq+bAbpfxQPDY+O3fkMc0/8EpYRt7Igsg7580+4S+De89jMPfqqKQbigh
+         Nr6KsqmPjziPT9ZsiwCI0Pm1XzAg1hpzDSsO8WANrWW/NS1P/zDb2Jq6dLUC+fkPfL+M
+         cJMEEwobSoU/K4mhH7Ol05MXyKW8Xu6oLXobzNT4Nxc3hHM8xV8i0XxQz/5voFV8XQsO
+         8a0zQ8XNN1/NQjIFUCCt31IoBcdlHWjOraCsZfLna9OVdpLdIIISD0ZOalzbygU4eZMo
+         dxXw==
+X-Gm-Message-State: AOAM530hv7NoG4Y0wIsyOYnr5Cs4EDLsaP5k0B3Sk+eltYFVWqihzV1p
+        WylaI1R63KvUBgyNqO/B0dSMKMG2n0/yL3iZegk=
+X-Google-Smtp-Source: ABdhPJyR8wRtUtrr+ge+bIY4WdnNfeReGufJe0RoPvCyYUYR3QnwFXof4Jpl1sLXvSek+FPZxcbKMyh9N7zKMoVC/Kw=
+X-Received: by 2002:a67:f147:: with SMTP id t7mr2113331vsm.41.1632942540439;
+ Wed, 29 Sep 2021 12:09:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8879480.rMLUfLXkoz@kreacher>
+References: <20210929145509.GA20495@lpieralisi> <20210929163250.GA773921@bhelgaas>
+ <CAK8P3a0Z=w6CK3EKG5LjMan3R04bO9BshLxqU1J_gm8+OLuU+Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a0Z=w6CK3EKG5LjMan3R04bO9BshLxqU1J_gm8+OLuU+Q@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 29 Sep 2021 21:08:42 +0200
+Message-ID: <CAMuHMdVNRdD8nD7w6+UsySC+8J_r5TeH1NVwgiKqKaOLBEfhcA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 09:17:08PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Using struct pci_platform_pm_ops for ACPI adds unnecessary
-> indirection to the interactions between the PCI core and ACPI PM,
-> which is also subject to retpolines.
-> 
-> Moreover, it is not particularly clear from the current code that,
-> as far as PCI PM is concerned, "platform" really means just ACPI
-> except for the special casess when Intel MID PCI PM is used or when
-> ACPI support is disabled (through the kernel config or command line,
-> or because there are no usable ACPI tables on the system).
-> 
-> To address the above, rework the PCI PM code to invoke ACPI PM
-> functions directly as needed and drop the acpi_pci_platform_pm
-> object that is not necessary any more.
-> 
-> Accordingly, update some of the ACPI PM functions in question to do
-> extra checks in case the ACPI support is disabled (which previously
-> was taken care of by avoiding to set the pci_platform_ops pointer
-> in those cases).
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Sep 29, 2021 at 8:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wed, Sep 29, 2021 at 6:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Sep 29, 2021 at 03:55:09PM +0100, Lorenzo Pieralisi wrote:
+> > > On Wed, Sep 22, 2021 at 01:13:11AM +0200, Marek Vasut wrote:
+> > > > On 9/21/21 6:08 PM, Geert Uytterhoeven wrote:
+> > > >
+> > > > [...]
+> > > >
+> > > > > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > > > > > index 326f7d13024f..ee6f5e525d3a 100644
+> > > > > > --- a/drivers/pci/controller/Kconfig
+> > > > > > +++ b/drivers/pci/controller/Kconfig
+> > > > > > @@ -66,6 +66,7 @@ config PCI_RCAR_GEN2
+> > > > > >   config PCIE_RCAR_HOST
+> > > > > >          bool "Renesas R-Car PCIe host controller"
+> > > > > >          depends on ARCH_RENESAS || COMPILE_TEST
+> > > > > > +       depends on COMMON_CLK
+> > > > >
+> > >
+> > > Bjorn, shall we pick Arnd's patch up then ? We should be fixing this in
+> > > one of the upcoming -rcs since we introduced it in the last merge
+> > > window.
+> >
+> > IIUC, a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort
+> > hook") appeared in v5.15-rc1 and added a use of __clk_is_enabled(),
+> > which is only available when COMMON_CLK=y.
+> >
+> > PCIE_RCAR_HOST depends on ARCH_RENESAS || COMPILE_TEST.  ARCH_RENESAS
+> > is an ARM64 platform, so when COMPILE_TEST is not set, I think we get
+> > COMMON_CLK=y via this:
+> >
+> >   config ARM64
+> >     select COMMON_CLK
+> >
+> > But when ARCH_RENESAS is not set and COMPILE_TEST=y, there's nothing
+> > that enforces the dependency on COMMON_CLK.  Personally I like the
+> > first hunk of Marek's patch at [1] because the dependency on
+> > COMMON_CLK is explicit:
+> >
+> >   config PCIE_RCAR_HOST
+> >     depends on ARCH_RENESAS || COMPILE_TEST
+> >     depends on COMMON_CLK
+>
+> Agreed, Marek's version is clearer than mine, please use that.
 
-This patch as commit 9896a58cdd59 ("PCI: ACPI: PM: Do not use
-pci_platform_pm_ops for ACPI") in -next causes the following build error
-when compiling x86_64 allmodconfig with clang:
+But PCIE_RCAR_EP does not need the dependency.
 
-drivers/pci/pci-acpi.c:1125:7: error: variable 'adev' is uninitialized when used here [-Werror,-Wuninitialized]
-        if (!adev || !acpi_device_power_manageable(adev))
-             ^~~~
-drivers/pci/pci-acpi.c:1110:26: note: initialize the variable 'adev' to silence this warning
-        struct acpi_device *adev;
-                                ^
-                                 = NULL
-1 error generated.
+Gr{oetje,eeting}s,
 
-Should the adev assignment be moved up or is there a different fix
-necessary?
+                        Geert
 
-Cheers,
-Nathan
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
