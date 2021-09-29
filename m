@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E0CB41CA62
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:39:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5287B41CA66
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346073AbhI2Qko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 12:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
+        id S1346065AbhI2Qkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 12:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345995AbhI2Qkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 12:40:39 -0400
+        id S1345996AbhI2Qkk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 12:40:40 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22066147F;
-        Wed, 29 Sep 2021 16:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21A6B61440;
+        Wed, 29 Sep 2021 16:38:59 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mVcbh-00DmcL-0M; Wed, 29 Sep 2021 17:38:57 +0100
+        id 1mVcbh-00DmcL-Dc; Wed, 29 Sep 2021 17:38:57 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Robin Murphy <Robin.Murphy@arm.com>,
         Joey Gouly <joey.gouly@arm.com>,
         Joerg Roedel <joro@8bytes.org>, kernel-team@android.com
-Subject: [PATCH v5 08/14] iommu/dart: Exclude MSI doorbell from PCIe device IOVA range
-Date:   Wed, 29 Sep 2021 17:38:41 +0100
-Message-Id: <20210929163847.2807812-9-maz@kernel.org>
+Subject: [PATCH v5 09/14] PCI: apple: Configure RID to SID mapper on device addition
+Date:   Wed, 29 Sep 2021 17:38:42 +0100
+Message-Id: <20210929163847.2807812-10-maz@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210929163847.2807812-1-maz@kernel.org>
 References: <20210929163847.2807812-1-maz@kernel.org>
@@ -52,97 +52,276 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The MSI doorbell on Apple HW can be any address in the low 4GB
-range. However, the MSI write is matched by the PCIe block before
-hitting the iommu. It must thus be excluded from the IOVA range
-that is assigned to any PCIe device.
+The Apple PCIe controller doesn't directly feed the endpoint's
+Requester ID to the IOMMU (DART), but instead maps RIDs onto
+Stream IDs (SIDs). The DART and the PCIe controller must thus
+agree on the SIDs that are used for translation (by using
+the 'iommu-map' property).
+
+For this purpose, parse the 'iommu-map' property each time a
+device gets added, and use the resulting translation to configure
+the PCIe RID-to-SID mapper. Similarily, remove the translation
+if/when the device gets removed.
+
+This is all driven from a bus notifier which gets registered at
+probe time. Hopefully this is the only PCI controller driver
+in the whole system.
 
 Reviewed-by: Sven Peter <sven@svenpeter.dev>
 Tested-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/iommu/apple-dart.c          | 27 +++++++++++++++++++++++++++
- drivers/pci/controller/Kconfig      |  5 +++++
- drivers/pci/controller/pcie-apple.c |  4 +++-
- 3 files changed, 35 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-apple.c | 165 +++++++++++++++++++++++++++-
+ 1 file changed, 163 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
-index 559db9259e65..f1f1f024c604 100644
---- a/drivers/iommu/apple-dart.c
-+++ b/drivers/iommu/apple-dart.c
-@@ -721,6 +721,31 @@ static int apple_dart_def_domain_type(struct device *dev)
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index a27dd93217f5..b4db7a065553 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -23,8 +23,10 @@
+ #include <linux/iopoll.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/msi.h>
++#include <linux/notifier.h>
+ #include <linux/of_irq.h>
+ #include <linux/pci-ecam.h>
+ 
+@@ -116,6 +118,8 @@
+ #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
+ #define PORT_PREFMEM_ENABLE		0x00994
+ 
++#define MAX_RID2SID			64
++
+ /*
+  * The doorbell address is set to 0xfffff000, which by convention
+  * matches what MacOS does, and it is possible to use any other
+@@ -131,6 +135,7 @@ struct apple_pcie {
+ 	void __iomem            *base;
+ 	struct irq_domain	*domain;
+ 	unsigned long		*bitmap;
++	struct list_head	ports;
+ 	struct completion	event;
+ 	struct irq_fwspec	fwspec;
+ 	u32			nvecs;
+@@ -141,6 +146,9 @@ struct apple_pcie_port {
+ 	struct device_node	*np;
+ 	void __iomem		*base;
+ 	struct irq_domain	*domain;
++	struct list_head	entry;
++	DECLARE_BITMAP(		sid_map, MAX_RID2SID);
++	int			sid_map_sz;
+ 	int			idx;
+ };
+ 
+@@ -489,6 +497,14 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
  	return 0;
  }
  
-+#ifndef CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR
-+/* Keep things compiling when CONFIG_PCI_APPLE isn't selected */
-+#define CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR	0
-+#endif
-+#define DOORBELL_ADDR	(CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR & PAGE_MASK)
-+
-+static void apple_dart_get_resv_regions(struct device *dev,
-+					struct list_head *head)
++static u32 apple_pcie_rid2sid_write(struct apple_pcie_port *port,
++				    int idx, u32 val)
 +{
-+	if (IS_ENABLED(CONFIG_PCIE_APPLE) && dev_is_pci(dev)) {
-+		struct iommu_resv_region *region;
-+		int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-+
-+		region = iommu_alloc_resv_region(DOORBELL_ADDR,
-+						 PAGE_SIZE, prot,
-+						 IOMMU_RESV_MSI);
-+		if (!region)
-+			return;
-+
-+		list_add_tail(&region->list, head);
-+	}
-+
-+	iommu_dma_get_resv_regions(dev, head);
++	writel_relaxed(val, port->base + PORT_RID2SID(idx));
++	/* Read back to ensure completion of the write */
++	return readl_relaxed(port->base + PORT_RID2SID(idx));
 +}
 +
- static const struct iommu_ops apple_dart_iommu_ops = {
- 	.domain_alloc = apple_dart_domain_alloc,
- 	.domain_free = apple_dart_domain_free,
-@@ -737,6 +762,8 @@ static const struct iommu_ops apple_dart_iommu_ops = {
- 	.device_group = apple_dart_device_group,
- 	.of_xlate = apple_dart_of_xlate,
- 	.def_domain_type = apple_dart_def_domain_type,
-+	.get_resv_regions = apple_dart_get_resv_regions,
-+	.put_resv_regions = generic_iommu_put_resv_regions,
- 	.pgsize_bitmap = -1UL, /* Restricted during dart probe */
- };
+ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 				 struct device_node *np)
+ {
+@@ -496,7 +512,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	struct apple_pcie_port *port;
+ 	struct gpio_desc *reset;
+ 	u32 stat, idx;
+-	int ret;
++	int ret, i;
  
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 814833a8120d..b6e7410da254 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -312,6 +312,11 @@ config PCIE_HISI_ERR
- 	  Say Y here if you want error handling support
- 	  for the PCIe controller's errors on HiSilicon HIP SoCs
+ 	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
+ 				       GPIOD_OUT_LOW, "#PERST");
+@@ -540,6 +556,18 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	if (ret)
+ 		return ret;
  
-+config PCIE_APPLE_MSI_DOORBELL_ADDR
-+	hex
-+	default 0xfffff000
-+	depends on PCIE_APPLE
++	/* Reset all RID/SID mappings, and check for RAZ/WI registers */
++	for (i = 0; i < MAX_RID2SID; i++) {
++		if (apple_pcie_rid2sid_write(port, i, 0xbad1d) != 0xbad1d)
++			break;
++		apple_pcie_rid2sid_write(port, i, 0);
++	}
 +
- config PCIE_APPLE
- 	tristate "Apple PCIe controller"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 97af5d9f0bcb..a27dd93217f5 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -120,8 +120,10 @@
-  * The doorbell address is set to 0xfffff000, which by convention
-  * matches what MacOS does, and it is possible to use any other
-  * address (in the bottom 4GB, as the base register is only 32bit).
-+ * However, it has to be excluded from the the IOVA range, and the
-+ * DART driver has to know about it.
-  */
--#define DOORBELL_ADDR			0xfffff000
-+#define DOORBELL_ADDR		CONFIG_PCIE_APPLE_MSI_DOORBELL_ADDR
++	dev_dbg(pcie->dev, "%pOF: %d RID/SID mapping entries\n", np, i);
++
++	port->sid_map_sz = i;
++
++	list_add_tail(&port->entry, &pcie->ports);
+ 	init_completion(&pcie->event);
  
- struct apple_pcie {
- 	struct mutex		lock;
+ 	ret = apple_pcie_port_register_irqs(port);
+@@ -602,6 +630,121 @@ static int apple_msi_init(struct apple_pcie *pcie)
+ 	return 0;
+ }
+ 
++static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
++{
++	struct pci_config_window *cfg = pdev->sysdata;
++	struct apple_pcie *pcie = cfg->priv;
++	struct pci_dev *port_pdev = pdev;
++	struct apple_pcie_port *port;
++
++	/* Find the root port this device is on */
++	port_pdev = pcie_find_root_port(pdev);
++
++	/* If finding the port itself, nothing to do */
++	if (WARN_ON(!port_pdev) || pdev == port_pdev)
++		return NULL;
++
++	list_for_each_entry(port, &pcie->ports, entry) {
++		if (port->idx == PCI_SLOT(port_pdev->devfn))
++			return port;
++	}
++
++	return NULL;
++}
++
++static int apple_pcie_add_device(struct apple_pcie_port *port,
++				 struct pci_dev *pdev)
++{
++	u32 sid, rid = PCI_DEVID(pdev->bus->number, pdev->devfn);
++	int idx, err;
++
++	dev_dbg(&pdev->dev, "added to bus %s, index %d\n",
++		pci_name(pdev->bus->self), port->idx);
++
++	err = of_map_id(port->pcie->dev->of_node, rid, "iommu-map",
++			"iommu-map-mask", NULL, &sid);
++	if (err)
++		return err;
++
++	mutex_lock(&port->pcie->lock);
++
++	idx = bitmap_find_free_region(port->sid_map, port->sid_map_sz, 0);
++	if (idx >= 0) {
++		apple_pcie_rid2sid_write(port, idx,
++					 PORT_RID2SID_VALID |
++					 (sid << PORT_RID2SID_SID_SHIFT) | rid);
++
++		dev_dbg(&pdev->dev, "mapping RID%x to SID%x (index %d)\n",
++			rid, sid, idx);
++	}
++
++	mutex_unlock(&port->pcie->lock);
++
++	return idx >= 0 ? 0 : -ENOSPC;
++}
++
++static void apple_pcie_release_device(struct apple_pcie_port *port,
++				      struct pci_dev *pdev)
++{
++	u32 rid = PCI_DEVID(pdev->bus->number, pdev->devfn);
++	int idx;
++
++	mutex_lock(&port->pcie->lock);
++
++	for_each_set_bit(idx, port->sid_map, port->sid_map_sz) {
++		u32 val;
++
++		val = readl_relaxed(port->base + PORT_RID2SID(idx));
++		if ((val & 0xffff) == rid) {
++			apple_pcie_rid2sid_write(port, idx, 0);
++			bitmap_release_region(port->sid_map, idx, 0);
++			dev_dbg(&pdev->dev, "Released %x (%d)\n", val, idx);
++			break;
++		}
++	}
++
++	mutex_unlock(&port->pcie->lock);
++}
++
++static int apple_pcie_bus_notifier(struct notifier_block *nb,
++				   unsigned long action,
++				   void *data)
++{
++	struct device *dev = data;
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct apple_pcie_port *port;
++	int err;
++
++	/*
++	 * This is a bit ugly. We assume that if we get notified for
++	 * any PCI device, we must be in charge of it, and that there
++	 * is no other PCI controller in the whole system. It probably
++	 * holds for now, but who knows for how long?
++	 */
++	port = apple_pcie_get_port(pdev);
++	if (!port)
++		return NOTIFY_DONE;
++
++	switch (action) {
++	case BUS_NOTIFY_ADD_DEVICE:
++		err = apple_pcie_add_device(port, pdev);
++		if (err)
++			return notifier_from_errno(err);
++		break;
++	case BUS_NOTIFY_DEL_DEVICE:
++		apple_pcie_release_device(port, pdev);
++		break;
++	default:
++		return NOTIFY_DONE;
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block apple_pcie_nb = {
++	.notifier_call = apple_pcie_bus_notifier,
++};
++
+ static int apple_pcie_init(struct pci_config_window *cfg)
+ {
+ 	struct device *dev = cfg->parent;
+@@ -622,6 +765,9 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 	if (IS_ERR(pcie->base))
+ 		return PTR_ERR(pcie->base);
+ 
++	cfg->priv = pcie;
++	INIT_LIST_HEAD(&pcie->ports);
++
+ 	for_each_child_of_node(dev->of_node, of_port) {
+ 		ret = apple_pcie_setup_port(pcie, of_port);
+ 		if (ret) {
+@@ -633,6 +779,21 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 	return apple_msi_init(pcie);
+ }
+ 
++static int apple_pcie_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	ret = bus_register_notifier(&pci_bus_type, &apple_pcie_nb);
++	if (ret)
++		return ret;
++
++	ret = pci_host_common_probe(pdev);
++	if (ret)
++		bus_unregister_notifier(&pci_bus_type, &apple_pcie_nb);
++
++	return ret;
++}
++
+ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
+ 	.init		= apple_pcie_init,
+ 	.pci_ops	= {
+@@ -649,7 +810,7 @@ static const struct of_device_id apple_pcie_of_match[] = {
+ MODULE_DEVICE_TABLE(of, apple_pcie_of_match);
+ 
+ static struct platform_driver apple_pcie_driver = {
+-	.probe	= pci_host_common_probe,
++	.probe	= apple_pcie_probe,
+ 	.driver	= {
+ 		.name			= "pcie-apple",
+ 		.of_match_table		= apple_pcie_of_match,
 -- 
 2.30.2
 
