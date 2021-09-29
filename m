@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E6E041CA60
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:39:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD0CE41CA67
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 18:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346059AbhI2Qko (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 12:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40780 "EHLO mail.kernel.org"
+        id S1346061AbhI2Qkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 12:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345987AbhI2Qkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1345989AbhI2Qkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 29 Sep 2021 12:40:39 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFEFA61406;
-        Wed, 29 Sep 2021 16:38:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3052E61502;
+        Wed, 29 Sep 2021 16:38:58 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mVcbg-00DmcL-4i; Wed, 29 Sep 2021 17:38:56 +0100
+        id 1mVcbg-00DmcL-J2; Wed, 29 Sep 2021 17:38:56 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Robin Murphy <Robin.Murphy@arm.com>,
         Joey Gouly <joey.gouly@arm.com>,
         Joerg Roedel <joro@8bytes.org>, kernel-team@android.com
-Subject: [PATCH v5 06/14] PCI: apple: Add INTx and per-port interrupt support
-Date:   Wed, 29 Sep 2021 17:38:39 +0100
-Message-Id: <20210929163847.2807812-7-maz@kernel.org>
+Subject: [PATCH v5 07/14] PCI: apple: Implement MSI support
+Date:   Wed, 29 Sep 2021 17:38:40 +0100
+Message-Id: <20210929163847.2807812-8-maz@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210929163847.2807812-1-maz@kernel.org>
 References: <20210929163847.2807812-1-maz@kernel.org>
@@ -52,272 +52,237 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support for the per-port interrupt controller that deals
-with both INTx signalling and management interrupts.
+Probe for the 'msi-ranges' property, and implement the MSI
+support in the form of the usual two-level hierarchy.
 
-This allows the Link-up/Link-down interrupts to be wired, allowing
-the bring-up to be synchronised (and provide debug information).
-The framework can further be used to handle the rest of the per
-port events if and when necessary.
-
-Likewise, INTx signalling is implemented so that end-points can
-actually be used.
+Note that contrary to the wired interrupts, MSIs are shared among
+all the ports.
 
 Tested-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 209 ++++++++++++++++++++++++++++
- 1 file changed, 209 insertions(+)
+ drivers/pci/controller/pcie-apple.c | 169 +++++++++++++++++++++++++++-
+ 1 file changed, 168 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 23390e5c54e9..09544f0d166c 100644
+index 09544f0d166c..97af5d9f0bcb 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -21,6 +21,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/iopoll.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-@@ -118,12 +119,14 @@
+@@ -116,10 +116,22 @@
+ #define   PORT_TUNSTAT_PERST_ACK_PEND	BIT(1)
+ #define PORT_PREFMEM_ENABLE		0x00994
+ 
++/*
++ * The doorbell address is set to 0xfffff000, which by convention
++ * matches what MacOS does, and it is possible to use any other
++ * address (in the bottom 4GB, as the base register is only 32bit).
++ */
++#define DOORBELL_ADDR			0xfffff000
++
  struct apple_pcie {
++	struct mutex		lock;
  	struct device		*dev;
  	void __iomem            *base;
-+	struct completion	event;
++	struct irq_domain	*domain;
++	unsigned long		*bitmap;
+ 	struct completion	event;
++	struct irq_fwspec	fwspec;
++	u32			nvecs;
  };
  
  struct apple_pcie_port {
- 	struct apple_pcie	*pcie;
- 	struct device_node	*np;
- 	void __iomem		*base;
-+	struct irq_domain	*domain;
- 	int			idx;
- };
- 
-@@ -137,6 +140,200 @@ static void rmw_clear(u32 clr, void __iomem *addr)
+@@ -140,6 +152,101 @@ static void rmw_clear(u32 clr, void __iomem *addr)
  	writel_relaxed(readl_relaxed(addr) & ~clr, addr);
  }
  
-+static void apple_port_irq_mask(struct irq_data *data)
++static void apple_msi_top_irq_mask(struct irq_data *d)
 +{
-+	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
-+
-+	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKSET);
++	pci_msi_mask_irq(d);
++	irq_chip_mask_parent(d);
 +}
 +
-+static void apple_port_irq_unmask(struct irq_data *data)
++static void apple_msi_top_irq_unmask(struct irq_data *d)
 +{
-+	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
-+
-+	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKCLR);
++	pci_msi_unmask_irq(d);
++	irq_chip_unmask_parent(d);
 +}
 +
-+static bool hwirq_is_intx(unsigned int hwirq)
-+{
-+	return BIT(hwirq) & PORT_INT_INTx_MASK;
-+}
-+
-+static void apple_port_irq_ack(struct irq_data *data)
-+{
-+	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
-+
-+	if (!hwirq_is_intx(data->hwirq))
-+		writel_relaxed(BIT(data->hwirq), port->base + PORT_INTSTAT);
-+}
-+
-+static int apple_port_irq_set_type(struct irq_data *data, unsigned int type)
-+{
-+	/*
-+	 * It doesn't seem that there is any way to configure the
-+	 * trigger, so assume INTx have to be level (as per the spec),
-+	 * and the rest is edge (which looks likely).
-+	 */
-+	if (hwirq_is_intx(data->hwirq) ^ !!(type & IRQ_TYPE_LEVEL_MASK))
-+		return -EINVAL;
-+
-+	irqd_set_trigger_type(data, type);
-+	return 0;
-+}
-+
-+static struct irq_chip apple_port_irqchip = {
-+	.name		= "PCIe",
-+	.irq_ack	= apple_port_irq_ack,
-+	.irq_mask	= apple_port_irq_mask,
-+	.irq_unmask	= apple_port_irq_unmask,
-+	.irq_set_type	= apple_port_irq_set_type,
++static struct irq_chip apple_msi_top_chip = {
++	.name			= "PCIe MSI",
++	.irq_mask		= apple_msi_top_irq_mask,
++	.irq_unmask		= apple_msi_top_irq_unmask,
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_set_type		= irq_chip_set_type_parent,
 +};
 +
-+static int apple_port_irq_domain_alloc(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs,
-+				       void *args)
++static void apple_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
 +{
-+	struct apple_pcie_port *port = domain->host_data;
-+	struct irq_fwspec *fwspec = args;
-+	int i;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		irq_flow_handler_t flow = handle_edge_irq;
-+		unsigned int type = IRQ_TYPE_EDGE_RISING;
-+
-+		if (hwirq_is_intx(fwspec->param[0] + i)) {
-+			flow = handle_level_irq;
-+			type = IRQ_TYPE_LEVEL_HIGH;
-+		}
-+
-+		irq_domain_set_info(domain, virq + i, fwspec->param[0] + i,
-+				    &apple_port_irqchip, port, flow,
-+				    NULL, NULL);
-+
-+		irq_set_irq_type(virq + i, type);
-+	}
-+
-+	return 0;
++	msg->address_hi = upper_32_bits(DOORBELL_ADDR);
++	msg->address_lo = lower_32_bits(DOORBELL_ADDR);
++	msg->data = data->hwirq;
 +}
 +
-+static void apple_port_irq_domain_free(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct irq_data *d = irq_domain_get_irq_data(domain, virq + i);
-+		irq_set_handler(virq + i, NULL);
-+		irq_domain_reset_irq_data(d);
-+	}
-+}
-+
-+static const struct irq_domain_ops apple_port_irq_domain_ops = {
-+	.translate	= irq_domain_translate_onecell,
-+	.alloc		= apple_port_irq_domain_alloc,
-+	.free		= apple_port_irq_domain_free,
++static struct irq_chip apple_msi_bottom_chip = {
++	.name			= "MSI",
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_set_type		= irq_chip_set_type_parent,
++	.irq_compose_msi_msg	= apple_msi_compose_msg,
 +};
 +
-+static void apple_port_irq_handler(struct irq_desc *desc)
++static int apple_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs, void *args)
 +{
-+	struct apple_pcie_port *port = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long stat;
-+	int i;
++	struct apple_pcie *pcie = domain->host_data;
++	struct irq_fwspec fwspec = pcie->fwspec;
++	unsigned int i;
++	int ret, hwirq;
 +
-+	chained_irq_enter(chip, desc);
++	mutex_lock(&pcie->lock);
 +
-+	stat = readl_relaxed(port->base + PORT_INTSTAT);
++	hwirq = bitmap_find_free_region(pcie->bitmap, pcie->nvecs,
++					order_base_2(nr_irqs));
 +
-+	for_each_set_bit(i, &stat, 32)
-+		generic_handle_domain_irq(port->domain, i);
++	mutex_unlock(&pcie->lock);
 +
-+	chained_irq_exit(chip, desc);
-+}
++	if (hwirq < 0)
++		return -ENOSPC;
 +
-+static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
-+{
-+	struct fwnode_handle *fwnode = &port->np->fwnode;
-+	unsigned int irq;
++	fwspec.param[1] += hwirq;
 +
-+	/* FIXME: consider moving each interrupt under each port */
-+	irq = irq_of_parse_and_map(to_of_node(dev_fwnode(port->pcie->dev)),
-+				   port->idx);
-+	if (!irq)
-+		return -ENXIO;
-+
-+	port->domain = irq_domain_create_linear(fwnode, 32,
-+						&apple_port_irq_domain_ops,
-+						port);
-+	if (!port->domain)
-+		return -ENOMEM;
-+
-+	/* Disable all interrupts */
-+	writel_relaxed(~0, port->base + PORT_INTMSKSET);
-+	writel_relaxed(~0, port->base + PORT_INTSTAT);
-+
-+	irq_set_chained_handler_and_data(irq, apple_port_irq_handler, port);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t apple_pcie_port_irq(int irq, void *data)
-+{
-+	struct apple_pcie_port *port = data;
-+	unsigned int hwirq = irq_domain_get_irq_data(port->domain, irq)->hwirq;
-+
-+	switch (hwirq) {
-+	case PORT_INT_LINK_UP:
-+		dev_info_ratelimited(port->pcie->dev, "Link up on %pOF\n",
-+				     port->np);
-+		complete_all(&port->pcie->event);
-+		break;
-+	case PORT_INT_LINK_DOWN:
-+		dev_info_ratelimited(port->pcie->dev, "Link down on %pOF\n",
-+				     port->np);
-+		break;
-+	default:
-+		return IRQ_NONE;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int apple_pcie_port_register_irqs(struct apple_pcie_port *port)
-+{
-+	static struct {
-+		unsigned int	hwirq;
-+		const char	*name;
-+	} port_irqs[] = {
-+		{ PORT_INT_LINK_UP,	"Link up",	},
-+		{ PORT_INT_LINK_DOWN,	"Link down",	},
-+	};
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(port_irqs); i++) {
-+		struct irq_fwspec fwspec = {
-+			.fwnode		= &port->np->fwnode,
-+			.param_count	= 1,
-+			.param		= {
-+				[0]	= port_irqs[i].hwirq,
-+			},
-+		};
-+		unsigned int irq;
-+		int ret;
-+
-+		irq = irq_domain_alloc_irqs(port->domain, 1, NUMA_NO_NODE,
-+					    &fwspec);
-+		if (WARN_ON(!irq))
-+			continue;
-+
-+		ret = request_irq(irq, apple_pcie_port_irq, 0,
-+				  port_irqs[i].name, port);
-+		WARN_ON(ret);
-+	}
-+
-+	return 0;
-+}
-+
- static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
- 				   struct apple_pcie_port *port)
- {
-@@ -221,8 +418,20 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 		return ret;
- 	}
- 
-+	ret = apple_pcie_port_setup_irq(port);
++	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &fwspec);
 +	if (ret)
 +		return ret;
 +
-+	init_completion(&pcie->event);
++	for (i = 0; i < nr_irqs; i++) {
++		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
++					      &apple_msi_bottom_chip,
++					      domain->host_data);
++	}
 +
-+	ret = apple_pcie_port_register_irqs(port);
-+	WARN_ON(ret);
++	return 0;
++}
 +
- 	writel_relaxed(PORT_LTSSMCTL_START, port->base + PORT_LTSSMCTL);
++static void apple_msi_domain_free(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs)
++{
++	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
++	struct apple_pcie *pcie = domain->host_data;
++
++	mutex_lock(&pcie->lock);
++
++	bitmap_release_region(pcie->bitmap, d->hwirq, order_base_2(nr_irqs));
++
++	mutex_unlock(&pcie->lock);
++}
++
++static const struct irq_domain_ops apple_msi_domain_ops = {
++	.alloc	= apple_msi_domain_alloc,
++	.free	= apple_msi_domain_free,
++};
++
++static struct msi_domain_info apple_msi_info = {
++	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
++	.chip	= &apple_msi_top_chip,
++};
++
+ static void apple_port_irq_mask(struct irq_data *data)
+ {
+ 	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
+@@ -274,6 +381,15 @@ static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
  
-+	if (!wait_for_completion_timeout(&pcie->event, HZ / 10))
-+		dev_warn(pcie->dev, "%pOF link didn't come up\n", np);
+ 	irq_set_chained_handler_and_data(irq, apple_port_irq_handler, port);
+ 
++	/* Configure MSI base address */
++	BUILD_BUG_ON(upper_32_bits(DOORBELL_ADDR));
++	writel_relaxed(lower_32_bits(DOORBELL_ADDR), port->base + PORT_MSIADDR);
++
++	/* Enable MSIs, shared between all ports */
++	writel_relaxed(0, port->base + PORT_MSIBASE);
++	writel_relaxed((ilog2(port->pcie->nvecs) << PORT_MSICFG_L2MSINUM_SHIFT) |
++		       PORT_MSICFG_EN, port->base + PORT_MSICFG);
 +
  	return 0;
  }
  
+@@ -435,6 +551,55 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	return 0;
+ }
+ 
++static int apple_msi_init(struct apple_pcie *pcie)
++{
++	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
++	struct of_phandle_args args = {};
++	struct irq_domain *parent;
++	int ret;
++
++	ret = of_parse_phandle_with_args(to_of_node(fwnode), "msi-ranges",
++					 "#interrupt-cells", 0, &args);
++	if (ret)
++		return ret;
++
++	ret = of_property_read_u32_index(to_of_node(fwnode), "msi-ranges",
++					 args.args_count + 1, &pcie->nvecs);
++	if (ret)
++		return ret;
++
++	of_phandle_args_to_fwspec(args.np, args.args, args.args_count,
++				  &pcie->fwspec);
++
++	pcie->bitmap = devm_bitmap_zalloc(pcie->dev, pcie->nvecs, GFP_KERNEL);
++	if (!pcie->bitmap)
++		return -ENOMEM;
++
++	parent = irq_find_matching_fwspec(&pcie->fwspec, DOMAIN_BUS_WIRED);
++	if (!parent) {
++		dev_err(pcie->dev, "failed to find parent domain\n");
++		return -ENXIO;
++	}
++
++	parent = irq_domain_create_hierarchy(parent, 0, pcie->nvecs, fwnode,
++					     &apple_msi_domain_ops, pcie);
++	if (!parent) {
++		dev_err(pcie->dev, "failed to create IRQ domain\n");
++		return -ENOMEM;
++	}
++	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
++
++	pcie->domain = pci_msi_create_irq_domain(fwnode, &apple_msi_info,
++						 parent);
++	if (!pcie->domain) {
++		dev_err(pcie->dev, "failed to create MSI domain\n");
++		irq_domain_remove(parent);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
+ static int apple_pcie_init(struct pci_config_window *cfg)
+ {
+ 	struct device *dev = cfg->parent;
+@@ -449,6 +614,8 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 
+ 	pcie->dev = dev;
+ 
++	mutex_init(&pcie->lock);
++
+ 	pcie->base = devm_platform_ioremap_resource(platform, 1);
+ 	if (IS_ERR(pcie->base))
+ 		return PTR_ERR(pcie->base);
+@@ -461,7 +628,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 		}
+ 	}
+ 
+-	return 0;
++	return apple_msi_init(pcie);
+ }
+ 
+ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
 -- 
 2.30.2
 
