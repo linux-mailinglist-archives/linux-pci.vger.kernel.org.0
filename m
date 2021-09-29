@@ -2,106 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A1741C3FD
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 13:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2AEB41C42A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 14:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245721AbhI2MAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 08:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245149AbhI2MAZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 08:00:25 -0400
-X-Greylist: delayed 2642 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Sep 2021 04:58:44 PDT
-Received: from bues.ch (bues.ch [IPv6:2a01:138:9005::1:4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EE3C06161C;
-        Wed, 29 Sep 2021 04:58:43 -0700 (PDT)
-Received: by bues.ch with esmtpsa (Exim 4.92)
-        (envelope-from <m@bues.ch>)
-        id 1mVXXn-0002kr-6z; Wed, 29 Sep 2021 13:14:35 +0200
-Date:   Wed, 29 Sep 2021 13:13:48 +0200
-From:   Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        linux-pci@vger.kernel.org, kernel@pengutronix.de,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v5 06/11] ssb: Simplify determination of driver name
-Message-ID: <20210929131348.4259f79d@wiggum>
-In-Reply-To: <20210929085306.2203850-7-u.kleine-koenig@pengutronix.de>
-References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
-        <20210929085306.2203850-7-u.kleine-koenig@pengutronix.de>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S1343705AbhI2MCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 08:02:55 -0400
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:44010 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343687AbhI2MCw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 08:02:52 -0400
+Received: by mail-oi1-f177.google.com with SMTP id q16so2538026oiw.10;
+        Wed, 29 Sep 2021 05:01:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hkqbVi86S7yRX44LH10zaUFULfl6o47U8MBszhuGD14=;
+        b=ZJETC+kAh5NO6mpMS9GHZ1MH2ie4ZEjwSKLMH3kFpmV81VFc9K62v2Rv1JQ6qqvPQ5
+         z14PE6PHzMjgZ/Le5WIn3F+7OoIVs7giRsjb92Wpp5I3iEYZripGc7OzPei2TkavEV5z
+         tqtJGVIJntDJJrIaIgM/IXoNumCnWFc92qcLVoQE3LZD/Gqk8BP62OhmoxW881iyH1uH
+         SxScQLj1tJOaA99UPIe/kcwFNCaAigJlS9X3FYi97LQputnQGJ7oM0vM4dm/17JCFwph
+         8SJMmA7tX5Vp80pcdum8Ci7uxOyqZ2xtlwPNjyGfBIwP5M/chEz6LKPitZEEMSSpDftp
+         uC9A==
+X-Gm-Message-State: AOAM532znh6ZJXdDTEMu39U/L0sE5RWzPsYNoCMObHVduSs1xhAgQrym
+        h7nt87q5BaaKCO2rpBgWSIr2p0wHtzFIRl0CrPw=
+X-Google-Smtp-Source: ABdhPJzqBNszuxNRS1MHW5un/eHAOQLNAv1pTp/wTZ5+hlLtyH/wRTYHcac9owjxwHyr9TrOaPV6rYw2ZU6Zu8it9z0=
+X-Received: by 2002:a05:6808:1816:: with SMTP id bh22mr7487019oib.69.1632916871234;
+ Wed, 29 Sep 2021 05:01:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CCfYodG4Q79G07r0GK6gWqX";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+References: <1800633.tdWV9SEqCh@kreacher> <20210928232823.GA748352@bhelgaas>
+In-Reply-To: <20210928232823.GA748352@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 29 Sep 2021 14:00:59 +0200
+Message-ID: <CAJZ5v0gr+o_AO7-EGRofU2UN_8aXivh5c-VQ9VKz7o4ZNq=VQw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] PCI: ACPI: Get rid of struct pci_platform_pm_ops
+ and clean up code
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ferry Toth <fntoth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---Sig_/CCfYodG4Q79G07r0GK6gWqX
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 29, 2021 at 1:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Ferry]
+>
+> On Mon, Sep 20, 2021 at 08:52:19PM +0200, Rafael J. Wysocki wrote:
+> > Hi All,
+> >
+> > As explained in the changelog of patch [2/7], using struct pci_platform_pm_ops
+> > for ACPI is not particularly beneficial, so it is better to get rid of it and
+> > call the functions pointed to by it directly from the PCI core.
+> >
+> > However, struct pci_platform_pm_ops is also used by the Intel MID support code,
+> > but it is actually better to call the MID PM function directly from the PCI
+> > core either, which is done in patch [1/7].
+> >
+> > After these changes, patch [3/7] removes struct pci_platform_pm_ops and the
+> > rest is just cleanups and some code consolidation on top of that.
+>
+> I like these a lot.  Not sure exactly where everything is after the
+> conversation with Ferry.
 
-On Wed, 29 Sep 2021 10:53:01 +0200
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
+It's mostly OK, the problem was in one of the "tail" patches that was
+not rebased properly.
 
-> For all drivers that make use of ssb_pcihost_probe() (i.e.
-> b43_pci_bridge_driver and b44_pci_driver) the driver name is set.
-> As at the time for the function is called __pci_register_driver() already
-> assigned drv->driver.name to hold the same value, use
-> dev_driver_string() with the same result.
->=20
-> This has the upside of not requiring the driver member of struct pci_dev
-> which is about to be removed and being simpler.
+There will be a follow-up series to test for Ferry (later today).
 
->  	struct ssb_bus *ssb;
->  	int err =3D -ENOMEM;
-> -	const char *name;
->  	u32 val;
-> =20
->  	ssb =3D kzalloc(sizeof(*ssb), GFP_KERNEL);
-> @@ -78,10 +77,7 @@ static int ssb_pcihost_probe(struct pci_dev *dev,
->  	err =3D pci_enable_device(dev);
->  	if (err)
->  		goto err_kfree_ssb;
-> -	name =3D dev_name(&dev->dev);
-> -	if (dev->driver && dev->driver->name)
-> -		name =3D dev->driver->name;
-> -	err =3D pci_request_regions(dev, name);
-> +	err =3D pci_request_regions(dev, dev_driver_string(&dev->dev));
->  	if (err)
->  		goto err_pci_disable;
->  	pci_set_master(dev);
+>  Let me know if I should be doing anything.
 
-Makes sense.
-
-Acked-by: Michael B=C3=BCsch <m@bues.ch>
-
-
---=20
-Michael
-
-https://bues.ch/
-
---Sig_/CCfYodG4Q79G07r0GK6gWqX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmFUSmwACgkQ9TK+HZCN
-iw4Lug/9HzQ/VJXDIfK8OXK9XTTMvFBkkqFYZpy1+AqlA8U7plSBraAQ7f4RyfF7
-9CCwMq+pu7ufranUiqZpj8mSf+ibDZdvcl09votMb0Z2Z0/CZ9SGMI/Y1SXJHoFl
-6QStGfhD3Pjc3XMYvUI6rEqzcqlN3tjieRPAE6PY2vnCf3i2UyKuQoVc0z4x7fL0
-I8eOdV/nR7PR+bRYoItfi4e5sjc0XL9ZUAC2BXs5gUedQKW8KX9zvOROAxA2bHHM
-/GEmIVr2kjgir0oTjs8jS44GHE9MxCQI4gli0c26IkfF4djaqOKhTSgmo05fj5QF
-TyjJZj6DGaZ69Al1XUac55GbYmY4LD6bqvgeHjJ6UvazGsWWchcLP2Cf4RO+lQKZ
-CxZy/Qr9IVlsMJqdyhkDtA6rsPt7UjCp+AVoX9v/fJEQbig7M8dEVAktDhgWyxq9
-6mFFnypRS7k3qAfMaaLNoBeAxCPEG69HtZ4Qb/aw9rg00aYKQsN/Q+DRQdRx9NjF
-S0k6EU5b88qbRlInS//JSgl/ucv16jXwadk2I9aGoXZ1HtCJcEZzYMaE7f6bg9O6
-3b91zqG+Fo2Dn9vl8aFNKQF70yuDPvosyIGbH3bpQQaP5CpS2KZxDNap5+V5zeFe
-4PuTkpbBnV9nDx38WVYY0rWWc7CAm6j30G4QJICxzKkbF7Y8tbo=
-=IWi9
------END PGP SIGNATURE-----
-
---Sig_/CCfYodG4Q79G07r0GK6gWqX--
+I'm going to take this lot if that's not a problem.  If I need
+anything from you, I'll let you know.
