@@ -2,109 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4771C41BBAC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 02:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6012D41BBC8
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 02:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbhI2AXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 20:23:21 -0400
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:36556 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242525AbhI2AXU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 20:23:20 -0400
-Received: by mail-lf1-f54.google.com with SMTP id b20so3374243lfv.3
-        for <linux-pci@vger.kernel.org>; Tue, 28 Sep 2021 17:21:40 -0700 (PDT)
+        id S243401AbhI2AnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 20:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242626AbhI2AnD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 20:43:03 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C7EC06161C;
+        Tue, 28 Sep 2021 17:41:23 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id g7so2002587edv.1;
+        Tue, 28 Sep 2021 17:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=irAkTQ9eHSnLCG+L/2PN01j5WXh7QNbtKnaav0rRkk0=;
+        b=JndEPZislozawHCc/jevA+2/3nSCg6TgRI7SfDGXAG+iHI9CivzzutcEjXvL98scJk
+         gcrhsLG1tVNHWnPMlTr34b4PAQXhO0DJvcyLrGNNucROwmQC1YwYtAKnv/EUEegzLvWB
+         DtQ9E9CV8UT7mzKqc5oGrVrsuCxStdMo8SySaHiUt9pBFSzkabdDyNrRG3zMSGWLAQbv
+         rFKVDaI4aJSdOwGwxlczKWVXOWH70Iek5yaPK0ZjLa3crP/5KujNCSqSm0WCBwVQy+Fa
+         8jbbvSP6pBZWU9QcHSVPkzMzRZNttWv+bi6wqzw+DcPf7WWhUgFhQGUsKYE4wuuC1m+x
+         f9SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CqUNWmcivn0lftYNEYzbLY1cZb4U9btRsNzP8dQXXzU=;
-        b=mcKpkQGIV6NkQFSLsCqw5ZbNEvRfbOlZWMrFAM4Q9iAMraHQZ7JY5jxrq0jffxK1v/
-         8r8ojvarej7u2vDtRdMrH+IQpWfEZMZXlWWziUqjCB1apfD0L5RKS6U6BOu3DhicJC1/
-         LVP5sTCw5R9wSPQiSNXOAxx/X5/eB3SY4XpX5e+ubX34pasmN/HN+HBRCj7wIPz8fy5J
-         WsQH863z6ju1sbyXX2LDZOCtEAK959yZqwMx26ngtJWk8sKr1CI9YJwLup/1n/Pd0f62
-         XBbmvpG8E2UXCLo//TDuyx+6EHQGC/wyodiqo2+8TAxKlq7CKgDGs7uCa8bbBLfVNWHc
-         3zfg==
-X-Gm-Message-State: AOAM531zEhi51M3aQEaktZvMpLyxGjqfZEtmDnCAwvVDy9tO7OXse/mi
-        MRiHplbQexBPxK6nT+vr0jabSx638+be9g==
-X-Google-Smtp-Source: ABdhPJy5J2uIt6lyMbACGeQjrXHJUIYx64UKIo1Bn5Sy5cvP0zuTIO+P0WFAU5OC3GZEkP3Xs7gJvQ==
-X-Received: by 2002:a19:6512:: with SMTP id z18mr8644138lfb.106.1632874899437;
-        Tue, 28 Sep 2021 17:21:39 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id q1sm51491lfg.18.2021.09.28.17.21.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=irAkTQ9eHSnLCG+L/2PN01j5WXh7QNbtKnaav0rRkk0=;
+        b=cujV+xm5g8B+53n+RDC/yba/jT9Fak+s00WBaJULGVZc8WOsBNDynySuhpvuEqtsCu
+         xUD3GYTuT0xboaRJbZP3DDFnC/DmlNQOQ9iLEcCfz2u4WCPumPc6Qeq/mr1KSX+zNxYC
+         39uqGiyZ+uMvyKD4CiyagZ0AD2A6fSiJ2MZk3R9LJT9Jn/Lsf5OdwE5gEbL5HvnJdw8n
+         D+DIjpe07sjyGaQW4ZKR1oZM9svFxGqLukoJYjcNOwk1VnQh05cOBvUxgVZco/Dvb2vb
+         pFCA7rrB2GoO+n5BJ4ey7M11xHGsCnUy2tqS/7BhlBEv5c1354SsO/X5YvO//eSe/ZJi
+         dthA==
+X-Gm-Message-State: AOAM532glS2fIvqHx97TbCHfImEC+XuMfHQTlQkwAlMNLmnZmgDcgrS8
+        Ouk8BzDhBjpeREH84bZtqANiZ1iVdY0=
+X-Google-Smtp-Source: ABdhPJwfct/OOIAyh/mUgNCC9Q2Vrj7FwFbKi/MHDeAF7nrvHkvH5PMIvrv/Rk2e9hnB6j4dp/Ba6A==
+X-Received: by 2002:a17:906:53c8:: with SMTP id p8mr10206897ejo.422.1632876081944;
+        Tue, 28 Sep 2021 17:41:21 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:ab88:10f:c9f0:35c7:3af0:a197:61d0])
+        by smtp.googlemail.com with ESMTPSA id y1sm372727edv.79.2021.09.28.17.41.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 17:21:38 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 02:21:37 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     David Jaundrew <david@jaundrew.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] Avoid FLR for AMD Starship/Matisse Cryptographic
- Coprocessor
-Message-ID: <YVOxkeJt6Rw10e+w@rocinante>
-References: <20210928214558.GA736874@bhelgaas>
- <9e85bcad-a73c-cccd-4522-a45e599309d7@jaundrew.com>
+        Tue, 28 Sep 2021 17:41:21 -0700 (PDT)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     "Bolarinwa O. Saheed" <refactormyself@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v3 0/3] PCI/ASPM: Remove struct aspm_latency
+Date:   Wed, 29 Sep 2021 02:41:13 +0200
+Message-Id: <20210929004116.20650-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e85bcad-a73c-cccd-4522-a45e599309d7@jaundrew.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi David,
+From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
 
-Just a note: it might have been better to sent this as v2, but given how
-small this patch is, albeit Bjorn might be fine with taking it as-is.
+To validate and set link latency capability, `struct aspm_latency` and
+related members defined within `struct pcie_link_state` are used.
+However, since there are not many access to theses values, it is
+possible to directly access and compute these values.
 
-> This patch fixes another FLR bug for the Starship/Matisse controller:
-> 
-> AMD Starship/Matisse Cryptogrpahic Coprocessor PSPCPP
-> 
-> This patch allows functions on the same Starship/Matisse device (such as
-> USB controller,sound card) to properly pass through to a guest OS using
-> vfio-pc. Without this patch, the virtual machine does not boot and
-> eventually times out.
-> 
-> Excerpt from lspci -nn showing crypto function on same device as USB and
-> sound card (which are already listed in quirks.c):
-> 
-> 0e:00.1 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD]
->   Starship/Matisse Cryptographic Coprocessor PSPCPP [1022:1486]
-> 0e:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD]
->   Matisse USB 3.0 Host Controller [1022:149c]
-> 0e:00.4 Audio device [0403]: Advanced Micro Devices, Inc. [AMD]
->   Starship/Matisse HD Audio Controller [1022:1487]
-> 
-> Fix tested successfully on an Asus ROG STRIX X570-E GAMING motherboard
-> with AMD Ryzen 9 3900X.
-> 
-> Signed-off-by: David Jaundrew <david@jaundrew.com>
-> ---
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 6d74386eadc2..0d19e7aa219a 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5208,6 +5208,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
->  /*
->   * FLR may cause the following to devices to hang:
->   *
-> + * AMD Starship/Matisse Cryptographic Coprocessor PSPCPP 0x1486
->   * AMD Starship/Matisse HD Audio Controller 0x1487
->   * AMD Starship USB 3.0 Host Controller 0x148c
->   * AMD Matisse USB 3.0 Host Controller 0x149c
-> @@ -5219,6 +5220,7 @@ static void quirk_no_flr(struct pci_dev *dev)
->  {
->         dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
->  }
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1486, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+Doing this will also reduce the dependency on `struct pcie_link_state`.
 
-Thank you!
+The series removes `struct aspm_latency` and related members within
+`struct pcie_link_state`. All latencies are now calculated when needed.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-	Krzysztof
+
+VERSION CHANGES:
+- v2:
+	- directly access downstream by calling `pci_function_0()`
+	  instead of using the `struct pcie_link_state`
+- v3(this version):
+	- rebase on Linux 5.15-rc2
+
+MERGE NOTICE:
+These series are based on 
+	'commit e4e737bb5c17 ("Linux 5.15-rc2")'
+
+
+Saheed O. Bolarinwa (3):
+  PCI/ASPM: Remove link latencies cached within struct pcie_link_state
+  PCI/ASPM: Remove struct pcie_link_state.acceptable
+  PCI/ASPM: Remove struct aspm_latency
+
+ drivers/pci/pcie/aspm.c | 89 ++++++++++++++++++-----------------------
+ 1 file changed, 38 insertions(+), 51 deletions(-)
+
+-- 
+2.20.1
+
