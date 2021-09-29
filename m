@@ -2,160 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E9941BBE1
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 02:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53C2441BC78
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 03:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243461AbhI2Ap6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Sep 2021 20:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243541AbhI2Apt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Sep 2021 20:45:49 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8249DC06161C;
-        Tue, 28 Sep 2021 17:44:09 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id v18so1861747edc.11;
-        Tue, 28 Sep 2021 17:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X2Mmz28tKhpY4RMXplVTUDjM+WhReCF+5Gp4Be7Q0+M=;
-        b=C38lruJrbEQdQFBuhCDUllgqyqvwtKlnFnUiUraiVteyzHhCyQIchG2wViImyPMFxN
-         /xLwshv5L+XIti+VG7lEFKQWAkwH0oUKXTDtp7Q8paHZ2LK58kc3N/UE8ullgwAK4Y8u
-         9hWHUyH9I3LCRYv2R8EuexrFjz0wmpTxp9pY4zif5ps1N956BkrvZc+xkhHHW9Ci4FoQ
-         rC+qHP3Jdv1suHJS+QzpBzAwh2yPv1oF34iC5E5k8Jdjuef1ZSF1POVdnjGsVigZPqPy
-         xTNXuYIWCEjkmQ3FSBzSPpCvJw7oWlYe8SyJGEnp4fg6gscsl/XlgEh8WJTLtaWv9cuq
-         KbhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X2Mmz28tKhpY4RMXplVTUDjM+WhReCF+5Gp4Be7Q0+M=;
-        b=asx6Ps5pgDwcxkOQ3mHhxPXYaiQxUtTgcyk3zsI3lupVeWFG9Qgp+QNzA3vaIYCDBW
-         Ps54NLW9pzWh/N2239LPQCq1fY6gFofttKe/Hopb7xQizuyYw31ozGe6ROYtMwyHoXMR
-         2BSOb5LEJ5oX3DCZvGc2ju2si9pxiqpFb3sYxy7DUemDXKtCzX4Xm6BAWepY/aP/x6e0
-         CNYAPwkgpfwJFvl8saoaNYpT59ovlKbfOf/ev3tIU9pawfRe7W9PDOmUDSNx8czoAVmj
-         m8UDhWpQqcM0wWHOu2RZyS4kptL9PVkCEQfq+A6Jeu//NuEUo7d/eCGNU72LSfEUXKX+
-         mp7Q==
-X-Gm-Message-State: AOAM531gC8n7PACFk0egU6v4b7pbr9gH5+wvBtBoYPMAUMOilbYNRNsE
-        +ZPReK7yXguqcTkItn3EPMQ=
-X-Google-Smtp-Source: ABdhPJxmBED0hNvbWqZMqlIqKCeHMg/jW59rSW1kEZC3IA7cmN9FNDperiMTAjH6vW6zzkOWdJnYuQ==
-X-Received: by 2002:a50:ab18:: with SMTP id s24mr11622300edc.88.1632876248070;
-        Tue, 28 Sep 2021 17:44:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:ab88:10f:c9f0:35c7:3af0:a197:61d0])
-        by smtp.googlemail.com with ESMTPSA id r19sm383578edt.54.2021.09.28.17.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 17:44:07 -0700 (PDT)
-From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org
-Cc:     "Bolarinwa O. Saheed" <refactormyself@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 4/4] PCI/ASPM: Remove struct pcie_link_state.clkpm_disable
-Date:   Wed, 29 Sep 2021 02:44:00 +0200
-Message-Id: <20210929004400.25717-5-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210929004400.25717-1-refactormyself@gmail.com>
-References: <20210929004400.25717-1-refactormyself@gmail.com>
+        id S243642AbhI2Blh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Sep 2021 21:41:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35233 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243639AbhI2Blg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 28 Sep 2021 21:41:36 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10121"; a="222947711"
+X-IronPort-AV: E=Sophos;i="5.85,331,1624345200"; 
+   d="scan'208";a="222947711"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2021 18:39:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,331,1624345200"; 
+   d="scan'208";a="476486375"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga007.jf.intel.com with ESMTP; 28 Sep 2021 18:39:53 -0700
+Cc:     baolu.lu@linux.intel.com, linux-cxl@vger.kernel.org,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 9/9] iommu/vt-d: Use pci core's DVSEC functionality
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>
+References: <20210923172647.72738-1-ben.widawsky@intel.com>
+ <20210923172647.72738-10-ben.widawsky@intel.com>
+ <CAPcyv4i4T4XLW-P=CzdO47mZ8+_Mih7GMeDEXAtgEE+gO9JQHw@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <6bca371c-44e4-3ba7-b49d-78c55a40d3a5@linux.intel.com>
+Date:   Wed, 29 Sep 2021 09:36:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4i4T4XLW-P=CzdO47mZ8+_Mih7GMeDEXAtgEE+gO9JQHw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
+Hi Dan,
 
-The clkpm_disable member of the struct pcie_link_state indicates
-if the Clock PM state of the device is disabled. There are two
-situations which can cause the Clock PM state disabled.
-1. If the device fails sanity check as in pcie_aspm_sanity_check()
-2. By calling __pci_disable_link_state()
+On 9/29/21 1:54 AM, Dan Williams wrote:
+> On Thu, Sep 23, 2021 at 10:27 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>>
+>> Reduce maintenance burden of DVSEC query implementation by using the
+>> centralized PCI core implementation.
+>>
+>> Cc: iommu@lists.linux-foundation.org
+>> Cc: David Woodhouse <dwmw2@infradead.org>
+>> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+>> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c | 15 +--------------
+>>   1 file changed, 1 insertion(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index d75f59ae28e6..30c97181f0ae 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -5398,20 +5398,7 @@ static int intel_iommu_disable_sva(struct device *dev)
+>>    */
+>>   static int siov_find_pci_dvsec(struct pci_dev *pdev)
+>>   {
+>> -       int pos;
+>> -       u16 vendor, id;
+>> -
+>> -       pos = pci_find_next_ext_capability(pdev, 0, 0x23);
+>> -       while (pos) {
+>> -               pci_read_config_word(pdev, pos + 4, &vendor);
+>> -               pci_read_config_word(pdev, pos + 8, &id);
+>> -               if (vendor == PCI_VENDOR_ID_INTEL && id == 5)
+>> -                       return pos;
+>> -
+>> -               pos = pci_find_next_ext_capability(pdev, pos, 0x23);
+>> -       }
+>> -
+>> -       return 0;
+>> +       return pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_INTEL, 5);
+>>   }
+> 
+> Same comments as the CXL patch, siov_find_pci_dvsec() doesn't seem to
+> have a reason to exist anymore. What is 5?
 
-It is possible to set the Clock PM state of a device ON or OFF by
-calling pcie_set_clkpm(). The state can be retieved by calling
-pcie_get_clkpm_state().
+"5" is DVSEC ID for Scalable IOV.
 
-pcie_link_state.clkpm_disable is only accessed in pcie_set_clkpm()
-to ensure that Clock PM state can be reenabled after being disabled.
+Anyway, the siov_find_pci_dvsec() has been dead code since commit
+262948f8ba57 ("iommu: Delete iommu_dev_has_feature()"). I have a patch
+to clean it up. No need to care about it in this series.
 
-This patch:
-  - add pm_disable to the struct pcie_link_state, to indicate that
-    the kernel has marked the device's AS and Clock PM states disabled
-  - removes clkpm_disable from the struct pcie_link_state
-  - removes all instance where clkpm_disable is set
-  - ensure that the Clock PM is always disabled if it is part of the
-    states passed into __pci_disable_link_state(), regardless of the
-    global policy
-
-Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
----
- drivers/pci/pcie/aspm.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 368828cd427d..e6ae00daa7ae 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -60,8 +60,7 @@ struct pcie_link_state {
- 	u32 aspm_default:7;		/* Default ASPM state by BIOS */
- 	u32 aspm_disable:7;		/* Disabled ASPM state */
- 
--	/* Clock PM state */
--	u32 clkpm_disable:1;		/* Clock PM disabled */
-+	u32 pm_disabled:1;		/* Disabled AS and Clock PM ? */
- 
- 	/* Exit latencies */
- 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
-@@ -198,7 +197,7 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- 	 * Don't enable Clock PM if the link is not Clock PM capable
- 	 * or Clock PM is disabled
- 	 */
--	if (!capable || link->clkpm_disable)
-+	if (enable && (!capable || link->pm_disabled))
- 		enable = 0;
- 	/* Need nothing if the specified equals to current state */
- 	if (pcie_get_clkpm_state(link->pdev) == enable)
-@@ -206,11 +205,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- 	pcie_set_clkpm_nocheck(link, enable);
- }
- 
--static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
--{
--	link->clkpm_disable = blacklist ? 1 : 0;
--}
--
- static bool pcie_retrain_link(struct pcie_link_state *link)
- {
- 	struct pci_dev *parent = link->pdev;
-@@ -952,8 +946,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
- 	 */
- 	pcie_aspm_cap_init(link, blacklist);
- 
--	/* Setup initial Clock PM state */
--	pcie_clkpm_cap_init(link, blacklist);
-+	link->pm_disabled = blacklist;
- 
- 	/*
- 	 * At this stage drivers haven't had an opportunity to change the
-@@ -1129,8 +1122,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
- 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
- 
- 	if (state & PCIE_LINK_STATE_CLKPM)
--		link->clkpm_disable = 1;
--	pcie_set_clkpm(link, policy_to_clkpm_state(link));
-+		pcie_set_clkpm(link, 0);
-+
- 	mutex_unlock(&aspm_lock);
- 	if (sem)
- 		up_read(&pci_bus_sem);
-@@ -1301,7 +1294,6 @@ static ssize_t clkpm_store(struct device *dev,
- 	down_read(&pci_bus_sem);
- 	mutex_lock(&aspm_lock);
- 
--	link->clkpm_disable = !state_enable;
- 	pcie_set_clkpm(link, policy_to_clkpm_state(link));
- 
- 	mutex_unlock(&aspm_lock);
--- 
-2.20.1
-
+Best regards,
+baolu
