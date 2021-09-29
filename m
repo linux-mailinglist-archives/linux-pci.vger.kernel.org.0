@@ -2,162 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9403F41C83C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 17:22:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0C0F41C85F
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Sep 2021 17:29:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345102AbhI2PXs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 11:23:48 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:57911 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345161AbhI2PXr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 11:23:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 908EA580BD1;
-        Wed, 29 Sep 2021 11:22:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 29 Sep 2021 11:22:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=D0IBY5Pj6/F0JNNHa8/d4D4dhFcHLMGCSTOY+LuBz
-        EA=; b=ZhuEp73RqBc+dT9dwPx5WFYuR7Gt0Z5v5JwZxAbdDiwVFqr1XKrU6RdqT
-        3rIoZ0CA9UXgji52+2PrjjTwfscTVJtNtaUNw4fuAiPKrcbpUMNPX+nbUdTlMNuo
-        UaNOlBBEIdPZdvCUm5E44mVcU0XNBF9ghUkUbjMwtk8eCdD0C5jk3+SwnJ6370BB
-        QgME+XdXif4rDMO/pgeg2l7pi1D3C/yDyz3uvu0xiYDNJw4CBYPifZEneb/EJw82
-        CIeEpqkNGZ0o97zwmk1ZQKBea3uhtd66i3eUUC6mqyYKw5ZNZrEiGUPGVcPsmtQJ
-        c5glFMBe4zEv4TdYBsw7o2ck4Y7Pw==
-X-ME-Sender: <xms:moRUYcIiQiek66OCH96DYUulnzjzdZQUThcHnOdDoDcRmeKGDlXjTg>
-    <xme:moRUYcI0MbGkED8qssdPRBiBWe_CrvaZAgkwunl6h6SPDjj1Nxxvi8lGvBHu2FgjH
-    55Xn4IWK7oq_YU>
-X-ME-Received: <xmr:moRUYcsakn1EZN6tshS1xq22hr0tGjDovRi3VpZjiEiXyTscCqvuL1Z2x-0vTKvY1JMClYZZLUhTFqgVM2ETrrkiuXTVYw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekvddgkeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepkfguohcu
-    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrth
-    htvghrnhepvdffveekfeeiieeuieetudefkeevkeeuhfeuieduudetkeegleefvdegheej
-    hefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepih
-    guohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:moRUYZY2T71Ye70VK0ZXT9k0rMv0XvUrClrZ-XxbCRE7b_iEWDrspw>
-    <xmx:moRUYTbGUGgYGvqoe_LLC_BahVB-nT9wy_dlTmqtTbk_4_48J7znPQ>
-    <xmx:moRUYVCFJwt-bPeKh9TD9dC-MuOE8-gqr0XNjl2JX7tu6qUkLlwV3g>
-    <xmx:nYRUYRaaJhOxHhrGXNsvKxWu6G5VIgXneeVfia8eaWBmOXFI-btEUQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 29 Sep 2021 11:22:01 -0400 (EDT)
-Date:   Wed, 29 Sep 2021 18:21:57 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Ido Schimmel <idosch@nvidia.com>, u.kleine-koenig@pengutronix.de
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        linux-pci@vger.kernel.org, kernel@pengutronix.de,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        id S1345256AbhI2Pal (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 11:30:41 -0400
+Received: from mail-bn1nam07on2080.outbound.protection.outlook.com ([40.107.212.80]:36485
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1345157AbhI2Paj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 11:30:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M7yE+3O25T4AcrkFRBqwxab+KX2nsT8LFo6lq8rkahtgHo/9+TZgF2ua1P0Gd+v60H2EPNdfKul2CFDR1YvVj1vvv9VrVmqBwYVtD3NEN9xuUCKqjWyeXO1h39t8EfPt4RsbTOLs/481f5i1eRhbvwOorS7+gHruyLkwveAlc0N6rHyWBvx6FIGIgWSfJCt8DwnnC60JetQvqyOLD8JHQe5WlKFni/nfM/1cGB27c45+Pd67BTM0HZq5N+YGBW0XEUXvohSbJT6x/YD7HiegeL0hWFuypjmF1IwjmKTj+PuJd7wsAAogG+o/tVHM2MK6kY0egB6crnO4+Jlp4/1WYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=9eel/MIbwZKsfy83C/KpYV1scUursh64yFpzJy4PeKQ=;
+ b=lyv2ynuSv0lVmB3vXaECbIdTHDo+AFW/tBnMBlWooAhfIzVBj5fN3LZuVzurbI+pbXlDEgo3I9cld8QAXpM1KZysaG0e7UiAIqaeAfXx/rC2LiX2hHsOEec340pk8unjco1L4WEmeLKkLgjDo+w25WYPPg4wrzH+FX1Lnl23fdwXs1mBCJ7UaNZj/0Af0EZivC2kqqEznrV7f88mLm0A9uGmoGqTm6Sd+T0FwupkodtPVzXEsQab01mR3RTjOHx0eRbjkMcyH43d2O4NGvOCABI8fhbdZorFOthTPO2pRcyTIryBaFESISNEEEj5gS4ut05ECSTIk1JOpJ8L+fNdsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9eel/MIbwZKsfy83C/KpYV1scUursh64yFpzJy4PeKQ=;
+ b=kh+mws043f07pa63ABZmDmVH7BdpSuBmhXxzgkY+4x5EhmYIm54L14DintFozJ8ODV3MLWzvYM2kSMFAjzC1SMRWpSdIRSQEnd7F5aMKGhok0yY+jcB+Z7FnAgqnps4qP67pa8sqW/plRgDpwLkqLBwHcLVBlYvgIgx4Jc+on3rWChyIFG7jX5n7S05XHUhw2LouubuIJdJVhdvZgiKGHHbNVH+WpB+rAW559HH/jP9EF1Tl0n0hT7uSFVLaj76dPRmzqBEf0IGKQzsnHdURt3lbmHIu7+ccqPs0ss23V4ABpPj5HMUb2EVZC284CzwtpXQH55mDJMRgGP2g1hoAaQ==
+Received: from BN9PR03CA0366.namprd03.prod.outlook.com (2603:10b6:408:f7::11)
+ by DM5PR12MB1162.namprd12.prod.outlook.com (2603:10b6:3:72::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Wed, 29 Sep
+ 2021 15:28:56 +0000
+Received: from BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:f7:cafe::cc) by BN9PR03CA0366.outlook.office365.com
+ (2603:10b6:408:f7::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.14 via Frontend
+ Transport; Wed, 29 Sep 2021 15:28:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ BN8NAM11FT060.mail.protection.outlook.com (10.13.177.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4566.14 via Frontend Transport; Wed, 29 Sep 2021 15:28:55 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 29 Sep
+ 2021 15:28:51 +0000
+Received: from [172.27.14.186] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 29 Sep
+ 2021 15:28:47 +0000
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        "Doug Ledford" <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Michael Buesch <m@bues.ch>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com
-Subject: Re: [PATCH v5 07/11] PCI: Replace pci_dev::driver usage that gets
- the driver name
-Message-ID: <YVSElahmw2AMwnNH@shredder>
-References: <20210929085306.2203850-1-u.kleine-koenig@pengutronix.de>
- <20210929085306.2203850-8-u.kleine-koenig@pengutronix.de>
- <YVR74+8Rw6XmTqDD@shredder>
+        "Jakub Kicinski" <kuba@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+References: <cover.1632305919.git.leonro@nvidia.com>
+ <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
+ <20210927164648.1e2d49ac.alex.williamson@redhat.com>
+ <20210927231239.GE3544071@ziepe.ca>
+ <25c97be6-eb4a-fdc8-3ac1-5628073f0214@nvidia.com>
+ <20210929063551.47590fbb.alex.williamson@redhat.com>
+ <1eba059c-4743-4675-9f72-1a26b8f3c0f6@nvidia.com>
+ <20210929075019.48d07deb.alex.williamson@redhat.com>
+ <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
+ <20210929091712.6390141c.alex.williamson@redhat.com>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+Message-ID: <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
+Date:   Wed, 29 Sep 2021 18:28:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YVR74+8Rw6XmTqDD@shredder>
+In-Reply-To: <20210929091712.6390141c.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c087cda9-6f94-4634-659e-08d9835dd9f1
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1162:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1162DA3E7D855678B0EEA62EDEA99@DM5PR12MB1162.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JSYVwHFEk0SSay0hP518DVStgWGhJi7O2UKbHYtMXGv53QxFAO+U1lLjjn47hrwXgsN9EPC1kmck09bAwM3lEsxiIpQLJc39syA7eRXE4pb62B/3o5KAx0w/xFgKUnz6g6Ybjq+T4j+UZ4XVOP9B/BvxoL8ZCVTVShuBc9qhAd8GRknt9anLLKp8RaSilt2MlRcJgumDKIa1rPYMkZ7DDPdPGB0euhe3pYyOW9ypF/8vq5uoT3L5fQQ/Fp+feh8sP0jJQQb7OwxAu/rHSd9E2uaInSAmLhMun7jVvTKL7frw1m3o02QsTA65R0qcs8G+fXHfG6X3o1zk3jS1llaE6yfYSxmgtEOzq29vZTakphf6oAWQrp5SgDM0OF/rsvpS0eNC+5+cjByH+rKe2Neh/+xCyYMvWQBTCPLumwWXAbswW5alKOmD9Hj3qno2tkNzWXnfnvTre7w0WuOcpPRUvRc5IAZFSWvo+Gay+3/0ISpSVLegHexloutc6WlM81MKtbL4uIo4mWgVLm7N7McrWP9gBCV+F62XI3JmturCChaZ3cuWAFcqEt8sYHHYermULMcqDuWMoFCv5mSZspDOLkv/M1t0EcFbysXCYXd8gPqXh3J/TSi3xn84ogzuvXFvkPk3KBefenuslwjoexYEh2SOo3D0aV4vhV+uwItmK77V4FTv7udTzXszgR+syoYGczYnUaHkRz8gXv4LsrcVDwEOqQDckAF2XCU7BSlk+k0=
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(6916009)(47076005)(508600001)(82310400003)(356005)(16526019)(7636003)(5660300002)(36756003)(6666004)(54906003)(336012)(426003)(36860700001)(83380400001)(31696002)(8676002)(186003)(86362001)(2906002)(70206006)(70586007)(53546011)(2616005)(8936002)(26005)(316002)(16576012)(31686004)(7416002)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 15:28:55.9719
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c087cda9-6f94-4634-659e-08d9835dd9f1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1162
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 05:44:51PM +0300, Ido Schimmel wrote:
-> On Wed, Sep 29, 2021 at 10:53:02AM +0200, Uwe Kleine-König wrote:
-> > struct pci_dev::driver holds (apart from a constant offset) the same
-> > data as struct pci_dev::dev->driver. With the goal to remove struct
-> > pci_dev::driver to get rid of data duplication replace getting the
-> > driver name by dev_driver_string() which implicitly makes use of struct
-> > pci_dev::dev->driver.
-> > 
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> For mlxsw:
-> 
-> Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-> Tested-by: Ido Schimmel <idosch@nvidia.com>
-> 
-> Thanks
 
-Actually, I found out that after loading and executing another kernel
-(or the same one) via kexec I get this splat [1].
+On 9/29/2021 6:17 PM, Alex Williamson wrote:
+> On Wed, 29 Sep 2021 17:36:59 +0300
+> Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
+>
+>> On 9/29/2021 4:50 PM, Alex Williamson wrote:
+>>> On Wed, 29 Sep 2021 16:26:55 +0300
+>>> Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
+>>>   
+>>>> On 9/29/2021 3:35 PM, Alex Williamson wrote:
+>>>>> On Wed, 29 Sep 2021 13:44:10 +0300
+>>>>> Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
+>>>>>      
+>>>>>> On 9/28/2021 2:12 AM, Jason Gunthorpe wrote:
+>>>>>>> On Mon, Sep 27, 2021 at 04:46:48PM -0600, Alex Williamson wrote:
+>>>>>>>>> +	enum { MAX_STATE = VFIO_DEVICE_STATE_RESUMING };
+>>>>>>>>> +	static const u8 vfio_from_state_table[MAX_STATE + 1][MAX_STATE + 1] = {
+>>>>>>>>> +		[VFIO_DEVICE_STATE_STOP] = {
+>>>>>>>>> +			[VFIO_DEVICE_STATE_RUNNING] = 1,
+>>>>>>>>> +			[VFIO_DEVICE_STATE_RESUMING] = 1,
+>>>>>>>>> +		},
+>>>>>>>> Our state transition diagram is pretty weak on reachable transitions
+>>>>>>>> out of the _STOP state, why do we select only these two as valid?
+>>>>>>> I have no particular opinion on specific states here, however adding
+>>>>>>> more states means more stuff for drivers to implement and more risk
+>>>>>>> driver writers will mess up this uAPI.
+>>>>>> _STOP == 000b => Device Stopped, not saving or resuming (from UAPI).
+>>>>>>
+>>>>>> This is the default initial state and not RUNNING.
+>>>>>>
+>>>>>> The user application should move device from STOP => RUNNING or STOP =>
+>>>>>> RESUMING.
+>>>>>>
+>>>>>> Maybe we need to extend the comment in the UAPI file.
+>>>>> include/uapi/linux/vfio.h:
+>>>>> ...
+>>>>>     *  +------- _RESUMING
+>>>>>     *  |+------ _SAVING
+>>>>>     *  ||+----- _RUNNING
+>>>>>     *  |||
+>>>>>     *  000b => Device Stopped, not saving or resuming
+>>>>>     *  001b => Device running, which is the default state
+>>>>>                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>>>> ...
+>>>>>     * State transitions:
+>>>>>     *
+>>>>>     *              _RESUMING  _RUNNING    Pre-copy    Stop-and-copy   _STOP
+>>>>>     *                (100b)     (001b)     (011b)        (010b)       (000b)
+>>>>>     * 0. Running or default state
+>>>>>     *                             |
+>>>>>                     ^^^^^^^^^^^^^
+>>>>> ...
+>>>>>     * 0. Default state of VFIO device is _RUNNING when the user application starts.
+>>>>>          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>>>>
+>>>>> The uAPI is pretty clear here.  A default state of _STOP is not
+>>>>> compatible with existing devices and userspace that does not support
+>>>>> migration.  Thanks,
+>>>> Why do you need this state machine for userspace that doesn't support
+>>>> migration ?
+>>> For userspace that doesn't support migration, there's one state,
+>>> _RUNNING.  That's what we're trying to be compatible and consistent
+>>> with.  Migration is an extension, not a base requirement.
+>> Userspace without migration doesn't care about this state.
+>>
+>> We left with kernel now. vfio-pci today doesn't support migration, right
+>> ? state is in theory is 0 (STOP).
+>>
+>> This state machine is controlled by the migration SW. The drivers don't
+>> move state implicitly.
+>>
+>> mlx5-vfio-pci support migration and will work fine with non-migration SW
+>> (it will stay with state = 0 unless someone will move it. but nobody
+>> will) exactly like vfio-pci does today.
+>>
+>> So where is the problem ?
+> So you have a device that's actively modifying its internal state,
+> performing I/O, including DMA (thereby dirtying VM memory), all while
+> in the _STOP state?  And you don't see this as a problem?
 
-[1]
- BUG: unable to handle page fault for address: ffffffffffffffc8         
- #PF: supervisor read access in kernel mode                       
- #PF: error_code(0x0000) - not-present page
- PGD 6e40c067 P4D 6e40c067 PUD 6e40e067 PMD 0 
- Oops: 0000 [#1] SMP                                                    
- CPU: 0 PID: 786 Comm: kexec Not tainted 5.15.0-rc2-custom-45114-g6b0effa5a61f #112
- Hardware name: Mellanox Technologies Ltd. MSN3700/VMOD0005, BIOS 5.11 01/06/2019                                                                              
- RIP: 0010:pci_device_shutdown+0x16/0x40
- Code: 01 00 31 d2 4c 89 e7 89 c6 e8 36 ce 01 00 41 89 c5 eb bb 90 55 48 8d af 40 ff ff ff 53 48 8b 47 68 48 89 fb 48 83 f8 78 74 0e <48> 8b 40 c8 48 85 c0 74 
-05 48 89 ef ff d0 80 3d 35 81 b7 01 00 74                                             
- RSP: 0018:ffff95fec0d37db8 EFLAGS: 00010297                            
- RAX: 0000000000000000 RBX: ffff8d70c0f1f0c0 RCX: 0000000000000004
- RDX: ffff8d7115a03a00 RSI: 0000000000000206 RDI: ffff8d70c0f1f0c0      
- RBP: ffff8d70c0f1f000 R08: 0000000000000002 R09: 0000000000000502
- R10: 0000000000000000 R11: 0000000000000006 R12: ffff8d70c0f1f0c0                                                                                             
- R13: ffff8d70c0f1f140 R14: 00000000fee1dead R15: 0000000000000000                                                                                             
- FS:  00007fd3089e0b80(0000) GS:ffff8d7237c00000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033                     
- CR2: ffffffffffffffc8 CR3: 0000000155abb001 CR4: 00000000003706f0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  device_shutdown+0x12e/0x180 
-  kernel_kexec+0x52/0xb0
-  __do_sys_reboot+0x1c0/0x210 
-  do_syscall_64+0x35/0x80
-  entry_SYSCALL_64_after_hwframe+0x44/0xae
- RIP: 0033:0x7fd308afd557
- Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 89 fa be 69 19 12 28 bf ad de e1 fe b8 a9 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 
-c3 48 8b 15 f1 a8 0c 00 f7 d8 64 89 02 b8
- RSP: 002b:00007fff7d01e0a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a9
- RAX: ffffffffffffffda RBX: 00005606db11d380 RCX: 00007fd308afd557
- RDX: 0000000045584543 RSI: 0000000028121969 RDI: 00000000fee1dead
- RBP: 0000000000000000 R08: 0000000000000007 R09: 00007fd308bc8a60
- R10: 0000000000000021 R11: 0000000000000246 R12: 0000000000000003
- R13: 00007fff7d01e1f0 R14: 00005606db11d8c0 R15: 00000000ffffffff
- Modules linked in:
- CR2: ffffffffffffffc8
- ---[ end trace 0cb0bc633a6fde3e ]---
+I don't see how is it different from vfio-pci situation.
 
-Where:
+And you said you're worried from compatibility. I can't see a 
+compatibility issue here.
 
-(gdb) l *(pci_device_shutdown+0x16)
-0xffffffff8156abf6 is in pci_device_shutdown (drivers/pci/pci-driver.c:496).
-491             struct pci_dev *pci_dev = to_pci_dev(dev);
-492             struct pci_driver *drv = to_pci_driver(pci_dev->dev.driver);
-493
-494             pm_runtime_resume(dev);
-495
-496             if (drv && drv->shutdown)
-497                     drv->shutdown(pci_dev);
-498
-499             /*
-500              * If this is a kexec reboot, turn off Bus Master bit on the
+Maybe we need to rename STOP state. We can call it READY or LIVE or 
+NON_MIGRATION_STATE.
+
+>
+> There's a major inconsistency if the migration interface is telling us
+> something different than we can actually observe through the behavior of
+> the device.  Thanks,
+>
+> Alex
+>
