@@ -2,88 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06AB341E012
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 19:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E34A41E019
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 19:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352555AbhI3RYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 13:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39480 "EHLO mail.kernel.org"
+        id S229585AbhI3RZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 13:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352459AbhI3RYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 13:24:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B919613A0;
-        Thu, 30 Sep 2021 17:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633022581;
-        bh=9rag8usx11vrfz5n1Alc5CNlxdSu7yLNHJusXs6H3Xc=;
+        id S229573AbhI3RZh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 13:25:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9AB20613A0;
+        Thu, 30 Sep 2021 17:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1633022635;
+        bh=5tePxdCWKV6n9abPoiedDR+S/Q6cb3pBjIOwiHhDGUE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=smT4INWHGimM8VYsC/zVfp5QMujuZ5U21z40UH9cFM5G70cYo0d2lKW1axqmPFwHK
-         ednwMaotuLnaClhXaxpoP0e43qc2gnvXfAoSltS7tmKX1wnMxutMJZyInXZ9oQe9PO
-         WMSJJUTDb+GcvMDiKZnoUeotF/c021KEkYFZ7lsWtyAMhLQK0L3KjY25ce6PyXZlWy
-         ykexidoxN/DmaHtSawowBwieM1XQwlvGiaHPW63tTlSBD1/M+Pq62kQsVruaiP22/N
-         +yQQ6zqMPlT/5OSWAuqq8x1OwRG/YVzL09M/fYfc59mLMNcgd/nbzQJJztM5SpEjWk
-         3IA6zqn6gfoIg==
-Received: by pali.im (Postfix)
-        id 7D7BEE79; Thu, 30 Sep 2021 19:22:59 +0200 (CEST)
-Date:   Thu, 30 Sep 2021 19:22:59 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Stefan Chulski <stefanc@marvell.com>
-Cc:     Konstantin Porotchkin <kostap@marvell.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        b=CgXtKWuOlomRjLMXskRL9wb0BnYsyELUL6upXwxZ0TfFVCT89Jt9Y5Q72o+qxmEEO
+         GBflVXV4mLsttSTo8bjOuUBHG5ZxGnlXFDM/TnEmlw6kWmVaZqyFyZbvtQVOzir9SG
+         NPfh8I8VF2F9QcuitqSzdMgMtz3j61QxifmcEbyo=
+Date:   Thu, 30 Sep 2021 19:23:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>, Xogium <contact@xogium.me>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Issues with A3720 PCIe controller driver pci-aardvark.c
-Message-ID: <20210930172259.gdz75oxz7doqrvna@pali>
-References: <20210723221710.wtztsrddudnxeoj3@pali>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
+ un-authorized devices
+Message-ID: <YVXyqBGa5Ix5MzmD@kroah.com>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065807-mutt-send-email-mst@kernel.org>
+ <YVXBNJ431YIWwZdQ@kroah.com>
+ <20210930103537-mutt-send-email-mst@kernel.org>
+ <YVXOc3IbcHsVXUxr@kroah.com>
+ <20210930105852-mutt-send-email-mst@kernel.org>
+ <YVXWIVZupeAzT6bO@kroah.com>
+ <f4b5a269-843f-6911-24fe-ebffb2bd4f9e@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210723221710.wtztsrddudnxeoj3@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <f4b5a269-843f-6911-24fe-ebffb2bd4f9e@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Stefan! Could you please look at this email and help us with this issue?
+On Thu, Sep 30, 2021 at 10:17:09AM -0700, Andi Kleen wrote:
+> 
+> > > The "it" that I referred to is the claim that no driver should be
+> > > touching hardware in their module init call. Andi seems to think
+> > > such drivers are worth working around with a special remap API.
+> > Andi is wrong.
+> 
+> While overall it's a small percentage of the total, there are still quite a
+> few drivers that do touch hardware in init functions. Sometimes for good
+> reasons -- they need to do some extra probing to discover something that is
+> not enumerated -- sometimes just because it's very old legacy code that
+> predates the modern driver model.
 
-On Saturday 24 July 2021 00:17:10 Pali Rohár wrote:
-> Hello Konstantin!
-> 
-> There are issues with Marvell Armada 3720 PCIe controller when high
-> performance PCIe card (e.g. WiFi AX) is connected to this SOC. Under
-> heavy load PCIe controller sends fatal abort to CPU and kernel crash.
-> 
-> In Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions
-> document is described erratum 3.12 PCIe Completion Timeout (Ref #: 251)
-> which may be relevant. But neither Bjorn, Thomas nor me were able to
-> understood text of this erratum. And we have already spent lot of time
-> on this erratum. My guess that is that in erratum itself are mistakes
-> and there are missing some other important details.
-> 
-> Konstantin, are you able to understand this erratum? Or do you know
-> somebody in Marvell who understand this erratum and can explain details
-> to us? Or do you know some more details about this erratum?
-> 
-> Also it would be useful if you / Marvell could share text of this
-> erratum with linux-pci people as currently it is available only on
-> Marvell Customer Portal which requires registration with signed NDA.
-> 
-> In past Thomas wrote patch "according to this erratum" and I have
-> rebased, rewritten and resent it to linux-pci mailing list for review:
-> https://lore.kernel.org/linux-pci/20210624222621.4776-6-pali@kernel.org/
-> 
-> Similar patch is available also in kernel which is part of Marvell SDK.
-> 
-> Bjorn has objections for this patch as he thinks that bit DIS_ORD_CHK in
-> that patch should be disabled. Seems that enabling this bit effectively
-> disables PCIe strong ordering model. PCIe kernel drivers rely on PCIe
-> strong ordering, so it would implicate that that bit should not be
-> enabled. Which is opposite of what is mentioned patch doing.
-> 
-> Konstantin, could you help us with this problem?
+Are any of them in the kernel today?
+
+PCI drivers should not be messing with this, we have had well over a
+decade to fix that up.
+
+> The legacy drivers could be fixed, but nobody really wants to touch them
+> anymore and they're impossible to test.
+
+Pointers to them?
+
+> The drivers that probe something that is not enumerated in a standard way
+> have no choice, it cannot be implemented in a different way.
+
+PCI devices are not enumerated in a standard way???
+
+> So instead we're using a "firewall" the prevents these drivers from doing
+> bad things by not allowing ioremap access unless opted in, and also do some
+> filtering on the IO ports The device filter is still the primary mechanism,
+> the ioremap filtering is just belts and suspenders for those odd cases.
+
+That's horrible, don't try to protect the kernel from itself.  Just fix
+the drivers.
+
+If you point me at them, I will be glad to have a look and throw some
+interns on them.
+
+But really, you all could have fixed them up by now if Intel really
+cared about it :(
+
+> If you want we can send an exact list, we did some analysis using a patched
+> smatch tool.
+
+Please do.
+
+thanks,
+
+greg k-h
