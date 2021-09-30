@@ -2,110 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F06141D4EE
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:01:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E673C41D4F5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:04:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348895AbhI3ICy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 04:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348840AbhI3ICe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 04:02:34 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28AF7615E0;
-        Thu, 30 Sep 2021 08:00:52 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mVqzq-00DuHm-4a; Thu, 30 Sep 2021 09:00:50 +0100
-Date:   Thu, 30 Sep 2021 09:00:49 +0100
-Message-ID: <87fstmtrv2.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        id S1348931AbhI3IF4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 04:05:56 -0400
+Received: from mail-vk1-f181.google.com ([209.85.221.181]:40733 "EHLO
+        mail-vk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348936AbhI3IDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 04:03:25 -0400
+Received: by mail-vk1-f181.google.com with SMTP id w68so2417790vkd.7;
+        Thu, 30 Sep 2021 01:01:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ms0VqDKZboxk1ut2VKuUbmXC/Os6zYllLTqnL0oRNbQ=;
+        b=VnYF7NDchrwmccq/WoK6bb/oudKrq2tzg7uDuJqTRXC6eD1wB3xlX8wYz1ymZ0eu2U
+         Q7cNRuwQJpxhYPl+yK+HhiEf8t1LE3xz+FcvWVgZ0nAdGdBmlvFgQJ445tBu2lFv3jYI
+         ng9qoFdBFgfqlMlAa0Ldz6Zw/KkqGgoU7nJIO68SGlcKKMe0mk0H0NhjVYhPmjYaniMW
+         uySORjIxIxPeaozHZr+ag5CCvH2FbMvXMIqJveNCRwXtry1Uar1XC5IkqVd+dbtSUzrO
+         LwtxPmYKb6SrKrSM3DCFcWyrjgi0cEoKh0YstpDgy9E6NGia0I+1XWhs2vK1H+nqVkrH
+         +CXA==
+X-Gm-Message-State: AOAM530w4GZO/y1CBh1NtWJZU2rOsTJbl0kk4882+E1AUeLh0zogxZx4
+        kUMIEG64WMiyYf7Kfb9TZ/X3/KoCtsXTGoXFpqIpetwXczk=
+X-Google-Smtp-Source: ABdhPJzM80iDyUPKXMxG4ur1pT73IGxCLDTHfMl3aO1BTD+/HNQJUw87pcAvECmNIYqvDzvLlU9N/pp5MpjFP+1Z3tM=
+X-Received: by 2002:a1f:3a4b:: with SMTP id h72mr2098433vka.19.1632988895590;
+ Thu, 30 Sep 2021 01:01:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210907144512.5238-1-marek.vasut@gmail.com> <163297980091.358640.10064724088378840378@swboyd.mtv.corp.google.com>
+In-Reply-To: <163297980091.358640.10064724088378840378@swboyd.mtv.corp.google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Sep 2021 10:01:24 +0200
+Message-ID: <CAMuHMdV8Xu-Pgda9ZrgaXFqXdzBrSRWwiSQFLjzxqRGNWkO3wQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Stan Skowronek <stan@corellium.com>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Hector Martin <marcan@marcan.st>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v5 10/14] arm64: apple: Add pinctrl nodes
-In-Reply-To: <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com>
-References: <20210929163847.2807812-1-maz@kernel.org>
-        <20210929163847.2807812-11-maz@kernel.org>
-        <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev, marcan@marcan.st, Robin.Murphy@arm.com, joey.gouly@arm.com, joro@8bytes.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 29 Sep 2021 20:05:42 +0100,
-Linus Walleij <linus.walleij@linaro.org> wrote:
-> 
-> On Wed, Sep 29, 2021 at 6:56 PM Marc Zyngier <maz@kernel.org> wrote:
-> 
-> > From: Mark Kettenis <kettenis@openbsd.org>
+Hi Stephen,
+
+On Thu, Sep 30, 2021 at 7:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> +linux-clk as I don't regularly read my inbox :/
+>
+> Quoting marek.vasut@gmail.com (2021-09-07 07:45:12)
+> > From: Marek Vasut <marek.vasut+renesas@gmail.com>
 > >
-> > Add pinctrl nodes corresponding to the gpio,t8101 nodes in the
-> > Apple device tree for the Mac mini (M1, 2020).
+> > Add COMMON_CLK dependency, otherwise the following build error occurs:
+> >   arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
+> >   pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_enabled'
+> > This should be OK, since all platforms shipping this controller also
+> > need COMMON_CLK enabled for their clock driver.
 > >
-> > Clock references are left out at the moment and will be added once
-> > the appropriate bindings have been settled upon.
-> >
-> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Link: https://lore.kernel.org/r/20210520171310.772-3-mark.kettenis@xs4all.nl
-> (...)
-> > +               pinctrl_ap: pinctrl@23c100000 {
-> > +                       compatible = "apple,t8103-pinctrl", "apple,pinctrl";
-> > +                       reg = <0x2 0x3c100000 0x0 0x100000>;
-> > +
-> > +                       gpio-controller;
-> > +                       #gpio-cells = <2>;
-> > +                       gpio-ranges = <&pinctrl_ap 0 0 212>;
-> 
-> In other discussions it turns out that the driver is abusing these gpio-ranges
-> to find out how many pins are in each pinctrl instance. This is not the
-> idea with gpio-ranges, these can be multiple and map different sets,
-> so we need something like
-> 
-> apple,npins = <212>;
-> (+ bindings)
-> 
-> or so...
+> > Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > ---
+> > +CC Stephen, please double-check whether this is the right approach or
+> >     whether there is some better option
+>
+> Stop using __clk_is_enabled()? I don't quite understand what's going on in
+> the code but __clk_is_enabled() should really go away. I thought we were
+> close to doing that but now I see a handful of calls have come up. The
+> API should be replaced by clk_hw_is_enabled() and then removed. We move
+> it to clk_hw API so that only clk providers can look at it.
 
-Is it the driver that needs updating? Or the binding? I don't really
-care about the former, but the latter is more disruptive as it has
-impacts over both u-boot and at least OpenBSD.
+But this is not a clk provider...
 
-How is that solved on other pinctrl blocks? I can't see anyone having
-a similar a similar property.
+> Sigh!
 
-Thanks,
+;-)
 
-	M.
+> Anyway, fixing the dependency is "ok" but really the long term fix would
+> be to not use a "is this clk enabled" sort of API. If I'm reading the
+> code correctly, this is some sort of fault handler that's trying to
+> avoid hanging the bus while handling the fault so it tries to make sure
+> the clk is enabled first? Is it a problem if the clk is not actually
+> enabled here? Would runtime PM enable state of the device work just as
+> well?
+
+Thanks, checking Runtime PM state is a good suggestion. Doing so
+would require caching a pointer to the PCIe struct device instead of
+the struct clk.
+However, pcie_bus_clk is not the module clock, which is managed by
+Runtime PM, but the PCIe bus clock, which is managed explicitly by
+the driver.
+However, I believe that we are checking the wrong clock, as register
+access needs the module clock to be enabled, not the PCIe bus clock?
+As the driver just calls pm_runtime_get_sync() and clk_prepare_enable()
+in .probe(), and never touches Runtime PM status or the PCIe bus clock
+during the further lifetime of the driver (it cannot be unloaded), both
+the module clock and the PCIe bus clock should always[*] be enabled
+when the static copy of the remapped PCIe controller address is valid.
+[*] Modulo system-wide power transitions like s2ram. Does
+    pm_runtime_suspended() reflect that state, too?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Without deviation from the norm, progress is not possible.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
