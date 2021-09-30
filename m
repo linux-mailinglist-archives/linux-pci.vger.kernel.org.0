@@ -2,128 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB7141DDCA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A55441DDEC
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345661AbhI3Pnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 11:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345133AbhI3Pns (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 11:43:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6903E61361;
-        Thu, 30 Sep 2021 15:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633016525;
-        bh=Ld6gmKgj4ZkpFLxu/49x5Bat/dDZqy1PdYTRqKMcEmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jlXDpf2+6u93jQCh2igjEF8goUz2IeBzFfBCaMWtFFxkZjzaF6vMhu5iyclcS2D9v
-         HgWr48obLMbc1RwdspGfSjMZwkf1KYlYnCjo/JsLTD3Bi5Cm++W0LfBVdB8ro8mCU9
-         kSM4wFHPbJnX7jdweMj71nqIa7JClCr0nmAoNJBAlqwfpKpG6uEBhUA3hieCETQpQ+
-         Nb2qg3A+Lh9vp3M5KF4NBR6SvhMRuP3mpfj7ca7qXSqiEM0BJTOZgixsB/pWrJV8KL
-         7pEmG1CMnW/2Yy1Axg8lY3ZaSUmjZ7pL+4wslkhFveEPYTCenBKtBrwgVFOEAYcumK
-         rRe9dhWEx714w==
-Received: by pali.im (Postfix)
-        id E29DEE79; Thu, 30 Sep 2021 17:42:02 +0200 (CEST)
-Date:   Thu, 30 Sep 2021 17:42:02 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-Message-ID: <20210930154202.cvw3it3edv7pmqtb@pali>
-References: <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
- <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
- <YS/rn8b0O3FPBbtm@google.com>
- <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
- <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
- <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl>
- <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
- <CAHp75Vd5iCLELx8s+Zvcj8ufd2bN6CK26soDMkZyC1CwMO2Qeg@mail.gmail.com>
- <20210923202231.t2zjoejpxrbbe5hc@pali>
- <db583b3c-6bfc-d765-a588-eb47c76cea31@v0yd.nl>
+        id S1346261AbhI3Psl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 11:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346202AbhI3Psl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 11:48:41 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871B2C06176D
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 08:46:58 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id b15so27006867lfe.7
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 08:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d2+hq+nxbbXAkaT4qaeWpisMiqGB49qBmA8xSYn2QSI=;
+        b=ts/avt3kzHzoGq7Ak5AV5Wxe9QuECdMvB1s1HFzD4+ry82idewTaLUO+lCQuPa4DyT
+         +gW4lWvWT46H7IaGSWgIxkI+ddVuNPHD7B4ZwzvfDM6vf/mfP9X4OI6AQuOiSypfGtZB
+         h3JFyOa4UBoWcHjaFYDexjo/9CzkqZyngQqJG5pdHE1mbP39PuOkPs0T7cpyNxEjM5Kz
+         UNFPvziWlKLKCBEVCTO6UtQGZazE4HPSsfNBQMMIEQoAQH8hu+mCqFP3HcABwh4l4y5v
+         WNZ9l1NNn4dCJYMrhtFz6JNdL92AvTTZeVcJ9g+V4XP+NEnb+VXo5HzLlIdET+Ht+L3K
+         Cszw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d2+hq+nxbbXAkaT4qaeWpisMiqGB49qBmA8xSYn2QSI=;
+        b=gIlo1TkhgJ7PlTZ+ZVzKW724I8OvIsRlllsKLTx3oqLiH0Cied99F/d99rNui1iOYn
+         8L9MRWy6zmvRmMJvQA4hXtZNMCfiELuSNRihKP40ZBf7DFuepkL19fGh5m/CVsZk4COy
+         ofJ3K617OxNo1NR//4MoAzE0xUw1bW6u+yA9VArEIOeqfdi8lXlkML+9uyDPGAmH6tu4
+         KSVw3XUP5amrctCE2RPy45d1xdYRnRQYJi8uuyJkMvO3xm2rAHZnyPcjOio3zdLfrBRR
+         Qj59wE7msfwEcISZi1FltUc3OlFsymWQdjTyVonNDQoPMdmLOaVZFj4ZOC4AErVgMSmr
+         owmA==
+X-Gm-Message-State: AOAM533p5OCfAQdUtHXzt26QESHJvhouCZX0j/0+05T1qSBe/lpX8Gd1
+        Nyq3XwQp+lkYa9SzibR1OGnmpdwEn/sjzeLFBZqWyQ==
+X-Google-Smtp-Source: ABdhPJzaDE9QWa7bdhAIHJ94Li3ZZgNfj3d7w6jgx+N0Ze2Whd0t5L9GUlAJne4LsPtEXT2xZD6rwTNo5z3vCOmzq18=
+X-Received: by 2002:a05:651c:4d2:: with SMTP id e18mr6742952lji.432.1633016816515;
+ Thu, 30 Sep 2021 08:46:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <db583b3c-6bfc-d765-a588-eb47c76cea31@v0yd.nl>
-User-Agent: NeoMutt/20180716
+References: <20210929163847.2807812-1-maz@kernel.org> <20210929163847.2807812-11-maz@kernel.org>
+ <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com> <87fstmtrv2.wl-maz@kernel.org>
+In-Reply-To: <87fstmtrv2.wl-maz@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 30 Sep 2021 17:46:45 +0200
+Message-ID: <CACRpkdb1JCoTLMH5hExcruJA=XT+KRX=LMvF=rRqzhJUup3-LA@mail.gmail.com>
+Subject: Re: [PATCH v5 10/14] arm64: apple: Add pinctrl nodes
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 30 September 2021 17:38:43 Jonas Dreßler wrote:
-> On 9/23/21 10:22 PM, Pali Rohár wrote:
-> > On Thursday 23 September 2021 22:41:30 Andy Shevchenko wrote:
-> > > On Thu, Sep 23, 2021 at 6:28 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
-> > > > On 9/22/21 2:50 PM, Jonas Dreßler wrote:
-> > > 
-> > > ...
-> > > 
-> > > > - Just calling mwifiex_write_reg() once and then blocking until the card
-> > > > wakes up using my delay-loop doesn't fix the issue, it's actually
-> > > > writing multiple times that fixes the issue
-> > > > 
-> > > > These observations sound a lot like writes (and even reads) are actually
-> > > > being dropped, don't they?
-> > > 
-> > > It sounds like you're writing into a not ready (fully powered on) device.
-> > 
-> > This reminds me a discussion with Bjorn about CRS response returned
-> > after firmware crash / reset when device is not ready yet:
-> > https://lore.kernel.org/linux-pci/20210922164803.GA203171@bhelgaas/
-> > 
-> > Could not be this similar issue? You could check it via reading
-> > PCI_VENDOR_ID register from config space. And if it is not valid value
-> > then card is not really ready yet.
-> > 
-> > > To check this, try to put a busy loop for reading and check the value
-> > > till it gets 0.
-> > > 
-> > > Something like
-> > > 
-> > >    unsigned int count = 1000;
-> > > 
-> > >    do {
-> > >      if (mwifiex_read_reg(...) == 0)
-> > >        break;
-> > >    } while (--count);
-> > > 
-> > > 
-> > > -- 
-> > > With Best Regards,
-> > > Andy Shevchenko
-> 
-> I've tried both reading PCI_VENDOR_ID and the firmware status using a busy
-> loop now, but sadly none of them worked. It looks like the card always
-> replies with the correct values even though it sometimes won't wake up after
-> that.
-> 
-> I do have one new observation though, although I've no clue what could be
-> happening here: When reading PCI_VENDOR_ID 1000 times to wakeup we can
-> "predict" the wakeup failure because exactly one (usually around the 20th)
-> of those 1000 reads will fail.
+On Thu, Sep 30, 2021 at 10:00 AM Marc Zyngier <maz@kernel.org> wrote:
 
-What does "fail" means here?
+> > In other discussions it turns out that the driver is abusing these gpio-ranges
+> > to find out how many pins are in each pinctrl instance. This is not the
+> > idea with gpio-ranges, these can be multiple and map different sets,
+> > so we need something like
+> >
+> > apple,npins = <212>;
+> > (+ bindings)
+> >
+> > or so...
+>
+> Is it the driver that needs updating? Or the binding?
 
-> Maybe the firmware actually tries to wake up,
-> encounters an error somewhere in its wakeup routines and then goes down a
-> special failure code path. That code path keeps the cards CPU so busy that
-> at some point a PCI_VENDOR_ID request times out?
-> 
-> Or well, maybe the card actually wakes up fine, but we don't receive the
-> interrupt on our end, so many possibilities...
+Both, I guess.
+
+> I don't really
+> care about the former, but the latter is more disruptive as it has
+> impacts over both u-boot and at least OpenBSD.
+>
+> How is that solved on other pinctrl blocks? I can't see anyone having
+> a similar a similar property.
+
+The Apple pincontroller is unique in having four instances using the
+same compatible string (I raised this as an issue too).
+
+Most SoCs has one instance of a pin controller, with one compatible
+string and then we also know how many pins it has.
+
+The maintainer seeme unhappy about my suggestion to name
+the four pin controllers after function and insist to use the same
+compatible for all four, which means they instead need to be
+parametrized, which means this parameter has to be added
+because ranges should not be used in this way.
+
+I guess the code can survive using the ranges as a fallback at
+the cost of some more complex code.
+
+Yours,
+Linus Walleij
