@@ -2,102 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F0F41E302
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 23:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 731AF41E312
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 23:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348704AbhI3VJC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 17:09:02 -0400
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:57772 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348668AbhI3VJB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 17:09:01 -0400
-X-Greylist: delayed 10990 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Sep 2021 17:09:00 EDT
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [80.241.60.233])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4HL5R820jFzQk38;
-        Thu, 30 Sep 2021 23:07:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Subject: Re: [PATCH v2 2/2] mwifiex: Try waking the firmware until we get an
- interrupt
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+        id S1348940AbhI3VOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 17:14:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:15201 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236609AbhI3VOg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 17:14:36 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="225369510"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="225369510"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:12:53 -0700
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="438185535"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.252.134.229]) ([10.252.134.229])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:12:53 -0700
+Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
+ un-authorized devices
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>, stable@vger.kernel.org
-References: <20210914114813.15404-1-verdre@v0yd.nl>
- <20210914114813.15404-3-verdre@v0yd.nl> <YUsRT1rmtITJiJRh@smile.fi.intel.com>
- <d9b1c8ea-99e2-7c3e-ec8e-61362e8ccfa7@v0yd.nl>
- <YVYk/1+ftFUOoitF@smile.fi.intel.com>
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-Message-ID: <98c1b772-ae6b-e435-030e-399f613061ba@v0yd.nl>
-Date:   Thu, 30 Sep 2021 23:07:09 +0200
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065807-mutt-send-email-mst@kernel.org> <YVXBNJ431YIWwZdQ@kroah.com>
+ <20210930144305.GA464826@rowland.harvard.edu>
+ <20210930104924-mutt-send-email-mst@kernel.org>
+ <20210930153509.GF464826@rowland.harvard.edu>
+ <20210930115243-mutt-send-email-mst@kernel.org>
+ <00156941-300d-a34a-772b-17f0a9aad885@linux.intel.com>
+ <20210930204447.GA482974@rowland.harvard.edu>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <77aae23f-8c07-845b-90d7-389e1cd1ef5d@linux.intel.com>
+Date:   Thu, 30 Sep 2021 14:12:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <YVYk/1+ftFUOoitF@smile.fi.intel.com>
+In-Reply-To: <20210930204447.GA482974@rowland.harvard.edu>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D745326E
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/30/21 10:58 PM, Andy Shevchenko wrote:
-> On Thu, Sep 30, 2021 at 08:04:00PM +0200, Jonas Dreßler wrote:
->> On 9/22/21 1:19 PM, Andy Shevchenko wrote:
->>> On Tue, Sep 14, 2021 at 01:48:13PM +0200, Jonas Dreßler wrote:
-> 
-> ...
-> 
->>>> +	do {
->>>> +		if (mwifiex_write_reg(adapter, reg->fw_status, FIRMWARE_READY_PCIE)) {
->>>> +			mwifiex_dbg(adapter, ERROR,
->>>> +				    "Writing fw_status register failed\n");
->>>> +			return -EIO;
->>>> +		}
->>>> +
->>>> +		n_tries++;
->>>> +
->>>> +		if (n_tries <= N_WAKEUP_TRIES_SHORT_INTERVAL)
->>>> +			usleep_range(400, 700);
->>>> +		else
->>>> +			msleep(10);
->>>> +	} while (n_tries <= N_WAKEUP_TRIES_SHORT_INTERVAL + N_WAKEUP_TRIES_LONG_INTERVAL &&
->>>> +		 READ_ONCE(adapter->int_status) == 0);
->>>
->>> Can't you use read_poll_timeout() twice instead of this custom approach?
->>
->> I've tried this now, but read_poll_timeout() is not ideal for our use-case.
->> What we'd need would be read->sleep->poll->repeat instead of
->> read->poll->sleep->repeat. With read_poll_timeout() we always end up doing
->> one more (unnecessary) write.
-> 
-> First of all, there is a parameter to get sleep beforehand.
 
-Sleeping beforehand will sleep before doing the first write, so that's 
-just wasted time.
+> If all you want to do is prevent someone from loading a bunch of
+> drivers that you have identified as unhardened, why not just use a
+> modprobe blacklist?
 
-> Second, what is the problem with having one write more or less?
-> Your current code doesn't guarantee this either. It only decreases
-> probability of such scenario. Am I wrong?
-> 
-> 
+That wouldn't help for builtin drivers, we cannot control initcalls.
 
-Indeed my approach just decreases the probability and we sometimes end 
-up writing twice to wakeup the card, but it would kinda bug me if we'd 
-always do one write too much.
+This LWN article has more details on the background.
 
-Anyway, if you still prefer the read_poll_timeout() solution I'd be 
-alright with that of course.
+https://lwn.net/Articles/865918/
+
+-Andi
+
+
+> Am I missing something?
+>
+> Alan Stern
