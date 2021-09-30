@@ -2,156 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7232541E005
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 19:19:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC21441E00F
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 19:21:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352558AbhI3RVV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 13:21:21 -0400
-Received: from mail-mw2nam10on2080.outbound.protection.outlook.com ([40.107.94.80]:19777
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1346857AbhI3RVA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 13:21:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lGZHpxJlldhPnlQC4mxGV7ED2NkMJDvsc4TFTaX6PFLsGKk4Imu8u3DNr88cHNgPglfkBsIhIydqnQOF2/4XAw4oxqawpg82vMXdyzqgMjyNmc6vrQm78zc3t6bxaRbgDslMtM5e96JVFb5uiJpuugkqo71VCavimSfeDBHo+UdZp+jLK8rn4usQhskxrNjEgI5YnmjZbGnSqDRUJaYyBu5Y44MqjzHbk4SLtxNDDWOgejlhreqTIgScCfvg4rTSkPcsqB2jOLCRwlFfISsgnIS56d2Wjf1Dt7T2OBI4wQETq+okLR30sRJlS9nunMQzthSEfgryaOMQTVaI6tE8tQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=2fELnHVMyTpNhwVbgHmVfPi5zThL1xvtdOS3eTwdpBM=;
- b=ao1w4wrabJyfLb8fdJFSed5AMJofDORT+c40AqpOF49Fu06ryEMfa3C6KSH29iETSG125E7VQEzhIhS6ImbHt2FJkQ/C3gdXLi2oYH9l0PyjDo+WZduJvZ+I4mTmEMIHnle9C1p40TqmoEjexwooAm1/SyuYriepxRNYIVKAdKuo6X8E7ghRqViS4CwemlXU9ZS1jTVlNr7cO9GoIr0rADkcteSDvJT5tly9Qbzyhp6QMOjLCtd8zux0FvrExNikE2sv0pwBuigOqoureafdr+Ubuzse/40v1HlwCDqXXkrstpbUvSTdmyozH2aWp1V8/JXuF4Gf3cRc3iwIkqkhQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2fELnHVMyTpNhwVbgHmVfPi5zThL1xvtdOS3eTwdpBM=;
- b=fL+e9g6tleIclm2ViKN5Sq0QjqvmzB+R6PjOu8wcjIhxZfyLKXBCUxVQSr4KXSAAeAHCJd9JPcaOW/ep2rfG3CunBgreAm+9myFQLs8Sy4LVqn9+ZQShEsKxRk8b6IhvmPt1uATd7e42J6isE60/McA5lPU6bi+UffeXRUSjgSdvMihRj0KHwMc9MlEF1qakf4nZSElKxMfTfVWdXfzUZ2oKrmvyQ4QhW1anZjGpmma3rrMyagLx69wb8J3r5iJAVTiOp55AcMRp5wiQBubCQon65lvVlWZ3U319ei8K2kRfxI665AV9km1jRUI0PtrLe3G5Z6Ivn4Gh3Xq+WDUHqg==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by MW3PR12MB4539.namprd12.prod.outlook.com (2603:10b6:303:59::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Thu, 30 Sep
- 2021 17:19:16 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::3db1:105d:2524:524]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::3db1:105d:2524:524%7]) with mapi id 15.20.4566.014; Thu, 30 Sep 2021
- 17:19:16 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-CC:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
+        id S1352539AbhI3RXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 13:23:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51510 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352498AbhI3RXX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 13:23:23 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1633022500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GA+E0IP9wAji4oISu6ACw4UTTLxZjlZyU/M+r1RXI64=;
+        b=OocumTjfdzaeeXe2YA+xo/7eisqf9hhrMQrNELBYo4DoMtylhXK2VroKlyHU3f+sLL8DcC
+        mrhoA97ju7OHSRlEQmoHnSfSboUw5SCKDEOnJqHvTPd7PTNNE/ewIkgfuOaVetUl611pQR
+        0uphGDoRfXsL/vA8OKvNovBla6eTQ6d0r6TxCwt4vaxExX1P+evdfzuXNsbdjFW/FrVuZ2
+        5v5XdeWSJW3Lau9VthhrhskdsC0ykl7r9oNe78Qil0vOhy4ww8J8j34szv9/SImVEhBQHH
+        Sl2aRPgrrX0m3JICsNzY8fysZ5WY/PpT06dV2mtmqs4DdjW8C3nDLWRYWqRXXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1633022500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GA+E0IP9wAji4oISu6ACw4UTTLxZjlZyU/M+r1RXI64=;
+        b=KpC7FemuoCU3saAzexR+zyGtoKX5BgAflK7A4YyltKE2m3KAShvUyE7oCpPkEghC9tCght
+        LRK2H2/B/J317TAg==
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        jose.souza@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 09/20] nvme-pci: check DMA ops when indicating support
- for PCI P2PDMA
-Thread-Topic: [PATCH v3 09/20] nvme-pci: check DMA ops when indicating support
- for PCI P2PDMA
-Thread-Index: AQHXq1RfNFWZGZ0XhUyLU5ISdBtHSKu8GxKAgADFEACAAAfMAA==
-Date:   Thu, 30 Sep 2021 17:19:15 +0000
-Message-ID: <59b52f30-00b3-f466-2601-592fa09d5614@nvidia.com>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-10-logang@deltatee.com>
- <c04215bd-442a-6520-4fc7-5035c1310662@nvidia.com>
- <acaa91df-f932-7449-3623-4209c41634d9@deltatee.com>
-In-Reply-To: <acaa91df-f932-7449-3623-4209c41634d9@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-authentication-results: deltatee.com; dkim=none (message not signed)
- header.d=none;deltatee.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 14e9e6fa-f4f6-4379-36f5-08d984366e20
-x-ms-traffictypediagnostic: MW3PR12MB4539:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR12MB4539B997822854BA5E8DAD5CA3AA9@MW3PR12MB4539.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v9e2ozBZnKVNBIIjEqNDx8j3oa2o0bYdeB9GNUdsvBe17xqyYYRgjs7zzFjotjGHTFy6zNfSNk1xfs6uMZLA7IpiIfmM/GAsa+t/+iFNu39R5R477o7TjRoy0bxK38EylbKvxpNUulIblijM8022nHCIg2DgAH8k6agFLHdVW8rPsmiyIcgc39lCG3FcM3l30W9cX7eNI1RerZuuQBNtBhu/MEg1oDOt8cW2hUnkwIW7rVZ/QV5U+RZlr4s7dDpQ1X43WZ9FQsTFvB31r+CI36y50LYvy5VuycZIkSMHb3fq17n3UW59yd2Ym77z2Fopy3lxGD52JIuYFLCPE6fV4o3D3kXz/yR9CzuvtSPJ8q6XdMbI68BtqZkFkdxvPWNAQpfKRnbmHy/7fZw3uuVX1nlj/W3F4R0ljITAXYrzQXiLRKdiOVCOUPY5nl6UX4MdbvGJ5J4t3i+sLdJzzK6/98SIvr3BCdfeoEFBegA0SbUhhRZ7Syk/zlBj2SC5W30/Lpi6HC2JybEAhmUmwEXJtEvZMDrlfKx2jSM/5syJZkHSbPlk4iGm8xd7nc/RbxhPD6XhXGNnI48Sx8k5bxi3Xs/GVYwn7XegLJSA81xaJuWCeygUyYpBRu8TQJjHlMvH1OUcrTW3sWEI2AFFyBWtlVvCSgIJ/oBCrrpWk4BciU/GWfeZQlQjKvxZBMu7NjAirJXlyPEa0iEPlR8z/Se0rsa2EBxm5mk7EabVgqwCmZ5WeeqTZFUvBG8ZtSDHG+Ar40JaBm07C47NssrxY3F/Ww==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6512007)(91956017)(5660300002)(122000001)(36756003)(54906003)(2906002)(38100700002)(83380400001)(31696002)(8676002)(186003)(86362001)(508600001)(66556008)(66946007)(66476007)(64756008)(66446008)(6506007)(6486002)(2616005)(8936002)(76116006)(316002)(4744005)(71200400001)(31686004)(7416002)(38070700005)(4326008)(110136005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WlFwUmtaa3hVWU0rRThKT3p6OXlnUUI2ZTV1ZTR1M0dxR2NZOHJRQXI1NlA3?=
- =?utf-8?B?Vko0Y3hMeHROUTBaUW84Z2owa2VhbG5LTUMwYkJUSkVtb21HT0tVeTFrYWZx?=
- =?utf-8?B?ZEFCN2dscm9ZczhlOHBxdGF6OHJNOFl6NkZUUzNreEpLTUVRMDR4aWVlZHh6?=
- =?utf-8?B?WS92ZndqL3J6Y3dMRXBabE8wWXpZRkJ2dHVENnh0RllyK2VWWDRjc2hxNEtk?=
- =?utf-8?B?KzdIL0p3dTA3U05CMWwyTC9pY2lpclJTMnBzWGExU1BncXlPU2pXdjlXSmZP?=
- =?utf-8?B?T1l2aW9ETjJPSm9rbFNPcnYyRVltcld5SkFUY1M0MnRaVnhDdmpBS3JZbCts?=
- =?utf-8?B?djdJRFBhNW80dVMzdlFsek45VDkxcFNPcHNmZVU2b09lUFBkVHFRYWxHcEZ2?=
- =?utf-8?B?Wm1UVjE1NFozK2JkS0ozQXVaV2MzZDdQaHRDbUxheEI4czhnQ0VrSUlXc3Jy?=
- =?utf-8?B?alJ0c0FyZlk0OTY2MFRZN2dTaHA4R0NsblA2LzZTLzRKUnhpdVI1NE1lTVVm?=
- =?utf-8?B?MUliV3AxdFJETHNYeEdQVWVKWTBnNE9WYjNLendEd0tHZXVQdzNDZUJ0Sm5r?=
- =?utf-8?B?SU5Ec3BsU2wvODFGTTd2ZnVVclY3UHU1cjJ0eGx0cGhHOFJDTFkxenJJNzhx?=
- =?utf-8?B?N2FWd1pJQWFnMkZRRW5IWVBFTC9zZDAxVWliUW1qaUJLTnFqbXlZRXMxV21Z?=
- =?utf-8?B?SjJKOTkzOHFacm1wNVA4cjJTR3lRZDROdW54eExNbWlQUURpTURhb1UxYVF4?=
- =?utf-8?B?cTJCLzNrdEY1NXdvSFdNV2R0Y0FyYXZxRVV1NWJFTWVRS04vTkd1N0xGblZT?=
- =?utf-8?B?b3BXSWJ1SUh2dTB0WS85UElHVjhEd2p2T0Zsd1IyTlZsUVZZWTM0YktuN3Uw?=
- =?utf-8?B?S3lBOGlKWmIxck1LL0NwSVErZ2Y2eGRPSXNqSGQvZmJGV3NzcEQwRHVHdHBK?=
- =?utf-8?B?WEQreTF1M0pObjZyemV6enJRdUMrNUNabk1mQ0IxSWd0cUtSUzI0YnZ6MHNr?=
- =?utf-8?B?dEtvZStYZ3c1YXBaemJ6R2FsekVWT2ZrVS9FTmw5NUkyYzJwSDZjaFJUMG5n?=
- =?utf-8?B?MHRxL0lVNUtEKzFGNEV6RnJnaTI5TGFXc3JJSzI4Z2g1ZWJqMFlzTTI4NW9X?=
- =?utf-8?B?SERJcWk1TTdUMmd0UXd2VjdHWWU5MDJzUlI3NERIZGZwUW9ncUFFTVJJblhG?=
- =?utf-8?B?OVk2aU5GVGdLeElpdGY5cG5kR0xZSnZWSlA5OWRVTWNoS2hKY21HQ2JvOGxV?=
- =?utf-8?B?TldGK25pMzhkS2xPSFhkRU5ZWjRVSUFxZWgxMU10VDl5Z2luYUgxbThSZE9E?=
- =?utf-8?B?YnA3MmIwN2FnMjlOQXZaanI5TEJLS0ducVVpOUVGQW9RS1N0Tm9BNVVLRFhP?=
- =?utf-8?B?TmYvNnEvTXVtaG1uQUVTaFRiOHhwNS9VNUF0MGRzaWdWVktvUFN2K3ZEZUF2?=
- =?utf-8?B?czJ5clJBclpqQ3BxUHFEMmc1TVg2TVErcEhUZzZzWFpNbWRNUlN2UVV6akt6?=
- =?utf-8?B?Q01ydldDcWZQd1d1NWxzVld5ZEFMNXFxSWNaSkVDbmM5Z1crdlZPa1crTHEy?=
- =?utf-8?B?MFV2T29iUFpKb1h6T21DR2U1Z2cxc2F0QkFwZzdNNnpPSkJEWkl6REdJZXov?=
- =?utf-8?B?S1Rtd1l6em5YOW5SUGNrN2h3dk1NNHB6WHhQbkZUdFpGa0EyRFNRK0VVMWJ3?=
- =?utf-8?B?TW9RdmpjV0xYL1ZUdGkxTUpYT0JEcCtic21MNThHVCtZQVR1R1NrYWNZcGYv?=
- =?utf-8?B?UExBTXVsdEl1eGw4RERua21MblJrVkdBeE9EakQ5T1RRWmxvVVovMW1UWUN5?=
- =?utf-8?B?cWxLaXpIMC9HdUhrWHNxR3lod2V1anRDWmhuTUlCSTBFSHZrYkQ2RmdqZG9x?=
- =?utf-8?Q?QVwiXeCEdyue6?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D4C7F51CCBC234A83967E26F99FA261@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Feng Tang <feng.tang@intel.com>,
+        Harry Pan <harry.pan@intel.com>
+Subject: [PATCH RFT v2] x86/hpet: Use another crystalball to evaluate HPET
+ usability
+In-Reply-To: <87h7e26lh9.ffs@tglx>
+References: <20210929160550.GA773748@bhelgaas> <87mtnu77mr.ffs@tglx>
+ <87k0iy71rw.ffs@tglx>
+ <CAJZ5v0hH_h9V0dACEMomqZbwpQUf6GB_8UK9+S1AGEdFQqvPLQ@mail.gmail.com>
+ <87h7e26lh9.ffs@tglx>
+Date:   Thu, 30 Sep 2021 19:21:39 +0200
+Message-ID: <87czoq6kt8.ffs@tglx>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14e9e6fa-f4f6-4379-36f5-08d984366e20
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2021 17:19:15.8682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WnTI8GZmYta7DriyIkvSTHA9XYg9HpX3uvwXv9VthqHZdhf9hchOMEkSZGdXUG1wDn1n8ylBmFQ1+wJ/NxebMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4539
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQo+Pg0KPj4gSXMgdGhpcyBuZXcgb3BzIG9ubHkgbmVlZGVkIGZvciB0aGUgUENJZSB0cmFuc3Bv
-cnQgPyBvciBkbyB5b3UgaGF2ZQ0KPj4gZm9sbG93aW5nIHBhdGNoZXMgdG8gdXNlIHRoaXMgb3Ag
-Zm9yIHRoZSBvdGhlciB0cmFuc3BvcnRzID8NCj4gDQo+IE5vLCBJIGRvbid0IHRoaW5rIHRoaXMg
-d2lsbCBtYWtlIHNlbnNlIGZvciB0cmFuc3BvcnRzIHRoYXQgYXJlIG5vdCBiYXNlZA0KPiBvbiBQ
-Q0kgZGV2aWNlcy4NCj4gDQo+PiBJZiBpdCBpcyBvbmx5IG5lZWRlZCBmb3IgdGhlIFBDSWUgdGhl
-biB3ZSBuZWVkIHRvIGZpbmQgYSB3YXkgdG8NCj4+IG5vdCBhZGQgdGhpcyBzb21laG93Li4uDQo+
-IA0KPiBJIGRvbid0IHNlZSBob3cgd2UgY2FuIGRvIHRoYXQuIFRoZSBjb3JlIGNvZGUgbmVlZHMg
-dG8ga25vdyB3aGV0aGVyIHRoZQ0KPiB0cmFuc3BvcnQgc3VwcG9ydHMgdGhpcyBhbmQgbXVzdCBo
-YXZlIGFuIG9wZXJhdGlvbiB0byBxdWVyeSBpdC4NCj4gDQoNCk9rYXkuDQoNCj4gTG9nYW4NCj4g
-DQo=
+On recent Intel systems the HPET stops working when the system reaches PC10
+idle state.
+
+The approach of adding PCI ids to the early quirks to disable HPET on
+these systems is a whack a mole game which makes no sense.
+
+Check for PC10 instead and force disable HPET if supported. The check is
+overbroad as it does not take ACPI, intel_idle enablement and command
+line parameters into account. That's fine as long as there is at least
+PMTIMER available to calibrate the TSC frequency. The decision can be
+overruled by adding "hpet=force" on the kernel command line.
+
+Remove the related early PCI quirks for affected Ice Cake and Coffin Lake
+systems as they are not longer required. That should also cover all
+other systems, i.e. Tiger Rag and newer generations, which are most
+likely affected by this as well.
+
+Fixes: Yet another hardware trainwreck
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Not-yet-signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+Notes: Completely untested. Use at your own peril.
+
+V2: Move the substate check into the helper function. Adjust function
+    name accordingly.
+---
+ arch/x86/kernel/early-quirks.c |    6 ---
+ arch/x86/kernel/hpet.c         |   81 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 6 deletions(-)
+
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -714,12 +714,6 @@ static struct chipset early_qrk[] __init
+ 	 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+-	{ PCI_VENDOR_ID_INTEL, 0x3e20,
+-		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+-	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+-		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+-	{ PCI_VENDOR_ID_INTEL, 0x8a12,
+-		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -10,6 +10,7 @@
+ #include <asm/irq_remapping.h>
+ #include <asm/hpet.h>
+ #include <asm/time.h>
++#include <asm/mwait.h>
+ 
+ #undef  pr_fmt
+ #define pr_fmt(fmt) "hpet: " fmt
+@@ -916,6 +917,83 @@ static bool __init hpet_counting(void)
+ 	return false;
+ }
+ 
++static bool __init mwait_pc10_supported(void)
++{
++	unsigned int eax, ebx, ecx, mwait_substates;
++
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++		return false;
++
++	if (!cpu_feature_enabled(X86_FEATURE_MWAIT))
++		return false;
++
++	if (boot_cpu_data.cpuid_level < CPUID_MWAIT_LEAF)
++		return false;
++
++	cpuid(CPUID_MWAIT_LEAF, &eax, &ebx, &ecx, &mwait_substates);
++
++	return (ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED) &&
++	       (ecx & CPUID5_ECX_INTERRUPT_BREAK) &&
++	       (mwait_substates & (0xF << 28));
++}
++
++/*
++ * Check whether the system supports PC10. If so force disable HPET as that
++ * stops counting in PC10. This check is overbroad as it does not take any
++ * of the following into account:
++ *
++ *	- ACPI tables
++ *	- Enablement of intel_idle
++ *	- Command line arguments which limit intel_idle C-state support
++ *
++ * That's perfectly fine. HPET is a piece of hardware designed by committee
++ * and the only reasons why it is still in use on modern systems is the
++ * fact that it is impossible to reliably query TSC and CPU frequency via
++ * CPUID or firmware.
++ *
++ * If HPET is functional it is useful for calibrating TSC, but this can be
++ * done via PMTIMER as well which seems to be the last remaining timer on
++ * X86/INTEL platforms that has not been completely wreckaged by feature
++ * creep.
++ *
++ * In theory HPET support should be removed altogether, but there are older
++ * systems out there which depend on it because TSC and APIC timer are
++ * dysfunctional in deeper C-states.
++ *
++ * It's only 20 years now that hardware people have been asked to provide
++ * reliable and discoverable facilities which can be used for timekeeping
++ * and per CPU timer interrupts.
++ *
++ * The probability that this problem is going to be solved in the
++ * forseeable future is close to zero, so the kernel has to be cluttered
++ * with heuristics to keep up with the ever growing amount of hardware and
++ * firmware trainwrecks. Hopefully some day hardware people will understand
++ * that the approach of "This can be fixed in software" is not sustainable.
++ * Hope dies last...
++ */
++static bool __init hpet_is_pc10_damaged(void)
++{
++	unsigned long long pcfg;
++
++	/* Check whether PC10 substates are supported */
++	if (!mwait_pc10_supported())
++		return false;
++
++	/* Check whether PC10 is enabled in PKG C-state limit */
++	rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, pcfg);
++	if ((pcfg & 0xF) < 8)
++		return false;
++
++	if (hpet_force_user) {
++		pr_warn("HPET force enabled via command line, but dysfunctional in PC10.\n");
++		return false;
++	}
++
++	pr_info("HPET dysfunctional in PC10. Force disabled.\n");
++	boot_hpet_disable = true;
++	return true;
++}
++
+ /**
+  * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
+  */
+@@ -929,6 +1007,9 @@ int __init hpet_enable(void)
+ 	if (!is_hpet_capable())
+ 		return 0;
+ 
++	if (hpet_is_pc10_damaged())
++		return 0;
++
+ 	hpet_set_mapping();
+ 	if (!hpet_virt_address)
+ 		return 0;
+
