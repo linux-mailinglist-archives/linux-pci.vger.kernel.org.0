@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6049A41D0D7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 03:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90B541D0D3
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 03:05:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347568AbhI3BHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 21:07:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24480 "EHLO mga02.intel.com"
+        id S236932AbhI3BHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 21:07:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24481 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1347152AbhI3BHO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 21:07:14 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212330104"
+        id S1347347AbhI3BHP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 21:07:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212330108"
 X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="212330104"
+   d="scan'208";a="212330108"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:31 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:33 -0700
 X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="521027367"
+   d="scan'208";a="521027370"
 Received: from yzhu3-mobl.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.37.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:30 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:31 -0700
 From:   Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-usb@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v2 2/6] driver core: Add common support to skip probe for un-authorized devices
-Date:   Wed, 29 Sep 2021 18:05:07 -0700
-Message-Id: <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2 3/6] driver core: Allow arch to initialize the authorized attribute
+Date:   Wed, 29 Sep 2021 18:05:08 -0700
+Message-Id: <20210930010511.3387967-4-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -53,82 +53,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While the common case for device-authorization is to skip probe of
-unauthorized devices, some buses may still want to emit a message on
-probe failure (Thunderbolt), or base probe failures on the
-authorization status of a related device like a parent (USB). So add
-an option (has_probe_authorization) in struct bus_type for the bus
-driver to own probe authorization policy.
+Authorized device attribute is used to authorize or deauthorize
+the driver probe of the given device. Currently this attribute
+is initialized to "true" (allow all) by default.
+
+But for platforms like TDX guest, in which the host is an untrusted
+entity, it has a requirement to disable all devices by default and
+allow only a trusted list of devices with hardened drivers. So
+define a variable "dev_default_authorization" which is used to
+initialize the "authorized" attribute in device_initialize(). Also
+allow arch code to override the default value by updating
+dev_default_authorization value.
+
+More discussion about the need for device/driver filter and the use
+of allow list can be found in article [1] titled "firewall for
+device drivers".
+
+Also note that USB and Thunderbolt both override this initial value
+in their respective device initializations so this is not a regression
+for those buses.
+
+[1] - https://lwn.net/Articles/865918/
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/base/dd.c            | 5 +++++
- drivers/thunderbolt/domain.c | 1 +
- drivers/usb/core/driver.c    | 1 +
- include/linux/device/bus.h   | 4 ++++
- 4 files changed, 11 insertions(+)
+ drivers/base/core.c    | 7 +++++++
+ include/linux/device.h | 2 ++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 68ea1f949daa..0cd03ac7d3b1 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -544,6 +544,11 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 			   !drv->suppress_bind_attrs;
- 	int ret;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index e65dd803a453..98717f00b90b 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -47,6 +47,12 @@ static int __init sysfs_deprecated_setup(char *arg)
+ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ #endif
  
-+	if (!dev->authorized && !dev->bus->has_probe_authorization) {
-+		dev_dbg(dev, "Device is not authorized\n");
-+		return -ENODEV;
-+	}
++/*
++ * Default authorization status set as allow all. It can be
++ * overridden by arch code.
++ */
++bool __ro_after_init dev_default_authorization = true;
 +
- 	if (defer_all_probes) {
- 		/*
- 		 * Value of defer_all_probes can be set only by
-diff --git a/drivers/thunderbolt/domain.c b/drivers/thunderbolt/domain.c
-index 3e39686eff14..6de8a366b796 100644
---- a/drivers/thunderbolt/domain.c
-+++ b/drivers/thunderbolt/domain.c
-@@ -321,6 +321,7 @@ struct bus_type tb_bus_type = {
- 	.probe = tb_service_probe,
- 	.remove = tb_service_remove,
- 	.shutdown = tb_service_shutdown,
-+	.has_probe_authorization = true,
- };
+ /* Device links support. */
+ static LIST_HEAD(deferred_sync);
+ static unsigned int defer_sync_state_count = 1;
+@@ -2855,6 +2861,7 @@ void device_initialize(struct device *dev)
+ #ifdef CONFIG_SWIOTLB
+ 	dev->dma_io_tlb_mem = &io_tlb_default_mem;
+ #endif
++	dev->authorized = dev_default_authorization;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
  
- static void tb_domain_release(struct device *dev)
-diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-index fb476665f52d..f57b5a7a90ca 100644
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -2028,4 +2028,5 @@ struct bus_type usb_bus_type = {
- 	.match =	usb_device_match,
- 	.uevent =	usb_uevent,
- 	.need_parent_lock =	true,
-+	.has_probe_authorization = true,
- };
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index 062777a45a74..571a2f6e7c1d 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -69,6 +69,9 @@ struct fwnode_handle;
-  * @lock_key:	Lock class key for use by the lock validator
-  * @need_parent_lock:	When probing or removing a device on this bus, the
-  *			device core should lock the device's parent.
-+ * @has_probe_authorization: Set true to indicate to the driver-core to skip
-+ *			     the authorization checks and let bus drivers
-+ *			     handle it locally.
-  *
-  * A bus is a channel between the processor and one or more devices. For the
-  * purposes of the device model, all devices are connected via a bus, even if
-@@ -112,6 +115,7 @@ struct bus_type {
- 	struct lock_class_key lock_key;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 899be9a2c0cb..c97b1e59d23a 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -959,6 +959,8 @@ int devtmpfs_mount(void);
+ static inline int devtmpfs_mount(void) { return 0; }
+ #endif
  
- 	bool need_parent_lock;
-+	bool has_probe_authorization;
- };
++extern bool dev_default_authorization;
++
+ /* drivers/base/power/shutdown.c */
+ void device_shutdown(void);
  
- extern int __must_check bus_register(struct bus_type *bus);
 -- 
 2.25.1
 
