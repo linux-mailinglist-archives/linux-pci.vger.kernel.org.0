@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EFE641E485
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 00:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E5DC41E482
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 00:59:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240594AbhI3XBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S234440AbhI3XBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 30 Sep 2021 19:01:39 -0400
 Received: from mga17.intel.com ([192.55.52.151]:31802 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345277AbhI3XBi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S240594AbhI3XBi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 30 Sep 2021 19:01:38 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="205460255"
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="205460256"
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="205460255"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
+   d="scan'208";a="205460256"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 15:59:55 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="438213484"
+   d="scan'208";a="520659941"
 Received: from lkp-server01.sh.intel.com (HELO 72c3bd3cf19c) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 30 Sep 2021 15:59:53 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2021 15:59:53 -0700
 Received: from kbuild by 72c3bd3cf19c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mW51t-0000Wt-0x; Thu, 30 Sep 2021 22:59:53 +0000
-Date:   Fri, 01 Oct 2021 06:59:01 +0800
+        id 1mW51t-0000Wq-0N; Thu, 30 Sep 2021 22:59:53 +0000
+Date:   Fri, 01 Oct 2021 06:59:33 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/acpi] BUILD SUCCESS
- 6bc779ee05d4fa66c99096dbf88ff61acbb8a887
-Message-ID: <61564135.1+F5j0Mgvjur284d%lkp@intel.com>
+Subject: [helgaas-pci:pci/portdrv] BUILD SUCCESS
+ 0e8ae5a6ff5952253cd7cc0260df838ab4c21009
+Message-ID: <61564155.M0ZxYibW4PXimltJ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/acpi
-branch HEAD: 6bc779ee05d4fa66c99096dbf88ff61acbb8a887  PCI/ACPI: Check for _OSC support in acpi_pci_osc_control_set()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/portdrv
+branch HEAD: 0e8ae5a6ff5952253cd7cc0260df838ab4c21009  PCI/portdrv: Do not setup up IRQs if there are no users
 
-elapsed time: 1096m
+elapsed time: 1091m
 
-configs tested: 199
+configs tested: 200
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -220,6 +220,7 @@ i386                 randconfig-a004-20210930
 i386                 randconfig-a002-20210930
 i386                 randconfig-a006-20210930
 i386                 randconfig-a005-20210930
+arc                  randconfig-r043-20210930
 riscv                    nommu_virt_defconfig
 riscv                             allnoconfig
 riscv                            allyesconfig
