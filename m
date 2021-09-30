@@ -2,175 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D668341DE5A
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A34FC41DE97
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:14:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348026AbhI3QHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 12:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348015AbhI3QHB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 12:07:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 240B5613A9;
-        Thu, 30 Sep 2021 16:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633017918;
-        bh=2NKb+EOcixlHXFwCusyqun807YKMXY+3F2kog04gvrQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TfG/xEZvsCG8dTUXUGC22WhnRq7LMObNMAKOQoD03HkKVAr4QEwMZG6/QvxXthzk1
-         5kGBnL+pCoAuISPPxmRSCrd9k+aC/XPEBGq/y6C+0oNrgNfmrWxmJABxGkplcwheXf
-         bbLlrO3Ytnbq8lEBZUTv0KfjxSYvY7eA/HEdzby3RR6vXBU7HMR57+od60aPEKBLhD
-         6hpb4w7GfrjN43CTLJloNi4RD/9eC8yv/1LJZmHq/QVn3/6rxwtUi5PODDd65D0HDi
-         7ICl5vGOext0eGotriNLD6VtdykPzUvjKrckGuRg81AyEm0RPjkrLhFQ/wra0qZF4F
-         jef70G2dvTSWw==
-Date:   Thu, 30 Sep 2021 11:05:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 2/4] PCI/ASPM: Remove struct
- pcie_link_state.clkpm_capable
-Message-ID: <20210930160516.GA887797@bhelgaas>
+        id S1349113AbhI3QPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 12:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349136AbhI3QPz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:15:55 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08A1C06176A;
+        Thu, 30 Sep 2021 09:14:12 -0700 (PDT)
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:105:465:1:3:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4HKywy72JLzQk1t;
+        Thu, 30 Sep 2021 18:14:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <CAHp75VdR4VC+Ojy9NjAtewAaPAgowq-3rffrr3uAdOeiN8gN-A@mail.gmail.com>
+ <CA+ASDXNGR2=sQ+w1LkMiY_UCfaYgQ5tcu2pbBn46R2asv83sSQ@mail.gmail.com>
+ <YS/rn8b0O3FPBbtm@google.com> <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
+ <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
+ <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl>
+ <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
+ <CAHp75Vd5iCLELx8s+Zvcj8ufd2bN6CK26soDMkZyC1CwMO2Qeg@mail.gmail.com>
+ <20210923202231.t2zjoejpxrbbe5hc@pali>
+ <db583b3c-6bfc-d765-a588-eb47c76cea31@v0yd.nl>
+ <20210930154202.cvw3it3edv7pmqtb@pali>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Message-ID: <6ba104fa-a659-c192-4dc0-291ca3413f99@v0yd.nl>
+Date:   Thu, 30 Sep 2021 18:14:04 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210929004400.25717-3-refactormyself@gmail.com>
+In-Reply-To: <20210930154202.cvw3it3edv7pmqtb@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: CD24B268
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 02:43:58AM +0200, Saheed O. Bolarinwa wrote:
-> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
+On 9/30/21 5:42 PM, Pali Rohár wrote:
+> On Thursday 30 September 2021 17:38:43 Jonas Dreßler wrote:
+>> On 9/23/21 10:22 PM, Pali Rohár wrote:
+>>> On Thursday 23 September 2021 22:41:30 Andy Shevchenko wrote:
+>>>> On Thu, Sep 23, 2021 at 6:28 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
+>>>>> On 9/22/21 2:50 PM, Jonas Dreßler wrote:
+>>>>
+>>>> ...
+>>>>
+>>>>> - Just calling mwifiex_write_reg() once and then blocking until the card
+>>>>> wakes up using my delay-loop doesn't fix the issue, it's actually
+>>>>> writing multiple times that fixes the issue
+>>>>>
+>>>>> These observations sound a lot like writes (and even reads) are actually
+>>>>> being dropped, don't they?
+>>>>
+>>>> It sounds like you're writing into a not ready (fully powered on) device.
+>>>
+>>> This reminds me a discussion with Bjorn about CRS response returned
+>>> after firmware crash / reset when device is not ready yet:
+>>> https://lore.kernel.org/linux-pci/20210922164803.GA203171@bhelgaas/
+>>>
+>>> Could not be this similar issue? You could check it via reading
+>>> PCI_VENDOR_ID register from config space. And if it is not valid value
+>>> then card is not really ready yet.
+>>>
+>>>> To check this, try to put a busy loop for reading and check the value
+>>>> till it gets 0.
+>>>>
+>>>> Something like
+>>>>
+>>>>     unsigned int count = 1000;
+>>>>
+>>>>     do {
+>>>>       if (mwifiex_read_reg(...) == 0)
+>>>>         break;
+>>>>     } while (--count);
+>>>>
+>>>>
+>>>> -- 
+>>>> With Best Regards,
+>>>> Andy Shevchenko
+>>
+>> I've tried both reading PCI_VENDOR_ID and the firmware status using a busy
+>> loop now, but sadly none of them worked. It looks like the card always
+>> replies with the correct values even though it sometimes won't wake up after
+>> that.
+>>
+>> I do have one new observation though, although I've no clue what could be
+>> happening here: When reading PCI_VENDOR_ID 1000 times to wakeup we can
+>> "predict" the wakeup failure because exactly one (usually around the 20th)
+>> of those 1000 reads will fail.
 > 
-> The clkpm_capable member of the struct pcie_link_state indicates
-> if the device is Clock PM capable. This can be calculated when
-> it is needed.
+> What does "fail" means here?
 
-... because it comes from Link Capabilities, a read-only register.
+ioread32() returns all ones, that's interpreted as failure by 
+mwifiex_read_reg().
 
-> This patch:
->   - removes clkpm_capable from struct pcie_link_state
->   - moves the calculation of clkpm_capable into
->     pcie_is_clkpm_capable()
->   - replaces references to clkpm_capable with a call to
->     pcie_is_clkpm_capable()
-
-No need to say "this patch"; commit logs *always* refer to "this
-patch".  Reword in imperative sentence structure, as if giving
-commands, e.g.,
-
-  Remove pcie_link_state.clkpm_capable and replace it with
-  pcie_is_clkpm_capable(), which computes the value from Link
-  Capabilities as needed.
-
-> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/pcie/aspm.c | 39 ++++++++++++++++++++++-----------------
->  1 file changed, 22 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index c23da9a4e2fb..9e65da9a22dd 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -61,7 +61,6 @@ struct pcie_link_state {
->  	u32 aspm_disable:7;		/* Disabled ASPM state */
->  
->  	/* Clock PM state */
-> -	u32 clkpm_capable:1;		/* Clock PM capable? */
->  	u32 clkpm_enabled:1;		/* Current Clock PM state */
->  	u32 clkpm_disable:1;		/* Clock PM disabled */
->  
-> @@ -146,6 +145,25 @@ static int pcie_get_clkpm_state(struct pci_dev *pdev)
->  	return enabled;
->  }
->  
-> +static int pcie_is_clkpm_capable(struct pci_dev *pdev)
-> +{
-> +	int capable = 1;
-> +	u32 reg32;
-> +	struct pci_dev *child;
-> +	struct pci_bus *linkbus = pdev->subordinate;
-> +
-> +	/* All functions should have the same cap state, take the worst */
-> +	list_for_each_entry(child, &linkbus->devices, bus_list) {
-> +		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
-> +		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-> +			capable = 0;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return capable;
-
-  static bool pcie_is_clkpm_capable()
-  {
-    list_for_each_entry(child, &linkbus->devices, bus_list) {
-      pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &cap);
-      if (!(cap & PCI_EXP_LNKCAP_CLKPM))
-	return false;
-    }
-    return true;
-  }
-
-> +}
-> +
->  static int policy_to_clkpm_state(struct pcie_link_state *link)
->  {
->  	switch (aspm_policy) {
-> @@ -177,11 +195,12 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
->  
->  static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  {
-> +	int capable = pcie_is_clkpm_capable(link->pdev);
->  	/*
->  	 * Don't enable Clock PM if the link is not Clock PM capable
->  	 * or Clock PM is disabled
->  	 */
-> -	if (!link->clkpm_capable || link->clkpm_disable)
-> +	if (!capable || link->clkpm_disable)
-
-I think I'd just call pcie_is_clkpm_capable() directly in the "if"
-condition to avoid the local variable, as you did below in
-aspm_ctrl_attrs_are_visible().
-
->  		enable = 0;
->  	/* Need nothing if the specified equals to current state */
->  	if (link->clkpm_enabled == enable)
-> @@ -191,21 +210,7 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  
->  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  {
-> -	int capable = 1;
-> -	u32 reg32;
-> -	struct pci_dev *child;
-> -	struct pci_bus *linkbus = link->pdev->subordinate;
-> -
-> -	/* All functions should have the same cap and state, take the worst */
-> -	list_for_each_entry(child, &linkbus->devices, bus_list) {
-> -		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
-> -		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-> -			capable = 0;
-> -			break;
-> -		}
-> -	}
->  	link->clkpm_enabled = pcie_get_clkpm_state(link->pdev);
-> -	link->clkpm_capable = capable;
-
-This makes good sense to me because PCI_EXP_LNKCAP_CLKPM is read-only
-and there's no need to cache the boot-time value because we can always
-recompute clkpm_capable if we need it.
-
->  	link->clkpm_disable = blacklist ? 1 : 0;
->  }
->  
-> @@ -1346,7 +1351,7 @@ static umode_t aspm_ctrl_attrs_are_visible(struct kobject *kobj,
->  		return 0;
->  
->  	if (n == 0)
-> -		return link->clkpm_capable ? a->mode : 0;
-> +		return pcie_is_clkpm_capable(link->pdev) ? a->mode : 0;
->  
->  	return link->aspm_capable & aspm_state_map[n - 1] ? a->mode : 0;
->  }
-> -- 
-> 2.20.1
-> 
+>> Maybe the firmware actually tries to wake up,
+>> encounters an error somewhere in its wakeup routines and then goes down a
+>> special failure code path. That code path keeps the cards CPU so busy that
+>> at some point a PCI_VENDOR_ID request times out?
+>>
+>> Or well, maybe the card actually wakes up fine, but we don't receive the
+>> interrupt on our end, so many possibilities...
