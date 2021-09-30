@@ -2,116 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C7A941E090
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 20:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46D5341E0C5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 20:16:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353027AbhI3SFz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 14:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353029AbhI3SFz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 14:05:55 -0400
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9206BC06176C;
-        Thu, 30 Sep 2021 11:04:12 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4HL1Mq0ttGzQkBY;
-        Thu, 30 Sep 2021 20:04:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Subject: Re: [PATCH v2 2/2] mwifiex: Try waking the firmware until we get an
- interrupt
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>, stable@vger.kernel.org
-References: <20210914114813.15404-1-verdre@v0yd.nl>
- <20210914114813.15404-3-verdre@v0yd.nl> <YUsRT1rmtITJiJRh@smile.fi.intel.com>
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-Message-ID: <d9b1c8ea-99e2-7c3e-ec8e-61362e8ccfa7@v0yd.nl>
-Date:   Thu, 30 Sep 2021 20:04:00 +0200
+        id S1353330AbhI3SRu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 14:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1353324AbhI3SRt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 14:17:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B57EA61A02;
+        Thu, 30 Sep 2021 18:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633025766;
+        bh=imSE4BVzuaU5GQAHEWNZDou02owSeD9rScj3NMKL5tQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=UOprfN2x/NY+/h0DEp5g2ccaRzifbUjlraQmYYDWZ40OLXVXOySoiqGezxTAiSdF8
+         xa6YqtAFwmqCyi/Yg/l6FnNy/TeE9yweMpiAdRPzKAsPjORYAFNSblbfxAr6aWv2kC
+         tZBZMukdusiuqJD1gZyaC8okNHI088GSFlgUB3O2K7aVB9BPtxwTqUQE4SCgNiMqyL
+         f/ojoSWywBMGBmHUR4E9gHJUg7oDijgesNdrDaIuZJ2SR3MP4oQmSMYFMd22D5loWz
+         Kon13qHTv90UckRAYx5zT7eQCwXYfkXm/Ry4FZfiz+TsNlC94HCyz3qPAyiv3Hej62
+         7F5loyAP2D/mg==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <YUsRT1rmtITJiJRh@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 839D1188F
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdV8Xu-Pgda9ZrgaXFqXdzBrSRWwiSQFLjzxqRGNWkO3wQ@mail.gmail.com>
+References: <20210907144512.5238-1-marek.vasut@gmail.com> <163297980091.358640.10064724088378840378@swboyd.mtv.corp.google.com> <CAMuHMdV8Xu-Pgda9ZrgaXFqXdzBrSRWwiSQFLjzxqRGNWkO3wQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Sep 2021 11:16:05 -0700
+Message-ID: <163302576552.358640.2337603190171807403@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/22/21 1:19 PM, Andy Shevchenko wrote:
-> On Tue, Sep 14, 2021 at 01:48:13PM +0200, Jonas Dreßler wrote:
->> It seems that the firmware of the 88W8897 card sometimes ignores or
->> misses when we try to wake it up by writing to the firmware status
->> register. This leads to the firmware wakeup timeout expiring and the
->> driver resetting the card because we assume the firmware has hung up or
->> crashed (unfortunately that's not unlikely with this card).
->>
->> Turns out that most of the time the firmware actually didn't hang up,
->> but simply "missed" our wakeup request and didn't send us an AWAKE
->> event.
->>
->> Trying again to read the firmware status register after a short timeout
->> usually makes the firmware wake up as expected, so add a small retry
->> loop to mwifiex_pm_wakeup_card() that looks at the interrupt status to
->> check whether the card woke up.
->>
->> The number of tries and timeout lengths for this were determined
->> experimentally: The firmware usually takes about 500 us to wake up
->> after we attempt to read the status register. In some cases where the
->> firmware is very busy (for example while doing a bluetooth scan) it
->> might even miss our requests for multiple milliseconds, which is why
->> after 15 tries the waiting time gets increased to 10 ms. The maximum
->> number of tries it took to wake the firmware when testing this was
->> around 20, so a maximum number of 50 tries should give us plenty of
->> safety margin.
->>
->> A good reproducer for this issue is letting the firmware sleep and wake
->> up in very short intervals, for example by pinging a device on the
->> network every 0.1 seconds.
-> 
-> ...
-> 
->> +	do {
->> +		if (mwifiex_write_reg(adapter, reg->fw_status, FIRMWARE_READY_PCIE)) {
->> +			mwifiex_dbg(adapter, ERROR,
->> +				    "Writing fw_status register failed\n");
->> +			return -EIO;
->> +		}
->> +
->> +		n_tries++;
->> +
->> +		if (n_tries <= N_WAKEUP_TRIES_SHORT_INTERVAL)
->> +			usleep_range(400, 700);
->> +		else
->> +			msleep(10);
->> +	} while (n_tries <= N_WAKEUP_TRIES_SHORT_INTERVAL + N_WAKEUP_TRIES_LONG_INTERVAL &&
->> +		 READ_ONCE(adapter->int_status) == 0);
-> 
-> Can't you use read_poll_timeout() twice instead of this custom approach?
-> 
+Quoting Geert Uytterhoeven (2021-09-30 01:01:24)
+> Hi Stephen,
+>=20
+> On Thu, Sep 30, 2021 at 7:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> > +linux-clk as I don't regularly read my inbox :/
+> >
+> > Quoting marek.vasut@gmail.com (2021-09-07 07:45:12)
+> > > From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > >
+> > > Add COMMON_CLK dependency, otherwise the following build error occurs:
+> > >   arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in f=
+unction `rcar_pcie_aarch32_abort_handler':
+> > >   pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_en=
+abled'
+> > > This should be OK, since all platforms shipping this controller also
+> > > need COMMON_CLK enabled for their clock driver.
+> > >
+> > > Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abor=
+t hook")
+> > > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Cc: linux-renesas-soc@vger.kernel.org
+> > > ---
+> > > +CC Stephen, please double-check whether this is the right approach or
+> > >     whether there is some better option
+> >
+> > Stop using __clk_is_enabled()? I don't quite understand what's going on=
+ in
+> > the code but __clk_is_enabled() should really go away. I thought we were
+> > close to doing that but now I see a handful of calls have come up. The
+> > API should be replaced by clk_hw_is_enabled() and then removed. We move
+> > it to clk_hw API so that only clk providers can look at it.
+>=20
+> But this is not a clk provider...
+>=20
+> > Sigh!
+>=20
+> ;-)
 
-I've tried this now, but read_poll_timeout() is not ideal for our 
-use-case. What we'd need would be read->sleep->poll->repeat instead of 
-read->poll->sleep->repeat. With read_poll_timeout() we always end up 
-doing one more (unnecessary) write.
+Exactly!
 
->> +	mwifiex_dbg(adapter, EVENT,
->> +		    "event: Tried %d times until firmware woke up\n", n_tries);
-> 
+>=20
+> > Anyway, fixing the dependency is "ok" but really the long term fix would
+> > be to not use a "is this clk enabled" sort of API. If I'm reading the
+> > code correctly, this is some sort of fault handler that's trying to
+> > avoid hanging the bus while handling the fault so it tries to make sure
+> > the clk is enabled first? Is it a problem if the clk is not actually
+> > enabled here? Would runtime PM enable state of the device work just as
+> > well?
+>=20
+> Thanks, checking Runtime PM state is a good suggestion. Doing so
+> would require caching a pointer to the PCIe struct device instead of
+> the struct clk.
+> However, pcie_bus_clk is not the module clock, which is managed by
+> Runtime PM, but the PCIe bus clock, which is managed explicitly by
+> the driver.
+> However, I believe that we are checking the wrong clock, as register
+> access needs the module clock to be enabled, not the PCIe bus clock?
+> As the driver just calls pm_runtime_get_sync() and clk_prepare_enable()
+> in .probe(), and never touches Runtime PM status or the PCIe bus clock
+> during the further lifetime of the driver (it cannot be unloaded), both
+> the module clock and the PCIe bus clock should always[*] be enabled
+> when the static copy of the remapped PCIe controller address is valid.
+> [*] Modulo system-wide power transitions like s2ram. Does
+>     pm_runtime_suspended() reflect that state, too?
+>=20
 
+Great! If that's all correct then simply removing the call to
+__clk_is_enabled() should work. Can we do that?
