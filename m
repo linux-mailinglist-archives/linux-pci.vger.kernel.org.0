@@ -2,164 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6B741DF2D
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:39:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF91441DF8C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:50:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352165AbhI3Qku (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 12:40:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352163AbhI3Qkt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 12:40:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 843FB615E0;
-        Thu, 30 Sep 2021 16:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633019946;
-        bh=l4psnDS2L4mNszZp3eSV39BLlsLnxaYRmZiaPEPx/DM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EDo+iZBLh61LjGBdXtXCGg7fsozqORH2v8dvTewaNZuP59U/Tsyw6NNHDzlLGYhBo
-         CF9isbBPlTNlRlq7dCzjxMalsuQvDx6tXPcmP6f16p2QZb2SabvCEmSBo06LdJWhTN
-         OojibY9LjoCfTYpycpQmrt4vdbw0OHqS0Wmn40pBQU6CLxnexuJf5LJKksESIdZAvF
-         XcddVlKSFw1KCtom961I8wGjttZ5Rpktiy3T4+cjjm9U0BIGTCy5WD2EPRNBEWtLNm
-         WJA8/cUlExi3NbnzJbwTjSmds5GYJzQKYu6z/Bskr/1+lWC+034E8CZXffMcc6Q/Bk
-         tBO+WvnLLZC+w==
-Received: by pali.im (Postfix)
-        id 466D7E79; Thu, 30 Sep 2021 18:39:04 +0200 (CEST)
-Date:   Thu, 30 Sep 2021 18:39:04 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-Message-ID: <20210930163904.asr3ugj7oj7l2arx@pali>
-References: <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
- <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl>
- <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
- <CAHp75Vd5iCLELx8s+Zvcj8ufd2bN6CK26soDMkZyC1CwMO2Qeg@mail.gmail.com>
- <20210923202231.t2zjoejpxrbbe5hc@pali>
- <db583b3c-6bfc-d765-a588-eb47c76cea31@v0yd.nl>
- <20210930154202.cvw3it3edv7pmqtb@pali>
- <6ba104fa-a659-c192-4dc0-291ca3413f99@v0yd.nl>
- <20210930161905.5a552go73c2o4e7l@pali>
- <4e4f3b6a-25c6-289f-2de0-660aeee2b695@v0yd.nl>
+        id S1351452AbhI3Qv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 12:51:58 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:43978 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348841AbhI3Qv4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:51:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=74h/+uZ+hrx0m4JxI1QkVpn5MOeSFXzNtUhZ4V300TI=; b=B5EPYCR6ELWWooi0yJ6/qwUCfs
+        xW68Odfkghb4ttQc08Np1dJRJhN9XdQKzIzlF9dxrShVzcR/fZ5mUTyUvDuCkeNQ4pQDaLqRNu4AV
+        9LBrq4VtrshpfRFd0tC3BAEpbaapoxt2T047s7v1k6PNW0G2koW4beGyNRcL+qQrpt1pAbvFArccc
+        9VhMSwHDeIwHWvh1BwQ3z3yRH/FBLA0ifIAFC12OqOFSrd1SnYHwgJBpvv5ay7kPYeRzcbtcELV2O
+        OfNoBSYFaO6AmrjP+TI7VDSlCZHBP7pqp9YmEG2tAPspvl1N53iFQI2JW4LgrqkrZjwFCuG05yLoM
+        xP02bFUA==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1mVzFp-0004cR-WF; Thu, 30 Sep 2021 10:49:55 -0600
+To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+References: <20210916234100.122368-1-logang@deltatee.com>
+ <20210916234100.122368-2-logang@deltatee.com>
+ <fa99b871-8753-7c3c-09f0-3fd7f610e664@nvidia.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c38e2ed7-43d8-767e-5b84-562c479267f4@deltatee.com>
+Date:   Thu, 30 Sep 2021 10:49:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <fa99b871-8753-7c3c-09f0-3fd7f610e664@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e4f3b6a-25c6-289f-2de0-660aeee2b695@v0yd.nl>
-User-Agent: NeoMutt/20180716
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, chaitanyak@nvidia.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.8 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v3 01/20] lib/scatterlist: add flag for indicating P2PDMA
+ segments in an SGL
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 30 September 2021 18:22:42 Jonas Dreßler wrote:
-> On 9/30/21 6:19 PM, Pali Rohár wrote:
-> > On Thursday 30 September 2021 18:14:04 Jonas Dreßler wrote:
-> > > On 9/30/21 5:42 PM, Pali Rohár wrote:
-> > > > On Thursday 30 September 2021 17:38:43 Jonas Dreßler wrote:
-> > > > > On 9/23/21 10:22 PM, Pali Rohár wrote:
-> > > > > > On Thursday 23 September 2021 22:41:30 Andy Shevchenko wrote:
-> > > > > > > On Thu, Sep 23, 2021 at 6:28 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
-> > > > > > > > On 9/22/21 2:50 PM, Jonas Dreßler wrote:
-> > > > > > > 
-> > > > > > > ...
-> > > > > > > 
-> > > > > > > > - Just calling mwifiex_write_reg() once and then blocking until the card
-> > > > > > > > wakes up using my delay-loop doesn't fix the issue, it's actually
-> > > > > > > > writing multiple times that fixes the issue
-> > > > > > > > 
-> > > > > > > > These observations sound a lot like writes (and even reads) are actually
-> > > > > > > > being dropped, don't they?
-> > > > > > > 
-> > > > > > > It sounds like you're writing into a not ready (fully powered on) device.
-> > > > > > 
-> > > > > > This reminds me a discussion with Bjorn about CRS response returned
-> > > > > > after firmware crash / reset when device is not ready yet:
-> > > > > > https://lore.kernel.org/linux-pci/20210922164803.GA203171@bhelgaas/
-> > > > > > 
-> > > > > > Could not be this similar issue? You could check it via reading
-> > > > > > PCI_VENDOR_ID register from config space. And if it is not valid value
-> > > > > > then card is not really ready yet.
-> > > > > > 
-> > > > > > > To check this, try to put a busy loop for reading and check the value
-> > > > > > > till it gets 0.
-> > > > > > > 
-> > > > > > > Something like
-> > > > > > > 
-> > > > > > >      unsigned int count = 1000;
-> > > > > > > 
-> > > > > > >      do {
-> > > > > > >        if (mwifiex_read_reg(...) == 0)
-> > > > > > >          break;
-> > > > > > >      } while (--count);
-> > > > > > > 
-> > > > > > > 
-> > > > > > > -- 
-> > > > > > > With Best Regards,
-> > > > > > > Andy Shevchenko
-> > > > > 
-> > > > > I've tried both reading PCI_VENDOR_ID and the firmware status using a busy
-> > > > > loop now, but sadly none of them worked. It looks like the card always
-> > > > > replies with the correct values even though it sometimes won't wake up after
-> > > > > that.
-> > > > > 
-> > > > > I do have one new observation though, although I've no clue what could be
-> > > > > happening here: When reading PCI_VENDOR_ID 1000 times to wakeup we can
-> > > > > "predict" the wakeup failure because exactly one (usually around the 20th)
-> > > > > of those 1000 reads will fail.
-> > > > 
-> > > > What does "fail" means here?
-> > > 
-> > > ioread32() returns all ones, that's interpreted as failure by
-> > > mwifiex_read_reg().
-> > 
-> > Ok. And can you check if PCI Bridge above this card has enabled CRSSVE
-> > bit (CRSVisible in RootCtl+RootCap in lspci output)? To determinate if
-> > Bridge could convert CRS response to all-ones as failed transaction.
-> > 
+
+
+On 2021-09-29 10:47 p.m., Chaitanya Kulkarni wrote:
+> Logan,
 > 
-> Seems like that bit is disabled:
-> > RootCap: CRSVisible-
-> > RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
+>> +/*
+>> + * bit 2 is the third free bit in the page_link on 64bit systems which
+>> + * is used by dma_unmap_sg() to determine if the dma_address is a PCI
+>> + * bus address when doing P2PDMA.
+>> + * Note: CONFIG_PCI_P2PDMA depends on CONFIG_64BIT because of this.
+>> + */
+>> +
+>> +#ifdef CONFIG_PCI_P2PDMA
+>> +#define SG_DMA_PCI_P2PDMA      0x04UL
+>> +#else
+>> +#define SG_DMA_PCI_P2PDMA      0x00UL
+>> +#endif
+>> +
+>> +#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END | SG_DMA_PCI_P2PDMA)
+>> +
+> 
+> You are doing two things in one patch :-
+> 1. Introducing a new macro to replace the current macros.
+> 2. Adding a new member to those macros.
+> 
+> shouldn't this be split into two patches where you introduce a
+> macro SG_PAGE_LINK_MASK (SG_CHAIN | SG_END) in prep patch and
+> update the SF_PAGE_LINK_MASK with SG_DMA_PCI_P2PDMA with related
+> code?
+> 
 
-So it means that CRSSVE is unsupported by upper bridge. In case card
-returns CRS response to system (via bridge) that is not ready yet,
-bridge re-issue read request, and after some failures it returns to
-system all-ones to indicate failed transaction. But all-ones can be
-returned also by bridge when card does not send any response.
+Ok, will split. I'll also add the static inline cleanup Jason suggested
+in the first patch.
 
-So from this test we do not know what happened. It would be nice to know
-it, but such test requires to connect this card into system which
-supports CRSSVE, in which case CRS response it passed directly to OS as
-value 0xffff0001. Look at the link above where I discussed with Bjorn
-about buggy wifi cards which resets internally, for more details.
-
-But in this setup when CRSSVE is not supported, I think there is no
-other option than just adding sleep prior accessing card...
-
-For debugging such issues I got the only advice to use PCIe analyzer and
-look at what is really happening on the bus. But required equipment for
-this debugging is not cheap...
-
-> > > > 
-> > > > > Maybe the firmware actually tries to wake up,
-> > > > > encounters an error somewhere in its wakeup routines and then goes down a
-> > > > > special failure code path. That code path keeps the cards CPU so busy that
-> > > > > at some point a PCI_VENDOR_ID request times out?
-> > > > > 
-> > > > > Or well, maybe the card actually wakes up fine, but we don't receive the
-> > > > > interrupt on our end, so many possibilities...
+Logan
