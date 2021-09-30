@@ -2,123 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 273AF41D129
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 03:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6946841D17B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 04:33:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347700AbhI3B5E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 21:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
+        id S1347852AbhI3CfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 22:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347668AbhI3B5E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 21:57:04 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C55CC06161C
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 18:55:22 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 66so4233841pgc.9
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 18:55:22 -0700 (PDT)
+        with ESMTP id S1347848AbhI3CfQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 22:35:16 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B6C06176A
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 19:33:34 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id n2so2903223plk.12
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 19:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ppSjAe5S3xlWKT7s8el3Il5gQkJrN0MmdVf0E/AP7Gc=;
-        b=ydGPiSJNMnM7op/wkyAmXwGCpbqUNFYUHuTIB1J9VMHKIEt0sSU7kMooEJf9ONRPIA
-         1epCxOZbM0aS2EhNFY6KaCCjZUa3fkU0LWjAEDekFcojleEFYbUWcOuBjLnFNrOYEP0b
-         mA+QtRVrgb+QVIzp8Q6gIPM6zutuAF5hBMmH4psZDUSy/atAm1KGSsMtdvT9RYXwFNoC
-         0OxTcAvRXaSSlv2eJGo5aW5AjIbbmaejIHX929b6XcPXwpNZj92Vz8XUEuL92z5RkXVg
-         41hSRYzrA1jBcQMejxi5WxXv4SfKoIIdMc6rLHA0kQZZpePX/R7ifabPflyujG0OznzI
-         tNCg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=I3Ka97zNeP725BXVDk5arDvDOWeoP2d7phzXrFZ8n4s=;
+        b=IlRJhaJg6rWVYyPM3VkfA65JEOSMQR6+oGsrVfOjOVHxL4WefefiLThzdZ40jTO6g8
+         Zx06WckyPxrt7Uy1K+0hnl1HZNYlZYL10ofG/bR9wh4e8/Sdc4VuKMTRKIl8zPF5jJ7b
+         sjkMrT9HnS0yDqFDQe+M7s9gEumGF4V6wnL/r/ioJHTbv1B5hcwZr7q3Q7Fh0N9xwdBQ
+         mKHz1fKGbNjriH5rlOs5OE5DOSH3XOBzj8Lukkx/0TWYEppgGXItvcJmX816w6eG33kU
+         rLof2DKdxqbIKj9nn22MFA22Eph/X4eFxJFCLPGAno38hVvSmS7EidBFKjCNQxoU0tMa
+         AGRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ppSjAe5S3xlWKT7s8el3Il5gQkJrN0MmdVf0E/AP7Gc=;
-        b=D17di+93uVusZR37+qQbwhh64jNfp8S3GqvWQZ7TYMnN5eZs78L3TcFdfEicSb0HnF
-         uGw1btt3/ySP4bUaLBRIjtNMWyiil41E+ebcaCuvir+x8FdmBF+w0aZhZpcC4iJZHbJE
-         7xGd7AxtxG04MaidahuK9eTi04WCwuY6asZ/fBwnTfjl1zf0Bz2eHJoAD5NhacpwbQWY
-         qtMzlatfOF0r0HnSvHKuu8LM7nFDLo0Z8mQkgkEHkaB4w/sX6vgVp1m7DBdTvR5GQYVz
-         LVbTlUEfTU9et8UmvD2Xzx+Up2BZIkwO4IU6dIwRMaaVANom6R8sGMAKvbykkGpoTnOF
-         sGXg==
-X-Gm-Message-State: AOAM531qSVsCQVWUN/fSPWLH6t5bTqN+2KZjcH78SAIwXFdrB6I5OyVy
-        FedSKKPUiYmTmteG5ASAoxGKaaZFAlbowAzklkrvjQ==
-X-Google-Smtp-Source: ABdhPJxRCE7JDiUtfbj2unJgpoYL58Y7cUzTX2X/PJ4QmiFOuX+rJGY6EYObim88lDm7ERTzm39OsGnRXceY8UTFM6A=
-X-Received: by 2002:a63:d709:: with SMTP id d9mr2624751pgg.377.1632966921696;
- Wed, 29 Sep 2021 18:55:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com> <20210930014229.GA447956@rowland.harvard.edu>
-In-Reply-To: <20210930014229.GA447956@rowland.harvard.edu>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 29 Sep 2021 18:55:12 -0700
-Message-ID: <CAPcyv4iiEC3B2i81evZpLP+XHa8dLkfgWmrY7HocORwP8FMPZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
- USB/Thunderbolt to core
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=I3Ka97zNeP725BXVDk5arDvDOWeoP2d7phzXrFZ8n4s=;
+        b=USl7z0+9E+ELyah4fiwWntoraD5VWfVMcFbicZ3pfN8pxaRkQswIK+eb5LYAhsPfiY
+         GtYcW+w1VxWUpwCigSt6fRxNJcfbt2faf1zNRhwh4qJnO2ISLCG7n4sVG1+7PIc0KmG9
+         u9TV6tdDd74PrH/wJ/ILbzJZgRbGeSck4m29jWv6SfGLLD3Vr4EvNZnAVZdufspeSf7w
+         cMLUXnreTyWFoulg6pBWtmbBvmpEjQlyGOL6xvWoGCRr3yXfSnwT18fz0xR1wlX3Dv9O
+         EldKaxdfbXhD+EiuVMGTBt0t6t/ZOABH0R1nSI/7upRw3C0kEXFN8wR75rZkdZRbAutI
+         YBdA==
+X-Gm-Message-State: AOAM533irGWFHZZYoKFuw5GcXVJCjz19m6cfAvApDKEk31jUm6qzQNYM
+        VNeh9Z/8Qk2klxsMDZI1+kpfm6iuGJSRnjzZ
+X-Google-Smtp-Source: ABdhPJxE6Hl3kX+pF11sEnIDGPtqYsZz4qjfhIf79ZIQfd0DSxRKUumrZjOUcb3ap3qqZ7YvCqj5eQ==
+X-Received: by 2002:a17:90a:af86:: with SMTP id w6mr3675210pjq.8.1632969213549;
+        Wed, 29 Sep 2021 19:33:33 -0700 (PDT)
+Received: from [10.50.0.6] ([94.177.118.147])
+        by smtp.gmail.com with ESMTPSA id y3sm834162pjg.7.2021.09.29.19.33.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Sep 2021 19:33:33 -0700 (PDT)
+Subject: Re: [PATCH 1/2] PCI: Use software node API with additional device
+ properties
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20210929170804.GA778424@bhelgaas>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <b3e3e9a3-c430-db98-9e6d-0e3526ddc6f7@linaro.org>
+Date:   Thu, 30 Sep 2021 10:33:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210929170804.GA778424@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 6:43 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+
+
+On 2021/9/30 上午1:08, Bjorn Helgaas wrote:
+> [+cc Zhangfei, author of 8304a3a199ee ("PCI: Set dma-can-stall for
+> HiSilicon chips"), which added this]
 >
-> On Wed, Sep 29, 2021 at 06:05:06PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > Currently bus drivers like "USB" or "Thunderbolt" implement a custom
-> > version of device authorization to selectively authorize the driver
-> > probes. Since there is a common requirement, move the "authorized"
-> > attribute support to the driver core in order to allow it to be used
-> > by other subsystems / buses.
-> >
-> > Similar requirements have been discussed in the PCI [1] community for
-> > PCI bus drivers as well.
-> >
-> > No functional changes are intended. It just converts authorized
-> > attribute from int to bool and moves it to the driver core. There
-> > should be no user-visible change in the location or semantics of
-> > attributes for USB devices.
-> >
-> > Regarding thunderbolt driver, although it declares sw->authorized as
-> > "int" and allows 0,1,2 as valid values for sw->authorized attribute,
-> > but within the driver, in all authorized attribute related checks,
-> > it is treated as bool value. So when converting the authorized
-> > attribute from int to bool value, there should be no functional
-> > changes other than value 2 being not visible to the user.
-> >
-> > [1]: https://lore.kernel.org/all/CACK8Z6E8pjVeC934oFgr=VB3pULx_GyT2NkzAogdRQJ9TKSX9A@mail.gmail.com/
-> >
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> On Wed, Sep 29, 2021 at 04:37:28PM +0300, Heikki Krogerus wrote:
+>> Using device_create_managed_software_node() to inject the
+>> properties in quirk_huawei_pcie_sva() instead of with the
+>> old device_add_properties() API.
+>>
+>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> This is fine with me, but please update the subject line and commit
+> log something like this:
 >
-> Since you're moving the authorized flag from the USB core to the
-> driver core, the corresponding sysfs attribute functions should be
-> moved as well.
+>    PCI: Convert to device_create_managed_software_node()
+>
+>    In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
+>    instead of device_add_properties() to set the "dma-can-stall"
+>    property.
+>
+>    This resolves a software node lifetime issue (see 151f6ff78cdf
+>    ("software node: Provide replacement for device_add_properties()"))
+>    and paves the way for removing device_add_properties() completely.
+>
+> Actually, 8304a3a199ee was merged during the v5.15 merge window, so if
+> this does in fact fix a lifetime issue, I can merge this before
+> v5.15-final.
+>
+> I know *this* quirk applies to AMBA devices, and I assume they cannot
+> be removed, so there's no actual lifetime problem in this particular
+> case, but in general it looks like a problem for PCI devices.
+Thanks Bjorn
+This patch also works, though the quirk is for platform devices and not 
+removed.
 
-Unlike when 'removable' moved from USB to the driver core there isn't
-a common definition for how the 'authorized' sysfs-attribute behaves
-across buses. The only common piece is where this flag is stored in
-the data structure, i.e. the 'authorized' sysfs interface is
-purposefully left bus specific.
+Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>
+>> ---
+>>   drivers/pci/quirks.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index b6b4c803bdc94..fe5eedba47908 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -1850,7 +1850,7 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+>>   	 * can set it directly.
+>>   	 */
+>>   	if (!pdev->dev.of_node &&
+>> -	    device_add_properties(&pdev->dev, properties))
+>> +	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+>>   		pci_warn(pdev, "could not add stall property");
+>>   }
+>>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+>> -- 
+>> 2.33.0
+>>
 
-> Also, you ignored the usb_[de]authorize_interface() functions and
-> their friends.
-
-Ugh, yes.
