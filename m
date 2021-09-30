@@ -2,30 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69BA441DD55
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:23:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 430EF41DD59
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:23:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245411AbhI3PZF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 11:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
+        id S238251AbhI3PZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 11:25:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:29059 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238186AbhI3PZF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 11:25:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 33FFA619EE;
-        Thu, 30 Sep 2021 15:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1633015402;
-        bh=9MrupzJ04PiY8h8aMJkaTmM9e1Ina/USuX9rUwlrYjE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y6RLkN+BefH1LZmMQ24S5fWDHxguhbJDPze8ZnYgG946HLg6qtQi72s7o4T4bUbuw
-         Yu54jVlP7QXa/SIMSra1Zs5Oug3HhfkZKQ5cazFQSGF9hgvrnM9dOhX+Ra3S3lRm4x
-         N8ofc+G0lR5/swJulBVwRbk9xPdbAkLVR/gdn1+k=
-Date:   Thu, 30 Sep 2021 17:23:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S233612AbhI3PZ3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 11:25:29 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="222006740"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="222006740"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 08:23:41 -0700
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="479980395"
+Received: from rnmathur-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.105.173])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 08:23:40 -0700
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,36 +42,56 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Linux PCI <linux-pci@vger.kernel.org>,
         USB list <linux-usb@vger.kernel.org>,
         virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
- confidential guest
-Message-ID: <YVXWaF73gcrlvpnf@kroah.com>
 References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
  <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
  <20210930065953-mutt-send-email-mst@kernel.org>
  <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
  <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+ <20210930112029-mutt-send-email-mst@kernel.org>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <2cc78624-b2ef-523a-5feb-064fdfd06a9a@linux.intel.com>
+Date:   Thu, 30 Sep 2021 08:23:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+In-Reply-To: <20210930112029-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 08:18:18AM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> 
-> 
-> On 9/30/21 6:36 AM, Dan Williams wrote:
-> > > And in particular, not all virtio drivers are hardened -
-> > > I think at this point blk and scsi drivers have been hardened - so
-> > > treating them all the same looks wrong.
-> > My understanding was that they have been audited, Sathya?
-> 
-> Yes, AFAIK, it has been audited. Andi also submitted some patches
-> related to it. Andi, can you confirm.
 
-What is the official definition of "audited"?
 
-thanks,
+On 9/30/21 8:20 AM, Michael S. Tsirkin wrote:
+> On Thu, Sep 30, 2021 at 08:18:18AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>>
+>> On 9/30/21 6:36 AM, Dan Williams wrote:
+>>>> And in particular, not all virtio drivers are hardened -
+>>>> I think at this point blk and scsi drivers have been hardened - so
+>>>> treating them all the same looks wrong.
+>>> My understanding was that they have been audited, Sathya?
+>>
+>> Yes, AFAIK, it has been audited. Andi also submitted some patches
+>> related to it. Andi, can you confirm.
+>>
+>> We also authorize the virtio at PCI ID level. And currently we allow
+>> console, block and net virtio PCI devices.
+>>
+>> { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_NET) },
+>> { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_BLOCK) },
+>> { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_CONSOLE) },
+> 
+> Presumably modern IDs should be allowed too?
 
-greg k-h
+You mean IDs in range 104x right? If yes, we also allow them for above
+mentioned types.
+
+> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
