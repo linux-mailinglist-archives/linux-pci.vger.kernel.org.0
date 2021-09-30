@@ -2,112 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4794041E1F3
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CAA441E21B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346222AbhI3TGm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 15:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346175AbhI3TGm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 15:06:42 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F403C06176C
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 12:04:59 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id pg10so4429281pjb.5
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 12:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sq8sxX34+Grk9aluOB8rkcRM/zE/YFO/Um/RRIXvef8=;
-        b=s/T3WxfqzLIySudeP/owpLxq0XbQ9h42h5F7XrkwCn4prX8sTpXGFoMMBQEd83MEIO
-         PqCfeU5PCR/yXXo8r2wkJsenE9iYQW3XUGx9MxaLkqME25QYBbLFpQJYiWOn4hiRACoh
-         TJTllOTyNgPfQ7b9UG0eAMROQIsdnsOOQLeGFOHh4nt4wRQ+vrnlctfEQ08G98STFuWP
-         qLdkCHCNKhyiGBu0trjL4UwUD50kT9W2dH5iUiz2nPBj+9HEjuN51lacErFVKXtN9JSC
-         xcQDxkXyP+/M/tLt4zoE3m/gxpHZUzIDNDdNOIfZ/PDoN/MMbSNvUBl5RG6cxna3nM0m
-         Z6+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sq8sxX34+Grk9aluOB8rkcRM/zE/YFO/Um/RRIXvef8=;
-        b=JuRFR6wKbrsg1X3aGwbMXecaZImP5x7QmBncgHsmxo7hHG191nF54eBLhDlDUyEyTy
-         fhldennMP4BQClNqmi5evfdIHOUco0cZEIA+F3uo5TpCsNlYZly5f9xkEAA9nQjpSV1M
-         nG5pUbo7BOfxmqgBZrZW8foZ1SplmP9nfA7aOyUlAJl5lefBpw4pLwXAAkdjJdQiPjQB
-         nixeJry2rmrdxD2++E1T0EHOpC84wWhriIaEFVBi6Wg6Zr1XI66hlkUvnPAhbWLxT75s
-         ZbWCfU1bwdNQlOLKyQvUe+lQDr2Byb5tXVupl3IhH25+hClwpw9yAWoA1nUf8/3Of0Qz
-         3maQ==
-X-Gm-Message-State: AOAM532xhkTLRa/97l1QGjz6ZzdRTREhfzUXM1Lfs1H30rD3SgSFlVbY
-        GkOTHo0+J7YOR4Bd/maXdtDLaqRUXmcjFt+s5HV4CQ==
-X-Google-Smtp-Source: ABdhPJzucKENnq7XhWDMviPOqEM8S2r1dBq8hNkP1imn+5HTl7kkb9fVxFNHk9g2RaqssOmOJEEGC/f7665XrQLlAAg=
-X-Received: by 2002:a17:90b:3ec3:: with SMTP id rm3mr7268323pjb.93.1633028698606;
- Thu, 30 Sep 2021 12:04:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
- <CA+CmpXtXn5wjxwow5va5u9qHcQDLkd4Sh2dcqB545SXaxV1GkQ@mail.gmail.com>
- <CAPcyv4iNp41mZcpzGCPR9Xty83j+abk_SOxvsx1xaQ8wALRv0Q@mail.gmail.com> <CA+CmpXvGCAny-WHGioJQHF9ZZ5pCaR-E_rw5oeE82xC30naVXg@mail.gmail.com>
-In-Reply-To: <CA+CmpXvGCAny-WHGioJQHF9ZZ5pCaR-E_rw5oeE82xC30naVXg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Sep 2021 12:04:48 -0700
-Message-ID: <CAPcyv4ixqiMw1KTB8rbzzrtaErV4PT3R3XqshHhAXv6Ohjzs1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
- USB/Thunderbolt to core
-To:     Yehezkel Bernat <yehezkelshb@gmail.com>
-Cc:     Kuppuswamy Sathyanarayanan 
+        id S245359AbhI3TRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 15:17:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31673 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229652AbhI3TRB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 15:17:01 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="212343991"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="212343991"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:15:17 -0700
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="438151438"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.252.134.229]) ([10.252.134.229])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:15:17 -0700
+Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
+ un-authorized devices
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
         Andreas Noever <andreas.noever@gmail.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
         Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Jason Wang <jasowang@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065807-mutt-send-email-mst@kernel.org> <YVXBNJ431YIWwZdQ@kroah.com>
+ <20210930103537-mutt-send-email-mst@kernel.org> <YVXOc3IbcHsVXUxr@kroah.com>
+ <20210930105852-mutt-send-email-mst@kernel.org> <YVXWIVZupeAzT6bO@kroah.com>
+ <f4b5a269-843f-6911-24fe-ebffb2bd4f9e@linux.intel.com>
+ <YVXyqBGa5Ix5MzmD@kroah.com>
+From:   Andi Kleen <ak@linux.intel.com>
+Message-ID: <bb27af8d-d4ba-fa70-8893-5b9939f9280a@linux.intel.com>
+Date:   Thu, 30 Sep 2021 12:15:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <YVXyqBGa5Ix5MzmD@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 11:25 AM Yehezkel Bernat <yehezkelshb@gmail.com> wrote:
->
-> On Thu, Sep 30, 2021 at 6:28 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Thu, Sep 30, 2021 at 4:20 AM Yehezkel Bernat <yehezkelshb@gmail.com> wrote:
-> > >
-> > > On Thu, Sep 30, 2021 at 4:05 AM Kuppuswamy Sathyanarayanan
-> > > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> > > >
-> > > > no functional
-> > > > changes other than value 2 being not visible to the user.
-> > > >
-> > >
-> > > Are we sure we don't break any user-facing tool with it? Tools might use this to
-> > > "remember" how the device was authorized this time.
-> >
-> > That's why it was highlighted in the changelog. Hopefully a
-> > Thunderbolt developer can confirm if it is a non-issue.
-> > Documentation/ABI/testing/sysfs-bus-thunderbolt does not seem to
-> > answer this question about whether authorized_show and
-> > authorized_store need to be symmetric.
->
-> Apparently, Bolt does read it [1] and cares about it [2].
 
-Ah, thank you!
+On 9/30/2021 10:23 AM, Greg Kroah-Hartman wrote:
+> On Thu, Sep 30, 2021 at 10:17:09AM -0700, Andi Kleen wrote:
+>>>> The "it" that I referred to is the claim that no driver should be
+>>>> touching hardware in their module init call. Andi seems to think
+>>>> such drivers are worth working around with a special remap API.
+>>> Andi is wrong.
+>> While overall it's a small percentage of the total, there are still quite a
+>> few drivers that do touch hardware in init functions. Sometimes for good
+>> reasons -- they need to do some extra probing to discover something that is
+>> not enumerated -- sometimes just because it's very old legacy code that
+>> predates the modern driver model.
+> Are any of them in the kernel today?
+>
+> PCI drivers should not be messing with this, we have had well over a
+> decade to fix that up.
 
-Yeah, looks like the conversion to bool was indeed too hopeful.
+
+It's not just PCI driver, it's every driver that can do io port / MMIO / 
+MSR / config space accesses.
+
+
+Maybe read the excellent article from Jon on this:
+
+https://lwn.net/Articles/865918/
+
 
 >
-> [1] https://gitlab.freedesktop.org/bolt/bolt/-/blob/130e09d1c7ff02c09e4ad1c9c36e9940b68e58d8/boltd/bolt-sysfs.c#L511
-> [2] https://gitlab.freedesktop.org/bolt/bolt/-/blob/130e09d1c7ff02c09e4ad1c9c36e9940b68e58d8/boltd/bolt-device.c#L639
+>> The legacy drivers could be fixed, but nobody really wants to touch them
+>> anymore and they're impossible to test.
+> Pointers to them?
+
+For example if you look over old SCSI drivers in drivers/scsi/*.c there 
+is a substantial number that has a module init longer than just 
+registering a driver. As a single example look at drivers/scsi/BusLogic.c
+
+There were also quite a few platform drivers like this.
+
+
+>
+>> The drivers that probe something that is not enumerated in a standard way
+>> have no choice, it cannot be implemented in a different way.
+> PCI devices are not enumerated in a standard way???
+
+The pci devices are enumerated in a standard way, but typically the 
+driver also needs something else outside PCI that needs some other 
+probing mechanism.
+
+
+>
+>> So instead we're using a "firewall" the prevents these drivers from doing
+>> bad things by not allowing ioremap access unless opted in, and also do some
+>> filtering on the IO ports The device filter is still the primary mechanism,
+>> the ioremap filtering is just belts and suspenders for those odd cases.
+> That's horrible, don't try to protect the kernel from itself.  Just fix
+> the drivers.
+
+I thought we had already established this last time we discussed it.
+
+That's completely impractical. We cannot harden thousands of drivers, 
+especially since it would be all wasted work since nobody will ever need 
+them in virtual guests. Even if we could harden them how would such a 
+work be maintained long term? Using a firewall and filtering mechanism 
+is much saner for everyone.
+
+-Andi
+
+
+
+
