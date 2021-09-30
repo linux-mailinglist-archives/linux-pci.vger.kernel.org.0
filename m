@@ -2,167 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CEA041E298
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 22:20:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2024C41E2A8
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 22:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbhI3UVp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 16:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229745AbhI3UVp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 16:21:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E668961439;
-        Thu, 30 Sep 2021 20:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633033202;
-        bh=eHVjgQVQ3o/+zTrjKH2Jy2IkIIM4qWeeIyY1HhsgZTQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=K825TWjImFo7pD0Ga9oPLweBdXvViUmyHwVGLwQxmXlrdVRaAL5vFmsoR6eusDgH9
-         zWY6TsYMSOb6qujEcbmX7UjOWk8wwA/yyar0Wkj1jKl/k1gipRwnUAkDg8JlNQuNXI
-         K7sF/eB9E17Lhh8jN9sId69fj5pB0pPWh3qgOuyYkd6u7ZpjwkkE+Mlb/4tC2XUBD7
-         AUkY+TnBr3XBsko8ihArvR4G2xKGmA3u1KNZnN/rcP5ipYfYGuI37T9AKODxBjS/EY
-         dF7MAWyxQ+ScytGMH03asUzXpNQUCkBTV3bHLDd/VVwafri6T8C61pPguabOJP/0P6
-         PR1Z+zcNWvSZw==
-Date:   Thu, 30 Sep 2021 15:20:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 4/4] PCI/ASPM: Remove struct
- pcie_link_state.clkpm_disable
-Message-ID: <20210930202000.GA906085@bhelgaas>
+        id S1347883AbhI3UZw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 16:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229949AbhI3UZv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 16:25:51 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB3DC06176C
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 13:24:08 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id oa12-20020a17090b1bcc00b0019f715462a8so363391pjb.3
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 13:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YNu/YUTTEta1euczrqSgmEotnhGowg7gkC/LCBiwK4s=;
+        b=xj9wCZapqmLIJztql+O6rs7uhLCij1deyqu/+aL8hw5KpdACRtEzLzlrczZPQazJf2
+         FupFdb9n864IVhhEWE2BFU2kLYdnzUmtFaxbjHm6lb//5fDkvE5CAaUcSQvsRG36P8PP
+         eun2CY6L6A5F0Wlzc/fObt5myxz90grs1McqqY8m7v98HFHvToc+FDZTHTkWeW44HECM
+         xCD+ovGiDADokJx7WJDuutLzRkMC4VORWMEfE6EY2d8Olt83Rs2NuhEFcPoVePw5SUH+
+         SZYrcirr0KsiRYZZIdz5IaTMK6SzVZ+teg347CmH3QnWX3NUvpnIOGpCQjLVm0yeaTnN
+         DPGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YNu/YUTTEta1euczrqSgmEotnhGowg7gkC/LCBiwK4s=;
+        b=AcBCNilysaW4c8RaUrp9+LXeJJD5GbV7xDcGuSOdyDZphosXMQb+lu9jSdmgRRIYCX
+         Qq2O0JCWQkUmWWRDNmE0DmRcrV9z507IczOf45DMUyxIW5+c25Vohuj/AZhxMEYKCdrO
+         kf0aa94AZFzpb30/mF80zJjuoXpTq26537MNeOgfosh2jn0aNPmd+fh9C+M8zCL2D87P
+         xnuZMVVzOAkjanzxlLKK4MoVKjUgQwq2HbINVKOJ4eifegumlufoi87EJP2h0dDRezDm
+         YsYL7YqCOXwauaQYZlTks+x2mRvRGGhjr8u4kyi6VagS1to8axFBFsawsk/dG9tQVFha
+         8vLQ==
+X-Gm-Message-State: AOAM531Qrnxl1fwj7X/fQSIagtK8K1MwOb6den0Lfzs7iW9gdGOolJ0t
+        N9va3V5GYU5jLF67Dbdx7G3bacValPnwlV9eBR4NXg==
+X-Google-Smtp-Source: ABdhPJxHo0SPWEXvKFwCQCE3PBZOqr998IUbVvJMOZmF3XCbHGVfqolawYuaus/mRtyLVKphZnv5zDwZadqtIJCP1+I=
+X-Received: by 2002:a17:90b:3ec3:: with SMTP id rm3mr7610144pjb.93.1633033447983;
+ Thu, 30 Sep 2021 13:24:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210929004400.25717-5-refactormyself@gmail.com>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CA+CmpXtXn5wjxwow5va5u9qHcQDLkd4Sh2dcqB545SXaxV1GkQ@mail.gmail.com>
+ <CAPcyv4iNp41mZcpzGCPR9Xty83j+abk_SOxvsx1xaQ8wALRv0Q@mail.gmail.com>
+ <CA+CmpXvGCAny-WHGioJQHF9ZZ5pCaR-E_rw5oeE82xC30naVXg@mail.gmail.com>
+ <CAPcyv4ixqiMw1KTB8rbzzrtaErV4PT3R3XqshHhAXv6Ohjzs1Q@mail.gmail.com> <c701ca61-4e7d-1060-102f-8f92dd6e6802@linux.intel.com>
+In-Reply-To: <c701ca61-4e7d-1060-102f-8f92dd6e6802@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 30 Sep 2021 13:23:57 -0700
+Message-ID: <CAPcyv4gZ=pm5GKV5q-QDqaVw+HAepiLdAokbcgqKooH-6bZcEg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
+ USB/Thunderbolt to core
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Yehezkel Bernat <yehezkelshb@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 02:44:00AM +0200, Saheed O. Bolarinwa wrote:
-> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
-> 
-> The clkpm_disable member of the struct pcie_link_state indicates
-> if the Clock PM state of the device is disabled. There are two
-> situations which can cause the Clock PM state disabled.
-> 1. If the device fails sanity check as in pcie_aspm_sanity_check()
-> 2. By calling __pci_disable_link_state()
+On Thu, Sep 30, 2021 at 12:50 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 9/30/21 12:04 PM, Dan Williams wrote:
+> >>> That's why it was highlighted in the changelog. Hopefully a
+> >>> Thunderbolt developer can confirm if it is a non-issue.
+> >>> Documentation/ABI/testing/sysfs-bus-thunderbolt does not seem to
+> >>> answer this question about whether authorized_show and
+> >>> authorized_store need to be symmetric.
+> >> Apparently, Bolt does read it [1] and cares about it [2].
+> > Ah, thank you!
+> >
+> > Yeah, looks like the conversion to bool was indeed too hopeful.
+> >
+>
+> IIUC, the end result of value "2" in authorized sysfs is to just
+> "authorize" or "de-authorize". In that case, can the user space
+> driver adapt to this int->bool change? Just want to know the
+> possibility.
 
-And, 3. clkpm_store(), when the user writes to the "clkpm" sysfs file,
-right?
-
-IIUC, clkpm_disable really tells us whether we can enable clkpm.  The
-only place we test clkpm_disable is in pcie_set_clkpm():
-
-  pcie_set_clkpm(struct pcie_link_state *link, int enable)
-  {
-    if (!link->clkpm_capable || link->clkpm_disable)
-      enable = 0;
-    pcie_set_clkpm_nocheck(link, enable);
-  }
-
-So in other words, if clkpm_disable is set, we will never call
-pcie_set_clkpm_nocheck() to *enable* clkpm.  We will only call it to
-*disable* clkpm.
-
-Tangent: I think the usefulness of pcie_set_clkpm_nocheck() being a
-separate function is gone.  I think things will be a little simpler if
-we integrate it into pcie_set_clkpm().  Separate preliminary patch, of
-course.
-
-> It is possible to set the Clock PM state of a device ON or OFF by
-> calling pcie_set_clkpm(). The state can be retieved by calling
-> pcie_get_clkpm_state().
-
-s/retieved/retrieved/
-
-> pcie_link_state.clkpm_disable is only accessed in pcie_set_clkpm()
-> to ensure that Clock PM state can be reenabled after being disabled.
-> 
-> This patch:
->   - add pm_disable to the struct pcie_link_state, to indicate that
->     the kernel has marked the device's AS and Clock PM states disabled
->   - removes clkpm_disable from the struct pcie_link_state
->   - removes all instance where clkpm_disable is set
->   - ensure that the Clock PM is always disabled if it is part of the
->     states passed into __pci_disable_link_state(), regardless of the
->     global policy
-> 
-> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/pcie/aspm.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 368828cd427d..e6ae00daa7ae 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -60,8 +60,7 @@ struct pcie_link_state {
->  	u32 aspm_default:7;		/* Default ASPM state by BIOS */
->  	u32 aspm_disable:7;		/* Disabled ASPM state */
->  
-> -	/* Clock PM state */
-> -	u32 clkpm_disable:1;		/* Clock PM disabled */
-> +	u32 pm_disabled:1;		/* Disabled AS and Clock PM ? */
-
-What did we gain by renaming this?  AFAICT this only affects clkpm
-(the only test of pm_disabled is in pcie_set_clkpm()).
-
->  	/* Exit latencies */
->  	struct aspm_latency latency_up;	/* Upstream direction exit latency */
-> @@ -198,7 +197,7 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  	 * Don't enable Clock PM if the link is not Clock PM capable
->  	 * or Clock PM is disabled
->  	 */
-> -	if (!capable || link->clkpm_disable)
-> +	if (enable && (!capable || link->pm_disabled))
->  		enable = 0;
->  	/* Need nothing if the specified equals to current state */
->  	if (pcie_get_clkpm_state(link->pdev) == enable)
-> @@ -206,11 +205,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  	pcie_set_clkpm_nocheck(link, enable);
->  }
->  
-> -static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> -{
-> -	link->clkpm_disable = blacklist ? 1 : 0;
-> -}
-> -
->  static bool pcie_retrain_link(struct pcie_link_state *link)
->  {
->  	struct pci_dev *parent = link->pdev;
-> @@ -952,8 +946,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
->  	 */
->  	pcie_aspm_cap_init(link, blacklist);
->  
-> -	/* Setup initial Clock PM state */
-> -	pcie_clkpm_cap_init(link, blacklist);
-> +	link->pm_disabled = blacklist;
->  
->  	/*
->  	 * At this stage drivers haven't had an opportunity to change the
-> @@ -1129,8 +1122,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
->  
->  	if (state & PCIE_LINK_STATE_CLKPM)
-> -		link->clkpm_disable = 1;
-> -	pcie_set_clkpm(link, policy_to_clkpm_state(link));
-> +		pcie_set_clkpm(link, 0);
-> +
->  	mutex_unlock(&aspm_lock);
->  	if (sem)
->  		up_read(&pci_bus_sem);
-> @@ -1301,7 +1294,6 @@ static ssize_t clkpm_store(struct device *dev,
->  	down_read(&pci_bus_sem);
->  	mutex_lock(&aspm_lock);
->  
-> -	link->clkpm_disable = !state_enable;
-
-Something is seriously wrong here because clkpm_store() no longer does
-anything with "state_enable", the value we got from the user.
-
->  	pcie_set_clkpm(link, policy_to_clkpm_state(link));
->  
->  	mutex_unlock(&aspm_lock);
-> -- 
-> 2.20.1
-> 
+ABIs are forever. The kernel has to uphold its contract to bolt that
+it will return '2' and not '1' after '2' has been written.
