@@ -2,125 +2,259 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 463F841E254
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2063241E265
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:48:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245317AbhI3Tmm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 15:42:42 -0400
-Received: from mga01.intel.com ([192.55.52.88]:8856 "EHLO mga01.intel.com"
+        id S1345339AbhI3Tuj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 15:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344889AbhI3Tmj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 15:42:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="247821075"
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="247821075"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:40:51 -0700
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="480062750"
-Received: from rnmathur-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.105.173])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:40:50 -0700
-Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
- confidential guest
-To:     Andi Kleen <ak@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930065953-mutt-send-email-mst@kernel.org>
- <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
- <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
- <YVXWaF73gcrlvpnf@kroah.com>
- <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
- <291d5e03-ccaa-3a73-cdcd-66cbe80fede1@linux.intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <b6229f0e-fee1-6623-f6c9-3648e18b2500@linux.intel.com>
-Date:   Thu, 30 Sep 2021 12:40:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.13.0
+        id S229777AbhI3Tui (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 15:50:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F14DC60C51;
+        Thu, 30 Sep 2021 19:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633031335;
+        bh=hDdTWheoUb4ZPM90BwAajZQdvPLHWOT4OxlEVDwGXig=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LTGpyZWG7WUD4OlNOPnmQIEH++4rz1slz2w49GSixX+nv5xl1b1QSYUAGOoYF7VyS
+         YOp6yIjK1Z9S1oQnXTlCKRBjwxlRJMYFbKIJrvnNF2sP56WeGUIan5USqKFl1/rtPq
+         g2BLVFemgMVFe+kCG+2zB2nfYRFNgq7qCWYY1lLRMew9VtGxKj2UjwyfwVtzXgTqIG
+         vXAcc0hKdqAVzyrTHXFe3squ+9E/om6esEohzIMs3vyxKZYRj6o5NhpibTbhhc2aQn
+         PZdiDO1bRR2X1XaCnSzn/+CNF0duPMQ+HphR79pG4QCv9SLe8Vv5sKHyspuphniaqT
+         U8V0lRRv+qY8Q==
+Date:   Thu, 30 Sep 2021 14:48:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     mingchuang qiao <mingchuang.qiao@mediatek.com>
+Cc:     kerun.zhu@mediatek.com, linux-pci@vger.kernel.org,
+        lambert.wang@mediatek.com, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, matthias.bgg@gmail.com,
+        alex.williamson@redhat.com, linux-mediatek@lists.infradead.org,
+        utkarsh.h.patel@intel.com, haijun.liu@mediatek.com,
+        bhelgaas@google.com, mika.westerberg@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v4] PCI: Avoid unsync of LTR mechanism configuration
+Message-ID: <20210930194853.GA903868@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <291d5e03-ccaa-3a73-cdcd-66cbe80fede1@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d11f5fa62151db0d490ea03e2f8399d784ea522.camel@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Elena
+On Thu, Sep 30, 2021 at 03:02:24PM +0800, mingchuang qiao wrote:
+> Hi Bjorn,
+> 
+> A friendly ping.
+> Thanks.
 
-On 9/30/21 12:30 PM, Andi Kleen wrote:
-> 
-> On 9/30/2021 12:04 PM, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 9/30/21 8:23 AM, Greg Kroah-Hartman wrote:
->>> On Thu, Sep 30, 2021 at 08:18:18AM -0700, Kuppuswamy, Sathyanarayanan wrote:
->>>>
->>>>
->>>> On 9/30/21 6:36 AM, Dan Williams wrote:
->>>>>> And in particular, not all virtio drivers are hardened -
->>>>>> I think at this point blk and scsi drivers have been hardened - so
->>>>>> treating them all the same looks wrong.
->>>>> My understanding was that they have been audited, Sathya?
->>>>
->>>> Yes, AFAIK, it has been audited. Andi also submitted some patches
->>>> related to it. Andi, can you confirm.
->>>
->>> What is the official definition of "audited"?
->>
->>
->> In our case (Confidential Computing platform), the host is an un-trusted
->> entity. So any interaction with host from the drivers will have to be
->> protected against the possible attack from the host. For example, if we
->> are accessing a memory based on index value received from host, we have
->> to make sure it does not lead to out of bound access or when sharing the
->> memory with the host, we need to make sure only the required region is
->> shared with the host and the memory is un-shared after use properly.
->>
->> Elena can share more details, but it was achieved with static analysis
->> and fuzzing. Here is a presentation she is sharing about the work at the
->> Linux Security Summit:
->> https://static.sched.com/hosted_files/lssna2021/b6/LSS-HardeningLinuxGuestForCCC.pdf
->>
->> Andi, can talk more about the specific driver changes that came out of this
->> effort.
-> 
-> The original virtio was quite easy to exploit because it put its free list into the shared ring buffer.
-> 
-> We had a patchkit to harden virtio originally, but after some discussion we instead switched to 
-> Jason Wang's patchkit to move the virtio metadata into protected memory, which fixed near all of the 
-> issues. These patches have been already merged. There is one additional patch to limit the virtio 
-> modes.
-> 
-> There's an ongoing effort to audit (mostly finished I believe) and fuzz the three virtio drivers 
-> (fuzzing is still ongoing).
-> 
-> There was also a range of changes outside virtio for code outside the device model. Most of it was 
-> just disabling it though.
-> 
-> -Andi
-> 
+I pointed out a couple issues, but you never responded.  See below.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> On Mon, 2021-09-06 at 13:36 +0800, mingchuang qiao wrote:
+> > Hi Bjorn,
+> > 
+> > On Thu, 2021-02-18 at 10:50 -0600, Bjorn Helgaas wrote:
+> > > On Thu, Feb 04, 2021 at 05:51:25PM +0800, mingchuang.qiao@mediatek.
+> > > co
+> > > m wrote:
+> > > > From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+> > > > 
+> > > > In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2
+> > > > register is
+> > > > configured in pci_configure_ltr(). If device and bridge both
+> > > > support LTR
+> > > > mechanism, the "LTR Mechanism Enable" bit of device and bridge
+> > > > will
+> > > > be
+> > > > enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as
+> > > > 1.
+> > > > 
+> > > > If PCIe link goes down when device resets, the "LTR Mechanism
+> > > > Enable" bit
+> > > > of bridge will change to 0 according to PCIe r5.0, sec 7.5.3.16.
+> > > > However,
+> > > > the pci_dev->ltr_path value of bridge is still 1.
+> > > > 
+> > > > For following conditions, check and re-configure "LTR Mechanism
+> > > > Enable" bit
+> > > > of bridge to make "LTR Mechanism Enable" bit match ltr_path
+> > > > value.
+> > > >    -before configuring device's LTR for hot-remove/hot-add
+> > > >    -before restoring device's DEVCTL2 register when restore
+> > > > device
+> > > > state
+> > > 
+> > > There's definitely a bug here.  The commit log should say a little
+> > > more about what it is.  I *think* if LTR is enabled and we suspend
+> > > (putting the device in D3cold) and resume, LTR probably doesn't
+> > > work
+> > > after resume because LTR is disabled in the upstream bridge, which
+> > > would be an obvious bug.
+
+Here's one thing.  Above I was asking for more details.  In
+particular, how would a user notice this bug?  How did *you* notice
+the bug?
+
+> > > Also, if a device with LTR enabled is hot-removed, and we hot-add a
+> > > device, I think LTR will not work on the new device.  Possibly also
+> > > a
+> > > bug, although I'm not convinced we know how to configure LTR on the
+> > > new device anyway.
+> > > 
+> > > So I'd *like* to merge the bug fix for v5.12, but I think I'll wait
+> > > because of the issue below.
+> > > 
+> > 
+> > A friendly ping.
+> > Any further process shall I make to get this patch merged?
+> > 
+> > > > Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+> > > > ---
+> > > > changes of v4
+> > > >  -fix typo of commit message
+> > > >  -rename: pci_reconfigure_bridge_ltr()-
+> > > > > pci_bridge_reconfigure_ltr()
+> > > > 
+> > > > changes of v3
+> > > >  -call pci_reconfigure_bridge_ltr() in probe.c
+> > > > changes of v2
+> > > >  -modify patch description
+> > > >  -reconfigure bridge's LTR before restoring device DEVCTL2
+> > > > register
+> > > > ---
+> > > >  drivers/pci/pci.c   | 25 +++++++++++++++++++++++++
+> > > >  drivers/pci/pci.h   |  1 +
+> > > >  drivers/pci/probe.c | 13 ++++++++++---
+> > > >  3 files changed, 36 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index b9fecc25d213..6bf65d295331 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -1437,6 +1437,24 @@ static int pci_save_pcie_state(struct
+> > > > pci_dev *dev)
+> > > >  	return 0;
+> > > >  }
+> > > >  
+> > > > +void pci_bridge_reconfigure_ltr(struct pci_dev *dev)
+> > > > +{
+> > > > +#ifdef CONFIG_PCIEASPM
+> > > > +	struct pci_dev *bridge;
+> > > > +	u32 ctl;
+> > > > +
+> > > > +	bridge = pci_upstream_bridge(dev);
+> > > > +	if (bridge && bridge->ltr_path) {
+> > > > +		pcie_capability_read_dword(bridge,
+> > > > PCI_EXP_DEVCTL2, &ctl);
+> > > > +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+> > > > +			pci_dbg(bridge, "re-enabling LTR\n");
+> > > > +			pcie_capability_set_word(bridge,
+> > > > PCI_EXP_DEVCTL2,
+> > > > +						 PCI_EXP_DEVCTL2
+> > > > _L
+> > > > TR_EN);
+> > > 
+> > > This pattern of updating the upstream bridge on behalf of "dev" is
+> > > problematic because it's racy:
+> > > 
+> > >   CPU 1                     CPU 2
+> > >   -------------------       ---------------------
+> > >   ctl = read DEVCTL2        ctl = read(DEVCTL2)
+> > >   ctl |= DEVCTL2_LTR_EN     ctl |= DEVCTL2_ARI
+> > >   write(DEVCTL2, ctl)
+> > >                             write(DEVCTL2, ctl)
+> > > 
+> > > Now the bridge has ARI set, but not LTR_EN.
+> > > 
+> > > We have the same problem in the pci_enable_device() path.  The most
+> > > recent try at fixing it is [1].
+
+I was hoping you would respond with "yes, I understand the problem,
+but don't think it's likely" or "no, this isn't actually a problem
+because ..."
+
+I think it *is* a problem, but we're probably unlikely to hit it, so
+we can probably live with it for now.  
+
+> > > [1] https://lore.kernel.org/linux-pci/20201218174011.340514-2-s.mir
+> > > os
+> > > hnichenko@yadro.com/
+> > > 
+> > > > +		}
+> > > > +	}
+> > > > +#endif
+> > > > +}
+> > > > +
+> > > >  static void pci_restore_pcie_state(struct pci_dev *dev)
+> > > >  {
+> > > >  	int i = 0;
+> > > > @@ -1447,6 +1465,13 @@ static void pci_restore_pcie_state(struct
+> > > > pci_dev *dev)
+> > > >  	if (!save_state)
+> > > >  		return;
+> > > >  
+> > > > +	/*
+> > > > +	 * Downstream ports reset the LTR enable bit when link
+> > > > goes down.
+> > > > +	 * Check and re-configure the bit here before restoring
+> > > > device.
+> > > > +	 * PCIe r5.0, sec 7.5.3.16.
+> > > > +	 */
+> > > > +	pci_bridge_reconfigure_ltr(dev);
+> > > > +
+> > > >  	cap = (u16 *)&save_state->cap.data[0];
+> > > >  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL,
+> > > > cap[i++]);
+> > > >  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
+> > > > cap[i++]);
+> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > index 5c59365092fa..b3a5e5287cb7 100644
+> > > > --- a/drivers/pci/pci.h
+> > > > +++ b/drivers/pci/pci.h
+> > > > @@ -111,6 +111,7 @@ void pci_free_cap_save_buffers(struct pci_dev
+> > > > *dev);
+> > > >  bool pci_bridge_d3_possible(struct pci_dev *dev);
+> > > >  void pci_bridge_d3_update(struct pci_dev *dev);
+> > > >  void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
+> > > > +void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
+> > > >  
+> > > >  static inline void pci_wakeup_event(struct pci_dev *dev)
+> > > >  {
+> > > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > > index 953f15abc850..ade055e9fb58 100644
+> > > > --- a/drivers/pci/probe.c
+> > > > +++ b/drivers/pci/probe.c
+> > > > @@ -2132,9 +2132,16 @@ static void pci_configure_ltr(struct
+> > > > pci_dev
+> > > > *dev)
+> > > >  	 * Complex and all intermediate Switches indicate
+> > > > support
+> > > > for LTR.
+> > > >  	 * PCIe r4.0, sec 6.18.
+> > > >  	 */
+> > > > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > > > -	    ((bridge = pci_upstream_bridge(dev)) &&
+> > > > -	      bridge->ltr_path)) {
+> > > > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> > > > +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> > > > +					 PCI_EXP_DEVCTL2_LTR_EN)
+> > > > ;
+> > > > +		dev->ltr_path = 1;
+> > > > +		return;
+> > > > +	}
+> > > > +
+> > > > +	bridge = pci_upstream_bridge(dev);
+> > > > +	if (bridge && bridge->ltr_path) {
+> > > > +		pci_bridge_reconfigure_ltr(dev);
+> > > >  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> > > >  					 PCI_EXP_DEVCTL2_LTR_EN)
+> > > > ;
+> > > >  		dev->ltr_path = 1;
+> > > > -- 
+> > > > 2.18.0
+> > > 
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
