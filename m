@@ -2,31 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAA441E21B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E66CA41E221
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245359AbhI3TRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 15:17:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31673 "EHLO mga18.intel.com"
+        id S229773AbhI3TSl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 15:18:41 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9088 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229652AbhI3TRB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 15:17:01 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="212343991"
+        id S229652AbhI3TSl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 15:18:41 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="204751445"
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="212343991"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:15:17 -0700
+   d="scan'208";a="204751445"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:16:58 -0700
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="438151438"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.252.134.229]) ([10.252.134.229])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:15:17 -0700
-Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
- un-authorized devices
+   d="scan'208";a="480055921"
+Received: from rnmathur-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.105.173])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:16:57 -0700
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -37,100 +38,80 @@ Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Jason Wang <jasowang@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
         Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
         virtualization@lists.linux-foundation.org,
         "Reshetova, Elena" <elena.reshetova@intel.com>
 References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930065807-mutt-send-email-mst@kernel.org> <YVXBNJ431YIWwZdQ@kroah.com>
- <20210930103537-mutt-send-email-mst@kernel.org> <YVXOc3IbcHsVXUxr@kroah.com>
- <20210930105852-mutt-send-email-mst@kernel.org> <YVXWIVZupeAzT6bO@kroah.com>
- <f4b5a269-843f-6911-24fe-ebffb2bd4f9e@linux.intel.com>
- <YVXyqBGa5Ix5MzmD@kroah.com>
-From:   Andi Kleen <ak@linux.intel.com>
-Message-ID: <bb27af8d-d4ba-fa70-8893-5b9939f9280a@linux.intel.com>
-Date:   Thu, 30 Sep 2021 12:15:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+ <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065953-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
+ <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+ <YVXWaF73gcrlvpnf@kroah.com>
+ <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
+Message-ID: <2ead1b1a-f5d2-f89c-b94f-071fdb99094b@linux.intel.com>
+Date:   Thu, 30 Sep 2021 12:16:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <YVXyqBGa5Ix5MzmD@kroah.com>
+In-Reply-To: <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
++Elena
 
-On 9/30/2021 10:23 AM, Greg Kroah-Hartman wrote:
-> On Thu, Sep 30, 2021 at 10:17:09AM -0700, Andi Kleen wrote:
->>>> The "it" that I referred to is the claim that no driver should be
->>>> touching hardware in their module init call. Andi seems to think
->>>> such drivers are worth working around with a special remap API.
->>> Andi is wrong.
->> While overall it's a small percentage of the total, there are still quite a
->> few drivers that do touch hardware in init functions. Sometimes for good
->> reasons -- they need to do some extra probing to discover something that is
->> not enumerated -- sometimes just because it's very old legacy code that
->> predates the modern driver model.
-> Are any of them in the kernel today?
->
-> PCI drivers should not be messing with this, we have had well over a
-> decade to fix that up.
+On 9/30/21 12:04 PM, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> 
+> On 9/30/21 8:23 AM, Greg Kroah-Hartman wrote:
+>> On Thu, Sep 30, 2021 at 08:18:18AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>>
+>>>
+>>> On 9/30/21 6:36 AM, Dan Williams wrote:
+>>>>> And in particular, not all virtio drivers are hardened -
+>>>>> I think at this point blk and scsi drivers have been hardened - so
+>>>>> treating them all the same looks wrong.
+>>>> My understanding was that they have been audited, Sathya?
+>>>
+>>> Yes, AFAIK, it has been audited. Andi also submitted some patches
+>>> related to it. Andi, can you confirm.
+>>
+>> What is the official definition of "audited"?
+> 
+> 
+> In our case (Confidential Computing platform), the host is an un-trusted
+> entity. So any interaction with host from the drivers will have to be
+> protected against the possible attack from the host. For example, if we
+> are accessing a memory based on index value received from host, we have
+> to make sure it does not lead to out of bound access or when sharing the
+> memory with the host, we need to make sure only the required region is
+> shared with the host and the memory is un-shared after use properly.
+> 
+> Elena can share more details, but it was achieved with static analysis
+> and fuzzing. Here is a presentation she is sharing about the work at the
+> Linux Security Summit:
+> https://static.sched.com/hosted_files/lssna2021/b6/LSS-HardeningLinuxGuestForCCC.pdf
+> 
+> Andi, can talk more about the specific driver changes that came out of this
+> effort.
+> 
+> In our case the driver is considered "hardened" / "audited" if it can handle
+> the above scenarios.
+> 
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
+> 
 
-
-It's not just PCI driver, it's every driver that can do io port / MMIO / 
-MSR / config space accesses.
-
-
-Maybe read the excellent article from Jon on this:
-
-https://lwn.net/Articles/865918/
-
-
->
->> The legacy drivers could be fixed, but nobody really wants to touch them
->> anymore and they're impossible to test.
-> Pointers to them?
-
-For example if you look over old SCSI drivers in drivers/scsi/*.c there 
-is a substantial number that has a module init longer than just 
-registering a driver. As a single example look at drivers/scsi/BusLogic.c
-
-There were also quite a few platform drivers like this.
-
-
->
->> The drivers that probe something that is not enumerated in a standard way
->> have no choice, it cannot be implemented in a different way.
-> PCI devices are not enumerated in a standard way???
-
-The pci devices are enumerated in a standard way, but typically the 
-driver also needs something else outside PCI that needs some other 
-probing mechanism.
-
-
->
->> So instead we're using a "firewall" the prevents these drivers from doing
->> bad things by not allowing ioremap access unless opted in, and also do some
->> filtering on the IO ports The device filter is still the primary mechanism,
->> the ioremap filtering is just belts and suspenders for those odd cases.
-> That's horrible, don't try to protect the kernel from itself.  Just fix
-> the drivers.
-
-I thought we had already established this last time we discussed it.
-
-That's completely impractical. We cannot harden thousands of drivers, 
-especially since it would be all wasted work since nobody will ever need 
-them in virtual guests. Even if we could harden them how would such a 
-work be maintained long term? Using a firewall and filtering mechanism 
-is much saner for everyone.
-
--Andi
-
-
-
-
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
