@@ -2,29 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 773D741D0DE
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 03:06:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D4C41D108
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 03:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347630AbhI3BHV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 21:07:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24480 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1347601AbhI3BHT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 29 Sep 2021 21:07:19 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212330117"
-X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="212330117"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:37 -0700
-X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="521027386"
-Received: from yzhu3-mobl.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.37.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 18:05:36 -0700
-From:   Kuppuswamy Sathyanarayanan 
+        id S1347648AbhI3BoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 21:44:12 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:45229 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S234448AbhI3BoM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 21:44:12 -0400
+Received: (qmail 448410 invoked by uid 1000); 29 Sep 2021 21:42:29 -0400
+Date:   Wed, 29 Sep 2021 21:42:29 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
         Andreas Noever <andreas.noever@gmail.com>,
@@ -41,58 +35,52 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-usb@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v2 6/6] PCI: Initialize authorized attribute for confidential guest
-Date:   Wed, 29 Sep 2021 18:05:11 -0700
-Message-Id: <20210930010511.3387967-7-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
+ USB/Thunderbolt to core
+Message-ID: <20210930014229.GA447956@rowland.harvard.edu>
 References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Confidential guest platforms like TDX have a requirement to allow
-only trusted devices. So initialize the "authorized" attribute
-using cc_guest_dev_authorized().
+On Wed, Sep 29, 2021 at 06:05:06PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Currently bus drivers like "USB" or "Thunderbolt" implement a custom
+> version of device authorization to selectively authorize the driver
+> probes. Since there is a common requirement, move the "authorized"
+> attribute support to the driver core in order to allow it to be used
+> by other subsystems / buses.
+> 
+> Similar requirements have been discussed in the PCI [1] community for
+> PCI bus drivers as well.
+> 
+> No functional changes are intended. It just converts authorized
+> attribute from int to bool and moves it to the driver core. There
+> should be no user-visible change in the location or semantics of
+> attributes for USB devices.
+> 
+> Regarding thunderbolt driver, although it declares sw->authorized as
+> "int" and allows 0,1,2 as valid values for sw->authorized attribute,
+> but within the driver, in all authorized attribute related checks,
+> it is treated as bool value. So when converting the authorized
+> attribute from int to bool value, there should be no functional
+> changes other than value 2 being not visible to the user.
+> 
+> [1]: https://lore.kernel.org/all/CACK8Z6E8pjVeC934oFgr=VB3pULx_GyT2NkzAogdRQJ9TKSX9A@mail.gmail.com/
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-By default the confidential-guest core arranges for all devices to
-default to unauthorized (via dev_default_authorization) in
-device_initialize(). So, consult a core list of allowed devices to
-override that default.
+Since you're moving the authorized flag from the USB core to the
+driver core, the corresponding sysfs attribute functions should be
+moved as well.
 
-ARCH code will use its device allow list in cc_guest_dev_authorized()
-to determine the status of the authorized attribute.
+Also, you ignored the usb_[de]authorize_interface() functions and 
+their friends.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/probe.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index d9fc02a71baa..aab9d1917d52 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -20,6 +20,8 @@
- #include <linux/irqdomain.h>
- #include <linux/pm_runtime.h>
- #include <linux/bitfield.h>
-+#include <linux/cc_platform.h>
-+#include <linux/device.h>
- #include "pci.h"
- 
- #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
-@@ -2491,6 +2493,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	pci_configure_device(dev);
- 
- 	device_initialize(&dev->dev);
-+	if (cc_platform_has(CC_ATTR_GUEST_DEVICE_FILTER))
-+		dev->dev.authorized = cc_guest_dev_authorized(&dev->dev);
- 	dev->dev.release = pci_release_dev;
- 
- 	set_dev_node(&dev->dev, pcibus_to_node(bus));
--- 
-2.25.1
-
+Alan Stern
