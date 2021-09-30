@@ -2,69 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A34F741D5C8
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C25AA41D5F2
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 11:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348985AbhI3Izp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 04:55:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:50682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348952AbhI3Izp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 04:55:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803C8D6E;
-        Thu, 30 Sep 2021 01:54:02 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.49.184])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E53843F793;
-        Thu, 30 Sep 2021 01:54:00 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 0/4] PCI: dwc: pci-dra7xx: miscellaneous improvements
-Date:   Thu, 30 Sep 2021 09:53:53 +0100
-Message-Id: <163299201477.31815.18190082659502039608.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20210531085934.2662457-1-luca@lucaceresoli.net>
-References: <20210531085934.2662457-1-luca@lucaceresoli.net>
+        id S1348938AbhI3JGy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 05:06:54 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:39505 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348505AbhI3JGy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 05:06:54 -0400
+Received: by mail-ot1-f42.google.com with SMTP id j11-20020a9d190b000000b00546fac94456so6413383ota.6;
+        Thu, 30 Sep 2021 02:05:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A0kBNA83hCb4HCc/FO3KjbqdDYyweltNhd4aS4t5/kU=;
+        b=ZQ03FvJTEVQgULL5OLEhNdTmZvrPWMrXROd0pTRxLQZ+a6FeveJ+mcBQqrxogW1hQ5
+         mdz0OPDeb36InyIXjRXRuu1rvSZWm60yjIZtW80Sm3TfQ760acisFrq0bATbPppPGVtW
+         cuWt529BWO7y9B5RDxBC+rgdaeTgp5PTMKPTgLjtvQD1R6DmxL3zdiltg22154XI5r89
+         1J8QwxfL47Jiv1P18MVOTs54AAS2ljT+v/lMkX9oEOZurxNi1lYYgBl2UXjpTUcJW8TJ
+         pzdOlfzssehxDMidDcALXpEqUyEjK0/2p5gu7t38ywiP1V7mlIKnpifgk9aEGXf2aKAY
+         cEbw==
+X-Gm-Message-State: AOAM530FwqgiVHJN65gBistiziBI4/Qc3LOQgMmGfk9atCYeMDIMVHTI
+        LYLS80UoHF3AMorsAnkfTEsMvqoPEVXohcQk2nk=
+X-Google-Smtp-Source: ABdhPJxQvr32DBDvE9GooVKcASD2AsIl4lfSqdKR1BOYS2VPGs0tjNvE9npSlrVtmKJ8P2bAkPp+G83bpdvcAuxPNP4=
+X-Received: by 2002:a05:6830:2784:: with SMTP id x4mr4274581otu.86.1632992711404;
+ Thu, 30 Sep 2021 02:05:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930014229.GA447956@rowland.harvard.edu> <CAPcyv4iiEC3B2i81evZpLP+XHa8dLkfgWmrY7HocORwP8FMPZQ@mail.gmail.com>
+ <f9b7cf97-0a14-1c80-12ab-23213ec2f4f2@linux.intel.com> <CAPcyv4gDgQYf0ct_Xy32gQBcWhs6d2uL+wUq4pfzszDHcUHbwQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4gDgQYf0ct_Xy32gQBcWhs6d2uL+wUq4pfzszDHcUHbwQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Sep 2021 11:05:00 +0200
+Message-ID: <CAJZ5v0gOEffKJoH7P9=QOAxXFbMGOf9j0V1DsixQwaAehicnfA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
+ USB/Thunderbolt to core
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 31 May 2021 10:59:30 +0200, Luca Ceresoli wrote:
-> This is an series of mixed improvements to the DRA7 PCI controller driver:
-> allow building as a loadabel module, allow to get and enable a clock and a
-> small cleanup.
-> 
-> Luca
-> 
-> Luca Ceresoli (4):
->   PCI: dwc: Export more symbols to allow modular drivers
->   PCI: dra7xx: Make it a kernel module
->   PCI: dra7xx: Remove unused include
->   PCI: dra7xx: Get an optional clock
-> 
-> [...]
+On Thu, Sep 30, 2021 at 6:59 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, Sep 29, 2021 at 7:39 PM Kuppuswamy, Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 9/29/21 6:55 PM, Dan Williams wrote:
+> > >> Also, you ignored the usb_[de]authorize_interface() functions and
+> > >> their friends.
+> > > Ugh, yes.
+> >
+> > I did not change it because I am not sure about the interface vs device
+> > dependency.
+> >
+>
+> This is was the rationale for has_probe_authorization flag. USB
+> performs authorization of child devices based on the authorization
+> state of the parent interface.
+>
+> > I think following change should work.
+> >
+> > diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+> > index f57b5a7a90ca..84969732d09c 100644
+> > --- a/drivers/usb/core/driver.c
+> > +++ b/drivers/usb/core/driver.c
+> > @@ -334,7 +334,7 @@ static int usb_probe_interface(struct device *dev)
+> >         if (udev->dev.authorized == false) {
+> >                 dev_err(&intf->dev, "Device is not authorized for usage\n");
+> >                 return error;
+> > -       } else if (intf->authorized == 0) {
+> > +       } else if (intf->dev.authorized == 0) {
+>
+> == false
 
-Applied to pci/dwc, thanks!
+Or even (!intf->dev.authorized).
 
-[1/4] PCI: dwc: Export more symbols to allow modular drivers
-      https://git.kernel.org/lpieralisi/pci/c/3a7fb86758
-[2/4] PCI: dra7xx: Make it a kernel module
-      https://git.kernel.org/lpieralisi/pci/c/3b868d150e
-[3/4] PCI: dra7xx: Remove unused include
-      https://git.kernel.org/lpieralisi/pci/c/b9a6943dc8
-[4/4] PCI: dra7xx: Get an optional clock
-      https://git.kernel.org/lpieralisi/pci/c/5af9405397
+> >                 dev_err(&intf->dev, "Interface %d is not authorized for usage\n",
+> >                                 intf->altsetting->desc.bInterfaceNumber);
+> >                 return error;
+> > @@ -546,7 +546,7 @@ int usb_driver_claim_interface(struct usb_driver *driver,
+> >                 return -EBUSY;
+> >
+> >         /* reject claim if interface is not authorized */
+> > -       if (!iface->authorized)
+> > +       if (!iface->dev.authorized)
+>
+> I'd do == false to keep it consistent with other conversions.
 
-Thanks,
-Lorenzo
+But this looks odd, FWIW.
