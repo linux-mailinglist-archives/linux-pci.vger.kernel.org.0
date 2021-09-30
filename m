@@ -2,140 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1031C41D96F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 14:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D96841DA07
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 14:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350708AbhI3MOn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 08:14:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38148 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348765AbhI3MOm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 08:14:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="223283964"
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="223283964"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 05:12:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="618097823"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Sep 2021 05:12:46 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/2] device property: Remove device_add_properties() API
-Date:   Thu, 30 Sep 2021 15:12:46 +0300
-Message-Id: <20210930121246.22833-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210930121246.22833-1-heikki.krogerus@linux.intel.com>
-References: <20210930121246.22833-1-heikki.krogerus@linux.intel.com>
+        id S1351004AbhI3Mn1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 08:43:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28380 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236162AbhI3Mn0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 08:43:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633005703;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Unbty8nNkK7YONUoWOx1LklE7WdRs1VG0UIIrgjCenI=;
+        b=HGZRWHAwRiMg7xk6aBelgvJMRTdsfxx6pOdYxyugg70517rkmMaJvhPh0tDcdPUvfcrA8I
+        PJ9JOHX0o+fNt/dnEWM3YvHcyiKU3ogIZnC9owsGPNhGVE87Js2gkLVPQ7QsWoNW8nVKJr
+        HbAwnMGjmW3jfXoBImcMpsc5pDgKpUM=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-N15R3teXP5GfAfzE63MvGQ-1; Thu, 30 Sep 2021 08:41:42 -0400
+X-MC-Unique: N15R3teXP5GfAfzE63MvGQ-1
+Received: by mail-oi1-f198.google.com with SMTP id j200-20020acaebd1000000b0027357b3466aso4127394oih.1
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 05:41:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Unbty8nNkK7YONUoWOx1LklE7WdRs1VG0UIIrgjCenI=;
+        b=z4HCZoC4NZRdKjE9r3jSz46HLsxEitrw2jR+4aSq8UdrYekMmbNG+W6S5F3bucMavx
+         gzGRjP3zlx4WLX72cYKBKmTFJGJWNUSR0L1pXAixus8fiWnzmyx6cbsrb2VHP4/mbJCO
+         UdF91eEyR/gDxPb/yhDppmw8N5mRaLLnr8FnZEnlc/5Og6fNXs7ykx8V4VlUIB0Y4ecq
+         6xUcrZL4lVbOKU/3cuZpU0r/EaWGDh8OL5uVME5rhF2mxdxntswk819UHkR1MrxyOs3q
+         g1XzYl5fLa9oxap/Ble7gLyM0QXez1c91MVEyL04P/B3ClMeuc+xGAJPUJp6HYlyOXL+
+         G4QQ==
+X-Gm-Message-State: AOAM530ECin4NAGWmg/zgAgcgaH4wN6UXeunItL7z+ttuvIzUpFGS6AL
+        jjc4ljFVMY+VQVSx8Jy63FkSfPel7msCaGMigw8pJEjX5Bgkls6cyRGm5QnWhkd6H4KNIDYHjJS
+        U1ngPQi9hbsrviszjZDOs
+X-Received: by 2002:a05:6808:46:: with SMTP id v6mr2547334oic.72.1633005701661;
+        Thu, 30 Sep 2021 05:41:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwMRYKLy+B+MpdesoWZkxr5N1driI4Zy8XmLACnQxDaRZIHqyWhxnO2lDZUxuKPwWjg5RQWJg==
+X-Received: by 2002:a05:6808:46:: with SMTP id v6mr2547322oic.72.1633005701417;
+        Thu, 30 Sep 2021 05:41:41 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id e6sm530698otr.79.2021.09.30.05.41.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 05:41:40 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 06:41:39 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        "Doug Ledford" <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+Message-ID: <20210930064139.57bb74c0.alex.williamson@redhat.com>
+In-Reply-To: <bad28179-cbca-9337-8e6b-d730f06c6c58@nvidia.com>
+References: <c87f55d6fec77a22b110d3c9611744e6b28bba46.1632305919.git.leonro@nvidia.com>
+        <20210927164648.1e2d49ac.alex.williamson@redhat.com>
+        <20210927231239.GE3544071@ziepe.ca>
+        <25c97be6-eb4a-fdc8-3ac1-5628073f0214@nvidia.com>
+        <20210929063551.47590fbb.alex.williamson@redhat.com>
+        <1eba059c-4743-4675-9f72-1a26b8f3c0f6@nvidia.com>
+        <20210929075019.48d07deb.alex.williamson@redhat.com>
+        <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
+        <20210929091712.6390141c.alex.williamson@redhat.com>
+        <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
+        <20210929161433.GA1808627@ziepe.ca>
+        <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
+        <20210929164409.3c33e311.alex.williamson@redhat.com>
+        <bad28179-cbca-9337-8e6b-d730f06c6c58@nvidia.com>
+Organization: Red Hat
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are no more users for it.
+On Thu, 30 Sep 2021 12:25:23 +0300
+Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/core.c      |  1 -
- drivers/base/property.c  | 48 ----------------------------------------
- include/linux/property.h |  4 ----
- 3 files changed, 53 deletions(-)
+> On 9/30/2021 1:44 AM, Alex Williamson wrote:
+> > On Thu, 30 Sep 2021 00:48:55 +0300
+> > Max Gurtovoy <mgurtovoy@nvidia.com> wrote:
+> >  
+> >> On 9/29/2021 7:14 PM, Jason Gunthorpe wrote:  
+> >>> On Wed, Sep 29, 2021 at 06:28:44PM +0300, Max Gurtovoy wrote:
+> >>>     
+> >>>>> So you have a device that's actively modifying its internal state,
+> >>>>> performing I/O, including DMA (thereby dirtying VM memory), all while
+> >>>>> in the _STOP state?  And you don't see this as a problem?  
+> >>>> I don't see how is it different from vfio-pci situation.  
+> >>> vfio-pci provides no way to observe the migration state. It isn't
+> >>> "000b"  
+> >> Alex said that there is a problem of compatibility.
+> >>
+> >> I migration SW is not involved, nobody will read this migration state.  
+> > The _STOP state has a specific meaning regardless of whether userspace
+> > reads the device state value.  I think what you're suggesting is that
+> > the device reports itself as _STOP'd but it's actually _RUNNING.  Is
+> > that the compatibility workaround, create a self inconsistency?  
+> 
+>  From migration point of view the device is stopped.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 7758223f040c8..7935ee642fa3f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3573,7 +3573,6 @@ void device_del(struct device *dev)
- 	device_pm_remove(dev);
- 	driver_deferred_probe_del(dev);
- 	device_platform_notify_remove(dev);
--	device_remove_properties(dev);
- 	device_links_purge(dev);
+The _RESUMING and _SAVING bits control the migration activity, the
+_RUNNING bit controls the ability of the device to modify its internal
+state and affect external state.  The initial state of the device is
+absolutely not stopped.
+
+> > We cannot impose on userspace to move a device from _STOP to _RUNNING
+> > simply because the device supports the migration region, nor should we
+> > report a device state that is inconsistent with the actual device state.  
+> 
+> In this case we can think maybe moving to running during enabling the 
+> bus master..
+
+There are no spontaneous state transitions, device_state changes only
+via user manipulation of the register.
+
+> >>>> Maybe we need to rename STOP state. We can call it READY or LIVE or
+> >>>> NON_MIGRATION_STATE.  
+> >>> It was a poor choice to use 000b as stop, but it doesn't really
+> >>> matter. The mlx5 driver should just pre-init this readable to running.  
+> >> I guess we can do it for this reason. There is no functional problem nor
+> >> compatibility issue here as was mentioned.
+> >>
+> >> But still we need the kernel to track transitions. We don't want to
+> >> allow moving from RESUMING to SAVING state for example. How this
+> >> transition can be allowed ?
+> >>
+> >> In this case we need to fail the request from the migration SW...  
+> > _RESUMING to _SAVING seems like a good way to test round trip migration
+> > without running the device to modify the state.  Potentially it's a
+> > means to update a saved device migration data stream to a newer format
+> > using an intermediate driver version.  
+> 
+> what do you mean by "without running the device to modify the state." ?
+
+If a device is !_RUNNING it should not be advancing its internal state,
+therefore state-in == state-out.
  
- 	if (dev->bus)
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 453918eb7390c..1f1eee37817e0 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -508,54 +508,6 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(fwnode_find_reference);
- 
--/**
-- * device_remove_properties - Remove properties from a device object.
-- * @dev: Device whose properties to remove.
-- *
-- * The function removes properties previously associated to the device
-- * firmware node with device_add_properties(). Memory allocated to the
-- * properties will also be released.
-- */
--void device_remove_properties(struct device *dev)
--{
--	struct fwnode_handle *fwnode = dev_fwnode(dev);
--
--	if (!fwnode)
--		return;
--
--	if (is_software_node(fwnode->secondary)) {
--		fwnode_remove_software_node(fwnode->secondary);
--		set_secondary_fwnode(dev, NULL);
--	}
--}
--EXPORT_SYMBOL_GPL(device_remove_properties);
--
--/**
-- * device_add_properties - Add a collection of properties to a device object.
-- * @dev: Device to add properties to.
-- * @properties: Collection of properties to add.
-- *
-- * Associate a collection of device properties represented by @properties with
-- * @dev. The function takes a copy of @properties.
-- *
-- * WARNING: The callers should not use this function if it is known that there
-- * is no real firmware node associated with @dev! In that case the callers
-- * should create a software node and assign it to @dev directly.
-- */
--int device_add_properties(struct device *dev,
--			  const struct property_entry *properties)
--{
--	struct fwnode_handle *fwnode;
--
--	fwnode = fwnode_create_software_node(properties, NULL);
--	if (IS_ERR(fwnode))
--		return PTR_ERR(fwnode);
--
--	set_secondary_fwnode(dev, fwnode);
--	return 0;
--}
--EXPORT_SYMBOL_GPL(device_add_properties);
--
- /**
-  * fwnode_get_name - Return the name of a node
-  * @fwnode: The firmware node
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 357513a977e5d..daf0b5841286f 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -377,10 +377,6 @@ property_entries_dup(const struct property_entry *properties);
- 
- void property_entries_free(const struct property_entry *properties);
- 
--int device_add_properties(struct device *dev,
--			  const struct property_entry *properties);
--void device_remove_properties(struct device *dev);
--
- bool device_dma_supported(struct device *dev);
- 
- enum dev_dma_attr device_get_dma_attr(struct device *dev);
--- 
-2.33.0
+> did you describe a case where you migrate from source to dst and then 
+> back to source with a new migration data format ?
+
+I'm speculating that as the driver evolves, the migration data stream
+generated from the device's migration region can change.  Hopefully in
+compatible ways.  The above sequence of restoring and extracting state
+without the complication of the device running could help to validate
+compatibility.  Thanks,
+
+Alex
 
