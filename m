@@ -2,155 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5565841DE14
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF7841DE46
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:59:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346658AbhI3Pzp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 11:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346582AbhI3Pzp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 11:55:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F1F661411;
-        Thu, 30 Sep 2021 15:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633017242;
-        bh=4FLgrYfiAV1mkDxGMwPnsUgIYDlrsX1nBmoYjQHKOrs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LQ/9JqDQ6td04d9li5F/dooPp/dOE3SlVNgF7u9Si5Kjew50vR+hVWBfsIIzJ+014
-         N8v+vCGq5AXzoCrCt+vTQHnjT6aXmqePpBODEjc3u2H1yZyKPneMl6p+EB3ZEKnRWC
-         t7KR/gFlY+F11CcGQOEVWeiDpHjkDxX27wH4n4ITAcmyYSd/M0WjR38k7hAfepJB76
-         iu3JWBvAMASHhgc8rAkbZ2Y9JGoNfsoaS9ng6IJsQGmJMTFzKDeQO5O5nHTC1SRTE+
-         FeVov8TjM9GUqeg+iWrn8GbDlAo46roW84eAQr+B+Zms1vXcwM1DlF1mHu7jNb+lnM
-         wHHzoZnoflP5Q==
-Date:   Thu, 30 Sep 2021 10:54:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/4] [PCI/ASPM:] Remove struct
- pcie_link_state.clkpm_default
-Message-ID: <20210930155400.GA886716@bhelgaas>
+        id S1347405AbhI3QA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 12:00:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57142 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1347326AbhI3QAz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633017552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9CLOOKqnl6WBTiVh9cnZX+K/sEpCo7/g2qzibCOpSjw=;
+        b=WFfJsIce6l1rBp9X4Yi/5B9Dabs2qryT18zWK+ssgoXw+D4TZUV9znp5Ro/UqRq+34UsaZ
+        x6pfZUY7Deduxndoqav9/5LW9gP4oUYVFMCOSvsfZ/9dM2H/A336qWiV26cXjFdAOtWSdh
+        jHTwrGSXPUOZbp9xpvNbVvi82YDNA5Y=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-NXVmb8NHOxqiHHbeXOS8rw-1; Thu, 30 Sep 2021 11:59:11 -0400
+X-MC-Unique: NXVmb8NHOxqiHHbeXOS8rw-1
+Received: by mail-wr1-f69.google.com with SMTP id j15-20020a5d564f000000b00160698bf7e9so1835219wrw.13
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 08:59:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9CLOOKqnl6WBTiVh9cnZX+K/sEpCo7/g2qzibCOpSjw=;
+        b=CKfwylvXWKI1+UWwDP8dTobqYxbfGVjtgpRWbIDAoocYeU3CgMOw8cn4RUIyBMnj1j
+         oZUkT0SuwFPsXb2gEtzKoquWOjXsDv3yL4iLNssUnd9aZ42ACrVKCjZoeBmm0DiSWkQx
+         NbR2w70loZkO2U2fFXCX1enXFbvaO5XIrg9JwNjXmGG0KsQHud4gELi5ITxazH+lAlqK
+         tDedHqyA5dgJ6oPkHne5N0dDnvDCO4R5AhAf3GnGm+m4s8Hs2uetnM0STXS912fUfVhz
+         kAAKeT0VQJ11sZ9IoXkcdVmKwEJvSwYOyB/nIbPzCJ6NH+c6C8PNX+ii9PRfTtC5SImL
+         uVww==
+X-Gm-Message-State: AOAM533o/4kcUT0JvwAQClE0zOULKsUz01Fh3UaxUqCT3zzfXNTlKGlG
+        kjLu1OWiyQUxv3H8SGlg7hTl3qXVN1cxUH1STEeZRImX7N/YcOttcA/4ADXxgFT0sFbR/FR2VhM
+        iHTKTjmVtyLPFcRjCR+lK
+X-Received: by 2002:adf:c7c2:: with SMTP id y2mr6859870wrg.248.1633017550251;
+        Thu, 30 Sep 2021 08:59:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy42E8my5muvsE8Nz78EmU3Z+uZP9H3yPkno0xob4dMAYSNcsCrkwFOYhLWIW8NasAhP33f4A==
+X-Received: by 2002:adf:c7c2:: with SMTP id y2mr6859853wrg.248.1633017550085;
+        Thu, 30 Sep 2021 08:59:10 -0700 (PDT)
+Received: from redhat.com ([2.55.134.220])
+        by smtp.gmail.com with ESMTPSA id o19sm3590521wrg.60.2021.09.30.08.59.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 08:59:09 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 11:59:04 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
+ un-authorized devices
+Message-ID: <20210930115243-mutt-send-email-mst@kernel.org>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065807-mutt-send-email-mst@kernel.org>
+ <YVXBNJ431YIWwZdQ@kroah.com>
+ <20210930144305.GA464826@rowland.harvard.edu>
+ <20210930104924-mutt-send-email-mst@kernel.org>
+ <20210930153509.GF464826@rowland.harvard.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210929004400.25717-2-refactormyself@gmail.com>
+In-Reply-To: <20210930153509.GF464826@rowland.harvard.edu>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 02:43:57AM +0200, Saheed O. Bolarinwa wrote:
-> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
+On Thu, Sep 30, 2021 at 11:35:09AM -0400, Alan Stern wrote:
+> On Thu, Sep 30, 2021 at 10:58:07AM -0400, Michael S. Tsirkin wrote:
+> > On Thu, Sep 30, 2021 at 10:43:05AM -0400, Alan Stern wrote:
+> > > I don't see any point in talking about "untrusted drivers".  If a 
+> > > driver isn't trusted then it doesn't belong in your kernel.  Period.  
+> > > When you load a driver into your kernel, you are implicitly trusting 
+> > > it (aside from limitations imposed by security modules).
+> > 
+> > Trusting it to do what? Historically a ton of drivers did not
+> > validate input from devices they drive. Most still don't.
 > 
-> The clkpm_default member of the struct pcie_link_state stores the
-> value of the default clkpm state as it is in the BIOS.
-> 
-> This patch:
-> - Removes clkpm_default from struct pcie_link_state
-> - Creates pcie_get_clkpm_state() which return the clkpm state
->   obtained the BIOS
-> - Replaces references to clkpm_default with call to
->   pcie_get_clkpm_state()
-> 
-> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/pcie/aspm.c | 37 +++++++++++++++++++++++++++----------
->  1 file changed, 27 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 013a47f587ce..c23da9a4e2fb 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -63,7 +63,6 @@ struct pcie_link_state {
->  	/* Clock PM state */
->  	u32 clkpm_capable:1;		/* Clock PM capable? */
->  	u32 clkpm_enabled:1;		/* Current Clock PM state */
-> -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
->  	u32 clkpm_disable:1;		/* Clock PM disabled */
->  
->  	/* Exit latencies */
-> @@ -123,6 +122,30 @@ static int policy_to_aspm_state(struct pcie_link_state *link)
->  	return 0;
->  }
->  
-> +static int pcie_get_clkpm_state(struct pci_dev *pdev)
-> +{
-> +	int enabled = 1;
-> +	u32 reg32;
-> +	u16 reg16;
-> +	struct pci_dev *child;
-> +	struct pci_bus *linkbus = pdev->subordinate;
-> +
-> +	/* All functions should have the same clkpm state, take the worst */
-> +	list_for_each_entry(child, &linkbus->devices, bus_list) {
-> +		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
-> +		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-> +			enabled = 0;
-> +			break;
-> +		}
-> +
-> +		pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
-> +		if (!(reg16 & PCI_EXP_LNKCTL_CLKREQ_EN))
-> +			enabled = 0;
-> +	}
-> +
-> +	return enabled;
-> +}
-> +
->  static int policy_to_clkpm_state(struct pcie_link_state *link)
->  {
->  	switch (aspm_policy) {
-> @@ -134,7 +157,7 @@ static int policy_to_clkpm_state(struct pcie_link_state *link)
->  		/* Enable Clock PM */
->  		return 1;
->  	case POLICY_DEFAULT:
-> -		return link->clkpm_default;
-> +		return pcie_get_clkpm_state(link->pdev);
->  	}
->  	return 0;
->  }
-> @@ -168,9 +191,8 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  
->  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  {
-> -	int capable = 1, enabled = 1;
-> +	int capable = 1;
->  	u32 reg32;
-> -	u16 reg16;
->  	struct pci_dev *child;
->  	struct pci_bus *linkbus = link->pdev->subordinate;
->  
-> @@ -179,15 +201,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
->  		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
->  			capable = 0;
-> -			enabled = 0;
->  			break;
->  		}
-> -		pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
-> -		if (!(reg16 & PCI_EXP_LNKCTL_CLKREQ_EN))
-> -			enabled = 0;
->  	}
-> -	link->clkpm_enabled = enabled;
-> -	link->clkpm_default = enabled;
-> +	link->clkpm_enabled = pcie_get_clkpm_state(link->pdev);
+> Trusting it to behave properly (i.e., not destroy your system, among 
+> other things).
 
-I love the idea of removing clkpm_default, but I need a little more
-convincing.  Before this patch, this code computes clkpm_default from
-PCI_EXP_LNKCAP_CLKPM and PCI_EXP_LNKCTL_CLKREQ_EN of all the functions
-of the device.
+I don't think the current mitigations under discussion here are about
+keeping the system working. In fact most encrypted VM configs tend to
+stop booting as a preferred way to handle security issues.
 
-PCI_EXP_LNKCAP_CLKPM is a read-only value, so we can re-read that any
-time.  But PCI_EXP_LNKCTL_CLKREQ_EN is writable, so if we want to know
-the value that firmware put there, we need to read and save it before
-we modify it.
-
-Why is it safe to remove this init-time read of
-PCI_EXP_LNKCTL_CLKREQ_EN and instead re-read it any time we need the
-"default" settings from firmware?
-
->  	link->clkpm_capable = capable;
->  	link->clkpm_disable = blacklist ? 1 : 0;
->  }
-> -- 
-> 2.20.1
+> The fact that many drivers haven't been trustworthy is beside the 
+> point.  By loading them into your kernel, you are trusting them 
+> regardless.  In the end, you may regret having done so.  :-(
 > 
+> Alan Stern
+
+
+
+-- 
+MST
+
