@@ -2,142 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F2D41DEDB
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A011641DEEA
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349769AbhI3QYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 12:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34938 "EHLO
+        id S1350518AbhI3Q0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 12:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346682AbhI3QYc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:24:32 -0400
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385CDC06176A;
-        Thu, 30 Sep 2021 09:22:50 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4HKz6w59dBzQjhm;
-        Thu, 30 Sep 2021 18:22:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Subject: Re: [PATCH 1/2] mwifiex: Use non-posted PCI register writes
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        with ESMTP id S1350438AbhI3Q01 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:26:27 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AACC06176F
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 09:24:44 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id p4so6379950qki.3
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 09:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=oVCTC+nt3p3+hMxDZO10YpzPmIzmwpHDbufnIhpB5sw=;
+        b=Qzvudx/7eTIRT7u9f/lsM4lO+MLgg9dJvfErxgBhnEydnevVQWd23+D5YUSGowYATg
+         5LHFyriFS29ECLsNuDA85jLdOXHfRyzXgbJK/06ZjgAk8HVJonpWUIlnVMatc67PxWT1
+         dn7yqZLpL85aZ8BeVtsKxdoUsWqTIj59egY14M/B//S1wnOh3KRf/3FL55A1Ucv+9BLn
+         jZPeDKdfHkv+LAbUR5/w9ZQdrTCYAyvVBBbLp+uFkKln1Y/zLhjlaaUsKhBgTmEBItm+
+         qlUqzUZVxpXlGnSKyFyL0+KmJa1pa0URiUh1DxnXvMKSutxbzIzA/l2jhx2tK1C9ilDH
+         ds/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=oVCTC+nt3p3+hMxDZO10YpzPmIzmwpHDbufnIhpB5sw=;
+        b=T9uc3oDxI8uBy8UaVlmcd2PrYw5WYEHDhDSOzSQMxiNKsLspL/c7QRJgOfyP0kOpcB
+         K6fOQB6bXyalsvMTwCyK2kfw5rFnODxMDbYsYgD34AtEM3GyHIY5wgUJjFSB501Rf4wM
+         79ftF/SVlGonuXT+Hq5sRPEHvGezLfaNG2hA5XpdSnFCM7NFf1HI7G8gWYNdgM6Jk757
+         s4jlN2w4j1AW1o6IrcmXGAysVLnTytkVKpoK7T9me/PBySdReclD+s7D7xglhCyxPbY1
+         tcjrzIlxiWUgRb4jRIUvyiy1nLK84whfwmos6pnIs1gkOYZyxhFzz8jqght3Tf4ajfTC
+         ivyg==
+X-Gm-Message-State: AOAM531nfC3bVCGNQsEnCexhBVf++5P+jCrefSKogtDRBrN4Mb+o06D7
+        tEWFc656upKLrVKBAMke7J9XDw==
+X-Google-Smtp-Source: ABdhPJwg8n4C63Fas9mtIKb7ayOW8k3lmOKYhJda6CIKMcYnXdwDezyohMM/ijUu5YJfcNLzaFD4WA==
+X-Received: by 2002:a37:d4f:: with SMTP id 76mr5649048qkn.385.1633019083624;
+        Thu, 30 Sep 2021 09:24:43 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id y15sm1798840qko.78.2021.09.30.09.24.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 09:24:43 -0700 (PDT)
+Received: from jgg by jggl with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mVyrS-000Hjq-5V; Thu, 30 Sep 2021 13:24:42 -0300
+Date:   Thu, 30 Sep 2021 13:24:42 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Max Gurtovoy <mgurtovoy@nvidia.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <YS/rn8b0O3FPBbtm@google.com>
- <0ce93e7c-b041-d322-90cd-40ff5e0e8ef0@v0yd.nl>
- <CA+ASDXNMhrxX-nFrr6kBo0a0c-25+Ge2gBP2uTjE8UWJMeQO2A@mail.gmail.com>
- <bd64c142-93d0-c348-834c-34ed80c460f9@v0yd.nl>
- <e4cbf804-c374-79a3-53ac-8a0fbd8f75b8@v0yd.nl>
- <CAHp75Vd5iCLELx8s+Zvcj8ufd2bN6CK26soDMkZyC1CwMO2Qeg@mail.gmail.com>
- <20210923202231.t2zjoejpxrbbe5hc@pali>
- <db583b3c-6bfc-d765-a588-eb47c76cea31@v0yd.nl>
- <20210930154202.cvw3it3edv7pmqtb@pali>
- <6ba104fa-a659-c192-4dc0-291ca3413f99@v0yd.nl>
- <20210930161905.5a552go73c2o4e7l@pali>
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-Message-ID: <4e4f3b6a-25c6-289f-2de0-660aeee2b695@v0yd.nl>
-Date:   Thu, 30 Sep 2021 18:22:42 +0200
+        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
+ transition validity
+Message-ID: <20210930162442.GB67618@ziepe.ca>
+References: <20210929075019.48d07deb.alex.williamson@redhat.com>
+ <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
+ <20210929091712.6390141c.alex.williamson@redhat.com>
+ <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
+ <20210929161433.GA1808627@ziepe.ca>
+ <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
+ <20210929232109.GC3544071@ziepe.ca>
+ <d8324d96-c897-b914-16c6-ad0bbb9b13a5@nvidia.com>
+ <20210930144752.GA67618@ziepe.ca>
+ <d5b68bb7-d4d3-e9d8-1834-dba505bb8595@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20210930161905.5a552go73c2o4e7l@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5DCBD22F
+In-Reply-To: <d5b68bb7-d4d3-e9d8-1834-dba505bb8595@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/30/21 6:19 PM, Pali Rohár wrote:
-> On Thursday 30 September 2021 18:14:04 Jonas Dreßler wrote:
->> On 9/30/21 5:42 PM, Pali Rohár wrote:
->>> On Thursday 30 September 2021 17:38:43 Jonas Dreßler wrote:
->>>> On 9/23/21 10:22 PM, Pali Rohár wrote:
->>>>> On Thursday 23 September 2021 22:41:30 Andy Shevchenko wrote:
->>>>>> On Thu, Sep 23, 2021 at 6:28 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
->>>>>>> On 9/22/21 2:50 PM, Jonas Dreßler wrote:
->>>>>>
->>>>>> ...
->>>>>>
->>>>>>> - Just calling mwifiex_write_reg() once and then blocking until the card
->>>>>>> wakes up using my delay-loop doesn't fix the issue, it's actually
->>>>>>> writing multiple times that fixes the issue
->>>>>>>
->>>>>>> These observations sound a lot like writes (and even reads) are actually
->>>>>>> being dropped, don't they?
->>>>>>
->>>>>> It sounds like you're writing into a not ready (fully powered on) device.
->>>>>
->>>>> This reminds me a discussion with Bjorn about CRS response returned
->>>>> after firmware crash / reset when device is not ready yet:
->>>>> https://lore.kernel.org/linux-pci/20210922164803.GA203171@bhelgaas/
->>>>>
->>>>> Could not be this similar issue? You could check it via reading
->>>>> PCI_VENDOR_ID register from config space. And if it is not valid value
->>>>> then card is not really ready yet.
->>>>>
->>>>>> To check this, try to put a busy loop for reading and check the value
->>>>>> till it gets 0.
->>>>>>
->>>>>> Something like
->>>>>>
->>>>>>      unsigned int count = 1000;
->>>>>>
->>>>>>      do {
->>>>>>        if (mwifiex_read_reg(...) == 0)
->>>>>>          break;
->>>>>>      } while (--count);
->>>>>>
->>>>>>
->>>>>> -- 
->>>>>> With Best Regards,
->>>>>> Andy Shevchenko
->>>>
->>>> I've tried both reading PCI_VENDOR_ID and the firmware status using a busy
->>>> loop now, but sadly none of them worked. It looks like the card always
->>>> replies with the correct values even though it sometimes won't wake up after
->>>> that.
->>>>
->>>> I do have one new observation though, although I've no clue what could be
->>>> happening here: When reading PCI_VENDOR_ID 1000 times to wakeup we can
->>>> "predict" the wakeup failure because exactly one (usually around the 20th)
->>>> of those 1000 reads will fail.
->>>
->>> What does "fail" means here?
->>
->> ioread32() returns all ones, that's interpreted as failure by
->> mwifiex_read_reg().
+On Thu, Sep 30, 2021 at 06:32:07PM +0300, Max Gurtovoy wrote:
+> > Just prior to open device the vfio pci layer will generate a FLR to
+> > the function so we expect that post open_device has a fresh from reset
+> > fully running device state.
 > 
-> Ok. And can you check if PCI Bridge above this card has enabled CRSSVE
-> bit (CRSVisible in RootCtl+RootCap in lspci output)? To determinate if
-> Bridge could convert CRS response to all-ones as failed transaction.
+> running also mean that the device doesn't have a clue on its internal state
+> ? or running means unfreezed and unquiesced ?
+
+The device just got FLR'd and it should be in a clean state and
+operating. Think the VM is booting for the first time.
+
+> > > > driver will see RESUMING toggle off so it will trigger a
+> > > > de-serialization
+> > > You mean stop serialization ?
+> > No, I mean it will take all the migration data that has been uploaded
+> > through the migration region and de-serialize it into active device
+> > state.
 > 
+> you should feed the device way before that.
 
-Seems like that bit is disabled:
- > RootCap: CRSVisible-
- > RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
+I don't know what this means, when the resuming bit is set the
+migration data buffer is wiped and userspace should beging loading
+it. When the resuming bit is cleared whatever is in the migration
+buffer is deserialized into the current device internal state.
 
+It is the opposite of saving. When the saving bit is set the current
+device state is serialized into the migration buffer and userspace and
+reads it out.
 
->>>
->>>> Maybe the firmware actually tries to wake up,
->>>> encounters an error somewhere in its wakeup routines and then goes down a
->>>> special failure code path. That code path keeps the cards CPU so busy that
->>>> at some point a PCI_VENDOR_ID request times out?
->>>>
->>>> Or well, maybe the card actually wakes up fine, but we don't receive the
->>>> interrupt on our end, so many possibilities...
+> 1. you initialize at  _RUNNING bit == 001b. No problem.
+> 
+> 2. state stream arrives, migration SW raise _RESUMING bit. should it be 101b
+> or 100b ? for now it's 100b. But according to your statement is should be
+> 101b (invalid today) since device state can change. right ?
+
+Running means the device state chanages independently, the controlled
+change of the device state via deserializing the migration buffer is
+different. Both running and saving commands need running to be zero.
+
+ie commands that are marked invalid in the uapi comment are rejected
+at the start - and that is probably the core helper we should provide.
+
+> 3. Then you should indicate that all the state was serialized to the device
+> (actually to all the pci devices). 100b mean RESUMING and not RUNNING so
+> maybe this can say RESUMED and state can't change now ?
+
+State is not loaded into the device until the resuming bit is
+cleared. There is no RESUMED state until we incorporate Artem's
+proposal for an additional bit eg 1001b - running with DMA master
+disabled.
+
+Jason
