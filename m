@@ -2,132 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6946841D17B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 04:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB1C41D186
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 04:38:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347852AbhI3CfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Sep 2021 22:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347848AbhI3CfQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Sep 2021 22:35:16 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B6C06176A
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 19:33:34 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id n2so2903223plk.12
-        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 19:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=I3Ka97zNeP725BXVDk5arDvDOWeoP2d7phzXrFZ8n4s=;
-        b=IlRJhaJg6rWVYyPM3VkfA65JEOSMQR6+oGsrVfOjOVHxL4WefefiLThzdZ40jTO6g8
-         Zx06WckyPxrt7Uy1K+0hnl1HZNYlZYL10ofG/bR9wh4e8/Sdc4VuKMTRKIl8zPF5jJ7b
-         sjkMrT9HnS0yDqFDQe+M7s9gEumGF4V6wnL/r/ioJHTbv1B5hcwZr7q3Q7Fh0N9xwdBQ
-         mKHz1fKGbNjriH5rlOs5OE5DOSH3XOBzj8Lukkx/0TWYEppgGXItvcJmX816w6eG33kU
-         rLof2DKdxqbIKj9nn22MFA22Eph/X4eFxJFCLPGAno38hVvSmS7EidBFKjCNQxoU0tMa
-         AGRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=I3Ka97zNeP725BXVDk5arDvDOWeoP2d7phzXrFZ8n4s=;
-        b=USl7z0+9E+ELyah4fiwWntoraD5VWfVMcFbicZ3pfN8pxaRkQswIK+eb5LYAhsPfiY
-         GtYcW+w1VxWUpwCigSt6fRxNJcfbt2faf1zNRhwh4qJnO2ISLCG7n4sVG1+7PIc0KmG9
-         u9TV6tdDd74PrH/wJ/ILbzJZgRbGeSck4m29jWv6SfGLLD3Vr4EvNZnAVZdufspeSf7w
-         cMLUXnreTyWFoulg6pBWtmbBvmpEjQlyGOL6xvWoGCRr3yXfSnwT18fz0xR1wlX3Dv9O
-         EldKaxdfbXhD+EiuVMGTBt0t6t/ZOABH0R1nSI/7upRw3C0kEXFN8wR75rZkdZRbAutI
-         YBdA==
-X-Gm-Message-State: AOAM533irGWFHZZYoKFuw5GcXVJCjz19m6cfAvApDKEk31jUm6qzQNYM
-        VNeh9Z/8Qk2klxsMDZI1+kpfm6iuGJSRnjzZ
-X-Google-Smtp-Source: ABdhPJxE6Hl3kX+pF11sEnIDGPtqYsZz4qjfhIf79ZIQfd0DSxRKUumrZjOUcb3ap3qqZ7YvCqj5eQ==
-X-Received: by 2002:a17:90a:af86:: with SMTP id w6mr3675210pjq.8.1632969213549;
-        Wed, 29 Sep 2021 19:33:33 -0700 (PDT)
-Received: from [10.50.0.6] ([94.177.118.147])
-        by smtp.gmail.com with ESMTPSA id y3sm834162pjg.7.2021.09.29.19.33.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 19:33:33 -0700 (PDT)
-Subject: Re: [PATCH 1/2] PCI: Use software node API with additional device
- properties
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+        id S1347875AbhI3Ckd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Sep 2021 22:40:33 -0400
+Received: from mga02.intel.com ([134.134.136.20]:59232 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347849AbhI3Ckd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 29 Sep 2021 22:40:33 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="212341575"
+X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
+   d="scan'208";a="212341575"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 19:38:50 -0700
+X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
+   d="scan'208";a="555319477"
+Received: from pgupadra-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.0.91])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 19:38:49 -0700
+Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
+ USB/Thunderbolt to core
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20210929170804.GA778424@bhelgaas>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <b3e3e9a3-c430-db98-9e6d-0e3526ddc6f7@linaro.org>
-Date:   Thu, 30 Sep 2021 10:33:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930014229.GA447956@rowland.harvard.edu>
+ <CAPcyv4iiEC3B2i81evZpLP+XHa8dLkfgWmrY7HocORwP8FMPZQ@mail.gmail.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <f9b7cf97-0a14-1c80-12ab-23213ec2f4f2@linux.intel.com>
+Date:   Wed, 29 Sep 2021 19:38:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20210929170804.GA778424@bhelgaas>
+In-Reply-To: <CAPcyv4iiEC3B2i81evZpLP+XHa8dLkfgWmrY7HocORwP8FMPZQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2021/9/30 上午1:08, Bjorn Helgaas wrote:
-> [+cc Zhangfei, author of 8304a3a199ee ("PCI: Set dma-can-stall for
-> HiSilicon chips"), which added this]
->
-> On Wed, Sep 29, 2021 at 04:37:28PM +0300, Heikki Krogerus wrote:
->> Using device_create_managed_software_node() to inject the
->> properties in quirk_huawei_pcie_sva() instead of with the
->> old device_add_properties() API.
->>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> This is fine with me, but please update the subject line and commit
-> log something like this:
->
->    PCI: Convert to device_create_managed_software_node()
->
->    In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
->    instead of device_add_properties() to set the "dma-can-stall"
->    property.
->
->    This resolves a software node lifetime issue (see 151f6ff78cdf
->    ("software node: Provide replacement for device_add_properties()"))
->    and paves the way for removing device_add_properties() completely.
->
-> Actually, 8304a3a199ee was merged during the v5.15 merge window, so if
-> this does in fact fix a lifetime issue, I can merge this before
-> v5.15-final.
->
-> I know *this* quirk applies to AMBA devices, and I assume they cannot
-> be removed, so there's no actual lifetime problem in this particular
-> case, but in general it looks like a problem for PCI devices.
-Thanks Bjorn
-This patch also works, though the quirk is for platform devices and not 
-removed.
+On 9/29/21 6:55 PM, Dan Williams wrote:
+>> Also, you ignored the usb_[de]authorize_interface() functions and
+>> their friends.
+> Ugh, yes.
 
-Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->
->> ---
->>   drivers/pci/quirks.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index b6b4c803bdc94..fe5eedba47908 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -1850,7 +1850,7 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
->>   	 * can set it directly.
->>   	 */
->>   	if (!pdev->dev.of_node &&
->> -	    device_add_properties(&pdev->dev, properties))
->> +	    device_create_managed_software_node(&pdev->dev, properties, NULL))
->>   		pci_warn(pdev, "could not add stall property");
->>   }
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
->> -- 
->> 2.33.0
->>
+I did not change it because I am not sure about the interface vs device
+dependency.
 
+I think following change should work.
+
+diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+index f57b5a7a90ca..84969732d09c 100644
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -334,7 +334,7 @@ static int usb_probe_interface(struct device *dev)
+  	if (udev->dev.authorized == false) {
+  		dev_err(&intf->dev, "Device is not authorized for usage\n");
+  		return error;
+-	} else if (intf->authorized == 0) {
++	} else if (intf->dev.authorized == 0) {
+  		dev_err(&intf->dev, "Interface %d is not authorized for usage\n",
+  				intf->altsetting->desc.bInterfaceNumber);
+  		return error;
+@@ -546,7 +546,7 @@ int usb_driver_claim_interface(struct usb_driver *driver,
+  		return -EBUSY;
+
+  	/* reject claim if interface is not authorized */
+-	if (!iface->authorized)
++	if (!iface->dev.authorized)
+  		return -ENODEV;
+
+  	dev->driver = &driver->drvwrap.driver;
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 47548ce1cfb1..ab3c8d1e4db9 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1791,9 +1791,9 @@ void usb_deauthorize_interface(struct usb_interface *intf)
+
+  	device_lock(dev->parent);
+
+-	if (intf->authorized) {
++	if (intf->dev.authorized) {
+  		device_lock(dev);
+-		intf->authorized = 0;
++		intf->dev.authorized = 0;
+  		device_unlock(dev);
+
+  		usb_forced_unbind_intf(intf);
+@@ -1811,9 +1811,9 @@ void usb_authorize_interface(struct usb_interface *intf)
+  {
+  	struct device *dev = &intf->dev;
+
+-	if (!intf->authorized) {
++	if (!intf->dev.authorized) {
+  		device_lock(dev);
+-		intf->authorized = 1; /* authorize interface */
++		intf->dev.authorized = 1; /* authorize interface */
+  		device_unlock(dev);
+  	}
+  }
+@@ -2069,7 +2069,6 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+  		intfc = cp->intf_cache[i];
+  		intf->altsetting = intfc->altsetting;
+  		intf->num_altsetting = intfc->num_altsetting;
+-		intf->authorized = !!HCD_INTF_AUTHORIZED(hcd);
+  		kref_get(&intfc->ref);
+
+  		alt = usb_altnum_to_altsetting(intf, 0);
+@@ -2101,6 +2100,7 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+  		INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
+  		intf->minor = -1;
+  		device_initialize(&intf->dev);
++		intf->dev.authorized = !!HCD_INTF_AUTHORIZED(hcd);
+  		pm_runtime_no_callbacks(&intf->dev);
+  		dev_set_name(&intf->dev, "%d-%s:%d.%d", dev->bus->busnum,
+  				dev->devpath, configuration, ifnum);
+diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+index 3d63e345d0a0..666eeb80ff29 100644
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -1160,9 +1160,7 @@ static DEVICE_ATTR_RO(supports_autosuspend);
+  static ssize_t interface_authorized_show(struct device *dev,
+  		struct device_attribute *attr, char *buf)
+  {
+-	struct usb_interface *intf = to_usb_interface(dev);
+-
+-	return sprintf(buf, "%u\n", intf->authorized);
++	return sprintf(buf, "%u\n", dev->authorized);
+  }
+
+  /*
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index 796df4068e94..1e41453c63cb 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -195,8 +195,6 @@ usb_find_last_int_out_endpoint(struct usb_host_interface *alt,
+   *	has been deferred.
+   * @needs_binding: flag set when the driver should be re-probed or unbound
+   *	following a reset or suspend operation it doesn't support.
+- * @authorized: This allows to (de)authorize individual interfaces instead
+- *	a whole device in contrast to the device authorization.
+   * @dev: driver model's view of this device
+   * @usb_dev: if an interface is bound to the USB major, this will point
+   *	to the sysfs representation for that device.
+@@ -252,7 +250,6 @@ struct usb_interface {
+  	unsigned needs_altsetting0:1;	/* switch to altsetting 0 is pending */
+  	unsigned needs_binding:1;	/* needs delayed unbind/rebind */
+  	unsigned resetting_device:1;	/* true: bandwidth alloc after reset */
+-	unsigned authorized:1;		/* used for interface authorization */
+
+  	struct device dev;		/* interface specific device info */
+  	struct device *usb_dev;
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
