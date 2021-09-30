@@ -2,141 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A011641DEEA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 655F341DF05
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 18:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350518AbhI3Q0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 12:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350438AbhI3Q01 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 12:26:27 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AACC06176F
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 09:24:44 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id p4so6379950qki.3
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 09:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=oVCTC+nt3p3+hMxDZO10YpzPmIzmwpHDbufnIhpB5sw=;
-        b=Qzvudx/7eTIRT7u9f/lsM4lO+MLgg9dJvfErxgBhnEydnevVQWd23+D5YUSGowYATg
-         5LHFyriFS29ECLsNuDA85jLdOXHfRyzXgbJK/06ZjgAk8HVJonpWUIlnVMatc67PxWT1
-         dn7yqZLpL85aZ8BeVtsKxdoUsWqTIj59egY14M/B//S1wnOh3KRf/3FL55A1Ucv+9BLn
-         jZPeDKdfHkv+LAbUR5/w9ZQdrTCYAyvVBBbLp+uFkKln1Y/zLhjlaaUsKhBgTmEBItm+
-         qlUqzUZVxpXlGnSKyFyL0+KmJa1pa0URiUh1DxnXvMKSutxbzIzA/l2jhx2tK1C9ilDH
-         ds/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=oVCTC+nt3p3+hMxDZO10YpzPmIzmwpHDbufnIhpB5sw=;
-        b=T9uc3oDxI8uBy8UaVlmcd2PrYw5WYEHDhDSOzSQMxiNKsLspL/c7QRJgOfyP0kOpcB
-         K6fOQB6bXyalsvMTwCyK2kfw5rFnODxMDbYsYgD34AtEM3GyHIY5wgUJjFSB501Rf4wM
-         79ftF/SVlGonuXT+Hq5sRPEHvGezLfaNG2hA5XpdSnFCM7NFf1HI7G8gWYNdgM6Jk757
-         s4jlN2w4j1AW1o6IrcmXGAysVLnTytkVKpoK7T9me/PBySdReclD+s7D7xglhCyxPbY1
-         tcjrzIlxiWUgRb4jRIUvyiy1nLK84whfwmos6pnIs1gkOYZyxhFzz8jqght3Tf4ajfTC
-         ivyg==
-X-Gm-Message-State: AOAM531nfC3bVCGNQsEnCexhBVf++5P+jCrefSKogtDRBrN4Mb+o06D7
-        tEWFc656upKLrVKBAMke7J9XDw==
-X-Google-Smtp-Source: ABdhPJwg8n4C63Fas9mtIKb7ayOW8k3lmOKYhJda6CIKMcYnXdwDezyohMM/ijUu5YJfcNLzaFD4WA==
-X-Received: by 2002:a37:d4f:: with SMTP id 76mr5649048qkn.385.1633019083624;
-        Thu, 30 Sep 2021 09:24:43 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id y15sm1798840qko.78.2021.09.30.09.24.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 09:24:43 -0700 (PDT)
-Received: from jgg by jggl with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mVyrS-000Hjq-5V; Thu, 30 Sep 2021 13:24:42 -0300
-Date:   Thu, 30 Sep 2021 13:24:42 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH mlx5-next 2/7] vfio: Add an API to check migration state
- transition validity
-Message-ID: <20210930162442.GB67618@ziepe.ca>
-References: <20210929075019.48d07deb.alex.williamson@redhat.com>
- <d2e94241-a146-c57d-cf81-8b7d8d00e62d@nvidia.com>
- <20210929091712.6390141c.alex.williamson@redhat.com>
- <e1ba006f-f181-0b89-822d-890396e81c7b@nvidia.com>
- <20210929161433.GA1808627@ziepe.ca>
- <29835bf4-d094-ae6d-1a32-08e65847b52c@nvidia.com>
- <20210929232109.GC3544071@ziepe.ca>
- <d8324d96-c897-b914-16c6-ad0bbb9b13a5@nvidia.com>
- <20210930144752.GA67618@ziepe.ca>
- <d5b68bb7-d4d3-e9d8-1834-dba505bb8595@nvidia.com>
+        id S1351048AbhI3Qak (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 12:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350390AbhI3Qaj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 12:30:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D6069615A2;
+        Thu, 30 Sep 2021 16:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633019337;
+        bh=h13uQ1EWLRKHyHC6YygYqklFpBEzNTt4uGMAdUKEMqo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XQvEycRN0dYR+LyhAPO+j6JK+ylD0+gajchvaAVGHiRLhO88MbUYNpbYWCr0OGDYO
+         qxSXQgqIPsZSYJob171o7VrJsgSAf0A+1ojVvGlJOkPhmndLGgyvrYlf+D2Z3A3+lm
+         WGzgNyTh3JgDhzr1r1Kj/bxnFMRU5LZgcUBlOv1cQGyzoJn63re9eNOm7AaohySBvs
+         x2M0pDm7eCGuBDBxeoHjF1WCsFvd9WA3+49RI6iOBUi5jufYsqKPzEIHJUWKWp2UGV
+         1QnkWnM0zrFd5Cys3B/LmpalwYgWVl1O1i078Pvdzf0r1GGhz7RDAFIiMKWZdmUj+r
+         pAZxbMhe1GUBw==
+Date:   Thu, 30 Sep 2021 11:28:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 3/4] PCI/ASPM: Remove struct
+ pcie_link_state.clkpm_enabled
+Message-ID: <20210930162854.GA888559@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d5b68bb7-d4d3-e9d8-1834-dba505bb8595@nvidia.com>
+In-Reply-To: <20210929004400.25717-4-refactormyself@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 06:32:07PM +0300, Max Gurtovoy wrote:
-> > Just prior to open device the vfio pci layer will generate a FLR to
-> > the function so we expect that post open_device has a fresh from reset
-> > fully running device state.
+On Wed, Sep 29, 2021 at 02:43:59AM +0200, Saheed O. Bolarinwa wrote:
+> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
 > 
-> running also mean that the device doesn't have a clue on its internal state
-> ? or running means unfreezed and unquiesced ?
-
-The device just got FLR'd and it should be in a clean state and
-operating. Think the VM is booting for the first time.
-
-> > > > driver will see RESUMING toggle off so it will trigger a
-> > > > de-serialization
-> > > You mean stop serialization ?
-> > No, I mean it will take all the migration data that has been uploaded
-> > through the migration region and de-serialize it into active device
-> > state.
+> The clkpm_enabled member of the struct pcie_link_state stores the
+> current Clock PM state for the device. However, when the state changes
+> it is persisted and can be retrieve by calling pcie_get_clkpm_state()
+> introduced in patch [1/3] in this series.
 > 
-> you should feed the device way before that.
+> This patch:
+>    - removes clkpm_enabled from the struct pcie_link_state
+>    - removes all instance where clkpm_enable is set
+>    - replaces references to clkpm_enabled with a call to
+>      pcie_get_clkpm_state()
 
-I don't know what this means, when the resuming bit is set the
-migration data buffer is wiped and userspace should beging loading
-it. When the resuming bit is cleared whatever is in the migration
-buffer is deserialized into the current device internal state.
+Similar commit log comments as previous patch.
 
-It is the opposite of saving. When the saving bit is set the current
-device state is serialized into the migration buffer and userspace and
-reads it out.
-
-> 1. you initialize at  _RUNNING bit == 001b. No problem.
+> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> 2. state stream arrives, migration SW raise _RESUMING bit. should it be 101b
-> or 100b ? for now it's 100b. But according to your statement is should be
-> 101b (invalid today) since device state can change. right ?
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 9e65da9a22dd..368828cd427d 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -61,7 +61,6 @@ struct pcie_link_state {
+>  	u32 aspm_disable:7;		/* Disabled ASPM state */
+>  
+>  	/* Clock PM state */
+> -	u32 clkpm_enabled:1;		/* Current Clock PM state */
+>  	u32 clkpm_disable:1;		/* Clock PM disabled */
+>  
+>  	/* Exit latencies */
+> @@ -190,7 +189,6 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
+>  		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
+>  						   PCI_EXP_LNKCTL_CLKREQ_EN,
+>  						   val);
+> -	link->clkpm_enabled = !!enable;
+>  }
+>  
+>  static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> @@ -203,14 +201,13 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+>  	if (!capable || link->clkpm_disable)
+>  		enable = 0;
+>  	/* Need nothing if the specified equals to current state */
+> -	if (link->clkpm_enabled == enable)
+> +	if (pcie_get_clkpm_state(link->pdev) == enable)
 
-Running means the device state chanages independently, the controlled
-change of the device state via deserializing the migration buffer is
-different. Both running and saving commands need running to be zero.
+Instead of pcie_get_clkpm_state(), I think I would add this:
 
-ie commands that are marked invalid in the uapi comment are rejected
-at the start - and that is probably the core helper we should provide.
+  static int pcie_clkpm_enabled(struct pci_dev *pdev)
+  {
+    struct pci_dev *child;
+    struct pci_bus *linkbus = pdev->subordinate;
+    u16 ctl;
 
-> 3. Then you should indicate that all the state was serialized to the device
-> (actually to all the pci devices). 100b mean RESUMING and not RUNNING so
-> maybe this can say RESUMED and state can't change now ?
+    /* CLKREQ_EN is only applicable for Upstream Ports */
+    list_for_each_entry(child, &linkbus->devices, bus_list) {
+      pcie_capability_read_word(PCI_EXP_LNKCTL, &ctl);
+      if (!(ctl & PCI_EXP_LNKCTL_CLKREQ_EN))
+        return 0;
+    }
+    return 1;
+  }
 
-State is not loaded into the device until the resuming bit is
-cleared. There is no RESUMED state until we incorporate Artem's
-proposal for an additional bit eg 1001b - running with DMA master
-disabled.
+And I would rename pcie_is_clkpm_capable() from the previous patch to
+match, i.e., pcie_clkpm_capable().  I suggested "bool" for it, but maybe
+it should stay "int" to match this.  They both could be "bool", but
+that seems a little messy because "enable" comes from
+policy_to_clkpm_state(), so it would involve quite a few more changes.
 
-Jason
+>  		return;
+>  	pcie_set_clkpm_nocheck(link, enable);
+>  }
+>  
+>  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>  {
+> -	link->clkpm_enabled = pcie_get_clkpm_state(link->pdev);
+>  	link->clkpm_disable = blacklist ? 1 : 0;
+>  }
+>  
+> @@ -1287,7 +1284,7 @@ static ssize_t clkpm_show(struct device *dev,
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
+>  
+> -	return sysfs_emit(buf, "%d\n", link->clkpm_enabled);
+> +	return sysfs_emit(buf, "%d\n", pcie_get_clkpm_state(link->pdev));
+>  }
+>  
+>  static ssize_t clkpm_store(struct device *dev,
+> -- 
+> 2.20.1
+> 
