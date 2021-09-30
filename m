@@ -2,85 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 731AF41E312
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 23:12:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9831141E322
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 23:16:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348940AbhI3VOh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 17:14:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15201 "EHLO mga03.intel.com"
+        id S1348216AbhI3VSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 17:18:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18616 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236609AbhI3VOg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 17:14:36 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="225369510"
+        id S1349413AbhI3VSP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 17:18:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="204774280"
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="225369510"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:12:53 -0700
+   d="scan'208";a="204774280"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:16:31 -0700
 X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="438185535"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.252.134.229]) ([10.252.134.229])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:12:53 -0700
-Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
- un-authorized devices
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+   d="scan'208";a="708231121"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 14:16:27 -0700
+Received: from andy by smile with local (Exim 4.95-RC2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mW3Pj-007GBl-F0;
+        Fri, 01 Oct 2021 00:16:23 +0300
+Date:   Fri, 1 Oct 2021 00:16:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930065807-mutt-send-email-mst@kernel.org> <YVXBNJ431YIWwZdQ@kroah.com>
- <20210930144305.GA464826@rowland.harvard.edu>
- <20210930104924-mutt-send-email-mst@kernel.org>
- <20210930153509.GF464826@rowland.harvard.edu>
- <20210930115243-mutt-send-email-mst@kernel.org>
- <00156941-300d-a34a-772b-17f0a9aad885@linux.intel.com>
- <20210930204447.GA482974@rowland.harvard.edu>
-From:   Andi Kleen <ak@linux.intel.com>
-Message-ID: <77aae23f-8c07-845b-90d7-389e1cd1ef5d@linux.intel.com>
-Date:   Thu, 30 Sep 2021 14:12:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mwifiex: Try waking the firmware until we get an
+ interrupt
+Message-ID: <YVYpJ4Thd0VHTDLT@smile.fi.intel.com>
+References: <20210914114813.15404-1-verdre@v0yd.nl>
+ <20210914114813.15404-3-verdre@v0yd.nl>
+ <YUsRT1rmtITJiJRh@smile.fi.intel.com>
+ <d9b1c8ea-99e2-7c3e-ec8e-61362e8ccfa7@v0yd.nl>
+ <YVYk/1+ftFUOoitF@smile.fi.intel.com>
+ <98c1b772-ae6b-e435-030e-399f613061ba@v0yd.nl>
 MIME-Version: 1.0
-In-Reply-To: <20210930204447.GA482974@rowland.harvard.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <98c1b772-ae6b-e435-030e-399f613061ba@v0yd.nl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Sep 30, 2021 at 11:07:09PM +0200, Jonas Dreßler wrote:
+> On 9/30/21 10:58 PM, Andy Shevchenko wrote:
+> > On Thu, Sep 30, 2021 at 08:04:00PM +0200, Jonas Dreßler wrote:
 
-> If all you want to do is prevent someone from loading a bunch of
-> drivers that you have identified as unhardened, why not just use a
-> modprobe blacklist?
+...
 
-That wouldn't help for builtin drivers, we cannot control initcalls.
+> > Second, what is the problem with having one write more or less?
+> > Your current code doesn't guarantee this either. It only decreases
+> > probability of such scenario. Am I wrong?
+> 
+> Indeed my approach just decreases the probability and we sometimes end up
+> writing twice to wakeup the card, but it would kinda bug me if we'd always
+> do one write too much.
+> 
+> Anyway, if you still prefer the read_poll_timeout() solution I'd be alright
+> with that of course.
 
-This LWN article has more details on the background.
+Yes, it will make code cleaner.
 
-https://lwn.net/Articles/865918/
+-- 
+With Best Regards,
+Andy Shevchenko
 
--Andi
 
-
-> Am I missing something?
->
-> Alan Stern
