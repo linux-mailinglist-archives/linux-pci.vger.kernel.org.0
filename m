@@ -2,139 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2F641E136
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 20:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BCF941E1F0
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 21:04:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343932AbhI3Sdj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 14:33:39 -0400
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:34718 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343936AbhI3Sdi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 14:33:38 -0400
-Received: by mail-vs1-f53.google.com with SMTP id z22so6865313vsp.1;
-        Thu, 30 Sep 2021 11:31:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+uSMHJOUvBAKYYR0VTNnH4FL7RyASHXjCxf6YLbmWnU=;
-        b=0JdkRrQT3Ksxu6OpYKAzFU1ZmHmPQxUmJBtG3tMnJdkXVa2VKswizAfuWxN94iP8bh
-         9pMn9gNtEIViwOO2UT+0RyVSNiPD57R9wE6ngJPjX1/hrjE/FfkGS14I/x4KVbaHLTe/
-         sMAvHddAAY7AaDiwvECO+iAskJZvgoI4C6OWC5+JyIETPrH7ntsiAY4G2QRyi1VJeQzC
-         YzswPxmo3g+W3tXz3OeOf3i0gsBA8hRkBtPb3Tj36Ui+AESfWLmt83YhW27vNbXZmsYV
-         if2QOmxqOyPW16ZPf5JJ0NUUOyx+5PaYZBYy/M98hqfEHcQKMGeCwaTtPCfOupMuyP7s
-         qV/Q==
-X-Gm-Message-State: AOAM53027aQe5CoUZw0ZLrD2058YWTVju6HgEYkM53j3ghJQDFijR6s/
-        P2Wj6EDxHky93u/YsUAoQRByVJQxPzJnyQ7+9QE=
-X-Google-Smtp-Source: ABdhPJzPOqFubo/0aUhp7ohFtUSpBt2HTLpWxwh4z0zpjVJpCQlZ0g62S2+KGaytL3q/tQEMHQtyiSxeuGG+rT+p72k=
-X-Received: by 2002:a67:cb0a:: with SMTP id b10mr926121vsl.9.1633026715195;
- Thu, 30 Sep 2021 11:31:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210907144512.5238-1-marek.vasut@gmail.com> <163297980091.358640.10064724088378840378@swboyd.mtv.corp.google.com>
- <CAMuHMdV8Xu-Pgda9ZrgaXFqXdzBrSRWwiSQFLjzxqRGNWkO3wQ@mail.gmail.com> <163302576552.358640.2337603190171807403@swboyd.mtv.corp.google.com>
-In-Reply-To: <163302576552.358640.2337603190171807403@swboyd.mtv.corp.google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Sep 2021 20:31:43 +0200
-Message-ID: <CAMuHMdVQ7r6-H8kBiNYXdqHQRGJxc4eE4hYthFw+XJZx86g6eA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar: Add missing COMMON_CLK dependency
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        id S1345619AbhI3TFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 15:05:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:13605 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1345610AbhI3TFv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 15:05:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="310809738"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="310809738"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:04:08 -0700
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="480052597"
+Received: from rnmathur-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.105.173])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 12:04:07 -0700
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065953-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
+ <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+ <YVXWaF73gcrlvpnf@kroah.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
+Date:   Thu, 30 Sep 2021 12:04:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <YVXWaF73gcrlvpnf@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Stephen,
 
-On Thu, Sep 30, 2021 at 8:16 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Geert Uytterhoeven (2021-09-30 01:01:24)
-> > On Thu, Sep 30, 2021 at 7:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > +linux-clk as I don't regularly read my inbox :/
-> > >
-> > > Quoting marek.vasut@gmail.com (2021-09-07 07:45:12)
-> > > > From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > >
-> > > > Add COMMON_CLK dependency, otherwise the following build error occurs:
-> > > >   arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
-> > > >   pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_enabled'
-> > > > This should be OK, since all platforms shipping this controller also
-> > > > need COMMON_CLK enabled for their clock driver.
-> > > >
-> > > > Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
-> > > > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > Cc: linux-renesas-soc@vger.kernel.org
-> > > > ---
-> > > > +CC Stephen, please double-check whether this is the right approach or
-> > > >     whether there is some better option
-> > >
-> > > Stop using __clk_is_enabled()? I don't quite understand what's going on in
-> > > the code but __clk_is_enabled() should really go away. I thought we were
-> > > close to doing that but now I see a handful of calls have come up. The
-> > > API should be replaced by clk_hw_is_enabled() and then removed. We move
-> > > it to clk_hw API so that only clk providers can look at it.
-> >
-> > But this is not a clk provider...
-> >
-> > > Sigh!
-> >
-> > ;-)
->
-> Exactly!
->
-> >
-> > > Anyway, fixing the dependency is "ok" but really the long term fix would
-> > > be to not use a "is this clk enabled" sort of API. If I'm reading the
-> > > code correctly, this is some sort of fault handler that's trying to
-> > > avoid hanging the bus while handling the fault so it tries to make sure
-> > > the clk is enabled first? Is it a problem if the clk is not actually
-> > > enabled here? Would runtime PM enable state of the device work just as
-> > > well?
-> >
-> > Thanks, checking Runtime PM state is a good suggestion. Doing so
-> > would require caching a pointer to the PCIe struct device instead of
-> > the struct clk.
-> > However, pcie_bus_clk is not the module clock, which is managed by
-> > Runtime PM, but the PCIe bus clock, which is managed explicitly by
-> > the driver.
-> > However, I believe that we are checking the wrong clock, as register
-> > access needs the module clock to be enabled, not the PCIe bus clock?
-> > As the driver just calls pm_runtime_get_sync() and clk_prepare_enable()
-> > in .probe(), and never touches Runtime PM status or the PCIe bus clock
-> > during the further lifetime of the driver (it cannot be unloaded), both
-> > the module clock and the PCIe bus clock should always[*] be enabled
-> > when the static copy of the remapped PCIe controller address is valid.
-> > [*] Modulo system-wide power transitions like s2ram. Does
-> >     pm_runtime_suspended() reflect that state, too?
-> >
->
-> Great! If that's all correct then simply removing the call to
-> __clk_is_enabled() should work. Can we do that?
 
-We first have to double-check that pm_runtime_suspended() reflects
-the state, as the reason behind the fault handler is to fix lock-ups
-during system-wide power transitions.
+On 9/30/21 8:23 AM, Greg Kroah-Hartman wrote:
+> On Thu, Sep 30, 2021 at 08:18:18AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>>
+>> On 9/30/21 6:36 AM, Dan Williams wrote:
+>>>> And in particular, not all virtio drivers are hardened -
+>>>> I think at this point blk and scsi drivers have been hardened - so
+>>>> treating them all the same looks wrong.
+>>> My understanding was that they have been audited, Sathya?
+>>
+>> Yes, AFAIK, it has been audited. Andi also submitted some patches
+>> related to it. Andi, can you confirm.
+> 
+> What is the official definition of "audited"?
 
-Gr{oetje,eeting}s,
 
-                        Geert
+In our case (Confidential Computing platform), the host is an un-trusted
+entity. So any interaction with host from the drivers will have to be
+protected against the possible attack from the host. For example, if we
+are accessing a memory based on index value received from host, we have
+to make sure it does not lead to out of bound access or when sharing the
+memory with the host, we need to make sure only the required region is
+shared with the host and the memory is un-shared after use properly.
+
+Elena can share more details, but it was achieved with static analysis
+and fuzzing. Here is a presentation she is sharing about the work at the
+Linux Security Summit:
+https://static.sched.com/hosted_files/lssna2021/b6/LSS-HardeningLinuxGuestForCCC.pdf
+
+Andi, can talk more about the specific driver changes that came out of this
+effort.
+
+In our case the driver is considered "hardened" / "audited" if it can handle
+the above scenarios.
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
