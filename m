@@ -2,88 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16CF041D88E
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 13:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4AC41D8BD
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 13:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350386AbhI3LVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 07:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350387AbhI3LVq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 07:21:46 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E6CC06176C;
-        Thu, 30 Sep 2021 04:20:04 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id s75so5867202pgs.5;
-        Thu, 30 Sep 2021 04:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0CgQJ7TRp+plPGkNDrMGOcj0htBXUR9OYy7BWH9GhPM=;
-        b=gjG9GFoMwgCB/asQWkGLcPiv7I7dd8FvYTIqmZZE6cyIPkk5afFfHRenu7G20tflHN
-         j4rJiMqHpXWudCF9n8xc9MrvMN+yoju9bNOHA02HLySurdI0tHwGeFJIV1EKeuI7jPHm
-         ROimCE1tT4CBilKK5G6/L/XJV7KEyT5CaGj6Br9dykSiI9WlUXDvxNQPFNqH8kcL2QpA
-         5SbfMWJjVZKr0PMX6SFsJl7EWqCgvIhm6VPNAZREAwC+LLXvzSIcZb198EAHwGklYHHv
-         H8bRbdSZjrG8MwfGQ+f3LV7wHT6psG1FKJwPgZJCF6LfC5NWdjgz44qR93mCdzms0BQO
-         f7Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0CgQJ7TRp+plPGkNDrMGOcj0htBXUR9OYy7BWH9GhPM=;
-        b=TMpwwh28EWxELw2bx0usMFa937hHRzLJ6k2MZH7/FkrPXgGo6G+DpqPdAlEcDwWLH3
-         /kqZq+hBEwA5XHjcODy1Ub6igSf+248g7o7YGlDwgxeLAPire0LzLZa+ZXvran9Xrp9I
-         RQ9wu1h1EYsvLMtE0YNfdtvfa8zdoELTXGSplsn7prXn8G1LYGERAW+0Dlr8EgSlIbbT
-         VV2IuHB2j/KLKO/jh8RiCDIh9zfgIIjL3AttITdGuFh1easOYE9VUdmszAc4th/fMKty
-         sg8TPCitkpR0GmUzOuFQkpcze3w29EaAzaoJ+Zb8fAZTPUJkU0P6z5f6CgvCB5rnpUPv
-         vRIA==
-X-Gm-Message-State: AOAM532jzd7rVtWqGxioBQ1DALyFAiVzRssXq8xirF5yINscjkbwQKq5
-        kbEJHNQQyibUcYqO8L/gAXqQF+40ztC3POGNIfDyvtwn
-X-Google-Smtp-Source: ABdhPJzFEi4IP6RI5YrTNhB/vj9MyeeE4W3MgV7dmTNmrzPxPxolhwys7nBdKNUL3IA6eQsQdLYNcyrOCALuW2HLVT8=
-X-Received: by 2002:a63:d351:: with SMTP id u17mr4453357pgi.174.1633000803750;
- Thu, 30 Sep 2021 04:20:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   Yehezkel Bernat <yehezkelshb@gmail.com>
-Date:   Thu, 30 Sep 2021 14:19:47 +0300
-Message-ID: <CA+CmpXtXn5wjxwow5va5u9qHcQDLkd4Sh2dcqB545SXaxV1GkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
- USB/Thunderbolt to core
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        id S1350431AbhI3L2V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 07:28:21 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25955 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350372AbhI3L2V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 07:28:21 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="225239604"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="225239604"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 04:26:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="618080451"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2021 04:26:33 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 30 Sep 2021 14:26:32 +0300
+Date:   Thu, 30 Sep 2021 14:26:32 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 1/2] PCI: Use software node API with additional device
+ properties
+Message-ID: <YVWe6A3TKz5LXNNb@kuha.fi.intel.com>
+References: <20210929170804.GA778424@bhelgaas>
+ <b3e3e9a3-c430-db98-9e6d-0e3526ddc6f7@linaro.org>
+ <YVWL3PyYRanGTlVG@kuha.fi.intel.com>
+ <CAHp75Vc9hxqy=vrVfuS_cPLCVxZ=KgxZUaD=-rU9W3KH=tAX9Q@mail.gmail.com>
+ <CAJZ5v0gAfWaUXjMrSf7Ei-P=0u7kzHVKQNFY0aSxs6KFd5T6ow@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gAfWaUXjMrSf7Ei-P=0u7kzHVKQNFY0aSxs6KFd5T6ow@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 4:05 AM Kuppuswamy Sathyanarayanan
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
-> no functional
-> changes other than value 2 being not visible to the user.
->
+On Thu, Sep 30, 2021 at 12:37:27PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Sep 30, 2021 at 12:20 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Thu, Sep 30, 2021 at 1:06 PM Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com> wrote:
+> > > On Thu, Sep 30, 2021 at 10:33:27AM +0800, Zhangfei Gao wrote:
+> >
+> > ...
+> >
+> > > If the device is really never removed, then we could also constify the
+> > > node and the properties in it. Then the patch would look like this:
+> >
+> > I'm not sure the user can't force removal of the device (via PCI
+> > rescan, for example,, or via unbind/bind cycle).
+> 
+> The sysfs unbind doesn't remove the device, though, AFAICS.  It just
+> unbinds the driver from it, if any.
+> 
+> > I guess this way should be really taken carefully.
+> 
+> But I agree.
 
-Are we sure we don't break any user-facing tool with it? Tools might use this to
-"remember" how the device was authorized this time.
+OK. Makes sense.
+
+Thanks guys,
+
+-- 
+heikki
