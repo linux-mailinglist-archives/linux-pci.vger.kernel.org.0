@@ -2,84 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10CEA41D553
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:16:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A34F741D5C8
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348910AbhI3ISI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 04:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349084AbhI3ISE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 04:18:04 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59879C06176C
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 01:16:19 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id u18so21875095lfd.12
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 01:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vJO11LsW2aM7Rr48nxV2HlBaAxaKgP0N57VF7dIApLA=;
-        b=FH8OJMfk0bf/R1QdJ7yAeiWx3bDKr8sTjNDYFdUIXfl6AF0SIWDN0g6VDPi4/87BZ3
-         nwo7NrpceB+8YMODkBSlvDjz6TIXDtCxrXgovj5CFIjWHtC6lRnx49eix4PTci7XwdhN
-         dDd5SPqsSJhUo09A8ar7VAnSLgwqjFEGxv7agIsBbXt8/jz5NBcKHt5rpgPz2dMpHmcq
-         eGYR+j84onMFqwfUE4D/J2qmUsmJ8wQw8GjO0yvAZGY4b6ThGNhDM/yzUVUCYPbc013x
-         OAbL5dTccQ/soubqXk7YNPLYXcIzRZNO/6aPztrUqLHEOX5r11b/tnFWO/J7u/ELDinF
-         zcUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vJO11LsW2aM7Rr48nxV2HlBaAxaKgP0N57VF7dIApLA=;
-        b=N9eJCryrtHBfAI2auhgaFIpMIr/YLvKn2xWiTXrY6o7ETR5nOxnnJrsw+85nE4KALw
-         kYzIko9Np86IHTRha/ZsDTzo99cupyKqcZc78hL9yhh1WiPNLi5fcSpx9FZQqrWwaeWl
-         zCyBuM5wLCWlYwcXq6WFYjXvCNUUTgiojK7S7+3rzaOcOiVfcKRs/mTOoe/LUN42Ri7a
-         CYKal/kHazF1xmtUIgp2Ruf8AR84Aj/xBoGmD1CSyNy2hzUB1ACKrGHJm+YtzicE4W8N
-         CHDByts5YTN7cl2+Lxu92EP+pckF/197vRKg71i/hoy02Doc5thabT8RItiimIJQwKEN
-         I3Ag==
-X-Gm-Message-State: AOAM530EaSse+n+XSw1ilT+6CKz4dFt/EjoQvod+MoSXW310gIDNDQoy
-        PWK7QMIa328Q9JTapofDcFzZfMc2P9iWVztNNGs=
-X-Google-Smtp-Source: ABdhPJylQfB1iIGLfMjXynsk8irZuT15HtycYtniVIx6BB02njLgQ7NpbDo41q39CFCpZUDfdND4rhV8JBzqvnm2Xu8=
-X-Received: by 2002:ac2:5101:: with SMTP id q1mr4416741lfb.284.1632989777644;
- Thu, 30 Sep 2021 01:16:17 -0700 (PDT)
+        id S1348985AbhI3Izp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 04:55:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:50682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348952AbhI3Izp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 04:55:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803C8D6E;
+        Thu, 30 Sep 2021 01:54:02 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.49.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E53843F793;
+        Thu, 30 Sep 2021 01:54:00 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 0/4] PCI: dwc: pci-dra7xx: miscellaneous improvements
+Date:   Thu, 30 Sep 2021 09:53:53 +0100
+Message-Id: <163299201477.31815.18190082659502039608.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20210531085934.2662457-1-luca@lucaceresoli.net>
+References: <20210531085934.2662457-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Received: by 2002:a2e:9b41:0:0:0:0:0 with HTTP; Thu, 30 Sep 2021 01:16:17
- -0700 (PDT)
-Reply-To: mgaddafi034@gmail.com
-From:   Aisha Gaddafi <mgaddafi034@gmail.com>
-Date:   Thu, 30 Sep 2021 01:16:17 -0700
-Message-ID: <CALjwqiSB2Mg3+tK81=7tkMiPzwWLx79F2O5tdxoAZ_RQ+wSb6Q@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh,
+On Mon, 31 May 2021 10:59:30 +0200, Luca Ceresoli wrote:
+> This is an series of mixed improvements to the DRA7 PCI controller driver:
+> allow building as a loadabel module, allow to get and enable a clock and a
+> small cleanup.
+> 
+> Luca
+> 
+> Luca Ceresoli (4):
+>   PCI: dwc: Export more symbols to allow modular drivers
+>   PCI: dra7xx: Make it a kernel module
+>   PCI: dra7xx: Remove unused include
+>   PCI: dra7xx: Get an optional clock
+> 
+> [...]
 
-hello dear
+Applied to pci/dwc, thanks!
 
-I came across your e-mail contact prior a private search while in need
-of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
+[1/4] PCI: dwc: Export more symbols to allow modular drivers
+      https://git.kernel.org/lpieralisi/pci/c/3a7fb86758
+[2/4] PCI: dra7xx: Make it a kernel module
+      https://git.kernel.org/lpieralisi/pci/c/3b868d150e
+[3/4] PCI: dra7xx: Remove unused include
+      https://git.kernel.org/lpieralisi/pci/c/b9a6943dc8
+[4/4] PCI: dra7xx: Get an optional clock
+      https://git.kernel.org/lpieralisi/pci/c/5af9405397
 
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country, may be from there, we can build business relationship in
-the nearest future.
-
-I am willing to negotiate investment/business profit sharing ratio
-with you base on the future investment earning profits.
-
-If you are willing to handle this project on my behalf kindly reply
-urgent to enable me provide you more information about the investment
-
-Your Urgent Reply Will Be Appreciated with this emailaddress
-(mgaddafi034@gmail.com)
-
-Best Regards
-Mrs Aisha Al-Qaddafi
+Thanks,
+Lorenzo
