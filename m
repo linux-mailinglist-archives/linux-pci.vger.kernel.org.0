@@ -2,175 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9764641D3D8
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 09:02:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F06141D4EE
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 10:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348458AbhI3HEP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 03:04:15 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:49236 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233661AbhI3HEN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 03:04:13 -0400
-X-UUID: 1d828ada830240c9b246b5eb904222c2-20210930
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=nVDOOA+MnaA31W246VDBrAkdIZusmE7EQ3Thm1dMlMI=;
-        b=u5pKLtviErt4FoFRwFvFF9qZA3g43ElwDeUPR/Ap4iBVv1BbO6ZnbIOB6mt3jRVTWpJ501H7iv3Fg+9kLBKwQPBwxOxm94MQGziQ4LL6FZZsNHtZz7fiHgl5oSv1yjcuP2sL89x6gCrP7MUbB5IVxTp6V/lsQ7E4SaCe4b566rQ=;
-X-UUID: 1d828ada830240c9b246b5eb904222c2-20210930
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <mingchuang.qiao@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 337720132; Thu, 30 Sep 2021 15:02:27 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.792.15; Thu, 30 Sep 2021 15:02:26 +0800
-Received: from mcddlt001.gcn.mediatek.inc (10.19.240.15) by
- mtkcas07.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Thu, 30 Sep 2021 15:02:24 +0800
-Message-ID: <2d11f5fa62151db0d490ea03e2f8399d784ea522.camel@mediatek.com>
-Subject: Re: [v4] PCI: Avoid unsync of LTR mechanism configuration
-From:   mingchuang qiao <mingchuang.qiao@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <kerun.zhu@mediatek.com>, <linux-pci@vger.kernel.org>,
-        <lambert.wang@mediatek.com>, <rjw@rjwysocki.net>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@gmail.com>,
-        <alex.williamson@redhat.com>, <linux-mediatek@lists.infradead.org>,
-        <utkarsh.h.patel@intel.com>, <haijun.liu@mediatek.com>,
-        <mingchuang.qiao@mediatek.com>, <bhelgaas@google.com>,
-        <mika.westerberg@linux.intel.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 30 Sep 2021 15:02:24 +0800
-In-Reply-To: <3a48bce6723c5588170dc0c399e7a266cb3b1817.camel@mediatek.com>
-References: <20210218165006.GA983767@bjorn-Precision-5520>
-         <3a48bce6723c5588170dc0c399e7a266cb3b1817.camel@mediatek.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.1-2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        id S1348895AbhI3ICy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 04:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348840AbhI3ICe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 04:02:34 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28AF7615E0;
+        Thu, 30 Sep 2021 08:00:52 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mVqzq-00DuHm-4a; Thu, 30 Sep 2021 09:00:50 +0100
+Date:   Thu, 30 Sep 2021 09:00:49 +0100
+Message-ID: <87fstmtrv2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v5 10/14] arm64: apple: Add pinctrl nodes
+In-Reply-To: <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com>
+References: <20210929163847.2807812-1-maz@kernel.org>
+        <20210929163847.2807812-11-maz@kernel.org>
+        <CACRpkdaXbrmvoQQNRdyv6rJ+dHYAKMN+J_sc-3_c1d6D2dsfbQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev, marcan@marcan.st, Robin.Murphy@arm.com, joey.gouly@arm.com, joro@8bytes.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4sDQoNCkEgZnJpZW5kbHkgcGluZy4NClRoYW5rcy4NCg0KT24gTW9uLCAyMDIxLTA5
-LTA2IGF0IDEzOjM2ICswODAwLCBtaW5nY2h1YW5nIHFpYW8gd3JvdGU6DQo+IEhpIEJqb3JuLA0K
-PiANCj4gT24gVGh1LCAyMDIxLTAyLTE4IGF0IDEwOjUwIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdy
-b3RlOg0KPiA+IE9uIFRodSwgRmViIDA0LCAyMDIxIGF0IDA1OjUxOjI1UE0gKzA4MDAsIG1pbmdj
-aHVhbmcucWlhb0BtZWRpYXRlay4NCj4gPiBjbw0KPiA+IG0gd3JvdGU6DQo+ID4gPiBGcm9tOiBN
-aW5nY2h1YW5nIFFpYW8gPG1pbmdjaHVhbmcucWlhb0BtZWRpYXRlay5jb20+DQo+ID4gPiANCj4g
-PiA+IEluIGJ1cyBzY2FuIGZsb3csIHRoZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdCBvZiBE
-RVZDVEwyDQo+ID4gPiByZWdpc3RlciBpcw0KPiA+ID4gY29uZmlndXJlZCBpbiBwY2lfY29uZmln
-dXJlX2x0cigpLiBJZiBkZXZpY2UgYW5kIGJyaWRnZSBib3RoDQo+ID4gPiBzdXBwb3J0IExUUg0K
-PiA+ID4gbWVjaGFuaXNtLCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgb2YgZGV2aWNl
-IGFuZCBicmlkZ2UNCj4gPiA+IHdpbGwNCj4gPiA+IGJlDQo+ID4gPiBlbmFibGVkIGluIERFVkNU
-TDIgcmVnaXN0ZXIuIEFuZCBwY2lfZGV2LT5sdHJfcGF0aCB3aWxsIGJlIHNldCBhcw0KPiA+ID4g
-MS4NCj4gPiA+IA0KPiA+ID4gSWYgUENJZSBsaW5rIGdvZXMgZG93biB3aGVuIGRldmljZSByZXNl
-dHMsIHRoZSAiTFRSIE1lY2hhbmlzbQ0KPiA+ID4gRW5hYmxlIiBiaXQNCj4gPiA+IG9mIGJyaWRn
-ZSB3aWxsIGNoYW5nZSB0byAwIGFjY29yZGluZyB0byBQQ0llIHI1LjAsIHNlYyA3LjUuMy4xNi4N
-Cj4gPiA+IEhvd2V2ZXIsDQo+ID4gPiB0aGUgcGNpX2Rldi0+bHRyX3BhdGggdmFsdWUgb2YgYnJp
-ZGdlIGlzIHN0aWxsIDEuDQo+ID4gPiANCj4gPiA+IEZvciBmb2xsb3dpbmcgY29uZGl0aW9ucywg
-Y2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSAiTFRSIE1lY2hhbmlzbQ0KPiA+ID4gRW5hYmxlIiBiaXQN
-Cj4gPiA+IG9mIGJyaWRnZSB0byBtYWtlICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0IG1hdGNo
-IGx0cl9wYXRoDQo+ID4gPiB2YWx1ZS4NCj4gPiA+ICAgIC1iZWZvcmUgY29uZmlndXJpbmcgZGV2
-aWNlJ3MgTFRSIGZvciBob3QtcmVtb3ZlL2hvdC1hZGQNCj4gPiA+ICAgIC1iZWZvcmUgcmVzdG9y
-aW5nIGRldmljZSdzIERFVkNUTDIgcmVnaXN0ZXIgd2hlbiByZXN0b3JlDQo+ID4gPiBkZXZpY2UN
-Cj4gPiA+IHN0YXRlDQo+ID4gDQo+ID4gVGhlcmUncyBkZWZpbml0ZWx5IGEgYnVnIGhlcmUuICBU
-aGUgY29tbWl0IGxvZyBzaG91bGQgc2F5IGEgbGl0dGxlDQo+ID4gbW9yZSBhYm91dCB3aGF0IGl0
-IGlzLiAgSSAqdGhpbmsqIGlmIExUUiBpcyBlbmFibGVkIGFuZCB3ZSBzdXNwZW5kDQo+ID4gKHB1
-dHRpbmcgdGhlIGRldmljZSBpbiBEM2NvbGQpIGFuZCByZXN1bWUsIExUUiBwcm9iYWJseSBkb2Vz
-bid0DQo+ID4gd29yaw0KPiA+IGFmdGVyIHJlc3VtZSBiZWNhdXNlIExUUiBpcyBkaXNhYmxlZCBp
-biB0aGUgdXBzdHJlYW0gYnJpZGdlLCB3aGljaA0KPiA+IHdvdWxkIGJlIGFuIG9idmlvdXMgYnVn
-Lg0KPiA+IA0KPiA+IEFsc28sIGlmIGEgZGV2aWNlIHdpdGggTFRSIGVuYWJsZWQgaXMgaG90LXJl
-bW92ZWQsIGFuZCB3ZSBob3QtYWRkIGENCj4gPiBkZXZpY2UsIEkgdGhpbmsgTFRSIHdpbGwgbm90
-IHdvcmsgb24gdGhlIG5ldyBkZXZpY2UuICBQb3NzaWJseSBhbHNvDQo+ID4gYQ0KPiA+IGJ1Zywg
-YWx0aG91Z2ggSSdtIG5vdCBjb252aW5jZWQgd2Uga25vdyBob3cgdG8gY29uZmlndXJlIExUUiBv
-biB0aGUNCj4gPiBuZXcgZGV2aWNlIGFueXdheS4NCj4gPiANCj4gPiBTbyBJJ2QgKmxpa2UqIHRv
-IG1lcmdlIHRoZSBidWcgZml4IGZvciB2NS4xMiwgYnV0IEkgdGhpbmsgSSdsbCB3YWl0DQo+ID4g
-YmVjYXVzZSBvZiB0aGUgaXNzdWUgYmVsb3cuDQo+ID4gDQo+IA0KPiBBIGZyaWVuZGx5IHBpbmcu
-DQo+IEFueSBmdXJ0aGVyIHByb2Nlc3Mgc2hhbGwgSSBtYWtlIHRvIGdldCB0aGlzIHBhdGNoIG1l
-cmdlZD8NCj4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNaW5nY2h1YW5nIFFpYW8gPG1pbmdjaHVh
-bmcucWlhb0BtZWRpYXRlay5jb20+DQo+ID4gPiAtLS0NCj4gPiA+IGNoYW5nZXMgb2YgdjQNCj4g
-PiA+ICAtZml4IHR5cG8gb2YgY29tbWl0IG1lc3NhZ2UNCj4gPiA+ICAtcmVuYW1lOiBwY2lfcmVj
-b25maWd1cmVfYnJpZGdlX2x0cigpLQ0KPiA+ID4gPiBwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0
-cigpDQo+ID4gPiANCj4gPiA+IGNoYW5nZXMgb2YgdjMNCj4gPiA+ICAtY2FsbCBwY2lfcmVjb25m
-aWd1cmVfYnJpZGdlX2x0cigpIGluIHByb2JlLmMNCj4gPiA+IGNoYW5nZXMgb2YgdjINCj4gPiA+
-ICAtbW9kaWZ5IHBhdGNoIGRlc2NyaXB0aW9uDQo+ID4gPiAgLXJlY29uZmlndXJlIGJyaWRnZSdz
-IExUUiBiZWZvcmUgcmVzdG9yaW5nIGRldmljZSBERVZDVEwyDQo+ID4gPiByZWdpc3Rlcg0KPiA+
-ID4gLS0tDQo+ID4gPiAgZHJpdmVycy9wY2kvcGNpLmMgICB8IDI1ICsrKysrKysrKysrKysrKysr
-KysrKysrKysNCj4gPiA+ICBkcml2ZXJzL3BjaS9wY2kuaCAgIHwgIDEgKw0KPiA+ID4gIGRyaXZl
-cnMvcGNpL3Byb2JlLmMgfCAxMyArKysrKysrKysrLS0tDQo+ID4gPiAgMyBmaWxlcyBjaGFuZ2Vk
-LCAzNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9wY2kvcGNpLmMgYi9kcml2ZXJzL3BjaS9wY2kuYw0KPiA+ID4gaW5kZXgg
-YjlmZWNjMjVkMjEzLi42YmY2NWQyOTUzMzEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3Bj
-aS9wY2kuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvcGNpLmMNCj4gPiA+IEBAIC0xNDM3LDYg
-KzE0MzcsMjQgQEAgc3RhdGljIGludCBwY2lfc2F2ZV9wY2llX3N0YXRlKHN0cnVjdA0KPiA+ID4g
-cGNpX2RldiAqZGV2KQ0KPiA+ID4gIAlyZXR1cm4gMDsNCj4gPiA+ICB9DQo+ID4gPiAgDQo+ID4g
-PiArdm9pZCBwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0cihzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0K
-PiA+ID4gK3sNCj4gPiA+ICsjaWZkZWYgQ09ORklHX1BDSUVBU1BNDQo+ID4gPiArCXN0cnVjdCBw
-Y2lfZGV2ICpicmlkZ2U7DQo+ID4gPiArCXUzMiBjdGw7DQo+ID4gPiArDQo+ID4gPiArCWJyaWRn
-ZSA9IHBjaV91cHN0cmVhbV9icmlkZ2UoZGV2KTsNCj4gPiA+ICsJaWYgKGJyaWRnZSAmJiBicmlk
-Z2UtPmx0cl9wYXRoKSB7DQo+ID4gPiArCQlwY2llX2NhcGFiaWxpdHlfcmVhZF9kd29yZChicmlk
-Z2UsDQo+ID4gPiBQQ0lfRVhQX0RFVkNUTDIsICZjdGwpOw0KPiA+ID4gKwkJaWYgKCEoY3RsICYg
-UENJX0VYUF9ERVZDVEwyX0xUUl9FTikpIHsNCj4gPiA+ICsJCQlwY2lfZGJnKGJyaWRnZSwgInJl
-LWVuYWJsaW5nIExUUlxuIik7DQo+ID4gPiArCQkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGJy
-aWRnZSwNCj4gPiA+IFBDSV9FWFBfREVWQ1RMMiwNCj4gPiA+ICsJCQkJCQkgUENJX0VYUF9ERVZD
-VEwyDQo+ID4gPiBfTA0KPiA+ID4gVFJfRU4pOw0KPiA+IA0KPiA+IFRoaXMgcGF0dGVybiBvZiB1
-cGRhdGluZyB0aGUgdXBzdHJlYW0gYnJpZGdlIG9uIGJlaGFsZiBvZiAiZGV2IiBpcw0KPiA+IHBy
-b2JsZW1hdGljIGJlY2F1c2UgaXQncyByYWN5Og0KPiA+IA0KPiA+ICAgQ1BVIDEgICAgICAgICAg
-ICAgICAgICAgICBDUFUgMg0KPiA+ICAgLS0tLS0tLS0tLS0tLS0tLS0tLSAgICAgICAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0NCj4gPiAgIGN0bCA9IHJlYWQgREVWQ1RMMiAgICAgICAgY3RsID0gcmVh
-ZChERVZDVEwyKQ0KPiA+ICAgY3RsIHw9IERFVkNUTDJfTFRSX0VOICAgICBjdGwgfD0gREVWQ1RM
-Ml9BUkkNCj4gPiAgIHdyaXRlKERFVkNUTDIsIGN0bCkNCj4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgd3JpdGUoREVWQ1RMMiwgY3RsKQ0KPiA+IA0KPiA+IE5vdyB0aGUgYnJpZGdlIGhh
-cyBBUkkgc2V0LCBidXQgbm90IExUUl9FTi4NCj4gPiANCj4gPiBXZSBoYXZlIHRoZSBzYW1lIHBy
-b2JsZW0gaW4gdGhlIHBjaV9lbmFibGVfZGV2aWNlKCkgcGF0aC4gIFRoZSBtb3N0DQo+ID4gcmVj
-ZW50IHRyeSBhdCBmaXhpbmcgaXQgaXMgWzFdLg0KPiA+IA0KPiA+IFsxXSBodHRwczovL2xvcmUu
-a2VybmVsLm9yZy9saW51eC1wY2kvMjAyMDEyMTgxNzQwMTEuMzQwNTE0LTItcy5taXINCj4gPiBv
-cw0KPiA+IGhuaWNoZW5rb0B5YWRyby5jb20vDQo+ID4gDQo+ID4gPiArCQl9DQo+ID4gPiArCX0N
-Cj4gPiA+ICsjZW5kaWYNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIHZvaWQgcGNp
-X3Jlc3RvcmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KPiA+ID4gIHsNCj4gPiA+
-ICAJaW50IGkgPSAwOw0KPiA+ID4gQEAgLTE0NDcsNiArMTQ2NSwxMyBAQCBzdGF0aWMgdm9pZCBw
-Y2lfcmVzdG9yZV9wY2llX3N0YXRlKHN0cnVjdA0KPiA+ID4gcGNpX2RldiAqZGV2KQ0KPiA+ID4g
-IAlpZiAoIXNhdmVfc3RhdGUpDQo+ID4gPiAgCQlyZXR1cm47DQo+ID4gPiAgDQo+ID4gPiArCS8q
-DQo+ID4gPiArCSAqIERvd25zdHJlYW0gcG9ydHMgcmVzZXQgdGhlIExUUiBlbmFibGUgYml0IHdo
-ZW4gbGluaw0KPiA+ID4gZ29lcyBkb3duLg0KPiA+ID4gKwkgKiBDaGVjayBhbmQgcmUtY29uZmln
-dXJlIHRoZSBiaXQgaGVyZSBiZWZvcmUgcmVzdG9yaW5nDQo+ID4gPiBkZXZpY2UuDQo+ID4gPiAr
-CSAqIFBDSWUgcjUuMCwgc2VjIDcuNS4zLjE2Lg0KPiA+ID4gKwkgKi8NCj4gPiA+ICsJcGNpX2Jy
-aWRnZV9yZWNvbmZpZ3VyZV9sdHIoZGV2KTsNCj4gPiA+ICsNCj4gPiA+ICAJY2FwID0gKHUxNiAq
-KSZzYXZlX3N0YXRlLT5jYXAuZGF0YVswXTsNCj4gPiA+ICAJcGNpZV9jYXBhYmlsaXR5X3dyaXRl
-X3dvcmQoZGV2LCBQQ0lfRVhQX0RFVkNUTCwNCj4gPiA+IGNhcFtpKytdKTsNCj4gPiA+ICAJcGNp
-ZV9jYXBhYmlsaXR5X3dyaXRlX3dvcmQoZGV2LCBQQ0lfRVhQX0xOS0NUTCwNCj4gPiA+IGNhcFtp
-KytdKTsNCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2kuaCBiL2RyaXZlcnMvcGNp
-L3BjaS5oDQo+ID4gPiBpbmRleCA1YzU5MzY1MDkyZmEuLmIzYTVlNTI4N2NiNyAxMDA2NDQNCj4g
-PiA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaS5oDQo+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9wY2ku
-aA0KPiA+ID4gQEAgLTExMSw2ICsxMTEsNyBAQCB2b2lkIHBjaV9mcmVlX2NhcF9zYXZlX2J1ZmZl
-cnMoc3RydWN0IHBjaV9kZXYNCj4gPiA+ICpkZXYpOw0KPiA+ID4gIGJvb2wgcGNpX2JyaWRnZV9k
-M19wb3NzaWJsZShzdHJ1Y3QgcGNpX2RldiAqZGV2KTsNCj4gPiA+ICB2b2lkIHBjaV9icmlkZ2Vf
-ZDNfdXBkYXRlKHN0cnVjdCBwY2lfZGV2ICpkZXYpOw0KPiA+ID4gIHZvaWQgcGNpX2JyaWRnZV93
-YWl0X2Zvcl9zZWNvbmRhcnlfYnVzKHN0cnVjdCBwY2lfZGV2ICpkZXYpOw0KPiA+ID4gK3ZvaWQg
-cGNpX2JyaWRnZV9yZWNvbmZpZ3VyZV9sdHIoc3RydWN0IHBjaV9kZXYgKmRldik7DQo+ID4gPiAg
-DQo+ID4gPiAgc3RhdGljIGlubGluZSB2b2lkIHBjaV93YWtldXBfZXZlbnQoc3RydWN0IHBjaV9k
-ZXYgKmRldikNCj4gPiA+ICB7DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcHJvYmUu
-YyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCj4gPiA+IGluZGV4IDk1M2YxNWFiYzg1MC4uYWRlMDU1
-ZTlmYjU4IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvcHJvYmUuYw0KPiA+ID4gKysr
-IGIvZHJpdmVycy9wY2kvcHJvYmUuYw0KPiA+ID4gQEAgLTIxMzIsOSArMjEzMiwxNiBAQCBzdGF0
-aWMgdm9pZCBwY2lfY29uZmlndXJlX2x0cihzdHJ1Y3QNCj4gPiA+IHBjaV9kZXYNCj4gPiA+ICpk
-ZXYpDQo+ID4gPiAgCSAqIENvbXBsZXggYW5kIGFsbCBpbnRlcm1lZGlhdGUgU3dpdGNoZXMgaW5k
-aWNhdGUNCj4gPiA+IHN1cHBvcnQNCj4gPiA+IGZvciBMVFIuDQo+ID4gPiAgCSAqIFBDSWUgcjQu
-MCwgc2VjIDYuMTguDQo+ID4gPiAgCSAqLw0KPiA+ID4gLQlpZiAocGNpX3BjaWVfdHlwZShkZXYp
-ID09IFBDSV9FWFBfVFlQRV9ST09UX1BPUlQgfHwNCj4gPiA+IC0JICAgICgoYnJpZGdlID0gcGNp
-X3Vwc3RyZWFtX2JyaWRnZShkZXYpKSAmJg0KPiA+ID4gLQkgICAgICBicmlkZ2UtPmx0cl9wYXRo
-KSkgew0KPiA+ID4gKwlpZiAocGNpX3BjaWVfdHlwZShkZXYpID09IFBDSV9FWFBfVFlQRV9ST09U
-X1BPUlQpIHsNCj4gPiA+ICsJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChkZXYsIFBDSV9FWFBf
-REVWQ1RMMiwNCj4gPiA+ICsJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKQ0KPiA+ID4gOw0K
-PiA+ID4gKwkJZGV2LT5sdHJfcGF0aCA9IDE7DQo+ID4gPiArCQlyZXR1cm47DQo+ID4gPiArCX0N
-Cj4gPiA+ICsNCj4gPiA+ICsJYnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpOw0KPiA+
-ID4gKwlpZiAoYnJpZGdlICYmIGJyaWRnZS0+bHRyX3BhdGgpIHsNCj4gPiA+ICsJCXBjaV9icmlk
-Z2VfcmVjb25maWd1cmVfbHRyKGRldik7DQo+ID4gPiAgCQlwY2llX2NhcGFiaWxpdHlfc2V0X3dv
-cmQoZGV2LCBQQ0lfRVhQX0RFVkNUTDIsDQo+ID4gPiAgCQkJCQkgUENJX0VYUF9ERVZDVEwyX0xU
-Ul9FTikNCj4gPiA+IDsNCj4gPiA+ICAJCWRldi0+bHRyX3BhdGggPSAxOw0KPiA+ID4gLS0gDQo+
-ID4gPiAyLjE4LjANCj4gPiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXw0KPiA+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+IExpbnV4
-LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVr
+On Wed, 29 Sep 2021 20:05:42 +0100,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> On Wed, Sep 29, 2021 at 6:56 PM Marc Zyngier <maz@kernel.org> wrote:
+> 
+> > From: Mark Kettenis <kettenis@openbsd.org>
+> >
+> > Add pinctrl nodes corresponding to the gpio,t8101 nodes in the
+> > Apple device tree for the Mac mini (M1, 2020).
+> >
+> > Clock references are left out at the moment and will be added once
+> > the appropriate bindings have been settled upon.
+> >
+> > Signed-off-by: Mark Kettenis <kettenis@openbsd.org>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > Link: https://lore.kernel.org/r/20210520171310.772-3-mark.kettenis@xs4all.nl
+> (...)
+> > +               pinctrl_ap: pinctrl@23c100000 {
+> > +                       compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+> > +                       reg = <0x2 0x3c100000 0x0 0x100000>;
+> > +
+> > +                       gpio-controller;
+> > +                       #gpio-cells = <2>;
+> > +                       gpio-ranges = <&pinctrl_ap 0 0 212>;
+> 
+> In other discussions it turns out that the driver is abusing these gpio-ranges
+> to find out how many pins are in each pinctrl instance. This is not the
+> idea with gpio-ranges, these can be multiple and map different sets,
+> so we need something like
+> 
+> apple,npins = <212>;
+> (+ bindings)
+> 
+> or so...
 
+Is it the driver that needs updating? Or the binding? I don't really
+care about the former, but the latter is more disruptive as it has
+impacts over both u-boot and at least OpenBSD.
+
+How is that solved on other pinctrl blocks? I can't see anyone having
+a similar a similar property.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
