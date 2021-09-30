@@ -2,153 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F215A41D28F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 06:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAAB41D292
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 06:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239357AbhI3E7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 00:59:25 -0400
-Received: from mail-dm6nam11on2040.outbound.protection.outlook.com ([40.107.223.40]:65504
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230413AbhI3E7Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 00:59:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=igos/tC54CqudHvXn980kVwKbZwKq5K+RoogtG8Fxwwt7C1hqcvHDAo/aAzBdNu54XCvEMhj2ejhBtdv0INqQ4iwvDJvE9smI1LHlE5xNAK/lyV+K2uxE2dWqxX1sw+13oqy4DnUYxkNDLrVpW4IXfDMGmv5flZzqIVnZ1saVUBLbBo/+pH3HD1C9Hz40Y2gDd+LpvyCePuqt9tvLG7b18OrLp5iGPhX7XSMHrV2Xwj107k052CtAzLqEw2VmjjvoZF05fr7PGjWvm62mbICynu8ofsNWhNz2GfDz0J6Ee9hUgF32uNreSDDjGjnT0TCouIOZUpCvhfZGoLP6+pJrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=O8hgmQdOWfIbikNPK4C5DdhYL5vMyjRbyGFzp0kKHdc=;
- b=iNJ8kfVn+ABC1iDOBWVHAY/l79Fw/x5Y+znaTuIrGugkF4zA8FxdMUOrHQTL8kOA+Eh/Q5iO2XMQRzLUSONSuCOCqoeyDnrOlI9pAxEVYNkdfH93HjUCz63+BMP5I4mE9byv1xWkRNpz6OsZZtOcW2yV6lJ+qM6jzwF8MmmJUvtKdn+KxP4hdWXsrYb2WCx7DQ+XGlMZytlHBWDOk257OZYfdA7mbv0DxSjjGvdiUgNmZ/TRa4ECCWCOtOMXjVQkHlRukFenwE1ky+vXg3Pe5kydg331htCrKry4wStJkxVo7R3lcVsE+Rrm1uHu30uWUZZU8nJAthByRFyz/sw5xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8hgmQdOWfIbikNPK4C5DdhYL5vMyjRbyGFzp0kKHdc=;
- b=WhTq0T8VAxsqk7/tcnYd++aGaBCIQRmUAtxM8BKAjy/k6KVsE4nZd9GHB8bWCLhc6MA8BPRWmaSKDPemdC105/DpT/vL0kDkG9KXZhFw3elf+9sXwQMriYYd0xcXI2UkR3/HgvZzjRNVoPU5J66Bpc5K6eyGdJZwh+WfZ1Ez4AkSvMZmMlCKRLJFjf1ftKJWgEHhbepGS+mhWD6YDQEHAQqRpljrtzqKm1pm75UnxQBtOVBtIpvtmb2fBRf5rhgr0HlbBBiWeUDo/tCG4H+lFw4lRPU95woA2Mdg2lg5FYBpk9jy/zwdRnrKA+nlFueMfRxLpuvXMTZwDj0/rs1X6w==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by MWHPR12MB1469.namprd12.prod.outlook.com (2603:10b6:301:10::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.13; Thu, 30 Sep
- 2021 04:57:40 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::3db1:105d:2524:524]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::3db1:105d:2524:524%7]) with mapi id 15.20.4566.014; Thu, 30 Sep 2021
- 04:57:40 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-CC:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v3 01/20] lib/scatterlist: add flag for indicating P2PDMA
- segments in an SGL
-Thread-Topic: [PATCH v3 01/20] lib/scatterlist: add flag for indicating P2PDMA
- segments in an SGL
-Thread-Index: AQHXq1RaC0AUk7ABDUmYF9Nk+3cp+Ku8GLqA
-Date:   Thu, 30 Sep 2021 04:57:39 +0000
-Message-ID: <7c168a79-67c5-15d2-e95a-97ce0d4b5e6c@nvidia.com>
-References: <20210916234100.122368-1-logang@deltatee.com>
- <20210916234100.122368-2-logang@deltatee.com>
-In-Reply-To: <20210916234100.122368-2-logang@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-authentication-results: deltatee.com; dkim=none (message not signed)
- header.d=none;deltatee.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d97a4090-df2a-48a8-e9fc-08d983ced47c
-x-ms-traffictypediagnostic: MWHPR12MB1469:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR12MB1469509A75EF39962A6E1DBCA3AA9@MWHPR12MB1469.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vyZLaZ5Q3GmK6HTTTu2BuLhBESHVydBWc1nqr8uvS46s/xipW7CbSzGD2sDQkSUEdxIENOOdrn5efFvO9a7ew9E+wCsK2ix4svPBHsePNmLNppK88Yzckxwzxddz1QLv4gFYCNej79OtJ/F3KCxnnhxrbPIu67Kbfw6BSTBRuQfqmR28BJVB/J9B8WA+l/T9fq4FVlJaCh36qBsTJx+V7Eb7kGlXVn8L8RrZYP768EE3qqSgtNhNWniHV7Zr0SLEane6M15J5R97zOLbWX/tebeiOcydwGLB+XaZB5QcyNDXUsh7dxb8GmJAwzV+xjUW0nCr2gIH+3LNjnxN/HuEMMdP9XyhLPDbSvyfWTDNPVbu2E4WZV4BnCDb2mByxa6dz1bf7e4vRDiTqY/CjzYQ+D4FephHjfGQKZSa6ZymyMI9UGFK5yye9CfrDmLOSLnKOq3nsdFiWnERfewfRg4ovymoR9Jbl3WdPKf1cPRXwMmE3SH8Bj0bmhPxRPfduPCsSoop2iu197Bu1maQ6OtIH7d2lhgMeCeoLwhkxNE0hqk+UijLr5EJZbesiLLzFLeobYcJXf5DC6AqpFBX7Ohg6pGqgIU5SzhdU+a/M5BWNdIqKu585BT1mOtwL1/97z1fwfzerybJZDKGMRs8xM7Zk0g4pT+hXbYq8OBqYcvSZjD0SbNudQT1SplJfx/n03CCWPLAhykXEvRzEzM5ix33IekJaXQwHW231QaxF2OwKXIiVnFTR6ysWYYJhuDRmR+mLCo2iCT57Kx12jKkQNjqOw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(4326008)(38070700005)(2616005)(31686004)(4744005)(186003)(6486002)(122000001)(86362001)(36756003)(7416002)(26005)(71200400001)(38100700002)(316002)(508600001)(2906002)(8936002)(5660300002)(54906003)(110136005)(31696002)(6512007)(8676002)(66556008)(64756008)(66476007)(66946007)(76116006)(66446008)(91956017)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OXlMTkhaL04ySFhpVGd4UU5nZjNveEpjMGQvVDQ5MCt1VGRUeXJkVUJpUm8r?=
- =?utf-8?B?SjlKMmZ1TmRtMDN3M3E2VU95MXFNSUNJdDZvVTJ5NmhCMTluWTljNGwxZFdx?=
- =?utf-8?B?Z3dFVlhlTE51ZjVlcFh1R0VyeE40SjhnOWF4ZFVSbzZEV1kvK0ErOXBMdXFN?=
- =?utf-8?B?N1U5bFZ0ZTA0K3ZDMmtjUkdVcXAvaHBVWmZFUG1QSzYraThtZnF6bkQyU1pt?=
- =?utf-8?B?MTBod2xSTUZ3cm0zbXp4bmd1Q2JpZDE0VGl2RENwRDV0YW5GQTZ6LzNIM1VI?=
- =?utf-8?B?S2YyczFKNUlTZHlTYVlySTE5WVJpTW1ZcHBRWlBRcmUwZ1AwSzNyQ2R2Q2h2?=
- =?utf-8?B?aTVvRk16dEs2cU55cURpYVhhMVordTViRkExVGhGNkpmWlNONG01cW5ySWFE?=
- =?utf-8?B?UXZabDhCbXE5RzRFYmpFb21XUzYrS2ZGSXBqWWFUeTF2b1U5VUZhSEk1VlNT?=
- =?utf-8?B?YzBlR2pMYlBpVGFoaVZaa0hhYzdKUlFwcVdSNktjUjBPczVvVlIzcS80Sy95?=
- =?utf-8?B?MnZmWGIyZ25nOEhsbXdVUmg4Y041enlGUEowVFhlNGVBYVFmL0ZscWUzWW9z?=
- =?utf-8?B?UjVrRG9ORk9sZFFNdVRCVDVXZEU0OWNoMzVCZzlSMWE1MmQ4enpUVEF5ZDg5?=
- =?utf-8?B?MHdLNmVRYlZGVlZJdjBBaGZKRUgzMmlTSTFOVVlGWFNxQmtOVXoxRnJvcjBN?=
- =?utf-8?B?SmowbE04ekkwZjhlWWJ2aWF6WHVTeGZndlBVVExKRW9lZlJBSmtjeXRGeCtM?=
- =?utf-8?B?bklwcW80L0xZRElpaXJBWXBjdTlkMDV4S0tLa05KT0xyTjNLeWg1V2doYjRn?=
- =?utf-8?B?VFpPVy9qTlN2SkU3SEF3MGxLcW1jdm0yc2RaYlAyZm5XR0grb0QyT1BsMXds?=
- =?utf-8?B?bElBNytCNFVVYXRtMGZZN0tVbDVFMUJIb1V4UXViaDVjZ0R0TkZwTlFqUzNP?=
- =?utf-8?B?bUM4eUZIaUs2ZUdPck9TKys0UUViTi9pSFJmMGs3S0RGZ3A1WGo2cGU3eGRD?=
- =?utf-8?B?OFk0eDNIQXkyWFI3WXh3SUNqOHN0elJqYWQyMjJiZVczUU1rTVJsekl6OHZy?=
- =?utf-8?B?ZlNpUUU3Nk5zU1lhQzY4OWl6dUhjRzUvQXVGSmF2aVU0eEtyamxNbGtydmxr?=
- =?utf-8?B?RkJOQTNPb0d6NFFONFlLWHFkekVXMDZ6VVdtVVlhTmtGSzk0VCs0RTl6a0s5?=
- =?utf-8?B?WjVGNE1tZy8wemM2WXV0QjZzbitrdG5sSkdEdzYvQnZWbEJUZ2ZzYzRJT053?=
- =?utf-8?B?UXBvajduckx2ZXJ6N0FQb1RvK2x3dWtXaTRVdm10ZFBWTDVKcUtpVXZrd1FV?=
- =?utf-8?B?aVpUaWVNQ2Uwb2VZNjVUSlpNSlZJMVBPdzBFYm1CdUpWSmNuUDI5RnU5OUZu?=
- =?utf-8?B?bmFVdmt6M091Y0taQXFQa1B2N0pWVXYwQUtCVGFjK1VhRitZYVdjOW1WdDhl?=
- =?utf-8?B?c2NEMEFMZmx5RVR4bkkvak96c01SMUFVNEtsVjBYV3VOSmp6THFEaHRQSlg0?=
- =?utf-8?B?bkVBU1NKVGxIaStvSmJsSEl0dGdFRm1LV2NvRVp6NURnMEx6RWRqQmFOMnJx?=
- =?utf-8?B?N2JxUlVQNkNXcVh4SngxTGdISk9SYlV1amt6aEdaalFPcWFjcGhMcnJmVTFT?=
- =?utf-8?B?VlJKd1AwUUxCS2VZZXpjZ0lEdE5rVVBhNDR2WWV5RVU0RnJaYlRvS2xQVE54?=
- =?utf-8?B?Z2NIMVAwK2RxVThvUXZOS05uZEhLUkcwL1JPNExJNTY5V2FqK25mRFk2Wnlj?=
- =?utf-8?Q?2LWDXlcpeX6UxkPtS0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AC2EA3CE3A26AA4490D69D7C686AD838@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S237508AbhI3FBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 01:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229918AbhI3FBS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 01:01:18 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5A2C06176A
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 21:59:36 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id n2so3111872plk.12
+        for <linux-pci@vger.kernel.org>; Wed, 29 Sep 2021 21:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VTM9z+DcTeYF3hZgKWEu9ebVrBPYT2J8Mz8sj8erXZk=;
+        b=PCpbwU/Blt/pbMA6NT2nm2SIqNzMnAtcLzxhxbtj3rTw2MHvXasv4KZ/zpwWPlZn7y
+         xPWsxFGYK8u70vbz7XcbGiHpsKtrQjK346ig5ArayijRkOVR0ZSgmSdFgnxE9i5Sf9pW
+         0deGfEYYnNhaWRDtv3KVBZBS8spTYrA43Nq9+AxcJVFP4EVbUPaWHgG3/ccF/i1QocQh
+         Qw4w3IvzGqNsfXW9sLxObs8iR9rV/NKytwQ8uw+30BCP3sXi3JaL/1APxK4M9G1CofGl
+         mDPEFjR6CHHEV+e1F5uOIa2vub/p77kBLKF9waZAxea7kzN/oqO6LWY664QZ4RAJnbzu
+         9G/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VTM9z+DcTeYF3hZgKWEu9ebVrBPYT2J8Mz8sj8erXZk=;
+        b=vP6fBMkov7yhTcnVuUceS99I9Yaf9E4ItzU1WvdxA0+K4cCjaWMfCUsSXs2ITI3Gu5
+         cRRetToZ70BgE6SYwA2tiDhIWJBzG2o0Ys8YPN0RSX25QOR+v6C3Vg6tOn0nmEM6Gs5l
+         7F1g587N9wjIeWsxmDwdzBjIvVffHPby/rupyqKV/cOkEECtLLeBgtR+b6eDidkAtF5l
+         mxZBEWILVnL2cCG74LGzR0UI37MD6Vu+m1t99S9yem0xQmAjh8ByE2oqY8fpYEPq3rOm
+         ZfFI+24g8gtUJV4MS9x2C9bqy9Y+HORatUGzP+Je5ovtjQgv/bsDEMUQYBT88rovBcVq
+         NLtA==
+X-Gm-Message-State: AOAM5326V9+OtjXJhXCtFdoFCPGy59zDEjz57kRk7aNQo6v2BYzxH5jp
+        QP+L6d8agO944ogmteuwvANLa36GHzlFcISa3kj6Mg==
+X-Google-Smtp-Source: ABdhPJyybPbFqs+kvSA+EffRawV4Hj+ykPs983Fz8BFHzbiq+5hEn89iPiOxS6iB4aUV2nFWiaggHuioY3Gye2yZA4U=
+X-Received: by 2002:a17:902:bd8d:b0:13a:8c8:a2b2 with SMTP id
+ q13-20020a170902bd8d00b0013a08c8a2b2mr2377812pls.89.1632977976213; Wed, 29
+ Sep 2021 21:59:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d97a4090-df2a-48a8-e9fc-08d983ced47c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2021 04:57:39.9324
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PXEU6uN5x9Jmx3oSrHhpDhSuJcUyqjYNckmAO3IO+jVTYXITI4Xqg8Vcn0kbPTSPX3iMrsRQAFanVHbDgfS3rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1469
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930014229.GA447956@rowland.harvard.edu> <CAPcyv4iiEC3B2i81evZpLP+XHa8dLkfgWmrY7HocORwP8FMPZQ@mail.gmail.com>
+ <f9b7cf97-0a14-1c80-12ab-23213ec2f4f2@linux.intel.com>
+In-Reply-To: <f9b7cf97-0a14-1c80-12ab-23213ec2f4f2@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 29 Sep 2021 21:59:25 -0700
+Message-ID: <CAPcyv4gDgQYf0ct_Xy32gQBcWhs6d2uL+wUq4pfzszDHcUHbwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] driver core: Move the "authorized" attribute from
+ USB/Thunderbolt to core
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiArLyoqDQo+ICsgKiBzZ191bm1hcmtfcGNpX3AycGRtYSAtIFVubWFyayB0aGUgc2NhdHRlcmxp
-c3QgZW50cnkgZm9yIFBDSSBwMnBkbWENCj4gKyAqIEBzZzogICAgICAgICAgICAgICAgIFNHIGVu
-dHJ5U2NhdHRlcmxpc3QNCj4gKyAqDQo+ICsgKiBEZXNjcmlwdGlvbjoNCj4gKyAqICAgQ2xlYXJz
-IHRoZSBQQ0kgUDJQRE1BIG1hcmsNCj4gKyAqKi8NCm5pdDotIFByb2JhYmx5IHdhbnQgdG8gYWRk
-ICcuJyBhYm92ZS4NCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBzZ19kbWFfdW5tYXJrX3BjaV9wMnBk
-bWEoc3RydWN0IHNjYXR0ZXJsaXN0ICpzZykNCj4gK3sNCj4gKyAgICAgICBzZy0+cGFnZV9saW5r
-ICY9IH5TR19ETUFfUENJX1AyUERNQTsNCj4gK30NCj4gKw0KPiAgIC8qKg0KPiAgICAqIHNnX3Bo
-eXMgLSBSZXR1cm4gcGh5c2ljYWwgYWRkcmVzcyBvZiBhbiBzZyBlbnRyeQ0KPiAgICAqIEBzZzog
-ICAgICAgICAgICAgU0cgZW50cnkNCj4gLS0NCj4gMi4zMC4yDQo+IA0KDQplaXRoZXIgd2F5cyB3
-aXRoIG9yIHdpdGhvdXQgc3BsaXQsIGxvb2tzIGdvb2QuDQoNClJldmlld2VkLWJ5OiBDaGFpdGFu
-eWEgS3Vsa2FybmkgPGtjaEBudmlkaWEuY29tPg0KDQo=
+On Wed, Sep 29, 2021 at 7:39 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 9/29/21 6:55 PM, Dan Williams wrote:
+> >> Also, you ignored the usb_[de]authorize_interface() functions and
+> >> their friends.
+> > Ugh, yes.
+>
+> I did not change it because I am not sure about the interface vs device
+> dependency.
+>
+
+This is was the rationale for has_probe_authorization flag. USB
+performs authorization of child devices based on the authorization
+state of the parent interface.
+
+> I think following change should work.
+>
+> diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
+> index f57b5a7a90ca..84969732d09c 100644
+> --- a/drivers/usb/core/driver.c
+> +++ b/drivers/usb/core/driver.c
+> @@ -334,7 +334,7 @@ static int usb_probe_interface(struct device *dev)
+>         if (udev->dev.authorized == false) {
+>                 dev_err(&intf->dev, "Device is not authorized for usage\n");
+>                 return error;
+> -       } else if (intf->authorized == 0) {
+> +       } else if (intf->dev.authorized == 0) {
+
+== false.
+
+>                 dev_err(&intf->dev, "Interface %d is not authorized for usage\n",
+>                                 intf->altsetting->desc.bInterfaceNumber);
+>                 return error;
+> @@ -546,7 +546,7 @@ int usb_driver_claim_interface(struct usb_driver *driver,
+>                 return -EBUSY;
+>
+>         /* reject claim if interface is not authorized */
+> -       if (!iface->authorized)
+> +       if (!iface->dev.authorized)
+
+I'd do == false to keep it consistent with other conversions.
+
+>                 return -ENODEV;
+>
+>         dev->driver = &driver->drvwrap.driver;
+> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> index 47548ce1cfb1..ab3c8d1e4db9 100644
+> --- a/drivers/usb/core/message.c
+> +++ b/drivers/usb/core/message.c
+> @@ -1791,9 +1791,9 @@ void usb_deauthorize_interface(struct usb_interface *intf)
+>
+>         device_lock(dev->parent);
+>
+> -       if (intf->authorized) {
+> +       if (intf->dev.authorized) {
+>                 device_lock(dev);
+> -               intf->authorized = 0;
+> +               intf->dev.authorized = 0;
+
+= false;
+
+>                 device_unlock(dev);
+>
+>                 usb_forced_unbind_intf(intf);
+> @@ -1811,9 +1811,9 @@ void usb_authorize_interface(struct usb_interface *intf)
+>   {
+>         struct device *dev = &intf->dev;
+>
+> -       if (!intf->authorized) {
+> +       if (!intf->dev.authorized) {
+>                 device_lock(dev);
+> -               intf->authorized = 1; /* authorize interface */
+> +               intf->dev.authorized = 1; /* authorize interface */
+
+= true
+
+...not sure that comment is worth preserving.
