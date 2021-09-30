@@ -2,124 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9813D41DCF1
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:04:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 842A941DD38
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 17:18:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231810AbhI3PFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 11:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48532 "EHLO mail.kernel.org"
+        id S245647AbhI3PUf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 11:20:35 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46943 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230370AbhI3PFr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 11:05:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8E2B560F4A;
-        Thu, 30 Sep 2021 15:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633014244;
-        bh=nSTw+j4d2UCCKhsHid2M5WQ7GT4HxeOWxUwBItejV+c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g11GVhubWbJ/GMBOb23KR6WPBnQbnsPapEPAmH9W/CkHL4SrnZ6OSbtFjLvlWWwVA
-         KI45hsV88rEDkrA4e9dQNzQPI63wb3PgbcgguUcOz9DEqcl+JUDxREpl7zAHJf05r4
-         EgArSxHg4bp6ARdwVMjfAU6NZ2jMy6WYnnx3r3UcgKD1bvzo36HdVJ+yDjeaeqc6Xs
-         Of2ntw2JDzgpJnzTlcyjEX4Sdl5Yx10fgBVug4nheliVVzuitooDJs+nRHUdDo95Zx
-         tndStmMdbBgumBc6UaOmEvZTg+43p8gVuuMe9Td4PFvkjWILpJQIRZsJJ2a/8RI5sW
-         3SmGakWn783xw==
-Date:   Thu, 30 Sep 2021 10:04:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+        id S245624AbhI3PUb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 11:20:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="247750991"
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="247750991"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 08:18:21 -0700
+X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
+   d="scan'208";a="479978381"
+Received: from rnmathur-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.105.173])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 08:18:21 -0700
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Convert to
- device_create_managed_software_node()
-Message-ID: <20210930150402.GA877907@bhelgaas>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065953-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+Date:   Thu, 30 Sep 2021 08:18:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210930121246.22833-2-heikki.krogerus@linux.intel.com>
+In-Reply-To: <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 03:12:45PM +0300, Heikki Krogerus wrote:
-> In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
-> instead of device_add_properties() to set the "dma-can-stall"
-> property.
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
-> Hi,
-> 
-> The commit message now says what Bjorn requested, except I left out
-> the claim that the patch fixes a lifetime issue.
 
-Thanks.
 
-The commit log should help reviewers determine whether the change is
-safe and necessary.  So far it doesn't have any hints along that line.
+On 9/30/21 6:36 AM, Dan Williams wrote:
+>> And in particular, not all virtio drivers are hardened -
+>> I think at this point blk and scsi drivers have been hardened - so
+>> treating them all the same looks wrong.
+> My understanding was that they have been audited, Sathya?
 
-Comparing device_add_properties() [1] and
-device_create_managed_software_node() [2], the only difference in this
-case is that the latter sets "swnode->managed = true".  The function
-comment says "managed" means the lifetime of the swnode is tied to the
-lifetime of dev, hence my question about a lifetime issue.
+Yes, AFAIK, it has been audited. Andi also submitted some patches
+related to it. Andi, can you confirm.
 
-I can see that one reason for this change is to remove the last caller
-of device_add_properties(), so device_add_properties() itself can be
-removed.  That's a good reason for wanting to do it, and the commit
-log could mention it.
+We also authorize the virtio at PCI ID level. And currently we allow
+console, block and net virtio PCI devices.
 
-But it doesn't help me figure out whether it's safe.  For that,
-I need to know the effect of setting "managed = true".  Obviously
-it means *something*, but I don't know what.  It looks like the only
-test is in software_node_notify():
+{ PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_NET) },
+{ PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_BLOCK) },
+{ PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, VIRTIO_TRANS_ID_CONSOLE) },
 
-  device_del
-    device_platform_notify_remove
-      software_node_notify_remove
-        sysfs_remove_link(dev_name)
-        sysfs_remove_link("software_node")
-        if (swnode->managed)                 <--
-          set_secondary_fwnode(dev, NULL)
-          kobject_put(&swnode->kobj)
-    device_remove_properties
-      if (is_software_node())
-        fwnode_remove_software_node
-          kobject_put(&swnode->kobj)
-        set_secondary_fwnode(dev, NULL)
 
-I'm not sure what's going on here; it looks like some redundancy with
-multiple calls of kobject_put() and set_secondary_fwnode().  Maybe you
-are in the process of removing device_remove_properties() as well as
-device_add_properties()?
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/base/property.c?id=v5.14#n533
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/base/swnode.c?id=v5.14#n1083
-
-> There shouldn't be any functional impact.
-> 
-> thanks,
-> ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b6b4c803bdc94..fe5eedba47908 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -1850,7 +1850,7 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
->  	 * can set it directly.
->  	 */
->  	if (!pdev->dev.of_node &&
-> -	    device_add_properties(&pdev->dev, properties))
-> +	    device_create_managed_software_node(&pdev->dev, properties, NULL))
->  		pci_warn(pdev, "could not add stall property");
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
-> -- 
-> 2.33.0
-> 
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
