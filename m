@@ -2,261 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B344041E484
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 00:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0404641E487
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 01:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345277AbhI3XBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 19:01:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5389 "EHLO mga11.intel.com"
+        id S1346870AbhI3XCc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 19:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344543AbhI3XBj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 19:01:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="222105835"
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="222105835"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 15:59:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,336,1624345200"; 
-   d="scan'208";a="477151909"
-Received: from lkp-server01.sh.intel.com (HELO 72c3bd3cf19c) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 30 Sep 2021 15:59:53 -0700
-Received: from kbuild by 72c3bd3cf19c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mW51t-0000Wx-2G; Thu, 30 Sep 2021 22:59:53 +0000
-Date:   Fri, 01 Oct 2021 06:59:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/switchtec] BUILD SUCCESS
- 3866382cf175c0a0143d74ca7b802b786ba7f85a
-Message-ID: <61564158.Xmytaq8rdYLAUQsE%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1344543AbhI3XCc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 19:02:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DB46C61A63;
+        Thu, 30 Sep 2021 23:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633042849;
+        bh=5qgapm9VVV5p1sXe/lQdYQ41rEq5iv4RtFtLTYvTtOY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Z9eoJfcyOrg7Gzl8Y4ovM9rrjfofA5YqitC2RLdI/IJ6gftF40SbkMNZOGC1FhOIl
+         Ny8aj3uYkJGBFlmFoUyjSB5qh6m9GWUH31oelP/aIrvX2yFIHC19Wb8VavOJxrpRoC
+         j8MLaXnpYU8KsnATFIhmQmilljJn7smy4JgmX+Wk141OPLx9u/SjvAl97ksSTT0PAc
+         pGw71UKdR8+pSVBV1wbDK0JekVuGzXAczX5wDdeH8zFhpg2ag1H1swNkf07pZwpnPV
+         aPWz5B0tLU3D5TyFnpqJQMFQoqqnGknETZP4WyA9rVraD2EcKeg+WN/DFqmOL86sZ6
+         6YEj4v5K9ILGw==
+Date:   Thu, 30 Sep 2021 18:00:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 4/4] PCI/ASPM: Remove unncessary linked list from
+ aspm.c
+Message-ID: <20210930230047.GA921465@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210929004315.22558-5-refactormyself@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/switchtec
-branch HEAD: 3866382cf175c0a0143d74ca7b802b786ba7f85a  PCI/switchtec: Add check of event support
+On Wed, Sep 29, 2021 at 02:43:15AM +0200, Saheed O. Bolarinwa wrote:
+> From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
+> 
+> aspm.c defines a linked list - `link_list` and stores each of
+> its node in struct pcie_link_state.sibling. This linked list
+> tracks devices for which the struct pcie_link_state object
+> was successfully created. It is used to loop through the list
+> for instance to set ASPM policy or update changes. However, it
+> is possible to access these devices via existing lists defined
+> inside pci.h
+> 
+> This patch:
+> - removes link_list and struct pcie_link_state.sibling
+> - accesses child devices via struct pci_dev.bust_list
+> - accesses all PCI buses via pci_root_buses on struct pci_bus.node
 
-elapsed time: 1091m
+Again, I LOVE the way this is going.  I depise this extra linked list.
 
-configs tested: 200
-configs skipped: 3
+> Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 39 +++++++++++++++++++++------------------
+>  1 file changed, 21 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 56d4fe7d50b5..4bef652dc63c 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -48,7 +48,6 @@ struct aspm_latency {
+>  
+>  struct pcie_link_state {
+>  	struct pci_dev *pdev;		/* Upstream component of the Link */
+> -	struct list_head sibling;	/* node in link_list */
+>  
+>  	/* ASPM state */
+>  	u32 aspm_support:7;		/* Supported ASPM state */
+> @@ -76,7 +75,6 @@ struct pcie_link_state {
+>  static int aspm_disabled, aspm_force;
+>  static bool aspm_support_enabled = true;
+>  static DEFINE_MUTEX(aspm_lock);
+> -static LIST_HEAD(link_list);
+>  
+>  #define POLICY_DEFAULT 0	/* BIOS default setting */
+>  #define POLICY_PERFORMANCE 1	/* high performance */
+> @@ -880,10 +878,7 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
+>  	if (!link)
+>  		return NULL;
+>  
+> -	INIT_LIST_HEAD(&link->sibling);
+>  	link->pdev = pdev;
+> -
+> -	list_add(&link->sibling, &link_list);
+>  	pdev->link_state = link;
+>  	return link;
+>  }
+> @@ -970,24 +965,22 @@ static void pcie_update_aspm_capable(struct pcie_link_state *root)
+>  {
+>  	struct pcie_link_state *link;
+>  	struct pci_dev *dev, *root_dev;
+> +	struct pci_bus *rootbus = root->pdev->bus;
+>  
+>  	/* Ensure it is the root device */
+>  	root_dev = pcie_get_root(root->pdev);
+>  	root = root_dev ? root_dev->link_state : NULL;
+>  
+> -	list_for_each_entry(link, &link_list, sibling) {
+> -		dev = pcie_get_root(link->pdev);
+> -		if (dev->link_state != root)
+> +	list_for_each_entry(dev, &rootbus->devices, bus_list) {
+> +		if (!dev->link_state)
+>  			continue;
+>  
+> -		link->aspm_capable = link->aspm_support;
+> +		dev->link_state->aspm_capable = link->aspm_support;
+>  	}
+> -	list_for_each_entry(link, &link_list, sibling) {
+> +
+> +	list_for_each_entry(dev, &rootbus->devices, bus_list) {
+>  		struct pci_dev *child;
+> -		struct pci_bus *linkbus = link->pdev->subordinate;
+> -		dev = pcie_get_root(link->pdev);
+> -		if (dev->link_state != root)
+> -			continue;
+> +		struct pci_bus *linkbus = dev->subordinate;
+>  
+>  		list_for_each_entry(child, &linkbus->devices, bus_list) {
+>  			if ((pci_pcie_type(child) != PCI_EXP_TYPE_ENDPOINT) &&
+> @@ -1024,7 +1017,6 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  
+>  	/* All functions are removed, so just disable ASPM for the link */
+>  	pcie_config_aspm_link(link, 0);
+> -	list_del(&link->sibling);
+>  	/* Clock PM is for endpoint device */
+>  	free_link_state(link);
+>  
+> @@ -1164,6 +1156,8 @@ static int pcie_aspm_set_policy(const char *val,
+>  {
+>  	int i;
+>  	struct pcie_link_state *link;
+> +	struct pci_bus *bus;
+> +	struct pci_dev *pdev;
+>  
+>  	if (aspm_disabled)
+>  		return -EPERM;
+> @@ -1176,9 +1170,18 @@ static int pcie_aspm_set_policy(const char *val,
+>  	down_read(&pci_bus_sem);
+>  	mutex_lock(&aspm_lock);
+>  	aspm_policy = i;
+> -	list_for_each_entry(link, &link_list, sibling) {
+> -		pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> -		pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> +	list_for_each_entry(bus, &pci_root_buses, node) {
+> +		list_for_each_entry(pdev, &bus->devices, bus_list) {
+> +			if (!pci_is_pcie(pdev))
+> +				break;
+> +
+> +			link = pdev->link_state;
+> +			if (!link)
+> +				continue;
+> +
+> +			pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> +			pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> +		}
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+IIUC, in the existing code, link_list contains *every* pcie_link_state
+in the system, so we update the configuration of all of them.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allmodconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20210930
-powerpc              randconfig-c003-20210930
-powerpc                   motionpro_defconfig
-sh                           se7750_defconfig
-arm                       imx_v6_v7_defconfig
-mips                           xway_defconfig
-csky                             alldefconfig
-mips                        workpad_defconfig
-arc                        vdk_hs38_defconfig
-mips                        maltaup_defconfig
-arm                        vexpress_defconfig
-arm                       multi_v4t_defconfig
-powerpc                        cell_defconfig
-mips                     loongson2k_defconfig
-mips                         mpc30x_defconfig
-mips                          rb532_defconfig
-arm                     eseries_pxa_defconfig
-sh                   sh7770_generic_defconfig
-x86_64                              defconfig
-mips                        vocore2_defconfig
-arm                        spear3xx_defconfig
-riscv                    nommu_k210_defconfig
-arm                       mainstone_defconfig
-powerpc                     stx_gp3_defconfig
-powerpc                    amigaone_defconfig
-sparc                       sparc64_defconfig
-riscv                               defconfig
-mips                            gpr_defconfig
-sh                           se7721_defconfig
-arc                              allyesconfig
-sh                               alldefconfig
-mips                           mtx1_defconfig
-arm                       aspeed_g5_defconfig
-sh                        sh7763rdp_defconfig
-ia64                          tiger_defconfig
-powerpc                     tqm8541_defconfig
-powerpc                      mgcoge_defconfig
-mips                          rm200_defconfig
-powerpc                     mpc83xx_defconfig
-arm                          gemini_defconfig
-powerpc                 mpc8540_ads_defconfig
-powerpc                      ppc40x_defconfig
-arm                           viper_defconfig
-arm                           stm32_defconfig
-m68k                          sun3x_defconfig
-mips                         tb0287_defconfig
-powerpc                     powernv_defconfig
-arm                        oxnas_v6_defconfig
-sh                   sh7724_generic_defconfig
-powerpc                 xes_mpc85xx_defconfig
-powerpc                    klondike_defconfig
-powerpc                     taishan_defconfig
-mips                        nlm_xlr_defconfig
-powerpc                       maple_defconfig
-ia64                        generic_defconfig
-m68k                            mac_defconfig
-xtensa                  nommu_kc705_defconfig
-arm                  colibri_pxa300_defconfig
-arm                         at91_dt_defconfig
-sh                ecovec24-romimage_defconfig
-arm                             ezx_defconfig
-arm                         assabet_defconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                      ppc6xx_defconfig
-microblaze                      mmu_defconfig
-arc                        nsimosci_defconfig
-powerpc                 mpc836x_mds_defconfig
-openrisc                            defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                     tqm8540_defconfig
-arm                        multi_v7_defconfig
-powerpc                     ep8248e_defconfig
-parisc                generic-64bit_defconfig
-powerpc                     pseries_defconfig
-arm                          simpad_defconfig
-m68k                        stmark2_defconfig
-powerpc                 mpc85xx_cds_defconfig
-arm                           u8500_defconfig
-xtensa                       common_defconfig
-arm                              alldefconfig
-arm                            lart_defconfig
-riscv                            alldefconfig
-mips                          malta_defconfig
-m68k                         amcore_defconfig
-riscv                          rv32_defconfig
-arc                              alldefconfig
-sh                  sh7785lcr_32bit_defconfig
-openrisc                    or1ksim_defconfig
-s390                          debug_defconfig
-powerpc                      pcm030_defconfig
-csky                                defconfig
-ia64                             alldefconfig
-powerpc                     tqm5200_defconfig
-powerpc64                           defconfig
-x86_64                           alldefconfig
-powerpc                      ppc64e_defconfig
-mips                            e55_defconfig
-mips                      malta_kvm_defconfig
-powerpc                 mpc8560_ads_defconfig
-arm                         palmz72_defconfig
-arm                          ixp4xx_defconfig
-powerpc                     mpc512x_defconfig
-mips                   sb1250_swarm_defconfig
-arm                       aspeed_g4_defconfig
-arm                            qcom_defconfig
-sh                   secureedge5410_defconfig
-arm                           sama7_defconfig
-powerpc                   microwatt_defconfig
-powerpc                     redwood_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                     davinci_all_defconfig
-sh                         ecovec24_defconfig
-arm                      footbridge_defconfig
-powerpc                     sequoia_defconfig
-mips                          ath79_defconfig
-sh                          lboxre2_defconfig
-xtensa                    xip_kc705_defconfig
-arc                         haps_hs_defconfig
-arm                   milbeaut_m10v_defconfig
-arc                           tb10x_defconfig
-arm                  randconfig-c002-20210930
-x86_64               randconfig-c001-20210930
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                                defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a004-20210930
-x86_64               randconfig-a001-20210930
-x86_64               randconfig-a002-20210930
-x86_64               randconfig-a005-20210930
-x86_64               randconfig-a006-20210930
-x86_64               randconfig-a003-20210930
-i386                 randconfig-a003-20210930
-i386                 randconfig-a001-20210930
-i386                 randconfig-a004-20210930
-i386                 randconfig-a002-20210930
-i386                 randconfig-a006-20210930
-i386                 randconfig-a005-20210930
-arc                  randconfig-r043-20210930
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
+Here, iterating through pci_root_buses gives us all the root buses (in
+the case of multiple host bridges), and on each root bus we look at
+every device that has a link_state, so those would typically be Root
+Ports.  But I don't think we descend the hierarchy, so in the case of
+deeper hierarchies, I don't think we update the lower levels.
 
-clang tested configs:
-i386                 randconfig-c001-20210930
-arm                  randconfig-c002-20210930
-powerpc              randconfig-c003-20210930
-mips                 randconfig-c004-20210930
-s390                 randconfig-c005-20210930
-riscv                randconfig-c006-20210930
-x86_64               randconfig-c007-20210930
-x86_64               randconfig-a015-20210930
-x86_64               randconfig-a011-20210930
-x86_64               randconfig-a012-20210930
-x86_64               randconfig-a013-20210930
-x86_64               randconfig-a016-20210930
-x86_64               randconfig-a014-20210930
-i386                 randconfig-a014-20210930
-i386                 randconfig-a013-20210930
-i386                 randconfig-a011-20210930
-i386                 randconfig-a015-20210930
-i386                 randconfig-a016-20210930
-i386                 randconfig-a012-20210930
-riscv                randconfig-r042-20210930
-hexagon              randconfig-r041-20210930
-s390                 randconfig-r044-20210930
-hexagon              randconfig-r045-20210930
+Example from my laptop:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  00:1d.6 Root Port                     to [bus 06-3e]
+  06:00.0 Upstream Port   (switch A)    to [bus 07-3e]
+  07:01.0 Downstream Port (switch A)    to [bus 09-3d]
+  09:00.0 Upstream Port   (switch B)    to [bus 0a-3d]
+  0a:04.0 Downstream Port (switch B)    to [bus 0c-3d]
+  0c:00.0 Upstream Port   (switch C)    to [bus 0d-3d]
+  0d:01.0 Downstream Port (switch C)    to [bus 0e]
+  0e:00.0 Upstream Port   (Endpoint)    USB controller
+
+Here there are four links:
+
+  00:1d.6 --- 06:00.0
+  07:01.0 --- 09:00.0
+  0a:04.0 --- 0c:00.0
+  0d:01.0 --- 0e:00.0
+
+But I think this patch only looks at the 00:1d.6 --- 06:00.0 link,
+doesn't it?
+
+>  	}
+>  	mutex_unlock(&aspm_lock);
+>  	up_read(&pci_bus_sem);
+> -- 
+> 2.20.1
+> 
