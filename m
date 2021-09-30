@@ -2,118 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B2241DC36
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 16:26:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7B141DC3B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Sep 2021 16:27:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349184AbhI3O1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 10:27:48 -0400
-Received: from mail-bn8nam12on2058.outbound.protection.outlook.com ([40.107.237.58]:46273
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1348704AbhI3O1r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Sep 2021 10:27:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UsIf4OBPt4Vf6dQ/p1ZYbyxAfoqWY4b1WvRmJLOkepQdsWZuI4X02nzSgmCP9zxjWYWbT3OKgaGJgfGcxu1vwctpqzntitU2lJNtpw7Vp2Ppp+EG+Kz0Jcz8/ujrYGY4yBZOJxe4uZBLZXTFCx+XwW5xEo+gd9Uey++Z9HrX7Oq9FdQmMbdWLukTBCDTs/RoT6SiGV/qT8sjEGz53+IXAbmZnmC808BhDQ62BKW6xvAArxfmb34cWi3hgRbfJDAPRqV4OFCCXu2l6AUxPDXB4Kav3iEXd2XL3x6umHwdrvAfZfObj0nitUsc6tB89BxBawSPTQCrQNJypfTQwRnJng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=lXoZsf0l/pmdHbmneNO6syKV5dmdhkdFhHoZzMPElGE=;
- b=MMpGqp8lJ9TpOpT4fF1/HSsbXBqjyzZE6u5dUQn9ZnmRkxy7B9noFYIo0rYeARSHqBL0D3tvn4XDl9MZx6MV7F9CSqma9lpCVfJZ2DerrEIUj32YtI7i02UPOUQokIsnQI2Dr/2RyGcxRAYDP+gpWwcdxazkpBvhr/8ImjsmJgNHoT6YWZBcgyT5qTXNSCBYd4JMFaljj7sAEZaFIbZPP+ugWkXz1OgdJSUlcwYe4XvUHit4LsqI0FAz7Rz1CqE7bj1kgRbS8Vqcbi4mYmZcU4gAblZ31A1IugzCuUBf6AERBetGn2XS0w3m5MPX30goCwg93dp0prApdF2mRPWLLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lXoZsf0l/pmdHbmneNO6syKV5dmdhkdFhHoZzMPElGE=;
- b=e3BsFxKir3jaaOS1pseFdoMArrH8ozrLlX2/NxLlMd5QeLOQSilzYKnmjqmgN5Lx1mRRRQAE/Y/w8kQqMxz+G83JJ1RN0dV0uAuX+sNMITh9QGyYBXoLf1nXpTp4vRZbq95xz6Nx3cab9Yruhj+6KtUB0yNmitfsu2YDxvV3O1J74HBqC7A+gHcBkwYjlMdpq0hbA3Ay5ulr1XQBtdOJTnL/iFYR+QNYzF4nEX412LkbKPD1h/HwyOBokjBquHS1uWi5mzegAw/kcCZPlJMw3vWv9+2AWBytmmp4Rnh1Kkpa8l3Zpowz8DdUHagHA5fn0oKfoKaxtJPlXrBTkd36Vg==
-Received: from DM6PR08CA0046.namprd08.prod.outlook.com (2603:10b6:5:1e0::20)
- by BN9PR12MB5321.namprd12.prod.outlook.com (2603:10b6:408:102::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15; Thu, 30 Sep
- 2021 14:26:01 +0000
-Received: from DM6NAM11FT037.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1e0:cafe::da) by DM6PR08CA0046.outlook.office365.com
- (2603:10b6:5:1e0::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend
- Transport; Thu, 30 Sep 2021 14:26:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- DM6NAM11FT037.mail.protection.outlook.com (10.13.172.122) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4566.14 via Frontend Transport; Thu, 30 Sep 2021 14:26:00 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 30 Sep
- 2021 14:25:59 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 30 Sep
- 2021 14:25:59 +0000
-Received: from r-arch-stor03.mtr.labs.mlnx (172.20.187.6) by mail.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Thu, 30 Sep 2021 14:25:57 +0000
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-To:     <hch@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <stefanha@redhat.com>, <oren@nvidia.com>,
-        <linux-pci@vger.kernel.org>, "Max Gurtovoy" <mgurtovoy@nvidia.com>
-Subject: [PATCH 1/1] driver core: use NUMA_NO_NODE during device_initialize
-Date:   Thu, 30 Sep 2021 17:25:56 +0300
-Message-ID: <20210930142556.9999-1-mgurtovoy@nvidia.com>
-X-Mailer: git-send-email 2.18.1
+        id S1349533AbhI3O3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 10:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348233AbhI3O3e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 10:29:34 -0400
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C65AC06176A;
+        Thu, 30 Sep 2021 07:27:51 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:105:465:1:4:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4HKwZD2LZLzQjf1;
+        Thu, 30 Sep 2021 16:27:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Subject: Re: [PATCH v2 1/2] mwifiex: Use non-posted PCI write when setting TX
+ ring write pointer
+To:     David Laight <David.Laight@ACULAB.COM>,
+        =?UTF-8?B?J1BhbGkgUm9ow6FyJw==?= <pali@kernel.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20210914114813.15404-1-verdre@v0yd.nl>
+ <20210914114813.15404-2-verdre@v0yd.nl>
+ <8f65f41a807c46d496bf1b45816077e4@AcuMS.aculab.com>
+ <20210922142726.guviqler5k7wnm52@pali>
+ <e0a4e0adc56148039f853ccb083be53a@AcuMS.aculab.com>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+Message-ID: <ae8ca158-ad86-9c0d-7217-f9db3d2fc42e@v0yd.nl>
+Date:   Thu, 30 Sep 2021 16:27:40 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26cd7d6d-a3e2-4bcf-8995-08d9841e3a06
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5321:
-X-Microsoft-Antispam-PRVS: <BN9PR12MB532136CDDE6B41B02379858ADEAA9@BN9PR12MB5321.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:862;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: T0wbfmjAT32KDm2AA/HOPvLIZpbitjyVi/U8n4kpz3NULK9tVcie06acV03tiKTwNpMHghJ8ehtNenGrzp6/I9+1qzMhnYsDdlNKW9I46igzw9GdSXOguf/eIeCo1oVQE2mZ6UN2HFX2v7Ta/R0kRRpe1LmkdqpRZfRCO9k9Rn7H+OdNy6QAYw2QMsvseyYecgKPJxsSllxDPdxsS9UvvVz5qGCLF9cJuVmuOWhUFw/JvgjmlwPBXgLMU9oP22fWOF5FbB0hp/eymrAz2qT8LV4M+EMZ75H9MI/p2sWPCkz2DdaedLSke4fSRvkyUgTKJ02ICqnoW7YqicowUKefvEWtG8+/cSck8xfxlWYL/rbiuMFyAVKjlCSALIv2YHGEGlTCjlKKikjPvtqmElnozZk96ZTWOC/WzogOkQzBthAQJ/Q4+9qlAHyG+UBtckVnBoQj09rl61Y0GGEwsAgf/TGlbWJBIdW+Yn1aT+Fuof82S+/WCezYcybyios6c+zAHyPf9M0RRHwt5VDKiyqYKH92gshWYNZqfSiMNxVYTq38EJx5zTPeLu2M8fQS9TqwZEn2xFOpbw7lwtLS1FbbDsSzWqOQBMPGCK1g6t7pcp/8rXUwU5CxzV32Xuntv1Rm5fJFDAycBkk11NWOYJp6cz1KTZXofZKkIw4m2diKVKFo3gHjZhrCeqz7HBB+EAZIt+wCymJD2e4qszamzYHarg==
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(8936002)(508600001)(316002)(36860700001)(186003)(26005)(1076003)(54906003)(5660300002)(426003)(336012)(2906002)(82310400003)(110136005)(4326008)(2616005)(8676002)(4744005)(36756003)(107886003)(7636003)(47076005)(86362001)(356005)(70586007)(70206006)(83380400001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2021 14:26:00.5838
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26cd7d6d-a3e2-4bcf-8995-08d9841e3a06
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT037.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5321
+In-Reply-To: <e0a4e0adc56148039f853ccb083be53a@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 3267726B
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Don't use (-1) constant for setting initial device node. Instead, use
-the generic NUMA_NO_NODE definition to indicate that "no node id
-specified".
+On 9/22/21 5:54 PM, David Laight wrote:
+> 
+> From: Pali Rohár
+>> Sent: 22 September 2021 15:27
+>>
+>> On Wednesday 22 September 2021 14:03:25 David Laight wrote:
+>>> From: Jonas Dreßler
+>>>> Sent: 14 September 2021 12:48
+>>>>
+>>>> On the 88W8897 card it's very important the TX ring write pointer is
+>>>> updated correctly to its new value before setting the TX ready
+>>>> interrupt, otherwise the firmware appears to crash (probably because
+>>>> it's trying to DMA-read from the wrong place). The issue is present in
+>>>> the latest firmware version 15.68.19.p21 of the pcie+usb card.
+>>>>
+>>>> Since PCI uses "posted writes" when writing to a register, it's not
+>>>> guaranteed that a write will happen immediately. That means the pointer
+>>>> might be outdated when setting the TX ready interrupt, leading to
+>>>> firmware crashes especially when ASPM L1 and L1 substates are enabled
+>>>> (because of the higher link latency, the write will probably take
+>>>> longer).
+>>>>
+>>>> So fix those firmware crashes by always using a non-posted write for
+>>>> this specific register write. We do that by simply reading back the
+>>>> register after writing it, just as a few other PCI drivers do.
+>>>>
+>>>> This fixes a bug where during rx/tx traffic and with ASPM L1 substates
+>>>> enabled (the enabled substates are platform dependent), the firmware
+>>>> crashes and eventually a command timeout appears in the logs.
+>>>
+>>> I think you need to change your terminology.
+>>> PCIe does have some non-posted write transactions - but I can't
+>>> remember when they are used.
+>>
+>> In PCIe are all memory write requests as posted.
+>>
+>> Non-posted writes in PCIe are used only for IO and config requests. But
+>> this is not case for proposed patch change as it access only card's
+>> memory space.
+>>
+>> Technically this patch does not use non-posted memory write (as PCIe
+>> does not support / provide it), just adds something like a barrier and
+>> I'm not sure if it is really correct (you already wrote more details
+>> about it, so I will let it be).
+>>
+>> I'm not sure what is the correct terminology, I do not know how this
+>> kind of write-followed-by-read "trick" is correctly called.
+> 
+> I think it is probably best to say:
+>     "flush the posted write when setting the TX ring write pointer".
+> 
+> The write can get posted in any/all of the following places:
+> 1) The cpu store buffer.
+> 2) The PCIe host bridge.
+> 3) Any other PCIe bridges.
+> 4) The PCIe slave logic in the target.
+>     There could be separate buffers for each BAR,
+> 5) The actual target logic for that address block.
+>     The target (probably) will look a bit like an old fashioned cpu
+>     motherboard with the PCIe slave logic as the main bus master.
+> 
+> The readback forces all the posted write buffers be flushed.
+> 
+> In this case I suspect it is either flushing (5) or the extra
+> delay of the read TLP processing that 'fixes' the problem.
+> 
+> Note that depending on the exact code and host cpu the second
+> write may not need to wait for the response to the read TLP.
+> So the write, readback, write TLP may be back to back on the
+> actual PCIe link.
+> 
+> Although I don't have access to an actual PCIe monitor we
+> do have the ability to trace 'data' TLP into fpga memory
+> on one of our systems.
+> This is near real-time but they are slightly munged.
+> Watching the TLP can be illuminating!
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
 
-Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
----
- drivers/base/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the detailed explanations, it looks like indeed the read-back 
+is not the real fix here, a simple udelay(50) before sending the "TX 
+ready" interrupt also does the trick.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index e65dd803a453..2b4b46f6c676 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2838,7 +2838,7 @@ void device_initialize(struct device *dev)
- 	spin_lock_init(&dev->devres_lock);
- 	INIT_LIST_HEAD(&dev->devres_head);
- 	device_pm_init(dev);
--	set_dev_node(dev, -1);
-+	set_dev_node(dev, NUMA_NO_NODE);
- #ifdef CONFIG_GENERIC_MSI_IRQ
- 	raw_spin_lock_init(&dev->msi_lock);
- 	INIT_LIST_HEAD(&dev->msi_list);
--- 
-2.18.1
+                 } else {
++                       udelay(50);
++
+                         /* Send the TX ready interrupt */
+                         if (mwifiex_write_reg(adapter, PCIE_CPU_INT_EVENT,
+                                               CPU_INTR_DNLD_RDY)) {
 
+I've tested that for a week now and haven't seen any firmware crashes. 
+Interestingly enough it looks like the delay can also be added after 
+setting the "TX ready" interrupt, just not before updating the TX ring 
+write pointer.
+
+I have no idea if 50 usecs is a good duration to wait here, from trying 
+different values I found that 10 to 20 usecs is not enough, but who 
+knows, maybe that's platform dependent?
