@@ -2,159 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBE8141E5FA
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 04:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2B541E688
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 06:17:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351207AbhJACV7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 22:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230261AbhJACV6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 22:21:58 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41200C06176C
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 19:20:15 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id qe4-20020a17090b4f8400b0019f663cfcd1so1738130pjb.1
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 19:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H1v7bfhbOYS9QQdwJ+dS1BX8nNt2lEyswi+C4uaCxgo=;
-        b=MCfltqqpgRZMipzrqKNzE4TCzkTYOE432mzaARuP6ZAPdOOvgGLlpUvdiffi7khzpY
-         r5ytcuFoPT7QP1M4OkD8d4AAlvn+vL0MyimnfkqRJhaR81vcmlu24dPrEc+YtKAlQybA
-         7uURmtuUtHfa/Nr7Epu3ozIGiZBUv0ryceNZpKerlCXqf9QNQpSj9B83sEeRR3HGje2V
-         ccammWBDCWeMLsP2DpIOuH4BWPqRZiqqTRMGUl6o6QVUfFIn9+Kh4TihdfnVd9FVq5xA
-         pfY/wl98KGZ2b/jqHOnCN5/hR5tIVmL9HTa0U3Dihde1AMTPm61wVlHLUYFEkJnvJlU6
-         RSGA==
+        id S237681AbhJAETY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 00:19:24 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:57314
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237622AbhJAETY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 00:19:24 -0400
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BACA44028F
+        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 04:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1633061859;
+        bh=SQu/5bN0exvN+2VZmVqasdBLNWTyrRXGdzKFgUCYVbs=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=tjFsHEe7FFjNcbpMQ7PL/T7RZOI2ognR2H++m/2q41FRa00Bv4TKAkzR65JmqCeM7
+         yYTCJD4cVzKwRiC0pZHlny8vxxUuZE7zaMDlVoKX1hbpHqGcPak5FVgpf0uZrqW6hL
+         VMcvuK4Xz62WKrNMkwhTWiqCpq9TVj1aDJy6yDjrRjxEQWzqvgqUdg7CG7GFjrc/kc
+         iKSx5uO88f9xbcarEHGv6B0tWyGmjoPlNpXGkAxFV+Oav+pgCRb8sH47ZdEwkFs81U
+         jbfYqcOmDavadiaJ36jUu8SflLq/FIhtkjuqzfl8MC1dsuOZ4GSh9Nptah2FjDK3jq
+         1aplwvQt52wyQ==
+Received: by mail-ot1-f71.google.com with SMTP id m12-20020a0568301e6c00b005469f1a7d70so5835199otr.15
+        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 21:17:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H1v7bfhbOYS9QQdwJ+dS1BX8nNt2lEyswi+C4uaCxgo=;
-        b=wbZS6HXj9bRzXKmOi3nh9co9Cbc24i3EUhYMmdRTrDiiLnAG8FsXDLlZlfhlEKbs5i
-         D3qrgR4z4r0rHqBpqKXh0/dh21cdn4gnOlfA+IiWshq2fRZ/4SlC+hug3zq/ZVYToJBu
-         cIEiOwQB9kCchsw2Lr83Hfu99vAWtcYGwdLareug124wtwX7QpAIn6frPFApH5Ko6UYa
-         z+4AOiT2vvwbXG2IDwPNp9/svCgMyY2IlkL5CDW09wCN66LK0SFpsj/BtGCm3yYFgDkQ
-         54x8msUgqGG9ZDWF94JVaYPCRIUyxJ3yZg5pKtuRvw7aban7IOQsSnklhSLVHW72hiEq
-         QfTg==
-X-Gm-Message-State: AOAM531kwqRgw336dDvpRbpBEFUa91pmZymSMOH42lwGDAITMAGDT+M6
-        Z0OIqsLXY5wmQad4w9ZXOLdmWj7/PuNa6JKVH9oUSg==
-X-Google-Smtp-Source: ABdhPJw3+LICXsBfSEFCKXlafRA7xXZxwrcD4LdHbM7zaf1EyXu36rjRKL9bEqMGIfW1AeETHE+7h0w47T6Gie9PJI0=
-X-Received: by 2002:a17:902:8a97:b0:13e:6e77:af59 with SMTP id
- p23-20020a1709028a9700b0013e6e77af59mr5975436plo.4.1633054814608; Thu, 30 Sep
- 2021 19:20:14 -0700 (PDT)
+        bh=SQu/5bN0exvN+2VZmVqasdBLNWTyrRXGdzKFgUCYVbs=;
+        b=s8iJ9IxdRjkVhJKMDxcq0rZPI+3W/XJ7GjdThboef/GIyXdoqBp5DveBx3EEREPb0e
+         jLTefunKfhRzZyAv92SScVbl/UIoeTFXz1xN/SOEHutTDnQUUB6KkigTrZGfTH/mDcQC
+         DcRCkl6O/cwP5k5i/+btXOtk3gsROAKpEgb4/cphFCLpFcAcemEQdmruSIvh5UpqR80J
+         e34qfAQetszGQTN1/KnQBnJj9MjQ9z7KuGZbWqZTYZGKHlS1Ozm5Y0zmFuVoAGY3RDi0
+         i1XPtfrXPi1JOzcfd8caRRmGSheFM6Shj2boV77nuOhsWNs50IwV8YPlUAXk/WeNqkKE
+         /xRg==
+X-Gm-Message-State: AOAM531RTfJCEbrHC/x+mxXL3RVaQAbUpX+Oh7cmmg2Nwt4/4sn2gf0u
+        3fIrDlFgfnuQH02PpuGIwyYTX/u/wohblUKkOW/QN5CMR0kKFJCzVkmIWUd+1LlWfRWnLtXTgb2
+        9OmAVMK8WZ2Fp69j/KLfMxRIpYFAjBrdRCsgEoWcGxCyEfY8x9TZhPw==
+X-Received: by 2002:a9d:6655:: with SMTP id q21mr8298623otm.269.1633061858447;
+        Thu, 30 Sep 2021 21:17:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx5sIFTWlNrMXzTMDwY9YsLGtg0P9BgxhaFy/YbVon+0xU6YDee9qv+1r4cYz7/RpEmtDpUMMD7dYG2ftih8jY=
+X-Received: by 2002:a9d:6655:: with SMTP id q21mr8298609otm.269.1633061858170;
+ Thu, 30 Sep 2021 21:17:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210930010511.3387967-3-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210930065807-mutt-send-email-mst@kernel.org> <YVXBNJ431YIWwZdQ@kroah.com>
- <20210930144305.GA464826@rowland.harvard.edu> <20210930104924-mutt-send-email-mst@kernel.org>
- <20210930153509.GF464826@rowland.harvard.edu> <20210930115243-mutt-send-email-mst@kernel.org>
- <00156941-300d-a34a-772b-17f0a9aad885@linux.intel.com> <20210930204447.GA482974@rowland.harvard.edu>
- <CAPcyv4j8DvsMYppRtm=+JQWc7nJGoXeAGGz9U150x0p_KekqcA@mail.gmail.com> <20211001014114.GB489012@rowland.harvard.edu>
-In-Reply-To: <20211001014114.GB489012@rowland.harvard.edu>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Sep 2021 19:20:04 -0700
-Message-ID: <CAPcyv4iRo0Hd=_3jAScb5KUEJp3bU=QrWM8FYeb94SzO4gqgJA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] driver core: Add common support to skip probe for
- un-authorized devices
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+References: <20210916154417.664323-1-kai.heng.feng@canonical.com> <20210917220942.GA1748301@bjorn-Precision-5520>
+In-Reply-To: <20210917220942.GA1748301@bjorn-Precision-5520>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 1 Oct 2021 12:17:26 +0800
+Message-ID: <CAAd53p409uhbor1ArZ=kfiMK2JRHVGVyYukDSSyDvFsVSs=ErQ@mail.gmail.com>
+Subject: Re: [RFC] [PATCH net-next v5 0/3] r8169: Implement dynamic ASPM
+ mechanism for recent 1.0/2.5Gbps Realtek NICs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        nic_swsd <nic_swsd@realtek.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 6:41 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+On Sat, Sep 18, 2021 at 6:09 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Thu, Sep 30, 2021 at 01:52:59PM -0700, Dan Williams wrote:
-> > On Thu, Sep 30, 2021 at 1:44 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Thu, Sep 30, 2021 at 12:23:36PM -0700, Andi Kleen wrote:
-> > > >
-> > > > > I don't think the current mitigations under discussion here are about
-> > > > > keeping the system working. In fact most encrypted VM configs tend to
-> > > > > stop booting as a preferred way to handle security issues.
-> > > >
-> > > > Maybe we should avoid the "trusted" term here. We're only really using it
-> > > > because USB is using it and we're now using a common framework like Greg
-> > > > requested. But I don't think it's the right way to think about it.
-> > > >
-> > > > We usually call the drivers "hardened". The requirement for a hardened
-> > > > driver is that all interactions through MMIO/port/config space IO/MSRs are
-> > > > sanitized and do not cause memory safety issues or other information leaks.
-> > > > Other than that there is no requirement on the functionality. In particular
-> > > > DOS is ok since a malicious hypervisor can decide to not run the guest at
-> > > > any time anyways.
-> > > >
-> > > > Someone loading an malicious driver inside the guest would be out of scope.
-> > > > If an attacker can do that inside the guest you already violated the
-> > > > security mechanisms and there are likely easier ways to take over the guest
-> > > > or leak data.
-> > > >
-> > > > The goal of the device filter mechanism is to prevent loading unhardened
-> > > > drivers that could be exploited without them being themselves malicious.
-> > >
-> > > If all you want to do is prevent someone from loading a bunch of
-> > > drivers that you have identified as unhardened, why not just use a
-> > > modprobe blacklist?  Am I missing something?
+> On Thu, Sep 16, 2021 at 11:44:14PM +0800, Kai-Heng Feng wrote:
+> > The purpose of the series is to get comments and reviews so we can merge
+> > and test the series in downstream kernel.
 > >
-> > modules != drivers (i.e. multi-driver modules are a thing) and builtin
-> > modules do not adhere to modprobe policy.
+> > The latest Realtek vendor driver and its Windows driver implements a
+> > feature called "dynamic ASPM" which can improve performance on it's
+> > ethernet NICs.
 > >
-> > There is also a desire to be able to support a single kernel image
-> > across hosts and guests. So, if you were going to say, "just compile
-> > all unnecessary drivers as modules" that defeats the common kernel
-> > image goal. For confidential computing the expectation is that the
-> > necessary device set is small. As you can see in the patches in this
-> > case it's just a few lines of PCI ids and a hack to the virtio bus to
-> > achieve the goal of disabling all extraneous devices by default.
+> > Heiner Kallweit pointed out the potential root cause can be that the
+> > buffer is too small for its ASPM exit latency.
 >
+> I looked at the lspci data in your bugzilla
+> (https://bugzilla.kernel.org/show_bug.cgi?id=214307).
 >
+> L1.2 is enabled, which requires the Latency Tolerance Reporting
+> capability, which helps determine when the Link will be put in L1.2.
+> IIUC, these are analogous to the DevCap "Acceptable Latency" values.
+> Zero latency values indicate the device will be impacted by any delay
+> (PCIe r5.0, sec 6.18).
 >
-> If your goal is to prevent some unwanted _drivers_ from operating --
-> or all but a few desired drivers, as the case may be -- why extend
-> the "authorized" API to all _devices_?  Why not instead develop a
-> separate API (but of similar form) for drivers?
+> Linux does not currently program those values, so the values there
+> must have been set by the BIOS.  On the working AMD system, they're
+> set to 1048576ns, while on the broken Intel system, they're set to
+> 3145728ns.
 >
-> Wouldn't that make more sense?  It corresponds a lot more directly
-> with what you say you want to accomplish.
+> I don't really understand how these values should be computed, and I
+> think they depend on some electrical characteristics of the Link, so
+> I'm not sure it's *necessarily* a problem that they are different.
+> But a 3X difference does seem pretty large.
+>
+> So I'm curious whether this is related to the problem.  Here are some
+> things we could try on the broken Intel system:
 
-This was v1. v1 was NAKd [1] [2]:
+Original network speed, tested via iperf3:
+TX: ~255 Mbps
+RX: ~490 Mbps
 
-[1]: https://lore.kernel.org/all/YQwpa+LAYt7YZ5dh@kroah.com/
-[2]: https://lore.kernel.org/all/YQzDqm6FOezM6Rnu@kroah.com/
+>
+>   - What happens if you disable ASPM L1.2 using
+>     /sys/devices/pci*/.../link/l1_2_aspm?
 
-> What would you do in the theoretical case where two separate drivers
-> can manage the same device, but one of them is desired (or hardened)
-> and the other isn't?
+TX: ~670 Mbps
+RX: ~670 Mbps
 
-Allow for user override, just like we do today for new_id, remove_id,
-bind, and unbind  when default driver policy is insufficient.
+>
+>   - If that doesn't work, what happens if you also disable PCI-PM L1.2
+>     using /sys/devices/pci*/.../link/l1_2_pcipm?
 
-echo 1 > /sys/bus/$bus/devices/$device/authorized
-echo $device > /sys/bus/$bus/drivers/$desired_driver/bind
+Same as only disables l1_2_aspm.
 
-The device filter is really only necessary to bootstrap until you can
-run override policy scripts. The driver firewall approach was overkill
-in that regard.
+>
+>   - If either of the above makes things work, then at least we know
+>     the problem is sensitive to L1.2.
+
+Right now the downstream kernel disables ASPM L1.2 as workaround.
+
+>
+>   - Then what happens if you use setpci to set the LTR Latency
+>     registers to 0, then re-enable ASPM L1.2 and PCI-PM L1.2?  This
+>     should mean the Realtek device wants the best possible service and
+>     the Link probably won't spend much time in L1.2.
+
+# setpci -s 01:00.0 ECAP_LTR+4.w=0x0
+# setpci -s 01:00.0 ECAP_LTR+6.w=0x0
+
+Then re-enable ASPM L1.2, the issue persists - the network speed is
+still very slow.
+
+>
+>   - What happens if you set the LTR Latency registers to 0x1001
+>     (should be the same as on the AMD system)?
+
+Same slow speed here.
+
+Kai-Heng
