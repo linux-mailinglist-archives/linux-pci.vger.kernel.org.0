@@ -2,100 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF36D41EFFC
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 16:51:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D54A41F0EC
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 17:13:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231876AbhJAOxD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 10:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbhJAOxD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 10:53:03 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E817C061775
-        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 07:51:19 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id d12-20020a05683025cc00b0054d8486c6b8so11859381otu.0
-        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 07:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=pI21qB/pQXParW0juqBdZHeaeuvWOc5OGghxmRD/HQE=;
-        b=gt1rgkcESxxoRF2CFHddv++q0jWtItmolNdJbUTV/aKkdvapxWiQLAORWE00u26al1
-         KhvxFN6Xoyv1WMT6BgCvvwyT89G1dvJefq1JaqB1jTH0dkUDeuEWm322FPz9kxky8Ord
-         TGv3m3FhU5UQETt7nB1R+sB2XWecrudvMvKOtz3bGnEys8qu9/6vgPGbCy8UX+gOpVqK
-         Z5AbeH2kdooX3tUPukBp5nOhJb+VD8i7a9Be1wt1UatDyG4j1bJ+1qtaN0077V8Q8J4G
-         wq/akhVplhH4iN12xAWHaL4Gwkr7R77VENulIRu7zTnwRE8rgvHWrKaqTYn9ueSy1haC
-         lnZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=pI21qB/pQXParW0juqBdZHeaeuvWOc5OGghxmRD/HQE=;
-        b=3sVRjtN9ufv+XCYI/hVT0Rmi//HzIt/BqBlMqlQwobr3rC51TceOYMRBlVoAwGkAAV
-         W6XqPWnqCss1Y+bSUB8LpTKtl0T3Fn7iSvUJ91Cs8CxmVDSHHi1bMmxOmkErVwTWdEMx
-         aRUEghY2AAvsm1DPLScA1jcOQtlGVJ+eAnfagBpsCyJSUUuHR4vLKCD9X95m6zKjAWdq
-         XQJRHibmRwvA/ad1v6mWTHjHKHs7T2tcWkHhh7jXqkyvg0fV6gPF0UWOpjnOuaoWixCG
-         qqMZklAm0M4FuSPAcsQ4DafLxDnTQeldSSgYcm1aOQKQ2okWPz8jQn0CKE3V91aKkNA8
-         uUZA==
-X-Gm-Message-State: AOAM5313VePOTcymCowCgdhKCOk3oWJtCNzFNfcbZC4vu1D4xdSgnooU
-        rjIOjfULEevPGy4jx9/6mUqKpoYZ0IJv39oduSXxamslbGk=
-X-Google-Smtp-Source: ABdhPJypGVVPS6r3/LM+1icMEfLetZpCwF+rK+UV5ki8PrAVwOKVda9qf1W0qHM4kZyxtoFAE7nBZ08uOIhChRvPrXc=
-X-Received: by 2002:a05:6830:1653:: with SMTP id h19mr11080095otr.162.1633099878073;
- Fri, 01 Oct 2021 07:51:18 -0700 (PDT)
+        id S1354865AbhJAPPJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 11:15:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1354953AbhJAPPJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 11:15:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EB84261A03;
+        Fri,  1 Oct 2021 15:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633101205;
+        bh=631cqBI4zzuyya1dk7UkFppXfo3kmF+rEVm0SaivdbY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p89Wq91bkvdeRbhXf3oJAHa27xaldvYp8bV3NLoZ7Vn+JgUtfYBdWuoyVYJxhHBOO
+         qI/wRkbYfw3+9d5GtrkTFN38DpjSMpk0MwnqW+PkfwsHNuJBMik7ELyC55V5q15cnb
+         vuADqA/frDO9kwp/28O4r2myBF219H+JQkQCvSppBYr6gFq5Ff6+1rdD19N9y1gv8G
+         JFiUvUPq/D3BAQ/0xevuDRwePlR9rnpVYBbUKRgPzTG7MAymSNhAc2e0N97zvu5t2E
+         KZ15I1lPSDif9LHeM6dN10jnZ+mn16fCBscsvRU8nDjgKycs2nwcoPlxBNMaAMILle
+         IhO+WqS54Onbw==
+Date:   Fri, 1 Oct 2021 08:13:22 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Ajay Garg <ajaygargnsit@gmail.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: None of the virtual/physical/bus address matches the (base)
+ BAR-0 register
+Message-ID: <20211001151322.GA408729@dhcp-10-100-145-180.wdc.com>
+References: <CAHP4M8UqzA4ET2bDVuucQYMJk9Lk4WqRr-9xX8=6YWXFOBBNzw@mail.gmail.com>
 MIME-Version: 1.0
-From:   Ajay Garg <ajaygargnsit@gmail.com>
-Date:   Fri, 1 Oct 2021 20:21:06 +0530
-Message-ID: <CAHP4M8UqzA4ET2bDVuucQYMJk9Lk4WqRr-9xX8=6YWXFOBBNzw@mail.gmail.com>
-Subject: None of the virtual/physical/bus address matches the (base) BAR-0 register
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHP4M8UqzA4ET2bDVuucQYMJk9Lk4WqRr-9xX8=6YWXFOBBNzw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All.
+On Fri, Oct 01, 2021 at 08:21:06PM +0530, Ajay Garg wrote:
+> Hi All.
+> 
+> I have a SD/MMC reader over PCI, which displays the following (amongst
+> others) when we do "lspci -vv" :
+> 
+> #########################################################
+> Region 0: Memory at e2c20000 (32-bit, non-prefetchable) [size=512]
+> #########################################################
+> 
+> Above shows that e2c20000 is the physical (base-)address of BAR0.
+> 
+> Now, in the device driver, I do the following :
+> 
+> ########################################################
+> .....
+> struct pci_dev *ptr;
+> void __iomem *bar0_ptr;
+> ......
+> 
+> ......
+> pci_request_region(ptr, 0, "ajay_sd_mmc_BAR0_region");
+> bar0_ptr = pci_iomap(ptr, 0, pci_resource_len(ptr, 0));
+> 
+> printk("Base virtual-address = [%p]\n", bar0_ptr);
+> printk("Base physical-address = [%p]\n", virt_to_phys(bar0_ptr));
+> printk("Base bus-address = [%p]\n", virt_to_bus(bar0_ptr));
+>
+> I have removed error-checking, but I confirm that pci_request_region()
+> and pci_iomap calls are successful.
+> 
+> Now, in the 3 printk's, none of the value is printed as e2c20000.
+> I was expecting that the 2nd result, of virt_to_phys() translation,
+> would be equal to the base-address of BAR0 register, as reported by
+> lspci.
+> 
+> 
+> What am I missing?
+> Will be grateful for pointers.
 
-I have a SD/MMC reader over PCI, which displays the following (amongst
-others) when we do "lspci -vv" :
-
-#########################################################
-Region 0: Memory at e2c20000 (32-bit, non-prefetchable) [size=512]
-#########################################################
-
-Above shows that e2c20000 is the physical (base-)address of BAR0.
-
-
-
-Now, in the device driver, I do the following :
-
-########################################################
-.....
-struct pci_dev *ptr;
-void __iomem *bar0_ptr;
-......
-
-......
-pci_request_region(ptr, 0, "ajay_sd_mmc_BAR0_region");
-bar0_ptr = pci_iomap(ptr, 0, pci_resource_len(ptr, 0));
-
-printk("Base virtual-address = [%p]\n", bar0_ptr);
-printk("Base physical-address = [%p]\n", virt_to_phys(bar0_ptr));
-printk("Base bus-address = [%p]\n", virt_to_bus(bar0_ptr));
-....
-########################################################
-
-
-I have removed error-checking, but I confirm that pci_request_region()
-and pci_iomap calls are successful.
-
-Now, in the 3 printk's, none of the value is printed as e2c20000.
-I was expecting that the 2nd result, of virt_to_phys() translation,
-would be equal to the base-address of BAR0 register, as reported by
-lspci.
-
-
-What am I missing?
-Will be grateful for pointers.
-
-
-Thanks and Regards,
-Ajay
+The CPU address isn't always the same as the PCI address. For example,
+some memory resources are added via pci_add_resource_offset(), so the
+windows the host sees will be different than the ones the devices use.
