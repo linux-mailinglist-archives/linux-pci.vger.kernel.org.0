@@ -2,93 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 655F441EEFC
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 15:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF36D41EFFC
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 16:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhJAN75 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 09:59:57 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:50168 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbhJAN75 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 09:59:57 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id b330d1a140d17332; Fri, 1 Oct 2021 15:58:11 +0200
-Received: from kreacher.localnet (unknown [213.134.175.164])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id BFC5E66A79A;
-        Fri,  1 Oct 2021 15:58:10 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Shanker Donthineni <sdonthineni@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH] PCI: ACPI: Check parent pointer in acpi_pci_find_companion()
-Date:   Fri, 01 Oct 2021 15:58:10 +0200
-Message-ID: <5523582.DvuYhMxLoT@kreacher>
+        id S231876AbhJAOxD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 10:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231854AbhJAOxD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 10:53:03 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E817C061775
+        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 07:51:19 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id d12-20020a05683025cc00b0054d8486c6b8so11859381otu.0
+        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 07:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=pI21qB/pQXParW0juqBdZHeaeuvWOc5OGghxmRD/HQE=;
+        b=gt1rgkcESxxoRF2CFHddv++q0jWtItmolNdJbUTV/aKkdvapxWiQLAORWE00u26al1
+         KhvxFN6Xoyv1WMT6BgCvvwyT89G1dvJefq1JaqB1jTH0dkUDeuEWm322FPz9kxky8Ord
+         TGv3m3FhU5UQETt7nB1R+sB2XWecrudvMvKOtz3bGnEys8qu9/6vgPGbCy8UX+gOpVqK
+         Z5AbeH2kdooX3tUPukBp5nOhJb+VD8i7a9Be1wt1UatDyG4j1bJ+1qtaN0077V8Q8J4G
+         wq/akhVplhH4iN12xAWHaL4Gwkr7R77VENulIRu7zTnwRE8rgvHWrKaqTYn9ueSy1haC
+         lnZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=pI21qB/pQXParW0juqBdZHeaeuvWOc5OGghxmRD/HQE=;
+        b=3sVRjtN9ufv+XCYI/hVT0Rmi//HzIt/BqBlMqlQwobr3rC51TceOYMRBlVoAwGkAAV
+         W6XqPWnqCss1Y+bSUB8LpTKtl0T3Fn7iSvUJ91Cs8CxmVDSHHi1bMmxOmkErVwTWdEMx
+         aRUEghY2AAvsm1DPLScA1jcOQtlGVJ+eAnfagBpsCyJSUUuHR4vLKCD9X95m6zKjAWdq
+         XQJRHibmRwvA/ad1v6mWTHjHKHs7T2tcWkHhh7jXqkyvg0fV6gPF0UWOpjnOuaoWixCG
+         qqMZklAm0M4FuSPAcsQ4DafLxDnTQeldSSgYcm1aOQKQ2okWPz8jQn0CKE3V91aKkNA8
+         uUZA==
+X-Gm-Message-State: AOAM5313VePOTcymCowCgdhKCOk3oWJtCNzFNfcbZC4vu1D4xdSgnooU
+        rjIOjfULEevPGy4jx9/6mUqKpoYZ0IJv39oduSXxamslbGk=
+X-Google-Smtp-Source: ABdhPJypGVVPS6r3/LM+1icMEfLetZpCwF+rK+UV5ki8PrAVwOKVda9qf1W0qHM4kZyxtoFAE7nBZ08uOIhChRvPrXc=
+X-Received: by 2002:a05:6830:1653:: with SMTP id h19mr11080095otr.162.1633099878073;
+ Fri, 01 Oct 2021 07:51:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+From:   Ajay Garg <ajaygargnsit@gmail.com>
+Date:   Fri, 1 Oct 2021 20:21:06 +0530
+Message-ID: <CAHP4M8UqzA4ET2bDVuucQYMJk9Lk4WqRr-9xX8=6YWXFOBBNzw@mail.gmail.com>
+Subject: None of the virtual/physical/bus address matches the (base) BAR-0 register
+To:     linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.175.164
-X-CLIENT-HOSTNAME: 213.134.175.164
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrudekiedgieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvvefgteeuteehkeduuedvudetleevffdtffdtjeejueekffetieekgfeigfehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvudefrddufeegrddujeehrdduieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudejhedrudeigedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
- tghpthhtohepshgthhhnvghllhgvsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtohepjhgvshhsvgdrsghrrghnuggvsghurhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepshguohhnthhhihhnvghnihesnhhvihguihgrrdgtohhmpdhrtghpthhtoheprghlvgigrdifihhllhhirghmshhonhesrhgvughhrghtrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi All.
 
-If acpi_pci_find_companion() is called for a device whose parent
-pointer is NULL, it will crash when attempting to get the ACPI
-companion of the parent due to a NULL pointer dereference in
-the ACPI_COMPANION() macro.
+I have a SD/MMC reader over PCI, which displays the following (amongst
+others) when we do "lspci -vv" :
 
-This was not a problem before commit 375553a93201 ("PCI: Setup ACPI
-fwnode early and at the same time with OF") that made pci_setup_device()
-call pci_set_acpi_fwnode() and so it allowed devices with NULL parent
-pointers to be passed to acpi_pci_find_companion() which is the case
-in pci_iov_add_virtfn(), for instance.
+#########################################################
+Region 0: Memory at e2c20000 (32-bit, non-prefetchable) [size=512]
+#########################################################
 
-Fix this issue by making acpi_pci_find_companion() check the device's
-parent pointer upfront and bail out if it is NULL.
-
-While pci_iov_add_virtfn() can be changed to set the device's parent
-pointer before calling pci_setup_device() for it, checking pointers
-against NULL before dereferencing them is prudent anyway and looking
-for ACPI companions of virtual functions isn't really useful.
-
-Fixes: 375553a93201 ("PCI: Setup ACPI fwnode early and at the same time with OF")
-Link: https://lore.kernel.org/linux-acpi/8e4bbd5c59de31db71f718556654c0aa077df03d.camel@linux.ibm.com/
-Reported-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci-acpi.c |    3 +++
- 1 file changed, 3 insertions(+)
-
-Index: linux-pm/drivers/pci/pci-acpi.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-acpi.c
-+++ linux-pm/drivers/pci/pci-acpi.c
-@@ -1243,6 +1243,9 @@ static struct acpi_device *acpi_pci_find
- 	bool check_children;
- 	u64 addr;
- 
-+	if (!dev->parent)
-+		return NULL;
-+
- 	down_read(&pci_acpi_companion_lookup_sem);
- 
- 	adev = pci_acpi_find_companion_hook ?
+Above shows that e2c20000 is the physical (base-)address of BAR0.
 
 
 
+Now, in the device driver, I do the following :
+
+########################################################
+.....
+struct pci_dev *ptr;
+void __iomem *bar0_ptr;
+......
+
+......
+pci_request_region(ptr, 0, "ajay_sd_mmc_BAR0_region");
+bar0_ptr = pci_iomap(ptr, 0, pci_resource_len(ptr, 0));
+
+printk("Base virtual-address = [%p]\n", bar0_ptr);
+printk("Base physical-address = [%p]\n", virt_to_phys(bar0_ptr));
+printk("Base bus-address = [%p]\n", virt_to_bus(bar0_ptr));
+....
+########################################################
+
+
+I have removed error-checking, but I confirm that pci_request_region()
+and pci_iomap calls are successful.
+
+Now, in the 3 printk's, none of the value is printed as e2c20000.
+I was expecting that the 2nd result, of virt_to_phys() translation,
+would be equal to the base-address of BAR0 register, as reported by
+lspci.
+
+
+What am I missing?
+Will be grateful for pointers.
+
+
+Thanks and Regards,
+Ajay
