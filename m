@@ -2,163 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C69841F630
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 22:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2822241F639
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 22:18:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbhJAUPY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 16:15:24 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:35274 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbhJAUPX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 16:15:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=MT0f0inatgvWHt9y6q41qCoiZgUB0hemG4eYA9iG0ZI=; b=gqh8dihCcDiD7/l4vhuUnLDPle
-        9EFzkzLPUy1dTkJIIS1JcbckiRfeXzJ3oPIWHHWu13MU5vZZTHs9K3VGis/f5lP/HAvCEkb2bDCoN
-        TVp36+euwLuf/+pQqIkLxjeOadBmDXsgBbgQIXRtYh3SCtOVuof43ew53y5WYQK1MoKHHMWFWrxpj
-        YV8lkp6q6VCo8sHUFpLphXcyAeg2LlwFDBTBjy2/jUe8+CL2T7gCQhwH9jY3nmRmA9+owtn82wpNH
-        GNBBBIIzV1eUB0QsANCVQCY6M7rzdY6M85FAsLTdYcDm8qwoj53La4rnmlpfbJDQo7Qm8m25f65pS
-        GXXa4xSA==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1mWOuH-000696-1t; Fri, 01 Oct 2021 14:13:22 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Alistair Popple <apopple@nvidia.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-References: <20210916234100.122368-20-logang@deltatee.com>
- <20210928195518.GV3544071@ziepe.ca>
- <8d386273-c721-c919-9749-fc0a7dc1ed8b@deltatee.com>
- <20210929230543.GB3544071@ziepe.ca>
- <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
- <20210929233540.GF3544071@ziepe.ca>
- <f9a83402-3d66-7437-ca47-77bac4108424@deltatee.com>
- <20210930003652.GH3544071@ziepe.ca> <20211001134856.GN3544071@ziepe.ca>
- <4fdd337b-fa35-a909-5eee-823bfd1e9dc4@deltatee.com>
- <20211001174511.GQ3544071@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <95ada0ac-08cc-5b77-8675-b955b1b6d488@deltatee.com>
-Date:   Fri, 1 Oct 2021 14:13:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S229967AbhJAUUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 16:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229531AbhJAUUI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 16:20:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DFB5C61247;
+        Fri,  1 Oct 2021 20:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633119504;
+        bh=c46j00fAmuNM9GFAqS4+ixKscZuoTge9mONuCRSHgsI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nIhV2tJkthXGldr92MDC8V8Vd3hHGUc4XtcFJB3sNakNLzBiKsDlexSr0wgusKGso
+         Y0KTbKE9QhCt97FiRWA6Ma7fcyWYGYwERIN9G36Ks38Oq1dYOKOMUQ7SrSbvhTXXmT
+         qBKkUMCoEguMuMggNAd5YQnFcgX4yt+zlJd1I1eBKvDSVDeVXySBlFpzO398G8s4sH
+         U2OecUFb6EY4ysIt7ysp7AKMnIKrsSRRIEHjnUkZf9Ii0DH1xv7dmxGjOKB8RBqY9w
+         UVsXg1wNm+qOFbHoduW2hROH/+CRaPl5IhtjjVFVID0vQITJEXIV49PBhjqe/1QlEA
+         dlfGa6/77K52w==
+Date:   Fri, 1 Oct 2021 15:18:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kelvin.cao@microchip.com
+Cc:     kurt.schwemmer@microsemi.com, logang@deltatee.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kelvincao@outlook.com
+Subject: Re: [PATCH 1/5] PCI/switchtec: Error out MRPC execution when no GAS
+ access
+Message-ID: <20211001201822.GA962472@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <20211001174511.GQ3544071@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, hch@lst.de, Felix.Kuehling@amd.com, apopple@nvidia.com, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210924110842.6323-2-kelvin.cao@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-10-01 11:45 a.m., Jason Gunthorpe wrote:
->> Before the invalidation, an active flag is cleared to ensure no new
->> mappings can be created while the unmap is proceeding.
->> unmap_mapping_range() should sequence itself with the TLB flush and
+On Fri, Sep 24, 2021 at 11:08:38AM +0000, kelvin.cao@microchip.com wrote:
+> From: Kelvin Cao <kelvin.cao@microchip.com>
 > 
-> AFIAK unmap_mapping_range() kicks off the TLB flush and then
-> returns. It doesn't always wait for the flush to fully finish. Ie some
-> cases use RCU to lock the page table against GUP fast and so the
-> put_page() doesn't happen until the call_rcu completes - after a grace
-> period. The unmap_mapping_range() does not wait for grace periods.
+> After a firmware hard reset, MRPC command executions, which are based
+> on the PCI BAR (which Microchip refers to as GAS) read/write, will hang
+> indefinitely. This is because after a reset, the host will fail all GAS
+> reads (get all 1s), in which case the driver won't get a valid MRPC
+> status.
 
-Admittedly, the tlb flush code isn't the easiest code to understand.
-But, yes it seems at least on some arches the pages are freed by
-call_rcu(). But can't this be fixed easily by adding a synchronize_rcu()
-call after calling unmap_mapping_range()? Certainly after a
-synchronize_rcu(), the TLB has been flushed and it is safe to free those
-pages.
+Trying to write a merge commit log for this, but having a hard time
+summarizing it.  It sounds like it covers both Switchtec-specific
+(firmware and MRPC commands) and generic PCIe behavior (MMIO read
+failures).
 
->> P2PDMA follows this pattern, except pages are not mapped linearly and
->> are returned to the genalloc when their refcount falls to 1. This only
->> happens after a VMA is closed which should imply the PTEs have already
->> been unlinked from the pages. 
+This has something to do with a firmware hard reset.  What is that?
+Is that like a firmware reboot?  A device reset, e.g., FLR or
+secondary bus reset, that causes a firmware reboot?  A device reset
+initiated by firmware?
+
+Anyway, apparently when that happens, MMIO reads to the switch fail
+(timeout or error completion on PCIe) for a while.  If a device reset
+is involved, that much is standard PCIe behavior.  And the driver sees
+~0 data from those failed reads.  That's not part of the PCIe spec,
+but is typical root complex behavior.
+
+But you said the MRPC commands hang indefinitely.  Presumably MMIO
+reads would start succeeding eventually when the device becomes ready,
+so I don't know how that translates to "indefinitely."
+
+Weird to refer to a PCI BAR as "GAS".  Maybe expanding the acronym
+would help it make sense.
+
+What does "host" refer to?  I guess it's the switch (the
+switchtec_dev), since you say it fails MMIO reads?
+
+Naming comment below.
+
+> Add a read check to GAS access when a MRPC command execution doesn't
+> response timely, error out if the check fails.
 > 
-> And here is the problem, since the genalloc is being used we now care
-> that a page should not continue to be accessed by userspace after it
-> has be placed back into the genalloc. I suppose fsdax has the same
-> basic issue too.
-
-Ok, similar question. Then if we call synchronize_rcu() in vm_close(),
-before the put_page() calls which return the pages to the genalloc,
-would that not guarantee the TLBs have been appropriately flushed?
-
-
->> Not to say that all this couldn't use a big conceptual cleanup. A
->> similar question exists with the single find_special_page() user
->> (xen/gntdev) and it's definitely not clear what the differences are
->> between the find_special_page() and vmf_insert_mixed() techniques and
->> when one should be used over the other. Or could they both be merged to
->> use the same technique?
+> Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
+> ---
+>  drivers/pci/switch/switchtec.c | 59 ++++++++++++++++++++++++++++++----
+>  1 file changed, 52 insertions(+), 7 deletions(-)
 > 
-> Oh that gntdev stuff is just nonsense. IIRC is trying to delegate
-> control over a PTE entry itself to the hypervisor.
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index 0b301f8be9ed..092653487021 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -45,6 +45,7 @@ enum mrpc_state {
+>  	MRPC_QUEUED,
+>  	MRPC_RUNNING,
+>  	MRPC_DONE,
+> +	MRPC_IO_ERROR,
+>  };
+>  
+>  struct switchtec_user {
+> @@ -66,6 +67,13 @@ struct switchtec_user {
+>  	int event_cnt;
+>  };
+>  
+> +static int check_access(struct switchtec_dev *stdev)
+> +{
+> +	u32 device = ioread32(&stdev->mmio_sys_info->device_id);
+> +
+> +	return stdev->pdev->device == device;
+> +}
+
+Didn't notice this before, but the "check_access()" name is not very
+helpful because it doesn't give a clue about what the return value
+means.  Does 0 mean no error?  Does 1 mean no error?  From reading the
+implementation, I can see that 0 is actually the error case, but I
+can't tell from the name.
+
+>  static struct switchtec_user *stuser_create(struct switchtec_dev *stdev)
+>  {
+>  	struct switchtec_user *stuser;
+> @@ -113,6 +121,7 @@ static void stuser_set_state(struct switchtec_user *stuser,
+>  		[MRPC_QUEUED] = "QUEUED",
+>  		[MRPC_RUNNING] = "RUNNING",
+>  		[MRPC_DONE] = "DONE",
+> +		[MRPC_IO_ERROR] = "IO_ERROR",
+>  	};
+>  
+>  	stuser->state = state;
+> @@ -184,6 +193,21 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+>  	return 0;
+>  }
+>  
+> +static void mrpc_cleanup_cmd(struct switchtec_dev *stdev)
+> +{
+> +	/* requires the mrpc_mutex to already be held when called */
+> +	struct switchtec_user *stuser = list_entry(stdev->mrpc_queue.next,
+> +						   struct switchtec_user, list);
+> +
+> +	stuser->cmd_done = true;
+> +	wake_up_interruptible(&stuser->cmd_comp);
+> +	list_del_init(&stuser->list);
+> +	stuser_put(stuser);
+> +	stdev->mrpc_busy = 0;
+> +
+> +	mrpc_cmd_submit(stdev);
+> +}
+> +
+>  static void mrpc_complete_cmd(struct switchtec_dev *stdev)
+>  {
+>  	/* requires the mrpc_mutex to already be held when called */
+> @@ -223,13 +247,7 @@ static void mrpc_complete_cmd(struct switchtec_dev *stdev)
+>  		memcpy_fromio(stuser->data, &stdev->mmio_mrpc->output_data,
+>  			      stuser->read_len);
+>  out:
+> -	stuser->cmd_done = true;
+> -	wake_up_interruptible(&stuser->cmd_comp);
+> -	list_del_init(&stuser->list);
+> -	stuser_put(stuser);
+> -	stdev->mrpc_busy = 0;
+> -
+> -	mrpc_cmd_submit(stdev);
+> +	mrpc_cleanup_cmd(stdev);
+>  }
+>  
+>  static void mrpc_event_work(struct work_struct *work)
+> @@ -246,6 +264,23 @@ static void mrpc_event_work(struct work_struct *work)
+>  	mutex_unlock(&stdev->mrpc_mutex);
+>  }
+>  
+> +static void mrpc_error_complete_cmd(struct switchtec_dev *stdev)
+> +{
+> +	/* requires the mrpc_mutex to already be held when called */
+> +
+> +	struct switchtec_user *stuser;
+> +
+> +	if (list_empty(&stdev->mrpc_queue))
+> +		return;
+> +
+> +	stuser = list_entry(stdev->mrpc_queue.next,
+> +			    struct switchtec_user, list);
+> +
+> +	stuser_set_state(stuser, MRPC_IO_ERROR);
+> +
+> +	mrpc_cleanup_cmd(stdev);
+> +}
+> +
+>  static void mrpc_timeout_work(struct work_struct *work)
+>  {
+>  	struct switchtec_dev *stdev;
+> @@ -257,6 +292,11 @@ static void mrpc_timeout_work(struct work_struct *work)
+>  
+>  	mutex_lock(&stdev->mrpc_mutex);
+>  
+> +	if (!check_access(stdev)) {
+> +		mrpc_error_complete_cmd(stdev);
+> +		goto out;
+> +	}
+> +
+>  	if (stdev->dma_mrpc)
+>  		status = stdev->dma_mrpc->status;
+>  	else
+> @@ -544,6 +584,11 @@ static ssize_t switchtec_dev_read(struct file *filp, char __user *data,
+>  	if (rc)
+>  		return rc;
+>  
+> +	if (stuser->state == MRPC_IO_ERROR) {
+> +		mutex_unlock(&stdev->mrpc_mutex);
+> +		return -EIO;
+> +	}
+> +
+>  	if (stuser->state != MRPC_DONE) {
+>  		mutex_unlock(&stdev->mrpc_mutex);
+>  		return -EBADE;
+> -- 
+> 2.25.1
 > 
-> 		/*
-> 		 * gntdev takes the address of the PTE in find_grant_ptes() and
-> 		 * passes it to the hypervisor in gntdev_map_grant_pages(). The
-> 		 * purpose of the notifier is to prevent the hypervisor pointer
-> 		 * to the PTE from going stale.
-> 		 *
-> 		 * Since this vma's mappings can't be touched without the
-> 		 * mmap_lock, and we are holding it now, there is no need for
-> 		 * the notifier_range locking pattern.
-> 
-> I vaugely recall it stuffs in a normal page then has the hypervisor
-> overwrite the PTE. When it comes time to free the PTE it recovers the
-> normal page via the 'find_special_page' hack and frees it. Somehow the
-> hypervisor is also using the normal page for something.
-> 
-> It is all very strange and one shouldn't think about it :|
-
-Found this from an old commit message which seems to be a better
-explanation, though I still don't fully understand it:
-
-   In a Xen PV guest, the PTEs contain MFNs so get_user_pages() (for
-   example) must do an MFN to PFN (M2P) lookup before it can get the
-   page.  For foreign pages (those owned by another guest) the M2P
-   lookup returns the PFN as seen by the foreign guest (which would be
-   completely the wrong page for the local guest).
-
-   This cannot be fixed up improving the M2P lookup since one MFN may be
-   mapped onto two or more pages so getting the right page is impossible
-   given just the MFN.
-
-Yes, all very strange.
-
-Logan
