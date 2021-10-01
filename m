@@ -2,146 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1AF41E9F2
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 11:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6795941EB05
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 12:36:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353237AbhJAJog (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 05:44:36 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3906 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353274AbhJAJoa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 05:44:30 -0400
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HLQ7S3HQwz67D3k;
-        Fri,  1 Oct 2021 17:39:48 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Fri, 1 Oct 2021 11:42:44 +0200
-Received: from localhost (10.52.123.156) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 1 Oct 2021
- 10:42:43 +0100
-Date:   Fri, 1 Oct 2021 10:42:26 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        "David E . Box" <david.e.box@linux.intel.com>,
+        id S1352004AbhJAKic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 06:38:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37232 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231316AbhJAKib (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 06:38:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="225053546"
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="225053546"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 03:36:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="619007355"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2021 03:36:44 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 01 Oct 2021 13:36:43 +0300
+Date:   Fri, 1 Oct 2021 13:36:43 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
- designated VSEC
-Message-ID: <20211001104226.00000add@Huawei.com>
-In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
-References: <20210923172647.72738-1-ben.widawsky@intel.com>
-        <20210923172647.72738-7-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: Convert to
+ device_create_managed_software_node()
+Message-ID: <YVbku7IQatCydZ+V@kuha.fi.intel.com>
+References: <20210930121246.22833-2-heikki.krogerus@linux.intel.com>
+ <20210930150402.GA877907@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.123.156]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210930150402.GA877907@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Sep 2021 10:26:44 -0700
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
-> Extended Capability with the specified DVSEC ID.
+On Thu, Sep 30, 2021 at 10:04:02AM -0500, Bjorn Helgaas wrote:
+> On Thu, Sep 30, 2021 at 03:12:45PM +0300, Heikki Krogerus wrote:
+> > In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
+> > instead of device_add_properties() to set the "dma-can-stall"
+> > property.
+> > 
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> > Hi,
+> > 
+> > The commit message now says what Bjorn requested, except I left out
+> > the claim that the patch fixes a lifetime issue.
 > 
-> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
-> more vendor specific capabilities that aren't tied to the vendor ID of
-> the PCI component.
+> Thanks.
 > 
-> DVSEC is critical for both the Compute Express Link (CXL) driver as well
-> as the driver for OpenCAPI coherent accelerator (OCXL).
+> The commit log should help reviewers determine whether the change is
+> safe and necessary.  So far it doesn't have any hints along that line.
 > 
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Andrew Donnellan <ajd@linux.ibm.com>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-Great to see this cleaned up.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
->  include/linux/pci.h |  1 +
->  2 files changed, 33 insertions(+)
+> Comparing device_add_properties() [1] and
+> device_create_managed_software_node() [2], the only difference in this
+> case is that the latter sets "swnode->managed = true".  The function
+> comment says "managed" means the lifetime of the swnode is tied to the
+> lifetime of dev, hence my question about a lifetime issue.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ce2ab62b64cf..94ac86ff28b0 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
->  }
->  EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
->  
-> +/**
-> + * pci_find_dvsec_capability - Find DVSEC for vendor
-> + * @dev: PCI device to query
-> + * @vendor: Vendor ID to match for the DVSEC
-> + * @dvsec: Designated Vendor-specific capability ID
-> + *
-> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
-> + * offset in config space; otherwise return 0.
-> + */
-> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
-> +{
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	while (pos) {
-> +		u16 v, id;
-> +
-> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
-> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
-> +		if (vendor == v && dvsec == id)
-> +			return pos;
-> +
-> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
-> +
->  /**
->   * pci_find_parent_resource - return resource region of parent bus of given
->   *			      region
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..c93ccfa4571b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
->  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
->  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
->  u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
-> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
->  
->  u64 pci_get_dsn(struct pci_dev *dev);
->  
+> I can see that one reason for this change is to remove the last caller
+> of device_add_properties(), so device_add_properties() itself can be
+> removed.  That's a good reason for wanting to do it, and the commit
+> log could mention it.
 
+Fair enough. I need to explain the why as well as the what.
+
+I'll improve the commit message, but just to be clear, the goal is
+actually not to get rid of device_add_properties(). It is removed in
+the second patch together with device_remove_properties() because
+there are simply no more users for that API.
+
+> But it doesn't help me figure out whether it's safe.  For that,
+> I need to know the effect of setting "managed = true".  Obviously
+> it means *something*, but I don't know what.  It looks like the only
+> test is in software_node_notify():
+> 
+>   device_del
+>     device_platform_notify_remove
+>       software_node_notify_remove
+>         sysfs_remove_link(dev_name)
+>         sysfs_remove_link("software_node")
+>         if (swnode->managed)                 <--
+>           set_secondary_fwnode(dev, NULL)
+>           kobject_put(&swnode->kobj)
+>     device_remove_properties
+>       if (is_software_node())
+>         fwnode_remove_software_node
+>           kobject_put(&swnode->kobj)
+>         set_secondary_fwnode(dev, NULL)
+> 
+> I'm not sure what's going on here; it looks like some redundancy with
+> multiple calls of kobject_put() and set_secondary_fwnode().  Maybe you
+> are in the process of removing device_remove_properties() as well as
+> device_add_properties()?
+
+It'll get removed, but that's not the goal. The goal is to get rid of
+the call to it in device_del(), so not the function itself. That call
+is the problem here as explained in commit 151f6ff78cdf ("software
+node: Provide replacement for device_add_properties()").
+
+I'll split the second patch, and first only remove that
+device_remove_properties() call from device_del(), and only after
+that remove the functions themselves.
+
+thanks,
+
+-- 
+heikki
