@@ -2,120 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6795941EB05
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 12:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECCDC41EB0D
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 12:38:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352004AbhJAKic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 06:38:32 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37232 "EHLO mga14.intel.com"
+        id S1353621AbhJAKkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 06:40:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:21683 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231316AbhJAKib (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Oct 2021 06:38:31 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="225053546"
+        id S1353615AbhJAKkH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 06:40:07 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="205551172"
 X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
-   d="scan'208";a="225053546"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 03:36:47 -0700
+   d="scan'208";a="205551172"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 03:38:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
-   d="scan'208";a="619007355"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2021 03:36:44 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 01 Oct 2021 13:36:43 +0300
-Date:   Fri, 1 Oct 2021 13:36:43 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: Convert to
- device_create_managed_software_node()
-Message-ID: <YVbku7IQatCydZ+V@kuha.fi.intel.com>
-References: <20210930121246.22833-2-heikki.krogerus@linux.intel.com>
- <20210930150402.GA877907@bhelgaas>
+   d="scan'208";a="709724066"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Oct 2021 03:38:23 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 1E93B580223;
+        Fri,  1 Oct 2021 03:38:23 -0700 (PDT)
+Message-ID: <d988a4b8698b20a151680cc98a6b7434efbaea55.camel@linux.intel.com>
+Subject: Re: [PATCH 5/5] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Fri, 01 Oct 2021 03:38:23 -0700
+In-Reply-To: <YVa1aiTqS6Ik5cO1@kroah.com>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+         <20211001012815.1999501-6-david.e.box@linux.intel.com>
+         <YVa1aiTqS6Ik5cO1@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210930150402.GA877907@bhelgaas>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 10:04:02AM -0500, Bjorn Helgaas wrote:
-> On Thu, Sep 30, 2021 at 03:12:45PM +0300, Heikki Krogerus wrote:
-> > In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
-> > instead of device_add_properties() to set the "dma-can-stall"
-> > property.
-> > 
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > ---
-> > Hi,
-> > 
-> > The commit message now says what Bjorn requested, except I left out
-> > the claim that the patch fixes a lifetime issue.
+On Fri, 2021-10-01 at 09:14 +0200, Greg KH wrote:
+> On Thu, Sep 30, 2021 at 06:28:15PM -0700, David E. Box wrote:
+> > +static int sdsi_device_open(struct inode *inode, struct file *file)
+> > +{
+> > +       struct miscdevice *miscdev = file->private_data;
+> > +
+> > +       get_device(miscdev->this_device);
 > 
-> Thanks.
+> Why do you think this is needed?  Shouldn't the misc core handle all of
+> this for you already?
 > 
-> The commit log should help reviewers determine whether the change is
-> safe and necessary.  So far it doesn't have any hints along that line.
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int sdsi_device_release(struct inode *inode, struct file *file)
+> > +{
+> > +
+> > +       struct miscdevice *miscdev = file->private_data;
+> > +       struct sdsi_priv *priv = to_sdsi_priv(miscdev);
+> > +
+> > +       if (priv->akc_owner == file)
+> > +               priv->akc_owner = NULL;
 > 
-> Comparing device_add_properties() [1] and
-> device_create_managed_software_node() [2], the only difference in this
-> case is that the latter sets "swnode->managed = true".  The function
-> comment says "managed" means the lifetime of the swnode is tied to the
-> lifetime of dev, hence my question about a lifetime issue.
+> Why is this needed?
 > 
-> I can see that one reason for this change is to remove the last caller
-> of device_add_properties(), so device_add_properties() itself can be
-> removed.  That's a good reason for wanting to do it, and the commit
-> log could mention it.
-
-Fair enough. I need to explain the why as well as the what.
-
-I'll improve the commit message, but just to be clear, the goal is
-actually not to get rid of device_add_properties(). It is removed in
-the second patch together with device_remove_properties() because
-there are simply no more users for that API.
-
-> But it doesn't help me figure out whether it's safe.  For that,
-> I need to know the effect of setting "managed = true".  Obviously
-> it means *something*, but I don't know what.  It looks like the only
-> test is in software_node_notify():
+> > +
+> > +       put_device(miscdev->this_device);
 > 
->   device_del
->     device_platform_notify_remove
->       software_node_notify_remove
->         sysfs_remove_link(dev_name)
->         sysfs_remove_link("software_node")
->         if (swnode->managed)                 <--
->           set_secondary_fwnode(dev, NULL)
->           kobject_put(&swnode->kobj)
->     device_remove_properties
->       if (is_software_node())
->         fwnode_remove_software_node
->           kobject_put(&swnode->kobj)
->         set_secondary_fwnode(dev, NULL)
+> I see this matches the open call, but if you do not have this in the
+> open call, is it needed here as well?
 > 
-> I'm not sure what's going on here; it looks like some redundancy with
-> multiple calls of kobject_put() and set_secondary_fwnode().  Maybe you
-> are in the process of removing device_remove_properties() as well as
-> device_add_properties()?
+> > +       ret = devm_add_action_or_reset(priv->miscdev.this_device, sdsi_miscdev_remove, priv);
+> > +       if (ret)
+> > +               goto deregister_misc;
+> 
+> I think this is all you need to clean up your device memory, not the
+> get/put device in open/release, right?
 
-It'll get removed, but that's not the goal. The goal is to get rid of
-the call to it in device_del(), so not the function itself. That call
-is the problem here as explained in commit 151f6ff78cdf ("software
-node: Provide replacement for device_add_properties()").
+It does clean up the memory, but it does so immediately after the device has been unregistered, even
+if a file is open. The get/put ensures that if files are open, the memory isn't cleaned up until the
+files are closed.
 
-I'll split the second patch, and first only remove that
-device_remove_properties() call from device_del(), and only after
-that remove the functions themselves.
+I can show that this happens without the get/put,
 
-thanks,
+	open()
+	unbind device -> devm action called -> kfree(priv)
+	ioctl() -> priv accessed
 
--- 
-heikki
+but it doesn't blow up. I guess because the former location of priv is accessible by container_of on
+the miscdev. But that memory was freed right?
+
+David
+
+> 
+> thanks,
+> 
+> greg k-h
+
+
