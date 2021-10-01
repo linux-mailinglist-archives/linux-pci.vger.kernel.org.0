@@ -2,36 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77F1441F5FF
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 21:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94A7A41F600
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 21:59:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239579AbhJAUAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 16:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
+        id S235981AbhJAUAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 16:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229916AbhJAUAp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 1 Oct 2021 16:00:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B29B619EE;
-        Fri,  1 Oct 2021 19:58:59 +0000 (UTC)
+        id S229916AbhJAUAq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 16:00:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF1E761AE0;
+        Fri,  1 Oct 2021 19:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633118340;
-        bh=LfTHafmaVMrpC77c8tV93teqbpWLR4gP0woQonzpYI8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RuUrmCqvCS+nJB186zvayHJ4zBMrgg8itiKaws7jXFhXUNOuOnnpErWq1woa4Yn51
-         fYIkVGY2qvQ472VhCMfp3peUwDYRbP0F2J2+aFlngtZG4PZHk1NmyxUd4vLcYODJKm
-         tv/UNkb1WRJuU/f4NxVN9l6aMCjzPTeOw6gTQA9Lwa45pnNATN53EfM0dJ5DjuRb72
-         Yqb6F7N7guW3C925caYmAadJvYqggoYG5nU80jWAwD63niZ2nTIGNfxs5dh32ApBRe
-         1SN/5fQ/cHfIzrK8QMoxh/YEx3POwzYC7ui5pnizFZTtiOexHTOB8OTTG/0oNQQXzO
-         +7gmk8wdDmp8g==
+        s=k20201202; t=1633118342;
+        bh=zYULdT8limU1JA7GnyK6oQpt+rh5yDZKYpQI0XEkQok=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cMBHij7N1pBT50PnMKpT+L1GtnfNN+UGnQfzzVoUcVlO3FDa02kA8tr5VPKyi6GHA
+         c7qPuU7KltHLtcNj1b9CNUquCxgE5nWOiiZuaUzMEjD5Ys/Y68xN4hWalqxJrPIIxx
+         C0sBoCXhiGYed7mfmhyxGGyhVJY1CebXFVKnAZBejrNWRzFCuP8ShsIHRVW6qU2Zoz
+         wD/M44NrmbKZ7UeeBiKt9WabbW5hnxORNGSWCP6jexLHptI+HMmtjDKy7yGWjFCzkB
+         5ajIM5hLVcBrpvXdaAxFEpIqlxYahK6H1s2bVIu9wXX6CEYsHmMMpk9b1D3o7vXkZR
+         qQuQeBMFwNFTw==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         pali@kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 00/13] PCI: aardvark controller fixes
-Date:   Fri,  1 Oct 2021 21:58:43 +0200
-Message-Id: <20211001195856.10081-1-kabel@kernel.org>
+Subject: [PATCH 01/13] PCI: Add PCI_EXP_DEVCTL_PAYLOAD_* macros
+Date:   Fri,  1 Oct 2021 21:58:44 +0200
+Message-Id: <20211001195856.10081-2-kabel@kernel.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20211001195856.10081-1-kabel@kernel.org>
+References: <20211001195856.10081-1-kabel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -39,45 +41,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+From: Pali Rohár <pali@kernel.org>
 
-this series fixes some issues with the Aardvark PCIe controller driver.
+Define a macro PCI_EXP_DEVCTL_PAYLOAD_* for every possible Max Payload
+Size in linux/pci_regs.h, in the same style as PCI_EXP_DEVCTL_READRQ_*.
 
-Most of them are small changes. Patch 11 has a rather long commit message
-since it explains how the bugs were introduced from multiple misleading
-names and comments of some registers.
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <kabel@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ include/uapi/linux/pci_regs.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-We have another 56 fixes for aardvark, but last time nobody wanted to
-review such a large series, so we are now trying in smaller batches.
-
-It would be great if you could find time to review, since we would like
-this to land in 5.16. Preferably we would like to send another batch for
-5.16, but we will see how fast this one goes
-
-Marek & Pali
-
-Marek Behún (2):
-  PCI: aardvark: Don't spam about PIO Response Status
-  PCI: aardvark: Deduplicate code in advk_pcie_rd_conf()
-
-Pali Rohár (11):
-  PCI: Add PCI_EXP_DEVCTL_PAYLOAD_* macros
-  PCI: aardvark: Fix PCIe Max Payload Size setting
-  PCI: aardvark: Fix preserving PCI_EXP_RTCTL_CRSSVE flag on emulated
-    bridge
-  PCI: aardvark: Fix configuring Reference clock
-  PCI: aardvark: Do not clear status bits of masked interrupts
-  PCI: aardvark: Do not unmask unused interrupts
-  PCI: aardvark: Implement re-issuing config requests on CRS response
-  PCI: aardvark: Simplify initialization of rootcap on virtual bridge
-  PCI: aardvark: Fix link training
-  PCI: aardvark: Fix checking for link up via LTSSM state
-  PCI: aardvark: Fix reporting Data Link Layer Link Active
-
- drivers/pci/controller/pci-aardvark.c | 364 +++++++++++++++-----------
- include/uapi/linux/pci_regs.h         |   6 +
- 2 files changed, 212 insertions(+), 158 deletions(-)
-
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index e709ae8235e7..ff6ccbc6efe9 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -504,6 +504,12 @@
+ #define  PCI_EXP_DEVCTL_URRE	0x0008	/* Unsupported Request Reporting En. */
+ #define  PCI_EXP_DEVCTL_RELAX_EN 0x0010 /* Enable relaxed ordering */
+ #define  PCI_EXP_DEVCTL_PAYLOAD	0x00e0	/* Max_Payload_Size */
++#define  PCI_EXP_DEVCTL_PAYLOAD_128B 0x0000 /* 128 Bytes */
++#define  PCI_EXP_DEVCTL_PAYLOAD_256B 0x0020 /* 256 Bytes */
++#define  PCI_EXP_DEVCTL_PAYLOAD_512B 0x0040 /* 512 Bytes */
++#define  PCI_EXP_DEVCTL_PAYLOAD_1024B 0x0060 /* 1024 Bytes */
++#define  PCI_EXP_DEVCTL_PAYLOAD_2048B 0x0080 /* 2048 Bytes */
++#define  PCI_EXP_DEVCTL_PAYLOAD_4096B 0x00a0 /* 4096 Bytes */
+ #define  PCI_EXP_DEVCTL_EXT_TAG	0x0100	/* Extended Tag Field Enable */
+ #define  PCI_EXP_DEVCTL_PHANTOM	0x0200	/* Phantom Functions Enable */
+ #define  PCI_EXP_DEVCTL_AUX_PME	0x0400	/* Auxiliary Power PM Enable */
 -- 
 2.32.0
 
