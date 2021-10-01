@@ -2,158 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D503741EB5A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 13:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8C2541EB68
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 13:08:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353447AbhJALHH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 07:07:07 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:52672 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1353235AbhJALHG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 07:07:06 -0400
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1919kHCd004210;
-        Fri, 1 Oct 2021 11:05:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=rVpCmWbLwEBQMCyZ+wV+5RFCcHzVDzJG3CEED8CEIV8=;
- b=O+VbFFTrpilP4ijITCFWmMmGh1gQLM3VHtADVmDjnWsl5+cQNk3WeBHSR2ziB/HRj8od
- VsK+i7dknUhW5UpbNAepxbxOnbr0I8iBH2jbu5n3hn2K4S/DUB3l6J9D4ua4dBMtaYA9
- Ca0WrukVXNMjRcmTnQeom9IguEdQ37dpBX/21U7mIf97giw1iFVnlXjpVYlUOQQEGu/l
- LG3KZQtmb2ejzVV4G+LgMXK8brKkwS7d+S5GPIAwGSuBjWXHZBrpaP3djIMrcyE96tSr
- qViblXULgIc3bcZH7RHLcKb4KYECamIN+AslsYjbR2hBnSWyM4K9Dgyi2SxOQ4ennZiH EA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3bddu8xx93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Oct 2021 11:05:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 191AxrdH035982;
-        Fri, 1 Oct 2021 11:05:18 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-        by aserp3020.oracle.com with ESMTP id 3bceu8fxb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Oct 2021 11:05:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dn4KOSn86SIyKx7oB9OlCFKf4T+51nhjBq8hQsURr/esVx3DalPE5AQAjoepI9Xd75kmeJTEaOOpXuzeSWsZH1q0pBHogv51C6d63TSZsXWEK9QDR/MTekUZ7qIXdSxu810qk39WVuxgl1oz31NgsUpX1bl1+MyLl0v37jG6wnGZp5HjD2+yNzEJZX5KKPx7OPS7/XMlzTaycyH4uxUokBqNP0GDUyug7SA5PlE0YNKxZdS3g1aSnZF+n1wqVxVaX0ZGWE3zt9G+rMdWOcVtnYhPdeG7whNuZag9tmQ9J5F1k1++DflW/nXJmwk6cFdQWoTWwzk4K/vkp6X9bJjfdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rVpCmWbLwEBQMCyZ+wV+5RFCcHzVDzJG3CEED8CEIV8=;
- b=Xec1dGhMaodbaiYaZBLj6qOznv95U2EhJOQB5Ayvzj2bDfPHDsXn0WbqtRVK6XG9GO64xmQQsu+u+Nae17Gin4ozkOFpWUjCCIGt7Tmn9VO+T2WU8uft2JTCLD/y7ZHFO1GieP7gBVeCQhB0mBb0E92xByfGTbz0hOvV/qN9Q3C2OTqLGrOEL5FsP82j+oKCFL91evJq7gUdj0hHrnrB0wvTvb+TxPfxJ+NQN9Xu3jd07a2hmScM23/ugjk+aBiShIC3kdQBw4fjdx4QBeiATXQAE/++aSlkM5rinlRG10qc3IglDDNqi85vma+kGOaIS9DcXYLKmtC+Uy2QmCnwJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVpCmWbLwEBQMCyZ+wV+5RFCcHzVDzJG3CEED8CEIV8=;
- b=qik9C85489Be2pjnpEXfSDgsnDCTELQMsVAmwOyIdJzTUTp8DDpPwWcgLnb3B/7O4FJiRKjG+/3bCJt6eslyLXLeGJ/Z4sbMQwFkwoERXFJlh0fTqG3JprlK6bBnm3R9B3uLbqqVXFG+nowOgdJ29ckpUbq/oIZHNZqFel8WGzk=
-Received: from PH0PR10MB5593.namprd10.prod.outlook.com (2603:10b6:510:f5::16)
- by PH0PR10MB4805.namprd10.prod.outlook.com (2603:10b6:510:3b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Fri, 1 Oct
- 2021 11:05:16 +0000
-Received: from PH0PR10MB5593.namprd10.prod.outlook.com
- ([fe80::7538:df56:577d:66]) by PH0PR10MB5593.namprd10.prod.outlook.com
- ([fe80::7538:df56:577d:66%5]) with mapi id 15.20.4566.019; Fri, 1 Oct 2021
- 11:05:16 +0000
-From:   Haakon Bugge <haakon.bugge@oracle.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     OFED mailing list <linux-rdma@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Enabling RO on a VF
-Thread-Topic: Enabling RO on a VF
-Thread-Index: AQHXtrQ2Snh1/80S5EW81QFY8okd6A==
-Date:   Fri, 1 Oct 2021 11:05:15 +0000
-Message-ID: <48FF6F8E-95E2-4A29-A059-12EF614B381C@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7a943b83-dcc0-420a-55c6-08d984cb5951
-x-ms-traffictypediagnostic: PH0PR10MB4805:
-x-microsoft-antispam-prvs: <PH0PR10MB48052632694C23D395AFAE8AFDAB9@PH0PR10MB4805.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: feUjEiMlVSuIVsYsdhgCNGgg0rlcUXx2AY8EEbpN7mabhpYlctg8oVgYOp/gyUj99HGkDme2ReMpTXpENWQj1LoJd5dlBiW2mbYy5MBvFC8I+11GNu+zwUQf3JFA8NAS8krLF9V1c21jo67RIf/BelKum/UirZ3MQHNm631FjVVWhBKdUevCxjf3nDsb5d5sxP8qw4oO9xudemqPIkfTlllvaloZenVcvhNaFCR++CLrKaHt5D1B6Fo6iwmk/PvUSs8LW/7i6GC//k+16rB4+0hrjXinY/2OVY8KMxaTaCxM4o/0+pGK71ze6lW4HCxy8IbkqsLZg31y9MDOtSB6w0VvsNStFsq5GtPPbEJEcMzzt71AeP2TGxYs1HRAjquvdqpXoaoLPltxTRWGwU9INV6LTdP3HikHjOfXUvUTUs0VxWnnggXqm22Gk33061z7cz1G/C1+GXyhXuoKbXYkp+ts/xy8j7FscG5EsJGlF6c0ESBrYtfvetbtmFVDfw/qTG7fER8B64wDDSdmkCKtSHYamNp4FcNyEuYuFlWOGxQoJ7QTIO4t0iTI9CfUc3/OP2PCYG4BzJw1Udq4xdWy4ExA88/yzYrMsREKR3AHEX1o9AGQJfjRomxxhaVVHn93iY/juIUW/KKld1KVpxZIbEZgX06g1JcmtIQTI2A6tfdhnTAIF3e6n+SJLc6UQHgR+q0pZ4X44HgWcak/PB4mlAWPdIP+4SYPZt9Klp3bmGQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5593.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(122000001)(8676002)(6506007)(2906002)(6512007)(6486002)(4744005)(44832011)(66946007)(26005)(33656002)(36756003)(110136005)(54906003)(38070700005)(66556008)(66476007)(186003)(64756008)(66446008)(2616005)(4326008)(71200400001)(76116006)(91956017)(38100700002)(8936002)(5660300002)(86362001)(316002)(508600001)(83380400001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?S1I4cDlJM2dQUEF0VDFtZGh6U05YeUZyOElLWXBqQktzYkplMU81empDcFZ0?=
- =?utf-8?B?cXpXRHZzb3FPMGNWWmhlRDFmdnBCY0F0TUN4Y0ZzYUNqdlJjdFd4UHBrcFl6?=
- =?utf-8?B?SkhZTHVFejZ2c1dBMm55eFJCYUV0SENyUUIwRUZ0ekFKalFJVnFHd2VKc05q?=
- =?utf-8?B?NzRiTkhQb1F2Z2RuN0hyejlidDdpbmtjaUZpNEprY1F3TkxFWmpXbTExaU83?=
- =?utf-8?B?SjR3UjMyUzAyV3UxSzZTL1JWYnNHKy8vbEtWV1FhWGlRcklqQzB1cE13a1pL?=
- =?utf-8?B?bXp1aUZ2UjFvTkhWL3R6UW55TEloTm82OGN3ZUJxZ215ZVVPaXVNZFhobUkx?=
- =?utf-8?B?bEVTUThuU3cyemhwN0RyR0g2Z0ZHdkl4YTVFdFhmQUdiL3ZqNkF4eitKRGlw?=
- =?utf-8?B?TVp1QmtUWDFsdzRESlRrb1kwK0llQ0hCMFBVSzc0VG9qc3dZTXpLd3JKUURW?=
- =?utf-8?B?bHdUZ1lqN3NmeVI0bDNobXlXU0hJWHI2Q2hHRzlnaDMxTkJTcDZ0bzhMY050?=
- =?utf-8?B?eTlvYk4zckk0bGlRVEtYUnVvU2Nmd3RLM0ZPejhlOU9kU0dScStKVWd3cDQx?=
- =?utf-8?B?UFF3cDEyV3ZMYndXTXdIR0o2eXNkaVZFRkpFa2JnbzM4WWhFd0kyamlEQXJS?=
- =?utf-8?B?NUVaZjQvYVVtazM3aFZxMVg1TEhHK3FUNnR5VmZqUENjbC8yYjRUZ1hNT3ls?=
- =?utf-8?B?MXU4LzJkZVVrbHRBUGlSYXFKbExtajhVdEhLcTVrQk5KcVBKcnZQcHNZYkRQ?=
- =?utf-8?B?RTUrYWRGeGtPZHR2U0JvZk02Y0hlczYxNmF1NVA0WGFQR28wZXVRZUxkYWxL?=
- =?utf-8?B?L3lJK2Z0YW1peDNHVG9NakpMcXBpOUwvblFoUVNFY3oraUZudzM1eDROa0dG?=
- =?utf-8?B?dmVtRy9JUU0vVlpia0I4bk5ZWjg1ek9vSFB5M3QxZ05hSDJEcmdxNUxxMTZT?=
- =?utf-8?B?bTgwdkNFVzFRaVRjQVhoTkd2cWJxR3ZDUGYwV0RGYlo0ZXZ2SVVWQUY3Y2VN?=
- =?utf-8?B?NEFTU0d0UnhDNWd0bkF6OGU1Vk1IQTlFSTNEMEI4eVVZUWIvY2FicldnandB?=
- =?utf-8?B?ZEtyd3NEc0N1d3JsRktGNUV4UHZyZ1UrZU1ZZStHRkIrU0xnM2xsenA2RzFk?=
- =?utf-8?B?WVdsRGNDd0tGbDdPYnM1d3lEZ3dieDBWdkpmNURxa2w1VC95WVZCdXNUU2lC?=
- =?utf-8?B?bEhDblpQT2FLaVAvNUpBNWRLSUlHalQxN2pXWVBaQk9nU1Y3dEtEbjlKN3B4?=
- =?utf-8?B?cjBTZzNybHc3WGNhQnlKNUVidWNSclgyTU13Q0Y1MnhOZzFzN3hrQ2p6VUo4?=
- =?utf-8?B?R1F3clpMMHZiaXBROFI2UkhjN2NRZGpZaGFienBuSHhSN1Q1eThqZG9EVmlL?=
- =?utf-8?B?TGFSdUduMGpTMXo1TlliSnJCRUV4Q282MTFUS3Jxa2tYM01NaFBGaXQ0RGpn?=
- =?utf-8?B?MVpsVkVhZnVHMTNUN3cxcXdPcmtoekZVcGg2USs4em1TY3U1QytzWVVyVzN4?=
- =?utf-8?B?cURzdHFXWWo5cUkrWFFnWU5GRW5CT2hRSTVpbnV1bFNhd1lkTmNmNjVaRS9V?=
- =?utf-8?B?c0JIdk5PV0VxeWVYQ1VxWXZDZm0ySEF2MUc3MGxCZXVURHhKSDk5TnFCcm1G?=
- =?utf-8?B?cmx2VHcvdEZDempubjN4eFY0bDZpK3lhN09QMDlqSExKVjg0ZS9PRXFtSnRw?=
- =?utf-8?B?QmpYcVBEQ3Y1ejV5RmM0TGtiUzlvVVFqRGdCODNxVWFpQlVEdWd1UXNIRTNv?=
- =?utf-8?B?dzl0NWVsWlVzdThNZ2dQazlxcHdjcnBwbzZ6OUdhVHlRekxORjY2Q3pnd09O?=
- =?utf-8?B?aUpoQ3JKVllIcGxSM2Q4UT09?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <19700E842DB293409522B44512A95888@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S231348AbhJALKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 07:10:01 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:44984 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230008AbhJALKA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 07:10:00 -0400
+Received: by mail-ot1-f45.google.com with SMTP id h9-20020a9d2f09000000b005453f95356cso10994656otb.11;
+        Fri, 01 Oct 2021 04:08:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EtAHmQZw91u7lVU62l1P8pNTURuYrm0FshqcUyypknw=;
+        b=RoSIKz2rg9h5aEA1hlf4lODjxJfRbfteOtdMZ8YRwmTYjTHmLcFIhENpXXuprCBTck
+         PgoFVYPSvPfS1ugsFYT2Wq/F1ZvUbhtDhf/QC7hvazba0vudBFfAkjeFRRwb4nVOLSwQ
+         I+G/U3BOUG9p2N9Ypyll7msf+3mKdeF3/F8FaZ2sBwu7cxMdA0ZZktO96EkD8dJI4+qB
+         uTba0/ZyNaG4nGWt+1nuqlax4EoNGVnpRQ7OLKW8NVvOSoiISmG4Q66AxV+kqssFGpuF
+         yk4obqn76KEzQFi60xWrFz6+jyrh2suKPLDZoZHYgDJoCYhEiqb86OS6Khlagx6DgH+s
+         o5xQ==
+X-Gm-Message-State: AOAM533grl42c5LmgVv8ZbOUvBxZwG9YxuLnd4/eWDNLvAApe1vdi0Hf
+        DfrCZ2b7dIDApNfGrNIYVJjOdXvAVm6cdV+3blI=
+X-Google-Smtp-Source: ABdhPJzo+0Q0KOxUoYQMmvMSP1UskRUfApAoeDtwjOT0KkLdiqigAI4XNGs0kPuGRX/q+zt3TgqAbNwDMkcP/x4w83Q=
+X-Received: by 2002:a05:6830:165a:: with SMTP id h26mr9902807otr.301.1633086496224;
+ Fri, 01 Oct 2021 04:08:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5593.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a943b83-dcc0-420a-55c6-08d984cb5951
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2021 11:05:15.9543
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BRaCmtqr9Zll+60EBFloo4STW+iyk9vAeU3VsK0Ub3l9KBlNzmWE9z/WTmZvlFkD0hP1gLBuqViOgZaDPbVdfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4805
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10123 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- adultscore=0 bulkscore=0 mlxscore=0 malwarescore=0 mlxlogscore=496
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
- definitions=main-2110010074
-X-Proofpoint-GUID: zpcPqitG26_cWiq2VFmsQBgF3GRS_EAy
-X-Proofpoint-ORIG-GUID: zpcPqitG26_cWiq2VFmsQBgF3GRS_EAy
+References: <20210929160550.GA773748@bhelgaas> <87mtnu77mr.ffs@tglx>
+ <87k0iy71rw.ffs@tglx> <CAJZ5v0hH_h9V0dACEMomqZbwpQUf6GB_8UK9+S1AGEdFQqvPLQ@mail.gmail.com>
+ <87h7e26lh9.ffs@tglx> <87czoq6kt8.ffs@tglx>
+In-Reply-To: <87czoq6kt8.ffs@tglx>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 1 Oct 2021 13:08:04 +0200
+Message-ID: <CAJZ5v0gCmRUF4PRoQzdQqf1sDieAgH-MY_=74HB+c_=VqW3qww@mail.gmail.com>
+Subject: Re: [PATCH RFT v2] x86/hpet: Use another crystalball to evaluate HPET usability
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>, jose.souza@intel.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
+        xapienz@fb.com, bmilton@fb.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Harry Pan <harry.pan@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGV5LA0KDQoNCkNvbW1pdCAxNDc3ZDQ0Y2U0N2QgKCJSRE1BL21seDU6IEVuYWJsZSBSZWxheGVk
-IE9yZGVyaW5nIGJ5IGRlZmF1bHQgZm9yIGtlcm5lbCBVTFBzIikgdXNlcyBwY2llX3JlbGF4ZWRf
-b3JkZXJpbmdfZW5hYmxlZCgpIHRvIGNoZWNrIGlmIFJPIGNhbiBiZSBlbmFibGVkLiBUaGlzIGZ1
-bmN0aW9uIGNoZWNrcyBpZiB0aGUgRW5hYmxlIFJlbGF4ZWQgT3JkZXJpbmcgYml0IGluIHRoZSBE
-ZXZpY2UgQ29udHJvbCByZWdpc3RlciBpcyBzZXQuIEhvd2V2ZXIsIG9uIGEgVkYsIHRoaXMgYml0
-IGlzIFJzdmRQIChSZXNlcnZlZCBmb3IgZnV0dXJlIFJXIGltcGxlbWVudGF0aW9ucy4gUmVnaXN0
-ZXIgYml0cyBhcmUgcmVhZC1vbmx5IGFuZCBtdXN0IHJldHVybiB6ZXJvIHdoZW4gcmVhZC4gU29m
-dHdhcmUgbXVzdCBwcmVzZXJ2ZSB0aGUgdmFsdWUgcmVhZCBmb3Igd3JpdGVzIHRvIGJpdHMuKS4N
-Cg0KSGVuY2UsIEFGQUlDVCwgUk8gd2lsbCBub3QgYmUgZW5hYmxlZCB3aGVuIHVzaW5nIGEgVkYu
-DQoNCkhvdyBjYW4gdGhhdCBiZSBmaXhlZD8NCg0KDQpUaHhzLCBIw6Vrb24NCg0KDQoNCg0K
+On Thu, Sep 30, 2021 at 7:21 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On recent Intel systems the HPET stops working when the system reaches PC10
+> idle state.
+>
+> The approach of adding PCI ids to the early quirks to disable HPET on
+> these systems is a whack a mole game which makes no sense.
+>
+> Check for PC10 instead and force disable HPET if supported. The check is
+> overbroad as it does not take ACPI, intel_idle enablement and command
+> line parameters into account. That's fine as long as there is at least
+> PMTIMER available to calibrate the TSC frequency. The decision can be
+> overruled by adding "hpet=force" on the kernel command line.
+>
+> Remove the related early PCI quirks for affected Ice Cake and Coffin Lake
+> systems as they are not longer required. That should also cover all
+> other systems, i.e. Tiger Rag and newer generations, which are most
+> likely affected by this as well.
+>
+> Fixes: Yet another hardware trainwreck
+> Reported-by: Jakub Kicinski <kuba@kernel.org>
+> Not-yet-signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+
+> ---
+> Notes: Completely untested. Use at your own peril.
+>
+> V2: Move the substate check into the helper function. Adjust function
+>     name accordingly.
+> ---
+>  arch/x86/kernel/early-quirks.c |    6 ---
+>  arch/x86/kernel/hpet.c         |   81 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 81 insertions(+), 6 deletions(-)
+>
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -714,12 +714,6 @@ static struct chipset early_qrk[] __init
+>          */
+>         { PCI_VENDOR_ID_INTEL, 0x0f00,
+>                 PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+> -       { PCI_VENDOR_ID_INTEL, 0x3e20,
+> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+> -       { PCI_VENDOR_ID_INTEL, 0x3ec4,
+> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+> -       { PCI_VENDOR_ID_INTEL, 0x8a12,
+> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+>         { PCI_VENDOR_ID_BROADCOM, 0x4331,
+>           PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+>         {}
+> --- a/arch/x86/kernel/hpet.c
+> +++ b/arch/x86/kernel/hpet.c
+> @@ -10,6 +10,7 @@
+>  #include <asm/irq_remapping.h>
+>  #include <asm/hpet.h>
+>  #include <asm/time.h>
+> +#include <asm/mwait.h>
+>
+>  #undef  pr_fmt
+>  #define pr_fmt(fmt) "hpet: " fmt
+> @@ -916,6 +917,83 @@ static bool __init hpet_counting(void)
+>         return false;
+>  }
+>
+> +static bool __init mwait_pc10_supported(void)
+> +{
+> +       unsigned int eax, ebx, ecx, mwait_substates;
+> +
+> +       if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+> +               return false;
+> +
+> +       if (!cpu_feature_enabled(X86_FEATURE_MWAIT))
+> +               return false;
+> +
+> +       if (boot_cpu_data.cpuid_level < CPUID_MWAIT_LEAF)
+> +               return false;
+> +
+> +       cpuid(CPUID_MWAIT_LEAF, &eax, &ebx, &ecx, &mwait_substates);
+> +
+> +       return (ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED) &&
+> +              (ecx & CPUID5_ECX_INTERRUPT_BREAK) &&
+> +              (mwait_substates & (0xF << 28));
+> +}
+> +
+> +/*
+> + * Check whether the system supports PC10. If so force disable HPET as that
+> + * stops counting in PC10. This check is overbroad as it does not take any
+> + * of the following into account:
+> + *
+> + *     - ACPI tables
+> + *     - Enablement of intel_idle
+> + *     - Command line arguments which limit intel_idle C-state support
+> + *
+> + * That's perfectly fine. HPET is a piece of hardware designed by committee
+> + * and the only reasons why it is still in use on modern systems is the
+> + * fact that it is impossible to reliably query TSC and CPU frequency via
+> + * CPUID or firmware.
+> + *
+> + * If HPET is functional it is useful for calibrating TSC, but this can be
+> + * done via PMTIMER as well which seems to be the last remaining timer on
+> + * X86/INTEL platforms that has not been completely wreckaged by feature
+> + * creep.
+> + *
+> + * In theory HPET support should be removed altogether, but there are older
+> + * systems out there which depend on it because TSC and APIC timer are
+> + * dysfunctional in deeper C-states.
+> + *
+> + * It's only 20 years now that hardware people have been asked to provide
+> + * reliable and discoverable facilities which can be used for timekeeping
+> + * and per CPU timer interrupts.
+> + *
+> + * The probability that this problem is going to be solved in the
+> + * forseeable future is close to zero, so the kernel has to be cluttered
+> + * with heuristics to keep up with the ever growing amount of hardware and
+> + * firmware trainwrecks. Hopefully some day hardware people will understand
+> + * that the approach of "This can be fixed in software" is not sustainable.
+> + * Hope dies last...
+> + */
+> +static bool __init hpet_is_pc10_damaged(void)
+> +{
+> +       unsigned long long pcfg;
+> +
+> +       /* Check whether PC10 substates are supported */
+> +       if (!mwait_pc10_supported())
+> +               return false;
+> +
+> +       /* Check whether PC10 is enabled in PKG C-state limit */
+> +       rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, pcfg);
+> +       if ((pcfg & 0xF) < 8)
+> +               return false;
+> +
+> +       if (hpet_force_user) {
+> +               pr_warn("HPET force enabled via command line, but dysfunctional in PC10.\n");
+> +               return false;
+> +       }
+> +
+> +       pr_info("HPET dysfunctional in PC10. Force disabled.\n");
+> +       boot_hpet_disable = true;
+> +       return true;
+> +}
+> +
+>  /**
+>   * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
+>   */
+> @@ -929,6 +1007,9 @@ int __init hpet_enable(void)
+>         if (!is_hpet_capable())
+>                 return 0;
+>
+> +       if (hpet_is_pc10_damaged())
+> +               return 0;
+> +
+>         hpet_set_mapping();
+>         if (!hpet_virt_address)
+>                 return 0;
+>
