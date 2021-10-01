@@ -2,86 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1433041E5AD
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 03:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 374A541E5B8
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 03:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349760AbhJABSM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Sep 2021 21:18:12 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:39926 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350757AbhJABSM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Sep 2021 21:18:12 -0400
-Received: by mail-wr1-f42.google.com with SMTP id d26so12860861wrb.6
-        for <linux-pci@vger.kernel.org>; Thu, 30 Sep 2021 18:16:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RQiSJdCX0tlMnA3Q7WCH9Xmfl+JtRrBqDMyYICSkAbo=;
-        b=5ce2rn9ghYfty1K0Ard1nMFKMWkDbRo1Lkj1PtEKOUNDCGwUa9m2VLz5hj9b+3UHzZ
-         kORDjKaq8wE4CUpjUhZo9r4AT25g4D/ivkRoh+OgNKN77fST7UiOEwTktC0M5YQdMdFZ
-         GbqfEW4ipdzrvUEdHg6gb7t3Q3QzeiC9XYILvxVJ5SOAAon1Mk8oruMBegpQu1XRXa+W
-         YbOEYmm2uWXIMw/DFGeHf0+MA/gsj9wb1WbyG30eNCYSKxmWCdEcfT+suAiHbbtpKbB3
-         KUYX8RRJKqMZNW6z/zNhQHH+22vRJ79KP9WJQA7MA6eR2QT+bc5TcUyFOjAFTOQa2n3w
-         QFEQ==
-X-Gm-Message-State: AOAM533CL7ef41PNyE7gOOV/Do6THQ3z4e3yh5rJXDhhBwXxGH6WCaP1
-        cIGp/WwrCi2aI7ZLTV8/YQI=
-X-Google-Smtp-Source: ABdhPJwJHiwe6vHkBlQrFnGM5Qik5kVAk8M2QlgWYmNtSKfhtb08Ck/KIvvcO3jLGbCBHBhoz+Zq+w==
-X-Received: by 2002:a5d:684f:: with SMTP id o15mr9632187wrw.268.1633050988181;
-        Thu, 30 Sep 2021 18:16:28 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id q9sm3629217wrx.4.2021.09.30.18.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 18:16:27 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: visconti: Remove surplus dev_err() when using platform_get_irq_byname()
-Date:   Fri,  1 Oct 2021 01:16:26 +0000
-Message-Id: <20211001011626.132286-1-kw@linux.com>
-X-Mailer: git-send-email 2.33.0
+        id S1351158AbhJAB37 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Sep 2021 21:29:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56854 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230214AbhJAB37 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Sep 2021 21:29:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="286348495"
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="286348495"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2021 18:28:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="521417044"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 30 Sep 2021 18:28:15 -0700
+Received: from debox1-server.jf.intel.com (debox1-server.jf.intel.com [10.54.39.121])
+        by linux.intel.com (Postfix) with ESMTP id CB5965808E0;
+        Thu, 30 Sep 2021 18:28:15 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 0/5] Move intel_pm from MFD to Auxiliary bus
+Date:   Thu, 30 Sep 2021 18:28:10 -0700
+Message-Id: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to call the dev_err() function directly to print a
-custom message when handling an error from either the platform_get_irq()
-or platform_get_irq_byname() functions as both are going to display an
-appropriate error message in case of a failure.
+This patch series converts the intel_pmt driver from an MFD driver to an
+auxiliary bus driver. The series also combines and supersedes two previous
+patch sets [1] and [2]. Though starting from V1, revision history from each
+series is summarized for each patch.
 
-This change is as per suggestions from Coccinelle, e.g.,
-  drivers/pci/controller/dwc/pcie-visconti.c:286:2-9: line 286 is redundant because platform_get_irq() already prints an error
+David E. Box (5):
+  PCI: Add #defines for accessing PCIe DVSEC fields
+  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
+  platform/x86/intel: extended_caps: Add support for PCIe VSEC
+    structures
+  Documentation: Update ioctl-number.rst for Intel Software Defined
+    Silicon interface
+  platform/x86: Add Intel Software Defined Silicon driver
 
-Related:
-  https://lore.kernel.org/all/20210310131913.2802385-1-kw@linux.com/
-  https://lore.kernel.org/all/20200802142601.1635926-1-kw@linux.com/
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  28 +
+ .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+ MAINTAINERS                                   |  16 +-
+ drivers/mfd/Kconfig                           |  10 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/intel_pmt.c                       | 261 -------
+ drivers/platform/x86/intel/Kconfig            |  23 +
+ drivers/platform/x86/intel/Makefile           |   4 +
+ drivers/platform/x86/intel/extended_caps.c    | 401 ++++++++++
+ drivers/platform/x86/intel/extended_caps.h    |  42 ++
+ drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
+ drivers/platform/x86/intel/pmt/class.c        |  18 +-
+ drivers/platform/x86/intel/pmt/class.h        |   5 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |  43 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  47 +-
+ drivers/platform/x86/intel/sdsi.c             | 692 ++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |   4 +
+ include/uapi/linux/sdsi_if.h                  |  47 ++
+ 18 files changed, 1318 insertions(+), 329 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ delete mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel/extended_caps.c
+ create mode 100644 drivers/platform/x86/intel/extended_caps.h
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 include/uapi/linux/sdsi_if.h
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/dwc/pcie-visconti.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-index a88eab6829bb..076da46726a7 100644
---- a/drivers/pci/controller/dwc/pcie-visconti.c
-+++ b/drivers/pci/controller/dwc/pcie-visconti.c
-@@ -282,10 +282,8 @@ static int visconti_add_pcie_port(struct visconti_pcie *pcie,
- 	struct device *dev = &pdev->dev;
- 
- 	pp->irq = platform_get_irq_byname(pdev, "intr");
--	if (pp->irq < 0) {
--		dev_err(dev, "Interrupt intr is missing");
-+	if (pp->irq < 0)
- 		return pp->irq;
--	}
- 
- 	pp->ops = &visconti_pcie_host_ops;
- 
 -- 
-2.33.0
+2.25.1
 
