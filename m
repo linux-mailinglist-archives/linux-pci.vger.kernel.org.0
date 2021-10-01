@@ -2,94 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2488641E88F
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 09:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D3641E912
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 10:26:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbhJAHxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 03:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46076 "EHLO
+        id S1352729AbhJAI1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 04:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbhJAHxo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 03:53:44 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6819BC061775
-        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 00:52:00 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id 11so5074932qvd.11
-        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 00:52:00 -0700 (PDT)
+        with ESMTP id S1352723AbhJAI1v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 04:27:51 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB488C061775
+        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 01:26:06 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id e66-20020a9d2ac8000000b0054da8bdf2aeso8382255otb.12
+        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 01:26:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kql8qZAOcxKEdh35EAkW5CA3UzEqjf7IKmpKo71LOjE=;
-        b=N497FoaJ1VvuhWYqAl/Ndqmn9YYPMbr4q9vLipFqi2yq2Chjn/P7P1OIyZcpNTCxuv
-         LtMBSw5reJ0AmXDtuEM839BKbkYDa1WxIn/7YBe9OAWbJXeAsnX5WGBgwJLmX8JJgMJ6
-         tDISls9ds6MRWTZCitxocTms5br1kJ5Epi5XP4AMLz0Q6VCNZoMYdF9QFHNiW5LjRWP3
-         1CmYVh1j1cZ1ZExEXW4AzQrICpfAvCrsUjXtF6RFZCeJNv3K22GOLwkLgF7epWC+uPoz
-         PWLKqFQ0Mc3uUzUsBsFxObQXdbv/23NNchBVoOI3OtMkm5PYmnHWNWFjcyEGXfN/5li2
-         wPBw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Q5NKyK/hHd+thwf2IuC0mb/EIbqzwR+oDaAazocO9y0=;
+        b=K0a747/pyYakwgAkDrJTP/tVtrui8Hv3q7M6ki2WWc6YZahYIbAri0jIDUyrLoDZKi
+         k+diF0a0UC+WD7vN2ODTRfBNjtof1Gspp3AkaPeLJDVGFYa8sCIckiU0HsMvpz3Io4pp
+         nhL5Ni93g4x6Q0SME8V4S5tWpgrM0Jq9vhFKNVAKjxCLS+JhMlB9YxOesrdO+hUB3q2I
+         hKPw6zZKVrKST+bhVssSGGygqjEYjSO2vy6qqd5oHpA9B0bid10Cme6diOEZY5wa1E3B
+         1T7/Vr9deMqN44rfLN0Vk/DytX9JLLP8uW4r2WypuIkRbsSVzda9R3PpD7oZVT5JmZVW
+         9hEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kql8qZAOcxKEdh35EAkW5CA3UzEqjf7IKmpKo71LOjE=;
-        b=D0klDVHW56IwjSY8sIzYJOjNwdJkT1sFargGvKNC6Dz9rYb45A9Tj1yguzl8ExgMiG
-         z+XLWK6M3bXByRVsF0Br+3pr66P3dfKtjfCpCdoaUeuDT1TfT2zVaR1r1zoAU0KdhbJh
-         /GWct9b9lF65Y/zLvx5bzGH+Y5WCfP+pmohaaJDndf1Tzhdd8OB5ztn3dcZQSEfq+ESl
-         pXwObQxLmG+MGl8Mk3NV9Qqd+g9bZFSQ9rbYG61zgg/CE9dlmL4kGOwZW5djbv+Hy0I1
-         YSHe61AeknA1G/qmNP5Yj9ivASEmq+eQQCs0PZH5f2iRWhUz5OVbWEGo0r0/bbD9CQQW
-         pocg==
-X-Gm-Message-State: AOAM532Lim2HiD4Muf4X5dmYSTrSJ1qxKXTsXUriLqrwYE9ku/PCNF/4
-        KmQYgy2TToG2jv64RHyT2YeYmE9pCsyfHSvr4ik=
-X-Google-Smtp-Source: ABdhPJwJUHYKNkxnwmlqHOy1ojKqerK4dL+kb/1s/wFC90jkoCIW9QTOrXMX5Uud1Iveeq8Fn0Ia1YT9GSZpboMVYXc=
-X-Received: by 2002:ad4:466a:: with SMTP id z10mr7775814qvv.47.1633074719466;
- Fri, 01 Oct 2021 00:51:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Q5NKyK/hHd+thwf2IuC0mb/EIbqzwR+oDaAazocO9y0=;
+        b=H9rQOHDTHw8C/hEsJrgZo7efpUAjkxCjzZRu4DvUczirjLi2dr6fRw03wtJdpQMqbs
+         SgWOh4q++ZVHIFJ6Su4QvLxRnjWvzf74cn5SqJVY+Whipt2k/Lcxf16If3eq7djcA5J4
+         qGjsafRpCUDL5lgPEcHB/aTfEZGaejYsZpyx3j4yU0ey5PcZl5yJe5nrsFGTjeb5CohP
+         P6IvwXIrW5w/qfF7e6k73K/YxNHdEuOvKXYvI087cqtDEchRcpzI2s5X3Y8+xbiyB4/t
+         pVzMgZQ+cl/60JAy2wmKtsPW0KczLvVdLb0lqwNAbH4W/bSypc06To4YxgUaJMZTOj1b
+         P2YA==
+X-Gm-Message-State: AOAM5316XxXLYB6ytIxl0AJTdlTRCmAvYCH3n+HPkaopbgEf4qN86ucm
+        1zGKU8n6fZdiROQXbgJ3RsEUZpzWD7Rp9BNGK9HF/1zFlLM=
+X-Google-Smtp-Source: ABdhPJyk67A0a0d75XawMq3i6UQGBc+O3QG3/R0y1xMm43fmDAmbj6e8m3zPiosE/cqZvYqHBB2NpjMNyyLjfgOIDao=
+X-Received: by 2002:a05:6830:793:: with SMTP id w19mr8991168ots.23.1633076765836;
+ Fri, 01 Oct 2021 01:26:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210901124047.1615-1-adrianhuang0701@gmail.com> <5120b110-693a-79d3-2793-ac53c036897f@intel.com>
-In-Reply-To: <5120b110-693a-79d3-2793-ac53c036897f@intel.com>
-From:   Huang Adrian <adrianhuang0701@gmail.com>
-Date:   Fri, 1 Oct 2021 15:51:49 +0800
-Message-ID: <CAHKZfL2pGNqj2j_VHyJG_tZ531SO4fuaEVvQrUWMF2Dnp_icGg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI: vmd: Do not disable MSI-X remapping if interrupt
- remapping is enabled by IOMMU
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Adrian Huang <ahuang12@lenovo.com>
+From:   Pierre Le Magourou <lemagoup@gmail.com>
+Date:   Fri, 1 Oct 2021 10:25:55 +0200
+Message-ID: <CAEz4NHpCJDBGkicfZ8YvJOCKRWDsmEe-hWoairnejQmUkm=sGA@mail.gmail.com>
+Subject: pcie-qcom legacy interrupt support
+To:     linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hello,
 
-On Wed, Sep 1, 2021 at 11:18 PM Jon Derrick <jonathan.derrick@intel.com> wrote:
->
-> Thank you Adrian
->
-> On 9/1/21 6:40 AM, Adrian Huang wrote:
-> > From: Adrian Huang <ahuang12@lenovo.com>
-> >
-> > When enabling VMD in BIOS setup (Ice Lake Processor: Whitley platform),
-> > the host OS cannot boot successfully with the following error message:
-> >
-> >   nvme nvme0: I/O 12 QID 0 timeout, completion polled
-> >   nvme nvme0: Shutdown timeout set to 6 seconds
-> >   DMAR: DRHD: handling fault status reg 2
-> >   DMAR: [INTR-REMAP] Request device [0x00:0x00.5] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
->
-> I know we'd really prefer to support interrupt remapping with the VMD feature,
-> and I'm not certain how EIME differs from the interrupt remapping modes that
-> were tested while developing the VMD feature.
->
-> I think this will have to be acceptable for now.
->
-> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
->
+I am trying to use a PI7C9X440SL PCIe/USB adapter on Qualcomm sdm845 platform.
+This PCIe device does not support MSI interrupts.
 
-Gentle ping. Any comments about this patch (with Jon's Reviewed-by)?
+On 5.10 kernel, the pci device is detected but EHCI driver probe fails
+with this message "Found HC with no IRQ. Check BIOS/PCI".
 
--- Adrian
+lspci shows that legacy interrupt cannot be found:
+ #lspci -vv -nk -s 0000:03:00.2
+ 0000:03:00.2 0c03: 12d8:400f (rev 01) (prog-if 20 [EHCI])
+        Subsystem: 12d8:400f
+        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin C routed to IRQ 0
+        Region 0: Memory at 60302000 (32-bit, non-prefetchable) [size=256]
+        Capabilities: [80] Power Management version 3
+                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA
+PME(D0+,D1+,D2+,D3hot+,D3cold+)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [8c] MSI: Enable- Count=1/1 Maskable- 64bit-
+                Address: 00000000  Data: 0000
+        Capabilities: [e0] Express (v1) Legacy Endpoint, MSI 00
+                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
+<64ns, L1 <1us
+                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
+                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+AuxPwr+ TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s,
+Exit Latency L0s <512ns
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
+                        TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+
+
+It is not clear to me if legacy interrupts are supported by the
+pcie-qcom driver.
+Do I need to add the PCIe/USB device description in the device tree
+for this to work ?
+
+Thank you.
+
+Pierre Le Magourou
