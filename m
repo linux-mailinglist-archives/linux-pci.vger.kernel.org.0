@@ -2,103 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D3641E912
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 10:26:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A1AF41E9F2
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 11:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352729AbhJAI1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 04:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352723AbhJAI1v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 04:27:51 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB488C061775
-        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 01:26:06 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id e66-20020a9d2ac8000000b0054da8bdf2aeso8382255otb.12
-        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 01:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Q5NKyK/hHd+thwf2IuC0mb/EIbqzwR+oDaAazocO9y0=;
-        b=K0a747/pyYakwgAkDrJTP/tVtrui8Hv3q7M6ki2WWc6YZahYIbAri0jIDUyrLoDZKi
-         k+diF0a0UC+WD7vN2ODTRfBNjtof1Gspp3AkaPeLJDVGFYa8sCIckiU0HsMvpz3Io4pp
-         nhL5Ni93g4x6Q0SME8V4S5tWpgrM0Jq9vhFKNVAKjxCLS+JhMlB9YxOesrdO+hUB3q2I
-         hKPw6zZKVrKST+bhVssSGGygqjEYjSO2vy6qqd5oHpA9B0bid10Cme6diOEZY5wa1E3B
-         1T7/Vr9deMqN44rfLN0Vk/DytX9JLLP8uW4r2WypuIkRbsSVzda9R3PpD7oZVT5JmZVW
-         9hEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Q5NKyK/hHd+thwf2IuC0mb/EIbqzwR+oDaAazocO9y0=;
-        b=H9rQOHDTHw8C/hEsJrgZo7efpUAjkxCjzZRu4DvUczirjLi2dr6fRw03wtJdpQMqbs
-         SgWOh4q++ZVHIFJ6Su4QvLxRnjWvzf74cn5SqJVY+Whipt2k/Lcxf16If3eq7djcA5J4
-         qGjsafRpCUDL5lgPEcHB/aTfEZGaejYsZpyx3j4yU0ey5PcZl5yJe5nrsFGTjeb5CohP
-         P6IvwXIrW5w/qfF7e6k73K/YxNHdEuOvKXYvI087cqtDEchRcpzI2s5X3Y8+xbiyB4/t
-         pVzMgZQ+cl/60JAy2wmKtsPW0KczLvVdLb0lqwNAbH4W/bSypc06To4YxgUaJMZTOj1b
-         P2YA==
-X-Gm-Message-State: AOAM5316XxXLYB6ytIxl0AJTdlTRCmAvYCH3n+HPkaopbgEf4qN86ucm
-        1zGKU8n6fZdiROQXbgJ3RsEUZpzWD7Rp9BNGK9HF/1zFlLM=
-X-Google-Smtp-Source: ABdhPJyk67A0a0d75XawMq3i6UQGBc+O3QG3/R0y1xMm43fmDAmbj6e8m3zPiosE/cqZvYqHBB2NpjMNyyLjfgOIDao=
-X-Received: by 2002:a05:6830:793:: with SMTP id w19mr8991168ots.23.1633076765836;
- Fri, 01 Oct 2021 01:26:05 -0700 (PDT)
+        id S1353237AbhJAJog (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 05:44:36 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3906 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353274AbhJAJoa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 05:44:30 -0400
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HLQ7S3HQwz67D3k;
+        Fri,  1 Oct 2021 17:39:48 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Fri, 1 Oct 2021 11:42:44 +0200
+Received: from localhost (10.52.123.156) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 1 Oct 2021
+ 10:42:43 +0100
+Date:   Fri, 1 Oct 2021 10:42:26 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 6/9] PCI: Add pci_find_dvsec_capability to find
+ designated VSEC
+Message-ID: <20211001104226.00000add@Huawei.com>
+In-Reply-To: <20210923172647.72738-7-ben.widawsky@intel.com>
+References: <20210923172647.72738-1-ben.widawsky@intel.com>
+        <20210923172647.72738-7-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-From:   Pierre Le Magourou <lemagoup@gmail.com>
-Date:   Fri, 1 Oct 2021 10:25:55 +0200
-Message-ID: <CAEz4NHpCJDBGkicfZ8YvJOCKRWDsmEe-hWoairnejQmUkm=sGA@mail.gmail.com>
-Subject: pcie-qcom legacy interrupt support
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.123.156]
+X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Thu, 23 Sep 2021 10:26:44 -0700
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-I am trying to use a PI7C9X440SL PCIe/USB adapter on Qualcomm sdm845 platform.
-This PCIe device does not support MSI interrupts.
+> Add pci_find_dvsec_capability to locate a Designated Vendor-Specific
+> Extended Capability with the specified DVSEC ID.
+> 
+> The Designated Vendor-Specific Extended Capability (DVSEC) allows one or
+> more vendor specific capabilities that aren't tied to the vendor ID of
+> the PCI component.
+> 
+> DVSEC is critical for both the Compute Express Link (CXL) driver as well
+> as the driver for OpenCAPI coherent accelerator (OCXL).
+> 
+> Cc: David E. Box <david.e.box@linux.intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-On 5.10 kernel, the pci device is detected but EHCI driver probe fails
-with this message "Found HC with no IRQ. Check BIOS/PCI".
+Great to see this cleaned up.
 
-lspci shows that legacy interrupt cannot be found:
- #lspci -vv -nk -s 0000:03:00.2
- 0000:03:00.2 0c03: 12d8:400f (rev 01) (prog-if 20 [EHCI])
-        Subsystem: 12d8:400f
-        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Interrupt: pin C routed to IRQ 0
-        Region 0: Memory at 60302000 (32-bit, non-prefetchable) [size=256]
-        Capabilities: [80] Power Management version 3
-                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA
-PME(D0+,D1+,D2+,D3hot+,D3cold+)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [8c] MSI: Enable- Count=1/1 Maskable- 64bit-
-                Address: 00000000  Data: 0000
-        Capabilities: [e0] Express (v1) Legacy Endpoint, MSI 00
-                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-<64ns, L1 <1us
-                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
-                DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                        MaxPayload 128 bytes, MaxReadReq 128 bytes
-                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-AuxPwr+ TransPend-
-                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s,
-Exit Latency L0s <512ns
-                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
-                        TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+> ---
+>  drivers/pci/pci.c   | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  1 +
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..94ac86ff28b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -732,6 +732,38 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
+>  
+> +/**
+> + * pci_find_dvsec_capability - Find DVSEC for vendor
+> + * @dev: PCI device to query
+> + * @vendor: Vendor ID to match for the DVSEC
+> + * @dvsec: Designated Vendor-specific capability ID
+> + *
+> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
+> + * offset in config space; otherwise return 0.
+> + */
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
+> +{
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		u16 v, id;
+> +
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
+> +		if (vendor == v && dvsec == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+> +
+>  /**
+>   * pci_find_parent_resource - return resource region of parent bus of given
+>   *			      region
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..c93ccfa4571b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1130,6 +1130,7 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>  u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
+> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
+>  
+>  u64 pci_get_dsn(struct pci_dev *dev);
+>  
 
-It is not clear to me if legacy interrupts are supported by the
-pcie-qcom driver.
-Do I need to add the PCIe/USB device description in the device tree
-for this to work ?
-
-Thank you.
-
-Pierre Le Magourou
