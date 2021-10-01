@@ -2,30 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AEC241F769
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 00:22:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38AFB41F7B8
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 00:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355829AbhJAWYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 18:24:36 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:36804 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbhJAWYf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 18:24:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=ent50A2FumpC9aDXR5Qm0QH4qyHyD1xD/705x8AcEeY=; b=s/z7F8PLrEmDP31iQENlxVoSTT
-        4H9l1aoVN8hef71V44S4SxGoamROPJy+o+t5Inv+9wUfb0JlZBmRG9IP5Q5pkDIiMhbUs2EWCzOQD
-        ij7Nano0aq6SDFRlJb1aqMkZUYSsEE5MPUok4lkBY/76ZdxutXBGBkZlvnvzvMarVcbrwZUiJHy8x
-        hz9y+5idzSe5S/rECi/Cde14mXwHV6WqVx3bDj4NrGxyLns/zKclaYP5wBoByv2HQy7cZ/+ZlvwJ2
-        BmRbZwnBFl3l22PHfA1sw7r1YVy4zXYebzwz0wDI8zcvW670GNrgnJ5WAVHpcxCuzGJqAI4LD3eTx
-        ng/1j+9w==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1mWQvK-0000Wo-1S; Fri, 01 Oct 2021 16:22:35 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
+        id S1356273AbhJAWsy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 18:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356322AbhJAWsi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 18:48:38 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2756C0613B8
+        for <linux-pci@vger.kernel.org>; Fri,  1 Oct 2021 15:46:07 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id e16so20101qts.4
+        for <linux-pci@vger.kernel.org>; Fri, 01 Oct 2021 15:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tnXGytG/2aEvcazdaoXj71bXQnwjyukOXIDiPveIZXA=;
+        b=pOTSnHYVXRz06VuaU1BDucThq3XLijVNOmqw8gUYgVjcX4bjaU1DPW80GPFpz1Bry3
+         5Izso0qtrLy+uxnjkbarKVIHYAhUgvRAYbABr2JkvP9GCyg+7YRvw6KqUUc7seGsa9fH
+         KzDaVUI4r8DRENRxq0vwC8QCWDmKp8VauDJh3yS5lxyhzeb0C6mReZGMghzJA7mUDjLv
+         3H6R6bTZK2L5cSKTP/HRhXJP2RtP51MG45N0gotai5Ttri7QJaEBuKZ8DLCGMwehfYns
+         QMf6evJgsJzNYeGrSyM/G3W4DM7LKIUGIRGLmulP3Gv60VEJqAsqbGSn5orZIQ0iTuZ9
+         WZEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tnXGytG/2aEvcazdaoXj71bXQnwjyukOXIDiPveIZXA=;
+        b=RxKzZ+FxrwxOyFVdAnjzXi4YMuCOWqHRgm8Pt4/AO8zgTgF8aurd4vww+JNudN5//2
+         0diBtHTbaEGu7S9z8ImYsx3UoyRZQavU5/Itf39qjM7WeF+4bg06KnwQvC7HifqhkAjA
+         HeRrvax5TanxhC6BT8ePKsvKlmNN8TqTNFr51ExspUoUSuzPkD3JY5LeXGJ4vprU6q4B
+         Z5DN4BaomsQ6G2hL/o8MEUa68FHZ9YZ7q+KMMvfRdNrC1sGqUIq+Gh250D9Eiz9FlsWQ
+         2icYTa/h/bITy903Tt1dpylDv1BA9IrLa+pPM37FupG5QGA3/Hpw5GyplbQFGAPVxoeQ
+         JCfQ==
+X-Gm-Message-State: AOAM532ypWPj0/xHQENM4h8NgqyTdE1ISxpAc7jCEfhG5TnqLeQB6129
+        YUyhgGPlMV1O/D366I1JuDF1Ew==
+X-Google-Smtp-Source: ABdhPJwIsqD13TKJo7mm1SIikHRk6qEvBFD6JpS7ZAJB6SMruIQLkql7OpNf4qMoVFvzMVj7AMSNJA==
+X-Received: by 2002:ac8:7dc1:: with SMTP id c1mr551179qte.289.1633128366918;
+        Fri, 01 Oct 2021 15:46:06 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id p187sm3759342qkd.101.2021.10.01.15.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Oct 2021 15:46:06 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mWRI5-009Y55-Ly; Fri, 01 Oct 2021 19:46:05 -0300
+Date:   Fri, 1 Oct 2021 19:46:05 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     Alistair Popple <apopple@nvidia.com>,
         Felix Kuehling <Felix.Kuehling@amd.com>,
         Christoph Hellwig <hch@lst.de>,
@@ -34,7 +61,7 @@ Cc:     Alistair Popple <apopple@nvidia.com>,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         Stephen Bates <sbates@raithlin.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
@@ -49,86 +76,52 @@ Cc:     Alistair Popple <apopple@nvidia.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-References: <8d386273-c721-c919-9749-fc0a7dc1ed8b@deltatee.com>
- <20210929230543.GB3544071@ziepe.ca>
- <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
+Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
+Message-ID: <20211001224605.GS3544071@ziepe.ca>
+References: <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
  <20210929233540.GF3544071@ziepe.ca>
  <f9a83402-3d66-7437-ca47-77bac4108424@deltatee.com>
- <20210930003652.GH3544071@ziepe.ca> <20211001134856.GN3544071@ziepe.ca>
+ <20210930003652.GH3544071@ziepe.ca>
+ <20211001134856.GN3544071@ziepe.ca>
  <4fdd337b-fa35-a909-5eee-823bfd1e9dc4@deltatee.com>
  <20211001174511.GQ3544071@ziepe.ca>
  <95ada0ac-08cc-5b77-8675-b955b1b6d488@deltatee.com>
  <20211001221405.GR3544071@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8871549c-63b5-d062-87ea-9036605984d5@deltatee.com>
-Date:   Fri, 1 Oct 2021 16:22:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+ <8871549c-63b5-d062-87ea-9036605984d5@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20211001221405.GR3544071@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, hch@lst.de, Felix.Kuehling@amd.com, apopple@nvidia.com, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8871549c-63b5-d062-87ea-9036605984d5@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Oct 01, 2021 at 04:22:28PM -0600, Logan Gunthorpe wrote:
 
-
-
-On 2021-10-01 4:14 p.m., Jason Gunthorpe wrote:
-> On Fri, Oct 01, 2021 at 02:13:14PM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2021-10-01 11:45 a.m., Jason Gunthorpe wrote:
->>>> Before the invalidation, an active flag is cleared to ensure no new
->>>> mappings can be created while the unmap is proceeding.
->>>> unmap_mapping_range() should sequence itself with the TLB flush and
->>>
->>> AFIAK unmap_mapping_range() kicks off the TLB flush and then
->>> returns. It doesn't always wait for the flush to fully finish. Ie some
->>> cases use RCU to lock the page table against GUP fast and so the
->>> put_page() doesn't happen until the call_rcu completes - after a grace
->>> period. The unmap_mapping_range() does not wait for grace periods.
->>
->> Admittedly, the tlb flush code isn't the easiest code to understand.
->> But, yes it seems at least on some arches the pages are freed by
->> call_rcu(). But can't this be fixed easily by adding a synchronize_rcu()
->> call after calling unmap_mapping_range()? Certainly after a
->> synchronize_rcu(), the TLB has been flushed and it is safe to free those
->> pages.
+> > It would close this issue, however synchronize_rcu() is very slow
+> > (think > 1second) in some cases and thus cannot be inserted here.
 > 
-> It would close this issue, however synchronize_rcu() is very slow
-> (think > 1second) in some cases and thus cannot be inserted here.
+> It shouldn't be *that* slow, at least not the vast majority of the
+> time... it seems a bit unreasonable that a CPU wouldn't schedule for
+> more than a second. 
 
-It shouldn't be *that* slow, at least not the vast majority of the
-time... it seems a bit unreasonable that a CPU wouldn't schedule for
-more than a second. But these aren't fast paths and synchronize_rcu()
-already gets called in the unbind path for p2pdma a of couple times. I'm
-sure it would also be fine to slow down the vma_close() path as well.
+I've seen bug reports on exactly this, it is well known. Loaded
+big multi-cpu systems have high delays here, for whatever reason.
 
-> I'm also not completely sure that rcu is the only case, I don't know
-> how every arch handles its gather structure.. I have a feeling the
-> general intention was for this to be asynchronous
+> But these aren't fast paths and synchronize_rcu() already gets
+> called in the unbind path for p2pdma a of couple times. I'm sure it
+> would also be fine to slow down the vma_close() path as well.
 
-Yeah, this is not clear to me either.
+vma_close is done in a loop destroying vma's and if each synchronize
+costs > 1s it can take forever to close a process. We had to kill a
+similar use of synchronize_rcu in RDMA because users were complaining
+of > 40s process exit times.
 
-> My preferences are to either remove devmap from gup_fast, or fix it to
-> not use special pages - the latter being obviously better.
+The driver unload path is fine to be slow, and is probably done on an
+unloaded system where synchronize_rcu is not so bad
 
-Yeah, I rather expect DAX users want the optimization provided by
-gup_fast. I don't think P2PDMA users would be happy about being stuck
-with slow gup either.
+Anyway, it is not really something for this series to fix, just
+something we should all be aware of and probably ought to get fixed
+before we do much more with ZONE_DEVICE pages
 
-Loga
+Jason
