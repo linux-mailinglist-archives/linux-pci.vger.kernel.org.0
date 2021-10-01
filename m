@@ -2,215 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C2541EB68
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 13:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EF4341EB90
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Oct 2021 13:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbhJALKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Oct 2021 07:10:01 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:44984 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbhJALKA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Oct 2021 07:10:00 -0400
-Received: by mail-ot1-f45.google.com with SMTP id h9-20020a9d2f09000000b005453f95356cso10994656otb.11;
-        Fri, 01 Oct 2021 04:08:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EtAHmQZw91u7lVU62l1P8pNTURuYrm0FshqcUyypknw=;
-        b=RoSIKz2rg9h5aEA1hlf4lODjxJfRbfteOtdMZ8YRwmTYjTHmLcFIhENpXXuprCBTck
-         PgoFVYPSvPfS1ugsFYT2Wq/F1ZvUbhtDhf/QC7hvazba0vudBFfAkjeFRRwb4nVOLSwQ
-         I+G/U3BOUG9p2N9Ypyll7msf+3mKdeF3/F8FaZ2sBwu7cxMdA0ZZktO96EkD8dJI4+qB
-         uTba0/ZyNaG4nGWt+1nuqlax4EoNGVnpRQ7OLKW8NVvOSoiISmG4Q66AxV+kqssFGpuF
-         yk4obqn76KEzQFi60xWrFz6+jyrh2suKPLDZoZHYgDJoCYhEiqb86OS6Khlagx6DgH+s
-         o5xQ==
-X-Gm-Message-State: AOAM533grl42c5LmgVv8ZbOUvBxZwG9YxuLnd4/eWDNLvAApe1vdi0Hf
-        DfrCZ2b7dIDApNfGrNIYVJjOdXvAVm6cdV+3blI=
-X-Google-Smtp-Source: ABdhPJzo+0Q0KOxUoYQMmvMSP1UskRUfApAoeDtwjOT0KkLdiqigAI4XNGs0kPuGRX/q+zt3TgqAbNwDMkcP/x4w83Q=
-X-Received: by 2002:a05:6830:165a:: with SMTP id h26mr9902807otr.301.1633086496224;
- Fri, 01 Oct 2021 04:08:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210929160550.GA773748@bhelgaas> <87mtnu77mr.ffs@tglx>
- <87k0iy71rw.ffs@tglx> <CAJZ5v0hH_h9V0dACEMomqZbwpQUf6GB_8UK9+S1AGEdFQqvPLQ@mail.gmail.com>
- <87h7e26lh9.ffs@tglx> <87czoq6kt8.ffs@tglx>
-In-Reply-To: <87czoq6kt8.ffs@tglx>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 1 Oct 2021 13:08:04 +0200
-Message-ID: <CAJZ5v0gCmRUF4PRoQzdQqf1sDieAgH-MY_=74HB+c_=VqW3qww@mail.gmail.com>
-Subject: Re: [PATCH RFT v2] x86/hpet: Use another crystalball to evaluate HPET usability
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>, jose.souza@intel.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>, rudolph@fb.com,
-        xapienz@fb.com, bmilton@fb.com,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Harry Pan <harry.pan@intel.com>
+        id S1353250AbhJALPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Oct 2021 07:15:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24723 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230257AbhJALPn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 1 Oct 2021 07:15:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="205557753"
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="205557753"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 04:13:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,337,1624345200"; 
+   d="scan'208";a="520990040"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Oct 2021 04:13:58 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id DF307580689;
+        Fri,  1 Oct 2021 04:13:58 -0700 (PDT)
+Message-ID: <45b6454a3421ac064dff3ba159e02985d3e55440.camel@linux.intel.com>
+Subject: Re: [PATCH 5/5] platform/x86: Add Intel Software Defined Silicon
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Fri, 01 Oct 2021 04:13:58 -0700
+In-Reply-To: <YVa46eU1VX7CM+Xd@kroah.com>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+         <20211001012815.1999501-6-david.e.box@linux.intel.com>
+         <YVa46eU1VX7CM+Xd@kroah.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 7:21 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On recent Intel systems the HPET stops working when the system reaches PC10
-> idle state.
->
-> The approach of adding PCI ids to the early quirks to disable HPET on
-> these systems is a whack a mole game which makes no sense.
->
-> Check for PC10 instead and force disable HPET if supported. The check is
-> overbroad as it does not take ACPI, intel_idle enablement and command
-> line parameters into account. That's fine as long as there is at least
-> PMTIMER available to calibrate the TSC frequency. The decision can be
-> overruled by adding "hpet=force" on the kernel command line.
->
-> Remove the related early PCI quirks for affected Ice Cake and Coffin Lake
-> systems as they are not longer required. That should also cover all
-> other systems, i.e. Tiger Rag and newer generations, which are most
-> likely affected by this as well.
->
-> Fixes: Yet another hardware trainwreck
-> Reported-by: Jakub Kicinski <kuba@kernel.org>
-> Not-yet-signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Fri, 2021-10-01 at 09:29 +0200, Greg KH wrote:
+> On Thu, Sep 30, 2021 at 06:28:15PM -0700, David E. Box wrote:
+> > +static long sdsi_device_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> > +{
+> > +       struct miscdevice *miscdev = file->private_data;
+> > +       struct sdsi_priv *priv = to_sdsi_priv(miscdev);
+> > +       void __user *argp = (void __user *)arg;
+> > +       long ret = -EINVAL;
+> > +
+> > +       if (!priv->dev_present)
+> > +               return -ENODEV;
+> > +
+> > +       if (!priv->sdsi_enabled)
+> > +               return -EPERM;
+> > +
+> > +       if (cmd == SDSI_IF_READ_STATE)
+> > +               return sdsi_if_read_state_cert(priv, argp);
+> > +
+> > +       mutex_lock(&priv->akc_lock);
+> > +       switch (cmd) {
+> > +       case SDSI_IF_PROVISION_AKC:
+> > +               /*
+> > +                * While writing an authentication certificate disallow other openers
+> > +                * from using AKC or CAP.
+> > +                */
+> > +               if (!priv->akc_owner)
+> > +                       priv->akc_owner = file;
+> > +
+> > +               if (priv->akc_owner != file) {
+> 
+> Please explain how this test would ever trigger and how you tested it?
+> 
+> What exactly are you trying to protect from here?  If userspace has your
+> file descriptor, it can do whatever it wants, don't try to be smarter
+> than it as you will never win.
+> 
+> And why are you using ioctls at all here?  As you are just
+> reading/writing to the hardware directly, why not just use a binary
+> sysfs file to be that pipe?  What requires an ioctl at all?
 
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+So an original internal version of this did use binary attributes. But there was concern during
+review that a flow, particularly when doing the two write operations, could not be handled
+atomically while exposed as separate files. Above is the attempt to handle the situation in the
+ioctl. That is, whichever opener performs AKC write first would lock out all other openers from
+performing any write until that file is closed. This is to avoid interfering with that process,
+should the opener also decide to perform a CAP operation.
 
-> ---
-> Notes: Completely untested. Use at your own peril.
->
-> V2: Move the substate check into the helper function. Adjust function
->     name accordingly.
-> ---
->  arch/x86/kernel/early-quirks.c |    6 ---
->  arch/x86/kernel/hpet.c         |   81 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+), 6 deletions(-)
->
-> --- a/arch/x86/kernel/early-quirks.c
-> +++ b/arch/x86/kernel/early-quirks.c
-> @@ -714,12 +714,6 @@ static struct chipset early_qrk[] __init
->          */
->         { PCI_VENDOR_ID_INTEL, 0x0f00,
->                 PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-> -       { PCI_VENDOR_ID_INTEL, 0x3e20,
-> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-> -       { PCI_VENDOR_ID_INTEL, 0x3ec4,
-> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-> -       { PCI_VENDOR_ID_INTEL, 0x8a12,
-> -               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
->         { PCI_VENDOR_ID_BROADCOM, 0x4331,
->           PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
->         {}
-> --- a/arch/x86/kernel/hpet.c
-> +++ b/arch/x86/kernel/hpet.c
-> @@ -10,6 +10,7 @@
->  #include <asm/irq_remapping.h>
->  #include <asm/hpet.h>
->  #include <asm/time.h>
-> +#include <asm/mwait.h>
->
->  #undef  pr_fmt
->  #define pr_fmt(fmt) "hpet: " fmt
-> @@ -916,6 +917,83 @@ static bool __init hpet_counting(void)
->         return false;
->  }
->
-> +static bool __init mwait_pc10_supported(void)
-> +{
-> +       unsigned int eax, ebx, ecx, mwait_substates;
-> +
-> +       if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-> +               return false;
-> +
-> +       if (!cpu_feature_enabled(X86_FEATURE_MWAIT))
-> +               return false;
-> +
-> +       if (boot_cpu_data.cpuid_level < CPUID_MWAIT_LEAF)
-> +               return false;
-> +
-> +       cpuid(CPUID_MWAIT_LEAF, &eax, &ebx, &ecx, &mwait_substates);
-> +
-> +       return (ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED) &&
-> +              (ecx & CPUID5_ECX_INTERRUPT_BREAK) &&
-> +              (mwait_substates & (0xF << 28));
-> +}
-> +
-> +/*
-> + * Check whether the system supports PC10. If so force disable HPET as that
-> + * stops counting in PC10. This check is overbroad as it does not take any
-> + * of the following into account:
-> + *
-> + *     - ACPI tables
-> + *     - Enablement of intel_idle
-> + *     - Command line arguments which limit intel_idle C-state support
-> + *
-> + * That's perfectly fine. HPET is a piece of hardware designed by committee
-> + * and the only reasons why it is still in use on modern systems is the
-> + * fact that it is impossible to reliably query TSC and CPU frequency via
-> + * CPUID or firmware.
-> + *
-> + * If HPET is functional it is useful for calibrating TSC, but this can be
-> + * done via PMTIMER as well which seems to be the last remaining timer on
-> + * X86/INTEL platforms that has not been completely wreckaged by feature
-> + * creep.
-> + *
-> + * In theory HPET support should be removed altogether, but there are older
-> + * systems out there which depend on it because TSC and APIC timer are
-> + * dysfunctional in deeper C-states.
-> + *
-> + * It's only 20 years now that hardware people have been asked to provide
-> + * reliable and discoverable facilities which can be used for timekeeping
-> + * and per CPU timer interrupts.
-> + *
-> + * The probability that this problem is going to be solved in the
-> + * forseeable future is close to zero, so the kernel has to be cluttered
-> + * with heuristics to keep up with the ever growing amount of hardware and
-> + * firmware trainwrecks. Hopefully some day hardware people will understand
-> + * that the approach of "This can be fixed in software" is not sustainable.
-> + * Hope dies last...
-> + */
-> +static bool __init hpet_is_pc10_damaged(void)
-> +{
-> +       unsigned long long pcfg;
-> +
-> +       /* Check whether PC10 substates are supported */
-> +       if (!mwait_pc10_supported())
-> +               return false;
-> +
-> +       /* Check whether PC10 is enabled in PKG C-state limit */
-> +       rdmsrl(MSR_PKG_CST_CONFIG_CONTROL, pcfg);
-> +       if ((pcfg & 0xF) < 8)
-> +               return false;
-> +
-> +       if (hpet_force_user) {
-> +               pr_warn("HPET force enabled via command line, but dysfunctional in PC10.\n");
-> +               return false;
-> +       }
-> +
-> +       pr_info("HPET dysfunctional in PC10. Force disabled.\n");
-> +       boot_hpet_disable = true;
-> +       return true;
-> +}
-> +
->  /**
->   * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
->   */
-> @@ -929,6 +1007,9 @@ int __init hpet_enable(void)
->         if (!is_hpet_capable())
->                 return 0;
->
-> +       if (hpet_is_pc10_damaged())
-> +               return 0;
-> +
->         hpet_set_mapping();
->         if (!hpet_virt_address)
->                 return 0;
->
+There may be future commands requiring RW ioctls as well.
+
+David
+
+> 
+> thanks,
+> 
+> greg k-h
+
+
