@@ -2,132 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0556541FCA6
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 17:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 609C941FCE3
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 17:54:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233389AbhJBPNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 11:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233274AbhJBPNm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 2 Oct 2021 11:13:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9DE22611C7;
-        Sat,  2 Oct 2021 15:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633187516;
-        bh=SbD0pLMeuMsQguP7ZVdU4NgeQOy5CPZuKGaMkAkIfkI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b46de+QJ1JwnmCWmVBZVR7FuPAC2vA7jEhMPZVEyNrHqD8ZUQX12egjCJvHz5umYb
-         oT8r4yvtKDiGvGQvYdFEP3qV4ZKkx9S/6gSQ2/hdpfACn9tU4lKBySXxBPY3IfRhjV
-         6zaRd6rQFfccqy6kyPtGN/d3VskGmfVPX5wstU+FBKOJnpz/H0dXegde+daYvSgthv
-         8xCGMwczrVuQtSUFPmntJio401eyJS0Oozz/OBHeobizJs9GEYwcR/UoBIdCWeUPuF
-         l60oDAuB+ay8bLlWBKNDFs8yxdCwWwCIyKukhLyoMqT7o+lOF8QIGiX1V3Ar9ajnb6
-         +TabPgsAhdkLg==
-Date:   Sat, 2 Oct 2021 10:11:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelvin.Cao@microchip.com
-Cc:     logang@deltatee.com, kurt.schwemmer@microsemi.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kelvincao@outlook.com
-Subject: Re: [PATCH 1/5] PCI/switchtec: Error out MRPC execution when no GAS
- access
-Message-ID: <20211002151153.GA967141@bhelgaas>
+        id S233538AbhJBP4S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 11:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233537AbhJBP4S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 11:56:18 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE7BC0613EC
+        for <linux-pci@vger.kernel.org>; Sat,  2 Oct 2021 08:54:30 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id j13so340802uaq.0
+        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 08:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xQrYULKok+hL+AIRGJuG9CojAZcnV9Xr+it7yxQJVlY=;
+        b=FVpHGn6Bd/3N42nal2cBmvqDTFJLswOt/kbQoY3Pz7JLJvYjPcJlY4qwZNq4RP9B1n
+         BpzLfIYXWy05x2EaEKAlO/5wCUe/8rmsQMvKG3TMgoDZL8AE6oLIuj6qMrVK9InqVm9u
+         Dl8haCJ+RZt8epUP8e5EUGvEePT2ZLCWl3Z3sedbL624S26uOpX0Barj4T47JNn2bt0V
+         E8YzxOJh+2HQ4R/m13c5ec2fCChJc7N/U3Loqdei9aMpsOYrsemdhA6mdkYdPazKXQN6
+         CO3F0WeHchjlK34+2diiPcI6dHSb1tVq8x+1J3e/WHOMghfGsrtc+KVaBxKFAljgbHuJ
+         w6/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xQrYULKok+hL+AIRGJuG9CojAZcnV9Xr+it7yxQJVlY=;
+        b=l6daGbrtc8HVz3dXqqUgidQoQMghd3AWHldD6FQejnPRCd1LjzZbhOAPS79YZDgi9h
+         e3FZLDlmIEwSTzfGWMFhfrIvLGavt3h2e16dIa5cQ1TOTzVRfsdtZlkXqvmLTrW12kUo
+         3/zHy1y2kY7V2ChOryuxHSuEwxH2PrFMc+BI4a2xDgJZe9lrDh3ABIx9CLCWGWqdmzhL
+         FoKzyip1d42BVKDxrstb9ztDVxG2EdB4oIKRArsrqpyr39bV2ieFJ2DdRi+x6luPGMF4
+         NwTdHqBkTqAj8iHaq9yCIEW5XXFSV42DXhWzs87cShi9Bef3VEGusiweksB94EC2+jXZ
+         zpBw==
+X-Gm-Message-State: AOAM5309XNhfzxHaMJ6FFSlGiJ9FkiY+LSjv8/JFHMHj44rOTNU3DK/7
+        lkXCc6Ob5cLqptMqAyAIo4tlC0RnOMsVR/mf0Q==
+X-Google-Smtp-Source: ABdhPJxfNu0atcOn4ckF1m0436CxFLD1pDq0ZbHqXwQtyd+31Ih3YffoKHxmJ5ljAneYgsJw+K3Iryd9p+/80m+051w=
+X-Received: by 2002:ab0:4adc:: with SMTP id t28mr2211322uae.4.1633190069450;
+ Sat, 02 Oct 2021 08:54:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed856f361ef3ca80e34c4565daffe6e566a8baa3.camel@microchip.com>
+Received: by 2002:ab0:594c:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 08:54:29 -0700 (PDT)
+Reply-To: mrsaishag45@gmail.com
+From:   Mrs Aisha Al-Qaddafi <mrsaishag8@gmail.com>
+Date:   Sat, 2 Oct 2021 08:54:29 -0700
+Message-ID: <CAMoG4bUH=LL_f8RmPG0JYMPeV5URKhqqs3vSmkksQHcZzRXYaQ@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 01, 2021 at 11:49:18PM +0000, Kelvin.Cao@microchip.com wrote:
-> On Fri, 2021-10-01 at 14:29 -0600, Logan Gunthorpe wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> > 
-> > On 2021-10-01 2:18 p.m., Bjorn Helgaas wrote:
-> > > On Fri, Sep 24, 2021 at 11:08:38AM +0000, kelvin.cao@microchip.com
-> > > wrote:
-> > > > From: Kelvin Cao <kelvin.cao@microchip.com>
-> > > > 
-> > > > After a firmware hard reset, MRPC command executions, which
-> > > > are based on the PCI BAR (which Microchip refers to as GAS)
-> > > > read/write, will hang indefinitely. This is because after a
-> > > > reset, the host will fail all GAS reads (get all 1s), in which
-> > > > case the driver won't get a valid MRPC status.
-> > > 
-> > > Trying to write a merge commit log for this, but having a hard
-> > > time summarizing it.  It sounds like it covers both
-> > > Switchtec-specific (firmware and MRPC commands) and generic PCIe
-> > > behavior (MMIO read failures).
-> > > 
-> > > This has something to do with a firmware hard reset.  What is
-> > > that?  Is that like a firmware reboot?  A device reset, e.g.,
-> > > FLR or secondary bus reset, that causes a firmware reboot?  A
-> > > device reset initiated by firmware?
->
-> A firmware reset can be triggered by a reset command issued to the
-> firmware to reboot it.
+Dear Friend,
 
-So I guess this reset command was issued by the driver?
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
 
-> > > Anyway, apparently when that happens, MMIO reads to the switch
-> > > fail (timeout or error completion on PCIe) for a while.  If a
-> > > device reset is involved, that much is standard PCIe behavior.
-> > > And the driver sees ~0 data from those failed reads.  That's not
-> > > part of the PCIe spec, but is typical root complex behavior.
-> > > 
-> > > But you said the MRPC commands hang indefinitely.  Presumably
-> > > MMIO reads would start succeeding eventually when the device
-> > > becomes ready, so I don't know how that translates to
-> > > "indefinitely."
-> > 
-> > I suspect Kelvin can expand on this and fix the issue below. But
-> > in my experience, the MMIO will read ~0 forever after a firmware
-> > reset, until the system is rebooted. Presumably on systems that
-> > have good hot plug support they are supposed to recover. Though
-> > I've never seen that.
-> 
-> This is also my observation, all MMIO read will fail (~0 returned)
-> until the system is rebooted or a PCI rescan is performed.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future.
 
-This made sense until you said MMIO reads would start working after a
-PCI rescan.  A rescan doesn't really do anything special other than
-doing config accesses to the device.  Two things come to mind:
+I am willing to negotiate an investment/business profit sharing ratio
+with you based on the future investment earning profits.
 
-1) Rescan does a config read of the Vendor ID, and devices may
-respond with "Configuration Request Retry Status" if they are not
-ready.  In this event, Linux retries this for a while.  This scenario
-doesn't quite fit because it sounds like this is a device-specific
-reset initiated by the driver, and CRS is not permited in this case.
-PCIe r5.0, sec 2.3.1, says:
+If you are willing to handle this project on my behalf kindly reply
+urgently to enable me to provide you more information about the
+investment funds.
 
-  A device Function is explicitly not permitted to return CRS
-  following a software-initiated reset (other than an FLR) of the
-  device, e.g., by the device's software driver writing to a
-  device-specific reset bit.
+Your Urgent Reply Will Be Appreciated
 
-2) The device may lose its bus and device number configuration after a
-reset, so it must capture bus and device numbers from config writes.
-I don't think Linux does this explicitly, but a rescan does do config
-writes, which could accidentally fix something (PCIe r5.0, sec 2.2.9).
-
-> > The MMIO read that signals the MRPC status always returns ~0 and the
-> > userspace request will eventually time out.
-> 
-> The problem in this case is that, in DMA MRPC mode, the status (in host
-> memory) is always initialized to 'in progress', and it's up to the
-> firmware to update it to 'done' after the command is executed in the
-> firmware. After a firmware reset is performed, the firmware cannot be
-> triggered to start a MRPC command, therefore the status in host memory
-> remains 'in progress' in the driver, which prevents a MRPC from timing
-> out. I should have included this in the message.
-
-I *thought* the problem was that the PCIe Memory Read failed and the
-Root Complex fabricated ~0 data to complete the CPU read.  But now I'm
-not sure, because it sounds like it might be that the PCIe transaction
-succeeds, but it reads data that hasn't been updated by the firmware,
-i.e., it reads 'in progress' because firmware hasn't updated it to
-'done'.
-
-Bjorn
+Best Regards
+Mrs Aisha Al-Qaddafi
