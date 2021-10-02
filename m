@@ -2,140 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C614A41FC94
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 16:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0556541FCA6
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 17:12:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233399AbhJBOpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 10:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
+        id S233389AbhJBPNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 11:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229560AbhJBOpv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 2 Oct 2021 10:45:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BDE8161A38;
-        Sat,  2 Oct 2021 14:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1633185845;
-        bh=RVXCE1KtXB8pEGemhZzbi1pw9kaZh7HJ77HnqA+Npns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KmKcktd/wdJOAcwgKPmcihqF52yuGkwO6RKYCQVgvR3byomenOLbvq2VfDP6EjvI0
-         plksHABi/Z/OXC4bfqZU2y4MUj4nw/JE7r+MlNbFWxMgZ3xVT+GKw6RNwYkpMQ3q5H
-         Df6XaN3sMEBBNp5q2PWkokq4AYxKlEzAikICkvoM=
-Date:   Sat, 2 Oct 2021 16:44:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
- confidential guest
-Message-ID: <YVhwMJyJeAb8iEFL@kroah.com>
-References: <20210930065953-mutt-send-email-mst@kernel.org>
- <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
- <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
- <YVXWaF73gcrlvpnf@kroah.com>
- <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
- <YVaywQLAboZ6b36V@kroah.com>
- <64eb085b-ef9d-dc6e-5bfd-d23ca0149b5e@linux.intel.com>
- <20211002070218-mutt-send-email-mst@kernel.org>
- <YVg/F10PCFNOtCnL@kroah.com>
- <95ba71c5-87b8-7716-fbe4-bdc9b04b6812@linux.intel.com>
+        id S233274AbhJBPNm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 2 Oct 2021 11:13:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9DE22611C7;
+        Sat,  2 Oct 2021 15:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633187516;
+        bh=SbD0pLMeuMsQguP7ZVdU4NgeQOy5CPZuKGaMkAkIfkI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=b46de+QJ1JwnmCWmVBZVR7FuPAC2vA7jEhMPZVEyNrHqD8ZUQX12egjCJvHz5umYb
+         oT8r4yvtKDiGvGQvYdFEP3qV4ZKkx9S/6gSQ2/hdpfACn9tU4lKBySXxBPY3IfRhjV
+         6zaRd6rQFfccqy6kyPtGN/d3VskGmfVPX5wstU+FBKOJnpz/H0dXegde+daYvSgthv
+         8xCGMwczrVuQtSUFPmntJio401eyJS0Oozz/OBHeobizJs9GEYwcR/UoBIdCWeUPuF
+         l60oDAuB+ay8bLlWBKNDFs8yxdCwWwCIyKukhLyoMqT7o+lOF8QIGiX1V3Ar9ajnb6
+         +TabPgsAhdkLg==
+Date:   Sat, 2 Oct 2021 10:11:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kelvin.Cao@microchip.com
+Cc:     logang@deltatee.com, kurt.schwemmer@microsemi.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kelvincao@outlook.com
+Subject: Re: [PATCH 1/5] PCI/switchtec: Error out MRPC execution when no GAS
+ access
+Message-ID: <20211002151153.GA967141@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <95ba71c5-87b8-7716-fbe4-bdc9b04b6812@linux.intel.com>
+In-Reply-To: <ed856f361ef3ca80e34c4565daffe6e566a8baa3.camel@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 02, 2021 at 07:20:22AM -0700, Andi Kleen wrote:
-> 
-> On 10/2/2021 4:14 AM, Greg Kroah-Hartman wrote:
-> > On Sat, Oct 02, 2021 at 07:04:28AM -0400, Michael S. Tsirkin wrote:
-> > > On Fri, Oct 01, 2021 at 08:49:28AM -0700, Andi Kleen wrote:
-> > > > >    Do you have a list of specific drivers and kernel options that you
-> > > > > feel you now "trust"?
-> > > > For TDX it's currently only virtio net/block/console
+On Fri, Oct 01, 2021 at 11:49:18PM +0000, Kelvin.Cao@microchip.com wrote:
+> On Fri, 2021-10-01 at 14:29 -0600, Logan Gunthorpe wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > know the content is safe
+> > 
+> > On 2021-10-01 2:18 p.m., Bjorn Helgaas wrote:
+> > > On Fri, Sep 24, 2021 at 11:08:38AM +0000, kelvin.cao@microchip.com
+> > > wrote:
+> > > > From: Kelvin Cao <kelvin.cao@microchip.com>
 > > > > 
-> > > > But we expect this list to grow slightly over time, but not at a high rate
-> > > > (so hopefully <10)
-> > > Well there are already >10 virtio drivers and I think it's reasonable
-> > > that all of these will be used with encrypted guests. The list will
-> > > grow.
-> > What is keeping "all" drivers from being on this list?
+> > > > After a firmware hard reset, MRPC command executions, which
+> > > > are based on the PCI BAR (which Microchip refers to as GAS)
+> > > > read/write, will hang indefinitely. This is because after a
+> > > > reset, the host will fail all GAS reads (get all 1s), in which
+> > > > case the driver won't get a valid MRPC status.
+> > > 
+> > > Trying to write a merge commit log for this, but having a hard
+> > > time summarizing it.  It sounds like it covers both
+> > > Switchtec-specific (firmware and MRPC commands) and generic PCIe
+> > > behavior (MMIO read failures).
+> > > 
+> > > This has something to do with a firmware hard reset.  What is
+> > > that?  Is that like a firmware reboot?  A device reset, e.g.,
+> > > FLR or secondary bus reset, that causes a firmware reboot?  A
+> > > device reset initiated by firmware?
+>
+> A firmware reset can be triggered by a reset command issued to the
+> firmware to reboot it.
+
+So I guess this reset command was issued by the driver?
+
+> > > Anyway, apparently when that happens, MMIO reads to the switch
+> > > fail (timeout or error completion on PCIe) for a while.  If a
+> > > device reset is involved, that much is standard PCIe behavior.
+> > > And the driver sees ~0 data from those failed reads.  That's not
+> > > part of the PCIe spec, but is typical root complex behavior.
+> > > 
+> > > But you said the MRPC commands hang indefinitely.  Presumably
+> > > MMIO reads would start succeeding eventually when the device
+> > > becomes ready, so I don't know how that translates to
+> > > "indefinitely."
+> > 
+> > I suspect Kelvin can expand on this and fix the issue below. But
+> > in my experience, the MMIO will read ~0 forever after a firmware
+> > reset, until the system is rebooted. Presumably on systems that
+> > have good hot plug support they are supposed to recover. Though
+> > I've never seen that.
 > 
-> It would be too much work to harden them all, and it would be pointless
-> because all these drivers are never legitimately needed in a virtualized
-> environment which only virtualize a very small number of devices.
+> This is also my observation, all MMIO read will fail (~0 returned)
+> until the system is rebooted or a PCI rescan is performed.
 
-Why would you not want to properly review and fix up all kernel drivers?
-That feels like you are being lazy.
+This made sense until you said MMIO reads would start working after a
+PCI rescan.  A rescan doesn't really do anything special other than
+doing config accesses to the device.  Two things come to mind:
 
-What exactly are you meaning by "harden"?  Why isn't it automated?  Who
-is doing this work?  Where is it being done?
+1) Rescan does a config read of the Vendor ID, and devices may
+respond with "Configuration Request Retry Status" if they are not
+ready.  In this event, Linux retries this for a while.  This scenario
+doesn't quite fit because it sounds like this is a device-specific
+reset initiated by the driver, and CRS is not permited in this case.
+PCIe r5.0, sec 2.3.1, says:
 
-Come on, you have a small number of virtio drivers, to somehow say that
-they are now divided up into trusted/untrusted feels very very odd.
+  A device Function is explicitly not permitted to return CRS
+  following a software-initiated reset (other than an FLR) of the
+  device, e.g., by the device's software driver writing to a
+  device-specific reset bit.
 
-Just do the real work here, everyone will benefit, including yourself.
+2) The device may lose its bus and device number configuration after a
+reset, so it must capture bus and device numbers from config writes.
+I don't think Linux does this explicitly, but a rescan does do config
+writes, which could accidentally fix something (PCIe r5.0, sec 2.2.9).
 
-> >   How exactly are
-> > you determining what should, and should not, be allowed?
+> > The MMIO read that signals the MRPC status always returns ~0 and the
+> > userspace request will eventually time out.
 > 
-> Everything that has had reasonable effort at hardening can be added. But if
-> someone proposes to add a driver that should trigger additional scrutiny in
-> code review. We should also request them to do some fuzzing.
+> The problem in this case is that, in DMA MRPC mode, the status (in host
+> memory) is always initialized to 'in progress', and it's up to the
+> firmware to update it to 'done' after the command is executed in the
+> firmware. After a firmware reset is performed, the firmware cannot be
+> triggered to start a MRPC command, therefore the status in host memory
+> remains 'in progress' in the driver, which prevents a MRPC from timing
+> out. I should have included this in the message.
 
-You can provide that fuzzing right now, why isn't syzbot running on
-these interfaces today?
+I *thought* the problem was that the PCIe Memory Read failed and the
+Root Complex fabricated ~0 data to complete the CPU read.  But now I'm
+not sure, because it sounds like it might be that the PCIe transaction
+succeeds, but it reads data that hasn't been updated by the firmware,
+i.e., it reads 'in progress' because firmware hasn't updated it to
+'done'.
 
-And again, what _exactly_ do you all mean by "hardening" that has
-happened?  Where is that documented and who did that work?
-
-> > And why not just put all of that into userspace and have it pick and
-> > choose?  That should be the end-goal here, you don't want to encode
-> > policy like this in the kernel, right?
-> 
-> How would user space know what drivers have been hardened? This is really
-> something that the kernel needs to determine. I don't think we can outsource
-> it to anyone else.
-
-It would "know" just as well as you know today in the kernel.  There is
-no difference here.
-
-Just do the real work here, and "harden" all of the virtio drivers
-please.  What prevents that?
-
-> Also BTW of course user space can still override it, but really the defaults
-> should be a kernel policy.
-> 
-> There's also the additional problem that one of the goals of confidential
-> guest is to just move existing guest virtual images into them without much
-> changes. So it's better for such a case if as much as possible of the policy
-> is in the kernel. But that's more a secondary consideration, the first point
-> is really the important part.
-
-Where exactly are all of these "goals" and "requirements" documented and
-who is defining them and forcing them on us without actually doing any
-of the work involved?
-
-thanks,
-
-greg k-h
+Bjorn
