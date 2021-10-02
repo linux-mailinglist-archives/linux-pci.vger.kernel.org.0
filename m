@@ -2,141 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA7341FD53
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 19:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0447941FDAF
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 20:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233454AbhJBROP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 13:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233451AbhJBROP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 13:14:15 -0400
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1A9C0613EC
-        for <linux-pci@vger.kernel.org>; Sat,  2 Oct 2021 10:12:29 -0700 (PDT)
-Received: by mail-oi1-x232.google.com with SMTP id s69so15756642oie.13
-        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 10:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aeqJfHb0iLnFHIG5GIxnb4uxBHYoE9DuLz3G0/kwTeI=;
-        b=j5q1kmOHxJ+YhfIgHbejrjffpuKubzJ68SlkIeP6Wz4lq8ip0vrht/SU6J4QEjBnwj
-         tdIx7cquOcaWrUFEXchj6NxmpU23NyPVg3NEPNSNYJx+stqb9JPUee2/Ob5CCK3IQa5p
-         vcD3IRu03Tn69e/7Of+OlA1LVkJiVsxIQyeuKFQMBiuUgukncc/uyz+lUXvFTH2hsQ7n
-         FMTZ/P8eJLwcVf/Cw32tBc4abqasPd5X3d0LqZxMfK3dF9nXKwysvHtt0KLHLrxVTwld
-         uBGRh7kMhygPSMNv2A6L14snyfGstRgIn0LM9sHRGT0UJqUdtjtO9ZJQYDHACgWu6tFy
-         XFIw==
+        id S233841AbhJBSYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 14:24:12 -0400
+Received: from mail-vk1-f177.google.com ([209.85.221.177]:45045 "EHLO
+        mail-vk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233844AbhJBSYL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 14:24:11 -0400
+Received: by mail-vk1-f177.google.com with SMTP id s137so5859385vke.11;
+        Sat, 02 Oct 2021 11:22:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aeqJfHb0iLnFHIG5GIxnb4uxBHYoE9DuLz3G0/kwTeI=;
-        b=y7LiJcGP5kOt8uCr2ihYk/V08nx6uwp5AiZZLrK4Xduy8Gec42xrwreAi5ToFO9vu3
-         68Cqz6Yzo1krxlMdQy9mRt2hst/OasHvPnf6nJBDsiFT28CULZLqWZXKJ1LZBnFA7//n
-         0yxtu2U14sA5UGEnDD1udikwbrCYNXKpEAljqerBcGEHV/OdUy7VR1+mV+f1lZH+Bt/P
-         b2F6TvHHE4DMFhqBT0dw6NyEH+08vkI7Rwah/MS5314+Psi2d1gWqI4AOJHgZVX5Zbt1
-         nG3SS7IWD9b2Lzp9M6tKx4cemP+65Ng8ikPgFk20Nz2WGAwGrqWmAyvoAsKU4pzsu0WZ
-         YfBg==
-X-Gm-Message-State: AOAM530Tt5YQdg66saU3NUm4AqVEfWtBj3tiNjQb8RQHyix6rwPbWeXV
-        fKBbYKg5P0ELOBr8DRvgeu+wQuAt404PfJh7xoYmh1ft9g0=
-X-Google-Smtp-Source: ABdhPJwwCIvY9/wm8fbagZLKMtqVAxIko8hB39gKi/PnC+xQwDVoCKTNsXaYaNs6TtHuYNj8xVoGHy7wEvdJDfMoinU=
-X-Received: by 2002:aca:6009:: with SMTP id u9mr1482184oib.71.1633194748448;
- Sat, 02 Oct 2021 10:12:28 -0700 (PDT)
+        bh=lgYFGECkMM3zfEo/dmg94OtbjIf3E69UNOzLv03h1qA=;
+        b=T/dyIT/XHU94TgTYTSir394gp6q/jqpwfQnOP+4z4oiHlCSyIblQ25zk5GaISzFpPr
+         /KoLBzO4wNvSxGh1W3yNa/pN5OaYV6dsF4XBFigpWK9q6xXVrmhueeOl8/ZiVArC3vL8
+         GjxBPfgJ2WDIgTXy4eaDaKaX94NkPmsGcKCtsFzc8EFssBvG4ul152H2ATffJCFum53o
+         WVl9ChgNGLgpS7pBVcPF5AbcokZKwsqeRuoWmNIZ1QxyqhIunARTs5FkFZwtLSkxT5hy
+         sdUIQblb/hQMLEgaayzvws3aDwhM2kYVUfa7uNYfDppsVRJ1vKpXHkZ7uWoWq47Aqb5k
+         K4iA==
+X-Gm-Message-State: AOAM531leYad/5tkBoFz8x8BRNaNjfJavNRYSmRJF6wsNTFiu+zfbgzb
+        4oHs+7lCvJvDisleLJiCUqSP+F1uCfLtFF/FwYI=
+X-Google-Smtp-Source: ABdhPJwqppFP1oPDH04cVBPOsVKlnib0ULpmK2lW3bGkaEcAWvDIGAYuMcSdEBUyIimD9yIK2tzAJAac+qOEHmZXaAE=
+X-Received: by 2002:a1f:230c:: with SMTP id j12mr11783798vkj.11.1633198944857;
+ Sat, 02 Oct 2021 11:22:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHP4M8U-uGwZqqGk5Z9KP7w_hESgTtrAsSrwxFfCiLZOht1uYw@mail.gmail.com>
- <20211002155508.GA968974@bhelgaas>
-In-Reply-To: <20211002155508.GA968974@bhelgaas>
-From:   Ajay Garg <ajaygargnsit@gmail.com>
-Date:   Sat, 2 Oct 2021 22:42:16 +0530
-Message-ID: <CAHP4M8XszWK6eGEPvvAV0E3mJWhZZdZMb4CmUsQg6jRdoABWjw@mail.gmail.com>
-Subject: Re: None of the virtual/physical/bus address matches the (base) BAR-0 register
+References: <54bed9a0e6991490ddb2b07e5abfaf40a7a62928.1633090577.git.geert+renesas@glider.be>
+ <20211002155953.GA971127@bhelgaas>
+In-Reply-To: <20211002155953.GA971127@bhelgaas>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 2 Oct 2021 20:22:13 +0200
+Message-ID: <CAMuHMdVRqW=v+AKsXKJkm7d_DUubF_zn3tRq560S9m5996PrHw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rcar: pcie-rcar-host: Remove unneeded includes
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks Bjorn, that certainly helped.
-Especially, it is nice to see that ptr->resource[0].start does give e2c20000 :)
+Hi Bjorn,
 
-Also, idiotic of me of making newbie kernel-format-specifier mistakes :-|
+On Sat, Oct 2, 2021 at 6:00 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Seems overkill to mention "rcar" and "pci" twice in the subject.  We
+> have so far not distinguished pcie-rcar-host.c and pcie-rcar-ep.c in
+> subject lines.
+>
+> If we want to start doing that consistently, maybe we could use "PCI:
+> rcar-host:" and "PCI: rcar-ep:" as we have done for cadence-ep and
+> designware-ep.
 
-So, now the outputs corresponding to
+I know.  But this is for PCIe, and there's also pci-rcar-gen2 for traditional
+PCI.
 
-    printk("Base virtual-address = [%lx]\n", bar0_ptr);
-    printk("Base physical-address (form-1) = [%lx]\n", dev->resource[0].start);
-    printk("Base bus-address = [%lx]\n", pci_bus_address(dev, 0));
-    printk("BAR 0: %pR\n", &dev->resource[0]);
+> On Fri, Oct 01, 2021 at 02:16:43PM +0200, Geert Uytterhoeven wrote:
+> > Remove includes that are not needed, to speed up (re)compilation.
+> > ...
 
+Gr{oetje,eeting}s,
 
-are :
+                        Geert
 
-    Base virtual-address = [ffffa0c6c02eb000]
-    Base physical-address (form-1) = [e2c20000]
-    Base bus-address = [e2c20000]
-    BAR 0: [mem 0xe2c20000-0xe2c201ff]
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-All as expected.
-Plus, all the lower 12 bits are now same everywhere (due to the 4 KB
-page-size alignment in x86, right)?
-
-
-
-My major missing understanding regarding this, is that we use the
-iowrite*/ioread* functions, using bar0_ptr as the
-base-(virtual-)address.
-Thus, bar0_ptr *is* very well the kernel-virtual-address, which maps
-to some physical-address (hopefully e2c20000), which directly triggers
-the write/read with the pci-device.
-
-Right now, the physical-address (form-1) we have printed, is via the
-data-structure field.
-However, looking from the virtual-address <=> physical-address
-translation from the usual memory write/read datapath's perspective, I
-am still not able to coalesce things.
-
-
-In the same run as above, if I add the following statements :
-
-    printk("Base physical-address (form-2) = [%lx]\n", virt_to_phys(bar0_ptr));
-    printk("Base physical-address (form-3) = [%lx]\n",
-virt_to_phys(*((uint32_t*)bar0_ptr)));
-    printk("Base physical-address (form-4) = [%lx]\n",
-virt_to_phys(*((uint64_t*)bar0_ptr)));
-
-I get :
-
-    Base physical-address (form-2) = [12e6002eb000]
-    Base physical-address (form-3) = [721f4000001e]
-    Base physical-address (form-4) = [721f4000001e]
-
-
-Looking at the function-doc for virt_to_phys(), it states :
-
-########################################################
-* This function does not give bus mappings for DMA transfers. In
-* almost all conceivable cases a device driver should not be using
-* this function
-########################################################
-
-
-
-So, two queries :
-
-1)
-Does the above comment apply here too (in MMIO case)?
-
-2)
-If yes, then what is the datapath followed for our case (since
-conventional virtual-address <=> physical-address translations via MMU
-/ TLB / page-tables is out of the picture I guess)?
-
-
-Thanks a ton already to everyone, in helping me clearing out my mind.
-
-
-Thanks and Regards,
-Ajay
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
