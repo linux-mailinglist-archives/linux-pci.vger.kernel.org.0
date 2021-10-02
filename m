@@ -2,100 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B267141FA56
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 09:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 426D241FAFB
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 13:04:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232526AbhJBHvu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 03:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232457AbhJBHvu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 03:51:50 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14673C061775
-        for <linux-pci@vger.kernel.org>; Sat,  2 Oct 2021 00:50:05 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id q16so14472700oiw.10
-        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 00:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jmhvzM+9q8Hsg6g8ZOvHSolVs0w3D3OtvwsSGnhbiWw=;
-        b=IgKflHq8ppi0B/W+mP7o0rOAHh2TmOWdNJzxcqMvHhRxjHiispRlsJDgRJJJzch7kc
-         w45UpZQmUkrahVomd7IWj4HH9WiyMRmwsEqqyk7FqaqmrHhzdKYJQHNb4Ufte6ZZPq08
-         9G4JVBYLCyn9UhN5s4X04nCWPfXhhz36edJOyO2PBBZtSGDBuJwxJyyaHQ+6/UUbBQw3
-         cA5U5jr4mlKFf5Hp2zOZuiZPyjRZETRgens7krerX3gfz0CfwTPwOs6rmsRGta+dUj1k
-         +rbBmcbFg3wevffAfLvunNxrHe5MdN0sMEV3yO4n8rIPUk1+bIPTUNnUG2zPxegYEjD3
-         Fr1Q==
+        id S232798AbhJBLGY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 07:06:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42705 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232790AbhJBLGX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 07:06:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633172677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qto351718/L5ukhIDEPhUdB+4/jOc5k7bmVTjbBmGFU=;
+        b=KjolU/u3sKdQGelrWSAOoZE3gu59MY8UOjHHIc0xhzOh4i4LvHzDav+Y3VuWSDlWc636Lr
+        c5FAFgPBGFWoKiLrDXqavkCFwGh2tW3WzdHhpitN5n4CWWKc3TlbtL7L8NokA9f1XxukmL
+        2gu5cScDnfna3qA35LDEeYD5pjZh02s=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-_lXH5gvHM3aqm45HwlIfhw-1; Sat, 02 Oct 2021 07:04:36 -0400
+X-MC-Unique: _lXH5gvHM3aqm45HwlIfhw-1
+Received: by mail-ed1-f71.google.com with SMTP id m20-20020aa7c2d4000000b003d1add00b8aso12810634edp.0
+        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 04:04:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jmhvzM+9q8Hsg6g8ZOvHSolVs0w3D3OtvwsSGnhbiWw=;
-        b=8ST0YcCsujTUVUAaI1C5OlAlZw/hXtFkVsHpLzZCd0JzbrnWXqB1O2ctiQpsIzbWWb
-         D/1OchTR1eZgJXVAEMJRlRhJgCuJCGdWZYfP8odHPo1qFDxvtzs73E9MkHP8DnTeZHES
-         c6yK6OU5Gen/JqpdbywJTB6sG7GJ3l84/+FBGRexkm/fe5P6A1/PrpaOIY2ZuZLrfh3G
-         5kg15uHce4iZzavsSSUIOfSEex76kGzdGff2OvEVjzb5jNfuEkbfHUBR1HGPEohWU20B
-         fj7Gixg8iQ+1ELWSA5tI+7mLGLD5M0hV9lRBkCHISZ0CyKnzhIjq1OhbshvN6hTpgqqZ
-         6k5Q==
-X-Gm-Message-State: AOAM530WqbPoqWDrIp0ozJRAT4CF9Dj/QSd7yJc5SNSi/2mzRxxq2BBo
-        RpkZTJ84zvoPEVOO6KZr3jbgzCe5tcLpRNMrcxREJFef
-X-Google-Smtp-Source: ABdhPJzvgLsIR46GNXvMO2Oeu0VUXkTdelNWr4CDPRC3aSL6KdWTZqpjheFoly9BZ+elICJudMSf2YGtAIpFaWf05n4=
-X-Received: by 2002:aca:6009:: with SMTP id u9mr123309oib.71.1633161004421;
- Sat, 02 Oct 2021 00:50:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qto351718/L5ukhIDEPhUdB+4/jOc5k7bmVTjbBmGFU=;
+        b=MG9GOktTAez3gAnnqL4e1T60wVZtWz5y6sgEz3po6VHBWwJdr9vSiWWui2CgQYzLzn
+         mkLYZhwoUcemfObNf86XdT0ApMiLV+/Lcse+SzxRDdpb0bMkPCpXeCB9+Pu9RX66DNSy
+         tBlhWf5BX741XOvc9RxbPHawhrF27dlEJcYK40MEo6IS3mGZUdrlZoUXuzD7NTEoWHYg
+         BwCFZqphUB99OsXZtCRDoYC+uwbwOEx46A9iQJBMQ8CQfJW7BrsyMVdkfx8JW7Iko+xt
+         HWZMVDKRGztBWvt+8jgBoU9A7lZ2lgwaG4DuOdVlwqFL1R5DW1Abki042Q+gLBYCzRtP
+         /eEw==
+X-Gm-Message-State: AOAM533mfDckeVTP3PqAbZyHscmmG0v3cjEMepxVAn8Pd76wVdEIUI87
+        08Nkzh7D9gEMcxQCgm7DNjiCHBtdClmT7qKUQC5m4klrmPTnuEAG8DrUWqMsPnr8HdtD9EKoTj1
+        0A1hbaWRU7awyuRxw2Bd6
+X-Received: by 2002:a17:906:8288:: with SMTP id h8mr3663366ejx.87.1633172675298;
+        Sat, 02 Oct 2021 04:04:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyDPoSoXkmNQqJE5Pt6aHzQGKWg+96z9iORt+sMWaffH4hD3Mut3sIH6/2W8YSAjIBpj8fcaA==
+X-Received: by 2002:a17:906:8288:: with SMTP id h8mr3663331ejx.87.1633172675106;
+        Sat, 02 Oct 2021 04:04:35 -0700 (PDT)
+Received: from redhat.com ([2.55.22.213])
+        by smtp.gmail.com with ESMTPSA id e3sm3959222ejr.118.2021.10.02.04.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Oct 2021 04:04:34 -0700 (PDT)
+Date:   Sat, 2 Oct 2021 07:04:28 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+Message-ID: <20211002070218-mutt-send-email-mst@kernel.org>
+References: <20210930010511.3387967-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930010511.3387967-5-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210930065953-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
+ <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com>
+ <YVXWaF73gcrlvpnf@kroah.com>
+ <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
+ <YVaywQLAboZ6b36V@kroah.com>
+ <64eb085b-ef9d-dc6e-5bfd-d23ca0149b5e@linux.intel.com>
 MIME-Version: 1.0
-References: <CAHP4M8UqzA4ET2bDVuucQYMJk9Lk4WqRr-9xX8=6YWXFOBBNzw@mail.gmail.com>
- <20211001151322.GA408729@dhcp-10-100-145-180.wdc.com> <CAHP4M8U-uGwZqqGk5Z9KP7w_hESgTtrAsSrwxFfCiLZOht1uYw@mail.gmail.com>
-In-Reply-To: <CAHP4M8U-uGwZqqGk5Z9KP7w_hESgTtrAsSrwxFfCiLZOht1uYw@mail.gmail.com>
-From:   Ajay Garg <ajaygargnsit@gmail.com>
-Date:   Sat, 2 Oct 2021 13:19:52 +0530
-Message-ID: <CAHP4M8WQMK59-Arg4rhusvT7f9870ymkc8OoMuWRuitRadzGVw@mail.gmail.com>
-Subject: Re: None of the virtual/physical/bus address matches the (base) BAR-0 register
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64eb085b-ef9d-dc6e-5bfd-d23ca0149b5e@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Forgot to mention one thing, the environment/machine has "intel_iommu=off".
+On Fri, Oct 01, 2021 at 08:49:28AM -0700, Andi Kleen wrote:
+> >   Do you have a list of specific drivers and kernel options that you
+> > feel you now "trust"?
+> 
+> For TDX it's currently only virtio net/block/console
+> 
+> But we expect this list to grow slightly over time, but not at a high rate
+> (so hopefully <10)
 
-On Sat, Oct 2, 2021 at 9:36 AM Ajay Garg <ajaygargnsit@gmail.com> wrote:
->
-> Thanks Keith.
->
-> Let's take a x86 world as of now, and let's say the physical address
-> (returned by virt_to_phys()) is 0661a070.
-> The pci address (as stated) is e2c20000.
->
->
-> Since the BAR0-region is of size 256 bytes, so the system-agent (as
-> per x86-terminology) will monitor the highest 24 bits of
-> address-lines, to sense a MMIO read/write, and then forward the
-> transaction to the corresponding pci bridge/device.
->
-> So, in the present case, would
->
-> a)
-> The system-agent sense address-lines A31-A8 value as 0661a07? If yes,
-> is it the system-agent that does the translation from 0661a070 =>
-> e2c20000, before finally forwarding the transaction to pci
-> bridge/device?
->
-> b)
-> The system-agent sense address-lines A31-A8 value as e2c2000 (and
-> simply forwards the transaction to pci bridge/device)? If yes,
-> who/what does the translation from 0661a070 =? e2c20000?
->
->
-> Meanwhile, I am also trying to learn how to do kernel-development for
-> statically linked modules (like pci).
-> That would help in a much better understanding of the things-flow :P
->
->
-> Thanks for the help.
->
->
-> Thanks and Regards,
-> Ajay
->
+Well there are already >10 virtio drivers and I think it's reasonable
+that all of these will be used with encrypted guests. The list will
+grow.
+
+-- 
+MST
+
