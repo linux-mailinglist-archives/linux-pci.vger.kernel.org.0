@@ -2,113 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDD1D41FDD5
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 21:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8492B41FDE1
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Oct 2021 21:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233835AbhJBTDD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 15:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        id S233826AbhJBTe7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 15:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233823AbhJBTDD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 2 Oct 2021 15:03:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A524B619F7;
-        Sat,  2 Oct 2021 19:01:16 +0000 (UTC)
+        id S229590AbhJBTe7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 2 Oct 2021 15:34:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3166461B2C;
+        Sat,  2 Oct 2021 19:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633201277;
-        bh=NTGyouacxEmuFQJT7w3cDH1MxUdbQeXeZs8seJ5/Jbc=;
+        s=k20201202; t=1633203193;
+        bh=vFLFLT1hVDvetudF/Tp6JD/lFwevk7FqKF3OPxbBcrw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=e1L7YCP/u/b9hf63WJz2ghDP3UvtRDevQK1EQgBZFCupqKdqJ26E76tQtBxggryhO
-         Texi/WhKGY7wfhTg/fR4nb8borEhT54tkgikBui2uRWOwoR1qBqGlsGxyEFLGZWnJK
-         VEpBj89qTQR/fc96DF3Yg5TF4pKPmuuGlC/WrfZ7UVZKiAUsR4EAG9fMCQ5pR1FnF2
-         paa3WgsEBu9W0b8hNRt5ggGKKnUj8+407DXHuORzycKobWWLrKyV/WnKUvcLx9+auw
-         AFV4lAnHmWCIE9wpjD73rKStSpUIcBsN4QBtpGg1i02nxqMSFnY5qreNI9xpAAzBKm
-         cM8dSCA3OoHsg==
-Date:   Sat, 2 Oct 2021 14:01:14 -0500
+        b=Q11bUw33KKHW1sZpMZT1U9vGoq5//iOydNCpPNziR/2EvuBATpbj18KPKi3m1PDhD
+         UJwJT/JZAcgB6BCCpxb35usfVpIWd2RcIwPHWL81OmkL0V6DZ0/z+7dU7SRD31+nf9
+         uW74yfxU5OYMYJTkLlZSJjH0jOYdXIB599fxbjcBjvBtSYxkkW9B/0Hqcjg7E40Xh+
+         qZ8dU6ModGxA+gGifv+iOiXW2oxQYZfv6sYbTqrV9s4TXc2LaWNdf9TtXuZ8zMQE63
+         72w0KclCZVa1Q3Z8CK6REjMmj/yew1Q5KP+7ka3hv9GIo6HrN8MR0UKjFgantQD+AE
+         d+9GmnAAT0qEw==
+Date:   Sat, 2 Oct 2021 14:33:11 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH] PCI: rcar: pcie-rcar-host: Remove unneeded includes
-Message-ID: <20211002190114.GA976888@bhelgaas>
+To:     Ajay Garg <ajaygargnsit@gmail.com>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: None of the virtual/physical/bus address matches the (base)
+ BAR-0 register
+Message-ID: <20211002193311.GA977182@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVRqW=v+AKsXKJkm7d_DUubF_zn3tRq560S9m5996PrHw@mail.gmail.com>
+In-Reply-To: <CAHP4M8XszWK6eGEPvvAV0E3mJWhZZdZMb4CmUsQg6jRdoABWjw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 02, 2021 at 08:22:13PM +0200, Geert Uytterhoeven wrote:
-> Hi Bjorn,
+On Sat, Oct 02, 2021 at 10:42:16PM +0530, Ajay Garg wrote:
+> Thanks Bjorn, that certainly helped.
+> Especially, it is nice to see that ptr->resource[0].start does give
+> e2c20000 :)
 > 
-> On Sat, Oct 2, 2021 at 6:00 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > Seems overkill to mention "rcar" and "pci" twice in the subject.  We
-> > have so far not distinguished pcie-rcar-host.c and pcie-rcar-ep.c in
-> > subject lines.
-> >
-> > If we want to start doing that consistently, maybe we could use "PCI:
-> > rcar-host:" and "PCI: rcar-ep:" as we have done for cadence-ep and
-> > designware-ep.
-> 
-> I know.  But this is for PCIe, and there's also pci-rcar-gen2 for traditional
-> PCI.
+> Also, idiotic of me of making newbie kernel-format-specifier
+> mistakes :-|
 
-We do have a precedent of "rcar-gen2" for that driver:
+If you're referring to %p being hashed, that's bitten me more than
+once.  I understand the value of it, but it's annoying in the
+day-to-day development process ;)
 
-  $ git log --oneline drivers/pci/controller/pci-rcar-gen2.c
-  df561f6688fe treewide: Use fallthrough pseudo-keyword
-  669cbc708122 PCI: Move DT resource setup into devm_pci_alloc_host_bridge()
-  4a957563fe02 PCI: rcar-gen2: Convert to use modern host bridge probe functions
-  6e0832fa432e PCI: Collect all native drivers under drivers/pci/controller/
+> So, now the outputs corresponding to
+> 
+>     printk("Base virtual-address = [%lx]\n", bar0_ptr);
+>     printk("Base physical-address (form-1) = [%lx]\n", dev->resource[0].start);
+>     printk("Base bus-address = [%lx]\n", pci_bus_address(dev, 0));
+>     printk("BAR 0: %pR\n", &dev->resource[0]);
+> 
+> are :
+> 
+>     Base virtual-address = [ffffa0c6c02eb000]
+>     Base physical-address (form-1) = [e2c20000]
+>     Base bus-address = [e2c20000]
+>     BAR 0: [mem 0xe2c20000-0xe2c201ff]
+> 
+> All as expected.
+> Plus, all the lower 12 bits are now same everywhere (due to the 4 KB
+> page-size alignment in x86, right)?
 
-  $ git log --oneline -- drivers/pci/host/pci-rcar-gen2.c
-  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
-  9e2aee80c78d ("PCI: Move private DT related functions into private header")
-  38b35992b7d2 ("PCI: rcar-gen2: Remove duplicated bit-wise or of RCAR_PCI_INT_SIGRETABORT")
-  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
-  1e61a57cac56 ("PCI: Use of_pci_dma_range_parser_init() to reduce duplication")
-  bf44167f37a1 ("PCI: rcar-gen2: Make of_device_ids const")
-  7b99d94277ba ("PCI: rcar-gen2: Use gen2 fallback compatibility last")
-  de9e6bc84b7e ("PCI: rcar-gen2: Add local struct device pointers")
-  0b9c158925b2 ("PCI: rcar-gen2: Make explicitly non-modular")
-  ac575ead871f ("PCI: rcar Gen2: Request host bridge window resources")
-  b2a5d3e2cf65 ("PCI: rcar: Drop gen2 dummy I/O port region")
-  3517652fda51 ("PCI: rcar: Add gen2 fallback compatibility string for pci-rcar-gen2")
-  8d598cabf50d ("PCI: rcar: Allow DT to override default window settings")
-  de24c18c0fac ("PCI: rcar: Add R8A7794 support")
-  7a27db23a3f6 ("PCI: rcar: Verify that mem_res is 64K-aligned")
-  b44923b78d11 ("PCI: rcar: Convert to use generic config accessors")
-  e27a5130ab64 ("pci: host: drop owner assignment from platform_drivers")
-  d47b62f4b1c0 ("PCI: rcar: Add gen2 device tree support")
-  b9bfe1bca8ec ("PCI: rcar: Use new OF interrupt mapping when possible")
-  33966fd9b5bc ("PCI: rcar: Break out window size handling")
-  546cadda3575 ("PCI: rcar: Register each instance independently")
-  e64a2a973e17 ("PCI: rcar: Fix bridge logic configuration accesses")
-  80a595d941a2 ("PCI: rcar: Add error interrupt handling")
-  ed65b78881c7 ("PCI: rcar: Check platform_get_irq() return code")
-  fb178d8b2fab ("PCI: rcar: Add runtime PM support")
-  c176d1c71bd1 ("PCI: rcar: Fix rcar_pci_probe() return value check")
-  ba3eb9fce315 ("PCI: Add R-Car Gen2 internal PCI support")
+Yes.
 
-> > On Fri, Oct 01, 2021 at 02:16:43PM +0200, Geert Uytterhoeven wrote:
-> > > Remove includes that are not needed, to speed up (re)compilation.
-> > > ...
+> My major missing understanding regarding this, is that we use the
+> iowrite*/ioread* functions, using bar0_ptr as the
+> base-(virtual-)address.
+> Thus, bar0_ptr *is* very well the kernel-virtual-address, which maps
+> to some physical-address (hopefully e2c20000), which directly triggers
+> the write/read with the pci-device.
+
+Yes.
+
+> Right now, the physical-address (form-1) we have printed, is via the
+> data-structure field.
+> However, looking from the virtual-address <=> physical-address
+> translation from the usual memory write/read datapath's perspective, I
+> am still not able to coalesce things.
 > 
-> Gr{oetje,eeting}s,
 > 
->                         Geert
+> In the same run as above, if I add the following statements :
 > 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>     printk("Base physical-address (form-2) = [%lx]\n", virt_to_phys(bar0_ptr));
+>     printk("Base physical-address (form-3) = [%lx]\n",
+> virt_to_phys(*((uint32_t*)bar0_ptr)));
+>     printk("Base physical-address (form-4) = [%lx]\n",
+> virt_to_phys(*((uint64_t*)bar0_ptr)));
+
+I don't think these last two make any sense.  You're doing an MMIO
+read from the address bar0_ptr, so this value (0x721f4000001e) came
+from the PCI devices.  There's no reason to think it's a kernel
+virtual address, so you shouldn't call virt_to_phys() on it.
+
+> I get :
 > 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+>     Base physical-address (form-2) = [12e6002eb000]
+>     Base physical-address (form-3) = [721f4000001e]
+>     Base physical-address (form-4) = [721f4000001e]
+>
+> Looking at the function-doc for virt_to_phys(), it states :
+> 
+> ########################################################
+> * This function does not give bus mappings for DMA transfers. In
+> * almost all conceivable cases a device driver should not be using
+> * this function
+> ########################################################
+> 
+> 
+> 
+> So, two queries :
+> 
+> 1)
+> Does the above comment apply here too (in MMIO case)?
+
+Yes.  You should not need to use virt_to_phys() for PCI MMIO
+addresses.
+
+> 2)
+> If yes, then what is the datapath followed for our case (since
+> conventional virtual-address <=> physical-address translations via MMU
+> / TLB / page-tables is out of the picture I guess)?
+
+This path is IN the picture.  This is exactly the path used by drivers
+doing MMIO accesses.
+
+The CPU does a load from a virtual address (0xffffa0c6c02eb000).  The
+MMU translates that virtual address to a physical address
+(0xe2c20000).  The PCI host bridge decodes that address and generates
+a PCIe Memory Read transaction to the bus address 0xe2c20000.
+
+Your dmesg log should have lines similar to this:
+
+  pci_bus 0000:00: root bus resource [mem 0x7f800000-0xefffffff window]
+  pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
+
+that show the parts of the CPU physical address space that result in
+MMIO to PCI devices.  0xe2c20000 should be inside one of those
+windows.
+
+Bjorn
