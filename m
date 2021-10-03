@@ -2,113 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4128E41FF28
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Oct 2021 04:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D961841FF47
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Oct 2021 04:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhJCCHl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Oct 2021 22:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbhJCCHk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 22:07:40 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F75C0613EC
-        for <linux-pci@vger.kernel.org>; Sat,  2 Oct 2021 19:05:54 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id w206so16808402oiw.4
-        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 19:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7C0b2cFCcna/0gouIocopgF7nydJ9yWQNLPlnlyqk3U=;
-        b=gmE904g/PJu0hBIIKtyjE3F3uyVbRbFzIuo9J7gTs09Ac+xrxzHTf3RQsm77J0ZJwJ
-         /GMH4NndA42MXCBjnnGdsiXhxa23SZxJqP+08CzUuNSKEeWQbcMTEOewJ5jp58x1cX9Q
-         vCIRRx8hgXk12Ho2+WG/pfqH0wzRFqOeSiXi89fetgz/aOR0JVhgkPCdgG8F4I6l4Yo6
-         SjN8Ez4RrlFXfOVgWOgBBFk4JmWyv/Iw16z/zSN7I4R9t1530Kq4eHoCUlFVNW1EBivH
-         /VPsFJwi9RyGroXEc0+T/qOIsG1NNMpY8hKps/D69Dpg8TkOPaNZUCrbNX38p1RVtndr
-         MC/Q==
+        id S229534AbhJCC4a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Oct 2021 22:56:30 -0400
+Received: from mail-ed1-f51.google.com ([209.85.208.51]:33484 "EHLO
+        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229514AbhJCC43 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Oct 2021 22:56:29 -0400
+Received: by mail-ed1-f51.google.com with SMTP id p13so21928462edw.0
+        for <linux-pci@vger.kernel.org>; Sat, 02 Oct 2021 19:54:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7C0b2cFCcna/0gouIocopgF7nydJ9yWQNLPlnlyqk3U=;
-        b=u7vg3kwZnH2uUb3ugV3ieqvl06z39sBbZ3A32jMviILBrNcZQU6gGB47TUZSlcgndy
-         Z7TOx6C+wGprIi9R18HD+2Biz4uuTT6hWKSCygCIfmeGCf5tv5uR0L1lwpnA0uG6+TDh
-         3rBHSGtsW2aD8jDuqT64s95GOi/n5lmGn0Kl0yFM7sGo6nDyS7YVFeEKy7D7NJVeWljm
-         D9t7Z9IlcWohGnPo3HUagZOhHqBusi8LlyhA0ZPl2VuJSKd02boJQnMhq96hGaXQdHqp
-         7F1mXX6WO8n/eFMRBlAccOc5BxosvdOekHv4HBhsUcur4wW3ZnzKq1lUAFd5Ets3cuFp
-         YLEg==
-X-Gm-Message-State: AOAM5316XRuy1D55TdknALbmfJCqfRrKs2e9jR7Dfb2Nm3TcW/qOt/iH
-        ApPibKpdK8mNP1Vmq0oKMr/0OYOCaDAUGunpXRxBXDZm
-X-Google-Smtp-Source: ABdhPJyPOqCFM6kLIAVdGZVUPjUvOGfQYeCcEZkeBNKLeQjKNXIVnky1glykPePgD5ohWttxlXNkmcqlqKDCpadfZDA=
-X-Received: by 2002:a05:6808:1211:: with SMTP id a17mr9068878oil.91.1633226753619;
- Sat, 02 Oct 2021 19:05:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tb0JYaOAZxreZsr7ftz6TvhnTsZs54RbRFVXYC69MIQ=;
+        b=eUist2CfD2f01NKFaohwwRtL8nzcEfdyVwrrUtGOEjteDMrtncd0YwVRlv0g/zGT9T
+         W8YrlZ+YTZD7KouBJHdr2qJRBn+eUXzffV+huVONiLyoT1UEGhmra/OxSv25mWQ/jmyZ
+         UsjuOUSWv1J8DF2yBeztTmQ0x8V7DVOsRBJ+rHBnYoP6cdWqOWfziMIox97GE1hSc8Bc
+         BMIAjmqr+x50ZhQR2jal7pt8yzaIJQAfz4zAhqH3NCw/8u0IFSbhlqrEAhD0qTiKjj0J
+         bOQM9RFop5zhNyQvP+p1arkFe8YSvBRtco5KyTrf+WUmi1TZlLid8w027MSi9kiOcjV6
+         JRiw==
+X-Gm-Message-State: AOAM533zFtv1ovbIeJEj7YIjBNpJocwHUjoMWj9dySpRnbWdMgsEIvLD
+        Zwxn12qCkIdxM9vVCK2DDn8=
+X-Google-Smtp-Source: ABdhPJxyRkCB3OnTnsKwYlQSC3exOWmehjdkHvreqTAHHLadaVfoEAOzpy6BRm4Vm3Fo58Jh5f29TA==
+X-Received: by 2002:a05:6402:181a:: with SMTP id g26mr8138818edy.54.1633229681836;
+        Sat, 02 Oct 2021 19:54:41 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id e3sm4683525ejr.118.2021.10.02.19.54.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Oct 2021 19:54:41 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: imx6: Remove unused assignment to variable ret
+Date:   Sun,  3 Oct 2021 02:54:39 +0000
+Message-Id: <20211003025439.84783-1-kw@linux.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <CAHP4M8XszWK6eGEPvvAV0E3mJWhZZdZMb4CmUsQg6jRdoABWjw@mail.gmail.com>
- <20211002193311.GA977182@bhelgaas>
-In-Reply-To: <20211002193311.GA977182@bhelgaas>
-From:   Ajay Garg <ajaygargnsit@gmail.com>
-Date:   Sun, 3 Oct 2021 07:35:41 +0530
-Message-ID: <CAHP4M8XzZCwKk3TGmHKVMdf5mkWKfafE75DEKBs6-t4ZPw-kaw@mail.gmail.com>
-Subject: Re: None of the virtual/physical/bus address matches the (base) BAR-0 register
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->
-> I don't think these last two make any sense.  You're doing an MMIO
-> read from the address bar0_ptr, so this value (0x721f4000001e) came
-> from the PCI devices.  There's no reason to think it's a kernel
-> virtual address, so you shouldn't call virt_to_phys() on it.
+Previously, the maximum link speed was set following an "fsl,max-link-speed"
+property read, and should the read failed, then the PCIe generation was
+manually set to PCIe Gen1 and thus limiting the link speed to 2.5 GT/s.
 
-Got it, thanks !
+Code refactoring completed in the commit 39bc5006501c ("PCI: dwc:
+Centralize link gen setting") changed to the logic that was previously
+used to limit the maximum link speed leaving behind an unused assignment
+to a variable "ret".
 
->
-> Yes.  You should not need to use virt_to_phys() for PCI MMIO
-> addresses.
+Since the value returned from the of_property_read_u32() and stored in
+the variable "ret" is never used in any meaningful way, and it's also
+immediately reassigned in the code that follows, the assignment can be
+removed.
 
-Hmm, the thing that started it all :P
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 80fc98acf097..26f49f797b0f 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1132,7 +1132,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 
+ 	/* Limit link speed */
+ 	pci->link_gen = 1;
+-	ret = of_property_read_u32(node, "fsl,max-link-speed", &pci->link_gen);
++	of_property_read_u32(node, "fsl,max-link-speed", &pci->link_gen);
+ 
+ 	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+ 	if (IS_ERR(imx6_pcie->vpcie)) {
+-- 
+2.33.0
 
->
-> This path is IN the picture.  This is exactly the path used by drivers
-> doing MMIO accesses.
->
-> The CPU does a load from a virtual address (0xffffa0c6c02eb000).  The
-> MMU translates that virtual address to a physical address
-> (0xe2c20000).
-
-Hmm, so I guess the core takeaway is that the virtual-address <=>
-physical-address mapping is indeed happening as envisioned. It's just
-that there is no programmatic way to prove/display the mapped physical
-address, in the case of PCI-MMIO transfers (as virt_to_phys() is not
-usable in this case).
-
-May be, someday it will :)
-
-  The PCI host bridge decodes that address and generates
-> a PCIe Memory Read transaction to the bus address 0xe2c20000.
->
-> Your dmesg log should have lines similar to this:
->
->   pci_bus 0000:00: root bus resource [mem 0x7f800000-0xefffffff window]
->   pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
->
-> that show the parts of the CPU physical address space that result in
-> MMIO to PCI devices.  0xe2c20000 should be inside one of those
-> windows.
->
-
-It indeed is, in one of the pci-bridge range.
-
-
-Thanks a ton Bjorn, for taking out the time to provide help, taking
-the particular program-values as per my run.
-I am grateful for your patience; nature bless you !
-
-
-Thanks and Regards,
-Ajay
