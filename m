@@ -2,87 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FDC0420718
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 10:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB98420766
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 10:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230260AbhJDIOz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 04:14:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45375 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230510AbhJDIOx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 04:14:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633335184;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jhd7OCRxNEDwqPIqJkCKn7zgxcgAxTP1VUtMdDFCHtI=;
-        b=M/CoeH17FQcM4W4IJVFBueGP8edPzk9RkDvHem+UAgsVY4GCfFu8wl0O/gqteQJqQMmkFj
-        h/xcWrk91WFR3U8daj/APoYs3r4LdBWapIqaQ/n+N4nmKRvq2TajMdT4s1qLDfCdUHczCb
-        JVEI6orlwRfd7hpQIm8ZhKD1Vu8NWlA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-594-J9LpLyzIM4mE7HeEaCjZMg-1; Mon, 04 Oct 2021 04:13:00 -0400
-X-MC-Unique: J9LpLyzIM4mE7HeEaCjZMg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45991100CCD5;
-        Mon,  4 Oct 2021 08:12:59 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC7F75DEFB;
-        Mon,  4 Oct 2021 08:12:58 +0000 (UTC)
-Date:   Mon, 4 Oct 2021 09:12:57 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     hch@infradead.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, oren@nvidia.com,
-        linux-pci@vger.kernel.org, kw@linux.com
-Subject: Re: [PATCH v2 2/2] PCI/sysfs: use NUMA_NO_NODE macro
-Message-ID: <YVq3iYaWGwPm5IJv@stefanha-x1.localdomain>
-References: <20211003091344.718-1-mgurtovoy@nvidia.com>
- <20211003091344.718-2-mgurtovoy@nvidia.com>
+        id S230389AbhJDIkl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 04:40:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:49040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229720AbhJDIkl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Oct 2021 04:40:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66FA71FB;
+        Mon,  4 Oct 2021 01:38:52 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6ABC93F66F;
+        Mon,  4 Oct 2021 01:38:50 -0700 (PDT)
+Date:   Mon, 4 Oct 2021 09:38:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, kernel-team@android.com
+Subject: Re: [PATCH v5 00/14] PCI: Add support for Apple M1
+Message-ID: <20211004083845.GA22336@lpieralisi>
+References: <20210929163847.2807812-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="amH8vhhIjD2i2fX9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211003091344.718-2-mgurtovoy@nvidia.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20210929163847.2807812-1-maz@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Sep 29, 2021 at 05:38:33PM +0100, Marc Zyngier wrote:
+> This is v5 of the series adding PCIe support for the M1 SoC. Not a lot
+> has changed this time around, and most of what I was saying in [1] is
+> still valid.
+> 
+> Very little has changed code wise (a couple of bug fixes). The series
+> however now carries a bunch of DT updates so that people can actually
+> make use of PCIe on an M1 box (OK, not quite, you will still need [2],
+> or whatever version replaces it). The corresponding bindings are
+> either already merged, or queued for 5.16 (this is the case for the
+> PCI binding).
+> 
+> It all should be in a state that makes it mergeable (yeah, I said that
+> last time... I mean it this time! ;-).
+> 
+> As always, comments welcome.
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/r/20210922205458.358517-1-maz@kernel.org
+> [2] https://lore.kernel.org/r/20210921222956.40719-2-joey.gouly@arm.com
+> 
+> Alyssa Rosenzweig (2):
+>   PCI: apple: Add initial hardware bring-up
+>   PCI: apple: Set up reference clocks when probing
+> 
+> Marc Zyngier (10):
+>   irqdomain: Make of_phandle_args_to_fwspec generally available
+>   of/irq: Allow matching of an interrupt-map local to an interrupt
+>     controller
+>   PCI: of: Allow matching of an interrupt-map local to a PCI device
+>   PCI: apple: Add INTx and per-port interrupt support
+>   PCI: apple: Implement MSI support
+>   iommu/dart: Exclude MSI doorbell from PCIe device IOVA range
+>   PCI: apple: Configure RID to SID mapper on device addition
+>   arm64: dts: apple: t8103: Add PCIe DARTs
+>   arm64: dts: apple: t8103: Add root port interrupt routing
+>   arm64: dts: apple: j274: Expose PCI node for the Ethernet MAC address
+> 
+> Mark Kettenis (2):
+>   arm64: apple: Add pinctrl nodes
+>   arm64: apple: Add PCIe node
+> 
+>  MAINTAINERS                              |   7 +
+>  arch/arm64/boot/dts/apple/t8103-j274.dts |  23 +
+>  arch/arm64/boot/dts/apple/t8103.dtsi     | 203 ++++++
+>  drivers/iommu/apple-dart.c               |  27 +
+>  drivers/of/irq.c                         |  17 +-
+>  drivers/pci/controller/Kconfig           |  17 +
+>  drivers/pci/controller/Makefile          |   1 +
+>  drivers/pci/controller/pcie-apple.c      | 822 +++++++++++++++++++++++
+>  drivers/pci/of.c                         |  10 +-
+>  include/linux/irqdomain.h                |   4 +
+>  kernel/irq/irqdomain.c                   |   6 +-
+>  11 files changed, 1127 insertions(+), 10 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-apple.c
 
---amH8vhhIjD2i2fX9
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have applied (with very minor log changes) patches [1-9] to
+pci/apple for v5.16, I expect the dts changes to go via the
+arm-soc tree separately, please let me know if that works for you.
 
-On Sun, Oct 03, 2021 at 12:13:44PM +0300, Max Gurtovoy wrote:
-> Use the proper macro instead of hard-coded (-1) value.
->=20
-> Suggested-by: Krzysztof Wilczy=C5=84ski <kw@linux.com>
-> Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
-> ---
->  drivers/pci/pci-sysfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---amH8vhhIjD2i2fX9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmFat4cACgkQnKSrs4Gr
-c8hJ4wf9GcRK8XZiWv922sRtrFwXiKXZZUdZlX0c9sOkNLALtbAjvM7g1GfcAjfm
-0uAAo6FYpUoDp64ToDc8V3O5nFsWrA2142I4WmiRx/4bbPMTSLvgwLoDRGUd6sAY
-BacsHNGjDDALdg0OkVAI+epGNiT36D4J40c7Qrc0UD5FMZm/RI+pntvixd2alugL
-AYKH9k+0T6tKAX9vMXul7bwuSfn3vclTzOjds6RFh05gjo+1KT8lRIVShhUKbTq6
-Yo69Ft+OK2sRbXZBJ1tFcjjcMeI/rA6PdcOdbq31VYM5KqW3agADNvAfKrVb++fL
-/tJNG1/MJzvdhw2DnReH13VL0pSp6Q==
-=FKzd
------END PGP SIGNATURE-----
-
---amH8vhhIjD2i2fX9--
-
+Thanks,
+Lorenzo
