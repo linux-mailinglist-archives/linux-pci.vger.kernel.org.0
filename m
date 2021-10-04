@@ -2,125 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F277B420FE8
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 15:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC061420FD8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 15:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237797AbhJDNjM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 09:39:12 -0400
-Received: from mail-dm3nam07on2046.outbound.protection.outlook.com ([40.107.95.46]:63713
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237777AbhJDNgu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 Oct 2021 09:36:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WmhiKwZV3TbDCWx0mQep8TRSfnHa1+vu4wpKu6vqBNNfKUCEFSSVQnMCd/VusHpMnqO44IM7I4PPbkZPyGWUqcBWjnWD5GaQlVb0vt0IEbK1vXg01dY4HQXuPMEZXZNJtGa2KxQhSUceR8pjBmLVdl9omFq3e8IVOMvuJOcYoZMG2f2rhrktig9C1FhF6KrFqE+qbKgwLfOe43zJTj0aH0LCC66PtauJFUilIV2etcl4az2hSAhmiOABAtaK9RMluJ8lslZcHF4pJWw/NykxJ6H09Ei4nE+ZPH1ACe/gRVfse1C1oHNWk2jkRDOfvJQ1ZVK02N2rFlbksIhpxP0GYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XXcIVea1o13qrb0O4CPv5uRDyJhKAEkDvnNPz8xNytU=;
- b=fzsx1jD3MaVERL1PIhadhZa8rrYfq9IVS+oXBepDl2dtou8awmP/ncUIiHymFNaH2PnLOC7pCd9MPJn/H+gKmIjNHyXaBEiEud2FT79YfHTP2CxbF02/yZJBgO2GR2VlI33N6iTpasul2wUO3rHlCrpFnwrEtvujEqXwHzZ1DpMUtbYO2nA6GY1GNGa80pJr/d2rRQT+IbqrVwqjK1KwdnY+lMzRv7+yaSF74GI49Umw3+RkrUxDkexN9wqNy1TT1+6A62gHyUZHQ/iC7PN+esizsqoXANP45XmAcsGtONtPA7PGiAWencX8rNb8FyEliEgKFdq1byChyfw8GHatBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.36) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XXcIVea1o13qrb0O4CPv5uRDyJhKAEkDvnNPz8xNytU=;
- b=lR68xbYGHtnEGhC7+r6OhnDxAVpso3YclMSoyIoGBfZ5DMNbyL0gmo0iWWncC8kIzr22jE5chUF+dA9av6tnbVT0rwtpvA5YbEu49Q6tA3ZmYV3gdXVS1B6MyUWX5lJ84a5MT9pOy1T4ibep1RMLphoppcWwr+KwNpAI5Kw6SiBlTq4qYzi+1aLOj4QcDjB1IIQaWRgBVZSjLAtRK4klUOjvvFv6gES6SwtB1EAE8djX0k9ED3WhK92n+hJQUCNrQ8BYZqwqVVIw9jtF3OR8nSeiyZxIyikHRppD8Z0386eTVOuxFadkzOODVvjtuu+whBlMZk9L0zuhHiHy8yeA3Q==
-Received: from CO2PR04CA0126.namprd04.prod.outlook.com (2603:10b6:104:7::28)
- by DM6PR12MB4713.namprd12.prod.outlook.com (2603:10b6:5:7d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Mon, 4 Oct
- 2021 13:35:00 +0000
-Received: from CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
- (2603:10b6:104:7:cafe::b3) by CO2PR04CA0126.outlook.office365.com
- (2603:10b6:104:7::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend
- Transport; Mon, 4 Oct 2021 13:34:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
- smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.36; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.36) by
- CO1NAM11FT026.mail.protection.outlook.com (10.13.175.67) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4566.14 via Frontend Transport; Mon, 4 Oct 2021 13:34:59 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 4 Oct
- 2021 13:34:59 +0000
-Received: from r-arch-stor03.mtr.labs.mlnx (172.20.187.6) by mail.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Mon, 4 Oct 2021 13:34:57 +0000
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-To:     <hch@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-pci@vger.kernel.org>,
-        <bhelgaas@google.com>
-CC:     <stefanha@redhat.com>, <oren@nvidia.com>, <kw@linux.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>
-Subject: [PATCH v3 2/2] PCI/sysfs: use NUMA_NO_NODE macro
-Date:   Mon, 4 Oct 2021 16:34:53 +0300
-Message-ID: <20211004133453.18881-2-mgurtovoy@nvidia.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20211004133453.18881-1-mgurtovoy@nvidia.com>
-References: <20211004133453.18881-1-mgurtovoy@nvidia.com>
+        id S238075AbhJDNjA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 09:39:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:35306 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238170AbhJDNhM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Oct 2021 09:37:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D9161FB;
+        Mon,  4 Oct 2021 06:35:22 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CF5E3F70D;
+        Mon,  4 Oct 2021 06:35:20 -0700 (PDT)
+Date:   Mon, 4 Oct 2021 14:35:16 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 12/13] PCI: aardvark: Fix checking for link up via LTSSM
+ state
+Message-ID: <20211004133516.GA24914@lpieralisi>
+References: <20211001195856.10081-1-kabel@kernel.org>
+ <20211001195856.10081-13-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a72f98b8-2c20-4d6d-e21e-08d9873bc336
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4713:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4713C00CF8CABD7CC8C98F9DDEAE9@DM6PR12MB4713.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1360;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bB4MJgDFFeogyrmuyJJYhWHJ6GSUpigsz2x4hSU50zwZYlM2r42R7OmrrFLGNZxaRW3OuDdbzVtg8D5LOa9Ty8xWVJ+eW3n35sJ5xVwI7pfJMph3sMuI0OptYz2BeWH2TQ6xbo3kLx8F6H32Aa5KezBhD7nTDpk3CuZvlEVzhhuozDMEOn8edGORb3l8NmuYNHjoR4tfk6vHKylYGn77C5adf/AF+ZaTrG6KGwyJR5vrR8+1ObsyguiXm0QRaZ1h2yHBWUtCkLu1TMWWqm+6Ozw0R+QUouMkTEfU849HCInVrOBu1gSbpSG3USfAIwu2yQDeuXqM8Ogh3XmZR8e6o0GNLwrYP882Tsq8EcjqiimpmhZHwZj5VI5uCcSehBJwmFDR2c2FT2h3vRKtVK6907HXsl9xrSuMBuhfDKCYiR+Eu9uF1Sgno1oqmFIs19B7t0b85cu+i6xhv4g3d929WLqWv5f+OdnyRwLQaVYISYfX7+gsBzfM/ZMT9QGF7ggiTG204f08ORxi1IDPDd6LEKK+RAbCMSc+Lw7xt6m2LCzMIxavJORVYwxHeXDsVLaFUL2REgz/oxnvhPdbejODrK2vSUgIOMqne666SCB4mfAfA6ISOA0iWepPKRx6rVzmdlEU/Q2qUP2Wf6tE1oz+hkIvPUt7OYYopXvQFlZXODJFu8SlUw5btWfkCMXoHvNhttF4jqB/SOui5t25Cc2pjg==
-X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(107886003)(2616005)(316002)(36906005)(336012)(426003)(356005)(110136005)(4326008)(8676002)(70586007)(86362001)(8936002)(7636003)(6666004)(36756003)(47076005)(36860700001)(54906003)(2906002)(186003)(4744005)(508600001)(82310400003)(70206006)(26005)(83380400001)(5660300002)(1076003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2021 13:34:59.6410
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a72f98b8-2c20-4d6d-e21e-08d9873bc336
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4713
+In-Reply-To: <20211001195856.10081-13-kabel@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use the proper macro instead of hard-coded (-1) value.
+On Fri, Oct 01, 2021 at 09:58:55PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> Current implementation of advk_pcie_link_up() is wrong as it marks also
+> link disabled or hot reset states as link up.
+> 
+> Fix it by marking link up only to those states which are defined in PCIe
+> Base specification 3.0, Table 4-14: Link Status Mapped to the LTSSM.
+> 
+> To simplify implementation, Define macros for every LTSSM state which
+> aardvark hardware can return in CFG_REG register.
+> 
+> Fix also checking for link training according to the same Table 4-14.
+> Define a new function advk_pcie_link_training() for this purpose.
+> 
+> Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <kabel@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Cc: Remi Pommarel <repk@triplefau.lt>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 69 +++++++++++++++++++++++++--
+>  1 file changed, 64 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 5387d9cc3eba..9465b630cede 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -165,7 +165,44 @@
+>  #define CFG_REG					(LMI_BASE_ADDR + 0x0)
+>  #define     LTSSM_SHIFT				24
+>  #define     LTSSM_MASK				0x3f
+> +#define     LTSSM_DETECT_QUIET			0x0
+> +#define     LTSSM_DETECT_ACTIVE			0x1
+> +#define     LTSSM_POLLING_ACTIVE		0x2
+> +#define     LTSSM_POLLING_COMPLIANCE		0x3
+> +#define     LTSSM_POLLING_CONFIGURATION		0x4
+> +#define     LTSSM_CONFIG_LINKWIDTH_START	0x5
+> +#define     LTSSM_CONFIG_LINKWIDTH_ACCEPT	0x6
+> +#define     LTSSM_CONFIG_LANENUM_ACCEPT		0x7
+> +#define     LTSSM_CONFIG_LANENUM_WAIT		0x8
+> +#define     LTSSM_CONFIG_COMPLETE		0x9
+> +#define     LTSSM_CONFIG_IDLE			0xa
+> +#define     LTSSM_RECOVERY_RCVR_LOCK		0xb
+> +#define     LTSSM_RECOVERY_SPEED		0xc
+> +#define     LTSSM_RECOVERY_RCVR_CFG		0xd
+> +#define     LTSSM_RECOVERY_IDLE			0xe
+>  #define     LTSSM_L0				0x10
+> +#define     LTSSM_RX_L0S_ENTRY			0x11
+> +#define     LTSSM_RX_L0S_IDLE			0x12
+> +#define     LTSSM_RX_L0S_FTS			0x13
+> +#define     LTSSM_TX_L0S_ENTRY			0x14
+> +#define     LTSSM_TX_L0S_IDLE			0x15
+> +#define     LTSSM_TX_L0S_FTS			0x16
+> +#define     LTSSM_L1_ENTRY			0x17
+> +#define     LTSSM_L1_IDLE			0x18
+> +#define     LTSSM_L2_IDLE			0x19
+> +#define     LTSSM_L2_TRANSMIT_WAKE		0x1a
+> +#define     LTSSM_DISABLED			0x20
+> +#define     LTSSM_LOOPBACK_ENTRY_MASTER		0x21
+> +#define     LTSSM_LOOPBACK_ACTIVE_MASTER	0x22
+> +#define     LTSSM_LOOPBACK_EXIT_MASTER		0x23
+> +#define     LTSSM_LOOPBACK_ENTRY_SLAVE		0x24
+> +#define     LTSSM_LOOPBACK_ACTIVE_SLAVE		0x25
+> +#define     LTSSM_LOOPBACK_EXIT_SLAVE		0x26
+> +#define     LTSSM_HOT_RESET			0x27
+> +#define     LTSSM_RECOVERY_EQUALIZATION_PHASE0	0x28
+> +#define     LTSSM_RECOVERY_EQUALIZATION_PHASE1	0x29
+> +#define     LTSSM_RECOVERY_EQUALIZATION_PHASE2	0x2a
+> +#define     LTSSM_RECOVERY_EQUALIZATION_PHASE3	0x2b
 
-Suggested-by: Krzysztof WilczyÅ„ski <kw@linux.com>
-Reviewed-by: Krzysztof WilczyÅ„ski <kw@linux.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
----
- drivers/pci/pci-sysfs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+An enum would be nicer IMO, for readability. Don't repost the series
+yet.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 7fb5cd17cc98..f807b92afa6c 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -81,8 +81,10 @@ static ssize_t pci_dev_show_local_cpu(struct device *dev, bool list,
- 	const struct cpumask *mask;
- 
- #ifdef CONFIG_NUMA
--	mask = (dev_to_node(dev) == -1) ? cpu_online_mask :
--					  cpumask_of_node(dev_to_node(dev));
-+	if (dev_to_node(dev) == NUMA_NO_NODE)
-+		mask = cpu_online_mask;
-+	else
-+		mask = cpumask_of_node(dev_to_node(dev));
- #else
- 	mask = cpumask_of_pcibus(to_pci_dev(dev)->bus);
- #endif
--- 
-2.18.1
+Lorenzo
 
+>  #define     RC_BAR_CONFIG			0x300
+>  #define VENDOR_ID_REG				(LMI_BASE_ADDR + 0x44)
+>  
+> @@ -258,13 +295,35 @@ static inline u32 advk_readl(struct advk_pcie *pcie, u64 reg)
+>  	return readl(pcie->base + reg);
+>  }
+>  
+> -static int advk_pcie_link_up(struct advk_pcie *pcie)
+> +static u8 advk_pcie_ltssm_state(struct advk_pcie *pcie)
+>  {
+> -	u32 val, ltssm_state;
+> +	u32 val;
+> +	u8 ltssm_state;
+>  
+>  	val = advk_readl(pcie, CFG_REG);
+>  	ltssm_state = (val >> LTSSM_SHIFT) & LTSSM_MASK;
+> -	return ltssm_state >= LTSSM_L0;
+> +	return ltssm_state;
+> +}
+> +
+> +static inline bool advk_pcie_link_up(struct advk_pcie *pcie)
+> +{
+> +	/* check if LTSSM is in normal operation - some L* state */
+> +	u8 ltssm_state = advk_pcie_ltssm_state(pcie);
+> +	return ltssm_state >= LTSSM_L0 && ltssm_state < LTSSM_DISABLED;
+> +}
+> +
+> +static inline bool advk_pcie_link_training(struct advk_pcie *pcie)
+> +{
+> +	/*
+> +	 * According to PCIe Base specification 3.0, Table 4-14: Link
+> +	 * Status Mapped to the LTSSM is Link Training mapped to LTSSM
+> +	 * Configuration and Recovery states.
+> +	 */
+> +	u8 ltssm_state = advk_pcie_ltssm_state(pcie);
+> +	return ((ltssm_state >= LTSSM_CONFIG_LINKWIDTH_START &&
+> +		 ltssm_state < LTSSM_L0) ||
+> +		(ltssm_state >= LTSSM_RECOVERY_EQUALIZATION_PHASE0 &&
+> +		 ltssm_state <= LTSSM_RECOVERY_EQUALIZATION_PHASE3));
+>  }
+>  
+>  static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+> @@ -287,7 +346,7 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+>  	size_t retries;
+>  
+>  	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> -		if (!advk_pcie_link_up(pcie))
+> +		if (advk_pcie_link_training(pcie))
+>  			break;
+>  		udelay(RETRAIN_WAIT_USLEEP_US);
+>  	}
+> @@ -706,7 +765,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+>  		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+>  			~(PCI_EXP_LNKSTA_LT << 16);
+> -		if (!advk_pcie_link_up(pcie))
+> +		if (advk_pcie_link_training(pcie))
+>  			val |= (PCI_EXP_LNKSTA_LT << 16);
+>  		*value = val;
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+> -- 
+> 2.32.0
+> 
