@@ -2,146 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B1D6421545
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 19:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83FA4421593
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 19:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234615AbhJDRnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 13:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38966 "EHLO
+        id S234678AbhJDRyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 13:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233295AbhJDRnE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 13:43:04 -0400
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B56C061745
-        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 10:41:15 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id b5-20020a4ac285000000b0029038344c3dso5622856ooq.8
-        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 10:41:15 -0700 (PDT)
+        with ESMTP id S235123AbhJDRyO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 13:54:14 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145E5C061745
+        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 10:52:25 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id bd28so67831409edb.9
+        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 10:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D/lMeoiuV+B5vzH2sTnlyy03bha/AFNv6BYAxtArpmc=;
-        b=WSdD5Yhua0kLFYxTM3uXF03qqwgDsgzFpc7672PC16XJWMPvDWlKUGvXhotGJCKPf7
-         71TGJcohCl5LAY00/ufklpY2WXXL2lStemKnIurL9scuZkvx0BOUh5P89pjqtKP90ieh
-         BWbT08QZYeSMzf4JwzSdOm/W+FKEgtko67k7dRbftmbRdZjjAU4WYYvAJogFCex/aoKz
-         Z8Fi8Q5i3dw6hZjZhx5hMWkwwY1WRB+U3+DjBH15+OnP8TU1ctYKdWbG1K2B0baK6WFE
-         rPJsPkbNuCG/k8DyWCY1kQv5J8tIttWU4UhZhMyWkX4otfmr5GAN4qoPf3ebQ1ir2+US
-         jWtQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SVy+42avAMDVs9YXx1N0MW72e1XqpRIo0we4Jey6TgQ=;
+        b=USZyRilZz6erOG49DFYjzZ7yWgjOF6KTPmH52T4Gemm+QUM3Fsk9hCPuO1ae+CsKMy
+         5cxbMWN0+QWJ7TNvMS+xMUWtoLMWb5t6Z7EiTWRxNQI0EeXpbmWGUY7HPhtaBMFPRnN1
+         tyqo3akeIm/LNXB/Hnk8xMZ2sGRkMTJTjJrVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D/lMeoiuV+B5vzH2sTnlyy03bha/AFNv6BYAxtArpmc=;
-        b=KqoHk+W1utWYPoXnZCmXU8H9haMixaPYYKCq59iaGl6RzHdR5kQ1zVKNBBHBVfjPIt
-         jhdS/WSYdZQj2nJfrLlZrRffJ6Q28NU35Ks5j5RW5E7dRAjMOLK9Wf2qpmou+S7yACXR
-         3kvBgOyMRswDkt6h/Jc7xCDXSBGslNCDvhzGvE8oooLE5mWcb9TpiqeUdYnzAkdW1Uyb
-         XG7Y4edvybjwkNphCtnFSepShjc7HqIZ1xPPZs7w9ikjh39DUWxe2uJeUGEE1u6aKQ1L
-         dFca1DQJhuaZLwJwgDwFflLhdyPNFl6Nr7pn9CiLNBq07eZB1LqAHqjIhxbJ+MIDKq4A
-         BGJw==
-X-Gm-Message-State: AOAM533tXP397+GaVmjvxF4PTVIq1T0K5ShH1ydi22re0j7z1IdCDs6+
-        gWeYC8Y/Kqu1qFfHiMh87g86pU3ioTE=
-X-Google-Smtp-Source: ABdhPJzwI6rF34qhq6GXVIbn6+GyC3iyAr2jDd5vxhDUefrtz7gPcIydBOsEjXMcRbtjcWAsWDhTCw==
-X-Received: by 2002:a4a:d0cd:: with SMTP id u13mr10026262oor.3.1633369274539;
-        Mon, 04 Oct 2021 10:41:14 -0700 (PDT)
-Received: from ?IPv6:2603:8081:2802:9dfb:c5d3:8f2f:d5f0:22e6? (2603-8081-2802-9dfb-c5d3-8f2f-d5f0-22e6.res6.spectrum.com. [2603:8081:2802:9dfb:c5d3:8f2f:d5f0:22e6])
-        by smtp.gmail.com with ESMTPSA id 65sm3021017otd.81.2021.10.04.10.41.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Oct 2021 10:41:13 -0700 (PDT)
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com, pavel@ucw.cz
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
- <20210814062328.GA25723@wunner.de>
-From:   stuart hayes <stuart.w.hayes@gmail.com>
-Message-ID: <aa253bad-5de0-7a25-7cc0-56ebfc0b6828@gmail.com>
-Date:   Mon, 4 Oct 2021 12:41:12 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SVy+42avAMDVs9YXx1N0MW72e1XqpRIo0we4Jey6TgQ=;
+        b=pNRlLnnyoqJqYxwgMV56aM5XH3eaQjwGoKYSi0dfIzrr470ik9op/WjqyR/NZbT45D
+         73LYqPCy/D9UuT85oClXh2Q1JHVPpvzypw12GicKCDMXQlOUlXnmnYn8Z1pcmyuoXuB8
+         qoLz3cmtnnbepUWJ2FkJB8mh2oqNrjOI0GUm0O7Jw9OJOHp5y+t3zwBGWNYpYbTeZIio
+         rpIrJ+VEMJ0A29zQbkM1dVngEdNYOeYKU20WKGmfhN2trPZy05Q9Qf0gab7RwFeZQEFK
+         /Thzmd8bVy/jZlQFA0l1DaBuYnUzvTXO2qY+lOG0WYLpAZ6knn5mU7KCQtra3kNWsugJ
+         KS+A==
+X-Gm-Message-State: AOAM533u3kNXu2rBAjuhjVmoMk5/5nPGc+LkSyfCwmRjgGn6usVqUw5x
+        0qEqTooE4pfIRaWDYspvotPdlAlWRuCULq84KHdnoA==
+X-Google-Smtp-Source: ABdhPJw473yRin1rcK/LShFHmhtAKymPp2Nzjft1z63Ov1VE3CPb6pN7T9mMOt0Y7yINQAzbdd9Z9LQmL/AJ4fFVqJE=
+X-Received: by 2002:a17:906:60c7:: with SMTP id f7mr18468620ejk.57.1633369942391;
+ Mon, 04 Oct 2021 10:52:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210814062328.GA25723@wunner.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210914114813.15404-1-verdre@v0yd.nl> <20210914114813.15404-3-verdre@v0yd.nl>
+ <5f0b52be-8b9c-b015-6c5a-f2f470e37058@v0yd.nl>
+In-Reply-To: <5f0b52be-8b9c-b015-6c5a-f2f470e37058@v0yd.nl>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 4 Oct 2021 10:52:11 -0700
+Message-ID: <CAOFLbXbK5LmZbLcEs5e-0twoSkxkyKy8S6ZJVsz9Ap_a_iGZPA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mwifiex: Try waking the firmware until we get an interrupt
+To:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        Linux Wireless <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "# 9798ac6d32c1 mfd : cros_ec : Add cros_ec_cmd_xfer_status helper" 
+        <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-
-On 8/14/2021 1:23 AM, Lukas Wunner wrote:
-> On Fri, Aug 13, 2021 at 05:36:53PM -0400, Stuart Hayes wrote:
->> +struct mutex drive_status_dev_list_lock;
->> +struct list_head drive_status_dev_list;
-> 
-> Should be declared static.
-> 
->> +const guid_t pcie_ssd_leds_dsm_guid =
->> +	GUID_INIT(0x5d524d9d, 0xfff9, 0x4d4b,
->> +		  0x8c, 0xb7, 0x74, 0x7e, 0xd5, 0x1e, 0x19, 0x4d);
-> 
-> Same.
-> 
->> +struct drive_status_led_ops dsm_drive_status_led_ops = {
->> +	.get_supported_states = get_supported_states_dsm,
->> +	.get_current_states = get_current_states_dsm,
->> +	.set_current_states = set_current_states_dsm,
->> +};
-> 
-> Same.
-> 
-
-Thank you!
-
->> +static void probe_pdev(struct pci_dev *pdev)
->> +{
->> +	/*
->> +	 * This is only supported on PCIe storage devices and PCIe ports
->> +	 */
->> +	if (pdev->class != PCI_CLASS_STORAGE_EXPRESS &&
->> +	    pdev->class != PCI_CLASS_BRIDGE_PCI)
->> +		return;
->> +	if (pdev_has_dsm(pdev))
->> +		add_drive_status_dev(pdev, &dsm_drive_status_led_ops);
->> +}
-> 
-> Why is &dsm_drive_status_led_ops passed to add_drive_status_dev()?
-> It's always the same argument.
+On Sun, Oct 3, 2021 at 2:18 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote:
+> So I think I have another solution that might be a lot more elegant, how
+> about this:
 >
-
-Because I hope this will also support NPEM as well, since it is so 
-similar except for using a PCIe extended capability instead of a _DSM 
-method. This will make it very easy to add the support... I just don't 
-have any NPEM hardware yet.
-
->> +static int __init ssd_leds_init(void)
->> +{
->> +	mutex_init(&drive_status_dev_list_lock);
->> +	INIT_LIST_HEAD(&drive_status_dev_list);
->> +
->> +	bus_register_notifier(&pci_bus_type, &ssd_leds_pci_bus_nb);
->> +	initial_scan_for_leds();
->> +	return 0;
->> +}
-> 
-> There's a concurrency issue here:  initial_scan_for_leds() uses
-> bus_for_each_dev(), which walks the bus's klist_devices.  When a
-> device is added (e.g. hotplugged), that device gets added to the
-> tail of klist_devices.  (See call to klist_add_tail() in
-> bus_add_device().)
-> 
-> It is thus possible that probe_pdev() is run concurrently for the
-> same device, once by the notifier and once by initial_scan_for_leds().
-> 
-> The problem is that add_drive_status_dev() only checks at the top
-> of the function whether the device has already been added to
-> drive_status_dev_list.  It goes on to instantiate the LED
-> and only then adds the device to drive_status_dev_list.
-> 
-> It's thus possible that the same LED is instantiated twice
-> which might confuse users.
+> try_again:
+>         n_tries++;
 >
+>         mwifiex_write_reg(adapter, reg->fw_status, FIRMWARE_READY_PCIE);
+>
+>         if (wait_event_interruptible_timeout(adapter->card_wakeup_wait_q,
+>                                              READ_ONCE(adapter->int_statu=
+s) !=3D 0,
+>                                              WAKEUP_TRY_AGAIN_TIMEOUT) =
+=3D=3D 0 &&
+>             n_tries < MAX_N_WAKEUP_TRIES) {
+>                 goto try_again;
+>         }
 
-I missed that, thanks!
+Isn't wait_event_interruptible_timeout()'s timeout in jiffies, which
+is not necessarily that predictable, and also a lot more
+coarse-grained than we want? (As in, if HZ=3D100, we're looking at
+precision on the order of 10ms, whereas the expected wakeup latency is
+~6ms.) That would be OK for well-behaved PCI cases, where we never
+miss a write, but it could ~double your latency for your bad systems
+that will need more than one run of the loop.
 
+Also, feels like a do/while could be cleaner, but that's a lesser detail.
+
+> and then call wake_up_interruptible() in the mwifiex_interrupt_status()
+> interrupt handler.
+>
+> This solution should make sure we always keep wakeup latency to a minimum
+> and can still retry the register write if things didn't work.
+
+Brian
