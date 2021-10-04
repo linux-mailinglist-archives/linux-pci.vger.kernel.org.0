@@ -2,82 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 336A642129F
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 17:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 812954212B7
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 17:31:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233972AbhJDP1j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 11:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233469AbhJDP1j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 11:27:39 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6EBC061745
-        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 08:25:50 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id v10so21926884oic.12
-        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 08:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=H46lBP7U3uS8gfic3XI+l15JbUNvAdGDD2k4mqDQUlQ=;
-        b=DJNXfwmDj64+XL74WsyrFFedzrcYkl4uL9gf3tLtOWoqFgkH/9YLdv7q8sE2fDY9To
-         jlxXxbW8HNPps5f/E1OzCJfcjypFDKBXy454A2Rgw/01EZ44Y/JrhSF46I9bvNMzWfJZ
-         3tUTBKLJtyvpqtrPWbNGbN55UvU31FdyHGzPV4KOMR6mIiDYdjjdkyqq2Rvn1CLpl2oo
-         0RkFYjuTkBgMLry3E8de+/1QH3UCwNwjohLUuFXt0atL7n0EgBdLLrvAEByZYKTDk5hV
-         HcxqDg8hGpWHqHT6LqIo5DXMtyGR6C25e15JGUerSbbkYB3RF9+M+H1+pOyR+0zcK10X
-         vIwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=H46lBP7U3uS8gfic3XI+l15JbUNvAdGDD2k4mqDQUlQ=;
-        b=8NQk5sVDnRVoswnUhS+M3l4cuW7DGQ/aIgsykINWMqLUi6i4fId8ujUyoNDU4IJVcu
-         JCBYSzyVRnWeoD24kuqyVJRkZ7eMM7YY3fVBTplCTxqIs55sdMXL5z0rqLJri0DMRgsz
-         dQ4aox04pW2m/vevJ9x1Th3VstiQPfPn4xEZ8fkcVEp+ZZ2yLn5iMPXD4j+D1P6D1IHR
-         0ayJofPRGKpotQjuDaHbwwhmjQGY6X1XmL9FO1gQenj6iJxjCKwKDPA6E7TvXdji1DzY
-         8zg7HeutDs44jx7s/ixEpvopyuRKcxodQPSodO+O4Xt2jVJbob2PzUB7VQxrSqq+961v
-         4e5A==
-X-Gm-Message-State: AOAM531h2syMl8mssyQNQHbdVs2DfPEPW2W3It16K2S/2B6fqCedexAJ
-        NwiGo2LylYvtZMIxVCnmfnFdYmPMjc0edlB7vlE=
-X-Google-Smtp-Source: ABdhPJxu/bue845L41H1ZSuOC1XSaUrWXgOJxDvYKYXYRgabnF/jJkFX6/F2vCtee07l59PEMO3ix3qmgd7qOr4TTjg=
-X-Received: by 2002:aca:e002:: with SMTP id x2mr14071615oig.19.1633361149383;
- Mon, 04 Oct 2021 08:25:49 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a4a:96e7:0:0:0:0:0 with HTTP; Mon, 4 Oct 2021 08:25:48 -0700 (PDT)
-Reply-To: mohamedkasim794@yahoo.com
-From:   "Mr.Kasim Mohamed" <drjubrilubaro36@gmail.com>
-Date:   Mon, 4 Oct 2021 08:25:48 -0700
-Message-ID: <CA+7yYtNK_ve8zS9ueNzaejPqOGAKGxPmmWTxaD5qAHmBTtuVxg@mail.gmail.com>
-Subject: GOOD DAY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S235490AbhJDPdq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 4 Oct 2021 11:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234917AbhJDPdq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Oct 2021 11:33:46 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C2461244;
+        Mon,  4 Oct 2021 15:31:57 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mXPwZ-00Efau-BR; Mon, 04 Oct 2021 16:31:55 +0100
+Date:   Mon, 04 Oct 2021 16:31:54 +0100
+Message-ID: <871r50st5h.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 06/13] PCI: aardvark: Do not clear status bits of masked interrupts
+In-Reply-To: <20211004140653.GB24914@lpieralisi>
+References: <20211001195856.10081-1-kabel@kernel.org>
+        <20211001195856.10081-7-kabel@kernel.org>
+        <20211004140653.GB24914@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, kabel@kernel.org, thomas.petazzoni@bootlin.com, bhelgaas@google.com, linux-pci@vger.kernel.org, pali@kernel.org, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
+On Mon, 04 Oct 2021 15:06:53 +0100,
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+> [+Marc - always better to have his eyes on IRQ handling code]
+> 
+> On Fri, Oct 01, 2021 at 09:58:49PM +0200, Marek Behún wrote:
+> > From: Pali Rohár <pali@kernel.org>
+> > 
+> > It is incorrect to clear status bits of masked interrupts.
+> > 
+> > The aardvark driver clears all status interrupt bits if no unmasked
+> > status bit is set. Masked bits should never be cleared.
+> > 
+> > Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Reviewed-by: Marek Behún <kabel@kernel.org>
+> > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index d5d6f92e5143..e4986806a189 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1295,11 +1295,8 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+> >  	isr1_mask = advk_readl(pcie, PCIE_ISR1_MASK_REG);
+> >  	isr1_status = isr1_val & ((~isr1_mask) & PCIE_ISR1_ALL_MASK);
+> >  
+> > -	if (!isr0_status && !isr1_status) {
+> > -		advk_writel(pcie, isr0_val, PCIE_ISR0_REG);
+> > -		advk_writel(pcie, isr1_val, PCIE_ISR1_REG);
+> 
+> This looks fine - on the other hand if no interrupt is set in the status
+> registers (that are filtered with the masks) we are dealing with a
+> spurious IRQ right ? Just gauging how severe this is.
+> 
+> Lorenzo
+> 
+> > +	if (!isr0_status && !isr1_status)
+> >  		return;
 
-Greetings.
+The whole thing is a bit odd. What the commit message doesn't say is
+whether the status register shows the status of the line before
+masking, or after masking.
 
-How are you doing today i hope fine?
+The code seems to imply the former, but then the behaviour is
+awkward. How did we end-up here the first place? if that's only a
+spurious interrupt, then I'd probably simplify the code altogether,
+and drop all the early return code. Something like below, as usual
+completely untested.
 
-I came across your e-mail contact prior a private search while in need
-of your assistance. My name Mr.Kasim Mohamed =E2=80=99 I work with the
-department of Audit and accounting manager here in UBA Bank of Africa,
-There is this fund that was keep in my custody years ago and I need
-your assistance for the transferring of this fund to your bank account
-for both of us benefit for life time investment and the amount is (US
-$27,500. Million Dollars).
+	M.
 
-I have every inquiry details to make the bank believe you and release
-the fund to your bank account in within 7 banking working days with
-your full co-operation with me after success Note 50% for you while
-50% for me after success of the transfer of the funds to your bank
-account okay.
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 596ebcfcc82d..1d8f257ecb63 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -1275,7 +1275,8 @@ static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+ {
+ 	u32 isr0_val, isr0_mask, isr0_status;
+-	u32 isr1_val, isr1_mask, isr1_status;
++	u32 isr1_val, isr1_mask;
++	unsigned long isr1_status;
+ 	int i;
+ 
+ 	isr0_val = advk_readl(pcie, PCIE_ISR0_REG);
+@@ -1285,22 +1286,14 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+ 	isr1_val = advk_readl(pcie, PCIE_ISR1_REG);
+ 	isr1_mask = advk_readl(pcie, PCIE_ISR1_MASK_REG);
+ 	isr1_status = isr1_val & ((~isr1_mask) & PCIE_ISR1_ALL_MASK);
+-
+-	if (!isr0_status && !isr1_status) {
+-		advk_writel(pcie, isr0_val, PCIE_ISR0_REG);
+-		advk_writel(pcie, isr1_val, PCIE_ISR1_REG);
+-		return;
+-	}
++	isr1_status >> 8;
+ 
+ 	/* Process MSI interrupts */
+ 	if (isr0_status & PCIE_ISR0_MSI_INT_PENDING)
+ 		advk_pcie_handle_msi(pcie);
+ 
+ 	/* Process legacy interrupts */
+-	for (i = 0; i < PCI_NUM_INTX; i++) {
+-		if (!(isr1_status & PCIE_ISR1_INTX_ASSERT(i)))
+-			continue;
+-
++	for_each_set_bit(i, &isr1_status, PCI_NUM_INTX) {
+ 		advk_writel(pcie, PCIE_ISR1_INTX_ASSERT(i),
+ 			    PCIE_ISR1_REG);
+ 
 
-WAITING TO HEAR FROM YOU.
-THANKS.
-
- Mr.Kasim Mohamed
+-- 
+Without deviation from the norm, progress is not possible.
