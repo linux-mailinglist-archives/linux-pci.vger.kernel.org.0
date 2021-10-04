@@ -2,74 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B84421241
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 17:06:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D92421280
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 17:18:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233775AbhJDPHw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 11:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
+        id S234516AbhJDPUQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 11:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229549AbhJDPHv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 Oct 2021 11:07:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADFE610FC;
-        Mon,  4 Oct 2021 15:06:02 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=hot-poop.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mXPXU-00EfKP-Is; Mon, 04 Oct 2021 16:06:00 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] irqdomain: Export __irq_domain_alloc_irqs() to modules
-Date:   Mon,  4 Oct 2021 16:05:52 +0100
-Message-Id: <20211004150552.3844830-1-maz@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        id S233561AbhJDPUQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Oct 2021 11:20:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F3B3961248;
+        Mon,  4 Oct 2021 15:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633360707;
+        bh=YCumSfZ/dbeZ4OPqKY/gryHPhfKvWqhTZ2tQRhwz7fE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DsJQDfXlE+N06KUEB403Inv0dnbSzPZzQ6A0vfRSbByuN2Qt+TiLn90gfnhQTSyJP
+         YdKatr8dwfaFlAtjycIprLdflZPKkrx0ydeJHvt9aGpi0mvgw8YV6f4eufW8KhdgbE
+         j/BEQ6U6vCLq8kv1QcMo3YhqKN8rrZEehLQV8ux9XRJRGNzoZvjGP5hfCrY6PxKeIT
+         qahcZXdWmH7ENesSjboacp9vRAfACnILKVrEG7R9sCkQMq2fdQkMHAKi7e3y11MzOM
+         XzDGbCbNJmvc/X60Zk+W6YKHGEARjS2UOiv9iMpIThBIIjr8hlXAp8LkmQ5ZBjPXpk
+         fsmpBDx6zdJUA==
+Date:   Mon, 4 Oct 2021 17:18:23 +0200
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org, stable@vger.kernel.org, maz@kernel.org
+Subject: Re: [PATCH 06/13] PCI: aardvark: Do not clear status bits of masked
+ interrupts
+Message-ID: <20211004171823.0288684e@thinkpad>
+In-Reply-To: <20211004140653.GB24914@lpieralisi>
+References: <20211001195856.10081-1-kabel@kernel.org>
+        <20211001195856.10081-7-kabel@kernel.org>
+        <20211004140653.GB24914@lpieralisi>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Apple PCIe controller driver allocates interrupts generated
-by the PCIe ports, and uses irq_domain_alloc_irqs() for that.
-THis is an inline function that uses __irq_domain_alloc_irqs()
-as a backend.
+On Mon, 4 Oct 2021 15:06:53 +0100
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-Since the driver can be built as a module, __irq_domain_alloc_irqs()
-must be exported.
+> [+Marc - always better to have his eyes on IRQ handling code]
+> 
+> > -	if (!isr0_status && !isr1_status) {
+> > -		advk_writel(pcie, isr0_val, PCIE_ISR0_REG);
+> > -		advk_writel(pcie, isr1_val, PCIE_ISR1_REG);  
+> 
+> This looks fine - on the other hand if no interrupt is set in the status
+> registers (that are filtered with the masks) we are dealing with a
+> spurious IRQ right ? Just gauging how severe this is.
 
-Fixes: 201adeaa9d82 ("PCI: apple: Add INTx and per-port interrupt support")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
+Yes, spurious IRQ can really happen.
 
-Notes:
-    Since the offending code is only in the PCI tree so far,
-    it would make sense if Lorenzo could take this patch directly.
+Patch 7 in this series fixes an issue where aardvark does not mask all
+interrupts, and then kernel can think that an interrupt is masked but
+it really isn't.
 
- kernel/irq/irqdomain.c | 1 +
- 1 file changed, 1 insertion(+)
+Also, some interrupts may be masked by the user of the emulated bridge
+(some other driver), so that they can be polled. But if we clear all of
+them in the status, even the masked ones, then the other driver which
+is polling will always get a zero.
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 5a698c1f6cc6..40e85a46f913 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1502,6 +1502,7 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 	irq_free_descs(virq, nr_irqs);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(__irq_domain_alloc_irqs);
- 
- /* The irq_data was moved, fix the revmap to refer to the new location */
- static void irq_domain_fix_revmap(struct irq_data *d)
--- 
-2.30.2
-
+Marek
