@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60D8D4210F9
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 16:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C8DD4210FB
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 16:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233900AbhJDOKp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 10:10:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43912 "EHLO
+        id S229716AbhJDOKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 10:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234023AbhJDOKn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 10:10:43 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6AD1C061749;
-        Mon,  4 Oct 2021 07:08:54 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id v19so11641869pjh.2;
-        Mon, 04 Oct 2021 07:08:54 -0700 (PDT)
+        with ESMTP id S233174AbhJDOKw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 10:10:52 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C3DC061783;
+        Mon,  4 Oct 2021 07:09:01 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id b22so11199639pls.1;
+        Mon, 04 Oct 2021 07:09:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WgoZ9+KpQrZR7tDkQXfhNUVljLBFuOfZzG3U49+7PlA=;
-        b=WEUa66Fd7WtoDf/7Q8UM0ovCljnLKeI51nGJW39td75KXO3U8ACM8fup/QKb83eEnY
-         5We5vSmFdYsjyhUd+BXEy6X5npUgLcRVji1T8id5/IdsPYDffHPrdeaJG0vcp92GFYgi
-         /6cPJrhvm3IRtDg+CimNj7eF2wU/5hwajfSjBiZFgJUU2FKT/HNmgWrawEp913St+qtS
-         /UehFaW02zzrxLTQPZT3rPz0B/JK9PUF3MRNhNTHfHAXJCZIMrSKgiNUCGjl/4AKrB2a
-         uvfiedlgTlMHTIz3lNS7YMTHLlXplBBRz1W+93YjBV8x+zquGy421afJsMPsjOnaue6V
-         ZNLQ==
+        bh=w+NqgXClATM2+U/6pmcAe6ttC1b34HIq6gozyTG/Fag=;
+        b=Ozwj5eo+JQr13kbgISfT/YYcy0EwCY30LXLUlWlbVkJd67t6s5mPWeUrFyYkyLrScw
+         QE30Lg2AZumU/Mp/g+pSA4HdJXE5l4IgxgYCrtImGnxcdEtEgn31D4eskl5WNWLfmoiP
+         dwSqeOT1wboM4W0ANBUZwjRBI9rpiG7hFCcqlsROuhtqYyrXOjk7zuSd+Ijok4MTEt/8
+         w4lb6EAAX7Fe0Frs8sNL9k/0JYK2UkkTdD1D0cj2HqZgpxjOjGHa7KywPAQ+vt5wkMcd
+         Z+6A3E5K8CejOdX7iWB+K5ko0IFiqV343d0OD2eUzDncwhqD8kIy7on3eSNpIFI1BHle
+         3woA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WgoZ9+KpQrZR7tDkQXfhNUVljLBFuOfZzG3U49+7PlA=;
-        b=Wl3+duQdMbBgEy0KFkJHMVsfqUj4pMFqQYLD4m37h+8IzsIz2XX+mB63ONQ33YZqNa
-         3Bir36OOmk+qhLsuUKKN39zbTfiHj4iwwUILkvlh9XuJV872vBHQysT/LtgSJU2Ee0dI
-         vJU4SUJTB6tMTQqPER3RlEm72Ec9YDARzVBRJGkvxUnB8apsD1SxtA5CwwbO9/aDJeW5
-         +cPbtJR73CeNrORheSW6zSFPRrJ6+wI57XDZwFYl4SsfEbUMigTWJFx8vucpu/cbFXdq
-         h1qSKR84JeH0QZkpCvECsQj0EXqKjt3uBYVT9j1j453t2jrAkyn1Gzi7FPXpSUnPzaGV
-         2yCQ==
-X-Gm-Message-State: AOAM531+wnIxmk/BYFGJO/nMJrOcoJYkgngRriYCzD85ivkzXVXB+x0e
-        ckzlZMdykCUH9jy3kVpuZ1Q=
-X-Google-Smtp-Source: ABdhPJxiXt3ftOJK3flYITskQM3Ai/Q5NEFZd6Kg0s9wJr1Y2Z0LU5DHKJF6ULES21X3Rgeej6QwzQ==
-X-Received: by 2002:a17:903:246:b0:13a:22d1:88b with SMTP id j6-20020a170903024600b0013a22d1088bmr23318540plh.16.1633356534168;
-        Mon, 04 Oct 2021 07:08:54 -0700 (PDT)
+        bh=w+NqgXClATM2+U/6pmcAe6ttC1b34HIq6gozyTG/Fag=;
+        b=8DLJtJhMwcAkaoRXGEshEbDteXVq6OHqsRwk1wGDMidRM1+drdvJodJ028A4vXS7Iu
+         fxAyiG1XYLxmrsKB6w/gDPKthVdiA05AAufBEMMclI8/lvZoUvUc0z2tsQGQbQt/hFlO
+         4LrMSSWkQpRvIgQcZi3iBPgTAatK4b1sdey66J3ijWNCA2cdCAkLhNRoGGWoK8SHlnFc
+         ZvhC0oRWUUU9hXetShJH9HGI0XG6JPzsFIz2wclwem5XyeFkM1Z3YFYzDbiGixDT6qm/
+         H5Xfi62hqMhdzsoYX6v1uR+dQLVklNGwbHYuVtSOI9W4OUbUvwLrpf/vcWjCoYt219Hp
+         qFoA==
+X-Gm-Message-State: AOAM5308Je7LRweL2th6HmjrQFJr42r2eVVpossGILdlp9I69DWYY+71
+        w+WN6Y6Z8PmFqanbIR8/LNDXqU6FbqL28oT+
+X-Google-Smtp-Source: ABdhPJz9tTa1vY09/ksLF7xk0Y6tU/8x10h8zOlbMuBmOEpd9L/4e0/Z5IuE/XsKNuFAeKf6CCpFYg==
+X-Received: by 2002:a17:902:b691:b029:12d:2b6:d116 with SMTP id c17-20020a170902b691b029012d02b6d116mr23418269pls.71.1633356541150;
+        Mon, 04 Oct 2021 07:09:01 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:e8f0:c2a7:3579:5fe8:31d9])
-        by smtp.gmail.com with ESMTPSA id p2sm15274135pgd.84.2021.10.04.07.08.50
+        by smtp.gmail.com with ESMTPSA id p2sm15274135pgd.84.2021.10.04.07.08.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Oct 2021 07:08:53 -0700 (PDT)
+        Mon, 04 Oct 2021 07:09:00 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Subject: [PATCH v2 4/8] PCI/DPC: Use pci_aer_clear_status() in dpc_process_error()
-Date:   Mon,  4 Oct 2021 19:36:30 +0530
-Message-Id: <71cec6aef2535b48911bd98bd010012643eb0bd0.1633353468.git.naveennaidu479@gmail.com>
+Subject: [PATCH v2 5/8] PCI/DPC: Converge EDR and DPC Path of clearing AER registers
+Date:   Mon,  4 Oct 2021 19:36:31 +0530
+Message-Id: <14df904c301dc417485f5a7563053b81ab1d3c76.1633353468.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633353468.git.naveennaidu479@gmail.com>
 References: <cover.1633353468.git.naveennaidu479@gmail.com>
@@ -65,31 +65,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-dpc_process_error() clears both AER fatal and non fatal status
-registers. Instead of clearing each status registers via a different
-function call use pci_aer_clear_status().
+In the EDR path, AER registers are cleared *after* DPC error event is
+processed. The process stack in EDR is:
 
-This helps clean up the code a bit.
+  edr_handle_event()
+    dpc_process_error()
+    pci_aer_raw_clear_status()
+    pcie_do_recovery()
+
+But in DPC path, AER status registers are cleared *while* processing
+the error. The process stack in DPC is:
+
+  dpc_handler()
+    dpc_process_error()
+      pci_aer_clear_status()
+    pcie_do_recovery()
+
+In EDR path, AER status registers are cleared irrespective of whether
+the error was an RP PIO or unmasked uncorrectable error. But in DPC, the
+AER status registers are cleared only when it's an unmasked uncorrectable
+error.
+
+This leads to two different behaviours for the same task (handling of
+DPC errors) in FFS systems and when native OS has control.
+
+Bring the same semantics for clearing the AER status register in EDR
+path and DPC path.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/pcie/dpc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/pcie/dpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index df3f3a10f8bc..faf4a1e77fab 100644
+index faf4a1e77fab..68899a3db126 100644
 --- a/drivers/pci/pcie/dpc.c
 +++ b/drivers/pci/pcie/dpc.c
-@@ -288,8 +288,7 @@ void dpc_process_error(struct pci_dev *pdev)
+@@ -288,7 +288,6 @@ void dpc_process_error(struct pci_dev *pdev)
  		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
  		 aer_get_device_error_info(pdev, &info)) {
  		aer_print_error(pdev, &info);
--		pci_aer_clear_nonfatal_status(pdev);
--		pci_aer_clear_fatal_status(pdev);
-+		pci_aer_clear_status(pdev);
+-		pci_aer_clear_status(pdev);
  	}
  }
  
+@@ -297,6 +296,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 	struct pci_dev *pdev = context;
+ 
+ 	dpc_process_error(pdev);
++	pci_aer_clear_status(pdev);
+ 
+ 	/* We configure DPC so it only triggers on ERR_FATAL */
+ 	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
 -- 
 2.25.1
 
