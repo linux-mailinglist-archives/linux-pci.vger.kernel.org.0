@@ -2,112 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83FA4421593
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 19:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C0BF4215D8
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 20:00:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234678AbhJDRyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 13:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        id S236133AbhJDSCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 14:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235123AbhJDRyO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 13:54:14 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145E5C061745
-        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 10:52:25 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id bd28so67831409edb.9
-        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 10:52:24 -0700 (PDT)
+        with ESMTP id S236103AbhJDSC3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 14:02:29 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03DD1C061745;
+        Mon,  4 Oct 2021 11:00:40 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id w14so464495pll.2;
+        Mon, 04 Oct 2021 11:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SVy+42avAMDVs9YXx1N0MW72e1XqpRIo0we4Jey6TgQ=;
-        b=USZyRilZz6erOG49DFYjzZ7yWgjOF6KTPmH52T4Gemm+QUM3Fsk9hCPuO1ae+CsKMy
-         5cxbMWN0+QWJ7TNvMS+xMUWtoLMWb5t6Z7EiTWRxNQI0EeXpbmWGUY7HPhtaBMFPRnN1
-         tyqo3akeIm/LNXB/Hnk8xMZ2sGRkMTJTjJrVs=
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/kZ/G80MyWYhdKVpqBk0C55lIN/V+L/Ury6/lN0H48=;
+        b=Iw7vxd3nbj0C1OKCrJ5xQgex0PG/Kc/CV2C7tPUsGeWawiJ+Az940Wzu2Uy5AmVN11
+         PYgVr1uisn3pGX1qacas8hTyKYIt8VOmZwZVG1gre/RBFwd13kU/cyjkN896O6+kWsOz
+         aqNCYiEUv+Mql1+gA+oauHx8b4gKZ+g+6JhBQ6JHyELV/qC0+trpinxN3/Si0Y/WpNZt
+         2otRHBRlasP0qjST8dSK+oXvQx3KF5hIWf8ATarS/AlOYRJtC3LVY4fzb8BFgrY3fyCZ
+         NIsIQLmwRkYPqoZj9GvQx7bJRDS0HPeBuGYOOlPlfaxJXhpXhK3AX18GgU/JfHwFGscp
+         c11Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SVy+42avAMDVs9YXx1N0MW72e1XqpRIo0we4Jey6TgQ=;
-        b=pNRlLnnyoqJqYxwgMV56aM5XH3eaQjwGoKYSi0dfIzrr470ik9op/WjqyR/NZbT45D
-         73LYqPCy/D9UuT85oClXh2Q1JHVPpvzypw12GicKCDMXQlOUlXnmnYn8Z1pcmyuoXuB8
-         qoLz3cmtnnbepUWJ2FkJB8mh2oqNrjOI0GUm0O7Jw9OJOHp5y+t3zwBGWNYpYbTeZIio
-         rpIrJ+VEMJ0A29zQbkM1dVngEdNYOeYKU20WKGmfhN2trPZy05Q9Qf0gab7RwFeZQEFK
-         /Thzmd8bVy/jZlQFA0l1DaBuYnUzvTXO2qY+lOG0WYLpAZ6knn5mU7KCQtra3kNWsugJ
-         KS+A==
-X-Gm-Message-State: AOAM533u3kNXu2rBAjuhjVmoMk5/5nPGc+LkSyfCwmRjgGn6usVqUw5x
-        0qEqTooE4pfIRaWDYspvotPdlAlWRuCULq84KHdnoA==
-X-Google-Smtp-Source: ABdhPJw473yRin1rcK/LShFHmhtAKymPp2Nzjft1z63Ov1VE3CPb6pN7T9mMOt0Y7yINQAzbdd9Z9LQmL/AJ4fFVqJE=
-X-Received: by 2002:a17:906:60c7:: with SMTP id f7mr18468620ejk.57.1633369942391;
- Mon, 04 Oct 2021 10:52:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/kZ/G80MyWYhdKVpqBk0C55lIN/V+L/Ury6/lN0H48=;
+        b=RjMFsfANAT220KfibGYWZuCCW2mMx43YSJgSwuAnSJb5WBrC1ZDqbUWD2nTZxuRhxA
+         aK1FXFXLOJyMyPcPZY3hU1niOcdmg8wRt6LZOeb73ZtJ6bF3pxf9Jhh+8b66S2uMecwv
+         SK7FZx6voXOu83+932ivIMzmMg4M+K86H/CeQ8HkvWSvQAZblKKX3fzovl/s1xuPQM+e
+         WBj7I2CQUHAeAYmQJkS3c01t25Eve9Yt2tvFrBY1KkTIgVQqK8UlQ8a+5OsTuOaddhte
+         C2crFhe+ELdrg48o+49udEYLu1IVgbyhweEWzNKaGZ+RY5b1lPbtb1qwMarCkZvMRO5w
+         A1xg==
+X-Gm-Message-State: AOAM533SW3SDG9zDJOT2HIHnyigg+Dh30ypoBJKlgPdei7gvLxJKDE1a
+        bnJGYbvmTTc85EkjB5Zwos4=
+X-Google-Smtp-Source: ABdhPJyjTQaAGxBR0yMHdOdR1pG5uX4ZqXJGgnNSDIvUGtfqSnjkdKem5NcrSNhG6aWIO723rBkbDw==
+X-Received: by 2002:a17:90a:4306:: with SMTP id q6mr32152882pjg.17.1633370439363;
+        Mon, 04 Oct 2021 11:00:39 -0700 (PDT)
+Received: from localhost.localdomain ([2406:7400:63:e8f0:c2a7:3579:5fe8:31d9])
+        by smtp.gmail.com with ESMTPSA id z2sm3641004pfe.210.2021.10.04.11.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Oct 2021 11:00:38 -0700 (PDT)
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     bhelgaas@google.com, tsbogend@alpha.franken.de, ruscur@russell.cc,
+        oohall@gmail.com
+Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 0/6] MIPS: OCTEON: Remove redundant AER code 
+Date:   Mon,  4 Oct 2021 23:29:26 +0530
+Message-Id: <cover.1633369560.git.naveennaidu479@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210914114813.15404-1-verdre@v0yd.nl> <20210914114813.15404-3-verdre@v0yd.nl>
- <5f0b52be-8b9c-b015-6c5a-f2f470e37058@v0yd.nl>
-In-Reply-To: <5f0b52be-8b9c-b015-6c5a-f2f470e37058@v0yd.nl>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 4 Oct 2021 10:52:11 -0700
-Message-ID: <CAOFLbXbK5LmZbLcEs5e-0twoSkxkyKy8S6ZJVsz9Ap_a_iGZPA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mwifiex: Try waking the firmware until we get an interrupt
-To:     =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Linux Wireless <linux-wireless@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "# 9798ac6d32c1 mfd : cros_ec : Add cros_ec_cmd_xfer_status helper" 
-        <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+e8635b484f64 ("MIPS: Add Cavium OCTEON PCI support.") added MIPS
+specific code to enable PCIe and AER error reporting (*irrespective
+of CONFIG_PCIEAER value*) because PCI core didn't do that at the time.
 
-On Sun, Oct 3, 2021 at 2:18 AM Jonas Dre=C3=9Fler <verdre@v0yd.nl> wrote:
-> So I think I have another solution that might be a lot more elegant, how
-> about this:
->
-> try_again:
->         n_tries++;
->
->         mwifiex_write_reg(adapter, reg->fw_status, FIRMWARE_READY_PCIE);
->
->         if (wait_event_interruptible_timeout(adapter->card_wakeup_wait_q,
->                                              READ_ONCE(adapter->int_statu=
-s) !=3D 0,
->                                              WAKEUP_TRY_AGAIN_TIMEOUT) =
-=3D=3D 0 &&
->             n_tries < MAX_N_WAKEUP_TRIES) {
->                 goto try_again;
->         }
+But currently, the PCI core clears and enables the AER status registers.
+So it's redundant for octeon code to do so. This patch series removes
+the redundant code from the pci-octeon.c
 
-Isn't wait_event_interruptible_timeout()'s timeout in jiffies, which
-is not necessarily that predictable, and also a lot more
-coarse-grained than we want? (As in, if HZ=3D100, we're looking at
-precision on the order of 10ms, whereas the expected wakeup latency is
-~6ms.) That would be OK for well-behaved PCI cases, where we never
-miss a write, but it could ~double your latency for your bad systems
-that will need more than one run of the loop.
+Currently, the correctable and uncorrectable AER mask registers are not
+set to their default value when AER service driver is loaded. This
+defect is also fixed in the "[PATCH 1/6]" in the series.
 
-Also, feels like a do/while could be cleaner, but that's a lesser detail.
+Please note that "Patch 4/6" is dependent on "Patch 1/6".
 
-> and then call wake_up_interruptible() in the mwifiex_interrupt_status()
-> interrupt handler.
->
-> This solution should make sure we always keep wakeup latency to a minimum
-> and can still retry the register write if things didn't work.
+Thanks,
+Naveen Naidu
 
-Brian
+Naveen Naidu (6):
+ [PATCH 1/6] PCI/AER: Enable COR/UNCOR error reporting in set_device_error_reporting()
+ [PATCH 2/6] MIPS: OCTEON: Remove redundant clearing of AER status registers
+ [PATCH 3/6] MIPS: OCTEON: Remove redundant enable of PCIe normal error reporting
+ [PATCH 4/6] MIPS: OCTEON: Remove redundant enable of COR/UNCOR error
+ [PATCH 5/6] MIPS: OCTEON: Remove redundant ECRC Generation Enable
+ [PATCH 6/6] MIPS: OCTEON: Remove redundant enable of RP error reporting
+
+ arch/mips/pci/pci-octeon.c | 50 --------------------------------------
+ drivers/pci/pcie/aer.c     | 13 +++++++++-
+ 2 files changed, 12 insertions(+), 51 deletions(-)
+
+-- 
+2.25.1
+
