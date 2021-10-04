@@ -2,79 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29F8A421702
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 21:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E13094217C7
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 21:42:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236534AbhJDTJX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 15:09:23 -0400
-Received: from mail-ed1-f41.google.com ([209.85.208.41]:47099 "EHLO
-        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233226AbhJDTJW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 15:09:22 -0400
-Received: by mail-ed1-f41.google.com with SMTP id z20so17399374edc.13;
-        Mon, 04 Oct 2021 12:07:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eS3yIdA30SJ4zKaXnysEXsznetD3b0GwKKFLH0KJiIA=;
-        b=qW720hianUSEljN35lHZPyx5UZ6QQBSl/h5A09CudW45pliqK/1dsVro0HOM75rgpU
-         bFTgeg5Rn6UWfBA7RzSHjgiNKm3OsnNHDUggURTnlo8W53inWFeeHfQz6n2f/Mmf/arQ
-         daVcLdRQW+lr9MHuPlq5GuKTHudjnRQT4iG47rnKtIxzae7uitHdknCReIU6yPFTFOZe
-         8KZObdd08jQquS0kf384Nw5LfirIIkwI69U9BtKSr/vABlvg7yvRZDSiqYXHwDu+LB+A
-         dNbbYXyubS0aA1gO2QRDCCCTEbX/kKF+ML6IEznx+85/WZ2GzPv80qtOG5RCmFsMQf1g
-         YcZQ==
-X-Gm-Message-State: AOAM533XViy7fVBsQqIbJUULGAhD2/FMXAvPlGJ9FlXNz1LXWi06Kyql
-        rzcZqdsrJ8YQUWotF2jNzVM=
-X-Google-Smtp-Source: ABdhPJz59DF3DwT8lz6agMgOMI59aahhiOse27ZIVxQvuxAdX4wlgCyGM8OTNnrKJtvPf6N91t9AqQ==
-X-Received: by 2002:a05:6402:4309:: with SMTP id m9mr5264219edc.272.1633374452230;
-        Mon, 04 Oct 2021 12:07:32 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id i6sm6740885ejd.57.2021.10.04.12.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Oct 2021 12:07:31 -0700 (PDT)
-Date:   Mon, 4 Oct 2021 21:07:30 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, gregkh@linuxfoundation.org,
-        hch@infradead.org, stefanha@redhat.com, oren@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI/sysfs: use NUMA_NO_NODE macro
-Message-ID: <YVtQ8ummGgG9AOZE@rocinante>
-References: <20211003091344.718-1-mgurtovoy@nvidia.com>
- <20211003091344.718-2-mgurtovoy@nvidia.com>
- <YVpctu416oj5gZ2i@rocinante>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YVpctu416oj5gZ2i@rocinante>
+        id S239045AbhJDToD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 15:44:03 -0400
+Received: from so254-9.mailgun.net ([198.61.254.9]:59705 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239067AbhJDTnv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 15:43:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1633376522; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=hn7lmRIVDQJrIAxbdnCv3VFdDFyuLebKXSyB7FoPSIU=; b=wv+LNsbSAexenL7GX9pQ3NpjmZ27S2NFXa6W/W8bzWtntx4RmixCFE2i0oLvIdeRnG9/Z9M2
+ Fhv3j4uSMTtqP/Ecl6SoXmaHU9kX8x5vCfC5zc/AJ+SJCTJgYT0F3BtaanKP8So7Km4wHYpD
+ 2QxfHVvIb5ZwMdyKvriwH5H8Xag=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 615b58f6605ecf100b48d8e4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 04 Oct 2021 19:41:42
+ GMT
+Sender: pmaliset=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 52434C43460; Mon,  4 Oct 2021 19:41:42 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+        autolearn=no autolearn_force=no version=3.4.0
+Received: from pmaliset-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmaliset)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60AF2C43460;
+        Mon,  4 Oct 2021 19:41:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 60AF2C43460
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From:   Prasad Malisetty <pmaliset@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
+        svarbanov@mm-sol.com
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dianders@chromium.org, mka@chromium.org, vbadigan@codeaurora.org,
+        sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
+        linux-pci@vger.kernel.org,
+        Prasad Malisetty <pmaliset@codeaurora.org>
+Subject: [PATCH v10 0/5] Add DT bindings and DT nodes for PCIe and PHY in SC7280
+Date:   Tue,  5 Oct 2021 01:11:23 +0530
+Message-Id: <1633376488-545-1-git-send-email-pmaliset@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Max,
+Changes added in v10:
 
-[...]
-> >  #ifdef CONFIG_NUMA
-> > -	mask = (dev_to_node(dev) == -1) ? cpu_online_mask :
-> > -					  cpumask_of_node(dev_to_node(dev));
-> > +	mask = (dev_to_node(dev) == NUMA_NO_NODE) ? cpu_online_mask :
-> > +				cpumask_of_node(dev_to_node(dev));
-> 
-> Oh this somewhat awkward indentation we have with this ternary now,
-> and so I wonder if either:
-> 
-> 	mask = (dev_to_node(dev) == NUMA_NO_NODE) ?
-> 		cpu_online_mask : cpumask_of_node(dev_to_node(dev));
-> 
-> Or, perhaps (yes, a few more lines):
-> 
-> 	if (dev_to_node(dev) == NUMA_NO_NODE)
-> 		mask = cpu_online_mask;
-> 	else
-> 		mask = cpumask_of_node(node);
+	* v9 [Patch 4/4/] has been split into two separate patches
+	* Addressed all comments in IDP [Patch 3/4] file.
+ 	
+Changes added in v9:
+    * Added fixed regulator entry for nvme.suggested by Stephen Boyd
+    * Added NULL pointer check before accessing ops in pcie probe
+      Suggested by Stephen Boyd
 
-Doh!  I should be cpumask_of_node(dev_to_node(dev)) in the above, of
-course.  Apologies!  Albeit, v3 you sent looks great!  Thank you!
+Changes added in v8:
 
-	Krzysztof
+    * Added seperate pinctrl state for NVMe LDO enable pin [v8 P3/4]
+    * Removed pointer initialization for pcie_cfg [v8 P4/4]
+    * Replaced bool pcie_pipe_clk_src with unsigned int:1 [v8 P4/4]
+    * Changed gcc_pcie_1_pipe_clk_src to pipe_clk_src
+
+Changes added in v7:
+
+        * Removed two fallbacks qcom,pcie-sm8250 and snps,dw-pcie.
+        * Replaced compatible method in get_resources_2_7_0 with
+            flag approach suggested by Bjorn Helgaas .
+        * Setting gcc_pcie_1_clk_src as XO in init_2_7_0 for
+          gdsc enable.
+        * Added specific NVMe GPIO entries for SKU1 and SKU2 support
+          in idp.dts and idp2.dts respectively.
+        * Moved pcie_1 and pcie_1_phy board specific entries into common
+          board file sc7280-idp.dtsi file.
+
+Changes in v6:
+
+    * Removed platform check while setting gcc_pcie_1_pipe_clk_src
+          as clk_set_parent will return 0 with nop if platform doesn't
+          need to switch pipe clk source.
+        * Moved wake-n gpio to board specific file sc7280-idp.dtsi
+        * Sorted gpio.h header entry in sc7280.dtsi file
+
+Changes in v5:
+
+        * Re ordered PCIe, PHY nodes in Soc and board specific dtsi files.
+        * Removed ref_clk entry in current patch [PATCH v4 P4/4].
+        * I will add ref clk entry in suspend/ resume commits.
+        * Added boolean flag in Soc specific dtsi file to differentiate
+          SM8250 and SC7280 platforms. based on boolean flag, platforms will handle
+          the pipe clk handling.
+
+Changes in v4 as suggested by Bjorn:
+
+        * Changed pipe clk mux name as gcc_pcie_1_pipe_clk_src.
+        * Changed pipe_ext_src as phy_pipe_clk.
+        * Updated commit message for [PATCH v4 4/4].
+
+Changes in v3:
+        * Changed pipe clock names in dt bindings as pipe_mux and phy_pipe.
+        * Moved reset and NVMe GPIO pin configs into board specific file.
+        * Updated pipe clk mux commit message.
+
+Changes in v2:
+        * Moved pcie pin control settings into IDP file.
+        * Replaced pipe_clk_src with pipe_clk_mux in pcie driver
+        * Included pipe clk mux setting change set in this series
+
+Prasad Malisetty (5):
+  dt-bindings: pci: qcom: Document PCIe bindings for SC7280
+  arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
+  arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
+  PCI: qcom: Add a flag in match data along with ops
+  PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  17 +++
+ arch/arm64/boot/dts/qcom/sc7280-idp.dts            |   8 ++
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |  51 +++++++++
+ arch/arm64/boot/dts/qcom/sc7280-idp2.dts           |   8 ++
+ arch/arm64/boot/dts/qcom/sc7280.dtsi               | 117 +++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             |  94 +++++++++++++++--
+ 6 files changed, 284 insertions(+), 11 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
