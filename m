@@ -2,181 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ABE242061A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 08:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED033420652
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 09:01:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbhJDHAl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 03:00:41 -0400
-Received: from mail-bn8nam12on2068.outbound.protection.outlook.com ([40.107.237.68]:40425
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232913AbhJDHAk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 Oct 2021 03:00:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YnEOFCpFudbs7C9xx/GUN/tpKSrr+yiPuRZMaVgEqwafJJdUVB91pYZKFtSEyEAcpu2rx15zEeH4F295xzWEBe0SaKBSwpgUqZEwuqi2nOt0FIhxmtkX7E0d5RQlDa+vOhle+YYz2Ya1Wp9VlWL2KpuAjxtNJ0fizoS2B6567JimL7hGWQAh2KkON4vberWqo1P0veRDgZvmq5BMteUSY5SFBRI4Swkr6zfvoiITnyx6Z4DvhlejQ5w7xOKF6LA4QP6XjOoyUYZMUXRyuwairKjm0kybTEQLz8c+hoPVGQE6fLQa0JVnZSQ7Pb12bI5X5CCPcIomtPrpKriBgwo72Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1fJFWF9kSGiTWjXQzL5DFAVOYq6DQAhxgB51DiXzk+c=;
- b=FcpoqJuNGI6GSpLu3k2xjeS6/elGL5x3ITLUmFIWAymjoiPvfIYnwxnhmNC0hH/mQIV8JRPeqTVQbbLmKwYAxpE0QJ8G7YMZvrfUN4PHp2xbKRFwYnuJLbupy0r+MAS/i9SxhMKxXs6iiEtd7Rlh4b52IKp/Ydj5b8Yxw+YWPaIz2947NPENM+FTp1+g2Jjs+epETyRDQQyDPuEia4KZ888VG76DFZuosXkarTTo2Y1TsrhU1Q9/MpAtGjfWvygIoLtNalLi7kCS4arGc+bAeKLkhhM6eaFyfeqDURDOSAIxSPNEwQKXL07rNyu49KZ9EuzgkH/Mv+861tvoDU3sXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1fJFWF9kSGiTWjXQzL5DFAVOYq6DQAhxgB51DiXzk+c=;
- b=bUsw/LDzOVgd/5pHa94zRkz41GMELPpjJR9gDsWRa2cGSH6gUtc1wlPPdRgk6VpCqjJH+RQKXiwBYYD3NE/+wT7gBZACLUIkJ1BmNWWHtw2ydh550NJje6Mo9e5tubz6+e9h28N6czaXGxCWI5OryjvcDEYuMlWFyRlEsnSOZQk=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR1201MB0192.namprd12.prod.outlook.com
- (2603:10b6:301:5a::14) by MWHPR1201MB0238.namprd12.prod.outlook.com
- (2603:10b6:301:57::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Mon, 4 Oct
- 2021 06:58:47 +0000
-Received: from MWHPR1201MB0192.namprd12.prod.outlook.com
- ([fe80::55c7:6fc9:b2b1:1e6a]) by MWHPR1201MB0192.namprd12.prod.outlook.com
- ([fe80::55c7:6fc9:b2b1:1e6a%10]) with mapi id 15.20.4566.022; Mon, 4 Oct 2021
- 06:58:47 +0000
-Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     Alistair Popple <apopple@nvidia.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-References: <20210916234100.122368-20-logang@deltatee.com>
- <20210928195518.GV3544071@ziepe.ca>
- <8d386273-c721-c919-9749-fc0a7dc1ed8b@deltatee.com>
- <20210929230543.GB3544071@ziepe.ca>
- <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
- <20210929233540.GF3544071@ziepe.ca>
- <f9a83402-3d66-7437-ca47-77bac4108424@deltatee.com>
- <20210930003652.GH3544071@ziepe.ca> <20211001134856.GN3544071@ziepe.ca>
- <4fdd337b-fa35-a909-5eee-823bfd1e9dc4@deltatee.com>
- <20211001174511.GQ3544071@ziepe.ca>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <809be72b-efb2-752c-31a6-702c8a307ce7@amd.com>
-Date:   Mon, 4 Oct 2021 08:58:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-In-Reply-To: <20211001174511.GQ3544071@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM6P191CA0077.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:209:8a::18) To MWHPR1201MB0192.namprd12.prod.outlook.com
- (2603:10b6:301:5a::14)
+        id S232755AbhJDHDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 03:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232305AbhJDHDg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 03:03:36 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904D9C061783
+        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 00:01:48 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id m21so15590435pgu.13
+        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 00:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zosd0K9+Pr0UnKUkcxuf4vbfDDIKWorpLv6c8v1wXp8=;
+        b=EgouGwLh3fT8/lKAaNHvybA9iCHEzUwWbJOJ/KZOWVa0/ByZwTAZsVJtB3PAWdL370
+         3afvfpf2fh3gz+TW4TShMAhPhDs/s6pwPFRaAf906vCBlrtmVcDF2AGd+u50ZPo9TQQj
+         38x9HiM3dh/6t19B9tELTVF8K+bEpJZk8bGhHqDMtan5oJaltnyUs/z6pt36HcEcI+LN
+         a0b7y4l65d3/jLl53An9KKMc9/U2w7XDRYLv0NoQXSL0DFhxkQBVJJ05AUflDLCQItPg
+         GTtwIUhVCyxvr86BxjqKTod7QfnRXtMe86A94NTI+R+kGS34QhtpHY90FoxcSQ8JtlbO
+         HnQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zosd0K9+Pr0UnKUkcxuf4vbfDDIKWorpLv6c8v1wXp8=;
+        b=n+HW5+NZRZsFMM4EAIBaYLipwRjlW57wE+O08KMYbmHPVdPvRZOYAdVbui7XKL3b7h
+         PFs/3vSSy4woQwjoGCZqzwVoIxQ2ABVMvqs059Cb8xjt1X2feUzpv05oMpw+bxUxkR2w
+         9tgcijqyeYudG/9pcSJvos4lXUYIjyeJeXJQ7PLAtKcN3hQQj78+3SKI4vFFNA/OnvzV
+         obLWswtqDl44zZPUVfBwgNqgPPMErHVHs/pVGvwPI1zahkEz7I93ve7mKItDqilEHwcr
+         dO6xQMLPSbj1/dOJ2ZAKuBdpUgAthq7aES5XEMeQBLShEil68/Y4NyxszpTno56O2+k6
+         tzqA==
+X-Gm-Message-State: AOAM533yAzLjLXw0qdJcWTnK1C3vtYpBuzcfs/blmIvlU2dvhjVbJ5Ip
+        dPQyqCB8x4FxSZXp1vv6Xzi1CA==
+X-Google-Smtp-Source: ABdhPJy5BzjgSp5dOVO2Q/8r2By2JGyoZJca5CF8hCTYjl4Tc3ffPkLFEpGg6Jgs0xx9pahYhJu9zg==
+X-Received: by 2002:a63:4743:: with SMTP id w3mr3446051pgk.245.1633330908122;
+        Mon, 04 Oct 2021 00:01:48 -0700 (PDT)
+Received: from localhost ([122.171.247.18])
+        by smtp.gmail.com with ESMTPSA id i5sm1417791pfk.170.2021.10.04.00.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Oct 2021 00:01:47 -0700 (PDT)
+Date:   Mon, 4 Oct 2021 12:31:45 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Mikko Perttunen <mperttunen@nvidia.com>
+Cc:     rafael@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        krzysztof.kozlowski@canonical.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, p.zabel@pengutronix.de,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org, amitk@kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/5] cpufreq: tegra186/tegra194: Handle errors in BPMP
+ response
+Message-ID: <20211004070145.pp3rafkinffk2pyh@vireshk-i7>
+References: <20210915085517.1669675-1-mperttunen@nvidia.com>
+ <20210915085517.1669675-4-mperttunen@nvidia.com>
 MIME-Version: 1.0
-Received: from [192.168.178.21] (91.14.161.181) by AM6P191CA0077.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8a::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend Transport; Mon, 4 Oct 2021 06:58:41 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 272bc214-ed0f-472e-ee4c-08d9870469a0
-X-MS-TrafficTypeDiagnostic: MWHPR1201MB0238:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR1201MB0238B567FC44CDE3964F077583AE9@MWHPR1201MB0238.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hTFiKMPmtTIrJAkGxxWUEuW07FLfonpS00wBVo8WjmlZv98VrtfjAUrUDA7oL670NcRx+jIvrAP/wL0W0BgHSFmU8thMLOPFvM1mDaF24y3Kwi9QrbFcuRdkQ9TF7/cq8C8vhAvtsHDSjT/ffjlMU2C0KU91Et8xcu4NE5gZAwh/lF7yGXnD0hqujEaCI8IIn0wdTs4kGuM5endyyixR4glj8KOgZdLO2maQqfeWTatH05w1QE66MavzpHucbFCqEZp4i9GOsu4cR6CUNznTHOjby9N1874z1Px5oLGBu2OhkHDiSYSMctT7yXgwlhn9m4DPXQB4fdbuLO6eMLhmB4VtOd+mwXZGedngqcekkaEqc3GS/8C7EqmeW2Q9Omz46xXocqDvpvF96rSKW/OoeQmrEpbYqS5xwjC+6bLxqeXCiUbZQjPl+z1ZrQgoehCxpU4zKHr5JhSvqvOAtEWgBI01ZV4xsDc2A1Cr7atXYweryfzXaEQpqNl+pTimjG1/MONR6W9d/Xp+eo/px+ers7Xok5UfNm2NeugcsF58Qksxxi4ID+LSm/H+vzcwuooWEaoy63Birpo2tBx+Po9TnJ0c3Kci0o12b1+S1lV0f0RYsjjBEcPIbi14Jxh8zLpWiRtkNyPy8tY4p7/bS7yWZU+zHcR2MAvkdiiCyGgLp/QUAbYG//7G+bf7gGN19j5e02STt4OGtdWjAKM/kGepS4hgt+Fm+ko46BiqmINP8tAplRLaXUeFjBrlI1OXAL/2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1201MB0192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(8676002)(508600001)(2616005)(956004)(26005)(6666004)(31686004)(66476007)(66556008)(2906002)(83380400001)(66946007)(7416002)(4326008)(186003)(316002)(86362001)(31696002)(6486002)(54906003)(110136005)(16576012)(38100700002)(5660300002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L1paWjhRZ0JiUGVNbFVQdzdoWStEUkxacVZBN0VvWFVOMmlrSldsRU5RQXp5?=
- =?utf-8?B?RStIdndubmVvVmdDTFM5SDlEWkMydDd5UEg3cnZJbnRJaFNUd05wcmFXTHNV?=
- =?utf-8?B?bm1va0d1Z0p3NHZzakREb0Q0OUpRczcrT2o1TzhTeGhvTUE4SnRtQUlubVYv?=
- =?utf-8?B?cnpqNWdGdGdLNjg0UllHQThBcmkrWENTOExBMVQxb3c3OFk3cnowTk9hckM3?=
- =?utf-8?B?Y1hLSDZTN2g2UUUwK2NaQWo2UDgyV2lzdGxteDUyRTdKbDNIWlF1bXJGeE1j?=
- =?utf-8?B?UTFXdVVKc0J4a01sOERNSnRFWWdQcnFkTFVKaGRjVzF4dEZPdFVZVlh3UHAx?=
- =?utf-8?B?ZUUwNk1DMnV2VE5DVk1DN3ZEUTdaZWh4WlZBaEdsRXkzM1hDcTZFbS82ZTJR?=
- =?utf-8?B?cVhuMlVRZENpdSszcUJGMmxOYU1qNXo5RElqTHpxVC8yRXM0b2o5a3JCRkdr?=
- =?utf-8?B?VVNlNklkTVUvSXpQSEM4RUZnUmJYTkhJS2UxUnJHaGkrOUJLbmY4UVlEK3Zi?=
- =?utf-8?B?WlJKaW9CaE1XMUtLYzA3NzFLVEp6bmwyQlhtd1ZzMHZpWkhFdTh2ZTBJY1Q3?=
- =?utf-8?B?UUR2dW1tZ2wrQ21nZnRrTFRubXcyVExDYytDbWhSNEN1ZE0zWm80ekdqUXBi?=
- =?utf-8?B?R3JFbFowNnZJZDBNdHBmVWx1RW5Iemp4eDUxZjZPUjJsUXVQblZxMlpTNmU1?=
- =?utf-8?B?VzBDZUtZOUpHd1hWbldGYzJoQmFDZ0ZkYU9od3M0SW1FNmxsdHdhMnYrSGdE?=
- =?utf-8?B?V1hudTIwcHd4MXZGcHE3UWxrcFU2VFl2blpFcTE1VlRBZUgvZU9Ud3ZmdVFM?=
- =?utf-8?B?aDU4R1VYUldqL3NBSHhZS1UvV3VORTZ0N2o2RWFkQlhzR1lXeUlMbzZSaFRw?=
- =?utf-8?B?aGJ0Qjd0MVFLS0RxdGNzYWpYUlRmblhQcDVvWGdXaTMzOFhKbW8zcWpEMk12?=
- =?utf-8?B?MFlrL296ekZHc2hXTmhMNmdkWWdqYWJQME1DdmJJM1hLc3FLWkJkSFZWM0E5?=
- =?utf-8?B?dlIzQkI1WXZ4WGZVVHBwei94TkUzYmN5d2srbkdwRDBYdGlCb21tVkhWK2tV?=
- =?utf-8?B?WnlYYUFKb2k1MFQyRDlvMjZMbk1Gd3Ruck9HTXlHZUd3d0lIOHE3UXpxUjgy?=
- =?utf-8?B?RzJubUJJMjlXb3U5ZWNSV1hSaFU2NFBOK0xJOVM4T1RDdnRqSkJHNUIyLzdi?=
- =?utf-8?B?bU1UTTBtSUxQTVcwalc1KzhBZ0t1SzFub1pURWliMTZMeks5TVo5cE10UFZs?=
- =?utf-8?B?V3FRZTBraGY4NmNMY3lndFVLZ05OSitQU2oxNm1lem03WUZmbUN4S3RPMzlv?=
- =?utf-8?B?aWpUSmdyY1BJMTZHaGZsWkxtQlJITTNBNzZmQUR1aDl1WVd5NlZESm04R29B?=
- =?utf-8?B?aGtRMS9qSFR3aER6eWN0U1NHWDQvVTJsSlF0TmF1UmZHUHJ1N05ZRkM0MkV5?=
- =?utf-8?B?SUdyeFVoNFRuc1FlUmRnaGxYdlo2ZVBvVjNGaXJXdTlvMGRmenZtZVFXejlx?=
- =?utf-8?B?b1ZLKzJ3NkJtOFZKeSt3aUQwZ3pSbUo4NWRST3NhZWNUS0psOVdFWjAyUTRr?=
- =?utf-8?B?cmcvYXN2RjgyTFZQanBmNjhLTW8rZk9BYm9LczNqYVpQSHE1U2RvY3lGekY4?=
- =?utf-8?B?VFFtYjFnZTBPTit3NnBuM21pMldtUy9tcWRUclpxMkdFR1k0TGdEOWl0STJj?=
- =?utf-8?B?Q3RYK0NSU0IyYWh4S1hMNkNZVURYZ3ZkeGp2aFdjenlyU2QwZ0hOL0RiU0Rh?=
- =?utf-8?Q?5j9oL76vGx1Kfjrox1PNBc/kI2vi808DZHjQYfg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 272bc214-ed0f-472e-ee4c-08d9870469a0
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1201MB0192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2021 06:58:47.5177
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uDzf444iJKJ6Nnx878MptzUPzeka8PNrpTMQmR12bj3HEw6XtwQfL5cLjP1Twrui
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0238
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210915085517.1669675-4-mperttunen@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I'm not following this discussion to closely, but try to look into it 
-from time to time.
+On 15-09-21, 11:55, Mikko Perttunen wrote:
+> The return value from tegra_bpmp_transfer indicates the success or
+> failure of the IPC transaction with BPMP. If the transaction
+> succeeded, we also need to check the actual command's result code.
+> Add code to do this.
+> 
+> While at it, explicitly handle missing CPU clusters, which can
+> occur on floorswept chips. This worked before as well, but
+> possibly only by accident.
+> 
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> ---
+>  drivers/cpufreq/tegra186-cpufreq.c | 4 ++++
+>  drivers/cpufreq/tegra194-cpufreq.c | 8 +++++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
+> index 5d1943e787b0..6c88827f4e62 100644
+> --- a/drivers/cpufreq/tegra186-cpufreq.c
+> +++ b/drivers/cpufreq/tegra186-cpufreq.c
+> @@ -159,6 +159,10 @@ static struct cpufreq_frequency_table *init_vhint_table(
+>  		table = ERR_PTR(err);
+>  		goto free;
+>  	}
+> +	if (msg.rx.ret) {
+> +		table = ERR_PTR(-EINVAL);
+> +		goto free;
+> +	}
+>  
+>  	for (i = data->vfloor; i <= data->vceil; i++) {
+>  		u16 ndiv = data->ndiv[i];
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> index a9620e4489ae..ac381db25dbe 100644
+> --- a/drivers/cpufreq/tegra194-cpufreq.c
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -242,7 +242,7 @@ static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+>  
+>  	smp_call_function_single(policy->cpu, get_cpu_cluster, &cl, true);
+>  
+> -	if (cl >= data->num_clusters)
+> +	if (cl >= data->num_clusters || !data->tables[cl])
+>  		return -EINVAL;
+>  
+>  	/* set same policy for all cpus in a cluster */
+> @@ -310,6 +310,12 @@ init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+>  	err = tegra_bpmp_transfer(bpmp, &msg);
+>  	if (err)
+>  		return ERR_PTR(err);
+> +	if (msg.rx.ret == -BPMP_EINVAL) {
+> +		/* Cluster not available */
+> +		return NULL;
+> +	}
+> +	if (msg.rx.ret)
+> +		return ERR_PTR(-EINVAL);
+>  
+>  	/*
+>  	 * Make sure frequency table step is a multiple of mdiv to match
 
-Am 01.10.21 um 19:45 schrieb Jason Gunthorpe:
-> On Fri, Oct 01, 2021 at 11:01:49AM -0600, Logan Gunthorpe wrote:
->
->> In device-dax, the refcount is only used to prevent the device, and
->> therefore the pages, from going away on device unbind. Pages cannot be
->> recycled, as you say, as they are mapped linearly within the device. The
->> address space invalidation is done only when the device is unbound.
-> By address space invalidation I mean invalidation of the VMA that is
-> pointing to those pages.
->
-> device-dax may not have a issue with use-after-VMA-invalidation by
-> it's very nature since every PFN always points to the same
-> thing. fsdax and this p2p stuff are different though.
->
->> Before the invalidation, an active flag is cleared to ensure no new
->> mappings can be created while the unmap is proceeding.
->> unmap_mapping_range() should sequence itself with the TLB flush and
-> AFIAK unmap_mapping_range() kicks off the TLB flush and then
-> returns. It doesn't always wait for the flush to fully finish. Ie some
-> cases use RCU to lock the page table against GUP fast and so the
-> put_page() doesn't happen until the call_rcu completes - after a grace
-> period. The unmap_mapping_range() does not wait for grace periods.
+Applied. Thanks.
 
-Wow, wait a second. That is quite a boomer. At least in all GEM/TTM 
-based graphics drivers that could potentially cause a lot of trouble.
-
-I've just double checked and we certainly have the assumption that when 
-unmap_mapping_range() returns the pte is gone and the TLB flush 
-completed in quite a number of places.
-
-Do you have more information when and why that can happen?
-
-Thanks,
-Christian.
+-- 
+viresh
