@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 045214215EE
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 20:02:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B0924215F4
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 20:02:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236296AbhJDSD4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 14:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44278 "EHLO
+        id S236341AbhJDSEU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 14:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235835AbhJDSDz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 14:03:55 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE879C061749;
-        Mon,  4 Oct 2021 11:02:05 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id k26so15212478pfi.5;
-        Mon, 04 Oct 2021 11:02:05 -0700 (PDT)
+        with ESMTP id S236449AbhJDSEO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 14:04:14 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0DBAC061753;
+        Mon,  4 Oct 2021 11:02:21 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id m26so1963340pff.3;
+        Mon, 04 Oct 2021 11:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gPh5qiPFI3S0XIvBtJdJh517PYOVsE4NLDG4oIGpMoo=;
-        b=mzYG7nKQV4n2HxRXM9fB7rETP3sJkX4/Rn82nC53JPOMhlckHng8L/wMMqqYreUoVU
-         1q0yC+5vomo21R4lPjPJCW6sO3brNvQ5NmyQ7oSHweT1yCJ5zDn2fwH+v4osk9SIqI/b
-         F64BEgmapf4JRVbxncKTSykF2ePnFj806kvrXZ5IZpw9pmpuxPq0jR65C+tcAi3wXKGx
-         ra3gpTCW0HCK5Cyuyucs/yCDjdojuIeSMYc6X6ZGG9rZSEHpoVVEuM/CuD22yHO2i3tH
-         +wX7xYaYDFO54xAJwJ2DCy+4YQro7wCRvKBqJiERX8FnrZt+qkx/nVbgMV+JMuzUM31u
-         WFsA==
+        bh=KXqbMrl5ji7P3WLEqvYvyx/g2tHqF5Pvsy98EpcbEmA=;
+        b=dK+/OiASR7/FhhaAZ1YS1MI0vNDY5l52Cxz3No+1sg7HRJnIdcgAq2YwESOyPBn6U2
+         ylQrlDPi0zET4PEkuZZaCD2aMFfQFJd5zq6AkC0uFi2S2rmimoy07cpRoQDo08+j3TlM
+         mm82LwXdWRtUirmQLHAQH5mBG4+PmSS85QwdWqcPmhfkFCN/BNttISWbcw9IBCdZK339
+         /ZZSwBhc414AE9lM7y7WmavuWwWVzavo+q3xY267R/GbDxwoAsITSos7CCXOGaq/BVj6
+         IPbA+CMtTg7ClhaFo/okYXOLZ8iemQ8vLlIPKr3K54As7GRT2CBtzx3b8o6HhtlMgguf
+         rAgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gPh5qiPFI3S0XIvBtJdJh517PYOVsE4NLDG4oIGpMoo=;
-        b=uponVvKfXPu+rLS9aTuubRJqZf+U24/UXtNkY4QieKgieWMKSy3kp21598NopFpt3v
-         PP6GllmhaesI2/iClLb6ns0ydrsopswGL4J8PpTUwCvzeb/maGRgyH0OZhVq7kVNmlFx
-         cDO5Z2O0VsBYGtZoNxQ6wB/MeW5cNRnJanOWfCm5UwR2Ea2QXbu3gT1mI88Gd2BxBaLv
-         HZRYk+I5+deeIHfgmkZZ5dVRgWD9pZha5Lfv88khju3olAB3koQEORdqWGOR7+7r667P
-         3ldhtze+ZDs/KTnHNpKhJJYXfKfosCMyBDg/BAg6eqaZMFmq9e8tvK364uEG327uQ8i8
-         K7lA==
-X-Gm-Message-State: AOAM530f7OJ6Si1V6se5IZG1gBEBdUQnjcsrMFPGLbKm4WXory4cso5b
-        9lN32lYC9jUveAe0OArw9tMkrbbRGd1TZUt1
-X-Google-Smtp-Source: ABdhPJzerTveTTqnmsEBHMgmpX4JByTTvA8Nw57fjbDy07nms6vrNcoekHMr7OeeNEK5XeDdbB4wQw==
-X-Received: by 2002:a05:6a00:1789:b0:43d:ea98:7ea8 with SMTP id s9-20020a056a00178900b0043dea987ea8mr27393301pfg.67.1633370525385;
-        Mon, 04 Oct 2021 11:02:05 -0700 (PDT)
+        bh=KXqbMrl5ji7P3WLEqvYvyx/g2tHqF5Pvsy98EpcbEmA=;
+        b=VUBuCbAQ5/qDQxa6SD4YIR/YWIvHomJCREOOYn/Bbsp4hUij4pSFcCGmclwIN5DPJA
+         wdeT/3vaMKFU/rb4S0rhROPMqzWoT7Hek0ySMXeYjnAJV4o2gOi+M9qrUQjwgpD2Si/H
+         yS0XUAuJAfcs7iafl67uxtlD8p/ukKT6j9wfjD8WvlcKlIgHbQTIZiP028EyGP+iQuZA
+         8HJP4AwnliqWHg1dmgCgmoqOoiBVV90Ku2pEMs6wT+o3ocIe2bjsGaHKMGlUynkshHTD
+         oCCEdd+Omh30bRFtGtTvN3QNXtx/iLalGfhlDiLpR1QwaxxHcIzwrRKsBn5xt47+AC34
+         JGlQ==
+X-Gm-Message-State: AOAM530dKry3KdePLLA7+UI+M9l8o++9uOISnt8TK2DTshxxdGpl5AGn
+        xxmeSk8MyHmSA5gcih2OH3c=
+X-Google-Smtp-Source: ABdhPJzbBvEjkhQa/NIXLQN94nJSDDapaLKAaUE41cWvqwkMormTval0zeWCNCkCWwbjm9h9m6LR6Q==
+X-Received: by 2002:a65:44c4:: with SMTP id g4mr12117582pgs.254.1633370541031;
+        Mon, 04 Oct 2021 11:02:21 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:e8f0:c2a7:3579:5fe8:31d9])
-        by smtp.gmail.com with ESMTPSA id z2sm3641004pfe.210.2021.10.04.11.02.02
+        by smtp.gmail.com with ESMTPSA id z2sm3641004pfe.210.2021.10.04.11.02.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Oct 2021 11:02:05 -0700 (PDT)
+        Mon, 04 Oct 2021 11:02:20 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com, tsbogend@alpha.franken.de
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH 3/6] MIPS: OCTEON: Remove redundant enable of PCIe normal error reporting
-Date:   Mon,  4 Oct 2021 23:29:29 +0530
-Message-Id: <b7eb2cae4f81648a8df5885d5d5f7371a6c436e2.1633369560.git.naveennaidu479@gmail.com>
+Subject: [PATCH 4/6] MIPS: OCTEON: Remove redundant enable of COR/UNCOR error
+Date:   Mon,  4 Oct 2021 23:29:30 +0530
+Message-Id: <ba79bae65a1955cd7f7e005f352b1b32799a1781.1633369560.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633369560.git.naveennaidu479@gmail.com>
 References: <cover.1633369560.git.naveennaidu479@gmail.com>
@@ -69,35 +69,42 @@ e8635b484f64 ("MIPS: Add Cavium OCTEON PCI support.") added MIPS
 specific code to enable PCIe and AER error reporting (*irrespective
 of CONFIG_PCIEAER value*) because PCI core didn't do that at the time.
 
-Currently when CONFIG_PCIEAER=y, the PCIe normal error reporting is
-enabled by pci_enable_pcie_error_reporting() in the aer_probe() path.
+Currently when CONFIG_PCIEAER=y, correctable/uncorrectable errors
+are enabled by set_device_error_reporting() in the aer_probe()
+path.
 
-It is now no longer necessary for Octeon code to enable PCIe normal
-error since it's done when PCIe bus loads the AER service driver.
+It is now no longer necessary for Octeon code to enable PCIe COR/UNCOR
+errors since it's done when PCIe bus loads the AER service driver.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- arch/mips/pci/pci-octeon.c | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/mips/pci/pci-octeon.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/arch/mips/pci/pci-octeon.c b/arch/mips/pci/pci-octeon.c
-index 8e8b282226cc..2c251018075c 100644
+index 2c251018075c..a82cf48f00ab 100644
 --- a/arch/mips/pci/pci-octeon.c
 +++ b/arch/mips/pci/pci-octeon.c
-@@ -114,13 +114,6 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
- 		pci_write_config_word(dev, PCI_BRIDGE_CONTROL, config);
- 	}
- 
--	/* Enable the PCIe normal error reporting */
--	config = PCI_EXP_DEVCTL_CERE; /* Correctable Error Reporting */
--	config |= PCI_EXP_DEVCTL_NFERE; /* Non-Fatal Error Reporting */
--	config |= PCI_EXP_DEVCTL_FERE;	/* Fatal Error Reporting */
--	config |= PCI_EXP_DEVCTL_URRE;	/* Unsupported Request */
--	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, config);
--
+@@ -117,18 +117,13 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
  	/* Find the Advanced Error Reporting capability */
  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
  	if (pos) {
+-		/* Enable reporting of all uncorrectable errors */
+-		/* Uncorrectable Error Mask - turned on bits disable errors */
+-		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, 0);
+ 		/*
+ 		 * Leave severity at HW default. This only controls if
+ 		 * errors are reported as uncorrectable or
+ 		 * correctable, not if the error is reported.
+ 		 */
+ 		/* PCI_ERR_UNCOR_SEVER - Uncorrectable Error Severity */
+-		/* Enable reporting of all correctable errors */
+-		/* Correctable Error Mask - turned on bits disable errors */
+-		pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, 0);
++
+ 		/* Advanced Error Capabilities */
+ 		pci_read_config_dword(dev, pos + PCI_ERR_CAP, &dconfig);
+ 		/* ECRC Generation Enable */
 -- 
 2.25.1
 
