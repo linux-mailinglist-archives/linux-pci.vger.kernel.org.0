@@ -2,126 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB39421180
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 16:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1BCE421212
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 16:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbhJDOgM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 10:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234532AbhJDOgL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 10:36:11 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0089AC061746;
-        Mon,  4 Oct 2021 07:34:22 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id h3so6077059pgb.7;
-        Mon, 04 Oct 2021 07:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6pWZxY1yQdsUwMEG6Is0voI7d8xdXhwobuZZscOdeBw=;
-        b=DrFpdMFEIQmQvoRS5VddB8m+GxhSGCKG1KDkOK4n9yhcyXAsA58jrgorq6Pa3ESPyX
-         FmghPXRm5yzs+2NAlYgyVwYaBN8Cv05+e7PF7rxZHGSUT43gTCwv1xFxwQmTmKsOx6B8
-         jGSfBj8NXKIOWkHN5MKcyLasaiyV9kyAIFWYOCqvp7LvpibYuqIydO0AwOF7/6xRs0lE
-         pYgPgE0OgJ5s7PpzGDxtFdliRnOmLL0xZUxtjlIsJMNBRD3cQhchDclojgZgOj0jaTt6
-         hTDWgEo66zRdLi4N/P0wbSJIt444hUoUD3P8E5oN1lxHId5MOo2g3OP8M6UOzdKowoSq
-         hWxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6pWZxY1yQdsUwMEG6Is0voI7d8xdXhwobuZZscOdeBw=;
-        b=8K93uvgEwIzSAjjivKJRoTLtvuGM1aaC2E2gPYwqkc/Oega8Vln+PFSKHcy4HEPOij
-         cUS/WadPk+Oqmk9+JAofDyoaHAyJgCCbL8xE9aX5SxuDxVIVyq/c5LdkyDMcKU2vPfQi
-         PMl69D30l3DxZp3whUoKD5j264w+Xis2azvmBaazHQ9YE4OnQfImvXeShPa1HA8esiA5
-         N1DUsSJYxVOe6zldGbrDv5cUqHsa8wo1kLLPuevtGjz2lFAQ36k583eGc3zJiupjiNy9
-         yKFRQBQYwI3Lj+MAsixR4sruBweooTIsHWng9ThwoHaMbw9PEWi4VxSaSTXf0v6OTwr8
-         FNlQ==
-X-Gm-Message-State: AOAM532agvKXAYvp+8I3ppYJwWfXxY/I6JutdlKCvQkoeSIe1yQkGf2X
-        69prXnhUjlnr713vdHv2K/M=
-X-Google-Smtp-Source: ABdhPJy+sWf8xBhC0RvZ5PKZWz/DDoInn++6/IvE8D6lUPdNyv263NSKhV+bEgdAgv26xYa63HLULg==
-X-Received: by 2002:a63:7d04:: with SMTP id y4mr11390118pgc.131.1633358062410;
-        Mon, 04 Oct 2021 07:34:22 -0700 (PDT)
-Received: from localhost.localdomain ([2406:7400:63:e8f0:c2a7:3579:5fe8:31d9])
-        by smtp.gmail.com with ESMTPSA id q3sm14489146pgf.18.2021.10.04.07.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Oct 2021 07:34:21 -0700 (PDT)
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v3 8/8] PCI/AER: Include DEVCTL in aer_print_error()
-Date:   Mon,  4 Oct 2021 20:00:04 +0530
-Message-Id: <b86533084b7098fb1d9d03a73e842f023cc6ace7.1633357368.git.naveennaidu479@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1633357368.git.naveennaidu479@gmail.com>
-References: <cover.1633357368.git.naveennaidu479@gmail.com>
-MIME-Version: 1.0
+        id S235334AbhJDO4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 10:56:10 -0400
+Received: from mail-dm6nam10on2053.outbound.protection.outlook.com ([40.107.93.53]:35872
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234270AbhJDO4J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 4 Oct 2021 10:56:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=amv5xp5m5UkEjN+333FKIu+3NJ2p85Y7TX0LdVgUX1GqDFTiH60o8GTQEXVBk2hpoljle6BV2fLzH3RU2tyt3YoJeyuf5vRSH614UwJPXYcMI89ycIXduXdxt6IfVyQUfrdnVN0Ao3cwUJYShSyMS50XbiCLd6/zzWVWsnR6ZfqPfJy+HfDmV3Ix8qV3mxukYWhUAdTInkeYEAl8VYMNkT1pNOhJqXOSmibF337ezjAy3GEzOVBSICb2SWNhkfWPamoPz11ROYm6ZNdp+ckV+ZHqvap6KDIMAwZgNHuKjX54Phyx8kPltY6EAQqJhYUEEY56KUZ6VlgHXyYDznWp3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VsKJb26U3+gtb7PIb9WqUQ/aXXPgqu5T5t8Y4vk3Mcw=;
+ b=gJXRCbagAJ6DO2xaSrXzt3VBOgIhAfiJS88Olj7FAFjkKrptszPllrrljeotM4NDHi/7KM1Y+d5RWL+yjXzI+7LPIaDLLsbZmD5mVnRL0b8BDBZeKGRp2Bgd4Y5AgureVZAdcJDLwaaLIiqsHTM9RIRk9X9h/RoeMYGwP23b+yrPMN/s2vttMjh88J8rHGTVi/1Hn/1311l6bLzFb9i3g//xzS4adZ7ERr5Q07IBP79x2Bop76+6YfTqrWWlWJUUiScj+3Sg5ZbGn93Tk9N3cYU60/SwcsDHK9Ryck5AO4Ff0C0ncRI1VSQDi/5oenLxlytWvnYu0vTv3gWr8i7Wwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VsKJb26U3+gtb7PIb9WqUQ/aXXPgqu5T5t8Y4vk3Mcw=;
+ b=TNmXPwmJnRxBygkPPXztQy0Mh2oHKCYantFRjeJUrooAzFL/sGI+V1h/aBufTs395mTkqS05qTcMU1NFQGIoBUdAzUjIzcpvGhec8aaHPnDC3c8jtzOjzOC5bMugJlahLSYg6MYfpNXUF7e0s7dCr+LH35vsD6jTRkbo0pVSnKU=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from MWHPR1201MB0192.namprd12.prod.outlook.com
+ (2603:10b6:301:5a::14) by MWHPR12MB1214.namprd12.prod.outlook.com
+ (2603:10b6:300:e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.21; Mon, 4 Oct
+ 2021 14:54:16 +0000
+Received: from MWHPR1201MB0192.namprd12.prod.outlook.com
+ ([fe80::55c7:6fc9:b2b1:1e6a]) by MWHPR1201MB0192.namprd12.prod.outlook.com
+ ([fe80::55c7:6fc9:b2b1:1e6a%10]) with mapi id 15.20.4566.022; Mon, 4 Oct 2021
+ 14:54:16 +0000
+Subject: Re: [PATCH v3 19/20] PCI/P2PDMA: introduce pci_mmap_p2pmem()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+References: <32ce26d7-86e9-f8d5-f0cf-40497946efe9@deltatee.com>
+ <20210929233540.GF3544071@ziepe.ca>
+ <f9a83402-3d66-7437-ca47-77bac4108424@deltatee.com>
+ <20210930003652.GH3544071@ziepe.ca> <20211001134856.GN3544071@ziepe.ca>
+ <4fdd337b-fa35-a909-5eee-823bfd1e9dc4@deltatee.com>
+ <20211001174511.GQ3544071@ziepe.ca>
+ <809be72b-efb2-752c-31a6-702c8a307ce7@amd.com>
+ <20211004131102.GU3544071@ziepe.ca>
+ <1e219386-7547-4f42-d090-2afd62a268d7@amd.com>
+ <20211004132759.GX3544071@ziepe.ca>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <613362ff-bd2f-b0b1-634a-55dc4c3837fd@amd.com>
+Date:   Mon, 4 Oct 2021 16:54:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+In-Reply-To: <20211004132759.GX3544071@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: FR2P281CA0014.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::24) To MWHPR1201MB0192.namprd12.prod.outlook.com
+ (2603:10b6:301:5a::14)
+MIME-Version: 1.0
+Received: from [IPv6:2a02:908:1252:fb60:bd14:2b97:8d11:9c50] (2a02:908:1252:fb60:bd14:2b97:8d11:9c50) by FR2P281CA0014.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.13 via Frontend Transport; Mon, 4 Oct 2021 14:54:08 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 93229e0a-f1c3-4f8a-1d9c-08d98746d5ed
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1214:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR12MB121461AFAB703FDAE10B502D83AE9@MWHPR12MB1214.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BeFLnLDmWC5ejqhjuN7N6FIFoll5ICLPlRVvcj8fqAaesLviJJp66dxfFTLhYlVfF8stDW4+v429qnIQZbKx5GcwrD1NrxN7K+PkpHhZynq1yN1llan0ZvRhy56hubaPJ7SbdUWG0k05CY03Cap22+ELvB+BEtBAr0ZxD26kHGtMMYa/8fhg8cJcabVmD3BG/xvr1p4+D9VxzQHjJ84G/qCPtWNUq5pID2oZQnWZmGEPt6lElFS886bEX6gdkukVc7W+jzceh7z5swiuLuqM3ohvd94wTTKOrEYmfjcfLYoQggAhO7c3v2a5jwC+hgolzxSMPf0oC6qYJJCshO9cCrldOJAUcNwcMWL2xHo+dsSqWk9tNVXmJJDuNTIMXEu5A/RZPvnh6hWABOMjYgSs1KTDiTtlpjS2EiaHtwBckvnJkzzGJM+6LzN7i2FLi29jqkyZBbnSxbqw+dxchLrhHpfxwKg/vsIGR7x09Eky01/1E97SdD5kNKtkMB85Y4+b4HP9QyKtc0TX6lMh+hm/2e0kSxtpPbHAiNlvcmMY/U/YQ1H/tYHK1HGobcgSXbP+Mr81Kbjnh+B70DADA2hUO+wbj4dsACzABX3KE1pst1vkVF6uqWGAPo36XUYJyXDXyRH0q+xz1WwCrdd6DY9e0e511FjhRqtp2wnm+w4uye3HXg1OkRvCwz6w+76OFEkgkYkithB80Pq2Zt0HbbTs8tvUnMUFGHwY3aEvFyx7qmVJOVx7pFwQXAPwxQcBW/eq
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1201MB0192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(86362001)(54906003)(6666004)(31686004)(4744005)(31696002)(508600001)(5660300002)(66946007)(83380400001)(36756003)(66476007)(8936002)(6486002)(2616005)(66556008)(6916009)(7416002)(186003)(38100700002)(2906002)(8676002)(316002)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MDVvUmN2V1FQUithdElRcTVIRlNrNm1mZUExVmQ4ZCs4QWN5OWlod3Q5V0Er?=
+ =?utf-8?B?dUQrM3p5dm10M2RWQ0pETFJnWVplMmwwTnhjQVAxZjZOL1lPOWRuS0ZhYU83?=
+ =?utf-8?B?eC94UnZFcmVvT3Z6TTRMTEpobk9lT1FtL0pUNWpCQktEbUM2NE5RSWh4UlRr?=
+ =?utf-8?B?WG50ZkJCUEVWdXBmV3RzT3F1eU5kM2xVSEdyS1lHQTRzd3lIWCtDbjYweFVL?=
+ =?utf-8?B?M2JrbmVZckhFaDFWTnpzcWtPQ21KNUZPNnJCUkltSmJSQi9teHNFRnBka1hn?=
+ =?utf-8?B?T2I2VC8vZ2JocTZibzliZWNmZUlKT21MdWJvckF1aE9DOXJ6QktRcE94Qzly?=
+ =?utf-8?B?RkJQdVdSZmlRRDZPSUhqUEVkeGQvMm9NU0trNDVSN1lmZndyU1dESHBlUmVp?=
+ =?utf-8?B?M0VRTUhXOUFoT1pBUi8yL0lLTldUSkZaQWp2RTFaTlIvMWhGa2hYRkVIelA3?=
+ =?utf-8?B?cmVtc2hzQzFBNzU5RUl3ZlByc1AzQmpXTjBPeFRtbzZwb1lhOVJWendyQnVq?=
+ =?utf-8?B?VXpwWmVxWDBJaVdiU2h0Q2hOc211MWFBdjJoWkl4c2xvRnlpZXdDUW9pN1F5?=
+ =?utf-8?B?S2JpcUViUzRPcTlmNy9MMGJOQXhKWkR3VC9aRjJvWGNNT0JuM2RZWWRFY2ZT?=
+ =?utf-8?B?YnUxVHp6TUhjbGZUS1pITGlMcXk4Wk1Rc0RxWnVwNDJMV2VMMmRTVk9Fa2J2?=
+ =?utf-8?B?MXJMNkxJNHlRQXB0QjIxUWVSeEIzY1FUMkFuYWVXUDRFeG10SUpRVkZqTXRj?=
+ =?utf-8?B?NmU2QTB2M3c4N0RPdi84OUNRU3A5eUpieFhuL3pCa2wyYlNQcDFJK2xsN1la?=
+ =?utf-8?B?MngvVUY5OVRtcWhwV3pRSUVhQUZPNDhaWlpCaDl2SklacEhBMjZUY3V4WlJP?=
+ =?utf-8?B?a25rdTJSUU1qdEdOclE0SGFWdHk5QXFvU0cyTW5nWjhtN29rWmdJYmlrZ1pE?=
+ =?utf-8?B?bGNaWmMrdjEwcWxvN0dETmpRUk93MXV2MzlMNDVnR3lCelRzcWFZRnNxbmNC?=
+ =?utf-8?B?ZWJZRHhydGlZWHJhV3JUSi9yZlVXcmRnYkd6TzhtdHJ2NUFNT1pabVJLUWZK?=
+ =?utf-8?B?c3JOaTNsUTZwNVZmdTBrNG1IUGlFR093QnZOMzRpSC9Fd24yK3FUR0ZhNUxJ?=
+ =?utf-8?B?Sko0WXpFTTVuWHZHV2w2SGg4VmFlWmFaNE5jS2hLRGhKczRwVGlDZlRHMGRq?=
+ =?utf-8?B?OUkyYmhVUUxTRjAzVkljL0tFdGFxOFYrQStRS3kyU2Z4SDRiSzE2YnY1SW8r?=
+ =?utf-8?B?RkdCNm5OT0tBZjVLenBTMkVGek1rc2c2QlBCSGVFNno4a1dHZ1BUdmlGbnQ4?=
+ =?utf-8?B?WDI0L1hBSHBZWGZUTUt3bWszSWQ4SEllZW1ka1kwQ2w1UkgyRmsrU1FIeU9o?=
+ =?utf-8?B?N3A4OTQzM29OcnZ4NUtnNW56NXh4T2RRa1Q2RFYwMWpRUHBnUGwvRnVZU1lu?=
+ =?utf-8?B?cm9GR2xHWnNPbzMvYTlnUnNjTUkwSGRIcVFaMVIvMUwxNHhJeCt2ZUN2Qy9h?=
+ =?utf-8?B?SHJkemxnN1lqZXNmZ0ZBQjZpKytNZklBR1dXeVNOSGJUTmJoSEhFZXFYbHpF?=
+ =?utf-8?B?RjZvY0JYRTRGeUo4UkxoT1JEamkzcWlVQWhaNkt4K1N1VGsxNUpORnJGdkNK?=
+ =?utf-8?B?MWM3T3R3b0tubWNRaDlhWHh0YmZMYmtadkQ1S3RaUnB0dHp6NWQzZlV1ZVNn?=
+ =?utf-8?B?TlZTNlp4cEU4bEFGWnBBWnVjdCtCUTlWL0FYQnVkak8zNnQ3aktWcUsxaU9i?=
+ =?utf-8?B?RjIvbUVZTmRzaUJOcjlmL2JRNm9WZ01NWkJueWJ5OGErRDcvU3I1YUU4OHRP?=
+ =?utf-8?B?K0JoUW8rb2QybXo1ZG96MEhiR1ltcVIzSzZrS0ZQWUd0dVJrL1FGQkRnUURy?=
+ =?utf-8?Q?0rKI39UTTIH4+?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93229e0a-f1c3-4f8a-1d9c-08d98746d5ed
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1201MB0192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2021 14:54:15.9771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZqSOru+Lpa7/li8gz64YdbiYsmZC1fN1JFtvOvogPKWG7BusoiTqVgvnSwxc7b+6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1214
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Print the contents of Device Control Register of the device which
-detected the error. This might help in faster error diagnosis.
+Am 04.10.21 um 15:27 schrieb Jason Gunthorpe:
+> On Mon, Oct 04, 2021 at 03:22:22PM +0200, Christian König wrote:
+>
+>> That use case is completely unrelated to GUP and when this doesn't work we
+>> have quite a problem.
+> My read is that unmap_mapping_range() guarentees the physical TLB
+> hardware is serialized across all CPUs upon return.
 
-Sample output from dummy error injected by aer-inject:
+Thanks, that's what I wanted to make sure.
 
-  pcieport 0000:00:03.0: AER: Corrected error received: 0000:00:03.0
-  pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver)
-  pcieport 0000:00:03.0:   device [1b36:000c] error status/mask=00000040/0000e000, devctl=0x000f
-  pcieport 0000:00:03.0:    [ 6] BadTLP
+Christian.
 
-Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
----
- drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/aer.c | 10 ++++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index eb88d8bfeaf7..48ed7f91113b 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -437,6 +437,8 @@ struct aer_err_info {
- 	u32 status;		/* COR/UNCOR Error Status */
- 	u32 mask;		/* COR/UNCOR Error Mask */
- 	struct aer_header_log_regs tlp;	/* TLP Header */
-+
-+	u16 devctl;
- };
- 
- /* Preliminary AER error information processed from Root port */
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 91f91d6ab052..42cae01b6887 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -729,8 +729,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 		   aer_error_severity_string[info->severity],
- 		   aer_error_layer[layer], aer_agent_string[agent]);
- 
--	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
--		   dev->vendor, dev->device, info->status, info->mask);
-+	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x, devctl=%#06x\n",
-+		   dev->vendor, dev->device, info->status, info->mask, info->devctl);
- 
- 	__aer_print_error(dev, info);
- 
-@@ -1083,6 +1083,12 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 	if (!aer)
- 		return 0;
- 
-+	/*
-+	 * Cache the value of Device Control Register now, because later the
-+	 * device might not be available
-+	 */
-+	pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &info->devctl);
-+
- 	if (info->severity == AER_CORRECTABLE) {
- 		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS,
- 			&info->status);
--- 
-2.25.1
+>
+> It also guarentees GUP slow is serialized due to the page table
+> spinlocks.
+>
+> Jason
 
