@@ -2,111 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1220B421607
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 20:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BDDD42168C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Oct 2021 20:30:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235704AbhJDSGU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 14:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        id S235190AbhJDScl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 14:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234389AbhJDSGT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 14:06:19 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA4DC061745
-        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 11:04:30 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id 24so22785020oix.0
-        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 11:04:30 -0700 (PDT)
+        with ESMTP id S238741AbhJDScl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 14:32:41 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAA4C061745
+        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 11:30:51 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id u18so75664311lfd.12
+        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 11:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v8xO+4vZI73uOmZkA7HgKBkA2xAQ2Mbya8e5l4z7JE4=;
-        b=Jyu3+9Xys8gQ9I8c2k6q+VZuHlDlj2qmmgFKJ4cmo8wqGoChLKCm4khgMIb3q44U4W
-         zXlDVJlgPmt4K5xcVcOKEg/MpogxmmgcY8SaV6USrhs4pehmy0DqcK9tLFVSex/KP0La
-         RIxgMoweosXXgM4ROnVmkSvuMOM3GDaJedOsC5EkLDTDP11sPek7Sii6X74dbcIc3czh
-         t8jAJekNtGnb3YjJ8qA8QOc1w9nLThixYxJC0MYF1nsIUPZMscsgz+FpNAX1B4NEjzGY
-         h41tuN/hVqcv9qL1V/cKgCxzTkvU9z7fChGFtSND7Eog89xA2fFc3gH+ZYVkIRPw7NRt
-         iMeQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WYaHpNPd5iNfSgVGQsCT7+Pa41+xpBTvkNAX6en4bmk=;
+        b=YW0KtJsTP5rI4zjU6hpQY7S4u6k9lUh4EEB+CsI+CIfSgEr7C3MO0cObLf7h2xjjx5
+         WtKYIF9M6s+d95as+hNn45lVSRYcprnbK4s0lb5tsF2xJxullrt/g3PaI/WIx9/mYJRA
+         BINausv0nynG979PoLxCE2wr8xooR3Udqj5LHdwwBvE2D820cC6rUQkh6wKhdKqZFCMI
+         UEwvzLQuU9bZ15aBxVwzMgKT3C+LApE2rhuQqn+VHQhGm7cMO2XOGpqwID/PkA3zp5Jv
+         h8G+a8pwKxwEMo0yPYTw91VCgh9K4U8PJjS0rbDRcBhutKgw5WPctumnmpctt/IqlbM3
+         fn6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v8xO+4vZI73uOmZkA7HgKBkA2xAQ2Mbya8e5l4z7JE4=;
-        b=EdCcOQib0hFRKAmiXxTtMoC5UCV+f24a/jX/qNJR2g4fQDn5yi1eHFyQUDC/B2fidk
-         VLBzV7CEyUKlB9oHx8EfHdocx6n+Q24QOY2q6V+J8SSBFqUcBEr4WJugIoiN+3kjSJ6R
-         SmwaJCAwYcZU+BAEcoQor3YQQw3EDeW83cwEyj3riaapDCEDzXuJkHiJHtw1oppCk80S
-         is42bREq93Px8Bwagh2k6TNWutJiHbgQfiMqOccgtCPRfEfwTK0c9fNMKuiWbwqtibZl
-         DxgK/7o62hIkx65lD/REstHqc36QGEasvB6NKiCYPTk7eZdOjSMFW5UkpBai09YN2ypv
-         z48g==
-X-Gm-Message-State: AOAM530NMyIS0CM3b6S5kfhN7/WsZNyOoKIDcDZMWbUMXlg0CEwLIwTb
-        Li3kqHcXCl8FgFqLRcwvD0pmn5yWPa8=
-X-Google-Smtp-Source: ABdhPJxc0LYRYp5PoNKRN8Sl6coMOL1qGCxN279wdFtpDev0sqFowNDsWgof1QcEF9ZKKKPrQTOmeA==
-X-Received: by 2002:a05:6808:198b:: with SMTP id bj11mr14590109oib.105.1633370670013;
-        Mon, 04 Oct 2021 11:04:30 -0700 (PDT)
-Received: from ?IPv6:2603:8081:2802:9dfb:c5d3:8f2f:d5f0:22e6? (2603-8081-2802-9dfb-c5d3-8f2f-d5f0-22e6.res6.spectrum.com. [2603:8081:2802:9dfb:c5d3:8f2f:d5f0:22e6])
-        by smtp.gmail.com with ESMTPSA id x62sm2863552oig.24.2021.10.04.11.04.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Oct 2021 11:04:29 -0700 (PDT)
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
- <20210818070503.GF22282@amd>
-From:   stuart hayes <stuart.w.hayes@gmail.com>
-Message-ID: <4909152d-7517-5ed9-393c-9c020e901688@gmail.com>
-Date:   Mon, 4 Oct 2021 13:04:28 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WYaHpNPd5iNfSgVGQsCT7+Pa41+xpBTvkNAX6en4bmk=;
+        b=WDPZIUYRxdsEAydYFaz06E6KRZOow6jELUx6wbhRQi2caoHacxSm8Nncqa+XrDYPHm
+         UHCFJ+div7Ll5sO2+0xTicQh6SScxOY9+Y8irMNrDVOyfrcXbJE5nCqq5LZATgmQVJDT
+         tlygIC/sZTpbaJohc1SNI9HIcGAiJW1b1oJWUcALFuZkHAIWFFau0FjeeRNaq54Cn+32
+         9X96Jx8TkFfX/3CYXmQHX4ybkOdnAhlDVVHmxoZD91OY+KsjA+Wyy2kELKFecneDsqhV
+         xwQkYs66wENT54R9QosxJbRubK6kKz0O1oNCXkT6CJYySG2qiLLEcIialaeVPsTDcS8w
+         2CGQ==
+X-Gm-Message-State: AOAM531Daar60x8Stky2Uphd80QZh39oF9c6+FOXabetxi/r26kv0uyI
+        mXLayizVEI1AgaClSTEw5etl5uhXLL437KPDc+UqTg==
+X-Google-Smtp-Source: ABdhPJzwPMLixmNEteJfYTYbQ05qYkqCLS3fY+3QFW/RcZFdO8U3LfG8R6lZnCdHdRy5zRPcTCePjhzKrDRf131zPjE=
+X-Received: by 2002:a19:c10d:: with SMTP id r13mr15971449lff.339.1633372247707;
+ Mon, 04 Oct 2021 11:30:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210818070503.GF22282@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210929163847.2807812-1-maz@kernel.org> <20211004083845.GA22336@lpieralisi>
+ <87czolrwgn.wl-maz@kernel.org>
+In-Reply-To: <87czolrwgn.wl-maz@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Oct 2021 20:30:36 +0200
+Message-ID: <CACRpkdZzdzJmatnYe2pcKCSW2=WJBa-DZQPib7aGW9m_GLrAwg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/14] PCI: Add support for Apple M1
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Oct 4, 2021 at 11:05 AM Marc Zyngier <maz@kernel.org> wrote:
 
+> Yes, that's absolutely fine. I hope we can resolve the issue on the
+> pinctrl binding pretty quickly, and get the arm-soc folks to pull the
+> DT changes in for 5.16 too.
 
-On 8/18/2021 2:05 AM, Pavel Machek wrote:
-> Hi!
-> 
->> This patch adds support for the PCIe SSD Status LED Management
->> interface, as described in the "_DSM Additions for PCIe SSD Status LED
->> Management" ECN to the PCI Firmware Specification revision 3.2.
->>
->> It will add (led_classdev) LEDs to each PCIe device that has a supported
->> _DSM interface (one off/on LED per supported state). Both PCIe storage
->> devices, and the ports to which they are connected, can support this
->> interface.
->>
->> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> 
-> I believe these are not LEDs, right? This is something that displays
-> information to the user, but how exactly it is implemented is up to
-> BIOS vendor.
-> 
-> I don't think it is good fit for LED subsystem.
-> 
-> Best regards,
-> 								Pavel
-> 
+I think I ACKed a patch for apple,npins = <> yesterday.
 
-I think it very likely these will be LEDs on most, if not all, systems 
-(likely enough that the PCI ECN has "LEDs" in the name)... they have 
-been LEDs on every system I've seen.  I would suspect that systems which 
-support more than one or two of the states won't have a 1-to-1 mapping 
-of logical LEDs to physical LEDs, though, but might instead use 
-something like IBPI (SFF-8489) to use fewer LEDs and be easier to read 
-at a glance.
+> This would make the Mini a usable machine with a mainline kernel.
 
-I'm not sure I understand why the LED subsystem would be that much worse 
-a fit for this than for keyboard (or other) indicator LEDs.  I 
-understand that many other indicators are more likely to have each 
-single kernel LED mapped to a single physical LED, but functionally they 
-are both kernel LEDs controlling on/off indicators which are likely 
-displayed on LEDs that are always visible on the system.
+That seems useful.
+
+Yours,
+Linus Walleij
