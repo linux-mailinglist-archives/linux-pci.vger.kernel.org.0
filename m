@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A39421B76
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 03:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E8A1421B7E
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 03:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbhJEBMk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Oct 2021 21:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
+        id S230293AbhJEBNj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Oct 2021 21:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230087AbhJEBMk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 21:12:40 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98850C06174E
-        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 18:10:50 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id e66-20020a9d2ac8000000b0054da8bdf2aeso21697009otb.12
-        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 18:10:50 -0700 (PDT)
+        with ESMTP id S229564AbhJEBNi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Oct 2021 21:13:38 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947FFC061749
+        for <linux-pci@vger.kernel.org>; Mon,  4 Oct 2021 18:11:48 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id g62-20020a9d2dc4000000b0054752cfbc59so23949207otb.1
+        for <linux-pci@vger.kernel.org>; Mon, 04 Oct 2021 18:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:in-reply-to:references:from:user-agent:date:message-id
          :subject:to:cc;
-        bh=rLYw2KrQ4s9yKh8fwXPTnJIwo3OAJ8FO94iCHD8cOyc=;
-        b=NfweNdNukEeDOmICkjI+OAOsiFlhGgBdGGuE3YS7PPqAtBU/vvUP2YYgGsozM8MhDr
-         xAdETSKZTxk+artDcSFycUCG6VpiP/8uGGZxPRj6+T772L+8572TOw4ceNhukT9YQzjh
-         l8qD3NkacSCpPIvzktW3BEsh7ksMXKB5Vk2qw=
+        bh=JF6vyOXESxtfPHWab3e07TTjv7Vg3ZVZyUb4GlwIoFs=;
+        b=cXaB7P7U3MKxhY/Xzb3aCV3IQ1p/c/QFk7Fteow2gs0Zy+03BHtIgOGazJV5pmbDuL
+         lDxZg/K+5T/PAT50O1qBp4EC4R46wrcpzlhiX6dC4siXKprLmNfWLB0uPBQyFd7Xv5/W
+         Q/dD20j+haqagqa05pclC8RFHt7CeFFwwf5Ls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:in-reply-to:references:from
          :user-agent:date:message-id:subject:to:cc;
-        bh=rLYw2KrQ4s9yKh8fwXPTnJIwo3OAJ8FO94iCHD8cOyc=;
-        b=eplbGAGk5Cj0gHmL5DXBtpUWrXsEaesBBUzlQaxTRQSfV8ccUl4SbDNJQLgj1lgaie
-         v3HoTjqXF8j8zKUOaSA4jsujSS//jsmy1PXLLEh7ERY1C9nE6sFVHU1THQb19GTf3Wbb
-         F4GzIFZ4kloETMRY4MVBNHXT2bynfdZ9ICdEs/1CGeJx6ovE//OdUcV58h7BxW2uGZx8
-         5n1XVRUIh9ZtOsHDadRA5kN6funJxS58/DG8iSsApcDQYePCdB3UI3ExPN09OiB+Ul25
-         FlLCgMD5q8FAxvvYUUEqhBiVOQdjiyzJ4AtIx+mTmetrflI1oa4OmYrnfjQxczjx38+U
-         5m8Q==
-X-Gm-Message-State: AOAM531+bhoGQrhJLIdm+d/F9GQEcOyG/ekLE8b1MujDSATIjOmKQGHV
-        TYsOx177tLEJ05t+UnFBtrvRWAuO9Vy1jrV3hjcmIQ==
-X-Google-Smtp-Source: ABdhPJw/be4HaaJNo0lUyEzqEwnsmy31pjLpTnss9vmmL1BpHUvaF9IauV887aW6sUmfDgdNjMNrPLMCP754T3ywXq0=
-X-Received: by 2002:a9d:6a0f:: with SMTP id g15mr12319566otn.126.1633396249933;
- Mon, 04 Oct 2021 18:10:49 -0700 (PDT)
+        bh=JF6vyOXESxtfPHWab3e07TTjv7Vg3ZVZyUb4GlwIoFs=;
+        b=zwLssuv4M1jRLLI9v9ixLPCuhiRt2d08BALItDOMFqwYCck23O8uGilwvZP2itu4N5
+         pfk4JDlnwmPyjyactGeJY8uhAjsINDujry7JDxHw1InLniL8YH99gX/Q7UjlcVMX+lil
+         8l9EHrdA8KzqZ21q1jQHSdmx+8sb4c5lgRIy2GtJ7/zQ3yaZCwi/jeBOZrqR65IdTrOp
+         Klz7imE9ouFjwnWoM97jV4kJoyrfJA4yfz+X8Ut2MbpGQCYBpwh6npjeaSmFPQePzZmt
+         JSAsuXRbaqREVrTlNP6oaBpLpy7g5OHzUWGfErRILj1L/9Zy3LpeZsZF3cpPvs2qycjE
+         jHVQ==
+X-Gm-Message-State: AOAM531gONubxdxY+4A1d2iLd7aabC9sAWmhxViCIh9YqODfCSMoeNv1
+        bwrdmDjHXMO63G6BTkYe71u0OrUQlQd7XM6Edl1nAg==
+X-Google-Smtp-Source: ABdhPJy6i+fPzH6N8khmOKxP7d2oPe0DSUpWQzfCTqacbniPOVIFqVrcjgwadOtNRRoIUW5BOUwS3sA0fBv8QXKRtQs=
+X-Received: by 2002:a05:6830:358:: with SMTP id h24mr11416616ote.159.1633396308016;
+ Mon, 04 Oct 2021 18:11:48 -0700 (PDT)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 4 Oct 2021 21:10:49 -0400
+ HTTPREST; Mon, 4 Oct 2021 21:11:47 -0400
 MIME-Version: 1.0
-In-Reply-To: <1633376488-545-4-git-send-email-pmaliset@codeaurora.org>
-References: <1633376488-545-1-git-send-email-pmaliset@codeaurora.org> <1633376488-545-4-git-send-email-pmaliset@codeaurora.org>
+In-Reply-To: <1633376488-545-3-git-send-email-pmaliset@codeaurora.org>
+References: <1633376488-545-1-git-send-email-pmaliset@codeaurora.org> <1633376488-545-3-git-send-email-pmaliset@codeaurora.org>
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.9.1
-Date:   Mon, 4 Oct 2021 21:10:49 -0400
-Message-ID: <CAE-0n50WXwP52YM9k6YrPwNWs+KCuODg=mnmROUUPvdwvRxEsw@mail.gmail.com>
-Subject: Re: [PATCH v10 3/5] arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
+Date:   Mon, 4 Oct 2021 21:11:47 -0400
+Message-ID: <CAE-0n50CBhdq3fbtygfzb0m8+bz3244-mYwCtVPjs_CfNaK_NQ@mail.gmail.com>
+Subject: Re: [PATCH v10 2/5] arm64: dts: qcom: sc7280: Add PCIe and PHY
+ related nodes
 To:     Prasad Malisetty <pmaliset@codeaurora.org>, agross@kernel.org,
         bhelgaas@google.com, bjorn.andersson@linaro.org,
         lorenzo.pieralisi@arm.com, robh+dt@kernel.org, svarbanov@mm-sol.com
@@ -63,58 +64,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Prasad Malisetty (2021-10-04 12:41:26)
-> Enable PCIe controller and PHY for sc7280 IDP board.
-> Add specific NVMe GPIO entries for SKU1 and SKU2 support.
+Quoting Prasad Malisetty (2021-10-04 12:41:25)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 39635da..e4bbf48 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2676,6 +2787,12 @@
+>                         gpio-ranges = <&tlmm 0 0 175>;
+>                         wakeup-parent = <&pdc>;
 >
-> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7280-idp.dts  |  8 +++++
->  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi | 51 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280-idp2.dts |  8 +++++
->  3 files changed, 67 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> index 272d5ca..b416f3d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-> @@ -462,6 +491,28 @@
->  };
->
->  &tlmm {
-> +       nvme_pwren_pin: nvme-pwren-pin {
+> +                       pcie1_default_state: pcie1-default-state {
 
-pin is sort of redundant but OK. It would be simpler without the pin
-postfix.
+Maybe call the node pcie1_clkreq_n: pcie1-clkreq-n as it's now only for
+the clkreq function.
 
-> +               function = "gpio";
-> +               bias-pull-up;
-
-Why is there a bias pull up on this enable pin? I'd expect to see a
-bias-disable as this is an output pin and there's no need for a pull.
-
-> +       };
+> +                               pins = "gpio79";
+> +                               function = "pcie1_clkreqn";
+> +                               bias-pull-up;
+> +                       };
 > +
-> +       pcie1_reset_n: pcie1-reset-n {
-> +               pins = "gpio2";
-> +               function = "gpio";
-> +
-> +               drive-strength = <16>;
-
-Why such a strong drive strength?
-
-> +               output-low;
-> +               bias-disable;
-> +       };
-> +
-> +       pcie1_wake_n: pcie1-wake-n {
-> +               pins = "gpio3";
-> +               function = "gpio";
-> +
-> +               drive-strength = <2>;
-> +               bias-pull-up;
-> +       };
-> +
->         qup_uart7_sleep_cts: qup-uart7-sleep-cts {
->                 pins = "gpio28";
->                 function = "gpio";
