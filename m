@@ -2,61 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C004222D3
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 11:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF2B24222E7
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 11:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233881AbhJEJ5j convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 5 Oct 2021 05:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233862AbhJEJ5i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 05:57:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B646C06161C
-        for <linux-pci@vger.kernel.org>; Tue,  5 Oct 2021 02:55:48 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mXhAb-00078O-Cj; Tue, 05 Oct 2021 11:55:33 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mXhAZ-0004kt-4E; Tue, 05 Oct 2021 11:55:31 +0200
-Message-ID: <8c26c28450abd8a3a183fdbef42d6c0468f4ec7d.camel@pengutronix.de>
-Subject: Re: [PATCH 2/5] reset: tegra-bpmp: Handle errors in BPMP response
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Mikko Perttunen <mperttunen@nvidia.com>, rafael@kernel.org,
-        viresh.kumar@linaro.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, krzysztof.kozlowski@canonical.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org, amitk@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Tue, 05 Oct 2021 11:55:31 +0200
-In-Reply-To: <20210915085517.1669675-2-mperttunen@nvidia.com>
-References: <20210915085517.1669675-1-mperttunen@nvidia.com>
-         <20210915085517.1669675-2-mperttunen@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+        id S233782AbhJEJ7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 05:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233365AbhJEJ7P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 05:59:15 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB8F610A5;
+        Tue,  5 Oct 2021 09:57:24 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mXhCN-00EqLn-1v; Tue, 05 Oct 2021 10:57:23 +0100
+Date:   Tue, 05 Oct 2021 10:57:22 +0100
+Message-ID: <87o883rdz1.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>,
+        opensuse-ppc@opensuse.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v5 00/14] PCI: Add support for Apple M1
+In-Reply-To: <CACRpkdaL=YEfqSmAogLcP0Gn2gUqSaEXZQrJD1GR5QU+DyuyDQ@mail.gmail.com>
+References: <20210929163847.2807812-1-maz@kernel.org>
+        <20211004083845.GA22336@lpieralisi>
+        <CAL_Jsq+4FF9QYy87aYhJ-AS78qyHp0NkLrL492+WmdyWj-NKaw@mail.gmail.com>
+        <CACRpkdaL=YEfqSmAogLcP0Gn2gUqSaEXZQrJD1GR5QU+DyuyDQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, robh+dt@kernel.org, linuxppc-dev@lists.ozlabs.org, opensuse-ppc@opensuse.org, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kw@linux.com, alyssa@rosenzweig.io, stan@corellium.com, kettenis@openbsd.org, sven@svenpeter.dev, marcan@marcan.st, Robin.Murphy@arm.com, joey.gouly@arm.com, joro@8bytes.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2021-09-15 at 11:55 +0300, Mikko Perttunen wrote:
-> The return value from tegra_bpmp_transfer indicates the success or
-> failure of the IPC transaction with BPMP. If the transaction
-> succeeded, we also need to check the actual command's result code.
-> Add code to do this.
+On Mon, 04 Oct 2021 21:42:45 +0100,
+Linus Walleij <linus.walleij@linaro.org> wrote:
 > 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> On Mon, Oct 4, 2021 at 9:52 PM Rob Herring <robh+dt@kernel.org> wrote:
+> 
+> > FYI, I pushed patches 1-3 to kernelCI and didn't see any regressions.
+> > I am a bit worried about changes to the DT interrupt parsing and
+> > ancient platforms (such as PowerMacs). Most likely there wouldn't be
+> > any report until -rc1 or months later on those old systems.
+> 
+> Lets page the PPC lists to see if someone can test on some powermac.
 
-Thank you, applied to reset/fixes.
+/me eyes the XServe-G5 that hasn't been powered on in 10 years. What
+could possibly go wrong?
 
-regards
-Philipp
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
