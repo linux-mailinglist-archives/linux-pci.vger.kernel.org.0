@@ -2,105 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A4704230C6
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 21:28:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E392C4230E6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 21:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbhJETaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 15:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
+        id S235206AbhJEToz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 15:44:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229671AbhJETaT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Oct 2021 15:30:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1150661027;
-        Tue,  5 Oct 2021 19:28:27 +0000 (UTC)
+        id S235134AbhJEToz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 15:44:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 063D4610A5;
+        Tue,  5 Oct 2021 19:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633462108;
-        bh=9JUGZ+smNoQ+dVO8HYAVZPWk0SiP7DmQOZjjrNdl2ws=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aeLnPYvWogEyCXNe4BZQ6IVMvG5M7tsPs73etoTPswIVWCorWGi/40VWaDMyGL4Pp
-         WjmBaB6LWsw0OXtgJg1sUK6Ep3u74OLB/H0uKQZxyl/9Z+E45i+t0eRXW12I9B7NwF
-         QiHkklYfdlk8NXKUdBHmjd5wNwxTdTFaYeLRbiZxH25Od2CZps2bFI3J/Mzv8Zjo9h
-         d6xmeb4XKU7Ux4/gym/+tdMGQ93NcFdEaSl6rwfibbx9SREpa7XV4pAkYcP1dQDIGp
-         FBDjZMvrhnRh01Xw/ez8ksgZNbrf7x1xLAVj9mjGjz1tBjQ1Djp1zvGV4EcsTL/i/H
-         cZ7UPdknCNXXA==
-Date:   Tue, 5 Oct 2021 14:28:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        pali@kernel.org
-Subject: Re: [PATCH 09/13] PCI: aardvark: Implement re-issuing config
- requests on CRS response
-Message-ID: <20211005192826.GA1111810@bhelgaas>
+        s=k20201202; t=1633462984;
+        bh=93hVsy5BdDKlxUJFddXFi3vlWoO0RQGiRnw/E66GdM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KYhYHG3q0/jMzU2P/lSej5mQZqlS1lOlJajSBxtUbkFvwRSihhtAyHaj7cEsOqc9h
+         Oz5+t5YI0rMT5PVj4UvfF2f4JWP6x+0L/krFZ6sKIR7SL6EnRyD2iLNcmjqhXI+9bg
+         zCw7M5f0xZ0HIPdq7rJwjqPsG13E94u0OOXE5W6F/EWgfWpM8YHY/8nIq/LcQO9Ny7
+         KmmqUAOTgC6gxtRCIqNlmzs/fnfrQQ1+Z0mldWwHkb1l/mR5GYFSuHB7hj1eEgxwlv
+         YXQkoH85br8e3dHfM9WzC6KRQ0JcUUFKNRZKRb+N0dYdrecgGUZzC3MR4ha1tYxlnc
+         pVdBhqZAsvzUg==
+Received: by pali.im (Postfix)
+        id 85139812; Tue,  5 Oct 2021 21:43:01 +0200 (CEST)
+Date:   Tue, 5 Oct 2021 21:43:01 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
+        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] PCI: brcmstb: Add ACPI config space quirk
+Message-ID: <20211005194301.enb5jddzdgczcolx@pali>
+References: <20211005153209.GA1083986@bhelgaas>
+ <d4b34193-31e5-2f95-6365-b58239c0dabb@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211004121938.546d8f73@thinkpad>
+In-Reply-To: <d4b34193-31e5-2f95-6365-b58239c0dabb@arm.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 12:19:38PM +0200, Marek Behún wrote:
-> On Mon, 4 Oct 2021 09:53:35 +0100
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> > On Mon, Oct 04, 2021 at 09:21:48AM +0200, Marek Behún wrote:
-> > > On Sat, 2 Oct 2021 11:35:19 -0500
-> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >   
-> > > > On Fri, Oct 01, 2021 at 09:58:52PM +0200, Marek Behún wrote:  
-> > > > > From: Pali Rohár <pali@kernel.org>
-> > > > > 
-> > > > > Commit 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value") fixed
-> > > > > handling of CRS response and when CRSSVE flag was not enabled it marked CRS
-> > > > > response as failed transaction (due to simplicity).
-> > > > > 
-> > > > > But pci-aardvark.c driver is already waiting up to the PIO_RETRY_CNT count
-> > > > > for PIO config response and so we can with a small change implement
-> > > > > re-issuing of config requests as described in PCIe base specification.
-> > > > > 
-> > > > > This change implements re-issuing of config requests when response is CRS.
-> > > > > Set upper bound of wait cycles to around PIO_RETRY_CNT, afterwards the
-> > > > > transaction is marked as failed and an all-ones value is returned as
-> > > > > before.    
-> > > > 
-> > > > Does this fix a problem?  
-> > > 
-> > > Hello Bjorn,
-> > > 
-> > > Pali has suspisions that certain Marvell WiFi cards may need this [1]
-> > > to work, but we do not have them so we cannot test this.
-> > > 
-> > > I guess you think this should be considered a new feature instead of a
-> > > fix, so that the Fixes tag should be removed, yes? Pali was of the
-> > > opinion that this patch "fixes" the driver to conform more to the PCIe
-> > > specification, that is why we added the Fixes tag.
-> > > 
-> > > Anyway if you think this should be considered a new feature, this patch
-> > > can be skipped. The following patches apply even without it.  
+Hello!
+
+On Tuesday 05 October 2021 10:57:18 Jeremy Linton wrote:
+> Hi,
+> 
+> On 10/5/21 10:32 AM, Bjorn Helgaas wrote:
+> > On Thu, Aug 26, 2021 at 02:15:55AM -0500, Jeremy Linton wrote:
+> > > Additionally, some basic bus/device filtering exist to avoid sending
+> > > config transactions to invalid devices on the RP's primary or
+> > > secondary bus. A basic link check is also made to assure that
+> > > something is operational on the secondary side before probing the
+> > > remainder of the config space. If either of these constraints are
+> > > violated and a config operation is lost in the ether because an EP
+> > > doesn't respond an unrecoverable SERROR is raised.
 > > 
-> > I do not think we should apply to the mainline a fix that can't be
-> > tested sorry, I will skip this patch.
+> > It's not "lost"; I assume the root port raises an error because it
+> > can't send a transaction over a link that is down.
 > 
-> Lorenzo,
-> 
-> my explanation was incorrect.
-> 
-> The functionality added by this patch _is_ tested and correctly does a
-> retry: it was done by simulating a CRS reply.
-> 
-> We just don't know whether there are real cards used by users that
-> need this functionality (the mentioned Marvell card may be such a card).
+> The problem is AFAIK because the root port doesn't do that.
 
-My claim is that the spec allows root complexes that retry zero times,
-so we must assume such a root complex exists and we cannot rely on any
-retries.  If such a root complex exists, this patch might fix a
-problem, but only for aardvark.  It would be better to fix the problem
-in a way that works for all PCIe controllers.
+Interesting! Does it mean that PCIe Root Complex / Host Bridge (which I
+guess contains also logic for Root Port) does not signal transaction
+failure for config requests? Or it is just your opinion? Because I'm
+dealing with similar issues and I'm trying to find a way how to detect
+if some PCIe IP signal transaction error via AXI SLVERR response OR it
+just does not send any response back. So if you know some way how to
+check which one it is, I would like to know it too.
 
-I'm playing devil's advocate here, and it's quite possible that I'm
-interpreting the spec incorrectly.  Maybe the Marvell card is a way to
-test this in the real world.
+> > 
+> > Is "SERROR" an ARM64 thing?  My guess is the root port would raise an
+> > Unsupported Request error or similar, and the root complex turns that
+> > into a system-specific SERROR?
 
-Bjorn
+Yes, SError is arm64 specific. It is asynchronous CPU interrupt and
+syndrome code then contains what happened.
+
+> AFAIK, what is happening here the CPU core has an outstanding R/W request
+> for which it never receives a response from the root port. So basically its
+> an interconnect protocol violation that the CPU is complaining about rather
+> than something PCIe specific.
+
+Could you describe (ideally in commit message) which SError is
+triggered? Normally if kernel receive SError interrupt it also puts into
+dmesg or oops message also syndrome code which describe what kind of
+error / event occurred. It could help also to other understand what is
+happening there.
