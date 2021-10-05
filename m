@@ -2,125 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12C464223EC
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 12:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5391422484
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 13:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233705AbhJEKxv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 06:53:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233672AbhJEKxv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 06:53:51 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00BA2C06161C;
-        Tue,  5 Oct 2021 03:52:01 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id d18so496537vsh.1;
-        Tue, 05 Oct 2021 03:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q+QFrqKGB0j7m6S9frhdYXSVQB6nI+oRzUWTBQ56AKc=;
-        b=hMo4pH7KAtaYW32hFVQn45VdK9FTXqt401Oc6ycqrAQRCl/6RuW4UhuwGhUeSZGpc1
-         R5BgZaiR6pOSwItCz1GvRGSbDQQexiFeAwpqewreiF1bahsdFfpl6rhDqrYQ5NKRF8b2
-         BfHY1aOuyNRXJmsjoVp3+7SMrwnfnHffNg2Gdv7cRumKfvQ1WYpVtNtGmFeaU8EsLN2T
-         WAoH2IKu2RpO3qhKXG4gV8qcbTvCMnabDt89+bH4Qr+auP5GeNxkdaXewpTpLAm68Wna
-         ccPeIX6H5W5N+Am5PUWfUvzPbXcTcKCYBpRR7ebNPnir9QkLEVhfVSUyI0YpOA47Dj3F
-         eTzw==
+        id S234223AbhJELFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 07:05:50 -0400
+Received: from mail-oo1-f54.google.com ([209.85.161.54]:40752 "EHLO
+        mail-oo1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233449AbhJELFt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 07:05:49 -0400
+Received: by mail-oo1-f54.google.com with SMTP id j11-20020a4a92cb000000b002902ae8cb10so6274311ooh.7;
+        Tue, 05 Oct 2021 04:03:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q+QFrqKGB0j7m6S9frhdYXSVQB6nI+oRzUWTBQ56AKc=;
-        b=fv9nN1R4F94hbOQ00DXk10fwO3hfUgmf2iw4czr0nxAja4d/zAohYFRIdn6L5jdYNE
-         5JA/QEP73ih4KjOpE+B2zAWy34LBa44ItsYFb5bCziMKrqxAAjPDT5VRn+ZY8go7ua4B
-         uQC/RIsvRy+43ZbcUdjUnHzyFkSDrOj7r6HeEkAHzNTKHhMDT7E6bKXFdoqyx9uf7QR0
-         nX0mwj72w0PtL6FhYOKz2hqu9xcSpLv3myxcldQb9qZzi10m3dq2XW8Y9d5aW1I1K5hg
-         J2V73kbctKDTf0EwZd9M2Hf/1vyC/gCsBB8o03oRGW2Z0pk+3rOGDEM/BfZ9YK2+7f9W
-         SnrQ==
-X-Gm-Message-State: AOAM530mAgxU2NvPG9lQGmkekrVPvY8pY0hU6gvqgBGYrTtier4eko+f
-        xfhVsamkTc1I+ksnEPdS9+bQhd8AwvjqlCWPQns=
-X-Google-Smtp-Source: ABdhPJwtV82P/rZoW/OgbX6bsC8jyoZ2nArcMJsVFUQINMfUERam1ukL/4J8XK4rPbjDxOEP0HGWPscydS36Ux35YHw=
-X-Received: by 2002:a67:f618:: with SMTP id k24mr17736934vso.48.1633431120157;
- Tue, 05 Oct 2021 03:52:00 -0700 (PDT)
+        bh=rbQR10SUFcLSb0CqZ3+0KI2N/KoBUg4lIS8MaCYfWzA=;
+        b=uTRXokuJvnnt9xhRhvKk7nmg9P1L43vtMvvkzf5c7uTPaL5O6Dm116xMRTZRZLMOKD
+         fojp1hYG7NkIA9hcGEnMqAxJiWVk7tjgJvK8DtXNeyQQqS7cg/EJjHrV9BvN2Z4z56jI
+         auEN2JL0rm9iHJXOVNMEWGLCRuuvyLLFYQ8tBwoYpbYmm6x7Zj22BlEoIkmscDl+fdH5
+         tkKXAnyEhlL7unmkR0KeV3Zd43U00mmYfnXhAZHZ7N/Cg7NpNn5s8ZZ7wN59fescRBEz
+         3jXXD+sRiUyrA47RR8tx2FCxMPDbNTdNh0382at7NxCDuNjDAqqPEmXcsiaVwOmfnS8G
+         P3Tg==
+X-Gm-Message-State: AOAM530Ar+fZq1ruftRtomp4A+sgIEHTZi+HxKS8HktX7BrEcxPVQtJ8
+        xa6J21cuzsIhE/yIGIk5ZPOdfXBlntJaqI/Ffmc=
+X-Google-Smtp-Source: ABdhPJxripPRp/2cLwKftBJJECVik2j1AfoGQDmRIUHPdG4gKa29qqGW4SnWQFEZNeKgTv6jZa4cvNpPu7oUx2ePtCo=
+X-Received: by 2002:a05:6820:17a:: with SMTP id k26mr12930860ood.37.1633431839035;
+ Tue, 05 Oct 2021 04:03:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210925203224.10419-1-sergio.paracuellos@gmail.com>
- <CAMhs-H9p4xmPO2F_byk4DQncTGZayW1HwAzrPn_W0eEW5UUn9A@mail.gmail.com> <YVwqpCbYzxUWm5LJ@kroah.com>
-In-Reply-To: <YVwqpCbYzxUWm5LJ@kroah.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 5 Oct 2021 12:51:48 +0200
-Message-ID: <CAMhs-H-YDg=q6sJhhawkqkfdLCj=EhcX8G-1WGH4K928ToLYLw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] MIPS: ralink: fix PCI IO resources
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-staging@lists.linux.dev, NeilBrown <neil@brown.name>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1800633.tdWV9SEqCh@kreacher> <7312660.EvYhyI6sBW@kreacher> <fe9b4f36-0b46-f8d7-4a4c-9bdefe1fbd90@gmail.com>
+In-Reply-To: <fe9b4f36-0b46-f8d7-4a4c-9bdefe1fbd90@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Oct 2021 13:03:42 +0200
+Message-ID: <CAJZ5v0i9vyT7oU-4NkVjrtD+Mz0Udaex=4j6iR5f70ssd8AnbA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] PCI: PM: Simplify and unify some helper functions
+To:     Ferry Toth <fntoth@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 5, 2021 at 12:36 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Sun, Oct 3, 2021 at 10:14 PM Ferry Toth <fntoth@gmail.com> wrote:
 >
-> On Sun, Oct 03, 2021 at 06:21:21PM +0200, Sergio Paracuellos wrote:
-> > Hi Greg,
+> Hi,
+>
+> Op 29-09-2021 om 20:05 schreef Rafael J. Wysocki:
+> > Hi All,
 > >
-> > On Sat, Sep 25, 2021 at 10:32 PM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > >
-> > > MIPs ralink need a special tratement regarding the way it handles PCI IO
-> > > resources. On MIPS I/O ports are memory mapped, so we access them using normal
-> > > load/store instructions. MIPS 'plat_mem_setup()' function does a call to
-> > > 'set_io_port_base(KSEG1)'. There, variable 'mips_io_port_base'
-> > > is set then using this address which is a virtual address to which all
-> > > ports are being mapped. Ralink I/O space has a mapping of bus address
-> > > equal to the window into the mmio space, with an offset of IO start range
-> > > cpu address. This means that to have this working we need:
-> > > - linux port numbers in the range 0-0xffff.
-> > > - pci port numbers in the range 0-0xffff.
-> > > - io_offset being zero.
-> > >
-> > > These means at the end to have bus address 0 mapped to IO range cpu address.
-> > > We need a way of properly set 'mips_io_port_base' with a virtually mapped
-> > > value of the IO cpu address.
-> > >
-> > > This series do the following approach:
-> > > 1) Revert two bad commit from a previous attempt of make this work [0].
-> > > 2) Set PCI_IOBASE to mips 'mips_io_port_base'.
-> > > 3) Allow architecture dependent 'pci_remap_iospace'.
-> > > 4) Implement 'pci_remap_iospace' for MIPS.
-> > > 5) Be sure IOBASE address for IO window is set with correct value.
-> > >
-> > > More context about this series appoach in this mail thread [1].
-> > >
-> > > Patches related with reverts are from this merge cycle so they are only
-> > > added to the staging git tree. So to have all stuff together I'd like to
-> > > get everybody Ack's to get all of this series through staging tree if
-> > > possible :).
-> > >
-> > > Thanks in advance for your time.
-> > >
-> > > Changes in v3:
-> > >  - Collect Arnd's Acked-by for the patches.
-> > >  - Be sure IO resource start address is zero and WARN_ONCE if it is not
-> > >    on MIPS pci_remap_iospace() patch. Also make use of 'resource_size'
-> > >    instead of do the logic explicitly again.
+> > This series is on top of the linux-next branch from linux-pm.git:
 > >
-> > I think nothing is missing to get this added through the staging tree.
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+> >
+> > which should be included in linux-next.
+> >
+> > Two of the 3 patches in this series, [1-2/3], were included in the "PCI: ACPI:
+> > Get rid of struct pci_platform_pm_ops and clean up code" series:
+> >
+> >   https://lore.kernel.org/linux-acpi/1800633.tdWV9SEqCh@kreacher/
+> >
+> > and the remaining one, [3/3] is a new version of a problematic patch from that
+> > series.  The rest of that series is present in the git branch above.
+> >
+> > All of the 3 patches in this set need to be tested in order to verify that
+> > there are no more issues that need to be addressed in them.
+> >
+> > Ferry, please test!
 >
-> Great, thanks for sticking with this, will go queue it up now.
-
-Thanks!
-
-Best regards,
-    Sergio Paracuellos
-
+> This is how I tested:
+> 3 patches from
+> https://patchwork.kernel.org/project/linux-acpi/patch/2793105.e9J7NaK4W3@kreacher/
+> on top of 5.15.0-rc2 as before
+> 4 patches from v2 in the order of linux-pm.git
+> then tested without, with 1/3, 1+2/3, 1+2+3/3 on top (with only 3/3 the
+> new patch, 1+2/3 taken from v2 as they are unchanged).
 >
-> greg k-h
+> In all 4 cases I didn't find any trouble (related to this patch).
+>
+> Thanks for doing this!
+
+Thank you!
