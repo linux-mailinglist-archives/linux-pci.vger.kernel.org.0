@@ -2,324 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D928842345A
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 01:13:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3EB423474
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 01:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236931AbhJEXPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 19:15:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47295 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236930AbhJEXPW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 19:15:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633475610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zj1Pqa/nW4zCjDbiBULlfMptYD+zwkzqfmywnaZHqKA=;
-        b=jJBSbIunMYTY7kD+1ilERg1wn47h9tTdeuzgowBb91+BCkFCWzm1ob4HwAkEzlbyJVLF2q
-        WS6naLPkmXN+Yzf0t3zb+bPz/DQ7ckqFISUn8eECxxWL9jdTp/q+RXogjwlcZqO5jDXdq5
-        fm5SHsBobNQE70uJtEZ2kW8KTdVSI7Y=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-NP7J7YWaM-mdmIXzqeX-Ng-1; Tue, 05 Oct 2021 19:13:29 -0400
-X-MC-Unique: NP7J7YWaM-mdmIXzqeX-Ng-1
-Received: by mail-oi1-f200.google.com with SMTP id y5-20020aca3205000000b0027644481fe7so581040oiy.10
-        for <linux-pci@vger.kernel.org>; Tue, 05 Oct 2021 16:13:29 -0700 (PDT)
+        id S236855AbhJEXa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 19:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233540AbhJEXa1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 19:30:27 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D15EC061749
+        for <linux-pci@vger.kernel.org>; Tue,  5 Oct 2021 16:28:36 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id e16so798988qts.4
+        for <linux-pci@vger.kernel.org>; Tue, 05 Oct 2021 16:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YZtqiNpZkkBjH9PLa+2pg+VWvxuMg2D7NfMsla0iApM=;
+        b=W9M/04ikoH0xs+S7XpSkDR2UwXuMr54r1WDEMiLrXADyvj+BVQZ5larNl6JHMBOsgJ
+         gi1057s5XCujQy0a8GeabfgF/4AP1j4BkhHMi4+7MT131D4BK4FskSqsvTT4NoLE/F5u
+         NjVsItMi+O2rP5j8RLxQ79/oq6B/6EBTEtvNelJDRpl8shFYKdQ/9gArgjLyrmFBWzFK
+         J0FW5GstAgSyxV36N+hYUTZRXh0jg2btzSVVF50hXhj8EzFxQBaPNQlEQVEVSO2OOl3k
+         8hqHJg7aP8qQKtZgc+6a2E9CcNk+xx3G2R8r/HMH0kiPwGLCxyv7CQafKgZQYknQJOIV
+         rj9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zj1Pqa/nW4zCjDbiBULlfMptYD+zwkzqfmywnaZHqKA=;
-        b=CADr+/qBqMw2VffYqtS8FafTkbv7+rKH2Edz19ha5+uA/xWGF80Q7WHdlx8jgonxnS
-         XMYRFhZOFqZXrBTejR99Y33Tof3y7ADfukO2xW69ybWQo4JEbzojrc/kiXNRkpM/9T6L
-         L4ia5YXSRzL9tSqTJAJHuYd7jO3H+R88H4nh0EdhzmQYaLeGt9sf8VxNXRCitl2AUcM1
-         ILVBeOkg0Y+EKOyxcTQG4Z66ksoIHGl+4P7UF0ZjZ1GdaqkNVFQWqtoNGNwJwI5OXKQq
-         cxOW9RrAp3Dh/d6p3YmkURfpPgmByYLLqoGQ+s+JahSa/YndDB6+YSDP6crxz4CWFyhW
-         KziQ==
-X-Gm-Message-State: AOAM5304lJVR+Bnfe+nDheQSbwIq6k25/gro3qgsvkWyDl5SFmPfC8fZ
-        o0Mrj2zg6O5jXdmo5ehZhiwUNSZFTq7CKo/2LbOdQoxrhlqkzEFRtGaVLKqLLMGCTwSlJMC7TmN
-        nsXk+AoF4Fh5+nCHBLSRn
-X-Received: by 2002:a9d:609a:: with SMTP id m26mr17156155otj.226.1633475608493;
-        Tue, 05 Oct 2021 16:13:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxnrBD3X8yCjj7mK0ad54Ro3UQYC86p0POKvspHM8DhJ0GW84v5/9RUjQihQJWQd/OQb4+tew==
-X-Received: by 2002:a9d:609a:: with SMTP id m26mr17156133otj.226.1633475608192;
-        Tue, 05 Oct 2021 16:13:28 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id c12sm3805488oos.16.2021.10.05.16.13.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YZtqiNpZkkBjH9PLa+2pg+VWvxuMg2D7NfMsla0iApM=;
+        b=4uTUVOlYhK0bINt2TzqvFWpvZp0+tSa3RsZnIyTHVKlQIzEP2JR36+2W/+0+2ZK4KQ
+         BETX8Ehopsw9XIVjN02oCeNsbycpHNAEyAmxA+VAYf0UHqsi3CcLOGoyDcZponmvcpxe
+         OXgsEmVzB8aqJ1rSx4lFUpSpBOTLFrnkPjVGeWYi1v3gqtG/mASwKjgrwoPHGe+nIAwK
+         /AXP4NFQUn2t89D1ug7HRxMBCg9aGRpUMJDeFqA2TuPxQ3xrKjwd/r7XDBB0e4BAPoJm
+         duIqsAjbVRS79KYrGnoKeLHOnc1/xiZO+Bw4n5NjoaCZqgNzkvv9wzRn+0qgHnyOmreE
+         Rf5A==
+X-Gm-Message-State: AOAM531po6Ngev67ln6w+ep5GaPSYCh8q/F0LilA4aZUuyDnYG4qdNNc
+        XVZG921tbz3iWaaxqaiRNZNGvg==
+X-Google-Smtp-Source: ABdhPJxLsGumPYgbsPy+xlzVZoblVHF5PD2wFx2gPiovv1H2BFWEuNX7TLFJw+HZ1DVzpRheZcUi0A==
+X-Received: by 2002:ac8:705d:: with SMTP id y29mr9574774qtm.73.1633476515521;
+        Tue, 05 Oct 2021 16:28:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id b18sm1329682qtq.62.2021.10.05.16.28.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 16:13:27 -0700 (PDT)
-Date:   Tue, 5 Oct 2021 17:13:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Ruffell <matthew.ruffell@canonical.com>
-Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
-Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
- through 2x GPUs that share same pci switch via vfio
-Message-ID: <20211005171326.3f25a43a.alex.williamson@redhat.com>
-In-Reply-To: <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
-References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
-        <20210914104301.48270518.alex.williamson@redhat.com>
-        <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
-        <20210915103235.097202d2.alex.williamson@redhat.com>
-        <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        Tue, 05 Oct 2021 16:28:35 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mXtrO-00BKTt-Fi; Tue, 05 Oct 2021 20:28:34 -0300
+Date:   Tue, 5 Oct 2021 20:28:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Si-Wei Liu <siwliu.kernel@gmail.com>
+Cc:     Haakon Bugge <haakon.bugge@oracle.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Enabling RO on a VF
+Message-ID: <20211005232834.GB2688930@ziepe.ca>
+References: <48FF6F8E-95E2-4A29-A059-12EF614B381C@oracle.com>
+ <20211001115455.GJ3544071@ziepe.ca>
+ <4EAE3BC9-26B6-41E3-B040-2ADAB77D96CE@oracle.com>
+ <20211001120153.GL3544071@ziepe.ca>
+ <CAPWQSg0wODmw7evfzdtP4gW-toVgoVfigP5t0CVosOAkarNTTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPWQSg0wODmw7evfzdtP4gW-toVgoVfigP5t0CVosOAkarNTTg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 5 Oct 2021 18:02:24 +1300
-Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
-
-> Hi Alex,
+On Tue, Oct 05, 2021 at 04:09:54PM -0700, Si-Wei Liu wrote:
+> On Fri, Oct 1, 2021 at 6:02 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Fri, Oct 01, 2021 at 11:59:15AM +0000, Haakon Bugge wrote:
+> > >
+> > >
+> > > > On 1 Oct 2021, at 13:54, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Fri, Oct 01, 2021 at 11:05:15AM +0000, Haakon Bugge wrote:
+> > > >> Hey,
+> > > >>
+> > > >>
+> > > >> Commit 1477d44ce47d ("RDMA/mlx5: Enable Relaxed Ordering by default
+> > > >> for kernel ULPs") uses pcie_relaxed_ordering_enabled() to check if
+> > > >> RO can be enabled. This function checks if the Enable Relaxed
+> > > >> Ordering bit in the Device Control register is set. However, on a
+> > > >> VF, this bit is RsvdP (Reserved for future RW
+> > > >> implementations. Register bits are read-only and must return zero
+> > > >> when read. Software must preserve the value read for writes to
+> > > >> bits.).
+> > > >>
+> > > >> Hence, AFAICT, RO will not be enabled when using a VF.
+> > > >>
+> > > >> How can that be fixed?
+> > > >
+> > > > When qemu takes a VF and turns it into a PF in a VM it must emulate
+> > > > the RO bit and return one
+> > >
+> > > I have a pass-through VF:
+> > >
+> > > # lspci -s ff:00.0 -vvv
+> > > ff:00.0 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex Virtual Function]
+> > > []
+> > >               DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+> > >                       RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
+> >
+> > Like I said, it is a problem in the qemu area..
+> >
+> > Jason
+> Can you clarify why this is a problem in the QEMU area?
 > 
-> Have you had an opportunity to have a look at this a bit deeper?
-> 
-> On 16/09/21 4:32 am, Alex Williamson wrote:
-> > 
-> > Adding debugging to the vfio-pci interrupt handler, it's correctly
-> > deferring the interrupt as the GPU device is not identifying itself as
-> > the source of the interrupt via the status register.  In fact, setting
-> > the disable INTx bit in the GPU command register while the interrupt
-> > storm occurs does not stop the interrupts.
-> > 
-> > The interrupt storm does seem to be related to the bus resets, but I
-> > can't figure out yet how multiple devices per switch factors into the
-> > issue.  Serializing all bus resets via a mutex doesn't seem to change
-> > the behavior.
-> > 
-> > I'm still investigating, but if anyone knows how to get access to the
-> > Broadcom datasheet or errata for this switch, please let me know.  
-> 
-> We have managed to obtain a recent errata for this switch, and it 
-> doesn't
->  mention any interrupt storms with nested switches. What would 
-> I be looking for
->  in the errata? I cannot share our copy, sorry.
+> Even though Mellanox device might well support it (on VF), there's no
+> way for QEMU to really know if an arbitrary passthrough device may
+> support RO. 
 
-I dug back into this today and I'm thinking that it doesn't have
-anything to do with the PCIe switch hardware.  In my case, I believe
-the switch is mostly just imposing interrupt sharing between pairs of
-GPUs under the switches.  For example, in the case of the GRID K1, the
-1st & 3rd share an interrupt, as do the 2nd & 4th, so I believe I could
-get away with assigning one from each shared set together.
+That isn't what the cap bit means
 
-The interrupt sharing is a problem because occasionally one of the GPUs
-will continuously stomp on the interrupt line while there's no handler
-configured, the other GPU replies "not me", and the kernel eventually
-squashes the line.
+The cap bit on the PF completely disables generation of RO at the
+device at all.
 
-In one case I see this happening when vfio-pci calls
-pci_free_irq_vectors() when we're tearing down the MSI interrupt.  This
-is the nastiest case because this function wants to clear DisINTx in
-pci_intx_for_msi(), where the free-irq-vectors function doesn't even
-return to vfio-pci code so that we could mask INTx before the interrupt
-storm does its thing.  I've got a workaround for this in the patch I'm
-playing with below, but it's exceptionally hacky.
+If the PF's cap bit is disabled then no VF can generate RO, and qemu
+should expose a wired to zero RO bit in the emulated PF.
 
-Another case I see is that DisINTx will be cleared while the device is
-still screaming on the interrupt line, but userspace doesn't yet have a
-handler setup.  I've had a notion that we need some sort of guard
-handler to protect the host from such situations, ie. a handler that
-only serves to squelch the device in cases where we could have a shared
-interrupt.  The patch below also includes swapping in this handler
-between userspace interrupt configurations.
+If the cap bit is enabled then the VFs could generate RO, depending on
+their drivers, and qemu should generate defaulted to 1 bit in the
+emulated PF.
 
-With both of these together, I'm so far able to prevent an interrupt
-storm for these cards.  I'd say the patch below is still extremely
-experimental, and I'm not sure how to get around the really hacky bit,
-but it would be interesting to see if it resolves the original issue.
-I've not yet tested this on a variety of devices, so YMMV.  Thanks,
+> PCIe device functions up to the root port throughout the PCIe fabric,
+> or it may follow PF's enabling status if it is at all capable. I don't
+> see what QEMU can do by just forcefully emulating the bit?
 
-Alex
+IMHO Kernel/BIOS should be responsible to clear the RO bit at the PF
+if RO is not supportable in the environment. It is proper to prevent
+the device from using RO completely if it is broken.
 
-(patch vs v5.14)
+> Not to mention the current implementation only takes care of broken
+> root port but not the intermediate switches.
+> https://lore.kernel.org/linux-arm-kernel/MWHPR12MB1600255ACFCD3FB3C80EB8B6C88B0@MWHPR12MB1600.namprd12.prod.outlook.com/
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 318864d52837..c8500fcda5b8 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -347,6 +347,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
- 			vdev->pci_2_3 = pci_intx_mask_supported(pdev);
- 	}
- 
-+	vfio_intx_stub_init(vdev);
- 	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
- 	if (vdev->pci_2_3 && (cmd & PCI_COMMAND_INTX_DISABLE)) {
- 		cmd &= ~PCI_COMMAND_INTX_DISABLE;
-@@ -447,6 +448,14 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 		kfree(dummy_res);
- 	}
- 
-+	/*
-+	 * Set known command register state, disabling MSI/X (via busmaster)
-+	 * and INTx directly.  At this point we can teardown the INTx stub
-+	 * handler initialized from the SET_IRQS teardown above.
-+	 */
-+	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-+	vfio_intx_stub_exit(vdev);
-+
- 	vdev->needs_reset = true;
- 
- 	/*
-@@ -464,12 +473,6 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
- 		pci_save_state(pdev);
- 	}
- 
--	/*
--	 * Disable INTx and MSI, presumably to avoid spurious interrupts
--	 * during reset.  Stolen from pci_reset_function()
--	 */
--	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
--
- 	/*
- 	 * Try to get the locks ourselves to prevent a deadlock. The
- 	 * success of this is dependent on being able to lock the device,
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 869dce5f134d..31978c1b0103 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -139,6 +139,44 @@ static irqreturn_t vfio_intx_handler(int irq, void *dev_id)
- 	return ret;
- }
- 
-+static irqreturn_t vfio_intx_stub(int irq, void *dev_id)
-+{
-+	struct vfio_pci_device *vdev = dev_id;
-+
-+	if (pci_check_and_mask_intx(vdev->pdev))
-+		return IRQ_HANDLED;
-+
-+	return IRQ_NONE;
-+}
-+
-+void vfio_intx_stub_init(struct vfio_pci_device *vdev)
-+{
-+	char *name;
-+
-+	if (vdev->nointx || !vdev->pci_2_3 || !vdev->pdev->irq)
-+		return;
-+
-+	name = kasprintf(GFP_KERNEL, "vfio-intx-stub(%s)",
-+			 pci_name(vdev->pdev));
-+	if (!name)
-+		return;
-+
-+	if (request_irq(vdev->pdev->irq, vfio_intx_stub,
-+			IRQF_SHARED, name, vdev))
-+		kfree(name);
-+
-+	vdev->intx_stub = true;
-+}
-+
-+void vfio_intx_stub_exit(struct vfio_pci_device *vdev)
-+{
-+	if (!vdev->intx_stub)
-+		return;
-+
-+	kfree(free_irq(vdev->pdev->irq, vdev));
-+	vdev->intx_stub = false;
-+}
-+
- static int vfio_intx_enable(struct vfio_pci_device *vdev)
- {
- 	if (!is_irq_none(vdev))
-@@ -153,6 +191,8 @@ static int vfio_intx_enable(struct vfio_pci_device *vdev)
- 
- 	vdev->num_ctx = 1;
- 
-+	vfio_intx_stub_exit(vdev);
-+
- 	/*
- 	 * If the virtual interrupt is masked, restore it.  Devices
- 	 * supporting DisINTx can be masked at the hardware level
-@@ -231,6 +271,7 @@ static void vfio_intx_disable(struct vfio_pci_device *vdev)
- 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
- 	vdev->num_ctx = 0;
- 	kfree(vdev->ctx);
-+	vfio_intx_stub_init(vdev);
- }
- 
- /*
-@@ -258,6 +299,8 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
- 	if (!vdev->ctx)
- 		return -ENOMEM;
- 
-+	vfio_intx_stub_exit(vdev);
-+
- 	/* return the number of supported vectors if we can't get all: */
- 	cmd = vfio_pci_memory_lock_and_enable(vdev);
- 	ret = pci_alloc_irq_vectors(pdev, 1, nvec, flag);
-@@ -266,6 +309,7 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
- 			pci_free_irq_vectors(pdev);
- 		vfio_pci_memory_unlock_and_restore(vdev, cmd);
- 		kfree(vdev->ctx);
-+		vfio_intx_stub_init(vdev);
- 		return ret;
- 	}
- 	vfio_pci_memory_unlock_and_restore(vdev, cmd);
-@@ -388,6 +432,7 @@ static int vfio_msi_set_block(struct vfio_pci_device *vdev, unsigned start,
- static void vfio_msi_disable(struct vfio_pci_device *vdev, bool msix)
- {
- 	struct pci_dev *pdev = vdev->pdev;
-+	pci_dev_flags_t dev_flags = pdev->dev_flags;
- 	int i;
- 	u16 cmd;
- 
-@@ -399,19 +444,22 @@ static void vfio_msi_disable(struct vfio_pci_device *vdev, bool msix)
- 	vfio_msi_set_block(vdev, 0, vdev->num_ctx, NULL, msix);
- 
- 	cmd = vfio_pci_memory_lock_and_enable(vdev);
--	pci_free_irq_vectors(pdev);
--	vfio_pci_memory_unlock_and_restore(vdev, cmd);
--
- 	/*
--	 * Both disable paths above use pci_intx_for_msi() to clear DisINTx
--	 * via their shutdown paths.  Restore for NoINTx devices.
-+	 * XXX pci_intx_for_msi() will clear DisINTx, which can trigger an
-+	 * INTx storm even before we return from pci_free_irq_vectors(), even
-+	 * as we'll restore the previous command register immediately after.
-+	 * Hack around it by masking in a dev_flag to prevent such behavior.
- 	 */
--	if (vdev->nointx)
--		pci_intx(pdev, 0);
-+	pdev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
-+	pci_free_irq_vectors(pdev);
-+	pdev->dev_flags = dev_flags;
-+
-+	vfio_pci_memory_unlock_and_restore(vdev, cmd);
- 
- 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
- 	vdev->num_ctx = 0;
- 	kfree(vdev->ctx);
-+	vfio_intx_stub_init(vdev);
- }
- 
- /*
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index 5a36272cecbf..709d497b528c 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -128,6 +128,7 @@ struct vfio_pci_device {
- 	bool			needs_reset;
- 	bool			nointx;
- 	bool			needs_pm_restore;
-+	bool			intx_stub;
- 	struct pci_saved_state	*pci_saved_state;
- 	struct pci_saved_state	*pm_save;
- 	struct vfio_pci_reflck	*reflck;
-@@ -151,6 +152,9 @@ struct vfio_pci_device {
- #define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
- #define irq_is(vdev, type) (vdev->irq_type == type)
- 
-+extern void vfio_intx_stub_init(struct vfio_pci_device *vdev);
-+extern void vfio_intx_stub_exit(struct vfio_pci_device *vdev);
-+
- extern void vfio_pci_intx_mask(struct vfio_pci_device *vdev);
- extern void vfio_pci_intx_unmask(struct vfio_pci_device *vdev);
- 
+Which is what this message suggests doing
 
+Jason
