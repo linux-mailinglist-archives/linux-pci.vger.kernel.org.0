@@ -2,129 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DFD423272
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 22:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C0D3423374
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 00:25:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232250AbhJEU6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 16:58:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231322AbhJEU6F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 16:58:05 -0400
-Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAAFC061749;
-        Tue,  5 Oct 2021 13:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=kmomRx0MWiWwMhds3Qf0OPR0SiP4275qlsODlT8KAeY=; b=rXkBoSln3QjUtM+muTTXybBqLI
-        62T9XF2/fxutRkU7qcpza92mn+wfv5oRKTauJJKaRebgbl6v79VrOYgbu6IFhWC5RtcADzrDJh/5f
-        MrChG4q/h5VVfOAnfW8C3/TRIMsypAtOXRBc0a1CGGaDQzWUWy35V7habfBDIpgj9illAeiB87x3k
-        CE5h/V7CO0lsBnoxbxWuAwPXzRN4H9HPe1u5bRvQQ3k1EhClrJgMiHRwtWg+Rvrpedek+bAbEH56p
-        BQ7SrX/hTsfcEMl86I0lyDfGIV/A6aGoORBtFujjGIbfsSTR9497+WWHn/gtvmYDnW5XDHF/u501U
-        ymm8TkGg==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mXrTx-00BsC6-Ln; Tue, 05 Oct 2021 20:56:13 +0000
-Subject: Re: [PATCH] x86/PCI: Add pci=no_e820 cmdline option to ignore E820
- reservations for bridge windows
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20211005150956.303707-1-hdegoede@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0320b854-327b-397f-ba26-e69ea321dd1b@infradead.org>
-Date:   Tue, 5 Oct 2021 13:56:13 -0700
+        id S236758AbhJEW10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 18:27:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:34334 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236697AbhJEW10 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 18:27:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D02B56D;
+        Tue,  5 Oct 2021 15:25:34 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5B2B3F66F;
+        Tue,  5 Oct 2021 15:25:33 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] PCI: brcmstb: Add ACPI config space quirk
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
+        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20211005153209.GA1083986@bhelgaas>
+ <d4b34193-31e5-2f95-6365-b58239c0dabb@arm.com>
+ <20211005194301.enb5jddzdgczcolx@pali>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <694bb355-3b5e-9801-3772-ff784b49a603@arm.com>
+Date:   Tue, 5 Oct 2021 17:25:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20211005150956.303707-1-hdegoede@redhat.com>
+In-Reply-To: <20211005194301.enb5jddzdgczcolx@pali>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/5/21 8:09 AM, Hans de Goede wrote:
-> Some BIOS-es contain a bug where they add addresses which map to system RAM
-> in the PCI bridge memory window returned by the ACPI _CRS method, see
-> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> space").
+Hi,
+
+On 10/5/21 2:43 PM, Pali Rohár wrote:
+> Hello!
 > 
-> To avoid this Linux by default excludes E820 reservations when allocating
-> addresses since 2010. Windows however ignores E820 reserved regions for PCI
-> mem allocations, instead it avoids these BIOS bugs by allocates addresses
-> top-down.
+> On Tuesday 05 October 2021 10:57:18 Jeremy Linton wrote:
+>> Hi,
+>>
+>> On 10/5/21 10:32 AM, Bjorn Helgaas wrote:
+>>> On Thu, Aug 26, 2021 at 02:15:55AM -0500, Jeremy Linton wrote:
+>>>> Additionally, some basic bus/device filtering exist to avoid sending
+>>>> config transactions to invalid devices on the RP's primary or
+>>>> secondary bus. A basic link check is also made to assure that
+>>>> something is operational on the secondary side before probing the
+>>>> remainder of the config space. If either of these constraints are
+>>>> violated and a config operation is lost in the ether because an EP
+>>>> doesn't respond an unrecoverable SERROR is raised.
+>>>
+>>> It's not "lost"; I assume the root port raises an error because it
+>>> can't send a transaction over a link that is down.
+>>
+>> The problem is AFAIK because the root port doesn't do that.
 > 
-> Recently (2020) some systems have shown-up with E820 reservations which
-> cover the entire _CRS returned PCI bridge memory window, causing all
-> attempts to assign memory to PCI bars which have not been setup by the BIOS
-> to fail. For example here are the relevant dmesg bits from a
-> Lenovo IdeaPad 3 15IIL 81WE:
+> Interesting! Does it mean that PCIe Root Complex / Host Bridge (which I
+> guess contains also logic for Root Port) does not signal transaction
+> failure for config requests? Or it is just your opinion? Because I'm
+> dealing with similar issues and I'm trying to find a way how to detect
+> if some PCIe IP signal transaction error via AXI SLVERR response OR it
+> just does not send any response back. So if you know some way how to
+> check which one it is, I would like to know it too.
+
+This is my _opinion_ based on what I've heard of some other IP 
+integration issues, and what i've seen poking at this one from the 
+perspective of a SW guy rather than a HW guy. So, basically worthless. 
+But, you should consider that most of these cores/interconnects aren't 
+aware of PCIe completion semantics so its the root ports responsibility 
+to say, gracefully translate a non-posted write that doesn't have a 
+completion for the interconnects its attached to, rather than tripping 
+something generic like a SLVERR.
+
+Anyway, for this I would poke around the pile of exception registers, 
+with your specific processors manual handy because a lot of them are 
+implementation defined.
+>>>
+>>> Is "SERROR" an ARM64 thing?  My guess is the root port would raise an
+>>> Unsupported Request error or similar, and the root complex turns that
+>>> into a system-specific SERROR?
 > 
-> [    0.000000] BIOS-e820: [mem 0x000000004bc50000-0x00000000cfffffff] reserved
-> [    0.557473] pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> Yes, SError is arm64 specific. It is asynchronous CPU interrupt and
+> syndrome code then contains what happened.
 > 
-> Add a pci=no_e820 option which allows disabling the E820 reservations
-> check, while still honoring the _CRS provided resources.
+>> AFAIK, what is happening here the CPU core has an outstanding R/W request
+>> for which it never receives a response from the root port. So basically its
+>> an interconnect protocol violation that the CPU is complaining about rather
+>> than something PCIe specific.
 > 
-> And automatically enable this on the "Lenovo IdeaPad 3 15IIL05" to fix
-> the touchpad not working on this laptop.
-> 
-> Also add a pci=use_e820 option to allow overruling the results of
-> DMI quirks defaulting to no_e820 on some systems.
-> 
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> BugLink: https://bugs.launchpad.net/ubuntu/+source/linux-signed-hwe/+bug/1878279
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-
-Hi Hans,
-
-Please update Documentation/admin-guide/kernel-parameters.txt also.
-
-> ---
->   arch/x86/include/asm/pci_x86.h | 10 ++++++++++
->   arch/x86/kernel/resource.c     | 17 +++++++++++++++++
->   arch/x86/pci/acpi.c            | 26 ++++++++++++++++++++++++++
->   arch/x86/pci/common.c          |  6 ++++++
->   4 files changed, 59 insertions(+)
+> Could you describe (ideally in commit message) which SError is
+> triggered? Normally if kernel receive SError interrupt it also puts into
+> dmesg or oops message also syndrome code which describe what kind of
+> error / event occurred. It could help also to other understand what is
+> happening there.
 > 
 
-> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> index 9b9fb7882c20..6069d86021f0 100644
-> --- a/arch/x86/kernel/resource.c
-> +++ b/arch/x86/kernel/resource.c
-
-> @@ -23,11 +24,27 @@ static void resource_clip(struct resource *res, resource_size_t start,
->   		res->start = end + 1;
->   }
->   
-> +/*
-> + * Some BIOS-es contain a bug where they add addresses which map to system RAM
-> + * in the PCI bridge memory window returned by the ACPI _CRS method, see
-> + * commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address space").
-> + * To avoid this Linux by default excludes E820 reservations when allocating
-> + * addresses since 2010. Windows however ignores E820 reserved regions for PCI
-> + * mem allocations, instead it avoids these BIOS bugs by allocates addresses
-> + * top-down.
-> + * Recently (2020) some systems have shown-up with E820 reservations which
-> + * cover the entire _CRS returned PCI bridge memory window, causing all
-> + * attempts to assign memory to PCI bars which have not been setup by the BIOS
-
-                     preferably:        BARs
-
-> + * to fail. The pci_use_e820 check is there as a workaround for these systems.
-> + */
-
-
-
-thanks.
--- 
-~Randy
