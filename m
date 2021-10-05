@@ -2,134 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8804D42304C
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 20:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0040423057
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 20:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235496AbhJESpg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 14:45:36 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:59126 "EHLO m43-7.mailgun.net"
+        id S229679AbhJESug (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 14:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235421AbhJESpb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Oct 2021 14:45:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1633459421; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=X876Ahdw47GXHYVdK4dXG/Umyyfo1APYAeN0CffMWTg=; b=eV9Sxs6bFUd6XsUP3f5JJj7BUnC1cV19BOHiSPU6yVvjhSF+pgH7Ng582ngga9KTBj8aAlRI
- Nwa+HAlxlqEbXcHMHY3Nt+x52rZ233kzY15KsIUq0dWDjQ01jzwK7wAAqILaXUlSbeFpu2Wq
- BO0HFF1OR8xvqfl7s8ipSB1D434=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 615c9cd37ae92c7fc90114fe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 05 Oct 2021 18:43:31
- GMT
-Sender: pmaliset=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2C0CFC4360C; Tue,  5 Oct 2021 18:43:31 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from pmaliset-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmaliset)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2839CC43617;
-        Tue,  5 Oct 2021 18:43:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 2839CC43617
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From:   Prasad Malisetty <pmaliset@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
-        svarbanov@mm-sol.com
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, mka@chromium.org, vbadigan@codeaurora.org,
-        sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
-        linux-pci@vger.kernel.org,
-        Prasad Malisetty <pmaliset@codeaurora.org>
-Subject: [PATCH v11 5/5] PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280
-Date:   Wed,  6 Oct 2021 00:12:39 +0530
-Message-Id: <1633459359-31517-6-git-send-email-pmaliset@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1633459359-31517-1-git-send-email-pmaliset@codeaurora.org>
-References: <1633459359-31517-1-git-send-email-pmaliset@codeaurora.org>
+        id S229577AbhJESuf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 14:50:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D81161215;
+        Tue,  5 Oct 2021 18:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633459724;
+        bh=hCoAuyF/nkHW3JTEAUZsqWtyDBaOH1b3pfFiHSJf4a4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gPrgersmIkFfN68r28fwVnMrIh6HtM+19pLPOfnTam7xQwaOyggpArLgHSqGcmKKK
+         yy+TVR/xxu4bs8FOHI16uY9rjlOrg+fPX4i+NLRGQhAQR45Oymsd/rM1UDsC/7BKh3
+         tBO3XQ9jakmqpkaGv2dzMxBHZS7r3v9v1x0i8TABVt7M+mM3d0cXaw2M6vsqi/JWQE
+         iwjbv/isV3QM1h0Hu3q8YosJOOs1Ol+EtDe/i6F2mJ5LTEtcK9QUslt1/iv93/lOG0
+         S0PEakWTscz0rkNvj83PzsA90oS3IZzuxe1W5C4RtCtmKjHdG+GqktnSDjYtmyJmKt
+         zJuUyhWN7Dx6A==
+Received: by pali.im (Postfix)
+        id D5834812; Tue,  5 Oct 2021 20:48:41 +0200 (CEST)
+Date:   Tue, 5 Oct 2021 20:48:41 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 06/13] PCI: aardvark: Do not clear status bits of masked
+ interrupts
+Message-ID: <20211005184841.46p3vrcmngkr73or@pali>
+References: <20211001195856.10081-1-kabel@kernel.org>
+ <20211001195856.10081-7-kabel@kernel.org>
+ <20211004140653.GB24914@lpieralisi>
+ <871r50st5h.wl-maz@kernel.org>
+ <20211005141340.48c8c0f6@dellmb>
+ <87mtnnr6cl.wl-maz@kernel.org>
+ <20211005131545.ol3rb3zzgzze67uf@pali>
+ <87lf37qxzu.wl-maz@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lf37qxzu.wl-maz@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On the SC7280, the clock source for gcc_pcie_1_pipe_clk_src
-must be the TCXO while gdsc is enabled. After PHY init successful
-clock source should switch to pipe clock for gcc_pcie_1_pipe_clk_src.
+On Tuesday 05 October 2021 16:42:29 Marc Zyngier wrote:
+> As I said, feel free to write something better.
 
-Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Marek now sent a new version, I hope it is better:
+https://lore.kernel.org/linux-pci/20211005180952.6812-7-kabel@kernel.org/
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 1d7a9cb..ded70e6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -166,6 +166,9 @@ struct qcom_pcie_resources_2_7_0 {
- 	struct regulator_bulk_data supplies[2];
- 	struct reset_control *pci_reset;
- 	struct clk *pipe_clk;
-+	struct clk *pipe_clk_src;
-+	struct clk *phy_pipe_clk;
-+	struct clk *ref_clk_src;
- };
- 
- union qcom_pcie_resources {
-@@ -1173,6 +1176,20 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	if (ret < 0)
- 		return ret;
- 
-+	if (pcie->pipe_clk_need_muxing) {
-+		res->pipe_clk_src = devm_clk_get(dev, "pipe_mux");
-+		if (IS_ERR(res->pipe_clk_src))
-+			return PTR_ERR(res->pipe_clk_src);
-+
-+		res->phy_pipe_clk = devm_clk_get(dev, "phy_pipe");
-+		if (IS_ERR(res->phy_pipe_clk))
-+			return PTR_ERR(res->phy_pipe_clk);
-+
-+		res->ref_clk_src = devm_clk_get(dev, "ref");
-+		if (IS_ERR(res->ref_clk_src))
-+			return PTR_ERR(res->ref_clk_src);
-+	}
-+
- 	res->pipe_clk = devm_clk_get(dev, "pipe");
- 	return PTR_ERR_OR_ZERO(res->pipe_clk);
- }
-@@ -1191,6 +1208,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 		return ret;
- 	}
- 
-+	/* Set TCXO as clock source for pcie_pipe_clk_src */
-+	if (pcie->pipe_clk_need_muxing)
-+		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
-+
- 	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
- 	if (ret < 0)
- 		goto err_disable_regulators;
-@@ -1262,6 +1283,10 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 
-+	/* Set pipe clock as clock source for pcie_pipe_clk_src */
-+	if (pcie->pipe_clk_need_muxing)
-+		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
-+
- 	return clk_prepare_enable(res->pipe_clk);
- }
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
 
+Anyway, I was thinking more if it is possible to end up in state when
+*_status variables are zero also after applying patch 7/13.
+
+I do not know how precisely are bits 8-11 of ISR1 reg handled in HW as
+description is completely missing in all documentations which I read.
+These bits represents events for legacy INTx interrupts.
+
+And maybe it is possible that driver for endpoint card run some function
+in context when all CPU interrupts are disabled and do something which
+cause card to send Assert_INTA message followed by Deassert_INTA (e.g.
+poke some register and immediately process event which deassert intx).
+After endpoint driver function finish its execution then CPU receive
+PCIe summary interrupt and pci controller driver would see that no event
+is pending and noting to process.
