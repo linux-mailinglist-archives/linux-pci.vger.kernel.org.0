@@ -2,148 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D3EB423474
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 01:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4934542347D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 01:32:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236855AbhJEXa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 19:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233540AbhJEXa1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 19:30:27 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D15EC061749
-        for <linux-pci@vger.kernel.org>; Tue,  5 Oct 2021 16:28:36 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id e16so798988qts.4
-        for <linux-pci@vger.kernel.org>; Tue, 05 Oct 2021 16:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YZtqiNpZkkBjH9PLa+2pg+VWvxuMg2D7NfMsla0iApM=;
-        b=W9M/04ikoH0xs+S7XpSkDR2UwXuMr54r1WDEMiLrXADyvj+BVQZ5larNl6JHMBOsgJ
-         gi1057s5XCujQy0a8GeabfgF/4AP1j4BkhHMi4+7MT131D4BK4FskSqsvTT4NoLE/F5u
-         NjVsItMi+O2rP5j8RLxQ79/oq6B/6EBTEtvNelJDRpl8shFYKdQ/9gArgjLyrmFBWzFK
-         J0FW5GstAgSyxV36N+hYUTZRXh0jg2btzSVVF50hXhj8EzFxQBaPNQlEQVEVSO2OOl3k
-         8hqHJg7aP8qQKtZgc+6a2E9CcNk+xx3G2R8r/HMH0kiPwGLCxyv7CQafKgZQYknQJOIV
-         rj9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YZtqiNpZkkBjH9PLa+2pg+VWvxuMg2D7NfMsla0iApM=;
-        b=4uTUVOlYhK0bINt2TzqvFWpvZp0+tSa3RsZnIyTHVKlQIzEP2JR36+2W/+0+2ZK4KQ
-         BETX8Ehopsw9XIVjN02oCeNsbycpHNAEyAmxA+VAYf0UHqsi3CcLOGoyDcZponmvcpxe
-         OXgsEmVzB8aqJ1rSx4lFUpSpBOTLFrnkPjVGeWYi1v3gqtG/mASwKjgrwoPHGe+nIAwK
-         /AXP4NFQUn2t89D1ug7HRxMBCg9aGRpUMJDeFqA2TuPxQ3xrKjwd/r7XDBB0e4BAPoJm
-         duIqsAjbVRS79KYrGnoKeLHOnc1/xiZO+Bw4n5NjoaCZqgNzkvv9wzRn+0qgHnyOmreE
-         Rf5A==
-X-Gm-Message-State: AOAM531po6Ngev67ln6w+ep5GaPSYCh8q/F0LilA4aZUuyDnYG4qdNNc
-        XVZG921tbz3iWaaxqaiRNZNGvg==
-X-Google-Smtp-Source: ABdhPJxLsGumPYgbsPy+xlzVZoblVHF5PD2wFx2gPiovv1H2BFWEuNX7TLFJw+HZ1DVzpRheZcUi0A==
-X-Received: by 2002:ac8:705d:: with SMTP id y29mr9574774qtm.73.1633476515521;
-        Tue, 05 Oct 2021 16:28:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id b18sm1329682qtq.62.2021.10.05.16.28.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 16:28:35 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1mXtrO-00BKTt-Fi; Tue, 05 Oct 2021 20:28:34 -0300
-Date:   Tue, 5 Oct 2021 20:28:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Si-Wei Liu <siwliu.kernel@gmail.com>
-Cc:     Haakon Bugge <haakon.bugge@oracle.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Enabling RO on a VF
-Message-ID: <20211005232834.GB2688930@ziepe.ca>
-References: <48FF6F8E-95E2-4A29-A059-12EF614B381C@oracle.com>
- <20211001115455.GJ3544071@ziepe.ca>
- <4EAE3BC9-26B6-41E3-B040-2ADAB77D96CE@oracle.com>
- <20211001120153.GL3544071@ziepe.ca>
- <CAPWQSg0wODmw7evfzdtP4gW-toVgoVfigP5t0CVosOAkarNTTg@mail.gmail.com>
+        id S233540AbhJEXee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 19:34:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:43614 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231304AbhJEXed (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 19:34:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35CB3D6E;
+        Tue,  5 Oct 2021 16:32:42 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE013F66F;
+        Tue,  5 Oct 2021 16:32:40 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] PCI/ACPI: Add Broadcom bcm2711 MCFG quirk
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        nsaenz@kernel.org, bhelgaas@google.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robh@kernel.org, kw@linux.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20211005223148.GA1125087@bhelgaas>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <bd047c7e-6bfb-320c-db0d-1ddcf98667ae@arm.com>
+Date:   Tue, 5 Oct 2021 18:32:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPWQSg0wODmw7evfzdtP4gW-toVgoVfigP5t0CVosOAkarNTTg@mail.gmail.com>
+In-Reply-To: <20211005223148.GA1125087@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 05, 2021 at 04:09:54PM -0700, Si-Wei Liu wrote:
-> On Fri, Oct 1, 2021 at 6:02 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Fri, Oct 01, 2021 at 11:59:15AM +0000, Haakon Bugge wrote:
-> > >
-> > >
-> > > > On 1 Oct 2021, at 13:54, Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > >
-> > > > On Fri, Oct 01, 2021 at 11:05:15AM +0000, Haakon Bugge wrote:
-> > > >> Hey,
-> > > >>
-> > > >>
-> > > >> Commit 1477d44ce47d ("RDMA/mlx5: Enable Relaxed Ordering by default
-> > > >> for kernel ULPs") uses pcie_relaxed_ordering_enabled() to check if
-> > > >> RO can be enabled. This function checks if the Enable Relaxed
-> > > >> Ordering bit in the Device Control register is set. However, on a
-> > > >> VF, this bit is RsvdP (Reserved for future RW
-> > > >> implementations. Register bits are read-only and must return zero
-> > > >> when read. Software must preserve the value read for writes to
-> > > >> bits.).
-> > > >>
-> > > >> Hence, AFAICT, RO will not be enabled when using a VF.
-> > > >>
-> > > >> How can that be fixed?
-> > > >
-> > > > When qemu takes a VF and turns it into a PF in a VM it must emulate
-> > > > the RO bit and return one
-> > >
-> > > I have a pass-through VF:
-> > >
-> > > # lspci -s ff:00.0 -vvv
-> > > ff:00.0 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex Virtual Function]
-> > > []
-> > >               DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
-> > >                       RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-> >
-> > Like I said, it is a problem in the qemu area..
-> >
-> > Jason
-> Can you clarify why this is a problem in the QEMU area?
+Hi,
+
+On 10/5/21 5:31 PM, Bjorn Helgaas wrote:
+> On Tue, Oct 05, 2021 at 10:43:32AM -0500, Jeremy Linton wrote:
+>> On 10/5/21 10:10 AM, Bjorn Helgaas wrote:
+>>> On Thu, Aug 26, 2021 at 02:15:56AM -0500, Jeremy Linton wrote:
+>>>> Now that there is a bcm2711 quirk, it needs to be enabled when the
+>>>> MCFG is missing. Use an ACPI namespace _DSD property
+>>>> "linux-ecam-quirk-id" as an alternative to the MCFG OEM.
+>>>>
+>>>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>> ---
+>>>>    drivers/acpi/pci_mcfg.c | 17 +++++++++++++++++
+>>>>    1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+>>>> index 53cab975f612..04c517418365 100644
+>>>> --- a/drivers/acpi/pci_mcfg.c
+>>>> +++ b/drivers/acpi/pci_mcfg.c
+>>>> @@ -169,6 +169,9 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>>>>    	ALTRA_ECAM_QUIRK(1, 13),
+>>>>    	ALTRA_ECAM_QUIRK(1, 14),
+>>>>    	ALTRA_ECAM_QUIRK(1, 15),
+>>>> +
+>>>> +	{ "bc2711", "", 0, 0, MCFG_BUS_ANY, &bcm2711_pcie_ops,
+>>>> +	  DEFINE_RES_MEM(0xFD500000, 0xA000) },
+>>>>    };
+>>>>    static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+>>>> @@ -198,8 +201,22 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
+>>>>    	u16 segment = root->segment;
+>>>>    	struct resource *bus_range = &root->secondary;
+>>>>    	struct mcfg_fixup *f;
+>>>> +	const char *soc;
+>>>>    	int i;
+>>>> +	/*
+>>>> +	 * This may be a machine with a PCI/SMC conduit, which means it doesn't
+>>>> +	 * have an MCFG. Use an ACPI namespace definition instead.
+>>>> +	 */
+>>>> +	if (!fwnode_property_read_string(acpi_fwnode_handle(root->device),
+>>>> +					 "linux-ecam-quirk-id", &soc)) {
+>>>> +		if (strlen(soc) != ACPI_OEM_ID_SIZE)
+>>>
+>>>  From a reviewing perspective, it's not obvious why soc must be exactly
+>>> ACPI_OEM_ID_SIZE.  Does that imply space-padding in the DT string or
+>>> something?
+>>
+>> This is at the moment an ACPI only DSD, and it must follow the MADT OEM_ID
+>> format for now because we are effectively just overriding that field. The
+>> rest of the code in this module is just treating it as a fixed 6 bytes.
+>>
+>>> Is there any documentation for this DT property?
+>>
+>> Its not a DT property, and its unclear since its linux only if it
+>> belongs in previously linked ACPI registry.
 > 
-> Even though Mellanox device might well support it (on VF), there's no
-> way for QEMU to really know if an arbitrary passthrough device may
-> support RO. 
+> Oh, right, it comes from a _DSD.
+> 
+>>> Also not obvious why strlen() is safe here.  I mean, I looked a couple
+>>> levels deep in fwnode_property_read_string(), but whatever guarantees
+>>> null termination is buried pretty deep.
+>>
+>> I've not tracked down who, if anyone other than the AML compiler is
+>> guaranteeing a null. The spec says something to the effect "Most other
+>> string, however,  are of variable-length and are automatically null
+>> terminated by the compiler". Not sure if that helps any.
+> 
+> Doesn't help for me.  The PCI core shouldn't go in the weeds no matter
+> what junk we might get from an AML compiler.  Maybe
+> fwnode_property_read_string() guarantees null termination, but it's
+> not documented and not easy to verify.
+> 
+> I think a strncpy() here might be better.  Not sure it's worthwhile to
+> emit a specific error message for the wrong length.
 
-That isn't what the cap bit means
+I think we went around about this a bit, but yes strncpy() is exactly 
+what we want because the rest of the code assumes 6 non-null terminated 
+characters and strncpy won't terminate it if its longer. OTOH, i'm not 
+sure we really want shorter strings padded with nulls either.
 
-The cap bit on the PF completely disables generation of RO at the
-device at all.
+strncpy() is easy though, so sure. <shrug>
 
-If the PF's cap bit is disabled then no VF can generate RO, and qemu
-should expose a wired to zero RO bit in the emulated PF.
 
-If the cap bit is enabled then the VFs could generate RO, depending on
-their drivers, and qemu should generate defaulted to 1 bit in the
-emulated PF.
+> 
+>>> It seems a little weird to use an MCFG quirk mechanism when there's no
+>>> MCFG at all on this platform.
+>>
+>> Well its just a point to hook in a CFG space quirk, and since that
+>> is what most of the MCFG quirks are, it seemed reasonable to reuse
+>> it rather than recreate it.
+> 
+> Yeah, it's ugly no matter how we slice it.  The pci_no_msi()
+> especially has nothing to do with ECAM at all.  But I don't know how
+> to identify this thing for a quirk.  PNP0A08 devices really rely on
+> ECAM or a system firmware config accessor.
+> 
+>>>> +			dev_err(&root->device->dev, "ECAM quirk should be %d characters\n",
+>>>> +				ACPI_OEM_ID_SIZE);
+>>>> +		else
+>>>> +			memcpy(mcfg_oem_id, soc, ACPI_OEM_ID_SIZE);
+>>>> +	}
+>>>> +
+>>>>    	for (i = 0, f = mcfg_quirks; i < ARRAY_SIZE(mcfg_quirks); i++, f++) {
+>>>>    		if (pci_mcfg_quirk_matches(f, segment, bus_range)) {
+>>>>    			if (f->cfgres.start)
+>>>> -- 
+>>>> 2.31.1
+>>>>
+>>
 
-> PCIe device functions up to the root port throughout the PCIe fabric,
-> or it may follow PF's enabling status if it is at all capable. I don't
-> see what QEMU can do by just forcefully emulating the bit?
-
-IMHO Kernel/BIOS should be responsible to clear the RO bit at the PF
-if RO is not supportable in the environment. It is proper to prevent
-the device from using RO completely if it is broken.
-
-> Not to mention the current implementation only takes care of broken
-> root port but not the intermediate switches.
-> https://lore.kernel.org/linux-arm-kernel/MWHPR12MB1600255ACFCD3FB3C80EB8B6C88B0@MWHPR12MB1600.namprd12.prod.outlook.com/
-
-Which is what this message suggests doing
-
-Jason
