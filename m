@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F40C422F00
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 19:20:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EBA2422F03
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 19:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236713AbhJERVz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 13:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58232 "EHLO
+        id S235238AbhJERWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 13:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233961AbhJERVx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 13:21:53 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4E5C061749;
-        Tue,  5 Oct 2021 10:20:01 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id y5so2777220pll.3;
-        Tue, 05 Oct 2021 10:20:01 -0700 (PDT)
+        with ESMTP id S236738AbhJERV5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 13:21:57 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA514C061749;
+        Tue,  5 Oct 2021 10:20:06 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id rm6-20020a17090b3ec600b0019ece2bdd20so150385pjb.1;
+        Tue, 05 Oct 2021 10:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FR6K5YUYcCv1FDH4y5DK0PhIoCQEDWlRf94cnPNCwds=;
-        b=A71fO3tGGjwz+OnHBY6HhMFyXvWq8AS2PEZEnxn0QPthRZFnOLoiXs4GRkH44Fgdpl
-         BCtSZsHnbMw+J/VBXutV0WFpyIh6lu9NnI7mlhc899K/fsgBufh5I5Oy5T+x6kEUwQT1
-         P2O6Wt+F3bQOVRQayknlFt8VAXQCCJfG7jOBXgT+a9jEe+6Z251sGpvTCQajheWVGtiF
-         TyqLt0U4e6fqJEcotNV7OM45+WmP0HTFw7QCuORT/mLLLLEcFm/GWJ3rej0agW1LW175
-         d1Fnbb6vpOY8V/3u6Say7gT9+ej81ABLd+flMzAlKo1hUBgPyn5dtAR/zVNKWLwEmG2M
-         jDFQ==
+        bh=0szOl/Q5keJYQjPtxy9YApfb7ftHWXnTXQ4eoRdC7oM=;
+        b=EqpIK1vTXdHM2T3qpKt7B5M72W9yNHp47Ooa5AzhsBqv/LSEr3GylhgEQKGtBbz8aF
+         ISkGnHZ77zRoof4FGCAdApmHRV4hxmhkzizSs9NOl/xyHgjEVdTwam86QBgOsUuIcb+J
+         MRHmgyoMWSbW56wDErgWeTtD9EB7ErJcD/LDcXR+l+fKPPqx6LUqgKtZ1BGRPPxEfttB
+         kQrD7xtiMRRpIOJPGyXtAAcyb0Dvj+ucWvAf6Q9eOTvEiUobNqdLsz4r2NvwflOVZ198
+         NleQppPNm4L6lTW5T4nON1Qwp7V7Q6OaU8CaF6s1ggbc5qjIvX2Jv1y2Vhsnc9PenK3Y
+         6EYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FR6K5YUYcCv1FDH4y5DK0PhIoCQEDWlRf94cnPNCwds=;
-        b=Grt/vnvranbqHDuiZjjIdQELyplgNWS3ZhNZdqkXkHziTlwfAgmRPn1SIfz+qXvSyy
-         3DdCfufpGAfUbHjlq40z8RPc5FVPf1yY6G8elw9bG2zvrK6ztZl2uuNLE+Ri9cxMp0al
-         vSsTtnT0vU6nA1dOLaHSTcDWpNn6KMfD/dOTled6wN50uRKgtqVKGhBrm/HbCSNEVogF
-         XOisX2zE2IOMopCGzGZGs6NSt/Qfhz8t2a9pRXMzmb73dQcBY3QjBqrluLEWn9icKZqf
-         yVZYID5mLRRKgYsusLowkff6z80vg6lm/it0UsXOLOYDRRIDJLhoOb1UPBaly9WmAm0M
-         fr+A==
-X-Gm-Message-State: AOAM530rwPBaM5c+yfV8EsavRe0rJGbgE9p75v7tG2x7hVDoYcn9SWP2
-        2V03kh/JqFjFOSiEEJiZ0F4=
-X-Google-Smtp-Source: ABdhPJx6mC9P6YQA9us0MGZNTH690yOdvv8Qd05OPcQYLlWaJDLvVp/f+i52bWzPefweCBqHH8+YGQ==
-X-Received: by 2002:a17:902:b093:b029:12c:843:b55a with SMTP id p19-20020a170902b093b029012c0843b55amr6271410plr.83.1633454401296;
-        Tue, 05 Oct 2021 10:20:01 -0700 (PDT)
+        bh=0szOl/Q5keJYQjPtxy9YApfb7ftHWXnTXQ4eoRdC7oM=;
+        b=jwLhFU1ctaJH/ZZeFIH+XUE2EpzES0z2H9urf/qE9wVXUscPPMAUnSYW6vu660TNDz
+         TIVXilQ6zhIIBFtCArs1AF+xe6jBKQ75S8y/B7+9m2UJNULncEPY/dXLfxRjQUaf6F0R
+         ++NK+9KvkCMMpOEPufOjRNp/ndOOSMZOVvLtZQfk5L9+X8JvaejrYgqH9yGb2X24lc+Q
+         TaEOgvvqKwm5WWqd/2Vdcb9zxS7hQVHNyXBKL6crHtbgt3aMv2GOD9MiL7AkZJUv24in
+         9KsumNANXHVyL/yGybqHDlU1hJWnqsoFTonLUmtiE2PLDsf4+vy5Wsv/t0cKqjEgH87H
+         rMEA==
+X-Gm-Message-State: AOAM531SzhfjKACb8XTg6UOOVy7Jg5u6xqgfJad9NzgPenvXNHD6UmfK
+        +9lSeoTfkrPIkqypko/JF8U=
+X-Google-Smtp-Source: ABdhPJzQlgbJ2vipxR8pOXATO00s5SdfAkVzILUymzDybhDIw7JfAUJP3lpRvmIhgSc/zwSufi+TBw==
+X-Received: by 2002:a17:90a:19d2:: with SMTP id 18mr5145011pjj.27.1633454406293;
+        Tue, 05 Oct 2021 10:20:06 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:f69:1127:b4ce:ef67:b718])
-        by smtp.gmail.com with ESMTPSA id f25sm18476722pge.7.2021.10.05.10.19.57
+        by smtp.gmail.com with ESMTPSA id f25sm18476722pge.7.2021.10.05.10.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 10:20:00 -0700 (PDT)
+        Tue, 05 Oct 2021 10:20:05 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 2/8] PCI: Cleanup struct aer_err_info
-Date:   Tue,  5 Oct 2021 22:48:09 +0530
-Message-Id: <a6f477dec0700f17933be993897114a7d7a5a282.1633453452.git.naveennaidu479@gmail.com>
+Subject: [PATCH v4 3/8] PCI/DPC: Initialize info->id in dpc_process_error()
+Date:   Tue,  5 Oct 2021 22:48:10 +0530
+Message-Id: <5ebe87f18339d7567c1d91203e7c5d31f4e65c52.1633453452.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633453452.git.naveennaidu479@gmail.com>
 References: <cover.1633453452.git.naveennaidu479@gmail.com>
@@ -65,53 +65,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The id, status and the mask fields of the struct aer_err_info comes
-directly from the registers, hence their sizes should be explicit.
+In the dpc_process_error() path, info->id isn't initialized before being
+passed to aer_print_error(). In the corresponding AER path, it is
+initialized in aer_isr_one_error().
 
-The length of these registers are:
-  - id: 16 bits - Represents the Error Source Requester ID
-  - status: 32 bits - COR/UNCOR Error Status
-  - mask: 32 bits - COR/UNCOR Error Mask
+The error message shown during Coverity Scan is:
 
-Since the length of the above registers are even, use u16 and u32
-to represent their values.
+  Coverity #1461602
+  CID 1461602 (#1 of 1): Uninitialized scalar variable (UNINIT)
+  8. uninit_use_in_call: Using uninitialized value info.id when calling aer_print_error.
 
-Also remove the __pad fields.
+Initialize the "info->id" before passing it to aer_print_error()
 
-"pahole" was run on the modified struct aer_err_info and the size
-remains unchanged.
-
+Fixes: 8aefa9b0d910 ("PCI/DPC: Print AER status in DPC event handling")
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/pci.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pci/pcie/dpc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1cce56c2aea0..9be7a966fda7 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -427,18 +427,16 @@ struct aer_err_info {
- 	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
- 	int error_dev_num;
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index c556e7beafe3..df3f3a10f8bc 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -262,14 +262,14 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
  
--	unsigned int id:16;
-+	u16	id;
+ void dpc_process_error(struct pci_dev *pdev)
+ {
+-	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
++	u16 cap = pdev->dpc_cap, status, reason, ext_reason;
+ 	struct aer_err_info info;
  
- 	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
--	unsigned int __pad1:5;
- 	unsigned int multi_error_valid:1;
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+-	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
++	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &info.id);
  
- 	unsigned int first_error:5;
--	unsigned int __pad2:2;
- 	unsigned int tlp_header_valid:1;
+ 	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+-		 status, source);
++		 status, info.id);
  
--	unsigned int status;		/* COR/UNCOR Error Status */
--	unsigned int mask;		/* COR/UNCOR Error Mask */
-+	u32 status;		/* COR/UNCOR Error Status */
-+	u32 mask;		/* COR/UNCOR Error Mask */
- 	struct aer_header_log_regs tlp;	/* TLP Header */
- };
- 
+ 	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
+ 	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
 -- 
 2.25.1
 
