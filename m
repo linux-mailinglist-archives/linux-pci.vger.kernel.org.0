@@ -2,303 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF1AD42338D
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 00:33:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8923A423399
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 00:40:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236862AbhJEWfd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 18:35:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbhJEWfd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 18:35:33 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD4EC06174E
-        for <linux-pci@vger.kernel.org>; Tue,  5 Oct 2021 15:33:42 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id k23-20020a17090a591700b001976d2db364so821017pji.2
-        for <linux-pci@vger.kernel.org>; Tue, 05 Oct 2021 15:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NVaNuqsh2cbkaLybruNHatXvA5elgWSJDPvzOcbacUE=;
-        b=EVm/hrha1IfLe4BiCQirvgf7RAapRUWd5OY2P/INgYjGkVj8hc9n6QLCp874tJH4B8
-         c59PijgCMCeR1ww75e7BgxIoTbMuTYzR9/moG5aTuzHYfPG7MAW0gYXmAVqBIaYxB6u3
-         pGT84S6wLaVtEx10zHX31KymEwCtGRBIM7nGxaEsjYxCLvHTfzY6xa7y7SldE/mqIVvK
-         oPnKGRn3Lv3ooPEL9qBqRzUnM8cnjxO5Piw2uYrVwcD14kajcyQSUHHfM8bMcuD/Rg2L
-         iTmJ3+gEulvEGrDRcURXy5eNQOactv7eOZqPRc7WNm1y+P0cIcKdewJWYVmtxJ5+4Jcu
-         GLMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NVaNuqsh2cbkaLybruNHatXvA5elgWSJDPvzOcbacUE=;
-        b=qhxTRIKdNbgYBw8OV/p3uEGknXfwKxbdSOMAur6EGf6BZXpART2PoMtuu0WE1J5e10
-         /d5/gidpt2c92XCoR6quAqSQTfbyel5Az9jtJlT/mXa6v4fAJK+OZNX/yyhbm/enrBzz
-         KfeUkcTAr8Tq/Jhfr0U7DyJd13aW1Gkm7onhnsPX86AxfhW1PMdisDg+W8dryaAH6R6u
-         6bY7fBSdm0RbVCec8d1sCdpS/hluQAGNlhCdKhe1F4LGcgzoApW+GVgIU+tLBT/zP1P0
-         q945+bQMPXTWwCvlB/UZqqWFlokVNUAE+/b1zTQ8M7a4pQhjJG946dQ6rZfrn23djsmN
-         Tctg==
-X-Gm-Message-State: AOAM531UgCmci2oKWfvCI+zr6z94FZMfKLC1/fnsodQD0LtZajaPoeTM
-        0oOlcePCSJIfUEhiY0U2yb/fIdg+KVxsZVvTdilLEw==
-X-Google-Smtp-Source: ABdhPJyNUK8tRKcu+8Dd6LTnJN+R73YCyL6OGLWiFBrQ/OXrJOoHzTAHLH3By0qn+wa4u+t5oNVbKSM82eOjyEdBbGQ=
-X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr6764886pju.8.1633473221792;
- Tue, 05 Oct 2021 15:33:41 -0700 (PDT)
+        id S231304AbhJEWmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 18:42:25 -0400
+Received: from mail-dm6nam12on2041.outbound.protection.outlook.com ([40.107.243.41]:22497
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230113AbhJEWmY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 18:42:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MWq93tHHJR1bgYKJl0vqF8qu+Mz2EHgt0+z9DlLm/UnX17SJTyo8vZkZ9OLvFx7FyjAtj4mehbX/LIVZp0V6/d8gCplH46/vgvcQ46hjwnl5Z4ZXXhJXYZvkpdzsNF1zPPTkAKb++KH5LNsD5I2RrkQJhsccjLDu5eDQXYzL3GtHw3khXL3hfJ57vJ5nqizig9jOtxyYOvnC1GMmGAg5J4lKL+4Li2GMRLN0CBbjP2BfhHSI7YBTcdog68N5GFWO358p/WwJLztn5dBlwy5gAWU4UHKaBDLHhruSSPYdZ3zmapJ8z226OpqzIorbJLQacAK98Ccveej/dmeQZoptSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j0SPiDLSecRVxcmTOcuqGMRRWrr5KYXrmBi4icLXSvk=;
+ b=i3PAWIcZ6Yqn43eZqo0cEP9vqZaumHPgYXQmJtbt0BhxvBtLzF5LWCM2CsAZlpX5/azOZYdWsbE3kiLtISPNmYLXiqLpkH0sWS3aVvE3OJeGMmwYu3DT+yWddQYAi7otc9XMrVuh/vplxs7t+0LITYRJ/PJaBli5wtEGOOHmYzWDYTije4iyC2C/STxyhtLkD6HHkjFVGfCcM+dohLZg21M68gBL02527pMs1LpPXMZ7suk2ws8jHlN5RtTuKUrEWAwYylEM139EVADdM/roe9MN4eBT1gRewlW2wkn/RavHB0kabV//0BMLVzGAjRkjDay6AgtmXWY4YOA+JBaUyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=raithlin.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j0SPiDLSecRVxcmTOcuqGMRRWrr5KYXrmBi4icLXSvk=;
+ b=OkvFs6/QRAvytephvDf7pcPIT4MSUjodhly+8w3JfW5OOxQRtRohadOf7ir8zzMmKDrp99SNYiz7w+hD9QQGOHzMXVcy41+v6oHs72UTnRFPQFytE6XXSP0MKrFJcCQNZSiApmBOh9fjExXfeG6zJmTDOiHGwfHh0K/+GpU6ZxbMMRplViY7Zwtf6LPuTGn1y/nL4ESwBv7MWHPKtrE2IP1q8seZTBoWEhzybdRG0GQQJVBkqiD2qCxsGoMWghas4cBPzxCr5NzuyOwv1I48nBaiT5mvkCevNOH26qdWy0JmaOJ/nPhROw1RhzzkzUzEr1Y81GebjfFmk+CbOtv+Bg==
+Received: from DM5PR19CA0072.namprd19.prod.outlook.com (2603:10b6:3:116::34)
+ by BL0PR12MB4724.namprd12.prod.outlook.com (2603:10b6:208:87::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Tue, 5 Oct
+ 2021 22:40:29 +0000
+Received: from DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:116:cafe::5c) by DM5PR19CA0072.outlook.office365.com
+ (2603:10b6:3:116::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend
+ Transport; Tue, 5 Oct 2021 22:40:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; raithlin.com; dkim=none (message not signed)
+ header.d=none;raithlin.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT066.mail.protection.outlook.com (10.13.173.179) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4566.14 via Frontend Transport; Tue, 5 Oct 2021 22:40:29 +0000
+Received: from [172.27.1.153] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 5 Oct
+ 2021 22:40:22 +0000
+Subject: Re: [PATCH v3 12/20] RDMA/rw: use dma_map_sgtable()
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mm@kvack.org>, <iommu@lists.linux-foundation.org>,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Xiong Jianxin" <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Martin Oliveira" <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
+References: <20210916234100.122368-1-logang@deltatee.com>
+ <20210916234100.122368-13-logang@deltatee.com>
+ <20210928194325.GS3544071@ziepe.ca>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+Message-ID: <ac05dec5-6b0c-6846-2f5b-a8930c718806@nvidia.com>
+Date:   Wed, 6 Oct 2021 01:40:20 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <CAPcyv4hP6mtzKS-CVb-aKf-kYuiLM771PMxN2zeBEfoj6NbctA@mail.gmail.com>
- <6d1e2701-5095-d110-3b0a-2697abd0c489@linux.intel.com> <YVXWaF73gcrlvpnf@kroah.com>
- <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com> <YVaywQLAboZ6b36V@kroah.com>
- <CAPcyv4gqs=KuGyxFR61QWqF6HKrRg851roCGUqrq585+s2Cm=w@mail.gmail.com>
- <20211001164533.GC505557@rowland.harvard.edu> <CAPcyv4i__reKFRP1KjWUov_W5jBQN9_vbUbKRL_V7KMM3oPuuQ@mail.gmail.com>
- <20211001190048.GA512418@rowland.harvard.edu> <CAPcyv4hYL51DcBuSuyMRFo5Jcc=zLd=Ugo+H_2saELcZ5AJBeQ@mail.gmail.com>
- <YVqONA0vhl0/H3QE@lahna>
-In-Reply-To: <YVqONA0vhl0/H3QE@lahna>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 5 Oct 2021 15:33:29 -0700
-Message-ID: <CAPcyv4im4Tsj1SnxSWe=cAHBP1mQ=zgO-D81n2BpD+_HkpitbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
- confidential guest
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jason Wang <jasowang@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210928194325.GS3544071@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5080e68f-6992-4776-b1ae-08d9885121f9
+X-MS-TrafficTypeDiagnostic: BL0PR12MB4724:
+X-Microsoft-Antispam-PRVS: <BL0PR12MB4724B1981A39F0928AD7ADF2DEAF9@BL0PR12MB4724.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NwotbeLPsRBLX9CmrwCLOm6Knk76ue7GIegYZDSe0jyh8JvA/2jcGYMOm49Jh4e6Bswef8t/Z/hzwmVBYs5ZkzRxSsd4/chNGAZnbjaJuzP7T6C5S2vjMuTgas2qTn5FrYSHOZi6bMejwk5C5uWWVUbfxU93o9ITSDT3XC1NfOKLtPWcJTj8VpZjRhGrhrT+JZYgDr9yvu31nVMPgqkt72HFV/bL2rAqACCwUwOb+N+NU7lePDOVfMd4d0BY/fhwy9vJtU4Yx+4tR/7QGRkEYpYxjCPdf9r4rEO+FJrwbzf9P/Fk9sKs1sit7/R+o+UIahn02E8d9685GUZJI3ToqwXdSY9xePuCVNQWv57pje4IkXFSzyWcggTTBvhKtAxzse+jEpoB5IPtlFo3um8COoxC3qYM0iBVJUpmZ+o9vphWeiOg7pTx6b0YV5xMCqedk2FY347Spi309b4RKZoTRMuER8zjvuokSYNiEooXNWp6mSBUDmAAWR3TzuJrxrVonVnIwSY5ub54a95/1xFPkSKa1ahVqthlgUVZavfZ/b1BOVxWnF+DFjbItlUFs/0+5MFTZ48N/lkKIqZAyjqszdnGMbOu1KR2fKjjq+MPJtZRCnMd9oXQ5A+q5MOz0KEGS7Yap0BTZQ6GoyoIacZYNS4twfxgyBD2DuuLBu52WeVvxzabknCdn7gt8rlexE275NfN53HolzUOYHgg84/YrVbJfWasqipgrZtqV924QaM=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(426003)(186003)(31696002)(26005)(53546011)(82310400003)(7416002)(36860700001)(16526019)(336012)(7636003)(86362001)(5660300002)(70206006)(70586007)(2906002)(4326008)(36756003)(54906003)(356005)(316002)(8936002)(47076005)(508600001)(31686004)(8676002)(16576012)(110136005)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2021 22:40:29.2247
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5080e68f-6992-4776-b1ae-08d9885121f9
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4724
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 3, 2021 at 10:16 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+
+On 9/28/2021 10:43 PM, Jason Gunthorpe wrote:
+> On Thu, Sep 16, 2021 at 05:40:52PM -0600, Logan Gunthorpe wrote:
+>> dma_map_sg() now supports the use of P2PDMA pages so pci_p2pdma_map_sg()
+>> is no longer necessary and may be dropped.
+>>
+>> Switch to the dma_map_sgtable() interface which will allow for better
+>> error reporting if the P2PDMA pages are unsupported.
+>>
+>> The change to sgtable also appears to fix a couple subtle error path
+>> bugs:
+>>
+>>    - In rdma_rw_ctx_init(), dma_unmap would be called with an sg
+>>      that could have been incremented from the original call, as
+>>      well as an nents that was not the original number of nents
+>>      called when mapped.
+>>    - Similarly in rdma_rw_ctx_signature_init, both sg and prot_sg
+>>      were unmapped with the incorrect number of nents.
+> Those bugs should definately get fixed.. I might extract the sgtable
+> conversion into a stand alone patch to do it.
+
+Yes, we need these fixes before this series will converge.
+
+Looks good,
+
+Reviewed-by: Max Gurtovoy <mgurtovoy@nvidia.com>
+
 >
-> Hi,
+> But as it is, this looks fine
 >
-> On Fri, Oct 01, 2021 at 12:57:18PM -0700, Dan Williams wrote:
-> > > > Ah, so are you saying that it would be sufficient for USB if the
-> > > > generic authorized implementation did something like:
-> > > >
-> > > > dev->authorized = 1;
-> > > > device_attach(dev);
-> > > >
-> > > > ...for the authorize case, and:
-> > > >
-> > > > dev->authorize = 0;
-> > > > device_release_driver(dev);
-> > > >
-> > > > ...for the deauthorize case?
-> > >
-> > > Yes, I think so.  But I haven't tried making this change to test and
-> > > see what really happens.
-> >
-> > Sounds like a useful path for this effort to explore. Especially as
-> > Greg seems to want the proposed "has_probe_authorization" flag in the
-> > bus_type to disappear and make this all generic. It just seems that
-> > Thunderbolt would need deeper surgery to move what it does in the
-> > authorization toggle path into the probe and remove paths.
-> >
-> > Mika, do you see a path for Thunderbolt to align its authorization
-> > paths behind bus ->probe() ->remove() events similar to what USB might
-> > be able to support for a generic authorization path?
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 >
-> In Thunderbolt "authorization" actually means whether there is a PCIe
-> tunnel to the device or not. There is no driver bind/unbind happening
-> when authorization toggles (well on Thunderbolt bus, there can be on PCI
-> bus after the tunnel is established) so I'm not entirely sure how we
-> could use the bus ->probe() or ->remove for that to be honest.
-
-Greg, per your comment:
-
-"... which was to move the way that busses are allowed to authorize
-the devices they wish to control into a generic way instead of being
-bus-specific logic."
-
-We have USB and TB that have already diverged on the ABI here. The USB
-behavior is more in line with the "probe authorization" concept, while
-TB is about tunnel establishment and not cleanly tied to probe
-authorization. So while I see a path to a common authorization
-implementation for USB and other buses (per the insight from Alan), TB
-needs to retain the ability to record the authorization state as an
-enum rather than a bool, and emit a uevent on authorization status
-change.
-
-So how about something like the following that moves the attribute
-into the core, but still calls back to TB and USB to perform their
-legacy authorization work. This new authorized attribute only shows up
-when devices default to not authorized, i.e. when userspace owns the
-allow list past critical-boot built-in drivers, or if the bus (USB /
-TB) implements ->authorize().
-
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index e65dd803a453..8f8fbe2637d1 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2414,6 +2414,58 @@ static ssize_t online_store(struct device *dev,
-struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(online);
-
-+static ssize_t authorized_show(struct device *dev,
-+                              struct device_attribute *attr, char *buf)
-+{
-+       return sysfs_emit(buf, "%u\n", dev->authorized);
-+}
-+
-+static ssize_t authorized_store(struct device *dev,
-+                               struct device_attribute *attr, const char *buf,
-+                               size_t count)
-+{
-+       unsigned int val, save;
-+       ssize_t rc;
-+
-+       rc = kstrtouint(buf, 0, &val);
-+       if (rc < 0)
-+               return rc;
-+
-+       /* some buses (Thunderbolt) support authorized values > 1 */
-+       if (val > 1 && !dev->bus->authorize)
-+               return -EINVAL;
-+
-+       device_lock(dev);
-+       save = dev->authorized;
-+       if (save == val) {
-+               rc = count;
-+               goto err;
-+       }
-+
-+       dev->authorized = val;
-+       if (dev->bus->authorize) {
-+               /* notify bus about change in authorization state */
-+               rc = dev->bus->authorize(dev);
-+               if (rc) {
-+                       dev->authorized = save;
-+                       goto err;
-+               }
-+       }
-+       device_unlock(dev);
-+
-+       if (dev->authorized) {
-+               if (!device_attach(dev))
-+                       dev_dbg(dev, "failed to probe after authorize\n");
-+       } else
-+               device_release_driver(dev);
-+       return count;
-+
-+err:
-+       device_unlock(dev);
-+       return rc < 0 ? rc : count;
-+}
-+static DEVICE_ATTR_RW(authorized);
-+
- static ssize_t removable_show(struct device *dev, struct
-device_attribute *attr,
-                              char *buf)
- {
-@@ -2616,8 +2668,16 @@ static int device_add_attrs(struct device *dev)
-                        goto err_remove_dev_waiting_for_supplier;
-        }
-
-+       if (dev_needs_authorization(dev)) {
-+               error = device_create_file(dev, &dev_attr_authorized);
-+               if (error)
-+                       goto err_remove_dev_removable;
-+       }
-+
-        return 0;
-
-+ err_remove_dev_removable:
-+       device_remove_file(dev, &dev_attr_removable);
-  err_remove_dev_waiting_for_supplier:
-        device_remove_file(dev, &dev_attr_waiting_for_supplier);
-  err_remove_dev_online:
-@@ -2639,6 +2699,7 @@ static void device_remove_attrs(struct device *dev)
-        struct class *class = dev->class;
-        const struct device_type *type = dev->type;
-
-+       device_remove_file(dev, &dev_attr_authorized);
-        device_remove_file(dev, &dev_attr_removable);
-        device_remove_file(dev, &dev_attr_waiting_for_supplier);
-        device_remove_file(dev, &dev_attr_online);
-@@ -2805,6 +2866,8 @@ static void klist_children_put(struct klist_node *n)
-        put_device(dev);
- }
-
-+unsigned int dev_default_authorization;
-+
- /**
-  * device_initialize - init device structure.
-  * @dev: device.
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e270cb740b9e..fbb83e46af9d 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -561,6 +561,7 @@ struct device {
-        struct dev_iommu        *iommu;
-
-        enum device_removable   removable;
-+       unsigned int            authorized;
-
-        bool                    offline_disabled:1;
-        bool                    offline:1;
-@@ -814,6 +815,19 @@ static inline bool dev_removable_is_valid(struct
-device *dev)
-        return dev->removable != DEVICE_REMOVABLE_NOT_SUPPORTED;
- }
-
-+extern unsigned int dev_default_authorization;
-+
-+/*
-+ * If the bus has custom authorization, or if devices default to not
-+ * authorized, register the 'authorized' attribute for @dev.
-+ */
-+static inline bool dev_needs_authorization(struct device *dev)
-+{
-+       if (dev->bus->authorize || dev_default_authorization == 0)
-+               return true;
-+       return false;
-+}
-+
- /*
-  * High level routines for use by the bus drivers
-  */
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index 062777a45a74..3202a2b13374 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -40,6 +40,11 @@ struct fwnode_handle;
-  *             that generate uevents to add the environment variables.
-  * @probe:     Called when a new device or driver add to this bus, and callback
-  *             the specific driver's probe to initial the matched device.
-+ * @authorize: Called after authorized_store() changes the
-+ *             authorization state of the device. Do not use for new
-+ *             bus implementations, revalidate dev->authorized in
-+ *             @probe and @remove to take any bus specific
-+ *             authorization actions.
-  * @sync_state:        Called to sync device state to software state
-after all the
-  *             state tracking consumers linked to this device (present at
-  *             the time of late_initcall) have successfully bound to a
-@@ -90,6 +95,7 @@ struct bus_type {
-        int (*match)(struct device *dev, struct device_driver *drv);
-        int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
-        int (*probe)(struct device *dev);
-+       int (*authorize)(struct device *dev);
-        void (*sync_state)(struct device *dev);
-        void (*remove)(struct device *dev);
-        void (*shutdown)(struct device *dev);
+> Jason
