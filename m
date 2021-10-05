@@ -2,134 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A73422EFA
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 19:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C88AB422EFC
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 19:19:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236487AbhJERUw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 13:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57978 "EHLO
+        id S234938AbhJERV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 13:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234938AbhJERUv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 13:20:51 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7745C061749;
-        Tue,  5 Oct 2021 10:19:00 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id s75so2369126pgs.5;
-        Tue, 05 Oct 2021 10:19:00 -0700 (PDT)
+        with ESMTP id S233961AbhJERV1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 13:21:27 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806E3C061749;
+        Tue,  5 Oct 2021 10:19:36 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id oa6-20020a17090b1bc600b0019ffc4b9c51so2495868pjb.2;
+        Tue, 05 Oct 2021 10:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qQT+mDvkkQCJQfW4l8MXueOtWGmReSv26PNLqJ69eIE=;
-        b=SAKUQo0n36vAvd2dP1867PQKEdhRlgvmbuzGuIjn6ExEt33l2DZ+FZeddFfsxZhPoN
-         pE1xkI3/fiwkKoL3lO3xSRKeT39B5otGFTRCa9aZtDn1KSLn8LY32Q3jEUGqnrGQhrRf
-         FEtTYTJWYMEm+plrrqi7vMw6tb1+3M+HUHAEaCbcIwP/maFCEilzUAFRDi4o/D4gskpb
-         dHH2tz7jl/EJDxM1lPpu8WUPW8FJtFq2xv+1kXuWmLX4IEXmoFtix8X8sQDIXBkTXUg6
-         X/01cjlj1ILLP2ZCI0eSAjTkX/SUAk97sQ0ISZoae2hjQQVoyJioUA2bq18o/TxQ8bFD
-         viIw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IjHgR4yuS2vTaKg7fKfhOjl8nNl87X4AMEmWTqe3CAo=;
+        b=UvpRegiHO4NAWwEm0An/S746HVyraL1+IKlEUHsK7b4F732ko1nh7S4XAi2+ZFi0b6
+         bj5GWF90SjpxzdpcbIVIimMhy10JdsL4iUHsdJGc7jTOfFL5A/B863nlU7PLVeyVe86m
+         ttiIP1ALgJkzIYlfgAGNKSIlvlHYsd1kA3M1Rs2Ot3MNkOwV8KjIalam0TrlZODMnqkM
+         dwaQ6z9hB42hc5w5gQom8SeKIt/CGM5sRwLYouk6LtfJmwRoxXlZAZp9uFb3M2XuSv9o
+         5Yf9C/0A8wDenXF5AwdJW1tVNKkVNrkT7LdOXxhF+wmBMKU+ZmbfNqmGwS664+mwVcrP
+         8R0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qQT+mDvkkQCJQfW4l8MXueOtWGmReSv26PNLqJ69eIE=;
-        b=q53FjND+vqd+IsLbmVrMROuyL2ESxOhAqyr8htxf0Vdcl7H7YzVb8wbSlxM5FWpfb4
-         HlCV7QH1YfHPPihkaHnSIC03dxr6687qNhgV47zo6Xav99KI4cb0G289/I9zhVa7utX5
-         vJAwvHd0L0VubNVTLyXdm6wVlByUaOWeAn1t4XUl3IWnLOBlInqBPeupKrYR5rfrhfno
-         TT4C0Kmv2srD9YUeZHYeQEnP6E5k90B/HoroqfIh1lBmwUpRMx1SG+VHt6ga8sYRiJE9
-         4JYH97VSMG5FThIaxT19JxbqgmybUVgvrWdBuM4GXjB4K5rNy79YjP08Z16UxiJJ/VJw
-         V/7Q==
-X-Gm-Message-State: AOAM531CunmcfL08+gb26pb2yRLK2w5uVfEgRsloQfzYfnFEZ8uUAT7O
-        9uxqRI8TGVlXKVQ1WCfCSno=
-X-Google-Smtp-Source: ABdhPJzEWfjabqzm399k9sgiMDMfZMs8fGUj9h1G1NasJnjVQm0jliPuqYwmVa/JBUHJf7aVDXzsGQ==
-X-Received: by 2002:a63:5717:: with SMTP id l23mr1322508pgb.87.1633454340207;
-        Tue, 05 Oct 2021 10:19:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IjHgR4yuS2vTaKg7fKfhOjl8nNl87X4AMEmWTqe3CAo=;
+        b=yoXM4yLtWPcdDousUlY8livvRW4kPLGhqJ8xODljNwriCLwVIksF3PuxyPI/pDFI36
+         lp0KUZVIRK0WA+gt6YB3RjX+PCcbB5slzOP27YPBwcPZ0xp9mpnEatDMXYZjCdT+4fN7
+         HZWkn3QiIGK19cNZcdb0+VynJU0cXiCmMl4zHYjtZ3qJSpLmtjZlUJgp3z+RZfHkbVtk
+         wC18xRB4qAkMe16FJLqFQSuxrNSoR68QQC0+cR86yjtAYRYt4dw2jrSaNiZjLpe2/cd2
+         2S1S9bhHsNUq7UV0wfqb+zyKSU82ma/aRbi8ZYkzf7e/9ImcBJRsbmEAO1b/UD6CwZey
+         XOBw==
+X-Gm-Message-State: AOAM531jJa5yuvgIcypv9KGlhQtJXbIBWTBI9xYw+w89jxUr8P36HS5O
+        1V4BORkBrC4/6MQR8LcK4rPeRPd4lutI27zoZ6w=
+X-Google-Smtp-Source: ABdhPJxzVl2CYXY1+jXkMgxI7lgjA4Vhcp7jsudKPrO1RBAfCZVLiTcwITS9ttdeflkxxCh6kEfNHQ==
+X-Received: by 2002:a17:90b:3e8d:: with SMTP id rj13mr5241539pjb.183.1633454375892;
+        Tue, 05 Oct 2021 10:19:35 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:f69:1127:b4ce:ef67:b718])
-        by smtp.gmail.com with ESMTPSA id f25sm18476722pge.7.2021.10.05.10.18.56
+        by smtp.gmail.com with ESMTPSA id f25sm18476722pge.7.2021.10.05.10.19.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 10:18:59 -0700 (PDT)
+        Tue, 05 Oct 2021 10:19:35 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 0/8] Fix long standing AER Error Handling Issues 
-Date:   Tue,  5 Oct 2021 22:48:06 +0530
-Message-Id: <cover.1633453452.git.naveennaidu479@gmail.com>
+Subject: [PATCH v4 1/8] PCI/AER: Remove ID from aer_agent_string[]
+Date:   Tue,  5 Oct 2021 22:48:08 +0530
+Message-Id: <22b2dae2a6ac340d9d45c28481d746ec1064cd6c.1633453452.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1633453452.git.naveennaidu479@gmail.com>
+References: <cover.1633453452.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series aims at fixing some of the AER error handling issues
-we have.
+Currently, we do not print the "id" field in the AER error logs. Yet the
+aer_agent_string[] has the word "id" in it. The AER error log looks
+like:
 
-Currently we have the following issues:
- - Confusing message in aer_print_error()
- - aer_err_info not being initialized completely in DPC path before
-   we print the AER logs
- - A bug [1] in clearing of AER registers in the native AER path
+  pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
 
-[1] https://lore.kernel.org/linux-pci/20151229155822.GA17321@localhost/
+Without the "id" field in the error log, The aer_agent_string[]
+(eg: "Receiver ID") does not make sense. A user reading the
+aer_agent_string[] in the log, might inadvertently look for an "id"
+field and not finding it might lead to confusion.
 
-The primary aim of this patch series is to converge the APEI path and the
-native AER error handling paths. In our current code, we find that we
-have two different behaviours (especially when it comes to clearing of
-the AER registers) for the same functionality.
+Remove the "ID" from the aer_agent_string[].
 
-This patch series, tries to bring the same semantics and hence more
-commonanlity between the APEI part of code and the native OS
-handling of AER errors.
+The following are sample dummy errors inject via aer-inject.
 
-PATCH 1:
-  - Fixes the first issue
+Before
+=======
 
-PATCH 2 - 4:
-  - Fixes the second issue
-  - "Patch 3/8" is dependent on "Patch 2/8" in the series
+In 010caed4ccb6 ("PCI/AER: Decode Error Source Requester ID"),
+the "id" field was removed from the AER error logs, so currently AER
+logs look like:
 
-PATCH 5 - 7
-  - Deals with converging the various paths and brings more
-    commonality between them
-  - "Patch 6/8" depends on "Patch 1/8"
+  pcieport 0000:00:03.0: AER: Corrected error received: 0000:00:03:0
+  pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID) <--- no id field
+  pcieport 0000:00:03.0:   device [1b36:000c] error status/mask=00000040/0000e000
+  pcieport 0000:00:03.0:    [ 6] BadTLP
 
-PATCH 8:
-  -  Adds extra information in AER error logs.
+After
+======
 
-Thanks,
-Naveen Naidu
+  pcieport 0000:00:03.0: AER: Corrected error received: 0000:00:03.0
+  pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver)
+  pcieport 0000:00:03.0:   device [1b36:000c] error status/mask=00000040/0000e000
+  pcieport 0000:00:03.0:    [ 6] BadTLP
 
-Changelog
-=========
+Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+---
+ drivers/pci/pcie/aer.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-v4:
-  - Implement review comments
-  - Make "Patch 1/8" commit message more meaningful
-  - Fix the code comment error detected by kernel test robot 
-    in "Patch 6/8"
-
-v2 and v3:
-  - Fix up mail formatting and include the appropriate receipients for
-    the patch.
-
-Naveen Naidu (8):
- [PATCH v4 1/8] PCI/AER: Remove ID from aer_agent_string[]
- [PATCH v4 2/8] PCI: Cleanup struct aer_err_info
- [PATCH v4 3/8] PCI/DPC: Initialize info->id in dpc_process_error()
- [PATCH v4 4/8] PCI/DPC: Use pci_aer_clear_status() in dpc_process_error()
- [PATCH v4 5/8] PCI/DPC: Converge EDR and DPC Path of clearing AER registers
- [PATCH v4 6/8] PCI/AER: Clear error device AER registers in aer_irq()
- [PATCH v4 7/8] PCI/ERR: Remove redundant clearing of AER register in pcie_do_recovery()
- [PATCH v4 8/8] PCI/AER: Include DEVCTL in aer_print_error()
-
- drivers/pci/pci.h      |  23 +++-
- drivers/pci/pcie/aer.c | 269 ++++++++++++++++++++++++++++-------------
- drivers/pci/pcie/dpc.c |   9 +-
- drivers/pci/pcie/err.c |   9 +-
- 4 files changed, 209 insertions(+), 101 deletions(-)
-
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 9784fdcf3006..241ff361b43c 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -516,10 +516,10 @@ static const char *aer_uncorrectable_error_string[] = {
+ };
+ 
+ static const char *aer_agent_string[] = {
+-	"Receiver ID",
+-	"Requester ID",
+-	"Completer ID",
+-	"Transmitter ID"
++	"Receiver",
++	"Requester",
++	"Completer",
++	"Transmitter"
+ };
+ 
+ #define aer_stats_dev_attr(name, stats_array, strings_array,		\
+@@ -703,7 +703,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 	const char *level;
+ 
+ 	if (!info->status) {
+-		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
++		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent)\n",
+ 			aer_error_severity_string[info->severity]);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
