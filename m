@@ -2,33 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DB7042218C
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 10:59:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A24A422195
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Oct 2021 11:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232992AbhJEJBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 05:01:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:55442 "EHLO foss.arm.com"
+        id S232992AbhJEJEG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 05:04:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:55834 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232971AbhJEJBs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Oct 2021 05:01:48 -0400
+        id S233365AbhJEJEF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Oct 2021 05:04:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 975BE6D;
-        Tue,  5 Oct 2021 01:59:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D5336D;
+        Tue,  5 Oct 2021 02:02:14 -0700 (PDT)
 Received: from e123427-lin.arm.com (unknown [10.57.51.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93E5F3F66F;
-        Tue,  5 Oct 2021 01:59:56 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02CD93F66F;
+        Tue,  5 Oct 2021 02:02:12 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: visconti: Remove surplus dev_err() when using platform_get_irq_byname()
-Date:   Tue,  5 Oct 2021 09:59:51 +0100
-Message-Id: <163342437630.25790.1225284067114425606.b4-ty@arm.com>
+        linux-renesas-soc@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: rcar: pcie-rcar-ep: Remove unneeded includes
+Date:   Tue,  5 Oct 2021 10:02:07 +0100
+Message-Id: <163342451358.26857.6595725847149939957.b4-ty@arm.com>
 X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20211001011626.132286-1-kw@linux.com>
-References: <20211001011626.132286-1-kw@linux.com>
+In-Reply-To: <7c708841a2bf84f85b14a963271c3e99c8ba38a5.1633090444.git.geert+renesas@glider.be>
+References: <7c708841a2bf84f85b14a963271c3e99c8ba38a5.1633090444.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -36,21 +40,20 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 1 Oct 2021 01:16:26 +0000, Krzysztof Wilczyński wrote:
-> There is no need to call the dev_err() function directly to print a
-> custom message when handling an error from either the platform_get_irq()
-> or platform_get_irq_byname() functions as both are going to display an
-> appropriate error message in case of a failure.
+On Fri, 1 Oct 2021 14:16:09 +0200, Geert Uytterhoeven wrote:
+> Remove includes that are not needed, to speed up (re)compilation.
+> Include <linux/pm_runtime.h>, which is needed, and was included
+> implicitly through <linux/phy/phy.h> before.
 > 
-> This change is as per suggestions from Coccinelle, e.g.,
->   drivers/pci/controller/dwc/pcie-visconti.c:286:2-9: line 286 is redundant because platform_get_irq() already prints an error
+> Most of these are relics from splitting the driver in a host and a
+> common part, and adding endpoint support.
 > 
 > [...]
 
-Applied to pci/dwc, thanks!
+Applied to pci/rcar, thanks!
 
-[1/1] PCI: visconti: Remove surplus dev_err() when using platform_get_irq_byname()
-      https://git.kernel.org/lpieralisi/pci/c/99e8fc7d35
+[1/1] PCI: rcar: pcie-rcar-ep: Remove unneeded includes
+      https://git.kernel.org/lpieralisi/pci/c/ea52bd3459
 
 Thanks,
 Lorenzo
