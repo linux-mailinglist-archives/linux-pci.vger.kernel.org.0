@@ -2,187 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEAED4247DB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 22:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1282B424862
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 22:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239442AbhJFUWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 16:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
+        id S239454AbhJFVAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 17:00:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54692 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239437AbhJFUWK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Oct 2021 16:22:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B30ED6103D;
-        Wed,  6 Oct 2021 20:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633551618;
-        bh=J6JmypoA5uAZGPt6CNkNVyuZncdg+GjqSiooi4DM/k0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M8JxJ/GYRh/gW16VuEzq0V2YJfFp7e/tuqqauwkMujEGoTFbTCXnMoT4fZ/gCm+Qn
-         BWfiCvNI56Qxy3RGsbgkSSI86aEyv7iqKWHkybA0fqm3x3hmmwwiQmtzIDjM554RmT
-         MLtl0uRKcon0E9e3f6Rx5Icwr6gOWdwWw/6t1zZduvImqC9ZM2Bw+v1AqSPzj+QQTG
-         ZJHhOGHbUX4FdRemA4xgOl994MFFQvMsSJauBRxhFY8CGMc+cBMD4u8NfNS474zccH
-         gD/HgJIHo9Gh0q1A9di7oPyP9xOnzO3x0NaxYNJzh4+VINO1cbhZiJWQA9dyJxG4Gn
-         R8fintZebqThw==
-Date:   Wed, 6 Oct 2021 15:20:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelvin.Cao@microchip.com
-Cc:     kurt.schwemmer@microsemi.com, bhelgaas@google.com,
-        kelvincao@outlook.com, linux-pci@vger.kernel.org,
-        logang@deltatee.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] PCI/switchtec: Error out MRPC execution when no GAS
- access
-Message-ID: <20211006202016.GA1178025@bhelgaas>
+        id S229657AbhJFVAU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 17:00:20 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10129"; a="226412795"
+X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
+   d="scan'208";a="226412795"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 13:58:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,352,1624345200"; 
+   d="scan'208";a="713074765"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Oct 2021 13:58:22 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id B6EEC5807FC;
+        Wed,  6 Oct 2021 13:58:22 -0700 (PDT)
+Message-ID: <668f263e1d2606ad7485c40ce41933300ec4b8a3.camel@linux.intel.com>
+Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
+        bhelgaas@google.com, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Wed, 06 Oct 2021 13:58:22 -0700
+In-Reply-To: <YV1lTMwBSVlvadiG@unreal>
+References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
+         <20211001012815.1999501-3-david.e.box@linux.intel.com>
+         <YV1lTMwBSVlvadiG@unreal>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70abccd6144d8eac461866355e3a6963b3fb3fe7.camel@microchip.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 06, 2021 at 07:00:55PM +0000, Kelvin.Cao@microchip.com wrote:
-> On Wed, 2021-10-06 at 09:19 -0500, Bjorn Helgaas wrote:
-> > On Wed, Oct 06, 2021 at 05:49:29AM +0000, Kelvin.Cao@microchip.com
-> > wrote:
-> > > On Tue, 2021-10-05 at 21:33 -0500, Bjorn Helgaas wrote:
-> > > > On Wed, Oct 06, 2021 at 12:37:02AM +0000, 
-> > > > Kelvin.Cao@microchip.com
-> > > > wrote:
-> > > > > On Tue, 2021-10-05 at 15:11 -0500, Bjorn Helgaas wrote:
-> > > > > > On Mon, Oct 04, 2021 at 08:51:06PM +0000,
-> > > > > > Kelvin.Cao@microchip.com
-> > > > > > wrote:
-> > > > > > > On Sat, 2021-10-02 at 10:11 -0500, Bjorn Helgaas wrote:
-> > > > > > > > I *thought* the problem was that the PCIe Memory Read
-> > > > > > > > failed and the Root Complex fabricated ~0 data to
-> > > > > > > > complete
-> > > > > > > > the CPU read.  But now I'm not sure, because it sounds
-> > > > > > > > like it might be that the PCIe transaction succeeds, but
-> > > > > > > > it reads data that hasn't been updated by the firmware,
-> > > > > > > > i.e., it reads 'in progress' because firmware hasn't
-> > > > > > > > updated it to 'done'.
-> > > > > > > 
-> > > > > > > The original message was sort of misleading. After a
-> > > > > > > firmware reset, CPU getting ~0 for the PCIe Memory Read
-> > > > > > > doesn't explain the hang.  In a MRPC execution (DMA MRPC
-> > > > > > > mode), the MRPC status which is located in the host memory,
-> > > > > > > gets initialized by the CPU and updated/finalized by the
-> > > > > > > firmware. In the situation of a firmware reset, any MRPC
-> > > > > > > initiated afterwards will not get the status updated by the
-> > > > > > > firmware per the reason you pointed out above (or similar,
-> > > > > > > to my understanding, firmware can no longer DMA data to
-> > > > > > > host
-> > > > > > > memory in such cases), therefore the MRPC execution will
-> > > > > > > never end.
-> > > > > > 
-> > > > > > I'm glad this makes sense to you, because it still doesn't to
-> > > > > > me.
-> > > > > > 
-> > > > > > check_access() does an MMIO read to something in BAR0.  If
-> > > > > > that read returns ~0, it means either the PCIe Memory Read
-> > > > > > was
-> > > > > > successful and the Switchtec device supplied ~0 data (maybe
-> > > > > > because firmware has not initialized that part of the BAR) or
-> > > > > > the PCIe Memory Read failed and the root complex fabricated
-> > > > > > the ~0 data.
-> > > > > > 
-> > > > > > I'd like to know which one is happening so we can clarify the
-> > > > > > commit log text about "MRPC command executions hang
-> > > > > > indefinitely" and "host wil fail all GAS reads."  It's not
-> > > > > > clear whether these are PCIe protocol issues or
-> > > > > > driver/firmware interaction issues.
-> > > > > 
-> > > > > I think it's the latter case, the ~0 data was fabricated by the
-> > > > > root complex, as the MMIO read in check_access() always returns
-> > > > > ~0 until a reboot or a rescan happens.
-> > > > 
-> > > > If the root complex fabricates ~0, that means a PCIe transaction
-> > > > failed, i.e., the device didn't respond.  Rescan only does config
-> > > > reads and writes.  Why should that cause the PCIe transactions to
-> > > > magically start working?
-> > > 
-> > > I took a closer look. What I observed was like this. A firmware
-> > > reset cleared some CSR settings including the MSE and MBE bits and
-> > > the Base Address Registers. With a rescan (removing the switch to
-> > > which the management EP was binded from root port and rescan), the
-> > > management EP was re-enumerated and driver was re-probed, so that
-> > > the settings cleared by the firmware reset was properly setup
-> > > again,
-> > > therefore PCIe transactions start working.
+On Wed, 2021-10-06 at 11:58 +0300, Leon Romanovsky wrote:
+> On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
+> > Intel Platform Monitoring Technology (PMT) support is indicated by presence
+> > of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
+> > structures may also be used by Intel to indicate support for other
+> > capabilities unrelated to PMT.  The Out Of Band Management Services Module
+> > (OOBMSM) is an example of a device that can have both PMT and non-PMT
+> > capabilities. In order to support these capabilities it is necessary to
+> > modify the intel_pmt driver to handle the creation of platform devices more
+> > generically. To that end the following changes are made.
 > > 
-> > I think what you just said is that
+> > Convert the driver and child drivers from MFD to the Auxiliary Bus. This
+> > architecture is more suitable anyway since the driver partitions a
+> > multifunctional PCIe device. This also moves the driver out of the MFD
+> > subsystem and into platform/x86/intel.
 > > 
-> >   - the driver asked the firmware to reset the device
+> > Before, devices were named by their capability (e.g. pmt_telemetry).
+> > Instead, generically name them by their capability ID (e.g.
+> > intel_extended_cap.2). This allows the IDs to be created automatically,
+> > minimizing the code needed to support future capabilities. However, to
+> > ensure that unsupported devices aren't created, use an allow list to
+> > specify supported capabilities. Along these lines, rename the driver from
+> > intel_pmt to intel_extended_caps to better reflect the purpose.
 > > 
-> >   - the firmware did reset the device, which cleared Memory Space
-> >     Enable
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
 > > 
-> >   - nothing restored the device config after the reset, so Memory
-> >     Space Enable remains cleared
+> > V1:     New patch. However incorporates some elements of [1] which was
+> >         dropped. Namely enumerating features generically and creating an
+> >         allow list. Also cleans up probe by moving some code to functions
+> >         and using a bool instead of an int to track whether a device was
+> >         added.
 > > 
-> >   - the driver does MMIO reads to figure out when the reset has
-> >     completed
-> > 
-> >   - the device doesn't respond to the PCIe Memory Reads because
-> > Memory
-> >     Space Enable is cleared
-> > 
-> >   - the root complex sees a timeout or error completion and
-> > fabricates
-> >     ~0 data for the CPU read
-> > 
-> >   - the driver sees ~0 data from the MMIO read and thinks the device
-> >     or firmware is hung
-> > 
-> > If that's all true, I think the patch is sort of a band-aid that
-> > doesn't fix the problem at all but only makes the driver's response
-> > to
-> > it marginally better.  But the device is still unusable until a
-> > rescan
-> > or reboot.
-> > 
-> > So I think we should drop this patch and do something to restore the
-> > device state after the reset.
+> > [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
 > 
-> Do you mean we should do something at the driver level to automatically
-> try to restore the device state after the reset? I was thinking it's up
-> to the user to make the call to restore the device state or take other
-> actions, so that returning an error code from MRPC to indicate what
-> happened would be good enough for the driver. 
+> <...>
+> 
+> > +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > +{
+> > +       struct extended_caps_platform_info *info;
+> > +       bool have_devices = false;
+> > +       unsigned long quirks = 0;
+> > +       int ret;
+> > +
+> > +       ret = pcim_enable_device(pdev);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       info = (struct extended_caps_platform_info *)id->driver_data;
+> 
+> pci_get_drvdata() in all places and no need to cast void *.
 
-It sounds like this is a completely predictable situation.  Why would
-you want manual user intervention?
+This is coming from the id not the pdev. The data here is type kernel_ulong_t.
 
-I'm pretty sure there are drivers that save state *before* the reset
-and restore it afterwards.
+> 
+> > +       if (info)
+> > +               quirks = info->quirks;
+> > +
+> > +       have_devices |= extended_caps_walk_dvsec(pdev, quirks);
+> > +
+> > +       if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
+> > +               have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
+> > +
+> > +       if (!have_devices)
+> > +               return -ENODEV;
+> > +
+> > +       return 0;
+> > +}
+> 
+> <...>
+> 
+> > -static struct platform_driver pmt_telem_driver = {
+> > -       .driver = {
+> > -               .name   = TELEM_DEV_NAME,
+> > -       },
+> > -       .remove = pmt_telem_remove,
+> > -       .probe  = pmt_telem_probe,
+> > +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
+> > +       { .name = "intel_extended_caps.2", },
+> 
+> Why "2" in the name?
 
-> Can you possibly shed light on what might be a reasonable way to
-> restore the device state in the driver if applicable? I was just doing
-> it by leveraging the remove and rescan interfaces in the sysfs.
-> 
-> That's all true. I lean towards keeping the patch as I think making the
-> response better under the following situations might not be bad.
-> 
->   - The firmware reset case, as we discussed. I'd think it's still
-> useful for users to get a fast error return which indicates something
-> bad happened and some actions need to be taken either to abort or try
-> to recover. In this case, we are assuming that a firmware reset will
-> boot the firmware successfully.
+This is being changed to a string for the next version after similar comment. Thanks.
 
-So wait, you mean you just intentionally ask the firmware to reset,
-knowing that the device will be unusable until the user reboots or
-does a manual rescan?  And the way to improve this is for the driver
-to report an error to the user instead of hanging?  I *guess* that
-might be some sort of improvement, but seems like a pretty small one.
+David
 
->   - The firwmare crashes and doesn't respond, which normally is the
-> reason for users to issue a firmware reset command to try to recover it
-> via either the driver or a sideband interface. The firmware may not be
-> able to recover by a reset in some extream situations like hardware
-> errors, so that an error return is probably all the users can get
-> before another level of recovery happens.
 > 
-> So I'd think this patch is still making the driver better in some way.
+> Thanks
 > 
-> Kelvin
-> 
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
+> > +
+> > +static struct auxiliary_driver pmt_telem_aux_driver = {
+> > +       .id_table       = pmt_telem_aux_id_table,
+> > +       .remove         = pmt_telem_remove,
+> > +       .probe          = pmt_telem_probe,
+> >  };
+> >  
+
+
