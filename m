@@ -2,80 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C08704237BA
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 07:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 655AF4237DF
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 08:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbhJFF6I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 01:58:08 -0400
-Received: from gandalf.ozlabs.org ([150.107.74.76]:35597 "EHLO
-        gandalf.ozlabs.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235604AbhJFF6I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Oct 2021 01:58:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4HPNx844mYz4xR9;
-        Wed,  6 Oct 2021 16:56:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1633499775;
-        bh=yAmQoNe4QQh6i00NhuH34dqGowIW44cpaMTI9W4YrSU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=hfVgrO7IF1qsS481zscMUiiK48SJzKENC+N3Ctiddk8MqqpJwPzIuFdUjBfq7Xm3v
-         /gnsvRiospeRnRfb8N076aAlV/UeoXUK56yAV6cm/Dl+Dqp4yErjZNvwYxop/rk8o6
-         6dXxyNH42jyYrIFFSY6E5BL3ercij5batzZN+L2XKaQ988U4LYykffnL/j9+8Agw/p
-         ZdSXjbcUg5zc0oB3qcIDZIM6QjkEykPilZyoJ1d4zRKIsOvKWTjxdth5BPcZg+mv/J
-         gqmVR9AoPsNHAZUhxlhfIsIB0+nhee8rOgyR44bVrDaUw+3okL07EmxboIbVD2/mYe
-         41sqv6HoKV8Tw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>,
-        opensuse-ppc@opensuse.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S229797AbhJFGTB convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 6 Oct 2021 02:19:01 -0400
+Received: from ni.piap.pl ([195.187.100.5]:51728 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229638AbhJFGTB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 02:19:01 -0400
+From:   Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, Artem Lapkin <email2tema@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Stan Skowronek <stan@corellium.com>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Hector Martin <marcan@marcan.st>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v5 00/14] PCI: Add support for Apple M1
-In-Reply-To: <CACRpkdaL=YEfqSmAogLcP0Gn2gUqSaEXZQrJD1GR5QU+DyuyDQ@mail.gmail.com>
-References: <20210929163847.2807812-1-maz@kernel.org>
- <20211004083845.GA22336@lpieralisi>
- <CAL_Jsq+4FF9QYy87aYhJ-AS78qyHp0NkLrL492+WmdyWj-NKaw@mail.gmail.com>
- <CACRpkdaL=YEfqSmAogLcP0Gn2gUqSaEXZQrJD1GR5QU+DyuyDQ@mail.gmail.com>
-Date:   Wed, 06 Oct 2021 16:56:07 +1100
-Message-ID: <87o882ofwo.fsf@mpe.ellerman.id.au>
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 REPOST] PCIe: limit Max Read Request Size on i.MX to 512
+ bytes
+Date:   Wed, 06 Oct 2021 08:17:07 +0200
+Message-ID: <m3lf36n0d8.fsf@t19.piap.pl>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Linus Walleij <linus.walleij@linaro.org> writes:
-> On Mon, Oct 4, 2021 at 9:52 PM Rob Herring <robh+dt@kernel.org> wrote:
->
->> FYI, I pushed patches 1-3 to kernelCI and didn't see any regressions.
->> I am a bit worried about changes to the DT interrupt parsing and
->> ancient platforms (such as PowerMacs). Most likely there wouldn't be
->> any report until -rc1 or months later on those old systems.
->
-> Lets page the PPC lists to see if someone can test on some powermac.
+DWC PCIe controller imposes limits on the Read Request Size that it can
+handle. For i.MX6 family it's fixed at 512 bytes by default.
 
-It boots and everything seems fine on an iMac-G5 of mine.
+If a memory read larger than the limit is requested, the CPU responds
+with Completer Abort (CA) (on i.MX6 Unsupported Request (UR) is returned
+instead due to a design error).
 
-I don't have access to any other powermac hardware at the moment due to
-the lockdown here.
+The i.MX6 documentation states that the limit can be changed by writing
+to the PCIE_PL_MRCCR0 register, however there is a fixed (and
+undocumented) maximum (CX_REMOTE_RD_REQ_SIZE constant). Tests indicate
+that values larger than 512 bytes don't work, though.
 
-cheers
+This patch makes the RTL8111 work on i.MX6.
+
+Signed-off-by: Krzysztof Hałasa <khalasa@piap.pl>
+---
+While ATM needed only on ARM, this version is compiled in on all
+archs.
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 80fc98acf097..225380e75fff 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1148,6 +1148,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		imx6_pcie->vph = NULL;
+ 	}
+ 
++	max_pcie_mrrs = 512;
+ 	platform_set_drvdata(pdev, imx6_pcie);
+ 
+ 	ret = imx6_pcie_attach_pd(dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index aacf575c15cf..abeb48a64ee3 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -112,6 +112,8 @@ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
+ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
+ #endif
+ 
++u16 max_pcie_mrrs = 4096; // no limit
++
+ /*
+  * The default CLS is used if arch didn't set CLS explicitly and not
+  * all pci devices agree on the same value.  Arch can override either
+@@ -5816,6 +5818,9 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 			rq = mps;
+ 	}
+ 
++	if (rq > max_pcie_mrrs)
++		rq = max_pcie_mrrs;
++
+ 	v = (ffs(rq) - 8) << 12;
+ 
+ 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 06ff1186c1ef..2b95a8204819 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -996,6 +996,7 @@ enum pcie_bus_config_types {
+ };
+ 
+ extern enum pcie_bus_config_types pcie_bus_config;
++extern u16 max_pcie_mrrs;
+ 
+ extern struct bus_type pci_bus_type;
+ 
+
+-- 
+Krzysztof "Chris" Hałasa
+
+Sieć Badawcza Łukasiewicz
+Przemysłowy Instytut Automatyki i Pomiarów PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
