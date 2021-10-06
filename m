@@ -2,20 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8E8A423614
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 04:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35108423617
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 04:47:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbhJFCsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 22:48:55 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:42296 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230261AbhJFCsy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 22:48:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0UqhcYh2_1633488420;
-Received: from localhost(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0UqhcYh2_1633488420)
+        id S230261AbhJFCto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Oct 2021 22:49:44 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:42598 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229908AbhJFCtl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 22:49:41 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0UqhYNe9_1633488467;
+Received: from localhost(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0UqhYNe9_1633488467)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 Oct 2021 10:47:01 +0800
-Date:   Wed, 6 Oct 2021 10:47:00 +0800
+          Wed, 06 Oct 2021 10:47:48 +0800
+Date:   Wed, 6 Oct 2021 10:47:47 +0800
 From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
 To:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
         james.morse@arm.com, will@kernel.org, rafael@kernel.org,
@@ -25,9 +25,9 @@ Cc:     steve.capper@arm.com, mark.rutland@arm.com,
         linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         xuesong.chen@linux.alibaba.com
-Subject: [PATCH 1/2] PCI: MCFG: Consolidate the separate PCI MCFG table entry
- list
-Message-ID: <YV0OJJoMktmL922U@Dennis-MBP.local>
+Subject: [PATCH 2/2] ACPI: APEI: Filter the PCI MCFG address with an
+ arch-agnostic method
+Message-ID: <YV0OU5Nhd4FrcdrJ@Dennis-MBP.local>
 Reply-To: Xuesong Chen <xuesong.chen@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -36,189 +36,152 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI MCFG entry list is discrete on x86 and other architectures like
-arm64 in current implementation, this list variable can be consolidated
-for unnecessary duplication and other purposes, for example, we can remove
-some of the 'arch' specific codes in the APEI/EINJ module and re-implement
-it in a more common arch-agnostic way.
+The commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
+level") fixes the issue that the ACPI/APEI can not access the PCI MCFG
+address on x86 platform, but this issue can also happen on other
+architectures, for instance, we got below error message on arm64 platform:
+...
+APEI: Can not request [mem 0x50100000-0x50100003] for APEI EINJ Trigger registers
+...
+
+This patch will try to handle this case in a more common way instead of the
+original 'arch' specific solution, which will be beneficial to all the
+APEI-dependent platforms after that.
 
 Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
 ---
- arch/x86/include/asm/pci_x86.h | 17 +----------------
- arch/x86/pci/mmconfig-shared.c |  2 --
- drivers/acpi/pci_mcfg.c        | 34 +++++++++++++---------------------
- drivers/pci/pci.c              |  2 ++
- include/linux/pci.h            | 17 +++++++++++++++++
- 5 files changed, 33 insertions(+), 39 deletions(-)
+ arch/x86/pci/mmconfig-shared.c | 28 ----------------------------
+ drivers/acpi/apei/apei-base.c  | 42 ++++++++++++++++++++++++++----------------
+ 2 files changed, 26 insertions(+), 44 deletions(-)
 
-diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-index 490411d..1f4257c 100644
---- a/arch/x86/include/asm/pci_x86.h
-+++ b/arch/x86/include/asm/pci_x86.h
-@@ -146,20 +146,7 @@ static inline int  __init pci_acpi_init(void)
- extern void pcibios_fixup_irqs(void);
- 
- /* pci-mmconfig.c */
--
--/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
--#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
--
--struct pci_mmcfg_region {
--	struct list_head list;
--	struct resource res;
--	u64 address;
--	char __iomem *virt;
--	u16 segment;
--	u8 start_bus;
--	u8 end_bus;
--	char name[PCI_MMCFG_RESOURCE_NAME_LEN];
--};
-+struct pci_mmcfg_region;
- 
- extern int __init pci_mmcfg_arch_init(void);
- extern void __init pci_mmcfg_arch_free(void);
-@@ -174,8 +161,6 @@ extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
- 
- extern struct list_head pci_mmcfg_list;
- 
--#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
--
- /*
-  * On AMD Fam10h CPUs, all PCI MMIO configuration space accesses must use
-  * %eax.  No other source or target registers may be used.  The following
 diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 758cbfe..0b961fe6 100644
+index 0b961fe6..12f7d96 100644
 --- a/arch/x86/pci/mmconfig-shared.c
 +++ b/arch/x86/pci/mmconfig-shared.c
-@@ -31,8 +31,6 @@
- static DEFINE_MUTEX(pci_mmcfg_lock);
- #define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
- 
--LIST_HEAD(pci_mmcfg_list);
--
- static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
- {
- 	if (cfg->res.parent)
-diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-index 53cab97..d9506b0 100644
---- a/drivers/acpi/pci_mcfg.c
-+++ b/drivers/acpi/pci_mcfg.c
-@@ -13,14 +13,7 @@
- #include <linux/pci-acpi.h>
- #include <linux/pci-ecam.h>
- 
--/* Structure to hold entries from the MCFG table */
--struct mcfg_entry {
--	struct list_head	list;
--	phys_addr_t		addr;
--	u16			segment;
--	u8			bus_start;
--	u8			bus_end;
--};
-+extern struct list_head pci_mmcfg_list;
- 
- #ifdef CONFIG_PCI_QUIRKS
- struct mcfg_fixup {
-@@ -214,16 +207,13 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
- #endif
+@@ -605,32 +605,6 @@ static int __init pci_parse_mcfg(struct acpi_table_header *header)
+ 	return 0;
  }
  
--/* List to save MCFG entries */
--static LIST_HEAD(pci_mcfg_list);
+-#ifdef CONFIG_ACPI_APEI
+-extern int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
+-				     void *data), void *data);
 -
- int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
- 		    const struct pci_ecam_ops **ecam_ops)
+-static int pci_mmcfg_for_each_region(int (*func)(__u64 start, __u64 size,
+-				     void *data), void *data)
+-{
+-	struct pci_mmcfg_region *cfg;
+-	int rc;
+-
+-	if (list_empty(&pci_mmcfg_list))
+-		return 0;
+-
+-	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
+-		rc = func(cfg->res.start, resource_size(&cfg->res), data);
+-		if (rc)
+-			return rc;
+-	}
+-
+-	return 0;
+-}
+-#define set_apei_filter() (arch_apei_filter_addr = pci_mmcfg_for_each_region)
+-#else
+-#define set_apei_filter()
+-#endif
+-
+ static void __init __pci_mmcfg_init(int early)
  {
- 	const struct pci_ecam_ops *ops = &pci_generic_ecam_ops;
- 	struct resource *bus_res = &root->secondary;
- 	u16 seg = root->segment;
--	struct mcfg_entry *e;
-+	struct pci_mmcfg_region *e;
- 	struct resource res;
- 
- 	/* Use address from _CBA if present, otherwise lookup MCFG */
-@@ -233,10 +223,10 @@ int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
- 	/*
- 	 * We expect the range in bus_res in the coverage of MCFG bus range.
- 	 */
--	list_for_each_entry(e, &pci_mcfg_list, list) {
--		if (e->segment == seg && e->bus_start <= bus_res->start &&
--		    e->bus_end >= bus_res->end) {
--			root->mcfg_addr = e->addr;
-+	list_for_each_entry(e, &pci_mmcfg_list, list) {
-+		if (e->segment == seg && e->start_bus <= bus_res->start &&
-+		    e->end_bus >= bus_res->end) {
-+			root->mcfg_addr = e->address;
- 		}
- 
+ 	pci_mmcfg_reject_broken(early);
+@@ -665,8 +639,6 @@ void __init pci_mmcfg_early_init(void)
+ 		else
+ 			acpi_table_parse(ACPI_SIG_MCFG, pci_parse_mcfg);
+ 		__pci_mmcfg_init(1);
+-
+-		set_apei_filter();
  	}
-@@ -268,7 +258,7 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
- {
- 	struct acpi_table_mcfg *mcfg;
- 	struct acpi_mcfg_allocation *mptr;
--	struct mcfg_entry *e, *arr;
-+	struct pci_mmcfg_region *e, *arr;
- 	int i, n;
+ }
  
- 	if (header->length < sizeof(struct acpi_table_mcfg))
-@@ -285,10 +275,12 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
+diff --git a/drivers/acpi/apei/apei-base.c b/drivers/acpi/apei/apei-base.c
+index c7fdb12..fa65792 100644
+--- a/drivers/acpi/apei/apei-base.c
++++ b/drivers/acpi/apei/apei-base.c
+@@ -21,6 +21,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
++#include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/slab.h>
+ #include <linux/io.h>
+@@ -34,6 +35,8 @@
  
- 	for (i = 0, e = arr; i < n; i++, mptr++, e++) {
- 		e->segment = mptr->pci_segment;
--		e->addr =  mptr->address;
--		e->bus_start = mptr->start_bus_number;
--		e->bus_end = mptr->end_bus_number;
--		list_add(&e->list, &pci_mcfg_list);
-+		e->address =  mptr->address;
-+		e->start_bus = mptr->start_bus_number;
-+		e->end_bus = mptr->end_bus_number;
-+		e->res.start = e->address + PCI_MMCFG_BUS_OFFSET(e->start_bus);
-+		e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
-+		list_add(&e->list, &pci_mmcfg_list);
- 	}
+ #define APEI_PFX "APEI: "
  
- #ifdef CONFIG_PCI_QUIRKS
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce2ab62..899004e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -47,6 +47,8 @@
- int pci_pci_problems;
- EXPORT_SYMBOL(pci_pci_problems);
- 
-+LIST_HEAD(pci_mmcfg_list);
-+
- unsigned int pci_pm_d3hot_delay;
- 
- static void pci_pme_list_scan(struct work_struct *work);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cd8aa6f..71e4c06 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -55,6 +55,23 @@
- #define PCI_RESET_PROBE		true
- #define PCI_RESET_DO_RESET	false
- 
-+#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
-+
-+/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
-+#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
-+
-+/* pci mcfg region */
-+struct pci_mmcfg_region {
-+	struct list_head list;
-+	struct resource res;
-+	u64 address;
-+	char __iomem *virt;
-+	u16 segment;
-+	u8 start_bus;
-+	u8 end_bus;
-+	char name[PCI_MMCFG_RESOURCE_NAME_LEN];
-+};
++extern struct list_head pci_mmcfg_list;
 +
  /*
-  * The PCI interface treats multi-function devices as independent
-  * devices.  The slot/function address of each device is encoded
+  * APEI ERST (Error Record Serialization Table) and EINJ (Error
+  * INJection) interpreter framework.
+@@ -448,12 +451,26 @@ static int apei_get_nvs_resources(struct apei_resources *resources)
+ 	return acpi_nvs_for_each_region(apei_get_res_callback, resources);
+ }
+ 
+-int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
+-				     void *data), void *data);
+-static int apei_get_arch_resources(struct apei_resources *resources)
+-
++static int apei_filter_mcfg_addr(struct apei_resources *res,
++			struct apei_resources *mcfg_res)
+ {
+-	return arch_apei_filter_addr(apei_get_res_callback, resources);
++	int rc = 0;
++	struct pci_mmcfg_region *cfg;
++
++	if (list_empty(&pci_mmcfg_list))
++		return 0;
++
++	apei_resources_init(mcfg_res);
++	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
++		rc = apei_res_add(&mcfg_res->iomem, cfg->res.start, resource_size(&cfg->res));
++		if (rc)
++			return rc;
++	}
++
++	/* filter the mcfg resource from current APEI's */
++	rc = apei_resources_sub(res, mcfg_res);
++
++	return rc;
+ }
+ 
+ /*
+@@ -486,15 +503,9 @@ int apei_resources_request(struct apei_resources *resources,
+ 	if (rc)
+ 		goto nvs_res_fini;
+ 
+-	if (arch_apei_filter_addr) {
+-		apei_resources_init(&arch_res);
+-		rc = apei_get_arch_resources(&arch_res);
+-		if (rc)
+-			goto arch_res_fini;
+-		rc = apei_resources_sub(resources, &arch_res);
+-		if (rc)
+-			goto arch_res_fini;
+-	}
++	rc = apei_filter_mcfg_addr(resources, &arch_res);
++	if (rc)
++		goto arch_res_fini;
+ 
+ 	rc = -EINVAL;
+ 	list_for_each_entry(res, &resources->iomem, list) {
+@@ -544,8 +555,7 @@ int apei_resources_request(struct apei_resources *resources,
+ 		release_mem_region(res->start, res->end - res->start);
+ 	}
+ arch_res_fini:
+-	if (arch_apei_filter_addr)
+-		apei_resources_fini(&arch_res);
++	apei_resources_fini(&arch_res);
+ nvs_res_fini:
+ 	apei_resources_fini(&nvs_resources);
+ 	return rc;
 -- 
 1.8.3.1
 
