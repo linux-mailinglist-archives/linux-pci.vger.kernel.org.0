@@ -2,186 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35108423617
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 04:47:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6707342378C
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 07:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbhJFCto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Oct 2021 22:49:44 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:42598 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229908AbhJFCtl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Oct 2021 22:49:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0UqhYNe9_1633488467;
-Received: from localhost(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0UqhYNe9_1633488467)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 Oct 2021 10:47:48 +0800
-Date:   Wed, 6 Oct 2021 10:47:47 +0800
-From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
-To:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
-        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
-        tony.luck@intel.com, bp@alien8.de, mingo@redhat.com,
-        bhelgaas@google.com
-Cc:     steve.capper@arm.com, mark.rutland@arm.com,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xuesong.chen@linux.alibaba.com
-Subject: [PATCH 2/2] ACPI: APEI: Filter the PCI MCFG address with an
- arch-agnostic method
-Message-ID: <YV0OU5Nhd4FrcdrJ@Dennis-MBP.local>
-Reply-To: Xuesong Chen <xuesong.chen@linux.alibaba.com>
+        id S229621AbhJFFrH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 01:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229579AbhJFFrH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 01:47:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 08C45610A8;
+        Wed,  6 Oct 2021 05:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1633499115;
+        bh=TkhOS3oV3aBi6/QsuUnIcb7Tuh/r6ed2nyWTvBNeZCE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ja+ryf444x6Di/ECYJ1MMxrIt8xWGjoeayFFSxzN7eUIV+0TdxlBE0oLlQK/Z6CPA
+         Mkt0M00dGomHevaZhMCpHpdn51zXqCAEv+4jonKBlHTIZ50E6rRLws7+HdzmJccBZV
+         CwuhTxux4JPGErPjZnNy3G/8slESpIe3e8+O8gMs=
+Date:   Wed, 6 Oct 2021 07:45:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jason Wang <jasowang@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 4/6] virtio: Initialize authorized attribute for
+ confidential guest
+Message-ID: <YV036H5iGd7FKg+E@kroah.com>
+References: <YVXWaF73gcrlvpnf@kroah.com>
+ <1cfdce51-6bb4-f7af-a86b-5854b6737253@linux.intel.com>
+ <YVaywQLAboZ6b36V@kroah.com>
+ <CAPcyv4gqs=KuGyxFR61QWqF6HKrRg851roCGUqrq585+s2Cm=w@mail.gmail.com>
+ <20211001164533.GC505557@rowland.harvard.edu>
+ <CAPcyv4i__reKFRP1KjWUov_W5jBQN9_vbUbKRL_V7KMM3oPuuQ@mail.gmail.com>
+ <20211001190048.GA512418@rowland.harvard.edu>
+ <CAPcyv4hYL51DcBuSuyMRFo5Jcc=zLd=Ugo+H_2saELcZ5AJBeQ@mail.gmail.com>
+ <YVqONA0vhl0/H3QE@lahna>
+ <CAPcyv4im4Tsj1SnxSWe=cAHBP1mQ=zgO-D81n2BpD+_HkpitbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAPcyv4im4Tsj1SnxSWe=cAHBP1mQ=zgO-D81n2BpD+_HkpitbQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
-level") fixes the issue that the ACPI/APEI can not access the PCI MCFG
-address on x86 platform, but this issue can also happen on other
-architectures, for instance, we got below error message on arm64 platform:
-...
-APEI: Can not request [mem 0x50100000-0x50100003] for APEI EINJ Trigger registers
-...
+On Tue, Oct 05, 2021 at 03:33:29PM -0700, Dan Williams wrote:
+> On Sun, Oct 3, 2021 at 10:16 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, Oct 01, 2021 at 12:57:18PM -0700, Dan Williams wrote:
+> > > > > Ah, so are you saying that it would be sufficient for USB if the
+> > > > > generic authorized implementation did something like:
+> > > > >
+> > > > > dev->authorized = 1;
+> > > > > device_attach(dev);
+> > > > >
+> > > > > ...for the authorize case, and:
+> > > > >
+> > > > > dev->authorize = 0;
+> > > > > device_release_driver(dev);
+> > > > >
+> > > > > ...for the deauthorize case?
+> > > >
+> > > > Yes, I think so.  But I haven't tried making this change to test and
+> > > > see what really happens.
+> > >
+> > > Sounds like a useful path for this effort to explore. Especially as
+> > > Greg seems to want the proposed "has_probe_authorization" flag in the
+> > > bus_type to disappear and make this all generic. It just seems that
+> > > Thunderbolt would need deeper surgery to move what it does in the
+> > > authorization toggle path into the probe and remove paths.
+> > >
+> > > Mika, do you see a path for Thunderbolt to align its authorization
+> > > paths behind bus ->probe() ->remove() events similar to what USB might
+> > > be able to support for a generic authorization path?
+> >
+> > In Thunderbolt "authorization" actually means whether there is a PCIe
+> > tunnel to the device or not. There is no driver bind/unbind happening
+> > when authorization toggles (well on Thunderbolt bus, there can be on PCI
+> > bus after the tunnel is established) so I'm not entirely sure how we
+> > could use the bus ->probe() or ->remove for that to be honest.
+> 
+> Greg, per your comment:
+> 
+> "... which was to move the way that busses are allowed to authorize
+> the devices they wish to control into a generic way instead of being
+> bus-specific logic."
+> 
+> We have USB and TB that have already diverged on the ABI here. The USB
+> behavior is more in line with the "probe authorization" concept, while
+> TB is about tunnel establishment and not cleanly tied to probe
+> authorization. So while I see a path to a common authorization
+> implementation for USB and other buses (per the insight from Alan), TB
+> needs to retain the ability to record the authorization state as an
+> enum rather than a bool, and emit a uevent on authorization status
+> change.
+> 
+> So how about something like the following that moves the attribute
+> into the core, but still calls back to TB and USB to perform their
+> legacy authorization work. This new authorized attribute only shows up
+> when devices default to not authorized, i.e. when userspace owns the
+> allow list past critical-boot built-in drivers, or if the bus (USB /
+> TB) implements ->authorize().
 
-This patch will try to handle this case in a more common way instead of the
-original 'arch' specific solution, which will be beneficial to all the
-APEI-dependent platforms after that.
+At quick glance, this looks better, but it would be good to see someone
+test it :)
 
-Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
----
- arch/x86/pci/mmconfig-shared.c | 28 ----------------------------
- drivers/acpi/apei/apei-base.c  | 42 ++++++++++++++++++++++++++----------------
- 2 files changed, 26 insertions(+), 44 deletions(-)
+thanks,
 
-diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 0b961fe6..12f7d96 100644
---- a/arch/x86/pci/mmconfig-shared.c
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -605,32 +605,6 @@ static int __init pci_parse_mcfg(struct acpi_table_header *header)
- 	return 0;
- }
- 
--#ifdef CONFIG_ACPI_APEI
--extern int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
--				     void *data), void *data);
--
--static int pci_mmcfg_for_each_region(int (*func)(__u64 start, __u64 size,
--				     void *data), void *data)
--{
--	struct pci_mmcfg_region *cfg;
--	int rc;
--
--	if (list_empty(&pci_mmcfg_list))
--		return 0;
--
--	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
--		rc = func(cfg->res.start, resource_size(&cfg->res), data);
--		if (rc)
--			return rc;
--	}
--
--	return 0;
--}
--#define set_apei_filter() (arch_apei_filter_addr = pci_mmcfg_for_each_region)
--#else
--#define set_apei_filter()
--#endif
--
- static void __init __pci_mmcfg_init(int early)
- {
- 	pci_mmcfg_reject_broken(early);
-@@ -665,8 +639,6 @@ void __init pci_mmcfg_early_init(void)
- 		else
- 			acpi_table_parse(ACPI_SIG_MCFG, pci_parse_mcfg);
- 		__pci_mmcfg_init(1);
--
--		set_apei_filter();
- 	}
- }
- 
-diff --git a/drivers/acpi/apei/apei-base.c b/drivers/acpi/apei/apei-base.c
-index c7fdb12..fa65792 100644
---- a/drivers/acpi/apei/apei-base.c
-+++ b/drivers/acpi/apei/apei-base.c
-@@ -21,6 +21,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-+#include <linux/pci.h>
- #include <linux/acpi.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-@@ -34,6 +35,8 @@
- 
- #define APEI_PFX "APEI: "
- 
-+extern struct list_head pci_mmcfg_list;
-+
- /*
-  * APEI ERST (Error Record Serialization Table) and EINJ (Error
-  * INJection) interpreter framework.
-@@ -448,12 +451,26 @@ static int apei_get_nvs_resources(struct apei_resources *resources)
- 	return acpi_nvs_for_each_region(apei_get_res_callback, resources);
- }
- 
--int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
--				     void *data), void *data);
--static int apei_get_arch_resources(struct apei_resources *resources)
--
-+static int apei_filter_mcfg_addr(struct apei_resources *res,
-+			struct apei_resources *mcfg_res)
- {
--	return arch_apei_filter_addr(apei_get_res_callback, resources);
-+	int rc = 0;
-+	struct pci_mmcfg_region *cfg;
-+
-+	if (list_empty(&pci_mmcfg_list))
-+		return 0;
-+
-+	apei_resources_init(mcfg_res);
-+	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
-+		rc = apei_res_add(&mcfg_res->iomem, cfg->res.start, resource_size(&cfg->res));
-+		if (rc)
-+			return rc;
-+	}
-+
-+	/* filter the mcfg resource from current APEI's */
-+	rc = apei_resources_sub(res, mcfg_res);
-+
-+	return rc;
- }
- 
- /*
-@@ -486,15 +503,9 @@ int apei_resources_request(struct apei_resources *resources,
- 	if (rc)
- 		goto nvs_res_fini;
- 
--	if (arch_apei_filter_addr) {
--		apei_resources_init(&arch_res);
--		rc = apei_get_arch_resources(&arch_res);
--		if (rc)
--			goto arch_res_fini;
--		rc = apei_resources_sub(resources, &arch_res);
--		if (rc)
--			goto arch_res_fini;
--	}
-+	rc = apei_filter_mcfg_addr(resources, &arch_res);
-+	if (rc)
-+		goto arch_res_fini;
- 
- 	rc = -EINVAL;
- 	list_for_each_entry(res, &resources->iomem, list) {
-@@ -544,8 +555,7 @@ int apei_resources_request(struct apei_resources *resources,
- 		release_mem_region(res->start, res->end - res->start);
- 	}
- arch_res_fini:
--	if (arch_apei_filter_addr)
--		apei_resources_fini(&arch_res);
-+	apei_resources_fini(&arch_res);
- nvs_res_fini:
- 	apei_resources_fini(&nvs_resources);
- 	return rc;
--- 
-1.8.3.1
-
+greg k-h
