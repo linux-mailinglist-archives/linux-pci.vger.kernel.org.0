@@ -2,104 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84C28423FCB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 16:06:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 160FB423FEB
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 16:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231540AbhJFOIl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 10:08:41 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3938 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbhJFOIk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Oct 2021 10:08:40 -0400
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HPbl84kNTz67vYw;
-        Wed,  6 Oct 2021 22:03:16 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Wed, 6 Oct 2021 16:06:46 +0200
-Received: from localhost (10.52.120.239) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Wed, 6 Oct 2021
- 15:06:46 +0100
-Date:   Wed, 6 Oct 2021 15:06:28 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Qi Liu <liuqi115@huawei.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <zhangshaokun@hisilicon.com>
-Subject: Re: [PATCH v10 2/2] drivers/perf: hisi: Add driver for HiSilicon
- PCIe PMU
-Message-ID: <20211006150628.00007cbf@Huawei.com>
-In-Reply-To: <20210915074524.18040-3-liuqi115@huawei.com>
-References: <20210915074524.18040-1-liuqi115@huawei.com>
-        <20210915074524.18040-3-liuqi115@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S231776AbhJFOVh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 10:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231356AbhJFOVg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 10:21:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9C40B60EFF;
+        Wed,  6 Oct 2021 14:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633529983;
+        bh=hcN96N38jd5OMtH94/dTJCYZqlodc1Iq8xYnE522YOI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=J5B2khO2tPlVRC1ROwcg+MaEtpl+YB5CMWd1GT78HSwWe6dky9/GObOoWLmrZ0EjH
+         QYXFo78X70FtMki3hhu+0LWn3jhPQuJ/2SyaiqYsMw/Sah+3ModOlFr7FpNV0pCDrz
+         Y12qCwO47i9+kjcY3m1ZdV9ejW9fcLwoonv8OltOdWZgTdwZSjxGcAACbklGon/E5j
+         EPmxyzxEZqoMuTuQG3Bjg2gkkzIIqSMwAWD2hZPv9qlg7q03booa3TEJpYaVpQ4nc0
+         qKfQFGLkA7sT5tdVMkNK0VauKMHTgd9fw0KEztGEydHlRupy/G2zYf6eTCVY52QQrZ
+         d3TOA4GRD8/Mg==
+Date:   Wed, 6 Oct 2021 09:19:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kelvin.Cao@microchip.com
+Cc:     kurt.schwemmer@microsemi.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, kelvincao@outlook.com
+Subject: Re: [PATCH 1/5] PCI/switchtec: Error out MRPC execution when no GAS
+ access
+Message-ID: <20211006141942.GA1152835@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.239]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14d694a3432de04ceb0dd8c4c5635194f44d269c.camel@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Sep 2021 15:45:24 +0800
-Qi Liu <liuqi115@huawei.com> wrote:
-
-> PCIe PMU Root Complex Integrated End Point(RCiEP) device is supported
-> to sample bandwidth, latency, buffer occupation etc.
+On Wed, Oct 06, 2021 at 05:49:29AM +0000, Kelvin.Cao@microchip.com wrote:
+> On Tue, 2021-10-05 at 21:33 -0500, Bjorn Helgaas wrote:
+> > On Wed, Oct 06, 2021 at 12:37:02AM +0000, Kelvin.Cao@microchip.com
+> > wrote:
+> > > On Tue, 2021-10-05 at 15:11 -0500, Bjorn Helgaas wrote:
+> > > > On Mon, Oct 04, 2021 at 08:51:06PM +0000, 
+> > > > Kelvin.Cao@microchip.com
+> > > > wrote:
+> > > > > On Sat, 2021-10-02 at 10:11 -0500, Bjorn Helgaas wrote:
+> > > > > > I *thought* the problem was that the PCIe Memory Read
+> > > > > > failed and the Root Complex fabricated ~0 data to complete
+> > > > > > the CPU read.  But now I'm not sure, because it sounds
+> > > > > > like it might be that the PCIe transaction succeeds, but
+> > > > > > it reads data that hasn't been updated by the firmware,
+> > > > > > i.e., it reads 'in progress' because firmware hasn't
+> > > > > > updated it to 'done'.
+> > > > > 
+> > > > > The original message was sort of misleading. After a
+> > > > > firmware reset, CPU getting ~0 for the PCIe Memory Read
+> > > > > doesn't explain the hang.  In a MRPC execution (DMA MRPC
+> > > > > mode), the MRPC status which is located in the host memory,
+> > > > > gets initialized by the CPU and updated/finalized by the
+> > > > > firmware. In the situation of a firmware reset, any MRPC
+> > > > > initiated afterwards will not get the status updated by the
+> > > > > firmware per the reason you pointed out above (or similar,
+> > > > > to my understanding, firmware can no longer DMA data to host
+> > > > > memory in such cases), therefore the MRPC execution will
+> > > > > never end.
+> > > > 
+> > > > I'm glad this makes sense to you, because it still doesn't to
+> > > > me.
+> > > > 
+> > > > check_access() does an MMIO read to something in BAR0.  If
+> > > > that read returns ~0, it means either the PCIe Memory Read was
+> > > > successful and the Switchtec device supplied ~0 data (maybe
+> > > > because firmware has not initialized that part of the BAR) or
+> > > > the PCIe Memory Read failed and the root complex fabricated
+> > > > the ~0 data.
+> > > > 
+> > > > I'd like to know which one is happening so we can clarify the
+> > > > commit log text about "MRPC command executions hang
+> > > > indefinitely" and "host wil fail all GAS reads."  It's not
+> > > > clear whether these are PCIe protocol issues or
+> > > > driver/firmware interaction issues.
+> > > 
+> > > I think it's the latter case, the ~0 data was fabricated by the
+> > > root complex, as the MMIO read in check_access() always returns
+> > > ~0 until a reboot or a rescan happens.
+> > 
+> > If the root complex fabricates ~0, that means a PCIe transaction
+> > failed, i.e., the device didn't respond.  Rescan only does config
+> > reads and writes.  Why should that cause the PCIe transactions to
+> > magically start working?
 > 
-> Each PMU RCiEP device monitors multiple Root Ports, and each RCiEP is
-> registered as a PMU in /sys/bus/event_source/devices, so users can
-> select target PMU, and use filter to do further sets.
-> 
-> Filtering options contains:
-> event     - select the event.
-> port      - select target Root Ports. Information of Root Ports are
->             shown under sysfs.
-> bdf       - select requester_id of target EP device.
-> trig_len  - set trigger condition for starting event statistics.
-> trig_mode - set trigger mode. 0 means starting to statistic when bigger
->             than trigger condition, and 1 means smaller.
-> thr_len   - set threshold for statistics.
-> thr_mode  - set threshold mode. 0 means count when bigger than threshold,
->             and 1 means smaller.
-> 
-> Reviewed-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> ---
-Hi Qi,
+> I took a closer look. What I observed was like this. A firmware
+> reset cleared some CSR settings including the MSE and MBE bits and
+> the Base Address Registers. With a rescan (removing the switch to
+> which the management EP was binded from root port and rescan), the
+> management EP was re-enumerated and driver was re-probed, so that
+> the settings cleared by the firmware reset was properly setup again,
+> therefore PCIe transactions start working.
 
-One trivial thing I just noticed below that can be easily fixed up by a follow up
-patch if that makes sense.
+I think what you just said is that 
 
-Thanks,
+  - the driver asked the firmware to reset the device
 
-Jonathan
+  - the firmware did reset the device, which cleared Memory Space
+    Enable
 
-> +/*
-> + * Events with the "dl" suffix in their names count performance in DL layer,
-> + * otherswise, events count performance in TL layer.
+  - nothing restored the device config after the reset, so Memory
+    Space Enable remains cleared
 
-This comment looks to be out of date..
+  - the driver does MMIO reads to figure out when the reset has
+    completed
 
-> + */
-> +static struct attribute *hisi_pcie_pmu_events_attr[] = {
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mwr_latency, 0x0010),
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mwr_cnt, 0x10010),
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_latency, 0x0210),
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_cnt, 0x10210),
-> +	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_latency, 0x0011),
-> +	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_cnt, 0x10011),
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_flux, 0x1005),
-> +	HISI_PCIE_PMU_EVENT_ATTR(rx_mrd_time, 0x11005),
-> +	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_flux, 0x2004),
-> +	HISI_PCIE_PMU_EVENT_ATTR(tx_mrd_time, 0x12004),
-> +	NULL
-> +};
+  - the device doesn't respond to the PCIe Memory Reads because Memory
+    Space Enable is cleared
+
+  - the root complex sees a timeout or error completion and fabricates
+    ~0 data for the CPU read
+
+  - the driver sees ~0 data from the MMIO read and thinks the device
+    or firmware is hung
+
+If that's all true, I think the patch is sort of a band-aid that
+doesn't fix the problem at all but only makes the driver's response to
+it marginally better.  But the device is still unusable until a rescan
+or reboot.
+
+So I think we should drop this patch and do something to restore the
+device state after the reset.
+
+Bjorn
