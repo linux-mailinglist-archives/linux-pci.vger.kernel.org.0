@@ -2,135 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04054423A1D
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 10:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B22F1423A4D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 11:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237819AbhJFJAu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 05:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45944 "EHLO mail.kernel.org"
+        id S237703AbhJFJPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 05:15:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:37352 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237653AbhJFJAt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Oct 2021 05:00:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2882761154;
-        Wed,  6 Oct 2021 08:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633510737;
-        bh=++lqEzQxtoW7xfOop+3aaHSFfCOnbuI0IZsaxmI1SwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U44MV0I+Y7MJ6VUgb5Zmwxs0dfF1p2KQU2+dd0zK8in5c21w8sAH6CYVHJwBOQOk7
-         39H45Z4x4k3pZXCNWfODnm981s+m9HOW6SEDaoDmIcY7xpTx4fiQG0p9nDenpY+iju
-         fVnxn0DPgcGoXk5LI8V9r5/SRkWIMwX2c0JN3UIxJhd2IVHPc5fb0HSIMFmu76qM0A
-         PSb/xnshsD3UX4CyqpPxGU16aruhSp9jJKdlOmKEm1Oeq47Bj/Idb+lg2GgGUJj+y6
-         IvIk/o+WKLjeohjaADhQBSr1mktt4YyFribvW1F+KEtBTdeitHEo/gGqv2LPT0VN1V
-         iCNt2bDWNSiuA==
-Date:   Wed, 6 Oct 2021 11:58:52 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
-        bhelgaas@google.com, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/5] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-Message-ID: <YV1lTMwBSVlvadiG@unreal>
-References: <20211001012815.1999501-1-david.e.box@linux.intel.com>
- <20211001012815.1999501-3-david.e.box@linux.intel.com>
+        id S230120AbhJFJPu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 05:15:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 931AF1FB;
+        Wed,  6 Oct 2021 02:13:58 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7AB13F766;
+        Wed,  6 Oct 2021 02:13:57 -0700 (PDT)
+Date:   Wed, 6 Oct 2021 10:13:38 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        sashal@kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH v2 07/13] PCI: aardvark: Do not unmask unused interrupts
+Message-ID: <20211006091337.GA9287@lpieralisi>
+References: <20211005180952.6812-1-kabel@kernel.org>
+ <20211005180952.6812-8-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211001012815.1999501-3-david.e.box@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211005180952.6812-8-kabel@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 06:28:12PM -0700, David E. Box wrote:
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe DVSEC structure with a PMT ID. However DVSEC
-> structures may also be used by Intel to indicate support for other
-> capabilities unrelated to PMT.  The Out Of Band Management Services Module
-> (OOBMSM) is an example of a device that can have both PMT and non-PMT
-> capabilities. In order to support these capabilities it is necessary to
-> modify the intel_pmt driver to handle the creation of platform devices more
-> generically. To that end the following changes are made.
+[CC Sasha for stable kernel rules]
+
+On Tue, Oct 05, 2021 at 08:09:46PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
 > 
-> Convert the driver and child drivers from MFD to the Auxiliary Bus. This
-> architecture is more suitable anyway since the driver partitions a
-> multifunctional PCIe device. This also moves the driver out of the MFD
-> subsystem and into platform/x86/intel.
+> There are lot of undocumented interrupt bits. Fix all *_ALL_MASK macros to
+> define all interrupt bits, so that driver can properly mask all interrupts,
+> including those which are undocumented.
 > 
-> Before, devices were named by their capability (e.g. pmt_telemetry).
-> Instead, generically name them by their capability ID (e.g.
-> intel_extended_cap.2). This allows the IDs to be created automatically,
-> minimizing the code needed to support future capabilities. However, to
-> ensure that unsupported devices aren't created, use an allow list to
-> specify supported capabilities. Along these lines, rename the driver from
-> intel_pmt to intel_extended_caps to better reflect the purpose.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <kabel@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Cc: stable@vger.kernel.org
+
+I don't think this is a fix and I don't think it should be sent
+to stable kernels in _preparation_ for other fixes to come (that
+may never land in mainline).
+
+If, for future fixes a depedency is detected they can be added
+in the relevant commit log.
+
+That's my understanding, Sasha can clarify if needed.
+
+Patch itself is fine.
+
+Thanks,
+Lorenzo
+
 > ---
+>  drivers/pci/controller/pci-aardvark.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> V1:	New patch. However incorporates some elements of [1] which was
-> 	dropped. Namely enumerating features generically and creating an
-> 	allow list. Also cleans up probe by moving some code to functions
-> 	and using a bool instead of an int to track whether a device was
-> 	added.
-> 
-> [1] https://lore.kernel.org/all/20210922213007.2738388-3-david.e.box@linux.intel.com/
-
-<...>
-
-> +static int extended_caps_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct extended_caps_platform_info *info;
-> +	bool have_devices = false;
-> +	unsigned long quirks = 0;
-> +	int ret;
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	info = (struct extended_caps_platform_info *)id->driver_data;
-
-pci_get_drvdata() in all places and no need to cast void *.
-
-> +	if (info)
-> +		quirks = info->quirks;
-> +
-> +	have_devices |= extended_caps_walk_dvsec(pdev, quirks);
-> +
-> +	if (info && (info->quirks & EXT_CAPS_QUIRK_NO_DVSEC))
-> +		have_devices |= extended_caps_walk_header(pdev, quirks, info->capabilities);
-> +
-> +	if (!have_devices)
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-
-<...>
-
-> -static struct platform_driver pmt_telem_driver = {
-> -	.driver = {
-> -		.name   = TELEM_DEV_NAME,
-> -	},
-> -	.remove = pmt_telem_remove,
-> -	.probe  = pmt_telem_probe,
-> +static const struct auxiliary_device_id pmt_telem_aux_id_table[] = {
-> +	{ .name = "intel_extended_caps.2", },
-
-Why "2" in the name?
-
-Thanks
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(auxiliary, pmt_telem_aux_id_table);
-> +
-> +static struct auxiliary_driver pmt_telem_aux_driver = {
-> +	.id_table	= pmt_telem_aux_id_table,
-> +	.remove		= pmt_telem_remove,
-> +	.probe		= pmt_telem_probe,
->  };
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index f7eebf453e83..3448a8c446d4 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -107,13 +107,13 @@
+>  #define     PCIE_ISR0_MSI_INT_PENDING		BIT(24)
+>  #define     PCIE_ISR0_INTX_ASSERT(val)		BIT(16 + (val))
+>  #define     PCIE_ISR0_INTX_DEASSERT(val)	BIT(20 + (val))
+> -#define	    PCIE_ISR0_ALL_MASK			GENMASK(26, 0)
+> +#define     PCIE_ISR0_ALL_MASK			GENMASK(31, 0)
+>  #define PCIE_ISR1_REG				(CONTROL_BASE_ADDR + 0x48)
+>  #define PCIE_ISR1_MASK_REG			(CONTROL_BASE_ADDR + 0x4C)
+>  #define     PCIE_ISR1_POWER_STATE_CHANGE	BIT(4)
+>  #define     PCIE_ISR1_FLUSH			BIT(5)
+>  #define     PCIE_ISR1_INTX_ASSERT(val)		BIT(8 + (val))
+> -#define     PCIE_ISR1_ALL_MASK			GENMASK(11, 4)
+> +#define     PCIE_ISR1_ALL_MASK			GENMASK(31, 0)
+>  #define PCIE_MSI_ADDR_LOW_REG			(CONTROL_BASE_ADDR + 0x50)
+>  #define PCIE_MSI_ADDR_HIGH_REG			(CONTROL_BASE_ADDR + 0x54)
+>  #define PCIE_MSI_STATUS_REG			(CONTROL_BASE_ADDR + 0x58)
+> @@ -199,7 +199,7 @@
+>  #define     PCIE_IRQ_MSI_INT2_DET		BIT(21)
+>  #define     PCIE_IRQ_RC_DBELL_DET		BIT(22)
+>  #define     PCIE_IRQ_EP_STATUS			BIT(23)
+> -#define     PCIE_IRQ_ALL_MASK			0xfff0fb
+> +#define     PCIE_IRQ_ALL_MASK			GENMASK(31, 0)
+>  #define     PCIE_IRQ_ENABLE_INTS_MASK		PCIE_IRQ_CORE_INT
 >  
+>  /* Transaction types */
+> -- 
+> 2.32.0
+> 
