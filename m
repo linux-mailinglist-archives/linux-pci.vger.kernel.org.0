@@ -2,127 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15C96423CCE
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 13:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 268D0423D19
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 13:44:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238154AbhJFL2k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 07:28:40 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41648 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238205AbhJFL2i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Oct 2021 07:28:38 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10128"; a="206091112"
-X-IronPort-AV: E=Sophos;i="5.85,350,1624345200"; 
-   d="scan'208";a="206091112"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2021 04:26:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,350,1624345200"; 
-   d="scan'208";a="623860189"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Oct 2021 04:26:43 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/3] device property: Remove device_add_properties() API
-Date:   Wed,  6 Oct 2021 14:26:43 +0300
-Message-Id: <20211006112643.77684-4-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211006112643.77684-1-heikki.krogerus@linux.intel.com>
-References: <20211006112643.77684-1-heikki.krogerus@linux.intel.com>
+        id S238167AbhJFLqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 07:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238117AbhJFLqf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Oct 2021 07:46:35 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF212C061749;
+        Wed,  6 Oct 2021 04:44:43 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id 66so2527363vsd.11;
+        Wed, 06 Oct 2021 04:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3juZIQZX9GCwI+vuBcZtPyTvOv/zI5cPebq0aQINMck=;
+        b=iR19eqT+qQlN2QaO7EN/0Ycr41m4CosSkJJyr5eW4oPSmnsetGPIYf7I/EtAHpiz/i
+         OBHfEqf0vMCsLRVeS2viJAn8O7/NLQIyUTiXVNwVa+Na5i39bQYeZcE8rTzk4BJpmA0F
+         0pT3NxDLVKD/BLnjlyAZ7TjwdWlDrLbQ4pSMH3JonuFIzxJJDQiJqgdhNZ8b507NaU8h
+         wPbiuUNr1zLqcG+iICWuN7F0nKpEiRUfY/8mtF/1USFbykfo2yxg52nEDs8fZSRCI/Lw
+         W+Jm66zWJqd4jPkcMI8eq32eAMvUxXs/W1s61Cu1cfLM0qTQihlXllp2IxREBu8n76gx
+         4qAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3juZIQZX9GCwI+vuBcZtPyTvOv/zI5cPebq0aQINMck=;
+        b=WABRC9sZhE2Xkc/frZUOcMFABPCSV4d8V9Ra5CriAWc4SbiYCcBw52LIGcxG/setHg
+         ayBi/J9BToJd0NQTUuyLuLiuxNC1OawUjH6H44xAyPlj5S8X+z41FzlF4YYLZJYIJBtK
+         y2xv/HW15KJ18ovSUScjgJ7jTEp9XnwPYnYpm8A4cK/axERL0G9E+eTk7F2ZIXShoUpB
+         zQ0S5SkmxJO2gLNmkGkiSqJIBkBfoeGH5Lpfj2TdRDoAoIEqwD+vvvsIx6bNuieOiWkF
+         EKOnzecuJ3Q17zqwVpfl/x5Ol6urld3c5SXb7xSkrv6n2LbrawznA397ruBbVR7W3cH5
+         wrAA==
+X-Gm-Message-State: AOAM5314mfCCmB+TTIumGMrrFevnl3UmauBfzvcliXkO8hWKAFLVB52k
+        05eHbrM5LPwm6siuqoGEgRfFjEvoCWWoEohB8g==
+X-Google-Smtp-Source: ABdhPJw7QKNr67fS3gDhO+zKe/hJi1YFElz1zNvFHtceZtniL65xH7Elblb7qv59vtKafH50+xiGf03ZvH4G2TYVtAY=
+X-Received: by 2002:a67:f317:: with SMTP id p23mr24113816vsf.0.1633520683136;
+ Wed, 06 Oct 2021 04:44:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+In-Reply-To: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Wed, 6 Oct 2021 12:44:32 +0100
+Message-ID: <CALjTZvbQr+rDUCct1fH-xgLP1jKvDRW6cMxCk6UVZ6h4dTsH6w@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
+To:     tglx@linutronix.de
+Cc:     maz@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are no more users for it.
+Hi, again,
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/property.c  | 48 ----------------------------------------
- include/linux/property.h |  4 ----
- 2 files changed, 52 deletions(-)
+On Wed, 6 Oct 2021 at 09:50, Rui Salvaterra <rsalvaterra@gmail.com> wrote:
+>
+> "PCI/MSI: Use new mask/unmask functions" broke boot for my ION/Atom
+> 330 system
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 453918eb7390c..1f1eee37817e0 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -508,54 +508,6 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(fwnode_find_reference);
- 
--/**
-- * device_remove_properties - Remove properties from a device object.
-- * @dev: Device whose properties to remove.
-- *
-- * The function removes properties previously associated to the device
-- * firmware node with device_add_properties(). Memory allocated to the
-- * properties will also be released.
-- */
--void device_remove_properties(struct device *dev)
--{
--	struct fwnode_handle *fwnode = dev_fwnode(dev);
--
--	if (!fwnode)
--		return;
--
--	if (is_software_node(fwnode->secondary)) {
--		fwnode_remove_software_node(fwnode->secondary);
--		set_secondary_fwnode(dev, NULL);
--	}
--}
--EXPORT_SYMBOL_GPL(device_remove_properties);
--
--/**
-- * device_add_properties - Add a collection of properties to a device object.
-- * @dev: Device to add properties to.
-- * @properties: Collection of properties to add.
-- *
-- * Associate a collection of device properties represented by @properties with
-- * @dev. The function takes a copy of @properties.
-- *
-- * WARNING: The callers should not use this function if it is known that there
-- * is no real firmware node associated with @dev! In that case the callers
-- * should create a software node and assign it to @dev directly.
-- */
--int device_add_properties(struct device *dev,
--			  const struct property_entry *properties)
--{
--	struct fwnode_handle *fwnode;
--
--	fwnode = fwnode_create_software_node(properties, NULL);
--	if (IS_ERR(fwnode))
--		return PTR_ERR(fwnode);
--
--	set_secondary_fwnode(dev, fwnode);
--	return 0;
--}
--EXPORT_SYMBOL_GPL(device_add_properties);
--
- /**
-  * fwnode_get_name - Return the name of a node
-  * @fwnode: The firmware node
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 357513a977e5d..daf0b5841286f 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -377,10 +377,6 @@ property_entries_dup(const struct property_entry *properties);
- 
- void property_entries_free(const struct property_entry *properties);
- 
--int device_add_properties(struct device *dev,
--			  const struct property_entry *properties);
--void device_remove_properties(struct device *dev);
--
- bool device_dma_supported(struct device *dev);
- 
- enum dev_dma_attr device_get_dma_attr(struct device *dev);
--- 
-2.33.0
+Just for the record (and probably stating the obvious), reverting the
+aforementioned commit fixes this system. Running Linux 5.15-rc4, at
+the moment.
 
+Thanks,
+Rui
