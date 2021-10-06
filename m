@@ -2,181 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB23142420C
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 18:01:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB274242AB
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Oct 2021 18:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbhJFQDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Oct 2021 12:03:06 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:17782 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239206AbhJFQDG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Oct 2021 12:03:06 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4HPfMB17jYzQlRX;
-        Wed,  6 Oct 2021 18:01:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <61b034e3-8d16-0488-d7e0-016e64f33b67@v0yd.nl>
-Date:   Wed, 6 Oct 2021 18:01:02 +0200
+        id S230101AbhJFQbd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Oct 2021 12:31:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:48004 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231755AbhJFQbd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Oct 2021 12:31:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA7AE6D;
+        Wed,  6 Oct 2021 09:29:40 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 000233F70D;
+        Wed,  6 Oct 2021 09:29:39 -0700 (PDT)
+Date:   Wed, 6 Oct 2021 17:29:34 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH 09/13] PCI: aardvark: Implement re-issuing config
+ requests on CRS response
+Message-ID: <20211006162934.GA12073@lpieralisi>
+References: <20211004121938.546d8f73@thinkpad>
+ <20211005192826.GA1111810@bhelgaas>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/2] mwifiex: Use non-posted PCI write when setting TX
- ring write pointer
-Content-Language: en-US
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        =?UTF-8?B?J1BhbGkgUm9ow6FyJw==?= <pali@kernel.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20210914114813.15404-1-verdre@v0yd.nl>
- <20210914114813.15404-2-verdre@v0yd.nl>
- <8f65f41a807c46d496bf1b45816077e4@AcuMS.aculab.com>
- <20210922142726.guviqler5k7wnm52@pali>
- <e0a4e0adc56148039f853ccb083be53a@AcuMS.aculab.com>
- <ae8ca158-ad86-9c0d-7217-f9db3d2fc42e@v0yd.nl>
-In-Reply-To: <ae8ca158-ad86-9c0d-7217-f9db3d2fc42e@v0yd.nl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 6BD7322F
+In-Reply-To: <20211005192826.GA1111810@bhelgaas>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/30/21 16:27, Jonas Dreßler wrote:
-> On 9/22/21 5:54 PM, David Laight wrote:
->>
->> From: Pali Rohár
->>> Sent: 22 September 2021 15:27
->>>
->>> On Wednesday 22 September 2021 14:03:25 David Laight wrote:
->>>> From: Jonas Dreßler
->>>>> Sent: 14 September 2021 12:48
->>>>>
->>>>> On the 88W8897 card it's very important the TX ring write pointer is
->>>>> updated correctly to its new value before setting the TX ready
->>>>> interrupt, otherwise the firmware appears to crash (probably because
->>>>> it's trying to DMA-read from the wrong place). The issue is present in
->>>>> the latest firmware version 15.68.19.p21 of the pcie+usb card.
->>>>>
->>>>> Since PCI uses "posted writes" when writing to a register, it's not
->>>>> guaranteed that a write will happen immediately. That means the pointer
->>>>> might be outdated when setting the TX ready interrupt, leading to
->>>>> firmware crashes especially when ASPM L1 and L1 substates are enabled
->>>>> (because of the higher link latency, the write will probably take
->>>>> longer).
->>>>>
->>>>> So fix those firmware crashes by always using a non-posted write for
->>>>> this specific register write. We do that by simply reading back the
->>>>> register after writing it, just as a few other PCI drivers do.
->>>>>
->>>>> This fixes a bug where during rx/tx traffic and with ASPM L1 substates
->>>>> enabled (the enabled substates are platform dependent), the firmware
->>>>> crashes and eventually a command timeout appears in the logs.
->>>>
->>>> I think you need to change your terminology.
->>>> PCIe does have some non-posted write transactions - but I can't
->>>> remember when they are used.
->>>
->>> In PCIe are all memory write requests as posted.
->>>
->>> Non-posted writes in PCIe are used only for IO and config requests. But
->>> this is not case for proposed patch change as it access only card's
->>> memory space.
->>>
->>> Technically this patch does not use non-posted memory write (as PCIe
->>> does not support / provide it), just adds something like a barrier and
->>> I'm not sure if it is really correct (you already wrote more details
->>> about it, so I will let it be).
->>>
->>> I'm not sure what is the correct terminology, I do not know how this
->>> kind of write-followed-by-read "trick" is correctly called.
->>
->> I think it is probably best to say:
->>     "flush the posted write when setting the TX ring write pointer".
->>
->> The write can get posted in any/all of the following places:
->> 1) The cpu store buffer.
->> 2) The PCIe host bridge.
->> 3) Any other PCIe bridges.
->> 4) The PCIe slave logic in the target.
->>     There could be separate buffers for each BAR,
->> 5) The actual target logic for that address block.
->>     The target (probably) will look a bit like an old fashioned cpu
->>     motherboard with the PCIe slave logic as the main bus master.
->>
->> The readback forces all the posted write buffers be flushed.
->>
->> In this case I suspect it is either flushing (5) or the extra
->> delay of the read TLP processing that 'fixes' the problem.
->>
->> Note that depending on the exact code and host cpu the second
->> write may not need to wait for the response to the read TLP.
->> So the write, readback, write TLP may be back to back on the
->> actual PCIe link.
->>
->> Although I don't have access to an actual PCIe monitor we
->> do have the ability to trace 'data' TLP into fpga memory
->> on one of our systems.
->> This is near real-time but they are slightly munged.
->> Watching the TLP can be illuminating!
->>
->>     David
->>
->> -
->> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
->> Registration No: 1397386 (Wales)
->>
+On Tue, Oct 05, 2021 at 02:28:26PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 04, 2021 at 12:19:38PM +0200, Marek Beh�n wrote:
+> > On Mon, 4 Oct 2021 09:53:35 +0100
+> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> > > On Mon, Oct 04, 2021 at 09:21:48AM +0200, Marek Beh�n wrote:
+> > > > On Sat, 2 Oct 2021 11:35:19 -0500
+> > > > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >   
+> > > > > On Fri, Oct 01, 2021 at 09:58:52PM +0200, Marek Beh�n wrote:  
+> > > > > > From: Pali Roh�r <pali@kernel.org>
+> > > > > > 
+> > > > > > Commit 43f5c77bcbd2 ("PCI: aardvark: Fix reporting CRS value") fixed
+> > > > > > handling of CRS response and when CRSSVE flag was not enabled it marked CRS
+> > > > > > response as failed transaction (due to simplicity).
+> > > > > > 
+> > > > > > But pci-aardvark.c driver is already waiting up to the PIO_RETRY_CNT count
+> > > > > > for PIO config response and so we can with a small change implement
+> > > > > > re-issuing of config requests as described in PCIe base specification.
+> > > > > > 
+> > > > > > This change implements re-issuing of config requests when response is CRS.
+> > > > > > Set upper bound of wait cycles to around PIO_RETRY_CNT, afterwards the
+> > > > > > transaction is marked as failed and an all-ones value is returned as
+> > > > > > before.    
+> > > > > 
+> > > > > Does this fix a problem?  
+> > > > 
+> > > > Hello Bjorn,
+> > > > 
+> > > > Pali has suspisions that certain Marvell WiFi cards may need this [1]
+> > > > to work, but we do not have them so we cannot test this.
+> > > > 
+> > > > I guess you think this should be considered a new feature instead of a
+> > > > fix, so that the Fixes tag should be removed, yes? Pali was of the
+> > > > opinion that this patch "fixes" the driver to conform more to the PCIe
+> > > > specification, that is why we added the Fixes tag.
+> > > > 
+> > > > Anyway if you think this should be considered a new feature, this patch
+> > > > can be skipped. The following patches apply even without it.  
+> > > 
+> > > I do not think we should apply to the mainline a fix that can't be
+> > > tested sorry, I will skip this patch.
+> > 
+> > Lorenzo,
+> > 
+> > my explanation was incorrect.
+> > 
+> > The functionality added by this patch _is_ tested and correctly does a
+> > retry: it was done by simulating a CRS reply.
+> > 
+> > We just don't know whether there are real cards used by users that
+> > need this functionality (the mentioned Marvell card may be such a card).
 > 
-> Thanks for the detailed explanations, it looks like indeed the read-back is not the real fix here, a simple udelay(50) before sending the "TX ready" interrupt also does the trick.
-> 
->                  } else {
-> +                       udelay(50);
-> +
->                          /* Send the TX ready interrupt */
->                          if (mwifiex_write_reg(adapter, PCIE_CPU_INT_EVENT,
->                                                CPU_INTR_DNLD_RDY)) {
-> 
-> I've tested that for a week now and haven't seen any firmware crashes. Interestingly enough it looks like the delay can also be added after setting the "TX ready" interrupt, just not before updating the TX ring write pointer.
-> 
-> I have no idea if 50 usecs is a good duration to wait here, from trying different values I found that 10 to 20 usecs is not enough, but who knows, maybe that's platform dependent?
+> My claim is that the spec allows root complexes that retry zero times,
+> so we must assume such a root complex exists and we cannot rely on any
+> retries.  If such a root complex exists, this patch might fix a
+> problem, but only for aardvark.  It would be better to fix the problem
+> in a way that works for all PCIe controllers.
 
-So I spent the last few days going slightly crazy while trying to dig deeper
-into this.
+We need a way for those PCI controllers to communicate to SW that
+they actually received a CRS completion (and that they don't retry
+in HW).
 
-My theory was that the udelay() delays some subsequent register write or
-other communication with the card that would trigger the crash if executed
-too early after writing the TX ring write pointer. So I tried moving the
-udelay() around, carefully checking when the crash is gone and when it isn't.
+By implementing the logic in the aardvark controller that platform
+information is there so to the best of my knowledge this patch
+is sound.
 
-In the end my theory turned out completely wrong, what I found was this:
-Pinning down the last place where the udelay() is effective gets us here
-(https://elixir.bootlin.com/linux/latest/source/drivers/net/wireless/marvell/mwifiex/main.c#L340),
-right before we bail out of the main process and idle.
+I assume that the HW retry is in the specs because there is no
+architected way if CRS Software Visibility is not enabled/present to
+report CRS completion in an architected PCI manner but I just
+don't know the entire background behind this.
 
-I tried adding the udelay() as the first thing we do on the next run of the
-while-loop after that break, but with that the crash came back.
+Lorenzo
 
-So what does this mean, we fix the crash by sleeping before idling? Sounds
-a bit counterintuitive to me...
-
-The only thing I can take away from this is that maybe the udelay() keeps
-the CPU from entering some powersaving state and with that the PCI bus from
-entering ASPM states (considering that the crash can also be fixed by
-disabling ASPM L1.2).
+> I'm playing devil's advocate here, and it's quite possible that I'm
+> interpreting the spec incorrectly.  Maybe the Marvell card is a way to
+> test this in the real world.
