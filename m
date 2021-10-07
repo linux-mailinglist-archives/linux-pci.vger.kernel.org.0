@@ -2,55 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99081425691
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 17:29:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0DC4256D8
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 17:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233468AbhJGPbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 11:31:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:32786 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230410AbhJGPbk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 11:31:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D9AF1FB;
-        Thu,  7 Oct 2021 08:29:46 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.53.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEF823F66F;
-        Thu,  7 Oct 2021 08:29:43 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     bhelgaas@google.com, robh@kernel.org,
-        brookxu <brookxu.cn@gmail.com>, jonathan.derrick@intel.com
+        id S242393AbhJGPpk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 11:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233463AbhJGPpj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 11:45:39 -0400
+Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7265C061570
+        for <linux-pci@vger.kernel.org>; Thu,  7 Oct 2021 08:43:45 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id C74BB3FA60;
+        Thu,  7 Oct 2021 15:43:36 +0000 (UTC)
+Subject: Re: [PATCH v5 00/14] PCI: Add support for Apple M1
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, kw@linux.com
-Subject: Re: [PATCH v4] PCI: vmd: Assign a number to each VMD controller
-Date:   Thu,  7 Oct 2021 16:29:38 +0100
-Message-Id: <163362056400.23598.4839753526203041343.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <1631884404-24141-1-git-send-email-brookxu.cn@gmail.com>
-References: <1631884404-24141-1-git-send-email-brookxu.cn@gmail.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Stan Skowronek <stan@corellium.com>,
+        Mark Kettenis <kettenis@openbsd.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20210929163847.2807812-1-maz@kernel.org>
+ <20211004083845.GA22336@lpieralisi> <87czolrwgn.wl-maz@kernel.org>
+ <CACRpkdZzdzJmatnYe2pcKCSW2=WJBa-DZQPib7aGW9m_GLrAwg@mail.gmail.com>
+From:   Hector Martin <marcan@marcan.st>
+Message-ID: <d9491159-670b-87c6-65b4-10f7c7ba62fe@marcan.st>
+Date:   Fri, 8 Oct 2021 00:43:34 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZzdzJmatnYe2pcKCSW2=WJBa-DZQPib7aGW9m_GLrAwg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: es-ES
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Sep 2021 21:13:24 +0800, brookxu wrote:
-> From: Chunguang Xu <brookxu@tencent.com>
+On 05/10/2021 03.30, Linus Walleij wrote:
+> On Mon, Oct 4, 2021 at 11:05 AM Marc Zyngier <maz@kernel.org> wrote:
 > 
-> If the system has multiple VMD controllers, the driver does not assign
-> a number to each controller, so when analyzing the interrupt through
-> /proc/interrupts, the names of all controllers are the same, which is
-> not very convenient for problem analysis. Here, try to assign a number
-> to each VMD controller.
+>> Yes, that's absolutely fine. I hope we can resolve the issue on the
+>> pinctrl binding pretty quickly, and get the arm-soc folks to pull the
+>> DT changes in for 5.16 too.
 > 
-> [...]
+> I think I ACKed a patch for apple,npins = <> yesterday.
 
-Applied to pci/vmd, thanks!
+You reviewed it :)
 
-[1/1] PCI: vmd: Assign a number to each VMD controller
-      https://git.kernel.org/lpieralisi/pci/c/42da7911b8
+It still needs some fixes to pass the schema linter though.
 
-Thanks,
-Lorenzo
+-- 
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
