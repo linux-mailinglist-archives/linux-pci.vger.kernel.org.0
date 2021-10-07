@@ -2,112 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2298E425CAB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 506C3425D3A
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 22:27:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233889AbhJGTzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 15:55:10 -0400
-Received: from rcdn-iport-6.cisco.com ([173.37.86.77]:44849 "EHLO
-        rcdn-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233925AbhJGTxM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 15:53:12 -0400
-X-Greylist: delayed 424 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Oct 2021 15:53:12 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1595; q=dns/txt; s=iport;
-  t=1633636278; x=1634845878;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=k13Cw5+zbxwgiD4aylr0j/1M7dK7iSjh8VSPRVa9fUI=;
-  b=Ya8fNvbtY4sgglFWJYIGUISNsbvyL3cd+v2aZjwj2ia4BohsLq0qtdBI
-   teUuhesGTzdlPc0G6LzHS0hE43WKN7FIiEh9g2U7B5ay4JlXzIVdTTiGn
-   clpIg1XBlXxdtmiIudaiztgbZlKAIvymFLqlzKOo/MvgneWxOWwcGyCL8
-   Y=;
-IronPort-Data: =?us-ascii?q?A9a23=3AlPV2vqpVkGTgvbBUXZKDT6gaG29eBmKvZxIvg?=
- =?us-ascii?q?KrLsJaIsI4StFCztgarIBmCbqrZYWH2KYwnO9uw8BtUvsDVn9NlGwdsr3xkH?=
- =?us-ascii?q?isT8ePIVI+TRqvS04x+DSFioHqKZKzyU/GYRCwPZiKa9krF3oTJ9yEmjPjQH?=
- =?us-ascii?q?uWkU4YoBwgoLeNaYHZ54f5cs7ZRbr5A2bBVMivV0T/Ai5S31GyNg1aYBlkpB?=
- =?us-ascii?q?5er83uDihhdVAQw5TTSbdgT1LPXeuJ84Jg3fcldJFOgKmVY83LTegrN8F251?=
- =?us-ascii?q?juxExYFENiplPPwdVcHB+OUNgmVgX0QUK+n6vRAjnVtieBga7xNMgEO1mvhc?=
- =?us-ascii?q?9NZkL2hsbS8QAEoM6nTkcwWUgJTFGd1OqguFLrvcCTj4ZHJnhGXG5fr67A0Z?=
- =?us-ascii?q?K0sBqUc++BqESRN+OYeJTQlcB+OnaS1zai9R+0qgd4sROHvPYUCqjR4xjDxE?=
- =?us-ascii?q?/krW9bATr/M6Nse2y0/7uhEHfvaaMMQchJgaxPPZxAJMVASYLolk+C1mnn2d?=
- =?us-ascii?q?hVdoUiLqK4zpWPUyWRZ27PtOcTLc/SPTN9Lk0Kc4GnB+gzRGR4TLtWHwCaE2?=
- =?us-ascii?q?nelnPHCmSe9U4UXfJWx9eZvqFmSwHEDTRMRSF23qOW4jUj4XMhQQ3H4UAJGQ?=
- =?us-ascii?q?bMa7kenSJz2WAe15SPCtR8HUN0WGOo/gDxhA5H8u26xblXohBYdADD+iPILe?=
- =?us-ascii?q?A=3D=3D?=
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3Am4meTKyWGSa0vPxccS+FKrPwJb1zdoMgy1?=
- =?us-ascii?q?knxilNoNJuHvBw8Pre/sjzuiWbtN98YhsdcLO7Scq9qA3nlKKdiLN5VdyftW?=
- =?us-ascii?q?Ld11dAQrsO0WKb+V3d8+mUzJ846U+mGJIObeHNMQ=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BpAACrTV9h/5xdJa1aHQEBAQEJARI?=
- =?us-ascii?q?BBQUBggYHAQsBgiiBTQE6MZVTnB2BfAsBAQEPQQQBAYR+gkoCJTUIDgECBAE?=
- =?us-ascii?q?BARIBAQUBAQECAQYEgREThXWGcAsBRikHbiATgnGDCKx6gXkygQGIFYFjgTo?=
- =?us-ascii?q?BiQ+FIByBSUSBFYJ6bopCBIs+AYENgTGBDyOSGI56nS6DOoE4nRgaMYNqkjG?=
- =?us-ascii?q?Qe7dMhEeBYgE5gVkzGggbFYMkURkPnRAhAzA4AgYLAQEDCZRxAQE?=
-X-IronPort-AV: E=Sophos;i="5.85,355,1624320000"; 
-   d="scan'208";a="944852949"
-Received: from rcdn-core-5.cisco.com ([173.37.93.156])
-  by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 Oct 2021 19:44:10 +0000
-Received: from zorba.lan ([10.24.18.63])
-        by rcdn-core-5.cisco.com (8.15.2/8.15.2) with ESMTP id 197Ji9j9009280;
-        Thu, 7 Oct 2021 19:44:10 GMT
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Suneel Garapati <sgarapati@marvell.com>,
+        id S233744AbhJGU3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 16:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233343AbhJGU3c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Oct 2021 16:29:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8718D6103B;
+        Thu,  7 Oct 2021 20:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633638458;
+        bh=pJi40OGK3MkHOENwvfDUfya08Gu+S7hACOu/Sbximq0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JZ6/vUvg6nj57OfAP312vFHJIgtLc1DRkaWq0Q3WnGV+EtYU9B7fRxRM3WmvUF01U
+         9skzxha+SqWQmNq1hzr0kfbDlcvu0ktz4MoPs0DGBOOUt7CX+EB/vJEb7x4B41xK6a
+         kiJveskpVJaG1v13leiC0ezaqcSHkO4XG5aQt1U1XtmUGEL6NT6YKBQKqjTpCpTlet
+         ovc9pYUas1sMT2/RfHMneI+QpJEP1r8kTtH8WrUNLwv6dk8F82axjFv9Ed1blCUuks
+         LjAoYJjp8mDFQKaFD6p9fytyO0qBjlGf3E7cbIL4y7oak//amMenKMrG8tW4Ve5A9F
+         YGQrokJj+hivg==
+Date:   Thu, 7 Oct 2021 15:27:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Walker <danielwa@cisco.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Suneel Garapati <sgarapati@marvell.com>,
         Chandrakala Chavva <cchavva@marvell.com>,
         Sunil Kovvuri Goutham <sgoutham@marvell.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH-RFC] drivers: pci: pcieport: Allow AER service only on root ports
-Date:   Thu,  7 Oct 2021 12:44:09 -0700
-Message-Id: <20211007194409.3641467-1-danielwa@cisco.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH-RFC] drivers: pci: pcieport: Allow AER service only on
+ root ports
+Message-ID: <20211007202737.GA1263785@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Outbound-SMTP-Client: 10.24.18.63, [10.24.18.63]
-X-Outbound-Node: rcdn-core-5.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211007194409.3641467-1-danielwa@cisco.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Suneel Garapati <sgarapati@marvell.com>
+Please note "git log --oneline drivers/pci/pcie/portdrv_core.c" and
+make your patch follow the style.
 
-Some AER interrupt capability registers may not be present on
-non Root ports. Since there is no way to check presence of
-ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
-service only on root ports.
-Otherwise AER interrupt message number is read incorrectly
-causing MSIX vector registration to fail and fallback to legacy
-unnecessarily.
+On Thu, Oct 07, 2021 at 12:44:09PM -0700, Daniel Walker wrote:
+> From: Suneel Garapati <sgarapati@marvell.com>
+> 
+> Some AER interrupt capability registers may not be present on
+> non Root ports. Since there is no way to check presence of
+> ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
+> service only on root ports.
+> Otherwise AER interrupt message number is read incorrectly
+> causing MSIX vector registration to fail and fallback to legacy
+> unnecessarily.
 
-Signed-off-by: Suneel Garapati <sgarapati@marvell.com>
-Reviewed-by: Chandrakala Chavva <cchavva@marvell.com>
-Reviewed-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
----
- drivers/pci/pcie/portdrv_core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Wrap to fill 75 columns.
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 3ee63968deaa..edc355971a32 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -221,7 +221,16 @@ static int get_port_device_capability(struct pci_dev *dev)
- 	}
- 
- #ifdef CONFIG_PCIEAER
-+	/*
-+	 * Some AER interrupt capability registers may not be present on
-+	 * non Root ports. Since there is no way to check presence of
-+	 * ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
-+	 * service only on root ports. Refer PCIe rev5.0 spec v1.0 7.8.4.
-+	 * Otherwise AER interrupt message number is read incorrectly
-+	 * causing MSIX vector registration to fail and fallback to legacy.
-+	 */
- 	if (dev->aer_cap && pci_aer_available() &&
-+	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
- 	    (pcie_ports_native || host->native_aer)) {
- 		services |= PCIE_PORT_SERVICE_AER;
- 
--- 
-2.25.1
+Add blank lines between paragraphs.
 
+Use complete sentences ("Since there is ..." is not a sentence).
+
+Capitalize consistently ("Root ports" vs "root ports").
+
+Use register names I can find in the spec or with grep
+("ROOT_ERR_COMMAND" and "ROOT_ERR_STATUS" do not appear in the
+source).
+
+s/MSIX/MSI-X/ to match spec usage.
+
+Also applies to code comment below.
+
+> Signed-off-by: Suneel Garapati <sgarapati@marvell.com>
+
+Needs to include your (Daniel's) Signed-off-by; see:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.14#n365
+
+> Reviewed-by: Chandrakala Chavva <cchavva@marvell.com>
+> Reviewed-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 3ee63968deaa..edc355971a32 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -221,7 +221,16 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	}
+>  
+>  #ifdef CONFIG_PCIEAER
+> +	/*
+> +	 * Some AER interrupt capability registers may not be present on
+> +	 * non Root ports. Since there is no way to check presence of
+> +	 * ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
+> +	 * service only on root ports. Refer PCIe rev5.0 spec v1.0 7.8.4.
+
+Sec 7.8.4 talks about Root Ports and Root Complex Event Collectors
+together, so I would think you would treat them the same here.
+
+> +	 * Otherwise AER interrupt message number is read incorrectly
+> +	 * causing MSIX vector registration to fail and fallback to legacy.
+> +	 */
+>  	if (dev->aer_cap && pci_aer_available() &&
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+>  	    (pcie_ports_native || host->native_aer)) {
+>  		services |= PCIE_PORT_SERVICE_AER;
+>  
+> -- 
+> 2.25.1
+> 
