@@ -2,115 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A566425B93
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2298E425CAB
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:53:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234732AbhJGThc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 15:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233251AbhJGThc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 15:37:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 018F8610C8;
-        Thu,  7 Oct 2021 19:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633635338;
-        bh=Vur98vXq4PsLHaokShnlstz73Uon8pgr3uFm9W6mdLg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oSNYEZ8NShvsEx3Mq5ZiKFtja3kD214N9jxV+wO9zAAbe5D2jors8Vghsgr1uA4eo
-         JIyf9jJYgsmNcSCyfMoBmNgVcxTWHm3M8cp7QMKUpTdk7vxNOwE66DMomv1RSuqyR+
-         /NitRl6ukFu6IbmPyHXUBg1YTRTEpno0qJt6tfNTEXgiTi8K9dF8LHxRQxYTqbKZWo
-         kdRPpMo7GuKubR1aUvFhuEnFO9FayfMsVa3QQuIiMCfGW9h4wWcifa1v05ev3PUZYn
-         mMg9FwGDmoBF4uVvvbMhAxO2qA5P7Ro4Uv/daRPbnAm+g09MjBroRA0tawczURo2Rs
-         KAQ6fP03SL/CA==
-Date:   Thu, 7 Oct 2021 14:35:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI: Convert to
- device_create_managed_software_node()
-Message-ID: <20211007193536.GA1260015@bhelgaas>
+        id S233889AbhJGTzK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 15:55:10 -0400
+Received: from rcdn-iport-6.cisco.com ([173.37.86.77]:44849 "EHLO
+        rcdn-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233925AbhJGTxM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 15:53:12 -0400
+X-Greylist: delayed 424 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Oct 2021 15:53:12 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=1595; q=dns/txt; s=iport;
+  t=1633636278; x=1634845878;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k13Cw5+zbxwgiD4aylr0j/1M7dK7iSjh8VSPRVa9fUI=;
+  b=Ya8fNvbtY4sgglFWJYIGUISNsbvyL3cd+v2aZjwj2ia4BohsLq0qtdBI
+   teUuhesGTzdlPc0G6LzHS0hE43WKN7FIiEh9g2U7B5ay4JlXzIVdTTiGn
+   clpIg1XBlXxdtmiIudaiztgbZlKAIvymFLqlzKOo/MvgneWxOWwcGyCL8
+   Y=;
+IronPort-Data: =?us-ascii?q?A9a23=3AlPV2vqpVkGTgvbBUXZKDT6gaG29eBmKvZxIvg?=
+ =?us-ascii?q?KrLsJaIsI4StFCztgarIBmCbqrZYWH2KYwnO9uw8BtUvsDVn9NlGwdsr3xkH?=
+ =?us-ascii?q?isT8ePIVI+TRqvS04x+DSFioHqKZKzyU/GYRCwPZiKa9krF3oTJ9yEmjPjQH?=
+ =?us-ascii?q?uWkU4YoBwgoLeNaYHZ54f5cs7ZRbr5A2bBVMivV0T/Ai5S31GyNg1aYBlkpB?=
+ =?us-ascii?q?5er83uDihhdVAQw5TTSbdgT1LPXeuJ84Jg3fcldJFOgKmVY83LTegrN8F251?=
+ =?us-ascii?q?juxExYFENiplPPwdVcHB+OUNgmVgX0QUK+n6vRAjnVtieBga7xNMgEO1mvhc?=
+ =?us-ascii?q?9NZkL2hsbS8QAEoM6nTkcwWUgJTFGd1OqguFLrvcCTj4ZHJnhGXG5fr67A0Z?=
+ =?us-ascii?q?K0sBqUc++BqESRN+OYeJTQlcB+OnaS1zai9R+0qgd4sROHvPYUCqjR4xjDxE?=
+ =?us-ascii?q?/krW9bATr/M6Nse2y0/7uhEHfvaaMMQchJgaxPPZxAJMVASYLolk+C1mnn2d?=
+ =?us-ascii?q?hVdoUiLqK4zpWPUyWRZ27PtOcTLc/SPTN9Lk0Kc4GnB+gzRGR4TLtWHwCaE2?=
+ =?us-ascii?q?nelnPHCmSe9U4UXfJWx9eZvqFmSwHEDTRMRSF23qOW4jUj4XMhQQ3H4UAJGQ?=
+ =?us-ascii?q?bMa7kenSJz2WAe15SPCtR8HUN0WGOo/gDxhA5H8u26xblXohBYdADD+iPILe?=
+ =?us-ascii?q?A=3D=3D?=
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3Am4meTKyWGSa0vPxccS+FKrPwJb1zdoMgy1?=
+ =?us-ascii?q?knxilNoNJuHvBw8Pre/sjzuiWbtN98YhsdcLO7Scq9qA3nlKKdiLN5VdyftW?=
+ =?us-ascii?q?Ld11dAQrsO0WKb+V3d8+mUzJ846U+mGJIObeHNMQ=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BpAACrTV9h/5xdJa1aHQEBAQEJARI?=
+ =?us-ascii?q?BBQUBggYHAQsBgiiBTQE6MZVTnB2BfAsBAQEPQQQBAYR+gkoCJTUIDgECBAE?=
+ =?us-ascii?q?BARIBAQUBAQECAQYEgREThXWGcAsBRikHbiATgnGDCKx6gXkygQGIFYFjgTo?=
+ =?us-ascii?q?BiQ+FIByBSUSBFYJ6bopCBIs+AYENgTGBDyOSGI56nS6DOoE4nRgaMYNqkjG?=
+ =?us-ascii?q?Qe7dMhEeBYgE5gVkzGggbFYMkURkPnRAhAzA4AgYLAQEDCZRxAQE?=
+X-IronPort-AV: E=Sophos;i="5.85,355,1624320000"; 
+   d="scan'208";a="944852949"
+Received: from rcdn-core-5.cisco.com ([173.37.93.156])
+  by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 07 Oct 2021 19:44:10 +0000
+Received: from zorba.lan ([10.24.18.63])
+        by rcdn-core-5.cisco.com (8.15.2/8.15.2) with ESMTP id 197Ji9j9009280;
+        Thu, 7 Oct 2021 19:44:10 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Suneel Garapati <sgarapati@marvell.com>,
+        Chandrakala Chavva <cchavva@marvell.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH-RFC] drivers: pci: pcieport: Allow AER service only on root ports
+Date:   Thu,  7 Oct 2021 12:44:09 -0700
+Message-Id: <20211007194409.3641467-1-danielwa@cisco.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YV7UFoAXb5MrkaFg@kuha.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Outbound-SMTP-Client: 10.24.18.63, [10.24.18.63]
+X-Outbound-Node: rcdn-core-5.cisco.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 02:03:50PM +0300, Heikki Krogerus wrote:
-> On Wed, Oct 06, 2021 at 01:47:54PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Oct 06, 2021 at 02:26:41PM +0300, Heikki Krogerus wrote:
-> > > In quirk_huawei_pcie_sva(), use device_create_managed_software_node()
-> > > instead of device_add_properties() to set the "dma-can-stall"
-> > > property.
-> > > 
-> > > This is the last user of device_add_properties() that relied on
-> > > device_del() to take care of also calling device_remove_properties().
-> > > After this change we can finally get rid of that
-> > > device_remove_properties() call in device_del().
-> > > 
-> > > After that device_remove_properties() call has been removed from
-> > > device_del(), the software nodes that hold the additional device
-> > > properties become reusable and shareable as there is no longer a
-> > > default assumption that those nodes are lifetime bound the first
-> > > device they are associated with.
-> > 
-> > This does not help me determine whether this patch is safe.
-> > device_create_managed_software_node() sets swnode->managed = true,
-> > but device_add_properties() did not.  I still don't know what the
-> > effect of that is.
-> 
-> OK. So how about this:
-> 
->         PCI: Convert to device_create_managed_software_node()
-> 
->         In quirk_huawei_pcie_sva(), device_add_properties() is used to
->         inject additional device properties, but there is no
->         device_remove_properties() call anywhere to remove those
->         properties. The assumption is most likely that the device is
->         never removed, and the properties therefore do not also never
->         need to be removed.
-> 
->         Even though it is unlikely that the device is ever removed in
->         this case, it is safer to make sure that the properties are
->         also removed if the device ever does get unregistered.
-> 
->         To achieve this, instead of adding a separate quirk for the
->         case of device removal where device_remove_properties() is
->         called, using device_create_managed_software_node() instead of
->         device_add_properties(). Both functions create a software node
->         (a type of fwnode) that holds the device properties, which is
->         then assigned to the device very much the same way.
-> 
->         The difference between the two functions is, that
->         device_create_managed_software_node() guarantees that the
->         software node (together with the properties) is removed when
->         the device is removed. The function device_add_property() does
->         _not_ guarantee that, so the properties added with it should
->         always be removed with device_remove_properties().
+From: Suneel Garapati <sgarapati@marvell.com>
 
-That makes sense to me, thanks.  And it sounds like it *does* resolve
-a lifetime issue, namely, a caller of device_add_properties(dev) is
-required to arrange for device_remove_properties(dev) to be called
-when "dev" is removed.
+Some AER interrupt capability registers may not be present on
+non Root ports. Since there is no way to check presence of
+ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
+service only on root ports.
+Otherwise AER interrupt message number is read incorrectly
+causing MSIX vector registration to fail and fallback to legacy
+unnecessarily.
 
-The fact that in this particular case, "dev" is a non-removable AMBA
-device doesn't mean there was no issue; it only means we should have
-had a matching device_remove_properties() call somewhere or at the
-very least a comment about why it wasn't needed.  Otherwise people
-copy the code to somewhere where it *does* matter.
+Signed-off-by: Suneel Garapati <sgarapati@marvell.com>
+Reviewed-by: Chandrakala Chavva <cchavva@marvell.com>
+Reviewed-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
+---
+ drivers/pci/pcie/portdrv_core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-But removing device_add_properties() altogether will mean this is all
-moot anyway.
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 3ee63968deaa..edc355971a32 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -221,7 +221,16 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	}
+ 
+ #ifdef CONFIG_PCIEAER
++	/*
++	 * Some AER interrupt capability registers may not be present on
++	 * non Root ports. Since there is no way to check presence of
++	 * ROOT_ERR_COMMAND and ROOT_ERR_STATUS registers. Allow AER
++	 * service only on root ports. Refer PCIe rev5.0 spec v1.0 7.8.4.
++	 * Otherwise AER interrupt message number is read incorrectly
++	 * causing MSIX vector registration to fail and fallback to legacy.
++	 */
+ 	if (dev->aer_cap && pci_aer_available() &&
++	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+ 	    (pcie_ports_native || host->native_aer)) {
+ 		services |= PCIE_PORT_SERVICE_AER;
+ 
+-- 
+2.25.1
 
-You can add my:
-
-  Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Bjorn
