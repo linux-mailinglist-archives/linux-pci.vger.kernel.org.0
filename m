@@ -2,261 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C47425B5E
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E73E425B63
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243892AbhJGTNG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 15:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        id S243799AbhJGTPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 15:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243906AbhJGTNE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 15:13:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 32958610A1;
-        Thu,  7 Oct 2021 19:11:10 +0000 (UTC)
+        id S233879AbhJGTPB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Oct 2021 15:15:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 433A260F23;
+        Thu,  7 Oct 2021 19:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633633870;
-        bh=Fyn8cZzhrYEEVYuqi3zLvyRHABtdianejk6MIm1y8Yw=;
+        s=k20201202; t=1633633986;
+        bh=4097i7mkFkqGG7g6bmJrh8yORC7/TSKWh6X6Z6f10a8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Akq8K5MP/KQUsqrWb2jGqh6Il6x2FfkxVS/enEB05f98eMkbpT139iN6U08cLk5RK
-         N2pzVWCA2vSSdh+TTy2aMmjz0kw7mRKziqo8+FoqK9dEcxUeGJ1s8V6cEARDU01AjL
-         KswWW9i1/HQUv9hQgpTzvjxFGk/apG36cM2V3EhLvlqGFQTx2EwsrmKcA/0mtHBme9
-         75JCO8Y63Pmvs4OhC/IOPiW7FZmB+SvlCct4arAMp+OkDF1nGx/MzOCiDXh7wK7iXA
-         Pm6ODKyA8wQ+2EwP9CDuFh1c/ZBmQGMHFUT2qGgIrzmxoFlXbIHyFyzf47Hoxn1inP
-         QTli8sX7ed5pQ==
-Date:   Thu, 7 Oct 2021 14:11:08 -0500
+        b=PAW7l7d+uZ/uWAbylFNHh7bfq4jdELPttvGO0mPiMMM7jV3YRMIcNp8m6qVATu0qA
+         e+3Xmr1sEvqzA9ww/tVvPj93ZR6u0X7F3iDfcdcWtGw89juUigk2q9KbvXXCN2HRIJ
+         LD9hahvTR136Q83ZBxxA4b3qoLBgYxrv7236PtPtZCyLAPD6KyFi04VSiG8O0QQSrt
+         ao3Pi07O4Zcjwm/s37c4/NsB9eDUArdO/HPfBIih1LkHKmGMo24lAF57paB1pAP49a
+         UrhLLUzQGVwumGu7L1Pf85Yh4ipTiX3hso7CTmA3JTDovpos7y/7Pvb1N5PGEd4GyC
+         9JOh66/bkHhag==
+Date:   Thu, 7 Oct 2021 14:13:04 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com,
-        davem@davemloft.net, kuba@kernel.org, anthony.wong@canonical.com,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] [PATCH net-next v6 3/3] r8169: Implement dynamic ASPM
- mechanism
-Message-ID: <20211007191108.GA1250550@bhelgaas>
+To:     Prasad Malisetty <pmaliset@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
+        svarbanov@mm-sol.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dianders@chromium.org,
+        mka@chromium.org, vbadigan@codeaurora.org, sallenki@codeaurora.org,
+        manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v12 5/5] PCI: qcom: Switch pcie_1_pipe_clk_src after PHY
+ init in SC7280
+Message-ID: <20211007191304.GA1256620@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211007161552.272771-4-kai.heng.feng@canonical.com>
+In-Reply-To: <1633628923-25047-6-git-send-email-pmaliset@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 12:15:52AM +0800, Kai-Heng Feng wrote:
-> r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
-> Same issue can be observed with older vendor drivers.
+On Thu, Oct 07, 2021 at 11:18:43PM +0530, Prasad Malisetty wrote:
+> On the SC7280, the clock source for gcc_pcie_1_pipe_clk_src
+> must be the TCXO while gdsc is enabled. After PHY init successful
+> clock source should switch to pipe clock for gcc_pcie_1_pipe_clk_src.
 > 
-> The issue is however solved by the latest vendor driver. There's a new
-> mechanism, which disables r8169's internal ASPM when the NIC traffic has
-> more than 10 packets per second, and vice versa. The possible reason for
-> this is likely because the buffer on the chip is too small for its ASPM
-> exit latency.
+> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Because the NIC works fine on some platforms with ASPM fully enabled,
-I would describe this as a "workaround" for a bug where we don't know
-the root cause, not a "solution".
+Thanks a lot for sorting out the patch 4/5 and 5/5 contents!
 
-> Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
-> use dynamic ASPM under Windows. So implement the same mechanism here to
-> resolve the issue.
-> 
-> Also introduce a lock to prevent race on accessing config registers.
-
-Strictly speaking, the addition of the lock should be a separate patch
-since it's not directly related to the ASPM change.
-
-A little more below...
-
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=214307
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
-> v6:
->  - Wording change.
->  - Add bugzilla link.
+>  drivers/pci/controller/dwc/pcie-qcom.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> v5:
->  - Split out aspm_manageable replacement as another patch.
->  - Introduce a lock for lock_config_regs() and unlock_config_regs().
-> 
-> v4:
->  - Squash two patches
->  - Remove aspm_manageable and use pcie_aspm_capable()
->    pcie_aspm_enabled() accordingly
-> 
-> v3:
->  - Use msecs_to_jiffies() for delay time
->  - Use atomic_t instead of mutex for bh
->  - Mention the buffer size and ASPM exit latency in commit message
-> 
-> v2: 
->  - Use delayed_work instead of timer_list to avoid interrupt context
->  - Use mutex to serialize packet counter read/write
->  - Wording change
->  drivers/net/ethernet/realtek/r8169_main.c | 58 +++++++++++++++++++++--
->  1 file changed, 53 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> index 53936ebb3b3a6..9c10a908c08fb 100644
-> --- a/drivers/net/ethernet/realtek/r8169_main.c
-> +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> @@ -622,6 +622,11 @@ struct rtl8169_private {
->  	} wk;
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 41132dd..ded70e6 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -166,6 +166,9 @@ struct qcom_pcie_resources_2_7_0 {
+>  	struct regulator_bulk_data supplies[2];
+>  	struct reset_control *pci_reset;
+>  	struct clk *pipe_clk;
+> +	struct clk *pipe_clk_src;
+> +	struct clk *phy_pipe_clk;
+> +	struct clk *ref_clk_src;
+>  };
 >  
->  	unsigned supports_gmii:1;
-> +	unsigned rtl_aspm_enabled:1;
-> +	struct delayed_work aspm_toggle;
-> +	atomic_t aspm_packet_count;
-> +	struct mutex config_lock;
+>  union qcom_pcie_resources {
+> @@ -191,6 +194,7 @@ struct qcom_pcie_ops {
+>  
+>  struct qcom_pcie_cfg {
+>  	const struct qcom_pcie_ops *ops;
+> +	unsigned int pipe_clk_need_muxing:1;
+>  };
+>  
+>  struct qcom_pcie {
+> @@ -201,6 +205,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	const struct qcom_pcie_ops *ops;
+> +	unsigned int pipe_clk_need_muxing:1;
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -1171,6 +1176,20 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	if (pcie->pipe_clk_need_muxing) {
+> +		res->pipe_clk_src = devm_clk_get(dev, "pipe_mux");
+> +		if (IS_ERR(res->pipe_clk_src))
+> +			return PTR_ERR(res->pipe_clk_src);
 > +
->  	dma_addr_t counters_phys_addr;
->  	struct rtl8169_counters *counters;
->  	struct rtl8169_tc_offsets tc_offset;
-> @@ -670,12 +675,14 @@ static inline struct device *tp_to_dev(struct rtl8169_private *tp)
->  
->  static void rtl_lock_config_regs(struct rtl8169_private *tp)
->  {
-> +	mutex_lock(&tp->config_lock);
->  	RTL_W8(tp, Cfg9346, Cfg9346_Lock);
->  }
->  
->  static void rtl_unlock_config_regs(struct rtl8169_private *tp)
->  {
->  	RTL_W8(tp, Cfg9346, Cfg9346_Unlock);
-> +	mutex_unlock(&tp->config_lock);
->  }
->  
->  static void rtl_pci_commit(struct rtl8169_private *tp)
-> @@ -2669,6 +2676,8 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
->  	if (!pcie_aspm_support_enabled() || !pcie_aspm_capable(pdev))
->  		return;
->  
-> +	tp->rtl_aspm_enabled = enable;
+> +		res->phy_pipe_clk = devm_clk_get(dev, "phy_pipe");
+> +		if (IS_ERR(res->phy_pipe_clk))
+> +			return PTR_ERR(res->phy_pipe_clk);
 > +
->  	if (enable) {
->  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
->  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
-> @@ -4407,6 +4416,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
->  
->  	dirty_tx = tp->dirty_tx;
->  
-> +	atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
->  	while (READ_ONCE(tp->cur_tx) != dirty_tx) {
->  		unsigned int entry = dirty_tx % NUM_TX_DESC;
->  		u32 status;
-> @@ -4551,6 +4561,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
->  		rtl8169_mark_to_asic(desc);
->  	}
->  
-> +	atomic_add(count, &tp->aspm_packet_count);
-> +
->  	return count;
->  }
->  
-> @@ -4658,8 +4670,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
->  	return 0;
->  }
->  
-> +#define ASPM_PACKET_THRESHOLD 10
-> +#define ASPM_TOGGLE_INTERVAL 1000
-> +
-> +static void rtl8169_aspm_toggle(struct work_struct *work)
-> +{
-> +	struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
-> +						  aspm_toggle.work);
-> +	int packet_count;
-> +	bool enable;
-> +
-> +	packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
-> +
-> +	if (pcie_aspm_enabled(tp->pci_dev)) {
-> +		enable = packet_count <= ASPM_PACKET_THRESHOLD;
-> +
-> +		if (tp->rtl_aspm_enabled != enable) {
-> +			rtl_unlock_config_regs(tp);
-> +			rtl_hw_aspm_clkreq_enable(tp, enable);
-> +			rtl_lock_config_regs(tp);
-> +		}
-> +	} else if (tp->rtl_aspm_enabled) {
-> +		rtl_unlock_config_regs(tp);
-> +		rtl_hw_aspm_clkreq_enable(tp, false);
-> +		rtl_lock_config_regs(tp);
+> +		res->ref_clk_src = devm_clk_get(dev, "ref");
+> +		if (IS_ERR(res->ref_clk_src))
+> +			return PTR_ERR(res->ref_clk_src);
 > +	}
-
-IIUC the way the "dynamic ASPM" works is that rtl8169_aspm_toggle()
-runs every second (1000ms).  If the NIC has sent or received fewer
-than 10 packets in the last second, you make sure ASPM is enabled.  If
-it has sent or received more than 10 packets, you disable ASPM.
-
-Since the disable is done in rtl_hw_aspm_clkreq_enable() with
-chip-specific registers, I suppose lspci and the like still show ASPM
-as being enabled.  Not really a problem, I guess.
-
-It looks like this disables ASPM completely, even though the NIC
-apparently works correctly with L0s and L1.1 enabled, right?
-
-I suppose that on the Intel system, if we enable ASPM, the link goes
-to L1.2, and the NIC immediately receives 1000 packets in that second
-before we can disable ASPM again, we probably drop a few packets?
-
-Whereas on the AMD system, we probably *never* drop any packets even
-with L1.2 enabled all the time?
-
-And if we actually knew the root cause and could set the correct LTR
-values or whatever is wrong on the Intel system, we probably wouldn't
-need this dynamic scheme?
-
-> +	schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
-> +}
 > +
->  static void rtl8169_down(struct rtl8169_private *tp)
->  {
-> +	cancel_delayed_work_sync(&tp->aspm_toggle);
-> +
->  	/* Clear all task flags */
->  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
->  
-> @@ -4686,6 +4729,10 @@ static void rtl8169_up(struct rtl8169_private *tp)
->  	rtl_reset_work(tp);
->  
->  	phy_start(tp->phydev);
-> +
-> +	/* pcie_aspm_capable may change after system resume */
-> +	if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev))
-> +		schedule_delayed_work(&tp->aspm_toggle, 0);
+>  	res->pipe_clk = devm_clk_get(dev, "pipe");
+>  	return PTR_ERR_OR_ZERO(res->pipe_clk);
 >  }
->  
->  static int rtl8169_close(struct net_device *dev)
-> @@ -5273,11 +5320,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	if (rc)
->  		return rc;
->  
-> -	/* Disable ASPM L1 as that cause random device stop working
-> -	 * problems as well as full system hangs for some PCIe devices users.
-> -	 */
-> -	pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
-> -
->  	/* enable device (incl. PCI PM wakeup and hotplug setup) */
->  	rc = pcim_enable_device(pdev);
->  	if (rc < 0) {
-> @@ -5307,6 +5349,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->  		return rc;
+> @@ -1189,6 +1208,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  		return ret;
 >  	}
 >  
-> +	mutex_init(&tp->config_lock);
+> +	/* Set TCXO as clock source for pcie_pipe_clk_src */
+> +	if (pcie->pipe_clk_need_muxing)
+> +		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
 > +
->  	tp->mmio_addr = pcim_iomap_table(pdev)[region];
+>  	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+>  	if (ret < 0)
+>  		goto err_disable_regulators;
+> @@ -1260,6 +1283,10 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
 >  
->  	xid = (RTL_R32(tp, TxConfig) >> 20) & 0xfcf;
-> @@ -5344,6 +5388,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	INIT_WORK(&tp->wk.work, rtl_task);
->  
-> +	INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
+> +	/* Set pipe clock as clock source for pcie_pipe_clk_src */
+> +	if (pcie->pipe_clk_need_muxing)
+> +		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
 > +
-> +	atomic_set(&tp->aspm_packet_count, 0);
-> +
->  	rtl_init_mac_address(tp);
+>  	return clk_prepare_enable(res->pipe_clk);
+>  }
 >  
->  	dev->ethtool_ops = &rtl8169_ethtool_ops;
+> @@ -1490,6 +1517,7 @@ static const struct qcom_pcie_cfg sm8250_cfg = {
+>  
+>  static const struct qcom_pcie_cfg sc7280_cfg = {
+>  	.ops = &ops_1_9_0,
+> +	.pipe_clk_need_muxing = true,
+>  };
+>  
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> @@ -1532,6 +1560,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	pcie->ops = pcie_cfg->ops;
+> +	pcie->pipe_clk_need_muxing = pcie_cfg->pipe_clk_need_muxing;
+>  
+>  	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
+>  	if (IS_ERR(pcie->reset)) {
 > -- 
-> 2.32.0
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
