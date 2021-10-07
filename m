@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A83E84259D4
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 19:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A384259E3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 19:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243356AbhJGRve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 13:51:34 -0400
+        id S243395AbhJGRvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 13:51:49 -0400
 Received: from so254-9.mailgun.net ([198.61.254.9]:26087 "EHLO
         so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243210AbhJGRv1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 13:51:27 -0400
+        with ESMTP id S243319AbhJGRvm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 13:51:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1633628973; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1633628988; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=wFbSDp1+dsOlHp9q6rR/IYUfo45XFKoQeOBlBafuP3E=; b=BC24ZJwFiFnZlmIQId8LLW55+oqe4cmz7pb9QnA+1SGJ3QIFVb1OgcCOrxlBJ2lJlx1UDCg1
- IWMSHE1h5ZNAHe/C1UHBF9tW71AjqPIbdWKyC367vdIs71kGRK0lSi0AikkXAuznLi1F6GJQ
- KiOLbq0vBDFea+T9by/YHI1d60I=
+ bh=tHA60v4N0YKViJuV9g9KY1VqT8BUuS4s4huUyY5Pxgk=; b=E5Y2wgGAaROC6SQqIp/vZFQla8/5qwHMzT0HQ+8c5xDaUd211VjwLhtHRxAj5w3c3PiLxySH
+ Q3QNo3C4AnGd7j6ELeEjPyQWtG0UyWWBtFMG6ZmDb1Xdj0EVpz1OU3iaORNhnzKKzgea97OS
+ WYZk56KfPnOomhxVUvKhpkfvE+I=
 X-Mailgun-Sending-Ip: 198.61.254.9
 X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 615f331b8ea00a941f1cbd8b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 07 Oct 2021 17:49:15
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 615f332003355859c8d8837c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 07 Oct 2021 17:49:20
  GMT
 Sender: pmaliset=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8582FC4360C; Thu,  7 Oct 2021 17:49:15 +0000 (UTC)
+        id C3A96C4361B; Thu,  7 Oct 2021 17:49:20 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
@@ -37,9 +37,9 @@ Received: from pmaliset-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: pmaliset)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12855C4360C;
-        Thu,  7 Oct 2021 17:49:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 12855C4360C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC9D9C4338F;
+        Thu,  7 Oct 2021 17:49:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org BC9D9C4338F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 From:   Prasad Malisetty <pmaliset@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
         linux-pci@vger.kernel.org,
         Prasad Malisetty <pmaliset@codeaurora.org>
-Subject: [PATCH v12 2/5] arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
-Date:   Thu,  7 Oct 2021 23:18:40 +0530
-Message-Id: <1633628923-25047-3-git-send-email-pmaliset@codeaurora.org>
+Subject: [PATCH v12 3/5] arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
+Date:   Thu,  7 Oct 2021 23:18:41 +0530
+Message-Id: <1633628923-25047-4-git-send-email-pmaliset@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
 References: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
@@ -62,150 +62,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe controller and PHY nodes for sc7280 SOC.
+Enable PCIe controller and PHY for sc7280 IDP board.
+Add specific NVMe GPIO entries for SKU1 and SKU2 support.
 
 Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 118 +++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7280-idp.dts  |  8 +++++
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi | 50 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sc7280-idp2.dts |  8 +++++
+ 3 files changed, 66 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 39635da..cde814f 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -1563,6 +1563,117 @@
- 			qcom,bcm-voters = <&apps_bcm_voter>;
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dts b/arch/arm64/boot/dts/qcom/sc7280-idp.dts
+index 64fc22a..e6b9f57 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dts
+@@ -61,6 +61,14 @@
+ 	modem-init;
+ };
+ 
++&nvme_pwren {
++	pins = "gpio19";
++};
++
++&nvme_3v3_regulator {
++	gpio = <&tlmm 19 GPIO_ACTIVE_HIGH>;
++};
++
+ &pmk8350_vadc {
+ 	pmr735a_die_temp {
+ 		reg = <PMR735A_ADC7_DIE_TEMP>;
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+index 272d5ca..d623d71 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+@@ -31,6 +31,18 @@
+ 			linux,can-disable;
  		};
+ 	};
++
++	nvme_3v3_regulator: nvme-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VLDO_3V3";
++
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		enable-active-high;
++		pinctrl-names = "default";
++		pinctrl-0 = <&nvme_pwren>;
++	};
+ };
  
-+		pcie1: pci@1c08000 {
-+			compatible = "qcom,pcie-sc7280";
-+			reg = <0 0x01c08000 0 0x3000>,
-+			      <0 0x40000000 0 0xf1d>,
-+			      <0 0x40000f20 0 0xa8>,
-+			      <0 0x40001000 0 0x1000>,
-+			      <0 0x40100000 0 0x100000>;
-+
-+			reg-names = "parf", "dbi", "elbi", "atu", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <2>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+
-+			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc 0 438 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc 0 439 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-+				 <&pcie1_lane 0>,
-+				 <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_PCIE_1_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-+				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
-+
-+			clock-names = "pipe",
-+				      "pipe_mux",
-+				      "phy_pipe",
-+				      "ref",
-+				      "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a",
-+				      "tbu",
-+				      "ddrss_sf_tbu";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			resets = <&gcc GCC_PCIE_1_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc GCC_PCIE_1_GDSC>;
-+
-+			phys = <&pcie1_lane>;
-+			phy-names = "pciephy";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pcie1_clkreq_n>;
-+
-+			iommus = <&apps_smmu 0x1c80 0x1>;
-+
-+			iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
-+				    <0x100 &apps_smmu 0x1c81 0x1>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie1_phy: phy@1c0e000 {
-+			compatible = "qcom,sm8250-qmp-gen3x2-pcie-phy";
-+			reg = <0 0x01c0e000 0 0x1c0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_CLKREF_EN>,
-+				 <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-+
-+			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			status = "disabled";
-+
-+			pcie1_lane: lanes@1c0e200 {
-+				reg = <0 0x01c0e200 0 0x170>,
-+				      <0 0x01c0e400 0 0x200>,
-+				      <0 0x01c0ea00 0 0x1f0>,
-+				      <0 0x01c0e600 0 0x170>,
-+				      <0 0x01c0e800 0 0x200>,
-+				      <0 0x01c0ee00 0 0xf4>;
-+				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-+				clock-names = "pipe0";
-+
-+				#phy-cells = <0>;
-+				#clock-cells = <1>;
-+				clock-output-names = "pcie_1_pipe_clk";
-+			};
-+		};
-+
- 		ipa: ipa@1e40000 {
- 			compatible = "qcom,sc7280-ipa";
+ /*
+@@ -272,6 +284,23 @@
+ 	modem-init;
+ };
  
-@@ -2676,6 +2787,13 @@
- 			gpio-ranges = <&tlmm 0 0 175>;
- 			wakeup-parent = <&pdc>;
- 
-+			pcie1_clkreq_n: pcie1-clkreq-n {
-+				pins = "gpio79";
-+				function = "pcie1_clkreqn";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
++&pcie1 {
++	status = "okay";
++	perst-gpio = <&tlmm 2 GPIO_ACTIVE_LOW>;
 +
- 			qspi_clk: qspi-clk {
- 				pins = "gpio14";
- 				function = "qspi_clk";
++	vddpe-3v3-supply = <&nvme_3v3_regulator>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
++};
++
++&pcie1_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l10c_0p8>;
++	vdda-pll-supply = <&vreg_l6b_1p2>;
++};
++
+ &pmk8350_vadc {
+ 	pmk8350_die_temp {
+ 		reg = <PMK8350_ADC7_DIE_TEMP>;
+@@ -462,6 +491,27 @@
+ };
+ 
+ &tlmm {
++	nvme_pwren: nvme-pwren {
++		function = "gpio";
++	};
++
++	pcie1_reset_n: pcie1-reset-n {
++		pins = "gpio2";
++		function = "gpio";
++
++		drive-strength = <16>;
++		output-low;
++		bias-disable;
++	};
++
++	pcie1_wake_n: pcie1-wake-n {
++		pins = "gpio3";
++		function = "gpio";
++
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++
+ 	qup_uart7_sleep_cts: qup-uart7-sleep-cts {
+ 		pins = "gpio28";
+ 		function = "gpio";
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp2.dts b/arch/arm64/boot/dts/qcom/sc7280-idp2.dts
+index 1fc2add..3ae9969 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-idp2.dts
++++ b/arch/arm64/boot/dts/qcom/sc7280-idp2.dts
+@@ -21,3 +21,11 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
++
++&nvme_pwren {
++	pins = "gpio51";
++};
++
++&nvme_3v3_regulator {
++	gpio = <&tlmm 51 GPIO_ACTIVE_HIGH>;
++};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
