@@ -2,74 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CE73425752
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 18:03:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0020425774
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 18:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242236AbhJGQF0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 12:05:26 -0400
-Received: from marcansoft.com ([212.63.210.85]:56266 "EHLO mail.marcansoft.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233486AbhJGQF0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 12:05:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id E0FED419BC;
-        Thu,  7 Oct 2021 16:03:26 +0000 (UTC)
-Subject: Re: [PATCH v5 14/14] arm64: dts: apple: j274: Expose PCI node for the
- Ethernet MAC address
-To:     Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Stan Skowronek <stan@corellium.com>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, kernel-team@android.com
-References: <20210929163847.2807812-1-maz@kernel.org>
- <20210929163847.2807812-15-maz@kernel.org>
-From:   Hector Martin <marcan@marcan.st>
-Message-ID: <d49994e1-cd01-f6a4-98bf-941058543a44@marcan.st>
-Date:   Fri, 8 Oct 2021 01:03:24 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S242106AbhJGQPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 12:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233591AbhJGQPu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 12:15:50 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84C4C061570;
+        Thu,  7 Oct 2021 09:13:56 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id p18so7244828vsu.7;
+        Thu, 07 Oct 2021 09:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M/o8NPJje5ot5/aF0XpJWy6+VB0DZerHIS0Mf5Yxj4U=;
+        b=C3UJQDCwjR5x6GYe1QTlKeSpX2Hc8klUILtPKHXL9f8hKudZ6kSz68Z2HuTIi2ZrUU
+         +sLxLGahfxkiEHdUO/Jyqc25pNntYlfCJfR/5SmsQtSHGsyqrDjmV+kLQ5ip+5nFqKl8
+         Wbsubk5jxn7y65882ZJN3NCL8t2DliV8pFnICx7bMrVRQZaiK1chGImdx41rfvRBA0wU
+         v23J++kq54HgKMvWudK+sYrqM6MG182rQ2JK01XttZA13xeAIwcuW4Iy1GarUhNjTULC
+         hvWVQycFn7eTU+I0XHzjEyC4zZ9S4HikwX9TQRZgxrSbC1rA8UZRCf9J4v7Q4RCK5b0P
+         oL2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M/o8NPJje5ot5/aF0XpJWy6+VB0DZerHIS0Mf5Yxj4U=;
+        b=mZTjCGKcMfuKDw/wwW2/DgIqn+pqP3qVydDlJZRHi8OBemfM0Qs+296HzvSIMF7rPO
+         UJYf6M9g83jYJ5vEUN/N8ui586V1d8SyPxm1fy3puWN/gmp5dV1adIMNPhf7DIoW6Y39
+         JQeEgLpxxHFFV9vDB/Bfv7NErmNVOYBtToqWFyrLdngzriPIxO0+S2X3UfJylXCfmlWv
+         sd6Y2pHbS8vUbxYudo+vAwTy7//lVEJxSVZ0MFXWSwWIwQLaLuZtaY+TurFHXUeXh1cD
+         Cvs+oVrOPGn+iZAo3l7QhUZEVe8m/ds+drUy6VayGRkRmA8grLGsoA4d09IEtr5O1Gvp
+         kTWA==
+X-Gm-Message-State: AOAM530tTgzOTBfMCzYnSyvZH0eBTn0yD9KO8TmvwPNCKvenk2MPKYtc
+        cgCZyvaWhOcmFmiEsaYx+WlkDJZgIPVXL4bD1Q==
+X-Google-Smtp-Source: ABdhPJwQa1uclhiiXKUPPeTGSMuc8RzY07oYdohLHz56SYEA0XbsKsBkx8qgthulXazx3F0Q+pHYlztaQQs7EiELKfE=
+X-Received: by 2002:a67:e192:: with SMTP id e18mr5379758vsl.26.1633623234759;
+ Thu, 07 Oct 2021 09:13:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210929163847.2807812-15-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 7bit
+References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+ <87ee8yquyi.wl-maz@kernel.org> <CALjTZvakX8Hz+ow3UeAuQiicVXtbkXEDFnHU-+n8Ts6i1LRyHQ@mail.gmail.com>
+ <87bl41qkrh.wl-maz@kernel.org> <CALjTZvbsvsD6abpw0H5D4ngUXPrgM2mDV0DX5BQi0z8cd-yxzA@mail.gmail.com>
+ <878rz5qbee.wl-maz@kernel.org> <CALjTZvZZf25tqoQWM_HsBb84JgKpMKAxqfhUdpD_e5M-Bc_yzA@mail.gmail.com>
+ <875yu8rj5t.wl-maz@kernel.org> <CALjTZvbZK3vxexyoEHmh9TPoceckvGV7ACHjOa0rJ9HH=YAyYA@mail.gmail.com>
+ <874k9sri65.wl-maz@kernel.org>
+In-Reply-To: <874k9sri65.wl-maz@kernel.org>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Thu, 7 Oct 2021 17:13:43 +0100
+Message-ID: <CALjTZvYZcDS5HB=3h8u68jaTRNTXENQGV96reOeDS544fVceew@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/09/2021 01.38, Marc Zyngier wrote:
-> At the moment, all the Minis running Linux have the same MAC
-> address (00:10:18:00:00:00), which is a bit annoying.
-> 
-> Expose the PCI node corresponding to the Ethernet device, and
-> declare a 'local-mac-address' property. The bootloader will update
-> it (m1n1 already has the required feature). And if it doesn't, then
-> the default value is already present in the DT.
-> 
-> This relies on forcing the bus number for each port so that the
-> endpoints connected to them are correctly numbered (and keeps dtc
-> quiet).
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   arch/arm64/boot/dts/apple/t8103-j274.dts | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
-> 
+Hi, Marc,
 
-Acked-by: Hector Martin <marcan@marcan.st>
+On Thu, 7 Oct 2021 at 16:03, Marc Zyngier <maz@kernel.org> wrote:
+>
+> Duh. Make that:
+>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dc7741431bf3..89c7c99cd1bb 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5798,6 +5798,6 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+>
+>  static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+>  {
+> -       pdev->dev_flags |= PCI_MSI_FLAGS_MASKBIT;
+> +       pdev->dev_flags |= PCI_DEV_FLAGS_HAS_MSI_MASKING;
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
+>
+>         M.
+>
+> --
 
--- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+The previous patch with this fixup on top also fixes the problem for
+me. No issues on the GPU side (other than the existing ones, due to
+NVIDIA uncooperativeness, regarding nouveau). Feel free to add my
+
+Tested-by: Rui Salvaterra <rsalvaterra@gmail.com>
+
+Thanks,
+Rui
