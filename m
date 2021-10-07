@@ -2,152 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E73E425B63
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:13:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2226425B74
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Oct 2021 21:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243799AbhJGTPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 15:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233879AbhJGTPB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 15:15:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 433A260F23;
-        Thu,  7 Oct 2021 19:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633633986;
-        bh=4097i7mkFkqGG7g6bmJrh8yORC7/TSKWh6X6Z6f10a8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PAW7l7d+uZ/uWAbylFNHh7bfq4jdELPttvGO0mPiMMM7jV3YRMIcNp8m6qVATu0qA
-         e+3Xmr1sEvqzA9ww/tVvPj93ZR6u0X7F3iDfcdcWtGw89juUigk2q9KbvXXCN2HRIJ
-         LD9hahvTR136Q83ZBxxA4b3qoLBgYxrv7236PtPtZCyLAPD6KyFi04VSiG8O0QQSrt
-         ao3Pi07O4Zcjwm/s37c4/NsB9eDUArdO/HPfBIih1LkHKmGMo24lAF57paB1pAP49a
-         UrhLLUzQGVwumGu7L1Pf85Yh4ipTiX3hso7CTmA3JTDovpos7y/7Pvb1N5PGEd4GyC
-         9JOh66/bkHhag==
-Date:   Thu, 7 Oct 2021 14:13:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Prasad Malisetty <pmaliset@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
-        svarbanov@mm-sol.com, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dianders@chromium.org,
-        mka@chromium.org, vbadigan@codeaurora.org, sallenki@codeaurora.org,
-        manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v12 5/5] PCI: qcom: Switch pcie_1_pipe_clk_src after PHY
- init in SC7280
-Message-ID: <20211007191304.GA1256620@bhelgaas>
+        id S243899AbhJGTZI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Oct 2021 15:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243891AbhJGTZI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Oct 2021 15:25:08 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF417C061570;
+        Thu,  7 Oct 2021 12:23:13 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id u18so22330092wrg.5;
+        Thu, 07 Oct 2021 12:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jKCYo7elbfN+8Lo9BJJiNFtvdPlRlQgGyDD+hhfOf40=;
+        b=d0dkuNNipB4R+OTaIs1kQfjnZ24jPRymUVjwKt4l6BIgSLjdhH30LPkaG6S9ik5axn
+         Biu2rz5ZCzOVw5gTs+1IZd97T7gUR1otVgyjL+ndg8/kVF3arFWi8qqVRKjhRsgF+M62
+         ketDfIfLDywghXB1AGHBlkRG4V+3h7X9vioozBPllV2YbsdaCqKv++N7Fwi4wSuiwVRc
+         ZXw5O4EfOocbF4cEIQ+CM2Vc48Ky/E5QxkAagZbsp3Qvx6Y5wOlue1pl5CASf4KA+ISW
+         CcsCkR4A5Wwnh8FLHbRLKYz+L1I+9SG+QhjF3IByCRi0bzjtfG3zhf1glEH9QGNsU2aJ
+         HQAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jKCYo7elbfN+8Lo9BJJiNFtvdPlRlQgGyDD+hhfOf40=;
+        b=Af1jiIVE4dCWfBG1QOnaH1YjIanU1OgfF8aCZ7ERqSfTlsKw5bkkxYHhf97cNXvVWT
+         0rFwpRgd0TiDMDzN9J2Uxrdkcc5eBAMaUAzLkmIiCy3Sv4PTMTVgxfnQIUcn2Wwr2CNp
+         nH4hYHcmCAsi06FWYtGXho0iQ0U/m4IY9cXmRpzqdY2MKQ0RWadfuHwCDpoUFWg4TBkA
+         reLbm8gBe7LFAz3WwZqb33knK2mzK+0MjiMVaZ2D/L4Z5gOjPsiMDRq0z3Nvt5GqSuUu
+         zBbxqoxIYzfrN27MX7ZIXJBibbYzVCT5GzeQ/xc04UKFiVmWhAjqovVINS0n1VYQGgTt
+         dQjA==
+X-Gm-Message-State: AOAM532J/trbOB9D/nRgABoN4AdEdcdavDb0Cxh6ytWCAlGuIK1y/RJW
+        BAgNHdcMKZvZSxg4a/jhLFA=
+X-Google-Smtp-Source: ABdhPJyqOVTW/HIi/ICquQaOPPDSGWhlYbd6fygN3jqI+8q43cGrGaR+0T8etAnCTt4TF7FXO+kDJg==
+X-Received: by 2002:a1c:cc0f:: with SMTP id h15mr6528641wmb.37.1633634592523;
+        Thu, 07 Oct 2021 12:23:12 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id i3sm245065wrn.34.2021.10.07.12.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Oct 2021 12:23:11 -0700 (PDT)
+Date:   Thu, 7 Oct 2021 21:23:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, linuxarm@huawei.com,
+        mauro.chehab@huawei.com, Bjorn Helgaas <bhelgaas@google.com>,
+        JC Kuo <jckuo@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] dt-bindings: arm64: tegra: fix pcie-ep DT nodes
+Message-ID: <YV9JHsFyu+zTxrcN@orome.fritz.box>
+References: <cover.1626608375.git.mchehab+huawei@kernel.org>
+ <15cf5067c0567614d5b186d006ebd88395d56b63.1626608375.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hvtSaJRi+eMRsZbD"
 Content-Disposition: inline
-In-Reply-To: <1633628923-25047-6-git-send-email-pmaliset@codeaurora.org>
+In-Reply-To: <15cf5067c0567614d5b186d006ebd88395d56b63.1626608375.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 11:18:43PM +0530, Prasad Malisetty wrote:
-> On the SC7280, the clock source for gcc_pcie_1_pipe_clk_src
-> must be the TCXO while gdsc is enabled. After PHY init successful
-> clock source should switch to pipe clock for gcc_pcie_1_pipe_clk_src.
-> 
-> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Thanks a lot for sorting out the patch 4/5 and 5/5 contents!
+--hvtSaJRi+eMRsZbD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Jul 18, 2021 at 01:40:52PM +0200, Mauro Carvalho Chehab wrote:
+> As defined by Documentation/devicetree/bindings/pci/pci-ep.yaml,
+> PCIe endpoints match this pattern:
+>=20
+> 	properties:
+> 	  $nodename:
+> 	    pattern: "^pcie-ep@"
+>=20
+> Change the existing ones in order to avoid those warnings:
+>=20
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0001.dt.yaml: pcie_=
+ep@14160000: $nodename:0: 'pcie_ep@14160000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0001.dt.yaml: pcie_=
+ep@14180000: $nodename:0: 'pcie_ep@14180000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0001.dt.yaml: pcie_=
+ep@141a0000: $nodename:0: 'pcie_ep@141a0000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dt.yaml: pcie_=
+ep@14160000: $nodename:0: 'pcie_ep@14160000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dt.yaml: pcie_=
+ep@14180000: $nodename:0: 'pcie_ep@14180000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dt.yaml: pcie_=
+ep@141a0000: $nodename:0: 'pcie_ep@141a0000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dt.yaml: pcie_ep@14160000=
+: $nodename:0: 'pcie_ep@14160000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dt.yaml: pcie_ep@14180000=
+: $nodename:0: 'pcie_ep@14180000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> 	arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dt.yaml: pcie_ep@141a0000=
+: $nodename:0: 'pcie_ep@141a0000' does not match '^pcie-ep@'
+> 		From schema: Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 41132dd..ded70e6 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -166,6 +166,9 @@ struct qcom_pcie_resources_2_7_0 {
->  	struct regulator_bulk_data supplies[2];
->  	struct reset_control *pci_reset;
->  	struct clk *pipe_clk;
-> +	struct clk *pipe_clk_src;
-> +	struct clk *phy_pipe_clk;
-> +	struct clk *ref_clk_src;
->  };
->  
->  union qcom_pcie_resources {
-> @@ -191,6 +194,7 @@ struct qcom_pcie_ops {
->  
->  struct qcom_pcie_cfg {
->  	const struct qcom_pcie_ops *ops;
-> +	unsigned int pipe_clk_need_muxing:1;
->  };
->  
->  struct qcom_pcie {
-> @@ -201,6 +205,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	const struct qcom_pcie_ops *ops;
-> +	unsigned int pipe_clk_need_muxing:1;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -1171,6 +1176,20 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (pcie->pipe_clk_need_muxing) {
-> +		res->pipe_clk_src = devm_clk_get(dev, "pipe_mux");
-> +		if (IS_ERR(res->pipe_clk_src))
-> +			return PTR_ERR(res->pipe_clk_src);
-> +
-> +		res->phy_pipe_clk = devm_clk_get(dev, "phy_pipe");
-> +		if (IS_ERR(res->phy_pipe_clk))
-> +			return PTR_ERR(res->phy_pipe_clk);
-> +
-> +		res->ref_clk_src = devm_clk_get(dev, "ref");
-> +		if (IS_ERR(res->ref_clk_src))
-> +			return PTR_ERR(res->ref_clk_src);
-> +	}
-> +
->  	res->pipe_clk = devm_clk_get(dev, "pipe");
->  	return PTR_ERR_OR_ZERO(res->pipe_clk);
->  }
-> @@ -1189,6 +1208,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  		return ret;
->  	}
->  
-> +	/* Set TCXO as clock source for pcie_pipe_clk_src */
-> +	if (pcie->pipe_clk_need_muxing)
-> +		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
-> +
->  	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
->  	if (ret < 0)
->  		goto err_disable_regulators;
-> @@ -1260,6 +1283,10 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
->  
-> +	/* Set pipe clock as clock source for pcie_pipe_clk_src */
-> +	if (pcie->pipe_clk_need_muxing)
-> +		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
-> +
->  	return clk_prepare_enable(res->pipe_clk);
->  }
->  
-> @@ -1490,6 +1517,7 @@ static const struct qcom_pcie_cfg sm8250_cfg = {
->  
->  static const struct qcom_pcie_cfg sc7280_cfg = {
->  	.ops = &ops_1_9_0,
-> +	.pipe_clk_need_muxing = true,
->  };
->  
->  static const struct dw_pcie_ops dw_pcie_ops = {
-> @@ -1532,6 +1560,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	}
->  
->  	pcie->ops = pcie_cfg->ops;
-> +	pcie->pipe_clk_need_muxing = pcie_cfg->pipe_clk_need_muxing;
->  
->  	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
->  	if (IS_ERR(pcie->reset)) {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt        | 2 +-
+>  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts          | 2 +-
+>  arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi         | 2 +-
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi                    | 6 +++---
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+
+Sorry for the delayed response, this fell through the cracks. Applied
+now, thanks.
+
+Thierry
+
+--hvtSaJRi+eMRsZbD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmFfSRwACgkQ3SOs138+
+s6FMVg//VA84RbAyFnRKV7Qf21suROrf13xD4bw8a6iFEvSedSMiqMJupJ6cW5Df
+xAdQxmivmNfwEtsVgrO7bw0MR6yrIU6eRxWPV89qAoIAOFMpIupcu6I+MZSNLin/
+vDBRvVw+R+zN95mHW7W4Edf76NwVjsFcLpDyxpTgdBYGc4CmTuUi15yGcfsnLWj1
+8phTiwa/U7/cf7qWTAy2PMhtseEoVRjXZT2FtubC9Y6YSfAE3gz86rKBUxE8ZZIg
+WcqO92HeOLtXxs/TAGkEkOfQWkRe4aHHzpC61V+c4ECs0emhbrXjQmePmcEWzW9n
+9zEjUANnaEiYbYcSGx1m34TtCWVuGtaIaHQZur/ClgB0FjwWV9k4MxbWnfU/2+ww
+M3LZgDLQh5wtx2wzq304FT1Jyoo1ekrBRHh5+jqVCcHKCTUMJquwpA1oDp9PI50W
+il6Ju775R2Q/Dj6p4P2c0YU6ZJ4qMK9JFuwLb7JBxDGNTvdJh2bGv63DZ+g86Mwq
+YCAKf5aQfcWf12GdRU04ttJ/n8rW6+33dw+iELC+HvxZChX/Yp3zwn4HbDt9Do/9
+lfW4QVBrF0QneD2zqEAmknoog7dU7MOih1RND/lZPF1rwRafxRGGZm7ys3rWZkVJ
+/U1CuNlPkdeEzLBHEvDSIVxKZgA81BxWRDSiiSs+Wg+AXSomY5I=
+=8l0Y
+-----END PGP SIGNATURE-----
+
+--hvtSaJRi+eMRsZbD--
