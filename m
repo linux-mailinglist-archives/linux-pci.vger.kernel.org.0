@@ -2,77 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 512C44273F3
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 00:53:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7DCC427455
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 01:42:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231888AbhJHWzi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 18:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        id S243751AbhJHXor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 19:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231876AbhJHWzh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Oct 2021 18:55:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5681E60E9C;
-        Fri,  8 Oct 2021 22:53:41 +0000 (UTC)
+        id S231964AbhJHXoq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 19:44:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ADF9260F94;
+        Fri,  8 Oct 2021 23:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633733621;
-        bh=fAFnZrcP9V2PJb2yr/KOB0SnKV7yRbBFGwGzEq+JY4M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g8mHcvii8fnRQgud/hlKghG7LYdxj8/nC03GrwwnwxrOjwjPanguauimd7XmbsM4c
-         NvYyw17YrajQtZ4YOs8xnDOLARc0QBv3wT2emwpuUsY+TDiJ/MSGP+ucngi3d0McEf
-         Fy6poYDfDrYpDVyRdpRh25h5OqihZsV9FSUNigxBFBdk4Ws4Fxh0RYDZaiIQM5/KEo
-         bt5DIV7H+GjHmiLt3GsFGdGEAx+0E05Ck4WCSQdpBFk6fvNRYmm6KCAMdk/pg9NRs9
-         ksw9y9rE8Zb6EZ+WBKRxCL/HSOV/R/IhmxUQkHmCVd/0THappl1M1XRkyvM9E0sR3x
-         0f3GG//MPJ2Kw==
-Date:   Fri, 8 Oct 2021 17:53:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        s=k20201202; t=1633736571;
+        bh=JbbAavGnxL8nsqyWmfzkPuh5K4VEGTCwznOeHApKIWM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S+GirTn/HDtsF+sAPzD0xRY4HHInS4CNYWAwvx4FDR18byh5xdPFlJN+11CpMb1p5
+         d33IpvVdhF+x4foem6jkwwrRfQhhjNkKZ3VCk/WdV9hPRm8gSvYrIhI362nbnopwph
+         GaWswd36C7GbM66EU2RQFvnOPwPiZBhNW45joRKDyJLOD9gHFmxyaPyzzX6C9muL2Y
+         x+j8FSXVxfdu5tdKc8c7wOTBplsno65qIC+q0dnVGp9qnSCpvIs6Vf1o2QDMjU25J+
+         fGdKmpeZjXTmI8l9+LosTeOb5EZR+xTnBN9yiu+JZpyfSRKA1nkX0XyZQOdK+v+9qA
+         Fskkww5LS1C9A==
+Date:   Fri, 8 Oct 2021 16:42:49 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         David Miller <davem@davemloft.net>,
         Raju Rangoju <rajur@chelsio.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 Subject: Re: [PATCH 0/5] PCI/VPD: Add and use pci_read/write_vpd_any()
-Message-ID: <20211008225340.GA1388382@bhelgaas>
+Message-ID: <20211008164249.26e04562@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20211008225340.GA1388382@bhelgaas>
+References: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
+        <20211008225340.GA1388382@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 10, 2021 at 08:20:23AM +0200, Heiner Kallweit wrote:
-> In certain cases we need a variant of pci_read_vpd()/pci_write_vpd() that
-> does not check against dev->vpd.len. Such cases are:
-> - reading VPD if dev->vpd.len isn't set yet (in pci_vpd_size())
-> - devices that map non-VPD information to arbitrary places in VPD address
->   space (example: Chelsio T3 EEPROM write-protect flag)
-> Therefore add function variants that check against PCI_VPD_MAX_SIZE only.
-> 
-> Make the cxgb3 driver the first user of the new functions.
-> 
-> Preferably this series should go through the PCI tree.
-> 
-> Heiner Kallweit (5):
->   PCI/VPD: Add pci_read/write_vpd_any()
->   PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()
->   cxgb3: Remove t3_seeprom_read and use VPD API
->   cxgb3: Use VPD API in t3_seeprom_wp()
->   cxgb3: Remove seeprom_write and user VPD API
+On Fri, 8 Oct 2021 17:53:40 -0500 Bjorn Helgaas wrote:
+> Ideally would like reviewed-by and ack for the cxgb3 parts from Raju,
+> Jakub, David.
 
-Tentatively applied to pci/vpd for v5.16.
+Raju's ack would be best, there isn't much networking there, 
+but certainly no objection for you merging the changes:
 
-Ideally would like reviewed-by and ack for the cxgb3 parts from Raju,
-Jakub, David.
-
->  drivers/net/ethernet/chelsio/cxgb3/common.h   |  2 -
->  .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   | 38 +++----
->  drivers/net/ethernet/chelsio/cxgb3/t3_hw.c    | 98 +++----------------
->  drivers/pci/vpd.c                             | 79 ++++++++++-----
->  include/linux/pci.h                           |  2 +
->  5 files changed, 83 insertions(+), 136 deletions(-)
-> 
-> -- 
-> 2.33.0
-> 
+Acked-by: Jakub Kicinski <kuba@kernel.org>
