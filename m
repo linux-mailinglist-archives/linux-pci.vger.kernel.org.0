@@ -2,209 +2,317 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E725C426320
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 05:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADF6426488
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 08:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbhJHDjW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Oct 2021 23:39:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31801 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240523AbhJHDjV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Oct 2021 23:39:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="226377524"
-X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; 
-   d="scan'208";a="226377524"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 20:37:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; 
-   d="scan'208";a="522850614"
-Received: from lkp-server01.sh.intel.com (HELO 72c3bd3cf19c) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 07 Oct 2021 20:37:24 -0700
-Received: from kbuild by 72c3bd3cf19c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mYghI-0007ta-0I; Fri, 08 Oct 2021 03:37:24 +0000
-Date:   Fri, 08 Oct 2021 11:37:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 69d9bc4ee815128a5f211e07c662b5533be6dbc9
-Message-ID: <615fbceb.AGim1YEe2wEi3XsV%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229794AbhJHGVN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 02:21:13 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:36618
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229693AbhJHGVM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 02:21:12 -0400
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E37283FFF4
+        for <linux-pci@vger.kernel.org>; Fri,  8 Oct 2021 06:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1633673949;
+        bh=cWlG5EYoT1/7D4Ww3p1KH0SaTmrnnM0OXvZ9d+n2OgE=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=k2EsFJWA0U62bPcg5/9adAVpw3kD27nA/4ZmP481RS80R7KsvDUSPqZg5V+ttZIrq
+         BqOkfcmhpgKxxb7GtNyaUHrTHIMsE5OHtAhheiz6Ul81ySyfhuueEvXfzahuhZjpEB
+         A9tfBK8zjXvLbRKxzV9qO2bfLtyNrFlrwBh6ddabh3n2di8OBdH+93igjXc0cLInA5
+         xwAkCymXPAkBZklwczTwZ5eQr2o/3CVnbgr4EP9+1LFrnvf9FNZHDfTAfJcmj1WPNt
+         X+DMWPAc+AEkYxRtUIQBtx2ZNqJq6pZ5JWGpdA8VXxSwc0VqqcL8gBbM6eh9vInW4K
+         +YyHrJu7b1anw==
+Received: by mail-ot1-f72.google.com with SMTP id n6-20020a9d7106000000b0054e474ad3ccso1793914otj.15
+        for <linux-pci@vger.kernel.org>; Thu, 07 Oct 2021 23:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cWlG5EYoT1/7D4Ww3p1KH0SaTmrnnM0OXvZ9d+n2OgE=;
+        b=Y2G6MUk/HMMszHk/UPq4xBWde9Dkf6zuzLYaq2RGuGv74gLk+SfTenFVuGMcIt2NLT
+         eZ3DIOAEQ/vucb+zbiTu4dhXX1Fen0SZvGMcvJvfej4stRp+Mxicsa1sxsFtso2JZKg+
+         ucHE3uMLLl/znuniBNrBHxYcsX5PpNaeMgJYJnLSy6tBDmsGp+kXaQg+i5FZXs6w8SIG
+         CnwRm5DrTSHa0ZVlJ38189fK6cWi68V7QHObPIj+NFR6gVmnJQilJM+hLf5vELgJ/98o
+         9epwjBotXptaxkuApxhnHnkRj/515/ofAmhWEaMSuykUOKIt3UP1FpArYAq0Vv1xMl4V
+         1uaA==
+X-Gm-Message-State: AOAM533+sRCV1heFteciNqYKU+aaoiTU9+TQL65Ax3vIuvybfaLHm4Ft
+        8X3Z0CqdEZcRDYA+CV03v3aNtxK1ONYauI7jcTIp7KMne2nKilEUAVwyR/Pj58FUCRHlnUIjKRl
+        GFrTg0piZwFTUpjwOQ/he/+DerN3tvKFkDE8U1o5Q7Y2Zef853+XkAw==
+X-Received: by 2002:a05:6808:10d5:: with SMTP id s21mr15017816ois.98.1633673948037;
+        Thu, 07 Oct 2021 23:19:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyoKs7eNdX07+xhGn6S4+OMQyiafBCTyV7LTMSWU3wT9Iiz6zcHyvedXe5fFfl1fHj7cR7wRAZ/xK2aba2UmAg=
+X-Received: by 2002:a05:6808:10d5:: with SMTP id s21mr15017782ois.98.1633673947178;
+ Thu, 07 Oct 2021 23:19:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20211007161552.272771-4-kai.heng.feng@canonical.com> <20211007191108.GA1250550@bhelgaas>
+In-Reply-To: <20211007191108.GA1250550@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 8 Oct 2021 14:18:55 +0800
+Message-ID: <CAAd53p4v+CmupCu2+3vY5N64WKkxcNvpk1M7+hhNoposx+aYCg@mail.gmail.com>
+Subject: Re: [RFC] [PATCH net-next v6 3/3] r8169: Implement dynamic ASPM mechanism
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        nic_swsd <nic_swsd@realtek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 69d9bc4ee815128a5f211e07c662b5533be6dbc9  Merge branch 'remotes/lorenzo/pci/xgene'
+On Fri, Oct 8, 2021 at 3:11 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Oct 08, 2021 at 12:15:52AM +0800, Kai-Heng Feng wrote:
+> > r8169 NICs on some platforms have abysmal speed when ASPM is enabled.
+> > Same issue can be observed with older vendor drivers.
+> >
+> > The issue is however solved by the latest vendor driver. There's a new
+> > mechanism, which disables r8169's internal ASPM when the NIC traffic has
+> > more than 10 packets per second, and vice versa. The possible reason for
+> > this is likely because the buffer on the chip is too small for its ASPM
+> > exit latency.
+>
+> Because the NIC works fine on some platforms with ASPM fully enabled,
+> I would describe this as a "workaround" for a bug where we don't know
+> the root cause, not a "solution".
 
-elapsed time: 1216m
+OK, will change the wording.
 
-configs tested: 149
-configs skipped: 3
+>
+> > Realtek confirmed that all their PCIe LAN NICs, r8106, r8168 and r8125
+> > use dynamic ASPM under Windows. So implement the same mechanism here to
+> > resolve the issue.
+> >
+> > Also introduce a lock to prevent race on accessing config registers.
+>
+> Strictly speaking, the addition of the lock should be a separate patch
+> since it's not directly related to the ASPM change.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Will separate it to another patch.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allmodconfig
-arm                              allyesconfig
-m68k                       m5475evb_defconfig
-powerpc                     tqm5200_defconfig
-m68k                       m5249evb_defconfig
-powerpc                     skiroot_defconfig
-powerpc                   motionpro_defconfig
-arc                 nsimosci_hs_smp_defconfig
-m68k                          atari_defconfig
-powerpc                      ppc40x_defconfig
-powerpc                     stx_gp3_defconfig
-m68k                          multi_defconfig
-sh                          landisk_defconfig
-powerpc                      pcm030_defconfig
-mips                          malta_defconfig
-mips                        qi_lb60_defconfig
-mips                       bmips_be_defconfig
-powerpc                     tqm8560_defconfig
-sh                         microdev_defconfig
-powerpc                       ppc64_defconfig
-mips                          ath25_defconfig
-arm                         orion5x_defconfig
-arm                          collie_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                   microwatt_defconfig
-arm                        multi_v5_defconfig
-xtensa                       common_defconfig
-m68k                        m5272c3_defconfig
-s390                       zfcpdump_defconfig
-sparc                            alldefconfig
-sparc                       sparc64_defconfig
-sh                        sh7757lcr_defconfig
-sh                          rsk7264_defconfig
-mips                       capcella_defconfig
-arm                           h5000_defconfig
-sh                            migor_defconfig
-openrisc                    or1ksim_defconfig
-arc                          axs101_defconfig
-sh                          kfr2r09_defconfig
-mips                        maltaup_defconfig
-mips                      loongson3_defconfig
-sh                   sh7724_generic_defconfig
-arm                           viper_defconfig
-arm                          simpad_defconfig
-powerpc                         ps3_defconfig
-h8300                            allyesconfig
-powerpc                      pasemi_defconfig
-powerpc64                           defconfig
-arm                          moxart_defconfig
-arm                           sama5_defconfig
-arc                     nsimosci_hs_defconfig
-m68k                        stmark2_defconfig
-arm                       omap2plus_defconfig
-mips                           ip27_defconfig
-mips                      malta_kvm_defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                     davinci_all_defconfig
-sh                          polaris_defconfig
-xtensa                          iss_defconfig
-arm                       multi_v4t_defconfig
-powerpc                     ksi8560_defconfig
-mips                        bcm63xx_defconfig
-x86_64               randconfig-c001-20211003
-i386                 randconfig-c001-20211003
-arm                  randconfig-c002-20211003
-x86_64               randconfig-c001-20211004
-i386                 randconfig-c001-20211004
-arm                  randconfig-c002-20211004
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-x86_64               randconfig-a015-20211004
-x86_64               randconfig-a012-20211004
-x86_64               randconfig-a016-20211004
-x86_64               randconfig-a014-20211004
-x86_64               randconfig-a013-20211004
-x86_64               randconfig-a011-20211004
-i386                 randconfig-a013-20211004
-i386                 randconfig-a016-20211004
-i386                 randconfig-a014-20211004
-i386                 randconfig-a011-20211004
-i386                 randconfig-a012-20211004
-i386                 randconfig-a015-20211004
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
+>
+> A little more below...
+>
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=214307
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v6:
+> >  - Wording change.
+> >  - Add bugzilla link.
+> >
+> > v5:
+> >  - Split out aspm_manageable replacement as another patch.
+> >  - Introduce a lock for lock_config_regs() and unlock_config_regs().
+> >
+> > v4:
+> >  - Squash two patches
+> >  - Remove aspm_manageable and use pcie_aspm_capable()
+> >    pcie_aspm_enabled() accordingly
+> >
+> > v3:
+> >  - Use msecs_to_jiffies() for delay time
+> >  - Use atomic_t instead of mutex for bh
+> >  - Mention the buffer size and ASPM exit latency in commit message
+> >
+> > v2:
+> >  - Use delayed_work instead of timer_list to avoid interrupt context
+> >  - Use mutex to serialize packet counter read/write
+> >  - Wording change
+> >  drivers/net/ethernet/realtek/r8169_main.c | 58 +++++++++++++++++++++--
+> >  1 file changed, 53 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> > index 53936ebb3b3a6..9c10a908c08fb 100644
+> > --- a/drivers/net/ethernet/realtek/r8169_main.c
+> > +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> > @@ -622,6 +622,11 @@ struct rtl8169_private {
+> >       } wk;
+> >
+> >       unsigned supports_gmii:1;
+> > +     unsigned rtl_aspm_enabled:1;
+> > +     struct delayed_work aspm_toggle;
+> > +     atomic_t aspm_packet_count;
+> > +     struct mutex config_lock;
+> > +
+> >       dma_addr_t counters_phys_addr;
+> >       struct rtl8169_counters *counters;
+> >       struct rtl8169_tc_offsets tc_offset;
+> > @@ -670,12 +675,14 @@ static inline struct device *tp_to_dev(struct rtl8169_private *tp)
+> >
+> >  static void rtl_lock_config_regs(struct rtl8169_private *tp)
+> >  {
+> > +     mutex_lock(&tp->config_lock);
+> >       RTL_W8(tp, Cfg9346, Cfg9346_Lock);
+> >  }
+> >
+> >  static void rtl_unlock_config_regs(struct rtl8169_private *tp)
+> >  {
+> >       RTL_W8(tp, Cfg9346, Cfg9346_Unlock);
+> > +     mutex_unlock(&tp->config_lock);
+> >  }
+> >
+> >  static void rtl_pci_commit(struct rtl8169_private *tp)
+> > @@ -2669,6 +2676,8 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+> >       if (!pcie_aspm_support_enabled() || !pcie_aspm_capable(pdev))
+> >               return;
+> >
+> > +     tp->rtl_aspm_enabled = enable;
+> > +
+> >       if (enable) {
+> >               RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+> >               RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+> > @@ -4407,6 +4416,7 @@ static void rtl_tx(struct net_device *dev, struct rtl8169_private *tp,
+> >
+> >       dirty_tx = tp->dirty_tx;
+> >
+> > +     atomic_add(tp->cur_tx - dirty_tx, &tp->aspm_packet_count);
+> >       while (READ_ONCE(tp->cur_tx) != dirty_tx) {
+> >               unsigned int entry = dirty_tx % NUM_TX_DESC;
+> >               u32 status;
+> > @@ -4551,6 +4561,8 @@ static int rtl_rx(struct net_device *dev, struct rtl8169_private *tp, int budget
+> >               rtl8169_mark_to_asic(desc);
+> >       }
+> >
+> > +     atomic_add(count, &tp->aspm_packet_count);
+> > +
+> >       return count;
+> >  }
+> >
+> > @@ -4658,8 +4670,39 @@ static int r8169_phy_connect(struct rtl8169_private *tp)
+> >       return 0;
+> >  }
+> >
+> > +#define ASPM_PACKET_THRESHOLD 10
+> > +#define ASPM_TOGGLE_INTERVAL 1000
+> > +
+> > +static void rtl8169_aspm_toggle(struct work_struct *work)
+> > +{
+> > +     struct rtl8169_private *tp = container_of(work, struct rtl8169_private,
+> > +                                               aspm_toggle.work);
+> > +     int packet_count;
+> > +     bool enable;
+> > +
+> > +     packet_count = atomic_xchg(&tp->aspm_packet_count, 0);
+> > +
+> > +     if (pcie_aspm_enabled(tp->pci_dev)) {
+> > +             enable = packet_count <= ASPM_PACKET_THRESHOLD;
+> > +
+> > +             if (tp->rtl_aspm_enabled != enable) {
+> > +                     rtl_unlock_config_regs(tp);
+> > +                     rtl_hw_aspm_clkreq_enable(tp, enable);
+> > +                     rtl_lock_config_regs(tp);
+> > +             }
+> > +     } else if (tp->rtl_aspm_enabled) {
+> > +             rtl_unlock_config_regs(tp);
+> > +             rtl_hw_aspm_clkreq_enable(tp, false);
+> > +             rtl_lock_config_regs(tp);
+> > +     }
+>
+> IIUC the way the "dynamic ASPM" works is that rtl8169_aspm_toggle()
+> runs every second (1000ms).  If the NIC has sent or received fewer
+> than 10 packets in the last second, you make sure ASPM is enabled.  If
+> it has sent or received more than 10 packets, you disable ASPM.
 
-clang tested configs:
-x86_64               randconfig-c007-20211003
-i386                 randconfig-c001-20211003
-arm                  randconfig-c002-20211003
-s390                 randconfig-c005-20211003
-powerpc              randconfig-c003-20211003
-riscv                randconfig-c006-20211003
-mips                 randconfig-c004-20211003
-x86_64               randconfig-a003-20211004
-x86_64               randconfig-a005-20211004
-x86_64               randconfig-a001-20211004
-x86_64               randconfig-a002-20211004
-x86_64               randconfig-a004-20211004
-x86_64               randconfig-a006-20211004
-i386                 randconfig-a001-20211004
-i386                 randconfig-a003-20211004
-i386                 randconfig-a005-20211004
-i386                 randconfig-a002-20211004
-i386                 randconfig-a004-20211004
-i386                 randconfig-a006-20211004
-hexagon              randconfig-r045-20211007
-hexagon              randconfig-r041-20211007
-s390                 randconfig-r044-20211007
-riscv                randconfig-r042-20211007
+Yes, this is what this patch does.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> Since the disable is done in rtl_hw_aspm_clkreq_enable() with
+> chip-specific registers, I suppose lspci and the like still show ASPM
+> as being enabled.  Not really a problem, I guess.
+>
+> It looks like this disables ASPM completely, even though the NIC
+> apparently works correctly with L0s and L1.1 enabled, right?
+
+I've seen bug reports that ASPM L0s and L1.1 caused the NIC stops to working.
+So dynamic ASPM strikes the right
+
+>
+> I suppose that on the Intel system, if we enable ASPM, the link goes
+> to L1.2, and the NIC immediately receives 1000 packets in that second
+> before we can disable ASPM again, we probably drop a few packets?
+>
+> Whereas on the AMD system, we probably *never* drop any packets even
+> with L1.2 enabled all the time?
+
+Yes and yes.
+
+>
+> And if we actually knew the root cause and could set the correct LTR
+> values or whatever is wrong on the Intel system, we probably wouldn't
+> need this dynamic scheme?
+
+Because Realtek already implemented the dynamic ASPM workaround in
+their Windows and Linux driver, they never bother to find the root
+cause.
+So we'll never know what really happens here.
+
+Kai-Heng
+
+>
+> > +     schedule_delayed_work(&tp->aspm_toggle, msecs_to_jiffies(ASPM_TOGGLE_INTERVAL));
+> > +}
+> > +
+> >  static void rtl8169_down(struct rtl8169_private *tp)
+> >  {
+> > +     cancel_delayed_work_sync(&tp->aspm_toggle);
+> > +
+> >       /* Clear all task flags */
+> >       bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
+> >
+> > @@ -4686,6 +4729,10 @@ static void rtl8169_up(struct rtl8169_private *tp)
+> >       rtl_reset_work(tp);
+> >
+> >       phy_start(tp->phydev);
+> > +
+> > +     /* pcie_aspm_capable may change after system resume */
+> > +     if (pcie_aspm_support_enabled() && pcie_aspm_capable(tp->pci_dev))
+> > +             schedule_delayed_work(&tp->aspm_toggle, 0);
+> >  }
+> >
+> >  static int rtl8169_close(struct net_device *dev)
+> > @@ -5273,11 +5320,6 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >       if (rc)
+> >               return rc;
+> >
+> > -     /* Disable ASPM L1 as that cause random device stop working
+> > -      * problems as well as full system hangs for some PCIe devices users.
+> > -      */
+> > -     pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+> > -
+> >       /* enable device (incl. PCI PM wakeup and hotplug setup) */
+> >       rc = pcim_enable_device(pdev);
+> >       if (rc < 0) {
+> > @@ -5307,6 +5349,8 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >               return rc;
+> >       }
+> >
+> > +     mutex_init(&tp->config_lock);
+> > +
+> >       tp->mmio_addr = pcim_iomap_table(pdev)[region];
+> >
+> >       xid = (RTL_R32(tp, TxConfig) >> 20) & 0xfcf;
+> > @@ -5344,6 +5388,10 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >
+> >       INIT_WORK(&tp->wk.work, rtl_task);
+> >
+> > +     INIT_DELAYED_WORK(&tp->aspm_toggle, rtl8169_aspm_toggle);
+> > +
+> > +     atomic_set(&tp->aspm_packet_count, 0);
+> > +
+> >       rtl_init_mac_address(tp);
+> >
+> >       dev->ethtool_ops = &rtl8169_ethtool_ops;
+> > --
+> > 2.32.0
+> >
