@@ -2,351 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC343426F58
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 19:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A472426F6D
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 19:20:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232599AbhJHRJO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 13:09:14 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:50074 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbhJHRJO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 13:09:14 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id 0022d0cc6dd07f2b; Fri, 8 Oct 2021 19:07:17 +0200
-Received: from kreacher.localnet (unknown [213.134.175.153])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 464E366A808;
-        Fri,  8 Oct 2021 19:07:15 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Subject: Re: [PATCH] PCI: Put power resources not tied to a physical node in D3cold
-Date:   Fri, 08 Oct 2021 19:07:14 +0200
-Message-ID: <5504370.DvuYhMxLoT@kreacher>
-In-Reply-To: <8c8df41d-265a-637d-bc26-cdaf0e4e93a8@amd.com>
-References: <20211007205126.11769-1-mario.limonciello@amd.com> <2211361.ElGaqSPkdT@kreacher> <8c8df41d-265a-637d-bc26-cdaf0e4e93a8@amd.com>
+        id S231217AbhJHRVx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 13:21:53 -0400
+Received: from mail-oln040093003002.outbound.protection.outlook.com ([40.93.3.2]:19149
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229606AbhJHRVx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 13:21:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CXXIDgByzRHS2odzJ/AtcaAnBsoHxXooRCmbWI4KZTqb2AePfRuOvk0tqO1xc8/obgZ/idmNNSDRf3FMi2WGKjVWjdfeD+Xt2OI+s2/+FnSFEdlkSmR7fvPn++sn/h7Rmhi1uXhOX+Md97RZ9ZoaFZ76SZ6evidSiogG13Cn0Aj9eGC8ju1+jNE8JTaAnYOVyi13aW2cu5PozRqtNBZZR/DGUXfyqD3QSn8Q5g1t1YTsn6aivMjL17oDkmGNyjB/E/gMGgekh27mEtP6FEaB0jKZj7R8XS4OS/u+y3gV9EaK5oAi1HnknxF3msNYvyc4Kj4sv7VVyE1xgzfkGkE0RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AIWI9usN7Wtk7PeGlgiXa3+a5hwHulxPebracARxzNk=;
+ b=nG12siMC6DVwDY0yTRIr5b1z5JG+qP3VXhL9UPjq0PS6rjQLVN7czaKhTwBLgJoQk12xKUPYiTA8Py6puCyBUqnD4l7UC0QNxVnY+u8IAG1mXTpA0ZD8dHj5G4xlOpydUOPcDDBLDqpw5N8Nuwe+uryPyk72xFSMjyLwuojPG1cWCPbBHD5w22unr+OzrYqDWL+V5XpR+D9FZ7YmD97g1sQMQQt+cplSdbA70jwCf3GngIeVnO9khFNAagO1lmAYWPzlQH97NuVpVnavZpOv+rl+Yd7OpZPDXdXCTES7m6WsaLl2qMPN9xwlxSjz2OvZ+9zugDyOuKutD4sNlO1hWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AIWI9usN7Wtk7PeGlgiXa3+a5hwHulxPebracARxzNk=;
+ b=Y2LqBWk+GP96/WQplWgmBsgmtGnJLoireLzA1+Sl3EH0RytS1lesixv/G4ZBgoUzRVo+y5CsLwKGSJs7lzMAtOHAi2h07McipSmONzz/0l1ABPh10EhO6xuKZ0ue6E1R1gVODh5ehgkXM74N2RunRL8AfN8nFzvbZVRYiVYsBEE=
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com (2603:10b6:303:68::18)
+ by MW2PR2101MB1851.namprd21.prod.outlook.com (2603:10b6:302:c::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.1; Fri, 8 Oct
+ 2021 17:19:53 +0000
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::89fe:5bf:5eb2:4c55]) by MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::89fe:5bf:5eb2:4c55%4]) with mapi id 15.20.4608.008; Fri, 8 Oct 2021
+ 17:19:53 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?iso-8859-2?Q?=22Krzysztof_Wilczy=F1ski=22?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] PCI: hv: Hyper-V vPCI for ARM64
+Thread-Topic: [PATCH v2 0/2] PCI: hv: Hyper-V vPCI for ARM64
+Thread-Index: Ade8Z9t+jRUuLsS9S2C/sb8+Gj5obw==
+Date:   Fri, 8 Oct 2021 17:19:53 +0000
+Message-ID: <MW4PR21MB200217CCFBC351FD12D68DF0C0B29@MW4PR21MB2002.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0a970baf-4191-44cf-9a6b-38ca92bcc987;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-08T17:08:01Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 39e0218e-c9e7-4d21-d083-08d98a7fd800
+x-ms-traffictypediagnostic: MW2PR2101MB1851:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB18513E2DDA1B933885312A90C0B29@MW2PR2101MB1851.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1013;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lYFfeeO4JmkO0F8jD3LYxmSfpTl1vOeVzRbyDmRwIr7GY4EaZ51i3HP/t64l/YxaQbsgy6qcLG4LU2aQBucGWmRdFpR68K/zNwHpIP1+KbOkCaOyi6xTCBj7XlGbGUsJRoh1aHo+pjw/xYJ5099Jn2bcOKJ9T7XjVA8O6Sx7pudfVsjR1TshwIG4zjCJsEGdIp0wIM8W7nOGP3kW4CIkZKMnTUEhLHJsFimJJyfYBC9X6ySzVVNJIm3Qmmq05GZvYB9vIrRBPj+EBLrdsdgUADxJZwSnRzi+qBtFIfDDrwm/bAySllIqHOmncuE0O9FWcJQO7eKhu9GnHe2quo2BQtuvrn7wHOIuR0VGSpcYPInCPxVHnsMC/XTCMgDx3CsYWOM8w+F4qPhW+KxSRvEFSfisYLwkSE/qARMiSwktaZaFLgvEwwUx2nLkSPGaLC6Hl+HRer/ZEbqABdeC72gow/pVyg26pXM8BKunhiLKAccEf2qBqUGECq+N8aBscL38ufKysDuzzFEnb0yUF0z9avRcWPNykaGCYcyYJyecG/UYDSkemVykUCZBw0NrPuHKYEm/D/Ae9JmvaIlRGvb06nH+QKSxBObfAbjLi+yFaeMO9GTchW/fejN3U5RJzO5Z6YitMpUlqNbFS8PMk6t8sLd7UYnEpTDetNW8Vjuczd34NSsMBS8Al+fNYGi+kQeu6GgH8L84Q3xDQNdPPT9t1LJqHChptq9SepwInnB4Rmc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2002.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66476007)(64756008)(66446008)(2906002)(8676002)(66556008)(66946007)(82960400001)(71200400001)(33656002)(55016002)(52536014)(122000001)(38100700002)(86362001)(186003)(9686003)(82950400001)(76116006)(8990500004)(921005)(4326008)(38070700005)(110136005)(8936002)(316002)(83380400001)(5660300002)(54906003)(508600001)(10290500003)(7696005)(6506007)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?nDaXAsFHdzmW3uR88KefPjKkKaQRPZFIrq5RfpGX9TvDhMdpg2VQutLme4?=
+ =?iso-8859-2?Q?TaCu7nMj5oYRQ9oNnIPCkTlpcGxrUx8r/SKBxCyS//gJBncnJc0wdTrEdR?=
+ =?iso-8859-2?Q?+wYHdzsa4Wb64q7/UMxd/MI/+ctuLoTYxaY+jPAsQuitbS1/8Fxjc92jEr?=
+ =?iso-8859-2?Q?XFjTvH/vzOeAZm78JENG3rbMpFNdewySqREa6wTE6M0unDY75ERAIe4tsw?=
+ =?iso-8859-2?Q?PFTXxvSblY1tBFXd0ER1rZWPbpg+5FHc1xkzX/i34i2EAdS+bD/mNeSlbn?=
+ =?iso-8859-2?Q?QPszqqhOQ95TxPl/UHwnZ0+FhRURcwg3/XhP44FYN8ZFWSUf4gL/1p2eVt?=
+ =?iso-8859-2?Q?vgtqh04g5SXScYtuFj0B1j5KWEwovPrL8kcsGHonJSs7vWvC3dXFP52n6G?=
+ =?iso-8859-2?Q?UddCQU0LKLAOZcFfsvHnorH2ISn7MSYoHE3I//YoIQ7PMVGUk7MJigZttz?=
+ =?iso-8859-2?Q?oQXIA96foFELi0WuCuU1K02MrcALZeZFc50eIKlngmqEIkVwOLYsI07ejK?=
+ =?iso-8859-2?Q?uMTPB5z9rWMhc7g2ayO0BFEf1iV86kPSqyTW59Ctxzb98ghhetHDstTJlG?=
+ =?iso-8859-2?Q?ug/hF5FjXwyMUiojCeCQJZM6vVBw9Dv+OjcqbXsPihM1Wu7uQAZHkvXPM6?=
+ =?iso-8859-2?Q?uaf3IMGOsBvvwA7MY/4pjhaa6H9kPcDgvkfmBFrPVL9DTqSAFaF+lPxNT9?=
+ =?iso-8859-2?Q?lNk6gTCORGLiG+BHAA36Eaj1Rjc494Ndu1fKHFT3EgICPBnGPJ/jlQlL7H?=
+ =?iso-8859-2?Q?mV/UMcVei7oaE/7YOmgtRAJsj3F6wnFyW1jET/y9Wdq+ddAtfaEGCv5b9Q?=
+ =?iso-8859-2?Q?I80+fwwpujC1B9s4ofxPaFiw9lMIomQ/tLPScK+4QQe8IU1wyyM89JK2dz?=
+ =?iso-8859-2?Q?cVucN1DS5e4J0sfhO3dPxxGSUL3SaCzBzsI8U1kVNMmSlgq3RZzsh7xGTn?=
+ =?iso-8859-2?Q?0fcBEXsooLXRfaI0cwFjPe6FMn4dxNk1UlVzOT3wYWxu4KXHIQiWfnc9nq?=
+ =?iso-8859-2?Q?iFur0EKcXus1bVFfQbecYr7hw7yTITK0JCsJDW1L28dzllo/xzuwTsiOY+?=
+ =?iso-8859-2?Q?tfqkELrZkfMF4R0TqLEzSlE/RjLcLVaSzpGFhgwRAd1E4UEcyU5PLO/MhS?=
+ =?iso-8859-2?Q?y+Ss/LiqVVwGKi1U02obyQUQdjvMcyY8E03yhNwBhS1DmYabQEiVYHJW5q?=
+ =?iso-8859-2?Q?WfIcm75RLsGmJkuYsFUpT9VWZETicHU/p1LakXU8UwJLTIRZB2yUuA0XOm?=
+ =?iso-8859-2?Q?AxCIXrkPphXIP/u4bBISwLNTwu+jh+iMY9uj/+Yz6ZTT7EryH+q8VRJbhY?=
+ =?iso-8859-2?Q?HWoRLjmdpGBbH0XAnMfUyEKu2CvX962HRt2+RPzpqmtYgVg/xOphwXSW46?=
+ =?iso-8859-2?Q?Z6+hu4naKWnr8QXsoVopBVoE73G5FxXnRtlBXaPxqwaP2lrKZRTkmvAhus?=
+ =?iso-8859-2?Q?+PvNuwiEJEsKUWpT?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.175.153
-X-CLIENT-HOSTNAME: 213.134.175.153
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrvddttddguddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhephfduteeiueegtefgieetteffveehhefgieelkedujeekhfettdfgvdelveevkeegnecuffhomhgrihhnpehouhhtlhhoohhkrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphepvddufedrudefgedrudejhedrudehfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrddujeehrdduheefpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehlvghnsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehrohgsvghrthdrmhhoohhrvgesihhnthgvlhdrtghomhdprhgt
- phhtthhopegvrhhikhdrkhgrnhgvuggrsehinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvvghlsegrtghpihgtrgdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2002.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39e0218e-c9e7-4d21-d083-08d98a7fd800
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2021 17:19:53.8171
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fVQnLlYx7DXZB9UqloRYd5AXro1u7NcZlG8xB2Gfp1dfHYfs/+qj/LkPl5bxwMnYiWpbJVFmW0VDStOM2Yi8bQiQfhQKWk6XiTVVpZbObew=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1851
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday, October 8, 2021 5:47:53 PM CEST Limonciello, Mario wrote:
-> On 10/8/2021 09:05, Rafael J. Wysocki wrote:
-> > On Thursday, October 7, 2021 10:51:26 PM CEST Mario Limonciello wrote:
-> >> I found a case that a system that two physical SATA controllers share
-> >> the same ACPI Power Resource.  When a drive is connected to one of
-> >> the controllers then it will bind with PCI devices with the ahci driver
-> >> and form a relationship with the firmware node and physical node.  During
-> >> s2idle I see that the constraints are met for this device as it is
-> >> transitioned into the appropriate state. However the second ACPI node
-> >> doesn't have any relationship with a physical node and stays in "D0":
-> >>
-> >> ```
-> >> ACPI: \_SB_.PCI0.GP18.SATA: ACPI: PM: Power state change: D0 -> D3cold
-> >> ACPI: PM: Power resource [P0SA] still in use
-> >> acpi device:2a: Power state changed to D3cold
-> >> ```
-> >>
-> >> Due to the refcounting used on the shared power resource putting the
-> >> device with a physical node into D3 doesn't result in the _OFF method
-> >> being called.
-> >>
-> >> To help with this type of problem, make a new helper function that can
-> >> be used to check all the children of an ACPI device and put any firmware
-> >> nodes that don't have physical devices into D3cold to allow shared
-> >> resources to transition. Call this helper function after PCI devices have
-> >> been scanned and ACPI companions have had a chance to associate.
-> >>
-> >> After making this change, here is what the flow looks like:
-> >> ```
-> >> <snip:bootup>
-> >> ACPI: \_SB_.PCI0.GP18.SAT1: ACPI: PM: Power state change: D0 -> D3cold
-> >> ACPI: PM: Power resource [P0SA] still in use
-> >> acpi device:2c: Power state changed to D3cold
-> >> <snip:suspend>
-> >> ACPI: \_SB_.PCI0.GP18.SATA: ACPI: PM: Power state change: D0 -> D3cold
-> >> ACPI: PM: Power resource [P0SA] turned off
-> >> acpi device:2a: Power state changed to D3cold
-> >> ```
-> >>
-> >> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-acpi%2F0571292a-286b-18f2-70ad-12b125a61469%40amd.com%2FT%2F%23m042055c5ca1e49c2829655511f04b0311c142559&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Ce54614dae1624dfb240408d98a64b8da%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692988971446528%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=9fYSZ4d2cA2TnM453MQxqmOlGN%2FU6WNi7By7pVP2EV4%3D&amp;reserved=0
-> >> BugLink: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D214091&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7Ce54614dae1624dfb240408d98a64b8da%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637692988971446528%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=vsjQOgqzadLYXTfRW2sui5Dp7%2B0EYf14rUCiIDNofoI%3D&amp;reserved=0
-> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> ---
-> >>   drivers/acpi/device_pm.c | 34 ++++++++++++++++++++++++++++++++++
-> >>   drivers/pci/probe.c      |  5 +++++
-> >>   include/acpi/acpi_bus.h  |  1 +
-> >>   3 files changed, 40 insertions(+)
-> >>
-> >> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> >> index 0028b6b51c87..0fb0bbeeae9e 100644
-> >> --- a/drivers/acpi/device_pm.c
-> >> +++ b/drivers/acpi/device_pm.c
-> >> @@ -149,6 +149,40 @@ static int acpi_dev_pm_explicit_set(struct acpi_device *adev, int state)
-> >>   	return 0;
-> >>   }
-> >>   
-> >> +/**
-> >> + * acpi_device_turn_off_absent_children - Turn off power resources for
-> >> + *					  children not physically present.
-> >> + * @parent: ACPI bridge device
-> >> + */
-> >> +int acpi_device_turn_off_absent_children(struct acpi_device *parent)
-> >> +{
-> >> +	struct acpi_device *adev;
-> >> +	int ret = 0;
-> >> +
-> >> +	if (!parent)
-> >> +		return -EINVAL;
-> >> +
-> >> +	list_for_each_entry(adev, &parent->children, node) {
-> > 
-> > It is better to use device_for_each_child() for this, walking the children list
-> > without locking is questionable.
-> > 
-> >> +		int state;
-> >> +
-> >> +		if (!adev->flags.power_manageable ||
-> > 
-> > This need not be checked, acpi_device_set_power() checks it.
-> > 
-> >> +		    !adev->power.flags.power_resources)
-> > 
-> > And I'm not sure about this too.  Even if there are no power resources, it
-> > would be still prudent to release PM resources referred to by unused device
-> > objects by calling _PS3 on them.
-> > 
-> >> +			continue;
-> >> +		if (acpi_get_first_physical_node(adev))
-> >> +			continue;
-> > 
-> > In addition to this, I would check if the device object has _ADR, because
-> > there are legitimate cases when device objects with a _HID have no physical
-> > nodes.
-> > 
-> >> +		ret = acpi_device_get_power(adev, &state);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +		if (state == ACPI_STATE_D3_COLD)
-> >> +			continue;
-> > 
-> > The above is not necessary.
-> > 
-> >> +		ret = acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +	}
-> >> +	return ret;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(acpi_device_turn_off_absent_children);
-> > 
-> > And I would put this function into glue.c.
-> > 
-> >> +
-> >>   /**
-> >>    * acpi_device_set_power - Set power state of an ACPI device.
-> >>    * @device: Device to set the power state of.
-> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> >> index 79177ac37880..1a45182394d1 100644
-> >> --- a/drivers/pci/probe.c
-> >> +++ b/drivers/pci/probe.c
-> >> @@ -2939,6 +2939,11 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> >>   		}
-> >>   	}
-> >>   
-> >> +	/* check for and turn off dangling power resources */
-> >> +	for_each_pci_bridge(dev, bus) {
-> >> +		acpi_device_turn_off_absent_children(ACPI_COMPANION(&dev->dev));
-> > 
-> > IMO it would be better to call this from inside of the ACPI subsystem and
-> > after scanning the entire bus.
-> > 
-> >> +	}
-> >> +
-> >>   	/*
-> >>   	 * We've scanned the bus and so we know all about what's on
-> >>   	 * the other side of any bridges that may be on this bus plus
-> >> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> >> index 13d93371790e..0eba08b60e13 100644
-> >> --- a/include/acpi/acpi_bus.h
-> >> +++ b/include/acpi/acpi_bus.h
-> >> @@ -510,6 +510,7 @@ int acpi_bus_get_status(struct acpi_device *device);
-> >>   
-> >>   int acpi_bus_set_power(acpi_handle handle, int state);
-> >>   const char *acpi_power_state_string(int state);
-> >> +int acpi_device_turn_off_absent_children(struct acpi_device *parent);
-> >>   int acpi_device_set_power(struct acpi_device *device, int state);
-> >>   int acpi_bus_init_power(struct acpi_device *device);
-> >>   int acpi_device_fix_up_power(struct acpi_device *device);
-> >>
-> > 
-> > Overall, something like the appended patch might work. >
-> > Note that on my test-bed machine it makes no difference, though.
-> 
-> Yes this helps the resources on the identified problematic machine.
-> 
-> > 
-> > ---
-> >   drivers/acpi/glue.c     |   28 ++++++++++++++++++++++++++++
-> >   drivers/acpi/internal.h |    2 ++
-> >   drivers/acpi/pci_root.c |    1 +
-> >   3 files changed, 31 insertions(+)
-> > 
-> > Index: linux-pm/drivers/acpi/glue.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/glue.c
-> > +++ linux-pm/drivers/acpi/glue.c
-> > @@ -350,3 +350,31 @@ void acpi_device_notify_remove(struct de
-> >   
-> >   	acpi_unbind_one(dev);
-> >   }
-> > +
-> > +static int acpi_dev_turn_off_if_unused(struct device *dev, void *not_used)
-> > +{
-> > +	struct acpi_device *adev = to_acpi_device(dev);
-> > +
-> > +	acpi_dev_turn_off_unused_descendants(adev);
-> > +
-> > +	if (adev->pnp.type.bus_address && !acpi_get_first_physical_node(adev))
-> > +		acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * acpi_dev_turn_off_unused_descendants - Put unused descendants into D3cold.
-> > + * @adev: ACPI device object at the top of a branch of device hierarchy.
-> > + *
-> > + * Walk the branch of the hierarchy of ACPI device objects starting at @adev
-> > + * and put all of the objects in it that have _ADR and have no corresponding
-> > + * physical nodes into D3cold.
-> > + *
-> > + * This allows power resources that are only referred to by unused ACPI device
-> > + * objects to be turned off.
-> > + */
-> > +void acpi_dev_turn_off_unused_descendants(struct acpi_device *adev)
-> > +{
-> > +	device_for_each_child(&adev->dev, NULL, acpi_dev_turn_off_if_unused);
-> > +}
-> > Index: linux-pm/drivers/acpi/internal.h
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/internal.h
-> > +++ linux-pm/drivers/acpi/internal.h
-> > @@ -88,6 +88,8 @@ bool acpi_scan_is_offline(struct acpi_de
-> >   acpi_status acpi_sysfs_table_handler(u32 event, void *table, void *context);
-> >   void acpi_scan_table_notify(void);
-> >   
-> > +void acpi_dev_turn_off_unused_descendants(struct acpi_device *adev);
-> > +
-> >   /* --------------------------------------------------------------------------
-> >                        Device Node Initialization / Removal
-> >      -------------------------------------------------------------------------- */
-> > Index: linux-pm/drivers/acpi/pci_root.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/pci_root.c
-> > +++ linux-pm/drivers/acpi/pci_root.c
-> > @@ -630,6 +630,7 @@ static int acpi_pci_root_add(struct acpi
-> >   
-> >   	pci_lock_rescan_remove();
-> >   	pci_bus_add_devices(root->bus);
-> > +	acpi_dev_turn_off_unused_descendants(root->device);
-> >   	pci_unlock_rescan_remove();
-> >   	return 1;
-> >   
-> > 
-> > 
-> > 
-> 
-> When you submit this if no other changes, please include:
-> 
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+Current Hyper-V vPCI code only compiles and works for x64. There are
+some hardcoded assumptions about the architectural IRQ chip and other
+arch defines.
 
-Thanks, but we may do better in a couple of ways.
+This patch series adds support for Hyper-V vPCI for ARM64 by first
+breaking the current hard coded dependency in the vPCI code and
+making it arch neutral. That is in the first patch. The second
+patch introduces a Hyper-V vPCI MSI IRQ chip for allocating SPI
+vectors.
 
-First off, there's no particular reason to restrict the walk to the device
-objects below the host bridge one.
+changes in v2:
+ - Moved the irqchip implementation to drivers/pci as suggested
+   by Marc Zyngier
+ - Addressed Multi-MSI handling issues identified by Marc Zyngier
+ - Addressed lock/synchronization primitive as suggested by Marc
+   Zyngier
+ - Addressed other code feedback from Marc Zyngier
 
-Second, if the physical node appears while we're removing power from the
-device, whoever adds it may be confused, so it's better to avoid that.
+Sunil Muthuswamy (2):
+  PCI: hv: Make the code arch neutral
+  PCI: hv: Support for Hyper-V vPCI for ARM64
 
-Please check if the appended one still works for you.
-
----
- drivers/acpi/glue.c     |   16 ++++++++++++++++
- drivers/acpi/internal.h |    1 +
- drivers/acpi/scan.c     |    6 ++++++
- 3 files changed, 23 insertions(+)
-
-Index: linux-pm/drivers/acpi/scan.c
-===================================================================
---- linux-pm.orig/drivers/acpi/scan.c
-+++ linux-pm/drivers/acpi/scan.c
-@@ -2559,6 +2559,12 @@ int __init acpi_scan_init(void)
- 		}
- 	}
- 
-+	/*
-+	 * Make sure that power management resources are not blocked by ACPI
-+	 * device objects with no users.
-+	 */
-+	bus_for_each_dev(&acpi_bus_type, NULL, NULL, acpi_dev_turn_off_if_unused);
-+
- 	acpi_turn_off_unused_power_resources();
- 
- 	acpi_scan_initialized = true;
-Index: linux-pm/drivers/acpi/glue.c
-===================================================================
---- linux-pm.orig/drivers/acpi/glue.c
-+++ linux-pm/drivers/acpi/glue.c
-@@ -350,3 +350,19 @@ void acpi_device_notify_remove(struct de
- 
- 	acpi_unbind_one(dev);
- }
-+
-+int acpi_dev_turn_off_if_unused(struct device *dev, void *not_used)
-+{
-+	struct acpi_device *adev = to_acpi_device(dev);
-+
-+	if (adev->pnp.type.bus_address) {
-+		mutex_lock(&adev->physical_node_lock);
-+
-+		if (list_empty(&adev->physical_node_list))
-+			acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
-+
-+		mutex_unlock(&adev->physical_node_lock);
-+	}
-+
-+	return 0;
-+}
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -117,6 +117,7 @@ bool acpi_device_is_battery(struct acpi_
- bool acpi_device_is_first_physical_node(struct acpi_device *adev,
- 					const struct device *dev);
- int acpi_bus_register_early_device(int type);
-+int acpi_dev_turn_off_if_unused(struct device *dev, void *not_used);
- 
- /* --------------------------------------------------------------------------
-                      Device Matching and Notification
+ MAINTAINERS                                 |   2 +
+ arch/arm64/include/asm/hyperv-tlfs.h        |   9 +
+ arch/x86/include/asm/hyperv-tlfs.h          |  33 +++
+ arch/x86/include/asm/mshyperv.h             |   7 -
+ drivers/pci/Kconfig                         |   2 +-
+ drivers/pci/controller/Kconfig              |   2 +-
+ drivers/pci/controller/Makefile             |   2 +-
+ drivers/pci/controller/pci-hyperv-irqchip.c | 256 ++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv-irqchip.h |  21 ++
+ drivers/pci/controller/pci-hyperv.c         |  58 +++--
+ include/asm-generic/hyperv-tlfs.h           |  33 ---
+ 11 files changed, 363 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.c
+ create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.h
 
 
-
+base-commit: e4e737bb5c170df6135a127739a9e6148ee3da82
+--=20
+2.25.1
