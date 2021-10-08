@@ -2,167 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7179426FA1
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 19:35:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 646BB426FAC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 19:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbhJHRg4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 13:36:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:38150 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234255AbhJHRgz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Oct 2021 13:36:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 838C51063;
-        Fri,  8 Oct 2021 10:34:59 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1FC83F766;
-        Fri,  8 Oct 2021 10:34:57 -0700 (PDT)
-Date:   Fri, 8 Oct 2021 18:34:51 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH v12 00/11] Add support for Hikey 970 PCIe
-Message-ID: <20211008173451.GA32193@lpieralisi>
-References: <20211005112448.2c40dc10@coco.lan>
- <20211005182321.GA1106986@bhelgaas>
- <20211007144103.GA23778@lpieralisi>
- <20211008125521.0aa31beb@coco.lan>
+        id S236109AbhJHRkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 13:40:33 -0400
+Received: from mail-oo1-f52.google.com ([209.85.161.52]:33338 "EHLO
+        mail-oo1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233472AbhJHRkb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 13:40:31 -0400
+Received: by mail-oo1-f52.google.com with SMTP id u5-20020a4ab5c5000000b002b6a2a05065so2013954ooo.0;
+        Fri, 08 Oct 2021 10:38:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=qeZizzmR8ulBQa65JNtXpCSROdVDInw2hIpSGf8jvqI=;
+        b=E2UHZPE8EgUhtrYzFM+zOUsfv+8pVFQpD6xMwYIpMuzXZZx6MsHxRew/s8UjB1J5Mw
+         y4/3h8yqxwVKht2+/4U/bOqhgWr9ot+F7ItlP6xMKq2qmf/CHxVTTMCyyiRkKt3t/kGx
+         SwZ91R630Dh/dOlY+PIajTW3954Z/7svk6niuAO7RSrI2/hPf6goW0lhaev4w7U+qzC8
+         3cUx/SowSLb+tLBs46toNUhaRzU5s/XOmkxddc6giPkEoey0YEeD7prKYinsVPcRjE/6
+         jrx9YIkuKDDUx/mJSoWU/6XZw9lyDfjEpffYphUWSSkKNC6kYgHnb5k03jg8FOQMMaKu
+         0eDA==
+X-Gm-Message-State: AOAM533y2mIsXgCwhZEs2SXc5rNUEz9Pxq3rFaK/0TQiMxEmS+zIpdvN
+        XS7B744WnhKZd/u5/b4ECVx1cLbcjTbg4J1pRP6uK74ogZo=
+X-Google-Smtp-Source: ABdhPJyqf7XOLvYAkW2U9Cpm0vLyKSBiroa9sT5ee89uOC9o2TKTIzTY/Zxj5QLQhhYwZ2zw/ft9jduuLCJghpCPRg0=
+X-Received: by 2002:a4a:ca98:: with SMTP id x24mr8772240ooq.91.1633714715818;
+ Fri, 08 Oct 2021 10:38:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211008125521.0aa31beb@coco.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 8 Oct 2021 19:38:25 +0200
+Message-ID: <CAJZ5v0gkdZRZRww8pXin+=xVQ+sCe-w7kS=NkFiSbcPSthTD+A@mail.gmail.com>
+Subject: [GIT PULL] ACPI fix for v5.15-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 12:55:21PM +0200, Mauro Carvalho Chehab wrote:
-> Hi Lorenzo,
-> 
-> Em Thu, 7 Oct 2021 15:41:03 +0100
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> escreveu:
-> 
-> > On Tue, Oct 05, 2021 at 01:23:21PM -0500, Bjorn Helgaas wrote:
-> > > [+cc Lorenzo]
-> > > 
-> > > On Tue, Oct 05, 2021 at 11:24:48AM +0200, Mauro Carvalho Chehab wrote:  
-> > > > Hi Bjorn,
-> > > > 
-> > > > Em Tue, 28 Sep 2021 09:34:10 +0200
-> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:  
-> > >   
-> > > > >   PCI: kirin: Reorganize the PHY logic inside the driver
-> > > > >   PCI: kirin: Add support for a PHY layer
-> > > > >   PCI: kirin: Use regmap for APB registers
-> > > > >   PCI: kirin: Add support for bridge slot DT schema
-> > > > >   PCI: kirin: Add Kirin 970 compatible
-> > > > >   PCI: kirin: Add MODULE_* macros
-> > > > >   PCI: kirin: Allow building it as a module
-> > > > >   PCI: kirin: Add power_off support for Kirin 960 PHY
-> > > > >   PCI: kirin: fix poweroff sequence
-> > > > >   PCI: kirin: Allow removing the driver  
-> > > > 
-> > > > I guess everything is already satisfying the review feedbacks.
-> > > > If so, could you please merge the PCI ones?  
-> > > 
-> > > Lorenzo takes care of the native host bridge drivers, so I'm sure this
-> > > is on his list.  I added him to cc: in case not.  
-> > 
-> > Ideally I'd like to see these patches ACKed/Review-ed by the kirin
-> > maintainers - that's what I was waiting for and that's what they
-> > are there for.
-> > 
-> > Having said that, I will keep an eye on this series so that we
-> > can hopefully queue it for v5.16.
-> 
-> Not sure if you received the e-mail from Xiaowei with his ack.
+Hi Linus,
 
-I have not (and it did not make it to linux-pci either).
+Please pull from the tag
 
-> At least here, I only received on my internal e-mail (perhaps because
-> the original e-mail was base64-encoded with gb2312 charset). 
-> 
-> So, let me forward his answer to you, c/c the mailing lists.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.15-rc5
 
-Patches should be acked with tags that tooling recognize, this
-would help me.
+with top-most commit 3fb937f441c64af1eec60bfd3732f64001fcc534
 
-> Thanks,
-> Mauro
-> 
-> -------- Forwarded Message --------
-> From: Songxiaowei (Kirin_DRV) <songxiaowei@hisilicon.com>
-> To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <helgaas@kernel.org>
-> CC: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Linuxarm <linuxarm@huawei.com>, Mauro Carvalho Chehab <mauro.chehab@huawei.com>, Krzysztof Wilczyński <kw@linux.com>, Wangbinghui (Biggio, Kirin_DRV) <wangbinghui@hisilicon.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>, linux-phy@lists.infradead.org <linux-phy@lists.infradead.org>, Kongfei <kongfei@hisilicon.com>
-> Subject: Re: [PATCH v12 00/11] Add support for Hikey 970 PCIe
-> Date: Fri, 8 Oct 2021 11:45:06 +0100
-> Message-ID: <e718dc06633e4f87a6b6e1626e8c098e@hisilicon.com>
-> 
-> Hi Bjorn,
-> 
-> ACKed, it seems ok to me and Binghui.
+ PCI: ACPI: Check parent pointer in acpi_pci_find_companion()
 
-For Xiaowei:
+on top of commit 9e1ff307c779ce1f0f810c7ecce3d95bbae40896
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+ Linux 5.15-rc4
 
-and your email must make it to the mailing list; if it does not
-it does not exist as far as I am concerned. I will apply the
-ACK manually for this time but let's keep this in mind please.
+to receive an ACPI fix for 5.15-rc5.
 
-Thanks,
-Lorenzo
-> 
-> Thanks a lot.
-> 
-> B. R.
-> 
-> -----邮件原件-----
-> 发件人: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> 发送时间: 2021年10月7日 22:41
-> 收件人: Bjorn Helgaas <helgaas@kernel.org>
-> 抄送: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; Linuxarm <linuxarm@huawei.com>; Mauro Carvalho Chehab <mauro.chehab@huawei.com>; Krzysztof Wilczyński <kw@linux.com>; Wangbinghui (Biggio, Kirin_DRV) <wangbinghui@hisilicon.com>; Rob Herring <robh@kernel.org>; Songxiaowei (Kirin_DRV) <songxiaowei@hisilicon.com>; linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org; linux-phy@lists.infradead.org
-> 主题: Re: [PATCH v12 00/11] Add support for Hikey 970 PCIe
-> 
-> On Tue, Oct 05, 2021 at 01:23:21PM -0500, Bjorn Helgaas wrote:
-> > [+cc Lorenzo]
-> > 
-> > On Tue, Oct 05, 2021 at 11:24:48AM +0200, Mauro Carvalho Chehab wrote:  
-> > > Hi Bjorn,
-> > > 
-> > > Em Tue, 28 Sep 2021 09:34:10 +0200
-> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:  
-> >   
-> > > >   PCI: kirin: Reorganize the PHY logic inside the driver
-> > > >   PCI: kirin: Add support for a PHY layer
-> > > >   PCI: kirin: Use regmap for APB registers
-> > > >   PCI: kirin: Add support for bridge slot DT schema
-> > > >   PCI: kirin: Add Kirin 970 compatible
-> > > >   PCI: kirin: Add MODULE_* macros
-> > > >   PCI: kirin: Allow building it as a module
-> > > >   PCI: kirin: Add power_off support for Kirin 960 PHY
-> > > >   PCI: kirin: fix poweroff sequence
-> > > >   PCI: kirin: Allow removing the driver  
-> > > 
-> > > I guess everything is already satisfying the review feedbacks.
-> > > If so, could you please merge the PCI ones?  
-> > 
-> > Lorenzo takes care of the native host bridge drivers, so I'm sure this 
-> > is on his list.  I added him to cc: in case not.  
-> 
-> Ideally I'd like to see these patches ACKed/Review-ed by the kirin maintainers - that's what I was waiting for and that's what they are there for.
-> 
-> Having said that, I will keep an eye on this series so that we can hopefully queue it for v5.16.
-> 
-> Lorenzo
-> 
-> 
+This fixes a recent ACPI-related regression in the PCI subsystem
+that introduced a NULL pointer dereference possible to trigger
+from user space via sysfs on some systems.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      PCI: ACPI: Check parent pointer in acpi_pci_find_companion()
+
+---------------
+
+ drivers/pci/pci-acpi.c | 3 +++
+ 1 file changed, 3 insertions(+)
