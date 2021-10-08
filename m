@@ -2,93 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB3842731D
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 23:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC60E42737D
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 00:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbhJHVjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 17:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbhJHVjn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 17:39:43 -0400
-Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A404C061570
-        for <linux-pci@vger.kernel.org>; Fri,  8 Oct 2021 14:37:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=2Mtl2skKVxX8eNy2j6eH+srbK/V2lEHz5HNSFOinQaA=; b=rzg+Z2ep9mIEE+vPZi/2B46pPE
-        WR9IVNqSh3iyeNj/zfQMq07Hh21UtobG+Ck1kRa3HOtwLU44JUfu6u26bcEBj1K9aNJmJN/cMejZk
-        EZIa0qskLywgZimvrkPwEUsDGYOPG7J8dyQ+r4//8tZZ/WmZ/ZKQ3xyQSWrQBxC4eaD3kWlXtgw6p
-        vgXhAiW+7Ok7DZgp+WK3xVRE2UGBSgiCrNx/5rR08IoF3kyEW7ky9ViDg+PhheLA4X1VLnklOO6PF
-        71i+Be+ZhB0dqfRj8XYE5N/Fz2SmUNKsQqoOJu/a74XSu9kuafE0hV+DuheXzOjm2Oc/OOuJCLnaI
-        fRRRpYhw==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mYxYl-004E7u-SK; Fri, 08 Oct 2021 21:37:43 +0000
-Subject: Re: [PATCH] PCI: vmd: depend on !UML
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "Berg, Johannes" <johannes.berg@intel.com>
-References: <20210811162530.affe26231bc3.I131b3c1e67e3d2ead6e98addd256c835fbef9a3e@changeid>
- <a8905276-7b46-cc50-740f-b9d86ec54717@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <613ef347-cafe-8b4e-ed89-8730aad4d6ef@infradead.org>
-Date:   Fri, 8 Oct 2021 14:37:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S243558AbhJHWPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 18:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243539AbhJHWPF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 18:15:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8320760FC1;
+        Fri,  8 Oct 2021 22:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633731189;
+        bh=wNgDKDIIK358RGjNmCHeTM6eGu9i1NUq2a4Cx1Zn5ec=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NfOQ1BydTGGErjNKi2rvvo23VwEfRECB5hinU3fTD/YWGT9/wIoxtnDy0UMOb9F4Z
+         Tzo85ZiIClqd9Br3sFdFgZc04avS7YFvKqBTXL1DiIl4OuLjBm9qY2WvQp8l+8T0B5
+         AthcCY3b9E2A3C/eMVa0xojj/6onvABaY40UGivKWe/p1obD6p8Y4Bun00Fgp1s8zp
+         RGlUjv6rmc5Hni8/2Ju6cxQJcUjT0b7O9dwy0Z94iGg1CuBBYqPTMaPsBt0GNoUzlI
+         HXbK/hR3Bd6/t9zuyP1NSYD6n8jVOsNG5w7uN4sQ0R/gVLZtxJfARJL0iO21pHUVd9
+         vv+eJeOuhHiyg==
+Date:   Fri, 8 Oct 2021 17:13:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3] PCI: Move pci_dev_is/assign_added() to pci.h
+Message-ID: <20211008221308.GA1383868@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <a8905276-7b46-cc50-740f-b9d86ec54717@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210720150145.640727-1-schnelle@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/11/21 7:43 AM, Derrick, Jonathan wrote:
-> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+On Tue, Jul 20, 2021 at 05:01:45PM +0200, Niklas Schnelle wrote:
+> The helper function pci_dev_is_added() from drivers/pci/pci.h is used in
+> PCI arch code of both s390 and powerpc leading to awkward relative
+> includes. Move it to the global include/linux/pci.h and get rid of these
+> includes just for that one function.
 > 
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+> Since v1 (and bad v2):
+> - Fixed accidental removal of PCI_DPC_RECOVERED, PCI_DPC_RECOVERING
+>   defines and also move these to include/linux/pci.h
+> 
+>  arch/powerpc/platforms/powernv/pci-sriov.c |  3 ---
+>  arch/powerpc/platforms/pseries/setup.c     |  1 -
+>  arch/s390/pci/pci_sysfs.c                  |  2 --
+>  drivers/pci/hotplug/acpiphp_glue.c         |  1 -
+>  drivers/pci/pci.h                          | 15 ---------------
+>  include/linux/pci.h                        | 15 +++++++++++++++
+>  6 files changed, 15 insertions(+), 22 deletions(-)
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Bjorn, can you merge this, please?
-or did you expect it to be merged somewhere else?
-
-thanks.
-
-> On 8/11/2021 8:25 AM, Johannes Berg wrote:
->> From: Johannes Berg <johannes.berg@intel.com>
->>
->> With UML having enabled (simulated) PCI on UML, VMD breaks
->> allyesconfig/allmodconfig compilation because it assumes
->> it's running on X86_64 bare metal, and has hardcoded API
->> use of ARCH=x86. Make it depend on !UML to fix this.
->>
->> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->> ---
->>   drivers/pci/controller/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
->> index 64e2f5e379aa..297bbd86806a 100644
->> --- a/drivers/pci/controller/Kconfig
->> +++ b/drivers/pci/controller/Kconfig
->> @@ -257,7 +257,7 @@ config PCIE_TANGO_SMP8759
->>   	  config and MMIO accesses.
->>   
->>   config VMD
->> -	depends on PCI_MSI && X86_64 && SRCU
->> +	depends on PCI_MSI && X86_64 && SRCU && !UML
->>   	tristate "Intel Volume Management Device Driver"
->>   	help
->>   	  Adds support for the Intel Volume Management Device (VMD). VMD is a
->>
-
-
--- 
-~Randy
+I dropped this one because I think a subsequent patch removed the use
+in arch/powerpc, so if you still need this, it probably needs to be
+updated to at least drop those hunks.
