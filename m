@@ -2,159 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8690942712B
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 21:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD29C427138
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 21:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240055AbhJHTIs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 15:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231316AbhJHTIo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 15:08:44 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE363C061570
-        for <linux-pci@vger.kernel.org>; Fri,  8 Oct 2021 12:06:48 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id a3so14988396oid.6
-        for <linux-pci@vger.kernel.org>; Fri, 08 Oct 2021 12:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LrmfX34GObvirBK4Iq8eQUnGcvQ0wY+TvxWBiA97kls=;
-        b=G2GT+K3lGKazwMmL6lbYFr4VtJsTOMVA2fV1wnnPCedS+C2rSUmMi2e9P4z6yfPUXq
-         yis176soBf1pdDcxpoxRWMVEX/DLMNc+xbFAR9iDk2s73MxinxOaU/yLP+jHYAISts4Q
-         n2TziaGC7+ybL47H/l9BWf9zrgKMUOGHWQ7MBMoLRddiKBGmgdeBHDkQ9vXxnwgq6uAF
-         iOWseFM4mIk/IL+rNRVZPqEpMF3u590Syw/vkaP4dZFeU1Y8DnnCwXKSBBHzsQX5+iIE
-         YJx+RKzKNgJvDT6mMqvPd8Aw6OKcDUJ/VqnxXOamDBr6oKy0saOhZmnHTBFgEZwv6xra
-         T8gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LrmfX34GObvirBK4Iq8eQUnGcvQ0wY+TvxWBiA97kls=;
-        b=I4af+t1m+94BvzcAx0p4OCTBac9VzhEQRMjnTbJKVe3qU1CJ0Jxd7SC4SQJnPYsuJs
-         RRUZiyvS6bVlOACuEHHKD2kpoUvx5p7bDLGt1BAMXN+CZkq8akA9n5+4N8nW0SgbP1uU
-         TqqD2hZavdIkeCAjogPHatPgXLq13+s0BNqMcJt3QucrelgySN3wmbxHcKufW5YLFhr1
-         7JMEC4aa+gzC18tp213khjJsOFiIWrV1kEMGf0ek9/arp4sthr7jGKZAmGIOmxTC04eb
-         N0Sqys5sWeY1CwFHEwdE2nEJcDz0wLuHAyOfbsQw5dm1gOMaJFBmP782GROdZnaVKEcJ
-         Ut6A==
-X-Gm-Message-State: AOAM533vrwoaT+0XXomSlxDTCehhyArBmoMpt2AnoCIB4j8WXc4Xr6PO
-        jAIBKeSKNjzK+v3jSrDzNuS1pg==
-X-Google-Smtp-Source: ABdhPJzVSQg8dziDkJydMZ6Kb5vkX9g4Lyp0OAZsBdvJIKINGRiNPzQHWR7UWwOiY1gowTV1UakbjA==
-X-Received: by 2002:aca:e009:: with SMTP id x9mr18290787oig.156.1633720007878;
-        Fri, 08 Oct 2021 12:06:47 -0700 (PDT)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id i127sm52577oia.43.2021.10.08.12.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Oct 2021 12:06:47 -0700 (PDT)
-Date:   Fri, 8 Oct 2021 12:08:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        id S239929AbhJHTNb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 15:13:31 -0400
+Received: from mail-oln040093003008.outbound.protection.outlook.com ([40.93.3.8]:25078
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231342AbhJHTN1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 15:13:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NZxxr0Zg6HcWdIe+TDO2lWza9wis6JR+zznmBUwNKiPB2ALxKB8HipMQ0bOyj9SveNoNywJXDmIZNRMqov8sRIXlRfvqfSBw0k1ln9DgCuhX5vazRbg7QwoXSmVDgESZFbtPkFn8694wnmjwQuZrN+vPgAbs3KInSwLpOTV/cQjVvymqAHbrF5skxefyilMftQg/oqftUsfHKaUjHQxa4Ui8gN4WS1ovBBm0EYkbn8JZXZGlkfUilMMhR+t/EQ42qsquLIbRPYUnYr2gR9Uze7PT92QKtDs7XKbk7v9UrDRTEfYfcuDWC4qxPTWKBL7/5DnH9mcVk7wzlo8ZZFKp7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L7b7Hy9qv7vhx9YqwWZuAq9LhRU9L1emvVhB7t5yuqU=;
+ b=JsTtoD9rG/6WNvJf0ZfYiaACtNBnY+xfH8cLXamv4BM4KqiEPguHNoatX0EwyDm8stbafp4UT7PSGQWIARjTy8FcEvDzZVIxR56Q+NDdkZTJfIq1sHXsFREZ0UTWzs9YE+vCjot1ndwTYxJm4n8JmFCsC9NevSjCe0+u3+AUULHy1X0FKDHlTdgQbhfWRCT7BD79okAPva6cNt8M3ufN0CtFSO5jdPfmKmYubezHjGfLIbUYG4r7kizJLqKyWv27FOo8J/3GR/UVOphytllVSbmJIw1KuS+FKXuuEkqIRgmBLePOwro0G8tU5mxLcUneGx+PGKXIYxX7INnKVuUIhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L7b7Hy9qv7vhx9YqwWZuAq9LhRU9L1emvVhB7t5yuqU=;
+ b=A5Myc+DvBQfgTB1EesQC3HzeIKFe8biuG+aKZdnN/QtqJ0nxinBlXZZNcTv23vD6AZcEL+KppZZzidT/jvFuxvLAWOpAfjddy7G5rrccsw9rS57fMZyMpCUWXmZYaYw7cTyLrGlRPGeVywf6tEiDya7O/hWHC2YXwGZnkSVJ9rQ=
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com (2603:10b6:303:68::18)
+ by MW2PR2101MB1851.namprd21.prod.outlook.com (2603:10b6:302:c::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.1; Fri, 8 Oct
+ 2021 19:11:27 +0000
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::89fe:5bf:5eb2:4c55]) by MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::89fe:5bf:5eb2:4c55%4]) with mapi id 15.20.4608.008; Fri, 8 Oct 2021
+ 19:11:27 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?iso-8859-2?Q?=22Krzysztof_Wilczy=F1ski=22?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vidyas@nvidia.com
-Subject: Re: [PATCH v2 1/2] PCI: dwc: Perform host_init() before registering
- msi
-Message-ID: <YWCXKevPYiSkqapt@ripper>
-References: <YSVTdedrDSgSYgwm@ripper>
- <20210824202925.GA3491441@bjorn-Precision-5520>
- <YSVjQgDmatkkCxtn@ripper>
- <20211008174803.GA32277@lpieralisi>
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v2 0/2] PCI: hv: Hyper-V vPCI for ARM64
+Thread-Topic: [EXTERNAL] Re: [PATCH v2 0/2] PCI: hv: Hyper-V vPCI for ARM64
+Thread-Index: Ade8Z9t+jRUuLsS9S2C/sb8+Gj5obwADb06AAACWIGA=
+Date:   Fri, 8 Oct 2021 19:11:24 +0000
+Message-ID: <MW4PR21MB20029E72816E8559053B0E4BC0B29@MW4PR21MB2002.namprd21.prod.outlook.com>
+References: <MW4PR21MB200217CCFBC351FD12D68DF0C0B29@MW4PR21MB2002.namprd21.prod.outlook.com>
+ <20211008185209.GA1362885@bhelgaas>
+In-Reply-To: <20211008185209.GA1362885@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5d997d76-5a0c-40f0-b68d-e5aba94ba3d8;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-08T19:08:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dad0b2f5-d38b-4113-ed97-08d98a8f6df2
+x-ms-traffictypediagnostic: MW2PR2101MB1851:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB1851F7EA2FD0D0A9415C8C56C0B29@MW2PR2101MB1851.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +L1wIwn5W8tCTbI3c05fCXpMDYWxJBgm2KTarOVFJR7Yo1sTnadStFaNTEG6n7micKyy6kl14nW73eZkZzt4UX6HUeiEvXmg1VyQhZyhyBpQcAqvBUKyoPIJfyYZvEqoC/+ujacRj0clAQWOOBDK3iNnmGRrD5e3BHTGrpirzBdV1rdG/rINFQquFcow2TV9r2w1gQ/M3RQO9J8P4ePGFAhPBoUrS1kH3sd7VRIelqi5QoCsA1vBHqsXD2yarzESkgSpL3eVlZrCo4He2ABQQki5cofhK1EaozfEp2zpRzYZOeFKc1cHYPN5DE2iznjBJaPnB3EGFgUaOLih8xmJjZlV7bjWLKEWbDcyJWTecSV4ScX4aR1mIpMXtfgb/NwHCVu5V5P3jB0W2bwLs5hEHhucNG+5FILYme45ER4Lw/uEWQJ6mCofZJTA67vos7AZ2P3GUz5ipNqRpo4wTG2vlxRw3sH9bh6+q5lo+e8ImjWcDuzEnceMRL1ArHz0fYboTNbDjClnSfiDIGxPdgJLSSCgnHD8XFOAJwPm4gdZ8EOay4X5gTPjB87cCF4orqIlLQIpYezy8fAYVfSKjoAVlBvM3PoG3jkum+3qkh6KONa0X2XQvwCjtIgF1qMHMOqlOXYDgTS1Q56hWbyHhThw0fF4dXK/MUB7NlyeEa9IGMWtMqClzGEYN/f8WFLLXGDCYxqEyQILClg9BPMX2lCkpw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2002.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66476007)(64756008)(66446008)(2906002)(8676002)(66556008)(66946007)(82960400001)(4744005)(71200400001)(33656002)(52536014)(55016002)(122000001)(38100700002)(6916009)(86362001)(6666004)(186003)(9686003)(82950400001)(76116006)(5660300002)(4326008)(8990500004)(38070700005)(316002)(83380400001)(8936002)(53546011)(54906003)(10290500003)(508600001)(7696005)(6506007)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?YOd5nTAXTivPQopJkYfHNZGuUIc/uTXWYMXFWTmUEBtPC93Idyp/TncVu/?=
+ =?iso-8859-2?Q?zY5Yz7/j7MVlCIRnbt1r9UElSwdXd7eAMLV1Owr4aqi95UuZkkca4HSenE?=
+ =?iso-8859-2?Q?MiL4E8egf7vYX0RicMEqYfwZK7r/SnzmwDkkbpiac5MjuI8AtH/8TL/JOO?=
+ =?iso-8859-2?Q?rRaxRH5Ex0Pz0qT0slgQ7MA7J+srWQw4volbMd5qhqx8tB9J8GNnT5wQqq?=
+ =?iso-8859-2?Q?g58GbmRxWiArBiTwBLJd6h5SIXErZctdgP9vLQUVlYUCYaBeEBIe9HOdI2?=
+ =?iso-8859-2?Q?+ajOLlbF/MIBa8G0/ekEOd23q62Ct2SBjcBQ84RvbbMSsOoVqF3mmkhKX/?=
+ =?iso-8859-2?Q?EMSGYtZ6KKUjQFLdxwPRz0C23wrrlNWtd/lkE20iedqQMpqq8O/AyDh9GO?=
+ =?iso-8859-2?Q?4jvAtwodMNJ1+OUd9t0RYAvS2Zkthsk3cDLiF9rhDKAlhAE74rzZxXGO1j?=
+ =?iso-8859-2?Q?fEodr49h0bWici/YY/0qkaRGMQFZCl37btHkVGkPcqrhogc/Um513FIm+B?=
+ =?iso-8859-2?Q?GdDbLinQodgvMmiTusuxRgR8xxpmm1S8wfyhmIw2GySnQFIgttsBwUCgWj?=
+ =?iso-8859-2?Q?8ehJwle9CaEfp1iA3VUNbIjjGW+QFmFH9VJmc42WAuPo0+qvngVhj1Wmbr?=
+ =?iso-8859-2?Q?fK8w9Vwwva20gXKLjIZe681gDT1UD816beTriL0Jbz/MbKsEYk7K1JhY7u?=
+ =?iso-8859-2?Q?WkaAu3A7yS268wuqJT2xqMXYcCBGz0wL/7QHNnlNveQQVyUenO1SLyu0li?=
+ =?iso-8859-2?Q?uTTWJiUsy2ocoZ8zqr09nLztzKRjksv4ldNF+XDQJPi5/D1UHryw3zmIOD?=
+ =?iso-8859-2?Q?WB7Dvpzh6NhR2eDN8zfwT29nyFtpAqUS8bOMUGL0fyJkCkquWaaRKEyJyZ?=
+ =?iso-8859-2?Q?jzHmDz0XnguEyVdETGGoAiY2wyvO1GisY7ur0kmamQpC8ovYhhRrdg9Bpo?=
+ =?iso-8859-2?Q?mh6ryb7745xVPLSj18zp13wzAf6CjhfEvNjpZvmPsPc1dIu2IEE3eDe+Er?=
+ =?iso-8859-2?Q?R5U3FlSTfwCTi6tTQpESc6aJQhYGJpspyUBlCwEn5ldVb0nzFTVgeKLLuS?=
+ =?iso-8859-2?Q?/xX+jw781iirpseDqGaXCX7Y44wYvW7OVCFda12mkoRG3W377TEFNeACjG?=
+ =?iso-8859-2?Q?Bo9IVaq6Wykbr4YNxSQDm0I1cl6uM7rF6bXerfSgg5MNMSBeMQt3NJ0bia?=
+ =?iso-8859-2?Q?w1npJRBfmJ7C+LvmYXgSW2TWn/ckHeBaZqVZbUQr5OIixHa9US5fVUEcJG?=
+ =?iso-8859-2?Q?ItAo3Q8HYAr5REa6V2Zcbt6xjQEiURbQPRJU3sisN6sgxmzgYlTGGp5WEC?=
+ =?iso-8859-2?Q?XgVgfmF1+8gCtucq8657BFtWFofkFGSkSIjJ/yZIiy6xODXvUnaZuOPVf9?=
+ =?iso-8859-2?Q?bB1fLSW1KmTUbDM3nS0oRe/ev7rdfMLAcwDDTaMgOKU2AUwr7zFH+wMK8W?=
+ =?iso-8859-2?Q?HZNBNN+YuMsOVALZ?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211008174803.GA32277@lpieralisi>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2002.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dad0b2f5-d38b-4113-ed97-08d98a8f6df2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2021 19:11:27.8203
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A3VhaYwk2xWSym5++RCQup6tCqDEozZk7iIuPTi7Vt9SJDQQIvejYPAb5TFCtApC6HDp09Z+mSrz0uKFFVRsQQeXox4yHB+tyfhNO4ZtNuI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1851
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri 08 Oct 10:48 PDT 2021, Lorenzo Pieralisi wrote:
+On Friday, October 8, 2021 11:52 AM
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> [+Vidya]
-> 
-> On Tue, Aug 24, 2021 at 02:23:14PM -0700, Bjorn Andersson wrote:
-> > On Tue 24 Aug 13:29 PDT 2021, Bjorn Helgaas wrote:
-> > 
-> > > On Tue, Aug 24, 2021 at 01:15:49PM -0700, Bjorn Andersson wrote:
-> > > > On Tue 24 Aug 12:05 PDT 2021, Bjorn Helgaas wrote:
-> > > > 
-> > > > > On Mon, Aug 23, 2021 at 08:49:57AM -0700, Bjorn Andersson wrote:
-> > > > > > On the Qualcomm sc8180x platform the bootloader does something related
-> > > > > > to PCI that leaves a pending "msi" interrupt, which with the current
-> > > > > > ordering often fires before init has a chance to enable the clocks that
-> > > > > > are necessary for the interrupt handler to access the hardware.
-> > > > > > 
-> > > > > > Move the host_init() call before the registration of the "msi" interrupt
-> > > > > > handler to ensure the host driver has a chance to enable the clocks.
-> > > > > 
-> > > > > Did you audit other drivers for similar issues?  If they do, we should
-> > > > > fix them all at once.
-> > > > 
-> > > > I only looked at the DesignWware drivers, in an attempt to find any
-> > > > issues the proposed reordering.
-> > > > 
-> > > > The set of bugs causes by drivers registering interrupts before critical
-> > > > resources tends to be rather visible and I don't know if there's much
-> > > > value in speculatively "fixing" drivers.
-> > > > 
-> > > > E.g. a quick look through the drivers I see a similar pattern in
-> > > > pci-tegra.c, but it's unlikely that they have the similar problem in
-> > > > practice and I have no way to validate that a change to the order would
-> > > > have a positive effect - or any side effects.
-> > > > 
-> > > > Or am I misunderstanding your request?
-> > > 
-> > > That is exactly my request.
-> > 
-> > Okay.
-> > 
-> > > I'm not sure if the potential issue you
-> > > noticed in pci-tegra.c is similar to the one I mentioned here:
-> > > 
-> > >   https://lore.kernel.org/linux-pci/20210624224040.GA3567297@bjorn-Precision-5520/
-> > > 
-> > 
-> > As I still have the tegra driver open, I share your concern about the
-> > use of potentially uninitialized variables.
-> > 
-> > The problem I was concerned about was however the same as in my patch
-> > and the rockchip one, that if the tegra hardware isn't clocked the
-> > pm_runtime_get_sync() (which would turn on power and clock) happens
-> > after setting up the msi chain handler...
-> > 
-> > > but I am actually in favor of speculatively fixing drivers even though
-> > > they're hard to test.  Code like this tends to get copied to other
-> > > places, and fixing several drivers sometimes exposes opportunities for
-> > > refactoring and sharing code.
-> > > 
-> > 
-> > Looking through the other cases mentioned in your reply above certainly
-> > gives a feeling that this problem has been inherited from driver to
-> > driver...
-> > 
-> > I've added a ticket to my backlog to take a deeper look at this.
-> 
-> Vidya, can you look into this please ? In the meantime I would merge
-> this series.
-> 
-
-I would greatly appreciate that, as it unlocks 5G connectivity and NVME
-support on my laptop. I still intend to review the items Bjorn pointed
-out, but I haven't gotten there yet.
-
-Thanks,
-Bjorn
-
-> Thanks,
-> Lorenzo
-> 
-> > 
-> > Regards,
-> > Bjorn
+> If you have occasion to post a v3, note that this is not correctly
+> threaded with patches as responses to the cover letter.  Thereore,
+> "b4 am
+> MW4PR21MB200217CCFBC351FD12D68DF0C0B29@MW4PR21MB2002.nampr
+> d21.prod.outlook.com"
+> does not work to download this series.  See
+>=20
+Yes, thanks for the heads up. Appears to me that Outlook doesn't work well =
+with
+patch series. I will setup the 'git send-email' and make sure that v3 is th=
+readed
+properly.
