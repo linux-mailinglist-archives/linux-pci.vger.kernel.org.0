@@ -2,94 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 539294273C2
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 00:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 512C44273F3
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 00:53:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243678AbhJHW3e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 18:29:34 -0400
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:33512 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243668AbhJHW3d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Oct 2021 18:29:33 -0400
-Received: by mail-wr1-f52.google.com with SMTP id m22so33986901wrb.0;
-        Fri, 08 Oct 2021 15:27:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tRYb2LPqEkxBD8lAFNonDclv6oFLdcwFLdTj/5b6MDk=;
-        b=LyBFFZsf89P0e+LemiwYQniJYmZiCGMYuerx7adwNjIW7loaYFfsV5v5kyrFPRyNHa
-         dejrjOqXbWwgGNUyqRAhJKcJLFcAIIheQmVitqs0EkJFyko0kBQ6iWGHQtiMhebAcSOx
-         C5PTYPpvu6lOQvzbjc0OpsK7NeJXGs7iXl1VcrdU/FDk1duOIdmlReYYS61kZZaxAKjS
-         LslgAAmIMbRHA7MKrglMtkR8MxSPklXfz437MSHj+W0kmTHOd16KkFMnOPK+3NQ5shSH
-         GVX3hozar2lv3jyvDo+txEoI77Wmm5IkSyFrwUM+/2LY2rEPrh9TrkU78winVkSEEElm
-         a3QA==
-X-Gm-Message-State: AOAM530L0wy56+uGI1cBQavXtGBoUR4l1tU0F+Zl1i4ja2Ud/f08e5PK
-        Avx7hVmdMeBNlWGmCCtunfE=
-X-Google-Smtp-Source: ABdhPJykfILUWlH/p9qgCZRY8huJyNxoIwFsVOgEfc1eHeJlb/8jzAS/o+YbCbohkm4IdP2ZkhwlNg==
-X-Received: by 2002:adf:bb49:: with SMTP id x9mr7243973wrg.413.1633732056696;
-        Fri, 08 Oct 2021 15:27:36 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b15sm549577wrr.90.2021.10.08.15.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Oct 2021 15:27:36 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Long Li <longli@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] PCI: Update variable type to match sscanf() format string
-Date:   Fri,  8 Oct 2021 22:27:32 +0000
-Message-Id: <20211008222732.2868493-3-kw@linux.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211008222732.2868493-1-kw@linux.com>
-References: <20211008222732.2868493-1-kw@linux.com>
+        id S231888AbhJHWzi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 18:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231876AbhJHWzh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 18:55:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5681E60E9C;
+        Fri,  8 Oct 2021 22:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633733621;
+        bh=fAFnZrcP9V2PJb2yr/KOB0SnKV7yRbBFGwGzEq+JY4M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g8mHcvii8fnRQgud/hlKghG7LYdxj8/nC03GrwwnwxrOjwjPanguauimd7XmbsM4c
+         NvYyw17YrajQtZ4YOs8xnDOLARc0QBv3wT2emwpuUsY+TDiJ/MSGP+ucngi3d0McEf
+         Fy6poYDfDrYpDVyRdpRh25h5OqihZsV9FSUNigxBFBdk4Ws4Fxh0RYDZaiIQM5/KEo
+         bt5DIV7H+GjHmiLt3GsFGdGEAx+0E05Ck4WCSQdpBFk6fvNRYmm6KCAMdk/pg9NRs9
+         ksw9y9rE8Zb6EZ+WBKRxCL/HSOV/R/IhmxUQkHmCVd/0THappl1M1XRkyvM9E0sR3x
+         0f3GG//MPJ2Kw==
+Date:   Fri, 8 Oct 2021 17:53:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Raju Rangoju <rajur@chelsio.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 0/5] PCI/VPD: Add and use pci_read/write_vpd_any()
+Message-ID: <20211008225340.GA1388382@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To test whether a string contains a valid PCI device path formatted as
-the "/<device>.<function>" address (see output from "lspci -P" as an
-example; such format can also be provided as part of kernel command-line
-parameters), the function called pci_dev_str_match_path() can be used.
+On Fri, Sep 10, 2021 at 08:20:23AM +0200, Heiner Kallweit wrote:
+> In certain cases we need a variant of pci_read_vpd()/pci_write_vpd() that
+> does not check against dev->vpd.len. Such cases are:
+> - reading VPD if dev->vpd.len isn't set yet (in pci_vpd_size())
+> - devices that map non-VPD information to arbitrary places in VPD address
+>   space (example: Chelsio T3 EEPROM write-protect flag)
+> Therefore add function variants that check against PCI_VPD_MAX_SIZE only.
+> 
+> Make the cxgb3 driver the first user of the new functions.
+> 
+> Preferably this series should go through the PCI tree.
+> 
+> Heiner Kallweit (5):
+>   PCI/VPD: Add pci_read/write_vpd_any()
+>   PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()
+>   cxgb3: Remove t3_seeprom_read and use VPD API
+>   cxgb3: Use VPD API in t3_seeprom_wp()
+>   cxgb3: Remove seeprom_write and user VPD API
 
-Internally, pci_dev_str_match_path() function uses sscanf() and the "%x"
-format string as part of its path matching implementation where it would
-parse a given value as a unsigned hexadecimal number.  This particular
-format string type requires the argument to be of an unsigned int type.
+Tentatively applied to pci/vpd for v5.16.
 
-Thus, to match given format string requirements and also safeguard
-against a potential undefined behaviour, change type of the variables
-passed to sscanf() to unsigned int accordingly.
+Ideally would like reviewed-by and ack for the cxgb3 parts from Raju,
+Jakub, David.
 
-No change to functionality intended.
-
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce2ab62b64cf..7998b65e9ae5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -269,7 +269,7 @@ static int pci_dev_str_match_path(struct pci_dev *dev, const char *path,
- 				  const char **endptr)
- {
- 	int ret;
--	int seg, bus, slot, func;
-+	unsigned int seg, bus, slot, func;
- 	char *wpath, *p;
- 	char end;
- 
--- 
-2.33.0
-
+>  drivers/net/ethernet/chelsio/cxgb3/common.h   |  2 -
+>  .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   | 38 +++----
+>  drivers/net/ethernet/chelsio/cxgb3/t3_hw.c    | 98 +++----------------
+>  drivers/pci/vpd.c                             | 79 ++++++++++-----
+>  include/linux/pci.h                           |  2 +
+>  5 files changed, 83 insertions(+), 136 deletions(-)
+> 
+> -- 
+> 2.33.0
+> 
