@@ -2,85 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17B054270AD
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 20:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9BA84270FD
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Oct 2021 20:52:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231388AbhJHS1X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Oct 2021 14:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        id S239721AbhJHSyK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Oct 2021 14:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231377AbhJHS1V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Oct 2021 14:27:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F108460F9D;
-        Fri,  8 Oct 2021 18:25:25 +0000 (UTC)
+        id S239650AbhJHSyG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Oct 2021 14:54:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5DDAE60F3A;
+        Fri,  8 Oct 2021 18:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633717526;
-        bh=iC/h3aiUcytVYRe2zTb8f9AgkuyTJM44W4jRd7yPuRc=;
+        s=k20201202; t=1633719130;
+        bh=njO5hv03OnrmJzSBoYpKmkfrNid/AyLiEQdwwNkuqok=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kh7q9Pwn462xjsy9yADINxXHInbs8u5TxCOXxd2q9go69YSoL2FvxKaurnG/JN2L9
-         b9SY01g6Gmmi6ndy5Try/UGhFuDV6DHoQVIBEc0p5o93GVq5O0aOEnh34vXz2uySko
-         OBp+b3oYoSbBSFEzzjM8EtkgbuDiBIdAwXFk0qfRCwe6dGhX93qP1yFNm4dKeI1Voh
-         E4PnXRj7CPOHnH0DoHMU6UuFzb0TpPyP7u5Lm2/FmdcC8ZbWfKFC0ZnL3Ga6BwdS1H
-         swMdwZ0MohdJEt4zbwEDpkPC2kG+TftoCzYAhLjqLs0J8ZzTJ0x62FWvFkgzDIcdYE
-         QrmdDJqOgSH6Q==
-Date:   Fri, 8 Oct 2021 13:25:24 -0500
+        b=qkuK9xGMhNG+5sm3CApJQjrxLqb1q1J9iggn5HmtkVh1PAYoAXdaMgIl+sBTrzgqU
+         maBxISU3GIpJF4FyXWlECwmxsmlnYtscvc+FyoU4i4xgYLxfW0uORp7Ukf4/WNdcgB
+         X1+g61VJZcWzZZAyNWZ9J7C/bhcsExlLuEKBrMyNIAATQqFqpX3AbP7BcSimC7HfiX
+         jnxJ+timIddxQMpez+t548H26qc6Z4vBYXFUTMfXjiqSJni50x9PdEcOyPiCAxTmjI
+         BmsdzPRRUZe3YmBUJBDl8BzK7+u9TplLr1a8Q7/xil+rRxeTLQmVyWCHCRFgGTKiv1
+         iKpHo05VUvPVA==
+Date:   Fri, 8 Oct 2021 13:52:09 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     kelvin.cao@microchip.com, kurt.schwemmer@microsemi.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kelvincao@outlook.com
-Subject: Re: [PATCH 0/5] Switchtec Fixes and Improvements
-Message-ID: <20211008182524.GA1361129@bhelgaas>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?utf-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] PCI: hv: Hyper-V vPCI for ARM64
+Message-ID: <20211008185209.GA1362885@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e60010f3-f803-e60b-3412-346ccc11a0fb@deltatee.com>
+In-Reply-To: <MW4PR21MB200217CCFBC351FD12D68DF0C0B29@MW4PR21MB2002.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 11:23:46AM -0600, Logan Gunthorpe wrote:
-> On 2021-10-08 11:05 a.m., Bjorn Helgaas wrote:
-> > On Fri, Sep 24, 2021 at 11:08:37AM +0000, kelvin.cao@microchip.com wrote:
-> >> From: Kelvin Cao <kelvin.cao@microchip.com>
-> >>
-> >> Hi,
-> >>
-> >> Please find a bunch of patches for the switchtec driver collected over the
-> >> last few months.
-> > 
-> > Question: Is there a reason this driver should be in drivers/pci/?
-> > 
-> > It doesn't use any internal PCI core interfaces, e.g., it doesn't
-> > include drivers/pci/pci.h, and AFAICT it's really just a driver for a
-> > PCI device that happens to be a switch.
-> > 
-> > I don't really *care* that it's in drivers/pci; I rely on Kurt and
-> > Logan to review changes.  The only problem it presents for me is that
-> > I have to write merge commit logs for the changes.  You'd think that
-> > would be trivial, but since I don't know much about the driver, it
-> > does end up being work for me.
+On Fri, Oct 08, 2021 at 05:19:53PM +0000, Sunil Muthuswamy wrote:
+> Current Hyper-V vPCI code only compiles and works for x64. There are
+> some hardcoded assumptions about the architectural IRQ chip and other
+> arch defines.
 > 
-> We did discuss this when it was originally merged.
-
-Thanks, I thought I remembered talking about it, but didn't bother to
-dig it up.
-
-> The main reason we want it in the PCI tree is so that it's in a sensible
-> spot in the Kconfig hierarchy (under PCI support). Seeing it is still
-> PCI hardware. Dropping it into the miscellaneous devices mess (or
-> similar) is less than desirable. Moreover, it's not like the maintainers
-> for misc have any additional knowledge that would make them better
-> qualified to merge these changes. In fact, I'm sure they'd have less
-> knowledge and we wouldn't have gotten to the bottom of this last issue
-> if it had been a different maintainer.
+> This patch series adds support for Hyper-V vPCI for ARM64 by first
+> breaking the current hard coded dependency in the vPCI code and
+> making it arch neutral. That is in the first patch. The second
+> patch introduces a Hyper-V vPCI MSI IRQ chip for allocating SPI
+> vectors.
 > 
-> In the future I'll try to be more careful in my reviews to ensure we
-> have a better understanding and clearer commit messages. If there's
-> anything else we can do to make your job easier, please let us know.
+> changes in v2:
+>  - Moved the irqchip implementation to drivers/pci as suggested
+>    by Marc Zyngier
+>  - Addressed Multi-MSI handling issues identified by Marc Zyngier
+>  - Addressed lock/synchronization primitive as suggested by Marc
+>    Zyngier
+>  - Addressed other code feedback from Marc Zyngier
+> 
+> Sunil Muthuswamy (2):
+>   PCI: hv: Make the code arch neutral
+>   PCI: hv: Support for Hyper-V vPCI for ARM64
 
-Oh, please don't take this as me complaining about anybody's reviews!
-I honestly just look for your or Kurt's ack.  I think I just need to
-be a little less fixated on writing the merge commit logs :)
+If you have occasion to post a v3, note that this is not correctly
+threaded with patches as responses to the cover letter.  Thereore,
+"b4 am MW4PR21MB200217CCFBC351FD12D68DF0C0B29@MW4PR21MB2002.namprd21.prod.outlook.com"
+does not work to download this series.  See
 
-Bjorn
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v5.14#n320
