@@ -2,144 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CED4427D68
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 22:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6CD427D73
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 22:51:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbhJIUmH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Oct 2021 16:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbhJIUmG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Oct 2021 16:42:06 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A522C061767
-        for <linux-pci@vger.kernel.org>; Sat,  9 Oct 2021 13:40:09 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id ls18so10143324pjb.3
-        for <linux-pci@vger.kernel.org>; Sat, 09 Oct 2021 13:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PNkbI6CC4MPwch06xoRoPuOpZuZRykTcMawJcvuLIGc=;
-        b=Muu3r0eHUqB/dNHg2SbcMZBR59fyebiqEBsvk6PezrQlxQGwEI1ZicQJ1XHU8yb+jR
-         kHSIW8u2KEJn+hh/8bqD+oSUoLGTMzHi2MKjMWxijaluyFQ9X/HFL9QP8jG3kJvP1+yC
-         MFrvKW7dOAqDY1UzAuwqQRxVpGtbg2xoYhxoIQminXJgv3DKYb4mwO0GqHZDYiNWBRPr
-         zX9FmLpjC1P17blRe4cxwK4BawnSAcTVigJTMtvWGUVR4Krw0LhW/yHMyjDs7LwJths0
-         zTeiN6ZgCa7R3RDBLb9WPt7ZUqU0TGXpSpq1OOroQI9pRt1DcheHTMwoozKzKGHc51Jc
-         ai5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PNkbI6CC4MPwch06xoRoPuOpZuZRykTcMawJcvuLIGc=;
-        b=ePWrBgupv+jsfQWg0y9e6cYAXyXOs4fE5U5CLmtDrHBKucWqSLJgvw4rontw372/0J
-         SI+PXCieXdfDPOHQH4lfcb52OCA65bHlg1UOYnwp8dOUjfOSinJmzZ/30kNEMRlRkwoD
-         ZFCOiBflymlRR4JCoEzCcVuNrMsLAacJOXxENgniQAoRAwxyCX3Uc+vjMMonZZR6Z0ST
-         YuF+PhgxmeuZVVo74jeaIEvxPdYQ8G9k873yIAGdfxkFm7VomJLQhb+glhJGCWHdYh7y
-         QiBRo1qV7qRjk53cfLs6GE3EYp9IHhCY+4DUHlN1823kxfuSNuZ/G9WnnlD6ctvIfthN
-         4nEw==
-X-Gm-Message-State: AOAM531qNoaAL5cRjTrFB7+SobuIWz8w8V+c0aQPweUU+D4DzOgKbo6F
-        bsawaaDUO58IBDnkflcFeRjG3Oqa/9UKj0bDlHNOhg==
-X-Google-Smtp-Source: ABdhPJySd5zqNERLKr8S37E5WA9IMnevPxuJEZ9BVS6uY8X2FGjPzRDwsaOEKoQH/I5/2YcevgWJ2BJGpdsvJiUJb30=
-X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr20678375pju.8.1633812008773;
- Sat, 09 Oct 2021 13:40:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com> <20211009053103-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20211009053103-mutt-send-email-mst@kernel.org>
+        id S230116AbhJIUxL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Oct 2021 16:53:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61562 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229998AbhJIUxL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 9 Oct 2021 16:53:11 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="312885488"
+X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
+   d="scan'208";a="312885488"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 13:51:13 -0700
+X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
+   d="scan'208";a="479353104"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 13:51:13 -0700
+Subject: [PATCH v4 05/10] cxl/pci: Make more use of cxl_register_map
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 9 Oct 2021 13:39:57 -0700
-Message-ID: <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(), pci_iomap_host_shared_range()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 09 Oct 2021 13:51:13 -0700
+Message-ID: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163379786381.692348.10643599219049157444.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <163379786381.692348.10643599219049157444.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 9, 2021 at 2:53 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Fri, Oct 08, 2021 at 05:37:07PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> > From: Andi Kleen <ak@linux.intel.com>
-> >
-> > For Confidential VM guests like TDX, the host is untrusted and hence
-> > the devices emulated by the host or any data coming from the host
-> > cannot be trusted. So the drivers that interact with the outside world
-> > have to be hardened by sharing memory with host on need basis
-> > with proper hardening fixes.
-> >
-> > For the PCI driver case, to share the memory with the host add
-> > pci_iomap_host_shared() and pci_iomap_host_shared_range() APIs.
-> >
-> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> So I proposed to make all pci mappings shared, eliminating the need
-> to patch drivers.
->
-> To which Andi replied
->         One problem with removing the ioremap opt-in is that
->         it's still possible for drivers to get at devices without going through probe.
->
-> To which Greg replied:
-> https://lore.kernel.org/all/YVXBNJ431YIWwZdQ@kroah.com/
->         If there are in-kernel PCI drivers that do not do this, they need to be
->         fixed today.
->
-> Can you guys resolve the differences here?
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-I agree with you and Greg here. If a driver is accessing hardware
-resources outside of the bind lifetime of one of the devices it
-supports, and in a way that neither modrobe-policy nor
-device-authorization -policy infrastructure can block, that sounds
-like a bug report. Fix those drivers instead of sprinkling
-ioremap_shared in select places and with unclear rules about when a
-driver is allowed to do "shared" mappings. Let the new
-device-authorization mechanism (with policy in userspace) be the
-central place where all of these driver "trust" issues are managed.
+The structure exists to pass around information about register mapping.
+Use it for passing @barno and @block_offset, and eliminate duplicate
+local variables.
 
-> And once they are resolved, mention this in the commit log so
-> I don't get to re-read the series just to find out nothing
-> changed in this respect?
->
-> I frankly do not believe we are anywhere near being able to harden
-> an arbitrary kernel config against attack.
-> How about creating a defconfig that makes sense for TDX then?
-> Anyone deviating from that better know what they are doing,
-> this API tweaking is just putting policy into the kernel  ...
+The helpers that use @map do not care about @cxlm, so just pass them a
+pdev instead.
 
-Right, userspace authorization policy and select driver fixups seems
-to be the answer to the raised concerns.
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+[djbw: separate @base conversion]
+[djbw: reorder before cxl_pci_setup_regs() refactor to improver readability]
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v3:
+- Fix a 0day report about printing a resource_size_t
+
+ drivers/cxl/pci.c |   55 ++++++++++++++++++++++-------------------------------
+ 1 file changed, 23 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 21dd10a77eb3..f1de236ccd13 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -306,12 +306,13 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
+-static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
+-					  u8 bar, u64 offset)
++static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
++					  struct cxl_register_map *map)
+ {
+ 	void __iomem *addr;
+-	struct device *dev = cxlm->dev;
+-	struct pci_dev *pdev = to_pci_dev(dev);
++	int bar = map->barno;
++	struct device *dev = &pdev->dev;
++	resource_size_t offset = map->block_offset;
+ 
+ 	/* Basic sanity check that BAR is big enough */
+ 	if (pci_resource_len(pdev, bar) < offset) {
+@@ -326,15 +327,15 @@ static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
+ 		return addr;
+ 	}
+ 
+-	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
+-		bar, offset);
++	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
++		bar, &offset);
+ 
+ 	return addr;
+ }
+ 
+-static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
++static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
+ {
+-	pci_iounmap(to_pci_dev(cxlm->dev), base);
++	pci_iounmap(pdev, base);
+ }
+ 
+ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+@@ -360,12 +361,12 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+ 	return 0;
+ }
+ 
+-static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
++static int cxl_probe_regs(struct pci_dev *pdev, void __iomem *base,
+ 			  struct cxl_register_map *map)
+ {
+ 	struct cxl_component_reg_map *comp_map;
+ 	struct cxl_device_reg_map *dev_map;
+-	struct device *dev = cxlm->dev;
++	struct device *dev = &pdev->dev;
+ 
+ 	switch (map->reg_type) {
+ 	case CXL_REGLOC_RBI_COMPONENT:
+@@ -420,12 +421,13 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
+ 	return 0;
+ }
+ 
+-static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
+-				      u8 *bar, u64 *offset, u8 *reg_type)
++static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
++				struct cxl_register_map *map)
+ {
+-	*offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
+-	*bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
+-	*reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
++	map->block_offset =
++		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
++	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
++	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
+ }
+ 
+ /**
+@@ -462,34 +464,23 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 
+ 	for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
+ 		u32 reg_lo, reg_hi;
+-		u8 reg_type;
+-		u64 offset;
+-		u8 bar;
+ 
+ 		pci_read_config_dword(pdev, regloc, &reg_lo);
+ 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
+ 
+-		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
+-					  &reg_type);
++		map = &maps[n_maps];
++		cxl_decode_regblock(reg_lo, reg_hi, map);
+ 
+ 		/* Ignore unknown register block types */
+-		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
++		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
+ 			continue;
+ 
+-		base = cxl_pci_map_regblock(cxlm, bar, offset);
++		base = cxl_pci_map_regblock(pdev, map);
+ 		if (!base)
+ 			return -ENOMEM;
+ 
+-		map = &maps[n_maps];
+-		map->barno = bar;
+-		map->block_offset = offset;
+-		map->reg_type = reg_type;
+-
+-		ret = cxl_probe_regs(cxlm, base + offset, map);
+-
+-		/* Always unmap the regblock regardless of probe success */
+-		cxl_pci_unmap_regblock(cxlm, base);
+-
++		ret = cxl_probe_regs(pdev, base + map->block_offset, map);
++		cxl_pci_unmap_regblock(pdev, base);
+ 		if (ret)
+ 			return ret;
+ 
+
