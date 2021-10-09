@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D892427DC7
+	by mail.lfdr.de (Postfix) with ESMTP id 0F534427DC8
 	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 00:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230342AbhJIWB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231205AbhJIWB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 9 Oct 2021 18:01:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19447 "EHLO mga02.intel.com"
+Received: from mga07.intel.com ([134.134.136.100]:17952 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230116AbhJIWB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S230342AbhJIWB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Sat, 9 Oct 2021 18:01:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="213834690"
+X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="290187550"
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="213834690"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 14:59:58 -0700
+   d="scan'208";a="290187550"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 14:59:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="479361791"
+   d="scan'208";a="441006125"
 Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 09 Oct 2021 14:59:57 -0700
+  by orsmga003.jf.intel.com with ESMTP; 09 Oct 2021 14:59:57 -0700
 Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mZKNo-0000cK-Py; Sat, 09 Oct 2021 21:59:56 +0000
-Date:   Sun, 10 Oct 2021 05:59:03 +0800
+        id 1mZKNo-0000cS-R2; Sat, 09 Oct 2021 21:59:56 +0000
+Date:   Sun, 10 Oct 2021 05:59:06 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/sysfs] BUILD SUCCESS
- 3d063534a7bfd15410febb7b69453ba1ebe00979
-Message-ID: <616210a7.5eVt64KqzYn9A9Pt%lkp@intel.com>
+Subject: [helgaas-pci:pci/vpd] BUILD SUCCESS
+ 0201320442875e877546a9d2861763414997feef
+Message-ID: <616210aa.hHVCawwWfeQh5Pl7%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,8 +39,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
-branch HEAD: 3d063534a7bfd15410febb7b69453ba1ebe00979  PCI/sysfs: Use NUMA_NO_NODE macro
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
+branch HEAD: 0201320442875e877546a9d2861763414997feef  cxgb3: Remove seeprom_write and use VPD API
 
 elapsed time: 1376m
 
@@ -247,9 +247,9 @@ riscv                            allmodconfig
 riscv                            allyesconfig
 x86_64                    rhel-8.3-kselftests
 um                           x86_64_defconfig
-x86_64                           allyesconfig
 x86_64                               rhel-8.3
 x86_64                                  kexec
+x86_64                           allyesconfig
 
 clang tested configs:
 x86_64               randconfig-c007-20211009
