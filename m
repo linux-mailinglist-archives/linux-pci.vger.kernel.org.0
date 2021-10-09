@@ -2,178 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D6CD427D73
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 22:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D892427DC7
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 00:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbhJIUxL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Oct 2021 16:53:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:61562 "EHLO mga05.intel.com"
+        id S230342AbhJIWB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Oct 2021 18:01:56 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19447 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229998AbhJIUxL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 9 Oct 2021 16:53:11 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="312885488"
+        id S230116AbhJIWB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 9 Oct 2021 18:01:56 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="213834690"
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="312885488"
+   d="scan'208";a="213834690"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 13:51:13 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 14:59:58 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="479353104"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 13:51:13 -0700
-Subject: [PATCH v4 05/10] cxl/pci: Make more use of cxl_register_map
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 09 Oct 2021 13:51:13 -0700
-Message-ID: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <163379786381.692348.10643599219049157444.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163379786381.692348.10643599219049157444.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="479361791"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 09 Oct 2021 14:59:57 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mZKNo-0000cK-Py; Sat, 09 Oct 2021 21:59:56 +0000
+Date:   Sun, 10 Oct 2021 05:59:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/sysfs] BUILD SUCCESS
+ 3d063534a7bfd15410febb7b69453ba1ebe00979
+Message-ID: <616210a7.5eVt64KqzYn9A9Pt%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/sysfs
+branch HEAD: 3d063534a7bfd15410febb7b69453ba1ebe00979  PCI/sysfs: Use NUMA_NO_NODE macro
 
-The structure exists to pass around information about register mapping.
-Use it for passing @barno and @block_offset, and eliminate duplicate
-local variables.
+elapsed time: 1376m
 
-The helpers that use @map do not care about @cxlm, so just pass them a
-pdev instead.
+configs tested: 238
+configs skipped: 4
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-[djbw: separate @base conversion]
-[djbw: reorder before cxl_pci_setup_regs() refactor to improver readability]
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211009
+i386                 randconfig-c001-20211008
+powerpc              randconfig-c003-20211009
+sh                          sdk7786_defconfig
+arm                           stm32_defconfig
+arm                             ezx_defconfig
+arm                          exynos_defconfig
+s390                          debug_defconfig
+parisc                generic-32bit_defconfig
+m68k                       bvme6000_defconfig
+arm                            hisi_defconfig
+nios2                         10m50_defconfig
+mips                       capcella_defconfig
+arm                        trizeps4_defconfig
+powerpc                 mpc85xx_cds_defconfig
+powerpc                    sam440ep_defconfig
+powerpc                      tqm8xx_defconfig
+sh                          rsk7269_defconfig
+arm                             mxs_defconfig
+m68k                        mvme147_defconfig
+sh                            shmin_defconfig
+powerpc                      pcm030_defconfig
+um                             i386_defconfig
+arm                            xcep_defconfig
+arm                         lpc32xx_defconfig
+mips                      maltaaprp_defconfig
+arc                         haps_hs_defconfig
+mips                    maltaup_xpa_defconfig
+mips                          rb532_defconfig
+riscv             nommu_k210_sdcard_defconfig
+xtensa                          iss_defconfig
+arc                     haps_hs_smp_defconfig
+arm                        mvebu_v5_defconfig
+powerpc                       holly_defconfig
+powerpc                    gamecube_defconfig
+mips                       lemote2f_defconfig
+sh                        sh7763rdp_defconfig
+mips                        jmr3927_defconfig
+mips                       rbtx49xx_defconfig
+arm                           h5000_defconfig
+m68k                        m5272c3_defconfig
+arc                              allyesconfig
+mips                        omega2p_defconfig
+sh                        dreamcast_defconfig
+mips                           gcw0_defconfig
+powerpc                     pq2fads_defconfig
+mips                         mpc30x_defconfig
+m68k                          multi_defconfig
+arm                       omap2plus_defconfig
+ia64                                defconfig
+powerpc                     tqm8548_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                         at91_dt_defconfig
+arm                       cns3420vb_defconfig
+mips                          ath25_defconfig
+xtensa                  cadence_csp_defconfig
+arm                         axm55xx_defconfig
+powerpc                     pseries_defconfig
+xtensa                           alldefconfig
+powerpc                     mpc83xx_defconfig
+powerpc                          allyesconfig
+sh                      rts7751r2d1_defconfig
+m68k                          atari_defconfig
+sh                   sh7770_generic_defconfig
+arm                        mvebu_v7_defconfig
+arm                       imx_v4_v5_defconfig
+arm                          collie_defconfig
+sh                           se7206_defconfig
+sh                               allmodconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      pasemi_defconfig
+powerpc                   currituck_defconfig
+sh                            hp6xx_defconfig
+ia64                             alldefconfig
+arm                         bcm2835_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                  storcenter_defconfig
+x86_64                              defconfig
+sh                        edosk7705_defconfig
+mips                           rs90_defconfig
+mips                        bcm63xx_defconfig
+mips                     loongson1b_defconfig
+arm64                            alldefconfig
+sh                             espt_defconfig
+riscv                             allnoconfig
+arm                          ixp4xx_defconfig
+powerpc                      mgcoge_defconfig
+mips                           mtx1_defconfig
+sh                           se7712_defconfig
+sh                   secureedge5410_defconfig
+sh                            titan_defconfig
+arm                        vexpress_defconfig
+powerpc                      ppc40x_defconfig
+um                                  defconfig
+mips                           ip22_defconfig
+mips                   sb1250_swarm_defconfig
+mips                         tb0219_defconfig
+arc                            hsdk_defconfig
+sh                        apsh4ad0a_defconfig
+mips                  decstation_64_defconfig
+sh                        sh7785lcr_defconfig
+arm                          gemini_defconfig
+m68k                            q40_defconfig
+csky                                defconfig
+microblaze                      mmu_defconfig
+sh                  sh7785lcr_32bit_defconfig
+m68k                             allyesconfig
+sh                               j2_defconfig
+sh                           se7619_defconfig
+sh                           se7721_defconfig
+powerpc                 mpc836x_rdk_defconfig
+xtensa                generic_kc705_defconfig
+mips                         db1xxx_defconfig
+arm                          ep93xx_defconfig
+powerpc                   microwatt_defconfig
+powerpc                      obs600_defconfig
+arm                           sama7_defconfig
+powerpc                     tqm8555_defconfig
+arm                         s5pv210_defconfig
+m68k                        m5307c3_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                  colibri_pxa270_defconfig
+arm                            mps2_defconfig
+sh                          lboxre2_defconfig
+mips                           xway_defconfig
+arm                     eseries_pxa_defconfig
+x86_64               randconfig-c001-20211009
+arm                  randconfig-c002-20211009
+x86_64               randconfig-c001-20211008
+arm                  randconfig-c002-20211008
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20211009
+x86_64               randconfig-a005-20211009
+x86_64               randconfig-a001-20211009
+x86_64               randconfig-a002-20211009
+x86_64               randconfig-a004-20211009
+x86_64               randconfig-a006-20211009
+i386                 randconfig-a001-20211009
+i386                 randconfig-a003-20211009
+i386                 randconfig-a005-20211009
+i386                 randconfig-a004-20211009
+i386                 randconfig-a002-20211009
+i386                 randconfig-a006-20211009
+x86_64               randconfig-a015-20211008
+x86_64               randconfig-a012-20211008
+x86_64               randconfig-a016-20211008
+x86_64               randconfig-a013-20211008
+x86_64               randconfig-a011-20211008
+x86_64               randconfig-a014-20211008
+i386                 randconfig-a013-20211008
+i386                 randconfig-a016-20211008
+i386                 randconfig-a014-20211008
+i386                 randconfig-a011-20211008
+i386                 randconfig-a012-20211008
+i386                 randconfig-a015-20211008
+arc                  randconfig-r043-20211008
+s390                 randconfig-r044-20211008
+riscv                randconfig-r042-20211008
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-c007-20211009
+i386                 randconfig-c001-20211009
+arm                  randconfig-c002-20211009
+s390                 randconfig-c005-20211009
+powerpc              randconfig-c003-20211009
+riscv                randconfig-c006-20211009
+mips                 randconfig-c004-20211009
+arm                  randconfig-c002-20211010
+mips                 randconfig-c004-20211010
+i386                 randconfig-c001-20211010
+s390                 randconfig-c005-20211010
+x86_64               randconfig-c007-20211010
+powerpc              randconfig-c003-20211010
+riscv                randconfig-c006-20211010
+i386                 randconfig-a001-20211008
+i386                 randconfig-a003-20211008
+i386                 randconfig-a005-20211008
+i386                 randconfig-a004-20211008
+i386                 randconfig-a002-20211008
+i386                 randconfig-a006-20211008
+x86_64               randconfig-a015-20211009
+x86_64               randconfig-a012-20211009
+x86_64               randconfig-a016-20211009
+x86_64               randconfig-a013-20211009
+x86_64               randconfig-a011-20211009
+x86_64               randconfig-a014-20211009
+i386                 randconfig-a013-20211009
+i386                 randconfig-a016-20211009
+i386                 randconfig-a014-20211009
+i386                 randconfig-a012-20211009
+i386                 randconfig-a011-20211009
+i386                 randconfig-a015-20211009
+x86_64               randconfig-a003-20211008
+x86_64               randconfig-a005-20211008
+x86_64               randconfig-a001-20211008
+x86_64               randconfig-a002-20211008
+x86_64               randconfig-a004-20211008
+x86_64               randconfig-a006-20211008
+hexagon              randconfig-r045-20211009
+hexagon              randconfig-r041-20211009
+s390                 randconfig-r044-20211009
+riscv                randconfig-r042-20211009
+
 ---
-Changes since v3:
-- Fix a 0day report about printing a resource_size_t
-
- drivers/cxl/pci.c |   55 ++++++++++++++++++++++-------------------------------
- 1 file changed, 23 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 21dd10a77eb3..f1de236ccd13 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -306,12 +306,13 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
- 	return 0;
- }
- 
--static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
--					  u8 bar, u64 offset)
-+static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
-+					  struct cxl_register_map *map)
- {
- 	void __iomem *addr;
--	struct device *dev = cxlm->dev;
--	struct pci_dev *pdev = to_pci_dev(dev);
-+	int bar = map->barno;
-+	struct device *dev = &pdev->dev;
-+	resource_size_t offset = map->block_offset;
- 
- 	/* Basic sanity check that BAR is big enough */
- 	if (pci_resource_len(pdev, bar) < offset) {
-@@ -326,15 +327,15 @@ static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
- 		return addr;
- 	}
- 
--	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
--		bar, offset);
-+	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
-+		bar, &offset);
- 
- 	return addr;
- }
- 
--static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
-+static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
- {
--	pci_iounmap(to_pci_dev(cxlm->dev), base);
-+	pci_iounmap(pdev, base);
- }
- 
- static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
-@@ -360,12 +361,12 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
- 	return 0;
- }
- 
--static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
-+static int cxl_probe_regs(struct pci_dev *pdev, void __iomem *base,
- 			  struct cxl_register_map *map)
- {
- 	struct cxl_component_reg_map *comp_map;
- 	struct cxl_device_reg_map *dev_map;
--	struct device *dev = cxlm->dev;
-+	struct device *dev = &pdev->dev;
- 
- 	switch (map->reg_type) {
- 	case CXL_REGLOC_RBI_COMPONENT:
-@@ -420,12 +421,13 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
- 	return 0;
- }
- 
--static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
--				      u8 *bar, u64 *offset, u8 *reg_type)
-+static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
-+				struct cxl_register_map *map)
- {
--	*offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
--	*bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
--	*reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-+	map->block_offset =
-+		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-+	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-+	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
- }
- 
- /**
-@@ -462,34 +464,23 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
- 
- 	for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
- 		u32 reg_lo, reg_hi;
--		u8 reg_type;
--		u64 offset;
--		u8 bar;
- 
- 		pci_read_config_dword(pdev, regloc, &reg_lo);
- 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
- 
--		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
--					  &reg_type);
-+		map = &maps[n_maps];
-+		cxl_decode_regblock(reg_lo, reg_hi, map);
- 
- 		/* Ignore unknown register block types */
--		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
-+		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
- 			continue;
- 
--		base = cxl_pci_map_regblock(cxlm, bar, offset);
-+		base = cxl_pci_map_regblock(pdev, map);
- 		if (!base)
- 			return -ENOMEM;
- 
--		map = &maps[n_maps];
--		map->barno = bar;
--		map->block_offset = offset;
--		map->reg_type = reg_type;
--
--		ret = cxl_probe_regs(cxlm, base + offset, map);
--
--		/* Always unmap the regblock regardless of probe success */
--		cxl_pci_unmap_regblock(cxlm, base);
--
-+		ret = cxl_probe_regs(pdev, base + map->block_offset, map);
-+		cxl_pci_unmap_regblock(pdev, base);
- 		if (ret)
- 			return ret;
- 
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
