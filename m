@@ -2,293 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77688427D29
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 21:42:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CED4427D68
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 22:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbhJITn4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Oct 2021 15:43:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34443 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229558AbhJITny (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 9 Oct 2021 15:43:54 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="225457408"
-X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="225457408"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 12:41:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="590882364"
-Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 09 Oct 2021 12:41:55 -0700
-Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mZIEE-0000VD-Ow; Sat, 09 Oct 2021 19:41:54 +0000
-Date:   Sun, 10 Oct 2021 03:41:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/qcom] BUILD SUCCESS
- 25e86c97a3a27f000849970b9d49bc5d37b30edd
-Message-ID: <6161f052.gTLix9U0uvOf3j85%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230052AbhJIUmH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Oct 2021 16:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230233AbhJIUmG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Oct 2021 16:42:06 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A522C061767
+        for <linux-pci@vger.kernel.org>; Sat,  9 Oct 2021 13:40:09 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id ls18so10143324pjb.3
+        for <linux-pci@vger.kernel.org>; Sat, 09 Oct 2021 13:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PNkbI6CC4MPwch06xoRoPuOpZuZRykTcMawJcvuLIGc=;
+        b=Muu3r0eHUqB/dNHg2SbcMZBR59fyebiqEBsvk6PezrQlxQGwEI1ZicQJ1XHU8yb+jR
+         kHSIW8u2KEJn+hh/8bqD+oSUoLGTMzHi2MKjMWxijaluyFQ9X/HFL9QP8jG3kJvP1+yC
+         MFrvKW7dOAqDY1UzAuwqQRxVpGtbg2xoYhxoIQminXJgv3DKYb4mwO0GqHZDYiNWBRPr
+         zX9FmLpjC1P17blRe4cxwK4BawnSAcTVigJTMtvWGUVR4Krw0LhW/yHMyjDs7LwJths0
+         zTeiN6ZgCa7R3RDBLb9WPt7ZUqU0TGXpSpq1OOroQI9pRt1DcheHTMwoozKzKGHc51Jc
+         ai5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PNkbI6CC4MPwch06xoRoPuOpZuZRykTcMawJcvuLIGc=;
+        b=ePWrBgupv+jsfQWg0y9e6cYAXyXOs4fE5U5CLmtDrHBKucWqSLJgvw4rontw372/0J
+         SI+PXCieXdfDPOHQH4lfcb52OCA65bHlg1UOYnwp8dOUjfOSinJmzZ/30kNEMRlRkwoD
+         ZFCOiBflymlRR4JCoEzCcVuNrMsLAacJOXxENgniQAoRAwxyCX3Uc+vjMMonZZR6Z0ST
+         YuF+PhgxmeuZVVo74jeaIEvxPdYQ8G9k873yIAGdfxkFm7VomJLQhb+glhJGCWHdYh7y
+         QiBRo1qV7qRjk53cfLs6GE3EYp9IHhCY+4DUHlN1823kxfuSNuZ/G9WnnlD6ctvIfthN
+         4nEw==
+X-Gm-Message-State: AOAM531qNoaAL5cRjTrFB7+SobuIWz8w8V+c0aQPweUU+D4DzOgKbo6F
+        bsawaaDUO58IBDnkflcFeRjG3Oqa/9UKj0bDlHNOhg==
+X-Google-Smtp-Source: ABdhPJySd5zqNERLKr8S37E5WA9IMnevPxuJEZ9BVS6uY8X2FGjPzRDwsaOEKoQH/I5/2YcevgWJ2BJGpdsvJiUJb30=
+X-Received: by 2002:a17:90a:d686:: with SMTP id x6mr20678375pju.8.1633812008773;
+ Sat, 09 Oct 2021 13:40:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com> <20211009053103-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20211009053103-mutt-send-email-mst@kernel.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 9 Oct 2021 13:39:57 -0700
+Message-ID: <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
+Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(), pci_iomap_host_shared_range()
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/qcom
-branch HEAD: 25e86c97a3a27f000849970b9d49bc5d37b30edd  MAINTAINERS: Add entry for Qualcomm PCIe Endpoint driver and binding
+On Sat, Oct 9, 2021 at 2:53 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Oct 08, 2021 at 05:37:07PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > From: Andi Kleen <ak@linux.intel.com>
+> >
+> > For Confidential VM guests like TDX, the host is untrusted and hence
+> > the devices emulated by the host or any data coming from the host
+> > cannot be trusted. So the drivers that interact with the outside world
+> > have to be hardened by sharing memory with host on need basis
+> > with proper hardening fixes.
+> >
+> > For the PCI driver case, to share the memory with the host add
+> > pci_iomap_host_shared() and pci_iomap_host_shared_range() APIs.
+> >
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> So I proposed to make all pci mappings shared, eliminating the need
+> to patch drivers.
+>
+> To which Andi replied
+>         One problem with removing the ioremap opt-in is that
+>         it's still possible for drivers to get at devices without going through probe.
+>
+> To which Greg replied:
+> https://lore.kernel.org/all/YVXBNJ431YIWwZdQ@kroah.com/
+>         If there are in-kernel PCI drivers that do not do this, they need to be
+>         fixed today.
+>
+> Can you guys resolve the differences here?
 
-elapsed time: 1687m
+I agree with you and Greg here. If a driver is accessing hardware
+resources outside of the bind lifetime of one of the devices it
+supports, and in a way that neither modrobe-policy nor
+device-authorization -policy infrastructure can block, that sounds
+like a bug report. Fix those drivers instead of sprinkling
+ioremap_shared in select places and with unclear rules about when a
+driver is allowed to do "shared" mappings. Let the new
+device-authorization mechanism (with policy in userspace) be the
+central place where all of these driver "trust" issues are managed.
 
-configs tested: 232
-configs skipped: 4
+> And once they are resolved, mention this in the commit log so
+> I don't get to re-read the series just to find out nothing
+> changed in this respect?
+>
+> I frankly do not believe we are anywhere near being able to harden
+> an arbitrary kernel config against attack.
+> How about creating a defconfig that makes sense for TDX then?
+> Anyone deviating from that better know what they are doing,
+> this API tweaking is just putting policy into the kernel  ...
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211009
-i386                 randconfig-c001-20211008
-powerpc              randconfig-c003-20211009
-sh                           se7206_defconfig
-sh                   sh7724_generic_defconfig
-powerpc                      pasemi_defconfig
-x86_64                              defconfig
-arm                        cerfcube_defconfig
-sh                          sdk7786_defconfig
-arm                           stm32_defconfig
-arm                             ezx_defconfig
-arm                          exynos_defconfig
-s390                          debug_defconfig
-parisc                generic-32bit_defconfig
-m68k                       bvme6000_defconfig
-arm                            hisi_defconfig
-nios2                         10m50_defconfig
-mips                       capcella_defconfig
-arm                        trizeps4_defconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                      pcm030_defconfig
-um                             i386_defconfig
-arm                            xcep_defconfig
-arm                         lpc32xx_defconfig
-mips                      maltaaprp_defconfig
-arc                         haps_hs_defconfig
-mips                    maltaup_xpa_defconfig
-mips                          rb532_defconfig
-riscv             nommu_k210_sdcard_defconfig
-xtensa                          iss_defconfig
-arc                     haps_hs_smp_defconfig
-arm                        mvebu_v5_defconfig
-powerpc                       holly_defconfig
-powerpc                    gamecube_defconfig
-mips                       lemote2f_defconfig
-sh                        sh7763rdp_defconfig
-mips                        jmr3927_defconfig
-mips                       rbtx49xx_defconfig
-arm                           h5000_defconfig
-m68k                        m5272c3_defconfig
-arc                              allyesconfig
-mips                        omega2p_defconfig
-sh                        dreamcast_defconfig
-mips                           gcw0_defconfig
-s390                                defconfig
-powerpc                     pq2fads_defconfig
-mips                         mpc30x_defconfig
-m68k                          multi_defconfig
-powerpc                    sam440ep_defconfig
-arm                       omap2plus_defconfig
-ia64                                defconfig
-powerpc                     tqm8548_defconfig
-powerpc                  mpc885_ads_defconfig
-arm                         at91_dt_defconfig
-arm                       cns3420vb_defconfig
-mips                          ath25_defconfig
-xtensa                  cadence_csp_defconfig
-arm                         axm55xx_defconfig
-powerpc                     pseries_defconfig
-xtensa                           alldefconfig
-powerpc                     mpc83xx_defconfig
-powerpc                          allyesconfig
-sh                      rts7751r2d1_defconfig
-m68k                          atari_defconfig
-arm                             mxs_defconfig
-sh                   sh7770_generic_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                 mpc8560_ads_defconfig
-sh                            titan_defconfig
-sh                             espt_defconfig
-arm                      jornada720_defconfig
-arm                       imx_v4_v5_defconfig
-arm                          collie_defconfig
-sh                               allmodconfig
-powerpc                 mpc837x_rdb_defconfig
-powerpc                   currituck_defconfig
-sh                            hp6xx_defconfig
-ia64                             alldefconfig
-arm                         bcm2835_defconfig
-powerpc                 mpc832x_mds_defconfig
-mips                           rs90_defconfig
-mips                        bcm63xx_defconfig
-mips                     loongson1b_defconfig
-arm64                            alldefconfig
-riscv                             allnoconfig
-arm                          ixp4xx_defconfig
-powerpc                      mgcoge_defconfig
-mips                           mtx1_defconfig
-sh                           se7712_defconfig
-sh                   secureedge5410_defconfig
-arm                        vexpress_defconfig
-powerpc                      ppc40x_defconfig
-um                                  defconfig
-mips                           ip22_defconfig
-mips                   sb1250_swarm_defconfig
-mips                         tb0219_defconfig
-arc                            hsdk_defconfig
-sh                        apsh4ad0a_defconfig
-mips                  decstation_64_defconfig
-sh                        sh7785lcr_defconfig
-arm                        realview_defconfig
-arm                       versatile_defconfig
-powerpc                 mpc836x_mds_defconfig
-arm                          gemini_defconfig
-m68k                            q40_defconfig
-csky                                defconfig
-microblaze                      mmu_defconfig
-sh                  sh7785lcr_32bit_defconfig
-m68k                             allyesconfig
-sh                               j2_defconfig
-sh                            shmin_defconfig
-sh                           se7619_defconfig
-sh                           se7721_defconfig
-powerpc                 mpc836x_rdk_defconfig
-xtensa                generic_kc705_defconfig
-mips                         db1xxx_defconfig
-arm                          ep93xx_defconfig
-powerpc                   microwatt_defconfig
-m68k                        m5307c3_defconfig
-arm                   milbeaut_m10v_defconfig
-arm                  colibri_pxa270_defconfig
-arm                            mps2_defconfig
-sh                          lboxre2_defconfig
-mips                           xway_defconfig
-arm                     eseries_pxa_defconfig
-x86_64               randconfig-c001-20211008
-arm                  randconfig-c002-20211008
-x86_64               randconfig-c001-20211009
-arm                  randconfig-c002-20211009
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-nios2                               defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20211009
-x86_64               randconfig-a005-20211009
-x86_64               randconfig-a001-20211009
-x86_64               randconfig-a002-20211009
-x86_64               randconfig-a004-20211009
-x86_64               randconfig-a006-20211009
-i386                 randconfig-a001-20211009
-i386                 randconfig-a003-20211009
-i386                 randconfig-a005-20211009
-i386                 randconfig-a004-20211009
-i386                 randconfig-a002-20211009
-i386                 randconfig-a006-20211009
-x86_64               randconfig-a015-20211008
-x86_64               randconfig-a012-20211008
-x86_64               randconfig-a016-20211008
-x86_64               randconfig-a013-20211008
-x86_64               randconfig-a011-20211008
-x86_64               randconfig-a014-20211008
-i386                 randconfig-a013-20211008
-i386                 randconfig-a016-20211008
-i386                 randconfig-a014-20211008
-i386                 randconfig-a011-20211008
-i386                 randconfig-a012-20211008
-i386                 randconfig-a015-20211008
-arc                  randconfig-r043-20211008
-s390                 randconfig-r044-20211008
-riscv                randconfig-r042-20211008
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c007-20211009
-i386                 randconfig-c001-20211009
-arm                  randconfig-c002-20211009
-s390                 randconfig-c005-20211009
-powerpc              randconfig-c003-20211009
-riscv                randconfig-c006-20211009
-mips                 randconfig-c004-20211009
-x86_64               randconfig-a003-20211008
-x86_64               randconfig-a005-20211008
-x86_64               randconfig-a001-20211008
-x86_64               randconfig-a002-20211008
-x86_64               randconfig-a004-20211008
-x86_64               randconfig-a006-20211008
-i386                 randconfig-a001-20211008
-i386                 randconfig-a003-20211008
-i386                 randconfig-a005-20211008
-i386                 randconfig-a004-20211008
-i386                 randconfig-a002-20211008
-i386                 randconfig-a006-20211008
-x86_64               randconfig-a015-20211009
-x86_64               randconfig-a012-20211009
-x86_64               randconfig-a016-20211009
-x86_64               randconfig-a013-20211009
-x86_64               randconfig-a011-20211009
-x86_64               randconfig-a014-20211009
-i386                 randconfig-a013-20211009
-i386                 randconfig-a016-20211009
-i386                 randconfig-a014-20211009
-i386                 randconfig-a012-20211009
-i386                 randconfig-a011-20211009
-i386                 randconfig-a015-20211009
-hexagon              randconfig-r045-20211009
-hexagon              randconfig-r041-20211009
-s390                 randconfig-r044-20211009
-riscv                randconfig-r042-20211009
-hexagon              randconfig-r045-20211008
-hexagon              randconfig-r041-20211008
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Right, userspace authorization policy and select driver fixups seems
+to be the answer to the raised concerns.
