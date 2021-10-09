@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F534427DC8
+	by mail.lfdr.de (Postfix) with ESMTP id 56500427DC9
 	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 00:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbhJIWB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S230116AbhJIWB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 9 Oct 2021 18:01:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17952 "EHLO mga07.intel.com"
+Received: from mga04.intel.com ([192.55.52.120]:50485 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230342AbhJIWB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S231201AbhJIWB4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Sat, 9 Oct 2021 18:01:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="290187550"
+X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="225464523"
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="290187550"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 14:59:58 -0700
+   d="scan'208";a="225464523"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 14:59:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,361,1624345200"; 
-   d="scan'208";a="441006125"
+   d="scan'208";a="440294974"
 Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 09 Oct 2021 14:59:57 -0700
+  by orsmga006.jf.intel.com with ESMTP; 09 Oct 2021 14:59:57 -0700
 Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mZKNo-0000cS-R2; Sat, 09 Oct 2021 21:59:56 +0000
-Date:   Sun, 10 Oct 2021 05:59:06 +0800
+        id 1mZKNo-0000cM-QK; Sat, 09 Oct 2021 21:59:56 +0000
+Date:   Sun, 10 Oct 2021 05:59:17 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/vpd] BUILD SUCCESS
- 0201320442875e877546a9d2861763414997feef
-Message-ID: <616210aa.hHVCawwWfeQh5Pl7%lkp@intel.com>
+Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
+ b2105b9f39b57ac80fb909b7ae4da3d343af9f7d
+Message-ID: <616210b5.zN5n+fN8OuKmuGuc%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,23 +39,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vpd
-branch HEAD: 0201320442875e877546a9d2861763414997feef  cxgb3: Remove seeprom_write and use VPD API
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: b2105b9f39b57ac80fb909b7ae4da3d343af9f7d  PCI: Correct misspelled and remove duplicated words
 
-elapsed time: 1376m
+elapsed time: 1377m
 
-configs tested: 238
+configs tested: 236
 configs skipped: 4
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
 
 gcc tested configs:
+arm                              allmodconfig
 arm                                 defconfig
 arm64                            allyesconfig
 arm64                               defconfig
 arm                              allyesconfig
-arm                              allmodconfig
 i386                 randconfig-c001-20211009
 i386                 randconfig-c001-20211008
 powerpc              randconfig-c003-20211009
@@ -132,9 +132,6 @@ sh                            hp6xx_defconfig
 ia64                             alldefconfig
 arm                         bcm2835_defconfig
 powerpc                 mpc832x_mds_defconfig
-powerpc                  storcenter_defconfig
-x86_64                              defconfig
-sh                        edosk7705_defconfig
 mips                           rs90_defconfig
 mips                        bcm63xx_defconfig
 mips                     loongson1b_defconfig
@@ -200,8 +197,8 @@ xtensa                           allyesconfig
 h8300                            allyesconfig
 arc                                 defconfig
 parisc                              defconfig
-s390                                defconfig
 parisc                           allyesconfig
+s390                                defconfig
 s390                             allyesconfig
 s390                             allmodconfig
 i386                             allyesconfig
@@ -243,10 +240,11 @@ riscv                    nommu_k210_defconfig
 riscv                    nommu_virt_defconfig
 riscv                               defconfig
 riscv                          rv32_defconfig
-riscv                            allmodconfig
 riscv                            allyesconfig
+riscv                            allmodconfig
 x86_64                    rhel-8.3-kselftests
 um                           x86_64_defconfig
+x86_64                              defconfig
 x86_64                               rhel-8.3
 x86_64                                  kexec
 x86_64                           allyesconfig
