@@ -2,102 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0257F427C2B
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 18:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F84E427C34
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 18:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232477AbhJIQqv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Oct 2021 12:46:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6955 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232387AbhJIQqt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 9 Oct 2021 12:46:49 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10132"; a="213816794"
-X-IronPort-AV: E=Sophos;i="5.85,360,1624345200"; 
-   d="scan'208";a="213816794"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 09:44:51 -0700
-X-IronPort-AV: E=Sophos;i="5.85,360,1624345200"; 
-   d="scan'208";a="546557593"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2021 09:44:51 -0700
-Subject: [PATCH v3 10/10] ocxl: Use pci core's DVSEC functionality
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-Date:   Sat, 09 Oct 2021 09:44:50 -0700
-Message-ID: <163379789065.692348.7117946955275586530.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
+        id S229743AbhJIQ6i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Oct 2021 12:58:38 -0400
+Received: from smtprelay0017.hostedemail.com ([216.40.44.17]:43924 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229624AbhJIQ6h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Oct 2021 12:58:37 -0400
+X-Greylist: delayed 508 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Oct 2021 12:58:37 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 1C3C0806CED7;
+        Sat,  9 Oct 2021 16:48:14 +0000 (UTC)
+Received: from omf03.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 5F1F332637;
+        Sat,  9 Oct 2021 16:48:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id 5976213D95;
+        Sat,  9 Oct 2021 16:48:11 +0000 (UTC)
+Message-ID: <0f625a108a2905c4f7d7ebb5b0db62b42f865338.camel@perches.com>
+Subject: Re: [PATCH v3 02/10] cxl/pci: Remove dev_dbg for unknown register
+ blocks
+From:   Joe Perches <joe@perches.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hch@lst.de
+Date:   Sat, 09 Oct 2021 09:48:10 -0700
+In-Reply-To: <163379784717.692348.3478221381958300790.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+         <163379784717.692348.3478221381958300790.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.22
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5976213D95
+X-Stat-Signature: a5tduneyhcpcb19yw7gotamc4ery6puk
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19EJkk5YGlMmhTfgufSNgJ6p7Sugk4y9po=
+X-HE-Tag: 1633798091-718472
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+On Sat, 2021-10-09 at 09:44 -0700, Dan Williams wrote:
+> From: Ben Widawsky <ben.widawsky@intel.com>
+> 
+> While interesting to driver developers, the dev_dbg message doesn't do
+> much except clutter up logs.
 
-Reduce maintenance burden of DVSEC query implementation by using the
-centralized PCI core implementation.
+So?  This isn't enabled by default.  How does it 'clutter' logs?
 
-There are two obvious places to simply drop in the new core
-implementation. There remains find_dvsec_from_pos() which would benefit
-from using a core implementation. As that change is less trivial it is
-reserved for later.
+> This information should be attainable
+> through sysfs, and someday lspci like utilities. This change
+> additionally helps reduce the LOC in a subsequent patch to refactor some
+> of cxl_pci register mapping.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/pci.c |    3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 64180f46c895..ccc7c2573ddc 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -475,9 +475,6 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+>  		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
+>  					  &reg_type);
+>  
+> 
+> -		dev_dbg(dev, "Found register block in bar %u @ 0x%llx of type %u\n",
+> -			bar, offset, reg_type);
+> -
+>  		/* Ignore unknown register block types */
+>  		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
+>  			continue;
+> 
 
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com> (v1)
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/powerpc/platforms/powernv/ocxl.c |    3 ++-
- drivers/misc/ocxl/config.c            |   13 +------------
- 2 files changed, 3 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
-index 9105efcf242a..28b009b46464 100644
---- a/arch/powerpc/platforms/powernv/ocxl.c
-+++ b/arch/powerpc/platforms/powernv/ocxl.c
-@@ -107,7 +107,8 @@ static int get_max_afu_index(struct pci_dev *dev, int *afu_idx)
- 	int pos;
- 	u32 val;
- 
--	pos = find_dvsec_from_pos(dev, OCXL_DVSEC_FUNC_ID, 0);
-+	pos = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM,
-+					OCXL_DVSEC_FUNC_ID);
- 	if (!pos)
- 		return -ESRCH;
- 
-diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-index a68738f38252..e401a51596b9 100644
---- a/drivers/misc/ocxl/config.c
-+++ b/drivers/misc/ocxl/config.c
-@@ -33,18 +33,7 @@
- 
- static int find_dvsec(struct pci_dev *dev, int dvsec_id)
- {
--	int vsec = 0;
--	u16 vendor, id;
--
--	while ((vsec = pci_find_next_ext_capability(dev, vsec,
--						    OCXL_EXT_CAP_ID_DVSEC))) {
--		pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
--				&vendor);
--		pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
--		if (vendor == PCI_VENDOR_ID_IBM && id == dvsec_id)
--			return vsec;
--	}
--	return 0;
-+	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_IBM, dvsec_id);
- }
- 
- static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
 
