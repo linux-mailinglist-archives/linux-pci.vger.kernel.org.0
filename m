@@ -2,238 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9326427898
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 11:53:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C5B942792F
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Oct 2021 12:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232453AbhJIJzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Oct 2021 05:55:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41234 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232470AbhJIJzp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Oct 2021 05:55:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633773228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TC+ficJjTyhwmBtLURsKztDpUSSEvDlSazI7HDdGRfI=;
-        b=VYugakf9gP0S8nsnFJl6fLThnA9B8jdnX9KlE8h28+NKZBz6hnHKZcJEzb8jkA3Eop98VY
-        uoX8QEnN4RzHVoBNxhpW89Edfy9L1Dv1MKR3P3rWEnNwF+ioqSZ7ooLM9bZZXD0RiI4p4s
-        QvyMzQrtaHFoUI5Qe7n5Zun6V4RTzMk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-DAhH_BHqPxGic-EMPqOBWw-1; Sat, 09 Oct 2021 05:53:42 -0400
-X-MC-Unique: DAhH_BHqPxGic-EMPqOBWw-1
-Received: by mail-ed1-f69.google.com with SMTP id r11-20020aa7cfcb000000b003d4fbd652b9so9371489edy.14
-        for <linux-pci@vger.kernel.org>; Sat, 09 Oct 2021 02:53:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TC+ficJjTyhwmBtLURsKztDpUSSEvDlSazI7HDdGRfI=;
-        b=7bGdGJPXDM33AGPPagfO1X41GTBuWsyINzjSWxwL64YDbA3IwblCXdOiMhCK9HAk+r
-         JbiJ4P50L1h4bVpTiyP0xxEwYJctAAn1UszRtOyUFAOdNubNlf9TFIdN0DLrGP/G4O8K
-         gW97XroA2QS+2k0KR0XApWnqNLIbtOqAMbg8vbe90XiF9qbnlC3ZHcc8O4LhPNs2rhZw
-         kRnlZYlgMe3U/DIbfp79rXshOQgA6G164DXJeDy5d4nw4+LiuwPe9Kt2Jv5RvAv8ub4G
-         bC97XyCa8D1sgPLKnN62Kmqf2c/LoWZpDYWKxKz5rA0XhyHP9rJNZCJzc1LRwjuF7Dcb
-         noag==
-X-Gm-Message-State: AOAM530lPSQ45wuAzC3ua9YvX4WB/iMMXuL4oTvbYCwyDwlQHazs8nGd
-        6vGVzHSdIE6UJShZggj0TitBJ6vs1EnchpLb+2cxWNbqzbUgriKmXaPdrypzKOsD+1mp/upTYnq
-        RGkp3rM0cjhYF5LHp2l7U
-X-Received: by 2002:a17:906:2bc7:: with SMTP id n7mr10404162ejg.238.1633773220397;
-        Sat, 09 Oct 2021 02:53:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxePZTE9MitFRdc70X+sthkRGYJjDyzEeDJjYhWOTmTvwwLiK4AL4UvsV8FtvbX7jf0fHnSpA==
-X-Received: by 2002:a17:906:2bc7:: with SMTP id n7mr10404118ejg.238.1633773220163;
-        Sat, 09 Oct 2021 02:53:40 -0700 (PDT)
-Received: from redhat.com ([2.55.132.170])
-        by smtp.gmail.com with ESMTPSA id rv25sm776493ejb.21.2021.10.09.02.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Oct 2021 02:53:39 -0700 (PDT)
-Date:   Sat, 9 Oct 2021 05:53:32 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
- pci_iomap_host_shared_range()
-Message-ID: <20211009053103-mutt-send-email-mst@kernel.org>
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S244568AbhJIKyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Oct 2021 06:54:49 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:23361 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231718AbhJIKyt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Oct 2021 06:54:49 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HRMGx36d2zRPqB;
+        Sat,  9 Oct 2021 18:48:25 +0800 (CST)
+Received: from SZX1000464847.huawei.com (10.21.59.169) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.8; Sat, 9 Oct 2021 18:52:50 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <helgaas@kernel.org>, <hch@infradead.org>, <kw@linux.com>,
+        <logang@deltatee.com>, <leon@kernel.org>,
+        <linux-pci@vger.kernel.org>, <rajur@chelsio.com>,
+        <hverkuil-cisco@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH V10 0/8] PCI: Enable 10-Bit tag support for PCIe devices
+Date:   Sat, 9 Oct 2021 18:49:30 +0800
+Message-ID: <20211009104938.48225-1-liudongdong3@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.21.59.169]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 05:37:07PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> From: Andi Kleen <ak@linux.intel.com>
-> 
-> For Confidential VM guests like TDX, the host is untrusted and hence
-> the devices emulated by the host or any data coming from the host
-> cannot be trusted. So the drivers that interact with the outside world
-> have to be hardened by sharing memory with host on need basis
-> with proper hardening fixes.
-> 
-> For the PCI driver case, to share the memory with the host add
-> pci_iomap_host_shared() and pci_iomap_host_shared_range() APIs.
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+field size from 8 bits to 10 bits.
 
-So I proposed to make all pci mappings shared, eliminating the need
-to patch drivers.
+This patchset is to enable 10-Bit tag for PCIe EP devices (include VF).
 
-To which Andi replied
-	One problem with removing the ioremap opt-in is that
-	it's still possible for drivers to get at devices without going through probe.
+V9->V10:
+- Rebased on V5.15-rc4.
+- Fix some commets suggested by Krzysztof.
 
-To which Greg replied:
-https://lore.kernel.org/all/YVXBNJ431YIWwZdQ@kroah.com/
-	If there are in-kernel PCI drivers that do not do this, they need to be
-	fixed today.
+V8->V9:
+- Rebased on V5.15-rc2.
+- Rename pcie_devcap to devcap, pcie_devcap2 to devcap2 to keep the same
+  style with commit 691392448065 ("PCI: Cache PCIe Device Capabilities
+  register").
 
-Can you guys resolve the differences here?
+V7->V8:
+- Add a kernel parameter pcie_tag_peer2peer to disable 10-bit tags.
+- Provide sysfs file to enable 10-bit tags.
+- Remove [PATCH V7 6/9] PCI: Enable 10-Bit Tag support for PCIe RP devices.
+- Rebased on v5.14-rc6.
+- Fix some other comments. Thanks to Bjorn who gave a lot of review
+  comments.
 
-And once they are resolved, mention this in the commit log so
-I don't get to re-read the series just to find out nothing
-changed in this respect?
+V6->V7:
+- Rebased on v5.14-rc3.
+- Change the "pci=disable_10bit_tag=" parameter to sysfs file to disable
+  10-Bit Tag Requester when need for p2pdma suggested by Leon.
+- Fix comment for p2pdma 10-bit tag check.
 
-I frankly do not believe we are anywhere near being able to harden
-an arbitrary kernel config against attack.
-How about creating a defconfig that makes sense for TDX then?
-Anyone deviating from that better know what they are doing,
-this API tweaking is just putting policy into the kernel  ...
+V5->V6:
+- Rebased on v5.14-rc2.
+- Add Reviewed-by: Christoph Hellwig <hch@lst.de> in [PATCH V6 2/8].
+- PCI: Add "pci=disable_10bit_tag=" parameter for peer-to-peer support.
+- Add a 10-bit tag check in P2PDMA.
+- Simplified implementation in [PATCH V6 6/8].
+- Fix some comments in [PATCH V6 4/8].
 
-> ---
->  Changes since v4:
->  * Replaced "_shared" with "_host_shared" in pci_iomap* APIs
->  * Fixed commit log as per review comments.
-> 
->  include/asm-generic/pci_iomap.h |  6 +++++
->  lib/pci_iomap.c                 | 47 +++++++++++++++++++++++++++++++++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/include/asm-generic/pci_iomap.h b/include/asm-generic/pci_iomap.h
-> index df636c6d8e6c..a4a83c8ab3cf 100644
-> --- a/include/asm-generic/pci_iomap.h
-> +++ b/include/asm-generic/pci_iomap.h
-> @@ -18,6 +18,12 @@ extern void __iomem *pci_iomap_range(struct pci_dev *dev, int bar,
->  extern void __iomem *pci_iomap_wc_range(struct pci_dev *dev, int bar,
->  					unsigned long offset,
->  					unsigned long maxlen);
-> +extern void __iomem *pci_iomap_host_shared(struct pci_dev *dev, int bar,
-> +					   unsigned long max);
-> +extern void __iomem *pci_iomap_host_shared_range(struct pci_dev *dev, int bar,
-> +						 unsigned long offset,
-> +						 unsigned long maxlen);
-> +
->  /* Create a virtual mapping cookie for a port on a given PCI device.
->   * Do not call this directly, it exists to make it easier for architectures
->   * to override */
-> diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-> index 57bd92f599ee..2816dc8715da 100644
-> --- a/lib/pci_iomap.c
-> +++ b/lib/pci_iomap.c
-> @@ -25,6 +25,11 @@ static void __iomem *map_ioremap_wc(phys_addr_t addr, size_t size)
->  	return ioremap_wc(addr, size);
->  }
->  
-> +static void __iomem *map_ioremap_host_shared(phys_addr_t addr, size_t size)
-> +{
-> +	return ioremap_host_shared(addr, size);
-> +}
-> +
->  static void __iomem *pci_iomap_range_map(struct pci_dev *dev,
->  					 int bar,
->  					 unsigned long offset,
-> @@ -106,6 +111,48 @@ void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
->  }
->  EXPORT_SYMBOL_GPL(pci_iomap_wc_range);
->  
-> +/**
-> + * pci_iomap_host_shared_range - create a virtual shared mapping cookie
-> + *				 for a PCI BAR
-> + * @dev: PCI device that owns the BAR
-> + * @bar: BAR number
-> + * @offset: map memory at the given offset in BAR
-> + * @maxlen: max length of the memory to map
-> + *
-> + * Remap a pci device's resources shared in a confidential guest.
-> + * For more details see pci_iomap_range's documentation.
+V4->V5:
+- Fix warning variable 'capa' is uninitialized.
+- Fix warning unused variable 'pchild'.
 
-So how does a driver author know when to use this function, and when to
-use the regular pci_iomap_range?  Drivers have no idea whether they are
-used in a confidential guest, and which ranges are shared, it's a TDX
-thing ...
+V3->V4:
+- Get the value of pcie_devcap2 in set_pcie_port_type().
+- Add Reviewed-by: Christoph Hellwig <hch@lst.de> in [PATCH V4 1/6],
+  [PATCH V4 3/6], [PATCH V4 4/6], [PATCH V4 5/6].
+- Fix some code style.
+- Rebased on v5.13-rc6.
 
-This documentation should really address it.
+V2->V3:
+- Use cached Device Capabilities Register suggested by Christoph.
+- Fix code style to avoid > 80 char lines.
+- Rename devcap2 to pcie_devcap2.
 
-> + *
-> + * @maxlen specifies the maximum length to map. To get access to
-> + * the complete BAR from offset to the end, pass %0 here.
-> + */
-> +void __iomem *pci_iomap_host_shared_range(struct pci_dev *dev, int bar,
-> +					  unsigned long offset,
-> +					  unsigned long maxlen)
-> +{
-> +	return pci_iomap_range_map(dev, bar, offset, maxlen,
-> +				   map_ioremap_host_shared, true);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iomap_host_shared_range);
-> +
-> +/**
-> + * pci_iomap_host_shared - create a virtual shared mapping cookie for a PCI BAR
-> + * @dev: PCI device that owns the BAR
-> + * @bar: BAR number
-> + * @maxlen: length of the memory to map
-> + *
-> + * See pci_iomap for details. This function creates a shared mapping
-> + * with the host for confidential hosts.
-> + *
-> + * @maxlen specifies the maximum length to map. To get access to the
-> + * complete BAR without checking for its length first, pass %0 here.
-> + */
-> +void __iomem *pci_iomap_host_shared(struct pci_dev *dev, int bar,
-> +			       unsigned long maxlen)
-> +{
-> +	return pci_iomap_host_shared_range(dev, bar, 0, maxlen);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iomap_host_shared);
-> +
->  /**
->   * pci_iomap - create a virtual mapping cookie for a PCI BAR
->   * @dev: PCI device that owns the BAR
-> -- 
-> 2.25.1
+V1->V2: Fix some comments by Christoph.
+- Store the devcap2 value in the pci_dev instead of reading it multiple
+  times.
+- Change pci_info to pci_dbg to avoid the noisy log.
+- Rename ext_10bit_tag_comp_path to ext_10bit_tag.
+- Fix the compile error.
+- Rebased on v5.13-rc1.
+
+Dongdong Liu (8):
+  PCI: Use cached devcap in more places
+  PCI: Cache Device Capabilities 2 Register
+  PCI: Add 10-Bit Tag register definitions
+  PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe Endpoint devices
+  PCI/IOV: Add 10-Bit Tag sysfs files for VF devices
+  PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
+  PCI: Enable 10-Bit Tag support for PCIe Endpoint device
+  PCI/IOV: Enable 10-Bit Tag support for PCIe VF devices
+
+ Documentation/ABI/testing/sysfs-bus-pci       | 41 +++++++++-
+ .../admin-guide/kernel-parameters.txt         |  5 ++
+ drivers/media/pci/cobalt/cobalt-driver.c      |  4 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   |  4 +-
+ drivers/pci/iov.c                             | 69 ++++++++++++++++
+ drivers/pci/p2pdma.c                          | 48 +++++++++++
+ drivers/pci/pci-sysfs.c                       | 81 +++++++++++++++++++
+ drivers/pci/pci.c                             | 12 +--
+ drivers/pci/pci.h                             |  9 +++
+ drivers/pci/pcie/aspm.c                       | 11 +--
+ drivers/pci/probe.c                           | 75 ++++++++++++++---
+ drivers/pci/quirks.c                          |  3 +-
+ include/linux/pci.h                           |  1 +
+ include/uapi/linux/pci_regs.h                 |  5 ++
+ 14 files changed, 336 insertions(+), 32 deletions(-)
+
+--
+2.22.0
 
