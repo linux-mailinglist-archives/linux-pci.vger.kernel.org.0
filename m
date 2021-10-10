@@ -2,120 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0FDC428028
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 11:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04198428107
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 13:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbhJJJQI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Oct 2021 05:16:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49832 "EHLO
+        id S231990AbhJJMBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Oct 2021 08:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbhJJJQI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Oct 2021 05:16:08 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD15BC061570
-        for <linux-pci@vger.kernel.org>; Sun, 10 Oct 2021 02:14:09 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6FD02300034C9;
-        Sun, 10 Oct 2021 11:14:07 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 68FD0B663C; Sun, 10 Oct 2021 11:14:07 +0200 (CEST)
-Date:   Sun, 10 Oct 2021 11:14:07 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/4] PCI: pciehp: Ignore Link Down/Up caused by
- error-induced Hot Reset
-Message-ID: <20211010091407.GA13471@wunner.de>
-References: <251f4edcc04c14f873ff1c967bc686169cd07d2d.1627638184.git.lukas@wunner.de>
- <20211007230020.GA1273969@bhelgaas>
+        with ESMTP id S231482AbhJJMBo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Oct 2021 08:01:44 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEACC06161C
+        for <linux-pci@vger.kernel.org>; Sun, 10 Oct 2021 04:59:46 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id q19so11855304pfl.4
+        for <linux-pci@vger.kernel.org>; Sun, 10 Oct 2021 04:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1ODEs4Dag8ER9NsVAeIVmCJUF6iNzYSfT1e/j9njNDg=;
+        b=mfSZb0Xy6jqQ6Qhb3UgeT/t2+5lrao1x3SqKw7TDNCeCd3rI+l+qi6iqOUtYiCmjRo
+         JD0NiI1uglyLleKYFmcBgCpdI1B2/cSnv//qgaF25FGZiHGes2+RXw6Q0dOQDoxXv/LA
+         Y/2nDbgBVH02SEBsDXOKBtUY3BxXdFycbzyWGDoxz5KsroqGrow6bUYfzHOx0JcQ1hhC
+         9fuyHGrKPQtPFGUlZZdmyPhWHagIclPJYacOUOdoGoAjaH33kfWLrbErrdSZefhZZ2yK
+         YW1XEZKh770fqjpzMecUDfyUyBQTglgCL7Q0ua0us8xnxQEOH7UmyQUJfVjudFzbclL+
+         H6Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1ODEs4Dag8ER9NsVAeIVmCJUF6iNzYSfT1e/j9njNDg=;
+        b=6VKwJMFs6nfT9D61hBcbg4U9HrUNgBiuoscyJ023CKKZwooZCPALwawCNndaQiecfc
+         +ncxjOJFmKvX3Vy6f+mceEn8CC5lIWTWHPwPgnvzhkuJMxIKUWkuTytmMUEOfiQmh/18
+         F8SrS0NJG6ogXfkP3cpQbhAJ8b+h5tHp1amDyCi7+lj5h75tRrhnuLp6t///qWVgr6wa
+         JCZsXGLoU4u5OWjlJlvTwyxKNK/Clhpx0vsYsaMnWBiTNh4rXPS01vPqDvGHNfpZqiGG
+         2W+d8yZi37z7pTOx6xxFNERF04d5G2ZdS23KW4E2SXZGq4WshUZhOZd7963GCuAMd9t9
+         ssOA==
+X-Gm-Message-State: AOAM532Y4IZ6VuNRWmVPtMZurShi+kWjZl3CqOgTnYdOKafOhCeCXIFI
+        qodHumOAyWDJsEHSLh47uu4/
+X-Google-Smtp-Source: ABdhPJyOFXzSYpHRvEB/uZUJpFqnwbDlVXJK88cvets5NG5muipfEHD61VQr1c2q5rhFzefB/Xl4/Q==
+X-Received: by 2002:a62:27c7:0:b0:44d:b86:54f2 with SMTP id n190-20020a6227c7000000b0044d0b8654f2mr3095707pfn.68.1633867185517;
+        Sun, 10 Oct 2021 04:59:45 -0700 (PDT)
+Received: from localhost.localdomain ([117.193.215.21])
+        by smtp.gmail.com with ESMTPSA id nn14sm4659235pjb.27.2021.10.10.04.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Oct 2021 04:59:44 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, kishon@ti.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] PCI: endpoint: Export symbols for endpoint controller drivers
+Date:   Sun, 10 Oct 2021 17:29:37 +0530
+Message-Id: <20211010115937.15856-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211007230020.GA1273969@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 06:00:20PM -0500, Bjorn Helgaas wrote:
-> On Sat, Jul 31, 2021 at 02:39:01PM +0200, Lukas Wunner wrote:
-> > The issue isn't DPC-specific, it also occurs when an error is handled by
-> > AER through aer_root_reset().  So while the issue was noticed only now,
-> > it's been around since 2006 when AER support was first introduced.
-> > 
-> > Fixes: 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver")
-[...]
-> > Cc: stable@vger.kernel.org # v2.6.19+: ba952824e6c1: PCI/portdrv: Report reset for frozen channel
-> 
-> Have you tried backporting this to v2.6.19?  I bet it's tough.  Not
-> sure we should suggest that stable pick this up unless there's a
-> reasonable path to do that.
+Use EXPORT_SYMBOL_GPL for functions such as dw_pcie_ep_reset_bar,
+dw_pcie_ep_raise_legacy_irq and dw_pcie_ep_raise_msi_irq for using with
+endpoint controller drivers built as modules.
 
-The oldest kernel.org stable release that still receives updates is v4.4.
-There may be older distribution kernels out there which continue to be
-supported.  We don't know for sure, so I think it's customary to tag
-the release that introduced an issue and leave it to the stable and
-distribution maintainers to choose what they backport.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It's true that patches often do not apply cleanly to older releases.
-There are some good folks who regularly take up the thankless task of
-backporting (Sudip Mukherjee to name but one), but I've also frequently
-backported patches myself where necessary.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 998b698f4085..0eda8236c125 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -83,6 +83,7 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ 	for (func_no = 0; func_no < funcs; func_no++)
+ 		__dw_pcie_ep_reset_bar(pci, func_no, bar, 0);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
+ 
+ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+ 		u8 cap_ptr, u8 cap)
+@@ -485,6 +486,7 @@ int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no)
+ 
+ 	return -EINVAL;
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
+ 
+ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num)
+@@ -536,6 +538,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_msi_irq);
+ 
+ int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
+ 				       u16 interrupt_num)
+-- 
+2.25.1
 
-
-> > +config PCI_ERROR_RECOVERY
-> > +	def_bool PCIEAER || EEH
-> 
-> I'm having a hard time connecting this to the code.
-[...]
-> But this still seems like it's kind of dangling.  It's not obvious to
-> me why pciehp_slot_reset() should be inside that #ifdef.  Do we need
-> the #ifdef for a functional reason, or is it there because we know it
-> will never be called?  If the latter, I don't think the savings are
-> worth it.
-
-The motivation for the #ifdef was merely to reduce code size if neither
-of PCIEAER or EEH is enabled.  Happy to remove it.
-
-I have a different question though.  We've often discussed deprecating
-portdrv and moving port services to the core instead.  I've stumbled
-across commit a39bd851dccf ("PCI/PM: Clear PCIe PME Status bit in core,
-not PCIe port driver"), wherein you moved pcie_pme_root_status_cleanup()
-from portdrv to the core, which allowed you to drop the ->resume_noirq
-callback from portdrv.
-
-I've been thinking what moving port services to the core would look like
-and what your vision for that might be.  If that commit is any indication,
-it seems you'd probably prefer that pciehp_slot_reset() (as introduced in
-the present patch) is called directly from report_slot_reset() in
-drivers/pci/pcie/err.c.
-
-That would eliminate much of the plumbing contained in the present patch
-to allow each port service driver to define a ->slot_reset callback and
-iterate over those callbacks.  pciehp is probably the only port service
-which requires special handling upon ->slot_reset and the same goes for
-a lot of the error handling and power management callbacks defined by
-port services.  So all that plumbing is probably just a very roundabout
-way of doing things.
-
-When calling into port service code from core code, one needs to find
-the port service's driver data.  For now we can resort to
-pcie_port_find_device(), but I imagine once we move all port services
-to the core, we'll be able to access their data directly from
-struct pci_dev, e.g. via pdev->hotplug or pdev->pcie->hotplug pointers.
-
-Does that make sense to you?
-
-Thanks,
-
-Lukas
