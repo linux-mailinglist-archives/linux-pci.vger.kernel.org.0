@@ -2,141 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 021AA428012
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 10:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0FDC428028
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Oct 2021 11:14:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231278AbhJJIjE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Oct 2021 04:39:04 -0400
-Received: from mail-sn1anam02on2063.outbound.protection.outlook.com ([40.107.96.63]:36078
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230254AbhJJIjD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 10 Oct 2021 04:39:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OvLv6s0ZEMK1uUt2pIzeUg+gPsQzC6+HMK5btEGqkKX2i/EJSqa0CjlK4/ZVR8Ed2Bz8wHEykcBF+reX8dgYDeSJ9fZ7CLzG40a0LpXA4UaIM8w3080+ky36EHtVY2eteovE6Yl8pXx/h2SrV10qvOat37HcMcDfdTe9O6vZUaS8W3F+6Q4Mh54rT72eEAPOT91CtJZjPJ7lnQjKIbJwiI3Un0yV7fSw4THg4F13iFExL4Xa4/dm49IjpUc1TvkilxTJWL57Z9Vb1Jczm1m5YQTdabGvycXlbnUXOq5cYC3ksf6SBgE9hNoXN3s833TPU7ThcKyv6hJmEQ81sRsHsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w/0DoH+Dpp3/L6SeUjH1l0wx54wHhnmxZ+t/hkqaf/I=;
- b=CMIcuQi9B9yl67mlysHcA02hzBcB2u5ZMx9NmvNMBYfM6kTW2IbJPHJUZj++fBuQ8+Sn49VlQfGHxEHAH2ZSScf7Kd8nkreRJ5OwuqEc4Py6kSfksEhN87dtHfZED29j5D7vvKTzz+WztKohUNL9Uah4YCKeWxuNCAA9vfUhJNZim/XVFZP7boEhrNiAuEuYnr3HR8k0Bjqpau52kg9JLXiyzeVp9niUDVVMd+oXoZQ8pUe965IP1LExyhHtaRdwLe3XU0DzTF0BDJxJJowY5ALMkassKx6YUVQePkIIJJGGvLG7Xyucge+CP6VMA93uSNuRqW9iuq+TgCnOni04jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=infradead.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w/0DoH+Dpp3/L6SeUjH1l0wx54wHhnmxZ+t/hkqaf/I=;
- b=SrUi0T+rfmS6S831sOd+3DePNBg++RpGlsjMm8KT/ZNfGEiBBwVszFOe6WN5ZHB4CPNBSjUUcg9jwcDHSKoHepc7Ol93Xxq+H819Bp55pZU4JI7gfWzCNNEw7h1Wj2mA9utYP/QjwtMzQrIxInsdPQ/WHrLpl1VlgqDuZ0rKQiGkcSZEYfv0y+xcYc9PVJ+129LATz7Xwu5J/5gqum2NgC3QXAfsfBBej1/E8R5jMBgpagqhPv3K3vb+rwWJE6Q2j7A7/1A6R+JGWG8Yl7sn7fH+tMs6vS5AZ5HBifml9zk8/dOcXUxI9cBMzS7FOb7g9SzMoPChk6XkzvQvkd2OyA==
-Received: from BN9P221CA0025.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::22)
- by DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.22; Sun, 10 Oct
- 2021 08:37:02 +0000
-Received: from BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:10a:cafe::4c) by BN9P221CA0025.outlook.office365.com
- (2603:10b6:408:10a::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19 via Frontend
- Transport; Sun, 10 Oct 2021 08:37:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT019.mail.protection.outlook.com (10.13.176.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4587.18 via Frontend Transport; Sun, 10 Oct 2021 08:37:00 +0000
-Received: from [172.27.13.3] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Sun, 10 Oct
- 2021 08:36:57 +0000
-Subject: Re: [PATCH v3 2/2] PCI/sysfs: use NUMA_NO_NODE macro
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <hch@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-        <stefanha@redhat.com>, <oren@nvidia.com>, <kw@linux.com>
-References: <20211008222550.GA1385680@bhelgaas>
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-Message-ID: <a947cd7e-c847-4d44-5a65-51bbdceb1a1d@nvidia.com>
-Date:   Sun, 10 Oct 2021 11:36:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S230525AbhJJJQI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Oct 2021 05:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230516AbhJJJQI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Oct 2021 05:16:08 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD15BC061570
+        for <linux-pci@vger.kernel.org>; Sun, 10 Oct 2021 02:14:09 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6FD02300034C9;
+        Sun, 10 Oct 2021 11:14:07 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 68FD0B663C; Sun, 10 Oct 2021 11:14:07 +0200 (CEST)
+Date:   Sun, 10 Oct 2021 11:14:07 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 1/4] PCI: pciehp: Ignore Link Down/Up caused by
+ error-induced Hot Reset
+Message-ID: <20211010091407.GA13471@wunner.de>
+References: <251f4edcc04c14f873ff1c967bc686169cd07d2d.1627638184.git.lukas@wunner.de>
+ <20211007230020.GA1273969@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <20211008222550.GA1385680@bhelgaas>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57f34661-50e9-4f82-2c92-08d98bc92139
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1835:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1835B1EDA8EA58FF890848EFDEB49@DM5PR12MB1835.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9fAUL0K+BCMnA6PsgZHLwos7Ga1X7uEMEhwNk0E8fwg34flKPrZY4qBqaUQ1QMZfKG1GLe7iABb1M0bM0bm1JXQKBgKSilOGGHvHH6PzJzxwv1+2+32SrC0BnZsqcSWnAP0tRot7fsKK5tglcgAri1YXmb5Qj+zSTPpFgovK0qJfYJN3RMkQcw/5X0ZSPoxhSehm7Aczo2mLpYKMvZx3GF+j7JzjdMnPyJdTM3ApJone/X8vVJZ9rrZKWqv26Fi3otIbJC4I9y9nK2P23jTJz+Nkpii9hU13gfA2vGSQHfDoKDVxIM1u1QJZAlZRlidTX5U/SuMSJpPlvaUoL+6YLqHtoKRg313/8VjXBW4m9zeMDZY4OvvT1GsYB0eAxIWu0aHFMYSEq1y4QWbGi4/RyYQIeFF9Q01SZZgOLpjnxsh+7vF8TXxNQwDY9Q4NdCX7Ilr7LlL4twzP+xN5uu+JVG1C9ne6yfmZMp1ciDcd7bzgIza8rGE58PtnlTr6C2fwrb0B9bHTN3Y6d3ZFvIRIps2QVuJtdR3usroZsmU10uNnJHJtry+xKGobopiNWBM/AirsoMKsZKcQLvRv9mqs/8KcFmUhobz1tQCxFKcQP/Jxf93BKZrOaGA48oLOprMg8VOdMBCvXYFF5mmQygB6LcD5pbn3OJiWKj67jRgqysTrp4rCPXgUszHd6kQxu++9NpiOiNtTBaTg/aZaY70s3fudc0fk16YkaMe4kRchvDs=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(4326008)(356005)(508600001)(8936002)(36860700001)(5660300002)(6666004)(26005)(16526019)(47076005)(186003)(36756003)(83380400001)(2906002)(31696002)(16576012)(54906003)(70586007)(2616005)(7636003)(86362001)(53546011)(82310400003)(8676002)(336012)(426003)(110136005)(316002)(70206006)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2021 08:37:00.9921
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57f34661-50e9-4f82-2c92-08d98bc92139
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1835
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211007230020.GA1273969@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Oct 07, 2021 at 06:00:20PM -0500, Bjorn Helgaas wrote:
+> On Sat, Jul 31, 2021 at 02:39:01PM +0200, Lukas Wunner wrote:
+> > The issue isn't DPC-specific, it also occurs when an error is handled by
+> > AER through aer_root_reset().  So while the issue was noticed only now,
+> > it's been around since 2006 when AER support was first introduced.
+> > 
+> > Fixes: 6c2b374d7485 ("PCI-Express AER implemetation: AER core and aerdriver")
+[...]
+> > Cc: stable@vger.kernel.org # v2.6.19+: ba952824e6c1: PCI/portdrv: Report reset for frozen channel
+> 
+> Have you tried backporting this to v2.6.19?  I bet it's tough.  Not
+> sure we should suggest that stable pick this up unless there's a
+> reasonable path to do that.
 
-On 10/9/2021 1:25 AM, Bjorn Helgaas wrote:
-> On Mon, Oct 04, 2021 at 04:34:53PM +0300, Max Gurtovoy wrote:
->> Use the proper macro instead of hard-coded (-1) value.
->>
->> Suggested-by: Krzysztof Wilczyński <kw@linux.com>
->> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
->> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
->> Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
-> These two patches are independent, so I applied this patch only to
-> pci/sysfs for v5.16, thanks!
->
-> I assume Greg will take the drivers/base patch.
+The oldest kernel.org stable release that still receives updates is v4.4.
+There may be older distribution kernels out there which continue to be
+supported.  We don't know for sure, so I think it's customary to tag
+the release that introduced an issue and leave it to the stable and
+distribution maintainers to choose what they backport.
 
-I saw both patches in his 
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 
-driver-core-next
+It's true that patches often do not apply cleanly to older releases.
+There are some good folks who regularly take up the thankless task of
+backporting (Sudip Mukherjee to name but one), but I've also frequently
+backported patches myself where necessary.
 
-So I guess there is no need for taking it separately, right Greg ?
 
->> ---
->>   drivers/pci/pci-sysfs.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 7fb5cd17cc98..f807b92afa6c 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -81,8 +81,10 @@ static ssize_t pci_dev_show_local_cpu(struct device *dev, bool list,
->>   	const struct cpumask *mask;
->>   
->>   #ifdef CONFIG_NUMA
->> -	mask = (dev_to_node(dev) == -1) ? cpu_online_mask :
->> -					  cpumask_of_node(dev_to_node(dev));
->> +	if (dev_to_node(dev) == NUMA_NO_NODE)
->> +		mask = cpu_online_mask;
->> +	else
->> +		mask = cpumask_of_node(dev_to_node(dev));
->>   #else
->>   	mask = cpumask_of_pcibus(to_pci_dev(dev)->bus);
->>   #endif
->> -- 
->> 2.18.1
->>
+> > +config PCI_ERROR_RECOVERY
+> > +	def_bool PCIEAER || EEH
+> 
+> I'm having a hard time connecting this to the code.
+[...]
+> But this still seems like it's kind of dangling.  It's not obvious to
+> me why pciehp_slot_reset() should be inside that #ifdef.  Do we need
+> the #ifdef for a functional reason, or is it there because we know it
+> will never be called?  If the latter, I don't think the savings are
+> worth it.
+
+The motivation for the #ifdef was merely to reduce code size if neither
+of PCIEAER or EEH is enabled.  Happy to remove it.
+
+I have a different question though.  We've often discussed deprecating
+portdrv and moving port services to the core instead.  I've stumbled
+across commit a39bd851dccf ("PCI/PM: Clear PCIe PME Status bit in core,
+not PCIe port driver"), wherein you moved pcie_pme_root_status_cleanup()
+from portdrv to the core, which allowed you to drop the ->resume_noirq
+callback from portdrv.
+
+I've been thinking what moving port services to the core would look like
+and what your vision for that might be.  If that commit is any indication,
+it seems you'd probably prefer that pciehp_slot_reset() (as introduced in
+the present patch) is called directly from report_slot_reset() in
+drivers/pci/pcie/err.c.
+
+That would eliminate much of the plumbing contained in the present patch
+to allow each port service driver to define a ->slot_reset callback and
+iterate over those callbacks.  pciehp is probably the only port service
+which requires special handling upon ->slot_reset and the same goes for
+a lot of the error handling and power management callbacks defined by
+port services.  So all that plumbing is probably just a very roundabout
+way of doing things.
+
+When calling into port service code from core code, one needs to find
+the port service's driver data.  For now we can resort to
+pcie_port_find_device(), but I imagine once we move all port services
+to the core, we'll be able to access their data directly from
+struct pci_dev, e.g. via pdev->hotplug or pdev->pcie->hotplug pointers.
+
+Does that make sense to you?
+
+Thanks,
+
+Lukas
