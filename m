@@ -2,30 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A2D84294D2
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 18:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD61F429518
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 19:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbhJKQzD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 12:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40582 "EHLO mail.kernel.org"
+        id S233472AbhJKREV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 13:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229816AbhJKQzD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Oct 2021 12:55:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C88AF60E90;
-        Mon, 11 Oct 2021 16:53:02 +0000 (UTC)
+        id S232954AbhJKREU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Oct 2021 13:04:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B3F79606A5;
+        Mon, 11 Oct 2021 17:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633971183;
-        bh=UhfKGVwptNVcTXaDecknZR62S/vnpiwlxLpJU98Gt0o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dL8AedcFlZAFeFQ8BWliMp+t59u2GmyOBfK8TlrpOF+jA082CYHsTkqXNh00US3H9
-         SW2IbzhluP7Hv8juSP8AyTPSgZenS4st//h+Pnle8zA+huZ2kldyXIkJCtt9YKpOJ7
-         3BIezXtAKwLqsKwAyiOGSn+nk0bQcSOfRsX7+n8u/g0fxYruz6YE5ZZ7iV1j7ajX5R
-         xgmIjpIazM/Ldql5n8Nj2KxGkLUXS/EM1jrCitETAY8vLM8eo3ModECkEFXpIQYQ7t
-         QslyJTGq8QkDku6a6urHsQp7D8e0EjyCpxO8hrlPbBe3c9DynbfWZvoapNAAtQor+Z
-         kud9y5ggIHw2g==
-Date:   Mon, 11 Oct 2021 11:53:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
+        s=k20201202; t=1633971740;
+        bh=+sw5vVvYzB9olZ/QfKHrBKLtJpmBFQ+mzziJlwpYm24=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HaZY28og8tI1/NuWbqAd1wxI/WmDvzz3qE12WZHII4SuxckNVP4s/8G9c/90KGEz2
+         MCbdEHemGkjr5yaZESU/9LGdQfZusr602hfmFM170uwJMvkhS5l3kilUuNMLDPLFj2
+         1z1QYP+ubJwTpGleScPwPOI3MU6uO+mULW5BdKQSMVNzYYdknkfhJd0MctezGgG0XA
+         bA/Cf3Bcu6q+DuZS9S/OqceSmpL0XTCeqAr/FiNv58wmpuJN897IeKrIJR4zQliIbE
+         8WHQKzLp+sFNFhMsbNcJ1CNF9DELxl4t0NWnqZZQcSt2KV9Gp3cpMj+tSV/d+WRSWK
+         lHxf2+dd3zztQ==
+Received: by pali.im (Postfix)
+        id A78F17C9; Mon, 11 Oct 2021 19:02:15 +0200 (CEST)
+Date:   Mon, 11 Oct 2021 19:02:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
 Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
         Ganapathi Bhat <ganapathi017@gmail.com>,
         Xinming Hu <huxinming820@gmail.com>,
@@ -38,27 +40,25 @@ Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Johannes Berg <johannes@sipsolutions.net>,
         Brian Norris <briannorris@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Alex Williamson <alex.williamson@redhat.com>
+        David Laight <David.Laight@ACULAB.COM>
 Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS
  Surface devices
-Message-ID: <20211011165301.GA1650148@bhelgaas>
+Message-ID: <20211011170215.3bnmi6sa5yqux2r7@pali>
+References: <20211011134238.16551-1-verdre@v0yd.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 In-Reply-To: <20211011134238.16551-1-verdre@v0yd.nl>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex]
-
-On Mon, Oct 11, 2021 at 03:42:38PM +0200, Jonas Dreﬂler wrote:
+On Monday 11 October 2021 15:42:38 Jonas Dre√üler wrote:
 > The most recent firmware (15.68.19.p21) of the 88W8897 PCIe+USB card
 > reports a hardcoded LTR value to the system during initialization,
 > probably as an (unsuccessful) attempt of the developers to fix firmware
@@ -67,12 +67,14 @@ On Mon, Oct 11, 2021 at 03:42:38PM +0200, Jonas Dreﬂler wrote:
 > S0ix state), because the exit latency of that state would be higher than
 > what the card can tolerate.
 
-S0ix and C-State 10 are ACPI concepts that don't mean anything in a
-PCIe context.
+This description looks like a generic issue in 88W8897 chip or its
+firmware and not something to Surface PCIe controller or Surface HW. But
+please correct me if I'm wrong here.
 
-I think LTR is only involved in deciding whether to enter the ASPM
-L1.2 substate.  Maybe the system will only enter C-State 10 or S0ix
-when the link is in L1.2?
+Has somebody 88W8897-based PCIe card in non-Surface device and can check
+or verify if this issue happens also outside of the Surface device?
+
+It would be really nice to know if this is issue in Surface or in 8897.
 
 > Turns out the card works just the same (including the firmware crashes)
 > no matter if that hardcoded LTR value is reported or not, so it's kind
@@ -85,8 +87,8 @@ when the link is in L1.2?
 > the bridge device. Doing the reset once after starting the wifi firmware
 > works very well, probably because the firmware only reports that LTR
 > value a single time during firmware startup.
->
-> Signed-off-by: Jonas Dreﬂler <verdre@v0yd.nl>
+> 
+> Signed-off-by: Jonas Dre√üler <verdre@v0yd.nl>
 > ---
 >  drivers/net/wireless/marvell/mwifiex/pcie.c   | 12 +++++++++
 >  .../wireless/marvell/mwifiex/pcie_quirks.c    | 26 +++++++++++++------
@@ -110,62 +112,12 @@ when the link is in L1.2?
 > +	 * the firmware (latest version 15.68.19.p21) of the 88W8897 PCIe+USB
 > +	 * card stop reporting a fixed LTR value that prevents the system from
 > +	 * entering package C10 and S0ix powersaving states.
-
-I don't believe this.  Why would resetting the root port change what
-the downstream device reports via LTR messages?
-
-From PCIe r5.0, sec 5.5.1:
-
-  The following rules define how the L1.1 and L1.2 substates are entered:
-    ...
-    * When in ASPM L1.0 and the ASPM L1.2 Enable bit is Set, the L1.2
-      substate must be entered when CLKREQ# is deasserted and all of
-      the following conditions are true:
-
-      - The reported snooped LTR value last sent or received by this
-	Port is greater than or equal to the value set by the
-	LTR_L1.2_THRESHOLD Value and Scale fields, or there is no
-	snoop service latency requirement.
-
-      - The reported non-snooped LTR last sent or received by this
-	Port value is greater than or equal to the value set by the
-	LTR_L1.2_THRESHOLD Value and Scale fields, or there is no
-	non-snoop service latency requirement.
-
-From the LTR Message format in sec 6.18:
-
-  No-Snoop Latency and Snoop Latency: As shown in Figure 6-15, these
-  fields include a Requirement bit that indicates if the device has a
-  latency requirement for the given type of Request. If the
-  Requirement bit is Set, the LatencyValue and LatencyScale fields
-  describe the latency requirement. If the Requirement bit is Clear,
-  there is no latency requirement and the LatencyValue and
-  LatencyScale fields are ignored.
-
-Resetting the root port might make it forget the LTR value it last
-received.  If that's equivalent to having no service latency
-requirement, it *might* enable L1.2 entry, although that doesn't seem
-equivalent to the downstream device having sent an LTR message with
-the Requirement bit cleared.
-
-I think the endpoint is required to send a new LTR message before it
-goes to a non-D0 state (sec 6.18), so the bridge will capture the
-latency again, and we'll probably be back in the same state.
-
-This all seems fragile to me.  If we force the link to L1.2 without
-knowing accurate exit latencies and latency tolerance, the device is
-liable to drop packets.
-
 > +	 * We need to do it here because it must happen after firmware
 > +	 * initialization and this function is called right after that is done.
 > +	 */
 > +	if (card->quirks & QUIRK_DO_FLR_ON_BRIDGE)
 > +		pci_reset_function(parent_pdev);
-
-PCIe r5.0, sec 7.5.3.3, says Function Level Reset can only be
-supported by endpoints, so I guess this will actually do some other
-kind of reset.
-
+> +
 >  	/* Write the RX ring read pointer in to reg->rx_rdptr */
 >  	if (mwifiex_write_reg(adapter, reg->rx_rdptr, card->rxbd_rdptr |
 >  			      tx_wrap)) {
