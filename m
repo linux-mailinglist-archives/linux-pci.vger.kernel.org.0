@@ -2,63 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9BE342963D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:01:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF155429647
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:02:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232673AbhJKSDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 14:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
+        id S232880AbhJKSEf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 14:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233950AbhJKSDW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:03:22 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A09C061570;
-        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id f21so3085109plb.3;
-        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
+        with ESMTP id S229565AbhJKSEf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:04:35 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C8FC061570;
+        Mon, 11 Oct 2021 11:02:34 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id pi19-20020a17090b1e5300b0019fdd3557d3so555087pjb.5;
+        Mon, 11 Oct 2021 11:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ac9LXj3z0Aargz2ofBXWx7xZeNNeuttwY96oTD0m/Sk=;
-        b=UpndYJVH2kYvgQ5Urq0olbt0Q/fTxH1a2N9PJz1x/BbJNW27uKe02za0ZnD4O3uV8x
-         YFIiMi8hdgMC+n1Tfo/PF390u3CxZxjtx6npxQZUEMMhxo1MszeFmbBoKa3C8g/HAiJi
-         6q1hHL9b5Xs5weDigUXmr1d80R1XH4E3wwVFtXGZJup+wBXRzN/ORh+klZgF8dSFTwCi
-         c2Du7OJmO+39l4z0+o9gdiK2FsW0UHXIX60P7C97Ov4y1/TGassp70S5TnWTe3meFzGD
-         n94a7Y+pBkCH6UDpBEWc5u5LfH4c/2rxQdU6dzs/WeYRxbGQ0h1il++ovY47dTcqPZwn
-         ZmUw==
+        bh=YKejBUXkQbFhZRkUnaq6l+1PH6Sz7FGa86StL/2yA7g=;
+        b=N5/LXxrSPtzTlFWoWqamkfy3kBLnmyFDVScezpSJYyRD5QcCvn200Fka9H6+0+VOf3
+         tTt0MhVGZvd3lwaRHStu6TWmWzOPb/cJ0DKkEUpXKibbZYnzKQy+6ysbfPK8eFtCLACm
+         vtuV2H5LbuSFYwwM38d11WDwE/jgeMM4amuYYBpGDm8YNv5uG1UIfA+soSCXntepKaLN
+         XZBB7jDW683ieY6/vdNS3TIcUiHnwB2Uw+r5zET7NijjiLOn0i47biNT1i1RtWrnes/j
+         yVg9u7JK8BJY7Y8PGKtz4x8g2XLeMrV/X08n5CHDCCfCVFiHRBJTmxO5PxMuYw+17lPu
+         JeQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ac9LXj3z0Aargz2ofBXWx7xZeNNeuttwY96oTD0m/Sk=;
-        b=ZlZt1cBjJ0mRTp7Yzjxe+CnyDIIaDG9EROguFqVMUvfN6X0uqpvK1J3nH7eHcEW2vv
-         Cj/FGTeWQVbLTNSkwDKSFSBwCPgQxZGL8izSmNgiAc+66MKCGSrjIaXbi00T9bJGozm4
-         Gra4rEp7kdNoZY6JNjCwXF/F83IZjwlh7QkP7bW2eE/pgW+KRvVds7hV7sm923VjfyOO
-         +v6I0zwJi9cwpqqsUazzYexZSEq2wyy/xPXnHW+nWpvlmYpBvunwjtH+5Quk0i7sZ+JM
-         lrkiEwBsc8i+AaUGAqk/eQ38m4RVcxhOh+hXbtgTWyTbZaVOwnnoLPCUeUxXG7p7o6n2
-         LDfg==
-X-Gm-Message-State: AOAM531WUb3QVePKtc3SQP0vs0Jnr7pPYAU/HjuPAPWcwnjtwj4fvWVQ
-        AtpLNk1+3vtTWv2q+HZR0LlcR6aOEecMuGdh
-X-Google-Smtp-Source: ABdhPJw5MHCkS1Q9eMp5sQHWRTrT0swYRsJEFWRTLQ1wt1NrCBy09H9LzFYZ4hCqnvbpODaPwXUvUg==
-X-Received: by 2002:a17:90a:8912:: with SMTP id u18mr456538pjn.69.1633975282221;
-        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
+        bh=YKejBUXkQbFhZRkUnaq6l+1PH6Sz7FGa86StL/2yA7g=;
+        b=gBs+3ndlcAAd8FEoX1hHX4ZHCx5ZBNPfOtQDnC0IcemDnDUcmqsrxIRp7fjgzwmKUo
+         nStcqIIzqs6dceOemtm8mw6h8lSCps4ellFxvr2vhcXJiPynZGQQGIEqeJl5N8sOFAwx
+         kdODI2yzI7tY1+lyXknalT+QnXl7fS9EEpQp5WUVTV4vWVqB5bNu4NyrOwjN69Bkza4p
+         RHAogHV2qniugPIisPrsXbQDfBu9y42SJWxT8EnTsL8nlD2pqKRy1UY7j+o4KBlMSk8A
+         e+mFl7n0AS5qWn+e8D3BBCBmckXSBax7c0FTGTJ+jOXDr688U28Aq99dNBEe8YWTP+eE
+         8+bA==
+X-Gm-Message-State: AOAM531SI4/Bnt9MMNqhkjYDXv/se3J8rYSphYdPvQ6wjY9sYuVLMATs
+        EoPMWG3q/oYDP0vAj54c5ww=
+X-Google-Smtp-Source: ABdhPJz3lTB1pRJC7LeANbY1RFJS7aAmpd27So5fwNvaM/OYQkGoVvaRsE4e7b1VyseJvPswRSBjDw==
+X-Received: by 2002:a17:90b:390b:: with SMTP id ob11mr471890pjb.145.1633975354253;
+        Mon, 11 Oct 2021 11:02:34 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
-        by smtp.gmail.com with ESMTPSA id b134sm8820045pga.3.2021.10.11.11.01.18
+        by smtp.gmail.com with ESMTPSA id t9sm120679pjm.36.2021.10.11.11.02.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Oct 2021 11:01:21 -0700 (PDT)
+        Mon, 11 Oct 2021 11:02:33 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joyce Ooi <joyce.ooi@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH 11/22] PCI: altera: Use SET_PCI_ERROR_RESPONSE() when device not found
-Date:   Mon, 11 Oct 2021 23:30:49 +0530
-Message-Id: <8e70c0f96b25e4b30ce4fc261cafe038a025429c.1633972263.git.naveennaidu479@gmail.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-renesas-soc@vger.kernel.org (open list:PCI DRIVER FOR RENESAS
+        R-CAR)
+Subject: [PATCH 12/22] PCI: rcar: Use SET_PCI_ERROR_RESPONSE() when device not found
+Date:   Mon, 11 Oct 2021 23:32:06 +0530
+Message-Id: <f7227e04a56e83c0a68db96b35194dddd7386a90.1633972263.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
 References: <cover.1633972263.git.naveennaidu479@gmail.com>
@@ -82,20 +85,20 @@ Compile tested only.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pcie-altera.c | 2 +-
+ drivers/pci/controller/pcie-rcar-host.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 2513e9363236..d6c71b5d1ffb 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -511,7 +511,7 @@ static int altera_pcie_cfg_read(struct pci_bus *bus, unsigned int devfn,
- 		return PCIBIOS_BAD_REGISTER_NUMBER;
- 
- 	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn))) {
--		*value = 0xffffffff;
-+		SET_PCI_ERROR_RESPONSE(value);
- 		return PCIBIOS_DEVICE_NOT_FOUND;
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 8f3131844e77..80dbc6f717d6 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -162,7 +162,7 @@ static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
+ 	ret = rcar_pcie_config_access(host, RCAR_PCI_ACCESS_READ,
+ 				      bus, devfn, where, val);
+ 	if (ret != PCIBIOS_SUCCESSFUL) {
+-		*val = 0xffffffff;
++		SET_PCI_ERROR_RESPONSE(val);
+ 		return ret;
  	}
  
 -- 
