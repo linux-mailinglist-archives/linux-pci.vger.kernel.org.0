@@ -2,111 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1491429682
+	by mail.lfdr.de (Postfix) with ESMTP id 4EAA9429681
 	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:08:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234313AbhJKSKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S234136AbhJKSKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 11 Oct 2021 14:10:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233422AbhJKSKy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:10:54 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3078C061570;
-        Mon, 11 Oct 2021 11:08:53 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id g9so1429914plo.12;
-        Mon, 11 Oct 2021 11:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tHENHhkpkZLornjDw8P+cbQvSFGcu3v2lE8jdyEkvRc=;
-        b=Br70NNJ34I4Yegy0eEKartu/w5zPNCFTVWKFcc+0SH9riN481Yw03dpvxVCyDtFDXl
-         SAGytifw3UMmpq3lnw8ankHQcppUplykvHGQN3JYCCcGRPSFfUvVibqUQWk6LKV4jSAx
-         vwuTdXxOL0wPIJfLv2QZAKykGNtc07syqHF+0tjqKVLvwKPqq21ziVPb/FpNrBNI1gwA
-         kWniU6LOcTTwgTMTNq5y8zxlj65oBXev1Y4/2VArihAVHVhSq82Ax4vyAq0S1YGr0b1t
-         nbpb5I7m3Gm1ep5Ukn4lB4YDMTGjThfuBcygzwFGLdlN0zU2wX+Q7ZyxL3t82eKCMNPD
-         vogg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tHENHhkpkZLornjDw8P+cbQvSFGcu3v2lE8jdyEkvRc=;
-        b=xPmd5zzjvqBnNFPaQ3jRZecZCSSCgO9NDCgQXOePzSlgKgbRAtI/vb3penvPku9nYv
-         9JNCCH1fDl0Z4wTh654p7LYMHFvZvaeWC6TClWIRFSPtHVB+buvM5DBUhhhuwQ+YPDbB
-         EZ7p0I6xmFmp/gW0s07iRJ1hkzS1/AszuzytOOLLQ46clozyNb4wxzXQ3DBRYNJrM4F9
-         KsBaW7uKQe9VX6od4H+FJQM6E1ti35/bjXBJbLtbh32B9mXFGDq5S1Oht2Yn6EV/iPLc
-         4ZrfRylwS57rn39+gXGxuW5wsYSlsXPWVIO2Wo8Y2RWJ++D6JfmHRHfsB1tyDMY1jm+v
-         SscQ==
-X-Gm-Message-State: AOAM533JP2SF0TmCoWg0nRfccUetboDeuYancoTpw+npAhYeqF19ob2o
-        509NfxTVnzf/Y0mrew18wLwGhayuQj0do+nr
-X-Google-Smtp-Source: ABdhPJxg6bu3T2mprP33rb4kjg4OQn9iK/yPDYAEI5T0dMHwN1Br2zmBANHMy1ks/11wEZhbExnAkg==
-X-Received: by 2002:a17:90a:9f95:: with SMTP id o21mr515839pjp.21.1633975733419;
-        Mon, 11 Oct 2021 11:08:53 -0700 (PDT)
-Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
-        by smtp.gmail.com with ESMTPSA id u74sm8480423pfc.87.2021.10.11.11.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Oct 2021 11:08:53 -0700 (PDT)
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     bhelgaas@google.com
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
+Received: from mail.kernel.org ([198.145.29.99]:46678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229565AbhJKSKx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Oct 2021 14:10:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F72C60EB4;
+        Mon, 11 Oct 2021 18:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633975733;
+        bh=znvt7lXTrjz8Q7uFKJ50VwboQPdEorWs9uuIA7tBazI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CzTduaqzuCsLQPm6VXtRH2KVlfxrgwAeezXN8LIoJto9GnO4HarUxbwIRF+OXLcgG
+         CwjE9u/52RytsnFKZXPva+CQiHJKAq/NFa2ZmAqb/yFosQ/JPVq21eChF9PyUjT+c+
+         JXeH2y/MI9mOL2FudCVWGv25ImJZ9uCWOIBxZTkYR0gb04FM/UPGgaPr1I9bbli7KU
+         QNwiHCeyh2xqZhtEF3dAb6yC1vqU3uVrehkvxsEL/KNcAfrkS5RKkiabqdcMlRVqI7
+         5k6FV2b6Czrb9x0v2JiS1x71z3B1jTS3qqvG6HzllevLVtGJEuQbPnQYLvVV7st0us
+         g4NT/kEUJrdGg==
+Received: by pali.im (Postfix)
+        id 0B6BB7C9; Mon, 11 Oct 2021 20:08:50 +0200 (CEST)
+Date:   Mon, 11 Oct 2021 20:08:50 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Naveen Naidu <naveennaidu479@gmail.com>
+Cc:     bhelgaas@google.com,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org (open list:PCI ENHANCED ERROR HANDLING
-        (EEH) FOR POWERPC)
-Subject: [PATCH 17/22] PCI/DPC: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
-Date:   Mon, 11 Oct 2021 23:38:27 +0530
-Message-Id: <8de64c63fa1559929c83a94a0da8e8f42f0b5377.1633972263.git.naveennaidu479@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:PCI DRIVER FOR AARDVARK (Marvell Armada 3700)" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 09/22] PCI: aardvark: Use SET_PCI_ERROR_RESPONSE() when
+ device not found
+Message-ID: <20211011180850.hgp4ctykvus37fx7@pali>
 References: <cover.1633972263.git.naveennaidu479@gmail.com>
+ <f423dc9cc90e345680d289d5df7ff469e9b89c60.1633972263.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f423dc9cc90e345680d289d5df7ff469e9b89c60.1633972263.git.naveennaidu479@gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-An MMIO read from a PCI device that doesn't exist or doesn't respond
-causes a PCI error.  There's no real data to return to satisfy the
-CPU read, so most hardware fabricates ~0 data.
+On Monday 11 October 2021 23:26:33 Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
+> 
+> Use SET_PCI_ERROR_RESPONSE() to set the error response, when a faulty
+> read occurs.
+> 
+> This helps unify PCI error response checking and make error check
+> consistent and easier to find.
+> 
+> Compile tested only.
+> 
+> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 596ebcfcc82d..dc2f820ef55f 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -894,7 +894,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+>  	int ret;
+>  
+>  	if (!advk_pcie_valid_device(pcie, bus, devfn)) {
+> -		*val = 0xffffffff;
+> +		SET_PCI_ERROR_RESPONSE(val);
 
-Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
-data from hardware.
+Hello! Now I'm looking at this macro, and should not it depends on
+"size" argument? If doing 8-bit or 16-bit read operation then should not
+it rather sets only low 8 bits or low 16 bits to ones?
 
-This helps unify PCI error response checking and make error checks
-consistent and easier to find.
-
-Compile tested only.
-
-Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
----
- drivers/pci/pcie/dpc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index c556e7beafe3..561c44d9429c 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -79,7 +79,7 @@ static bool dpc_completed(struct pci_dev *pdev)
- 	u16 status;
- 
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS, &status);
--	if ((status != 0xffff) && (status & PCI_EXP_DPC_STATUS_TRIGGER))
-+	if ((!RESPONSE_IS_PCI_ERROR(&status)) && (status & PCI_EXP_DPC_STATUS_TRIGGER))
- 		return false;
- 
- 	if (test_bit(PCI_DPC_RECOVERING, &pdev->priv_flags))
-@@ -312,7 +312,7 @@ static irqreturn_t dpc_irq(int irq, void *context)
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 
--	if (!(status & PCI_EXP_DPC_STATUS_INTERRUPT) || status == (u16)(~0))
-+	if (!(status & PCI_EXP_DPC_STATUS_INTERRUPT) || RESPONSE_IS_PCI_ERROR(&status))
- 		return IRQ_NONE;
- 
- 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
--- 
-2.25.1
-
+>  		return PCIBIOS_DEVICE_NOT_FOUND;
+>  	}
+>  
+> @@ -920,7 +920,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+>  			*val = CFG_RD_CRS_VAL;
+>  			return PCIBIOS_SUCCESSFUL;
+>  		}
+> -		*val = 0xffffffff;
+> +		SET_PCI_ERROR_RESPONSE(val);
+>  		return PCIBIOS_SET_FAILED;
+>  	}
+>  
+> @@ -955,14 +955,14 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
+>  			*val = CFG_RD_CRS_VAL;
+>  			return PCIBIOS_SUCCESSFUL;
+>  		}
+> -		*val = 0xffffffff;
+> +		SET_PCI_ERROR_RESPONSE(val);
+>  		return PCIBIOS_SET_FAILED;
+>  	}
+>  
+>  	/* Check PIO status and get the read result */
+>  	ret = advk_pcie_check_pio_status(pcie, allow_crs, val);
+>  	if (ret < 0) {
+> -		*val = 0xffffffff;
+> +		SET_PCI_ERROR_RESPONSE(val);
+>  		return PCIBIOS_SET_FAILED;
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
