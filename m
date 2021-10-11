@@ -2,79 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB5F2428852
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 10:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A236C4288B0
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 10:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234733AbhJKIIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 04:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231300AbhJKIIF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 04:08:05 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353D0C061570;
-        Mon, 11 Oct 2021 01:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NePUhq2kCKuKoLuyepvAsQyQ3u7DiGVbX0RKJvjUUBc=; b=t0XKqM9eXqx+4HnaXU3qjxrcgE
-        DAIGSaUWiyGD5X9tASynPdwMwQ7CObj9K4vyt5PIYZSZg5eXPXdqeh0+p8khIYRRb5l69wjtSlm7L
-        AXnpOtT2ilZaZDuEND8sp4gdlWcqHlfUvytMstqVyJsG1aeJQiTFtimDrwWIeZuDcvOqrxBI1EIAy
-        h97La2yXt8YhzNa9oJM8fvdRdKQak3maZ5PSU6QaoJMK5DXPqXxNsx1XPFs3SDDQMjhVDvQLbxr9U
-        ViQfg0AAx2g5lHzJloJzLPfjivGpqAe0f3NFxAQSOvhVdAkhQUc6pTexSik4p+FFZjfrs8Lx1PE0Q
-        69kuX6dg==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mZqCT-005LX8-JJ; Mon, 11 Oct 2021 07:58:45 +0000
-Date:   Mon, 11 Oct 2021 08:58:21 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
- pci_iomap_host_shared_range()
-Message-ID: <YWPunfa+WK86Cgnv@infradead.org>
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S234889AbhJKIZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 04:25:03 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:25118 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235058AbhJKIZC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 04:25:02 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HSWwQ6fQ1z1DHVw;
+        Mon, 11 Oct 2021 16:21:26 +0800 (CST)
+Received: from kwepemm600001.china.huawei.com (7.193.23.3) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Mon, 11 Oct 2021 16:23:01 +0800
+Received: from huawei.com (10.175.104.82) by kwepemm600001.china.huawei.com
+ (7.193.23.3) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 11 Oct
+ 2021 16:23:00 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <bhelgaas@google.com>, <maz@kernel.org>, <tglx@linutronix.de>,
+        <song.bao.hua@hisilicon.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PCI/MSI: fix page fault when msi_populate_sysfs() failed
+Date:   Mon, 11 Oct 2021 16:40:49 +0800
+Message-ID: <20211011084049.53643-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.82]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600001.china.huawei.com (7.193.23.3)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Just as last time:  This does not make any sense.  ioremap is shared
-by definition.
+I got a page fault report when doing fault injection test:
+
+BUG: unable to handle page fault for address: fffffffffffffff4
+...
+RIP: 0010:sysfs_remove_groups+0x25/0x60
+...
+Call Trace:
+ msi_destroy_sysfs+0x30/0xa0
+ free_msi_irqs+0x11d/0x1b0
+ __pci_enable_msix_range+0x67f/0x760
+ pci_alloc_irq_vectors_affinity+0xe7/0x170
+ vp_find_vqs_msix+0x129/0x560
+ vp_find_vqs+0x52/0x230
+ vp_modern_find_vqs+0x47/0xb0
+ p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
+ virtio_dev_probe+0x1ed/0x2e0
+ really_probe+0x1c7/0x400
+ __driver_probe_device+0xa4/0x120
+ driver_probe_device+0x32/0xe0
+ __driver_attach+0xbf/0x130
+ bus_for_each_dev+0xbb/0x110
+ driver_attach+0x27/0x30
+ bus_add_driver+0x1d9/0x270
+ driver_register+0xa9/0x180
+ register_virtio_driver+0x31/0x50
+ p9_virtio_init+0x3c/0x1000 [9pnet_virtio]
+ do_one_initcall+0x7b/0x380
+ do_init_module+0x5f/0x21e
+ load_module+0x265c/0x2c60
+ __do_sys_finit_module+0xb0/0xf0
+ __x64_sys_finit_module+0x1a/0x20
+ do_syscall_64+0x34/0xb0
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+When populating msi_irqs sysfs failed in msi_capability_init() or
+msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
+This will cause a page fault when destroying the wrong
+dev->msi_irq_groups in free_msi_irqs().
+
+Fix this by setting dev->msi_irq_groups to NULL when msi_populate_sysfs()
+failed.
+
+Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/pci/msi.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0099a00af361..6f75db9f3be7 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -561,6 +561,7 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+ 	if (IS_ERR(dev->msi_irq_groups)) {
+ 		ret = PTR_ERR(dev->msi_irq_groups);
++		dev->msi_irq_groups = NULL;
+ 		goto err;
+ 	}
+ 
+@@ -733,6 +734,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+ 	if (IS_ERR(dev->msi_irq_groups)) {
+ 		ret = PTR_ERR(dev->msi_irq_groups);
++		dev->msi_irq_groups = NULL;
+ 		goto out_free;
+ 	}
+ 
+-- 
+2.17.1
 
