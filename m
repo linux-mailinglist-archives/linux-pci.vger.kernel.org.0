@@ -2,124 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E307E428D0B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 14:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C56428D8C
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 15:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234955AbhJKMdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 08:33:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234689AbhJKMds (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 08:33:48 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E359C061570;
-        Mon, 11 Oct 2021 05:31:48 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id z20so67014995edc.13;
-        Mon, 11 Oct 2021 05:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c2eTRNvAGOUCjeqJDNL2ksEpYYsNkxxTJa86680pxtA=;
-        b=oJBU9I8B87kw3u2pSyqP3EO9Eo4TyDScNfSk39tYnZgPMgf0m7PACnzfcEGVxCC2os
-         T/g50DDk/tRzWUcWOuYgA5Qa9tcchI/8FEgIDnyXYqf4k6sB13yakKezIfK6KawCCEqd
-         N1wMcW2+Grx5OpIikw2CVUcTkUXn1VgvO2s3WtTAetQ2MviOFPmTXKm6RVA92HKYtsbe
-         PDaiH9gHch65jgi4G3lNoN8ZTnHg3Eczi/2aGF7HBA//4pOAQNOHp/NY1eA64BAuowQU
-         VQ0F9XDbTFeNS2JlYCKrEi7dvxkQLcYVqGQ9jTTL7v76kZi/jwFhVb33y4lh9TVrZkSy
-         Cl3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c2eTRNvAGOUCjeqJDNL2ksEpYYsNkxxTJa86680pxtA=;
-        b=Mg7iFl31JkMBjXu7J5gjFNCIt1biR3k72QpnFj/PuSyyqVchlVWOr/MxaIxa8OaCph
-         7mu4GoiWXxap8uAUix1/JPfFBlDzgEKlgCqhhai9D+MgV0wSpugl+EI1grgm7VoNXUTw
-         SLp295Xh4IzkahE+YNdcIT2oYXUNRWcaXYP5iCCo4d8WxplXx52bwnNsVeVaSOYucgYs
-         Rd5CvQCloA4YsS2U6TYtgRKRsxQV94D0hgkdv61lfLFNPN2Ng93stULTf2rTGRc3CEjp
-         /xCeCYZjmXkdV+4Hq5alSBEzfe5i0CQs40YfYZZLsgaBjMYzIwpSGat/ymNRrEZQ9PqC
-         ZwVg==
-X-Gm-Message-State: AOAM533DXeA9jA7Pd0Gdo7faHVcVLVd1UcE0Hou5iQdSHkQaiW6eto76
-        UQxBA4wzaDkBovNmXFJmI55S6iNkaZFbsIHAIcQNs0/H
-X-Google-Smtp-Source: ABdhPJzyJmztrugduFjx8yXJEK/cUavb61qDiNhKArKQp0oEgoVfgcj0/byTEOFJiWwoBuzOJHOBvnMRrL04aQ8YhTs=
-X-Received: by 2002:a17:907:785a:: with SMTP id lb26mr25156333ejc.77.1633955506928;
- Mon, 11 Oct 2021 05:31:46 -0700 (PDT)
+        id S235410AbhJKNLd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 09:11:33 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:28916 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236807AbhJKNLd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 09:11:33 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HSfCh6mvszbn4k;
+        Mon, 11 Oct 2021 21:05:04 +0800 (CST)
+Received: from kwepemm600001.china.huawei.com (7.193.23.3) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.8; Mon, 11 Oct 2021 21:09:29 +0800
+Received: from huawei.com (10.175.104.82) by kwepemm600001.china.huawei.com
+ (7.193.23.3) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 11 Oct
+ 2021 21:09:28 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <bhelgaas@google.com>, <andy.shevchenko@gmail.com>,
+        <maz@kernel.org>, <tglx@linutronix.de>,
+        <song.bao.hua@hisilicon.com>, <21cnbao@gmail.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] PCI/MSI: fix page fault when msi_populate_sysfs() failed
+Date:   Mon, 11 Oct 2021 21:08:37 +0800
+Message-ID: <20211011130837.766323-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210723204958.7186-1-tharvey@gateworks.com> <36070609-9f1f-00c8-ccf5-8ed7877b29da@pengutronix.de>
- <VI1PR04MB58533AF76EA4DFD8AD6CDA158CEC9@VI1PR04MB5853.eurprd04.prod.outlook.com>
- <CAJ+vNU1tgVsQWtxa0E8SArO=hA2K8OkqiSPrRSpx0Q5XS4gUWA@mail.gmail.com>
- <CAHCN7xLC1ob_nxRsZezgYQ9p-me7hNd+1MNFQt2wtcRqU+z9Sw@mail.gmail.com> <2eee557db84087acca4665603ba3d2716199f842.camel@pengutronix.de>
-In-Reply-To: <2eee557db84087acca4665603ba3d2716199f842.camel@pengutronix.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 11 Oct 2021 07:31:35 -0500
-Message-ID: <CAHCN7xJ-bmEtFFw749m+r5Nr4kNwF2SvFGfTKjRPULqshuA89Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Add IMX8M Mini PCI support
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Tim Harvey <tharvey@gateworks.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.82]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600001.china.huawei.com (7.193.23.3)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 11, 2021 at 7:30 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Hi Adam,
->
-> Am Montag, dem 11.10.2021 um 07:25 -0500 schrieb Adam Ford:
-> > On Mon, Aug 16, 2021 at 10:45 AM Tim Harvey <tharvey@gateworks.com> wrote:
-> > >
-> > > On Thu, Jul 29, 2021 at 6:28 PM Richard Zhu <hongxing.zhu@nxp.com> wrote:
-> > > >
-> > > > Hi Tim:
-> > > > Just as Ahmad mentioned, Lucas had issue one patch-set to support i.MX8MM PCIe.
-> > > > Some comments in the review cycle.
-> > > > - One separate PHY driver should be used for i.MX8MM PCIe driver.
-> > > > - Schema file should be used I think, otherwise the .txt file in the dt-binding.
-> > > >
-> > > > I'm preparing one patch-set, but it's relied on the yaml file exchanges and power-domain changes(block control and so on).
-> > > > Up to now, I only walking on the first step, trying to exchange the dt-binding files to schema yaml file.
-> > > >
-> > > > Best Regards
-> > > > Richard Zhu
-> > >
-> > > Richard / Ahmad,
-> > >
-> > > Thanks for your response - I did not see the series from Lucas. I will
-> > > drop this and wait for him to complete his work.
-> > >
-> >
-> > Tim,
-> >
-> > It appears that the power domain changes have been applied to Shawn's
-> > for-next branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/log/?h=for-next
-> >
-> > Is there any chance you could rebase and resend this series?
->
-> This wasn't about the power domain series. I also tried to get i.MX8M
-> PCIe upstream, but the feedback was that we need to split out the PHY
-> functionality, Richard is currently working on this. There is no point
-> in resending this series.
+I got a page fault report when doing fault injection test:
 
-Sorry.  I missed that part.
+BUG: unable to handle page fault for address: fffffffffffffff4
+...
+RIP: 0010:sysfs_remove_groups+0x25/0x60
+...
+Call Trace:
+ msi_destroy_sysfs+0x30/0xa0
+ free_msi_irqs+0x11d/0x1b0
+ __pci_enable_msix_range+0x67f/0x760
+ pci_alloc_irq_vectors_affinity+0xe7/0x170
+ vp_find_vqs_msix+0x129/0x560
+ vp_find_vqs+0x52/0x230
+ vp_modern_find_vqs+0x47/0xb0
+ p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
+...
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-adam
->
-> Regards,
-> Lucas
->
+When populating msi_irqs sysfs failed in msi_capability_init() or
+msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
+This will cause a page fault when destroying the wrong
+dev->msi_irq_groups in free_msi_irqs().
+
+Define a temp variable and assign it to dev->msi_irq_groups if
+the temp variable is not PTR_ERR.
+
+Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+v1->v2: introduce temporary variable 'groups'
+ drivers/pci/msi.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0099a00af361..4b4792940e86 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -535,6 +535,7 @@ static int msi_verify_entries(struct pci_dev *dev)
+ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 			       struct irq_affinity *affd)
+ {
++	const struct attribute_group **groups;
+ 	struct msi_desc *entry;
+ 	int ret;
+ 
+@@ -558,12 +559,14 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 	if (ret)
+ 		goto err;
+ 
+-	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+-	if (IS_ERR(dev->msi_irq_groups)) {
+-		ret = PTR_ERR(dev->msi_irq_groups);
++	groups = msi_populate_sysfs(&dev->dev);
++	if (IS_ERR(groups)) {
++		ret = PTR_ERR(groups);
+ 		goto err;
+ 	}
+ 
++	dev->msi_irq_groups = groups;
++
+ 	/* Set MSI enabled bits	*/
+ 	pci_intx_for_msi(dev, 0);
+ 	pci_msi_set_enable(dev, 1);
+@@ -691,6 +694,7 @@ static void msix_mask_all(void __iomem *base, int tsize)
+ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 				int nvec, struct irq_affinity *affd)
+ {
++	const struct attribute_group **groups;
+ 	void __iomem *base;
+ 	int ret, tsize;
+ 	u16 control;
+@@ -730,12 +734,14 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 
+ 	msix_update_entries(dev, entries);
+ 
+-	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+-	if (IS_ERR(dev->msi_irq_groups)) {
+-		ret = PTR_ERR(dev->msi_irq_groups);
++	groups = msi_populate_sysfs(&dev->dev);
++	if (IS_ERR(groups)) {
++		ret = PTR_ERR(groups);
+ 		goto out_free;
+ 	}
+ 
++	dev->msi_irq_groups = groups;
++
+ 	/* Set MSI-X enabled bits and unmask the function */
+ 	pci_intx_for_msi(dev, 0);
+ 	dev->msix_enabled = 1;
+-- 
+2.17.1
+
