@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8343A42869A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 08:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15CE242869D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 08:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233853AbhJKGHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 02:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
+        id S234053AbhJKGIU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 02:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233772AbhJKGHy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 02:07:54 -0400
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8005C061570;
-        Sun, 10 Oct 2021 23:05:54 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id x33-20020a9d37a4000000b0054733a85462so20321575otb.10;
-        Sun, 10 Oct 2021 23:05:54 -0700 (PDT)
+        with ESMTP id S233772AbhJKGIU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 02:08:20 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE635C061570;
+        Sun, 10 Oct 2021 23:06:20 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id s18-20020a0568301e1200b0054e77a16651so3630004otr.7;
+        Sun, 10 Oct 2021 23:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fTIHUEqXg0ktBodoRxwr+G0+AFSSNgvE2tJ/mjBW9uk=;
-        b=ANq9OiyrANgs7ew8IchI1McMjeg+adshr5yG6ZkFrO2aUgfqgbNLzXD1fC+Il0qp1p
-         KFcUOZ7Dcb12wcPSepbNM4JpQ+xSR11lO9Y1RgoeZJIyCpIP38wX5D6zBGcWU7HziMWF
-         djUyYHbXo4osU8NRUlAhT4+9ELzv76dwz8xJCUa5eLPqTb/+m5PhkTy8jlaz6qbZXy8t
-         XFNX/2TwGohbZRA4i53+CUQLHB0xzQEI3ymaXyyW3l2wMrQV/8J23nM/D5wtFGZgGb6y
-         072sh2i9KBaibsQ+qfb/Cbrr9pxiVL+VGJblRPbmOVJFiPmYnQFksGWUhqUOuNf7chYB
-         /6Fg==
+        bh=uCQJ1Anwx+geP4zKElVEAUByvs28wDh2TDsdOWHfmdw=;
+        b=iJbLGBlJhAILk/v1nCdjf5JGrYDNkKEibH+2EcvozGNIocsceCB7ndBDfPq3m4IdMs
+         jCfescr9qzeElZ9mdXuIS7BRVCrAhnpC+q3j68pa2ffCmD3bNlxqpFSMHPEkY3XbtPBa
+         WWCCM273I7kC2Wa8WQwY+85qKhcaM7oIqDgv+mX6G4Ag8ba0EW8hUieT6IttW1AjuKQK
+         z9d7maVAgX9k3Ijzq7URduRPrnhM+O+r/nePJ9EFcKnupKDhWj2JOcCX7K77XozPLEgk
+         eSyOFbB9Ss37t+L9HB9W5Jhr6SmCuM4gQe68zWNzhoH7aKWeFmbg29zJn4JDoDxFKc4K
+         A9EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fTIHUEqXg0ktBodoRxwr+G0+AFSSNgvE2tJ/mjBW9uk=;
-        b=gHzC4LxEPFa9g5TicIrWLFLDUwbPoEcUqTwCXy1AT+u5fFaKdloqVG7Xvdu3BLZm1r
-         rukuBGYnVM5GZjoC1ghuVH68402X7cJcMrb20pRSwucGBZvaI9fIzXJlOja4oX7+XrQG
-         2pl1C7qcc+tuoUDmfUOjdZl5YRKL9tJtxFVCnj851vELrzTC1KXt3R1ROYGn2zzqLCCN
-         Md6foqOc6FKR1YCEt+gWl27aqafxB9gjvHan5Seo8B20mICKk1+nE+T3KtZOocCeqCVT
-         DWgXlIlx9XB38cRZfhObUxzJkcOOPLLVfLRGS2eFfk5JalaybeQgXK+71Wm75Og9sarQ
-         s5LQ==
-X-Gm-Message-State: AOAM5306eG4eoE0LUlJzy5I7m3858HXfXp+edC2mffCzQUt4EtDPAHO0
-        RDNIte9KU0lVexw+K21HXmRy78MAEKyFLtfI1hBOR95x
-X-Google-Smtp-Source: ABdhPJwanKKtvGiW2SqA7SLXruEcwLP7+pNDS8X0xvdAxfxRco3TlRtC0AyFPYcZxYIG4nLszcPk1NMNUIlHzcvEqWU=
-X-Received: by 2002:a9d:4616:: with SMTP id y22mr3028425ote.165.1633932354022;
- Sun, 10 Oct 2021 23:05:54 -0700 (PDT)
+        bh=uCQJ1Anwx+geP4zKElVEAUByvs28wDh2TDsdOWHfmdw=;
+        b=H6llVjyr6atmoTPi9IbGz/8KGklDKTJyj2CzF6i70IXtbY2cSHJJWJOHJcj//QOrgD
+         8hg+PhmzjK/oLje9VSmwHd0SWtuqW/QPWuiUvMlykuIXqC9/RNcC9hsGwR3B4srTZK6F
+         Ohn+s8BNAhQJbbzJ8RfcmTrpARogGjXrnhhaLSvaFALGWKS/jytYVNQ19nebDB9c4VJB
+         x1ny7XFM0ZgxPA2ohIELKg7HtFXgLZxOI/DHgeHeKp64EuYZf0VzZYW7Yr9CsYsoQUmR
+         ONqUwSBbfndDL2oMwgQy3Dag2R6x17noABPKaUbyEAfoQegKOIxCFjoP8jYEfgeJlYvW
+         0lgQ==
+X-Gm-Message-State: AOAM531Z+RSYSYlN70BRvQ5+JvAK2E/5NVV6gL/RhrzAz+rcDyvBIDNb
+        MIlFiugulmgNAO3Cmat7ZOJGUyYjP3a88YPN1eU=
+X-Google-Smtp-Source: ABdhPJwUodNxHdIrXcAANLkyzN13fekDUC/vHgXM0eOVj37be+ynEYRXagakf675bRc95LsqJkm8NZNVjk5Y4RcT+hQ=
+X-Received: by 2002:a9d:20a3:: with SMTP id x32mr19750134ota.91.1633932380184;
+ Sun, 10 Oct 2021 23:06:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210929004400.25717-2-refactormyself@gmail.com> <20210930155400.GA886716@bhelgaas>
-In-Reply-To: <20210930155400.GA886716@bhelgaas>
+References: <20210929004400.25717-5-refactormyself@gmail.com> <20210930202000.GA906085@bhelgaas>
+In-Reply-To: <20210930202000.GA906085@bhelgaas>
 From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Date:   Mon, 11 Oct 2021 08:05:42 +0200
-Message-ID: <CABGxfO4QM-0=CRQ64NJMW9nC219m53NJJ3zGG+c_-E0ftZ+Eag@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/4] [PCI/ASPM:] Remove struct pcie_link_state.clkpm_default
+Date:   Mon, 11 Oct 2021 08:06:09 +0200
+Message-ID: <CABGxfO6MTXX-NmrU+N55-c-F4nrbwkg8YD9zF7NjFvuhEXbMzA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 4/4] PCI/ASPM: Remove struct pcie_link_state.clkpm_disable
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -57,154 +57,154 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 5:54 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Thank you for the review.
+
+
+On Thu, Sep 30, 2021 at 10:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Wed, Sep 29, 2021 at 02:43:57AM +0200, Saheed O. Bolarinwa wrote:
+> On Wed, Sep 29, 2021 at 02:44:00AM +0200, Saheed O. Bolarinwa wrote:
 > > From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
 > >
-> > The clkpm_default member of the struct pcie_link_state stores the
-> > value of the default clkpm state as it is in the BIOS.
+> > The clkpm_disable member of the struct pcie_link_state indicates
+> > if the Clock PM state of the device is disabled. There are two
+> > situations which can cause the Clock PM state disabled.
+> > 1. If the device fails sanity check as in pcie_aspm_sanity_check()
+> > 2. By calling __pci_disable_link_state()
+>
+> And, 3. clkpm_store(), when the user writes to the "clkpm" sysfs file,
+> right?
+That's right and something went wrong truly. I intend to propose that
+instead of setting
+    link->clkpm_disable = !state_enable;
+we can :
+    if (!state_enable)
+         pci_disable_link_state_locked(pdev, PCIE_LINK_STATE_CLKPM);
+
+>
+> IIUC, clkpm_disable really tells us whether we can enable clkpm.  The
+> only place we test clkpm_disable is in pcie_set_clkpm():
+>
+>   pcie_set_clkpm(struct pcie_link_state *link, int enable)
+>   {
+>     if (!link->clkpm_capable || link->clkpm_disable)
+>       enable = 0;
+>     pcie_set_clkpm_nocheck(link, enable);
+>   }
+>
+> So in other words, if clkpm_disable is set, we will never call
+> pcie_set_clkpm_nocheck() to *enable* clkpm.  We will only call it to
+> *disable* clkpm.
+>
+For case 1 (as stated above), this is fine. However, I am concerned that
+the intention of cases 2 and 3 may require that it should be possible to
+re-enable clkpm after disabling it. Is this the correct perspective?
+
+I think the essence of this patch should have been to show that cases 2 and 3
+have the same goal which is different from case 1. Hence, three and not two
+checks are needed within pcie_set_clkpm().
+
+
+
+
+> Tangent: I think the usefulness of pcie_set_clkpm_nocheck() being a
+> separate function is gone.  I think things will be a little simpler if
+> we integrate it into pcie_set_clkpm().  Separate preliminary patch, of
+> course.
+>
+> > It is possible to set the Clock PM state of a device ON or OFF by
+> > calling pcie_set_clkpm(). The state can be retieved by calling
+> > pcie_get_clkpm_state().
+>
+> s/retieved/retrieved/
+>
+> > pcie_link_state.clkpm_disable is only accessed in pcie_set_clkpm()
+> > to ensure that Clock PM state can be reenabled after being disabled.
 > >
 > > This patch:
-> > - Removes clkpm_default from struct pcie_link_state
-> > - Creates pcie_get_clkpm_state() which return the clkpm state
-> >   obtained the BIOS
-> > - Replaces references to clkpm_default with call to
-> >   pcie_get_clkpm_state()
+> >   - add pm_disable to the struct pcie_link_state, to indicate that
+> >     the kernel has marked the device's AS and Clock PM states disabled
+> >   - removes clkpm_disable from the struct pcie_link_state
+> >   - removes all instance where clkpm_disable is set
+> >   - ensure that the Clock PM is always disabled if it is part of the
+> >     states passed into __pci_disable_link_state(), regardless of the
+> >     global policy
 > >
 > > Signed-off-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
 > > ---
-> >  drivers/pci/pcie/aspm.c | 37 +++++++++++++++++++++++++++----------
-> >  1 file changed, 27 insertions(+), 10 deletions(-)
+> >  drivers/pci/pcie/aspm.c | 18 +++++-------------
+> >  1 file changed, 5 insertions(+), 13 deletions(-)
 > >
 > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 013a47f587ce..c23da9a4e2fb 100644
+> > index 368828cd427d..e6ae00daa7ae 100644
 > > --- a/drivers/pci/pcie/aspm.c
 > > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -63,7 +63,6 @@ struct pcie_link_state {
-> >       /* Clock PM state */
-> >       u32 clkpm_capable:1;            /* Clock PM capable? */
-> >       u32 clkpm_enabled:1;            /* Current Clock PM state */
-> > -     u32 clkpm_default:1;            /* Default Clock PM state by BIOS */
-> >       u32 clkpm_disable:1;            /* Clock PM disabled */
+> > @@ -60,8 +60,7 @@ struct pcie_link_state {
+> >       u32 aspm_default:7;             /* Default ASPM state by BIOS */
+> >       u32 aspm_disable:7;             /* Disabled ASPM state */
 > >
+> > -     /* Clock PM state */
+> > -     u32 clkpm_disable:1;            /* Clock PM disabled */
+> > +     u32 pm_disabled:1;              /* Disabled AS and Clock PM ? */
+>
+> What did we gain by renaming this?  AFAICT this only affects clkpm
+> (the only test of pm_disabled is in pcie_set_clkpm()).
+>
 > >       /* Exit latencies */
-> > @@ -123,6 +122,30 @@ static int policy_to_aspm_state(struct pcie_link_state *link)
-> >       return 0;
+> >       struct aspm_latency latency_up; /* Upstream direction exit latency */
+> > @@ -198,7 +197,7 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >        * Don't enable Clock PM if the link is not Clock PM capable
+> >        * or Clock PM is disabled
+> >        */
+> > -     if (!capable || link->clkpm_disable)
+> > +     if (enable && (!capable || link->pm_disabled))
+> >               enable = 0;
+> >       /* Need nothing if the specified equals to current state */
+> >       if (pcie_get_clkpm_state(link->pdev) == enable)
+> > @@ -206,11 +205,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >       pcie_set_clkpm_nocheck(link, enable);
 > >  }
 > >
-> > +static int pcie_get_clkpm_state(struct pci_dev *pdev)
-> > +{
-> > +     int enabled = 1;
-> > +     u32 reg32;
-> > +     u16 reg16;
-> > +     struct pci_dev *child;
-> > +     struct pci_bus *linkbus = pdev->subordinate;
-> > +
-> > +     /* All functions should have the same clkpm state, take the worst */
-> > +     list_for_each_entry(child, &linkbus->devices, bus_list) {
-> > +             pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
-> > +             if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-> > +                     enabled = 0;
-> > +                     break;
-> > +             }
-> > +
-> > +             pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
-> > +             if (!(reg16 & PCI_EXP_LNKCTL_CLKREQ_EN))
-> > +                     enabled = 0;
-> > +     }
-> > +
-> > +     return enabled;
-> > +}
-> > +
-> >  static int policy_to_clkpm_state(struct pcie_link_state *link)
+> > -static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> > -{
+> > -     link->clkpm_disable = blacklist ? 1 : 0;
+> > -}
+> > -
+> >  static bool pcie_retrain_link(struct pcie_link_state *link)
 > >  {
-> >       switch (aspm_policy) {
-> > @@ -134,7 +157,7 @@ static int policy_to_clkpm_state(struct pcie_link_state *link)
-> >               /* Enable Clock PM */
-> >               return 1;
-> >       case POLICY_DEFAULT:
-> > -             return link->clkpm_default;
-> > +             return pcie_get_clkpm_state(link->pdev);
-> >       }
-> >       return 0;
-> >  }
-> > @@ -168,9 +191,8 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >       struct pci_dev *parent = link->pdev;
+> > @@ -952,8 +946,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
+> >        */
+> >       pcie_aspm_cap_init(link, blacklist);
 > >
-> >  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> >  {
-> > -     int capable = 1, enabled = 1;
-> > +     int capable = 1;
-> >       u32 reg32;
-> > -     u16 reg16;
-> >       struct pci_dev *child;
-> >       struct pci_bus *linkbus = link->pdev->subordinate;
+> > -     /* Setup initial Clock PM state */
+> > -     pcie_clkpm_cap_init(link, blacklist);
+> > +     link->pm_disabled = blacklist;
 > >
-> > @@ -179,15 +201,10 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> >               pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
-> >               if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-> >                       capable = 0;
-> > -                     enabled = 0;
-> >                       break;
-> >               }
-> > -             pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
-> > -             if (!(reg16 & PCI_EXP_LNKCTL_CLKREQ_EN))
-> > -                     enabled = 0;
-> >       }
-> > -     link->clkpm_enabled = enabled;
-> > -     link->clkpm_default = enabled;
-> > +     link->clkpm_enabled = pcie_get_clkpm_state(link->pdev);
+> >       /*
+> >        * At this stage drivers haven't had an opportunity to change the
+> > @@ -1129,8 +1122,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+> >       pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> >
+> >       if (state & PCIE_LINK_STATE_CLKPM)
+> > -             link->clkpm_disable = 1;
+> > -     pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> > +             pcie_set_clkpm(link, 0);
+> > +
+> >       mutex_unlock(&aspm_lock);
+> >       if (sem)
+> >               up_read(&pci_bus_sem);
+> > @@ -1301,7 +1294,6 @@ static ssize_t clkpm_store(struct device *dev,
+> >       down_read(&pci_bus_sem);
+> >       mutex_lock(&aspm_lock);
+> >
+> > -     link->clkpm_disable = !state_enable;
 >
-> I love the idea of removing clkpm_default, but I need a little more
-> convincing.  Before this patch, this code computes clkpm_default from
-> PCI_EXP_LNKCAP_CLKPM and PCI_EXP_LNKCTL_CLKREQ_EN of all the functions
-> of the device.
+> Something is seriously wrong here because clkpm_store() no longer does
+> anything with "state_enable", the value we got from the user.
 >
-> PCI_EXP_LNKCAP_CLKPM is a read-only value, so we can re-read that any
-> time.  But PCI_EXP_LNKCTL_CLKREQ_EN is writable, so if we want to know
-> the value that firmware put there, we need to read and save it before
-> we modify it.
- >
-> Why is it safe to remove this init-time read of
-> PCI_EXP_LNKCTL_CLKREQ_EN and instead re-read it any time we need the
-> "default" settings from firmware?
-After another look, it "may" not be safe, but then clkpm_default
-should be documented
-as /* Clock PM state at last boot */ because I don't think it is the
-*default* state. Please,
-let me know what I missing, I list below my reasons: (pardon the repetitions)
-
-- I agree that clkpm_default current stores the boot time value.
-- currently, the value of clkpm_default reflect the value of
-PCI_EXP_LNKCAP_CLKPM
-   (read-only) and PCI_EXP_LNKCTL_CLKREQ_EN (writable)
-- calling pcie_set_clkpm() can change the "default" state in the
-firmware and it is stored
-   in clkpm_enable until the next boot, when clkpm_enable = clkpm_default
-- if the "default" state is changed after boot then its initial value
-stored in clkpm_default is
-  lost at reboot.
-- IMO the intention of calling pcie_set_clkpm() is to set the default
-value on the firmware.
-  We may need another function to set clkpm to a *temporary state*
-that may at any time
-  be different from the value in the firmware.
-- Currently, clkpm_enable always reflect the value in the firmware and
-the may be different
-  from the value of clkpm_default.
-- If clkpm_default does not reflect the value in the firmware after
-boot, it feels to me like it is
-  not the *default* value
-- I also think that clkpm_enabled is supposed to be a sort of
-*temporary/current state* that
-  may or may not be stored as the default. Although, I am not sure why
-it will be needed!
-
-
->
-> >       link->clkpm_capable = capable;
-> >       link->clkpm_disable = blacklist ? 1 : 0;
-> >  }
+> >       pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> >
+> >       mutex_unlock(&aspm_lock);
 > > --
 > > 2.20.1
 > >
