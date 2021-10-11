@@ -2,230 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD61F429518
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 19:02:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE218429552
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 19:11:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233472AbhJKREV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 13:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46682 "EHLO mail.kernel.org"
+        id S233692AbhJKRNr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 13:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232954AbhJKREU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Oct 2021 13:04:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B3F79606A5;
-        Mon, 11 Oct 2021 17:02:19 +0000 (UTC)
+        id S233658AbhJKRNn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Oct 2021 13:13:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A33A860462;
+        Mon, 11 Oct 2021 17:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633971740;
-        bh=+sw5vVvYzB9olZ/QfKHrBKLtJpmBFQ+mzziJlwpYm24=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HaZY28og8tI1/NuWbqAd1wxI/WmDvzz3qE12WZHII4SuxckNVP4s/8G9c/90KGEz2
-         MCbdEHemGkjr5yaZESU/9LGdQfZusr602hfmFM170uwJMvkhS5l3kilUuNMLDPLFj2
-         1z1QYP+ubJwTpGleScPwPOI3MU6uO+mULW5BdKQSMVNzYYdknkfhJd0MctezGgG0XA
-         bA/Cf3Bcu6q+DuZS9S/OqceSmpL0XTCeqAr/FiNv58wmpuJN897IeKrIJR4zQliIbE
-         8WHQKzLp+sFNFhMsbNcJ1CNF9DELxl4t0NWnqZZQcSt2KV9Gp3cpMj+tSV/d+WRSWK
-         lHxf2+dd3zztQ==
-Received: by pali.im (Postfix)
-        id A78F17C9; Mon, 11 Oct 2021 19:02:15 +0200 (CEST)
-Date:   Mon, 11 Oct 2021 19:02:15 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        s=k20201202; t=1633972302;
+        bh=vlC7GRUY6Gew22EEYGiNGt/sDPcVqVC63fFpQxSlLII=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bcuLvJ3lPNHCD5gqCHCeTQhfa+Gi49VmGN8WISzqx9eWCRDDXEa1sp8+sHCWwv5Mh
+         6yx83sWdzhhlXJV9ZYvAzFEuaIw0qguRrRXd8UvnPsEM95q4od/KIwgX4msoO897Wx
+         Twob/xJgZINDfoRqjIHAT4VWyFFIVElJGg8HgS1d58Mzj7AhvU+74SGeiIRVaven2Q
+         hPnPv8aa5qa1lT4qDduzwlHgXqW4pG3Hrlem5X47Ob6PRxWZtDBWlFmtflo2kJ1JCB
+         CcrQcP5Fa8GYoAlW70QNBv7eJHyUw7CfhJ+fYIx0eNRB9ZbkCc87l06ApW5Q0Jqxgi
+         tTqK84KMutqHA==
+Date:   Mon, 11 Oct 2021 12:11:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "wanghai (M)" <wanghai38@huawei.com>
+Cc:     Barry Song <21cnbao@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS
- Surface devices
-Message-ID: <20211011170215.3bnmi6sa5yqux2r7@pali>
-References: <20211011134238.16551-1-verdre@v0yd.nl>
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI/MSI: fix page fault when msi_populate_sysfs() failed
+Message-ID: <20211011171139.GA1662796@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211011134238.16551-1-verdre@v0yd.nl>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <9be017de-79a2-9f00-657a-a91da7a7ce1f@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 11 October 2021 15:42:38 Jonas Dreßler wrote:
-> The most recent firmware (15.68.19.p21) of the 88W8897 PCIe+USB card
-> reports a hardcoded LTR value to the system during initialization,
-> probably as an (unsuccessful) attempt of the developers to fix firmware
-> crashes. This LTR value prevents most of the Microsoft Surface devices
-> from entering deep powersaving states (either platform C-State 10 or
-> S0ix state), because the exit latency of that state would be higher than
-> what the card can tolerate.
+For v2, please note "git log --oneline drivers/pci/msi.c" and make
+your patch follow the style, including capitalization.
 
-This description looks like a generic issue in 88W8897 chip or its
-firmware and not something to Surface PCIe controller or Surface HW. But
-please correct me if I'm wrong here.
-
-Has somebody 88W8897-based PCIe card in non-Surface device and can check
-or verify if this issue happens also outside of the Surface device?
-
-It would be really nice to know if this is issue in Surface or in 8897.
-
-> Turns out the card works just the same (including the firmware crashes)
-> no matter if that hardcoded LTR value is reported or not, so it's kind
-> of useless and only prevents us from saving power.
+On Mon, Oct 11, 2021 at 05:15:28PM +0800, wanghai (M) wrote:
 > 
-> To get rid of those hardcoded LTR requirements, it's possible to reset
-> the PCI bridge device after initializing the cards firmware. I'm not
-> exactly sure why that works, maybe the power management subsystem of the
-> PCH resets its stored LTR values when doing a function level reset of
-> the bridge device. Doing the reset once after starting the wifi firmware
-> works very well, probably because the firmware only reports that LTR
-> value a single time during firmware startup.
-> 
-> Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
-> ---
->  drivers/net/wireless/marvell/mwifiex/pcie.c   | 12 +++++++++
->  .../wireless/marvell/mwifiex/pcie_quirks.c    | 26 +++++++++++++------
->  .../wireless/marvell/mwifiex/pcie_quirks.h    |  1 +
->  3 files changed, 31 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-> index c6ccce426b49..2506e7e49f0c 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-> @@ -1748,9 +1748,21 @@ mwifiex_pcie_send_boot_cmd(struct mwifiex_adapter *adapter, struct sk_buff *skb)
->  static int mwifiex_pcie_init_fw_port(struct mwifiex_adapter *adapter)
->  {
->  	struct pcie_service_card *card = adapter->card;
-> +	struct pci_dev *pdev = card->dev;
-> +	struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
->  	const struct mwifiex_pcie_card_reg *reg = card->pcie.reg;
->  	int tx_wrap = card->txbd_wrptr & reg->tx_wrap_mask;
->  
-> +	/* Trigger a function level reset of the PCI bridge device, this makes
-> +	 * the firmware (latest version 15.68.19.p21) of the 88W8897 PCIe+USB
-> +	 * card stop reporting a fixed LTR value that prevents the system from
-> +	 * entering package C10 and S0ix powersaving states.
-> +	 * We need to do it here because it must happen after firmware
-> +	 * initialization and this function is called right after that is done.
-> +	 */
-> +	if (card->quirks & QUIRK_DO_FLR_ON_BRIDGE)
-> +		pci_reset_function(parent_pdev);
-> +
->  	/* Write the RX ring read pointer in to reg->rx_rdptr */
->  	if (mwifiex_write_reg(adapter, reg->rx_rdptr, card->rxbd_rdptr |
->  			      tx_wrap)) {
-> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
-> index 0234cf3c2974..cbf0565353ae 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
-> @@ -27,7 +27,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 4"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Pro 5",
-> @@ -36,7 +37,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1796"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Pro 5 (LTE)",
-> @@ -45,7 +47,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1807"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Pro 6",
-> @@ -53,7 +56,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 6"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Book 1",
-> @@ -61,7 +65,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Book 2",
-> @@ -69,7 +74,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 2"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Laptop 1",
-> @@ -77,7 +83,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{
->  		.ident = "Surface Laptop 2",
-> @@ -85,7 +92,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
->  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
->  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop 2"),
->  		},
-> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
-> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
-> +					QUIRK_DO_FLR_ON_BRIDGE),
->  	},
->  	{}
->  };
-> @@ -103,6 +111,8 @@ void mwifiex_initialize_quirks(struct pcie_service_card *card)
->  		dev_info(&pdev->dev, "no quirks enabled\n");
->  	if (card->quirks & QUIRK_FW_RST_D3COLD)
->  		dev_info(&pdev->dev, "quirk reset_d3cold enabled\n");
-> +	if (card->quirks & QUIRK_DO_FLR_ON_BRIDGE)
-> +		dev_info(&pdev->dev, "quirk do_flr_on_bridge enabled\n");
->  }
->  
->  static void mwifiex_pcie_set_power_d3cold(struct pci_dev *pdev)
-> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
-> index 8ec4176d698f..f8d463f4269a 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
-> @@ -18,6 +18,7 @@
->  #include "pcie.h"
->  
->  #define QUIRK_FW_RST_D3COLD	BIT(0)
-> +#define QUIRK_DO_FLR_ON_BRIDGE	BIT(1)
->  
->  void mwifiex_initialize_quirks(struct pcie_service_card *card);
->  int mwifiex_pcie_reset_d3cold_quirk(struct pci_dev *pdev);
+> 在 2021/10/11 16:52, Barry Song 写道:
+> > On Mon, Oct 11, 2021 at 9:24 PM Wang Hai <wanghai38@huawei.com> wrote:
+> > > I got a page fault report when doing fault injection test:
+
+When you send v2, can you include information about how you injected
+the fault?  If it's easy, others can reproduce the failure that way.
+
+> > > BUG: unable to handle page fault for address: fffffffffffffff4
+> > > ...
+> > > RIP: 0010:sysfs_remove_groups+0x25/0x60
+> > > ...
+> > > Call Trace:
+> > >   msi_destroy_sysfs+0x30/0xa0
+> > >   free_msi_irqs+0x11d/0x1b0
+> > >   __pci_enable_msix_range+0x67f/0x760
+> > >   pci_alloc_irq_vectors_affinity+0xe7/0x170
+> > >   vp_find_vqs_msix+0x129/0x560
+> > >   vp_find_vqs+0x52/0x230
+> > >   vp_modern_find_vqs+0x47/0xb0
+> > >   p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
+> > >   virtio_dev_probe+0x1ed/0x2e0
+> > >   really_probe+0x1c7/0x400
+> > >   __driver_probe_device+0xa4/0x120
+> > >   driver_probe_device+0x32/0xe0
+> > >   __driver_attach+0xbf/0x130
+> > >   bus_for_each_dev+0xbb/0x110
+> > >   driver_attach+0x27/0x30
+> > >   bus_add_driver+0x1d9/0x270
+> > >   driver_register+0xa9/0x180
+> > >   register_virtio_driver+0x31/0x50
+> > >   p9_virtio_init+0x3c/0x1000 [9pnet_virtio]
+> > >   do_one_initcall+0x7b/0x380
+> > >   do_init_module+0x5f/0x21e
+> > >   load_module+0x265c/0x2c60
+> > >   __do_sys_finit_module+0xb0/0xf0
+> > >   __x64_sys_finit_module+0x1a/0x20
+> > >   do_syscall_64+0x34/0xb0
+> > >   entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > > 
+> > > When populating msi_irqs sysfs failed in msi_capability_init() or
+> > > msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
+> > > This will cause a page fault when destroying the wrong
+> > > dev->msi_irq_groups in free_msi_irqs().
+> > > 
+> > > Fix this by setting dev->msi_irq_groups to NULL when msi_populate_sysfs()
+> > > failed.
+> > > 
+> > > Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
+> > > Reported-by: Hulk Robot <hulkci@huawei.com>
+
+What exactly was reported by the Hulk Robot?  Did it really do the
+fault injection and report the page fault?
+
+> > > Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> > Acked-by: Barry Song <song.bao.hua@hisilicon.com>
+> > 
+> > > ---
+> > >   drivers/pci/msi.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> > > index 0099a00af361..6f75db9f3be7 100644
+> > > --- a/drivers/pci/msi.c
+> > > +++ b/drivers/pci/msi.c
+> > > @@ -561,6 +561,7 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+> > >          dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+> > >          if (IS_ERR(dev->msi_irq_groups)) {
+> > >                  ret = PTR_ERR(dev->msi_irq_groups);
+> > > +               dev->msi_irq_groups = NULL;
+> > >                  goto err;
+> > >          }
+> > > 
+> > > @@ -733,6 +734,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+> > >          dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
+> > >          if (IS_ERR(dev->msi_irq_groups)) {
+> > >                  ret = PTR_ERR(dev->msi_irq_groups);
+> > > +               dev->msi_irq_groups = NULL;
+> > Can you define a temp variable and assign it to dev->msi_irq_groups if
+> > the temp variable
+> > is not PTR_ERR?
+> Of course, I will send a v2 patch.
+> > 
+> > >                  goto out_free;
+> > >          }
+> > > 
+> > > --
+> > > 2.17.1
+> > > 
+> > Thanks
+> > Barry
+> > .
+> > 
 > -- 
-> 2.31.1
+> Wang Hai
 > 
