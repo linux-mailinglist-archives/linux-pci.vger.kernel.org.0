@@ -2,138 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C56428D8C
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 15:09:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B8A428DFB
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 15:32:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235410AbhJKNLd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 09:11:33 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:28916 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236807AbhJKNLd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 09:11:33 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HSfCh6mvszbn4k;
-        Mon, 11 Oct 2021 21:05:04 +0800 (CST)
-Received: from kwepemm600001.china.huawei.com (7.193.23.3) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Mon, 11 Oct 2021 21:09:29 +0800
-Received: from huawei.com (10.175.104.82) by kwepemm600001.china.huawei.com
- (7.193.23.3) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Mon, 11 Oct
- 2021 21:09:28 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <bhelgaas@google.com>, <andy.shevchenko@gmail.com>,
-        <maz@kernel.org>, <tglx@linutronix.de>,
-        <song.bao.hua@hisilicon.com>, <21cnbao@gmail.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] PCI/MSI: fix page fault when msi_populate_sysfs() failed
-Date:   Mon, 11 Oct 2021 21:08:37 +0800
-Message-ID: <20211011130837.766323-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        id S235548AbhJKNev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 09:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235280AbhJKNev (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 09:34:51 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE351C061570;
+        Mon, 11 Oct 2021 06:32:50 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4HSfqf6rPMzQkFS;
+        Mon, 11 Oct 2021 15:32:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH v3 0/2] mwifiex: Work around firmware bugs on 88W8897 chip
+Date:   Mon, 11 Oct 2021 15:32:22 +0200
+Message-Id: <20211011133224.15561-1-verdre@v0yd.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.82]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600001.china.huawei.com (7.193.23.3)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 0E32518B7
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I got a page fault report when doing fault injection test:
+This is the third revision of this patch, here's v1 and v2:
+v1: https://lore.kernel.org/linux-wireless/20210830123704.221494-1-verdre@v0yd.nl/
+v2: https://lore.kernel.org/linux-wireless/20210914114813.15404-1-verdre@v0yd.nl/
 
-BUG: unable to handle page fault for address: fffffffffffffff4
-...
-RIP: 0010:sysfs_remove_groups+0x25/0x60
-...
-Call Trace:
- msi_destroy_sysfs+0x30/0xa0
- free_msi_irqs+0x11d/0x1b0
- __pci_enable_msix_range+0x67f/0x760
- pci_alloc_irq_vectors_affinity+0xe7/0x170
- vp_find_vqs_msix+0x129/0x560
- vp_find_vqs+0x52/0x230
- vp_modern_find_vqs+0x47/0xb0
- p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
-...
- entry_SYSCALL_64_after_hwframe+0x44/0xae
+Changes between v2 and v3:
+ - Use consistent terminology (PCIe, USB)
+ - Read a generic register (PCI_VENDOR_ID) in the first patch since it's not 
+ the actual readback that fixes the crash. I decided against using usleep()
+ because reading a register has proven to work on lots of devices for a few 
+ months now, and usleep() only appears to work when a certain duration is used.
+ - Use read_poll_timeout() for wakeup patch
 
-When populating msi_irqs sysfs failed in msi_capability_init() or
-msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
-This will cause a page fault when destroying the wrong
-dev->msi_irq_groups in free_msi_irqs().
+Jonas Dreßler (2):
+  mwifiex: Read a PCI register after writing the TX ring write pointer
+  mwifiex: Try waking the firmware until we get an interrupt
 
-Define a temp variable and assign it to dev->msi_irq_groups if
-the temp variable is not PTR_ERR.
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 36 ++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 5 deletions(-)
 
-Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Barry Song <song.bao.hua@hisilicon.com>
----
-v1->v2: introduce temporary variable 'groups'
- drivers/pci/msi.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0099a00af361..4b4792940e86 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -535,6 +535,7 @@ static int msi_verify_entries(struct pci_dev *dev)
- static int msi_capability_init(struct pci_dev *dev, int nvec,
- 			       struct irq_affinity *affd)
- {
-+	const struct attribute_group **groups;
- 	struct msi_desc *entry;
- 	int ret;
- 
-@@ -558,12 +559,14 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 	if (ret)
- 		goto err;
- 
--	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
--	if (IS_ERR(dev->msi_irq_groups)) {
--		ret = PTR_ERR(dev->msi_irq_groups);
-+	groups = msi_populate_sysfs(&dev->dev);
-+	if (IS_ERR(groups)) {
-+		ret = PTR_ERR(groups);
- 		goto err;
- 	}
- 
-+	dev->msi_irq_groups = groups;
-+
- 	/* Set MSI enabled bits	*/
- 	pci_intx_for_msi(dev, 0);
- 	pci_msi_set_enable(dev, 1);
-@@ -691,6 +694,7 @@ static void msix_mask_all(void __iomem *base, int tsize)
- static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 				int nvec, struct irq_affinity *affd)
- {
-+	const struct attribute_group **groups;
- 	void __iomem *base;
- 	int ret, tsize;
- 	u16 control;
-@@ -730,12 +734,14 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 
- 	msix_update_entries(dev, entries);
- 
--	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
--	if (IS_ERR(dev->msi_irq_groups)) {
--		ret = PTR_ERR(dev->msi_irq_groups);
-+	groups = msi_populate_sysfs(&dev->dev);
-+	if (IS_ERR(groups)) {
-+		ret = PTR_ERR(groups);
- 		goto out_free;
- 	}
- 
-+	dev->msi_irq_groups = groups;
-+
- 	/* Set MSI-X enabled bits and unmask the function */
- 	pci_intx_for_msi(dev, 0);
- 	dev->msix_enabled = 1;
 -- 
-2.17.1
+2.31.1
 
