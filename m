@@ -2,61 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A1A942963A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:00:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9BE342963D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232721AbhJKSCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 14:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
+        id S232673AbhJKSDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 14:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232673AbhJKSC3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:02:29 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB14C061570;
-        Mon, 11 Oct 2021 11:00:29 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id oa4so13126182pjb.2;
-        Mon, 11 Oct 2021 11:00:29 -0700 (PDT)
+        with ESMTP id S233950AbhJKSDW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:03:22 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A09C061570;
+        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id f21so3085109plb.3;
+        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=06w4bvyU3F5XYJfjaevgNf8iCsWjF2RGPbd38EHlRsE=;
-        b=ewhaVOVE3Ut21et20HX9bpL1dBjGMy3f7hQ3DwpDRkqgOicXp9ZoVxk63UAjCISdVW
-         uINmSYUK71oj9tD88th+1BNaOBErxbqvn5DP/5bAqBzvn3VWHBc+MKR3O5UiFcLJdCu0
-         DU1VAnPejnU7bKuvSjzVXqnFJ6IMlao+lMvDCQjNNeI/6SXeKq1q4ZEAeOwSfCH+ROtQ
-         YmrDcj6Yrmf6VbDXgVIK8X1m0UW4IShYFugP69VsnQCseLJbF47XzeFw60v74kjRYyow
-         Xs46ZyAezSIRbYtUQX/OqWuxzXQaE0aE7UTivfDSFVg/83QmMLk65cgoVWopJsZfN1BG
-         DnUQ==
+        bh=Ac9LXj3z0Aargz2ofBXWx7xZeNNeuttwY96oTD0m/Sk=;
+        b=UpndYJVH2kYvgQ5Urq0olbt0Q/fTxH1a2N9PJz1x/BbJNW27uKe02za0ZnD4O3uV8x
+         YFIiMi8hdgMC+n1Tfo/PF390u3CxZxjtx6npxQZUEMMhxo1MszeFmbBoKa3C8g/HAiJi
+         6q1hHL9b5Xs5weDigUXmr1d80R1XH4E3wwVFtXGZJup+wBXRzN/ORh+klZgF8dSFTwCi
+         c2Du7OJmO+39l4z0+o9gdiK2FsW0UHXIX60P7C97Ov4y1/TGassp70S5TnWTe3meFzGD
+         n94a7Y+pBkCH6UDpBEWc5u5LfH4c/2rxQdU6dzs/WeYRxbGQ0h1il++ovY47dTcqPZwn
+         ZmUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=06w4bvyU3F5XYJfjaevgNf8iCsWjF2RGPbd38EHlRsE=;
-        b=4KT0uFbQw4aYzsA2Xya4xrtLuxqXQrbeyA2fTUe7cRpMBEc819eK9N6LbaLYQ8f7Cc
-         aEXxPSZNep/hnEUCjuFyvEgNN2sAVGYnMAx6niSNd27UsONSyS678y8VcsYlaQFg7zC7
-         5JRazkf/djgQrP0IkudeuFPv8q+yWd+MR8vyLWSSvOJvJ0Mz5+U+JfCGUjXX2lEynIfZ
-         1pIFSkN6HQKk2FAnDVnDxSEnWQgxMh0tSZqchWT9DFqyOQ7tXiEdayOobrbQ+TE4jCKG
-         7baDd6sBjOXI8widGXpPdCXCzk6RfH2hy4eceMHBwZb65LihdF9HUPEVPwkPmBT+jbzQ
-         Ck6Q==
-X-Gm-Message-State: AOAM530obtSGznEpWbyKco+2wu1Z/Zrin47omMKHSI1vfBkHvG3VQM+E
-        kuDOqvWCZplTHCYhe4+/tgfGOLV30qIILpNt
-X-Google-Smtp-Source: ABdhPJybbROwc8U2D4nQvCa26A3RsTPnBtm/nbkH8KGQfx9cS7rugKMW4c3owdWnQGYvQo+LoFV9ew==
-X-Received: by 2002:a17:90a:5894:: with SMTP id j20mr527868pji.82.1633975228856;
-        Mon, 11 Oct 2021 11:00:28 -0700 (PDT)
+        bh=Ac9LXj3z0Aargz2ofBXWx7xZeNNeuttwY96oTD0m/Sk=;
+        b=ZlZt1cBjJ0mRTp7Yzjxe+CnyDIIaDG9EROguFqVMUvfN6X0uqpvK1J3nH7eHcEW2vv
+         Cj/FGTeWQVbLTNSkwDKSFSBwCPgQxZGL8izSmNgiAc+66MKCGSrjIaXbi00T9bJGozm4
+         Gra4rEp7kdNoZY6JNjCwXF/F83IZjwlh7QkP7bW2eE/pgW+KRvVds7hV7sm923VjfyOO
+         +v6I0zwJi9cwpqqsUazzYexZSEq2wyy/xPXnHW+nWpvlmYpBvunwjtH+5Quk0i7sZ+JM
+         lrkiEwBsc8i+AaUGAqk/eQ38m4RVcxhOh+hXbtgTWyTbZaVOwnnoLPCUeUxXG7p7o6n2
+         LDfg==
+X-Gm-Message-State: AOAM531WUb3QVePKtc3SQP0vs0Jnr7pPYAU/HjuPAPWcwnjtwj4fvWVQ
+        AtpLNk1+3vtTWv2q+HZR0LlcR6aOEecMuGdh
+X-Google-Smtp-Source: ABdhPJw5MHCkS1Q9eMp5sQHWRTrT0swYRsJEFWRTLQ1wt1NrCBy09H9LzFYZ4hCqnvbpODaPwXUvUg==
+X-Received: by 2002:a17:90a:8912:: with SMTP id u18mr456538pjn.69.1633975282221;
+        Mon, 11 Oct 2021 11:01:22 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
-        by smtp.gmail.com with ESMTPSA id z9sm116702pji.42.2021.10.11.11.00.24
+        by smtp.gmail.com with ESMTPSA id b134sm8820045pga.3.2021.10.11.11.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Oct 2021 11:00:28 -0700 (PDT)
+        Mon, 11 Oct 2021 11:01:21 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 10/22] PCI: mvebu: Use SET_PCI_ERROR_RESPONSE() when device not found
-Date:   Mon, 11 Oct 2021 23:30:00 +0530
-Message-Id: <147d72149c4863be53b6044e8db6772c1b450bc0.1633972263.git.naveennaidu479@gmail.com>
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [PATCH 11/22] PCI: altera: Use SET_PCI_ERROR_RESPONSE() when device not found
+Date:   Mon, 11 Oct 2021 23:30:49 +0530
+Message-Id: <8e70c0f96b25e4b30ce4fc261cafe038a025429c.1633972263.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
 References: <cover.1633972263.git.naveennaidu479@gmail.com>
@@ -76,30 +78,23 @@ read occurs.
 This helps unify PCI error response checking and make error check
 consistent and easier to find.
 
+Compile tested only.
+
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pci-mvebu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-altera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index ed13e81cd691..51d61194a31a 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -654,7 +654,7 @@ static int mvebu_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 2513e9363236..d6c71b5d1ffb 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -511,7 +511,7 @@ static int altera_pcie_cfg_read(struct pci_bus *bus, unsigned int devfn,
+ 		return PCIBIOS_BAD_REGISTER_NUMBER;
  
- 	port = mvebu_pcie_find_port(pcie, bus, devfn);
- 	if (!port) {
--		*val = 0xffffffff;
-+		SET_PCI_ERROR_RESPONSE(val);
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 	}
- 
-@@ -664,7 +664,7 @@ static int mvebu_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- 						 size, val);
- 
- 	if (!mvebu_pcie_link_up(port)) {
--		*val = 0xffffffff;
-+		SET_PCI_ERROR_RESPONSE(val);
+ 	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn))) {
+-		*value = 0xffffffff;
++		SET_PCI_ERROR_RESPONSE(value);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
  
