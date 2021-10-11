@@ -2,100 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30ACB428828
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 09:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5F2428852
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 10:06:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234685AbhJKHz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 03:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234656AbhJKHzY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Oct 2021 03:55:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 417EE60F0F;
-        Mon, 11 Oct 2021 07:53:23 +0000 (UTC)
-From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V10 6/6] PCI: Add quirk for multifunction devices of LS7A
-Date:   Mon, 11 Oct 2021 15:46:04 +0800
-Message-Id: <20211011074604.854340-7-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20211011074604.854340-1-chenhuacai@loongson.cn>
-References: <20211011074604.854340-1-chenhuacai@loongson.cn>
+        id S234733AbhJKIIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 04:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231300AbhJKIIF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 04:08:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353D0C061570;
+        Mon, 11 Oct 2021 01:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NePUhq2kCKuKoLuyepvAsQyQ3u7DiGVbX0RKJvjUUBc=; b=t0XKqM9eXqx+4HnaXU3qjxrcgE
+        DAIGSaUWiyGD5X9tASynPdwMwQ7CObj9K4vyt5PIYZSZg5eXPXdqeh0+p8khIYRRb5l69wjtSlm7L
+        AXnpOtT2ilZaZDuEND8sp4gdlWcqHlfUvytMstqVyJsG1aeJQiTFtimDrwWIeZuDcvOqrxBI1EIAy
+        h97La2yXt8YhzNa9oJM8fvdRdKQak3maZ5PSU6QaoJMK5DXPqXxNsx1XPFs3SDDQMjhVDvQLbxr9U
+        ViQfg0AAx2g5lHzJloJzLPfjivGpqAe0f3NFxAQSOvhVdAkhQUc6pTexSik4p+FFZjfrs8Lx1PE0Q
+        69kuX6dg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mZqCT-005LX8-JJ; Mon, 11 Oct 2021 07:58:45 +0000
+Date:   Mon, 11 Oct 2021 08:58:21 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
+ pci_iomap_host_shared_range()
+Message-ID: <YWPunfa+WK86Cgnv@infradead.org>
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jianmin Lv <lvjianmin@loongson.cn>
-
-In LS7A, multifunction device use same PCI PIN (because the PIN register
-report the same INTx value to each function) but we need different IRQ
-for different functions, so add a quirk to fix it for standard PCI PIN
-usage.
-
-This patch only affect ACPI based systems (and only needed by ACPI based
-systems, too). For DT based systems, the irq mappings is defined in .dts
-files and be handled by of_irq_parse_pci().
-
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/pci/controller/pci-loongson.c | 29 +++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 6b158819f5bc..0ae222a15ac7 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -22,6 +22,12 @@
- #define DEV_LS2K_APB	0x7a02
- #define DEV_LS7A_CONF	0x7a10
- #define DEV_LS7A_LPC	0x7a0c
-+#define DEV_LS7A_GMAC	0x7a03
-+#define DEV_LS7A_DC	0x7a06
-+#define DEV_LS7A_GPU	0x7a15
-+#define DEV_LS7A_AHCI	0x7a08
-+#define DEV_LS7A_EHCI	0x7a14
-+#define DEV_LS7A_OHCI	0x7a24
- 
- #define FLAG_CFG0	BIT(0)
- #define FLAG_CFG1	BIT(1)
-@@ -108,6 +114,29 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
- 
-+static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-+{
-+	pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_DC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GPU, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GMAC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_AHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_EHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_OHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
--- 
-2.27.0
+Just as last time:  This does not make any sense.  ioremap is shared
+by definition.
 
