@@ -2,62 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F20B442968B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF29F42968E
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 20:11:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232019AbhJKSMb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 14:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39772 "EHLO
+        id S234281AbhJKSNW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 14:13:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbhJKSMb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:12:31 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAC8C061570;
-        Mon, 11 Oct 2021 11:10:30 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id pf6-20020a17090b1d8600b0019fa884ab85so40234pjb.5;
-        Mon, 11 Oct 2021 11:10:30 -0700 (PDT)
+        with ESMTP id S234300AbhJKSNW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 14:13:22 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA8AC061745;
+        Mon, 11 Oct 2021 11:11:22 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id t11so11829247plq.11;
+        Mon, 11 Oct 2021 11:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hOpzKqtZkl4vpPBZR8uQl2s3BPZXOsp3vKlUaVIS/Mo=;
-        b=NCpPkW2tW+1A9ejqPsw/E89AdQ1IG22gXH4d0M9se1jCFdsfpIKYs4e087pVmidl/e
-         q8qXvAKlGq9XLghs8p7T9gx0F4y0R4IX350PxIBQ7mkLYCyILrSZ460YkVB36SdBHikK
-         rw3NuJ9e5U1bRxNP0zCAQawqJ7QisUHe8RacVwL6iHNGGS7S7+Ecra7/vN+xVk3XU0gt
-         dwP8+iyekUEdEAprLEoIHsnCrxeWBakt7ZC1+zNNyHYBfqOizT3BOii/pEbLivYDE0PA
-         etsTVYzI2VFTdzajkhJOd8NRKWRFxzTiyNhBL5CODQz4JBTbgElhcn8JeIQuYbARVDBX
-         6L0Q==
+        bh=F90TVLLbkkjlFTZkt/NbI81qyTfS7mybpJeR5bN32UQ=;
+        b=qB2VJ/H/xD7afUDeAVvAmQ8dpaVRwqBxT4tgjGdsz6jeAMyR8/klf2Ma2/uiMlha+I
+         nwsVUpss+uaV/dGwK1/QCRO0J6MZ6xBoX3AgnXKocT/lEJMovkagO+n6WcFtCn6emFQI
+         LhJ3Fdm4yuNTxWTcm2hiLqv3SjbeqlLFMLO3kAsiv/C7RuXnv5R0j9DsrxrPk44dxsjT
+         gBiCbOQkAA58fXp80XIyB5K0TK2iXLnB8eVACd5Xo5OlkirRNB0OWK1kHIps7+zxAxGP
+         qvTSxcwtEqKZCVSrgVG0px0H5G0hl8SS1b7NGW1uU14sZ7i4c33GSCdaJyeXr9gzDszK
+         36qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hOpzKqtZkl4vpPBZR8uQl2s3BPZXOsp3vKlUaVIS/Mo=;
-        b=HVBStgdDxQ7Tz2N5/tqAcDi0p5i/HSgjkLemb+4Lt96/GJX6hVPIaWvSfsSwjtM9Nm
-         yRzAWHiTpA2UzKYoTojci7YMNUc6oLAlFOCB42Hrc6Jyct97w/GZIQRJvq8NuuXx7k5n
-         uN58SZmFvUzTEOS3pugZcXpSmhZ/7th5YVgWvBkCbuT74OjFHqSrR+OkuSx4APJFnWwS
-         n6HRBqpe/E14Vqu23407Si53buPLNPYMRUKJ9IYkWZrNDja4z1j3TgHqFtWWBGeSrCpU
-         6+3MkgsH+nQJPqSBxIFX9V7grGqi8hSErRchD9NMeT63UxdDrPd0lM3ktvmiBSHkeHmk
-         X4gA==
-X-Gm-Message-State: AOAM531+mq8l7Im65tNYnP7LwDS9MAqy3a4Yu2Rq2F7pVsIJHxAsh8fX
-        Srvjq4SjKEx4pJe4nzNd2wM=
-X-Google-Smtp-Source: ABdhPJyTTIVV9W/Db1QkVLCqIJwuHX9GWdlAoaPYXja1BJeanTcWGwAAwOoIrYet7aTT3B6sBS+BxQ==
-X-Received: by 2002:a17:90b:4a01:: with SMTP id kk1mr552278pjb.208.1633975830306;
-        Mon, 11 Oct 2021 11:10:30 -0700 (PDT)
+        bh=F90TVLLbkkjlFTZkt/NbI81qyTfS7mybpJeR5bN32UQ=;
+        b=GnRCfdJOse14QdqJ5+9SzCRYMgrW5yjVYljQcwQPj6TNDBILJQobuY1H41XHoo2Wcj
+         ymEi+ZmbYmwxGrw5ZSryZqkvbmkVwNxzx1+S+16vS5T61UdFIM98NUreZN6i0rwvd+0N
+         OnVjZ5UFzlboQpwjTm5kJ7LbIIYKA0ns3j03q1kiwsHob3KCH84D0HZF9KKTRX9/qbbZ
+         8ZO+OB7CcgpgvoVTrWK+iug7C1+MJffw7dTUkwOg/LFYuUSgNd+JP0hTvj4jXBXWzQx/
+         UTzHTyWJqNsLJiT3MfzJND1w46MT4dv53OBzxuzwICA1mxvT5T+/hRwCxJoBCr40QGgR
+         RQmA==
+X-Gm-Message-State: AOAM533njVaEKhRIZ57/h3rCe2nS8YYIEefrB+X0FQHozJkVa6O/mzxw
+        8EIBIj5KfH8UTsMWhWfnNbFIS4nwRrUov5VU
+X-Google-Smtp-Source: ABdhPJyDy1ammFivUjxkoM8cy+Vqu1CBcafx8j5nzYCWL94+TsGdVIgZMcqOppi+HdAi0Uh6WMQBFQ==
+X-Received: by 2002:a17:90b:4f46:: with SMTP id pj6mr544585pjb.63.1633975881620;
+        Mon, 11 Oct 2021 11:11:21 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
-        by smtp.gmail.com with ESMTPSA id j16sm8471216pfr.42.2021.10.11.11.10.27
+        by smtp.gmail.com with ESMTPSA id p3sm8398824pfb.205.2021.10.11.11.11.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Oct 2021 11:10:29 -0700 (PDT)
+        Mon, 11 Oct 2021 11:11:21 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH 18/22] PCI/PME: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
-Date:   Mon, 11 Oct 2021 23:40:14 +0530
-Message-Id: <53e9d01d1683ccae66b07a5b7904e2aa124c5aa3.1633972263.git.naveennaidu479@gmail.com>
+Subject: [PATCH 19/22] PCI: cpqphp: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
+Date:   Mon, 11 Oct 2021 23:41:09 +0530
+Message-Id: <e330cad6bdc0fc932a72d33b221f1b51ab55fcfe.1633972263.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
 References: <cover.1633972263.git.naveennaidu479@gmail.com>
@@ -77,35 +75,33 @@ data from hardware.
 This helps unify PCI error response checking and make error checks
 consistent and easier to find.
 
-Compile tested only.
-
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/pcie/pme.c | 4 ++--
+ drivers/pci/hotplug/cpqphp_ctrl.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 1d0dd77fed3a..24588d0b581f 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -224,7 +224,7 @@ static void pcie_pme_work_fn(struct work_struct *work)
- 			break;
+diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
+index 1b26ca0b3701..d5274b9b06a5 100644
+--- a/drivers/pci/hotplug/cpqphp_ctrl.c
++++ b/drivers/pci/hotplug/cpqphp_ctrl.c
+@@ -2273,7 +2273,7 @@ static u32 configure_new_device(struct controller  *ctrl, struct pci_func  *func
+ 		while ((function < max_functions) && (!stop_it)) {
+ 			pci_bus_read_config_dword(ctrl->pci_bus, PCI_DEVFN(func->device, function), 0x00, &ID);
  
- 		pcie_capability_read_dword(port, PCI_EXP_RTSTA, &rtsta);
--		if (rtsta == (u32) ~0)
-+		if (RESPONSE_IS_PCI_ERROR(&rtsta))
- 			break;
+-			if (ID == 0xFFFFFFFF) {
++			if (RESPONSE_IS_PCI_ERROR(&ID)) {
+ 				function++;
+ 			} else {
+ 				/* Setup slot structure. */
+@@ -2517,7 +2517,7 @@ static int configure_new_function(struct controller *ctrl, struct pci_func *func
+ 			pci_bus_read_config_dword(pci_bus, PCI_DEVFN(device, 0), 0x00, &ID);
+ 			pci_bus->number = func->bus;
  
- 		if (rtsta & PCI_EXP_RTSTA_PME) {
-@@ -274,7 +274,7 @@ static irqreturn_t pcie_pme_irq(int irq, void *context)
- 	spin_lock_irqsave(&data->lock, flags);
- 	pcie_capability_read_dword(port, PCI_EXP_RTSTA, &rtsta);
+-			if (ID != 0xFFFFFFFF) {	  /*  device present */
++			if (!RESPONSE_IS_PCI_ERROR(&ID)) {	  /*  device present */
+ 				/* Setup slot structure. */
+ 				new_slot = cpqhp_slot_create(hold_bus_node->base);
  
--	if (rtsta == (u32) ~0 || !(rtsta & PCI_EXP_RTSTA_PME)) {
-+	if (RESPONSE_IS_PCI_ERROR(&rtsta) || !(rtsta & PCI_EXP_RTSTA_PME)) {
- 		spin_unlock_irqrestore(&data->lock, flags);
- 		return IRQ_NONE;
- 	}
 -- 
 2.25.1
 
