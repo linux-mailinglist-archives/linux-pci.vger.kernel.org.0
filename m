@@ -2,89 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C66ED42917B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 16:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2763D429361
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 17:29:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240979AbhJKOTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 10:19:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242540AbhJKORD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:17:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1E2846136F;
-        Mon, 11 Oct 2021 14:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633961179;
-        bh=w5y83sNdnzbd+RwMEcSG5seR5+ET5nOWfWBbqyRe1VE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gPAisVbSkBEsYzvJp0KAUnFr1V8Z2cxEttLZOXj6pngV3I1BGyRsCjkMJttU3VOzh
-         SU9HsBp3hHX92euYETfkqvSj4Jk8JPh7bKSOCXm3bZo9aprA0nC4KpitkLY5Mihgdt
-         K4rgBiYjXyl/jVycnW2VWo0ttFPaNnMc71qfICE8dmk7Oqz59hxnyoPWLEbO9HP7oD
-         ASCZx0J5rPrRQYyLHQLvqNXRzDUAWWRKCjD7TzvLl8NZR31r/1n/YQ5eytGw4E1Wfj
-         3eXP1PftwXR6Fyw7CdiDDIvB4QZqzSHsTCeOoscwemo4vRwzkZISEkiWbUIE+5QD8z
-         IJ6UOiB6ACa+g==
-Date:   Mon, 11 Oct 2021 09:06:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hch@infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, stefanha@redhat.com, oren@nvidia.com,
-        kw@linux.com
-Subject: Re: [PATCH v3 2/2] PCI/sysfs: use NUMA_NO_NODE macro
-Message-ID: <20211011140617.GA1643826@bhelgaas>
+        id S238179AbhJKPbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 11:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237861AbhJKPbg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 11:31:36 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2EBC06161C
+        for <linux-pci@vger.kernel.org>; Mon, 11 Oct 2021 08:29:36 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id oa12-20020a17090b1bcc00b0019f715462a8so241157pjb.3
+        for <linux-pci@vger.kernel.org>; Mon, 11 Oct 2021 08:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k8atijS/+iEmLpEHHw2Pegmxv2DcWYYJPJdpIxxMix4=;
+        b=Vrxtp+c7M+8e2l3FL7FJPO1v/t2Zq0exaMrNNv+5TwkIUrG2QTtOLJeTXjEfdETAnv
+         qkUjEvy1FQFOXuIYp2Cg4PpYMXHuMOzqnkPxyxZQkyGV+sFRdT+87AkKARNHFpUDDr3m
+         JarsmFyZlynYfm+fDz6wxY4Rn+2ln1cMFRod1OzI6YgPf8Y9dnUUVnRagOZTBEI+lZCB
+         E07MGyR3xgt3XgHD7zQ+FgHqXdSgNZFlHcsxsw+VnMpa5hjE65b3BKGvZpQ4xUJ3zqRd
+         2NyN8ZSL7zI9l3LU6hoOCnY5Y8QxHEdzSQmAl09ViavJWcCTNMWt7GP934culCU/0Gq1
+         J0qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k8atijS/+iEmLpEHHw2Pegmxv2DcWYYJPJdpIxxMix4=;
+        b=hBOqn+qVZKwdyoGvcx0qpsuGwv8Php7YY8QzEZyzZTRxmhmVwmBjrisLopfgeKSIwd
+         Qk5JfOMhMFNfUCY6BKLbB2rwApXl8ONpasth/MBcaTzUy0u8LCTBZ+1wcnGcnMcwkhsW
+         O15su9Oj9eQowMt0/vp4UV2Sgz4O9iLxCCTKCSQb0zefLO1YEW+SLQX/5x+WTbPZr1IY
+         eLheGLXEwhy300oHVWImESkacZ2G1U48/38CGPFF66Yqkew/pTNlV6SlFZ00TbvmbseP
+         7S9bdC465v34WQay/Gn7dRi0p1Wr73ebV3xWSmAUPZ8Y/nUs5mJqzSvGK0S6t25tbi0K
+         rHng==
+X-Gm-Message-State: AOAM531uu0BPRzlwSlZpCAP13A1+U2tljlYIenY7gDcyN4R8d3EjYlJo
+        6qIoxvnHVwtQiJxLeKKErK7EO+gAiuqVnpZwJun+NA==
+X-Google-Smtp-Source: ABdhPJzCT79jpoEsIiK+BEe6D9q4lUZ8G6Lk7OpB6uQ1SPfMwLyjlWtWJh609WIls5YIP5wXqB9SVMOF70Iz3/n018k=
+X-Received: by 2002:a17:90b:1e4b:: with SMTP id pi11mr31473637pjb.179.1633966175512;
+ Mon, 11 Oct 2021 08:29:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a947cd7e-c847-4d44-5a65-51bbdceb1a1d@nvidia.com>
+References: <20210723204958.7186-1-tharvey@gateworks.com> <36070609-9f1f-00c8-ccf5-8ed7877b29da@pengutronix.de>
+ <VI1PR04MB58533AF76EA4DFD8AD6CDA158CEC9@VI1PR04MB5853.eurprd04.prod.outlook.com>
+ <CAJ+vNU1tgVsQWtxa0E8SArO=hA2K8OkqiSPrRSpx0Q5XS4gUWA@mail.gmail.com>
+ <CAHCN7xLC1ob_nxRsZezgYQ9p-me7hNd+1MNFQt2wtcRqU+z9Sw@mail.gmail.com> <2eee557db84087acca4665603ba3d2716199f842.camel@pengutronix.de>
+In-Reply-To: <2eee557db84087acca4665603ba3d2716199f842.camel@pengutronix.de>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Mon, 11 Oct 2021 08:29:24 -0700
+Message-ID: <CAJ+vNU2MCV9oVru5wPqCMJUwAxHtS8ANv=K2kW4TryOGQXxybA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add IMX8M Mini PCI support
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 10, 2021 at 11:36:49AM +0300, Max Gurtovoy wrote:
-> 
-> On 10/9/2021 1:25 AM, Bjorn Helgaas wrote:
-> > On Mon, Oct 04, 2021 at 04:34:53PM +0300, Max Gurtovoy wrote:
-> > > Use the proper macro instead of hard-coded (-1) value.
-> > > 
-> > > Suggested-by: Krzysztof Wilczyński <kw@linux.com>
-> > > Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
-> > These two patches are independent, so I applied this patch only to
-> > pci/sysfs for v5.16, thanks!
-> > 
-> > I assume Greg will take the drivers/base patch.
-> 
-> I saw both patches in his
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-> driver-core-next
-> 
-> So I guess there is no need for taking it separately, right Greg ?
+On Mon, Oct 11, 2021 at 5:30 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Adam,
+>
+> Am Montag, dem 11.10.2021 um 07:25 -0500 schrieb Adam Ford:
+> > On Mon, Aug 16, 2021 at 10:45 AM Tim Harvey <tharvey@gateworks.com> wrote:
+> > >
+> > > On Thu, Jul 29, 2021 at 6:28 PM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+> > > >
+> > > > Hi Tim:
+> > > > Just as Ahmad mentioned, Lucas had issue one patch-set to support i.MX8MM PCIe.
+> > > > Some comments in the review cycle.
+> > > > - One separate PHY driver should be used for i.MX8MM PCIe driver.
+> > > > - Schema file should be used I think, otherwise the .txt file in the dt-binding.
+> > > >
+> > > > I'm preparing one patch-set, but it's relied on the yaml file exchanges and power-domain changes(block control and so on).
+> > > > Up to now, I only walking on the first step, trying to exchange the dt-binding files to schema yaml file.
+> > > >
+> > > > Best Regards
+> > > > Richard Zhu
+> > >
+> > > Richard / Ahmad,
+> > >
+> > > Thanks for your response - I did not see the series from Lucas. I will
+> > > drop this and wait for him to complete his work.
+> > >
+> >
+> > Tim,
+> >
+> > It appears that the power domain changes have been applied to Shawn's
+> > for-next branch:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/log/?h=for-next
+> >
+> > Is there any chance you could rebase and resend this series?
+>
+> This wasn't about the power domain series. I also tried to get i.MX8M
+> PCIe upstream, but the feedback was that we need to split out the PHY
+> functionality, Richard is currently working on this. There is no point
+> in resending this series.
+>
 
-No problem, I dropped the pci-sysfs.c patch.  Thanks for letting me
-know!
+Lucas,
 
-> > > ---
-> > >   drivers/pci/pci-sysfs.c | 6 ++++--
-> > >   1 file changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > index 7fb5cd17cc98..f807b92afa6c 100644
-> > > --- a/drivers/pci/pci-sysfs.c
-> > > +++ b/drivers/pci/pci-sysfs.c
-> > > @@ -81,8 +81,10 @@ static ssize_t pci_dev_show_local_cpu(struct device *dev, bool list,
-> > >   	const struct cpumask *mask;
-> > >   #ifdef CONFIG_NUMA
-> > > -	mask = (dev_to_node(dev) == -1) ? cpu_online_mask :
-> > > -					  cpumask_of_node(dev_to_node(dev));
-> > > +	if (dev_to_node(dev) == NUMA_NO_NODE)
-> > > +		mask = cpu_online_mask;
-> > > +	else
-> > > +		mask = cpumask_of_node(dev_to_node(dev));
-> > >   #else
-> > >   	mask = cpumask_of_pcibus(to_pci_dev(dev)->bus);
-> > >   #endif
-> > > -- 
-> > > 2.18.1
-> > > 
+Thanks for the update.
+
+Richard - please Cc me when you submit as I have several boards to
+test IMX8MM PCI with, some with PCI bridges and some without.
+
+Best regards,
+
+Tim
