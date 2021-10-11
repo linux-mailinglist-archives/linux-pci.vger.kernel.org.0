@@ -2,59 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD5A4295E8
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 19:39:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9C34295FC
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Oct 2021 19:45:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233502AbhJKRlA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 13:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        id S232082AbhJKRrf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 13:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233497AbhJKRlA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 13:41:00 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C965C06161C;
-        Mon, 11 Oct 2021 10:39:00 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id k23-20020a17090a591700b001976d2db364so515824pji.2;
-        Mon, 11 Oct 2021 10:39:00 -0700 (PDT)
+        with ESMTP id S230102AbhJKRre (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 13:47:34 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E09F7C061570;
+        Mon, 11 Oct 2021 10:45:33 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id y1so11780549plk.10;
+        Mon, 11 Oct 2021 10:45:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uG5YGH1HQhNqI6Rs9B6rHyRWKh0Ji0hRKGqWlkWjVmw=;
-        b=ZTMkXOs4RrOGSszqIfzgTMk40on6vGxBESpWNkSlxPsTuOrMYLrvfRIOBcjzBYwjBF
-         aEWCeQto/K909hUQpon72h6xYWPfgfQnh8n738ZsmlTUjbVGzakQkeevSVhF/zWXEDQY
-         Daw/NL19GwHuG5WCyhdmciQcFgh7ldoE/QHbDRP9mC5l5Cb6LnQI9fAcDrlJri5664CC
-         s/PqtGapp06/k2acCLHkBF/k02bb+uWDc9S9o1pWMlSbOZkXWWdZ4A21Lyz6cxXUbIeo
-         NCGxaPdtidgdRPEL4rm5ZtbD2TdiBi73ulmPim/QXXhqKaYtMU2skRz9S9HcEKQVCcl3
-         0oBw==
+        bh=rvyIILinTPLJ5IGz12ZGgmNprHQpAgzhPfKruj1QRTQ=;
+        b=JrP1Ohv+cYjrx5Jh/JaA7MwB/9gvY+X1vWCy+bHL75WvvGHkjD9CJL50NjhZAIFjel
+         W5Vd5bG4LFgS3+ZaYLS/EccdCLVOWQmE8zFXKq9L9XxrEpD9Ed9OBzeOpnYV8MWVt5m7
+         RovxeDrvhFMwn64Ldcfe+yGWQSQFgoqFSBOUS5wMtlPZCeU6300+7LyIS5TCDPt/CuPV
+         Z3c+Xrw5aDYy7ivX6Mwnx6Hs79JA+/O1VJyrmjMtNG7vgfCyYpC41G+WQDwijKoIxiLC
+         bgJYonkUnoYeHr/pMqT80xLaX/Zv3upaDGR6IG3ul+W3X++nwnJbyRcvjNMSuijQGKSN
+         dzgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uG5YGH1HQhNqI6Rs9B6rHyRWKh0Ji0hRKGqWlkWjVmw=;
-        b=4J7alUrSGVBQpXodD4mw8nLoOFhv7fcmhqKeLOD9hxIUn651PTz2A8sEJOSP89BdzR
-         C3HHTakV+LdQour6ZR+UMGUFha2aMgeLBwgvPIN30M1E5M/g3xAt7IZmHcddVn/w5BHm
-         Ri9LGW5VZyr9C1R3/R19XR4dA5LT5gqm+0HKz0vYBuGZX9cWT4K8jQ/UWwpzoJRFXU7s
-         6EN/1H1pnlb6yLNz5ViA2Uydc8yKQ0dKuCPfcFmp0RQM6WdfcO3Mnr8aWyu16H7s4wec
-         od4aX4rdskaJQM2/c9LrsIhSxfFmUg9ay3Lg3aUeRUe1Wxuqsu0Ry0Z0PL0g5CBP7hpf
-         xhCA==
-X-Gm-Message-State: AOAM532GVTsjNNUy+DUBhxdyYm5i/EjnOPAwjenLUbaaD96leR6ToKW9
-        fDp+8vXA8j0Xdct2MboZEg/APDSfJQgZTSPW
-X-Google-Smtp-Source: ABdhPJxKbI/iqEe2pHkz+/Uc7eaiYQWFEaZEu4mQ1/aniGv566n8kDeeJO20tnAmbtimzV8JFOvZRA==
-X-Received: by 2002:a17:90a:190:: with SMTP id 16mr379232pjc.152.1633973939735;
-        Mon, 11 Oct 2021 10:38:59 -0700 (PDT)
+        bh=rvyIILinTPLJ5IGz12ZGgmNprHQpAgzhPfKruj1QRTQ=;
+        b=FEZvf4lpkzvj6R8RuVn7fpKv+FzvFsrvRckvyWXYOmF32bhYuMfez2u43ZyoijO/Pj
+         e4Yxdr8YTeSNqL4qpSy5N1T+avqQou0c3KEvmqEMR4hx4JEp3uEvHtOW9ZBcOkHZqZls
+         94kYkNuWv9VCkjNaCyPvUIOeQecwUX3Qyg9NNfIt+Q8VZ7y6em3IRTUaX6i1kuKRZfCR
+         6Yftkjb4UylWeRuuejhrtuzrU5shnmDDLMF3bx6MAq0DTPiKLq7IwGx9ye7qipP5bNnx
+         wYSCZcSl9aYlzDB1Lh3owOSGWp6R6zFCEJFHoITn4gWDALuVBeejmqtTSbGO6xKYvLYS
+         iu8A==
+X-Gm-Message-State: AOAM533+PrRZPunrodmPItJSHx28729ZfkNs2rIWBs1GlGtWLlaYDeny
+        JaOhEKVv3XwYR7tfjoh8nr27LOnTBlda07a0
+X-Google-Smtp-Source: ABdhPJxj6ob2ZpfsVy9xfdI99KTdNW8a1qGjYI7I2upgWYUEMQtqA6qVYw3yibmKLLl8AKLPxR4CHQ==
+X-Received: by 2002:a17:903:2451:b0:13e:f1ef:d819 with SMTP id l17-20020a170903245100b0013ef1efd819mr25566918pls.85.1633974333299;
+        Mon, 11 Oct 2021 10:45:33 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
-        by smtp.gmail.com with ESMTPSA id b23sm8804907pgn.83.2021.10.11.10.38.57
+        by smtp.gmail.com with ESMTPSA id k22sm8395232pfi.149.2021.10.11.10.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Oct 2021 10:38:59 -0700 (PDT)
+        Mon, 11 Oct 2021 10:45:32 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/22] PCI: Unify PCI error response checking
-Date:   Mon, 11 Oct 2021 23:08:32 +0530
-Message-Id: <c632b07eb1b08cc7d4346455a55641436a379abd.1633972263.git.naveennaidu479@gmail.com>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Richter <rric@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 03/22] PCI: thunder: Use SET_PCI_ERROR_RESPONSE() when device not found
+Date:   Mon, 11 Oct 2021 23:15:10 +0530
+Message-Id: <c5f9e140106cd6a38026300a4e5e5e6ad9257fb3.1633972263.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
 References: <cover.1633972263.git.naveennaidu479@gmail.com>
@@ -68,94 +73,125 @@ An MMIO read from a PCI device that doesn't exist or doesn't respond
 causes a PCI error.  There's no real data to return to satisfy the
 CPU read, so most hardware fabricates ~0 data.
 
-Use SET_PCI_ERROR_RESPONSE() to set the error response and
-RESPONSE_IS_PCI_ERROR() to check the error response during hardware
-read.
+Use SET_PCI_ERROR_RESPONSE() to set the error response, when a faulty
+read occurs.
 
-These definitions make error checks consistent and easier to find.
+This helps unify PCI error response checking and make error check
+consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/access.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/pci/controller/pci-thunder-ecam.c | 20 ++++++++++----------
+ drivers/pci/controller/pci-thunder-pem.c  |  2 +-
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 46935695cfb9..e1954bbbd137 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -81,7 +81,7 @@ int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
+index ffd84656544f..4c57ad2aa9aa 100644
+--- a/drivers/pci/controller/pci-thunder-ecam.c
++++ b/drivers/pci/controller/pci-thunder-ecam.c
+@@ -42,7 +42,7 @@ static int handle_ea_bar(u32 e0, int bar, struct pci_bus *bus,
+ 	if (where_a == 0x4) {
+ 		addr = bus->ops->map_bus(bus, devfn, bar); /* BAR 0 */
+ 		if (!addr) {
+-			*val = ~0;
++			SET_PCI_ERROR_RESPONSE(val);
+ 			return PCIBIOS_DEVICE_NOT_FOUND;
+ 		}
+ 		v = readl(addr);
+@@ -57,7 +57,7 @@ static int handle_ea_bar(u32 e0, int bar, struct pci_bus *bus,
  
- 	addr = bus->ops->map_bus(bus, devfn, where);
+ 		addr = bus->ops->map_bus(bus, devfn, bar); /* BAR 0 */
+ 		if (!addr) {
+-			*val = ~0;
++			SET_PCI_ERROR_RESPONSE(val);
+ 			return PCIBIOS_DEVICE_NOT_FOUND;
+ 		}
+ 		barl_orig = readl(addr + 0);
+@@ -73,7 +73,7 @@ static int handle_ea_bar(u32 e0, int bar, struct pci_bus *bus,
+ 	if (where_a == 0xc) {
+ 		addr = bus->ops->map_bus(bus, devfn, bar + 4); /* BAR 1 */
+ 		if (!addr) {
+-			*val = ~0;
++			SET_PCI_ERROR_RESPONSE(val);
+ 			return PCIBIOS_DEVICE_NOT_FOUND;
+ 		}
+ 		v = readl(addr); /* EA entry-3. Base-H */
+@@ -105,7 +105,7 @@ static int thunder_ecam_p2_config_read(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	addr = bus->ops->map_bus(bus, devfn, where_a);
  	if (!addr) {
 -		*val = ~0;
 +		SET_PCI_ERROR_RESPONSE(val);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
  
-@@ -123,7 +123,7 @@ int pci_generic_config_read32(struct pci_bus *bus, unsigned int devfn,
+@@ -136,7 +136,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
  
- 	addr = bus->ops->map_bus(bus, devfn, where & ~0x3);
+ 	addr = bus->ops->map_bus(bus, devfn, 0xc);
  	if (!addr) {
 -		*val = ~0;
 +		SET_PCI_ERROR_RESPONSE(val);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
  
-@@ -411,10 +411,10 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
- 		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
- 		/*
- 		 * Reset *val to 0 if pci_read_config_word() fails, it may
--		 * have been written as 0xFFFF if hardware error happens
--		 * during pci_read_config_word().
-+		 * have been written as 0xFFFF (PCI_ERROR_RESPONSE) if hardware error
-+		 * happens during pci_read_config_word().
- 		 */
--		if (ret)
-+		if (RESPONSE_IS_PCI_ERROR(val))
- 			*val = 0;
- 		return ret;
- 	}
-@@ -446,10 +446,10 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
- 		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
- 		/*
- 		 * Reset *val to 0 if pci_read_config_dword() fails, it may
--		 * have been written as 0xFFFFFFFF if hardware error happens
--		 * during pci_read_config_dword().
-+		 * have been written as 0xFFFFFFFF (PCI_ERROR_RESPONSE) if hardware
-+		 * error happens during pci_read_config_dword().
- 		 */
--		if (ret)
-+		if (RESPONSE_IS_PCI_ERROR(val))
- 			*val = 0;
- 		return ret;
- 	}
-@@ -523,7 +523,7 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
- int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
- {
- 	if (pci_dev_is_disconnected(dev)) {
+@@ -147,7 +147,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	addr = bus->ops->map_bus(bus, devfn, 8);
+ 	if (!addr) {
 -		*val = ~0;
 +		SET_PCI_ERROR_RESPONSE(val);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
- 	return pci_bus_read_config_byte(dev->bus, dev->devfn, where, val);
-@@ -533,7 +533,7 @@ EXPORT_SYMBOL(pci_read_config_byte);
- int pci_read_config_word(const struct pci_dev *dev, int where, u16 *val)
- {
- 	if (pci_dev_is_disconnected(dev)) {
+ 
+@@ -177,7 +177,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	addr = bus->ops->map_bus(bus, devfn, 0);
+ 	if (!addr) {
 -		*val = ~0;
 +		SET_PCI_ERROR_RESPONSE(val);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
- 	return pci_bus_read_config_word(dev->bus, dev->devfn, where, val);
-@@ -544,7 +544,7 @@ int pci_read_config_dword(const struct pci_dev *dev, int where,
- 					u32 *val)
- {
- 	if (pci_dev_is_disconnected(dev)) {
+ 
+@@ -197,7 +197,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 
+ 		addr = bus->ops->map_bus(bus, devfn, 0x70);
+ 		if (!addr) {
+-			*val = ~0;
++			SET_PCI_ERROR_RESPONSE(val);
+ 			return PCIBIOS_DEVICE_NOT_FOUND;
+ 		}
+ 		/* E_CAP */
+@@ -212,7 +212,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 		if (where_a == 0xb0) {
+ 			addr = bus->ops->map_bus(bus, devfn, where_a);
+ 			if (!addr) {
+-				*val = ~0;
++				SET_PCI_ERROR_RESPONSE(val);
+ 				return PCIBIOS_DEVICE_NOT_FOUND;
+ 			}
+ 			v = readl(addr);
+@@ -269,7 +269,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 		if (where_a == 0x70) {
+ 			addr = bus->ops->map_bus(bus, devfn, where_a);
+ 			if (!addr) {
+-				*val = ~0;
++				SET_PCI_ERROR_RESPONSE(val);
+ 				return PCIBIOS_DEVICE_NOT_FOUND;
+ 			}
+ 			v = readl(addr);
+diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
+index 0660b9da204f..a463a1b61f23 100644
+--- a/drivers/pci/controller/pci-thunder-pem.c
++++ b/drivers/pci/controller/pci-thunder-pem.c
+@@ -42,7 +42,7 @@ static int thunder_pem_bridge_read(struct pci_bus *bus, unsigned int devfn,
+ 	struct thunder_pem_pci *pem_pci = (struct thunder_pem_pci *)cfg->priv;
+ 
+ 	if (devfn != 0 || where >= 2048) {
 -		*val = ~0;
 +		SET_PCI_ERROR_RESPONSE(val);
  		return PCIBIOS_DEVICE_NOT_FOUND;
  	}
- 	return pci_bus_read_config_dword(dev->bus, dev->devfn, where, val);
+ 
 -- 
 2.25.1
 
