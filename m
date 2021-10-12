@@ -2,232 +2,316 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A30C8429FD3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 10:29:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F70F42A052
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 10:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234937AbhJLIbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 04:31:36 -0400
-Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:42525
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234549AbhJLIbf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Oct 2021 04:31:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oQWXE/lb8hk+ZKcjmh2payF7hPQgf2mztF8oqvgKByJFjsx+NFPDfHQG+zLAmPxaBlpS1d44hXQqYhqQAzMDwAnmC6tsSiJnC6nGoRHUH6OEGXPGJDJkFLjy7gX/RUpdW/8JJCUf4sZulw9YqWWIrWI7vGS/NCjFpEZ7Z+889o9LucK3n2+bFREYNbH/zFsSI4zRu0j3xiTCP2k92EPfgwcWCHF9rcFfSiy59O9olkTU+1hEIY2WloEx8WJs5R9xFKlBNG9SviBsPXqUhM52+vTu1GY4gmpEjM4RUmlpSWG+iLCqUmnFx28y4hH1wG3vAVVL22tkZRHbQ/8q4Op5yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=epjkbmIIhkl2yxbGEvfEILltIavqxX2X2JLqKjrjZKU=;
- b=SDf6yiAXXpTizHie17eTQ3QdJkywyNwNWUWODOHiYpMVr4bOm5pUy1BZEx9VgChoxEyz1MmbMvun+ZWHnLG8CIpQeEeVCTzI3m5oA1Bki8pvJw18thLZA+55IXEdGhEtP3DDqUWDr3DiMbR63mm5j5pzen/iVluwl1N96UCdiozNQZ3xownEoiYwly/WJwROyS/wm4uEY1Nfn9OfQpnBfn7epeuu0tjIkHKFBH80uekIvY2LFGhtL2u4WriS5TPdZxePcvV60YyfImPat8ge/gmESUfxHa2QQvT7SsREIJCR66hM+m9YWkNcuv3t5IH0sntDlMMQYgPRadIp42918Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=epjkbmIIhkl2yxbGEvfEILltIavqxX2X2JLqKjrjZKU=;
- b=KGpaiXopNlY9Yir804o0zbIvfoW3IwrV9f6w0MezQ1JHqe/nJqn7vZld8YKiEB8RACM2aZRBzNpdiegL3nHB0K0shqJee/A41hOJkANEPuaMxP/Ef03IRLX6kYRzvtkMBNrSS8jiiWl6WRjwzPRXCJ29BaJDRPAJYarCnX4mzQ4=
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AS8PR04MB9141.eurprd04.prod.outlook.com (2603:10a6:20b:448::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18; Tue, 12 Oct
- 2021 08:29:30 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::551d:cc86:4d67:587]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::551d:cc86:4d67:587%3]) with mapi id 15.20.4587.026; Tue, 12 Oct 2021
- 08:29:30 +0000
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     "tharvey@gateworks.com" <tharvey@gateworks.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-CC:     Adam Ford <aford173@gmail.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: RE: [PATCH 0/6] Add IMX8M Mini PCI support
-Thread-Topic: [PATCH 0/6] Add IMX8M Mini PCI support
-Thread-Index: AQHXhIed1aByXd/Pa0GD1Q7Hp2a0Y6tauTPAgBunrICAV8w/AIAAAWKAgAAx+gCAAKNrgA==
-Date:   Tue, 12 Oct 2021 08:29:30 +0000
-Message-ID: <AS8PR04MB8676E06CA5642DC75B2E8FA78CB69@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <20210723204958.7186-1-tharvey@gateworks.com>
- <36070609-9f1f-00c8-ccf5-8ed7877b29da@pengutronix.de>
- <VI1PR04MB58533AF76EA4DFD8AD6CDA158CEC9@VI1PR04MB5853.eurprd04.prod.outlook.com>
- <CAJ+vNU1tgVsQWtxa0E8SArO=hA2K8OkqiSPrRSpx0Q5XS4gUWA@mail.gmail.com>
- <CAHCN7xLC1ob_nxRsZezgYQ9p-me7hNd+1MNFQt2wtcRqU+z9Sw@mail.gmail.com>
- <2eee557db84087acca4665603ba3d2716199f842.camel@pengutronix.de>
- <CAJ+vNU2MCV9oVru5wPqCMJUwAxHtS8ANv=K2kW4TryOGQXxybA@mail.gmail.com>
-In-Reply-To: <CAJ+vNU2MCV9oVru5wPqCMJUwAxHtS8ANv=K2kW4TryOGQXxybA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gateworks.com; dkim=none (message not signed)
- header.d=none;gateworks.com; dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e56559ba-6ffe-4ab3-147e-08d98d5a6947
-x-ms-traffictypediagnostic: AS8PR04MB9141:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AS8PR04MB914136AFBB8C616F79B966768CB69@AS8PR04MB9141.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7W3Ixn6sLN8RzDHtMLfcFjLl2funpxaCNvmKnNeNHvnsustWrTXUbii2C3KK3fv7lr5Th1SPop4yd6sW1/h5UxQq4TEw2qqMzO5c2jVgpFrUvJ9QcbOcStAfxqIuoLJzECjGr3VrMKTzK8abv+r2FZkb81GYhIkmfvvpLFsGFHKA7kBOtooimJngPxLvXJwq9YAsRfL/jzb/aoX2KwhKOckhHUR95iUbbdBJApExsehwQiI/yRy7sBLjQb4LFgTqLXXvryqZI2R6WPT0B6T6fX3SK/l0tEewL2Eeb8tJVfrG186l/VSpd4wvhCM150h33KVh0v/ygqFRle1LUUtaw94UKtWY9f8QZVvGhFqfv1fMja0UbCnsbnUr63Wf2X4DdSlCbdqVU4jK7/9l7QgGs+29rAm0FVqsVaqVzCsR1u7mEqo/sevqQj9Egtrb1RSLwocRiRjDL4RlZXHk4qkPpF54jtejwEgQrRu6qY45ppkPqzZ08pvq8xWbZA7jQQmjOBVQKn6QL+cn1pCfnGNpqNM7jMR9Z3BllzEkIpKqgLfIFtPvDua4goJtbPkdaYP+UKjrkDSCEa+QTWdAo9qi509FGNfRh36LPWAg/+aCg91TYnBSpQMIm4QLNtc1rc+Lts4JZ5j7K275GPXiEiqDAHZS5KUl0APbQwuz+vKAmELhu9HXHXXs9JUP8WjeQcZdRB0subC1F/buDP0l76WMir2iCwAVIywcX6ICiKkv0Yk3HmGT3ZSlVgbKI9gm6qNU6Nr6p1r0bhLycFFwXJ9NJhHVnXTq9S/4GVQK+VzJG0ruZak19eAeJsL3ALsarcTN
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66556008)(64756008)(71200400001)(66446008)(316002)(66574015)(53546011)(26005)(54906003)(186003)(110136005)(2906002)(66476007)(6506007)(7416002)(76116006)(7696005)(38070700005)(66946007)(9686003)(4326008)(45080400002)(38100700002)(86362001)(8676002)(966005)(5660300002)(55016002)(52536014)(508600001)(122000001)(33656002)(83380400001)(8936002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?YIQZ0FeG4kCAUerTfjCPW2a+OdHs+kBn5HvS4Imb/3Hb1rKHEIkXcOyNgM?=
- =?iso-8859-2?Q?O5cV0VE/I9bJ3Qem34WyClKDHkTWuNPMXo9CvOVoREe+Iw9XKx7eqnOziD?=
- =?iso-8859-2?Q?T7grpuK/eIz3vWv+hVkBX00ibG8zA0kGUITp3oqpPyZK5Wv3lTxmhtvzVH?=
- =?iso-8859-2?Q?HDzlu5jUmJ0Q5k3IQX6tQhyBBviWMFuNHCRKfb+oa5Z0uyRyJzTidWXJZR?=
- =?iso-8859-2?Q?Zy/+GeSxMbAACWPz0V/1vzsJ+kfNsZcYtf/8gqOPEqz2FfBDUGh6qWcmtQ?=
- =?iso-8859-2?Q?Lcr+9wO8RKAfiyAjlsgTEfR5vgMyQAupkH1c+iEN8wNT96DXx8EBGdWnv9?=
- =?iso-8859-2?Q?6ZR86QniIZiDfESyxFqbqXU4fuk3wOiR8ng72nqnbeGgP4Frl7Hcv2G2Tu?=
- =?iso-8859-2?Q?2JgypdeBi4zyBXHaH7nYs1hzBaKBwFjdwSkmBWAu1vyZQhN+KrBYt9sCtN?=
- =?iso-8859-2?Q?UQUo700hS54776g8j6eWWJiqphK32pYminrVdkCNuGSlBmAsniV/AKrxI8?=
- =?iso-8859-2?Q?fjto6b4gZyy9P43T3yHTGuSuSCfJ+M9oWl6wSszSbGqNJasjhe2rjFdC1P?=
- =?iso-8859-2?Q?0w3oCkI2dEFLp+4B7zspAYhbEsFQUIumjO4AaqAbOWqgBN9p+5RC/99x0q?=
- =?iso-8859-2?Q?FxuYZLNXFXTUZXd5lFkMEqEx15MW+GbJt7tow0JfTxZC6sx69cL7MPeVZH?=
- =?iso-8859-2?Q?KLpJaIxVHQiYUfPrND/8UIBDFMNm4CY+ph5qSToMtS+RF/r0HmW+AxuAME?=
- =?iso-8859-2?Q?HnqWVbbTeDH4uahbMNh1qF2VJgQIrxrf/LVnahbbnW+yGIUAbNbUfoNTLw?=
- =?iso-8859-2?Q?S9q18BQeTjY7ObVjqShg/imdHus+E3n7nZ5CIZ0W+Nbl7YV4+H61VKv5QN?=
- =?iso-8859-2?Q?1PJi9aXLmSxREKKEv0Ursq1smYHRVwyyLEfm/VOzi1/mpwABRPm5dPGDtn?=
- =?iso-8859-2?Q?cLVmQntiS1lWEJKbnv6cePJOu9NCjiLm+CTKPVixcDFigmqVc2vQyI5ZSa?=
- =?iso-8859-2?Q?508755uovjR1vuuayCyBU+PDaYxIAJTlTeeX3nZ+faZR8mqaZQNGkfomAm?=
- =?iso-8859-2?Q?+/61UfFd8grtw1L/Y8MFzhU/TQyv7spTltj9fUJn54nZWbkXUpZRjkeazm?=
- =?iso-8859-2?Q?sAI2NA8mE1sQ2hHShz90GVPeB0qhwT+C7iPAnQi1tnQr+ysGS1faqtNxr4?=
- =?iso-8859-2?Q?7QPXoGM6fL61dS+9bjdvvPoq2TMqLFZtI4rlmkJun120F7eIh+hZvnh1pM?=
- =?iso-8859-2?Q?WAkRYjv0900oC8dy2bO6KjOwA0g36MlgTFBp7pVsEgioQPYXR//QOnAOWW?=
- =?iso-8859-2?Q?ytsA3hHsEz6CQH24L0y5UcJj/dN4g9Q/z0IEDbFaZ4cE0XOHLlupBh16cl?=
- =?iso-8859-2?Q?fLWsq3mZoj?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        id S235028AbhJLIvH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 04:51:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235277AbhJLIvF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 04:51:05 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71998C061570;
+        Tue, 12 Oct 2021 01:49:04 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:105:465:1:4:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4HT8Tn3Ln9zQkhX;
+        Tue, 12 Oct 2021 10:49:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Message-ID: <fee8b431-617f-3890-3ad2-67a61d3ffca2@v0yd.nl>
+Date:   Tue, 12 Oct 2021 10:48:49 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e56559ba-6ffe-4ab3-147e-08d98d5a6947
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2021 08:29:30.1529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wEEE9zhehlh7i+/2PPMQMJbw39lNfCtkpAqAJgSWVNfbxlW5dzHTg2mB2DIE4hnGip64aD+WtcNS1c7wB34/xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9141
+Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS Surface
+ devices
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tsuchiya Yuto <kitakar@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Brian Norris <briannorris@chromium.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20211011165301.GA1650148@bhelgaas>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+In-Reply-To: <20211011165301.GA1650148@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 5514626E
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 10/11/21 18:53, Bjorn Helgaas wrote:
+> [+cc Alex]
+> 
+> On Mon, Oct 11, 2021 at 03:42:38PM +0200, Jonas Dreßler wrote:
+>> The most recent firmware (15.68.19.p21) of the 88W8897 PCIe+USB card
+>> reports a hardcoded LTR value to the system during initialization,
+>> probably as an (unsuccessful) attempt of the developers to fix firmware
+>> crashes. This LTR value prevents most of the Microsoft Surface devices
+>> from entering deep powersaving states (either platform C-State 10 or
+>> S0ix state), because the exit latency of that state would be higher than
+>> what the card can tolerate.
+> 
+> S0ix and C-State 10 are ACPI concepts that don't mean anything in a
+> PCIe context.
+> 
+> I think LTR is only involved in deciding whether to enter the ASPM
+> L1.2 substate.  Maybe the system will only enter C-State 10 or S0ix
+> when the link is in L1.2?
 
-> -----Original Message-----
-> From: Tim Harvey <tharvey@gateworks.com>
-> Sent: Monday, October 11, 2021 11:29 PM
-> To: Lucas Stach <l.stach@pengutronix.de>; Richard Zhu
-> <hongxing.zhu@nxp.com>
-> Cc: Adam Ford <aford173@gmail.com>; Ahmad Fatoum
-> <a.fatoum@pengutronix.de>; Bjorn Helgaas <bhelgaas@google.com>; Rob
-> Herring <robh+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Sascha
-> Hauer <s.hauer@pengutronix.de>; Pengutronix Kernel Team
-> <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>;
-> dl-linux-imx <linux-imx@nxp.com>; linux-pci@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Krzysztof Wilczy=F1ski <kw@linux.com>; Lore=
-nzo
-> Pieralisi <lorenzo.pieralisi@arm.com>
-> Subject: Re: [PATCH 0/6] Add IMX8M Mini PCI support
->=20
-> On Mon, Oct 11, 2021 at 5:30 AM Lucas Stach <l.stach@pengutronix.de>
-> wrote:
-> >
-> > Hi Adam,
-> >
-> > Am Montag, dem 11.10.2021 um 07:25 -0500 schrieb Adam Ford:
-> > > On Mon, Aug 16, 2021 at 10:45 AM Tim Harvey <tharvey@gateworks.com>
-> wrote:
-> > > >
-> > > > On Thu, Jul 29, 2021 at 6:28 PM Richard Zhu <hongxing.zhu@nxp.com>
-> wrote:
-> > > > >
-> > > > > Hi Tim:
-> > > > > Just as Ahmad mentioned, Lucas had issue one patch-set to support
-> i.MX8MM PCIe.
-> > > > > Some comments in the review cycle.
-> > > > > - One separate PHY driver should be used for i.MX8MM PCIe driver.
-> > > > > - Schema file should be used I think, otherwise the .txt file in =
-the
-> dt-binding.
-> > > > >
-> > > > > I'm preparing one patch-set, but it's relied on the yaml file exc=
-hanges
-> and power-domain changes(block control and so on).
-> > > > > Up to now, I only walking on the first step, trying to exchange t=
-he
-> dt-binding files to schema yaml file.
-> > > > >
-> > > > > Best Regards
-> > > > > Richard Zhu
-> > > >
-> > > > Richard / Ahmad,
-> > > >
-> > > > Thanks for your response - I did not see the series from Lucas. I
-> > > > will drop this and wait for him to complete his work.
-> > > >
-> > >
-> > > Tim,
-> > >
-> > > It appears that the power domain changes have been applied to
-> > > Shawn's for-next branch:
-> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
-i
-> > >
-> t.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fshawnguo%2Flinux.
-> g
-> > >
-> it%2Flog%2F%3Fh%3Dfor-next&amp;data=3D04%7C01%7Chongxing.zhu%40nx
-> p.com
-> > > %7C1e298d5c31594e5a09df08d98ccbef7a%7C686ea1d3bc2b4c6fa92cd9
-> 9c5c3016
-> > >
-> 35%7C0%7C0%7C637695629794787625%7CUnknown%7CTWFpbGZsb3d8ey
-> JWIjoiMC4w
-> > >
-> LjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&a
-> mp;sd
-> > >
-> ata=3DPY2%2Bvr3s6K5O18lQ9SLY5YCqZHR7Fa%2F2RrbJ%2B041CBU%3D&amp;
-> reserve
-> > > d=3D0
-> > >
-> > > Is there any chance you could rebase and resend this series?
-> >
-> > This wasn't about the power domain series. I also tried to get i.MX8M
-> > PCIe upstream, but the feedback was that we need to split out the PHY
-> > functionality, Richard is currently working on this. There is no point
-> > in resending this series.
-> >
->=20
-> Lucas,
->=20
-> Thanks for the update.
->=20
-> Richard - please Cc me when you submit as I have several boards to test
-> IMX8MM PCI with, some with PCI bridges and some without.
-[Richard Zhu] Ok, no problem. I would CC you when I issued the v3 patch-set=
- later.
-Thanks.
+Yup, this is indeed the case, see https://01.org/blogs/qwang59/2020/linux-s0ix-troubleshooting
+(ctrl+f "IP LINK PM STATE").
 
-Best Regards
-Richard Zhu>=20
-> Best regards,
->=20
-> Tim
+> 
+>> Turns out the card works just the same (including the firmware crashes)
+>> no matter if that hardcoded LTR value is reported or not, so it's kind
+>> of useless and only prevents us from saving power.
+>>
+>> To get rid of those hardcoded LTR requirements, it's possible to reset
+>> the PCI bridge device after initializing the cards firmware. I'm not
+>> exactly sure why that works, maybe the power management subsystem of the
+>> PCH resets its stored LTR values when doing a function level reset of
+>> the bridge device. Doing the reset once after starting the wifi firmware
+>> works very well, probably because the firmware only reports that LTR
+>> value a single time during firmware startup.
+>>
+>> Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+>> ---
+>>   drivers/net/wireless/marvell/mwifiex/pcie.c   | 12 +++++++++
+>>   .../wireless/marvell/mwifiex/pcie_quirks.c    | 26 +++++++++++++------
+>>   .../wireless/marvell/mwifiex/pcie_quirks.h    |  1 +
+>>   3 files changed, 31 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+>> index c6ccce426b49..2506e7e49f0c 100644
+>> --- a/drivers/net/wireless/marvell/mwifiex/pcie.c
+>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+>> @@ -1748,9 +1748,21 @@ mwifiex_pcie_send_boot_cmd(struct mwifiex_adapter *adapter, struct sk_buff *skb)
+>>   static int mwifiex_pcie_init_fw_port(struct mwifiex_adapter *adapter)
+>>   {
+>>   	struct pcie_service_card *card = adapter->card;
+>> +	struct pci_dev *pdev = card->dev;
+>> +	struct pci_dev *parent_pdev = pci_upstream_bridge(pdev);
+>>   	const struct mwifiex_pcie_card_reg *reg = card->pcie.reg;
+>>   	int tx_wrap = card->txbd_wrptr & reg->tx_wrap_mask;
+>>   
+>> +	/* Trigger a function level reset of the PCI bridge device, this makes
+>> +	 * the firmware (latest version 15.68.19.p21) of the 88W8897 PCIe+USB
+>> +	 * card stop reporting a fixed LTR value that prevents the system from
+>> +	 * entering package C10 and S0ix powersaving states.
+> 
+> I don't believe this.  Why would resetting the root port change what
+> the downstream device reports via LTR messages?
+> 
+>  From PCIe r5.0, sec 5.5.1:
+> 
+>    The following rules define how the L1.1 and L1.2 substates are entered:
+>      ...
+>      * When in ASPM L1.0 and the ASPM L1.2 Enable bit is Set, the L1.2
+>        substate must be entered when CLKREQ# is deasserted and all of
+>        the following conditions are true:
+> 
+>        - The reported snooped LTR value last sent or received by this
+> 	Port is greater than or equal to the value set by the
+> 	LTR_L1.2_THRESHOLD Value and Scale fields, or there is no
+> 	snoop service latency requirement.
+> 
+>        - The reported non-snooped LTR last sent or received by this
+> 	Port value is greater than or equal to the value set by the
+> 	LTR_L1.2_THRESHOLD Value and Scale fields, or there is no
+> 	non-snoop service latency requirement.
+> 
+>  From the LTR Message format in sec 6.18:
+> 
+>    No-Snoop Latency and Snoop Latency: As shown in Figure 6-15, these
+>    fields include a Requirement bit that indicates if the device has a
+>    latency requirement for the given type of Request. If the
+>    Requirement bit is Set, the LatencyValue and LatencyScale fields
+>    describe the latency requirement. If the Requirement bit is Clear,
+>    there is no latency requirement and the LatencyValue and
+>    LatencyScale fields are ignored.
+> 
+> Resetting the root port might make it forget the LTR value it last
+> received.  If that's equivalent to having no service latency
+> requirement, it *might* enable L1.2 entry, although that doesn't seem
+> equivalent to the downstream device having sent an LTR message with
+> the Requirement bit cleared.
+> 
+> I think the endpoint is required to send a new LTR message before it
+> goes to a non-D0 state (sec 6.18), so the bridge will capture the
+> latency again, and we'll probably be back in the same state.
+
+Indeed that happens when suspending the device, after resuming the LTR
+value is back to the initial value. mwifiex_pcie_init_fw_port() is
+executed on resume, too though (I should probably have mentioned this
+in the commit message, will do in v2), so this is taken care of.
+
+While suspended, the device goes into D3 anyway and S0ix is achieved
+regardless of the LTR value.
+
+> 
+> This all seems fragile to me.  If we force the link to L1.2 without
+> knowing accurate exit latencies and latency tolerance, the device is
+> liable to drop packets.
+
+Yeah, I'm not saying this patch isn't an ugly hack...
+
+What I can say though is that this patch has been running in the
+linux-surface (https://github.com/linux-surface/kernel/pull/72) kernel
+for a few months now, and so far we've only received positive feedback.
+
+There's two alternatives I can think of to deal with this issue:
+
+1) Revert the cards firmware in linux-firmware back to the second-latest
+version. That firmware didn't report a fixed LTR value and also doesn't
+have any other obvious issues I know of compared to the latest one.
+
+2) Somehow interact with the PMC Core driver to make it ignore the LTR
+values reported by the card (I doubt that's possible from mwifiex).
+It can be done manually via debugfs by writing to
+/sys/kernel/debug/pmc_core/ltr_ignore.
+
+> 
+>> +	 * We need to do it here because it must happen after firmware
+>> +	 * initialization and this function is called right after that is done.
+>> +	 */
+>> +	if (card->quirks & QUIRK_DO_FLR_ON_BRIDGE)
+>> +		pci_reset_function(parent_pdev);
+> 
+> PCIe r5.0, sec 7.5.3.3, says Function Level Reset can only be
+> supported by endpoints, so I guess this will actually do some other
+> kind of reset.
+
+Interesting, I briefly searched and it doesn't seem like think
+there's public documentation available by Intel that goes into
+the specifics here, maybe someone working at Intel knows more?
+
+> 
+>>   	/* Write the RX ring read pointer in to reg->rx_rdptr */
+>>   	if (mwifiex_write_reg(adapter, reg->rx_rdptr, card->rxbd_rdptr |
+>>   			      tx_wrap)) {
+>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+>> index 0234cf3c2974..cbf0565353ae 100644
+>> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.c
+>> @@ -27,7 +27,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 4"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Pro 5",
+>> @@ -36,7 +37,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1796"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Pro 5 (LTE)",
+>> @@ -45,7 +47,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1807"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Pro 6",
+>> @@ -53,7 +56,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 6"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Book 1",
+>> @@ -61,7 +65,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Book 2",
+>> @@ -69,7 +74,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 2"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Laptop 1",
+>> @@ -77,7 +83,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{
+>>   		.ident = "Surface Laptop 2",
+>> @@ -85,7 +92,8 @@ static const struct dmi_system_id mwifiex_quirk_table[] = {
+>>   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+>>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop 2"),
+>>   		},
+>> -		.driver_data = (void *)QUIRK_FW_RST_D3COLD,
+>> +		.driver_data = (void *)(QUIRK_FW_RST_D3COLD |
+>> +					QUIRK_DO_FLR_ON_BRIDGE),
+>>   	},
+>>   	{}
+>>   };
+>> @@ -103,6 +111,8 @@ void mwifiex_initialize_quirks(struct pcie_service_card *card)
+>>   		dev_info(&pdev->dev, "no quirks enabled\n");
+>>   	if (card->quirks & QUIRK_FW_RST_D3COLD)
+>>   		dev_info(&pdev->dev, "quirk reset_d3cold enabled\n");
+>> +	if (card->quirks & QUIRK_DO_FLR_ON_BRIDGE)
+>> +		dev_info(&pdev->dev, "quirk do_flr_on_bridge enabled\n");
+>>   }
+>>   
+>>   static void mwifiex_pcie_set_power_d3cold(struct pci_dev *pdev)
+>> diff --git a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+>> index 8ec4176d698f..f8d463f4269a 100644
+>> --- a/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+>> +++ b/drivers/net/wireless/marvell/mwifiex/pcie_quirks.h
+>> @@ -18,6 +18,7 @@
+>>   #include "pcie.h"
+>>   
+>>   #define QUIRK_FW_RST_D3COLD	BIT(0)
+>> +#define QUIRK_DO_FLR_ON_BRIDGE	BIT(1)
+>>   
+>>   void mwifiex_initialize_quirks(struct pcie_service_card *card);
+>>   int mwifiex_pcie_reset_d3cold_quirk(struct pci_dev *pdev);
+>> -- 
+>> 2.31.1
+>>
+
