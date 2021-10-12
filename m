@@ -2,146 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF246429E6F
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 09:16:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73839429F18
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 09:56:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233554AbhJLHSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 03:18:53 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:13724 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233482AbhJLHSx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 03:18:53 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HT6PZ1p46zWlQ9;
-        Tue, 12 Oct 2021 15:15:14 +0800 (CST)
-Received: from kwepemm600001.china.huawei.com (7.193.23.3) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 12 Oct 2021 15:16:48 +0800
-Received: from huawei.com (10.175.104.82) by kwepemm600001.china.huawei.com
- (7.193.23.3) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Tue, 12 Oct
- 2021 15:16:47 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <bhelgaas@google.com>, <andy.shevchenko@gmail.com>,
-        <maz@kernel.org>, <tglx@linutronix.de>,
-        <song.bao.hua@hisilicon.com>, <21cnbao@gmail.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] PCI/MSI: fix page fault when msi_populate_sysfs() failed
-Date:   Tue, 12 Oct 2021 15:15:56 +0800
-Message-ID: <20211012071556.939137-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        id S234264AbhJLH65 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 03:58:57 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:32624 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234071AbhJLH64 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 03:58:56 -0400
+X-UUID: b30b6fa905654b719d555b87d7ddde5f-20211012
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=42MbtHaE4DAIiMKFHplZ1S3Y2/ONK7RbeH5lUTmtMs0=;
+        b=RjCZeK0+NnCxJC/Yb5ee9eDnUp6w78qpCLyS2N9etm6bu3Y9XWu0v602eII8DhfVoo1BgprOt28EUtLWG1xy6tpRpGNc0HYjsYzvcbJHDGOyizTjZuanhfQWjlV/xTmU7XFen7WtSvEA1AQc4agLrL4lsC4cF79obkEI4PEdl4c=;
+X-UUID: b30b6fa905654b719d555b87d7ddde5f-20211012
+Received: from mtkcas36.mediatek.inc [(172.27.5.253)] by mailgw02.mediatek.com
+        (envelope-from <mingchuang.qiao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 15761383; Tue, 12 Oct 2021 15:56:52 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 12 Oct
+ 2021 15:56:49 +0800
+Received: from mcddlt001.gcn.mediatek.inc (10.19.240.15) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Tue, 12 Oct 2021 15:56:48 +0800
+From:   <mingchuang.qiao@mediatek.com>
+To:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <mingchuang.qiao@mediatek.com>, <haijun.liu@mediatek.com>,
+        <lambert.wang@mediatek.com>, <kerun.zhu@mediatek.com>,
+        <rjw@rjwysocki.net>, <alex.williamson@redhat.com>,
+        <utkarsh.h.patel@intel.com>, <mika.westerberg@linux.intel.com>,
+        <rajatja@google.com>
+Subject: [v5] PCI: Avoid unsync of LTR mechanism configuration
+Date:   Tue, 12 Oct 2021 15:56:14 +0800
+Message-ID: <20211012075614.54576-1-mingchuang.qiao@mediatek.com>
+X-Mailer: git-send-email 2.17.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.82]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600001.china.huawei.com (7.193.23.3)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 641A7F88397021256AFDB3C2C859A85B7615E10DB2369B6D7FA859C9FBF72CAB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I got a page fault report when doing fault injection test:
-
-BUG: unable to handle page fault for address: fffffffffffffff4
-...
-RIP: 0010:sysfs_remove_groups+0x25/0x60
-...
-Call Trace:
- msi_destroy_sysfs+0x30/0xa0
- free_msi_irqs+0x11d/0x1b0
- __pci_enable_msix_range+0x67f/0x760
- pci_alloc_irq_vectors_affinity+0xe7/0x170
- vp_find_vqs_msix+0x129/0x560
- vp_find_vqs+0x52/0x230
- vp_modern_find_vqs+0x47/0xb0
- p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
-...
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-When populating msi_irqs sysfs failed (such as msi_attrs = kcalloc()
-in msi_populate_sysfs() failed) in msi_capability_init() or
-msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
-This will cause a page fault when destroying the wrong
-dev->msi_irq_groups in free_msi_irqs().
-
-msix_capability_init()/msi_capability_init()
-	msi_populate_sysfs()
-		msi_attrs = kcalloc() // fault injection, let msi_attrs = NULL
-	free_msi_irqs()
-		msi_destroy_sysfs() // msi_irq_groups is ERR_PTR(...), page fault
-
-Define a temp variable and assign it to dev->msi_irq_groups if
-the temp variable is not PTR_ERR.
-
-Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Barry Song <song.bao.hua@hisilicon.com>
----
-v2->v3: refine the commit log
-v1->v2: introduce temporary variable 'groups'
- drivers/pci/msi.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0099a00af361..4b4792940e86 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -535,6 +535,7 @@ static int msi_verify_entries(struct pci_dev *dev)
- static int msi_capability_init(struct pci_dev *dev, int nvec,
- 			       struct irq_affinity *affd)
- {
-+	const struct attribute_group **groups;
- 	struct msi_desc *entry;
- 	int ret;
- 
-@@ -558,12 +559,14 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 	if (ret)
- 		goto err;
- 
--	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
--	if (IS_ERR(dev->msi_irq_groups)) {
--		ret = PTR_ERR(dev->msi_irq_groups);
-+	groups = msi_populate_sysfs(&dev->dev);
-+	if (IS_ERR(groups)) {
-+		ret = PTR_ERR(groups);
- 		goto err;
- 	}
- 
-+	dev->msi_irq_groups = groups;
-+
- 	/* Set MSI enabled bits	*/
- 	pci_intx_for_msi(dev, 0);
- 	pci_msi_set_enable(dev, 1);
-@@ -691,6 +694,7 @@ static void msix_mask_all(void __iomem *base, int tsize)
- static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 				int nvec, struct irq_affinity *affd)
- {
-+	const struct attribute_group **groups;
- 	void __iomem *base;
- 	int ret, tsize;
- 	u16 control;
-@@ -730,12 +734,14 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 
- 	msix_update_entries(dev, entries);
- 
--	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
--	if (IS_ERR(dev->msi_irq_groups)) {
--		ret = PTR_ERR(dev->msi_irq_groups);
-+	groups = msi_populate_sysfs(&dev->dev);
-+	if (IS_ERR(groups)) {
-+		ret = PTR_ERR(groups);
- 		goto out_free;
- 	}
- 
-+	dev->msi_irq_groups = groups;
-+
- 	/* Set MSI-X enabled bits and unmask the function */
- 	pci_intx_for_msi(dev, 0);
- 	dev->msix_enabled = 1;
--- 
-2.17.1
+RnJvbTogTWluZ2NodWFuZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KDQpJ
+biBidXMgc2NhbiBmbG93LCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgb2YgREVWQ1RM
+MiByZWdpc3RlciBpcw0KY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZp
+Y2UgYW5kIGJyaWRnZSBib3RoIHN1cHBvcnQgTFRSDQptZWNoYW5pc20sIHRoZSAiTFRSIE1lY2hh
+bmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJyaWRnZSB3aWxsIGJlDQplbmFibGVkIGlu
+IERFVkNUTDIgcmVnaXN0ZXIuIEFuZCBwY2lfZGV2LT5sdHJfcGF0aCB3aWxsIGJlIHNldCBhcyAx
+Lg0KDQpJZiBQQ0llIGxpbmsgZ29lcyBkb3duLCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBi
+aXQgb2YgYnJpZGdlIHdpbGwgDQpjaGFuZ2UgdG8gMCBhY2NvcmRpbmcgdG8gUENJZSByNS4wLCBz
+ZWMgNy41LjMuMTYuIEhvd2V2ZXIsIHRoZSAtPmx0cl9wYXRoIA0Kb2YgYnJpZGdlIGlzIHN0aWxs
+IHNldC4NCg0KRm9sbG93aW5nIHNob3dzIHR3byBzY2VuYXJpb3Mgb2YgdGhpcyBMVFIgaXNzdWU6
+DQoNCi1zY2VuYXJpbyBvZiBkZXZpY2UgcmVzdG9yZQ0KIC0tIGJyaWRnZSBMVFIgZW5hYmxlZA0K
+IC0tIGRldmljZSBMVFIgZW5hYmxlZA0KIC0tIHJlc2V0IGRldmljZQ0KIC0tIGxpbmsgZ29lcyBk
+b3duLCBicmlkZ2UgZGlzYWJsZXMgTFRSDQogLS0gbGluayBjb21lcyBiYWNrIHVwLCBMVFIgZGlz
+YWJsZWQgaW4gYm90aCBicmlkZ2UgYW5kIGRldmljZQ0KIC0tIHJlc3RvcmUgZGV2aWNlIHN0YXRl
+LCBpbmNsdWRpbmcgTFRSIGVuYWJsZQ0KIC0tIGRldmljZSBzZW5kcyBMVFIgbWVzc2FnZQ0KIC0t
+IGJyaWRnZSByZXBvcnRzIFVuc3VwcG9ydGVkIFJlcXVlc3QNCg0KLXNjZW5hcmlvIG9mIGRldmlj
+ZSBob3QtcmVtb3ZlL2hvdC1hZGQNCiAtLSBicmlkZ2UgTFRSIGVuYWJsZWQNCiAtLSBkZXZpY2Ug
+TFRSIGVuYWJsZWQNCiAtLSBob3QtcmVtb3ZlIGRldmljZQ0KIC0tIGxpbmsgZ29lcyBkb3duLCBi
+cmlkZ2UgZGlzYWJsZXMgTFRSDQogLS0gaG90LWFkZCBkZXZpY2UgYW5kIGxpbmsgY29tZXMgYmFj
+ayB1cA0KIC0tIHNjYW4gZGV2aWNlLCBzZXQgTFRSIGVuYWJsZSBiaXQgb2YgZGV2aWNlDQogLS0g
+ZGV2aWNlIHNlbmRzIExUUiBtZXNzYWdlDQogLS0gYnJpZGdlIHJlcG9ydHMgVW5zdXBwb3J0ZWQg
+UmVxdWVzdA0KDQpUaGlzIGlzc3VlIHdhcyBub3RpY2VkIGJ5IEFFUiBsb2cgYXMgZm9sbG93aW5n
+IHNob3dzOg0KcGNpZXBvcnQgMDAwMDowMDoxZC4wOiBBRVI6IFVuY29ycmVjdGVkIChOb24tRmF0
+YWwpIGVycm9yIHJlY2VpdmVkOiBpZD0wMGU4DQpwY2llcG9ydCAwMDAwOjAwOjFkLjA6IFBDSWUg
+QnVzIEVycm9yOiBzZXZlcml0eT1VbmNvcnJlY3RlZCAoTm9uLUZhdGFsKSwgDQp0eXBlPVRyYW5z
+YWN0aW9uIExheWVyLCBpZD0wMGU4KFJlcXVlc3RlciBJRCkNCnBjaWVwb3J0IDAwMDA6MDA6MWQu
+MDogICBkZXZpY2UgWzgwODY6OWQxOF0gZXJyb3IgDQpzdGF0dXMvbWFzaz0wMDEwMDAwMC8wMDAx
+MDAwMA0KcGNpZXBvcnQgMDAwMDowMDoxZC4wOiAgICBbMjBdIFVuc3VwcG9ydGVkIFJlcXVlc3Qg
+ICAgKEZpcnN0KQ0KDQpJdCB3YXMgYWxzbyBub3RpY2VkIHdoZW4gUENJZSBkZXZpY2VzICh0aHVu
+ZGVyYm9sdCBkb2Nrcykgd2VyZSBob3QgcmVtb3ZlZCANCmZyb20gY2hyb21lYm9va3MsIGFuZCB0
+aGVuIGhvdC1wbHVnZ2VkIGJhY2sgYWdhaW4uIE9uY2UgaG90cGx1Z2dlZCBiYWNrLCANCnRoZSBu
+ZXdlciBJbnRlbCBjaHJvbWVib29rcyBmYWlsIHRvIGdvIGludG8gUzBpeCBsb3cgcG93ZXIgc3Rh
+dGUgYmVjYXVzZSANCm9mIHRoaXMgTFRSIGlzc3VlLihodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL3Byb2plY3QvbGludXgtcGNpL3BhdGNoLw0KMjAyMTAyMDQwOTUxMjUuOTIxMi0xLW1pbmdj
+aHVhbmcucWlhb0BtZWRpYXRlay5jb20vKQ0KDQpUbyByZXNvbHZlIHRoaXMgaXNzdWUsIGNoZWNr
+IGFuZCByZS1jb25maWd1cmUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQNCm9mIGJyaWRnZSB0
+byBtYWtlICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0IG1hdGNoIGx0cl9wYXRoIHZhbHVlIGlu
+DQpmb2xsb3dpbmcgY29uZGl0aW9ucy4NCiAgIC1iZWZvcmUgY29uZmlndXJpbmcgZGV2aWNlJ3Mg
+TFRSIGZvciBob3QtcmVtb3ZlL2hvdC1hZGQNCiAgIC1iZWZvcmUgcmVzdG9yaW5nIGRldmljZSdz
+IERFVkNUTDIgcmVnaXN0ZXIgd2hlbiByZXN0b3JlIGRldmljZSBzdGF0ZQ0KDQpSZXZpZXdlZC1i
+eTogTWlrYSBXZXN0ZXJiZXJnIDxtaWthLndlc3RlcmJlcmdAbGludXguaW50ZWwuY29tPg0KU2ln
+bmVkLW9mZi1ieTogTWluZ2NodWFuZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29t
+Pg0KLS0tDQpjaGFuZ2VzIG9mIHY1DQogLWFkZCBtb3JlIGRldGFpbHMgaW4gY29tbWl0IG1lc3Nh
+Z2UNCmNoYW5nZXMgb2YgdjQNCiAtZml4IHR5cG8gb2YgY29tbWl0IG1lc3NhZ2UNCiAtcmVuYW1l
+OiBwY2lfcmVjb25maWd1cmVfYnJpZGdlX2x0cigpLT5wY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0
+cigpDQpjaGFuZ2VzIG9mIHYzDQogLWNhbGwgcGNpX3JlY29uZmlndXJlX2JyaWRnZV9sdHIoKSBp
+biBwcm9iZS5jDQpjaGFuZ2VzIG9mIHYyDQogLW1vZGlmeSBwYXRjaCBkZXNjcmlwdGlvbg0KIC1y
+ZWNvbmZpZ3VyZSBicmlkZ2UncyBMVFIgYmVmb3JlIHJlc3RvcmluZyBkZXZpY2UgREVWQ1RMMiBy
+ZWdpc3Rlcg0KLS0tDQogZHJpdmVycy9wY2kvcGNpLmMgICB8IDI1ICsrKysrKysrKysrKysrKysr
+KysrKysrKysNCiBkcml2ZXJzL3BjaS9wY2kuaCAgIHwgIDEgKw0KIGRyaXZlcnMvcGNpL3Byb2Jl
+LmMgfCAxMyArKysrKysrKysrLS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCsp
+LCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpLmMgYi9kcml2
+ZXJzL3BjaS9wY2kuYw0KaW5kZXggYjlmZWNjMjVkMjEzLi42YmY2NWQyOTUzMzEgMTAwNjQ0DQot
+LS0gYS9kcml2ZXJzL3BjaS9wY2kuYw0KKysrIGIvZHJpdmVycy9wY2kvcGNpLmMNCkBAIC0xNDM3
+LDYgKzE0MzcsMjQgQEAgc3RhdGljIGludCBwY2lfc2F2ZV9wY2llX3N0YXRlKHN0cnVjdCBwY2lf
+ZGV2ICpkZXYpDQogCXJldHVybiAwOw0KIH0NCiANCit2b2lkIHBjaV9icmlkZ2VfcmVjb25maWd1
+cmVfbHRyKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQorew0KKyNpZmRlZiBDT05GSUdfUENJRUFTUE0N
+CisJc3RydWN0IHBjaV9kZXYgKmJyaWRnZTsNCisJdTMyIGN0bDsNCisNCisJYnJpZGdlID0gcGNp
+X3Vwc3RyZWFtX2JyaWRnZShkZXYpOw0KKwlpZiAoYnJpZGdlICYmIGJyaWRnZS0+bHRyX3BhdGgp
+IHsNCisJCXBjaWVfY2FwYWJpbGl0eV9yZWFkX2R3b3JkKGJyaWRnZSwgUENJX0VYUF9ERVZDVEwy
+LCAmY3RsKTsNCisJCWlmICghKGN0bCAmIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pKSB7DQorCQkJ
+cGNpX2RiZyhicmlkZ2UsICJyZS1lbmFibGluZyBMVFJcbiIpOw0KKwkJCXBjaWVfY2FwYWJpbGl0
+eV9zZXRfd29yZChicmlkZ2UsIFBDSV9FWFBfREVWQ1RMMiwNCisJCQkJCQkgUENJX0VYUF9ERVZD
+VEwyX0xUUl9FTik7DQorCQl9DQorCX0NCisjZW5kaWYNCit9DQorDQogc3RhdGljIHZvaWQgcGNp
+X3Jlc3RvcmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KIHsNCiAJaW50IGkgPSAw
+Ow0KQEAgLTE0NDcsNiArMTQ2NSwxMyBAQCBzdGF0aWMgdm9pZCBwY2lfcmVzdG9yZV9wY2llX3N0
+YXRlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQogCWlmICghc2F2ZV9zdGF0ZSkNCiAJCXJldHVybjsN
+CiANCisJLyoNCisJICogRG93bnN0cmVhbSBwb3J0cyByZXNldCB0aGUgTFRSIGVuYWJsZSBiaXQg
+d2hlbiBsaW5rIGdvZXMgZG93bi4NCisJICogQ2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSB0aGUgYml0
+IGhlcmUgYmVmb3JlIHJlc3RvcmluZyBkZXZpY2UuDQorCSAqIFBDSWUgcjUuMCwgc2VjIDcuNS4z
+LjE2Lg0KKwkgKi8NCisJcGNpX2JyaWRnZV9yZWNvbmZpZ3VyZV9sdHIoZGV2KTsNCisNCiAJY2Fw
+ID0gKHUxNiAqKSZzYXZlX3N0YXRlLT5jYXAuZGF0YVswXTsNCiAJcGNpZV9jYXBhYmlsaXR5X3dy
+aXRlX3dvcmQoZGV2LCBQQ0lfRVhQX0RFVkNUTCwgY2FwW2krK10pOw0KIAlwY2llX2NhcGFiaWxp
+dHlfd3JpdGVfd29yZChkZXYsIFBDSV9FWFBfTE5LQ1RMLCBjYXBbaSsrXSk7DQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9wY2kvcGNpLmggYi9kcml2ZXJzL3BjaS9wY2kuaA0KaW5kZXggNWM1OTM2NTA5
+MmZhLi5iM2E1ZTUyODdjYjcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9wY2kuaA0KKysrIGIv
+ZHJpdmVycy9wY2kvcGNpLmgNCkBAIC0xMTEsNiArMTExLDcgQEAgdm9pZCBwY2lfZnJlZV9jYXBf
+c2F2ZV9idWZmZXJzKHN0cnVjdCBwY2lfZGV2ICpkZXYpOw0KIGJvb2wgcGNpX2JyaWRnZV9kM19w
+b3NzaWJsZShzdHJ1Y3QgcGNpX2RldiAqZGV2KTsNCiB2b2lkIHBjaV9icmlkZ2VfZDNfdXBkYXRl
+KHN0cnVjdCBwY2lfZGV2ICpkZXYpOw0KIHZvaWQgcGNpX2JyaWRnZV93YWl0X2Zvcl9zZWNvbmRh
+cnlfYnVzKHN0cnVjdCBwY2lfZGV2ICpkZXYpOw0KK3ZvaWQgcGNpX2JyaWRnZV9yZWNvbmZpZ3Vy
+ZV9sdHIoc3RydWN0IHBjaV9kZXYgKmRldik7DQogDQogc3RhdGljIGlubGluZSB2b2lkIHBjaV93
+YWtldXBfZXZlbnQoc3RydWN0IHBjaV9kZXYgKmRldikNCiB7DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9wY2kvcHJvYmUuYyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCmluZGV4IDk1M2YxNWFiYzg1MC4u
+YWRlMDU1ZTlmYjU4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kvcHJvYmUuYw0KKysrIGIvZHJp
+dmVycy9wY2kvcHJvYmUuYw0KQEAgLTIxMzIsOSArMjEzMiwxNiBAQCBzdGF0aWMgdm9pZCBwY2lf
+Y29uZmlndXJlX2x0cihzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KIAkgKiBDb21wbGV4IGFuZCBhbGwg
+aW50ZXJtZWRpYXRlIFN3aXRjaGVzIGluZGljYXRlIHN1cHBvcnQgZm9yIExUUi4NCiAJICogUENJ
+ZSByNC4wLCBzZWMgNi4xOC4NCiAJICovDQotCWlmIChwY2lfcGNpZV90eXBlKGRldikgPT0gUENJ
+X0VYUF9UWVBFX1JPT1RfUE9SVCB8fA0KLQkgICAgKChicmlkZ2UgPSBwY2lfdXBzdHJlYW1fYnJp
+ZGdlKGRldikpICYmDQotCSAgICAgIGJyaWRnZS0+bHRyX3BhdGgpKSB7DQorCWlmIChwY2lfcGNp
+ZV90eXBlKGRldikgPT0gUENJX0VYUF9UWVBFX1JPT1RfUE9SVCkgew0KKwkJcGNpZV9jYXBhYmls
+aXR5X3NldF93b3JkKGRldiwgUENJX0VYUF9ERVZDVEwyLA0KKwkJCQkJIFBDSV9FWFBfREVWQ1RM
+Ml9MVFJfRU4pOw0KKwkJZGV2LT5sdHJfcGF0aCA9IDE7DQorCQlyZXR1cm47DQorCX0NCisNCisJ
+YnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpOw0KKwlpZiAoYnJpZGdlICYmIGJyaWRn
+ZS0+bHRyX3BhdGgpIHsNCisJCXBjaV9icmlkZ2VfcmVjb25maWd1cmVfbHRyKGRldik7DQogCQlw
+Y2llX2NhcGFiaWxpdHlfc2V0X3dvcmQoZGV2LCBQQ0lfRVhQX0RFVkNUTDIsDQogCQkJCQkgUENJ
+X0VYUF9ERVZDVEwyX0xUUl9FTik7DQogCQlkZXYtPmx0cl9wYXRoID0gMTsNCi0tIA0KMi4xOC4w
+DQo=
 
