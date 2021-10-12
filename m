@@ -2,113 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B12D6429B4E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 04:10:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28E26429B74
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 04:21:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230444AbhJLCMD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Oct 2021 22:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229556AbhJLCMB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Oct 2021 22:12:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B1EAF60FD7;
-        Tue, 12 Oct 2021 02:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634004601;
-        bh=PFH6YMgh1NPjnBVcknJcRHHylsiinxs1uiD5pC8d1SE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HKcwpp0l2/B9vrHV+Phur4+YFVNsjD4593zfz0D40rHbQI8DT5gWVX9odVSswJl4R
-         Qlfg0JqJ/FwwnLxdxuGTbt40d6JoE/0xCo4d193JLwWJ4/1/CVKGJ+n7ptn7HbpqrY
-         dtfzoj2kH6Hvo1wiZ8kW3Rp7r2yftFnEZjcnosgB5NGtSmnl3JjBJSDCjBEnjtYsyU
-         7DX0vcasbp0mRk/dwq67z44iNSDBj8W6VE7qXXDxKDq0Jqatw6aZLAAq+x4ZyvhXHP
-         4R/qpalbPi6TGeA0QDmrR/vMyReZQQf36NDzEHDyayWnIHk8jYE/lCVhK5VhkepwCd
-         D7A96ODS/BbqQ==
-Date:   Mon, 11 Oct 2021 21:09:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "wanghai (M)" <wanghai38@huawei.com>
-Cc:     Barry Song <21cnbao@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/MSI: fix page fault when msi_populate_sysfs() failed
-Message-ID: <20211012020959.GA1708781@bhelgaas>
+        id S231652AbhJLCXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Oct 2021 22:23:22 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:43817 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231609AbhJLCXW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Oct 2021 22:23:22 -0400
+Received: by mail-pl1-f178.google.com with SMTP id y1so12473884plk.10;
+        Mon, 11 Oct 2021 19:21:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oIRsn6iNEFHg+PhIYW5Z69IDGiPIeGIeW4ryh/X6f3g=;
+        b=zxkAY3ctXWYqBsf15BCGYBX7XlXDTjr2OyTxCwtiVKKUMtqwKbk6Av1TeV5i+e8XYd
+         h8S01vhfiCllydN+wtCGnzWBmeIy9xjjYpnl3crI4j7DUMxEQSQ0iMqn/e1ELHzHaO2B
+         ojF1BYuhm1VwfRWvBjX9hSOo5RKSbsKx5Fy6ksN4K+H3YtOQd2fCVIE56w70ujX2oIDZ
+         snHe01UMr5ALlGPj7df/fTmQuZmDBGvhcaX9Wm6A+JUaCFTyDkC0L7zXHWo3KowfyvjZ
+         PTIIMJMyVkkOSCDuGUEZpCZhZXlNvQKtA+eE1PjnpVvEgsG/G8PDJ6p32MWKE2qIbRkQ
+         10YA==
+X-Gm-Message-State: AOAM531p19Z1KozTx/f4DtnoNSPss27Qh1rLQuVsyEP0/TSkPaCDMjiZ
+        +dg53NeV6g7B72/FPf5SGlr+EIqZnxo=
+X-Google-Smtp-Source: ABdhPJxjmKu6eGmB8s+e+rTmXv8jWqruT8T9P94l95AHP9z47RZttdTxhdzMORT1Sm8pU4cCBLyJzQ==
+X-Received: by 2002:a17:90a:ba88:: with SMTP id t8mr2939574pjr.15.1634005279863;
+        Mon, 11 Oct 2021 19:21:19 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c11sm697644pji.38.2021.10.11.19.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Oct 2021 19:21:19 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH] PCI: qcom: Make rst_names array static with const elements
+Date:   Tue, 12 Oct 2021 02:21:08 +0000
+Message-Id: <20211012022108.2823743-1-kw@linux.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2fc860b4-ec4e-3415-a58b-9099f164b607@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 09:59:40AM +0800, wanghai (M) wrote:
-> 
-> 在 2021/10/12 1:11, Bjorn Helgaas 写道:
-> > For v2, please note "git log --oneline drivers/pci/msi.c" and make
-> > your patch follow the style, including capitalization.
-> > 
-> > On Mon, Oct 11, 2021 at 05:15:28PM +0800, wanghai (M) wrote:
-> > > 在 2021/10/11 16:52, Barry Song 写道:
-> > > > On Mon, Oct 11, 2021 at 9:24 PM Wang Hai <wanghai38@huawei.com> wrote:
-> > > > > I got a page fault report when doing fault injection test:
-> > When you send v2, can you include information about how you injected
-> > the fault?  If it's easy, others can reproduce the failure that way.
-> Sorry, the reproduction needs to be based on the fault injection framework
-> provided by Hulk Robot. I don't know how the framework is implemented.
-> 
-> The way to reproduce this is to do a fault injection to make
-> 'msi_attrs = kcalloc() in msi_populate_sysfs()' fail when insmod
-> 9pnet_virtio.ko.
-> 
-> I sent v2 yesterday, can you help review it?
-> https://lore.kernel.org/linux-pci/20211011130837.766323-1-wanghai38@huawei.com/
-> > > > > BUG: unable to handle page fault for address: fffffffffffffff4
-> > > > > ...
-> > > > > RIP: 0010:sysfs_remove_groups+0x25/0x60
-> > > > > ...
-> > > > > Call Trace:
-> > > > >    msi_destroy_sysfs+0x30/0xa0
-> > > > >    free_msi_irqs+0x11d/0x1b0
-> > > > >    __pci_enable_msix_range+0x67f/0x760
-> > > > >    pci_alloc_irq_vectors_affinity+0xe7/0x170
-> > > > >    vp_find_vqs_msix+0x129/0x560
-> > > > >    vp_find_vqs+0x52/0x230
-> > > > >    vp_modern_find_vqs+0x47/0xb0
-> > > > >    p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
-> > > > >    virtio_dev_probe+0x1ed/0x2e0
-> > > > >    really_probe+0x1c7/0x400
-> > > > >    __driver_probe_device+0xa4/0x120
-> > > > >    driver_probe_device+0x32/0xe0
-> > > > >    __driver_attach+0xbf/0x130
-> > > > >    bus_for_each_dev+0xbb/0x110
-> > > > >    driver_attach+0x27/0x30
-> > > > >    bus_add_driver+0x1d9/0x270
-> > > > >    driver_register+0xa9/0x180
-> > > > >    register_virtio_driver+0x31/0x50
-> > > > >    p9_virtio_init+0x3c/0x1000 [9pnet_virtio]
-> > > > >    do_one_initcall+0x7b/0x380
-> > > > >    do_init_module+0x5f/0x21e
-> > > > >    load_module+0x265c/0x2c60
-> > > > >    __do_sys_finit_module+0xb0/0xf0
-> > > > >    __x64_sys_finit_module+0x1a/0x20
-> > > > >    do_syscall_64+0x34/0xb0
-> > > > >    entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > > > > 
-> > > > > When populating msi_irqs sysfs failed in msi_capability_init() or
-> > > > > msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
-> > > > > This will cause a page fault when destroying the wrong
-> > > > > dev->msi_irq_groups in free_msi_irqs().
-> > > > > 
-> > > > > Fix this by setting dev->msi_irq_groups to NULL when msi_populate_sysfs()
-> > > > > failed.
-> > > > > 
-> > > > > Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
-> > > > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > What exactly was reported by the Hulk Robot?  Did it really do the
-> > fault injection and report the page fault?
-> Yes, it reported the error and provided a way to reproduce it
+A static const string array often reduces size of the size of text
+section and can lead to an improved runtime performance as the need
+to initialize and populate the array every time a given function is
+called would be removed, contrary to local variables that live on
+the stack and have to be initialized every time the come into scope.
 
-Great, can you include a link to that report then?
+Thus, make the rst_names array a static const array with constant
+strings elements (stored in the .rodata section) so that it will be
+stored in the data section and accessible for the total lifetime of
+the running kernel.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 8a7a300163e5..6bb616b45388 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -977,9 +977,9 @@ static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	int i;
+-	const char *rst_names[] = { "axi_m", "axi_s", "pipe",
+-				    "axi_m_sticky", "sticky",
+-				    "ahb", "sleep", };
++	static const char * const rst_names[] = { "axi_m", "axi_s", "pipe",
++						  "axi_m_sticky", "sticky",
++						  "ahb", "sleep", };
+ 
+ 	res->iface = devm_clk_get(dev, "iface");
+ 	if (IS_ERR(res->iface))
+-- 
+2.33.0
+
