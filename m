@@ -2,165 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09CF342AD91
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 22:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6806742ADC7
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 22:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234280AbhJLUHZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 16:07:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26243 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234166AbhJLUHY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 16:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634069121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Izu+rZ+bydrqP5Ea4+zsV5r5PHcw8FRNGYQmKnuuTsQ=;
-        b=Qesu7kYU2iLqRQ/fK5gVfhKvN2RjN+d0ZA7SsNAGuzMoVjp88GuNedbUKXUYJN9b9lu6Lb
-        4c11FDzauZzDSEMOFjNPLN5/0xC5wDQ2+ERddqu5rDztXopnu97EhPSV/5mH+bE1kGDJda
-        ZMpAq8lDokzoO+PsjI/D12gVpI+uDBA=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-fozeszAcMSejyaH-H1l5Vw-1; Tue, 12 Oct 2021 16:05:19 -0400
-X-MC-Unique: fozeszAcMSejyaH-H1l5Vw-1
-Received: by mail-ot1-f72.google.com with SMTP id r3-20020a056830236300b0054d43b72ba5so305527oth.17
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 13:05:19 -0700 (PDT)
+        id S232419AbhJLU2n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 16:28:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231902AbhJLU2m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 16:28:42 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746E0C061570;
+        Tue, 12 Oct 2021 13:26:40 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id e3so948248wrc.11;
+        Tue, 12 Oct 2021 13:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=UsptdzvTdn6UE1AtBXu662Ns9Tc/4dC6w5tW+FP8SEY=;
+        b=jk9hE4s6Y5YuBHWHkGhwSgvB5FO+4phY2gn7WjeMOz3F1VxRIGwJdA7mluG1X19icY
+         7zlVzkgGjvtFahR3GMF86wwfmBU1Z2b1KD0B1xRm84fOj7vFwqNbuHPNgl9JNfkFZK5n
+         fk7qFTKoafsICHXeGdE135OEJ4WYAiNOv+OCMqFXvcdVjRJdUG8NkqCh3NfWlo4F/Ebz
+         IJ5RmPxXdMaPAjeH8GUIeTRSHInX2wacBpelEjwTdHrCFM+iSdb/QbwqwFr4nK13Fj5/
+         FS6jWpAExuxsfielC9xj9Q7KWzrI7z6V7kEDADIJ6GN64GF1hgbKRrIVxAQGuzcsfvKr
+         kq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Izu+rZ+bydrqP5Ea4+zsV5r5PHcw8FRNGYQmKnuuTsQ=;
-        b=GCzdnzj+TTzv8vfKqC73L38kMXX3iUtMkg/ZUyHvzhLt/eM4AO7TsCfiaLQ/Xh+wg5
-         BTbz7YI3AnHqH9mclkPkD89NgTOM1EQuypfIobO2HlxS7Fn0A/1gezWWkSCsNwxmRIhX
-         CHuVsrrt7VTr8PogBubIOSMz+3jKxToAnLsjjgLaD5PhrEB99uLQaV97JHTmoErE8x5G
-         l3EoSOqMxbOYO+X6wvO8fxQuG/6mibV3DT5D0IrhbgiVBriTGw00Z10vnV/dxoDk5mis
-         pIBdy6NP+tDlIUej5ZF3TsBXwAq8yBS8l05WZm1wg26jBcyIYQS6ktsUsytiRrqc64Rs
-         eXDA==
-X-Gm-Message-State: AOAM530iFbrIdfzj5FYrhsFUwBI7bSgb3KM/ZSXx22DxlwUnw1f+Byrz
-        prtWTas2VNn5TtxeguRcw6RVYo+jgTXQ3TzHfqfSbBGCN7HcZ88DYzSkiPW6sqyc6XuBo4Qe/6i
-        vkkWUMMHBodgVFT4TTeY6
-X-Received: by 2002:a9d:1b7:: with SMTP id e52mr23201510ote.352.1634069118749;
-        Tue, 12 Oct 2021 13:05:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJypL1uduEwPyz5IFlx9E/9+AA+30xBIuVrw1wb7qiXdQjSf3ur9Ov2wqqb1YqMhwczA/WtR2w==
-X-Received: by 2002:a9d:1b7:: with SMTP id e52mr23201490ote.352.1634069118419;
-        Tue, 12 Oct 2021 13:05:18 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id s18sm2135912otd.55.2021.10.12.13.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 13:05:18 -0700 (PDT)
-Date:   Tue, 12 Oct 2021 14:05:16 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Ruffell <matthew.ruffell@canonical.com>
-Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
-Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
- through 2x GPUs that share same pci switch via vfio
-Message-ID: <20211012140516.6838248b.alex.williamson@redhat.com>
-In-Reply-To: <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
-References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
-        <20210914104301.48270518.alex.williamson@redhat.com>
-        <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
-        <20210915103235.097202d2.alex.williamson@redhat.com>
-        <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
-        <20211005171326.3f25a43a.alex.williamson@redhat.com>
-        <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=UsptdzvTdn6UE1AtBXu662Ns9Tc/4dC6w5tW+FP8SEY=;
+        b=Wy+RbfWZdR0PQ242JxuRVJznrky50iZKplUchnzBXR8CGYixoFli/BCto14Vfs/DXl
+         T6U257IdDqgQM1MtXbv+x83UC8kl2Yg9CnnQzsvtN8la7CC5BcIsaleLH7iPYagnzMhk
+         YFjB3cLPUKfFO7Kmi9Rz4iw/GSurxH595PxgJnyipLDeQxpawZ6HJx6EfFtWjeegCv5d
+         i+tOm6x/sC+lMEYpJofnkamvE9Jop0pnWEleDjIRIv4g91cUA+4PE5M2rSuAAUdL43TG
+         ymEX0h3+PZYCy2DYPkcYRs0IIvFcKTWODPi4vChLaD+a/LNyFhjpW77LYd/4czKP87b4
+         armQ==
+X-Gm-Message-State: AOAM532keESX+twJWk1iiA+JO8WORIPCZHVV71ZdSzbU3sYOIP+zEtuw
+        Zv3ouMoqUg2ieMyKdHUwaaM8wvqDbAc=
+X-Google-Smtp-Source: ABdhPJzOhegXjammWmbRYZc/ePan7Sde8YS82cw1oKfzEl9cj4jFzpVD7NXku0cHSqiUdi+XNKK1vQ==
+X-Received: by 2002:a1c:ed03:: with SMTP id l3mr8060420wmh.86.1634070399067;
+        Tue, 12 Oct 2021 13:26:39 -0700 (PDT)
+Received: from ?IPV6:2003:ea:8f22:fa00:adaf:1c11:2541:4fe? (p200300ea8f22fa00adaf1c11254104fe.dip0.t-ipconnect.de. [2003:ea:8f22:fa00:adaf:1c11:2541:4fe])
+        by smtp.googlemail.com with ESMTPSA id m4sm3520620wrz.45.2021.10.12.13.26.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Oct 2021 13:26:38 -0700 (PDT)
+Message-ID: <ca805454-6ec5-303b-d39f-d505cad6b338@gmail.com>
+Date:   Tue, 12 Oct 2021 22:26:24 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH 1/5] PCI/VPD: Add pci_read/write_vpd_any()
+Content-Language: en-US
+To:     Qian Cai <quic_qiancai@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Raju Rangoju <rajur@chelsio.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
+ <93ecce28-a158-f02a-d134-8afcaced8efe@gmail.com>
+ <e89087c5-c495-c5ca-feb1-54cf3a8775c5@quicinc.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <e89087c5-c495-c5ca-feb1-54cf3a8775c5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 12 Oct 2021 17:58:07 +1300
-Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
+On 12.10.2021 20:59, Qian Cai wrote:
+> 
+> 
+> On 9/10/2021 2:22 AM, Heiner Kallweit wrote:
+>> In certain cases we need a variant of pci_read_vpd()/pci_write_vpd() that
+>> does not check against dev->vpd.len. Such cases are:
+>> - reading VPD if dev->vpd.len isn't set yet (in pci_vpd_size())
+>> - devices that map non-VPD information to arbitrary places in VPD address
+>>   space (example: Chelsio T3 EEPROM write-protect flag)
+>> Therefore add function variants that check against PCI_VPD_MAX_SIZE only.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com
+> Reverting this series fixed a hang or stack overflow while reading things like,
+> 
+> /sys/devices/pci0000:00/0000:00:00.0/0000:01:00.0/vpd
+> 
+> [  125.797082] Insufficient stack space to handle exception!
+> [  125.797091] ESR: 0x96000047 -- DABT (current EL)
+> [  125.797095] FAR: 0xffff80002433ffc0
+> [  125.797096] Task stack:     [0xffff800024340000..0xffff800024350000]
+> [  125.797099] IRQ stack:      [0xffff8000101c0000..0xffff8000101d0000]
+> [  125.797102] Overflow stack: [0xffff009b675b02b0..0xffff009b675b12b0]
+> [  125.797106] CPU: 14 PID: 1550 Comm: lsbug Not tainted 5.15.0-rc5-next-20211012 #143
+> [  125.797110] Hardware name: MiTAC RAPTOR EV-883832-X3-0001/RAPTOR, BIOS 1.6 06/28/2020
+> [  125.797114] pstate: 10000005 (nzcV daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  125.797118] pc : pci_vpd_size+0xc/0x1f8
+> [  125.797128] lr : pci_vpd_read+0x2ec/0x420
+> [  125.797132] sp : ffff800024340060
+> [  125.797133] x29: ffff800024340060 x28: ffff00001a54cbcc x27: 0000000000000000
+> [  125.797142] x26: ffff800024340210 x25: 0000000000000004 x24: 1fffe000034a9979
+> [  125.797148] x23: ffff00001a54cbc8 x22: ffff00001a54cb38 x21: 0000000000008000
+> [  125.797153] x20: 1fffe000034a9979 x19: ffff00001a54c000 x18: 0000000000000000
+> [  125.797158] x17: 0000000000000000 x16: 0000000000000000 x15: dfff800000000000
+> [  125.797163] x14: ffff800019ab0560 x13: 1fffe00110f9272f x12: ffff60010e945be1
+> [  125.797168] x11: 1fffe0010e945be0 x10: 1ffff00004868022 x9 : ffff800010d1a38c
+> [  125.797174] x8 : ffff700004868022 x7 : dfff800000000000 x6 : 0000000000000000
+> [  125.797179] x5 : ffff000887c93540 x4 : 0000000000000000 x3 : ffff800024340210
+> [  125.797184] x2 : 0000000000000001 x1 : 0000000000000003 x0 : ffff00001a54c000
+> [  125.797190] Kernel panic - not syncing: kernel stack overflow
+> [  125.797193] CPU: 14 PID: 1550 Comm: lsbug Not tainted 5.15.0-rc5-next-20211012 #143
+> [  125.797197] Hardware name: MiTAC RAPTOR EV-883832-X3-0001/RAPTOR, BIOS 1.6 06/28/2020
+> [  125.797199] Call trace:
+> [  125.797201]  dump_backtrace+0x0/0x3b8
+> [  125.797208]  show_stack+0x20/0x30
+> [  125.797212]  dump_stack_lvl+0x8c/0xb8
+> [  125.797216]  dump_stack+0x1c/0x38
+> [  125.797219]  panic+0x2b0/0x538
+> [  125.797224]  add_taint+0x0/0xe8
+> [  125.797229]  panic_bad_stack+0x1e4/0x230
+> [  125.797233]  handle_bad_stack+0x38/0x50
+> [  125.797237]  __bad_stack+0x88/0x8c
+> [  125.797241]  pci_vpd_size+0xc/0x1f8
+> [  125.797244]  __pci_read_vpd+0x114/0x158
+> [  125.797247]  pci_vpd_size+0xa0/0x1f8
+> [  125.797251]  pci_vpd_read+0x2ec/0x420
+> [  125.797254]  __pci_read_vpd+0x114/0x158
+> [  125.797258]  pci_vpd_size+0xa0/0x1f8
+> [  125.797261]  pci_vpd_read+0x2ec/0x420
+> ...
+> [  125.798534]  __pci_read_vpd+0x114/0x158
+> [  125.798538]  pci_vpd_size+0xa0/0x1f8
+> [  125.798541]  pci_vpd_read+0x2ec/0x420
+> [  125.798545]  __pci_read_vpd+0x114/0x158
+> __pci_read_vpd at /usr/src/linux-next/drivers/pci/vpd.c:398
+> [  125.798548]  vpd_read+0x28/0x38
+> vpd_read at /usr/src/linux-next/drivers/pci/vpd.c:276
+> [  125.798551]  sysfs_kf_bin_read+0x120/0x218
+> [  125.798556]  kernfs_fop_read_iter+0x244/0x4a8
+> [  125.798559]  new_sync_read+0x2bc/0x4e8
+> [  125.798564]  vfs_read+0x18c/0x390
+> [  125.798567]  ksys_read+0xf8/0x1e0
+> [  125.798570]  __arm64_sys_read+0x74/0xa8
+> [  125.798574]  invoke_syscall.constprop.0+0xdc/0x1d8
+> [  125.798578]  do_el0_svc+0xe4/0x298
+> [  125.798582]  el0_svc+0x64/0x130
+> [  125.798586]  el0t_64_sync_handler+0xb0/0xb8
+> [  125.798590]  el0t_64_sync+0x180/0x184
+> [  125.798598] ------------[ cut here ]------------
+> [  125.798600] WARNING: CPU: -32 PID: 1550 at include/linux/cpumask.h:108 smp_send_stop+0x4a4/0x5e8
+> [  125.798607] Modules linked in: loop cppc_cpufreq efivarfs ip_tables x_tables ext4 mbcache jbd2 dm_mod igb i2c_algo_bit nvme mlx5_core i2c_core nvme_core firmware_class
+> [  125.798632] CPU: 791961908 PID: 1550 Comm: lsbug Not tainted 5.15.0-rc5-next-20211012 #143
+> [  125.798637] Hardware name: MiTAC RAPTOR EV-883832-X3-0001/RAPTOR, BIOS 1.6 06/28/2020
+> [  125.798639] pstate: a00003c5 (NzCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  125.798643] pc : smp_send_stop+0x4a4/0x5e8
+> [  125.798647] lr : panic+0x2b8/0x538
+> [  125.798650] sp : ffff009b675b0c70
+> [  125.798652] x29: ffff009b675b0c70 x28: ffff000887c92ec0 x27: 0000000000000000
+> [  125.798658] x26: 0000000000000025 x25: ffff809b55bf0000 x24: ffff800011eeb4d0
+> [  125.798663] x23: ffff800011426680 x22: ffff800019393000 x21: ffff800019dfa000
+> [  125.798668] x20: 00000000ffffffe0 x19: ffff8000119c0000 x18: 0000000000000000
+> [  125.798673] x17: 0000000000000000 x16: 0000000000000002 x15: 0000000000000000
+> [  125.798678] x14: 0000000000000000 x13: 000000000000000f x12: ffff7000023ef669
+> [  125.798683] x11: 1ffff000023ef668 x10: ffff7000023ef668 x9 : ffff80001133f2cc
+> [  125.798688] x8 : 0000000000000003 x7 : 0000000000000001 x6 : ffff800011f7b340
+> [  125.798693] x5 : 1fffe0136ceb619e x4 : 0000000041b58ab3 x3 : 1fffe0136ceb6000
+> [  125.798698] x2 : 1ffff000023dd69a x1 : 0000000000000000 x0 : 0000000000000020
+> [  125.798704] Call trace:
+> [  125.798705]  smp_send_stop+0x4a4/0x5e8
+> [  125.798709]  panic+0x2b8/0x538
+> [  125.798713]  add_taint+0x0/0xe8
+> [  125.798717]  panic_bad_stack+0x1e4/0x230
+> [  125.798720]  handle_bad_stack+0x38/0x50
+> [  125.798724]  __bad_stack+0x88/0x8c
+> [  125.798727]  pci_vpd_size+0xc/0x1f8
+> [  125.798731]  __pci_read_vpd+0x114/0x158
+> [  125.798734]  pci_vpd_size+0xa0/0x1f8
+> [  125.798738]  pci_vpd_read+0x2ec/0x420
+> [  125.798741]  __pci_read_vpd+0x114/0x158
+> [  125.798744]  pci_vpd_size+0xa0/0x1f8
+> [  125.798748]  pci_vpd_read+0x2ec/0x420  
+> 
 
-> Hi Alex,
-> 
-> On Wed, Oct 6, 2021 at 12:13 PM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
-> > With both of these together, I'm so far able to prevent an interrupt
-> > storm for these cards.  I'd say the patch below is still extremely
-> > experimental, and I'm not sure how to get around the really hacky bit,
-> > but it would be interesting to see if it resolves the original issue.
-> > I've not yet tested this on a variety of devices, so YMMV.  Thanks,  
-> 
-> Thank you very much for your analysis and for the experimental patch, and we
-> have excellent news to report.
-> 
-> I sent Nathan a test kernel built on 5.14.0, and he has been running the
-> reproducer for a few days now.
-> 
-> Nathan writes:
-> 
-> > I've been testing heavily with the reproducer for a few days using all 8 GPUs
-> > and with the MSI fix for the audio devices in the guest disabled, i.e. a pretty
-> > much worst case scenario. As a control with kernel 5.14 (unpatched), the system
-> > locked up in 2,2,6,1, and 4 VM reset iterations, all in less than 10 minutes
-> > each time. With the patched kernel I'm currently at 1226 iterations running for
-> > 2 days 10 hours with no failures. This is excellent. FYI, I have disabled the
-> > dyndbg setting.  
-> 
-> The system is stable, and your patch sounds very promising.
+Thanks for the report! I could reproduce the issue, the following fixes
+it for me. Could you please test whether it fixes the issue for you as well?
+Thank you.
 
-Great, I also ran a VM reboot loop for several days with all 6 GPUs
-assigned, no interrupt issues.
 
-> Nathan does have a small side effect to report:
-> 
-> > The only thing close to an issue that I have is that I still get frequent
-> > "irq 112: nobody cared" and "Disabling IRQ #112" errors. They just no longer
-> > lockup the system. If I watch the reproducer time between VM resets, I've
-> > noticed that it takes longer for the VM to startup after one of these
-> > "nobody cared" errors, and thus it takes longer until I can reset the VM again.
-> > I believe slow guest behavior in this disabled IRQ scenario is expected though?  
-> 
-> Full dmesg:
-> https://paste.ubuntu.com/p/hz8WdPZmNZ/
-> 
-> I had a look at all the lspci Nathan has provided me in the past, but 112 isn't
-> listed. I will ask Nathan for a fresh lspci so we can see what device it is.
-> The interesting thing is that we still hit __report_bad_irq() for 112 when we
-> have previously disabled it, typically after 1000+ seconds has gone by.
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 5108bbd20..a4fc4d069 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -96,14 +96,14 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+ 	return off ?: PCI_VPD_SZ_INVALID;
+ }
+ 
+-static bool pci_vpd_available(struct pci_dev *dev)
++static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+ 
+ 	if (!vpd->cap)
+ 		return false;
+ 
+-	if (vpd->len == 0) {
++	if (vpd->len == 0 && check_size) {
+ 		vpd->len = pci_vpd_size(dev);
+ 		if (vpd->len == PCI_VPD_SZ_INVALID) {
+ 			vpd->cap = 0;
+@@ -156,17 +156,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			    void *arg, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+-	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++	unsigned int max_len;
+ 	int ret = 0;
+ 	loff_t end = pos + count;
+ 	u8 *buf = arg;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, check_size))
+ 		return -ENODEV;
+ 
+ 	if (pos < 0)
+ 		return -EINVAL;
+ 
++	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++
+ 	if (pos >= max_len)
+ 		return 0;
+ 
+@@ -218,17 +220,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 			     const void *arg, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+-	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++	unsigned int max_len;
+ 	const u8 *buf = arg;
+ 	loff_t end = pos + count;
+ 	int ret = 0;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, check_size))
+ 		return -ENODEV;
+ 
+ 	if (pos < 0 || (pos & 3) || (count & 3))
+ 		return -EINVAL;
+ 
++	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++
+ 	if (end > max_len)
+ 		return -EINVAL;
+ 
+@@ -312,7 +316,7 @@ void *pci_vpd_alloc(struct pci_dev *dev, unsigned int *size)
+ 	void *buf;
+ 	int cnt;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, true))
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	len = dev->vpd.len;
+-- 
+2.33.0
 
-The device might need to be operating in INTx mode, or at least had
-been at some point, to get the register filled.  It's essentially just
-a scratch register on the card that gets filled when the interrupt is
-configured.
-
-Each time we register a new handler for the irq the masking due to
-spurious interrupt will be removed, but if it's actually causing the VM
-boot to take longer that suggests to me that the guest driver is
-stalled, perhaps because it's expecting an interrupt that's now masked
-in the host.  This could also be caused by a device that gets
-incorrectly probed for PCI-2.3 compliant interrupt masking.  For
-probing we can really only test that we have the ability to set the
-DisINTx bit, we can only hope that the hardware folks also properly
-implemented the INTx status bit to indicate the device is signaling
-INTx.  We should really figure out which device this is so that we can
-focus on whether it's another shared interrupt issue or something
-specific to the device.
-
-I'm also confused why this doesn't trigger the same panic/kexec as we
-were seeing with the other interrupt lines.  Are there some downstream
-patches or configs missing here that would promote these to more fatal
-errors?
-
-> We think your patch fixes the interrupt storm issues. We are happy to continue
-> testing for as much as you need, and we are happy to test any followup patch
-> revisions.
-> 
-> Is there anything you can do to feel more comfortable about the
-> PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG dev flag hack? While it works, I can see why
-> you might not want to land it in mainline.
-
-Yeah, it's a huge hack.  I wonder if we could look at the interrupt
-status and conditional'ize clearing DisINTx based on lack of a pending
-interrupt.  It seems somewhat reasonable not to clear the bit masking
-the interrupt if we know it's pending and know there's no handler for
-it.  I'll try to check if that's possible.  Thanks,
-
-Alex
 
