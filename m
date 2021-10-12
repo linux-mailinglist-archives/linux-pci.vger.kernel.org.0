@@ -2,169 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0760942AFB0
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 00:35:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337F742AFD8
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 00:52:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234777AbhJLWhe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 18:37:34 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:41640
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229588AbhJLWhc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 18:37:32 -0400
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2CE413FFE0
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 22:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1634078128;
-        bh=JdyWx+2ERSnViZDVbDwwgVFOd8VEAu/EAtgOsXvDSgc=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=dVNz4oPEGQ9XE4tvCDIoOBebJJxx4Kql1Y1RLm48oNLy3MIQSIAx5agcreYruGWL4
-         G+G2E+ocVOPPKfcDom4ykJJ0z0ANEgKFz3k0UlxrXm0DPXPi6K5RGntmHkIpp11szW
-         zOGxveFyIQwvMvtc2wXLbQAbaFyQWDLWNWfnqAkNfJmG043xozrYtfwAW44k6EWuh3
-         5J+NhBuJ5991jots6gQiADoLNNtYzp5XDSaxqZbES5jU/H/QIbaBIUa4xEL3dNiaJP
-         KRaBDC6P02eEZQDY1Qfs6VnFJWvhruQOQqKVcJf5+5lfQ4T9ZXdUDd3HUNT2Cu7ol9
-         sYr3Due6HRhaQ==
-Received: by mail-pf1-f200.google.com with SMTP id y41-20020a056a00182900b0044d43d31f20so386948pfa.11
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 15:35:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JdyWx+2ERSnViZDVbDwwgVFOd8VEAu/EAtgOsXvDSgc=;
-        b=Lqubb07tYjO7cFLlCPpD2f5e5GRAWlI656pJelxvCSjz3rZRe1MlQgByrGLrr8waQf
-         bQnTgRyoYVvt5HhM8MchudYcWc5prXP42LaPoeup1kDPSnQQ6DdoFTiO/SxAFnIWg4V8
-         eb2eMN+MQA3/PviZSLvQbVKJUE9oojY9HynTuzM4aqYfwkOVY0RRIaouJ4b1Tpzva9PF
-         5HzUqtOdYCrYGpgsA7uQ53OAorxivFaez1+7JNm0O8eXOkR6VMKf4uzQNU/nWOKDHo5B
-         CSOybBEahzlP8DmP4Wb8M/CaXi+2bfa5p95y4SWyfPDOMj4I/rzumIM8NSvvKVnrKaUi
-         LRwQ==
-X-Gm-Message-State: AOAM530xA0SjyRGvBdIVV1BoX/PDGr6A7qcD1Qx1R3u9QJH+xFWWzk3T
-        JumMgwExvziUL7ti2bCivDltYbkgjU1XZvVL1cP618+GZQF3hYvtYKaize+i8V1FQvYESCmHRx8
-        80oY4dZpUGpVWYizw2slMCW8ueORzTMTTSWR+QeuLenWpv/ygqNZIgA==
-X-Received: by 2002:a17:90a:e552:: with SMTP id ei18mr9106971pjb.239.1634078126702;
-        Tue, 12 Oct 2021 15:35:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxPZHBuI2h8GZ3aiVR/3gWtNcOG0SGFTakfr7kOOYkbT+7szM6417piCAlzL2Fpr33usykNkq3jlxg2CT02vms=
-X-Received: by 2002:a17:90a:e552:: with SMTP id ei18mr9106945pjb.239.1634078126288;
- Tue, 12 Oct 2021 15:35:26 -0700 (PDT)
+        id S235142AbhJLWyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 18:54:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234607AbhJLWyu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Oct 2021 18:54:50 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D21E604DA;
+        Tue, 12 Oct 2021 22:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634079167;
+        bh=6avHt35fxd5kfvbX66gcBjXd91rrPnS5ZdttP+UskTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tUPaJIq+NbqOD928tKX1BaHll+Clbo11OlaJjS4L7fMEi3Wxh/KWrAvByhm27g5uI
+         jHufW02Yvz1zwBCVPjT1Y/91WiqSaK4VXq419ncpNJKGlkB+Co8bjghoeZnZghTjy7
+         oWO7Ymrq2Z/HgxNplbaJCMFxu52HBXferNerq53AFNa0ZEZ5dvUb+TQ9Nxw1ris26r
+         dBXS0CwwWl/xjHh8KKj91DETVIts+SXYLIGcB7Phu2VN9UzhbUS/hTcfnIcHwL924U
+         tQFqx3LtPP6pUc3CDOd8v4r4ZBx6coeyaGD1YkX3x7pFxgIydvCfKGhTu3zZdMiaA1
+         yYZ8pclq0gZJQ==
+Received: by pali.im (Postfix)
+        id A11267B4; Wed, 13 Oct 2021 00:52:44 +0200 (CEST)
+Date:   Wed, 13 Oct 2021 00:52:44 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Naveen Naidu <naveennaidu479@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, bhelgaas@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew.murray@arm.com
+Subject: Re: [PATCH 02/22] PCI: Unify PCI error response checking
+Message-ID: <20211012225244.y75fsd7777ubvljl@pali>
+References: <cover.1633972263.git.naveennaidu479@gmail.com>
+ <c632b07eb1b08cc7d4346455a55641436a379abd.1633972263.git.naveennaidu479@gmail.com>
+ <YWS1QtNJh7vPCftH@robh.at.kernel.org>
+ <20211012162054.rxx7aubwdvhl2eqj@theprophet>
 MIME-Version: 1.0
-References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
- <20210914104301.48270518.alex.williamson@redhat.com> <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
- <20210915103235.097202d2.alex.williamson@redhat.com> <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
- <20211005171326.3f25a43a.alex.williamson@redhat.com> <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
- <20211012140516.6838248b.alex.williamson@redhat.com>
-In-Reply-To: <20211012140516.6838248b.alex.williamson@redhat.com>
-From:   Matthew Ruffell <matthew.ruffell@canonical.com>
-Date:   Wed, 13 Oct 2021 11:35:14 +1300
-Message-ID: <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
-Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
- through 2x GPUs that share same pci switch via vfio
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211012162054.rxx7aubwdvhl2eqj@theprophet>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alex,
+On Tuesday 12 October 2021 21:51:08 Naveen Naidu wrote:
+> On 11/10, Rob Herring wrote:
+> > On Mon, Oct 11, 2021 at 11:08:32PM +0530, Naveen Naidu wrote:
+> > >  		return PCIBIOS_DEVICE_NOT_FOUND;
+> > 
+> > Neither does this using custom error codes rather than standard Linux 
+> > errno. I point this out as I that's were I'd start with the config 
+> > accessors. Though there are lots of occurrences so we'd need a way to do 
+> > this in manageable steps.
+> > 
+> 
+> I am sorry, but I do not have any answer for this. I really do not know
+> why we return custom error codes instead of standard Linux errno. Maybe
+> someone else can pitch in on this.
 
-On Wed, Oct 13, 2021 at 9:05 AM Alex Williamson
-<alex.williamson@redhat.com> wrote:
-> On Tue, 12 Oct 2021 17:58:07 +1300
-> Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
-> > Nathan does have a small side effect to report:
-> >
-> > > The only thing close to an issue that I have is that I still get frequent
-> > > "irq 112: nobody cared" and "Disabling IRQ #112" errors. They just no longer
-> > > lockup the system. If I watch the reproducer time between VM resets, I've
-> > > noticed that it takes longer for the VM to startup after one of these
-> > > "nobody cared" errors, and thus it takes longer until I can reset the VM again.
-> > > I believe slow guest behavior in this disabled IRQ scenario is expected though?
->
-> The device might need to be operating in INTx mode, or at least had
-> been at some point, to get the register filled.  It's essentially just
-> a scratch register on the card that gets filled when the interrupt is
-> configured.
->
-> Each time we register a new handler for the irq the masking due to
-> spurious interrupt will be removed, but if it's actually causing the VM
-> boot to take longer that suggests to me that the guest driver is
-> stalled, perhaps because it's expecting an interrupt that's now masked
-> in the host.  This could also be caused by a device that gets
-> incorrectly probed for PCI-2.3 compliant interrupt masking.  For
-> probing we can really only test that we have the ability to set the
-> DisINTx bit, we can only hope that the hardware folks also properly
-> implemented the INTx status bit to indicate the device is signaling
-> INTx.  We should really figure out which device this is so that we can
-> focus on whether it's another shared interrupt issue or something
-> specific to the device.
+More people are asking same question and Bjorn recently wrote answer:
+https://lore.kernel.org/linux-pci/20211011205851.GA1690395@bhelgaas/
 
-Nathan got back to me and the device is that same GPU audio controller pair from
-before, so it might be another shared interrupt issue, since they both
-share 112.
+It looks like some relict from past when PCI was implemented only for x86.
 
-$ sudo lspci -vvv | grep "IRQ 112" -B 5 -A 10
-88:00.1 Audio device: NVIDIA Corporation TU102 High Definition Audio
-Controller (rev a1)
-        Subsystem: eVga.com. Corp. TU102 High Definition Audio Controller
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Interrupt: pin B routed to IRQ 112
-        NUMA node: 1
-        Region 0: Memory at f7080000 (32-bit, non-prefetchable) [size=16K]
-        Capabilities: [60] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
-                Address: 0000000000000000  Data: 0000
-        Capabilities: [78] Express (v2) Endpoint, MSI 00
-                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-unlimited, L1 <64us
-                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+
-FLReset- SlotPowerLimit 25.000W
--- 
-89:00.1 Audio device: NVIDIA Corporation TU102 High Definition Audio
-Controller (rev a1)
-        Subsystem: eVga.com. Corp. TU102 High Definition Audio Controller
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Interrupt: pin B routed to IRQ 112
-        NUMA node: 1
-        Region 0: Memory at f5080000 (32-bit, non-prefetchable) [size=16K]
-        Capabilities: [60] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
-                Address: 0000000000000000  Data: 0000
-        Capabilities: [78] Express (v2) Endpoint, MSI 00
-                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-unlimited, L1 <64us
-                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+
-FLReset- SlotPowerLimit 25.000W
+Anyway, I was looking at PCI firmware spec (where are these PCBIOS_*
+codes defined) and config read function can return only
+PCIBIOS_SUCCESSFUL value.
 
-> I'm also confused why this doesn't trigger the same panic/kexec as we
-> were seeing with the other interrupt lines.  Are there some downstream
-> patches or configs missing here that would promote these to more fatal
-> errors?
->
-There aren't any downstream patches, since the machine lockup happens with
-regular mainline kernels too. Even without panic on oops set, the system will
-grind to a halt and hang. The panic on oops sysctl was an attempt to get the
-machine to reboot to the crashkernel and restart again, but it didn't work very
-well since we get stuck copying the IR tables from DMAR.
+So if kernel PCI API is following this PCBIOS API it means that
+controller drivers are implementing it improperly if they returns also
+non-success value for read method in some cases. And for me it looks
+like very "stupid" API for read as it has basically same meaning as
+function with void return value.
 
-But your patches seem to fix the hang, which is very promising.
+> > Can't we make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value 
+> > and delete the drivers all doing this? Then we have 2 copies (in source) 
+> > rather than the many this series modifies. Though I'm not sure if there 
+> > are other cases of calling pci_bus.ops.read() which expect to get ~0.
+> > 
+> 
+> This seems like a really good idea :) But again, I am not entirely sure
+> if doing so would give us any unexpected behaviour. I'll wait for some
+> one to reply to this and if people agree to it, I would be glad to make
+> the changes to PCI_OP_READ and PCI_USER_READ_CONFIG and send a new
+> patch.
 
-Thanks,
-Matthew
+If you are going to discuss and change API of config read / write
+functions, please CC me.
+
+For example pci-aardvark controller reports not only "unknown error"
+happened (via 0xffffffff) but can report exact PCIe error (CRS, UR, CA)
+which can be mapped to some linux errnos. I can imagine that it can be
+useful for some callers.
