@@ -2,145 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E75442AB7F
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 20:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7FC42AC49
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 20:52:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234014AbhJLSFG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 14:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37676 "EHLO mail.kernel.org"
+        id S235088AbhJLSoj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 14:44:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25600 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233507AbhJLSE4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Oct 2021 14:04:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 294BE610CE;
-        Tue, 12 Oct 2021 18:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634061774;
-        bh=xTN1PjqxcKL64k4FjBSP0uPIUc967wpJd6JWcfYGptQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VkWxnZ4AdwcZOrLECs7LwOd2c9krNsSkWbN4SZ1zwEAlTpWr00f/aWx22Zqx82KkV
-         zZ2r1bSmAmhv2WVSmNCLAKRgHWRNZ+reGUKY6CSZ1qGVsGPyZXs6IB/Ei0ATlAl5kI
-         f0UJV8f/xAe9Ou5SJOWwXdnzg9cACx+LAYP6jL8qAgfyAN4yU8dMYPAhIqI03q0vjm
-         JWRls1TQp/KVRaC/D4/eYBSXcQR0BSjrBOS1LicD+vyGkJ9MkcObROljn1ufaKTHPy
-         OfdyvXa7gBCsthA5+L2mrwVaM4pni2MlpQLe5rfSw2/rtSgXgZQfKzUEFp0sr9Py3x
-         QaCdUJNUOUxIw==
-Received: by mail-ed1-f42.google.com with SMTP id d9so2738642edh.5;
-        Tue, 12 Oct 2021 11:02:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530ZmPkw9u4gyxy79iH6AP2Qnpax4oEw97RepjechBdV0ll024/Z
-        edTMrzsKzyaHoN2BuAiHbEFWLiy0cCLPMTUI8w==
-X-Google-Smtp-Source: ABdhPJxx05UpaUAZBZhobVr3mWSJ/Vmt1Vre3u4+SUHd1FZeloZmFdpglKPZPp5Q7X+iaEzRfGBddajKTnGEf+TRS58=
-X-Received: by 2002:a05:6402:1d55:: with SMTP id dz21mr1780223edb.164.1634061772482;
- Tue, 12 Oct 2021 11:02:52 -0700 (PDT)
+        id S235100AbhJLSoi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Oct 2021 14:44:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10135"; a="207352546"
+X-IronPort-AV: E=Sophos;i="5.85,368,1624345200"; 
+   d="scan'208";a="207352546"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2021 11:35:07 -0700
+X-IronPort-AV: E=Sophos;i="5.85,368,1624345200"; 
+   d="scan'208";a="562780166"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.209.115.208]) ([10.209.115.208])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2021 11:35:05 -0700
+Message-ID: <9302f1c2-b3f8-2c9e-52c5-d5a4a2987409@linux.intel.com>
+Date:   Tue, 12 Oct 2021 11:35:04 -0700
 MIME-Version: 1.0
-References: <cover.1633972263.git.naveennaidu479@gmail.com>
- <c632b07eb1b08cc7d4346455a55641436a379abd.1633972263.git.naveennaidu479@gmail.com>
- <YWS1QtNJh7vPCftH@robh.at.kernel.org> <20211012162054.rxx7aubwdvhl2eqj@theprophet>
-In-Reply-To: <20211012162054.rxx7aubwdvhl2eqj@theprophet>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 12 Oct 2021 13:02:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKYP+6Bzm5hvcVbAz5R3+omREDJoOspJ4eTBeMwBSfkfw@mail.gmail.com>
-Message-ID: <CAL_JsqKYP+6Bzm5hvcVbAz5R3+omREDJoOspJ4eTBeMwBSfkfw@mail.gmail.com>
-Subject: Re: [PATCH 02/22] PCI: Unify PCI error response checking
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
+ pci_iomap_host_shared_range()
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009053103-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
+ <0e6664ac-cbb2-96ff-0106-9301735c0836@linux.intel.com>
+ <CAPcyv4g0v0YHZ-okxf4wwVCYxHotxdKwsJpZGkoT+fhvvAJEFg@mail.gmail.com>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <CAPcyv4g0v0YHZ-okxf4wwVCYxHotxdKwsJpZGkoT+fhvvAJEFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 11:21 AM Naveen Naidu <naveennaidu479@gmail.com> wrote:
+
+> The "better safe-than-sorry" argument is hard to build consensus
+> around. The spectre mitigations ran into similar problems where the
+> community rightly wanted to see the details and instrument the
+> problematic paths rather than blanket sprinkle lfence "just to be
+> safe".
+
+But that was due to performance problems in hot paths. Nothing of this 
+applies here.
+
+> In this case the rules about when a driver is suitably
+> "hardened" are vague and the overlapping policy engines are confusing.
+
+What is confusing exactly?
+
+For me it both seems very straight forward and simple (but then I'm biased)
+
+The policy is:
+
+- Have an allow list at driver registration.
+
+- Have an additional opt-in for MMIO mappings (and potentially config 
+space, but that's not currently there) to cover init calls completely.
+
 >
-> On 11/10, Rob Herring wrote:
-> > On Mon, Oct 11, 2021 at 11:08:32PM +0530, Naveen Naidu wrote:
-> > > An MMIO read from a PCI device that doesn't exist or doesn't respond
-> > > causes a PCI error.  There's no real data to return to satisfy the
-> > > CPU read, so most hardware fabricates ~0 data.
-> > >
-> > > Use SET_PCI_ERROR_RESPONSE() to set the error response and
-> > > RESPONSE_IS_PCI_ERROR() to check the error response during hardware
-> > > read.
-> > >
-> > > These definitions make error checks consistent and easier to find.
-> > >
-> > > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> > > ---
-> > >  drivers/pci/access.c | 22 +++++++++++-----------
-> > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> > > index 46935695cfb9..e1954bbbd137 100644
-> > > --- a/drivers/pci/access.c
-> > > +++ b/drivers/pci/access.c
-> > > @@ -81,7 +81,7 @@ int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
-> > >
-> > >     addr = bus->ops->map_bus(bus, devfn, where);
-> > >     if (!addr) {
-> > > -           *val = ~0;
-> > > +           SET_PCI_ERROR_RESPONSE(val);
-> >
-> > This to me doesn't look like kernel style. I'd rather see a define
-> > replace just '~0', but I defer to Bjorn.
-> >
+> I'd rather see more concerted efforts focused/limited core changes
+> rather than leaf driver changes until there is a clearer definition of
+> hardened.
+
+A hardened driver is a driver that
+
+- Had similar security (not API) oriented review of its IO operations 
+(mainly MMIO access, but also PCI config space) as a non privileged user 
+interface (like a ioctl). That review should be focused on memory safety.
+
+- Had some fuzzing on these IO interfaces using to be released tools.
+
+Right now it's only three virtio drivers (console, net, block)
+
+Really it's no different than what we do for every new unprivileged user 
+interface.
+
+
+> I.e. instead of jumping to the assertion that fixing up
+> these init-path vulnerabilities are too big to fix, dig to the next
+> level to provide more evidence that per-driver opt-in is the only
+> viable option.
 >
-> Apologies, if this is a lame question. Why is the macro
-> SET_PCI_ERROR_RESPONSE not a kernel style. I ask this so that I do not
-> end up making the same mistake again.
+> For example, how many of these problematic paths are built-in to the
+> average kernel config?
 
-Generally, we don't do macros if a static inline function will work
-because you get more type checking with a function. There's exceptions
-like struct initializers which need to work in declarations.
+I don't think arguments from "the average kernel config" (if such a 
+thing even exists) are useful. That's would be just hand waving.
 
-Second, I think the above obfuscates the code. I know exactly what the
-original line is doing to val. With SET_PCI_ERROR_RESPONSE(), I have
-to go look and it hasn't saved us any LOC to make the caller more
-readable. The downside of the original way, is I don't know why we set
-val to ~0, but just a define would tell me that.
 
-> Bjorn, did initally make a patch with only replacing '~0' but then
-> Andrew suggested in the patch [1] that we should use the macro.
+> A strawman might be to add a sprinkling error
+> exits in the module_init() of the problematic drivers, and only fail
+> if the module is built-in, and let modprobe policy handle the rest.
+
+
+That would be already hundreds of changes. I have no idea how such a 
+thing could be maintained or sustained either.
+
+Really I don't even see how these alternatives can be considered. Tree 
+sweeps should always be last resort. They're a pain for everyone. But 
+here they're casually thrown around as alternatives to straight forward 
+one or two line changes.
+
+
+
+
 >
-> [1]:
-> https://lore.kernel.org/linux-pci/20190823104415.GC14582@e119886-lin.cambridge.arm.com/
-> [Adding Andrew in the CC for this]
+>> Default policy in user space just seems to be a bad idea here. Who
+>> should know if a driver is hardened other than the kernel? Maintaining
+>> the list somewhere else just doesn't make sense to me.
+> I do not understand the maintenance burden correlation of where the
+> policy is driven vs where the list is maintained?
 
-He's no longer at Arm nor active upstream.
+All the hardening and auditing happens in the kernel tree. So it seems 
+the natural place to store the result is in the kernel tree.
 
-> Apologies, I should have added this link in the cover letter but I
-> completely forgot about it.
+But there's no single package for initrd, so you would need custom 
+configurations for all the supported distros.
+
+Also we're really arguing about a list that currently has three entries.
+
+
+>   Even if I agreed
+> with the contention that out-of-tree userspace would have a hard time
+> tracking the "hardened" driver list there is still an in-tree
+> userspace path to explore. E.g. perf maintains lists of things tightly
+> coupled to the kernel, this authorized device list seems to be in the
+> same category of data.
+
+You mean the event list? perf is in the kernel tree, so it's maintained 
+together with the kernel.
+
+But we don't have a kernel initrd.
+
+
+
 >
-> That's why I decided to go with the macro. If that is not the right
-> approach please let me know and I can fix it up.
->
-> > >             return PCIBIOS_DEVICE_NOT_FOUND;
-> >
-> > Neither does this using custom error codes rather than standard Linux
-> > errno. I point this out as I that's were I'd start with the config
-> > accessors. Though there are lots of occurrences so we'd need a way to do
-> > this in manageable steps.
-> >
->
-> I am sorry, but I do not have any answer for this. I really do not know
-> why we return custom error codes instead of standard Linux errno. Maybe
-> someone else can pitch in on this.
+>> Also there is the more practical problem that some devices are needed
+>> for booting. For example in TDX we can't print something to the console
+>> with this mechanism, so you would never get any output before the
+>> initrd. Just seems like a nightmare for debugging anything. There really
+>> needs to be an authorization mechanism that works reasonably early.
+>>
+>> I can see a point of having user space overrides though, but we need to
+>> have a sane kernel default that works early.
+> Right, as I suggested [1], just enough early authorization to
+> bootstrap/debug initramfs and then that can authorize the remainder.
 
-I don't either. My guess is either just too many places to fix or
-somehow it trickles up to userspace (but probably not since the error
-codes aren't in a uapi header).
+But how do you debug the kernel then? Making early undebuggable seems 
+just bad policy to me.
 
-> > Can't we make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value
-> > and delete the drivers all doing this? Then we have 2 copies (in source)
-> > rather than the many this series modifies. Though I'm not sure if there
-> > are other cases of calling pci_bus.ops.read() which expect to get ~0.
-> >
->
-> This seems like a really good idea :) But again, I am not entirely sure
-> if doing so would give us any unexpected behaviour. I'll wait for some
-> one to reply to this and if people agree to it, I would be glad to make
-> the changes to PCI_OP_READ and PCI_USER_READ_CONFIG and send a new
-> patch.
+And if you fix if for the console why not add the two more entries for 
+virtio net and block too?
 
-I'm expecting Bjorn to chime in.
 
-Rob
+-Andi
+
