@@ -2,115 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C0442AF70
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 00:00:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0760942AFB0
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 00:35:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235711AbhJLWCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 18:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234845AbhJLWCP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 18:02:15 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B38C06174E
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 15:00:13 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id q19so690847pfl.4
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 15:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtMAj68aUuTTSGbrDQhTvggvj29pIYu2zJBH77+GR9M=;
-        b=l4aQQdqM1qp9TtohjZx2PZM0wFCEL6l/kvo8NN9KzJyymhBkkyJgSo+9JA65w2tJEC
-         9LMd/PZYWtD639cxF6qZMwd7jZd9819/ZvHD/DyB/7wSK2/pajxSegKWAuJyX3EvYN36
-         Hvgx10j1dFhPR07T/GBgmSYWFBkdDDI7TrgeSvfoF3jbQGYARg2lN3Mrzq8mhpCVohvp
-         ZGTcRKSDYPs1LYZ9Cvfeg4KhU92J4uRVYVOhbj7jW97OCTyGTD9dTqfQJOsiIMNnWVv0
-         /ozc6W/ADlxkkOe6vMPoo0ylJl6JzbiIVBISrC3VjWn2vlC4L7iJWKamuM1v2Iw/lFzH
-         VREA==
+        id S234777AbhJLWhe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 18:37:34 -0400
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:41640
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229588AbhJLWhc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 18:37:32 -0400
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2CE413FFE0
+        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 22:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1634078128;
+        bh=JdyWx+2ERSnViZDVbDwwgVFOd8VEAu/EAtgOsXvDSgc=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=dVNz4oPEGQ9XE4tvCDIoOBebJJxx4Kql1Y1RLm48oNLy3MIQSIAx5agcreYruGWL4
+         G+G2E+ocVOPPKfcDom4ykJJ0z0ANEgKFz3k0UlxrXm0DPXPi6K5RGntmHkIpp11szW
+         zOGxveFyIQwvMvtc2wXLbQAbaFyQWDLWNWfnqAkNfJmG043xozrYtfwAW44k6EWuh3
+         5J+NhBuJ5991jots6gQiADoLNNtYzp5XDSaxqZbES5jU/H/QIbaBIUa4xEL3dNiaJP
+         KRaBDC6P02eEZQDY1Qfs6VnFJWvhruQOQqKVcJf5+5lfQ4T9ZXdUDd3HUNT2Cu7ol9
+         sYr3Due6HRhaQ==
+Received: by mail-pf1-f200.google.com with SMTP id y41-20020a056a00182900b0044d43d31f20so386948pfa.11
+        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 15:35:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BtMAj68aUuTTSGbrDQhTvggvj29pIYu2zJBH77+GR9M=;
-        b=s4LU/UV/cGQKtd3lGJz02ufxiYbLmcaZpArG85AQLvuj7gLef+IRnLolC7pHy7qcGF
-         Acub5vYj18kBdRrPTirp11FP7WYTV5XuxJDTrG4qfDBoqojp7JiPBQajxfuRKI21ns6G
-         EKDw36WFNQKm4vNJBy1jLs92h60wZ2tLReLleQ3WOkKMUA1BpUqHqyUjD6mrHy5THCP4
-         xSmsLKJJnbJwa9T3BzSRFpTC+tDA2vNb8fu7f53rJvpU1Fzpj4skptfMvEzSP8LS13R1
-         R2bbSMP6Pm/CifJ/BmxhK+GTaqiWQxvcEOjszBxQpsq3JDVm78oOd7sBdtuAsENeNugn
-         j8+Q==
-X-Gm-Message-State: AOAM533vSxT/y1/OuhGSRdth+bl3/A5zDtSPbMEjnY+lKwODMeuETgXK
-        Gn//H948Qf/KGIEGoUY16b/3Fe1iZIAMP3H7MrK3qQ==
-X-Google-Smtp-Source: ABdhPJy/e3jBUJgWufF7ultP6rKqv7OOHb6VQ8mNAhGHcU3yrYfDGGAVb/xjngRbf2MGZ68jBqzuzUn25eWS2pvZ40Y=
-X-Received: by 2002:a63:1262:: with SMTP id 34mr24624590pgs.356.1634076012990;
- Tue, 12 Oct 2021 15:00:12 -0700 (PDT)
+        bh=JdyWx+2ERSnViZDVbDwwgVFOd8VEAu/EAtgOsXvDSgc=;
+        b=Lqubb07tYjO7cFLlCPpD2f5e5GRAWlI656pJelxvCSjz3rZRe1MlQgByrGLrr8waQf
+         bQnTgRyoYVvt5HhM8MchudYcWc5prXP42LaPoeup1kDPSnQQ6DdoFTiO/SxAFnIWg4V8
+         eb2eMN+MQA3/PviZSLvQbVKJUE9oojY9HynTuzM4aqYfwkOVY0RRIaouJ4b1Tpzva9PF
+         5HzUqtOdYCrYGpgsA7uQ53OAorxivFaez1+7JNm0O8eXOkR6VMKf4uzQNU/nWOKDHo5B
+         CSOybBEahzlP8DmP4Wb8M/CaXi+2bfa5p95y4SWyfPDOMj4I/rzumIM8NSvvKVnrKaUi
+         LRwQ==
+X-Gm-Message-State: AOAM530xA0SjyRGvBdIVV1BoX/PDGr6A7qcD1Qx1R3u9QJH+xFWWzk3T
+        JumMgwExvziUL7ti2bCivDltYbkgjU1XZvVL1cP618+GZQF3hYvtYKaize+i8V1FQvYESCmHRx8
+        80oY4dZpUGpVWYizw2slMCW8ueORzTMTTSWR+QeuLenWpv/ygqNZIgA==
+X-Received: by 2002:a17:90a:e552:: with SMTP id ei18mr9106971pjb.239.1634078126702;
+        Tue, 12 Oct 2021 15:35:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxPZHBuI2h8GZ3aiVR/3gWtNcOG0SGFTakfr7kOOYkbT+7szM6417piCAlzL2Fpr33usykNkq3jlxg2CT02vms=
+X-Received: by 2002:a17:90a:e552:: with SMTP id ei18mr9106945pjb.239.1634078126288;
+ Tue, 12 Oct 2021 15:35:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009053103-mutt-send-email-mst@kernel.org> <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
- <0e6664ac-cbb2-96ff-0106-9301735c0836@linux.intel.com> <CAPcyv4g0v0YHZ-okxf4wwVCYxHotxdKwsJpZGkoT+fhvvAJEFg@mail.gmail.com>
- <9302f1c2-b3f8-2c9e-52c5-d5a4a2987409@linux.intel.com> <CAPcyv4hG0HcbUO8Mb=ccDp5Bz3RJNkAJwKwNzRkQ1gCMpp_OMQ@mail.gmail.com>
- <bca75b04-f084-5bda-c071-249fd91aaa1e@linux.intel.com>
-In-Reply-To: <bca75b04-f084-5bda-c071-249fd91aaa1e@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Oct 2021 15:00:01 -0700
-Message-ID: <CAPcyv4gZfG-Bm+_jGRjSHd8K+jO2M2NgXisqacanxGZgZKFaJA@mail.gmail.com>
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(), pci_iomap_host_shared_range()
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
+References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
+ <20210914104301.48270518.alex.williamson@redhat.com> <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
+ <20210915103235.097202d2.alex.williamson@redhat.com> <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
+ <20211005171326.3f25a43a.alex.williamson@redhat.com> <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
+ <20211012140516.6838248b.alex.williamson@redhat.com>
+In-Reply-To: <20211012140516.6838248b.alex.williamson@redhat.com>
+From:   Matthew Ruffell <matthew.ruffell@canonical.com>
+Date:   Wed, 13 Oct 2021 11:35:14 +1300
+Message-ID: <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
+Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
+ through 2x GPUs that share same pci switch via vfio
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 2:28 PM Andi Kleen <ak@linux.intel.com> wrote:
-[..]
-> >> But how do you debug the kernel then? Making early undebuggable seems
-> >> just bad policy to me.
-> > I am not proposing making the early undebuggable.
->
->
-> That's the implication of moving the policy into initrd.
->
->
-> If only initrd can authorize then it won't be possible to authorize
-> before initrd, thus the early console won't work.
+Hi Alex,
 
-Again, the proposal is that the allow-list is limited to just enough
-devices to startup and debug the initramfs and no more. Everything
-else can be dynamic, and this allows for a powerful custom override
-interface without needing to debate additional ABI like command line
-overrides, and minimizes future changes to this kernel-internal
-allow-list.
+On Wed, Oct 13, 2021 at 9:05 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+> On Tue, 12 Oct 2021 17:58:07 +1300
+> Matthew Ruffell <matthew.ruffell@canonical.com> wrote:
+> > Nathan does have a small side effect to report:
+> >
+> > > The only thing close to an issue that I have is that I still get frequent
+> > > "irq 112: nobody cared" and "Disabling IRQ #112" errors. They just no longer
+> > > lockup the system. If I watch the reproducer time between VM resets, I've
+> > > noticed that it takes longer for the VM to startup after one of these
+> > > "nobody cared" errors, and thus it takes longer until I can reset the VM again.
+> > > I believe slow guest behavior in this disabled IRQ scenario is expected though?
+>
+> The device might need to be operating in INTx mode, or at least had
+> been at some point, to get the register filled.  It's essentially just
+> a scratch register on the card that gets filled when the interrupt is
+> configured.
+>
+> Each time we register a new handler for the irq the masking due to
+> spurious interrupt will be removed, but if it's actually causing the VM
+> boot to take longer that suggests to me that the guest driver is
+> stalled, perhaps because it's expecting an interrupt that's now masked
+> in the host.  This could also be caused by a device that gets
+> incorrectly probed for PCI-2.3 compliant interrupt masking.  For
+> probing we can really only test that we have the ability to set the
+> DisINTx bit, we can only hope that the hardware folks also properly
+> implemented the INTx status bit to indicate the device is signaling
+> INTx.  We should really figure out which device this is so that we can
+> focus on whether it's another shared interrupt issue or something
+> specific to the device.
+
+Nathan got back to me and the device is that same GPU audio controller pair from
+before, so it might be another shared interrupt issue, since they both
+share 112.
+
+$ sudo lspci -vvv | grep "IRQ 112" -B 5 -A 10
+88:00.1 Audio device: NVIDIA Corporation TU102 High Definition Audio
+Controller (rev a1)
+        Subsystem: eVga.com. Corp. TU102 High Definition Audio Controller
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin B routed to IRQ 112
+        NUMA node: 1
+        Region 0: Memory at f7080000 (32-bit, non-prefetchable) [size=16K]
+        Capabilities: [60] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [78] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
+unlimited, L1 <64us
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+
+FLReset- SlotPowerLimit 25.000W
+-- 
+89:00.1 Audio device: NVIDIA Corporation TU102 High Definition Audio
+Controller (rev a1)
+        Subsystem: eVga.com. Corp. TU102 High Definition Audio Controller
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin B routed to IRQ 112
+        NUMA node: 1
+        Region 0: Memory at f5080000 (32-bit, non-prefetchable) [size=16K]
+        Capabilities: [60] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+PME(D0-,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [78] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
+unlimited, L1 <64us
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+
+FLReset- SlotPowerLimit 25.000W
+
+> I'm also confused why this doesn't trigger the same panic/kexec as we
+> were seeing with the other interrupt lines.  Are there some downstream
+> patches or configs missing here that would promote these to more fatal
+> errors?
+>
+There aren't any downstream patches, since the machine lockup happens with
+regular mainline kernels too. Even without panic on oops set, the system will
+grind to a halt and hang. The panic on oops sysctl was an attempt to get the
+machine to reboot to the crashkernel and restart again, but it didn't work very
+well since we get stuck copying the IR tables from DMAR.
+
+But your patches seem to fix the hang, which is very promising.
+
+Thanks,
+Matthew
