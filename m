@@ -2,116 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D85542A512
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 15:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E50FE42A516
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 15:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233883AbhJLNIY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 09:08:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:41118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232851AbhJLNIY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Oct 2021 09:08:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84C2FED1;
-        Tue, 12 Oct 2021 06:06:22 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1FB63F70D;
-        Tue, 12 Oct 2021 06:06:20 -0700 (PDT)
-Date:   Tue, 12 Oct 2021 14:06:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Songxiaowei (Kirin_DRV)" <songxiaowei@hisilicon.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mauro Carvalho Chehab <mauro.chehab@huawei.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "Wangbinghui (Biggio, Kirin_DRV)" <wangbinghui@hisilicon.com>,
-        Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>
-Subject: Re: [PATCH v12 00/11] Add support for Hikey 970 PCIe
-Message-ID: <20211012130615.GA27771@lpieralisi>
-References: <cd22c1e143b94f55a78d969193847812@hisilicon.com>
+        id S236441AbhJLNJs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 09:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232851AbhJLNJr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 09:09:47 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F80C061570;
+        Tue, 12 Oct 2021 06:07:45 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id j5so87625794lfg.8;
+        Tue, 12 Oct 2021 06:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rYG56F/pmgMHv1mArUcA8EEq00+Sgti/K9FJa+oQWXk=;
+        b=M9NkcejAIFMD9Vvc5kH26nk2yLKGRqy48zBmflcT4XDcmuPtHMkFigWJykHZGApZMz
+         Rttt21COCUYuUewkdNzceE0E1cZRcP/I/h/jk9Z5N0Kt0wxFe62o1brCdWPBjot0/dfh
+         HZyA92CLwzWKsdJHcJsJERPPlRLvQrp8cd4+Lonjq8MU/PbI7gg6Mb2+1gF3NqVn10M+
+         tCPNLBDxFH6bxB2LOSouw8rn6om3JPZdKlhDfgvQZP8CEDZyrvS3xbSqVzHboJdRATkZ
+         +bAaEvn+ifst8AyUGQPhfb5/ntK+cPpCrSs1f6VRJoO7c5PDY0+LL5MqT4R5YeChV07B
+         t/BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rYG56F/pmgMHv1mArUcA8EEq00+Sgti/K9FJa+oQWXk=;
+        b=GAwnReglIJRxGPYxY9mMSBMq8KDmYz9GkKe5ugwUcQt9BBdl8ug/FGHbwPj4HQgjgv
+         2p4UT1fG6dBxOnEr14LRMTLioGlFaHU2Whsw0maqwAeQ7hVfHE2nYKOlpPdOaA/Enwv1
+         XswSCMMmy3EOQc632N8TNf+HkUT/7Iwy2/WoY34PaTUJEjCsO7TkkKY7OvY1WrX1TAql
+         FQEsXGc5Lyy72xkeFS1xdesvajImysV9buopEYJgsmPwu57ambSx74IfANVFjPC0eg3E
+         QcN+SPrupuaqe+/7tyCaCUftCDtUCCq/3vkDdWoBbxFRdsg452IIVmBtG4P6+ADL3uFP
+         bW2Q==
+X-Gm-Message-State: AOAM531JZIKMaVlM+Q/2u6vOtQwPZ+KnrNYYDxOnkj+BdPXTIIzkolmh
+        s1Zz7HdFQA/7mrL8Ov/1pgfJkbf85ktzAvcmHCRtMS3Cr3U=
+X-Google-Smtp-Source: ABdhPJz61t07almgu0IAokxTxZ7zlkSBd1avA5oFDY7xmLI1j3ABt4rWihEiEMk01DF+Cr5t5BcjWjuAZsMbGht60Es=
+X-Received: by 2002:a2e:89cd:: with SMTP id c13mr28669547ljk.168.1634044063520;
+ Tue, 12 Oct 2021 06:07:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd22c1e143b94f55a78d969193847812@hisilicon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+ <b023adf9-e21c-59ac-de49-57915c8cede8@oderland.se> <c9218eb4-9fc1-28f4-d053-895bab0473d4@oderland.se>
+ <ef163327-f965-09f8-4396-2c1c4e689a6d@oderland.se>
+In-Reply-To: <ef163327-f965-09f8-4396-2c1c4e689a6d@oderland.se>
+From:   Jason Andryuk <jandryuk@gmail.com>
+Date:   Tue, 12 Oct 2021 09:07:31 -0400
+Message-ID: <CAKf6xpvGyCKVHsvauP54=0j10fxis4XiiqBNWH+1cpkbtt_QJw@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
+To:     Josef Johansson <josef@oderland.se>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, maz@kernel.org,
+        linux-pci@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 09, 2021 at 01:44:24AM +0000, Songxiaowei (Kirin_DRV) wrote:
-> Ack-by Xiaowei Song.
+On Tue, Oct 12, 2021 at 2:09 AM Josef Johansson <josef@oderland.se> wrote:
+>
+> On 10/11/21 21:34, Josef Johansson wrote:
+> > On 10/11/21 20:47, Josef Johansson wrote:
+> >> More can be read over at freedesktop:
+> >> https://gitlab.freedesktop.org/drm/amd/-/issues/1715
 
-First of all, you should not top-post:
+Hi, Josef,
 
-https://kernelnewbies.org/PatchCulture
+If you compare
+commit fcacdfbef5a1633211ebfac1b669a7739f5b553e "PCI/MSI: Provide a
+new set of mask and unmask functions"
+and
+commit 446a98b19fd6da97a1fb148abb1766ad89c9b767 "PCI/MSI: Use new
+mask/unmask functions" some of the replacement functions in 446198b1
+no longer exit early for the pci_msi_ignore_mask flag.
 
-Second the format does not match the guidelines:
+Josef, I'd recommend you try adding pci_msi_ignore_mask checks to the
+new functions in fcacdfbef5a to see if that helps.
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+There was already a pci_msi_ignore_mask fixup in commit
+1a519dc7a73c977547d8b5108d98c6e769c89f4b "PCI/MSI: Skip masking MSI-X
+on Xen PV" though the kernel was crashing in that case.
 
-So let's retry to send your ACK a third time please.
-
-Thanks,
-Lorenzo
-
-> 
-> > Hi Lorenzo,
-> > 
-> > Em Thu, 7 Oct 2021 15:41:03 +0100
-> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> escreveu:
-> > 
-> > > On Tue, Oct 05, 2021 at 01:23:21PM -0500, Bjorn Helgaas wrote:
-> > > > [+cc Lorenzo]
-> > > > 
-> > > > On Tue, Oct 05, 2021 at 11:24:48AM +0200, Mauro Carvalho Chehab wrote:  
-> > > > > Hi Bjorn,
-> > > > > 
-> > > > > Em Tue, 28 Sep 2021 09:34:10 +0200
-> > > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:  
-> > > >   
-> > > > > >   PCI: kirin: Reorganize the PHY logic inside the driver
-> > > > > >   PCI: kirin: Add support for a PHY layer
-> > > > > >   PCI: kirin: Use regmap for APB registers
-> > > > > >   PCI: kirin: Add support for bridge slot DT schema
-> > > > > >   PCI: kirin: Add Kirin 970 compatible
-> > > > > >   PCI: kirin: Add MODULE_* macros
-> > > > > >   PCI: kirin: Allow building it as a module
-> > > > > >   PCI: kirin: Add power_off support for Kirin 960 PHY
-> > > > > >   PCI: kirin: fix poweroff sequence
-> > > > > >   PCI: kirin: Allow removing the driver  
-> > > > > 
-> > > > > I guess everything is already satisfying the review feedbacks.
-> > > > > If so, could you please merge the PCI ones?  
-> > > > 
-> > > > Lorenzo takes care of the native host bridge drivers, so I'm sure this
-> > > > is on his list.  I added him to cc: in case not.  
-> > > 
-> > > Ideally I'd like to see these patches ACKed/Review-ed by the kirin
-> > > maintainers - that's what I was waiting for and that's what they
-> > > are there for.
-> > > 
-> > > Having said that, I will keep an eye on this series so that we
-> > > can hopefully queue it for v5.16.
-> > 
-> > Not sure if you received the e-mail from Xiaowei with his ack.
-> 
-> I have not (and it did not make it to linux-pci either).
-> 
-> > At least here, I only received on my internal e-mail (perhaps because
-> > the original e-mail was base64-encoded with gb2312 charset). 
-> > 
-> > So, let me forward his answer to you, c/c the mailing lists.
-> 
-> Patches should be acked with tags that tooling recognize, this
-> would help me.
-> 
-> > Thanks,
-> > Mauro
-> > 
-> 
-> Thanks.
+Regards,
+Jason
