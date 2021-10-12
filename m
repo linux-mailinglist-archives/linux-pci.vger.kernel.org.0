@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B81342A080
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 11:00:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1107C42A314
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 13:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235263AbhJLJCl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 05:02:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232578AbhJLJCl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Oct 2021 05:02:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D6D7760E54;
-        Tue, 12 Oct 2021 09:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634029240;
-        bh=TVj9dloozAyW16amMZxZwPSuRXoQgPT1QTvMuSQGFX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QC9WQeY+nVU75Hp+bftVBJ68Qsrc7UbaMkO8RAHotlG+QFh1ouPAmwWDHpi4t8m2u
-         hqysN2IEoNEXRtQFevKnS+QaoCYSHsSNdtwM5GHqXIGA/PlrQHny77emzrZ94kCpF4
-         DtHpKnX7DTg57ZQXGtaM2zmYTMfL5qmile3rdSErZkZSW1d+ixUcLWznEuajkkoDbp
-         fU8f5fyRbVmTnez/PTmCb9sBuMv8Es7cea95Is/QVQmhPpLHBINrM1tMpxDvuTmVEm
-         4Gg/F7PzGR/Ey9rK4T7tb4WUDupD2h0FBwzH76LGC5gKhVn6tOKXbNvyGaYkDtC5LH
-         //xj60vru9/1Q==
-Received: by pali.im (Postfix)
-        id 905885BC; Tue, 12 Oct 2021 11:00:37 +0200 (CEST)
-Date:   Tue, 12 Oct 2021 11:00:37 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jonas =?utf-8?Q?Dre=C3=9Fler?= <verdre@v0yd.nl>
+        id S236186AbhJLLXB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 07:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236184AbhJLLXA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 07:23:00 -0400
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE642C061570;
+        Tue, 12 Oct 2021 04:20:58 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4HTCs36VXgzQkkS;
+        Tue, 12 Oct 2021 13:20:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Message-ID: <3c98ea6c-b80f-59d4-ad84-85cf1c9ff440@v0yd.nl>
+Date:   Tue, 12 Oct 2021 13:20:46 +0200
+MIME-Version: 1.0
+Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS Surface
+ devices
+Content-Language: en-US
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Amitkumar Karwar <amitkarwar@gmail.com>,
         Ganapathi Bhat <ganapathi017@gmail.com>,
@@ -46,32 +46,43 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Brian Norris <briannorris@chromium.org>,
         David Laight <David.Laight@ACULAB.COM>,
         Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS
- Surface devices
-Message-ID: <20211012090037.v3w4za5hshtm253f@pali>
 References: <20211011165301.GA1650148@bhelgaas>
  <fee8b431-617f-3890-3ad2-67a61d3ffca2@v0yd.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+ <20211012090037.v3w4za5hshtm253f@pali>
+From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
+In-Reply-To: <20211012090037.v3w4za5hshtm253f@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fee8b431-617f-3890-3ad2-67a61d3ffca2@v0yd.nl>
-User-Agent: NeoMutt/20180716
+X-Rspamd-Queue-Id: CBF09183C
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 12 October 2021 10:48:49 Jonas Dreßler wrote:
-> 1) Revert the cards firmware in linux-firmware back to the second-latest
-> version. That firmware didn't report a fixed LTR value and also doesn't
-> have any other obvious issues I know of compared to the latest one.
+On 10/12/21 11:00, Pali Rohár wrote:
+> On Tuesday 12 October 2021 10:48:49 Jonas Dreßler wrote:
+>> 1) Revert the cards firmware in linux-firmware back to the second-latest
+>> version. That firmware didn't report a fixed LTR value and also doesn't
+>> have any other obvious issues I know of compared to the latest one.
+> 
+> FYI, there are new bugs with new firmware versions for 8997 sent by NXP
+> to linux-firmware repository... and questions what to do with it. Seems
+> that NXP again do not respond to any questions after new version was
+> merged into linux-firmware repo.
+> 
+> https://lore.kernel.org/linux-firmware/edeb34bc-7c85-7f1d-79e4-e3e21df86334@gk2.net/
+> 
+> So firmware revert also for other ex-Marvell / NXP chips is not
+> something which could not happen.
+> 
 
-FYI, there are new bugs with new firmware versions for 8997 sent by NXP
-to linux-firmware repository... and questions what to do with it. Seems
-that NXP again do not respond to any questions after new version was
-merged into linux-firmware repo.
+Argh, nevermind, it seems like my memory is fooling me once again, sorry.
+I just tried the older firmware and I was completely wrong, there's no
+difference at all between the versions when it comes to LTR messages. So
+there goes alternative 1).
 
-https://lore.kernel.org/linux-firmware/edeb34bc-7c85-7f1d-79e4-e3e21df86334@gk2.net/
-
-So firmware revert also for other ex-Marvell / NXP chips is not
-something which could not happen.
+Something interesting and reassuring I noticed though: After resuming from
+suspend the firmware actually doesn't send a new LTR message, which means
+now the LTR is 0 and we enter PC10/S0ix just fine. So basically the change
+this patch does is already in effect, just after one suspend/resume cycle.
+That gives me more confidence that we should maybe apply this patch for
+all 8897 devices, not only Surface devices?
