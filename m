@@ -2,89 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E50FE42A516
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 15:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9003F42A5B8
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Oct 2021 15:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236441AbhJLNJs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 09:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232851AbhJLNJr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 09:09:47 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F80C061570;
-        Tue, 12 Oct 2021 06:07:45 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id j5so87625794lfg.8;
-        Tue, 12 Oct 2021 06:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rYG56F/pmgMHv1mArUcA8EEq00+Sgti/K9FJa+oQWXk=;
-        b=M9NkcejAIFMD9Vvc5kH26nk2yLKGRqy48zBmflcT4XDcmuPtHMkFigWJykHZGApZMz
-         Rttt21COCUYuUewkdNzceE0E1cZRcP/I/h/jk9Z5N0Kt0wxFe62o1brCdWPBjot0/dfh
-         HZyA92CLwzWKsdJHcJsJERPPlRLvQrp8cd4+Lonjq8MU/PbI7gg6Mb2+1gF3NqVn10M+
-         tCPNLBDxFH6bxB2LOSouw8rn6om3JPZdKlhDfgvQZP8CEDZyrvS3xbSqVzHboJdRATkZ
-         +bAaEvn+ifst8AyUGQPhfb5/ntK+cPpCrSs1f6VRJoO7c5PDY0+LL5MqT4R5YeChV07B
-         t/BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rYG56F/pmgMHv1mArUcA8EEq00+Sgti/K9FJa+oQWXk=;
-        b=GAwnReglIJRxGPYxY9mMSBMq8KDmYz9GkKe5ugwUcQt9BBdl8ug/FGHbwPj4HQgjgv
-         2p4UT1fG6dBxOnEr14LRMTLioGlFaHU2Whsw0maqwAeQ7hVfHE2nYKOlpPdOaA/Enwv1
-         XswSCMMmy3EOQc632N8TNf+HkUT/7Iwy2/WoY34PaTUJEjCsO7TkkKY7OvY1WrX1TAql
-         FQEsXGc5Lyy72xkeFS1xdesvajImysV9buopEYJgsmPwu57ambSx74IfANVFjPC0eg3E
-         QcN+SPrupuaqe+/7tyCaCUftCDtUCCq/3vkDdWoBbxFRdsg452IIVmBtG4P6+ADL3uFP
-         bW2Q==
-X-Gm-Message-State: AOAM531JZIKMaVlM+Q/2u6vOtQwPZ+KnrNYYDxOnkj+BdPXTIIzkolmh
-        s1Zz7HdFQA/7mrL8Ov/1pgfJkbf85ktzAvcmHCRtMS3Cr3U=
-X-Google-Smtp-Source: ABdhPJz61t07almgu0IAokxTxZ7zlkSBd1avA5oFDY7xmLI1j3ABt4rWihEiEMk01DF+Cr5t5BcjWjuAZsMbGht60Es=
-X-Received: by 2002:a2e:89cd:: with SMTP id c13mr28669547ljk.168.1634044063520;
- Tue, 12 Oct 2021 06:07:43 -0700 (PDT)
+        id S236856AbhJLNej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 09:34:39 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:33924
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236655AbhJLNej (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 09:34:39 -0400
+Received: from localhost (1.general.cking.uk.vpn [10.172.193.212])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5DB313FFE2;
+        Tue, 12 Oct 2021 13:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1634045556;
+        bh=dKXMSStMoPxCZm0p9/uoqNBAaXNVf2iSmUkWehBtigY=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
+        b=QIjK1rg/hK1MvI48l18670bu0Ps4BFgRAkdAP2oTPfC/vS6XsYo1VRgNvWos6zAhk
+         luCBLGbFIDOX9+y2jZU+ycqVywMhrvfaOCRw/ZWjtVxqJOQMX824A0j0koPAnagAWZ
+         OC/uoDfRYTrWZCBmeGJNoLCqpWpEsj9xy0UUrFUKkgD7Ca3bDZAjbFhpTeiL0w8Z8M
+         wUMXDmAWgXw4HpUpKt9jBtXo/0jmu58NW7Cz5urUwrJap/ZgWF3EtIMlHQHaky9EYm
+         /JB3vLoDfZjcZ4Bp6NDEYUys7kmrPVD7YiV4MrvNv+3EcTULr8m+I3MS52h3HhF1ys
+         362t2VO1inoUg==
+From:   Colin King <colin.king@canonical.com>
+To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] PCI: apple: Remove redundant initialization of pointer port_pdev
+Date:   Tue, 12 Oct 2021 14:32:35 +0100
+Message-Id: <20211012133235.260534-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
- <b023adf9-e21c-59ac-de49-57915c8cede8@oderland.se> <c9218eb4-9fc1-28f4-d053-895bab0473d4@oderland.se>
- <ef163327-f965-09f8-4396-2c1c4e689a6d@oderland.se>
-In-Reply-To: <ef163327-f965-09f8-4396-2c1c4e689a6d@oderland.se>
-From:   Jason Andryuk <jandryuk@gmail.com>
-Date:   Tue, 12 Oct 2021 09:07:31 -0400
-Message-ID: <CAKf6xpvGyCKVHsvauP54=0j10fxis4XiiqBNWH+1cpkbtt_QJw@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
-To:     Josef Johansson <josef@oderland.se>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, maz@kernel.org,
-        linux-pci@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 2:09 AM Josef Johansson <josef@oderland.se> wrote:
->
-> On 10/11/21 21:34, Josef Johansson wrote:
-> > On 10/11/21 20:47, Josef Johansson wrote:
-> >> More can be read over at freedesktop:
-> >> https://gitlab.freedesktop.org/drm/amd/-/issues/1715
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi, Josef,
+The pointer port_pdev is being initialized with a value that is never
+read, it is being updated later on. The assignment is redundant and
+can be removed.
 
-If you compare
-commit fcacdfbef5a1633211ebfac1b669a7739f5b553e "PCI/MSI: Provide a
-new set of mask and unmask functions"
-and
-commit 446a98b19fd6da97a1fb148abb1766ad89c9b767 "PCI/MSI: Use new
-mask/unmask functions" some of the replacement functions in 446198b1
-no longer exit early for the pci_msi_ignore_mask flag.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/pci/controller/pcie-apple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Josef, I'd recommend you try adding pci_msi_ignore_mask checks to the
-new functions in fcacdfbef5a to see if that helps.
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index b4db7a065553..19fd2d38aaab 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -634,7 +634,7 @@ static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
+ {
+ 	struct pci_config_window *cfg = pdev->sysdata;
+ 	struct apple_pcie *pcie = cfg->priv;
+-	struct pci_dev *port_pdev = pdev;
++	struct pci_dev *port_pdev;
+ 	struct apple_pcie_port *port;
+ 
+ 	/* Find the root port this device is on */
+-- 
+2.32.0
 
-There was already a pci_msi_ignore_mask fixup in commit
-1a519dc7a73c977547d8b5108d98c6e769c89f4b "PCI/MSI: Skip masking MSI-X
-on Xen PV" though the kernel was crashing in that case.
-
-Regards,
-Jason
