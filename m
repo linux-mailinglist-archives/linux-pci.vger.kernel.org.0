@@ -2,144 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46FCF42C838
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 19:59:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D68B842C855
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 20:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbhJMSBf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 14:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229814AbhJMSBf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 14:01:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 49E82604DC;
-        Wed, 13 Oct 2021 17:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634147971;
-        bh=lq9t+NEWwYUY1eCnpZoa1nDuyeDLIStz5FujbA0LBgs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GrpJudMP2+EFqVYwSMHxgaoAxHB5Jo95mZD8RoRhZvbJS+z3+dDVZv4wFuYjpy5gw
-         nXdrkx3ourKU9P7o+T1UMj9SZOk/JRNsErwDR/JBrEE6HUVKPGCV1pOOY4L+wNDfcQ
-         GjBEpEXzhg2++9HmYtQmka9Key5WLk5rTDDjBgsfCVsJ+yiWlzIPhqdFM1ykCAIh5V
-         k0srhDXySuGSYLLs1XoyljLZGS5PWSaQ4STsWShe4eub49+MU2JoGGfGozUAcz9+0n
-         LjmBqvtYq9eLOA64z2q3fHUhDuFTT5ztaikI002pCIkfJ1Y2ennO0Oqeg8cYtQkyrJ
-         aWy84a//HcZMg==
-Received: by pali.im (Postfix)
-        id 1F5777FF; Wed, 13 Oct 2021 19:59:29 +0200 (CEST)
-Date:   Wed, 13 Oct 2021 19:59:28 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        bhelgaas@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "moderated list:PCI DRIVER FOR AARDVARK (Marvell Armada 3700)" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 09/22] PCI: aardvark: Use SET_PCI_ERROR_RESPONSE() when
- device not found
-Message-ID: <20211013175928.3sqnvrv7qc727uja@pali>
-References: <20211012155928.3nuyzgrgvyjm2v3r@theprophet>
- <20211013021310.GA1864069@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        id S229967AbhJMSJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 14:09:00 -0400
+Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:17760
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229814AbhJMSI7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 14:08:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=miWZhCNAKQGYkEDU0yVrZkUYNA4mhfI1ALiPwK7yNGrHHvxSYyARHv21NIzi2ZTdU/4vKOBkQXvxKdXtZnCeTjQHvgOfijG77efY6DkOwYmyEqqAjZIK1J0rx3qLZVBmK/QS7Sonmn49OxjW3ybw+KDO+ao/uZvXmkVK96CLseuUqypf2rplsbevgh8FEWgA1EPGS86lnsBhZSHfUfELTvOWNZOyEXAuIdDL9qlXVzvnkhvu2olojzcqLel7Q06oeOC0jhsIJxC0bJljcDptqAyUx+XGS6tgsT6AeXSuZB0YyTu9qqln4SRJ/eNwsEXiwd74rNidkmEefwBQRTcCdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=J6yOPD5MSOO5uGJ0sLl/wr/y0gfSWT6BMuq1oZERb/M=;
+ b=PNhyV1t/Rq/Sem6awmWSRylpqzc88fJ0onXVa5njKA6f5OsJwo9nJPWXrFny1NSFr3ceRIwmOmoBn9wshAZS7Ri7TxybLIMVH54xjJaO76GFJeonphhY0bY3DT18ZD3CTwEdfEh9p/Bflp0KMcsJH/oPbVlQ6EkGcL2jDg2sYsoFFwrI/2NhbuxYJZWGVEnNgWn1pYkdZcsijxyVMVJiQfAacccSfSySF9algs3AnVLxjYWh28p6LKbpjAHftWEvFl5SK7+YIiCH+tQitsAmA5yUMOsN99oAEjux8pr/drxqLMYfamElNSi2mcrZrg/eY/hE2VBBPSi7z1WAjxbWXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J6yOPD5MSOO5uGJ0sLl/wr/y0gfSWT6BMuq1oZERb/M=;
+ b=DryNIiLD/YcRVbfBqjmpJHD13iVqO0IZcdr7hr7HZ3V8mNvJourA51xkJNQ3OPhyLvQFSjKyFQgwzOg9AbSLscTWYg6hLc60UTzn3ngFvLWA/AcrZXvHzSRXMhhJ0eW7BvKcyqEYhKVsaKxgE0flXAlnG9r2rKgVGH/wfNxgg6BnLYjOjxmnyad4kwerYNYY+QRKAjnB7fypM+cKVgijxi7DD/S2BxS1fCepE0Iw/6v22lorDpAeHC2E/5LAHaNto6Mwl45R8lvPeR85Z7TT9XZlfk/E+58KNB+p8YEdVPCHYN1oDXPTDRLhC77gqAzBU2V78jle7ivQCgkHSsT9wg==
+Authentication-Results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5239.namprd12.prod.outlook.com (2603:10b6:208:315::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16; Wed, 13 Oct
+ 2021 18:06:52 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95%6]) with mapi id 15.20.4608.016; Wed, 13 Oct 2021
+ 18:06:52 +0000
+Date:   Wed, 13 Oct 2021 15:06:51 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com, saeedm@nvidia.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V1 mlx5-next 13/13] vfio/mlx5: Trap device RESET and
+ update state accordingly
+Message-ID: <20211013180651.GM2744544@nvidia.com>
+References: <20211013094707.163054-1-yishaih@nvidia.com>
+ <20211013094707.163054-14-yishaih@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211013021310.GA1864069@bhelgaas>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211013094707.163054-14-yishaih@nvidia.com>
+X-ClientProxiedBy: MN2PR05CA0047.namprd05.prod.outlook.com
+ (2603:10b6:208:236::16) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR05CA0047.namprd05.prod.outlook.com (2603:10b6:208:236::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.8 via Frontend Transport; Wed, 13 Oct 2021 18:06:52 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1maieR-00EcUG-Fb; Wed, 13 Oct 2021 15:06:51 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4883f0db-9364-4c38-d748-08d98e743be4
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5239:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5239BCBDF5642C0E37342D34C2B79@BL1PR12MB5239.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: E/H9HZqWh7RYFtIJ5H+y4kDi6B4HlaNZKMz01nxp4q1+g+FPtOzy22lD5W5OV1bwQPjmHKV7VaA3U/XWUoAhZkF2JDkdQBWaeAt0F4KGM5zi6OEJxqLjCS0ucev/chHPbjN53/1bXwqJifaxCwjbkkSjPB2bpflNt4oGALv/M2BP3rpZBwOCyBRlWhSbITOCr3I4FE5yZSQ7aTwfhdaMTD6pKgUHfZAj+pZ7jV0aqcKyJoGOoVTXP862fnfr0nGA40M0O0HBaSaNETBzi6Ae2nJSuIVJZfMgqXxx8wGk27T9dTNkV/vxrOkPyOTpTm9QvxWr4uq7dTUvfYN5DVOnUsWp+oOPbWMdkiic8pQFi5OQeBJiyySfaiw+0g5uUaINLhUwwaPDtWzH+bhbxEAtwuCMlf7q9LXFzGruLaxArirWB1HMESCU7gB6dwgSpmKFJSK+7qfrpqtLFMF27XTTr7hi8SJ2NtzTcKHEqFwhYjJYnfotPY5wFrPgfyTm6vrO4Wyf3IfBHVBEYN86obQTVvsNpqZpyJwn6nWB5AoJgHNWAyEBfg/QF1Nbf4O4+8VN54fuhj7YS2jSkZ7wJLB3IQskJ6xd9curE74JpiR98CeXp5IJjXGezIG7DK5X2/T0WFZZiiQJc15jhHZMWCL+uA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(107886003)(26005)(37006003)(8936002)(33656002)(9786002)(9746002)(2616005)(1076003)(4744005)(86362001)(186003)(316002)(6636002)(36756003)(15650500001)(508600001)(66476007)(66946007)(38100700002)(66556008)(8676002)(4326008)(6862004)(5660300002)(2906002)(426003)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xZMYHJ41tWNz4AynwzwT/3JRnktL9Crzz/oNittcESBJdAw2CVCiIsuD1UMb?=
+ =?us-ascii?Q?EQ3txFQzMpy0JU5csvV57Ct0b3af2UBTA5OAtaFDYJjeY+HDKhMW+4VcXWJ8?=
+ =?us-ascii?Q?vA5DmowLHltUdtSzLlBoW/tgMINvc70gMUsRoT8QEFCqLnTR58VKfVN+4PF8?=
+ =?us-ascii?Q?HznGUYrKd5qkvnpG4p5Anowabsmc5f7exzzyev8siB8jTS7hKaHBTV69f0iR?=
+ =?us-ascii?Q?UtxlEwpBVDV7bVvzAtrwzE372MXgocKgurinTF9xIKlAQ+E+IhA+OEIfmtEu?=
+ =?us-ascii?Q?AoxIB5PV2JKy1+KdAx3YDqC/yYjKjbaBVUNoAkUMYmXuYiMKdwHDm8Z5pK04?=
+ =?us-ascii?Q?PT3YsqEzxciMJo21NtLQa636bManw/sQ5OfeG/XEhOnm3dBmAxlcibWo2Gwy?=
+ =?us-ascii?Q?PQhT/l3+gwZ9UvlUAqk/702RkdgB5g99lut918xhoEro64er3+uTGuzRN6Yx?=
+ =?us-ascii?Q?RFP0ydF5DaOPcTuLg4ElRFdxbFPB8y8jb5yiqlzJ1tMg/M/im1BIfHvafsUT?=
+ =?us-ascii?Q?0AR+E8u9Iz7mufORLt/3zy8WMBQ97iVLZMYsBENS9UfqnoWFQRF2iP6RLsmt?=
+ =?us-ascii?Q?Xksp0HepwNO9aO+9I22GoIl82ufcOowp5Ajiz/Z64t4X+0KZIpAMghtrw9Xu?=
+ =?us-ascii?Q?CSR3D/BF/6XplSZCAfolxZb5nkZ2wEVOtl2d40NuvJQBb+V/6sI4cQ84/V3G?=
+ =?us-ascii?Q?aq6ukKsU5COnZRTiqS3bREHgVJsIbEC9d8eVKo+t4kWJKFI+R23G7VS2BWdv?=
+ =?us-ascii?Q?rNYGkVp8lDezAM3j+klctVfyyifkCCjBovw4LExcvDL1qrOc/elec4FCrOO1?=
+ =?us-ascii?Q?preOJce5B41JifvCPL5pdmcjs2MNyrHYCVlNPVAkd0rn2Xx6Y0XdjT51Mkon?=
+ =?us-ascii?Q?ZOeo1tVoMAeHDnSMEgXv4UTyPqBOTz3ngC09p/z2WGaayU9eT6j+1G+Pbbak?=
+ =?us-ascii?Q?L4tyEE1PoTlvT3+1q7/mu1WawBydsfNZszJm8gOMfjjz9O+96qB2Cad0sK3b?=
+ =?us-ascii?Q?shaol4H1IPxMdBxgHU79oupRhJJInRmaWeYHAUUDb+mWdWdEXWseMZ01fSmj?=
+ =?us-ascii?Q?dY+DU3oCHXRJFs66QXYuKSkc8T2Am023WbP+ZYbBN4vfamiM/4hBz8TqMq/t?=
+ =?us-ascii?Q?LlrHLXXbbQ04BJgRgpdp85IaaIc+ohyyDP1ZzrU9c+66OpSkcx2S9f7AyQ5Q?=
+ =?us-ascii?Q?2eu+v+MMvRXyGGY/qS8BHHzZPBWKHacseNMtEVGV5JPqwwoHlw9tgudphXt+?=
+ =?us-ascii?Q?1t0QhCtCphuzg4tLAKvmPld62ietJUd1DRVoIYrOGXGXWf2LAIdl7i9LpiTS?=
+ =?us-ascii?Q?ZslcmbUVkp47hqvRKAz4mIeDSrUi0RwRSVlSn+BDGVogbw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4883f0db-9364-4c38-d748-08d98e743be4
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2021 18:06:52.3512
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nWpcrWM34DbcoN0qVAAuLMW7ANAuRNGkVGogOzidXiXSOQTqrhlh4QCyoTeiwttL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5239
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 12 October 2021 21:13:10 Bjorn Helgaas wrote:
-> On Tue, Oct 12, 2021 at 09:29:28PM +0530, Naveen Naidu wrote:
-> > On 11/10, Pali Rohár wrote:
-> > > On Monday 11 October 2021 23:55:35 Naveen Naidu wrote:
-> > > > On 11/10, Pali Rohár wrote:
-> > > > > On Monday 11 October 2021 23:26:33 Naveen Naidu wrote:
-> > > > > > An MMIO read from a PCI device that doesn't exist or doesn't respond
-> > > > > > causes a PCI error.  There's no real data to return to satisfy the
-> > > > > > CPU read, so most hardware fabricates ~0 data.
-> > > > > > 
-> > > > > > Use SET_PCI_ERROR_RESPONSE() to set the error response, when a faulty
-> > > > > > read occurs.
-> > > > > > 
-> > > > > > This helps unify PCI error response checking and make error check
-> > > > > > consistent and easier to find.
-> > > > > > 
-> > > > > > Compile tested only.
-> > > > > > 
-> > > > > > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pci-aardvark.c | 8 ++++----
-> > > > > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > > index 596ebcfcc82d..dc2f820ef55f 100644
-> > > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > > @@ -894,7 +894,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
-> > > > > >  	int ret;
-> > > > > >  
-> > > > > >  	if (!advk_pcie_valid_device(pcie, bus, devfn)) {
-> > > > > > -		*val = 0xffffffff;
-> > > > > > +		SET_PCI_ERROR_RESPONSE(val);
-> > > > > 
-> > > > > Hello! Now I'm looking at this macro, and should not it depends on
-> > > > > "size" argument? If doing 8-bit or 16-bit read operation then should not
-> > > > > it rather sets only low 8 bits or low 16 bits to ones?
+On Wed, Oct 13, 2021 at 12:47:07PM +0300, Yishai Hadas wrote:
+> Trap device RESET and update state accordingly, it's done by registering
+> the matching callbacks.
 > 
-> > > Function itself is declared as:
-> > > 
-> > > static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where, int size, u32 *val);
-> > > 
-> > > And in "size" argument is stored number of bytes, kind of read operation
-> > > (read byte, read word, read dword). In *val is then stored read value.
-> > > For byte operation, just low 8 bits in *val variable are set.
-> > > 
-> > > Because *val is u32 it means that typeof(*val) is always 4 independently
-> > > of the "size" argument.
-> > > 
-> > > For example other project U-Boot has also pci-aardvark.c driver and
-> > > U-Boot has for (probably same) purpose pci_get_ff() macro, see:
-> > > https://source.denx.de/u-boot/u-boot/-/blob/v2021.10/drivers/pci/pci-aardvark.c#L367
-> > > 
-> > > I'm not saying if current approach to always sets 0xffffffff
-> > > (independently of "size" argument) is correct or not as I do not know
-> > > it too! I'm just giving example that this PCI code has very similar
-> > > implementation of other project (U-Boot) which sets number of ones based
-> > > on the size argument.
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+>  drivers/vfio/pci/mlx5/main.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
 > 
-> I don't think there's an issue here.  advk_pcie_rd_conf() can set the
-> whole u32 to 0xffffffff regardless of the "size" value because
-> pci_bus_read_config_byte() and pci_bus_read_config_word() extract out
-> the part they need:
-> 
->   res = bus->ops->read(bus, devfn, pos, len, &data);              \
->   *value = (type)data;                                            \
-> 
-> where "type" is u8 or u16 (this is hard to grep for; it's in the
-> PCI_OP_READ() macro in drivers/pci/access.c).
+> diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
+> index e36302b444a6..8fe44ed13552 100644
+> +++ b/drivers/vfio/pci/mlx5/main.c
+> @@ -613,6 +613,19 @@ static const struct vfio_device_ops mlx5vf_pci_ops = {
+>  	.match = vfio_pci_core_match,
+>  };
+>  
+> +static void mlx5vf_reset_done(struct vfio_pci_core_device *core_vdev)
+> +{
+> +	struct mlx5vf_pci_core_device *mvdev = container_of(
+> +			core_vdev, struct mlx5vf_pci_core_device,
+> +			core_device);
+> +
+> +	mvdev->vmig.vfio_dev_state = VFIO_DEVICE_STATE_RUNNING;
 
-Ok! No problem if this is something which is not going to be changed.
+This should hold the state mutex too
 
-> > I am not sure too, if we would like to have something like pci_get_ff()
-> > which sets the return mask based on the size.
-> 
-> I'd like to see how pci_get_ff() works because this is potentially a
-> widespread, invasive change and it's always better to copy a good
-> existing design than to make up something new.
-
-Here is U-Boot implementation of that function, it is pretty simple:
-https://source.denx.de/u-boot/u-boot/-/blob/v2021.10/drivers/pci/pci-uclass.c#L103-113
-
-> > > Anyway, I very like this your idea to have a macro which purpose is to
-> > > explicitly indicate error during config read operation! And to unify all
-> > > drivers to use same style for signalling config read error.
-> 
-> I definitely think there's a lot of value in making this consistent
-> *somehow*, so thanks for working on this!
-
-+1
+Jason
