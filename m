@@ -2,94 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C269E42B9B3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 09:53:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E1142BAEF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 10:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232444AbhJMHz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 03:55:58 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57622 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229902AbhJMHz6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 03:55:58 -0400
-X-UUID: 2080e3392f3c4492a7363f504d906a6b-20211013
-X-UUID: 2080e3392f3c4492a7363f504d906a6b-20211013
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 472035250; Wed, 13 Oct 2021 15:53:53 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Wed, 13 Oct 2021 15:53:51 +0800
-Received: from localhost.localdomain (10.17.3.154) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 13 Oct 2021 15:53:51 +0800
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        id S234535AbhJMIzW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 04:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232692AbhJMIzV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 04:55:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FC32C061570
+        for <linux-pci@vger.kernel.org>; Wed, 13 Oct 2021 01:53:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZzE-0007An-3c; Wed, 13 Oct 2021 10:51:44 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZz1-0005Il-VI; Wed, 13 Oct 2021 10:51:31 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1maZz1-0006zY-R9; Wed, 13 Oct 2021 10:51:31 +0200
+Date:   Wed, 13 Oct 2021 10:51:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>, x86@kernel.org,
+        qat-linux@intel.com, oss-drivers@corigine.com,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Ido Schimmel <idosch@nvidia.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jack Xu <jack.xu@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Michael Buesch <m@bues.ch>, Jiri Pirko <jiri@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        <qizhong.cheng@mediatek.com>, <Ryan-JH.Yu@mediatek.com>,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: [PATCH v2] PCI: mediatek-gen3: Disable DVFSRC voltage request
-Date:   Wed, 13 Oct 2021 15:53:28 +0800
-Message-ID: <20211013075328.12273-1-jianjun.wang@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        Namhyung Kim <namhyung@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20211013085131.5htnch5p6zv46mzn@pengutronix.de>
+References: <20211004125935.2300113-1-u.kleine-koenig@pengutronix.de>
+ <20211012233212.GA1806189@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jgo3ssjhgqy54b4n"
+Content-Disposition: inline
+In-Reply-To: <20211012233212.GA1806189@bhelgaas>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the DVFSRC feature is not implemented, the MAC layer will
-assert a voltage request signal when exit from the L1ss state,
-but cannot receive the voltage ready signal, which will cause
-the link to fail to exit the L1ss state correctly.
 
-Disable DVFSRC voltage request by default, we need to find
-a common way to enable it in the future.
+--jgo3ssjhgqy54b4n
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Tue, Oct 12, 2021 at 06:32:12PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > this is v6 of the quest to drop the "driver" member from struct pci_dev
+> > which tracks the same data (apart from a constant offset) as dev.driver.
+>=20
+> I like this a lot and applied it to pci/driver for v5.16, thanks!
+>=20
+> I split some of the bigger patches apart so they only touched one
+> driver or subsystem at a time.  I also updated to_pci_driver() so it
+> returns NULL when given NULL, which makes some of the validations
+> quite a bit simpler, especially in the PM code in pci-driver.c.
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index f3aeb8d4eaca..79fb12fca6a9 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -79,6 +79,9 @@
- #define PCIE_ICMD_PM_REG		0x198
- #define PCIE_TURN_OFF_LINK		BIT(4)
- 
-+#define PCIE_MISC_CTRL_REG		0x348
-+#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
-+
- #define PCIE_TRANS_TABLE_BASE_REG	0x800
- #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
- #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
-@@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
- 	val &= ~PCIE_INTX_ENABLE;
- 	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
- 
-+	/* Disable DVFSRC voltage request */
-+	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
-+	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
-+	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
-+
- 	/* Assert all reset signals */
- 	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
- 	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
--- 
-2.25.1
+OK.
 
+> Full interdiff from this v6 series:
+>=20
+> diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
+> index deaaef6efe34..36e84d904260 100644
+> --- a/arch/x86/kernel/probe_roms.c
+> +++ b/arch/x86/kernel/probe_roms.c
+> @@ -80,17 +80,15 @@ static struct resource video_rom_resource =3D {
+>   */
+>  static bool match_id(struct pci_dev *pdev, unsigned short vendor, unsign=
+ed short device)
+>  {
+> +	struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
+>  	const struct pci_device_id *id;
+> =20
+>  	if (pdev->vendor =3D=3D vendor && pdev->device =3D=3D device)
+>  		return true;
+> =20
+> -	if (pdev->dev.driver) {
+> -		struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
+> -		for (id =3D drv->id_table; id && id->vendor; id++)
+> -			if (id->vendor =3D=3D vendor && id->device =3D=3D device)
+> -				break;
+> -	}
+> +	for (id =3D drv ? drv->id_table : NULL; id && id->vendor; id++)
+> +		if (id->vendor =3D=3D vendor && id->device =3D=3D device)
+> +			break;
+> =20
+>  	return id && id->vendor;
+>  }
+> diff --git a/drivers/misc/cxl/guest.c b/drivers/misc/cxl/guest.c
+> index d997c9c3ebb5..7eb3706cf42d 100644
+> --- a/drivers/misc/cxl/guest.c
+> +++ b/drivers/misc/cxl/guest.c
+> @@ -20,38 +20,38 @@ static void pci_error_handlers(struct cxl_afu *afu,
+>  				pci_channel_state_t state)
+>  {
+>  	struct pci_dev *afu_dev;
+> +	struct pci_driver *afu_drv;
+> +	struct pci_error_handlers *err_handler;
+
+These two could be moved into the for loop (where afu_drv was with my
+patch already). This is also possible in a few other drivers.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jgo3ssjhgqy54b4n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFmng8ACgkQwfwUeK3K
+7AmPuQgAk6Dld3vvwdriW0ibspNDJTGfUcre3doNKax+JiXCiHbUthkO3jZ7kx1f
+rTKn9F/GlIOEH1uZZZPonJEaOLwVQmJz3OF8+BKCx7g1+0AqtNe2WefCf4Jl6ajR
+fuBtbNjjaCmBXFqToERlpAsB8kRfNy8Y5V7a/XqiX7ZDLiXle3V2AbuQVi5Ikmhp
+S72E0TV74YTVv77LeVSAA8275wN0GVI3gVT9F7w9ja0BjrapAALEVsk/s9pAl3Zq
+j9D63evuObSQ8ILnNmMOldPueBNZBIGCrXPD/EWKYWXjfstcmZUQtQqvyF6lK9ww
+AubKoQZ72JnZiuJZzVyJCsmBBRo2Vw==
+=Gp6y
+-----END PGP SIGNATURE-----
+
+--jgo3ssjhgqy54b4n--
