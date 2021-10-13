@@ -2,96 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E7742C93B
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 21:00:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C113C42C949
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 21:02:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231263AbhJMTCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 15:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45186 "EHLO mail.kernel.org"
+        id S238849AbhJMTEg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 15:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231246AbhJMTCU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 15:02:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4EE06610E8;
-        Wed, 13 Oct 2021 19:00:16 +0000 (UTC)
+        id S230118AbhJMTEc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 15:04:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6284060E96;
+        Wed, 13 Oct 2021 19:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634151616;
-        bh=vu0O+pfV+sCyaPdC66uaJw0vVQuREbc9+nyIuESVaQw=;
+        s=k20201202; t=1634151749;
+        bh=nrpmV2aL7Yyo2rvXkWXL6W7OTMDFqb0qTu+6E6wA2jw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=t08h/jItfp6nbs6PYAEQyke8nuQTkSs0EEEmdggCQQ0dRzR0PuFh8jgsf4zelvM5V
-         7sWRUEBc3w9k1sLQ5KmMfuhVaNPWoYPyBZUyqtAo0D7iVSBklrXA9o3yxmhFjWwaB2
-         9XNWwZdaK1k5JSwcDnWOmrqnDycU2C6AzPqO7a3iKsv6tk6bRZUoqjGEWaBxf2Fv56
-         CNv5IPAFtoRhAy3jEJ1i6p5Mhn0OxQLmqAqPz2p0e3sLBFq/LC0L2Zhlsdx38CNd0r
-         pPPpTXiBCiHHI5UeA38KXbHgNqN3qKS9nBmhB9o9eTXKeHVVu2w+5KVF/mnKu1gxD1
-         nmlruchHZZCBA==
-Date:   Wed, 13 Oct 2021 14:00:14 -0500
+        b=SOy4uik6jEZWbxmPABrbRogV42T8n5r6jEXXfPGNkk6SIgKDyIO6cbZHoarlAkULH
+         kjFBy8PONij7Kl/a60F5hUAIVGNFG9k12KIb2imfqAi2rJcNiU8z+4/0Pb3gpVh9NV
+         ZE3BZ4ySVphSPjAHTDam/ZsH5e6jxU/R6OI0hHiCymtbcuanXohqSbDNMLVzpcPMG4
+         +ZwTDIG4PZnBHVWK/y0yyxATl1P2Qxh2c1shr3aCXxIkGCWdlLx0vEnrb+FK0vCgIV
+         liF96uxIaP05sMPqKAeIkyXUSC0pKpdUh2TTdPkiCAvJs5qPoCYm3v145cEdkU6kNk
+         2BB+INXZ2Oo4Q==
+Date:   Wed, 13 Oct 2021 14:02:26 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     menglong8.dong@gmail.com
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Menglong Dong <imagedong@tencent.com>
-Subject: Re: [PATCH] pci: call _cond_resched() after pci_bus_write_config
-Message-ID: <20211013190014.GA1909934@bhelgaas>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        qizhong.cheng@mediatek.com, Ryan-JH.Yu@mediatek.com,
+        Tzung-Bi Shih <tzungbi@google.com>
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Disable DVFSRC voltage request
+Message-ID: <20211013190226.GA1910352@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211013125542.759696-1-imagedong@tencent.com>
+In-Reply-To: <20211013183515.GA1907868@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Match previous subject lines (use "git log --oneline
-drivers/pci/access.c" to see them).
-
-On Wed, Oct 13, 2021 at 08:55:42PM +0800, menglong8.dong@gmail.com wrote:
-> From: Menglong Dong <imagedong@tencent.com>
+On Wed, Oct 13, 2021 at 01:35:17PM -0500, Bjorn Helgaas wrote:
+> On Wed, Oct 13, 2021 at 03:53:28PM +0800, Jianjun Wang wrote:
+> > When the DVFSRC feature is not implemented, the MAC layer will
+> > assert a voltage request signal when exit from the L1ss state,
+> > but cannot receive the voltage ready signal, which will cause
+> > the link to fail to exit the L1ss state correctly.
+> > 
+> > Disable DVFSRC voltage request by default, we need to find
+> > a common way to enable it in the future.
 > 
-> While the system is running in KVM, pci config writing for virtio devices
-> may cost long time(about 1-2ms), as it causes VM-exit. During
-> __pci_bus_assign_resources(), pci_setup_bridge, which can do pci config
-> writing up to 10 times, can be called many times without any
-> _cond_resched(). So __pci_bus_assign_resources can cause 25+ms scheduling
-> latency with !CONFIG_PREEMPT.
+> Rewrap commit log to fill 75 columns.
 > 
-> To solve this problem, call _cond_resched() after pci config writing.
-
-s/pci/PCI/ above.
-Add space before "(".
-Add "()" after function names consistently (some have it, some don't).
-
-What exactly is the problem?  I expect __pci_bus_assign_resources() to
-be used mostly during boot-time enumeration.  How much of a problem is
-the latency at that point?  Why is this particularly a problem in the
-KVM environment?  Or is it also a problem on bare metal?
-
-Are there other config write paths that should have a similar change?
-
-_cond_resched() only appears here:
-
-  $ git grep "\<_cond_resched\>"
-  include/linux/sched.h:static __always_inline int _cond_resched(void)
-  include/linux/sched.h:static inline int _cond_resched(void)
-  include/linux/sched.h:static inline int _cond_resched(void) { return 0; }
-  include/linux/sched.h:  _cond_resched();
-
-so I don't believe PCI is so special that this needs to be the only
-other use.  Maybe a different resched interface is more appropriate?
-
-> Signed-off-by: Menglong Dong <imagedong@tencent.com>
-> ---
->  drivers/pci/access.c | 1 +
->  1 file changed, 1 insertion(+)
+> Does "L1ss" above refer to L1.1 and L1.2?  If so, please say that
+> explicitly or say something like "L1 PM Substates" (the term used in
+> the PCIe spec) so it's clear.
 > 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 46935695cfb9..babed43702df 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -57,6 +57,7 @@ int noinline pci_bus_write_config_##size \
->  	pci_lock_config(flags);						\
->  	res = bus->ops->write(bus, devfn, pos, len, value);		\
->  	pci_unlock_config(flags);					\
-> +	_cond_resched();						\
->  	return res;							\
->  }
->  
-> -- 
-> 2.27.0
+> This seems on the boundary of PCIe-specified things and Mediatek
+> implementation details, so I'm not sure what "DVFSRC," "MAC," and
+> "voltage request signal" mean.  Since I don't recognize those terms,
+> I'm guessing they are Mediatek-specific things.
 > 
+> But if they are things specified by the PCIe spec, please use the
+> exact names used in the spec.
+> 
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+> > Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
+
+Krzysztof also pointed out that if this is a bug fix, we may want a
+stable tag here.  And, ideally, a Fixes: tag with the specific commit
+that introduced the bug.
+
+> > ---
+> >  drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > index f3aeb8d4eaca..79fb12fca6a9 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -79,6 +79,9 @@
+> >  #define PCIE_ICMD_PM_REG		0x198
+> >  #define PCIE_TURN_OFF_LINK		BIT(4)
+> >  
+> > +#define PCIE_MISC_CTRL_REG		0x348
+> > +#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
+> > +
+> >  #define PCIE_TRANS_TABLE_BASE_REG	0x800
+> >  #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
+> >  #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
+> > @@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+> >  	val &= ~PCIE_INTX_ENABLE;
+> >  	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
+> >  
+> > +	/* Disable DVFSRC voltage request */
+> > +	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
+> > +	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+> > +	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
+> > +
+> >  	/* Assert all reset signals */
+> >  	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
+> >  	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+> > -- 
+> > 2.25.1
+> > 
