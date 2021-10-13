@@ -2,135 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0ED42C91D
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 20:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E7742C93B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 21:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237656AbhJMS4A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 14:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
+        id S231263AbhJMTCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 15:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229814AbhJMSz7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 14:55:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 334B26008E;
-        Wed, 13 Oct 2021 18:53:55 +0000 (UTC)
+        id S231246AbhJMTCU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 15:02:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4EE06610E8;
+        Wed, 13 Oct 2021 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634151235;
-        bh=A8IoIsWihagI3YspI5rm1b9XF17mv6LOfvUhY1VoL9s=;
+        s=k20201202; t=1634151616;
+        bh=vu0O+pfV+sCyaPdC66uaJw0vVQuREbc9+nyIuESVaQw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pHIrSXu4SUB/Pr2iuIqPVexucH8LP/y5kUcg0SPv3DC2nPSyN0hqilBg3JqNQsUC/
-         jpOYWZ3KylwWxrjajrH2jRBGszbKF1bbUDCI5sUU7hvZA0rkGTVvWNr6pb5pGuKVMP
-         Mc7pdKpIYB+IFpIPx69uq5pOeYfXrPcmn6A3XuVaAFBsKk1WJVu5VM8lpQZM5ofKkf
-         MFdepVlQ90svuIBzE+kWTPcicNR/9Iz77DJnRgqM0Nef6k+A1ro/j1rO/Kh8fh1LN9
-         Ml5Y24Kz6Qfl+9u7QDGZEl4l3l9imWY9Urv5+UX8F/dZGrNV4Vuqwkv52vqED/yoFD
-         KdjSNku39Q6aw==
-Date:   Wed, 13 Oct 2021 13:53:53 -0500
+        b=t08h/jItfp6nbs6PYAEQyke8nuQTkSs0EEEmdggCQQ0dRzR0PuFh8jgsf4zelvM5V
+         7sWRUEBc3w9k1sLQ5KmMfuhVaNPWoYPyBZUyqtAo0D7iVSBklrXA9o3yxmhFjWwaB2
+         9XNWwZdaK1k5JSwcDnWOmrqnDycU2C6AzPqO7a3iKsv6tk6bRZUoqjGEWaBxf2Fv56
+         CNv5IPAFtoRhAy3jEJ1i6p5Mhn0OxQLmqAqPz2p0e3sLBFq/LC0L2Zhlsdx38CNd0r
+         pPPpTXiBCiHHI5UeA38KXbHgNqN3qKS9nBmhB9o9eTXKeHVVu2w+5KVF/mnKu1gxD1
+         nmlruchHZZCBA==
+Date:   Wed, 13 Oct 2021 14:00:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Qian Cai <quic_qiancai@quicinc.com>
-Subject: Re: [PATCH] PCI/VPD: Fix stack overflow caused by pci_read_vpd_any()
-Message-ID: <20211013185353.GA1909717@bhelgaas>
+To:     menglong8.dong@gmail.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Menglong Dong <imagedong@tencent.com>
+Subject: Re: [PATCH] pci: call _cond_resched() after pci_bus_write_config
+Message-ID: <20211013190014.GA1909934@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6211be8a-5d10-8f3a-6d33-af695dc35caf@gmail.com>
+In-Reply-To: <20211013125542.759696-1-imagedong@tencent.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 08:19:59PM +0200, Heiner Kallweit wrote:
-> Recent bug fix 00e1a5d21b4f ("PCI/VPD: Defer VPD sizing until first
-> access") interferes with the original change, resulting in a stack
-> overflow. The following fix has been successfully tested by Qian
-> and myself.
+Match previous subject lines (use "git log --oneline
+drivers/pci/access.c" to see them).
 
-What does "the original change" refer to?  80484b7f8db1?  I guess the
-stack overflow is an unintended recursion?  Is there a URL to Qian's
-bug report with more details that we can include here?
-
-> Fixes: 80484b7f8db1 ("PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()")
-> Reported-by: Qian Cai <quic_qiancai@quicinc.com>
-> Tested-by: Qian Cai <quic_qiancai@quicinc.com>
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/vpd.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+On Wed, Oct 13, 2021 at 08:55:42PM +0800, menglong8.dong@gmail.com wrote:
+> From: Menglong Dong <imagedong@tencent.com>
 > 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 5108bbd20..a4fc4d069 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -96,14 +96,14 @@ static size_t pci_vpd_size(struct pci_dev *dev)
->  	return off ?: PCI_VPD_SZ_INVALID;
+> While the system is running in KVM, pci config writing for virtio devices
+> may cost long time(about 1-2ms), as it causes VM-exit. During
+> __pci_bus_assign_resources(), pci_setup_bridge, which can do pci config
+> writing up to 10 times, can be called many times without any
+> _cond_resched(). So __pci_bus_assign_resources can cause 25+ms scheduling
+> latency with !CONFIG_PREEMPT.
+> 
+> To solve this problem, call _cond_resched() after pci config writing.
+
+s/pci/PCI/ above.
+Add space before "(".
+Add "()" after function names consistently (some have it, some don't).
+
+What exactly is the problem?  I expect __pci_bus_assign_resources() to
+be used mostly during boot-time enumeration.  How much of a problem is
+the latency at that point?  Why is this particularly a problem in the
+KVM environment?  Or is it also a problem on bare metal?
+
+Are there other config write paths that should have a similar change?
+
+_cond_resched() only appears here:
+
+  $ git grep "\<_cond_resched\>"
+  include/linux/sched.h:static __always_inline int _cond_resched(void)
+  include/linux/sched.h:static inline int _cond_resched(void)
+  include/linux/sched.h:static inline int _cond_resched(void) { return 0; }
+  include/linux/sched.h:  _cond_resched();
+
+so I don't believe PCI is so special that this needs to be the only
+other use.  Maybe a different resched interface is more appropriate?
+
+> Signed-off-by: Menglong Dong <imagedong@tencent.com>
+> ---
+>  drivers/pci/access.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 46935695cfb9..babed43702df 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -57,6 +57,7 @@ int noinline pci_bus_write_config_##size \
+>  	pci_lock_config(flags);						\
+>  	res = bus->ops->write(bus, devfn, pos, len, value);		\
+>  	pci_unlock_config(flags);					\
+> +	_cond_resched();						\
+>  	return res;							\
 >  }
 >  
-> -static bool pci_vpd_available(struct pci_dev *dev)
-> +static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
->  {
->  	struct pci_vpd *vpd = &dev->vpd;
->  
->  	if (!vpd->cap)
->  		return false;
->  
-> -	if (vpd->len == 0) {
-> +	if (vpd->len == 0 && check_size) {
->  		vpd->len = pci_vpd_size(dev);
->  		if (vpd->len == PCI_VPD_SZ_INVALID) {
->  			vpd->cap = 0;
-> @@ -156,17 +156,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
->  			    void *arg, bool check_size)
->  {
->  	struct pci_vpd *vpd = &dev->vpd;
-> -	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
-> +	unsigned int max_len;
->  	int ret = 0;
->  	loff_t end = pos + count;
->  	u8 *buf = arg;
->  
-> -	if (!pci_vpd_available(dev))
-> +	if (!pci_vpd_available(dev, check_size))
->  		return -ENODEV;
->  
->  	if (pos < 0)
->  		return -EINVAL;
->  
-> +	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
-> +
->  	if (pos >= max_len)
->  		return 0;
->  
-> @@ -218,17 +220,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
->  			     const void *arg, bool check_size)
->  {
->  	struct pci_vpd *vpd = &dev->vpd;
-> -	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
-> +	unsigned int max_len;
->  	const u8 *buf = arg;
->  	loff_t end = pos + count;
->  	int ret = 0;
->  
-> -	if (!pci_vpd_available(dev))
-> +	if (!pci_vpd_available(dev, check_size))
->  		return -ENODEV;
->  
->  	if (pos < 0 || (pos & 3) || (count & 3))
->  		return -EINVAL;
->  
-> +	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
-> +
->  	if (end > max_len)
->  		return -EINVAL;
->  
-> @@ -312,7 +316,7 @@ void *pci_vpd_alloc(struct pci_dev *dev, unsigned int *size)
->  	void *buf;
->  	int cnt;
->  
-> -	if (!pci_vpd_available(dev))
-> +	if (!pci_vpd_available(dev, true))
->  		return ERR_PTR(-ENODEV);
->  
->  	len = dev->vpd.len;
 > -- 
-> 2.33.0
+> 2.27.0
 > 
