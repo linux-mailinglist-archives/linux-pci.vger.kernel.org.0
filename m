@@ -2,130 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14A3742C870
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 20:14:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D87842C88D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 20:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbhJMSQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 14:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230301AbhJMSQc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 14:16:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F213461130;
-        Wed, 13 Oct 2021 18:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634148869;
-        bh=nTv0tRFqu3rs6zCgIelWjkmGWCCAcB61amgKTV3GfC0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HOLLh68Gs9vf4Npd6whvsjzKAoFHcVugXPxOcgeVyO732h8qgr+DSmkWwj+upu833
-         2GS1m+i3/ZzqrPhLaWml/+vF7n4KSFWN7vivN6sdzeb0R7CadkUZ/Ls3KBzcBGT5FE
-         P7YEPTmdFlVm63NKRClCMh5xlUNzrMBS02v7nNZDB7ERffjEdsNKgaAEPUO8Q5RMw+
-         Q90N9x92/Wc6rpIpp+FgplmzxhrMnDmgoHQbayy2BQmnwtfaLhSv87bXfLFElBPwig
-         813KDACHpaI04Vunmw4nRcp+/W7Zu4Q0CNL9GOJ6NC7pG8jXfTf2a9hQT0hPVBZPHK
-         DH76xPmHZ9lRQ==
-Date:   Wed, 13 Oct 2021 13:14:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com, jgg@nvidia.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V1 mlx5-next 01/13] PCI/IOV: Provide internal VF index
-Message-ID: <20211013181426.GA1906116@bhelgaas>
+        id S230301AbhJMSWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 14:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229967AbhJMSWQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 14:22:16 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC65C061570
+        for <linux-pci@vger.kernel.org>; Wed, 13 Oct 2021 11:20:12 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id y3so11386317wrl.1
+        for <linux-pci@vger.kernel.org>; Wed, 13 Oct 2021 11:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc:from
+         :subject:content-transfer-encoding;
+        bh=S4KiNJ0xwtVPHy1jy7OLgTDaym7CvCdiNC8o8ajWkDc=;
+        b=kvkZHGFd/uoiBlsdnwEUMUUOate+uJKaXp0yYY4HQevbTUncJgMgxagjJWQugxYZSg
+         Oc7z4nsZdG+s7H6JjnA2cbJ9UL7RNw4cg9tT1ib8CjaG6zwAHHrv9b/QCoxJrBLVKMv8
+         fCsrwgc195hM2lcNB5OzIlSQ7w88u+XOJQx3nTgnrl2EAxEMNy6ENgd6FLXMEIB1EFlq
+         LfdkvbS+PjlsYHFOzEqvgPbVjhdUmoGV8qzjAAhxJ48xV70qmdkKhyPekCoZ6COtfPIy
+         4VoNECHuEOGIDwOKgvaIAPRlhcW/fQIpWR8dTzVWE99hUnDJTqsbVJI065cdNRk535kn
+         kZKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=S4KiNJ0xwtVPHy1jy7OLgTDaym7CvCdiNC8o8ajWkDc=;
+        b=NLZg5PeiAJQ+P49ezViem/2ziQEQpKvOrpbkeEnvV92ebk8kRW1At+teuFZLOJpeXA
+         cHE2BLg8lviswDYDXuhUE5PUX67Bmq8FiaH865CHpz6ZXUkGWa/FCdWR5tfCOZK+OqdT
+         NNeJdHBaiZ9n6rmMzC0xL/7y4DdzC9aYRoRjrXB5P/cnmEt3R5o+jFVhfUPYrzUZpkdL
+         omVMNPAHlCFgXEtBhG9UKG4Vr2bzpoFns6W/GbxTZGFJgpaPUZG4NY35Yws3yB5Af2or
+         w6A1h96+fDQgEV5Au85ZzjkohXjoIPSA/L1LQOCb4dZfZ0VAgzwMRfqMvT/hZSFdb/Qs
+         stfw==
+X-Gm-Message-State: AOAM531rxwNTZM6+8SbCfm/sPcx15J5cuQJ50sOEcOKtTCV6Txv5zjNt
+        9xCbVu3ApgckUCX4JJnnjfsOEIj3I8I=
+X-Google-Smtp-Source: ABdhPJyg78Cvnm4WhwN72wN4MX6xNrEnthtEE3KdDg5ZUwq1EwVhCZPXo7pB6eiCIJWrX14+zrxcCA==
+X-Received: by 2002:adf:8b06:: with SMTP id n6mr813690wra.5.1634149211408;
+        Wed, 13 Oct 2021 11:20:11 -0700 (PDT)
+Received: from ?IPV6:2003:ea:8f22:fa00:49bd:5329:15d2:9218? (p200300ea8f22fa0049bd532915d29218.dip0.t-ipconnect.de. [2003:ea:8f22:fa00:49bd:5329:15d2:9218])
+        by smtp.googlemail.com with ESMTPSA id l5sm278501wrq.77.2021.10.13.11.20.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Oct 2021 11:20:11 -0700 (PDT)
+Message-ID: <6211be8a-5d10-8f3a-6d33-af695dc35caf@gmail.com>
+Date:   Wed, 13 Oct 2021 20:19:59 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211013094707.163054-2-yishaih@nvidia.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-US
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Qian Cai <quic_qiancai@quicinc.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI/VPD: Fix stack overflow caused by pci_read_vpd_any()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 12:46:55PM +0300, Yishai Hadas wrote:
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> The PCI core uses the VF index internally, often called the vf_id,
-> during the setup of the VF, eg pci_iov_add_virtfn().
-> 
-> This index is needed for device drivers that implement live migration
-> for their internal operations that configure/control their VFs.
-> 
-> Specifically, mlx5_vfio_pci driver that is introduced in coming patches
-> from this series needs it and not the bus/device/function which is
-> exposed today.
-> 
-> Add pci_iov_vf_id() which computes the vf_id by reversing the math that
-> was used to create the bus/device/function.
-> 
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Recent bug fix 00e1a5d21b4f ("PCI/VPD: Defer VPD sizing until first
+access") interferes with the original change, resulting in a stack
+overflow. The following fix has been successfully tested by Qian
+and myself.
 
-I already acked this:
+Fixes: 80484b7f8db1 ("PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()")
+Reported-by: Qian Cai <quic_qiancai@quicinc.com>
+Tested-by: Qian Cai <quic_qiancai@quicinc.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/vpd.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-  https://lore.kernel.org/r/20210922215930.GA231505@bhelgaas
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 5108bbd20..a4fc4d069 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -96,14 +96,14 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+ 	return off ?: PCI_VPD_SZ_INVALID;
+ }
+ 
+-static bool pci_vpd_available(struct pci_dev *dev)
++static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+ 
+ 	if (!vpd->cap)
+ 		return false;
+ 
+-	if (vpd->len == 0) {
++	if (vpd->len == 0 && check_size) {
+ 		vpd->len = pci_vpd_size(dev);
+ 		if (vpd->len == PCI_VPD_SZ_INVALID) {
+ 			vpd->cap = 0;
+@@ -156,17 +156,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 			    void *arg, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+-	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++	unsigned int max_len;
+ 	int ret = 0;
+ 	loff_t end = pos + count;
+ 	u8 *buf = arg;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, check_size))
+ 		return -ENODEV;
+ 
+ 	if (pos < 0)
+ 		return -EINVAL;
+ 
++	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++
+ 	if (pos >= max_len)
+ 		return 0;
+ 
+@@ -218,17 +220,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 			     const void *arg, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
+-	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++	unsigned int max_len;
+ 	const u8 *buf = arg;
+ 	loff_t end = pos + count;
+ 	int ret = 0;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, check_size))
+ 		return -ENODEV;
+ 
+ 	if (pos < 0 || (pos & 3) || (count & 3))
+ 		return -EINVAL;
+ 
++	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
++
+ 	if (end > max_len)
+ 		return -EINVAL;
+ 
+@@ -312,7 +316,7 @@ void *pci_vpd_alloc(struct pci_dev *dev, unsigned int *size)
+ 	void *buf;
+ 	int cnt;
+ 
+-	if (!pci_vpd_available(dev))
++	if (!pci_vpd_available(dev, true))
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	len = dev->vpd.len;
+-- 
+2.33.0
 
-Saves me time if you carry the ack so I don't have to look at this
-again.  But since I *am* looking at it again, I think it's nice if the
-subject line includes the actual interface you're adding, e.g.,
-
-  PCI/IOV: Add pci_iov_vf_id() to get VF index
-
-> ---
->  drivers/pci/iov.c   | 14 ++++++++++++++
->  include/linux/pci.h |  8 +++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index dafdc652fcd0..e7751fa3fe0b 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -33,6 +33,20 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id)
->  }
->  EXPORT_SYMBOL_GPL(pci_iov_virtfn_devfn);
->  
-> +int pci_iov_vf_id(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *pf;
-> +
-> +	if (!dev->is_virtfn)
-> +		return -EINVAL;
-> +
-> +	pf = pci_physfn(dev);
-> +	return (((dev->bus->number << 8) + dev->devfn) -
-> +		((pf->bus->number << 8) + pf->devfn + pf->sriov->offset)) /
-> +	       pf->sriov->stride;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_vf_id);
-> +
->  /*
->   * Per SR-IOV spec sec 3.3.10 and 3.3.11, First VF Offset and VF Stride may
->   * change when NumVFs changes.
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..2337512e67f0 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2153,7 +2153,7 @@ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
->  #ifdef CONFIG_PCI_IOV
->  int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
->  int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
-> -
-> +int pci_iov_vf_id(struct pci_dev *dev);
->  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
->  void pci_disable_sriov(struct pci_dev *dev);
->  
-> @@ -2181,6 +2181,12 @@ static inline int pci_iov_virtfn_devfn(struct pci_dev *dev, int id)
->  {
->  	return -ENOSYS;
->  }
-> +
-> +static inline int pci_iov_vf_id(struct pci_dev *dev)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
->  { return -ENODEV; }
->  
-> -- 
-> 2.18.1
-> 
