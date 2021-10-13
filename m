@@ -2,145 +2,263 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD35942CD58
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 00:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE74542CD93
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 00:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230378AbhJMWKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 18:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230414AbhJMWKw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 18:10:52 -0400
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF2EC061570;
-        Wed, 13 Oct 2021 15:08:48 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4HV6B02yKzzQjmX;
-        Thu, 14 Oct 2021 00:08:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <e7983fec-f4f1-6d31-5e46-f5a427fe55cc@v0yd.nl>
-Date:   Thu, 14 Oct 2021 00:08:31 +0200
-MIME-Version: 1.0
-Subject: Re: [PATCH] mwifiex: Add quirk resetting the PCI bridge on MS Surface
- devices
-Content-Language: en-US
+        id S230023AbhJMWNt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 18:13:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:30492 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229883AbhJMWNt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 18:13:49 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="227836305"
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="227836305"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 15:11:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="659723511"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 13 Oct 2021 15:11:43 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mamTP-0005Cp-29; Wed, 13 Oct 2021 22:11:43 +0000
+Date:   Thu, 14 Oct 2021 06:10:53 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Victor Ding <victording@google.com>
-References: <20211012153921.GA1754629@bhelgaas>
-From:   =?UTF-8?Q?Jonas_Dre=c3=9fler?= <verdre@v0yd.nl>
-In-Reply-To: <20211012153921.GA1754629@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4CD6117FC
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ 2b94b6b79b7c24092a6169db9e83c4565be0db42
+Message-ID: <6167596d.Hv0KDh61U6+lV52h%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/12/21 17:39, Bjorn Helgaas wrote:
-> [+cc Vidya, Victor, ASPM L1.2 config issue; beginning of thread:
-> https://lore.kernel.org/all/20211011134238.16551-1-verdre@v0yd.nl/]
-> 
-> On Tue, Oct 12, 2021 at 10:55:03AM +0200, Jonas Dreßler wrote:
->> On 10/11/21 19:02, Pali Rohár wrote:
->>> On Monday 11 October 2021 15:42:38 Jonas Dreßler wrote:
->>>> The most recent firmware (15.68.19.p21) of the 88W8897 PCIe+USB card
->>>> reports a hardcoded LTR value to the system during initialization,
->>>> probably as an (unsuccessful) attempt of the developers to fix firmware
->>>> crashes. This LTR value prevents most of the Microsoft Surface devices
->>>> from entering deep powersaving states (either platform C-State 10 or
->>>> S0ix state), because the exit latency of that state would be higher than
->>>> what the card can tolerate.
->>>
->>> This description looks like a generic issue in 88W8897 chip or its
->>> firmware and not something to Surface PCIe controller or Surface HW. But
->>> please correct me if I'm wrong here.
->>>
->>> Has somebody 88W8897-based PCIe card in non-Surface device and can check
->>> or verify if this issue happens also outside of the Surface device?
->>>
->>> It would be really nice to know if this is issue in Surface or in 8897.
->>
->> Fairly sure the LTR value is something that's reported by the firmware
->> and will be the same on all 8897 devices (as mentioned in my reply to Bjorn
->> the second-latest firmware doesn't report that fixed LTR value).
-> 
-> I suggested earlier that the LTR values reported by the device might
-> depend on the electrical characteristics of the link and hence be
-> platform-dependent, but I think that might be wrong.
-> 
-> The spec (PCIe r5.0, sec 5.5.4) does say that some of the *other*
-> parameters related to L1.2 entry are platform-dependent:
-> 
->    Prior to setting either or both of the enable bits for L1.2, the
->    values for TPOWER_ON, Common_Mode_Restore_Time, and, if the ASPM
->    L1.2 Enable bit is to be Set, the LTR_L1.2_THRESHOLD (both Value
->    and Scale fields) must be programmed.  The TPOWER_ON and
->    Common_Mode_Restore_Time fields must be programmed to the
->    appropriate values based on the components and AC coupling
->    capacitors used in the connection linking the two components. The
->    determination of these values is design implementation specific.
-> 
-> These T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD
-> values are in the L1 PM Substates Control registers.
-> 
-> I don't know of a way for the kernel or the device firmware to learn
-> these circuit characteristics or the appropriate values, so I think
-> only system firmware can program the L1 PM Substates Control registers
-> (a corollary of this is that I don't see a way for hot-plugged devices
-> to *ever* use L1.2).
-> 
-> I wonder if this reset quirk works because pci_reset_function() saves
-> and restores much of config space, but it currently does *not* restore
-> the L1 PM Substates capability, so those T_POWER_ON,
-> Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD values probably get
-> cleared out by the reset.  We did briefly save/restore it [1], but we
-> had to revert that because of a regression that AFAIK was never
-> resolved [2].  I expect we will eventually save/restore this, so if
-> the quirk depends on it *not* being restored, that would be a problem.
-> 
-> You should be able to test whether this is the critical thing by
-> clearing those registers with setpci instead of doing the reset.  Per
-> spec, they can only be modified when L1.2 is disabled, so you would
-> have to disable it via sysfs (for the endpoint, I think)
-> /sys/.../l1_2_aspm and /sys/.../l1_2_pcipm, do the setpci on the root
-> port, then re-enable L1.2.
-> 
-> [1] https://git.kernel.org/linus/4257f7e008ea
-> [2] https://lore.kernel.org/all/20210127160449.2990506-1-helgaas@kernel.org/
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 2b94b6b79b7c24092a6169db9e83c4565be0db42  PCI/MSI: Handle msi_populate_sysfs() errors correctly
 
-Hmm, interesting, thanks for those links.
+elapsed time: 1185m
 
-Are you sure the config values will get lost on the reset? If we only reset
-the port by going into D3hot and back into D0, the device will remain powered
-and won't lose the config space, will it?
+configs tested: 203
+configs skipped: 4
 
-Because when I reset the bridge using pci_reset_function() (ie. pci_pm_reset())
-or when I suspend and resume the laptop, all the L1 PM Substates registers are
-still the same as before, nothing is lost.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-That said, our new mwifiex_pcie_reset_d3cold_quirk() puts *both the card and
-the bridge* into D3cold, so I gave that a try, and indeed the cards L1 Substate
-Ctl registers are cleared out (so T_CommonMode, LTR1.2_Threshold and T_PwrOn),
-but the bridge still has its values, no clue why that's the case.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+i386                 randconfig-c001-20211013
+um                           x86_64_defconfig
+riscv                            allyesconfig
+mips                             allyesconfig
+um                             i386_defconfig
+mips                             allmodconfig
+riscv                            allmodconfig
+sparc                            allyesconfig
+powerpc                         ps3_defconfig
+mips                     cu1000-neo_defconfig
+arm                       spear13xx_defconfig
+arm                          pxa168_defconfig
+arc                     nsimosci_hs_defconfig
+powerpc                 mpc834x_itx_defconfig
+m68k                       m5249evb_defconfig
+csky                             alldefconfig
+mips                            e55_defconfig
+arm                  colibri_pxa300_defconfig
+powerpc                       maple_defconfig
+sh                 kfr2r09-romimage_defconfig
+powerpc                 mpc8313_rdb_defconfig
+sh                              ul2_defconfig
+arm                            mmp2_defconfig
+powerpc                  storcenter_defconfig
+arm                         lpc32xx_defconfig
+um                               alldefconfig
+um                                  defconfig
+arm                        multi_v7_defconfig
+powerpc                     mpc5200_defconfig
+powerpc                 mpc8560_ads_defconfig
+riscv                               defconfig
+powerpc                    sam440ep_defconfig
+h8300                     edosk2674_defconfig
+arc                 nsimosci_hs_smp_defconfig
+arm                             ezx_defconfig
+powerpc                      tqm8xx_defconfig
+arm                        clps711x_defconfig
+powerpc                        cell_defconfig
+mips                 decstation_r4k_defconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                      mgcoge_defconfig
+sh                           se7724_defconfig
+powerpc                 mpc832x_mds_defconfig
+mips                  decstation_64_defconfig
+h8300                            allyesconfig
+sh                             sh03_defconfig
+powerpc                     asp8347_defconfig
+riscv                    nommu_virt_defconfig
+powerpc                      ppc6xx_defconfig
+xtensa                  audio_kc705_defconfig
+powerpc               mpc834x_itxgp_defconfig
+m68k                          amiga_defconfig
+mips                           xway_defconfig
+m68k                         amcore_defconfig
+arm                        mini2440_defconfig
+arm                     eseries_pxa_defconfig
+sh                           se7751_defconfig
+arm                        spear6xx_defconfig
+parisc                generic-32bit_defconfig
+arm                          iop32x_defconfig
+mips                        bcm47xx_defconfig
+ia64                          tiger_defconfig
+mips                        jmr3927_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                       eiger_defconfig
+ia64                             alldefconfig
+mips                           ip28_defconfig
+sparc                       sparc64_defconfig
+mips                          ath25_defconfig
+sh                   sh7724_generic_defconfig
+arc                    vdk_hs38_smp_defconfig
+arc                              alldefconfig
+arm                           tegra_defconfig
+mips                   sb1250_swarm_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                        icon_defconfig
+arm                         s3c6400_defconfig
+powerpc                    klondike_defconfig
+arm                        magician_defconfig
+mips                           ip32_defconfig
+mips                     cu1830-neo_defconfig
+mips                     loongson1b_defconfig
+openrisc                    or1ksim_defconfig
+arm                         lpc18xx_defconfig
+arc                        vdk_hs38_defconfig
+mips                     loongson2k_defconfig
+arm                           u8500_defconfig
+powerpc                       holly_defconfig
+powerpc                   bluestone_defconfig
+sh                          polaris_defconfig
+powerpc                      ppc64e_defconfig
+arm                       netwinder_defconfig
+arm                          gemini_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                          malta_defconfig
+arm                         assabet_defconfig
+mips                            gpr_defconfig
+arc                          axs101_defconfig
+arm                         at91_dt_defconfig
+sh                        edosk7705_defconfig
+nios2                            alldefconfig
+mips                       bmips_be_defconfig
+mips                        bcm63xx_defconfig
+arm                      jornada720_defconfig
+arm                         axm55xx_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                      pasemi_defconfig
+arm                         vf610m4_defconfig
+arc                          axs103_defconfig
+s390                          debug_defconfig
+sh                        apsh4ad0a_defconfig
+arm                  randconfig-c002-20211013
+x86_64               randconfig-c001-20211013
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+arc                                 defconfig
+xtensa                           allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+i386                 randconfig-a001-20211012
+i386                 randconfig-a003-20211012
+i386                 randconfig-a004-20211012
+i386                 randconfig-a005-20211012
+i386                 randconfig-a002-20211012
+i386                 randconfig-a006-20211012
+x86_64               randconfig-a015-20211013
+x86_64               randconfig-a012-20211013
+x86_64               randconfig-a016-20211013
+x86_64               randconfig-a014-20211013
+x86_64               randconfig-a013-20211013
+x86_64               randconfig-a011-20211013
+i386                 randconfig-a016-20211013
+i386                 randconfig-a014-20211013
+i386                 randconfig-a011-20211013
+i386                 randconfig-a015-20211013
+i386                 randconfig-a012-20211013
+i386                 randconfig-a013-20211013
+arc                  randconfig-r043-20211012
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
+
+clang tested configs:
+arm                  randconfig-c002-20211013
+mips                 randconfig-c004-20211013
+i386                 randconfig-c001-20211013
+s390                 randconfig-c005-20211013
+x86_64               randconfig-c007-20211013
+powerpc              randconfig-c003-20211013
+riscv                randconfig-c006-20211013
+x86_64               randconfig-a004-20211013
+x86_64               randconfig-a006-20211013
+x86_64               randconfig-a001-20211013
+x86_64               randconfig-a005-20211013
+x86_64               randconfig-a002-20211013
+x86_64               randconfig-a003-20211013
+i386                 randconfig-a001-20211013
+i386                 randconfig-a003-20211013
+i386                 randconfig-a004-20211013
+i386                 randconfig-a005-20211013
+i386                 randconfig-a002-20211013
+i386                 randconfig-a006-20211013
+x86_64               randconfig-a015-20211012
+x86_64               randconfig-a012-20211012
+x86_64               randconfig-a016-20211012
+x86_64               randconfig-a014-20211012
+x86_64               randconfig-a013-20211012
+x86_64               randconfig-a011-20211012
+hexagon              randconfig-r041-20211013
+hexagon              randconfig-r045-20211013
+hexagon              randconfig-r041-20211012
+s390                 randconfig-r044-20211012
+riscv                randconfig-r042-20211012
+hexagon              randconfig-r045-20211012
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
