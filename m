@@ -2,78 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A7342B0FE
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 02:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ABA842B110
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 02:43:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234237AbhJMAdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 20:33:51 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:43564 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235727AbhJMAdv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 20:33:51 -0400
-Received: by mail-wr1-f44.google.com with SMTP id r7so2394755wrc.10
-        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 17:31:48 -0700 (PDT)
+        id S233128AbhJMApO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 20:45:14 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:35396 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231672AbhJMApO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 20:45:14 -0400
+Received: by mail-lf1-f48.google.com with SMTP id p16so4167913lfa.2;
+        Tue, 12 Oct 2021 17:43:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bwDQdl4mJJugF0SeCDT0lzru/oRcVPVlEEZvO8eSgPw=;
-        b=Lblk0Z7S64UHXTP8bxDBs3MaARd41qpiWehRVZD+aXXu03DbaAakEOuH5t8V2BDyzI
-         2WZ9tDHiMrjcgYm5cqIISgPPwW+UuBhEGVnTBuR9wbrXnujzmFD4Xl44/QM6f50fvxG7
-         je3SVwstXCiPNRFOLcTx/ufi4XTcC9IOCqhNpHfYqDpznhPKXJQaTtICAIww/oLkaqdk
-         6K/fwh2vCLhqG7xEeXEPvNfm9jVHR43721Gm8VW5UdEMCAXbeLSRFmFFHI22vPsEtefU
-         rCwJSEp6nCb626HOIGjUkiyulqCtG311hFbJ5WYH5JpcSiWjM+ev71zsQF3DGLaoGLz+
-         gVPA==
-X-Gm-Message-State: AOAM5308kb6Ua71nlEurHXEPsJ0ejxK0wjH8H5li5wn4vm/12ntY+Wlb
-        QjeEMb10+m7rYLuzvZsy/+g=
-X-Google-Smtp-Source: ABdhPJyzdJ8GkMZPKu5K8p1ubuLkWmxrZ1905H96sfK+TsW00n76tEzGlQ4QElYaudeshZ0v8RKdiQ==
-X-Received: by 2002:a7b:c1cb:: with SMTP id a11mr9181115wmj.39.1634085108018;
-        Tue, 12 Oct 2021 17:31:48 -0700 (PDT)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id a2sm12147516wru.82.2021.10.12.17.31.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oOwvM3EKxNEtBFMhhfn75utnR2wRei/SWwuhD1BYw9o=;
+        b=Clk/stTufjyHS59b1DNmYydkp89DwLOpNhZ2YlZa6+PcsmhRI7jopq8lVkJEDmmhwJ
+         7xa1t1rFEqGZwzjhXFwztxxRlooOK/6FUJuCHx1/gdlCCgY+TMh0lPY99dV8GubMPOO6
+         I7DvzN35O4IURb7kJwl7AzSsOxypNGFd1N1ZrLNBllxvNsZ5m8tYYmpZp3ZQTpstEcN7
+         MpACXzwx3Ea5q/omu466pZhPNDt1YRvNVs2TzBBEt5f2+nE0X0R89TBa4XlpaSlcg1yj
+         afPxtURx2lmFC9mTzFlodt/nmTTAHfSd72/GrLmmfMG46JzYfvV6lTfuRVzB6PLuQMQM
+         CF8g==
+X-Gm-Message-State: AOAM5330xuaA3+mFOq999JFxAOyyWhOmEWludJCgeXbkcVKMGtLAq9Fb
+        Xalw7wVZeI7PVvoJj+jlfQw=
+X-Google-Smtp-Source: ABdhPJzWJ5C01RYWvPPFegSq9LNKpJ7YSIi7KrEldjA2ZVgyonPU6nzwAa7GBg+K3yJKlDrpRLdFyg==
+X-Received: by 2002:a2e:bd86:: with SMTP id o6mr1258496ljq.221.1634085790886;
+        Tue, 12 Oct 2021 17:43:10 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id t24sm44473lfk.100.2021.10.12.17.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 17:31:47 -0700 (PDT)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 2/2] PCI: hotplug: Use preferred header file linux/io.h
-Date:   Wed, 13 Oct 2021 00:31:45 +0000
-Message-Id: <20211013003145.1107148-2-kw@linux.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211013003145.1107148-1-kw@linux.com>
-References: <20211013003145.1107148-1-kw@linux.com>
+        Tue, 12 Oct 2021 17:43:10 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 02:43:08 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Long Li <longli@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: hv: Remove unnecessary integer promotion from
+ dev_err()
+Message-ID: <YWYrnMwyvY45u4qk@rocinante>
+References: <20211008222732.2868493-1-kw@linux.com>
+ <20211012184749.GA1775474@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211012184749.GA1775474@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use the preferred generic header file linux/io.h that already includes
-the corresponding asm/io.h file.
+Hi Bjorn,
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/hotplug/cpqphp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Internally, printk() et al already correctly handles the standard
+> > integer promotions, so there is no need to explicitly "%h" modifier as
+> > part of a format string such as "%hx".
+> > 
+> > Thus, drop the "%h" modifier as it's completely unnecessary (N.B. this
+> > wouldn't be true for the sscanf() function family), and match preferred
+> > coding style.
+> > 
+> > Related:
+> >   commit cbacb5ab0aa0 ("docs: printk-formats: Stop encouraging use of unnecessary
+> >   commit 70eb2275ff8e ("checkpatch: add warning for unnecessary use of %h[xudi] and %hh[xudi]")
+> >   https://lore.kernel.org/lkml/CAHk-=wgoxnmsj8GEVFJSvTwdnWm8wVJthefNk2n6+4TC=20e0Q@mail.gmail.com/
+> > 
+> > No change to functionality intended.
+> 
+> Applied 1/3 and 3/3 to pci/misc for v5.16, thanks!
+> 
+> For 2/3, I think we might want to convert the VF ID to be unsigned
+> consistently.
 
-diff --git a/drivers/pci/hotplug/cpqphp.h b/drivers/pci/hotplug/cpqphp.h
-index 77e4e0142fbc..2f7b49ea96e2 100644
---- a/drivers/pci/hotplug/cpqphp.h
-+++ b/drivers/pci/hotplug/cpqphp.h
-@@ -15,7 +15,7 @@
- #define _CPQPHP_H
- 
- #include <linux/interrupt.h>
--#include <asm/io.h>		/* for read? and write? functions */
-+#include <linux/io.h>		/* for read? and write? functions */
- #include <linux/delay.h>	/* for delays */
- #include <linux/mutex.h>
- #include <linux/sched/signal.h>	/* for signal_pending() */
--- 
-2.33.0
+Will do!  I am going to send a separate patch for it.
 
+	Krzysztof
