@@ -2,85 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D94442B115
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 02:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88F7342B1E3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 03:14:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235237AbhJMAta (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 20:49:30 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:38492 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231672AbhJMAta (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 20:49:30 -0400
-Received: by mail-lf1-f43.google.com with SMTP id x27so4142202lfu.5;
-        Tue, 12 Oct 2021 17:47:27 -0700 (PDT)
+        id S235271AbhJMBQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 21:16:18 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:46814 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233371AbhJMBQR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 21:16:17 -0400
+Received: by mail-lf1-f41.google.com with SMTP id i24so4174885lfj.13
+        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 18:14:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Cww5CWiG2lAFWq3mC6EgABYlReMWnDxQ5zuCkCa+u88=;
-        b=FwZDLBBaEBvmtprzN7FTfWsj0yM4kgLHQuF/lm/ICZQ6uXKYreg4WrbQtUFDfQOUwT
-         vdDZvEvaCoi0bOCV4d6INBLNjaUs+qwIZYwn1/RHJr6sKC425Ffk+Ye0Xe/MmTu+qen1
-         PGTjpF8LPF5MOwUrCJxdIYxz0RjrhUOK2aFHzk2hA7o/0228CPbOq6tbeq83pHoKKsz4
-         xCLhb2H8AK2oVCA4ezaVtKlSYtHWqeAFrZv3Mzd5Yx4jtq7o+9Umx8kHCLKzKBWPsac1
-         q1kmyBEZq701MKPlnwzycKv4mTc+o36BdQHBjsryskjJQ50qPN7o5CZ5RLekbYH1zce+
-         UTng==
-X-Gm-Message-State: AOAM530DZc1vVYePuspMzucxH0rPAHNXRoFk2/vUoVlgHgxOkgDPKi/y
-        pcRY8UO4onrIuznjZFvx726MmFGVQkxySA==
-X-Google-Smtp-Source: ABdhPJxi6cyFOhnS0+nQ29c5JpLuTebvtE8tsdP7MbBSWH6nLdmzDhus317WyPqpnAI/bDD+wVyGGQ==
-X-Received: by 2002:a05:6512:3d29:: with SMTP id d41mr25000318lfv.481.1634086046368;
-        Tue, 12 Oct 2021 17:47:26 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id t22sm1268467ljj.61.2021.10.12.17.47.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vVhLOeILl0ueBtj/XaMQtGA78s7pXK4nt3NOyI7EX+U=;
+        b=3JHhtab0gNZvXyreAeM+9fK/1u2r3WC5NkOjs0fH/q9rxmDHPnsgetZPGTLm3k9O66
+         tUHJ794ExCqRE8dVjIxDoTfcib73bP+/4IiAtaT7T/dxAqKsWStKJ0qsjja+OOVO0RTn
+         P/aHR++CZlhahREmeNqscPtzfhgOFsMeF6NUqk8jj2o8R48lcypglr1oO6NsA8Xxxc0e
+         NP4v+jdZrvaRmhYkV6m7rR5oMYlCbvKfMUtFBuZ7VqLkPk/oOSFqtgEVhDsfZai/Q6Xw
+         Syth4MLyt7WZsB31x4qQ1qd1J09K7y7SCIY+Zj2PR5nf1TJIREot9SrpmsJQUk4JZheM
+         jPaw==
+X-Gm-Message-State: AOAM533HILQQKpBVXFzKjgejcvEoy8BY7U3YKd0d6BTw6fXDPkGI1P9c
+        TvcBOyUtycNQzl851xd7/Rg/V2CMyRc=
+X-Google-Smtp-Source: ABdhPJzO4oVHsNA0jPLehh4fvYTxY8se0Jxhrg04fnf5nYyLuQGUlCQE12emjAfd7DK6+8FiaE8E4A==
+X-Received: by 2002:a05:6512:3e02:: with SMTP id i2mr36425585lfv.163.1634087654276;
+        Tue, 12 Oct 2021 18:14:14 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id k16sm1173144lfo.219.2021.10.12.18.14.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 17:47:25 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 02:47:24 +0200
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: apple: Remove redundant initialization of
- pointer port_pdev
-Message-ID: <YWYsnGt3+LRI2q4W@rocinante>
-References: <20211012133235.260534-1-colin.king@canonical.com>
+        Tue, 12 Oct 2021 18:14:13 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: cpqphp: Format if-statement code block correctly
+Date:   Wed, 13 Oct 2021 01:14:12 +0000
+Message-Id: <20211013011412.1110829-1-kw@linux.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211012133235.260534-1-colin.king@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Colin!
+The if-statement code block as seen in the cpqhp_s
 
-> The pointer port_pdev is being initialized with a value that is never
-> read, it is being updated later on. The assignment is redundant and
-> can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pci/controller/pcie-apple.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index b4db7a065553..19fd2d38aaab 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -634,7 +634,7 @@ static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
->  {
->  	struct pci_config_window *cfg = pdev->sysdata;
->  	struct apple_pcie *pcie = cfg->priv;
-> -	struct pci_dev *port_pdev = pdev;
-> +	struct pci_dev *port_pdev;
+The code block related to the if-statement in cpqhp_set_irq() is
+somewhat awkwardly formatted making the code hard to read.
 
-Thank you!
+Thus, update the code to match preferred code formatting style.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+No change to functionality intended.
 
-	Krzysztof
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/hotplug/cpqphp_pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/hotplug/cpqphp_pci.c b/drivers/pci/hotplug/cpqphp_pci.c
+index 1b2b3f3b648b..9038039ad6db 100644
+--- a/drivers/pci/hotplug/cpqphp_pci.c
++++ b/drivers/pci/hotplug/cpqphp_pci.c
+@@ -189,8 +189,10 @@ int cpqhp_set_irq(u8 bus_num, u8 dev_num, u8 int_pin, u8 irq_num)
+ 		/* This should only be for x86 as it sets the Edge Level
+ 		 * Control Register
+ 		 */
+-		outb((u8) (temp_word & 0xFF), 0x4d0); outb((u8) ((temp_word &
+-		0xFF00) >> 8), 0x4d1); rc = 0; }
++		outb((u8)(temp_word & 0xFF), 0x4d0);
++		outb((u8)((temp_word & 0xFF00) >> 8), 0x4d1);
++		rc = 0;
++	}
+ 
+ 	return rc;
+ }
+-- 
+2.33.0
+
