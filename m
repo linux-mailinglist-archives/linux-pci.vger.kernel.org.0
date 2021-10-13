@@ -2,299 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 718E642BB7C
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 11:27:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 947FF42BBEB
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 11:48:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236407AbhJMJ32 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 05:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236145AbhJMJ3Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 05:29:24 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0A3C061570;
-        Wed, 13 Oct 2021 02:27:20 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id a25so7445359edx.8;
-        Wed, 13 Oct 2021 02:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+/MfPZS60YJ0eap0AJdMs6gge+XO+BZUvon0pBTzNGA=;
-        b=evc4kDT+QZNhO898nkNWsOvYd5uoHISP2WxjXfUrXPc/LAvzY9eu3qYsrzHLMiVRP3
-         7ek8KrGpW83pP3+71f6NoTqJUNew57wgLSdZESolUuO3w3SjswV4oNuZrRCsx5d2Sz6Z
-         U6Dil/exw/Z01VwoZLKDTI9+cXYT6HoMhvbPnOyg97B0PkHUENz49VLf5qJ3twBM3fy6
-         bHXGjIYLA3Q6jVCBIp04R0UFvkX24frr6ijNGP3vuZmaos7c/PDqm98vd8l9QZ2VLZ00
-         0EBJxe8ZaQK4AqNo/Rk1lDSww7yrEMjrcnUEwQvCtD2OBAhLhOYcZrSIMXdkiq7GrIG/
-         lN/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+/MfPZS60YJ0eap0AJdMs6gge+XO+BZUvon0pBTzNGA=;
-        b=sB4NJpdNsDPkUy6mxgmKe4HtKEN2nu+cK//OpsRyWcLfqCQ31MaLagEbI4kFORFqWT
-         DXbHANfm+km5qyLipWbKv5591O8apIQedw6yhqLc6B1Lu6kV3JmypGG4iKk2WO5NLkRa
-         zJbI6VauabL7kp7wxsO8rh1LG//nT89gz2Z0A/Ir7ZciqzBTL295g8CrovWFVz0JNd4K
-         KMhMg5Ydf7Xmdxs2sxIPMdWWfBLbKkwgNmHyJEe1KkptIjkS7UtgLwkWzDKnP6F1oiOm
-         4z+NWC8E31Hcy0XwUwG6HCd8EhncS4c00qRbwmTVYNuK5UhVy/FLe+YQo9dJvL2k0Srj
-         swAg==
-X-Gm-Message-State: AOAM531TZwmZkz1ZBJo16E9AqcvamrBTbCU10ocMMZ9lBNlzUFX1/LQp
-        +Azpq2TJkpSzwoXVZ2AYXYmrGbmWlW/LJhHRc6k=
-X-Google-Smtp-Source: ABdhPJzL0SqFZyZBLTfBNcE8CpMsywyY4boERpEcXyUfc9yUq7Z2mLOKk/hnon0PQ/WXXVk02NgEbEHqrWvW2H64g2s=
-X-Received: by 2002:a17:907:7601:: with SMTP id jx1mr40092015ejc.69.1634117238956;
- Wed, 13 Oct 2021 02:27:18 -0700 (PDT)
+        id S237473AbhJMJu3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 05:50:29 -0400
+Received: from mail-mw2nam12on2051.outbound.protection.outlook.com ([40.107.244.51]:41313
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235811AbhJMJu2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 05:50:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=euRy5gcUqlChYDYj5zioJy1bmTIW824dM/N/6/rsPU7+xbzpvUgQtjXBtiPDRwo4+meU9DjmyL23mhXkwJPPkyJo53YxPM6s8Frw7W3mhZgpaktpAJJ6zgC6Socj/MThoYr4JpI7zZYIkYy7x5NEtb7ir8h2O/Md884MMQyA28T+qJMa7iYO5PyWdbtRb2CmJ7cLiid0XTsZOsrzMcWN8LtiNMk9/aTpxTUttrxF9XntE/t8pPGu2egJX5oU6XQQz7GaJnRUKOj4mmchH+GwPdIuJFeq3JV8SRRZ3iqmgPRNJGYX3Qhb5H02Jcup3Sg2+RjJmyBHJDXn8TxPZnAsfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X1I162L7yvpQdq4kUMGIeyV2F1Dm3zZ3PJa7LGhR7ns=;
+ b=diTMm+RL9SjwyC+Ceo3LxQw8B+iOId4FvG2biGY5Gk0fp42zXYC8OHtZ+x/ulSJlXO1UxwDV1bYIy4Rbz2wM/fgBW7RwHFY06T0NOsRP2Pw6gR6dB2ReHuh961zyXtIbjOV27Q90ftfSDVRICe9bYQNM1a0Ydf0JrGPoJflper6dI8C6YyDhm0ZXp8pmQSoaeGYKUlJLSNgOTgWjYgmE4xRP7WPuZpUEmv/za64TzWI8Q5M3jSv4NjZ7j6msQxmvIfdMx1GuAKJU4dsJHZLmvK47iuyAfk3/4XX5h60GqwvY6OXab9+wreA7HNWZAtdI2yVf3e0rnof0g7Le6LM5JQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.36) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X1I162L7yvpQdq4kUMGIeyV2F1Dm3zZ3PJa7LGhR7ns=;
+ b=VspMuDNyml0dludg5LAY/kyZed/RNUDr5sL3RxKT1vleYdMrOQhjHUVVxH5FqlWi/Xr3TqSAjS4oA8J6zTyrcI5o+6NpJvrhFYu1gp5SllV2kK8pXGI0/iwt1L0q8VGB2kt5ga1CypHSl7FaDFHKSiUBJmXATl2+VTNAdCf7aMgmoWgzkWSCDeT1HrNOshilBfSHqM3gliGtIaXJsHojgkzkit05LO3w5TtlUCUVJrJRJRqvEm+HSEj37WzsPFhgzAZLsGeF0Fa/kccLk5cEJT3InUzh3a/w9pn2cuOVZUYL8e7Bz/oBTIv0rwBJWKKXl5YCSMZyBTO54o7Vi1PSQQ==
+Received: from MW4P223CA0007.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::12)
+ by BN6PR1201MB0081.namprd12.prod.outlook.com (2603:10b6:405:4f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.15; Wed, 13 Oct
+ 2021 09:48:24 +0000
+Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:80:cafe::83) by MW4P223CA0007.outlook.office365.com
+ (2603:10b6:303:80::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.14 via Frontend
+ Transport; Wed, 13 Oct 2021 09:48:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4608.15 via Frontend Transport; Wed, 13 Oct 2021 09:48:23 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 13 Oct
+ 2021 09:48:23 +0000
+Received: from vdi.nvidia.com (172.20.187.6) by mail.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Wed, 13 Oct 2021 09:48:19 +0000
+From:   Yishai Hadas <yishaih@nvidia.com>
+To:     <alex.williamson@redhat.com>, <bhelgaas@google.com>,
+        <jgg@nvidia.com>, <saeedm@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>,
+        <yishaih@nvidia.com>, <maorg@nvidia.com>
+Subject: [PATCH V1 mlx5-next 00/13] Add mlx5 live migration driver
+Date:   Wed, 13 Oct 2021 12:46:54 +0300
+Message-ID: <20211013094707.163054-1-yishaih@nvidia.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20211004125935.2300113-1-u.kleine-koenig@pengutronix.de> <20211012233212.GA1806189@bhelgaas>
-In-Reply-To: <20211012233212.GA1806189@bhelgaas>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Oct 2021 12:26:42 +0300
-Message-ID: <CAHp75Vd0uYEdfB0XaQuUV34V91qJdHR5ARku1hX_TCJLJHEjxQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
-        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Buesch <m@bues.ch>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, netdev <netdev@vger.kernel.org>,
-        oss-drivers@corigine.com, qat-linux@intel.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 08a2a1b4-fb13-40c0-89c7-08d98e2e9920
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0081:
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB0081FFAAD26F48E3327C658AC3B79@BN6PR1201MB0081.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ddQTxPgR4ZQWay2dFagWoSo4YzxPmlamTa1w8ox7Suk2wmYopwKzqNTfzJFjoyXo/FeBMjlE8ZclvK61W2sCETyv330zSSGlAZggeOfBDHuWClWlbzkRmoWBp6L/Tl/9XB8D0/BiOFjOJcS/O6og+qs/TUT77CptfesBr/MPrd2q3VF2LdhFGOyMrcenaVil3E3kkPHFAlBhd1y1swd6oMtaP4X2zPhXyvL746VnVqNpuhzqYk+M2ZEO8TPZM8ftcd3Wt7Bne24deXlpbcv0tLQyixMp6F3hdHirw0ZblLo95OWEO/Fk10wg/NPANx5jbhfthb4p7f4byUzUjxM3LfwupMZM8yec6t89frOJ/xPWGGzAZSzSg16rNM6a80Ji6pRMa9YFEYqMGRPMhnJMhyxPVNvohMrN6u5Azn7+X/3+geLO4vptNHhKIESTnG1Sb90UWrFZ6jz9OYml+uEtscIU2J7buCLSThN9dKHGca0TR6MXwc546lexuYL2H5FFDziITYUerzttCu1b2QNMUUZM02JmfTMqT8aG7HptmWPQmNz2yq+7O1IzSmjVwIdGBUdaY4L9iGllYxQ1G+yWfUH2JjU8c2+ErL0QNHiH5Bw5xH9YYGGROW4MgqnJ5jvoak6PT8hEq4HYGBCgbvdXDAGodQZPLa6pmtfacttDEP+u6JxifR5iaQCGc2Le9VpevUj8AbG46uGVd/lqW9LuIw==
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(36906005)(36860700001)(36756003)(2616005)(508600001)(107886003)(70586007)(316002)(70206006)(2906002)(47076005)(86362001)(6666004)(186003)(26005)(8936002)(356005)(8676002)(6636002)(1076003)(4326008)(7636003)(7696005)(82310400003)(110136005)(83380400001)(5660300002)(426003)(54906003)(336012);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2021 09:48:23.6879
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08a2a1b4-fb13-40c0-89c7-08d98e2e9920
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0081
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 2:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+This series adds mlx5 live migration driver for VFs that are migrated
+capable.
 
-> I split some of the bigger patches apart so they only touched one
-> driver or subsystem at a time.  I also updated to_pci_driver() so it
-> returns NULL when given NULL, which makes some of the validations
-> quite a bit simpler, especially in the PM code in pci-driver.c.
+It uses vfio_pci_core to register to the VFIO subsystem and then
+implements the mlx5 specific logic in the migration area.
 
-It's a bit unusual. Other to_*_dev() are not NULL-aware IIRC.
+The migration implementation follows the definition from uapi/vfio.h and
+uses the mlx5 VF->PF command channel to achieve it.
 
-Below are some comments as well.
+The series adds an option in the vfio core layer to let a driver being
+registered to get a 'device RESET done' notification. This is needed to
+let the driver maintains its state accordingly.
 
-...
+As part of the migration process the VF doesn't ride on mlx5_core, the
+device is driving *two* different PCI devices, the PF owned by mlx5_core
+and the VF owned by the mlx5 vfio driver.
 
->  static bool match_id(struct pci_dev *pdev, unsigned short vendor, unsign=
-ed short device)
->  {
-> +       struct pci_driver *drv =3D to_pci_driver(pdev->dev.driver);
->         const struct pci_device_id *id;
->
->         if (pdev->vendor =3D=3D vendor && pdev->device =3D=3D device)
->                 return true;
+The mlx5_core of the PF is accessed only during the narrow window of the
+VF's ioctl that requires its services.
 
-> +       for (id =3D drv ? drv->id_table : NULL; id && id->vendor; id++)
-> +               if (id->vendor =3D=3D vendor && id->device =3D=3D device)
+To let that work properly a new API was added in the PCI layer (i.e.
+pci_iov_get_pf_drvdata) that lets the VF access safely to the PF
+drvdata. It was used in this series as part of mlx5_core and mlx5_vdpa
+when a VF needed that functionality.
 
-> +                       break;
+In addition, mlx5_core was aligned with other drivers to disable SRIOV
+before PF has gone as part of the remove_one() call back.
 
-return true;
+This enables proper usage of the above new PCI API and prevents some
+warning message that exists today when it's not done.
 
->         return id && id->vendor;
+The series also exposes from the PCI sub system an API named
+pci_iov_vf_id() to get the index of the VF. The PCI core uses this index
+internally, often called the vf_id, during the setup of the VF, eg
+pci_iov_add_virtfn().
 
-return false;
+The returned VF index is needed by the mlx5 vfio driver for its internal
+operations to configure/control its VFs as part of the migration
+process.
 
->  }
+With the above functionality in place the driver implements the
+suspend/resume flows to work over QEMU.
 
-...
+Changes from V0:
+PCI/IOV:
+- Add an API (i.e. pci_iov_get_pf_drvdata()) that allows SRVIO VF
+  drivers to reach the drvdata of a PF.
+net/mlx5:
+- Add an extra patch to disable SRIOV before PF removal.
+- Adapt to use the above PCI/IOV API as part of mlx5_vf_get_core_dev().
+- Reuse the exported PCI/IOV virtfn index function call (i.e.
+  pci_iov_vf_id().
+vfio:
+- Add support in the pci_core to let a driver be notified when
+ ‘reset_done’ to let it sets its internal state accordingly.
+- Add some helper stuff for ‘invalid’ state handling.
+vfio/mlx5:
+- Move to use the ‘command mode’ instead of the ‘state machine’
+  scheme as was discussed in the mailing list.
+-Handle the RESET scenario when called by vfio_pci_core to sets
+ its internal state accordingly.
+- Set initial state as RUNNING.
+- Put the driver files as sub-folder under drivers/vfio/pci named mlx5
+  and update the MAINTAINER file as was asked.
+vdpa/mlx5:
+Add a new patch to use mlx5_vf_get_core_dev() to get the PF device.
 
-> +                       afu_result =3D err_handler->error_detected(afu_de=
-v,
-> +                                                                state);
+---------------------------------------------------------------
+Alex,
 
-One line?
+This series touches our ethernet and RDMA drivers, so we will need to
+route the patches through separate shared branch (mlx5-next) in order to
+eliminate the chances of merge conflicts between different subsystems.
 
-...
+Thanks,
+Yishai
 
->         device_lock(&vf_dev->dev);
-> -       if (vf_dev->dev.driver) {
-> +       if (to_pci_driver(vf_dev->dev.driver)) {
+Jason Gunthorpe (2):
+  PCI/IOV: Provide internal VF index
+  PCI/IOV: Allow SRIOV VF drivers to reach the drvdata of a PF
 
-Hmm...
+Leon Romanovsky (1):
+  net/mlx5: Reuse exported virtfn index function call
 
-...
+Yishai Hadas (10):
+  net/mlx5: Disable SRIOV before PF removal
+  net/mlx5: Expose APIs to get/put the mlx5 core device
+  vdpa/mlx5: Use mlx5_vf_get_core_dev() to get PF device
+  vfio: Add 'invalid' state definitions
+  vfio/pci_core: Make the region->release() function optional
+  net/mlx5: Introduce migration bits and structures
+  vfio/mlx5: Expose migration commands over mlx5 device
+  vfio/mlx5: Implement vfio_pci driver for mlx5 devices
+  vfio/pci: Add infrastructure to let vfio_pci_core drivers trap device
+    RESET
+  vfio/mlx5: Trap device RESET and update state accordingly
 
-> +               if (!pci_dev->state_saved && pci_dev->current_state !=3D =
-PCI_D0
+ MAINTAINERS                                   |   6 +
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  44 ++
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   1 +
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   |  17 +-
+ drivers/pci/iov.c                             |  43 ++
+ drivers/vdpa/mlx5/net/mlx5_vnet.c             |  27 +-
+ drivers/vfio/pci/Kconfig                      |   3 +
+ drivers/vfio/pci/Makefile                     |   2 +
+ drivers/vfio/pci/mlx5/Kconfig                 |  11 +
+ drivers/vfio/pci/mlx5/Makefile                |   4 +
+ drivers/vfio/pci/mlx5/cmd.c                   | 353 +++++++++
+ drivers/vfio/pci/mlx5/cmd.h                   |  43 ++
+ drivers/vfio/pci/mlx5/main.c                  | 707 ++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_config.c            |   8 +-
+ drivers/vfio/pci/vfio_pci_core.c              |   5 +-
+ include/linux/mlx5/driver.h                   |   3 +
+ include/linux/mlx5/mlx5_ifc.h                 | 145 +++-
+ include/linux/pci.h                           |  15 +-
+ include/linux/vfio.h                          |   5 +
+ include/linux/vfio_pci_core.h                 |  10 +
+ include/uapi/linux/vfio.h                     |   4 +-
+ 21 files changed, 1428 insertions(+), 28 deletions(-)
+ create mode 100644 drivers/vfio/pci/mlx5/Kconfig
+ create mode 100644 drivers/vfio/pci/mlx5/Makefile
+ create mode 100644 drivers/vfio/pci/mlx5/cmd.c
+ create mode 100644 drivers/vfio/pci/mlx5/cmd.h
+ create mode 100644 drivers/vfio/pci/mlx5/main.c
 
-> +                   && pci_dev->current_state !=3D PCI_UNKNOWN) {
+-- 
+2.18.1
 
-Can we keep && on the previous line?
-
-> +                       pci_WARN_ONCE(pci_dev, pci_dev->current_state !=
-=3D prev,
-> +                                     "PCI PM: Device state not saved by =
-%pS\n",
-> +                                     drv->suspend);
->                 }
-
-...
-
-> +       return drv && drv->resume ?
-> +                       drv->resume(pci_dev) : pci_pm_reenable_device(pci=
-_dev);
-
-One line?
-
-...
-
-> +       struct pci_driver *drv =3D to_pci_driver(dev->dev.driver);
->         const struct pci_error_handlers *err_handler =3D
-> -                       dev->dev.driver ? to_pci_driver(dev->dev.driver)-=
->err_handler : NULL;
-> +                       drv ? drv->err_handler : NULL;
-
-Isn't dev->driver =3D=3D to_pci_driver(dev->dev.driver)?
-
-...
-
-> +       struct pci_driver *drv =3D to_pci_driver(dev->dev.driver);
->         const struct pci_error_handlers *err_handler =3D
-> -                       dev->dev.driver ? to_pci_driver(dev->dev.driver)-=
->err_handler : NULL;
-> +                       drv ? drv->err_handler : NULL;
-
-Ditto.
-
-...
-
->         device_lock(&dev->dev);
-> +       pdrv =3D to_pci_driver(dev->dev.driver);
->         if (!pci_dev_set_io_state(dev, state) ||
-> -               !dev->dev.driver ||
-> -               !(pdrv =3D to_pci_driver(dev->dev.driver))->err_handler |=
-|
-
-> +               !pdrv ||
-> +               !pdrv->err_handler ||
-
-One line now?
-
->                 !pdrv->err_handler->error_detected) {
-
-Or this and the previous line?
-
-...
-
-> +       pdrv =3D to_pci_driver(dev->dev.driver);
-> +       if (!pdrv ||
-> +               !pdrv->err_handler ||
->                 !pdrv->err_handler->mmio_enabled)
->                 goto out;
-
-Ditto.
-
-...
-
-> +       pdrv =3D to_pci_driver(dev->dev.driver);
-> +       if (!pdrv ||
-> +               !pdrv->err_handler ||
->                 !pdrv->err_handler->slot_reset)
->                 goto out;
-
-Ditto.
-
-...
-
->         if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
-> -               !dev->dev.driver ||
-> -               !(pdrv =3D to_pci_driver(dev->dev.driver))->err_handler |=
-|
-> +               !pdrv ||
-> +               !pdrv->err_handler ||
->                 !pdrv->err_handler->resume)
->                 goto out;
-
-Ditto.
-
-> -       result =3D PCI_ERS_RESULT_NONE;
->
->         pcidev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
->         if (!pcidev || !pcidev->dev.driver) {
->                 dev_err(&pdev->xdev->dev, "device or AER driver is NULL\n=
-");
->                 pci_dev_put(pcidev);
-> -               return result;
-> +               return PCI_ERS_RESULT_NONE;
->         }
->         pdrv =3D to_pci_driver(pcidev->dev.driver);
-
-What about splitting the conditional to two with clear error message
-in each and use pci_err() in the second one?
-
-...
-
->                 default:
->                         dev_err(&pdev->xdev->dev,
-> -                               "bad request in aer recovery "
-> -                               "operation!\n");
-> +                               "bad request in AER recovery operation!\n=
-");
-
-Stray change? Or is it in a separate patch in your tree?
-
---=20
-With Best Regards,
-Andy Shevchenko
