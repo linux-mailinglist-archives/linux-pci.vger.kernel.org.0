@@ -2,112 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C113C42C949
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 21:02:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6A1142C9AF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 21:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238849AbhJMTEg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 15:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230118AbhJMTEc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 15:04:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6284060E96;
-        Wed, 13 Oct 2021 19:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634151749;
-        bh=nrpmV2aL7Yyo2rvXkWXL6W7OTMDFqb0qTu+6E6wA2jw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SOy4uik6jEZWbxmPABrbRogV42T8n5r6jEXXfPGNkk6SIgKDyIO6cbZHoarlAkULH
-         kjFBy8PONij7Kl/a60F5hUAIVGNFG9k12KIb2imfqAi2rJcNiU8z+4/0Pb3gpVh9NV
-         ZE3BZ4ySVphSPjAHTDam/ZsH5e6jxU/R6OI0hHiCymtbcuanXohqSbDNMLVzpcPMG4
-         +ZwTDIG4PZnBHVWK/y0yyxATl1P2Qxh2c1shr3aCXxIkGCWdlLx0vEnrb+FK0vCgIV
-         liF96uxIaP05sMPqKAeIkyXUSC0pKpdUh2TTdPkiCAvJs5qPoCYm3v145cEdkU6kNk
-         2BB+INXZ2Oo4Q==
-Date:   Wed, 13 Oct 2021 14:02:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        qizhong.cheng@mediatek.com, Ryan-JH.Yu@mediatek.com,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Disable DVFSRC voltage request
-Message-ID: <20211013190226.GA1910352@bhelgaas>
+        id S231308AbhJMTOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 15:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231246AbhJMTOd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 15:14:33 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BA2C061570
+        for <linux-pci@vger.kernel.org>; Wed, 13 Oct 2021 12:12:29 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id e12so11746811wra.4
+        for <linux-pci@vger.kernel.org>; Wed, 13 Oct 2021 12:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=RTEuaNVerH44msHPFHkC9nYaFuCv/TdxLnI+ogS+hlY=;
+        b=mrZ7ojR0K4y031FBsSTlH8rpbDOTLeUf+3MX27CmkfIrOpbUFzDnJg55znk6UTD/UR
+         QyMXjEcHHESpi+PcXwD8OjBI+7O5DgLF/NKVO0tlrZf0LK7eovsrT9RdILfNKhYFvU2+
+         0udOa8fm+Ymzt3HD5cWws1zcZhiwNGdMeLj5fYUkMjDTEIudflrrkBNMadZpmNyi1uFX
+         bNFHwiV5j4MdyOh9w4DjjXIC48b853vrXGHneAJ1MfptEatS2j5gN5temlOcZVWNEc/h
+         LGSL/5rhM+ImkBeFalE3YsMpR2m4e0rZ+nrRINknX8cxInxOnoIeSma9v22qgfkBOepD
+         ftNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=RTEuaNVerH44msHPFHkC9nYaFuCv/TdxLnI+ogS+hlY=;
+        b=Sb+7uK4T0nNBIF7jj09uYzKpI7NvrYwYOarNqfFA1sDsSBmIF5FAH32bOoPArIT6AB
+         zIcEHkT4Ja5sS6+TLflWAxvW8T03JReFXN9LcUeXo6Boqf0onZMXdTmfy7/QVAhRI7yA
+         vOeC0cc9LDIz7P19VwcqonlT3PCSqtRagOntpBGOrWU1UdvIEW2HNTqeXcnVMo9DsQ0E
+         BK2nsOc9IwEfWWczehen7s7GTg1O/OJ8RoOM+k6nUkOE7vpCausLpBCfnhtr3yugjzX1
+         RhZvKoHLRyBySqnAlfHY7T76iBE2tiShBDw6GQdz/SVubFARDldh4p8lEE4qmNuJVtVu
+         tePQ==
+X-Gm-Message-State: AOAM532OQGa54k0UpUgU3i7ysAyo33RuCNEuX3XjehKERw2hIdbfOxbi
+        M9FR4HMq1Gw9ycAdxlMUt6U=
+X-Google-Smtp-Source: ABdhPJwI1rJ+EZv9TlRZYGR2VuELS8a5gvci6dUoLclG1ZvQ56vjBqG5yMsAMPtvQiuVAeTaIbG5Ow==
+X-Received: by 2002:a05:600c:4f96:: with SMTP id n22mr1094744wmq.168.1634152347925;
+        Wed, 13 Oct 2021 12:12:27 -0700 (PDT)
+Received: from ?IPV6:2003:ea:8f22:fa00:49bd:5329:15d2:9218? (p200300ea8f22fa0049bd532915d29218.dip0.t-ipconnect.de. [2003:ea:8f22:fa00:49bd:5329:15d2:9218])
+        by smtp.googlemail.com with ESMTPSA id l2sm6559431wmi.1.2021.10.13.12.12.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Oct 2021 12:12:27 -0700 (PDT)
+Message-ID: <ff35d592-af37-2975-0b8f-9a8e2616d38a@gmail.com>
+Date:   Wed, 13 Oct 2021 21:12:14 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211013183515.GA1907868@bhelgaas>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH] PCI/VPD: Fix stack overflow caused by pci_read_vpd_any()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Qian Cai <quic_qiancai@quicinc.com>
+References: <20211013185353.GA1909717@bhelgaas>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <20211013185353.GA1909717@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 01:35:17PM -0500, Bjorn Helgaas wrote:
-> On Wed, Oct 13, 2021 at 03:53:28PM +0800, Jianjun Wang wrote:
-> > When the DVFSRC feature is not implemented, the MAC layer will
-> > assert a voltage request signal when exit from the L1ss state,
-> > but cannot receive the voltage ready signal, which will cause
-> > the link to fail to exit the L1ss state correctly.
-> > 
-> > Disable DVFSRC voltage request by default, we need to find
-> > a common way to enable it in the future.
+On 13.10.2021 20:53, Bjorn Helgaas wrote:
+> On Wed, Oct 13, 2021 at 08:19:59PM +0200, Heiner Kallweit wrote:
+>> Recent bug fix 00e1a5d21b4f ("PCI/VPD: Defer VPD sizing until first
+>> access") interferes with the original change, resulting in a stack
+>> overflow. The following fix has been successfully tested by Qian
+>> and myself.
 > 
-> Rewrap commit log to fill 75 columns.
+> What does "the original change" refer to?  80484b7f8db1?  I guess the
+> stack overflow is an unintended recursion?  Is there a URL to Qian's
+> bug report with more details that we can include here?
 > 
-> Does "L1ss" above refer to L1.1 and L1.2?  If so, please say that
-> explicitly or say something like "L1 PM Substates" (the term used in
-> the PCIe spec) so it's clear.
-> 
-> This seems on the boundary of PCIe-specified things and Mediatek
-> implementation details, so I'm not sure what "DVFSRC," "MAC," and
-> "voltage request signal" mean.  Since I don't recognize those terms,
-> I'm guessing they are Mediatek-specific things.
-> 
-> But if they are things specified by the PCIe spec, please use the
-> exact names used in the spec.
-> 
-> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-> > Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
 
-Krzysztof also pointed out that if this is a bug fix, we may want a
-stable tag here.  And, ideally, a Fixes: tag with the specific commit
-that introduced the bug.
+1. yes
+2. yes
+3. https://lore.kernel.org/netdev/e89087c5-c495-c5ca-feb1-54cf3a8775c5@quicinc.com/
 
-> > ---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > index f3aeb8d4eaca..79fb12fca6a9 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -79,6 +79,9 @@
-> >  #define PCIE_ICMD_PM_REG		0x198
-> >  #define PCIE_TURN_OFF_LINK		BIT(4)
-> >  
-> > +#define PCIE_MISC_CTRL_REG		0x348
-> > +#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
-> > +
-> >  #define PCIE_TRANS_TABLE_BASE_REG	0x800
-> >  #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
-> >  #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
-> > @@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
-> >  	val &= ~PCIE_INTX_ENABLE;
-> >  	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
-> >  
-> > +	/* Disable DVFSRC voltage request */
-> > +	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
-> > +	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
-> > +	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
-> > +
-> >  	/* Assert all reset signals */
-> >  	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
-> >  	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
-> > -- 
-> > 2.25.1
-> > 
+>> Fixes: 80484b7f8db1 ("PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()")
+>> Reported-by: Qian Cai <quic_qiancai@quicinc.com>
+>> Tested-by: Qian Cai <quic_qiancai@quicinc.com>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  drivers/pci/vpd.c | 18 +++++++++++-------
+>>  1 file changed, 11 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+>> index 5108bbd20..a4fc4d069 100644
+>> --- a/drivers/pci/vpd.c
+>> +++ b/drivers/pci/vpd.c
+>> @@ -96,14 +96,14 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+>>  	return off ?: PCI_VPD_SZ_INVALID;
+>>  }
+>>  
+>> -static bool pci_vpd_available(struct pci_dev *dev)
+>> +static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
+>>  {
+>>  	struct pci_vpd *vpd = &dev->vpd;
+>>  
+>>  	if (!vpd->cap)
+>>  		return false;
+>>  
+>> -	if (vpd->len == 0) {
+>> +	if (vpd->len == 0 && check_size) {
+>>  		vpd->len = pci_vpd_size(dev);
+>>  		if (vpd->len == PCI_VPD_SZ_INVALID) {
+>>  			vpd->cap = 0;
+>> @@ -156,17 +156,19 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+>>  			    void *arg, bool check_size)
+>>  {
+>>  	struct pci_vpd *vpd = &dev->vpd;
+>> -	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
+>> +	unsigned int max_len;
+>>  	int ret = 0;
+>>  	loff_t end = pos + count;
+>>  	u8 *buf = arg;
+>>  
+>> -	if (!pci_vpd_available(dev))
+>> +	if (!pci_vpd_available(dev, check_size))
+>>  		return -ENODEV;
+>>  
+>>  	if (pos < 0)
+>>  		return -EINVAL;
+>>  
+>> +	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
+>> +
+>>  	if (pos >= max_len)
+>>  		return 0;
+>>  
+>> @@ -218,17 +220,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+>>  			     const void *arg, bool check_size)
+>>  {
+>>  	struct pci_vpd *vpd = &dev->vpd;
+>> -	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
+>> +	unsigned int max_len;
+>>  	const u8 *buf = arg;
+>>  	loff_t end = pos + count;
+>>  	int ret = 0;
+>>  
+>> -	if (!pci_vpd_available(dev))
+>> +	if (!pci_vpd_available(dev, check_size))
+>>  		return -ENODEV;
+>>  
+>>  	if (pos < 0 || (pos & 3) || (count & 3))
+>>  		return -EINVAL;
+>>  
+>> +	max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
+>> +
+>>  	if (end > max_len)
+>>  		return -EINVAL;
+>>  
+>> @@ -312,7 +316,7 @@ void *pci_vpd_alloc(struct pci_dev *dev, unsigned int *size)
+>>  	void *buf;
+>>  	int cnt;
+>>  
+>> -	if (!pci_vpd_available(dev))
+>> +	if (!pci_vpd_available(dev, true))
+>>  		return ERR_PTR(-ENODEV);
+>>  
+>>  	len = dev->vpd.len;
+>> -- 
+>> 2.33.0
+>>
+
