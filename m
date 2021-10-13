@@ -2,92 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1430842C2DF
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 16:22:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24CF142C2E2
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 16:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235564AbhJMOYa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 10:24:30 -0400
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:53204
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231664AbhJMOYa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 10:24:30 -0400
-Received: from [10.172.193.212] (1.general.cking.uk.vpn [10.172.193.212])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 72F1740600;
-        Wed, 13 Oct 2021 14:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1634134944;
-        bh=F2Aeq4CGeeeQ7RzlmcFZtrjZ5QnGLtWz/nVBx/bUwwc=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=RB3tvbelMWDTEOZgX7CRrPNrtMkBxwV7Kq7SPz4QULIliM46O/VczxpIeReue0K6I
-         CrYjoxKYZpAUQYrnx7xfE1fu2pLNOqF8c/80zQPsfHFOZQhETQe2lNqn3OC48IYSQn
-         pCZod9pbn38K69sLe/mg5WUd5zwVLjIOo2hjAIT5hc+mNyLRq2igoNVUSpBgFbQ5k4
-         dNmUL7EvKQ7DhRDqa1KQZtceQ6uIS5oXYzPdmiQa5afeAZuiSUx3OMWVez8HMlepsP
-         PMvGPkQ3pDvt630MpW/nqgO3F9vPgut0P1ZAV9f/imyEKqGnAbmBLW8XvgpYzEoYmZ
-         9wyz/U6UBQVjQ==
-Message-ID: <7fb08233-efc9-b0bd-b234-084e52878036@canonical.com>
-Date:   Wed, 13 Oct 2021 15:22:22 +0100
+        id S236694AbhJMOYt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 10:24:49 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:14526 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235899AbhJMOYl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 10:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1634134958; x=1665670958;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QLxl0HoobPToMMkExPECA79JKwgJz+rF51IZKeXVMAA=;
+  b=UtRLKzkk643Ek+LsTu/gYJDoE0EdmT7jNm6wjqVDqIJl+bPB5unf7Yow
+   3X5EnpqwKQW950ZNm46DPx95VJrSlgGKCK/FbeezWzdAa+fnV124WaZOo
+   Yyt9PCow09VyN/I5LHWBlrPfgpTFq3VltkQq1jrGYR0uG4lNAaaqP+EZH
+   M=;
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 13 Oct 2021 07:22:38 -0700
+X-QCInternal: smtphost
+Received: from nalasex01a.na.qualcomm.com ([10.47.209.196])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 07:22:37 -0700
+Received: from [10.111.161.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.7; Wed, 13 Oct 2021
+ 07:22:36 -0700
+Message-ID: <64b87f6b-5db9-721f-1bb8-6ae29742bf96@quicinc.com>
+Date:   Wed, 13 Oct 2021 10:22:35 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH][next] PCI: apple: Remove redundant initialization of
- pointer port_pdev
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Subject: Re: [PATCH 1/5] PCI/VPD: Add pci_read/write_vpd_any()
 Content-Language: en-US
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211012133235.260534-1-colin.king@canonical.com>
- <20211013134114.GC11036@lpieralisi>
-From:   Colin Ian King <colin.king@canonical.com>
-In-Reply-To: <20211013134114.GC11036@lpieralisi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Raju Rangoju <rajur@chelsio.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
+ <93ecce28-a158-f02a-d134-8afcaced8efe@gmail.com>
+ <e89087c5-c495-c5ca-feb1-54cf3a8775c5@quicinc.com>
+ <ca805454-6ec5-303b-d39f-d505cad6b338@gmail.com>
+From:   Qian Cai <quic_qiancai@quicinc.com>
+In-Reply-To: <ca805454-6ec5-303b-d39f-d505cad6b338@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13/10/2021 14:41, Lorenzo Pieralisi wrote:
-> On Tue, Oct 12, 2021 at 02:32:35PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The pointer port_pdev is being initialized with a value that is never
->> read, it is being updated later on. The assignment is redundant and
->> can be removed.
->>
->> Addresses-Coverity: ("Unused value")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>   drivers/pci/controller/pcie-apple.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Squashed into the commit it is fixing.
-> 
 
-Thanks. Much appreciated.
 
-> Thanks !
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
->> index b4db7a065553..19fd2d38aaab 100644
->> --- a/drivers/pci/controller/pcie-apple.c
->> +++ b/drivers/pci/controller/pcie-apple.c
->> @@ -634,7 +634,7 @@ static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
->>   {
->>   	struct pci_config_window *cfg = pdev->sysdata;
->>   	struct apple_pcie *pcie = cfg->priv;
->> -	struct pci_dev *port_pdev = pdev;
->> +	struct pci_dev *port_pdev;
->>   	struct apple_pcie_port *port;
->>   
->>   	/* Find the root port this device is on */
->> -- 
->> 2.32.0
->>
+On 10/12/2021 4:26 PM, Heiner Kallweit wrote:
+> Thanks for the report! I could reproduce the issue, the following fixes
+> it for me. Could you please test whether it fixes the issue for you as well?
 
+Yes, it works fine. BTW, in the original patch here:
+
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -138,9 +138,10 @@ static int pci_vpd_wait(struct pci_dev *dev, bool set)
+ }
+ 
+ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+-			    void *arg)
++			    void *arg, bool check_size)
+ {
+ 	struct pci_vpd *vpd = &dev->vpd;
++	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
+ 	int ret = 0;
+ 	loff_t end = pos + count;
+ 	u8 *buf = arg;
+@@ -151,11 +152,11 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
+ 	if (pos < 0)
+ 		return -EINVAL;
+ 
+-	if (pos > vpd->len)
++	if (pos >= max_len)
+ 		return 0;
+
+I am not sure if "pos >= max_len" is correct there, so just want to give you
+a chance to double-check.
