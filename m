@@ -2,35 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5FE142CF50
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 01:53:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E85FD42CF56
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 01:57:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbhJMXze (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 19:55:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42541 "EHLO mga02.intel.com"
+        id S229774AbhJNAAC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 20:00:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54477 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229575AbhJMXzd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 19:55:33 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="214721456"
+        id S229677AbhJNAAB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 20:00:01 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="207680693"
 X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="214721456"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:53:29 -0700
+   d="scan'208";a="207680693"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:57:57 -0700
 X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
-   d="scan'208";a="442497745"
+   d="scan'208";a="715807091"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:53:29 -0700
-Subject: [PATCH v5 05/10] cxl/pci: Make more use of cxl_register_map
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 16:57:57 -0700
+Subject: [PATCH v5 06/10] cxl/pci: Add @base to cxl_register_map
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-pci@vger.kernel.org,
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 13 Oct 2021 16:53:29 -0700
-Message-ID: <163416901172.806743.10056306321247850914.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <163381262522.716926.15040239940531720280.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 13 Oct 2021 16:57:57 -0700
+Message-ID: <163416940205.816123.10667482871687420836.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <163379786922.692348.2318044990911111834.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <163379786922.692348.2318044990911111834.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,152 +37,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+In addition to carrying @barno, @block_offset, and @reg_type, add @base
+to keep all map/unmap parameters in one object. The helpers
+cxl_{map,unmap}_regblock() handle adjusting @base to the @block_offset
+at map and unmap time.
 
-The structure exists to pass around information about register mapping.
-Use it for passing @barno and @block_offset, and eliminate duplicate
-local variables.
-
-The helpers that use @map do not care about @cxlm, so just pass them a
-pdev instead.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-[djbw: separate @base conversion]
-[djbw: reorder before cxl_pci_setup_regs() refactor to improver readability]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-Changes since v4:
-- Collect Ira's reviewed-by, thanks Ira!
-- Fixup the dev_err() in cxl_pci_map_regblock() to use %pa just like the
-  same fixup in v3 of the warning introduced by changing @offset from u64 to
-  resource_size_t. 
+Changes since v3:
+- Collect Ira's reviewed-by, thanks!
+- rebase on the %pa fixups in [PATCH v5 05/10] in this series
 
- drivers/cxl/pci.c |   59 ++++++++++++++++++++++-------------------------------
- 1 file changed, 25 insertions(+), 34 deletions(-)
+ drivers/cxl/cxl.h |    1 +
+ drivers/cxl/pci.c |   31 ++++++++++++++++---------------
+ 2 files changed, 17 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index a6687e7fd598..7cd16ef144dd 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -140,6 +140,7 @@ struct cxl_device_reg_map {
+ };
+ 
+ struct cxl_register_map {
++	void __iomem *base;
+ 	u64 block_offset;
+ 	u8 reg_type;
+ 	u8 barno;
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 21dd10a77eb3..eb0c2f1b9e65 100644
+index eb0c2f1b9e65..7d5e5548b316 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -306,17 +306,18 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
+@@ -306,8 +306,7 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
  	return 0;
  }
  
--static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
--					  u8 bar, u64 offset)
-+static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
-+					  struct cxl_register_map *map)
+-static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
+-					  struct cxl_register_map *map)
++static int cxl_map_regblock(struct pci_dev *pdev, struct cxl_register_map *map)
  {
  	void __iomem *addr;
--	struct device *dev = cxlm->dev;
--	struct pci_dev *pdev = to_pci_dev(dev);
-+	int bar = map->barno;
-+	struct device *dev = &pdev->dev;
-+	resource_size_t offset = map->block_offset;
- 
- 	/* Basic sanity check that BAR is big enough */
+ 	int bar = map->barno;
+@@ -318,24 +317,27 @@ static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
  	if (pci_resource_len(pdev, bar) < offset) {
--		dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
--			&pdev->resource[bar], (unsigned long long)offset);
-+		dev_err(dev, "BAR%d: %pr: too small (offset: %pa)\n", bar,
-+			&pdev->resource[bar], &offset);
- 		return NULL;
+ 		dev_err(dev, "BAR%d: %pr: too small (offset: %pa)\n", bar,
+ 			&pdev->resource[bar], &offset);
+-		return NULL;
++		return -ENXIO;
  	}
  
-@@ -326,15 +327,15 @@ static void __iomem *cxl_pci_map_regblock(struct cxl_mem *cxlm,
- 		return addr;
+ 	addr = pci_iomap(pdev, bar, 0);
+ 	if (!addr) {
+ 		dev_err(dev, "failed to map registers\n");
+-		return addr;
++		return -ENOMEM;
  	}
  
--	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
--		bar, offset);
-+	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
-+		bar, &offset);
+ 	dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %pa\n",
+ 		bar, &offset);
  
- 	return addr;
+-	return addr;
++	map->base = addr + map->block_offset;
++	return 0;
  }
  
--static void cxl_pci_unmap_regblock(struct cxl_mem *cxlm, void __iomem *base)
-+static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
+-static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
++static void cxl_unmap_regblock(struct pci_dev *pdev,
++			       struct cxl_register_map *map)
  {
--	pci_iounmap(to_pci_dev(cxlm->dev), base);
-+	pci_iounmap(pdev, base);
+-	pci_iounmap(pdev, base);
++	pci_iounmap(pdev, map->base - map->block_offset);
++	map->base = NULL;
  }
  
  static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
-@@ -360,12 +361,12 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
+@@ -361,12 +363,12 @@ static int cxl_pci_dvsec(struct pci_dev *pdev, int dvsec)
  	return 0;
  }
  
--static int cxl_probe_regs(struct cxl_mem *cxlm, void __iomem *base,
-+static int cxl_probe_regs(struct pci_dev *pdev, void __iomem *base,
- 			  struct cxl_register_map *map)
+-static int cxl_probe_regs(struct pci_dev *pdev, void __iomem *base,
+-			  struct cxl_register_map *map)
++static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
  {
  	struct cxl_component_reg_map *comp_map;
  	struct cxl_device_reg_map *dev_map;
--	struct device *dev = cxlm->dev;
-+	struct device *dev = &pdev->dev;
+ 	struct device *dev = &pdev->dev;
++	void __iomem *base = map->base;
  
  	switch (map->reg_type) {
  	case CXL_REGLOC_RBI_COMPONENT:
-@@ -420,12 +421,13 @@ static int cxl_map_regs(struct cxl_mem *cxlm, struct cxl_register_map *map)
- 	return 0;
- }
- 
--static void cxl_decode_register_block(u32 reg_lo, u32 reg_hi,
--				      u8 *bar, u64 *offset, u8 *reg_type)
-+static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
-+				struct cxl_register_map *map)
+@@ -442,7 +444,6 @@ static void cxl_decode_regblock(u32 reg_lo, u32 reg_hi,
+  */
+ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
  {
--	*offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
--	*bar = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
--	*reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
-+	map->block_offset =
-+		((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-+	map->barno = FIELD_GET(CXL_REGLOC_BIR_MASK, reg_lo);
-+	map->reg_type = FIELD_GET(CXL_REGLOC_RBI_MASK, reg_lo);
- }
- 
- /**
-@@ -462,34 +464,23 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
- 
- 	for (i = 0, n_maps = 0; i < regblocks; i++, regloc += 8) {
- 		u32 reg_lo, reg_hi;
--		u8 reg_type;
--		u64 offset;
--		u8 bar;
- 
- 		pci_read_config_dword(pdev, regloc, &reg_lo);
- 		pci_read_config_dword(pdev, regloc + 4, &reg_hi);
- 
--		cxl_decode_register_block(reg_lo, reg_hi, &bar, &offset,
--					  &reg_type);
-+		map = &maps[n_maps];
-+		cxl_decode_regblock(reg_lo, reg_hi, map);
- 
- 		/* Ignore unknown register block types */
--		if (reg_type > CXL_REGLOC_RBI_MEMDEV)
-+		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
+-	void __iomem *base;
+ 	u32 regloc_size, regblocks;
+ 	int regloc, i, n_maps, ret = 0;
+ 	struct device *dev = cxlm->dev;
+@@ -475,12 +476,12 @@ static int cxl_pci_setup_regs(struct cxl_mem *cxlm)
+ 		if (map->reg_type > CXL_REGLOC_RBI_MEMDEV)
  			continue;
  
--		base = cxl_pci_map_regblock(cxlm, bar, offset);
-+		base = cxl_pci_map_regblock(pdev, map);
- 		if (!base)
- 			return -ENOMEM;
+-		base = cxl_pci_map_regblock(pdev, map);
+-		if (!base)
+-			return -ENOMEM;
++		ret = cxl_map_regblock(pdev, map);
++		if (ret)
++			return ret;
  
--		map = &maps[n_maps];
--		map->barno = bar;
--		map->block_offset = offset;
--		map->reg_type = reg_type;
--
--		ret = cxl_probe_regs(cxlm, base + offset, map);
--
--		/* Always unmap the regblock regardless of probe success */
--		cxl_pci_unmap_regblock(cxlm, base);
--
-+		ret = cxl_probe_regs(pdev, base + map->block_offset, map);
-+		cxl_pci_unmap_regblock(pdev, base);
+-		ret = cxl_probe_regs(pdev, base + map->block_offset, map);
+-		cxl_pci_unmap_regblock(pdev, base);
++		ret = cxl_probe_regs(pdev, map);
++		cxl_unmap_regblock(pdev, map);
  		if (ret)
  			return ret;
  
