@@ -2,92 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24CF142C2E2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 16:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE54042C38B
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 16:39:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236694AbhJMOYt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 10:24:49 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:14526 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235899AbhJMOYl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Oct 2021 10:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1634134958; x=1665670958;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QLxl0HoobPToMMkExPECA79JKwgJz+rF51IZKeXVMAA=;
-  b=UtRLKzkk643Ek+LsTu/gYJDoE0EdmT7jNm6wjqVDqIJl+bPB5unf7Yow
-   3X5EnpqwKQW950ZNm46DPx95VJrSlgGKCK/FbeezWzdAa+fnV124WaZOo
-   Yyt9PCow09VyN/I5LHWBlrPfgpTFq3VltkQq1jrGYR0uG4lNAaaqP+EZH
-   M=;
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 13 Oct 2021 07:22:38 -0700
-X-QCInternal: smtphost
-Received: from nalasex01a.na.qualcomm.com ([10.47.209.196])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 07:22:37 -0700
-Received: from [10.111.161.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.7; Wed, 13 Oct 2021
- 07:22:36 -0700
-Message-ID: <64b87f6b-5db9-721f-1bb8-6ae29742bf96@quicinc.com>
-Date:   Wed, 13 Oct 2021 10:22:35 -0400
+        id S235927AbhJMOlY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 10:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235971AbhJMOlW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 10:41:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 86B54610FB;
+        Wed, 13 Oct 2021 14:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634135959;
+        bh=9WB5lF54mgm3wn8vIZ5HCjqWjYU/IqSZYcUKAxAyLcI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vDTPhA7stpqi/xYjk7VcyRPb6eCn0RHgaQUX1vdeUxKJ822zzPar4YwDIPE7leHG5
+         o1BGiGm9c1AbT64AdLwTv/gai8RixbjHFjkEEqImWpV2k1kJpOG8eOb5+S1Kn5hGZJ
+         gSMGw5VOMcKO4fWCMoQ05donAnQ01Nw+ns9aw9lEXcRrf1SZxlAe/HzoU+Q6pJEdtb
+         iw/yxtKADU5f4OieYFefuDheyofTCSHlEIrFkXtggvbwFfonwnGa/Fvznf/O48R77h
+         oPQmj66nuUs66jvYZapRJMdkfEyEgkaRZJZvHfXmz+SBnxq4GxAxaRHjiPrvJ0yUpd
+         OwdaomnxgCrYQ==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: apple: select CONFIG_PCI_HOST_COMMON
+Date:   Wed, 13 Oct 2021 16:38:50 +0200
+Message-Id: <20211013143914.2133428-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH 1/5] PCI/VPD: Add pci_read/write_vpd_any()
-Content-Language: en-US
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Raju Rangoju <rajur@chelsio.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <ba0b18a3-64d8-d72f-9e9f-ad3e4d7ae3b8@gmail.com>
- <93ecce28-a158-f02a-d134-8afcaced8efe@gmail.com>
- <e89087c5-c495-c5ca-feb1-54cf3a8775c5@quicinc.com>
- <ca805454-6ec5-303b-d39f-d505cad6b338@gmail.com>
-From:   Qian Cai <quic_qiancai@quicinc.com>
-In-Reply-To: <ca805454-6ec5-303b-d39f-d505cad6b338@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+If this symbol is not already selected by another driver, pci-apple.o
+fails to link:
 
-On 10/12/2021 4:26 PM, Heiner Kallweit wrote:
-> Thanks for the report! I could reproduce the issue, the following fixes
-> it for me. Could you please test whether it fixes the issue for you as well?
+aarch64-linux-ld: drivers/pci/controller/pcie-apple.o: in function `apple_pcie_probe':
+pcie-apple.c:(.text+0xd28): undefined reference to `pci_host_common_probe'
 
-Yes, it works fine. BTW, in the original patch here:
+Add another 'select' statement here, the same that is used for the
+other drivers.
 
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -138,9 +138,10 @@ static int pci_vpd_wait(struct pci_dev *dev, bool set)
- }
- 
- static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
--			    void *arg)
-+			    void *arg, bool check_size)
- {
- 	struct pci_vpd *vpd = &dev->vpd;
-+	unsigned int max_len = check_size ? vpd->len : PCI_VPD_MAX_SIZE;
- 	int ret = 0;
- 	loff_t end = pos + count;
- 	u8 *buf = arg;
-@@ -151,11 +152,11 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
- 	if (pos < 0)
- 		return -EINVAL;
- 
--	if (pos > vpd->len)
-+	if (pos >= max_len)
- 		return 0;
+Fixes: a8bbe0366a3e ("PCI: apple: Add initial hardware bring-up")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pci/controller/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I am not sure if "pos >= max_len" is correct there, so just want to give you
-a chance to double-check.
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index cc1fcc89c58f..5af99701e1f6 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -322,6 +322,7 @@ config PCIE_APPLE
+ 	depends on ARCH_APPLE || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
++	select PCI_HOST_COMMON
+ 	help
+ 	  Say Y here if you want to enable PCIe controller support on Apple
+ 	  system-on-chips, like the Apple M1. This is required for the USB
+-- 
+2.29.2
+
