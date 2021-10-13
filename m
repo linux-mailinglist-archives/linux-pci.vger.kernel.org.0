@@ -2,149 +2,239 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD6842B24B
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 03:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28BE042B250
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 03:41:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234266AbhJMBhV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Oct 2021 21:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231200AbhJMBhU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Oct 2021 21:37:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A8C161056;
-        Wed, 13 Oct 2021 01:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634088918;
-        bh=QeSMIWRZp7x+XaAw3ZCrt23uzGcrj1rReuYX+snVCF4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DMJ4I0/WR2D8ECWc74JA9mCo8JZ13Res2KhFqKyGiOgwpet87tQ25PFZrsd1AuetZ
-         efv9OOV3BCZYgkKMllCASbO4IVgTAR/uFsk+u776UgjErHp5vEvNODjI5amWgryDGE
-         V9zaBCgIPFR7POOFr+iy7jpYxODQeAYWb73vdSs2eDyjg4YkgtNyil48R5ljTt6Lt1
-         /3hByjykPlFD9SvnPhnB2d28I/iXKBzE7VPBlWHkY6MOSFwRsx7R1tRqCXBOrONAmm
-         JXTTpznEY/W7Y6F5inhNdc3bH1AfYi3AYdmpPuvEsC7nqepiEM3N2ia1Seb4BNJVmw
-         qeh9zocoWrahQ==
-Date:   Tue, 12 Oct 2021 20:35:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     bhelgaas@google.com, andy.shevchenko@gmail.com, maz@kernel.org,
-        tglx@linutronix.de, song.bao.hua@hisilicon.com, 21cnbao@gmail.com,
-        gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI/MSI: fix page fault when msi_populate_sysfs()
- failed
-Message-ID: <20211013013515.GA1860366@bhelgaas>
+        id S232801AbhJMBnl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Oct 2021 21:43:41 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:34631 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232630AbhJMBnl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Oct 2021 21:43:41 -0400
+Received: by mail-wr1-f42.google.com with SMTP id y3so2906018wrl.1
+        for <linux-pci@vger.kernel.org>; Tue, 12 Oct 2021 18:41:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=32NenQIB+2j0abI1APn0XF0e5kmc+onGeNxxdWPCVtc=;
+        b=n/SqVOxY2Ynhco7g9M11YXsIHjjuqTicF0F7MxahaA4Dn+ZyKKiNXLLP+CfP0AlanO
+         UFegzrVN6nvZCVv7KyXqgsTvFFw3+O0X7vlTkgfeppaXNaEHKJGb63WTvrYLuDDg0XnT
+         wA6r0QLr5sHoeJ+3wuzbJe8AkQfdrNj+HI+kFHz8fBCRZ+gXQkhJ9c2SBFdrkpSym5dk
+         KSIkIActj+faXu/xahya4d/WQ4en0x6m+dhhyIt/yhhjfFc1KcQ4sYat+DlgiTLMNiXS
+         ndI+PWO39h1h1AvtUCJiYXkGZXoCopBbuV0bIo1FRMk76Pg/vDxdI9qRNHYrsqyk3GX+
+         CzRQ==
+X-Gm-Message-State: AOAM5325lpL7xCPuvEnjEpoa2SgE1R5orrKZ6GJsqQ774fMKspE7Aeh/
+        SAQn59grpkrG2mqgmweXvkxFgxL1MW0=
+X-Google-Smtp-Source: ABdhPJxFBcfT+6aRMY7nyeHxHBee/IMfJ2TPlTaAMZXQU5idA7Iu7i/DITVUWal/MDVcwx1ZFMhU1w==
+X-Received: by 2002:a05:600c:1909:: with SMTP id j9mr9634638wmq.138.1634089297859;
+        Tue, 12 Oct 2021 18:41:37 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id t14sm10423701wrr.75.2021.10.12.18.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Oct 2021 18:41:37 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Use unsigned int type explicitly when declaring variables
+Date:   Wed, 13 Oct 2021 01:41:36 +0000
+Message-Id: <20211013014136.1117543-1-kw@linux.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211012071556.939137-1-wanghai38@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 03:15:56PM +0800, Wang Hai wrote:
-> I got a page fault report when doing fault injection test:
-> 
-> BUG: unable to handle page fault for address: fffffffffffffff4
-> ...
-> RIP: 0010:sysfs_remove_groups+0x25/0x60
-> ...
-> Call Trace:
->  msi_destroy_sysfs+0x30/0xa0
->  free_msi_irqs+0x11d/0x1b0
->  __pci_enable_msix_range+0x67f/0x760
->  pci_alloc_irq_vectors_affinity+0xe7/0x170
->  vp_find_vqs_msix+0x129/0x560
->  vp_find_vqs+0x52/0x230
->  vp_modern_find_vqs+0x47/0xb0
->  p9_virtio_probe+0xa1/0x460 [9pnet_virtio]
-> ...
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> 
-> When populating msi_irqs sysfs failed (such as msi_attrs = kcalloc()
-> in msi_populate_sysfs() failed) in msi_capability_init() or
-> msix_capability_init(), dev->msi_irq_groups will point to ERR_PTR(...).
-> This will cause a page fault when destroying the wrong
-> dev->msi_irq_groups in free_msi_irqs().
-> 
-> msix_capability_init()/msi_capability_init()
-> 	msi_populate_sysfs()
-> 		msi_attrs = kcalloc() // fault injection, let msi_attrs = NULL
-> 	free_msi_irqs()
-> 		msi_destroy_sysfs() // msi_irq_groups is ERR_PTR(...), page fault
-> 
-> Define a temp variable and assign it to dev->msi_irq_groups if
-> the temp variable is not PTR_ERR.
-> 
-> Fixes: 2f170814bdd2 ("genirq/msi: Move MSI sysfs handling from PCI to MSI core")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> Acked-by: Barry Song <song.bao.hua@hisilicon.com>
+The bare "unsigned" type implicitly means "unsigned int", but as per the
+preferred coding style the preference is to spell the completely type
+name explicitly to remove any possible ambiguity from the code.
 
-2f170814bdd2 appeared in v5.15-rc1, so I applied this to for-linus so
-we can fix it before v5.15.  Thank you!
+Thus, update the bare use of "unsigned" to the preferred "unsigned int"
+to keep the style consistent throughout the kernel code base.
 
-> ---
-> v2->v3: refine the commit log
-> v1->v2: introduce temporary variable 'groups'
->  drivers/pci/msi.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 0099a00af361..4b4792940e86 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -535,6 +535,7 @@ static int msi_verify_entries(struct pci_dev *dev)
->  static int msi_capability_init(struct pci_dev *dev, int nvec,
->  			       struct irq_affinity *affd)
->  {
-> +	const struct attribute_group **groups;
->  	struct msi_desc *entry;
->  	int ret;
->  
-> @@ -558,12 +559,14 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
->  	if (ret)
->  		goto err;
->  
-> -	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
-> -	if (IS_ERR(dev->msi_irq_groups)) {
-> -		ret = PTR_ERR(dev->msi_irq_groups);
-> +	groups = msi_populate_sysfs(&dev->dev);
-> +	if (IS_ERR(groups)) {
-> +		ret = PTR_ERR(groups);
->  		goto err;
->  	}
->  
-> +	dev->msi_irq_groups = groups;
-> +
->  	/* Set MSI enabled bits	*/
->  	pci_intx_for_msi(dev, 0);
->  	pci_msi_set_enable(dev, 1);
-> @@ -691,6 +694,7 @@ static void msix_mask_all(void __iomem *base, int tsize)
->  static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
->  				int nvec, struct irq_affinity *affd)
->  {
-> +	const struct attribute_group **groups;
->  	void __iomem *base;
->  	int ret, tsize;
->  	u16 control;
-> @@ -730,12 +734,14 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
->  
->  	msix_update_entries(dev, entries);
->  
-> -	dev->msi_irq_groups = msi_populate_sysfs(&dev->dev);
-> -	if (IS_ERR(dev->msi_irq_groups)) {
-> -		ret = PTR_ERR(dev->msi_irq_groups);
-> +	groups = msi_populate_sysfs(&dev->dev);
-> +	if (IS_ERR(groups)) {
-> +		ret = PTR_ERR(groups);
->  		goto out_free;
->  	}
->  
-> +	dev->msi_irq_groups = groups;
-> +
->  	/* Set MSI-X enabled bits and unmask the function */
->  	pci_intx_for_msi(dev, 0);
->  	dev->msix_enabled = 1;
-> -- 
-> 2.17.1
-> 
+ No change to functionality intended.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pci-thunder-ecam.c |  4 ++--
+ drivers/pci/msi.c                         |  3 ++-
+ drivers/pci/pci.c                         |  5 +++--
+ drivers/pci/probe.c                       |  7 ++++---
+ drivers/pci/quirks.c                      | 12 ++++++------
+ drivers/pci/rom.c                         |  2 +-
+ drivers/pci/setup-bus.c                   |  2 +-
+ 7 files changed, 19 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
+index ffd84656544f..e9d5ca245f5e 100644
+--- a/drivers/pci/controller/pci-thunder-ecam.c
++++ b/drivers/pci/controller/pci-thunder-ecam.c
+@@ -17,7 +17,7 @@ static void set_val(u32 v, int where, int size, u32 *val)
+ {
+ 	int shift = (where & 3) * 8;
+ 
+-	pr_debug("set_val %04x: %08x\n", (unsigned)(where & ~3), v);
++	pr_debug("set_val %04x: %08x\n", (unsigned int)(where & ~3), v);
+ 	v >>= shift;
+ 	if (size == 1)
+ 		v &= 0xff;
+@@ -187,7 +187,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	pr_debug("%04x:%04x - Fix pass#: %08x, where: %03x, devfn: %03x\n",
+ 		 vendor_device & 0xffff, vendor_device >> 16, class_rev,
+-		 (unsigned) where, devfn);
++		 (unsigned int)where, devfn);
+ 
+ 	/* Check for non type-00 header */
+ 	if (cfg_type == 0) {
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0099a00af361..bdc6ba7f39f0 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -579,7 +579,8 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 	return ret;
+ }
+ 
+-static void __iomem *msix_map_region(struct pci_dev *dev, unsigned nr_entries)
++static void __iomem *msix_map_region(struct pci_dev *dev,
++				     unsigned int nr_entries)
+ {
+ 	resource_size_t phys_addr;
+ 	u32 table_offset;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce2ab62b64cf..fa4f27f747fd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6324,11 +6324,12 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
+  * cannot be left as a userspace activity).  DMA aliases should therefore
+  * be configured via quirks, such as the PCI fixup header quirk.
+  */
+-void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
++void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from,
++		       unsigned int nr_devfns)
+ {
+ 	int devfn_to;
+ 
+-	nr_devfns = min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
++	nr_devfns = min(nr_devfns, (unsigned int)MAX_NR_DEVFNS - devfn_from);
+ 	devfn_to = devfn_from + nr_devfns - 1;
+ 
+ 	if (!dev->dma_alias_mask)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index d9fc02a71baa..51c0a33640e6 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2550,11 +2550,12 @@ struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
+ }
+ EXPORT_SYMBOL(pci_scan_single_device);
+ 
+-static unsigned next_fn(struct pci_bus *bus, struct pci_dev *dev, unsigned fn)
++static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
++			    unsigned int fn)
+ {
+ 	int pos;
+ 	u16 cap = 0;
+-	unsigned next_fn;
++	unsigned int next_fn;
+ 
+ 	if (pci_ari_enabled(bus)) {
+ 		if (!dev)
+@@ -2613,7 +2614,7 @@ static int only_one_child(struct pci_bus *bus)
+  */
+ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ {
+-	unsigned fn, nr = 0;
++	unsigned int fn, nr = 0;
+ 	struct pci_dev *dev;
+ 
+ 	if (only_one_child(bus) && (devfn > 0))
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4537d1ea14fd..67107840ce84 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -501,7 +501,7 @@ static void quirk_s3_64M(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_S3,	PCI_DEVICE_ID_S3_868,		quirk_s3_64M);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_S3,	PCI_DEVICE_ID_S3_968,		quirk_s3_64M);
+ 
+-static void quirk_io(struct pci_dev *dev, int pos, unsigned size,
++static void quirk_io(struct pci_dev *dev, int pos, unsigned int size,
+ 		     const char *name)
+ {
+ 	u32 region;
+@@ -552,7 +552,7 @@ static void quirk_cs5536_vsa(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CS5536_ISA, quirk_cs5536_vsa);
+ 
+ static void quirk_io_region(struct pci_dev *dev, int port,
+-				unsigned size, int nr, const char *name)
++			    unsigned int size, int nr, const char *name)
+ {
+ 	u16 region;
+ 	struct pci_bus_region bus_region;
+@@ -666,7 +666,7 @@ static void piix4_io_quirk(struct pci_dev *dev, const char *name, unsigned int p
+ 	base = devres & 0xffff;
+ 	size = 16;
+ 	for (;;) {
+-		unsigned bit = size >> 1;
++		unsigned int bit = size >> 1;
+ 		if ((bit & mask) == bit)
+ 			break;
+ 		size = bit;
+@@ -692,7 +692,7 @@ static void piix4_mem_quirk(struct pci_dev *dev, const char *name, unsigned int
+ 	mask = (devres & 0x3f) << 16;
+ 	size = 128 << 16;
+ 	for (;;) {
+-		unsigned bit = size >> 1;
++		unsigned int bit = size >> 1;
+ 		if ((bit & mask) == bit)
+ 			break;
+ 		size = bit;
+@@ -806,7 +806,7 @@ static void ich6_lpc_acpi_gpio(struct pci_dev *dev)
+ 				"ICH6 GPIO");
+ }
+ 
+-static void ich6_lpc_generic_decode(struct pci_dev *dev, unsigned reg,
++static void ich6_lpc_generic_decode(struct pci_dev *dev, unsigned int reg,
+ 				    const char *name, int dynsize)
+ {
+ 	u32 val;
+@@ -850,7 +850,7 @@ static void quirk_ich6_lpc(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ICH6_0, quirk_ich6_lpc);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ICH6_1, quirk_ich6_lpc);
+ 
+-static void ich7_lpc_generic_decode(struct pci_dev *dev, unsigned reg,
++static void ich7_lpc_generic_decode(struct pci_dev *dev, unsigned int reg,
+ 				    const char *name)
+ {
+ 	u32 val;
+diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+index 8fc9a4e911e3..e18d3a4383ba 100644
+--- a/drivers/pci/rom.c
++++ b/drivers/pci/rom.c
+@@ -85,7 +85,7 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
+ {
+ 	void __iomem *image;
+ 	int last_image;
+-	unsigned length;
++	unsigned int length;
+ 
+ 	image = rom;
+ 	do {
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 2ce636937c6e..547396ec50b5 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1525,7 +1525,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ {
+ 	struct pci_dev *dev = bus->self;
+ 	struct resource *r;
+-	unsigned old_flags = 0;
++	unsigned int old_flags = 0;
+ 	struct resource *b_res;
+ 	int idx = 1;
+ 
+-- 
+2.33.0
+
