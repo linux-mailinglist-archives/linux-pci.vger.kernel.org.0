@@ -2,135 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8730742BC50
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 12:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18EB442BD86
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 12:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239231AbhJMKCN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 06:02:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:59718 "EHLO foss.arm.com"
+        id S229516AbhJMKqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 06:46:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:33454 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239124AbhJMKCN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 06:02:13 -0400
+        id S229750AbhJMKqz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 06:46:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B94F91063;
-        Wed, 13 Oct 2021 03:00:09 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 010031063;
+        Wed, 13 Oct 2021 03:44:52 -0700 (PDT)
 Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 994AD3F70D;
-        Wed, 13 Oct 2021 03:00:07 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 11:00:05 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBAAD3F70D;
+        Wed, 13 Oct 2021 03:44:49 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 11:44:44 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Prasad Malisetty <pmaliset@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, swboyd@chromium.org, svarbanov@mm-sol.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, mka@chromium.org, vbadigan@codeaurora.org,
-        sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v12 0/5] Add DT bindings and DT nodes for PCIe and PHY in
- SC7280
-Message-ID: <20211013100005.GB9901@lpieralisi>
-References: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Xuesong Chen <xuesong.chen@linux.alibaba.com>,
+        catalin.marinas@arm.com, james.morse@arm.com, will@kernel.org,
+        rafael@kernel.org, tony.luck@intel.com, bp@alien8.de,
+        mingo@kernel.org, bhelgaas@google.com, mark.rutland@arm.com,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jayachandran C <c.jayachandran@gmail.com>,
+        Tomasz Nowicki <tn@semihalf.com>
+Subject: Re: [PATCH v2 1/2] PCI: MCFG: Consolidate the separate PCI MCFG
+ table entry list
+Message-ID: <20211013104444.GA10360@lpieralisi>
+References: <YWAD7LRsTCcfTkgJ@Dennis-MBP.local>
+ <20211008213143.GA1373034@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
+In-Reply-To: <20211008213143.GA1373034@bhelgaas>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 11:18:38PM +0530, Prasad Malisetty wrote:
-> Changes added in v12:
+On Fri, Oct 08, 2021 at 04:31:43PM -0500, Bjorn Helgaas wrote:
+> [+cc Jayachandran, Tomasz; not sure if they're still around, but just
+> in case they have a comment on any reasons for keeping the
+> pci_mcfg_list list separate.]
 > 
-> 	* Sorted pipe_clk muxing changes in patch 4 & 5 as per the commit log.
-> 	  -Suggested by Bjorn.
+> On Fri, Oct 08, 2021 at 04:40:12PM +0800, Xuesong Chen wrote:
+> > The PCI MCFG entry list is discrete on x86 and other architectures like
+> > arm64 in current implementation, this list variable can be consolidated
+> > for unnecessary duplication and other purposes, for example, we can remove
+> > some of the 'arch' specific codes in the APEI/EINJ module and re-implement
+> > it in a more common arch-agnostic way.
 > 
-> Changes added in v11:
+> This commit log could be more explicit about what's going on here.
 > 
-> 	* Modified nvme_pwren name as nvme_pwren.
-> 	* Removed bias-pullup option in nvme_pwren entry [v11 Patch 3/5].
-> 	* Changed pcie1_default_state name to pcie1_clkreq_n.
-> 	* Added NULL pointer check for pcie_cfg.
+> From deciphering the patch, I think it takes advantage of the fact
+> that struct pci_mmcfg_region and struct mcfg_entry contain basically
+> the same information, but pci_mmcfg_region contains a little extra
+> information (a struct resource, a virtual address, and a name).
 > 
-> Changes added in v10:
+> To reduce the redundancy, it:
 > 
-> 	* v9 [Patch 4/4/] has been split into two separate patches
-> 	* Addressed all comments in IDP [Patch 3/4] file.
->  	
-> Changes added in v9:
->     * Added fixed regulator entry for nvme.suggested by Stephen Boyd
->     * Added NULL pointer check before accessing ops in pcie probe
->       Suggested by Stephen Boyd
+>   - Moves the "struct pci_mmcfg_region" definition from
+>     arch/x86/include/asm/pci_x86.h to include/linux/pci.h, where it
+>     can be shared across arches.
 > 
-> Changes added in v8:
-> 
->     * Added seperate pinctrl state for NVMe LDO enable pin [v8 P3/4]
->     * Removed pointer initialization for pcie_cfg [v8 P4/4]
->     * Replaced bool pcie_pipe_clk_src with unsigned int:1 [v8 P4/4]
->     * Changed gcc_pcie_1_pipe_clk_src to pipe_clk_src
-> 
-> Changes added in v7:
-> 
->         * Removed two fallbacks qcom,pcie-sm8250 and snps,dw-pcie.
->         * Replaced compatible method in get_resources_2_7_0 with
->             flag approach suggested by Bjorn Helgaas .
->         * Setting gcc_pcie_1_clk_src as XO in init_2_7_0 for
->           gdsc enable.
->         * Added specific NVMe GPIO entries for SKU1 and SKU2 support
->           in idp.dts and idp2.dts respectively.
->         * Moved pcie_1 and pcie_1_phy board specific entries into common
->           board file sc7280-idp.dtsi file.
-> 
-> Changes in v6:
-> 
->     * Removed platform check while setting gcc_pcie_1_pipe_clk_src
->           as clk_set_parent will return 0 with nop if platform doesn't
->           need to switch pipe clk source.
->         * Moved wake-n gpio to board specific file sc7280-idp.dtsi
->         * Sorted gpio.h header entry in sc7280.dtsi file
-> 
-> Changes in v5:
-> 
->         * Re ordered PCIe, PHY nodes in Soc and board specific dtsi files.
->         * Removed ref_clk entry in current patch [PATCH v4 P4/4].
->         * I will add ref clk entry in suspend/ resume commits.
->         * Added boolean flag in Soc specific dtsi file to differentiate
->           SM8250 and SC7280 platforms. based on boolean flag, platforms will handle
->           the pipe clk handling.
-> 
-> Changes in v4 as suggested by Bjorn:
-> 
->         * Changed pipe clk mux name as gcc_pcie_1_pipe_clk_src.
->         * Changed pipe_ext_src as phy_pipe_clk.
->         * Updated commit message for [PATCH v4 4/4].
-> 
-> Changes in v3:
->         * Changed pipe clock names in dt bindings as pipe_mux and phy_pipe.
->         * Moved reset and NVMe GPIO pin configs into board specific file.
->         * Updated pipe clk mux commit message.
-> 
-> Changes in v2:
->         * Moved pcie pin control settings into IDP file.
->         * Replaced pipe_clk_src with pipe_clk_mux in pcie driver
->         * Included pipe clk mux setting change set in this series
-> 
-> Prasad Malisetty (5):
->   dt-bindings: pci: qcom: Document PCIe bindings for SC7280
->   arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
->   arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
->   PCI: qcom: Add a flag in match data along with ops
->   PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  17 +++
->  arch/arm64/boot/dts/qcom/sc7280-idp.dts            |   8 ++
->  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |  50 +++++++++
->  arch/arm64/boot/dts/qcom/sc7280-idp2.dts           |   8 ++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 118 +++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-qcom.c             |  95 +++++++++++++++--
->  6 files changed, 285 insertions(+), 11 deletions(-)
+>   - Moves pci_mmcfg_list (a list of pci_mmcfg_region structs) from
+>     arch/x86/pci/mmconfig-shared.c to drivers/pci/pci.c, where it can
+>     be shared across arches.
 
-I applied patches [4-5] to pci/qcom for v5.16, thanks I expect other
-patches to go via the relevant trees.
+This is a bit ugly, especially the resulting ifdef CONFIG_PCI in
+patch 2:
+
+https://lore.kernel.org/linux-acpi/YWAEG7fyFC+lhwd+@Dennis-MBP.local
+
+I'd rather make apei_filter_mcfg_addr() conditional, on what, that's
+the question.
+
+#ifdef CONFIG_FOO
+static int apei_filter_mcfg_addr()
+{
+...
+}
+#else
+static inline int apei_filter_mcfg_addr() { return 0; }
+#endif
+
+>   - On x86 (which does not enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
+>     built in arch/x86/pci/mmconfig-shared.c as before.
+> 
+>   - Removes the "struct mcfg_entry" from drivers/acpi/pci_mcfg.c.
+> 
+>   - Replaces pci_mcfg_list (previously a list of mcfg_entry structs)
+>     in drivers/acpi/pci_mcfg.c with the newly-shared pci_mmcfg_list (a
+>     list of pci_mmcfg_region structs).
+> 
+>   - On ARM64 (which does enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
+>     built in drivers/acpi/pci_mcfg.c.
+> 
+> Does that sound about right?
+
+Yes it does. Another option would consist in doing all the MCFG parsing
+(anew) in APEI code to build a temporary list that is discarded as soon
+as the resource filtering took place - maybe it is something worth
+thinking about (but do we really need more MCFG parsing code ?).
 
 Lorenzo
+
+> > Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
+> > ---
+> >  arch/x86/include/asm/pci_x86.h | 17 +----------------
+> >  arch/x86/pci/mmconfig-shared.c |  2 --
+> >  drivers/acpi/pci_mcfg.c        | 34 +++++++++++++---------------------
+> >  drivers/pci/pci.c              |  2 ++
+> >  include/linux/pci.h            | 17 +++++++++++++++++
+> >  5 files changed, 33 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+> > index 490411d..1f4257c 100644
+> > --- a/arch/x86/include/asm/pci_x86.h
+> > +++ b/arch/x86/include/asm/pci_x86.h
+> > @@ -146,20 +146,7 @@ static inline int  __init pci_acpi_init(void)
+> >  extern void pcibios_fixup_irqs(void);
+> >  
+> >  /* pci-mmconfig.c */
+> > -
+> > -/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
+> > -#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
+> > -
+> > -struct pci_mmcfg_region {
+> > -	struct list_head list;
+> > -	struct resource res;
+> > -	u64 address;
+> > -	char __iomem *virt;
+> > -	u16 segment;
+> > -	u8 start_bus;
+> > -	u8 end_bus;
+> > -	char name[PCI_MMCFG_RESOURCE_NAME_LEN];
+> > -};
+> > +struct pci_mmcfg_region;
+> >  
+> >  extern int __init pci_mmcfg_arch_init(void);
+> >  extern void __init pci_mmcfg_arch_free(void);
+> > @@ -174,8 +161,6 @@ extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
+> >  
+> >  extern struct list_head pci_mmcfg_list;
+> >  
+> > -#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
+> > -
+> >  /*
+> >   * On AMD Fam10h CPUs, all PCI MMIO configuration space accesses must use
+> >   * %eax.  No other source or target registers may be used.  The following
+> > diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+> > index 758cbfe..0b961fe6 100644
+> > --- a/arch/x86/pci/mmconfig-shared.c
+> > +++ b/arch/x86/pci/mmconfig-shared.c
+> > @@ -31,8 +31,6 @@
+> >  static DEFINE_MUTEX(pci_mmcfg_lock);
+> >  #define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
+> >  
+> > -LIST_HEAD(pci_mmcfg_list);
+> > -
+> >  static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
+> >  {
+> >  	if (cfg->res.parent)
+> > diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> > index 53cab97..d9506b0 100644
+> > --- a/drivers/acpi/pci_mcfg.c
+> > +++ b/drivers/acpi/pci_mcfg.c
+> > @@ -13,14 +13,7 @@
+> >  #include <linux/pci-acpi.h>
+> >  #include <linux/pci-ecam.h>
+> >  
+> > -/* Structure to hold entries from the MCFG table */
+> > -struct mcfg_entry {
+> > -	struct list_head	list;
+> > -	phys_addr_t		addr;
+> > -	u16			segment;
+> > -	u8			bus_start;
+> > -	u8			bus_end;
+> > -};
+> > +extern struct list_head pci_mmcfg_list;
+> >  
+> >  #ifdef CONFIG_PCI_QUIRKS
+> >  struct mcfg_fixup {
+> > @@ -214,16 +207,13 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
+> >  #endif
+> >  }
+> >  
+> > -/* List to save MCFG entries */
+> > -static LIST_HEAD(pci_mcfg_list);
+> > -
+> >  int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
+> >  		    const struct pci_ecam_ops **ecam_ops)
+> >  {
+> >  	const struct pci_ecam_ops *ops = &pci_generic_ecam_ops;
+> >  	struct resource *bus_res = &root->secondary;
+> >  	u16 seg = root->segment;
+> > -	struct mcfg_entry *e;
+> > +	struct pci_mmcfg_region *e;
+> >  	struct resource res;
+> >  
+> >  	/* Use address from _CBA if present, otherwise lookup MCFG */
+> > @@ -233,10 +223,10 @@ int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
+> >  	/*
+> >  	 * We expect the range in bus_res in the coverage of MCFG bus range.
+> >  	 */
+> > -	list_for_each_entry(e, &pci_mcfg_list, list) {
+> > -		if (e->segment == seg && e->bus_start <= bus_res->start &&
+> > -		    e->bus_end >= bus_res->end) {
+> > -			root->mcfg_addr = e->addr;
+> > +	list_for_each_entry(e, &pci_mmcfg_list, list) {
+> > +		if (e->segment == seg && e->start_bus <= bus_res->start &&
+> > +		    e->end_bus >= bus_res->end) {
+> > +			root->mcfg_addr = e->address;
+> >  		}
+> >  
+> >  	}
+> > @@ -268,7 +258,7 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
+> >  {
+> >  	struct acpi_table_mcfg *mcfg;
+> >  	struct acpi_mcfg_allocation *mptr;
+> > -	struct mcfg_entry *e, *arr;
+> > +	struct pci_mmcfg_region *e, *arr;
+> >  	int i, n;
+> >  
+> >  	if (header->length < sizeof(struct acpi_table_mcfg))
+> > @@ -285,10 +275,12 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
+> >  
+> >  	for (i = 0, e = arr; i < n; i++, mptr++, e++) {
+> >  		e->segment = mptr->pci_segment;
+> > -		e->addr =  mptr->address;
+> > -		e->bus_start = mptr->start_bus_number;
+> > -		e->bus_end = mptr->end_bus_number;
+> > -		list_add(&e->list, &pci_mcfg_list);
+> > +		e->address =  mptr->address;
+> > +		e->start_bus = mptr->start_bus_number;
+> > +		e->end_bus = mptr->end_bus_number;
+> > +		e->res.start = e->address + PCI_MMCFG_BUS_OFFSET(e->start_bus);
+> > +		e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
+> > +		list_add(&e->list, &pci_mmcfg_list);
+> >  	}
+> >  
+> >  #ifdef CONFIG_PCI_QUIRKS
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index ce2ab62..899004e 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -47,6 +47,8 @@
+> >  int pci_pci_problems;
+> >  EXPORT_SYMBOL(pci_pci_problems);
+> >  
+> > +LIST_HEAD(pci_mmcfg_list);
+> > +
+> >  unsigned int pci_pm_d3hot_delay;
+> >  
+> >  static void pci_pme_list_scan(struct work_struct *work);
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index cd8aa6f..71e4c06 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -55,6 +55,23 @@
+> >  #define PCI_RESET_PROBE		true
+> >  #define PCI_RESET_DO_RESET	false
+> >  
+> > +#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
+> > +
+> > +/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
+> > +#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
+> > +
+> > +/* pci mcfg region */
+> > +struct pci_mmcfg_region {
+> > +	struct list_head list;
+> > +	struct resource res;
+> > +	u64 address;
+> > +	char __iomem *virt;
+> > +	u16 segment;
+> > +	u8 start_bus;
+> > +	u8 end_bus;
+> > +	char name[PCI_MMCFG_RESOURCE_NAME_LEN];
+> > +};
+> > +
+> >  /*
+> >   * The PCI interface treats multi-function devices as independent
+> >   * devices.  The slot/function address of each device is encoded
+> > -- 
+> > 1.8.3.1
+> > 
