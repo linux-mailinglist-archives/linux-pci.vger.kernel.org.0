@@ -2,60 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E2CF42C14E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 15:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B77B42C152
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Oct 2021 15:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbhJMNYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Oct 2021 09:24:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:39182 "EHLO foss.arm.com"
+        id S231372AbhJMNZd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Oct 2021 09:25:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29501 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233962AbhJMNYI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Oct 2021 09:24:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DAF41FB;
-        Wed, 13 Oct 2021 06:22:05 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.53.207])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20FA93F66F;
-        Wed, 13 Oct 2021 06:22:03 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
+        id S233226AbhJMNZc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Oct 2021 09:25:32 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10135"; a="208223337"
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="208223337"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 06:23:29 -0700
+X-IronPort-AV: E=Sophos;i="5.85,371,1624345200"; 
+   d="scan'208";a="626341116"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2021 06:23:15 -0700
+Received: from andy by smile with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1maeDt-000LPO-Od;
+        Wed, 13 Oct 2021 16:23:09 +0300
+Date:   Wed, 13 Oct 2021 16:23:09 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Alexander Duyck <alexanderduyck@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: uniphier: Serialize INTx masking/unmasking and fix the bit operation
-Date:   Wed, 13 Oct 2021 14:21:57 +0100
-Message-Id: <163413129990.22138.15702601418817174711.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <1631924579-24567-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1631924579-24567-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
+        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marco Chiappero <marco.chiappero@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
+        Vadym Kochan <vkochan@marvell.com>,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, netdev <netdev@vger.kernel.org>,
+        oss-drivers@corigine.com, qat-linux@intel.com,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <YWbdvc7EWEZLVTHM@smile.fi.intel.com>
+References: <CAHp75Vd0uYEdfB0XaQuUV34V91qJdHR5ARku1hX_TCJLJHEjxQ@mail.gmail.com>
+ <20211013113356.GA1891412@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211013113356.GA1891412@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 18 Sep 2021 09:22:59 +0900, Kunihiko Hayashi wrote:
-> The condition register PCI_RCV_INTX is used in irq_mask() and irq_unmask()
-> callbacks. Accesses to register can occur at the same time without a lock.
-> Add a lock into each callback to prevent the issue.
+On Wed, Oct 13, 2021 at 06:33:56AM -0500, Bjorn Helgaas wrote:
+> On Wed, Oct 13, 2021 at 12:26:42PM +0300, Andy Shevchenko wrote:
+> > On Wed, Oct 13, 2021 at 2:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Mon, Oct 04, 2021 at 02:59:24PM +0200, Uwe Kleine-König wrote:
+
+...
+
+> > It's a bit unusual. Other to_*_dev() are not NULL-aware IIRC.
 > 
-> And INTX mask and unmask fields in PCL_RCV_INTX register should only be
-> set/reset for each bit. Clearing by PCL_RCV_INTX_ALL_MASK should be
-> removed.
+> It is a little unusual.  I only found three of 77 that are NULL-aware:
 > 
-> [...]
+>   to_moxtet_driver()
+>   to_siox_driver()
+>   to_spi_driver()
+> 
+> It seems worthwhile to me because it makes the patch and the resulting
+> code significantly cleaner.
 
-Applied to pci/qcom, thanks!
+I'm not objecting the change, just a remark.
 
-[1/1] PCI: uniphier: Serialize INTx masking/unmasking and fix the bit operation
-      https://git.kernel.org/lpieralisi/pci/c/bab406fc11
+...
 
-Thanks,
-Lorenzo
+> > > +       for (id = drv ? drv->id_table : NULL; id && id->vendor; id++)
+> > > +               if (id->vendor == vendor && id->device == device)
+> > 
+> > > +                       break;
+> > 
+> > return true;
+> > 
+> > >         return id && id->vendor;
+> > 
+> > return false;
+> 
+> Good cleanup for a follow-up patch, but doesn't seem directly related
+> to the objective here.
+
+True. Maybe you can bake one while not forgotten?
+
+...
+
+> > > +       return drv && drv->resume ?
+> > > +                       drv->resume(pci_dev) : pci_pm_reenable_device(pci_dev);
+> > 
+> > One line?
+> 
+> I don't think I touched that line.
+
+Then why they are both in + section?
+
+...
+
+> > > +       struct pci_driver *drv = to_pci_driver(dev->dev.driver);
+> > >         const struct pci_error_handlers *err_handler =
+> > > -                       dev->dev.driver ? to_pci_driver(dev->dev.driver)->err_handler : NULL;
+> > > +                       drv ? drv->err_handler : NULL;
+> > 
+> > Isn't dev->driver == to_pci_driver(dev->dev.driver)?
+> 
+> Yes, I think so, but not sure what you're getting at here, can you
+> elaborate?
+
+Getting pointer from another pointer seems waste of resources, why we
+can't simply
+
+	struct pci_driver *drv = dev->driver;
+
+?
+
+...
+
+> > Stray change? Or is it in a separate patch in your tree?
+> 
+> Could be skipped.  The string now fits on one line so I combined it to
+> make it more greppable.
+
+This is inconsistency in your changes, in one case you are objecting of
+doing something close to the changed lines, in the other you are doing
+unrelated change.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
