@@ -2,122 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5194642DA9A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 15:37:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78C2E42DAA2
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 15:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbhJNNkB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 09:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
+        id S230010AbhJNNn0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 09:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbhJNNkA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 09:40:00 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F66C061570;
-        Thu, 14 Oct 2021 06:37:55 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id g6so14784402ybb.3;
-        Thu, 14 Oct 2021 06:37:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mbgbRDUeTUyS3975uv27h+b+4eQcagHBtAm3RK4mRio=;
-        b=qmgCJ42kSkaSCiL62fmwk8FsRJIapU+OyGgWdYII3UdkitX2WzArrncotTqg2AMWP0
-         tJn0um3amoXF4I8vJD1Gm0tC7yXR4EngdB5ocSqgTPTbXIaB+fnG58LSf7RLMnQBzf1o
-         z5yvWN45Q6V9P/BvsOFitjrxatZlY+KCTvobsEjqcSxLccUMujwMzKD7GZ3/jAyjD0rA
-         IcNDxlgHXfWjYBOvCk8+FzhR7oYgbLyYir1Z7NnkAZgcOL+TZNEkXO591wErvff824dT
-         6nYXeuCj1OoZt5KJnveH/c20k6SoYi9KwO427Jk5jAa7RO6MEk9ZzrGA88gMzFkMBuSt
-         UZFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mbgbRDUeTUyS3975uv27h+b+4eQcagHBtAm3RK4mRio=;
-        b=h0NfnWwRwNJKRO56vm4NmoblAyhy65vzCL7jHUYgWmmmjcPJT+d+v0VOqdfPTlZx1W
-         KLNm2K+3oOUAJenh8dErWka805TJKNfkT4nY+9Rb0vM7lWEEKJqb3oG+j/Px9WbzfxK6
-         5tAWnxth/mYAqD7a2eDxtE1X6PJr8nQwVMbtQagmTTwMgy9xbrlPhEs9gR20Iohzsm9O
-         52Y7+qX806svSWPWXQe2W6tNaMCmeXPc59XFaMUI17ykgHjKGDTOusnmPdasEX0r0ftB
-         8heapT/6rmaeAaUKFbezK8C6TfnriCyjmAj3oDkaqlVeCwRBjKBHSKw3l9jBO0dTokNR
-         axng==
-X-Gm-Message-State: AOAM532eJaHkjvEEe8h1j+XMIIs4y+yZO2pNW24PFArq+X9aDXZgiBBB
-        V/aOTKAJb1DvQCbZi2I7k0diJ0Sz9fI5/1Tm8rKZavNvIs4=
-X-Google-Smtp-Source: ABdhPJy6Sv53mPNnZ5/+mRm4KMI0WKd6yX7MOv3xDgif+E5itNFVclj9SpKfoLun8XE+5eCELmXumiZ5Rw/DTmXETFY=
-X-Received: by 2002:a25:ace0:: with SMTP id x32mr6550218ybd.142.1634218675130;
- Thu, 14 Oct 2021 06:37:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211014095748.84604-1-yaozhenguo1@gmail.com> <20211014064824.66c90ee5.alex.williamson@redhat.com>
-In-Reply-To: <20211014064824.66c90ee5.alex.williamson@redhat.com>
-From:   Zhenguo Yao <yaozhenguo1@gmail.com>
-Date:   Thu, 14 Oct 2021 21:37:44 +0800
-Message-ID: <CA+WzARn6r3qduRpyjaPGkrt7EeUwDPSCJiCQ62t4MtPg=DMRqw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Add ablility of VFIO driver to ignore reset when
- device don't need it
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, cohuck@redhat.com,
-        jgg@ziepe.ca, mgurtovoy@nvidia.com, yishaih@nvidia.com,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        with ESMTP id S229637AbhJNNn0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 09:43:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD48C061570;
+        Thu, 14 Oct 2021 06:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yh0dLNTCAidxPky1fKSiNS/T1k0UpRDN2U2Pf55bD6Q=; b=RYuW1teOpHoxKXuAE0m9w30T5o
+        piZKigjQ0cg4nSULeNxiuEVSgvHKRyIj/BI7eg/iiljIgrU1oQ/KeZAnRvRq8rFI1Wxg2SkO1pqtZ
+        klOcoquqJszlE2YOh9GXH9V6b+HSCpr3WeaSONyri9Nj8KEtDaOJAyX7xZ068gMFQ4AwTVpdbxcaR
+        zBOk5ISSuBfqfv7nv/GX65Zd3nqgKOkhoEA83T2o+EQeRS+kVuQAXfSByZH97ZkcSB7jbAdaktL28
+        Vro+JsZT85iieaduwkauV9g1Fa7/HpCnN2+jJNKn6w28uV0rP5XE/etmAmJO59Ah/+9XrahTKqPT2
+        rA4kvFvA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mb0yf-003Hyo-PY; Thu, 14 Oct 2021 13:40:57 +0000
+Date:   Thu, 14 Oct 2021 06:40:57 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
         linux-kernel@vger.kernel.org,
-        =?UTF-8?B?5aea5oyv5Zu9?= <yaozhenguo@jd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>
+Subject: Re: [PATCH v3] x86/PCI: Ignore E820 reservations for bridge windows
+ on newer systems
+Message-ID: <YWgzaa9Z4elzoRwL@infradead.org>
+References: <20211014110357.17957-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211014110357.17957-1-hdegoede@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-OK.  Thank you.  Let's waitting for NVIDIA's solution.
+On Thu, Oct 14, 2021 at 01:03:57PM +0200, Hans de Goede wrote:
+> +	 * Some BIOS-es contain a bug where they add addresses which map to system
+> +	 * RAM in the PCI bridge memory window returned by the ACPI _CRS method,
 
-Alex Williamson <alex.williamson@redhat.com> =E4=BA=8E2021=E5=B9=B410=E6=9C=
-=8814=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=888:48=E5=86=99=E9=81=93=
-=EF=BC=9A
->
-> On Thu, 14 Oct 2021 17:57:46 +0800
-> Zhenguo Yao <yaozhenguo1@gmail.com> wrote:
->
-> > In some scenarios, vfio device can't do any reset in initialization
-> > process. For example: Nvswitch and GPU A100 working in Shared NVSwitch
-> > Virtualization Model. In such mode, there are two type VMs: service
-> > VM and Guest VM. The GPU devices are initialized in the following steps=
-:
-> >
-> > 1. Service VM boot up. GPUs and Nvswitchs are passthrough to service VM=
-.
-> > Nvidia driver and manager software will do some settings in service VM.
-> >
-> > 2. The selected GPUs are unpluged from service VM.
-> >
-> > 3. Guest VM boots up with the selected GPUs passthrough.
-> >
-> > The selected GPUs can't do any reset in step3, or they will be initiali=
-zed
-> > failed in Guest VM.
-> >
-> > This patchset add a PCI sysfs interface:ignore_reset which drivers can
-> > use it to control whether to do PCI reset or not. For example: In Share=
-d
-> > NVSwitch Virtualization Model. Hypervisor can disable PCI reset by sett=
-ing
-> > ignore_reset to 1 before Gust VM booting up.
-> >
-> > Zhenguo Yao (2):
-> >   PCI: Add ignore_reset sysfs interface to control whether do device
-> >     reset in PCI drivers
-> >   vfio-pci: Don't do device reset when ignore_reset is setting
-> >
-> >  drivers/pci/pci-sysfs.c          | 25 +++++++++++++++++
-> >  drivers/vfio/pci/vfio_pci_core.c | 48 ++++++++++++++++++++------------
-> >  include/linux/pci.h              |  1 +
-> >  3 files changed, 56 insertions(+), 18 deletions(-)
-> >
->
-> This all seems like code to mask that these NVSwitch configurations are
-> probably insecure because we can't factor and manage NVSwitch isolation
-> into IOMMU grouping.  I'm guessing this "service VM" pokes proprietary
-> registers to manage that isolation and perhaps later resetting devices
-> negates that programming.  A more proper solution is probably to do our
-> best to guess the span of an NVSwitch configuration and make the IOMMU
-> group include all the devices, until NVIDIA provides proper code for
-> the kernel to understand this interconnect and how it affects DMA
-> isolation.  Nak on disabling resets for the purpose of preventing a
-> user from undoing proprietary device programming.  Thanks,
->
-> Alex
->
+Please avoid the overly long lines in your comments.
