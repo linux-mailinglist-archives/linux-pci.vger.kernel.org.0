@@ -2,154 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D446142E17A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 20:40:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 995D742E1C4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 20:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233981AbhJNSmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 14:42:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44289 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233976AbhJNSmJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 14:42:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634236804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZJWeI237I8vJJhqiJWMB6c2JMjtxXJ/9AbonOkMBp6s=;
-        b=D1qzBd4n1f8+DJOLhDhbn3Xlyem5cqOKOmzdTNzvWTuo0Il9pQ1GNeJ1tzUAtp8LfR7dYy
-        XCBU50TMaOPC3wDKlDkogrwi4hLs0w+TnyOsuTGFMdERJ26+wlwQvaH1nlIfKsD+seHze2
-        e5ch3WQorDK9yOHHb8eM3V3HAlJWrnw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-516-3FPBGYrzPP2tjFPWdQCfmQ-1; Thu, 14 Oct 2021 14:40:02 -0400
-X-MC-Unique: 3FPBGYrzPP2tjFPWdQCfmQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S232123AbhJNTBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 15:01:19 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:28912 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230032AbhJNTBQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Oct 2021 15:01:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1634237951; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=YdYae8FjvdwlIZUmd/70Jf7pQukNnaljep/EvzoyYRQ=; b=fDP02P/FqyjcJmQk4OJXccycr3VGU6UyzSI8XPkEvVsOYQ+tyKNbb5KlJCtDNXJU2WmyR8Jz
+ rlAIxF8UXJdSqN4kJyuGc0XGYmJDV+Tr1a45eWISjgUddKMQxK/nU4eXUS+4/ripOV1MnboZ
+ s5yIEOujnPgqiZMfsSVjUnGIR+Y=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 61687df8257f7c405a2c8e24 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 14 Oct 2021 18:59:04
+ GMT
+Sender: pmaliset=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8ABE7C4338F; Thu, 14 Oct 2021 18:59:03 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from pmaliset-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 373491006AA2;
-        Thu, 14 Oct 2021 18:40:00 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C39A60583;
-        Thu, 14 Oct 2021 18:39:57 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v5 2/2] x86/PCI/ACPI: Replace printk calls with pr_info/pr_warn calls
-Date:   Thu, 14 Oct 2021 20:39:43 +0200
-Message-Id: <20211014183943.27717-3-hdegoede@redhat.com>
-In-Reply-To: <20211014183943.27717-1-hdegoede@redhat.com>
-References: <20211014183943.27717-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        (Authenticated sender: pmaliset)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10FC0C4338F;
+        Thu, 14 Oct 2021 18:58:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 10FC0C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From:   Prasad Malisetty <pmaliset@codeaurora.org>
+To:     svarbanov@mm-sol.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vbadigan@codeaurora.org,
+        kw@linux.com, bhelgaas@google.com, manivannan.sadhasivam@linaro.org
+Cc:     Prasad Malisetty <pmaliset@codeaurora.org>
+Subject: [PATCH v1] PCI: qcom: Fix incorrect register offset in pcie init
+Date:   Fri, 15 Oct 2021 00:28:49 +0530
+Message-Id: <1634237929-25459-1-git-send-email-pmaliset@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The direct use of printk is deprecated, replace the printk calls
-in arch/x86/pci/acpi.c with pr_info/pr_warn calls.
+In pcie_init_2_7_0 one of the register writes using incorrect offset
+as per the platform register definitions (PCIE_PARF_AXI_MSTR_WR_ADDR_HALT
+offset value should be 0x1A8 instead 0x178).
+Update the correct offset value for SDM845 platform.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v5:
-- Rebase on v5 of:
-  "x86/PCI: Ignore E820 reservations for bridge windows on newer systems"
-  and send it out as part of a series instead of as a stand-alone patch
-- Add Rafael's Acked-by
----
- arch/x86/pci/acpi.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+fixes: ed8cc3b1 ("PCI: qcom: Add support for SDM845 PCIe controller")
 
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 72d473054262..f357dac92610 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -1,4 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
-+
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/pci.h>
- #include <linux/acpi.h>
- #include <linux/init.h>
-@@ -38,7 +41,7 @@ static int __init set_nouse_crs(const struct dmi_system_id *id)
+Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 8a7a300..5bce152 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1230,9 +1230,9 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
  
- static int __init set_ignore_seg(const struct dmi_system_id *id)
- {
--	printk(KERN_INFO "PCI: %s detected: ignoring ACPI _SEG\n", id->ident);
-+	pr_info("%s detected: ignoring ACPI _SEG\n", id->ident);
- 	pci_ignore_seg = true;
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 		val |= BIT(31);
+-		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 	}
+ 
  	return 0;
- }
-@@ -158,10 +161,9 @@ void __init pci_acpi_crs_quirks(void)
- 	else if (pci_probe & PCI_USE__CRS)
- 		pci_use_crs = true;
- 
--	printk(KERN_INFO "PCI: %s host bridge windows from ACPI; "
--	       "if necessary, use \"pci=%s\" and report a bug\n",
--	       pci_use_crs ? "Using" : "Ignoring",
--	       pci_use_crs ? "nocrs" : "use_crs");
-+	pr_info("%s host bridge windows from ACPI; if necessary, use \"pci=%s\" and report a bug\n",
-+		pci_use_crs ? "Using" : "Ignoring",
-+		pci_use_crs ? "nocrs" : "use_crs");
- 
- 	/*
- 	 * Some BIOS-es contain a bug where they add addresses which map to
-@@ -186,8 +188,8 @@ void __init pci_acpi_crs_quirks(void)
- 	else if (pci_probe & PCI_USE_E820)
- 		pci_use_e820 = true;
- 
--	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
--	       pci_use_e820 ? "Using" : "Ignoring");
-+	pr_info("%s E820 reservations for host bridge windows\n",
-+		pci_use_e820 ? "Using" : "Ignoring");
- }
- 
- #ifdef	CONFIG_PCI_MMCONFIG
-@@ -362,9 +364,8 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 		root->segment = domain = 0;
- 
- 	if (domain && !pci_domains_supported) {
--		printk(KERN_WARNING "pci_bus %04x:%02x: "
--		       "ignored (multiple domains not supported)\n",
--		       domain, busnum);
-+		pr_warn("pci_bus %04x:%02x: ignored (multiple domains not supported)\n",
-+			domain, busnum);
- 		return NULL;
- 	}
- 
-@@ -432,7 +433,7 @@ int __init pci_acpi_init(void)
- 	if (acpi_noirq)
- 		return -ENODEV;
- 
--	printk(KERN_INFO "PCI: Using ACPI for IRQ routing\n");
-+	pr_info("Using ACPI for IRQ routing\n");
- 	acpi_irq_penalty_init();
- 	pcibios_enable_irq = acpi_pci_irq_enable;
- 	pcibios_disable_irq = acpi_pci_irq_disable;
-@@ -444,7 +445,7 @@ int __init pci_acpi_init(void)
- 		 * also do it here in case there are still broken drivers that
- 		 * don't use pci_enable_device().
- 		 */
--		printk(KERN_INFO "PCI: Routing PCI interrupts for all devices because \"pci=routeirq\" specified\n");
-+		pr_info("Routing PCI interrupts for all devices because \"pci=routeirq\" specified\n");
- 		for_each_pci_dev(dev)
- 			acpi_pci_irq_enable(dev);
- 	}
 -- 
-2.31.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
