@@ -2,30 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 957D442E0C0
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 20:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F154342E0C1
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 20:06:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233821AbhJNSH3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 14:07:29 -0400
-Received: from out1.migadu.com ([91.121.223.63]:61247 "EHLO out1.migadu.com"
+        id S233471AbhJNSIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 14:08:18 -0400
+Received: from out1.migadu.com ([91.121.223.63]:61592 "EHLO out1.migadu.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233471AbhJNSH2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Oct 2021 14:07:28 -0400
-Message-ID: <4152471b-fdc9-5cfa-b72d-97f62fe4d282@linux.dev>
+        id S230386AbhJNSIS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Oct 2021 14:08:18 -0400
+Message-ID: <3117b0ac-dc2f-4986-8952-cd97a8351307@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1634234722;
+        t=1634234772;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IEmLw//Lj/QFJpBZ+ZGoCjcZ2/ZzcehH4/P8idSMT1U=;
-        b=fkKyL41GzLdYjf3fP76BuKqQQ5UepaD3wmrmmSyq3UjI8OZo3pkkQqOctjLrinvav+ejIs
-        ViwzC6dpng8Nl8kKKU6/HYwBVWChHF28CusB/whOS1JcA3ZjJ3naoP1GNyDhKsnQL7LAXE
-        DWJFfS8//KZW60H3c7X47kmRfZvCWi0=
-Date:   Thu, 14 Oct 2021 12:05:19 -0600
+        bh=/N1wY+gpT76b6FYYA1y3p7za2C/XYM0nto66DpglIpY=;
+        b=ZniFiqlKFoPWK1F+BYc/OYzEFkSvYXzGinFhiI00ecbB5qIYiUeGx+fM5B/Yddv/5EKyZI
+        73zOTnmikanCmMra2RUzcyualkAE5ER5egAD/uEuVrdzYYEnW0lDr7cWPQ4E19MliJ2W54
+        Kjiwglfn1jcm1oty+cyLdWaRNcdLJHI=
+Date:   Thu, 14 Oct 2021 12:06:09 -0600
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] PCI: vmd: Use preferred header files linux/device.h
- and linux/msi.h
+Subject: Re: [PATCH 2/2] PCI: hotplug: Use preferred header file linux/io.h
 Content-Language: en-US
 To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>
@@ -34,9 +33,10 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Nirmal Patel <nirmal.patel@linux.intel.com>,
         linux-pci@vger.kernel.org
 References: <20211013003145.1107148-1-kw@linux.com>
+ <20211013003145.1107148-2-kw@linux.com>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <20211013003145.1107148-1-kw@linux.com>
+In-Reply-To: <20211013003145.1107148-2-kw@linux.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
@@ -48,37 +48,27 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 10/12/2021 6:31 PM, Krzysztof Wilczyński wrote:
-> Use the preferred generic header files linux/device.h and linux/msi.h
-> that already include the corresponding asm/device.h and asm/msi.h files,
-> especially where the headers files linux/msi.h and asm/msi.h where both
-> included.
+> Use the preferred generic header file linux/io.h that already includes
+> the corresponding asm/io.h file.
 > 
 > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 > ---
->  drivers/pci/controller/vmd.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/pci/hotplug/cpqphp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a5987e52700e..9609eb911349 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -9,6 +9,7 @@
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/device.h>
->  #include <linux/msi.h>
->  #include <linux/pci.h>
->  #include <linux/pci-acpi.h>
-> @@ -18,8 +19,6 @@
->  #include <linux/rcupdate.h>
+> diff --git a/drivers/pci/hotplug/cpqphp.h b/drivers/pci/hotplug/cpqphp.h
+> index 77e4e0142fbc..2f7b49ea96e2 100644
+> --- a/drivers/pci/hotplug/cpqphp.h
+> +++ b/drivers/pci/hotplug/cpqphp.h
+> @@ -15,7 +15,7 @@
+>  #define _CPQPHP_H
 >  
->  #include <asm/irqdomain.h>
-> -#include <asm/device.h>
-> -#include <asm/msi.h>
->  
->  #define VMD_CFGBAR	0
->  #define VMD_MEMBAR1	2
+>  #include <linux/interrupt.h>
+> -#include <asm/io.h>		/* for read? and write? functions */
+> +#include <linux/io.h>		/* for read? and write? functions */
+>  #include <linux/delay.h>	/* for delays */
+>  #include <linux/mutex.h>
+>  #include <linux/sched/signal.h>	/* for signal_pending() */
 > 
 
 Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
