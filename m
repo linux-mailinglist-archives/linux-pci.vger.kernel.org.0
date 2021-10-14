@@ -2,192 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF7142E405
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 00:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C7842E41B
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 00:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233853AbhJNWOB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 18:14:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23573 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233818AbhJNWOA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 18:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634249515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0ARAKw+zbfJl7TPK/5neGhKOl4wJB5HrSDNndJfON5Q=;
-        b=YFlOjwL3ET8rY9nT43GfEon9Zuh352Q5WUhgxGl6Gu8klCMnptyg0VQPt/aRC42G0dJQ7c
-        oZbZmRjnBTXA/+sU9r/oQvxtyY0srNmUhDtkG8R+Nb6suEdBs3Z2TwypT8KxWX7upFiU6S
-        oxNjwzLALU6q6ZD1R5OBN1ax93MSXFw=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-N0_8F0OXNP-fpS-DJseqWQ-1; Thu, 14 Oct 2021 18:11:53 -0400
-X-MC-Unique: N0_8F0OXNP-fpS-DJseqWQ-1
-Received: by mail-ot1-f69.google.com with SMTP id t24-20020a056830225800b00552c055b5c1so1402048otd.18
-        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 15:11:53 -0700 (PDT)
+        id S234202AbhJNWZ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 18:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229836AbhJNWZ4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 18:25:56 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9462DC061753
+        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 15:23:50 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id bp7so2288590qkb.12
+        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 15:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L5FbFHDt82gq72AeamS55JhkriRGh9HPCqy/+ZBXeC8=;
+        b=Nv+II/I6Rxp+jIXHB/OwJsgKMS65qDgCi6gcPbaZXLs+93pYfEoJxF4vi3uWdDA4Fc
+         NGNxpfY41aiPX/grohsiy8KZKQrNUVyGLG41qrqVeolgEyBNtPhxlvpYagKYkXcuyykW
+         N/Dho6hlXzRiGjyXh43MpwD5ukSM3EUlXqrZ+CGdEdu9uHBNLqbS889kP5JzfDXIegAe
+         XGeCBWN3rl3qO/IW98eR+MYgWd6rSpaDwavWR+wmZuLFpe6qpQGhzi21SAv9kl8RtEZB
+         yh+Sok7hUSKGykFw5vEPjLuu0/+gAjomJXLlW/OVzO6HgI2BQtSM+8WAddAZcL/tFaP5
+         022Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0ARAKw+zbfJl7TPK/5neGhKOl4wJB5HrSDNndJfON5Q=;
-        b=e4AbWQuov2sldTe2m7Am/OQz1u+RIKouGuvxBkrySY+s59/mbGvTH/cOuLAuCNjq/2
-         wqT+IQQpH9snyNyvAIiMK4iLS5TNl6K79RLQ4P7F4IKd+iNqaZNRsve8hgsEAVMMh7/w
-         /0uoiagqQyQqtPCytjhg5c9tn+bpbTAfM21iiZKgCtROj8rz3505GzptL23gPzkCdOiL
-         rdTBMddZsvWX/PHigFyfsRKI/ZlX3VvwxDGyWv0G3uK63/I3NgIONRjJPLN0yskJWsrK
-         nAfzYsGOZqeQsf4DRa8DqpYpjYL+0skQqwuwJXxBGOLcmzrOdEYY6lLl3VigTuHqQzQ7
-         lRRA==
-X-Gm-Message-State: AOAM531nuw8GolFY13ldroY2oGaCV/zeR93P8THwqMfIDtZTFmYnidXq
-        2iE6dKNewqo21EXK831JHRrB3UUlzsfQvjLNX/4arnekw36h6sbZ97haAw0TbH5tyb/AUoTqzmm
-        BPxzSNpCmc5uXONj3tUyu
-X-Received: by 2002:a9d:5a91:: with SMTP id w17mr4897115oth.10.1634249512888;
-        Thu, 14 Oct 2021 15:11:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzhyTgtUZ7kxZV1KMw4Yjl5clGArHD2gXQWg0Vty4Q5kK8J0ZA26iqdN+NjNg61RdWAq5XZzQ==
-X-Received: by 2002:a9d:5a91:: with SMTP id w17mr4897086oth.10.1634249512592;
-        Thu, 14 Oct 2021 15:11:52 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id v5sm833965oix.6.2021.10.14.15.11.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L5FbFHDt82gq72AeamS55JhkriRGh9HPCqy/+ZBXeC8=;
+        b=zcVSs343NqdMV1nHSAlr50A29KpYakRkHlzPNHrkPRwhRMdbqrCXKfhBOVFekBGCxF
+         WGRNMhtF0U91VDRr+XGvAw30MUN4BVxQbgavuSSyOX6rYe8kXYa79h7P3++jaxTwbi9V
+         gN2//+eUvg0xze3mk0c5c6orUkR0D9CWiy7b/pMeohzVM5fVjh2elBgUYUaz+m2mogIm
+         ETTL93KRhhBvgz9XMndQyn+wDV9QeCWPWgeuVGWDh/mdq7Sm1RWXxFuwODzKGriCgu0D
+         QEQ8dW1aZfB45U1UB8G/qeDRpfXnxqlG2Ppk41BKfFu04Q3zvokCTqyP0qxaCAPbv/o9
+         mjcQ==
+X-Gm-Message-State: AOAM5307je3giUYrqlTMWxwNO4kktmC8e21G2Y1jkT84SbfyghfBFR56
+        Od3GJSIa0LWcCnLc7Jrt+x5P2Q==
+X-Google-Smtp-Source: ABdhPJywYNDaGn9W3ZA4/hE4KjmIX5JIQ4CpRpSHNeloBi0gr4d7dtWd/tNYpyw5lbaV4w5MTOOKHw==
+X-Received: by 2002:ae9:ebc2:: with SMTP id b185mr7028681qkg.491.1634250229560;
+        Thu, 14 Oct 2021 15:23:49 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id i11sm1850010qki.28.2021.10.14.15.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Oct 2021 15:11:52 -0700 (PDT)
-Date:   Thu, 14 Oct 2021 16:11:50 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     <bhelgaas@google.com>, <jgg@nvidia.com>, <saeedm@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
-        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
-Subject: Re: [PATCH V1 mlx5-next 04/13] PCI/IOV: Allow SRIOV VF drivers to
- reach the drvdata of a PF
-Message-ID: <20211014161150.38e3d8aa.alex.williamson@redhat.com>
-In-Reply-To: <20211013094707.163054-5-yishaih@nvidia.com>
-References: <20211013094707.163054-1-yishaih@nvidia.com>
-        <20211013094707.163054-5-yishaih@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        Thu, 14 Oct 2021 15:23:48 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mb98e-00F4b3-4g; Thu, 14 Oct 2021 19:23:48 -0300
+Date:   Thu, 14 Oct 2021 19:23:48 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Si-Wei Liu <siwliu.kernel@gmail.com>
+Cc:     Haakon Bugge <haakon.bugge@oracle.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Enabling RO on a VF
+Message-ID: <20211014222348.GP2688930@ziepe.ca>
+References: <48FF6F8E-95E2-4A29-A059-12EF614B381C@oracle.com>
+ <20211001115455.GJ3544071@ziepe.ca>
+ <4EAE3BC9-26B6-41E3-B040-2ADAB77D96CE@oracle.com>
+ <20211001120153.GL3544071@ziepe.ca>
+ <CAPWQSg0wODmw7evfzdtP4gW-toVgoVfigP5t0CVosOAkarNTTg@mail.gmail.com>
+ <20211005232834.GB2688930@ziepe.ca>
+ <CAPWQSg0EYPcudN9Gc--ges68sLmW4mJ4eYHxmmRq8FAzq8C5WQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPWQSg0EYPcudN9Gc--ges68sLmW4mJ4eYHxmmRq8FAzq8C5WQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 13 Oct 2021 12:46:58 +0300
-Yishai Hadas <yishaih@nvidia.com> wrote:
+On Tue, Oct 12, 2021 at 10:57:16AM -0700, Si-Wei Liu wrote:
+> On Tue, Oct 5, 2021 at 4:28 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, Oct 05, 2021 at 04:09:54PM -0700, Si-Wei Liu wrote:
+> > > On Fri, Oct 1, 2021 at 6:02 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Fri, Oct 01, 2021 at 11:59:15AM +0000, Haakon Bugge wrote:
+> > > > >
+> > > > >
+> > > > > > On 1 Oct 2021, at 13:54, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > > >
+> > > > > > On Fri, Oct 01, 2021 at 11:05:15AM +0000, Haakon Bugge wrote:
+> > > > > >> Hey,
+> > > > > >>
+> > > > > >>
+> > > > > >> Commit 1477d44ce47d ("RDMA/mlx5: Enable Relaxed Ordering by default
+> > > > > >> for kernel ULPs") uses pcie_relaxed_ordering_enabled() to check if
+> > > > > >> RO can be enabled. This function checks if the Enable Relaxed
+> > > > > >> Ordering bit in the Device Control register is set. However, on a
+> > > > > >> VF, this bit is RsvdP (Reserved for future RW
+> > > > > >> implementations. Register bits are read-only and must return zero
+> > > > > >> when read. Software must preserve the value read for writes to
+> > > > > >> bits.).
+> > > > > >>
+> > > > > >> Hence, AFAICT, RO will not be enabled when using a VF.
+> > > > > >>
+> > > > > >> How can that be fixed?
+> > > > > >
+> > > > > > When qemu takes a VF and turns it into a PF in a VM it must emulate
+> > > > > > the RO bit and return one
+> > > > >
+> > > > > I have a pass-through VF:
+> > > > >
+> > > > > # lspci -s ff:00.0 -vvv
+> > > > > ff:00.0 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex Virtual Function]
+> > > > > []
+> > > > >               DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+> > > > >                       RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
+> > > >
+> > > > Like I said, it is a problem in the qemu area..
+> > > >
+> > > > Jason
+> > > Can you clarify why this is a problem in the QEMU area?
+> > >
+> > > Even though Mellanox device might well support it (on VF), there's no
+> > > way for QEMU to really know if an arbitrary passthrough device may
+> > > support RO.
+> >
+> > That isn't what the cap bit means
+> >
+> > The cap bit on the PF completely disables generation of RO at the
+> > device at all.
+> >
+> > If the PF's cap bit is disabled then no VF can generate RO, and qemu
+> > should expose a wired to zero RO bit in the emulated PF.
+> >
+> > If the cap bit is enabled then the VFs could generate RO, depending on
+> > their drivers, and qemu should generate defaulted to 1 bit in the
+> > emulated PF.
+> 
+> Set the broken root port and the P2P DMA cases aside, let's say we
+> have a RO enabled PF where there's a working root port upstream that
+> well supports RO. As VF mostly inherits PF's state/config, no matter
+> what value the DevCtl RlxdOrd bit presents in the host it doesn't mean
+> anything,
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> There are some cases where a SRIOV VF driver will need to reach into and
-> interact with the PF driver. This requires accessing the drvdata of the PF.
-> 
-> Provide a function pci_iov_get_pf_drvdata() to return this PF drvdata in a
-> safe way. Normally accessing a drvdata of a foreign struct device would be
-> done using the device_lock() to protect against device driver
-> probe()/remove() races.
-> 
-> However, due to the design of pci_enable_sriov() this will result in a
-> ABBA deadlock on the device_lock as the PF's device_lock is held during PF
-> sriov_configure() while calling pci_enable_sriov() which in turn holds the
-> VF's device_lock while calling VF probe(), and similarly for remove.
-> 
-> This means the VF driver can never obtain the PF's device_lock.
-> 
-> Instead use the implicit locking created by pci_enable/disable_sriov(). A
-> VF driver can access its PF drvdata only while its own driver is attached,
-> and the PF driver can control access to its own drvdata based on when it
-> calls pci_enable/disable_sriov().
-> 
-> To use this API the PF driver will setup the PF drvdata in the probe()
-> function. pci_enable_sriov() is only called from sriov_configure() which
-> cannot happen until probe() completes, ensuring no VF races with drvdata
-> setup.
-> 
-> For removal, the PF driver must call pci_disable_sriov() in its remove
-> function before destroying any of the drvdata. This ensures that all VF
-> drivers are unbound before returning, fencing concurrent access to the
-> drvdata.
-> 
-> The introduction of a new function to do this access makes clear the
-> special locking scheme and the documents the requirements on the PF/VF
-> drivers using this.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> ---
->  drivers/pci/iov.c   | 29 +++++++++++++++++++++++++++++
->  include/linux/pci.h |  7 +++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index e7751fa3fe0b..ca696730f761 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -47,6 +47,35 @@ int pci_iov_vf_id(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_iov_vf_id);
->  
-> +/**
-> + * pci_iov_get_pf_drvdata - Return the drvdata of a PF
-> + * @dev - VF pci_dev
-> + * @pf_driver - Device driver required to own the PF
-> + *
-> + * This must be called from a context that ensures that a VF driver is attached.
-> + * The value returned is invalid once the VF driver completes its remove()
-> + * callback.
-> + *
-> + * Locking is achieved by the driver core. A VF driver cannot be probed until
-> + * pci_enable_sriov() is called and pci_disable_sriov() does not return until
-> + * all VF drivers have completed their remove().
-> + *
-> + * The PF driver must call pci_disable_sriov() before it begins to destroy the
-> + * drvdata.
-> + */
-> +void *pci_iov_get_pf_drvdata(struct pci_dev *dev, struct pci_driver *pf_driver)
-> +{
-> +	struct pci_dev *pf_dev;
-> +
-> +	if (dev->is_physfn)
-> +		return ERR_PTR(-EINVAL);
+Not quite if the guest sees RlxdOrd enabled then it means the guest
+can expect that the device can send TLPs with relaxed ordering sent.
 
-I think we're trying to make this only accessible to VFs, so shouldn't
-we test (!dev->is_virtfn)?  is_physfn will be zero for either a PF with
-failed SR-IOV configuration or for a non-SR-IOV device afaict.  Thanks,
+> although we know getting RO disabled on the PF implies
+> prohibiting RO TLP being sent by all its child VFs. There's no
+> question for this part. The real problem though, is if the RlxdOrd cap
+> bit for the VF can be controlled individually similar to the way the
+> toggling on PF is done?
 
-Alex
+It cannot.
 
-> +	pf_dev = dev->physfn;
-> +	if (pf_dev->driver != pf_driver)
-> +		return ERR_PTR(-EINVAL);
-> +	return pci_get_drvdata(pf_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_get_pf_drvdata);
-> +
->  /*
->   * Per SR-IOV spec sec 3.3.10 and 3.3.11, First VF Offset and VF Stride may
->   * change when NumVFs changes.
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 2337512e67f0..639a0a239774 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2154,6 +2154,7 @@ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
->  int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
->  int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
->  int pci_iov_vf_id(struct pci_dev *dev);
-> +void *pci_iov_get_pf_drvdata(struct pci_dev *dev, struct pci_driver *pf_driver);
->  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
->  void pci_disable_sriov(struct pci_dev *dev);
->  
-> @@ -2187,6 +2188,12 @@ static inline int pci_iov_vf_id(struct pci_dev *dev)
->  	return -ENOSYS;
->  }
->  
-> +static inline void *pci_iov_get_pf_drvdata(struct pci_dev *dev,
-> +					   struct pci_driver *pf_driver)
-> +{
-> +	return ERR_PTR(-EINVAL);
-> +}
-> +
->  static inline int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn)
->  { return -ENODEV; }
->  
+Just like today where qemu wrongly reports disabled for a VF RlxdOrd
+it doesn't mean that the VF cannot or does not issue Relaxed Ordering
+TLPs.
 
+Since the HW cannot have this level of fine grained control a full
+emulation of the RlxdOrd bit is not possible for VFs.
+
+> For e.g, suppose the RO cap bit for the VF
+> emulated by QEMU defaults to enabled where the backing PF and all
+> child VFs have RO enabled. Will a PCI write of zero to the bit be able
+> to prevent RO ULP initiated by that specific VF from being sent out,
+> which is to resemble PF's behaviour? 
+
+Nope. HW can't do it.
+
+> This being the Mellanox VF's specifics? 
+
+It is not Mellanox specific, this is all PCI spec.
+
+> More broadly, should the VFs for arbitrary PCIe devices have that
+> kind of control on an individual VF's level? I don't find it
+> anywhere in the PCIe SR-IOV spec that this should be the case.
+
+They don't and for this discussion it doesn't matter.
+
+Your question was about how to enable relaxed ordering in guests, and
+the answer is for qemu to report enabled on rlxdord in the VF using
+PCI config space emulation and continue to not support changing the
+relaxed ordering mode of a VF (ie wired to enabled)
+
+Jason
