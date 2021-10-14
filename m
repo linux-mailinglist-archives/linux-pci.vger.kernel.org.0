@@ -2,327 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E1F142D81E
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 13:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E65F442D88F
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 13:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230518AbhJNL0f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 07:26:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26812 "EHLO
+        id S231310AbhJNLwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 07:52:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:37189 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230474AbhJNL0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 07:26:33 -0400
+        by vger.kernel.org with ESMTP id S231286AbhJNLwK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 07:52:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634210667;
+        s=mimecast20190719; t=1634212205;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LPRIOFVHOX7he1jSqwslJXf29i8yYE1ZatBZ4ZEv92k=;
-        b=LnBQQ5yvKD0s3U38X2q0F51PSzCHI7Es+7wcJznRdKJkZ1phxY55fM6rjguXu4Ot1J4DB4
-        IgGLrIEvctAezgy+CMCzobDdL7MxfQqKtm74hcRIYy9IzP40u4BqXJRRJ82W1NLzRbuBT6
-        VljE5y5xcul9bMzXm0DDSy5uf9SP0qg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-5kWyTriYODmvZLEiTPaxTg-1; Thu, 14 Oct 2021 07:24:26 -0400
-X-MC-Unique: 5kWyTriYODmvZLEiTPaxTg-1
-Received: by mail-ed1-f70.google.com with SMTP id cy14-20020a0564021c8e00b003db8c9a6e30so4908318edb.1
-        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 04:24:26 -0700 (PDT)
+        bh=BjIpv+udz4Ba/qOEMRyyxOUnaMX1at+9okP/sD2YABQ=;
+        b=RJbGGIXmx737jWGuoaQ8BkDITholNunoKfz2idBH8Ex9dwETzD6evS4D1CIE7V9DHUciz4
+        tIIp3EVImjL3SuQUCsQxqGKnmw7Bo0J8UBrdr5DKdcGaLtonDs3pki71SV7Dk0V/XrKKVS
+        hRNVJHH+BKAKBG8xync17sEcCJQHEn8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-tZX968CQMrGG1ZkDP1QESg-1; Thu, 14 Oct 2021 07:50:04 -0400
+X-MC-Unique: tZX968CQMrGG1ZkDP1QESg-1
+Received: by mail-wr1-f71.google.com with SMTP id s18-20020adfbc12000000b00160b2d4d5ebso4378723wrg.7
+        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 04:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LPRIOFVHOX7he1jSqwslJXf29i8yYE1ZatBZ4ZEv92k=;
-        b=IJwZtlSF2S84qJlmzdxER/lR7vLIOJxWCyJMZd4RtRTvDSz7RWc42X6HdDJ8sp96Dx
-         +1mLJqz2hvIigkJ+tb7y9BOjpMXZeok2JiKFf20qSo59Wbc6KK899pgJcnUGEAXdLOOL
-         oxqAlolbaimk1aajBMay1wxeYKsxHB878TWWI4BOUEnxGEKRDGqFi7EW64ZC9KQXEpLp
-         g5rdHykQs/5l+Y7x4KjjEpLHjjcxyOTGErvnTU6ZNaK/lG1a4qCc6ll3NjZGjNdgutQ6
-         Q7wb3GJ9cbpNeHk8DosD52/Fg7GjR24G0gFjSKS9jOTd6TNEvzx3ElAWEGm+tjTAIKJL
-         SZvQ==
-X-Gm-Message-State: AOAM530ED+3RUB4Xumcjnb242lvaNnOnr19weeaiZLTxNBXDS8zLpSU2
-        kMikfeEdlH1VhNOFciwZK/s9Q8sBM0fx9MYXHZMm1pk5SvHqj6g5LCqhUMk85f08yuWG36C7ZGv
-        I3zHyoizmNYtoN8RG/3QP
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr7778378edz.215.1634210664967;
-        Thu, 14 Oct 2021 04:24:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJza3Loi8vzUt6vxJHsEEpBV8wwBsxVZpMwQDd7chPzHr++H+3aIpEkKvCZdW3WN4px1lhKmQA==
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr7778342edz.215.1634210664705;
-        Thu, 14 Oct 2021 04:24:24 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c1e-bf00-6fd7-b500-c1ca-784d.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:6fd7:b500:c1ca:784d])
-        by smtp.gmail.com with ESMTPSA id d3sm1755865ejb.35.2021.10.14.04.24.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Oct 2021 04:24:24 -0700 (PDT)
-Subject: Re: [PATCH v3] x86/PCI: Ignore E820 reservations for bridge windows
- on newer systems
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BjIpv+udz4Ba/qOEMRyyxOUnaMX1at+9okP/sD2YABQ=;
+        b=HnD0pQCFiDcinCVv+tFmd5O1Ajvy9KUa57ceQDG03iOJFXAUqJaxMvEYFG8Li5UtjC
+         6WX9FtUVc8vTKYxMH0j3981vD1kS3uAK/01CKxW6kNyY7UPL1DxUnKY4D0P0/5hPLMo0
+         BMWV0pBZdRfbXRyySyWZZO6RfXNNokZrgC+VNP6UG2U9ZTWunMgYlQkuHnUQ4y2FEu1Y
+         7QyVrU+2fNLDLA5O5SV02W8M7jDomikhBY0otg5DlRQIQYLsP1Y/o5WFOQCcmAY4kvL6
+         j/5/7ekI8BqMDjxR6DTDpL824rFwBaqryFAkMf/LXVDqqqWIf/lWLj/OjndKGLomkOoJ
+         GHTQ==
+X-Gm-Message-State: AOAM531JpAvqfBxWk1WdqpRRdWAVmDakSxwo56htEteFq5vRGCCoqDhV
+        A7yXelfSZd50lU1gFrWsnOucQe/IFlgnTQNMmjf8/0K33NfTh+9vHNWxeiVO8ElDsrodP0EXcoV
+        B4wDDBStXSFSnpcrjDk5E
+X-Received: by 2002:adf:959a:: with SMTP id p26mr5903565wrp.342.1634212203027;
+        Thu, 14 Oct 2021 04:50:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz9qOw3WbNBTRd79UJzGLK0rcHBsHFX2nKa+bjejslC1TbPETWCFjebXvTyHUX4CLIfPAkTIA==
+X-Received: by 2002:adf:959a:: with SMTP id p26mr5903550wrp.342.1634212202845;
+        Thu, 14 Oct 2021 04:50:02 -0700 (PDT)
+Received: from redhat.com ([2.55.16.227])
+        by smtp.gmail.com with ESMTPSA id o1sm2171853wru.91.2021.10.14.04.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Oct 2021 04:50:02 -0700 (PDT)
+Date:   Thu, 14 Oct 2021 07:49:55 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Lutomirski, Andy" <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>
-References: <20211014110357.17957-1-hdegoede@redhat.com>
- <CAJZ5v0hiQXhLs4Y2ij_8YaVupmWYdTEYBpJLFg1CPk6RocP1_A@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <22c25ecc-c43e-53e6-0aa1-51e548406363@redhat.com>
-Date:   Thu, 14 Oct 2021 13:24:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
+ pci_iomap_host_shared_range()
+Message-ID: <20211014065626-mutt-send-email-mst@kernel.org>
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009053103-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
+ <0e6664ac-cbb2-96ff-0106-9301735c0836@linux.intel.com>
+ <DM8PR11MB57501C8F8F5C8B315726882EE7B69@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <20211012171016-mutt-send-email-mst@kernel.org>
+ <DM8PR11MB5750A40FAA6AFF6A29CF70DAE7B89@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <20211014025514-mutt-send-email-mst@kernel.org>
+ <DM8PR11MB57500B2D821E8AAF93EB66CEE7B89@DM8PR11MB5750.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hiQXhLs4Y2ij_8YaVupmWYdTEYBpJLFg1CPk6RocP1_A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB57500B2D821E8AAF93EB66CEE7B89@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 14-10-2021 13:14, Rafael J. Wysocki wrote:
-> On Thu, Oct 14, 2021 at 1:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Some BIOS-es contain a bug where they add addresses which map to system RAM
->> in the PCI bridge memory window returned by the ACPI _CRS method, see
->> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
->> space").
->>
->> To avoid this Linux by default excludes E820 reservations when allocating
->> addresses since 2010. Windows however ignores E820 reserved regions for PCI
->> mem allocations, so in hindsight Linux honoring them is a problem.
->>
->> Recently (2020) some systems have shown-up with E820 reservations which
->> cover the entire _CRS returned PCI bridge memory window, causing all
->> attempts to assign memory to PCI BARs which have not been setup by the
->> BIOS to fail. For example here are the relevant dmesg bits from a
->> Lenovo IdeaPad 3 15IIL 81WE:
->>
->>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->>
->> Ideally Linux would fully stop honoring E820 reservations for PCI mem
->> allocations, but then the old systems this was added for will regress.
->> Instead keep the old behavior for old systems, while ignoring the E820
->> reservations like Windows does for any systems from now on.
->>
->> Old systems are defined here as BIOS year < 2018, this was chosen to
->> make sure that pci_use_e820 will not be set on the currently affected
->> systems, while at the same time also taking into account that the
->> systems for which the E820 checking was originally added may have
->> received BIOS updates for quite a while (esp. CVE related ones),
->> giving them a more recent BIOS year then 2010.
->>
->> Also add pci=no_e820 and pci=use_e820 options to allow overriding
->> the BIOS year heuristic.
->>
->> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
->> BugLink: https://bugs.launchpad.net/bugs/1878279
->> BugLink: https://bugs.launchpad.net/bugs/1931715
->> BugLink: https://bugs.launchpad.net/bugs/1932069
->> BugLink: https://bugs.launchpad.net/bugs/1921649
->> Cc: Benoit Grégoire <benoitg@coeus.ca>
->> Cc: Hui Wang <hui.wang@canonical.com>
->> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Thu, Oct 14, 2021 at 07:27:42AM +0000, Reshetova, Elena wrote:
+> > On Thu, Oct 14, 2021 at 06:32:32AM +0000, Reshetova, Elena wrote:
+> > > > On Tue, Oct 12, 2021 at 06:36:16PM +0000, Reshetova, Elena wrote:
+> > > > > > The 5.15 tree has something like ~2.4k IO accesses (including MMIO and
+> > > > > > others) in init functions that also register drivers (thanks Elena for
+> > > > > > the number)
+> > > > >
+> > > > > To provide more numbers on this. What I can see so far from a smatch-based
+> > > > > analysis, we have 409 __init style functions (.probe & builtin/module_
+> > > > > _platform_driver_probe excluded) for 5.15 with allyesconfig.
+> > > >
+> > > > I don't think we care about allyesconfig at all though.
+> > > > Just don't do that.
+> > > > How about allmodconfig? This is closer to what distros actually do.
+> > >
+> > > It does not make any difference really for the content of the /drivers/*:
+> > > gives 408 __init style functions doing IO (.probe & builtin/module_
+> > > > > _platform_driver_probe excluded) for 5.15 with allmodconfig:
+> > >
+> > > ['doc200x_ident_chip',
+> > > 'doc_probe', 'doc2001_init', 'mtd_speedtest_init',
+> > > 'mtd_nandbiterrs_init', 'mtd_oobtest_init', 'mtd_pagetest_init',
+> > > 'tort_init', 'mtd_subpagetest_init', 'fixup_pmc551',
+> > > 'doc_set_driver_info', 'init_amd76xrom', 'init_l440gx',
+> > > 'init_sc520cdp', 'init_ichxrom', 'init_ck804xrom', 'init_esb2rom',
+> > > 'probe_acpi_namespace_devices', 'amd_iommu_init_pci', 'state_next',
+> > > 'arm_v7s_do_selftests', 'arm_lpae_run_tests', 'init_iommu_one',
+> > 
+> > Um. ARM? Which architecture is this build for?
 > 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Thank you.
-
-> with one tiny nit below.
+> The list of smatch IO findings is built for x86, but the smatch cross function
+> database covers all archs, so when queried for all potential function callers,
+> it would show non x86 arch call chains also. 
 > 
-> Or please let me know if you want me to pick this up.
-
-Since all of the changes are under arch/x86/ I expect the x86/tip
-folks to pick this up ?
-
+> Here is the original x86 finding and call chain for the 'arm_v7s_do_selftests':
 > 
->> ---
->> Changes in v3:
->> - Commit msg tweaks (drop dmesg timestamps, typo fix)
->> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
->> - Add Mika's Reviewed-by
->>
->> Changes in v2:
->> - Replace the per model DMI quirk approach with disabling E820 reservations
->>   checking for all systems with a BIOS year >= 2018
->> - Add documentation for the new kernel-parameters to
->>   Documentation/admin-guide/kernel-parameters.txt
->> ---
->> Other patches trying to address the same issue:
->> https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
->> https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
->> V1 patch:
->> https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
->> ---
->>  .../admin-guide/kernel-parameters.txt         |  6 ++++
->>  arch/x86/include/asm/pci_x86.h                | 10 +++++++
->>  arch/x86/kernel/resource.c                    |  4 +++
->>  arch/x86/pci/acpi.c                           | 29 +++++++++++++++++++
->>  arch/x86/pci/common.c                         |  6 ++++
->>  5 files changed, 55 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 43dc35fe5bc0..969cde5d74c8 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -3949,6 +3949,12 @@
->>                                 please report a bug.
->>                 nocrs           [X86] Ignore PCI host bridge windows from ACPI.
->>                                 If you need to use this, please report a bug.
->> +               use_e820        [X86] Honor E820 reservations when allocating
->> +                               PCI host bridge memory. If you need to use this,
->> +                               please report a bug.
->> +               no_e820         [X86] ignore E820 reservations when allocating
->> +                               PCI host bridge memory. If you need to use this,
->> +                               please report a bug.
->>                 routeirq        Do IRQ routing for all PCI devices.
->>                                 This is normally done in pci_enable_device(),
->>                                 so this option is a temporary workaround
->> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
->> index 490411dba438..0bb4e7dd0ffc 100644
->> --- a/arch/x86/include/asm/pci_x86.h
->> +++ b/arch/x86/include/asm/pci_x86.h
->> @@ -39,6 +39,8 @@ do {                                          \
->>  #define PCI_ROOT_NO_CRS                0x100000
->>  #define PCI_NOASSIGN_BARS      0x200000
->>  #define PCI_BIG_ROOT_WINDOW    0x400000
->> +#define PCI_USE_E820           0x800000
->> +#define PCI_NO_E820            0x1000000
->>
->>  extern unsigned int pci_probe;
->>  extern unsigned long pirq_table_addr;
->> @@ -64,6 +66,8 @@ void pcibios_scan_specific_bus(int busn);
->>
->>  /* pci-irq.c */
->>
->> +struct pci_dev;
->> +
->>  struct irq_info {
->>         u8 bus, devfn;                  /* Bus, device and function */
->>         struct {
->> @@ -232,3 +236,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
->>  # define x86_default_pci_init_irq      NULL
->>  # define x86_default_pci_fixup_irqs    NULL
->>  #endif
->> +
->> +#if defined(CONFIG_PCI) && defined(CONFIG_ACPI)
->> +extern bool pci_use_e820;
->> +#else
->> +#define pci_use_e820 false
->> +#endif
->> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
->> index 9b9fb7882c20..e8dc9bc327bd 100644
->> --- a/arch/x86/kernel/resource.c
->> +++ b/arch/x86/kernel/resource.c
->> @@ -1,6 +1,7 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include <linux/ioport.h>
->>  #include <asm/e820/api.h>
->> +#include <asm/pci_x86.h>
->>
->>  static void resource_clip(struct resource *res, resource_size_t start,
->>                           resource_size_t end)
->> @@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
->>         int i;
->>         struct e820_entry *entry;
->>
->> +       if (!pci_use_e820)
->> +               return;
->> +
->>         for (i = 0; i < e820_table->nr_entries; i++) {
->>                 entry = &e820_table->entries[i];
->>
->> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
->> index 948656069cdd..6c2febe84b6f 100644
->> --- a/arch/x86/pci/acpi.c
->> +++ b/arch/x86/pci/acpi.c
->> @@ -21,6 +21,8 @@ struct pci_root_info {
->>
->>  static bool pci_use_crs = true;
->>  static bool pci_ignore_seg = false;
->> +/* Consumed in arch/x86/kernel/resource.c */
->> +bool pci_use_e820 = false;
->>
->>  static int __init set_use_crs(const struct dmi_system_id *id)
->>  {
->> @@ -160,6 +162,33 @@ void __init pci_acpi_crs_quirks(void)
->>                "if necessary, use \"pci=%s\" and report a bug\n",
->>                pci_use_crs ? "Using" : "Ignoring",
->>                pci_use_crs ? "nocrs" : "use_crs");
->> +
->> +       /*
->> +        * Some BIOS-es contain a bug where they add addresses which map to system
->> +        * RAM in the PCI bridge memory window returned by the ACPI _CRS method, see
->> +        * commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address space").
->> +        * To avoid this Linux by default excludes E820 reservations when allocating
->> +        * addresses since 2010. Windows however ignores E820 reserved regions for
->> +        * PCI mem allocations, so in hindsight Linux honoring them is a problem.
->> +        * In 2020 some systems have shown-up with E820 reservations which cover the
->> +        * entire _CRS returned PCI bridge memory window, causing all attempts to
->> +        * assign memory to PCI BARs to fail if Linux honors the E820 reservations.
->> +        *
->> +        * Ideally Linux would fully stop honoring E820 reservations for PCI mem
->> +        * allocations, but then the old systems this was added for will regress.
->> +        * Instead keep the old behavior for old systems, while ignoring the E820
->> +        * reservations like Windows does for any systems from now on.
->> +        */
->> +       if (year >= 0 && year < 2018)
->> +               pci_use_e820 = true;
->> +
->> +       if (pci_probe & PCI_NO_E820)
->> +               pci_use_e820 = false;
->> +       else if (pci_probe & PCI_USE_E820)
->> +               pci_use_e820 = true;
->> +
->> +       printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
->> +              pci_use_e820 ? "Honoring" : "Ignoring");
+>   Detected low-level IO from arm_v7s_do_selftests in fun
+> __iommu_queue_command_sync
 > 
-> Why not pr_info()?
-
-This file is using printk(KERN_... consistently everywhere. I'm just following
-the existing style here. I very much dislike mixing styles in a single file. 
-
-If we want to change this for this file then IMHO the right thing to do would
-be a follow up patch changing all the printk-s at once.
-
-Regards,
-
-Hans
-
-
-
+> drivers/iommu/amd/iommu.c:1025 __iommu_queue_command_sync() error:
+> {15002074744551330002}
+>     'check_host_input' read from the host using function 'readl' to a
+> member of the structure 'iommu->cmd_buf_head';
 > 
->>  }
->>
->>  #ifdef CONFIG_PCI_MMCONFIG
->> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
->> index 3507f456fcd0..091ec7e94fcb 100644
->> --- a/arch/x86/pci/common.c
->> +++ b/arch/x86/pci/common.c
->> @@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
->>         } else if (!strcmp(str, "nocrs")) {
->>                 pci_probe |= PCI_ROOT_NO_CRS;
->>                 return NULL;
->> +       } else if (!strcmp(str, "use_e820")) {
->> +               pci_probe |= PCI_USE_E820;
->> +               return NULL;
->> +       } else if (!strcmp(str, "no_e820")) {
->> +               pci_probe |= PCI_NO_E820;
->> +               return NULL;
->>  #ifdef CONFIG_PHYS_ADDR_T_64BIT
->>         } else if (!strcmp(str, "big_root_window")) {
->>                 pci_probe |= PCI_BIG_ROOT_WINDOW;
->> --
+> __iommu_queue_command_sync()
+>   iommu_completion_wait()
+>     amd_iommu_domain_flush_complete()
+>       iommu_v1_map_page()
+>         arm_v7s_do_selftests()
 > 
+> So, the results can be further filtered if you want a specified arch. 
+
+Even better would be a typical distro build.
+
+-- 
+MST
 
