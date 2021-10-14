@@ -2,169 +2,266 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 198FC42D69D
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 11:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61F7E42D7AF
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Oct 2021 13:04:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbhJNKAn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Oct 2021 06:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbhJNKAm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 06:00:42 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4C9C061760;
-        Thu, 14 Oct 2021 02:58:37 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id l6so3791240plh.9;
-        Thu, 14 Oct 2021 02:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7pLIyNJD+d5mAa5PFcs4g1QmPkUK7kz7RJBNS5MvFNU=;
-        b=Ah6yRqVAdD4LxJmM0L+oAgTEvbnLGQdgTDLVPsNv4h/MGGz4gP8NxmaQFWlLnlnnCV
-         iCeC/m2bFkk2ynY0SAPHDJO7L+KjudbSaYQAwNrsWfRMqdnh/yftsB20y+tg8yCi+GZk
-         cv2KGgSQAgK9f4l2yXlNlnvR0NKWMkC2wGuU5te8kHtdNvErrrH/vJEQSVSQbjpcx21X
-         WZ0VwIvpbAZ0shhyRFxEriDi6CNi46ejgK4mM2N5oNZKlqokpGwyCurtfsxWNdEbV05u
-         0WrEd8qvFuUqPVLO/kjv1aCYD70loJVVGTh4tbU8wDG+FwS9xOcScT3r8Y0J8A2KEYQ0
-         Xtiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7pLIyNJD+d5mAa5PFcs4g1QmPkUK7kz7RJBNS5MvFNU=;
-        b=p4L7GMuIm5c6/RJS50//6Mt+w2SaNO7l2EJ0Xn+HOFMIzplbvyOzt0XmzXIZwcgUA4
-         0alG7GDDHXUPjC5dRUeI0rsbxvln5RZinRg1xenXhOo/XDjEtxJfEKNZG+QNtV9i7iH7
-         LWpxAhnyCnhWIh91OAgkvE/abwLmYo8tqlTMhA+voq4EtAVYrLEfyBPcHyfPHEv/McPP
-         rVBMoNkSp20ciNqNMt1vf3QDO2G6d3E8V5mTqdYmsKdR+i81i/1WsIx6JssdlExl0wsN
-         yT77X5bSoAu8p+3mkDKyL2p4NKXKpnB5c8/gyHhDLb8jZLbDH5JWJqXU4cqbXngTrts6
-         fUAA==
-X-Gm-Message-State: AOAM531p0HkC+3qut4fej7CeKbNG9PxjjFCYCZWxeK9sY+XB15z8i+UV
-        wrcX+3N95PP/02zRGljd+sk=
-X-Google-Smtp-Source: ABdhPJzXxvkWR+vqomWVBACjT7oXOvcLdFI29NK4NAXfXv87ebuNlyJybNcBQfZnAabrIZRuGoTl9g==
-X-Received: by 2002:a17:903:31cd:b0:134:5b6f:2ff8 with SMTP id v13-20020a17090331cd00b001345b6f2ff8mr4156279ple.46.1634205517429;
-        Thu, 14 Oct 2021 02:58:37 -0700 (PDT)
-Received: from localhost.localdomain (5e.8a.38a9.ip4.static.sl-reverse.com. [169.56.138.94])
-        by smtp.gmail.com with ESMTPSA id k127sm2080664pfd.1.2021.10.14.02.58.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Oct 2021 02:58:37 -0700 (PDT)
-From:   Zhenguo Yao <yaozhenguo1@gmail.com>
-To:     bhelgaas@google.com, alex.williamson@redhat.com
-Cc:     cohuck@redhat.com, jgg@ziepe.ca, mgurtovoy@nvidia.com,
-        yishaih@nvidia.com, kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yaozhenguo@jd.com,
-        Zhenguo Yao <yaozhenguo1@gmail.com>
-Subject: [PATCH v1 2/2] vfio-pci: Don't do device reset when ignore_reset is setting
-Date:   Thu, 14 Oct 2021 17:57:48 +0800
-Message-Id: <20211014095748.84604-3-yaozhenguo1@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211014095748.84604-1-yaozhenguo1@gmail.com>
-References: <20211014095748.84604-1-yaozhenguo1@gmail.com>
+        id S230303AbhJNLGP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Oct 2021 07:06:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54960 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229513AbhJNLGO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Oct 2021 07:06:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634209449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rq+QWyp2N+DjEFN/Bh9hLDkkMiSLdVvuewAKSqWLGKA=;
+        b=UtbfZZV7g6gfksY/bdSRBbkc+ixqcrM04nSCIRSk6XqgtASAOKU966iS1aARaHjgZ97HQJ
+        bDxlasvRZQvcuDeDT33mmwQNxPHisnSnsVJKET375ebg8a0neiVAsYy1fRZ0KuHy7VO5oA
+        0HiTUMnJJqh25iaGtS9LwV/pKV4ZQBA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-521-alR1zAqIOwiIlbKH8AeWQw-1; Thu, 14 Oct 2021 07:04:04 -0400
+X-MC-Unique: alR1zAqIOwiIlbKH8AeWQw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 034321235A83;
+        Thu, 14 Oct 2021 11:04:02 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.193.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E98515DEFA;
+        Thu, 14 Oct 2021 11:03:58 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH v3] x86/PCI: Ignore E820 reservations for bridge windows on newer systems
+Date:   Thu, 14 Oct 2021 13:03:57 +0200
+Message-Id: <20211014110357.17957-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In some scenarios, vfio device can't do any reset in initialization
-process. For example: Nvswitch and GPU A100 working in Shared NVSwitch
-Virtualization Model. In such mode, The GPUs can't do any reset when
-Guest VM is booting up.
+Some BIOS-es contain a bug where they add addresses which map to system RAM
+in the PCI bridge memory window returned by the ACPI _CRS method, see
+commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+space").
 
-So, Using ignore_reset to control whether to do PCI reset in
-initialization. In Shared NVSwitch Virtualization Model, GPUs will
-ignore reset when Gust VM booting up.
+To avoid this Linux by default excludes E820 reservations when allocating
+addresses since 2010. Windows however ignores E820 reserved regions for PCI
+mem allocations, so in hindsight Linux honoring them is a problem.
 
-Signed-off-by: Zhenguo Yao <yaozhenguo1@gmail.com>
+Recently (2020) some systems have shown-up with E820 reservations which
+cover the entire _CRS returned PCI bridge memory window, causing all
+attempts to assign memory to PCI BARs which have not been setup by the
+BIOS to fail. For example here are the relevant dmesg bits from a
+Lenovo IdeaPad 3 15IIL 81WE:
+
+ [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+ pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+
+Ideally Linux would fully stop honoring E820 reservations for PCI mem
+allocations, but then the old systems this was added for will regress.
+Instead keep the old behavior for old systems, while ignoring the E820
+reservations like Windows does for any systems from now on.
+
+Old systems are defined here as BIOS year < 2018, this was chosen to
+make sure that pci_use_e820 will not be set on the currently affected
+systems, while at the same time also taking into account that the
+systems for which the E820 checking was originally added may have
+received BIOS updates for quite a while (esp. CVE related ones),
+giving them a more recent BIOS year then 2010.
+
+Also add pci=no_e820 and pci=use_e820 options to allow overriding
+the BIOS year heuristic.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+BugLink: https://bugs.launchpad.net/bugs/1878279
+BugLink: https://bugs.launchpad.net/bugs/1931715
+BugLink: https://bugs.launchpad.net/bugs/1932069
+BugLink: https://bugs.launchpad.net/bugs/1921649
+Cc: Benoit Grégoire <benoitg@coeus.ca>
+Cc: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/vfio/pci/vfio_pci_core.c | 48 ++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 18 deletions(-)
+Changes in v3:
+- Commit msg tweaks (drop dmesg timestamps, typo fix)
+- Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
+- Add Mika's Reviewed-by
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 68198e0f2a63..83d3ef5d3a9c 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -254,11 +254,13 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 	if (ret)
- 		return ret;
+Changes in v2:
+- Replace the per model DMI quirk approach with disabling E820 reservations
+  checking for all systems with a BIOS year >= 2018
+- Add documentation for the new kernel-parameters to
+  Documentation/admin-guide/kernel-parameters.txt
+---
+Other patches trying to address the same issue:
+https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
+https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
+V1 patch:
+https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
+---
+ .../admin-guide/kernel-parameters.txt         |  6 ++++
+ arch/x86/include/asm/pci_x86.h                | 10 +++++++
+ arch/x86/kernel/resource.c                    |  4 +++
+ arch/x86/pci/acpi.c                           | 29 +++++++++++++++++++
+ arch/x86/pci/common.c                         |  6 ++++
+ 5 files changed, 55 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 43dc35fe5bc0..969cde5d74c8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3949,6 +3949,12 @@
+ 				please report a bug.
+ 		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
+ 				If you need to use this, please report a bug.
++		use_e820	[X86] Honor E820 reservations when allocating
++				PCI host bridge memory. If you need to use this,
++				please report a bug.
++		no_e820		[X86] ignore E820 reservations when allocating
++				PCI host bridge memory. If you need to use this,
++				please report a bug.
+ 		routeirq	Do IRQ routing for all PCI devices.
+ 				This is normally done in pci_enable_device(),
+ 				so this option is a temporary workaround
+diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+index 490411dba438..0bb4e7dd0ffc 100644
+--- a/arch/x86/include/asm/pci_x86.h
++++ b/arch/x86/include/asm/pci_x86.h
+@@ -39,6 +39,8 @@ do {						\
+ #define PCI_ROOT_NO_CRS		0x100000
+ #define PCI_NOASSIGN_BARS	0x200000
+ #define PCI_BIG_ROOT_WINDOW	0x400000
++#define PCI_USE_E820		0x800000
++#define PCI_NO_E820		0x1000000
  
--	/* If reset fails because of the device lock, fail this path entirely */
--	ret = pci_try_reset_function(pdev);
--	if (ret == -EAGAIN) {
--		pci_disable_device(pdev);
--		return ret;
-+	if (!pdev->ignore_reset) {
-+		/* If reset fails because of the device lock, fail this path entirely */
-+		ret = pci_try_reset_function(pdev);
-+		if (ret == -EAGAIN) {
-+			pci_disable_device(pdev);
-+			return ret;
-+		}
- 	}
+ extern unsigned int pci_probe;
+ extern unsigned long pirq_table_addr;
+@@ -64,6 +66,8 @@ void pcibios_scan_specific_bus(int busn);
  
- 	vdev->reset_works = !ret;
-@@ -388,25 +390,30 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
- 	 */
- 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+ /* pci-irq.c */
  
--	/*
--	 * Try to get the locks ourselves to prevent a deadlock. The
--	 * success of this is dependent on being able to lock the device,
--	 * which is not always possible.
--	 * We can not use the "try" reset interface here, which will
--	 * overwrite the previously restored configuration information.
--	 */
--	if (vdev->reset_works && pci_dev_trylock(pdev)) {
--		if (!__pci_reset_function_locked(pdev))
--			vdev->needs_reset = false;
--		pci_dev_unlock(pdev);
-+	if (!pdev->ignore_reset) {
-+		/*
-+		 * Try to get the locks ourselves to prevent a deadlock. The
-+		 * success of this is dependent on being able to lock the device,
-+		 * which is not always possible.
-+		 * We can not use the "try" reset interface here, which will
-+		 * overwrite the previously restored configuration information.
-+		 */
-+		if (vdev->reset_works && pci_dev_trylock(pdev)) {
-+			if (!__pci_reset_function_locked(pdev))
-+				vdev->needs_reset = false;
-+			pci_dev_unlock(pdev);
-+		}
- 	}
- 
- 	pci_restore_state(pdev);
- out:
- 	pci_disable_device(pdev);
- 
--	if (!vfio_pci_dev_set_try_reset(vdev->vdev.dev_set) && !disable_idle_d3)
--		vfio_pci_set_power_state(vdev, PCI_D3hot);
-+	if (!pdev->ignore_reset) {
-+		if (!vfio_pci_dev_set_try_reset(vdev->vdev.dev_set) &&
-+					!disable_idle_d3)
-+			vfio_pci_set_power_state(vdev, PCI_D3hot);
-+	}
- }
- EXPORT_SYMBOL_GPL(vfio_pci_core_disable);
- 
-@@ -919,6 +926,8 @@ long vfio_pci_core_ioctl(struct vfio_device *core_vdev, unsigned int cmd,
- 
- 		if (!vdev->reset_works)
- 			return -EINVAL;
-+		if (vdev->pdev->ignore_reset)
-+			return -EINVAL;
- 
- 		vfio_pci_zap_and_down_write_memory_lock(vdev);
- 		ret = pci_try_reset_function(vdev->pdev);
-@@ -1007,6 +1016,9 @@ long vfio_pci_core_ioctl(struct vfio_device *core_vdev, unsigned int cmd,
- 		bool slot = false;
- 		int group_idx, count = 0, ret = 0;
- 
-+		if (vdev->pdev->ignore_reset)
-+			return -EINVAL;
++struct pci_dev;
 +
- 		minsz = offsetofend(struct vfio_pci_hot_reset, count);
+ struct irq_info {
+ 	u8 bus, devfn;			/* Bus, device and function */
+ 	struct {
+@@ -232,3 +236,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
+ # define x86_default_pci_init_irq	NULL
+ # define x86_default_pci_fixup_irqs	NULL
+ #endif
++
++#if defined(CONFIG_PCI) && defined(CONFIG_ACPI)
++extern bool pci_use_e820;
++#else
++#define pci_use_e820 false
++#endif
+diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+index 9b9fb7882c20..e8dc9bc327bd 100644
+--- a/arch/x86/kernel/resource.c
++++ b/arch/x86/kernel/resource.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/ioport.h>
+ #include <asm/e820/api.h>
++#include <asm/pci_x86.h>
  
- 		if (copy_from_user(&hdr, (void __user *)arg, minsz))
+ static void resource_clip(struct resource *res, resource_size_t start,
+ 			  resource_size_t end)
+@@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
+ 	int i;
+ 	struct e820_entry *entry;
+ 
++	if (!pci_use_e820)
++		return;
++
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		entry = &e820_table->entries[i];
+ 
+diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+index 948656069cdd..6c2febe84b6f 100644
+--- a/arch/x86/pci/acpi.c
++++ b/arch/x86/pci/acpi.c
+@@ -21,6 +21,8 @@ struct pci_root_info {
+ 
+ static bool pci_use_crs = true;
+ static bool pci_ignore_seg = false;
++/* Consumed in arch/x86/kernel/resource.c */
++bool pci_use_e820 = false;
+ 
+ static int __init set_use_crs(const struct dmi_system_id *id)
+ {
+@@ -160,6 +162,33 @@ void __init pci_acpi_crs_quirks(void)
+ 	       "if necessary, use \"pci=%s\" and report a bug\n",
+ 	       pci_use_crs ? "Using" : "Ignoring",
+ 	       pci_use_crs ? "nocrs" : "use_crs");
++
++	/*
++	 * Some BIOS-es contain a bug where they add addresses which map to system
++	 * RAM in the PCI bridge memory window returned by the ACPI _CRS method, see
++	 * commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address space").
++	 * To avoid this Linux by default excludes E820 reservations when allocating
++	 * addresses since 2010. Windows however ignores E820 reserved regions for
++	 * PCI mem allocations, so in hindsight Linux honoring them is a problem.
++	 * In 2020 some systems have shown-up with E820 reservations which cover the
++	 * entire _CRS returned PCI bridge memory window, causing all attempts to
++	 * assign memory to PCI BARs to fail if Linux honors the E820 reservations.
++	 *
++	 * Ideally Linux would fully stop honoring E820 reservations for PCI mem
++	 * allocations, but then the old systems this was added for will regress.
++	 * Instead keep the old behavior for old systems, while ignoring the E820
++	 * reservations like Windows does for any systems from now on.
++	 */
++	if (year >= 0 && year < 2018)
++		pci_use_e820 = true;
++
++	if (pci_probe & PCI_NO_E820)
++		pci_use_e820 = false;
++	else if (pci_probe & PCI_USE_E820)
++		pci_use_e820 = true;
++
++	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
++	       pci_use_e820 ? "Honoring" : "Ignoring");
+ }
+ 
+ #ifdef	CONFIG_PCI_MMCONFIG
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index 3507f456fcd0..091ec7e94fcb 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
+ 	} else if (!strcmp(str, "nocrs")) {
+ 		pci_probe |= PCI_ROOT_NO_CRS;
+ 		return NULL;
++	} else if (!strcmp(str, "use_e820")) {
++		pci_probe |= PCI_USE_E820;
++		return NULL;
++	} else if (!strcmp(str, "no_e820")) {
++		pci_probe |= PCI_NO_E820;
++		return NULL;
+ #ifdef CONFIG_PHYS_ADDR_T_64BIT
+ 	} else if (!strcmp(str, "big_root_window")) {
+ 		pci_probe |= PCI_BIG_ROOT_WINDOW;
 -- 
-2.27.0
+2.31.1
 
