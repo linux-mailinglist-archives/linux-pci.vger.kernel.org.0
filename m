@@ -2,67 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2E6642F602
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8777842F603
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:45:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240708AbhJOOrt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 10:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
+        id S240728AbhJOOru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 10:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240718AbhJOOrm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:47:42 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88430C061570;
-        Fri, 15 Oct 2021 07:45:35 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id q2-20020a17090a2e0200b001a0fd4efd49so2937109pjd.1;
-        Fri, 15 Oct 2021 07:45:35 -0700 (PDT)
+        with ESMTP id S240736AbhJOOrp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:47:45 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C514C061762;
+        Fri, 15 Oct 2021 07:45:39 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id v8so4408854pfu.11;
+        Fri, 15 Oct 2021 07:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=g4G4Yffk64HxtbjZzw9/E8PSnsLTvUujtQvSwE3J4gU=;
-        b=flHW2Jb/AbysBVvJNNr6JwH4MLrEHqIfdfTJWIOUpBUFJwLO86Ww3lJYUN7rYZqGJh
-         I/lLA1GbwqNXEqeL89Z3FnLGzNne+/JrIebWPKmh9G+HFumicXJhgPMP/FcWxH3Qo12+
-         Q0ZxbrKvgId5wRbJMk7X2tyZjOWKJ1dQkwD56X7y0ajeoKXdAStXPcstCBSbsF4aWum2
-         zF22ZFS6E/jaZgCPFP68wJmWfS9nwNR3Mf74lov/0SXtOEeA6Pe3kS0PlgMvknpXbjei
-         UoH4eIy6X67PmTd7h87bfKgIgkE3H+Tq1rJ5p5b5NVrQLGDERDaJut6pmY8fSOHCLf0a
-         bQWA==
+        bh=Wg9CIjlvFpQ0mVyLruVXTyXRfH69nmtxShZyyO67k10=;
+        b=O4C9zYJL9l7EbrlGSDp0OOYmbfrQI/mk7hKB2KetLAfTJkrzFPw/c64gcGjsOAg/gS
+         XisYpdLBtUdscG4+zLFIqn84JjKco6cDb3F70hnPwsx4kPYC84CdTP6IGTuXohsBXQn6
+         gM8iJy7Qdmuy3rI16l9MgKjozQXgOxJepwN9ZHaDjPSmwyX2mfK/CnxNmWqc0nYK1+Gw
+         Vionef2tPDP17XYMqXM2N2ATJwtpPWgr1nGPNBkW0HT0ecGB3nObThlDWfpb/8sWHyVU
+         yrFOp0FpZgJcuwXofxQ+qSkUD/OLZ1nfxhte3aeIdRCmGwHQa8I4M3Ba3Lm8PCBKisx2
+         L35A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=g4G4Yffk64HxtbjZzw9/E8PSnsLTvUujtQvSwE3J4gU=;
-        b=bZhTXKMr2vF2KPemwXwEnx60GZ0GZo6ANFimsApScv1EhVAhqSkm6dBTTDfxRcHz+v
-         YYkq6IyJjbr5wJKQg2EVrKBeHzL7j1KESvdTg+hs+wy9h08QlVilBK0txNFrYfy/RMXW
-         xF6bXSxVXoKZU6PH0+1wYgNVcb0hAPa2YgH2YHMBVpVNi+1WkLdyHby9LE3XPGIq6VXq
-         lo84DVIYQYCOOp5MnGHySwv2HzCt5/ZUZYuw2LIn8vL9wFaWsYgrrAd0rDf22kWXySlo
-         QPxVzV32ECbIeDpN1cweKT1rDVksWDx9agX+TL2GDmnVmBYBdyk/Ye9Ddr6LMw9p5omu
-         IZ7g==
-X-Gm-Message-State: AOAM532qd4OOv0Ua/ccQTLoiADplMq6jrmmhShJguwYjG4K6mo5UyAYS
-        6IMJzy7Or1H7Pv4HW9OfwKbht3CJwoX//KYk
-X-Google-Smtp-Source: ABdhPJzyBRhAH58hfG57hRWt1brI24x/g9MveoCJoOB1DDAWMEjJsf6dfeFJ3flcCuWG22yuJmFJEg==
-X-Received: by 2002:a17:90b:38c6:: with SMTP id nn6mr13976286pjb.206.1634309134963;
-        Fri, 15 Oct 2021 07:45:34 -0700 (PDT)
+        bh=Wg9CIjlvFpQ0mVyLruVXTyXRfH69nmtxShZyyO67k10=;
+        b=PltK+d3QdTwzDYyfqJSMJHvYHdRj8l6ihzLJZc5X68DoMUPt8oJxUskrophHWQ7Mq+
+         GmQEkCQuq72rmdST5QBzz2ldglfIE7yTCyNA7jgc4J8nRKPWWfpZQAgXIjo2nqptbsOM
+         HAjbGtu8685LLdI0/PJatFbgzBk+eYUs7Y2Li9pKVaX3B5LJv8Cjkm8mU8ZcLl14fyHi
+         4OPfnnSmg7zZQIWYvAaR91nvj3+KW9XH0M1ip/cDAKcLeWuNSB6HDKXeSRFCv2ZUvEFY
+         LPidVSKHjdTizvUPKq4MS02C9tEzRvdGW5Mmr/EtrRm6QZxyIrxYttnJrF3MHgCjdJRV
+         HasA==
+X-Gm-Message-State: AOAM531IZMMWMTK1Z1J7nYFShg/euy9ER9O5SOV9IKThXGGybyzwjPWI
+        2UuP9+PH3EkNk188P8KMScY=
+X-Google-Smtp-Source: ABdhPJzVsujjyhtu4qdgTMOPdGHq2Omqc8DYqIdFvZ6lxYZhtdKrpABl9i6841s5RVRY23eQjwq/QA==
+X-Received: by 2002:aa7:8d86:0:b0:44c:9006:1b44 with SMTP id i6-20020aa78d86000000b0044c90061b44mr12215663pfr.36.1634309139012;
+        Fri, 15 Oct 2021 07:45:39 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
-        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.45.30
+        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.45.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 07:45:34 -0700 (PDT)
+        Fri, 15 Oct 2021 07:45:38 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org (open list:PCIE DRIVER FOR ROCKCHIP),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
-        support)
-Subject: [PATCH v2 15/24] PCI: rockchip: Remove redundant error fabrication when device read fails
-Date:   Fri, 15 Oct 2021 20:08:56 +0530
-Message-Id: <4fe27c1af8b43e87c2eaf31fced8015b81478c8f.1634306198.git.naveennaidu479@gmail.com>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 16/24] PCI/ERR: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
+Date:   Fri, 15 Oct 2021 20:08:57 +0530
+Message-Id: <69fed7552be7c516bc92ce1e3bbb3249dfb74860.1634306198.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634306198.git.naveennaidu479@gmail.com>
 References: <cover.1634306198.git.naveennaidu479@gmail.com>
@@ -73,41 +65,96 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 An MMIO read from a PCI device that doesn't exist or doesn't respond
-causes a PCI error. There's no real data to return to satisfy the
+causes a PCI error.  There's no real data to return to satisfy the
 CPU read, so most hardware fabricates ~0 data.
 
-The host controller drivers sets the error response values (~0) and
-returns an error when faulty hardware read occurs. But the error
-response value (~0) is already being set in PCI_OP_READ and
-PCI_USER_READ_CONFIG whenever a read by host controller driver fails.
+Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
+data from hardware.
 
-Thus, it's no longer necessary for the host controller drivers to
-fabricate any error response.
-
-This helps unify PCI error response checking and make error check
+This unifies PCI error response checking and make error checks
 consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pcie-rockchip-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/pci.c   | 10 +++++-----
+ drivers/pci/probe.c | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index c52316d0bfd2..45a28880f322 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -221,10 +221,8 @@ static int rockchip_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- {
- 	struct rockchip_pcie *rockchip = bus->sysdata;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce2ab62b64cf..c1575364d1ce 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1077,7 +1077,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 		return -EIO;
  
--	if (!rockchip_pcie_valid_device(rockchip, bus, PCI_SLOT(devfn))) {
--		*val = 0xffffffff;
-+	if (!rockchip_pcie_valid_device(rockchip, bus, PCI_SLOT(devfn)))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+-	if (pmcsr == (u16) ~0) {
++	if (RESPONSE_IS_PCI_ERROR(&pmcsr)) {
+ 		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
+ 			pci_power_name(dev->current_state),
+ 			pci_power_name(state));
+@@ -1239,16 +1239,16 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+ 	 * After reset, the device should not silently discard config
+ 	 * requests, but it may still indicate that it needs more time by
+ 	 * responding to them with CRS completions.  The Root Port will
+-	 * generally synthesize ~0 data to complete the read (except when
+-	 * CRS SV is enabled and the read was for the Vendor ID; in that
+-	 * case it synthesizes 0x0001 data).
++	 * generally synthesize ~0 (PCI_ERROR_RESPONSE) data to complete
++	 * the read (except when CRS SV is enabled and the read was for the
++	 * Vendor ID; in that case it synthesizes 0x0001 data).
+ 	 *
+ 	 * Wait for the device to return a non-CRS completion.  Read the
+ 	 * Command register instead of Vendor ID so we don't have to
+ 	 * contend with the CRS SV value.
+ 	 */
+ 	pci_read_config_dword(dev, PCI_COMMAND, &id);
+-	while (id == ~0) {
++	while (RESPONSE_IS_PCI_ERROR(&id)) {
+ 		if (delay > timeout) {
+ 			pci_warn(dev, "not ready %dms after %s; giving up\n",
+ 				 delay - 1, reset_type);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index d9fc02a71baa..55b94d689eca 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -206,14 +206,14 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+ 	 * memory BAR or a ROM, bit 0 must be clear; if it's an io BAR, bit
+ 	 * 1 must be clear.
+ 	 */
+-	if (sz == 0xffffffff)
++	if (RESPONSE_IS_PCI_ERROR(&sz))
+ 		sz = 0;
  
- 	if (pci_is_root_bus(bus))
- 		return rockchip_pcie_rd_own_conf(rockchip, where, size, val);
+ 	/*
+ 	 * I don't know how l can have all bits set.  Copied from old code.
+ 	 * Maybe it fixes a bug on some ancient platform.
+ 	 */
+-	if (l == 0xffffffff)
++	if (RESPONSE_IS_PCI_ERROR(&l))
+ 		l = 0;
+ 
+ 	if (type == pci_bar_unknown) {
+@@ -1660,7 +1660,7 @@ static int pci_cfg_space_size_ext(struct pci_dev *dev)
+ 
+ 	if (pci_read_config_dword(dev, pos, &status) != PCIBIOS_SUCCESSFUL)
+ 		return PCI_CFG_SPACE_SIZE;
+-	if (status == 0xffffffff || pci_ext_cfg_is_aliased(dev))
++	if (RESPONSE_IS_PCI_ERROR(&status) || pci_ext_cfg_is_aliased(dev))
+ 		return PCI_CFG_SPACE_SIZE;
+ 
+ 	return PCI_CFG_SPACE_EXP_SIZE;
+@@ -2336,8 +2336,8 @@ bool pci_bus_generic_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+ 	if (pci_bus_read_config_dword(bus, devfn, PCI_VENDOR_ID, l))
+ 		return false;
+ 
+-	/* Some broken boards return 0 or ~0 if a slot is empty: */
+-	if (*l == 0xffffffff || *l == 0x00000000 ||
++	/* Some broken boards return 0 or ~0 (PCI_ERROR_RESPONSE) if a slot is empty: */
++	if (RESPONSE_IS_PCI_ERROR(l) || *l == 0x00000000 ||
+ 	    *l == 0x0000ffff || *l == 0xffff0000)
+ 		return false;
+ 
 -- 
 2.25.1
 
