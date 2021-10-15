@@ -2,168 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7940A42F6D1
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 17:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04D1B42F7AE
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 18:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240272AbhJOPSW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 11:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
+        id S241113AbhJOQIv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 12:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232051AbhJOPSW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 11:18:22 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B2AC061570;
-        Fri, 15 Oct 2021 08:16:15 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id nn3-20020a17090b38c300b001a03bb6c4ebso7512563pjb.1;
-        Fri, 15 Oct 2021 08:16:15 -0700 (PDT)
+        with ESMTP id S241059AbhJOQIu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 12:08:50 -0400
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D827C061570
+        for <linux-pci@vger.kernel.org>; Fri, 15 Oct 2021 09:06:44 -0700 (PDT)
+Received: by mail-ot1-x32c.google.com with SMTP id p6-20020a9d7446000000b0054e6bb223f3so13491765otk.3
+        for <linux-pci@vger.kernel.org>; Fri, 15 Oct 2021 09:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rsq7Coa4DOxPOn0eZbpZdLfOClr4GNCnmw0Rnrrt1Qw=;
-        b=hSxnHl3oyN/MtM+qsldq6hsB1s7pGGZvJuASUryBHZCU+ZEL6mFCa+LtSZlsPk+Mgl
-         zs2SzaxQgnKpwzxL39QHUcwxwaf4a33HvycHcpvF6cWAQn/W9JCWr+btdMEbeuxhoS+F
-         vQ4NfS0llRXA+CWI6qZrx5qNuMywGXiv0KB5EBtZ8lkaSZPDLOnHksy1KtjMoqdII5mI
-         sQCDLmlhqaLD71rnga3U1iVmsRLXnRAHu3ZRG/Dr2yOFz0l7dOSDLgt82MGIG+EiRc0j
-         34dAlMzS2KD0Qn9OU0ynsLHSUCMSkPfL1ECpVAqJ7KADGWkSpMe/yuK4HuMJ4exCEbr9
-         zjtg==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=I1hD65KZvsTUM11Z3+OFqcCldJ1PmlO0xyX0FqNo4g8=;
+        b=l7XGJBtJWwSkDWFWzBueb4AOSdvZPd4CkJ2gDdb73FyZEMtgbjYfBINLTJu83ai4hT
+         tajsKA8RLPGARMVv0m/Q1I3VOGvUPGjRJNixb/okrR20oTnyWPoGjITcAkKW4pG6s0q/
+         zPtHNRSkFDmgBhGlFxfmcOb90crdFxjQ4/xmXZZFiZ2uu9VqpLYi7IXAl8BMc3OPwLHG
+         TuwbXZENdhyAH6g2S2+XB9LvSLEkU/wWI02BHGXAzGL7/f9JJlnbl3EryOw1tMojjc2n
+         G4LTqIpMCJ4CkTmBgcEMz16PS0TqEPdW5Z/2HDJTb1fdjgWQh1++6o2ABzCWEfNVmmqV
+         YcCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rsq7Coa4DOxPOn0eZbpZdLfOClr4GNCnmw0Rnrrt1Qw=;
-        b=SQkn3K0YW2NsHKao7SwyHY6YnWFYgaw7o+VtrNTjqvUdp+uQHeqTQUcbznWYBIFYTr
-         1NvagOh/pfSilyvGd1rZ576JajO2NYZ7wZw+Zc9KzkznQql1r5YwpQHqoRbTE5pNCZBj
-         AqGS+E0zESTLIRaGweuPuTDRGCZWr45Je9vEVkiSteI1iuuAeY5BNPQE7ySkA1iMkw+Q
-         BgqnpY5ase+Gqbgbl9Tg+VxhKmFhV1wdNvnmK6389K4Okf7kbIhbGTm6Hyq1raBqwqLJ
-         MhaZVM1UxXQM1LAbEluybP1rvm0ah7dEkAOF1UMFPqqX2A3f3H1jUFkzBQ/USb3TqG2n
-         P0IQ==
-X-Gm-Message-State: AOAM532W6ULQ3WXNG1ufhCb1ZDP6uDF1LUh5m0QcWy4fHmxVASy93pUB
-        RqbR79ClkLTVgdSl3PhKof65w0sUkU2h5Ke/
-X-Google-Smtp-Source: ABdhPJyCqbZfWSMhuuPRjAv0uUPvUBqyW5wVqCXkRUL4kLCQLYBGm/nfmiSu2Y23rgpo7KvQd5u0Ow==
-X-Received: by 2002:a17:90a:df0e:: with SMTP id gp14mr14183780pjb.35.1634310975311;
-        Fri, 15 Oct 2021 08:16:15 -0700 (PDT)
-Received: from theprophet ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
-        by smtp.gmail.com with ESMTPSA id on17sm12250018pjb.47.2021.10.15.08.16.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 08:16:14 -0700 (PDT)
-Date:   Fri, 15 Oct 2021 20:45:59 +0530
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     bhelgaas@google.com
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH v2 18/24] PCI: pciehp: Use RESPONSE_IS_PCI_ERROR() to
- check read from hardware
-Message-ID: <20211015151553.wjztlftdmi2xnsyd@theprophet>
-References: <cover.1634306198.git.naveennaidu479@gmail.com>
- <2bc987dc1dfb753c37a65b6c8c98c32e66a4d2a0.1634306198.git.naveennaidu479@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=I1hD65KZvsTUM11Z3+OFqcCldJ1PmlO0xyX0FqNo4g8=;
+        b=rRSsPkflZorqRtsrVyxb3ZKNET6rEF7hHHG7QZdHJoMgpduWORHw/NFQ1nagZgQjXU
+         7qLA3R2muESvLli4PCq5pz1C+9t5zX7hFcpHQD2+HOl/WblMy8YdHwsoW3MA0uUNq1Xk
+         etQMlpip4ii6hKJCnFQnqXXtSagEyQDj9vAq53e8l7p9Y6cSLnYW+/Dv/7K0qP5sUf0R
+         gQ7CRhFV6Ju0LRj23H+63/URVPWkwAYFzv8lLBe6uHzxooCjokg0Nn5rME27lVk0seBv
+         MDFmC8njY7CaocpsbgoeorQp741GxOxvv8kzs7X1opRloDM93o5vwcAjdK6o3ooBNWfk
+         VDNg==
+X-Gm-Message-State: AOAM533sPV140F3T95Ku59mOGGr5yDmUdoSpA5qpa19Ht4kvCf1yxgRc
+        ml2vriRk5PAbDSlTErs2oscNi2W2oaJSCfs/+uKD3OVcY9THxg==
+X-Google-Smtp-Source: ABdhPJw6yX5L5dezK5z0mmUW9dbMl86S6pg5jOzb/va4JUt41Rwc0U5zQOe0QKe2HobyCq8dSYvnArBjCiA5B7smi5w=
+X-Received: by 2002:a05:6830:3148:: with SMTP id c8mr5714344ots.351.1634314003564;
+ Fri, 15 Oct 2021 09:06:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bc987dc1dfb753c37a65b6c8c98c32e66a4d2a0.1634306198.git.naveennaidu479@gmail.com>
+From:   Ajay Garg <ajaygargnsit@gmail.com>
+Date:   Fri, 15 Oct 2021 21:36:31 +0530
+Message-ID: <CAHP4M8URVjPEGFLHFXk4iS-7FYpg_=ZCVr2f6ufcFkNnZqAUug@mail.gmail.com>
+Subject: Host-PCI-Device mapping
+To:     QEMU Developers <qemu-devel@nongnu.org>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 15/10, Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error.  There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
-> 
-> Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
-> data from hardware.
-> 
-> This helps unify PCI error response checking and make error checks
-> consistent and easier to find.
-> 
-> Compile tested only.
-> 
-> Acked-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 3024d7e85e6a..8a2f6bb643b5 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->  
->  	do {
->  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -		if (slot_status == (u16) ~0) {
-> +		if (RESPONSE_IS_PCI_ERROR(&slot_status)) {
->  			ctrl_info(ctrl, "%s: no response from device\n",
->  				  __func__);
->  			return 0;
-> @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
->  	pcie_wait_cmd(ctrl);
->  
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
-> -	if (slot_ctrl == (u16) ~0) {
-> +	if (RESPONSE_IS_PCI_ERROR(&slot_ctrl)) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		goto out;
->  	}
-> @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(&lnk_status))
->  		return -ENODEV;
->  
->  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
-> @@ -443,7 +443,7 @@ int pciehp_card_present(struct controller *ctrl)
->  	int ret;
->  
->  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
-> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(&slot_status))
->  		return -ENODEV;
->  
->  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
-> @@ -621,7 +621,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  
->  read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
-> -	if (status == (u16) ~0) {
-> +	if (RESPONSE_IS_PCI_ERROR(&status)) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
->  		if (parent)
->  			pm_runtime_put(parent);
-> -- 
-> 2.25.1
-> 
+Hello everyone.
 
-Lukas, I have added your Acked-by tag from the v1 [1] of patch series,
-since this patch has not changed in v2. I hope that's okay. If not, I
-apologize for that and can resend the patch series without the tag.
-Apologies for the inconvenience.
+I have a x86_64 L1 guest, running on a x86_64 host, with a
+host-pci-device attached to the guest.
+The host runs with IOMMU enabled, and passthrough enabled.
 
-[1]: https://lore.kernel.org/linux-pci/20211011194740.GA14357@wunner.de/
+Following are the addresses of the bar0-region of the pci-device, as
+per the output of lspci -v :
 
-Also, regarding your comments from v1 patch series [1] about re-naming the
-RESPONSE_IS_PCI_ERROR to RESPONSE_IS_PCI_TIMEOUT. We could indeed change
-the change to RESPONSE_IS_PCI_TIMEOUT for pciehp, but then I'm afraid
-that picehp would be the odd one out. I mean, since in all the other
-places we are using RESPONE_IS_PCI_TIMEOUT to see if any error occured
-while reading from a device.
+* On host (hpa) => e2c20000
+* On guest (gpa) => fc078000
 
-RESPONSE_IS_PCI_ERROR stills gives an idea to the readers that some PCI
-error occured. It was my understanding that timeout is also a kind of
-PCI error (I might be horribly wrong here, given my very less experience
-with PCI subsystem) so it would be okay to use RESPONSE_IS_PCI_ERROR
-here.
 
-If that is not the case please let me know. But I am not sure what to
-do here? If RESPONSE_IS_PCI_ERROR does not fit here, should the right
-option would be to revert/remove this patch from the series?
+Now, if /proc/<qemu-pid>/maps is dumped on the host, following line of
+interest is seen :
 
-Thanks,
-Naveen
+#############################################################################
+7f0b5c5f4000-7f0b5c5f5000 rw-s e2c20000 00:0e 13653
+  anon_inode:[vfio-device]
+#############################################################################
+
+Above indicates that the hva for the pci-device starts from 0x7f0b5c5f4000.
+
+
+Also, upon attaching gdb to the qemu process, and using a slightly
+modified qemugdb/mtree.py (that prints only the information for
+0000:0a:00.0 name) to dump the memory-regions, following is obtained :
+
+#############################################################################
+(gdb) source qemu-gdb.py
+(gdb) qemu mtree
+    00000000fc078000-00000000fc07c095 0000:0a:00.0 base BAR 0 (I/O) (@
+0x56540d8c8da0)
+      00000000fc078000-00000000fc07c095 0000:0a:00.0 BAR 0 (I/O) (@
+0x56540d8c76b0)
+        00000000fc078000-00000000fc07c095 0000:0a:00.0 BAR 0 mmaps[0]
+(I/O) (@ 0x56540d8c7c30)
+(gdb)
+#############################################################################
+
+Above indicates that the hva for the pci-device starts from 0x56540d8c7c30.
+
+As seen, there is a discrepancy in the two results.
+
+
+What am I missing?
+Looking for pointers, will be grateful.
+
+
+Thanks and Regards,
+Ajay
