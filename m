@@ -2,63 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87DC042F5FB
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:45:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB68042F600
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240689AbhJOOrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 10:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        id S234575AbhJOOrf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 10:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240681AbhJOOrW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:47:22 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6916EC061764;
-        Fri, 15 Oct 2021 07:45:16 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id f5so8792711pgc.12;
-        Fri, 15 Oct 2021 07:45:16 -0700 (PDT)
+        with ESMTP id S240697AbhJOOre (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:47:34 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F5EC061570;
+        Fri, 15 Oct 2021 07:45:28 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id kk10so7364886pjb.1;
+        Fri, 15 Oct 2021 07:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oxis35XdZSIgJr6mklaAXMEQHUEVDMfz+GZuoz2m4I8=;
-        b=bHF3MVmMD4KZ3VipJ6gbsgTAs58lBf7KZekNmTmtHSVziT8Bj5Q4nj6WoGR4JJh1X9
-         ptoYV/uKzVs7KLN79M4K1dzreOtUNb3OmhKFeQMusup3PG8bmgu8CiNw3FPEYJaSgecw
-         F5KNxdHmHmbQmrDwWHdIJMc7EQMypxSo+ZckstpfprL10QAqD5Wu4hVtllulE6qOjIsU
-         Gre2jphM64b+ETzcdr5HAuHIgCP1bUlletjTOtO96cvW+D60ab9ERHcl8PWksUIWxawH
-         WdMcMIrisLQeK8YuWhXYZGSySNUvCWKsXceWP6SViEtyTw1woJ5paAWojSijJnSA54OM
-         FpUA==
+        bh=RSO8fMw2XXEulSijQBNzsaO/mKtFViudcJrPIwPiUa8=;
+        b=VpeS/amvYUMgnN+vcfj6j8ChB1pwWoO6uMGWOuOMw3t5zmBHwzJtCs9quAgWX82zzr
+         D/DOYmnPRH3/zvIoD/chwGm/OTZmGKh7UDc5sla+AWQUDxnltegMOxxaLJ+BY+bb3DEi
+         kUxKxjW7VBspT9igA7St5CiXuMYxgm1Q6RD6ymtQ98l75Bc4vY+OSN63d5ch8/fKy4od
+         Y4qhkPaVGXRe7krQX38Y92Xy9pC/0uz1/ZdQjlWbnPXRMTZeXYN11L4yhHy00f8NQJJF
+         VoeYU4l+491rXplUi+pwwyOq9jrtGmS4bd6qdAYxZIONa0If5nnCBE+VVpXitLj0RfDD
+         adPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oxis35XdZSIgJr6mklaAXMEQHUEVDMfz+GZuoz2m4I8=;
-        b=J9tnTqElRf49xt2KiCAWCSocULQy6ihZtjRmkkndM3TvpsPB/USr5zzzvVAfnm1BaR
-         vraTa58kT91qa39Jg93jLU+ks6elBKoFap3jQRGGlpyyQknaPoz0H4i8XSIBk4qhDMLY
-         dOLeFRgdvZoSogLEtRCvWdgmAhRyuSZZbiOTF+AxTjM/y+L+wMr4ubmR89yysC4gXa+k
-         i/Gg64pNE7yoZqmeII4TlvHsmdGqyyDxJB5gvSHdntt+FzLdlIaJZvK50cAOcOmMyssk
-         G89UeVjT54d/oqLh1SKg3wysAJvi2A7iL8mBAgQdj1QYyDWvPCuzUTU9eer0B6334D6D
-         Qang==
-X-Gm-Message-State: AOAM532FBJ2wEYhbN1fpUpHMiBuimZcmJSKlkLj1PwPmvY/0UdtIMbch
-        PMZKPlFUYGgUwUGZlBVj4Yg=
-X-Google-Smtp-Source: ABdhPJyRQZ0uhDDsgFuUWNaw1Mmhj5b/guuZItbpnQb9Eb1O9szMMGggSfvh5Z8HkGi9Z+VXPCBt6g==
-X-Received: by 2002:a63:f346:: with SMTP id t6mr9505513pgj.345.1634309115853;
-        Fri, 15 Oct 2021 07:45:15 -0700 (PDT)
+        bh=RSO8fMw2XXEulSijQBNzsaO/mKtFViudcJrPIwPiUa8=;
+        b=mDZa4SIYV0jZmYEkfkH9myPwW76MdmRc7QOlRypZF6PqEdzyHHr3kZBMzkAVUsUCXT
+         jpk+2Q3vwLBIXdjQ6KNvctw7/wIyJn0ZhSCKG/quDfSaNtPzKFaOH3Q+wby7NZsxUA5m
+         OSdwW1ob2eQfJHSQaaQfOppwUldOKkj3VXs/oWS5ba/eSbKNu2lFulSkrtrC4WOXwECo
+         Zr0yJ5JaIujhyQubUssZswvUbwoBEQh40Rat+iRqhLTg10mLCw3B+GM4vGYhoMuT+qdK
+         mSqdSeOYLsVhzbKqX9T3XTpIE7ttSxQSOQTNzIOaPf32GyR/5PsqQ6Tb7+24YvoPbwBk
+         E95A==
+X-Gm-Message-State: AOAM531npeN2eczBXYBkBJoBc0F/dc0HRNVwpWsZMKiQBuSYSQ4BMvdN
+        HIRnnE6mIAGSkKR3Am7BvCk=
+X-Google-Smtp-Source: ABdhPJwTbPdY3g2bOp7CoNi8n3DnxaNqHB7MsT+VZH6Djl1EnJi3JSClC4QlhR0Wg/UTCn6Kg2YgNg==
+X-Received: by 2002:a17:90a:e547:: with SMTP id ei7mr28994508pjb.169.1634309127749;
+        Fri, 15 Oct 2021 07:45:27 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
-        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.45.12
+        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 07:45:15 -0700 (PDT)
+        Fri, 15 Oct 2021 07:45:27 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joyce Ooi <joyce.ooi@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH v2 13/24] PCI: altera: Remove redundant error fabrication when device read fails
-Date:   Fri, 15 Oct 2021 20:08:54 +0530
-Message-Id: <178022540498862f4d16e5738b5d5c1fac008afe.1634306198.git.naveennaidu479@gmail.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-renesas-soc@vger.kernel.org (open list:PCI DRIVER FOR RENESAS
+        R-CAR)
+Subject: [PATCH v2 14/24] PCI: rcar: Remove redundant error fabrication when device read fails
+Date:   Fri, 15 Oct 2021 20:08:55 +0530
+Message-Id: <2544a93bf8725eecbea510e7ddbff6b5a5593c84.1634306198.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634306198.git.naveennaidu479@gmail.com>
 References: <cover.1634306198.git.naveennaidu479@gmail.com>
@@ -85,25 +88,25 @@ consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pcie-altera.c | 4 +---
+ drivers/pci/controller/pcie-rcar-host.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 2513e9363236..a6bdf9aff833 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -510,10 +510,8 @@ static int altera_pcie_cfg_read(struct pci_bus *bus, unsigned int devfn,
- 	if (altera_pcie_hide_rc_bar(bus, devfn, where))
- 		return PCIBIOS_BAD_REGISTER_NUMBER;
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 8f3131844e77..1324cb984ed5 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -161,10 +161,8 @@ static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
  
--	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn))) {
--		*value = 0xffffffff;
-+	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn)))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
+ 	ret = rcar_pcie_config_access(host, RCAR_PCI_ACCESS_READ,
+ 				      bus, devfn, where, val);
+-	if (ret != PCIBIOS_SUCCESSFUL) {
+-		*val = 0xffffffff;
++	if (ret != PCIBIOS_SUCCESSFUL)
+ 		return ret;
 -	}
  
- 	return _altera_pcie_cfg_read(pcie, bus->number, devfn, where, size,
- 				     value);
+ 	if (size == 1)
+ 		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
 -- 
 2.25.1
 
