@@ -2,102 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 038A442F62B
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:47:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF3C642F641
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240801AbhJOOtq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 10:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
+        id S235948AbhJOOyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 10:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240811AbhJOOtZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:49:25 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51922C061774;
-        Fri, 15 Oct 2021 07:47:05 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id e65so6421752pgc.5;
-        Fri, 15 Oct 2021 07:47:05 -0700 (PDT)
+        with ESMTP id S230471AbhJOOya (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:54:30 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED12C061570;
+        Fri, 15 Oct 2021 07:52:24 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id na16-20020a17090b4c1000b0019f5bb661f9so7491313pjb.0;
+        Fri, 15 Oct 2021 07:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+xcssxkZTlEueyseAvWLLQTd3E+oYkVw7Pd99PMykLI=;
-        b=Iy+AonqojkrW8rKIV3iaCTVCXCGDTy7haLOxTS468QgbAhuk81NQIp7kYWZHskLo6s
-         v8sCPrmS67ugEEigbj1fwjQdlU8RKGwOO/eUToxWh16fJjtH/QhnDiUGh0FhHudjtVx/
-         coEpyt11LgRWe1SNGFFBvYZWHHPjeQjG5hOnqzu3Cr4OetheCAwq0JtAuDiWWAVj94tI
-         uOjJnJyPXMyHjlxrzw/eNa6/zMYBiDOQ1GZaF0cBSSMAyJhDdFjnXvawtpTM/tYzX3Lh
-         beQ3GoX5EjQwIB64IWMv93LWrndytwEQtQwba9QMabTYbWyrF0rHqfuGQlg1WEpBo22L
-         X6Fw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wSBkt9zYHPwlUZ1/2+m7OdxEgpbgJqT9W9WPrNpsTT4=;
+        b=cd4+4EBvunAe+muc+Kj5ssmqyR/v1gZu4XoQ6Sfq9tyPLjTs++rfTRLjSaELmun2aG
+         i2b1vNDWdhdMIe4twlANpIfG+N1djG5XczwFb7zy0SDUYl8BnoY9yAZR6aXN45UOSihz
+         kNmgqw+6cBc3qqIwrJQXbvYq65haGMFePkaDWouycHNRp5eIlji1MDo/FPnc7ltQduvY
+         ++o8BVa/VsU+VHZ+rkavg0FfKNu8KjxmzutwKyau3N/OvKJeAUMCarzPZndNMDlDPk7c
+         TsCqLExSFpMLC+DW9Njm5d9Y6JG5J9BNO43qFpFeox48Vu3QKziSLticwSfTr2rzRBBd
+         TpoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+xcssxkZTlEueyseAvWLLQTd3E+oYkVw7Pd99PMykLI=;
-        b=rYDS4HrYpSYW5uEI+yy9eCuB2R5VYPFSaaHpm8MZZy98YdKZteqvL+DGQ+a/HQ3cIJ
-         6VQtuX1pePvDPtkkYF7Adk+sMKuO91uyHwBc807k86C64iESMHsuWWPQcWSs7vLjoR+w
-         q3g+Gzznq4nR9MauRZSHD6Kjs2Zlefv6WS4PojStifGf04pClfbf54aoekNM1it29Z8x
-         5P1hW+hVWznCUWjf6zRULy81AOblFGYqh5MLJMY1FhCGN+Vh/DeF4W5z6ZPeEJGUsFPN
-         ECW01HdgYbHeRzNK5MlR5yaHCI6a3WeHIA1welLUoBoBRf7dNkc2g5wRa5xPRxbfubIQ
-         wY+w==
-X-Gm-Message-State: AOAM530iQ67C2+QwqFLEQsnhEgqq2BiizN6O1b8KLLuowYDi1CX1fohB
-        Vggmkbz24OJvj2V7jxO9s5a0Fz9rR2Eui/Yl
-X-Google-Smtp-Source: ABdhPJwi/McjAR5PneaBPmW4CRufrgJrhsRVQ8oeQWMqZvCjg+NqlGDu+MFUmairIcko2zay8NCKPw==
-X-Received: by 2002:a63:e516:: with SMTP id r22mr9610343pgh.197.1634309224790;
-        Fri, 15 Oct 2021 07:47:04 -0700 (PDT)
-Received: from localhost.localdomain ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
-        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.47.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wSBkt9zYHPwlUZ1/2+m7OdxEgpbgJqT9W9WPrNpsTT4=;
+        b=CDFU6/Sv0P3WwcKuwuc43irz1Hn1ZpEjhI2krW0mIh65PqwKRKUloS+nHrbC3ENXil
+         rg+mxQ+ojAOSjNPllgnHQOJ5veorXo75tb1LAwcIocBEs0Dbgl8qh/01NHmC/7YhgZH1
+         j8mGM5EhX7vWV00mRSTU7SwDtFPZ7MU4LQXBK42m5EzdHSuYl3Hhj5ZT/EKpPYb6eoOP
+         Zt3EQJRWQ78A8yKev2Zy9cmLJOE6pfbWntGIZGtw7OXvTyzIJd2ww8/otrsn3I1/7K9d
+         5acFRqCGI71gOl5IQuHbMAlDz+mgtaLuZEyB2fyvuzBuvbmxj9ieZ80Yn8dwQ8I69W0b
+         J4uQ==
+X-Gm-Message-State: AOAM5313f0Hn5yWBJbID2w5pUNpq5CLs+8G/I12Erna4+0WjnacllRvj
+        KlYApGhq7WkUSj/krAV+SDg=
+X-Google-Smtp-Source: ABdhPJz9ueCV0j30JfV2DfEN7UWTuCXSeIzgd/QlYR21lkRRHqOiR7AruNUAHVn9UN8FS8XeNsb0wA==
+X-Received: by 2002:a17:90a:5d89:: with SMTP id t9mr5655713pji.21.1634309543625;
+        Fri, 15 Oct 2021 07:52:23 -0700 (PDT)
+Received: from theprophet ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
+        by smtp.gmail.com with ESMTPSA id b8sm5548190pfm.65.2021.10.15.07.52.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 07:47:04 -0700 (PDT)
+        Fri, 15 Oct 2021 07:52:23 -0700 (PDT)
+Date:   Fri, 15 Oct 2021 20:22:10 +0530
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Toan Le <toan@os.amperecomputing.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR
-        APPLIEDMICRO XGENE)
-Subject: [PATCH v2 24/24] PCI: xgene: Use PCI_ERROR_RESPONSE to specify hardware error
-Date:   Fri, 15 Oct 2021 20:09:05 +0530
-Message-Id: <d5791e3697e6b78f0283c39dd58ba247a429d3c7.1634306198.git.naveennaidu479@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1634306198.git.naveennaidu479@gmail.com>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH v2 17/24] PCI: vmd: Use RESPONSE_IS_PCI_ERROR() to check
+ read from hardware
+Message-ID: <20211015145210.opb72brioa5tcbtw@theprophet>
 References: <cover.1634306198.git.naveennaidu479@gmail.com>
+ <0da4dfe7642bf89d954c7062a40566bf28d94da1.1634306198.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0da4dfe7642bf89d954c7062a40566bf28d94da1.1634306198.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Include PCI_ERROR_RESPONSE along with 0xffffffff in the comment to
-specify a hardware error. This makes finding where MMIO read error
-occurs easier.
+On 15/10, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
+> 
+> Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
+> data from hardware.
+> 
+> This helps unify PCI error response checking and make error checks
+> consistent and easier to find.
+> 
+> Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
+> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  drivers/pci/controller/vmd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index a5987e52700e..db81bc4cfe8c 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -538,7 +538,7 @@ static int vmd_get_phys_offsets(struct vmd_dev *vmd, bool native_hint,
+>  		int ret;
+>  
+>  		ret = pci_read_config_dword(dev, PCI_REG_VMLOCK, &vmlock);
+> -		if (ret || vmlock == ~0)
+> +		if (ret || RESPONSE_IS_PCI_ERROR(&vmlock))
+>  			return -ENODEV;
+>  
+>  		if (MB2_SHADOW_EN(vmlock)) {
+> -- 
+> 2.25.1
+> 
 
-Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
----
- drivers/pci/controller/pci-xgene.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Jonathan, I have added your Reviewed-by tag from the first version [1] of
+the patch series, since this patch did not change in the version 2. I
+hope that's okay. If not, I really apologize for that and can you 
+please let me know how to rectify that mistake.
 
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index e64536047b65..4b10794e1ba1 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -176,10 +176,10 @@ static int xgene_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
- 	 * Retry Status (CRS) logic: when CRS Software Visibility is
- 	 * enabled and we read the Vendor and Device ID of a non-existent
- 	 * device, the controller fabricates return data of 0xFFFF0001
--	 * ("device exists but is not ready") instead of 0xFFFFFFFF
--	 * ("device does not exist").  This causes the PCI core to retry
--	 * the read until it times out.  Avoid this by not claiming to
--	 * support CRS SV.
-+	 * ("device exists but is not ready") instead of
-+	 * 0xFFFFFFFF (PCI_ERROR_RESPONSE) ("device does not exist"). This causes
-+	 * the PCI core to retry the read until it times out.
-+	 * Avoid this by not claiming to support CRS SV.
- 	 */
- 	if (pci_is_root_bus(bus) && (port->version == XGENE_PCIE_IP_VER_1) &&
- 	    ((where & ~0x3) == XGENE_V1_PCI_EXP_CAP + PCI_EXP_RTCTL))
--- 
-2.25.1
+[1]:
+https://lore.kernel.org/linux-pci/f3aca934-7dee-b294-ad3c-264e773eddda@linux.dev/T/#u
+
+Thanks,
+Naveen
 
