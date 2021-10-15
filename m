@@ -2,145 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62E1F42F81C
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 18:29:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F98742F862
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 18:38:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241292AbhJOQbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 12:31:41 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3986 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236936AbhJOQbk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 12:31:40 -0400
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HWBTb6rkGz67lSs;
-        Sat, 16 Oct 2021 00:25:55 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Fri, 15 Oct 2021 18:29:31 +0200
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Fri, 15 Oct
- 2021 17:29:31 +0100
-Date:   Fri, 15 Oct 2021 17:29:30 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 06/10] cxl/pci: Add @base to cxl_register_map
-Message-ID: <20211015172930.00007f21@Huawei.com>
-In-Reply-To: <CAPcyv4hP5ohs10-xC+h=QOH7yiUXji55ubwVG1XfMA006tjR8A@mail.gmail.com>
-References: <163379783658.692348.16064992154261275220.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <163379786922.692348.2318044990911111834.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20211010042056.GJ3114988@iweiny-DESK2.sc.intel.com>
-        <CAPcyv4hP5ohs10-xC+h=QOH7yiUXji55ubwVG1XfMA006tjR8A@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S241468AbhJOQk0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 12:40:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59594 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S241408AbhJOQk0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 12:40:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634315899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OL1xVkJ1GZ3Vp5ZR2VEcp/JIFWoJLAIj138sahWf0nI=;
+        b=NOpGfMXRuFgdOyETbQos7lxomZy5caANyRh3AwP6wyg8ZX49FVWEHouoFESn+1ZvJJRW0B
+        ACF66jgHu3nRsn9zgqudeO5Ki5AalzcSCLxsMJ4JY1CmCRuhX903fzGQjqkVyZ0IqORPne
+        IHMCE72aMQItwED2qWVao3zePgVQiEQ=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-E1aKl_mvNtq2whOyfDSPjA-1; Fri, 15 Oct 2021 12:38:18 -0400
+X-MC-Unique: E1aKl_mvNtq2whOyfDSPjA-1
+Received: by mail-oi1-f199.google.com with SMTP id q132-20020acac08a000000b00298e2159ac7so4551104oif.17
+        for <linux-pci@vger.kernel.org>; Fri, 15 Oct 2021 09:38:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OL1xVkJ1GZ3Vp5ZR2VEcp/JIFWoJLAIj138sahWf0nI=;
+        b=QTGHHEcPB6fJipKTlQLstDD1+Qcbx+5Hfiqt/KA8TgI/LzdZnP8RxHBklRsz7h6M8m
+         JO6hDKp2SStDhri+RtxFK2P3DJQFl8wty1gRrXQUJn+ji+s2RnY4KhZAma/yY6SOzs9i
+         4nS7i5WYLnIRi82a3wR6I0zpWj3xkbRqLagLx9KGH2Xe05kA5PbqzFSKhYan8SnayxMv
+         a9E5QojUnDFqGU06fXdj4zC1SfvXa1W659cgSZkIcPXO2nhI56vSluN9qnvTtlNLBcn4
+         jaojAt7pdNU9NwgDO8/QmyZUjvlvICuaZmwzTAQKWU9JyB4RDLW5afKBXC4tFbVlrp7K
+         8wGA==
+X-Gm-Message-State: AOAM532c7BluLandY0SfMXGq0e+6SyK45EXDnhZhHt9ZkEyypgIbRY+B
+        RrnZT27UGatNFWx+ntohzr+sKgnnb7RBn6EpoeDFsHj0Zc2gJ7XdAELFy88HxFxQB98/23LzpvW
+        tLzM2a1bIyQbr1HOnnO0m
+X-Received: by 2002:a4a:adca:: with SMTP id t10mr9780934oon.19.1634315897610;
+        Fri, 15 Oct 2021 09:38:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy07XqbfRReKgHIu02thE2BC8q9a60k39yM0PD78yJmMQBceFMI+pcgwV8uY+kr3MAVEOqLnA==
+X-Received: by 2002:a4a:adca:: with SMTP id t10mr9780920oon.19.1634315897403;
+        Fri, 15 Oct 2021 09:38:17 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id a10sm1334513otb.7.2021.10.15.09.38.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Oct 2021 09:38:17 -0700 (PDT)
+Date:   Fri, 15 Oct 2021 10:38:15 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <jgg@nvidia.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
+Subject: Re: [PATCH V1 mlx5-next 07/13] vfio: Add 'invalid' state
+ definitions
+Message-ID: <20211015103815.4b165d43.alex.williamson@redhat.com>
+In-Reply-To: <20211013094707.163054-8-yishaih@nvidia.com>
+References: <20211013094707.163054-1-yishaih@nvidia.com>
+        <20211013094707.163054-8-yishaih@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 13 Oct 2021 15:53:20 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 13 Oct 2021 12:47:01 +0300
+Yishai Hadas <yishaih@nvidia.com> wrote:
 
-> On Sat, Oct 9, 2021 at 9:21 PM Ira Weiny <ira.weiny@intel.com> wrote:
-> >
-> > On Sat, Oct 09, 2021 at 09:44:29AM -0700, Dan Williams wrote:  
-> > > In addition to carrying @barno, @block_offset, and @reg_type, add @base
-> > > to keep all map/unmap parameters in one object. The helpers
-> > > cxl_{map,unmap}_regblock() handle adjusting @base to the @block_offset
-> > > at map and unmap time.
-> > >
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  drivers/cxl/cxl.h |    1 +
-> > >  drivers/cxl/pci.c |   31 ++++++++++++++++---------------
-> > >  2 files changed, 17 insertions(+), 15 deletions(-)
-> > >
-> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > index a6687e7fd598..7cd16ef144dd 100644
-> > > --- a/drivers/cxl/cxl.h
-> > > +++ b/drivers/cxl/cxl.h
-> > > @@ -140,6 +140,7 @@ struct cxl_device_reg_map {
-> > >  };
-> > >
-> > >  struct cxl_register_map {
-> > > +     void __iomem *base;
-> > >       u64 block_offset;
-> > >       u8 reg_type;
-> > >       u8 barno;
-> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > index 9f006299a0e3..b42407d067ac 100644
-> > > --- a/drivers/cxl/pci.c
-> > > +++ b/drivers/cxl/pci.c
-> > > @@ -306,8 +306,7 @@ static int cxl_pci_setup_mailbox(struct cxl_mem *cxlm)
-> > >       return 0;
-> > >  }
-> > >
-> > > -static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
-> > > -                                       struct cxl_register_map *map)
-> > > +static int cxl_map_regblock(struct pci_dev *pdev, struct cxl_register_map *map)
-> > >  {
-> > >       void __iomem *addr;
-> > >       int bar = map->barno;
-> > > @@ -318,24 +317,27 @@ static void __iomem *cxl_pci_map_regblock(struct pci_dev *pdev,
-> > >       if (pci_resource_len(pdev, bar) < offset) {
-> > >               dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
-> > >                       &pdev->resource[bar], (unsigned long long)offset);
-> > > -             return NULL;
-> > > +             return -ENXIO;
-> > >       }
-> > >
-> > >       addr = pci_iomap(pdev, bar, 0);
-> > >       if (!addr) {
-> > >               dev_err(dev, "failed to map registers\n");
-> > > -             return addr;
-> > > +             return -ENOMEM;
-> > >       }
-> > >
-> > >       dev_dbg(dev, "Mapped CXL Memory Device resource bar %u @ %#llx\n",
-> > >               bar, offset);
-> > >
-> > > -     return addr;
-> > > +     map->base = addr + map->block_offset;
-> > > +     return 0;
-> > >  }
-> > >
-> > > -static void cxl_pci_unmap_regblock(struct pci_dev *pdev, void __iomem *base)
-> > > +static void cxl_unmap_regblock(struct pci_dev *pdev,
-> > > +                            struct cxl_register_map *map)
-> > >  {
-> > > -     pci_iounmap(pdev, base);
-> > > +     pci_iounmap(pdev, map->base - map->block_offset);  
-> >
-> > I know we need to get these in soon.  But I think map->base should be 'base'
-> > and map->block_offset should be handled in cxl_probe_regs() rather than
-> > subtract it here..  
+> Add 'invalid' state definition to be used by drivers to set/check
+> invalid state.
 > 
-> But why? The goal of the cxl_register_map cleanups is to reduce the
-> open-coding for details that can just be passed around in a @map
-> instance. Once cxl_map_regblock() sets up @base there's little reason
-> to consider the hardware regblock details.
+> In addition dropped the non complied macro VFIO_DEVICE_STATE_SET_ERROR
+> (i.e SATE instead of STATE) which seems unusable.
 
-I agree with Ira to the extent that this was a little confusing.   Perhaps it is worth
-a comment at the structure definition to make the relationship of block_offset
-and base clear?
+s/non complied/non-compiled/
 
-Jonathan
+We can certainly assume it's unused based on the typo, but removing it
+or fixing it should be a separate patch.
 
+> Fixes: a8a24f3f6e38 ("vfio: UAPI for migration interface for device state")
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  include/linux/vfio.h      | 5 +++++
+>  include/uapi/linux/vfio.h | 4 +---
+>  2 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> > Either way this is cleaner than what it was.
-> >
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>  
-> 
-> Thanks!
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index b53a9557884a..6a8cf6637333 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -252,4 +252,9 @@ extern int vfio_virqfd_enable(void *opaque,
+>  			      void *data, struct virqfd **pvirqfd, int fd);
+>  extern void vfio_virqfd_disable(struct virqfd **pvirqfd);
+>  
+> +static inline bool vfio_is_state_invalid(u32 state)
+> +{
+> +	return state >= VFIO_DEVICE_STATE_INVALID;
+> +}
+
+
+Redundant, we already have !VFIO_DEVICE_STATE_VALID(state)
+
+> +
+>  #endif /* VFIO_H */
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index ef33ea002b0b..7f8fdada5eb3 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -609,6 +609,7 @@ struct vfio_device_migration_info {
+>  #define VFIO_DEVICE_STATE_RUNNING   (1 << 0)
+>  #define VFIO_DEVICE_STATE_SAVING    (1 << 1)
+>  #define VFIO_DEVICE_STATE_RESUMING  (1 << 2)
+> +#define VFIO_DEVICE_STATE_INVALID   (VFIO_DEVICE_STATE_RESUMING + 1)
+
+Nak, device_state is not an enum, this is only one of the states we
+currently define as invalid and usage such as the inline above ignores
+the device state mask below, which induces future limits on how we can
+expand the device_state field.  Thanks,
+
+Alex
+
+>  #define VFIO_DEVICE_STATE_MASK      (VFIO_DEVICE_STATE_RUNNING | \
+>  				     VFIO_DEVICE_STATE_SAVING |  \
+>  				     VFIO_DEVICE_STATE_RESUMING)
+> @@ -621,9 +622,6 @@ struct vfio_device_migration_info {
+>  	((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_SAVING | \
+>  					      VFIO_DEVICE_STATE_RESUMING))
+>  
+> -#define VFIO_DEVICE_STATE_SET_ERROR(state) \
+> -	((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_SATE_SAVING | \
+> -					     VFIO_DEVICE_STATE_RESUMING)
+>  
+>  	__u32 reserved;
+>  	__u64 pending_bytes;
 
