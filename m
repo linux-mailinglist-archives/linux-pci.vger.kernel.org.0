@@ -2,134 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F173E42E97F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 08:57:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FF4A42E98F
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 08:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235799AbhJOG7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 02:59:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24327 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235794AbhJOG7e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 02:59:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634281048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XrPIV2fprNlCi1MFN3D9uad/uIU7Ev00FM5PU9k9D8g=;
-        b=GwGEbBaFXzzU9REDj1BMs3OjLs1HY0aJfHc/a+BJs6vuO0yix4OQclcAkiHiv1kYUhz722
-        xAFnGbVhG5my5OxhrPr3N3g1lTb8X+zidtpCKY67Q5trfQw/4cSbUyo/+jWUMFt9aJnieF
-        CKM+HW1fLTN7z2tsVptUIFJFqhBauno=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-VC9-iisYNr6UjPOKOxomVQ-1; Fri, 15 Oct 2021 02:57:26 -0400
-X-MC-Unique: VC9-iisYNr6UjPOKOxomVQ-1
-Received: by mail-ed1-f71.google.com with SMTP id p20-20020a50cd94000000b003db23619472so7351550edi.19
-        for <linux-pci@vger.kernel.org>; Thu, 14 Oct 2021 23:57:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XrPIV2fprNlCi1MFN3D9uad/uIU7Ev00FM5PU9k9D8g=;
-        b=3yhBg1+LoGtgebz2rjyy8TG3x5sQ4sfBGQJn63LjSUb+II0cJI3Ry6/rcszo7Z5DAN
-         0YUvplDZbTZU5GsGTMA3iJ2WHf9AOrbyXcPfW6rq/et3KEBSciiZfgnZ1oAOWtotsFdI
-         y9SVO+OT8er03sKijcKtADFumeDP1gHi0q0rZ1JNDy9z0mKoxDcK7PWkMSwyeyD7ZVIf
-         0dmx2OZpl66b9MI6EdnOCUa7BbPYiqVNLeGH+7reL5Kfa6XsLU5JIhM5W+8DcURasSs6
-         N402VJZsnL33ByjVV5L67mnlztj5qHP08Q0x96xhYC0Fn2h0rHhoKd/3UPwLzjssFWlD
-         g22A==
-X-Gm-Message-State: AOAM531Vhz2oBWufHa0BzUJl41WMDY2k1xreAPuZOuzv0UeHHwtzqdSa
-        OITstvmpT97Fc+1fCDFx5e64+lNrhMLYYMoHrNoMGZP310kisqji5c9GDahOG6HuoPpVRmEn5a3
-        BiG1ALbWfYBgg6UMyRlIm
-X-Received: by 2002:a05:6402:447:: with SMTP id p7mr15322762edw.261.1634281045400;
-        Thu, 14 Oct 2021 23:57:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw3wsrR7axiFHmfph2bLnxYqxO8ciYC1BIDrnzojSmvwa6tk0pkkVI5pGdF1DtDsbmx8LCmYQ==
-X-Received: by 2002:a05:6402:447:: with SMTP id p7mr15322726edw.261.1634281045218;
-        Thu, 14 Oct 2021 23:57:25 -0700 (PDT)
-Received: from redhat.com ([2.55.1.196])
-        by smtp.gmail.com with ESMTPSA id e11sm4094212edl.70.2021.10.14.23.57.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Oct 2021 23:57:24 -0700 (PDT)
-Date:   Fri, 15 Oct 2021 02:57:16 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 16/16] x86/tdx: Add cmdline option to force use of
- ioremap_host_shared
-Message-ID: <20211015024923-mutt-send-email-mst@kernel.org>
-References: <20211009070132-mutt-send-email-mst@kernel.org>
- <8c906de6-5efa-b87a-c800-6f07b98339d0@linux.intel.com>
- <20211011075945-mutt-send-email-mst@kernel.org>
- <9d0ac556-6a06-0f2e-c4ff-0c3ce742a382@linux.intel.com>
- <20211011142330-mutt-send-email-mst@kernel.org>
- <4fe8d60a-2522-f111-995c-dcbefd0d5e31@linux.intel.com>
- <20211012165705-mutt-send-email-mst@kernel.org>
- <c09c961d-f433-4a68-0b38-208ffe8b36c7@linux.intel.com>
- <20211012171846-mutt-send-email-mst@kernel.org>
- <c2ce5ad8-4df7-3a37-b235-8762a76b1fd3@linux.intel.com>
+        id S232270AbhJOHBR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 03:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235830AbhJOHBR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 Oct 2021 03:01:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 44D1161163;
+        Fri, 15 Oct 2021 06:59:09 +0000 (UTC)
+From:   Huacai Chen <chenhuacai@loongson.cn>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V7 09/11] PCI/VGA: Log bridge control messages when adding devices
+Date:   Fri, 15 Oct 2021 14:58:42 +0800
+Message-Id: <20211015065844.2957617-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20211015061512.2941859-1-chenhuacai@loongson.cn>
+References: <20211015061512.2941859-1-chenhuacai@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2ce5ad8-4df7-3a37-b235-8762a76b1fd3@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 14, 2021 at 10:50:59PM -0700, Andi Kleen wrote:
-> 
-> > I thought you basically create an OperationRegion of SystemMemory type,
-> > and off you go. Maybe the OSPM in Linux is clever and protects
-> > some memory, I wouldn't know.
-> 
-> 
-> I investigated this now, and it looks like acpi is using ioremap_cache(). We
-> can hook into that and force non sharing. It's probably safe to assume that
-> this is not used on real IO devices.
-> 
-> I think there are still some other BIOS mappings that use just plain
-> ioremap() though.
-> 
-> 
-> -Andi
+Previously vga_arb_device_init() iterated through all VGA devices and
+indicated whether legacy VGA routing to each could be controlled by an
+upstream bridge.
 
-Hmm don't you mean the reverse? If you make ioremap shared then OS is
-protected from malicious ACPI? If you don't make it shared then
-malicious ACPI can poke at arbitrary OS memory.  Looks like making
-ioremap non shared by default is actually less safe than shared.
-Interesting.
+But we determine that information in vga_arbiter_add_pci_device(), which we
+call for every device, so we can log it there without iterating through the
+VGA devices again.
 
-For BIOS I suspect there's no way around it, it needs to be
-audited since it's executable.
+Note that we call vga_arbiter_check_bridge_sharing() before adding the
+device to vga_list, so we have to handle the very first device separately.
 
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/gpu/vga/vgaarb.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
+index 7cd989c5d03b..7f52db439c11 100644
+--- a/drivers/gpu/vga/vgaarb.c
++++ b/drivers/gpu/vga/vgaarb.c
+@@ -672,8 +672,10 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
+ 
+ 	vgadev->bridge_has_one_vga = true;
+ 
+-	if (list_empty(&vga_list))
++	if (list_empty(&vga_list)) {
++		vgaarb_info(&vgadev->pdev->dev, "bridge control possible\n");
+ 		return;
++	}
+ 
+ 	/* okay iterate the new devices bridge hierarachy */
+ 	new_bus = vgadev->pdev->bus;
+@@ -712,6 +714,11 @@ static void vga_arbiter_check_bridge_sharing(struct vga_device *vgadev)
+ 		}
+ 		new_bus = new_bus->parent;
+ 	}
++
++	if (vgadev->bridge_has_one_vga)
++		vgaarb_info(&vgadev->pdev->dev, "bridge control possible\n");
++	else
++		vgaarb_info(&vgadev->pdev->dev, "no bridge control possible\n");
+ }
+ 
+ /*
+@@ -1504,7 +1511,6 @@ static int __init vga_arb_device_init(void)
+ {
+ 	int rc;
+ 	struct pci_dev *pdev;
+-	struct vga_device *vgadev;
+ 
+ 	rc = misc_register(&vga_arb_device);
+ 	if (rc < 0)
+@@ -1520,15 +1526,6 @@ static int __init vga_arb_device_init(void)
+ 			       PCI_ANY_ID, pdev)) != NULL)
+ 		vga_arbiter_add_pci_device(pdev);
+ 
+-	list_for_each_entry(vgadev, &vga_list, list) {
+-		struct device *dev = &vgadev->pdev->dev;
+-
+-		if (vgadev->bridge_has_one_vga)
+-			vgaarb_info(dev, "bridge control possible\n");
+-		else
+-			vgaarb_info(dev, "no bridge control possible\n");
+-	}
+-
+ 	return rc;
+ }
+ subsys_initcall(vga_arb_device_init);
 -- 
-MST
+2.27.0
 
