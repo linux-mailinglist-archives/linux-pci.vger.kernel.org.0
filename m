@@ -2,64 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6FF142F606
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:46:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2BC842F60E
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 16:46:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240573AbhJOOsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 10:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59156 "EHLO
+        id S240758AbhJOOsf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 10:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235318AbhJOOsH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:48:07 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEBAC061570;
-        Fri, 15 Oct 2021 07:46:00 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id l6so6526298plh.9;
-        Fri, 15 Oct 2021 07:46:00 -0700 (PDT)
+        with ESMTP id S240766AbhJOOsN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 10:48:13 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80ED9C061764;
+        Fri, 15 Oct 2021 07:46:07 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id oa12-20020a17090b1bcc00b0019f715462a8so7418609pjb.3;
+        Fri, 15 Oct 2021 07:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jZJX9CbLMezPavdAEsrkOsiHPTmHr09QIspE6IFIFVc=;
-        b=iXTG7MgruvfoISzQMeRGbBt2ad6/7BSmR4i1c1wy+VVD8k+y+QFQjDpVRGodJJARaB
-         rDa5mBuKvLkuaNAjwKzsRKp/jZ9BQCX3vfmu9UO49PwTu4nE3j4cv9boiPNIZnNf4FM5
-         JcLFF7SwagmeuTdanyYGIqRaR5J9yFyDF8fwB7mDdZ+lR8jk08ccNse8poo8n/XK5kvH
-         Sa7wc7IhrlhwJhRdzMn6SvMGIAwfg27LrzHpI49DK2knMHVg0AMavrixa5bAsmrGNK4+
-         4DVqk+mlk721j7YqlN/+l94CASLZG3nsHLorK+dwEOjBIMBiQjsge9pJxrpovAzXUhdM
-         Az/Q==
+        bh=EXqQzO1oSewfqo9sAbFeLWFXnz/W3EVi0EQdPEI6sRE=;
+        b=K53e7Oe+f9+7D7WpNDUco3qWePYRLXAYCersP6n2gPnyhNdVyIE3Wu1/0wXNvCeD4h
+         GQwrZ1Ch9tnNznJLjY2BCfcuNx29Ntzjkp1QpG5TUU7MSzTzCmUOq1NHcaxBCGoxZxyy
+         zIfAW+IH/LqvtfiGH23oImVF4unRFwnBN9vExy/ehbxrgFRX7YYyzxkVcc9KuA+iIEVN
+         x8UujC0F/DA4KmjgsLX7BCsyrLN09joYUMjO/XpoZHl2nnyh0BtSo/Ujt9fhazeGrq2+
+         bwvDDRhHpWmQtgwA4fSn8mw4uZYf066PvrVj1XtJxZlAJNneDe5bOTB1mzHAalmdDjLy
+         q8LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jZJX9CbLMezPavdAEsrkOsiHPTmHr09QIspE6IFIFVc=;
-        b=67iIKZIKHNUycfYWKtwdsZyi1JtCOBE9hQne2F1THNH+sDb6AFoi/NpRtwPffyGEGR
-         XzMbhgYHka+KTr03uVpCLgameHn+vkgiWRtMaLJIFutYz5EWurkS9InjZRlUQCdEJHFw
-         eXTWAAE4DQ4RtjR2CBGHPfH69tOBTxVEz7m6HjblsXAI6PG9BVqpp9qcqB/4WfkUqRTh
-         lFSlK69pGyjNP4mzb4NE2yOeK9fNFUppptdnU/kzWZUi+sd1MHojDPEpPR2TT2dh4Fmx
-         GUzm3dKDsTZFLb93J6V2nMNyFAW3PcfoCVxQwWvCVBtt3MF9iCAG806311m3CjSz0qFK
-         InNw==
-X-Gm-Message-State: AOAM530VMeWZ3rTAJlNn7QBYoSEn6REo833gnSQBDYM+lX0Y9XusKhcN
-        0x357Z1aSwZuIgS2VEqLdVw=
-X-Google-Smtp-Source: ABdhPJzd2mU9TMFIg5GGMN/W6stxEp3fblwUqADMrcyM6e2uYsbW/4c/MWtkdNzq2Zv0qomNn3Tv0A==
-X-Received: by 2002:a17:902:6544:b0:13e:dd16:bd5b with SMTP id d4-20020a170902654400b0013edd16bd5bmr11591581pln.61.1634309160465;
-        Fri, 15 Oct 2021 07:46:00 -0700 (PDT)
+        bh=EXqQzO1oSewfqo9sAbFeLWFXnz/W3EVi0EQdPEI6sRE=;
+        b=01+P60Eow/pN6alrf/0o6wBS/SLdvZmCowG2rMCvcuh/cg8GwavzyR3/5k0R7buI2p
+         1GIWbH/tJROgn/p08NbL9Bt6xiSXb4w4OZFdDPjv5JhlA1WrQxt9pbITnwITO46CYfbM
+         5O9O3MsnYWP7tHiPYHmkifkNM4N0I4Xhs99tdS0UzrWq4h8EVugaI858ZAYeUnzuTMbR
+         ZF3OYpyhdPvwSyGc+yUKsgqOUJuVUDQG46xfXUv5J8KeLyYx40LkW2DnrLnsKUceQD8n
+         Z0u8SukGCjIfbGjLQAEFtEzqMocLnYqkIIkJ9oJuVTLPovHu2dPDtbznFtH+Vapw8q1x
+         mtpg==
+X-Gm-Message-State: AOAM530k0SJk6gxOi1MX4mmdsO9OTByqx8miQyZSd7X658foufacWI+1
+        mDhnOXEulPM3xwnujNWKVRc=
+X-Google-Smtp-Source: ABdhPJzsMZqm+frY+X1rHzGEJNsNKsVIy7dntkjRCaKaKKSNaCGslbffodRrOi1845tZSOiFoJhUTA==
+X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr28357103pjr.57.1634309167032;
+        Fri, 15 Oct 2021 07:46:07 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:4806:9a51:7f4b:9b5c:337a])
-        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.45.56
+        by smtp.gmail.com with ESMTPSA id f18sm5293491pfa.60.2021.10.15.07.46.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Oct 2021 07:46:00 -0700 (PDT)
+        Fri, 15 Oct 2021 07:46:06 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH v2 17/24] PCI: vmd: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
-Date:   Fri, 15 Oct 2021 20:08:58 +0530
-Message-Id: <0da4dfe7642bf89d954c7062a40566bf28d94da1.1634306198.git.naveennaidu479@gmail.com>
+        Lukas Wunner <lukas@wunner.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: [PATCH v2 18/24] PCI: pciehp: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
+Date:   Fri, 15 Oct 2021 20:08:59 +0530
+Message-Id: <2bc987dc1dfb753c37a65b6c8c98c32e66a4d2a0.1634306198.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634306198.git.naveennaidu479@gmail.com>
 References: <cover.1634306198.git.naveennaidu479@gmail.com>
@@ -79,25 +78,63 @@ data from hardware.
 This helps unify PCI error response checking and make error checks
 consistent and easier to find.
 
-Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
+Compile tested only.
+
+Acked-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/vmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a5987e52700e..db81bc4cfe8c 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -538,7 +538,7 @@ static int vmd_get_phys_offsets(struct vmd_dev *vmd, bool native_hint,
- 		int ret;
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 3024d7e85e6a..8a2f6bb643b5 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
  
- 		ret = pci_read_config_dword(dev, PCI_REG_VMLOCK, &vmlock);
--		if (ret || vmlock == ~0)
-+		if (ret || RESPONSE_IS_PCI_ERROR(&vmlock))
- 			return -ENODEV;
+ 	do {
+ 		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-		if (slot_status == (u16) ~0) {
++		if (RESPONSE_IS_PCI_ERROR(&slot_status)) {
+ 			ctrl_info(ctrl, "%s: no response from device\n",
+ 				  __func__);
+ 			return 0;
+@@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+ 	pcie_wait_cmd(ctrl);
  
- 		if (MB2_SHADOW_EN(vmlock)) {
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+-	if (slot_ctrl == (u16) ~0) {
++	if (RESPONSE_IS_PCI_ERROR(&slot_ctrl)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		goto out;
+ 	}
+@@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
+ 	int ret;
+ 
+ 	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+-	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(&lnk_status))
+ 		return -ENODEV;
+ 
+ 	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+@@ -443,7 +443,7 @@ int pciehp_card_present(struct controller *ctrl)
+ 	int ret;
+ 
+ 	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+-	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(&slot_status))
+ 		return -ENODEV;
+ 
+ 	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+@@ -621,7 +621,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 
+ read_status:
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+-	if (status == (u16) ~0) {
++	if (RESPONSE_IS_PCI_ERROR(&status)) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+ 		if (parent)
+ 			pm_runtime_put(parent);
 -- 
 2.25.1
 
