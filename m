@@ -2,101 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF3F42E8E7
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 08:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B38D242E916
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 08:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234301AbhJOGY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 02:24:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232124AbhJOGY5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 Oct 2021 02:24:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BAAC361090;
-        Fri, 15 Oct 2021 06:22:49 +0000 (UTC)
-From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V7 08/11] PCI/VGA: Remove empty vga_arb_device_card_gone()
-Date:   Fri, 15 Oct 2021 14:15:09 +0800
-Message-Id: <20211015061512.2941859-9-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20211015061512.2941859-1-chenhuacai@loongson.cn>
-References: <20211015061512.2941859-1-chenhuacai@loongson.cn>
+        id S233032AbhJOGiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 02:38:16 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46912 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S232970AbhJOGiP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 02:38:15 -0400
+X-UUID: dd39aa4c66844d2b936dcff1b0029f1d-20211015
+X-UUID: dd39aa4c66844d2b936dcff1b0029f1d-20211015
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1718076048; Fri, 15 Oct 2021 14:36:06 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 15 Oct 2021 14:36:05 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 15 Oct 2021 14:36:04 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        <qizhong.cheng@mediatek.com>, <Ryan-JH.Yu@mediatek.com>,
+        Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH v3] PCI: mediatek-gen3: Disable DVFSRC voltage request
+Date:   Fri, 15 Oct 2021 14:36:02 +0800
+Message-ID: <20211015063602.29058-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+When the DVFSRC (dynamic voltage and frequency scaling resource collector)
+feature is not implemented, the PCIe hardware will assert a voltage request
+signal when exit from the L1 PM Substates to request a specific Vcore
+voltage, but cannot receive the voltage ready signal, which will cause
+the link to fail to exit the L1 PM Substates.
 
-vga_arb_device_card_gone() has always been empty.  Remove it.
+Disable DVFSRC voltage request by default, we need to find a common way to
+enable it in the future.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
 ---
- drivers/gpu/vga/vgaarb.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
-index 05174fd7e7ef..7cd989c5d03b 100644
---- a/drivers/gpu/vga/vgaarb.c
-+++ b/drivers/gpu/vga/vgaarb.c
-@@ -122,8 +122,6 @@ static int vga_str_to_iostate(char *buf, int str_size, int *io_state)
- /* this is only used a cookie - it should not be dereferenced */
- static struct pci_dev *vga_default;
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index f3aeb8d4eaca..79fb12fca6a9 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -79,6 +79,9 @@
+ #define PCIE_ICMD_PM_REG		0x198
+ #define PCIE_TURN_OFF_LINK		BIT(4)
  
--static void vga_arb_device_card_gone(struct pci_dev *pdev);
--
- /* Find somebody in our list */
- static struct vga_device *vgadev_find(struct pci_dev *pdev)
- {
-@@ -825,10 +823,6 @@ static bool vga_arbiter_del_pci_device(struct pci_dev *pdev)
- 	/* Remove entry from list */
- 	list_del(&vgadev->list);
- 	vga_count--;
--	/* Notify userland driver that the device is gone so it discards
--	 * it's copies of the pci_dev pointer
--	 */
--	vga_arb_device_card_gone(pdev);
++#define PCIE_MISC_CTRL_REG		0x348
++#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
++
+ #define PCIE_TRANS_TABLE_BASE_REG	0x800
+ #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
+ #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
+@@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+ 	val &= ~PCIE_INTX_ENABLE;
+ 	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
  
- 	/* Wake up all possible waiters */
- 	wake_up_all(&vga_wait_queue);
-@@ -1078,9 +1072,7 @@ static ssize_t vga_arb_read(struct file *file, char __user *buf,
- 	if (lbuf == NULL)
- 		return -ENOMEM;
- 
--	/* Shields against vga_arb_device_card_gone (pci_dev going
--	 * away), and allows access to vga list
--	 */
-+	/* Protects vga_list */
- 	spin_lock_irqsave(&vga_lock, flags);
- 
- 	/* If we are targeting the default, use it */
-@@ -1097,8 +1089,6 @@ static ssize_t vga_arb_read(struct file *file, char __user *buf,
- 		/* Wow, it's not in the list, that shouldn't happen,
- 		 * let's fix us up and return invalid card
- 		 */
--		if (pdev == priv->target)
--			vga_arb_device_card_gone(pdev);
- 		spin_unlock_irqrestore(&vga_lock, flags);
- 		len = sprintf(lbuf, "invalid");
- 		goto done;
-@@ -1442,10 +1432,6 @@ static int vga_arb_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static void vga_arb_device_card_gone(struct pci_dev *pdev)
--{
--}
--
- /*
-  * callback any registered clients to let them know we have a
-  * change in VGA cards
++	/* Disable DVFSRC voltage request */
++	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
++	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
++	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
++
+ 	/* Assert all reset signals */
+ 	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
+ 	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
 -- 
-2.27.0
+2.25.1
 
