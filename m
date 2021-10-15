@@ -2,147 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE9842F8DA
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 18:53:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C39F42FACA
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Oct 2021 20:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241703AbhJOQzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Oct 2021 12:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33110 "EHLO
+        id S242478AbhJOSQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Oct 2021 14:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236428AbhJOQzl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 12:55:41 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57FCC061762;
-        Fri, 15 Oct 2021 09:53:34 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id y12so42189837eda.4;
-        Fri, 15 Oct 2021 09:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DFAfhL2wTnA/x1oOiRIEIccRhRGZWYerK6em4KwuQr0=;
-        b=WhznUYR2nkpwiwbTRwmHKoc047JsFdk3RvHIe/jtOLSDmdxX07MCX9Eow0Bi+yLoQp
-         EyU08OzLxLG5ZCsUs7GUsgWdhql+ygc3SL2hgpQj7qkueaPaH4FCl+VEJFbTT66B35gH
-         GDagaCdrbJmPFv3m1vjK25dlCo+SurtmwsJpbtn+lVZ1hUtQu8pPUJ/3APaMcce/rMb+
-         gK4/JKJga2A5DLyU3cXWQ467mYYMbHs26I04bEcKD9mvTuveZ0BpijvVaw9Fg5WzWNNW
-         l7COh3PfIisjI8gWM0rsyxYaukEsrZpFMim7hIuXFIwI4NkGZUXxkbzqxVTnksr3mpP4
-         SUYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DFAfhL2wTnA/x1oOiRIEIccRhRGZWYerK6em4KwuQr0=;
-        b=Pz66uXOYVPkKHpFryMN1vuv3PRaUUufVOktG/MXAyn+Mbnw67Hg+Y9A5/5ATuNWpbN
-         2apggTaSkDPxZ0TXvlb7Yc2fkPKHAqAH6cPp0ZRCyIhRq5T/Ga+wN92BZY22KWRL0px0
-         kr3ipbNNYsXFEfbnMnDFID1N0gdKA3BqLM+r9mGWrrMHp26dHnH2mwYGb/5/gQlnYc1Q
-         ArLpMWvshnVXU7a8w1Gp8dngNucMAhb62ma12skWTfwT7Kljvwc42Ges/nmkAMVmyRsa
-         FboJls257B2pG0z6DUpE/Rinw4YeDgbQmKpklsvYMMoCGqS84dFt7TluRpTUrsSBS1JO
-         lSow==
-X-Gm-Message-State: AOAM531fRDtVFQmGAgEdDX8QQ9FKZCV0/Fcr/6I7qlFhhfOBUo0iN3R/
-        2HQYIpNqVOsbxTFimIu3oU9vvzetwldYc5ybjC8=
-X-Google-Smtp-Source: ABdhPJw1GMYkf4/DzQ6xCdDldbViFURlmc0YnNdhDKa/6j1hrF7JWMyfM92nI6tIEj+fn7ChYTDQotvOC+uhf3cE48A=
-X-Received: by 2002:a50:e188:: with SMTP id k8mr19911628edl.119.1634316813165;
- Fri, 15 Oct 2021 09:53:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <YWbdvc7EWEZLVTHM@smile.fi.intel.com> <20211015164653.GA2108651@bhelgaas>
-In-Reply-To: <20211015164653.GA2108651@bhelgaas>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 15 Oct 2021 22:52:45 +0300
-Message-ID: <CAHp75VdpVwvOkjDWHcnWA-qZFm062UBp7VwdcpWbkdVR=i75Hw@mail.gmail.com>
-Subject: Re: [PATCH v6 00/11] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ido Schimmel <idosch@nvidia.com>,
-        Ingo Molnar <mingo@redhat.com>, Jack Xu <jack.xu@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Jiri Pirko <jiri@nvidia.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marco Chiappero <marco.chiappero@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Michael Buesch <m@bues.ch>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomaszx Kowalik <tomaszx.kowalik@intel.com>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, netdev <netdev@vger.kernel.org>,
-        oss-drivers@corigine.com, qat-linux@intel.com,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        xen-devel@lists.xenproject.org
+        with ESMTP id S237653AbhJOSQC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Oct 2021 14:16:02 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6E9C061570
+        for <linux-pci@vger.kernel.org>; Fri, 15 Oct 2021 11:13:55 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1mbRiJ-0000MK-T4; Fri, 15 Oct 2021 20:13:51 +0200
+Message-ID: <b1c38eb0cbded46d5f3c087e641b18cdb4f500ac.camel@pengutronix.de>
+Subject: Re: [RESEND v2 1/5] PCI: imx6: Encapsulate the clock enable into
+ one standalone function
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Date:   Fri, 15 Oct 2021 20:13:50 +0200
+In-Reply-To: <1634277941-6672-2-git-send-email-hongxing.zhu@nxp.com>
+References: <1634277941-6672-1-git-send-email-hongxing.zhu@nxp.com>
+         <1634277941-6672-2-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 7:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Wed, Oct 13, 2021 at 04:23:09PM +0300, Andy Shevchenko wrote:
+Am Freitag, dem 15.10.2021 um 14:05 +0800 schrieb Richard Zhu:
+> No function changes, just encapsulate the i.MX PCIe clocks enable
+> operations into one standalone function
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-...
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-> so compared to Uwe's v6, I restored that section to the original code.
-> My goal here was to make the patch as simple and easy to review as
-> possible.
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 79 ++++++++++++++++-----------
+>  1 file changed, 48 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 26f49f797b0f..1fa1dba6da81 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -470,38 +470,16 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  	return ret;
+>  }
+>  
+> -static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
+> -{
+> -	u32 val;
+> -	struct device *dev = imx6_pcie->pci->dev;
+> -
+> -	if (regmap_read_poll_timeout(imx6_pcie->iomuxc_gpr,
+> -				     IOMUXC_GPR22, val,
+> -				     val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED,
+> -				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
+> -				     PHY_PLL_LOCK_WAIT_TIMEOUT))
+> -		dev_err(dev, "PCIe PLL lock timeout\n");
+> -}
+> -
+> -static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+> +static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
+>  {
+>  	struct dw_pcie *pci = imx6_pcie->pci;
+>  	struct device *dev = pci->dev;
+>  	int ret;
+>  
+> -	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
+> -		ret = regulator_enable(imx6_pcie->vpcie);
+> -		if (ret) {
+> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+> -				ret);
+> -			return;
+> -		}
+> -	}
+> -
+>  	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
+>  	if (ret) {
+>  		dev_err(dev, "unable to enable pcie_phy clock\n");
+> -		goto err_pcie_phy;
+> +		return ret;
+>  	}
+>  
+>  	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
+> @@ -524,6 +502,51 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  
+>  	/* allow the clocks to stabilize */
+>  	usleep_range(200, 500);
+> +	return 0;
+> +
+> +err_ref_clk:
+> +	clk_disable_unprepare(imx6_pcie->pcie);
+> +err_pcie:
+> +	clk_disable_unprepare(imx6_pcie->pcie_bus);
+> +err_pcie_bus:
+> +	clk_disable_unprepare(imx6_pcie->pcie_phy);
+> +
+> +	return ret;
+> +}
+> +
+> +static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
+> +{
+> +	u32 val;
+> +	struct device *dev = imx6_pcie->pci->dev;
+> +
+> +	if (regmap_read_poll_timeout(imx6_pcie->iomuxc_gpr,
+> +				     IOMUXC_GPR22, val,
+> +				     val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED,
+> +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
+> +				     PHY_PLL_LOCK_WAIT_TIMEOUT))
+> +		dev_err(dev, "PCIe PLL lock timeout\n");
+> +}
+> +
+> +static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+> +{
+> +	struct dw_pcie *pci = imx6_pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	int ret;
+> +
+> +	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
+> +		ret = regulator_enable(imx6_pcie->vpcie);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+> +				ret);
+> +			return;
+> +		}
+> +	}
+> +
+> +	ret = imx6_pcie_clk_enable(imx6_pcie);
+> +	if (ret) {
+> +		dev_err(dev, "unable to enable pcie clocks\n");
+> +		goto err_clks;
+> +	}
+>  
+>  	/* Some boards don't have PCIe reset GPIO. */
+>  	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> @@ -578,13 +601,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  
+>  	return;
+>  
+> -err_ref_clk:
+> -	clk_disable_unprepare(imx6_pcie->pcie);
+> -err_pcie:
+> -	clk_disable_unprepare(imx6_pcie->pcie_bus);
+> -err_pcie_bus:
+> -	clk_disable_unprepare(imx6_pcie->pcie_phy);
+> -err_pcie_phy:
+> +err_clks:
+>  	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
+>  		ret = regulator_disable(imx6_pcie->vpcie);
+>  		if (ret)
 
-Thanks for elaboration. I have got it.
 
-...
-
-> You're right, this didn't make much sense in that patch.  I moved the
-> line join to the previous patch, which unindented this section and
-> made space for this to fit on one line.  Here's the revised commit:
->
->   https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=34ab316d7287
-
-Side remark: default without break or return is error prone (okay, to
-some extent). Perhaps adding the return statement there will make
-things robust and clean.
-
--- 
-With Best Regards,
-Andy Shevchenko
