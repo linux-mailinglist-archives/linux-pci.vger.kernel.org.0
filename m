@@ -2,211 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8C274301BD
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Oct 2021 12:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0E843020A
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Oct 2021 12:31:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240231AbhJPKNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Oct 2021 06:13:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53658 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235335AbhJPKNT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Oct 2021 06:13:19 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id 78e70f4d00fd6bb1; Sat, 16 Oct 2021 12:11:09 +0200
-Received: from kreacher.localnet (89-77-51-84.dynamic.chello.pl [89.77.51.84])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 28C0766A73A;
-        Sat, 16 Oct 2021 12:11:09 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: [PATCH v2 2/3] ACPI: PM: Fix sharing of wakeup power resources
-Date:   Sat, 16 Oct 2021 12:11:08 +0200
-Message-ID: <11874779.O9o76ZdvQC@kreacher>
-In-Reply-To: <2077987.irdbgypaU6@kreacher>
-References: <4347933.LvFx2qVVIh@kreacher> <2077987.irdbgypaU6@kreacher>
+        id S236697AbhJPKeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Oct 2021 06:34:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54813 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235031AbhJPKeC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 16 Oct 2021 06:34:02 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10138"; a="215208902"
+X-IronPort-AV: E=Sophos;i="5.85,378,1624345200"; 
+   d="scan'208";a="215208902"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2021 03:31:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,378,1624345200"; 
+   d="scan'208";a="442801506"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 16 Oct 2021 03:31:53 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mbgym-0009CV-Gz; Sat, 16 Oct 2021 10:31:52 +0000
+Date:   Sat, 16 Oct 2021 18:31:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
+ 80828c71ab0544a5460eca2dc0f60c458ea467e1
+Message-ID: <616aaa14.qB9Rp43umBabR7Ad%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 89.77.51.84
-X-CLIENT-HOSTNAME: 89-77-51-84.dynamic.chello.pl
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrvdduiedgvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvjeelgffhiedukedtleekkedvudfggefhgfegjefgueekjeelvefggfdvledutdenucfkphepkeelrdejjedrhedurdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrjeejrdehuddrkeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhp
- tghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: 80828c71ab0544a5460eca2dc0f60c458ea467e1  PCI/ERR: Reduce compile time for CONFIG_PCIEAER=n
 
-If an ACPI wakeup power resource is shared between multiple devices,
-it may not be managed correctly.
+elapsed time: 868m
 
-Suppose, for example, that two devices, A and B, share a wakeup power
-resource P whose wakeup_enabled flag is 0 initially.  Next, suppose
-that wakeup power is enabled for A and B, in this order, and disabled
-for B.  When wakeup power is enabled for A, P will be turned on and
-its wakeup_enabled flag will be set.  Next, when wakeup power is
-enabled for B, P will not be touched, because its wakeup_enabled flag
-is set.  Now, when wakeup power is disabled for B, P will be turned
-off which is incorrect, because A will still need P in order to signal
-wakeup.
+configs tested: 190
+configs skipped: 4
 
-Moreover, if wakeup power is enabled for A and then disabled for B,
-the latter will cause P to be turned off incorrectly (it will be still
-needed by A), because acpi_disable_wakeup_device_power() is allowed
-to manipulate power resources when the wakeup.prepare_count counter
-of the given device is 0.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-While the first issue could be addressed by changing the
-wakeup_enabled power resource flag into a counter, addressing the
-second one requires modifying acpi_disable_wakeup_device_power() to
-do nothing when the target device's wakeup.prepare_count reference
-counter is zero and that would cause the new counter to be redundant.
-Namely, if acpi_disable_wakeup_device_power() is modified as per the
-above, every change of the new counter following a wakeup.prepare_count
-change would be reflected by the analogous change of the main reference
-counter of the given power resource.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211016
+i386                 randconfig-c001-20211015
+mips                           ip28_defconfig
+sh                        sh7763rdp_defconfig
+mips                      bmips_stb_defconfig
+powerpc                      acadia_defconfig
+mips                        nlm_xlr_defconfig
+xtensa                           alldefconfig
+arm                         at91_dt_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                    socrates_defconfig
+arm                      tct_hammer_defconfig
+mips                      maltasmvp_defconfig
+arm                        trizeps4_defconfig
+powerpc                       maple_defconfig
+powerpc                      obs600_defconfig
+arm                          pcm027_defconfig
+powerpc64                        alldefconfig
+arm                          gemini_defconfig
+openrisc                            defconfig
+powerpc                          g5_defconfig
+powerpc                      chrp32_defconfig
+m68k                       m5249evb_defconfig
+sparc64                             defconfig
+arm                          iop32x_defconfig
+h8300                       h8s-sim_defconfig
+sh                        sh7785lcr_defconfig
+mips                      maltaaprp_defconfig
+sh                     magicpanelr2_defconfig
+nds32                            alldefconfig
+arm                       mainstone_defconfig
+um                             i386_defconfig
+mips                        nlm_xlp_defconfig
+arm                  colibri_pxa300_defconfig
+sh                   sh7724_generic_defconfig
+sh                          rsk7264_defconfig
+s390                       zfcpdump_defconfig
+arm                    vt8500_v6_v7_defconfig
+mips                        workpad_defconfig
+powerpc                    ge_imp3a_defconfig
+arm                         bcm2835_defconfig
+arc                              alldefconfig
+arm                          pxa3xx_defconfig
+arm                        magician_defconfig
+arm                  colibri_pxa270_defconfig
+m68k                        m5307c3_defconfig
+mips                         db1xxx_defconfig
+mips                          malta_defconfig
+microblaze                      mmu_defconfig
+mips                        vocore2_defconfig
+sh                           se7206_defconfig
+mips                     loongson1b_defconfig
+powerpc                     rainier_defconfig
+arm                           omap1_defconfig
+h8300                               defconfig
+arm                         cm_x300_defconfig
+powerpc                    gamecube_defconfig
+powerpc                 mpc837x_mds_defconfig
+mips                   sb1250_swarm_defconfig
+arm                         socfpga_defconfig
+arm                           h3600_defconfig
+m68k                           sun3_defconfig
+h8300                            alldefconfig
+powerpc                   motionpro_defconfig
+m68k                          atari_defconfig
+arm64                            alldefconfig
+arm                          ixp4xx_defconfig
+mips                            e55_defconfig
+arm                      pxa255-idp_defconfig
+arm                       versatile_defconfig
+s390                                defconfig
+arm                      integrator_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                      bamboo_defconfig
+arm                        vexpress_defconfig
+powerpc                        cell_defconfig
+powerpc                 mpc834x_itx_defconfig
+powerpc64                           defconfig
+arm                        mvebu_v7_defconfig
+sh                            shmin_defconfig
+sh                        dreamcast_defconfig
+arm                  randconfig-c002-20211015
+x86_64               randconfig-c001-20211015
+arm                  randconfig-c002-20211016
+x86_64               randconfig-c001-20211016
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+arc                              allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20211016
+x86_64               randconfig-a004-20211016
+x86_64               randconfig-a001-20211016
+x86_64               randconfig-a005-20211016
+x86_64               randconfig-a002-20211016
+x86_64               randconfig-a003-20211016
+i386                 randconfig-a003-20211016
+i386                 randconfig-a001-20211016
+i386                 randconfig-a005-20211016
+i386                 randconfig-a004-20211016
+i386                 randconfig-a002-20211016
+i386                 randconfig-a006-20211016
+x86_64               randconfig-a012-20211015
+x86_64               randconfig-a015-20211015
+x86_64               randconfig-a016-20211015
+x86_64               randconfig-a014-20211015
+x86_64               randconfig-a011-20211015
+x86_64               randconfig-a013-20211015
+i386                 randconfig-a016-20211015
+i386                 randconfig-a014-20211015
+i386                 randconfig-a011-20211015
+i386                 randconfig-a015-20211015
+i386                 randconfig-a012-20211015
+i386                 randconfig-a013-20211015
+arc                  randconfig-r043-20211015
+s390                 randconfig-r044-20211015
+riscv                randconfig-r042-20211015
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Accordingly, modify acpi_disable_wakeup_device_power() to do nothing
-when the target device's wakeup.prepare_count reference counter is
-zero and drop the power resource wakeup_enabled flag altogether.
+clang tested configs:
+mips                 randconfig-c004-20211015
+arm                  randconfig-c002-20211015
+i386                 randconfig-c001-20211015
+s390                 randconfig-c005-20211015
+x86_64               randconfig-c007-20211015
+powerpc              randconfig-c003-20211015
+riscv                randconfig-c006-20211015
+x86_64               randconfig-a006-20211015
+x86_64               randconfig-a004-20211015
+x86_64               randconfig-a001-20211015
+x86_64               randconfig-a005-20211015
+x86_64               randconfig-a002-20211015
+x86_64               randconfig-a003-20211015
+i386                 randconfig-a003-20211015
+i386                 randconfig-a001-20211015
+i386                 randconfig-a005-20211015
+i386                 randconfig-a004-20211015
+i386                 randconfig-a002-20211015
+i386                 randconfig-a006-20211015
+i386                 randconfig-a016-20211016
+i386                 randconfig-a014-20211016
+i386                 randconfig-a011-20211016
+i386                 randconfig-a015-20211016
+i386                 randconfig-a012-20211016
+i386                 randconfig-a013-20211016
+hexagon              randconfig-r041-20211015
+hexagon              randconfig-r045-20211015
+hexagon              randconfig-r041-20211016
+s390                 randconfig-r044-20211016
+riscv                randconfig-r042-20211016
+hexagon              randconfig-r045-20211016
 
-While at it, ensure that all of the power resources that can be
-turned off will be turned off when disabling device wakeup due to
-a power resource manipulation error, to prevent energy from being
-wasted.
-
-Fixes: b5d667eb392e ("ACPI / PM: Take unusual configurations of power resources into account")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-
-v1 -> v2:
-   * Restore the initialization of err in two places removed by v1 by mistake.
-
----
- drivers/acpi/power.c |   69 +++++++++++++++++----------------------------------
- 1 file changed, 24 insertions(+), 45 deletions(-)
-
-Index: linux-pm/drivers/acpi/power.c
-===================================================================
---- linux-pm.orig/drivers/acpi/power.c
-+++ linux-pm/drivers/acpi/power.c
-@@ -52,7 +52,6 @@ struct acpi_power_resource {
- 	u32 order;
- 	unsigned int ref_count;
- 	u8 state;
--	bool wakeup_enabled;
- 	struct mutex resource_lock;
- 	struct list_head dependents;
- };
-@@ -710,7 +709,6 @@ int acpi_device_sleep_wake(struct acpi_d
-  */
- int acpi_enable_wakeup_device_power(struct acpi_device *dev, int sleep_state)
- {
--	struct acpi_power_resource_entry *entry;
- 	int err = 0;
- 
- 	if (!dev || !dev->wakeup.flags.valid)
-@@ -721,26 +719,13 @@ int acpi_enable_wakeup_device_power(stru
- 	if (dev->wakeup.prepare_count++)
- 		goto out;
- 
--	list_for_each_entry(entry, &dev->wakeup.resources, node) {
--		struct acpi_power_resource *resource = entry->resource;
--
--		mutex_lock(&resource->resource_lock);
--
--		if (!resource->wakeup_enabled) {
--			err = acpi_power_on_unlocked(resource);
--			if (!err)
--				resource->wakeup_enabled = true;
--		}
--
--		mutex_unlock(&resource->resource_lock);
--
--		if (err) {
--			dev_err(&dev->dev,
--				"Cannot turn wakeup power resources on\n");
--			dev->wakeup.flags.valid = 0;
--			goto out;
--		}
-+	err = acpi_power_on_list(&dev->wakeup.resources);
-+	if (err) {
-+		dev_err(&dev->dev, "Cannot turn on wakeup power resources\n");
-+		dev->wakeup.flags.valid = 0;
-+		goto out;
- 	}
-+
- 	/*
- 	 * Passing 3 as the third argument below means the device may be
- 	 * put into arbitrary power state afterward.
-@@ -770,39 +755,33 @@ int acpi_disable_wakeup_device_power(str
- 
- 	mutex_lock(&acpi_device_lock);
- 
--	if (--dev->wakeup.prepare_count > 0)
-+	if (dev->wakeup.prepare_count > 1) {
-+		dev->wakeup.prepare_count--;
- 		goto out;
-+	}
- 
--	/*
--	 * Executing the code below even if prepare_count is already zero when
--	 * the function is called may be useful, for example for initialisation.
--	 */
--	if (dev->wakeup.prepare_count < 0)
--		dev->wakeup.prepare_count = 0;
-+	/* Do nothing if wakeup power has not been enabled for this device. */
-+	if (!dev->wakeup.prepare_count)
-+		goto out;
- 
- 	err = acpi_device_sleep_wake(dev, 0, 0, 0);
- 	if (err)
- 		goto out;
- 
-+	/*
-+	 * All of the power resources in the list need to be turned off even if
-+	 * there are errors.
-+	 */
- 	list_for_each_entry(entry, &dev->wakeup.resources, node) {
--		struct acpi_power_resource *resource = entry->resource;
--
--		mutex_lock(&resource->resource_lock);
--
--		if (resource->wakeup_enabled) {
--			err = acpi_power_off_unlocked(resource);
--			if (!err)
--				resource->wakeup_enabled = false;
--		}
--
--		mutex_unlock(&resource->resource_lock);
-+		int ret;
- 
--		if (err) {
--			dev_err(&dev->dev,
--				"Cannot turn wakeup power resources off\n");
--			dev->wakeup.flags.valid = 0;
--			break;
--		}
-+		ret = acpi_power_off(entry->resource);
-+		if (ret && !err)
-+			err = ret;
-+	}
-+	if (err) {
-+		dev_err(&dev->dev, "Cannot turn off wakeup power resources\n");
-+		dev->wakeup.flags.valid = 0;
- 	}
- 
-  out:
-
-
-
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
