@@ -2,229 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7DB4309C4
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Oct 2021 16:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81E3A430C7A
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Oct 2021 23:52:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbhJQOb7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Oct 2021 10:31:59 -0400
-Received: from mail-bn8nam08on2040.outbound.protection.outlook.com ([40.107.100.40]:10752
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229994AbhJQOb7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 17 Oct 2021 10:31:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ag8puPjvSQhgn754bbIrgVVHNMFmW2hdFKVdimkdPcvF9oLHY7MSLha5LdsYsakrGn8DJcp4275EuRfxWF381J4eOmIXDrSE7xnGev/6vnodHM4I1zz4d0dZl6y2GR2bhxNTg7559Pie0zyDzMIw5WEbcj78A7/S09Vqdl/6WM+5cnBOdWzU5UIDRATFQUWzxTdOEqnP2LtP1mgc4C1AolC5MhLgz2n1jUid+9ipdrrz1Hsi4ZrqSH0wkLr5JHVT7slzAPmhFnPAKlXNq8fQ8KwR1w30nSDfIjX3V6H07D94uNa8u06MTssgVCJOVxApO6EeqHqJQA31CeWBi9fQ4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XhPQAiuOwceN/uCfoRBisN53PNzDPeTLF2xfkENMgz4=;
- b=TfxO2+zGyaGklAomyiNfeMh18YpZKENKsOrh0cu0eyw4fyZnmQb+VxgM2mPpL/VlBMugIO1MPiFrsBaDxxOJa6eXDVzdiq/W+vEn27OhXoXQ+PA7uRPZZBt1CC99Pcy7Ucr3VsiYd3yHSe+TjxGZmMhiHEGlMYlz7AXtdXgY77Wr1nmUlsMiSI2rZZWVNlILYn6ySArvHQkgYviy9POBnonF7hyiwelgbg3lnSArh71AKybq1fviBXeTkmsrqidsjfqpl2ZPsu4BAkzWe8uBtzbBDGgRyUE7R+r0McGIYSZDb+nTbN2Fw29JkHs1OwltfOE5tGrN4DR5Jg9Si6KN2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XhPQAiuOwceN/uCfoRBisN53PNzDPeTLF2xfkENMgz4=;
- b=iDd+r6KfIF0lh/OgHIcN12z7sMbNrLSwNGIrB4o2cJ3RGs8STRUYH4OhPHqojvA0jqGLU7BeE+NGp71q8XMmBK9Z783GtFrxOe51UBZUWc6N8/JBeYMigiAzAPC5+BSZbYh4NpRpNYbutYUBjWU9E7uuiwB1O91SQtA3Jhqj2tp9yrx485o9twX/AJuQnueiEjk/ruwJvP83zWrZBSCKTFG04pxzaXp5iH6P2MfFhtDJlXqNRtMx2aWyyJC28mOD96JrDgMZGcCR2/bfZAlma4EdBLjrZO15fihi4Iy0bk6vFMWbmSj3z3lufKc9asdjkWoSDVnQiUWimd6G3Crlxg==
-Received: from DM3PR03CA0004.namprd03.prod.outlook.com (2603:10b6:0:50::14) by
- MN2PR12MB4093.namprd12.prod.outlook.com (2603:10b6:208:198::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.18; Sun, 17 Oct
- 2021 14:29:48 +0000
-Received: from DM6NAM11FT023.eop-nam11.prod.protection.outlook.com
- (2603:10b6:0:50:cafe::60) by DM3PR03CA0004.outlook.office365.com
- (2603:10b6:0:50::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.15 via Frontend
- Transport; Sun, 17 Oct 2021 14:29:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- DM6NAM11FT023.mail.protection.outlook.com (10.13.173.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4608.15 via Frontend Transport; Sun, 17 Oct 2021 14:29:47 +0000
-Received: from [172.27.13.186] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Sun, 17 Oct
- 2021 14:29:44 +0000
-Subject: Re: [PATCH V1 mlx5-next 12/13] vfio/pci: Add infrastructure to let
- vfio_pci_core drivers trap device RESET
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-CC:     <bhelgaas@google.com>, <saeedm@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
-        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
-References: <20211013094707.163054-1-yishaih@nvidia.com>
- <20211013094707.163054-13-yishaih@nvidia.com>
- <20211015135237.759fe688.alex.williamson@redhat.com>
- <20211015200328.GG2744544@nvidia.com>
- <20211015151243.3c5b0910.alex.williamson@redhat.com>
-From:   Yishai Hadas <yishaih@nvidia.com>
-Message-ID: <d91f729b-d547-406f-353f-04627d4e555c@nvidia.com>
-Date:   Sun, 17 Oct 2021 17:29:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S1344734AbhJQVy5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Oct 2021 17:54:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34386 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344711AbhJQVyz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Oct 2021 17:54:55 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1634507563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oGU3VBFl0sKrIgl1Sc1KV2BejTNdxNtrrFpg1XupE2M=;
+        b=yl9xf3xmBTcy8CntNVG9VTuO+qujh9LZoB7T+Dme/8RtXoXWn2QnzfLNR49/6XAkEnpoQ6
+        Lz4FcUJ9Ft/N3B9jNJAQFFhI6cbNDF1n6F2XbAp3nAcygHQ2Q6xyFf7Rs2gZPVtHmXGRYN
+        8NF156ek/+bE6ZMROSSN3OgSrwqU1jgLq+b6im1TqoeeGHQSbhasNbBbsT9wlX91aA2wPw
+        sOMwD8MskfBr3xiOh4eq2ZJxPcTx/rltPQWXn+VKRPWhEW3uqFdAmZVFj1RIfLSHupUWHz
+        esKZ5lO67iSdD/vi7W4r6XMAsUP8VdC9V0tFEV6cdkpIKLnay2qZ4owOPYrumA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1634507563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oGU3VBFl0sKrIgl1Sc1KV2BejTNdxNtrrFpg1XupE2M=;
+        b=Ebc3IFcDLDCuDjgBjix7OrByUokRy8JGJRwUf6TZQSWlNc6v5TLbtSTC1xpxNb4mLZlG5v
+        nyEapizKizRJRiAw==
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Lutomirski, Andy" <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: RE: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
+ pci_iomap_host_shared_range()
+In-Reply-To: <DM8PR11MB5750A40FAA6AFF6A29CF70DAE7B89@DM8PR11MB5750.namprd11.prod.outlook.com>
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009053103-mutt-send-email-mst@kernel.org>
+ <CAPcyv4hDhjRXYCX_aiOboLF0eaTo6VySbZDa5NQu2ed9Ty2Ekw@mail.gmail.com>
+ <0e6664ac-cbb2-96ff-0106-9301735c0836@linux.intel.com>
+ <DM8PR11MB57501C8F8F5C8B315726882EE7B69@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <20211012171016-mutt-send-email-mst@kernel.org>
+ <DM8PR11MB5750A40FAA6AFF6A29CF70DAE7B89@DM8PR11MB5750.namprd11.prod.outlook.com>
+Date:   Sun, 17 Oct 2021 23:52:42 +0200
+Message-ID: <87r1cj2uad.ffs@tglx>
 MIME-Version: 1.0
-In-Reply-To: <20211015151243.3c5b0910.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: afc8b5c8-e290-4985-f6eb-08d9917a9246
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4093:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4093BCBBDB44CA0CC3185194C3BB9@MN2PR12MB4093.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ifBmfE9v9cZkK40vBcOjsgFA7I24VmdWmmqGGpw54xX6kkXMkulibZwW7hC1zFc2M8j/2THwyLIBcS+0VqytgKT1K4jVFGS8mlTthCNQAGjCxUf0+2CZjTngA1rZH1FDsdANsI84QkvQ9izqa0Pod32HON7HcCv9itgu7wbOfgmf6VOJS7AtLXNMov6v6mh3I2nsR3K6X5H5I/M+Grui/SY5dWzFY5V+Dazovh1GL2D7u6Pf7rXXY9s7O/d4ZBFO1v61Cg+PNCjmfSh//RduvGA7Pfjq5Kmuo0fNN8F44ifuK5GoOw//VdDITItnHHde93dDP7Ot8KlBqDqIqNqT3p+88l+SLmqREDFsvf5Q6G3S/RC5+KngSDRuN/SjA+pZymmjYK5MOGCG+MOKjzctoUpFf9tUL2hWsfDgdy0gqq6Cy9Xgb/qAEuX0fj7Zf9vo1Ajtz3gcgUhn0381lzmnhFJdnKbZXTzdkSvfO4ttxSgr7+ZABoCVl/ZlTHaT3QniV2/usUxx2o/uARIhSnWYLLjnCcQsPWFRmmnmjlU8L0fggOKdsOlaQDp7nutUqgewLDH15zD2kCW9WRvsZyCrIr5q4h4/Dzgstnn8IO3EHEJJ3oGf07hNq2fC6gEaWZ33apsm1U15StEG6vCnZHeGDbeXL1l2JmPqRoaN3Ls6C29obQU3rFN5SGMBvpuKj1mDE9fBe5zUNuXA2sE0C9/3uHhcznZcqPrcvgy9gVWTdfY=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(4326008)(107886003)(8936002)(31686004)(70206006)(6666004)(426003)(36756003)(16576012)(82310400003)(53546011)(31696002)(8676002)(26005)(16526019)(86362001)(2906002)(6636002)(70586007)(54906003)(36860700001)(186003)(316002)(356005)(7636003)(47076005)(2616005)(83380400001)(336012)(5660300002)(110136005)(508600001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2021 14:29:47.4738
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afc8b5c8-e290-4985-f6eb-08d9917a9246
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT023.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4093
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/16/2021 12:12 AM, Alex Williamson wrote:
-> On Fri, 15 Oct 2021 17:03:28 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
+Elena,
+
+On Thu, Oct 14 2021 at 06:32, Elena Reshetova wrote:
+>> On Tue, Oct 12, 2021 at 06:36:16PM +0000, Reshetova, Elena wrote:
+> It does not make any difference really for the content of the /drivers/*:
+> gives 408 __init style functions doing IO (.probe & builtin/module_
+>> > _platform_driver_probe excluded) for 5.15 with allmodconfig:
 >
->> On Fri, Oct 15, 2021 at 01:52:37PM -0600, Alex Williamson wrote:
->>> On Wed, 13 Oct 2021 12:47:06 +0300
->>> Yishai Hadas <yishaih@nvidia.com> wrote:
->>>    
->>>> Add infrastructure to let vfio_pci_core drivers trap device RESET.
->>>>
->>>> The motivation for this is to let the underlay driver be aware that
->>>> reset was done and set its internal state accordingly.
->>> I think the intention of the uAPI here is that the migration error
->>> state is exited specifically via the reset ioctl.  Maybe that should be
->>> made more clear, but variant drivers can already wrap the core ioctl
->>> for the purpose of determining that mechanism of reset has occurred.
->> It is not just recovering the error state.
->>
->> Any transition to reset changes the firmware state. Eg if userspace
->> uses one of the other emulation paths to trigger the reset after
->> putting the device off running then the driver state and FW state
->> become desynchronized.
->>
->> So all the reset paths need to be synchronized some how, either
->> blocked while in non-running states or aligning the SW state with the
->> new post-reset FW state.
-> This only catches the two flavors of FLR and the RESET ioctl itself, so
-> we've got gaps relative to "all the reset paths" anyway.  I'm also
-> concerned about adding arbitrary callbacks for every case that it gets
-> too cumbersome to write a wrapper for the existing callbacks.
->
-> However, why is this a vfio thing when we have the
-> pci_error_handlers.reset_done callback.  At best this ought to be
-> redundant to that.  Thanks,
->
-> Alex
->
-Alex,
+> ['doc200x_ident_chip',
+> 'doc_probe', 'doc2001_init', 'mtd_speedtest_init',
+> 'mtd_nandbiterrs_init', 'mtd_oobtest_init', 'mtd_pagetest_init',
+> 'tort_init', 'mtd_subpagetest_init', 'fixup_pmc551',
+> 'doc_set_driver_info', 'init_amd76xrom', 'init_l440gx',
+> 'init_sc520cdp', 'init_ichxrom', 'init_ck804xrom', 'init_esb2rom',
+> 'ubi_gluebi_init', 'ubiblock_init'
+> 'ubi_init', 'mtd_stresstest_init',
 
-How about the below patch instead ?
+All of this is MTD and can just be disabled wholesale.
 
-This will centralize the 'reset_done' notifications for drivers to one 
-place (i.e. pci_error_handlers.reset_done)  and may close the gap that 
-you pointed on.
+Aside of that, most of these depend on either platform devices or device
+tree enumerations which are not ever available on X86.
 
-I just followed the logic in vfio_pci_aer_err_detected() from usage and 
-locking point of view.
+> 'probe_acpi_namespace_devices',
 
-Do we really need to take the &vdev->igate mutex as was done there ?
+> 'amd_iommu_init_pci', 'state_next',
+> 'init_dmars', 'iommu_init_pci', 'early_amd_iommu_init',
+> 'late_iommu_features_init', 'detect_ivrs',
+> 'intel_prepare_irq_remapping', 'intel_enable_irq_remapping',
+> 'intel_cleanup_irq_remapping', 'detect_intel_iommu',
+> 'parse_ioapics_under_ir', 'si_domain_init',
+> 'intel_iommu_init', 'dmar_table_init',
+> 'enable_drhd_fault_handling',
+> 'check_tylersburg_isoch', 
 
-The next patch from the series in mlx5 will stay as of in V1, it may 
-just set its ops and be called upon PCI 'reset_done'.
+None of this is reachable because the initial detection which is ACPI
+table based will fail for TDX. If not, it's a guest firmware problem.
 
+> 'fb_console_init', 'xenbus_probe_backend_init',
+> 'xenbus_probe_frontend_init', 'setup_vcpu_hotplug_event',
+> 'balloon_init',
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c 
-b/drivers/vfio/pci/vfio_pci_core.c
-index e581a327f90d..20bf37c00fb6 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1925,6 +1925,27 @@ static pci_ers_result_t 
-vfio_pci_aer_err_detected(struct pci_dev *pdev,
-         return PCI_ERS_RESULT_CAN_RECOVER;
-  }
+XEN, that's relevant because magically the TDX guest will assume that it
+is a XEN instance?
 
-+static void vfio_pci_aer_err_reset_done(struct pci_dev *pdev)
-+{
-+       struct vfio_pci_core_device *vdev;
-+       struct vfio_device *device;
-+
-+       device = vfio_device_get_from_dev(&pdev->dev);
-+       if (device == NULL)
-+               return;
-+
-+       vdev = container_of(device, struct vfio_pci_core_device, vdev);
-+
-+       mutex_lock(&vdev->igate);
-+       if (vdev->ops && vdev->ops->reset_done)
-+               vdev->ops->reset_done(vdev);
-+       mutex_unlock(&vdev->igate);
-+
-+       vfio_device_put(device);
-+
-+       return;
-+}
-+
-  int vfio_pci_core_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
-  {
-         struct vfio_device *device;
-@@ -1947,6 +1968,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_sriov_configure);
+> 'ostm_init_clksrc', 'ftm_clockevent_init', 'ftm_clocksource_init',
+> 'kona_timer_init', 'mtk_gpt_init', 'samsung_clockevent_init',
+> 'samsung_clocksource_init', 'sysctr_timer_init', 'mxs_timer_init',
+> 'sun4i_timer_init', 'at91sam926x_pit_dt_init', 'owl_timer_init',
+> 'sun5i_setup_clockevent',
+> 'mt7621_clk_init',
+> 'samsung_clk_register_mux', 'samsung_clk_register_gate',
+> 'samsung_clk_register_fixed_rate', 'clk_boston_setup',
+> 'gemini_cc_init', 'aspeed_ast2400_cc', 'aspeed_ast2500_cc',
+> 'sun6i_rtc_clk_init', 'phy_init', 'ingenic_ost_register_clock',
+> 'meson6_timer_init', 'atcpit100_timer_init',
+> 'npcm7xx_clocksource_init', 'clksrc_dbx500_prcmu_init',
+> 'rcar_sysc_pd_setup', 'r8a779a0_sysc_pd_setup', 'renesas_soc_init',
+> 'rcar_rst_init', 'rmobile_setup_pm_domain', 'mcp_write_pairing_set',
+> 'a72_b53_rac_enable_all', 'mcp_a72_b53_set',
+> 'brcmstb_soc_device_early_init', 'imx8mq_soc_revision',
+> 'imx8mm_soc_uid', 'imx8mm_soc_revision', 'qe_init',
+> 'exynos5x_clk_init', 'exynos5250_clk_init', 'exynos4_get_xom',
+> 'create_one_cmux', 'create_one_pll', 'p2041_init_periph',
+> 'p4080_init_periph', 'p5020_init_periph', 'p5040_init_periph',
+> 'r9a06g032_clocks_probe', 'r8a73a4_cpg_clocks_init',
+> 'sh73a0_cpg_clocks_init', 'cpg_div6_register',
+> 'r8a7740_cpg_clocks_init', 'cpg_mssr_register_mod_clk',
+> 'cpg_mssr_register_core_clk', 'rcar_gen3_cpg_clk_register',
+> 'cpg_sd_clk_register', 'r7s9210_update_clk_table',
+> 'rz_cpg_read_mode_pins', 'rz_cpg_clocks_init',
+> 'rcar_r8a779a0_cpg_clk_register', 'rcar_gen2_cpg_clk_register',
+> 'sun8i_a33_ccu_setup', 'sun8i_a23_ccu_setup', 'sun5i_ccu_init',
+> 'suniv_f1c100s_ccu_setup', 'sun6i_a31_ccu_setup',
+> 'sun8i_v3_v3s_ccu_init', 'sun50i_h616_ccu_setup',
+> 'sunxi_h3_h5_ccu_init', 'sun4i_ccu_init', 'kona_ccu_init',
+> 'ns2_genpll_scr_clk_init', 'ns2_genpll_sw_clk_init',
+> 'ns2_lcpll_ddr_clk_init', 'ns2_lcpll_ports_clk_init',
+> 'nsp_genpll_clk_init', 'nsp_lcpll0_clk_init',
+> 'cygnus_genpll_clk_init', 'cygnus_lcpll0_clk_init',
+> 'cygnus_mipipll_clk_init', 'cygnus_audiopll_clk_init',
+> 'of_fixed_mmio_clk_setup',
+> 'arm_v7s_do_selftests', 'arm_lpae_run_tests', 'init_iommu_one',
 
-  const struct pci_error_handlers vfio_pci_core_err_handlers = {
-         .error_detected = vfio_pci_aer_err_detected,
-+       .reset_done = vfio_pci_aer_err_reset_done,
-  };
-  EXPORT_SYMBOL_GPL(vfio_pci_core_err_handlers);
+ARM based drivers are initialized on x86 in which way?
 
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index ef9a44b6cf5d..6ccf5824f098 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -95,6 +95,15 @@ struct vfio_pci_mmap_vma {
-         struct list_head        vma_next;
-  };
+> 'hv_init_tsc_clocksource', 'hv_init_clocksource',
 
-+/**
-+ * struct vfio_pci_core_device_ops - VFIO PCI driver device callbacks
-+ *
-+ * @reset_done: Called when the device was reset
-+ */
-+struct vfio_pci_core_device_ops {
-+       void    (*reset_done)(struct vfio_pci_core_device *vdev);
-+};
-+
-  struct vfio_pci_core_device {
-         struct vfio_device      vdev;
-         struct pci_dev          *pdev;
-@@ -137,6 +146,7 @@ struct vfio_pci_core_device {
-         struct mutex            vma_lock;
-         struct list_head        vma_list;
-         struct rw_semaphore     memory_lock;
-+       const struct vfio_pci_core_device_ops *ops;
-  };
+HyperV. See XEN
 
+> 'skx_init',
+> 'i10nm_init', 'sbridge_init', 'i82975x_init', 'i3000_init',
+> 'x38_init', 'ie31200_init', 'i3200_init', 'amd64_edac_init',
+> 'pnd2_init', 'edac_init', 'adummy_init',
 
+EDAC has already hypervisor checks
 
+> 'init_acpi_pm_clocksource',
 
+Requires ACPI table entry or command line override
+
+> 'intel_rng_mod_init',
+
+Has an old style PCI table which is searched via pci_get_device(). Could
+do with a cleanup which converts it to proper PCI probing.
+
+<SNIP>
+
+So I stop here, because it would be way simpler to have the file names
+but so far I could identify all of it from the top of my head.
+
+So what are you trying to tell me? That you found tons of ioremaps in
+__init functions which are completely irrelevant.
+
+Please stop making arguments based on completely nonsensical data. It
+took me less than 5 minutes to eliminate more than 50% of that list and
+I'm pretty sure that I could have eliminated the bulk of the rest as
+well.
+
+The fact that a large part of this is ARM only, the fact that nobody
+bothered to look at how e.g. IOMMU detection works and whether those
+ioremaps actually can't be reached is hillarious.
+
+So of these 400 instances are at least 30% ARM specific and those
+cannot be reached on ARM nilly willy either because they are either
+device tree or ACPI enumerated.
+
+Claiming that it is soo much work to analyze 400 at least to the point:
+
+  - whether they are relevant for x86 and therefore potentially TDX at
+    all
+
+  - whether they have some form of enumeration or detection which makes
+    the ioremaps unreachable when the trusted BIOS is implemented
+    correctly
+
+Ijust can laugh at that, really:
+
+  Two of my engineers have done an inventory of hundreds of cpu hotplug
+  notifier instances in a couple of days some years ago. Ditto for a
+  couple of hundred seqcount and a couple of hundred tasklet usage
+  sites.
+
+Sure, but it makes more security handwaving and a nice presentation to
+tell people how much unsecure code there is based on half thought out
+static analysis. To do a proper static analysis of this, you really
+have to do a proper brain based analysis first of:
+
+  1) Which code is relevant for x86
+
+  2) What are the mechanisms which are used across the X86 relevant
+     driver space to make these ioremap/MSR accesses actually reachable.
+
+And of course this will not be complete, but this eliminates the vast
+majority of your list. And looking at the remaining ones is not rocket
+science either.
+
+I can't take that serious at all. Come back when you have a properly
+compiled list of drivers which:
+
+  1) Can even be built for X86
+
+  2) Do ioremap/MSR based poking unconditionally.
+
+  3) Cannot be easily guarded off at the subsystem level
+
+It's not going to be a huge list.
+
+Then we can talk about facts and talk about the work required to fix
+them or blacklist them in some way.
+
+Thanks,
+
+        tglx
