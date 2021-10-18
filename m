@@ -2,109 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA47431916
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 14:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17E7043197E
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 14:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbhJRMdE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Oct 2021 08:33:04 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:21445 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230005AbhJRMdD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Oct 2021 08:33:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1634560252; h=Date: Message-ID: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=KqtpMIVRke8Zx8U0r3eUL9gInbDot/bfnHC07DXz8kw=;
- b=juH+qjE1l95lIR2KFfotSTJEpIrM0fe1zSiPH3k2q8djCY9mt0AT0aUoC/odTf+vQ4hK1Y5O
- 4luJgwQHEe170XCRQbUQEDDyLwFLYjMb+dJOlhuxbmdIux2mguiDTDBzuCMpyOXOPNjFRxoh
- 5NvNg/KSUs3A2SSNElW33Jhy0DA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 616d68cf0605239689645c50 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 18 Oct 2021 12:30:07
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3946FC43619; Mon, 18 Oct 2021 12:30:07 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        MISSING_DATE,SPF_FAIL autolearn=no autolearn_force=no version=3.4.0
-Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D89AEC4338F;
-        Mon, 18 Oct 2021 12:30:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org D89AEC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 1/2] mwifiex: Read a PCI register after writing the TX
- ring
- write pointer
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20211011133224.15561-2-verdre@v0yd.nl>
-References: <20211011133224.15561-2-verdre@v0yd.nl>
-To:     =?utf-8?q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        =?utf-8?q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S231741AbhJRMnb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Oct 2021 08:43:31 -0400
+Received: from mx24.baidu.com ([111.206.215.185]:54154 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231601AbhJRMna (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Oct 2021 08:43:30 -0400
+Received: from BJHW-Mail-Ex07.internal.baidu.com (unknown [10.127.64.17])
+        by Forcepoint Email with ESMTPS id 10DF484695B7C702BF99;
+        Mon, 18 Oct 2021 20:41:12 +0800 (CST)
+Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
+ BJHW-Mail-Ex07.internal.baidu.com (10.127.64.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.14; Mon, 18 Oct 2021 20:41:11 +0800
+Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.14; Mon, 18 Oct 2021 20:41:11 +0800
+From:   Cai Huoqing <caihuoqing@baidu.com>
+To:     <hch@infradead.org>
+CC:     Cai Huoqing <caihuoqing@baidu.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Brian Norris <briannorris@chromium.org>,
-        David Laight <David.Laight@ACULAB.COM>, stable@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <163456019981.5790.2196596945429161000.kvalo@codeaurora.org>
-Date:   Mon, 18 Oct 2021 12:30:07 +0000 (UTC)
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] PCI: Remove the unused pci wrappers pci_pool_xxx()
+Date:   Mon, 18 Oct 2021 20:41:09 +0800
+Message-ID: <20211018124110.214-1-caihuoqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.31.63.8]
+X-ClientProxiedBy: BJHW-Mail-Ex15.internal.baidu.com (10.127.64.38) To
+ BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex07_2021-10-18 20:41:11:925
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonas Dreßler <verdre@v0yd.nl> wrote:
+The wrappers around dma_pool_xxx should go away, so
+remove the unused pci wrappers.
+Prefer using dma_pool_xxx() instead of the pci wrappers
+pci_pool_xxx(), and the use of pci_pool_xxx was already
+removed.
 
-> On the 88W8897 PCIe+USB card the firmware randomly crashes after setting
-> the TX ring write pointer. The issue is present in the latest firmware
-> version 15.68.19.p21 of the PCIe+USB card.
-> 
-> Those firmware crashes can be worked around by reading any PCI register
-> of the card after setting that register, so read the PCI_VENDOR_ID
-> register here. The reason this works is probably because we keep the bus
-> from entering an ASPM state for a bit longer, because that's what causes
-> the cards firmware to crash.
-> 
-> This fixes a bug where during RX/TX traffic and with ASPM L1 substates
-> enabled (the specific substates where the issue happens appear to be
-> platform dependent), the firmware crashes and eventually a command
-> timeout appears in the logs.
-> 
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=109681
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+---
+v1->v2: *Revert the implicit inclusion of dma_pool.h
 
-2 patches applied to wireless-drivers-next.git, thanks.
+ include/linux/pci.h | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-e5f4eb8223aa mwifiex: Read a PCI register after writing the TX ring write pointer
-8e3e59c31fea mwifiex: Try waking the firmware until we get an interrupt
-
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 94c75f3a4a19..74529d0388de 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1500,19 +1500,8 @@ int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+ #define PCI_IRQ_ALL_TYPES \
+ 	(PCI_IRQ_LEGACY | PCI_IRQ_MSI | PCI_IRQ_MSIX)
+ 
+-/* kmem_cache style wrapper around pci_alloc_consistent() */
+-
+ #include <linux/dmapool.h>
+ 
+-#define	pci_pool dma_pool
+-#define pci_pool_create(name, pdev, size, align, allocation) \
+-		dma_pool_create(name, &pdev->dev, size, align, allocation)
+-#define	pci_pool_destroy(pool) dma_pool_destroy(pool)
+-#define	pci_pool_alloc(pool, flags, handle) dma_pool_alloc(pool, flags, handle)
+-#define	pci_pool_zalloc(pool, flags, handle) \
+-		dma_pool_zalloc(pool, flags, handle)
+-#define	pci_pool_free(pool, vaddr, addr) dma_pool_free(pool, vaddr, addr)
+-
+ struct msix_entry {
+ 	u32	vector;	/* Kernel uses to write allocated vector */
+ 	u16	entry;	/* Driver uses to specify entry, OS writes */
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20211011133224.15561-2-verdre@v0yd.nl/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
 
