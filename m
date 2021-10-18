@@ -2,193 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A87B430D4B
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 03:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CF6C430E99
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 06:17:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344922AbhJRBMf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Oct 2021 21:12:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35054 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344912AbhJRBMe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Oct 2021 21:12:34 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1634519422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2renu8ZE8ozzoUn8doITIHK/p2oy+zqiubPlxkzvjKI=;
-        b=NeYfFMecTWNziQtQWeHQRI+pSG8mlPx6rXnTY+tqAmJzCsEnkfJdfxBPRvyYIRvcAU8kWP
-        JXOl8vAwoKGZixe/fWcIkEVur6LcilfP2x0Ax+WPMpFO3NFr9bARL3HGLg5zIGHjKA1y9c
-        q3rYu+QwEgDYmExjuGiOFYCLkBA4EzIpDVo6HZbDQqKEnzRgAYO7b3zRFgn8jpP+A800Jj
-        2UmK35n0lwcDd6gSXItNrWDs8YtI0n7t5587yj/LuVrrNu61iqhJw5dBbpEd3Rf2pdoDV6
-        Jc98JYhX0b1wja0EWFZO/gKnYKM45illilYEq4oiOkJMu8T1dEdMpLcTGJ5lLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1634519422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2renu8ZE8ozzoUn8doITIHK/p2oy+zqiubPlxkzvjKI=;
-        b=yTgU4qMQsJ0Prrb5VgmZPnJugZRYb/9AQNBOmEJMAHu2NeRNJyDX9XIv0KSMJ7cnVvjbMs
-        5ijmDWqMRiGSdHAA==
-To:     Andi Kleen <ak@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        "Schlobohm, Bruce" <bruce.schlobohm@intel.com>,
-        "Kovatch, Kathleen" <kathleen.kovatch@intel.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
- pci_iomap_host_shared_range()
-In-Reply-To: <875ytv2lu8.ffs@tglx>
-References: <875ytv2lu8.ffs@tglx>
-Date:   Mon, 18 Oct 2021 03:10:21 +0200
-Message-ID: <871r4j2l4y.ffs@tglx>
+        id S229825AbhJRET6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Oct 2021 00:19:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53646 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229682AbhJRET5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Oct 2021 00:19:57 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 19I4HgBa015750;
+        Sun, 17 Oct 2021 23:17:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1634530662;
+        bh=uK8Un6BEAjJA4vFp0uQJcU/uxzHzMOhc/QjBLD/GMCs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g9jYvVt088hxRhZCH11fN0WaPuyGsreOUz8IDsDx1BxzEo5VZ3PjmwtshCsocu8+G
+         sXz+gMZ5Q6116yy5ip1jfwxkY7LOLv8OTMncvHEp6x5jeUiV7HIj5/3DSnJq2jtUzx
+         zXVffl7Wi2djwFuFT+1LgNdIOnhpr0B/rZNAyS6E=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 19I4HgRb100323
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 17 Oct 2021 23:17:42 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Sun, 17
+ Oct 2021 23:17:42 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Sun, 17 Oct 2021 23:17:42 -0500
+Received: from [10.250.233.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 19I4Hd7w035463;
+        Sun, 17 Oct 2021 23:17:40 -0500
+Subject: Re: Linux PCIe EP NTB function
+To:     Frank Li <frank.li@nxp.com>, "kw@linux.com" <kw@linux.com>,
+        Sherry Sun <sherry.sun@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <AS8PR04MB850055DFB524C99D64560B6188B89@AS8PR04MB8500.eurprd04.prod.outlook.com>
+ <AS8PR04MB85008E09EAE36DFD6A51F4B588B89@AS8PR04MB8500.eurprd04.prod.outlook.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <459745d1-9fe7-e792-3532-33ee9552bc4d@ti.com>
+Date:   Mon, 18 Oct 2021 09:47:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <AS8PR04MB85008E09EAE36DFD6A51F4B588B89@AS8PR04MB8500.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 18 2021 at 02:55, Thomas Gleixner wrote:
-> On Sun, Oct 10 2021 at 15:11, Andi Kleen wrote:
->> The 5.15 tree has something like ~2.4k IO accesses (including MMIO and 
->> others) in init functions that also register drivers (thanks Elena for 
->> the number)
->
-> These numbers are completely useless simply because they are based on
-> nonsensical criteria. See:
->
->   https://lore.kernel.org/r/87r1cj2uad.ffs@tglx
->
->> My point is just that the ecosystem of devices that Linux supports is 
->> messy enough that there are legitimate exceptions from the "First IO 
->> only in probe call only" rule.
->
-> Your point is based on your outright refusal to actualy do a proper
-> analysis and your outright refusal to help fixing the real problems.
->
-> All you have provided so far is handwaving based on a completely useless
-> analysis.
->
-> Sure, your goal is to get this TDX problem solved, but it's not going to
-> be solved by:
->
->   1) Providing a nonsensical analysis
->
->   2) Using #1 as an argument to hack some half baken interfaces into the
->      kernel which allow you to tick off your checkbox and then leave the
->      resulting mess for others to clean up.
->  
-> Try again when you have factual data to back up your claims and factual
-> arguments which prove that the problem can't be fixed otherwise.
->
-> I might be repeating myself, but kernel development works this way:
->
->   1) Hack your private POC - Yay!
->
->   2) Sit down and think hard about the problems you identified in step
->      #1. Do a thorough analysis.
->   
->   3) Come up with a sensible integration plan.
->
->   4) Do the necessary grump work of cleanups all over the place
->
->   5) Add sensible infrastructure which is understandable for the bulk
->      of kernel/driver developers
->
->   6) Let your feature fall in place
->
-> and not in the way you are insisting on:
->
->   1) Hack your private POC - Yay!
->
->   2) Define that this is the only way to do it and try to shove it down
->      the throat of everyone.
->
->   3) Getting told that this is not the way it works
->
->   4) Insist on it forever and blame the grumpy maintainers who are just
->      not understanding the great value of your approach.
->
->   5) Go back to #2
->
-> You should know that already, but I have no problem to give that lecture
-> to you over and over again. I probably should create a form letter.
->
-> And no, you can bitch about me as much as you want. These are not my
-> personal rules and personal pet pieves. These are rules Linus cares
-> about very much and aside of that they just reflect common sense.
->
->   The kernel is a common good and not the dump ground for your personal
->   brain waste.
->
->   The kernel does not serve Intel. Quite the contrary Intel depends on
->   the kernel to work nicely with it's hardware. Ergo, Intel should have
->   a vested interest to serve the kernel and take responsibility for it
->   as a whole. And so should you as an Intel employee.
->
-> Just dumping your next half baken workaround does not cut it especially
-> not when it is not backed up by sensible arguments.
->
-> Please try again, but not before you have something substantial to back
-> up your claims.
+Hi Frank,
 
-That said, I can't resist the urge to say a few words to the responsible
-senior and management people at Intel in this context:
+On 15/10/21 2:10 am, Frank Li wrote:
+> Sorry, correct Linux-pci mail list address.
+> 
+>> -----Original Message-----
+>> From: Frank Li
+>> Sent: Thursday, October 14, 2021 3:35 PM
+>> To: kishon@ti.com; kw@linux.com; Sherry Sun <sherry.sun@nxp.com>; Richard
+>> Zhu <hongxing.zhu@nxp.com>
+>> Cc: inux-pci@vger.kernel.org
+>> Subject: Linux PCIe EP NTB function
+>>
+>> Kishon:
+>>
+>> 	We use VOP(virtio over PCIe) communication between PCI RC and EP side.
+>> But VOP already removed and switch into NTB solution.
+>> 	I saw you submit patch and already accepted by community about pci-
+>> epf-ntb.
+>>
+>> 	According to document, whole system work as Device1 (PCI host) -> EP1
+>> -> EP2 -> Device2(PCI host).
+>> 	But our user case is Device 1(RC Host) ->  Device 2(EP).
+>>
+>> 	I am not sure how to apply ntb frame work into this user case.
 
-I surely know that a lot of Intel people claim that their lack of
-progress is _only_ because Thomas is hard to work with and Thomas wants
-unreasonable changes to their code, which I could perceive as an abuse of
-myself for the purpose of self-deception. TBH, I don't give a damn.
+NTB by definition is PCIe RC-to-RC communication. For RC-to-EP, see
+pci_endpoint_test.c (RC) and pci-epf-test.c (EP) that provides sample endpoint
+usecase.
 
-Let me ask a few questions instead:
+One more RC<->EP communication model was built in [1], but that is not yet
+upstreamed.
 
-  - Is it unreasonable to expect that argumentations are based on facts
-    and proper analysis?
-
-  - Is it unreasonable to expect a proper integration of a new feature?
-
-  - Does it take unreasonable effort to do a proper design?
-
-  - Is it unreasonable to ask that he necessary cleanups are done
-    upfront?
-
-If anyone of the responsible people at Intel thinks so, then they should
-speak up now and tell me in public and into my face what's so
-unreasonable about that.
+[1] -> https://lore.kernel.org/r/20200702082143.25259-1-kishon@ti.com
 
 Thanks,
+Kishon
 
-	Thomas
+>>
+>> 	I think we can modify pci-epf-ntb to register a ntb devices. But I am
+>> not sure that this is recommunicate method.  I think this user case is
+>> quite common. I don't want to implement a local solution.
+>>
+>> 	Any suggestion?
+>>
+>>
+>> Best regards
+>> Frank Li
