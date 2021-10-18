@@ -2,97 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF35B43294C
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 23:50:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE0A432969
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 23:58:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbhJRVxB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Oct 2021 17:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229529AbhJRVxB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Oct 2021 17:53:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 66F5E6108E;
-        Mon, 18 Oct 2021 21:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634593849;
-        bh=dt3MSeiRt5AB2vSPHXjLfcp5bM2lLSUVx63oQi8vToQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VeuvmacIvYL9IMSRGYDE1FBQuwvFqvBnTCajrHldlrgBzL1sXsAH+9uhPE2pHG487
-         NvYriGozxDhha+VKANql+j0andbbkgb91zmIdSlKsyC1Pt3y6dlvdcLuL//Baz82fj
-         Qr3gq3ip6xLkDigfAvySsJvPH/McfT0qy2zOsTW/+Iml7/qLIMHA6N6wvcTbB6W+Ai
-         wxxAoUw5gCd/OLU77uVvG3KOP+N4YMUsGdssjtePDHVUR81TQoIO+RdXYG480M0+9e
-         Rp/1USfHd1YXRlRTBWize16a3J4ZelsYCYxrEF2PY9r2Jrn1zQsRBaobmR3eFryZtY
-         DUSul52ithVhw==
-Date:   Mon, 18 Oct 2021 16:50:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Barry Song <21cnbao@gmail.com>
-Cc:     bhelgaas@google.com, maz@kernel.org, tglx@linutronix.de,
-        Jonathan.Cameron@huawei.com, bilbao@vt.edu, corbet@lwn.net,
-        gregkh@linuxfoundation.org, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxarm@huawei.com, luzmaximilian@gmail.com,
-        mchehab+huawei@kernel.org, schnelle@linux.ibm.com,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        intel-wired-lan@lists.osuosl.org,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v3 0/3] PCI/MSI: Clarify the IRQ sysfs ABI for PCI devices
-Message-ID: <20211018215047.GA2265015@bhelgaas>
+        id S233285AbhJRWAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Oct 2021 18:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231811AbhJRWAW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Oct 2021 18:00:22 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36843C061745
+        for <linux-pci@vger.kernel.org>; Mon, 18 Oct 2021 14:58:11 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id a13so7008033qkg.11
+        for <linux-pci@vger.kernel.org>; Mon, 18 Oct 2021 14:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VNpqRRdnPDIUGCc3uEFG9REMCz+uQZwgGwBrpVs1X7k=;
+        b=PzH1/3QFJDCAo6+yfE9yZp3FhN5bdJblxdwmrYJXz4W0YDV5QgMDwXPS+9oDzaYsmR
+         1hy1VBsrs0g+cboLAmAYffm5C4OKJ9PZknz0zqdbSlWGpa8IqJfWmggmKLf9VGSQPSoq
+         bF2fHToJMjgOwuWZ6BDY28QPn+sUaZRuPFe0c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VNpqRRdnPDIUGCc3uEFG9REMCz+uQZwgGwBrpVs1X7k=;
+        b=kbX+8RCFjFonhjfjreJxoykkKnjhVgwCJtuTQGPW32WyqnVsAmb+Ju2AUSAdFnaB7R
+         wskfctJl58Eeb6KcxCT7+NwQcBcwNlisJqNeZS6pw63LMNcnQOCcLNbrjyaULVgOrnCx
+         AmyFrpT7blOjB+qCkBquNq8LiZQAnpPjsXEZ5SOqpmc9UISC1oH0GzK64icXOXweS9T8
+         +q58VSx6n0avM4M/O6dfwe+GH4lR+hNGLiUZQ6kVgSPumIfUHo5vZZHLHyltnoj4oG5e
+         KrhmpSv2wvqV1ffEt0iNZQQE/lN23rix83d638vGjTOQfpqhWNIVcR6MThuFpUbI9pRw
+         z9ZA==
+X-Gm-Message-State: AOAM5301cTDS/WZkSlqxW0yvpo82tKpxS/gpmZoFhrfWVHPC/TAvY3CN
+        v9Kv7NDcmQPo6tj8POVZ+F2VCPPB9eHSnw==
+X-Google-Smtp-Source: ABdhPJwU3soZVWhovOcpJkO66EsCCITKH06vHcsIfeQnl4h00WhEW1p0ISfUNf39kf59GUXSlM4U5A==
+X-Received: by 2002:a37:bb85:: with SMTP id l127mr24679729qkf.433.1634594290308;
+        Mon, 18 Oct 2021 14:58:10 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 125sm7077464qkf.95.2021.10.18.14.58.08
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Oct 2021 14:58:09 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id g6so2160345ybb.3
+        for <linux-pci@vger.kernel.org>; Mon, 18 Oct 2021 14:58:08 -0700 (PDT)
+X-Received: by 2002:a5b:102:: with SMTP id 2mr31008124ybx.101.1634594288583;
+ Mon, 18 Oct 2021 14:58:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210825102636.52757-1-21cnbao@gmail.com>
+References: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
+ <20211013100005.GB9901@lpieralisi> <CAE-0n52fZZkWt5KxF8gq0D55f_joq0v2sBBp81Gts8cBt6fJgg@mail.gmail.com>
+In-Reply-To: <CAE-0n52fZZkWt5KxF8gq0D55f_joq0v2sBBp81Gts8cBt6fJgg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 Oct 2021 14:57:56 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WYvV+=uyEOYq7LjtBgpSGV6KovvoS1e88fgc1kpt_c7Q@mail.gmail.com>
+Message-ID: <CAD=FV=WYvV+=uyEOYq7LjtBgpSGV6KovvoS1e88fgc1kpt_c7Q@mail.gmail.com>
+Subject: Re: [PATCH v12 0/5] Add DT bindings and DT nodes for PCIe and PHY in SC7280
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Prasad Malisetty <pmaliset@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, svarbanov@mm-sol.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        sallenki@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 06:26:33PM +0800, Barry Song wrote:
-> From: Barry Song <song.bao.hua@hisilicon.com>
-> 
-> 
-> /sys/bus/pci/devices/.../irq has been there for many years but it has never
-> been documented. This patchset is trying to clarify it.
-> 
-> -v3:
->   - Don't attempt to modify the current behaviour of IRQ ABI for MSI-X
->   - Make MSI IRQ ABI more explicit(return 1st IRQ of the IRQ vector)
->   - Add Marc's patch of removing default_irq from the previous comment to
->     the series.
->   Note patch 3/3 indirectly changed the code of pci_restore_msi_state(),
->   drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c is the only driver
->   calling this API. I would appreciate testing done from this driver's
->   maintainers.
-> 
-> -v2:
->   - split into two patches according to Bjorn's comments;
->   - Add Greg's Acked-by, thanks for reviewing!
->   https://lore.kernel.org/lkml/20210820223744.8439-1-21cnbao@gmail.com/
-> 
-> -v1:
->   https://lore.kernel.org/lkml/20210813122650.25764-1-21cnbao@gmail.com/#t
-> 
-> Barry Song (2):
->   Documentation: ABI: sysfs-bus-pci: Add description for IRQ entry
->   PCI/sysfs: Don't depend on pci_dev.irq for IRQ entry
+Hi,
 
-I applied the first two (above) to pci/msi for v5.16, thanks!
+On Fri, Oct 15, 2021 at 12:43 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Lorenzo Pieralisi (2021-10-13 03:00:05)
+> > On Thu, Oct 07, 2021 at 11:18:38PM +0530, Prasad Malisetty wrote:
+> > > Prasad Malisetty (5):
+> > >   dt-bindings: pci: qcom: Document PCIe bindings for SC7280
+> > >   arm64: dts: qcom: sc7280: Add PCIe and PHY related nodes
+> > >   arm64: dts: qcom: sc7280: Add PCIe nodes for IDP board
+> > >   PCI: qcom: Add a flag in match data along with ops
+> > >   PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280
+> > >
+> > >  .../devicetree/bindings/pci/qcom,pcie.txt          |  17 +++
+> > >  arch/arm64/boot/dts/qcom/sc7280-idp.dts            |   8 ++
+> > >  arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |  50 +++++++++
+> > >  arch/arm64/boot/dts/qcom/sc7280-idp2.dts           |   8 ++
+> > >  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 118 +++++++++++++++++++++
+> > >  drivers/pci/controller/dwc/pcie-qcom.c             |  95 +++++++++++++++--
+> > >  6 files changed, 285 insertions(+), 11 deletions(-)
+> >
+> > I applied patches [4-5] to pci/qcom for v5.16, thanks I expect other
+> > patches to go via the relevant trees.
+> >
+>
+> Lorenzo, can you pick up patch 1 too? It's the binding update for the
+> compatible string used in patch 4-5.
 
-As far as I can tell from the discussion so far, they should be safe
-and should preserve all existing behavior.  The second patch should
-remove the sysfs dependency on the PCI core to swap the INTx and first
-MSI IRQ values in dev->irq.
+I think that means that patches 2-3 are ready to land in the Qualcomm
+tree assuming Bjorn Andersson is still accepting patches there for
+5.16, right?
 
-Marc's patch below is certainly desirable but my understanding is that
-it requires some driver updates first.
-
-> Marc Zyngier (1):
->   PCI/MSI: remove msi_attrib.default_irq in msi_desc
-> 
->  Documentation/ABI/testing/sysfs-bus-pci | 10 ++++++++++
->  drivers/pci/msi.c                       | 12 +++++-------
->  drivers/pci/pci-sysfs.c                 | 23 ++++++++++++++++++++++-
->  include/linux/msi.h                     |  2 --
->  4 files changed, 37 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 1.8.3.1
-> 
+-Doug
