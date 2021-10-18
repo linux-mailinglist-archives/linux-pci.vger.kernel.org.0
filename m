@@ -2,132 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F4A3431A9A
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 15:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C999C431AC3
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Oct 2021 15:26:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231814AbhJRNUJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Oct 2021 09:20:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56312 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231489AbhJRNUF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Oct 2021 09:20:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634563073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MzTAOtwulDEmvfrOMqdp9kU77zBPM/IRO9XOnd+cufc=;
-        b=Zzog55VI2G2Ibuy6CANigG/Q77iyfOtp8pVcRGZiUYhusYfqwNrowcR2msszISgJ6fF757
-        nXG8C9ziKGNU2HQVFOLp5FOevznG+Iy5kB5MKNG61hgVXn2zmAS/YyC3QY1X2N4/pvKu6i
-        BSEtNVghbgPHO0e9Tx40Y+jJGxT0eBQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-518-Ti5o8QGeNgSylIZ15jQ-vA-1; Mon, 18 Oct 2021 09:17:51 -0400
-X-MC-Unique: Ti5o8QGeNgSylIZ15jQ-vA-1
-Received: by mail-wm1-f71.google.com with SMTP id y142-20020a1c7d94000000b00322f2e380f2so1918706wmc.6
-        for <linux-pci@vger.kernel.org>; Mon, 18 Oct 2021 06:17:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MzTAOtwulDEmvfrOMqdp9kU77zBPM/IRO9XOnd+cufc=;
-        b=eM4S8T4Dyx078gf186B8Ogl1z/MF49AORmOdclg3zsuZeC6pwg9MfYlHwacX3AshpV
-         STES6Stgbscn1b+0Xwyj/9xrA/y307xmeX0iBBboVRfzibSyfi4Ds8MsT9+AWZyhsP4S
-         Ih90Zy7wqK4AWBDNk99zg2ND85JPhJgPbbTsys7Bj/C65xMJVe/mNz1WaZkl1220gqmH
-         z6hms80OKUxS7KTG7tqejqVzwhNYGYh7osgaSk3xSlw1UxfFIAH103ewI0c8CSRbpOqX
-         cHIdocFTAsEWntq8s+Z2C4NilrrfjwEUWUpRPSBOHWuKtAP2w5f19GgOuphlQHEmkpuc
-         mBrA==
-X-Gm-Message-State: AOAM533VOZtE+2TgPhtvV1tsfUNS2vCDmerJBRSiPHxIjISF2ohkQCfS
-        MWbH/ti28DvFyjiGvSYdFhgcZgerjs9lRzwuVhR410d9PxeN1OXo2/bp3cyz1IGtXE/2AvlDNbK
-        zlg0jJklVv7HKqXxk9kWe
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr43163285wmj.160.1634563070233;
-        Mon, 18 Oct 2021 06:17:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzSuIZ1TUObsaltct5kZLxF5NiX0EAwqlesEoWuwEt55OWxSiqTjrt15fn3c5YHGk3doStYbg==
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr43163243wmj.160.1634563069879;
-        Mon, 18 Oct 2021 06:17:49 -0700 (PDT)
-Received: from redhat.com ([2.55.19.190])
-        by smtp.gmail.com with ESMTPSA id n66sm12531808wmn.2.2021.10.18.06.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Oct 2021 06:17:48 -0700 (PDT)
-Date:   Mon, 18 Oct 2021 09:17:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 12/16] PCI: Add pci_iomap_host_shared(),
- pci_iomap_host_shared_range()
-Message-ID: <20211018091627-mutt-send-email-mst@kernel.org>
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-13-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009053103-mutt-send-email-mst@kernel.org>
- <cec62ebb-87d7-d725-1096-2c97c5eedbc3@linux.intel.com>
- <20211011073614-mutt-send-email-mst@kernel.org>
- <YW1lc5Y2P1zRc2kp@kroah.com>
+        id S231899AbhJRN3G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Oct 2021 09:29:06 -0400
+Received: from mail-mw2nam12on2059.outbound.protection.outlook.com ([40.107.244.59]:51777
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231548AbhJRN2h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Oct 2021 09:28:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J/TLvzLz9MaITQhhN27KsRT39jTjEuoeNTjnmwMledNNCJG34vAkQPdWnwYLCUWdWwFsCGPfVXlk3pPbdTmgg5X9dPo1eylivCnEZ8uTG+DAopOMVdiQuS8kEoKTUfxvOXrGxgQ3iP+8UXjKIG4XaVx9QhCaUMRoeFoP0ND2/Y/NlFuQHwiNHeEADDGIHfkQ3li3mSlGySHjypBwgKlp52z89HYooXTHnJ+CBuzauYtl1p0wsSvyaRS8L+4T0K43BIgAiLlfksFZ7H2kfhvFq6EGB9CK67ojOg37MUryPt9EqgXOp+jdtL1bcNm5vgShE+npD63ye/VpV/+ouwAfsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2EG3922+/l+1A7ZAMw1FN4JECWOzmSFWYJ6qfvb0cCg=;
+ b=ZD603vC+Qe7XbnevuA8G8r2wU2mdZfAG/Zi7nW5JgjYFTZA9yJqzxkxlu2giWDX2TnIw0/rCiFNxmsaeqG1Gav2fXaccAOeVWubh7dRZRbWk3VB7nWUjhRLD5QUNC9dfecpmL9zzWHvkVvdgXZ6ap/CLv4ydxNUViEge8mExQ+HvWdHqOkCoZARLXaaQEV0Q5tp+b89S7AkwqKOYUaoSyQoQkMK7XLWBA+nd+CIPoeZyRM+mUSqvbDUzkY9r2ySJ8LDGcDZdRG5rc7JLiy0oUt61FMT0+7oU6mJXryeuQbCGv3HiR++L9F4orlSfaKymrRWaioXLNZ2xArk476FUfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2EG3922+/l+1A7ZAMw1FN4JECWOzmSFWYJ6qfvb0cCg=;
+ b=qEdnIdxauC7Ba8Zv+jU0qeDWXhMW8Ux3xTm7Qc/EFL3H7pm1VZI6tJ/4lQ/kobt8n78RX7FLDkK6MasDK8qf3LsU1G+1HKHBPFSzwWXph+3v3R92J0SH7k8FVcZGlJXJTqB6dV+gbcTA9G5dvfLGjKNg+0ONhR+4SqqJHWnK8i3L0u63ymXIJuEbIk2LjJn76tzTkkc4uZk6ehUMkJ9TKRft2JNduLaxN/W3tm6FPxYiRdbaLhpYG4zW1i1nrevvtA2Uf3WYpDldm7RKWf8lMIyo76RCsZmgLAG0yVHpx69O5nQ13Iy6EV1Gpk1lGJmO90XUP+YA29odyX6KU7kzNg==
+Received: from DM6PR08CA0054.namprd08.prod.outlook.com (2603:10b6:5:1e0::28)
+ by DM5PR1201MB0027.namprd12.prod.outlook.com (2603:10b6:4:59::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Mon, 18 Oct
+ 2021 13:26:24 +0000
+Received: from DM6NAM11FT026.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:1e0:cafe::2e) by DM6PR08CA0054.outlook.office365.com
+ (2603:10b6:5:1e0::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.14 via Frontend
+ Transport; Mon, 18 Oct 2021 13:26:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT026.mail.protection.outlook.com (10.13.172.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4608.15 via Frontend Transport; Mon, 18 Oct 2021 13:26:24 +0000
+Received: from [172.27.14.240] (172.20.187.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 18 Oct
+ 2021 13:26:19 +0000
+Subject: Re: [PATCH V1 mlx5-next 11/13] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     <bhelgaas@google.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
+References: <20211013094707.163054-1-yishaih@nvidia.com>
+ <20211013094707.163054-12-yishaih@nvidia.com>
+ <20211015134820.603c45d0.alex.williamson@redhat.com>
+ <20211015195937.GF2744544@nvidia.com>
+ <20211015141201.617049e9.alex.williamson@redhat.com>
+ <20211015201654.GH2744544@nvidia.com>
+ <20211015145921.0abf7cb0.alex.williamson@redhat.com>
+ <6608853f-7426-7b79-da1a-29c8fcc6ffc3@nvidia.com>
+ <20211018115107.GM2744544@nvidia.com>
+From:   Yishai Hadas <yishaih@nvidia.com>
+Message-ID: <c27a775f-f003-b652-ea80-f6ea988c0e78@nvidia.com>
+Date:   Mon, 18 Oct 2021 16:26:16 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YW1lc5Y2P1zRc2kp@kroah.com>
+In-Reply-To: <20211018115107.GM2744544@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 29cf26ba-2ac7-4922-616c-08d9923ae1e4
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0027:
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB002762D7E15152942D2EB939C3BC9@DM5PR1201MB0027.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qrOMt+v6mlq5juOHN48SjnZK3O1msnNxGO76XJHRN4Y3lxAM8iUqXEABrXgJREyNsX7rE/2Ldz9to4wXW0VsTbgSQpdtjnC6PnyW9b7IqCOSRiVdRP3pSd9ZA4tT9znueTaHwoMXlP6nM5w2pvHctGk2jXvaAa5KnDvSrkqzi/o8XpxL6NK+G4rfeKcoSOhbfuOsb7E5ziIAZ4bHltfE2FL7QgEEzo4lgofRVa3j7YJksl2HQbu+VROzsv2J/8MecqqW4zh9gFBpjqQ2yTaTC0NYBS4kl7DMUOxPNcDqbghDtkla9w6CtojYKa49hQhmxxMBKCJIM12WHSqQ5RRF8TktpN+YdDnMSx9ikWE8Cjv+JD3/V18zSJxneHv96Bl0TsFIfYPZ8IiCGSw4EERrw9IOFfDd5EK/KTRf+x5K9ebVw46mWitluChziFlZZqs166dRYzYmyUCMMA+6wAg0lYsR0888PgzWQ5khoEt9rgIY4OkB8N2EXgPvWd+E8r+3O7JuAtz5Q7KbNSPHuxk3LUu9UupCR/EpVgTf7FnpuZkeOUvYuZ5DBMm4VBCSq2T3oR3LrEpPerORmAwboE4TuF/UPwC+b5hpGg2LEDo6zpbrTjhm/HmhDVdjYgc83z51yN4OWvBx3fWhjWV/YcwGRKtapq7jmHuq4qXUjAhasc5sw9xPtHzpasrqB/HSq7lIYICgNFlSKpi1EVaynDbQwlGCWj7lC2cFOBxAJUiZ1dE=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(356005)(8936002)(70206006)(426003)(86362001)(336012)(2616005)(70586007)(8676002)(36756003)(47076005)(26005)(110136005)(16576012)(5660300002)(31686004)(82310400003)(6666004)(2906002)(508600001)(4326008)(316002)(53546011)(54906003)(7636003)(36860700001)(186003)(16526019)(31696002)(107886003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2021 13:26:24.4201
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29cf26ba-2ac7-4922-616c-08d9923ae1e4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT026.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0027
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 02:15:47PM +0200, Greg KH wrote:
-> On Mon, Oct 11, 2021 at 07:59:17AM -0400, Michael S. Tsirkin wrote:
-> > On Sun, Oct 10, 2021 at 03:22:39PM -0700, Andi Kleen wrote:
-> > > 
-> > > > To which Andi replied
-> > > > 	One problem with removing the ioremap opt-in is that
-> > > > 	it's still possible for drivers to get at devices without going through probe.
-> > > > 
-> > > > To which Greg replied:
-> > > > https://lore.kernel.org/all/YVXBNJ431YIWwZdQ@kroah.com/
-> > > > 	If there are in-kernel PCI drivers that do not do this, they need to be
-> > > > 	fixed today.
-> > > > 
-> > > > Can you guys resolve the differences here?
-> > > 
-> > > 
-> > > I addressed this in my other mail, but we may need more discussion.
-> > 
-> > Hopefully Greg will reply to that one.
-> 
-> Note, when wanting Greg to reply, someone should at the very least cc:
-> him.
+On 10/18/2021 2:51 PM, Jason Gunthorpe wrote:
+> On Sun, Oct 17, 2021 at 05:03:28PM +0300, Yishai Hadas wrote:
+>> On 10/15/2021 11:59 PM, Alex Williamson wrote:
+>>> On Fri, 15 Oct 2021 17:16:54 -0300
+>>> Jason Gunthorpe <jgg@nvidia.com> wrote:
+>>>
+>>>> On Fri, Oct 15, 2021 at 02:12:01PM -0600, Alex Williamson wrote:
+>>>>> On Fri, 15 Oct 2021 16:59:37 -0300
+>>>>> Jason Gunthorpe <jgg@nvidia.com> wrote:
+>>>>>> On Fri, Oct 15, 2021 at 01:48:20PM -0600, Alex Williamson wrote:
+>>>>>>>> +static int mlx5vf_pci_set_device_state(struct mlx5vf_pci_core_device *mvdev,
+>>>>>>>> +				       u32 state)
+>>>>>>>> +{
+>>>>>>>> +	struct mlx5vf_pci_migration_info *vmig = &mvdev->vmig;
+>>>>>>>> +	u32 old_state = vmig->vfio_dev_state;
+>>>>>>>> +	int ret = 0;
+>>>>>>>> +
+>>>>>>>> +	if (vfio_is_state_invalid(state) || vfio_is_state_invalid(old_state))
+>>>>>>>> +		return -EINVAL;
+>>>>>>> if (!VFIO_DEVICE_STATE_VALID(old_state) || !VFIO_DEVICE_STATE_VALID(state))
+>>>>>> AFAICT this macro doesn't do what is needed, eg
+>>>>>>
+>>>>>> VFIO_DEVICE_STATE_VALID(0xF000) == true
+>>>>>>
+>>>>>> What Yishai implemented is at least functionally correct - states this
+>>>>>> driver does not support are rejected.
+>>>>> if (!VFIO_DEVICE_STATE_VALID(old_state) || !VFIO_DEVICE_STATE_VALID(state)) || (state & ~VFIO_DEVICE_STATE_MASK))
+>>>>>
+>>>>> old_state is controlled by the driver and can never have random bits
+>>>>> set, user state should be sanitized to prevent setting undefined bits.
+>>>> In that instance let's just write
+>>>>
+>>>> old_state != VFIO_DEVICE_STATE_ERROR
+>>>>
+>>>> ?
+>>> Not quite, the user can't set either of the other invalid states
+>>> either.
+>>
+>> OK so let's go with below as you suggested.
+>> if (!VFIO_DEVICE_STATE_VALID(old_state) ||
+>>       !VFIO_DEVICE_STATE_VALID(state) ||
+>>        (state & ~VFIO_DEVICE_STATE_MASK))
+>>             
+> This is my preference:
+>
+> if (vmig->vfio_dev_state != VFIO_DEVICE_STATE_ERROR ||
+>      !vfio_device_state_valid(state) ||
+>      (state & !MLX5VF_SUPPORTED_DEVICE_STATES))
+>
 
-"that one" being "Andi's other mail". Which I don't remember what it was,
-by now. Sorry.
+OK, let's go with this approach which enforces what the driver supports 
+as well.
 
-> {sigh}
-> 
-> greg k-h
+We may have the below post making it accurate and complete.
+
+enum {
+     MLX5VF_SUPPORTED_DEVICE_STATES = VFIO_DEVICE_STATE_RUNNING |
+                                      VFIO_DEVICE_STATE_SAVING |
+                                      VFIO_DEVICE_STATE_RESUMING,
+};
+
+if (old_state == VFIO_DEVICE_STATE_ERROR ||
+     !vfio_device_state_valid(state) ||
+     (state & ~MLX5VF_SUPPORTED_DEVICE_STATES))
+           return -EINVAL;
+
+>> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+>> index b53a9557884a..37376dadca5a 100644
+>> +++ b/include/linux/vfio.h
+>> @@ -15,6 +15,8 @@
+>>   #include <linux/poll.h>
+>>   #include <uapi/linux/vfio.h>
+>>
+>> +static const int VFIO_DEVICE_STATE_ERROR = VFIO_DEVICE_STATE_SAVING |
+>> + VFIO_DEVICE_STATE_RESUMING;
+> Do not put static variables in header files
+>
+> Jason
+
+OK, we can come with an enum instead.
+
+enum {
+
+VFIO_DEVICE_STATE_ERROR = VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING,
+
+};
+
+Alex,
+
+Do you prefer to  put it under include/uapi/vfio.h or that it can go 
+under inlcude/linux/vfio.h for internal drivers usage ?
+
+Yishai
 
