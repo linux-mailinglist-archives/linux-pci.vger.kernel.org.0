@@ -2,116 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C27E43418B
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 00:44:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 228094341AE
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 00:53:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbhJSWqW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 18:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        id S229521AbhJSW4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 18:56:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229899AbhJSWqV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Oct 2021 18:46:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3854361154;
-        Tue, 19 Oct 2021 22:44:08 +0000 (UTC)
+        id S229483AbhJSW4G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Oct 2021 18:56:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8712B61074;
+        Tue, 19 Oct 2021 22:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634683448;
-        bh=/g+wgF+JF3O4Y6H7+V152kAnH9oMhD3tFztz/AZaDXg=;
+        s=k20201202; t=1634684032;
+        bh=a6eeZS/LZBl+OZKeBZ0Xvg/kT5IZrCEt3S2OPTd7s20=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=taEdq55I88noCQArDJFBVRb0y+GQm4nLIF+JwfjphkxyTiBMTKaqaVO1LMP9l6ipk
-         4xcojsdBrhqBwSlCLOoC0rFkNH5do224KYikvGw/YgXbOOUG/LlgwrLUAOxjU2648E
-         FByVYoLxGsqr66Oyr72t+89CrEGLH7+J62Xy8LLgTjjBeQS8te+R29y0rTaJBjOqp5
-         CUMVsVLQb8lX/+nf714wjxSPC226yspKH3RO87A9Oj9n/TSyaJKuNbeUez6meaXdTM
-         /io3xit3dWXLz/TUpP3Ut6yydOTJ9rHukCFP10z1FZeJqbn5tgrojmQW2aynd9qglr
-         lUXhh4/tVJqyw==
-Date:   Tue, 19 Oct 2021 17:44:06 -0500
+        b=n9y7wy/hVq0fzn44+J2dKMaBrYIZp+5HEzTYhKxH+uV+GPsyrLHNxvfRzaSHNItEs
+         hRYUZVLQ962h0t0kTtoBUkiZ3qPH/70/vebaBKcs0c4FxoUF912mYoYqDlbyW4BpWU
+         EqMTK/4NJ3wZJ9bJukVHO1Vnu9WviQVsqRVuN5laK+EbSZfQfhLXQgMZomCNwaFems
+         P1JxE+pDJ3W7ifngq/lKOuLLcKyU2kKc79OLnsgdlMc/5xR5AcTlqBbYWqIyhSnhIr
+         +503+vqcBtUDCTlj6ts+F9i1ceme2o9tOlZzDb/EwVxRkKkjC1MYvm8VJ82WhwCXB9
+         Zc1OU4gON+Jmw==
+Date:   Tue, 19 Oct 2021 17:53:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com, tsbogend@alpha.franken.de, ruscur@russell.cc,
-        oohall@gmail.com, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+Cc:     bhelgaas@google.com, tsbogend@alpha.franken.de,
+        linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 1/6] PCI/AER: Enable COR/UNCOR error reporting in
- set_device_error_reporting()
-Message-ID: <20211019224406.GA2414443@bhelgaas>
+Subject: Re: [PATCH 2/6] MIPS: OCTEON: Remove redundant clearing of AER
+ status registers
+Message-ID: <20211019225351.GA2416612@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b583172ece1fb1dab3d75c6007ec8c443323158d.1633369560.git.naveennaidu479@gmail.com>
+In-Reply-To: <81597ce8ee30ad01da86fe1edf0fab76aa9b9710.1633369560.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 11:29:27PM +0530, Naveen Naidu wrote:
-> The (PCIe r5.0, sec 7.6.4.3, Table 7-101) and  (PCIe r5.0, sec 7.8.4.6,
-> Table 7-104) 
+On Mon, Oct 04, 2021 at 11:29:28PM +0530, Naveen Naidu wrote:
+> e8635b484f64 ("MIPS: Add Cavium OCTEON PCI support.") added MIPS
+> specific code to enable PCIe and AER error reporting (*irrespective
+> of CONFIG_PCIEAER value*) because PCI core didn't do that at the time.
+> 
+> Currently when CONFIG_PCIEAER=y, the Uncorrectable Error status,
+> Correctable Error status and Root status registers are cleared
+> during the PCI Bus enumeration path by pci_aer_init() via
+> pci_init_capabilities()
 
-s/7.6.4.3/7.8.4.3/
+So the current tree (before this patch) always clears these AER status
+registers regardless of CONFIG_PCIEAER.
 
-Cite it like this:
+After this patch, we would clear them only if CONFIG_PCIEAER=y.  I
+don't see anything in arch/mips that sets CONFIG_PCIEAER, so I'm
+concerned we will no longer clear the AER status bits.
 
-  Per PCIe r5.0, sec 7.8.4.3 and sec 7.8.4.6, the default values ...
+I only want to propose a change here if we're very confident that it
+won't change any OCTEON behavior.
 
-> states that the default values for the Uncorrectable Error
-> Mask and Correctable Error Mask should be 0b. But the current code does
-> not set the default value of these registers when the PCIe bus loads the
-> AER service driver.
-
-The defaults specified here are for hardware designers -- this is what
-the registers must contain after power-up or reset.  This section of
-the spec isn't telling us what the OS is required to write.
-
-If we want to clear these masks, I think we have to:
-
-  1) Analyze every other place that writes the masks to make sure we
-  don't break any of them.  There aren't very many, and most of them
-  are in drivers, which would be after the aer_probe() path.  There
-  might be a conflict with program_hpx_type2(), though.
-
-  2) Make it dependent on pcie_aer_is_native().  Ownership of the AER
-  capability can be retained by the platform, in which case the OS
-  shouldn't touch it.
-
-> Enable reporting of all correctable and uncorrectable errors during
-> aer_probe()
+> It is now no longer necessary for Octeon code to clear AER status
+> registers since it's done by PCI core.
 > 
 > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 > ---
->  drivers/pci/pcie/aer.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  arch/mips/pci/pci-octeon.c | 11 -----------
+>  1 file changed, 11 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9784fdcf3006..88c4ca6098fb 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1212,6 +1212,7 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
->  {
->  	bool enable = *((bool *)data);
->  	int type = pci_pcie_type(dev);
-> +	int aer = dev->aer_cap;
->  
->  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
->  	    (type == PCI_EXP_TYPE_RC_EC) ||
-> @@ -1223,8 +1224,18 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
->  			pci_disable_pcie_error_reporting(dev);
+> diff --git a/arch/mips/pci/pci-octeon.c b/arch/mips/pci/pci-octeon.c
+> index fc29b85cfa92..8e8b282226cc 100644
+> --- a/arch/mips/pci/pci-octeon.c
+> +++ b/arch/mips/pci/pci-octeon.c
+> @@ -124,11 +124,6 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+>  	/* Find the Advanced Error Reporting capability */
+>  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+>  	if (pos) {
+> -		/* Clear Uncorrectable Error Status */
+> -		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS,
+> -				      &dconfig);
+> -		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS,
+> -				       dconfig);
+>  		/* Enable reporting of all uncorrectable errors */
+>  		/* Uncorrectable Error Mask - turned on bits disable errors */
+>  		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, 0);
+> @@ -138,9 +133,6 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+>  		 * correctable, not if the error is reported.
+>  		 */
+>  		/* PCI_ERR_UNCOR_SEVER - Uncorrectable Error Severity */
+> -		/* Clear Correctable Error Status */
+> -		pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS, &dconfig);
+> -		pci_write_config_dword(dev, pos + PCI_ERR_COR_STATUS, dconfig);
+>  		/* Enable reporting of all correctable errors */
+>  		/* Correctable Error Mask - turned on bits disable errors */
+>  		pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, 0);
+> @@ -159,9 +151,6 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
+>  				       PCI_ERR_ROOT_CMD_COR_EN |
+>  				       PCI_ERR_ROOT_CMD_NONFATAL_EN |
+>  				       PCI_ERR_ROOT_CMD_FATAL_EN);
+> -		/* Clear the Root status register */
+> -		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &dconfig);
+> -		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, dconfig);
 >  	}
 >  
-> -	if (enable)
-> +	if (enable) {
-> +
-> +		/* Enable reporting of all uncorrectable errors */
-> +		/* Uncorrectable Error Mask - turned on bits disable errors */
-> +		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, 0);
-> +
-> +		/* Enable reporting of all correctable errors */
-> +		/* Correctable Error Mask - turned on bits disable errors */
-> +		pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, 0);
-> +
->  		pcie_set_ecrc_checking(dev);
-> +	}
->  
 >  	return 0;
->  }
 > -- 
 > 2.25.1
 > 
