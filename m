@@ -2,176 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5541A43400F
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 22:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A540C434062
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 23:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232726AbhJSVBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 17:01:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60569 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230454AbhJSVBN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 17:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634677140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M4+WNR2eLymnTtTe8KwNWU19Ve6ylf5HkM+bJ6wI1go=;
-        b=WfVGgmYJDpxwMDudkAHaMGn8EwZWq0IyG+8otche73r60p9D4mxARWsh5qP1Hhz1myKHPk
-        QtntTWccCJjskMnjjD+KgDwNjOfChxNNHYfDjPn1XE8fd65Ii5kAARLaVayJQ10u3sqW30
-        fZ94TMgYnk5ZP+0nYqsqEq7zD8zut2Q=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-563-z0jZtqHJNfS6l2V2P7XuxA-1; Tue, 19 Oct 2021 16:58:59 -0400
-X-MC-Unique: z0jZtqHJNfS6l2V2P7XuxA-1
-Received: by mail-ot1-f70.google.com with SMTP id b7-20020a0568301de700b0054e351e751aso2459318otj.11
-        for <linux-pci@vger.kernel.org>; Tue, 19 Oct 2021 13:58:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M4+WNR2eLymnTtTe8KwNWU19Ve6ylf5HkM+bJ6wI1go=;
-        b=QolMoFIGrBstj63QOp0GwVYGDsq8zT/BNmSWWlCtrPP6qntULUv832m46aWphxzquy
-         U7xgMGk4iudXBVMiX+8tPtYI81E9AmNbhaD76++UAl3RCvqpqwuzUHnSuT7e3FWALDgi
-         XKSYBbnKiFBde2+/Wvt/a84j6g7rDNvbV2a/e3qrYmMdOVvxcbWeoBdxVSzbr5UoVjas
-         7lj8SjO5NC4j5hECcqJWJxASyHiVC+g5h46RgDSs+34LNcnZqpS7AKK5tVanD4q9bGY2
-         e+fMSoFrU4WwMbVYA+RyUjoeTL0H/TR/kmThFw84a/sGbPVLvAQmGo/VdDo1iSlt/dhq
-         XUtw==
-X-Gm-Message-State: AOAM533PFJFLbIznx/RWGK/DIGfFIj70+XDsU9E86tSXh8ib7BCTRb/q
-        QcWjJkNc8AnjWEDp4mjka7v3MO5iyJSrD/pE63xaLC3y/Ry1XBNjti7UzdbXtxXWC6e9NTsdeMQ
-        uzaI/XWGwunTHNdDC/JXj
-X-Received: by 2002:a05:6808:13cf:: with SMTP id d15mr4565980oiw.56.1634677138377;
-        Tue, 19 Oct 2021 13:58:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxsN1oGyRVl+2odsviO25bJteg7tLOBYwgEX1/9Q2C9sqJ4ghXD86BKMaNyc/hkLuVwN+GW2Q==
-X-Received: by 2002:a05:6808:13cf:: with SMTP id d15mr4565975oiw.56.1634677138166;
-        Tue, 19 Oct 2021 13:58:58 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id t8sm41451otc.74.2021.10.19.13.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 13:58:57 -0700 (PDT)
-Date:   Tue, 19 Oct 2021 14:58:56 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
-In-Reply-To: <20211019192328.GZ2744544@nvidia.com>
-References: <20211019105838.227569-1-yishaih@nvidia.com>
-        <20211019105838.227569-13-yishaih@nvidia.com>
-        <20211019124352.74c3b6ba.alex.williamson@redhat.com>
-        <20211019192328.GZ2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S229498AbhJSVWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 17:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229491AbhJSVWK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Oct 2021 17:22:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0AC8611B0;
+        Tue, 19 Oct 2021 21:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634678397;
+        bh=epkVDp/bgEDm+bVqpoBVX3hB3fAbtLC2h6cSZU5ltYk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iNsRZai+xVGVtWVA6Yd/+UrA6KyiRnBTpsrECzZW7CIUT5xugp7Ph72cbRh6dpQBW
+         K9ri5fa7om4G8BSt42QoJGggBINWX3tjs6bOTYYEjambebbcwwbfmMZ1kBMF54Gvy1
+         m17i64ZZFDdx+BhwGwkqfIgZ+kYAfrlAU9zg/rEpqnkmB0ekcsSbZG/MOqJuZ0iejk
+         ew21Krx34RYCOt56XGXoxnE6bPwMm3RMvhiUPLOkfNsVqKZEMoztV+z+p9fjmWMFzL
+         e0oczSplreeP0uGK8UUB/8i8mlMVmauRd/ybXnVv/lOESfsyUcbtvTcHJALgueEZrF
+         JLDW7pFOVtF2w==
+Date:   Tue, 19 Oct 2021 16:19:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     mingchuang.qiao@mediatek.com
+Cc:     bhelgaas@google.com, matthias.bgg@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, haijun.liu@mediatek.com,
+        lambert.wang@mediatek.com, kerun.zhu@mediatek.com,
+        rjw@rjwysocki.net, alex.williamson@redhat.com,
+        utkarsh.h.patel@intel.com, mika.westerberg@linux.intel.com,
+        rajatja@google.com
+Subject: Re: [v5] PCI: Avoid unsync of LTR mechanism configuration
+Message-ID: <20211019211955.GA2403055@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211012075614.54576-1-mingchuang.qiao@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 19 Oct 2021 16:23:28 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Tue, Oct 19, 2021 at 12:43:52PM -0600, Alex Williamson wrote:
-> > > +	/* Running switches on */
-> > > +	if (((old_state ^ state) & VFIO_DEVICE_STATE_RUNNING) &&
-> > > +	    (state & VFIO_DEVICE_STATE_RUNNING)) {
-> > > +		ret = mlx5vf_pci_unfreeze_device(mvdev);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +		ret = mlx5vf_pci_unquiesce_device(mvdev);
-> > > +		if (ret) {
-> > > +			vmig->vfio_dev_state = VFIO_DEVICE_STATE_ERROR;
-> > > +			return ret;
-> > > +		}
-> > > +	}  
-> > 
-> > Per previous discussion, I understand that freeze and quiesce are
-> > loosely stop-responding-to-dma and stop-sending-dma, respectively.
-> > Once we're quiesced and frozen, device state doesn't change.  What are
-> > the implications to userspace that we don't expose a quiesce state
-> > (yet)?  I'm wondering if this needs to be resolved before we introduce
-> > our first in-tree user of the uAPI (and before QEMU support becomes
-> > non-experimental).  Thanks,  
+On Tue, Oct 12, 2021 at 03:56:14PM +0800, mingchuang.qiao@mediatek.com wrote:
+> From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
 > 
-> The prototype patch I saw added a 4th bit to the state which was
->    1 == 'not dma initiating'
-> As you suggested I think a cap bit someplace should be defined if the
-> driver supports the 4th bit.
+> In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2 register is
+> configured in pci_configure_ltr(). If device and bridge both support LTR
+> mechanism, the "LTR Mechanism Enable" bit of device and bridge will be
+> enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as 1.
 > 
-> Otherwise, I think it is backwards compatible, the new logic would be
-> two ifs
+> If PCIe link goes down, the "LTR Mechanism Enable" bit of bridge will 
+> change to 0 according to PCIe r5.0, sec 7.5.3.16. However, the ->ltr_path 
+> of bridge is still set.
 > 
->  if ((flipped & STATE_NDMA) &&
->       (flipped & (STATE_NDMA | STATE_RUNNING)) == STATE_NDMA | STATE_RUNNING)
->       mlx5vf_pci _quiesce_device()
+> Following shows two scenarios of this LTR issue:
 > 
->  [..]
+> -scenario of device restore
+>  -- bridge LTR enabled
+>  -- device LTR enabled
+>  -- reset device
+>  -- link goes down, bridge disables LTR
+>  -- link comes back up, LTR disabled in both bridge and device
+>  -- restore device state, including LTR enable
+>  -- device sends LTR message
+>  -- bridge reports Unsupported Request
 > 
->  if ((flipped == (STATE_NDMA)) &&
->       (flipped & (STATE_NDMA | STATE_RUNNING)) == STATE_RUNNING)
->       mlx5vf_pci_unquiesce_device()
+> -scenario of device hot-remove/hot-add
+>  -- bridge LTR enabled
+>  -- device LTR enabled
+>  -- hot-remove device
+>  -- link goes down, bridge disables LTR
+>  -- hot-add device and link comes back up
+>  -- scan device, set LTR enable bit of device
+>  -- device sends LTR message
+>  -- bridge reports Unsupported Request
 > 
-> Sequenced before/after the other calls to quiesce_device
+> This issue was noticed by AER log as following shows:
+> pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: id=00e8
+> pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), 
+> type=Transaction Layer, id=00e8(Requester ID)
+> pcieport 0000:00:1d.0:   device [8086:9d18] error 
+> status/mask=00100000/00010000
+> pcieport 0000:00:1d.0:    [20] Unsupported Request    (First)
 > 
-> So if userspace doesn't use it then the same driver behavior is kept,
-> as it never sees STATE_NDMA flip
+> It was also noticed when PCIe devices (thunderbolt docks) were hot removed 
+> from chromebooks, and then hot-plugged back again. Once hotplugged back, 
+> the newer Intel chromebooks fail to go into S0ix low power state because 
+> of this LTR issue.(https://patchwork.kernel.org/project/linux-pci/patch/
+> 20210204095125.9212-1-mingchuang.qiao@mediatek.com/)
 > 
-> Asking for STATE_NDMA !STATE_RUNNING is just ignored because !RUNNING
-> already implies NDMA
+> To resolve this issue, check and re-configure "LTR Mechanism Enable" bit
+> of bridge to make "LTR Mechanism Enable" bit match ltr_path value in
+> following conditions.
+>    -before configuring device's LTR for hot-remove/hot-add
+>    -before restoring device's DEVCTL2 register when restore device state
 > 
-> .. and some optimization of the logic to avoid duplicated work
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
 
-Ok, so this new bit just augments how the device interprets _RUNNING,
-it's essentially a don't-care relative to _SAVING or _RESTORING.
+Applied to pci/aspm for v5.16, thanks!
 
-I think that gives us this table:
-
-|   NDMA   | RESUMING |  SAVING  |  RUNNING |
-+----------+----------+----------+----------+ ---
-|     X    |     0    |     0    |     0    |  ^
-+----------+----------+----------+----------+  |
-|     0    |     0    |     0    |     1    |  |
-+----------+----------+----------+----------+  |
-|     X    |     0    |     1    |     0    |
-+----------+----------+----------+----------+  NDMA value is either compatible
-|     0    |     0    |     1    |     1    |  to existing behavior or don't
-+----------+----------+----------+----------+  care due to redundancy vs
-|     X    |     1    |     0    |     0    |  !_RUNNING/INVALID/ERROR
-+----------+----------+----------+----------+
-|     X    |     1    |     0    |     1    |  |
-+----------+----------+----------+----------+  |
-|     X    |     1    |     1    |     0    |  |
-+----------+----------+----------+----------+  |
-|     X    |     1    |     1    |     1    |  v
-+----------+----------+----------+----------+ ---
-|     1    |     0    |     0    |     1    |  ^
-+----------+----------+----------+----------+  Desired new useful cases
-|     1    |     0    |     1    |     1    |  v
-+----------+----------+----------+----------+ ---
-
-Specifically, rows 1, 3, 5 with NDMA = 1 are valid states a user can
-set which are simply redundant to the NDMA = 0 cases.  Row 6 remains
-invalid due to lack of support for pre-copy (_RESUMING | _RUNNING) and
-therefore cannot be set by userspace.  Rows 7 & 8 are error states and
-cannot be set by userspace.
-
-Like other bits, setting the bit should be effective at the completion
-of writing device state.  Therefore the device would need to flush any
-outbound DMA queues before returning.
-
-The question I was really trying to get to though is whether we have a
-supportable interface without such an extension.  There's currently
-only an experimental version of vfio migration support for PCI devices
-in QEMU (afaik), so it seems like we could make use of the bus-master
-bit to fill this gap in QEMU currently, before we claim
-non-experimental support, but this new device agnostic extension would
-be required for non-PCI device support (and PCI support should adopt it
-as available).  Does that sound right?  Thanks,
-
-Alex
-
+> ---
+> changes of v5
+>  -add more details in commit message
+> changes of v4
+>  -fix typo of commit message
+>  -rename: pci_reconfigure_bridge_ltr()->pci_bridge_reconfigure_ltr()
+> changes of v3
+>  -call pci_reconfigure_bridge_ltr() in probe.c
+> changes of v2
+>  -modify patch description
+>  -reconfigure bridge's LTR before restoring device DEVCTL2 register
+> ---
+>  drivers/pci/pci.c   | 25 +++++++++++++++++++++++++
+>  drivers/pci/pci.h   |  1 +
+>  drivers/pci/probe.c | 13 ++++++++++---
+>  3 files changed, 36 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b9fecc25d213..6bf65d295331 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1437,6 +1437,24 @@ static int pci_save_pcie_state(struct pci_dev *dev)
+>  	return 0;
+>  }
+>  
+> +void pci_bridge_reconfigure_ltr(struct pci_dev *dev)
+> +{
+> +#ifdef CONFIG_PCIEASPM
+> +	struct pci_dev *bridge;
+> +	u32 ctl;
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
+> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+> +			pci_dbg(bridge, "re-enabling LTR\n");
+> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+> +						 PCI_EXP_DEVCTL2_LTR_EN);
+> +		}
+> +	}
+> +#endif
+> +}
+> +
+>  static void pci_restore_pcie_state(struct pci_dev *dev)
+>  {
+>  	int i = 0;
+> @@ -1447,6 +1465,13 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>  	if (!save_state)
+>  		return;
+>  
+> +	/*
+> +	 * Downstream ports reset the LTR enable bit when link goes down.
+> +	 * Check and re-configure the bit here before restoring device.
+> +	 * PCIe r5.0, sec 7.5.3.16.
+> +	 */
+> +	pci_bridge_reconfigure_ltr(dev);
+> +
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
+>  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5c59365092fa..b3a5e5287cb7 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -111,6 +111,7 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
+>  bool pci_bridge_d3_possible(struct pci_dev *dev);
+>  void pci_bridge_d3_update(struct pci_dev *dev);
+>  void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
+> +void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
+>  
+>  static inline void pci_wakeup_event(struct pci_dev *dev)
+>  {
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc850..ade055e9fb58 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2132,9 +2132,16 @@ static void pci_configure_ltr(struct pci_dev *dev)
+>  	 * Complex and all intermediate Switches indicate support for LTR.
+>  	 * PCIe r4.0, sec 6.18.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    ((bridge = pci_upstream_bridge(dev)) &&
+> -	      bridge->ltr_path)) {
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> +					 PCI_EXP_DEVCTL2_LTR_EN);
+> +		dev->ltr_path = 1;
+> +		return;
+> +	}
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pci_bridge_reconfigure_ltr(dev);
+>  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+>  					 PCI_EXP_DEVCTL2_LTR_EN);
+>  		dev->ltr_path = 1;
+> -- 
+> 2.18.0
