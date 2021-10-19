@@ -2,97 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17FCC4332A5
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 11:39:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 411504332B1
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 11:41:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235112AbhJSJlh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 05:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235157AbhJSJl0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 05:41:26 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C902BC06177E
-        for <linux-pci@vger.kernel.org>; Tue, 19 Oct 2021 02:39:02 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id h20so13429901qko.13
-        for <linux-pci@vger.kernel.org>; Tue, 19 Oct 2021 02:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=h7Ka/8DlpkXEXF23rPgOfJJ3SyquA2FhD5HYDsybiG4=;
-        b=TOvN/3L74NxJ8jkZLAwc1HWcAigE5PqgL50bgmFqgfF5N3Ni/F/hFF6HKKLKTN31yN
-         HevaAXYbPfypt8hhKvSPyehT5ALdXqczNk+5xUwtC+i5sgHXh2uIQwAecZjfCaWU8ix6
-         IP3iNNDeKzM9Rarn67S7Y6Q5meavaw7Mpk+sez5Jm9gTXVkS2K7rH0HxN0wGBD1vTEZW
-         SlZ7Ohjm5TDffwxVe9psHKkZrw9F8ewS3UJdvRp48BugnVC9N6o6tGt7kOuD9dBL9WOI
-         l1dbXlU20FuuDCR1G9eGV6dpPzPq/obtSd+vSUmjw4dvgQ3M4KndmuUgzevCd5/KLP2j
-         AvJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=h7Ka/8DlpkXEXF23rPgOfJJ3SyquA2FhD5HYDsybiG4=;
-        b=fQMScRB7jByR4bukhXOKkHFce7SwU/V7krAEheBB5k2bBdHCYY12dxESx5QeUZEIRn
-         Q316oS4NFzi2VHuqK9PU2QjBo/Oq6dkZJEjzIUiF9p5a8RgN+lTPibdQuPK/DoQ/l7Bf
-         5lV+OhYE0198LMx8TgLEyuIbxwbIr8V1dihglMpnJ9IBNj1rZwX2IFjIBtz75JJXZOj9
-         D1kqOwd/EHYvmIw0H0yHpUpUogSEs219CtFJzaeDBNyL6XrFzzUhxfwVd5uG8QxvaE4r
-         7nb4dTtlPmzxU0i9KptVio2XoXUi4vv5oc0FU9VSKHb2W8PXcalQtHyfFRdS11IEBF0i
-         poxw==
-X-Gm-Message-State: AOAM531wz9NHEBWaa9XTBkgWxD48lmhYmzOVZh8nwiSBRQ26E4lHKDQc
-        MNsSd+ib1w/fV3ENFp0eASZp1Ww7LNJqH7pMdAHIssT0JuM=
-X-Google-Smtp-Source: ABdhPJzMH7/Viv+gmOFi/wRxRbcc549EbhNxq1WBmFuuCl5Y1sIaNw3hPc5P9A8SHm6QnP1HNGNAvecvirmJS/oiL6w=
-X-Received: by 2002:a02:6f5d:: with SMTP id b29mr3319085jae.113.1634636331013;
- Tue, 19 Oct 2021 02:38:51 -0700 (PDT)
+        id S234887AbhJSJnI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 05:43:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:46748 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234680AbhJSJnH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Oct 2021 05:43:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F6B3D6E;
+        Tue, 19 Oct 2021 02:40:55 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B166C3F73D;
+        Tue, 19 Oct 2021 02:40:53 -0700 (PDT)
+Date:   Tue, 19 Oct 2021 10:40:48 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Songxiaowei <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v13 09/10] PCI: kirin: fix poweroff sequence
+Message-ID: <20211019094048.GA24481@lpieralisi>
+References: <cover.1634539769.git.mchehab+huawei@kernel.org>
+ <8116a4ddaaeda8dd056e80fa0ee506c5c6f42ca7.1634539769.git.mchehab+huawei@kernel.org>
+ <20211018102127.GD17152@lpieralisi>
+ <20211018153716.0370a66c@sal.lan>
 MIME-Version: 1.0
-Received: by 2002:a92:c7c6:0:0:0:0:0 with HTTP; Tue, 19 Oct 2021 02:38:50
- -0700 (PDT)
-Reply-To: megaritalouisdrayfu199@yahoo.com
-From:   "Mrs. Margarita Louis-Dreyfus." <anniewei112@gmail.com>
-Date:   Mon, 18 Oct 2021 21:38:50 -1200
-Message-ID: <CAGT4pMkzKn8mfeY05OAG04CCAxodKEVDUk46D=O7cfK8+n1=tA@mail.gmail.com>
-Subject: Charitable funds to help the less privilege!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211018153716.0370a66c@sal.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Hello,
+On Mon, Oct 18, 2021 at 03:37:16PM +0100, Mauro Carvalho Chehab wrote:
+> Em Mon, 18 Oct 2021 11:21:27 +0100
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> escreveu:
+> 
+> > On Mon, Oct 18, 2021 at 08:07:34AM +0100, Mauro Carvalho Chehab wrote:
+> > > This driver currently doesn't call dw_pcie_host_deinit()
+> > > at the .remove() callback. This can cause an OOPS if the driver
+> > > is unbound.  
+> > 
+> > This looks like a fix, it has to be marked as such.
+> 
+> Well, without patch 10/10, the .remove() ops won't be called,
+> so, it is not really a fix, but I can surely add a c/c
+> stable@vger.kernel.org and add a Fixes: tag here.
 
-I am sorry to encroach into your privacy in this manner, my name
-Margarita Louis-Dreyfus , I find it pleasurable to offer you my
-partnership in business, i only pray at this time that your email
-address is still valid. I want to solicit your attention to receive
-money on my behalf for humanitarian project to help the less
-priviledge.
+You have a point - unless we send patch 10 to stable as well I
+would not tag it then.
 
-The purpose of my contacting you is because my status would not permit
-me to do this alone. Given my current state of health, I have decided
-to donate Ninety -Eight Million United State Dollars to establish a
-foundation with your help to reach out to the less privilege, orphans,
-sick and homeless people in your country who will receive their
-blessings as i promised my God before i leave this earth.
+> > > While here, add a poweroff function, in order to abstract
+> > > between the internal and external PHY logic.
+> > > 
+> > > Acked-by: Xiaowei Song <songxiaowei@hisilicon.com>
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > > 
+> > > See [PATCH v13 00/10] at: https://lore.kernel.org/all/cover.1634539769.git.mchehab+huawei@kernel.org/
+> > > 
+> > >  drivers/pci/controller/dwc/pcie-kirin.c | 30 ++++++++++++++++---------
+> > >  1 file changed, 20 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> > > index b17a194cf78d..ffc63d12f8ed 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> > > @@ -680,6 +680,23 @@ static const struct dw_pcie_host_ops kirin_pcie_host_ops = {
+> > >  	.host_init = kirin_pcie_host_init,
+> > >  };
+> > >  
+> > > +static int kirin_pcie_power_off(struct kirin_pcie *kirin_pcie)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	if (kirin_pcie->type == PCIE_KIRIN_INTERNAL_PHY)
+> > > +		return hi3660_pcie_phy_power_off(kirin_pcie);
+> > > +
+> > > +	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
+> > > +		gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 1);
+> > > +	}  
+> > 
+> > It looks like you are adding functionality here (ie gpio), not
+> > just wrapping common code in a function.
+> 
+> It is just reverting the power on logic there.
 
-I got your contact through my personal search, you were revealed as
-being quite astute in private entrepreneurship, and i have no doubt
-that you can handle this huge financial transaction. Please contact my
-executor for more information:
+What I am saying is that executing:
 
-Mr. Ford Spencer(Attorney at Law).
-For: Mrs. Margarita Louis-Dreyfus
-LEGAL DEPARTMENT LAWSON & ASSOCIATES
-(JUSTICE, FAIRPLAY & EQUITY)
-Email: fordspencer828@yahoo.com, fordspencereqs828@gmail.com
-Office: +1-970-414-1400
-+1-702-714-3422
-Mobile: +1 916 269 2733
-Fax: +1-970-414-1433
-=C2=AE Property of Steven C Spence PA.
+for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++)
+	gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 1);
 
-Your earliest response to this letter will be appreciated.
+is an addition to what current code does AFAICS (ie you are not just
+moving code into a function - kirin_pcie_power_off(), you are adding
+to it), it is a logical change that belongs in a separate patch.
 
-Kind Regards,
+There are two logical changes:
 
-Mrs. Margarita Louis-Dreyfus.
+- Adding dw_pcie_host_deinit()
+- Moving PHY power off code into kirin_pcie_power_off() (and adding
+  gpio handling in it)
+
+That's what I read from the diffstat, please correct me if I am wrong.
+
+Thanks,
+Lorenzo
+
+> > 
+> > Also, remove the braces, they aren't needed.
+> 
+> Yeah, I forgot to drop it, when I dropped a tem code that had some
+> dev_dbg() on it.
+> 
+> I'll drop on v14.
+> 
+> Regards,
+> Mauro
