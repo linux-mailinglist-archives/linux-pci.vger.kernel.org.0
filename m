@@ -2,1130 +2,307 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48CAA4340C8
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 23:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ADAF4340D1
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Oct 2021 23:52:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbhJSVug (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 17:50:36 -0400
-Received: from office.oderland.com ([91.201.60.5]:58004 "EHLO
-        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbhJSVuf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 17:50:35 -0400
-Received: from [193.180.18.161] (port=58518 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1mcwy4-004Yi8-In; Tue, 19 Oct 2021 23:48:20 +0200
-Message-ID: <5f050b30-fa1c-8387-0d6b-a667851b34b0@oderland.se>
-Date:   Tue, 19 Oct 2021 23:48:19 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
- Thunderbird/93.0
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Jason Andryuk <jandryuk@gmail.com>,
+        id S229546AbhJSVy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 17:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229483AbhJSVyz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Oct 2021 17:54:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 491386113D;
+        Tue, 19 Oct 2021 21:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634680362;
+        bh=RChkijL4VgeiILZ/hKivuyweXS5HKozQM5/t83ixE4s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dACRbHL5KuWVhHI8Eeg/t64gpnkT3KqH36q/3jN6gyRusHzonDIV4dRB8RUy5aeQ6
+         tXef5o6GOZzITXrw+84Msi+/mVqtqH+LLfmBBXqq5vUTVMl58M3h8/xn+4MZPVF/Zv
+         euc43455+CRuIa6ds71IcSolD2gJD5lUIzvFadRiRc22H5QbHrfPcQvFhbVZMINohP
+         7VggRlYCrwf/O94NN7iNdqtIQlVedTYSn9XNtc0NBY1WG8R+DYEJ2bZr+UyiQGX05n
+         Rs9yfEJpeKaIKdpt9Lx6s2huH5lO2iSWPIWS9Oy28sVCwWdxuv891ek2QNPkZ8JXO8
+         tRTGlpvgnmJIw==
+Date:   Tue, 19 Oct 2021 16:52:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-References: <20211019202906.GA2397931@bhelgaas>
-From:   Josef Johansson <josef@oderland.se>
-Subject: [PATCH v2] PCI/MSI: Re-add checks for skip masking MSI-X on Xen PV
-In-Reply-To: <20211019202906.GA2397931@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Message-ID: <20211019215240.GA2411590@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+In-Reply-To: <20211014183943.27717-2-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Josef Johansson <josef@oderland.se>
+On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
+> Some BIOS-es contain a bug where they add addresses which map to system
+> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> space").
+> 
+> To work around this bug Linux excludes E820 reserved addresses when
+> allocating addresses from the PCI host bridge window since 2010.
+> 
+> Recently (2020) some systems have shown-up with E820 reservations which
+> cover the entire _CRS returned PCI bridge memory window, causing all
+> attempts to assign memory to PCI BARs which have not been setup by the
+> BIOS to fail. For example here are the relevant dmesg bits from a
+> Lenovo IdeaPad 3 15IIL 81WE:
+> 
+>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> 
+> The ACPI specifications appear to allow this new behavior:
+> 
+> The relationship between E820 and ACPI _CRS is not really very clear.
+> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+> 
+>   This range of addresses is in use or reserved by the system and is
+>   not to be included in the allocatable memory pool of the operating
+>   system's memory manager.
+> 
+> and it may be used when:
+> 
+>   The address range is in use by a memory-mapped system device.
+> 
+> Furthermore, sec 15.2 says:
+> 
+>   Address ranges defined for baseboard memory-mapped I/O devices, such
+>   as APICs, are returned as reserved.
+> 
+> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+> and its apertures are in use and certainly should not be included in
+> the general allocatable pool, so the fact that some BIOS-es reports
+> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+> 
+> So it seems that the excluding of E820 reserved addresses is a mistake.
+> 
+> Ideally Linux would fully stop excluding E820 reserved addresses,
+> but then the old systems this was added for will regress.
+> Instead keep the old behavior for old systems, while ignoring
+> the E820 reservations for any systems from now on.
+> 
+> Old systems are defined here as BIOS year < 2018, this was chosen to
+> make sure that pci_use_e820 will not be set on the currently affected
+> systems, while at the same time also taking into account that the
+> systems for which the E820 checking was originally added may have
+> received BIOS updates for quite a while (esp. CVE related ones),
+> giving them a more recent BIOS year then 2010.
+> 
+> Also add pci=no_e820 and pci=use_e820 options to allow overriding
+> the BIOS year heuristic.
+> 
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+> BugLink: https://bugs.launchpad.net/bugs/1878279
+> BugLink: https://bugs.launchpad.net/bugs/1931715
+> BugLink: https://bugs.launchpad.net/bugs/1932069
+> BugLink: https://bugs.launchpad.net/bugs/1921649
+> Cc: Benoit Gr�goire <benoitg@coeus.ca>
+> Cc: Hui Wang <hui.wang@canonical.com>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
+I haven't seen anybody else eager to merge this, so I guess I'll stick
+my neck out here.
 
-PCI/MSI: Re-add checks for skip masking MSI-X on Xen PV
-    
-commit fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask
-functions") introduce functions pci_msi_update_mask() and 
-pci_msix_write_vector_ctrl() that is missing checks for
-pci_msi_ignore_mask that exists in commit 446a98b19fd6 ("PCI/MSI: Use
-new mask/unmask functions"). Add them back since it is
-causing severe lockups in amdgpu drivers under Xen during boot.
+I applied this to my for-linus branch for v5.15.
 
-As explained in commit 1a519dc7a73c ("PCI/MSI: Skip masking MSI-X
-on Xen PV"), when running as Xen PV guest, masking MSI-X is a 
-responsibility of the hypervisor.
-
-Fixes: fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask
-functions")
-Suggested-by: Jason Andryuk <jandryuk@gmail.com>
-Signed-off-by: Josef Johansson <josef@oderland.se>
----
-
-v1
-* commit log is not in the correct mood
-* commit log has single quotes around the commits
-* the information with what led up to the patch is lacking.
-
-v2
-* correct the mood
-* correct the quotes
-* add much more information.
-
-Here I describe the current patch and what led up to it,
-more on what led up to it below the first attached dmesg.
-
-This patch solves a major issue with booting 5.15-rc1 under Xen
-with amdgpu drivers. Specifically Lenovo P14s Gen 1, AMD 4750U.
-
-During boot around when I unluck the disk the first entry of
-'Fence fallback timer expired' occur, the laptop is mostly useless.
-
-After a while the WARN_ON trace shows up and the boot process starts
-again, until it again gets stuck. This pattern repeats until X boots,
-after that point it's kind of ok to work in.
-If I try to switch to console the same process happens.
-
-My solution to this was at first bisecting and finding 
-commit 446a98b19fd6 ("PCI/MSI: Use new mask/unmask functions") series,
-reverting this commit made the boot fast again with no lockups.
-
-Later on I tried to apply pci=nomsi as a kernel argument and that
-worked fine as well, letting me compile the kernel without the revert.
-
-I have to note that this is my first commit and PCI/MSI area is
-not my area of expertise. I tried to mimic what was
-obviously missing between the aforementioned commits. There may be
-better ways to solve this problem, or other places to put the checks.
-Should desc->msi_attrib.is_virtual be checked? It is not checked in
-'commit 1a519dc7a73c ("PCI/MSI: Skip masking MSI-X on Xen PV")'
-
-If there's anything I can try out, I'd be happy to assist.
-
-The important bits from dmesg, with debug-configs on.
-
-Oct 11 22:32:00 dom0 kernel: Linux version 5.15.0-1.fc32.qubes.x86_64
-(user@compiler) (gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1), GNU ld
-version 2.34-6.fc32) #14 SMP Mon Oct 11 20:12:00 UTC 2021
-
-Oct 11 22:32:00 dom0 kernel: Command line: placeholder
-root=/dev/mapper/qubes_dom0-root ro
-rd.luks.uuid=luks-c8f1f8e3-a5e7-4697-b01e-b104f5a0eedb
-rd.lvm.lv=qubes_dom0/root rd.lvm.lv=qubes_dom0/swap
-plymouth.ignore-serial-consoles rd.driver.pre=btrfs
-rd.driver.blacklist=pcspkr
-
-[snip]
-
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: [drm] fb0: amdgpu
-frame buffer device
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring gfx uses
-VM inv eng 0 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.0.0 uses VM inv eng 1 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.1.0 uses VM inv eng 4 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.2.0 uses VM inv eng 5 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.3.0 uses VM inv eng 6 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.0.1 uses VM inv eng 7 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.1.1 uses VM inv eng 8 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.2.1 uses VM inv eng 9 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring
-comp_1.3.1 uses VM inv eng 10 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring kiq_2.1.0
-uses VM inv eng 11 on hub 0
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring sdma0
-uses VM inv eng 0 on hub 1
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring vcn_dec
-uses VM inv eng 1 on hub 1
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring vcn_enc0
-uses VM inv eng 4 on hub 1
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring vcn_enc1
-uses VM inv eng 5 on hub 1
-Oct 11 22:32:04 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: ring jpeg_dec
-uses VM inv eng 6 on hub 1
-Oct 11 22:32:04 dom0 kernel: [drm] Initialized amdgpu 3.42.0 20150101
-for 0000:07:00.0 on minor 0
-
-[snip]
-
-Oct 11 22:32:06 dom0 kernel: [drm] Fence fallback timer expired on ring gfx
-Oct 11 22:32:07 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.0.0
-Oct 11 22:32:07 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.1.0
-Oct 11 22:32:08 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.2.0
-Oct 11 22:32:08 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.3.0
-Oct 11 22:32:09 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.0.1
-Oct 11 22:32:09 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.1.1
-Oct 11 22:32:10 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.2.1
-Oct 11 22:32:10 dom0 kernel: [drm] Fence fallback timer expired on ring
-comp_1.3.1
-Oct 11 22:32:11 dom0 kernel: [drm] Fence fallback timer expired on ring
-sdma0
-Oct 11 22:32:11 dom0 kernel: [drm] Fence fallback timer expired on ring
-vcn_dec
-Oct 11 22:32:12 dom0 kernel: [drm] Fence fallback timer expired on ring
-vcn_enc0
-Oct 11 22:32:12 dom0 kernel: amdgpu 0000:07:00.0: [drm] *ERROR* Sending
-link address failed with -5
-Oct 11 22:32:12 dom0 kernel: [drm] Fence fallback timer expired on ring
-vcn_enc1
-Oct 11 22:32:13 dom0 kernel: [drm] Fence fallback timer expired on ring
-jpeg_dec
-Oct 11 22:32:14 dom0 kernel: [drm:drm_atomic_helper_wait_for_flip_done
-[drm_kms_helper]] *ERROR* [CRTC:67:crtc-0] flip_done timed out
-[snip]
-
-Oct 11 22:32:37 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:32:37 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CRTC:67:crtc-0] commit wait timed out
-Oct 11 22:32:47 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:32:47 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CONNECTOR:78:eDP-1] commit wait timed out
-Oct 11 22:32:57 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:32:57 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[PLANE:55:plane-3] commit wait timed out
-Oct 11 22:32:57 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:32:57 dom0 kernel: WARNING: CPU: 5 PID: 1425 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8689
-amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:32:57 dom0 kernel: Modules linked in: intel_rapl_msr wmi_bmof
-intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops
-joydev videobuf2_v4l2 k10temp videobuf2_common videodev sp5100_tco mc
-i2c_piix4 iwlwifi cfg80211 thinkpad_acpi platform_profile ipmi_devintf
-ledtrig_audio ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi
-rfkill typec wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool
-dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder
-hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel
-gpu_sched i2c_algo_bit drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm
-cqhci drm_kms_helper serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas
-xhci_hcd drm nvme mmc_core ehci_pci ehci_hcd nvme_core
-xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc
-xen_gntdev xen_evtchn uinput
-Oct 11 22:32:57 dom0 kernel: CPU: 5 PID: 1425 Comm: setfont Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:32:57 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:32:57 dom0 kernel: RIP:
-e030:amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:32:57 dom0 kernel: Code: 8b 45 b0 48 c7 c7 a2 bc 8c c0 4c 89
-55 88 8b b0 80 05 00 00 e8 e5 04 be ff 4c 8b 55 88 0f b6 55 ab 49 8b 72
-08 e9 53 fa ff ff <0f> 0b e9 e2 fe ff ff e8 78 e4 82 c1 0f 1f 84 00 00
-00 00 00 0f 1f
-Oct 11 22:32:57 dom0 kernel: RSP: e02b:ffffc900403e7698 EFLAGS: 00010002
-Oct 11 22:32:57 dom0 kernel: RAX: ffff888110500210 RBX: 00000000000010ac
-RCX: 00000000000021e8
-Oct 11 22:32:57 dom0 kernel: RDX: ffff88813f418e40 RSI: ffff888110500450
-RDI: ffff88810ddf0f30
-Oct 11 22:32:57 dom0 kernel: RBP: ffffc900403e7758 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:32:57 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:32:57 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810dee8cc0
-R15: ffff88810ddada00
-Oct 11 22:32:57 dom0 kernel: FS:  00007005ac91c580(0000)
-GS:ffff88813f400000(0000) knlGS:0000000000000000
-Oct 11 22:32:57 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:32:57 dom0 kernel: CR2: 000073c449584d48 CR3: 0000000104974000
-CR4: 0000000000050660
-Oct 11 22:32:57 dom0 kernel: Call Trace:
-Oct 11 22:32:57 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:32:57 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:32:57 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:32:57 dom0 kernel:  drm_fb_helper_pan_display+0x9b/0x110
-[drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel:  fb_pan_display+0x8f/0x110
-Oct 11 22:32:57 dom0 kernel:  bit_update_start+0x1a/0x40
-Oct 11 22:32:57 dom0 kernel:  fbcon_switch+0x357/0x500
-Oct 11 22:32:57 dom0 kernel:  redraw_screen+0xe9/0x230
-Oct 11 22:32:57 dom0 kernel:  fbcon_do_set_font+0x170/0x190
-Oct 11 22:32:57 dom0 kernel:  con_font_op+0x156/0x250
-Oct 11 22:32:57 dom0 kernel:  ? do_anonymous_page+0x1ec/0x3b0
-Oct 11 22:32:57 dom0 kernel:  ? _copy_from_user+0x45/0x80
-Oct 11 22:32:57 dom0 kernel:  vt_k_ioctl+0x1b7/0x630
-Oct 11 22:32:57 dom0 kernel:  vt_ioctl+0x7d/0x660
-Oct 11 22:32:57 dom0 kernel:  tty_ioctl+0x354/0x810
-Oct 11 22:32:57 dom0 kernel:  ? __lock_release+0x181/0x2d0
-Oct 11 22:32:57 dom0 kernel:  ? ktime_get_coarse_real_ts64+0xe/0x50
-Oct 11 22:32:57 dom0 kernel:  ?
-lockdep_hardirqs_on_prepare.part.0+0xbf/0x140
-Oct 11 22:32:57 dom0 kernel:  ?
-seqcount_lockdep_reader_access.constprop.0+0x84/0x90
-Oct 11 22:32:57 dom0 kernel:  __x64_sys_ioctl+0x83/0xb0
-Oct 11 22:32:57 dom0 kernel:  do_syscall_64+0x3b/0x90
-Oct 11 22:32:57 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:32:57 dom0 kernel: RIP: 0033:0x7005ac84917b
-Oct 11 22:32:57 dom0 kernel: Code: 0f 1e fa 48 8b 05 1d ad 0c 00 64 c7
-00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8
-10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed ac 0c 00 f7
-d8 64 89 01 48
-Oct 11 22:32:57 dom0 kernel: RSP: 002b:00007ffc7dee5a78 EFLAGS: 00000246
-ORIG_RAX: 0000000000000010
-Oct 11 22:32:57 dom0 kernel: RAX: ffffffffffffffda RBX: 0000000000000010
-RCX: 00007005ac84917b
-Oct 11 22:32:57 dom0 kernel: RDX: 00007ffc7dee5aa0 RSI: 0000000000004b72
-RDI: 0000000000000003
-Oct 11 22:32:57 dom0 kernel: RBP: 0000000000000200 R08: 0000000000000010
-R09: 00007005ac914a40
-Oct 11 22:32:57 dom0 kernel: R10: 0000000000000072 R11: 0000000000000246
-R12: 0000000000000008
-Oct 11 22:32:57 dom0 kernel: R13: 0000558e251606a0 R14: 0000000000000003
-R15: 00007ffc7dee5aa0
-Oct 11 22:32:57 dom0 kernel: irq event stamp: 13242
-Oct 11 22:32:57 dom0 kernel: hardirqs last  enabled at (13241):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:32:57 dom0 kernel: hardirqs last disabled at (13242):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:32:57 dom0 kernel: softirqs last  enabled at (12464):
-[<ffffffff8103b972>] fpu_clone+0x72/0x200
-Oct 11 22:32:57 dom0 kernel: softirqs last disabled at (12462):
-[<ffffffff8103b905>] fpu_clone+0x5/0x200
-Oct 11 22:32:57 dom0 kernel: ---[ end trace 6fec6583c02534af ]---
-Oct 11 22:32:57 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:32:57 dom0 kernel: WARNING: CPU: 5 PID: 1425 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8276
-prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:32:57 dom0 kernel: Modules linked in: intel_rapl_msr wmi_bmof
-intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops
-joydev videobuf2_v4l2 k10temp videobuf2_common videodev sp5100_tco mc
-i2c_piix4 iwlwifi cfg80211 thinkpad_acpi platform_profile ipmi_devintf
-ledtrig_audio ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi
-rfkill typec wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool
-dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder
-hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel
-gpu_sched i2c_algo_bit drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm
-cqhci drm_kms_helper serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas
-xhci_hcd drm nvme mmc_core ehci_pci ehci_hcd nvme_core
-xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc
-xen_gntdev xen_evtchn uinput
-Oct 11 22:32:57 dom0 kernel: CPU: 5 PID: 1425 Comm: setfont Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:32:57 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:32:57 dom0 kernel: RIP: e030:prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:32:57 dom0 kernel: Code: 00 48 c7 80 38 01 00 00 00 00 00 00
-66 90 c3 8b 97 80 05 00 00 48 c7 c6 d8 65 89 c0 48 c7 c7 d8 fa a1 c0 e9
-0e ed 1f c1 0f 0b <0f> 0b eb b4 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-41 57 41 56 41
-Oct 11 22:32:57 dom0 kernel: RSP: e02b:ffffc900403e7690 EFLAGS: 00010082
-Oct 11 22:32:57 dom0 kernel: RAX: 0000000000000001 RBX: 00000000000010ac
-RCX: 00000000000021e8
-Oct 11 22:32:57 dom0 kernel: RDX: ffff88813f418e40 RSI: ffff888110500450
-RDI: ffff88810d35e800
-Oct 11 22:32:57 dom0 kernel: RBP: ffffc900403e7758 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:32:57 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:32:57 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810dee8cc0
-R15: ffff88810ddada00
-Oct 11 22:32:57 dom0 kernel: FS:  00007005ac91c580(0000)
-GS:ffff88813f400000(0000) knlGS:0000000000000000
-Oct 11 22:32:57 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:32:57 dom0 kernel: CR2: 000073c449584d48 CR3: 0000000104974000
-CR4: 0000000000050660
-Oct 11 22:32:57 dom0 kernel: Call Trace:
-Oct 11 22:32:57 dom0 kernel:  amdgpu_dm_commit_planes+0x87d/0x9a0 [amdgpu]
-Oct 11 22:32:57 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:32:57 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:32:57 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:32:57 dom0 kernel:  drm_fb_helper_pan_display+0x9b/0x110
-[drm_kms_helper]
-Oct 11 22:32:57 dom0 kernel:  fb_pan_display+0x8f/0x110
-Oct 11 22:32:57 dom0 kernel:  bit_update_start+0x1a/0x40
-Oct 11 22:32:57 dom0 kernel:  fbcon_switch+0x357/0x500
-Oct 11 22:32:57 dom0 kernel:  redraw_screen+0xe9/0x230
-Oct 11 22:32:57 dom0 kernel:  fbcon_do_set_font+0x170/0x190
-Oct 11 22:32:57 dom0 kernel:  con_font_op+0x156/0x250
-Oct 11 22:32:57 dom0 kernel:  ? do_anonymous_page+0x1ec/0x3b0
-Oct 11 22:32:57 dom0 kernel:  ? _copy_from_user+0x45/0x80
-Oct 11 22:32:57 dom0 kernel:  vt_k_ioctl+0x1b7/0x630
-Oct 11 22:32:57 dom0 kernel:  vt_ioctl+0x7d/0x660
-Oct 11 22:32:57 dom0 kernel:  tty_ioctl+0x354/0x810
-Oct 11 22:32:57 dom0 kernel:  ? __lock_release+0x181/0x2d0
-Oct 11 22:32:57 dom0 kernel:  ? ktime_get_coarse_real_ts64+0xe/0x50
-Oct 11 22:32:57 dom0 kernel:  ?
-lockdep_hardirqs_on_prepare.part.0+0xbf/0x140
-Oct 11 22:32:57 dom0 kernel:  ?
-seqcount_lockdep_reader_access.constprop.0+0x84/0x90
-Oct 11 22:32:57 dom0 kernel:  __x64_sys_ioctl+0x83/0xb0
-Oct 11 22:32:57 dom0 kernel:  do_syscall_64+0x3b/0x90
-Oct 11 22:32:57 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:32:57 dom0 kernel: RIP: 0033:0x7005ac84917b
-Oct 11 22:32:57 dom0 kernel: Code: 0f 1e fa 48 8b 05 1d ad 0c 00 64 c7
-00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8
-10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed ac 0c 00 f7
-d8 64 89 01 48
-Oct 11 22:32:57 dom0 kernel: RSP: 002b:00007ffc7dee5a78 EFLAGS: 00000246
-ORIG_RAX: 0000000000000010
-Oct 11 22:32:57 dom0 kernel: RAX: ffffffffffffffda RBX: 0000000000000010
-RCX: 00007005ac84917b
-Oct 11 22:32:57 dom0 kernel: RDX: 00007ffc7dee5aa0 RSI: 0000000000004b72
-RDI: 0000000000000003
-Oct 11 22:32:57 dom0 kernel: RBP: 0000000000000200 R08: 0000000000000010
-R09: 00007005ac914a40
-Oct 11 22:32:57 dom0 kernel: R10: 0000000000000072 R11: 0000000000000246
-R12: 0000000000000008
-Oct 11 22:32:57 dom0 kernel: R13: 0000558e251606a0 R14: 0000000000000003
-R15: 00007ffc7dee5aa0
-Oct 11 22:32:57 dom0 kernel: irq event stamp: 13242
-Oct 11 22:32:57 dom0 kernel: hardirqs last  enabled at (13241):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:32:57 dom0 kernel: hardirqs last disabled at (13242):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:32:57 dom0 kernel: softirqs last  enabled at (12464):
-[<ffffffff8103b972>] fpu_clone+0x72/0x200
-Oct 11 22:32:57 dom0 kernel: softirqs last disabled at (12462):
-[<ffffffff8103b905>] fpu_clone+0x5/0x200
-Oct 11 22:32:57 dom0 kernel: ---[ end trace 6fec6583c02534b0 ]---
-Oct 11 22:33:07 dom0 kernel: [drm:drm_atomic_helper_wait_for_flip_done
-[drm_kms_helper]] *ERROR* [CRTC:67:crtc-0] flip_done timed out
-Oct 11 22:33:18 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:33:18 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CRTC:67:crtc-0] commit wait timed out
-Oct 11 22:33:28 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:33:28 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CONNECTOR:78:eDP-1] commit wait timed out
-Oct 11 22:33:38 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:33:38 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[PLANE:55:plane-3] commit wait timed out
-Oct 11 22:33:38 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:33:38 dom0 kernel: WARNING: CPU: 5 PID: 1427 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8689
-amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:33:38 dom0 kernel: Modules linked in: intel_rapl_msr wmi_bmof
-intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops
-joydev videobuf2_v4l2 k10temp videobuf2_common videodev sp5100_tco mc
-i2c_piix4 iwlwifi cfg80211 thinkpad_acpi platform_profile ipmi_devintf
-ledtrig_audio ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi
-rfkill typec wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool
-dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder
-hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel
-gpu_sched i2c_algo_bit drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm
-cqhci drm_kms_helper serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas
-xhci_hcd drm nvme mmc_core ehci_pci ehci_hcd nvme_core
-xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc
-xen_gntdev xen_evtchn uinput
-Oct 11 22:33:38 dom0 kernel: CPU: 5 PID: 1427 Comm: setfont Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:33:38 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:33:38 dom0 kernel: RIP:
-e030:amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:33:38 dom0 kernel: Code: 8b 45 b0 48 c7 c7 a2 bc 8c c0 4c 89
-55 88 8b b0 80 05 00 00 e8 e5 04 be ff 4c 8b 55 88 0f b6 55 ab 49 8b 72
-08 e9 53 fa ff ff <0f> 0b e9 e2 fe ff ff e8 78 e4 82 c1 0f 1f 84 00 00
-00 00 00 0f 1f
-Oct 11 22:33:38 dom0 kernel: RSP: e02b:ffffc90041613698 EFLAGS: 00010002
-Oct 11 22:33:38 dom0 kernel: RAX: ffff888110500210 RBX: 0000000000001a46
-RCX: 00000000000021e8
-Oct 11 22:33:38 dom0 kernel: RDX: ffff88813f418e40 RSI: ffff888110500450
-RDI: ffff888106330f30
-Oct 11 22:33:38 dom0 kernel: RBP: ffffc90041613758 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:33:38 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:33:38 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810c39c0c0
-R15: ffff88810de78c00
-Oct 11 22:33:38 dom0 kernel: FS:  0000723fc3d77580(0000)
-GS:ffff88813f400000(0000) knlGS:0000000000000000
-Oct 11 22:33:38 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:33:38 dom0 kernel: CR2: 000070eb0f040520 CR3: 000000010aeaa000
-CR4: 0000000000050660
-Oct 11 22:33:38 dom0 kernel: Call Trace:
-Oct 11 22:33:38 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:33:38 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:33:38 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:33:38 dom0 kernel:  drm_fb_helper_pan_display+0x9b/0x110
-[drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel:  fb_pan_display+0x8f/0x110
-Oct 11 22:33:38 dom0 kernel:  bit_update_start+0x1a/0x40
-Oct 11 22:33:38 dom0 kernel:  fbcon_switch+0x357/0x500
-Oct 11 22:33:38 dom0 kernel:  redraw_screen+0xe9/0x230
-Oct 11 22:33:38 dom0 kernel:  fbcon_do_set_font+0x170/0x190
-Oct 11 22:33:38 dom0 kernel:  con_font_op+0x156/0x250
-Oct 11 22:33:38 dom0 kernel:  ? do_anonymous_page+0x1ec/0x3b0
-Oct 11 22:33:38 dom0 kernel:  ? _copy_from_user+0x45/0x80
-Oct 11 22:33:38 dom0 kernel:  vt_k_ioctl+0x1b7/0x630
-Oct 11 22:33:38 dom0 kernel:  vt_ioctl+0x7d/0x660
-Oct 11 22:33:38 dom0 kernel:  tty_ioctl+0x354/0x810
-Oct 11 22:33:38 dom0 kernel:  ? __lock_release+0x181/0x2d0
-Oct 11 22:33:38 dom0 kernel:  ? ktime_get_coarse_real_ts64+0xe/0x50
-Oct 11 22:33:38 dom0 kernel:  ?
-lockdep_hardirqs_on_prepare.part.0+0xbf/0x140
-Oct 11 22:33:38 dom0 kernel:  ?
-seqcount_lockdep_reader_access.constprop.0+0x84/0x90
-Oct 11 22:33:38 dom0 kernel:  __x64_sys_ioctl+0x83/0xb0
-Oct 11 22:33:38 dom0 kernel:  do_syscall_64+0x3b/0x90
-Oct 11 22:33:38 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:33:38 dom0 kernel: RIP: 0033:0x723fc3ca417b
-Oct 11 22:33:38 dom0 kernel: Code: 0f 1e fa 48 8b 05 1d ad 0c 00 64 c7
-00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8
-10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed ac 0c 00 f7
-d8 64 89 01 48
-Oct 11 22:33:38 dom0 kernel: RSP: 002b:00007ffc0f3b06a8 EFLAGS: 00000246
-ORIG_RAX: 0000000000000010
-Oct 11 22:33:38 dom0 kernel: RAX: ffffffffffffffda RBX: 0000000000000010
-RCX: 0000723fc3ca417b
-Oct 11 22:33:38 dom0 kernel: RDX: 00007ffc0f3b06d0 RSI: 0000000000004b72
-RDI: 0000000000000003
-Oct 11 22:33:38 dom0 kernel: RBP: 0000000000000200 R08: 0000000000000010
-R09: 0000723fc3d6fa40
-Oct 11 22:33:38 dom0 kernel: R10: 0000000000000072 R11: 0000000000000246
-R12: 0000000000000008
-Oct 11 22:33:38 dom0 kernel: R13: 00005750656256a0 R14: 0000000000000003
-R15: 00007ffc0f3b06d0
-Oct 11 22:33:38 dom0 kernel: irq event stamp: 9426
-Oct 11 22:33:38 dom0 kernel: hardirqs last  enabled at (9425):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:33:38 dom0 kernel: hardirqs last disabled at (9426):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:33:38 dom0 kernel: softirqs last  enabled at (8654):
-[<ffffffff8103b972>] fpu_clone+0x72/0x200
-Oct 11 22:33:38 dom0 kernel: softirqs last disabled at (8652):
-[<ffffffff8103b905>] fpu_clone+0x5/0x200
-Oct 11 22:33:38 dom0 kernel: ---[ end trace 6fec6583c02534b1 ]---
-Oct 11 22:33:38 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:33:38 dom0 kernel: WARNING: CPU: 5 PID: 1427 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8276
-prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:33:38 dom0 kernel: Modules linked in: intel_rapl_msr wmi_bmof
-intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops
-joydev videobuf2_v4l2 k10temp videobuf2_common videodev sp5100_tco mc
-i2c_piix4 iwlwifi cfg80211 thinkpad_acpi platform_profile ipmi_devintf
-ledtrig_audio ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi
-rfkill typec wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool
-dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder
-hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel
-gpu_sched i2c_algo_bit drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm
-cqhci drm_kms_helper serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas
-xhci_hcd drm nvme mmc_core ehci_pci ehci_hcd nvme_core
-xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc
-xen_gntdev xen_evtchn uinput
-Oct 11 22:33:38 dom0 kernel: CPU: 5 PID: 1427 Comm: setfont Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:33:38 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:33:38 dom0 kernel: RIP: e030:prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:33:38 dom0 kernel: Code: 00 48 c7 80 38 01 00 00 00 00 00 00
-66 90 c3 8b 97 80 05 00 00 48 c7 c6 d8 65 89 c0 48 c7 c7 d8 fa a1 c0 e9
-0e ed 1f c1 0f 0b <0f> 0b eb b4 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-41 57 41 56 41
-Oct 11 22:33:38 dom0 kernel: RSP: e02b:ffffc90041613690 EFLAGS: 00010086
-Oct 11 22:33:38 dom0 kernel: RAX: 0000000000000001 RBX: 0000000000001a46
-RCX: 00000000000021e8
-Oct 11 22:33:38 dom0 kernel: RDX: ffff88813f418e40 RSI: ffff888110500450
-RDI: ffff88810d35e800
-Oct 11 22:33:38 dom0 kernel: RBP: ffffc90041613758 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:33:38 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:33:38 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810c39c0c0
-R15: ffff88810de78c00
-Oct 11 22:33:38 dom0 kernel: FS:  0000723fc3d77580(0000)
-GS:ffff88813f400000(0000) knlGS:0000000000000000
-Oct 11 22:33:38 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:33:38 dom0 kernel: CR2: 000070eb0f040520 CR3: 000000010aeaa000
-CR4: 0000000000050660
-Oct 11 22:33:38 dom0 kernel: Call Trace:
-Oct 11 22:33:38 dom0 kernel:  amdgpu_dm_commit_planes+0x87d/0x9a0 [amdgpu]
-Oct 11 22:33:38 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:33:38 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:33:38 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:33:38 dom0 kernel:  drm_fb_helper_pan_display+0x9b/0x110
-[drm_kms_helper]
-Oct 11 22:33:38 dom0 kernel:  fb_pan_display+0x8f/0x110
-Oct 11 22:33:38 dom0 kernel:  bit_update_start+0x1a/0x40
-Oct 11 22:33:38 dom0 kernel:  fbcon_switch+0x357/0x500
-Oct 11 22:33:38 dom0 kernel:  redraw_screen+0xe9/0x230
-Oct 11 22:33:38 dom0 kernel:  fbcon_do_set_font+0x170/0x190
-Oct 11 22:33:38 dom0 kernel:  con_font_op+0x156/0x250
-Oct 11 22:33:38 dom0 kernel:  ? do_anonymous_page+0x1ec/0x3b0
-Oct 11 22:33:38 dom0 kernel:  ? _copy_from_user+0x45/0x80
-Oct 11 22:33:38 dom0 kernel:  vt_k_ioctl+0x1b7/0x630
-Oct 11 22:33:38 dom0 kernel:  vt_ioctl+0x7d/0x660
-Oct 11 22:33:38 dom0 kernel:  tty_ioctl+0x354/0x810
-Oct 11 22:33:38 dom0 kernel:  ? __lock_release+0x181/0x2d0
-Oct 11 22:33:38 dom0 kernel:  ? ktime_get_coarse_real_ts64+0xe/0x50
-Oct 11 22:33:38 dom0 kernel:  ?
-lockdep_hardirqs_on_prepare.part.0+0xbf/0x140
-Oct 11 22:33:38 dom0 kernel:  ?
-seqcount_lockdep_reader_access.constprop.0+0x84/0x90
-Oct 11 22:33:38 dom0 kernel:  __x64_sys_ioctl+0x83/0xb0
-Oct 11 22:33:38 dom0 kernel:  do_syscall_64+0x3b/0x90
-Oct 11 22:33:38 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:33:38 dom0 kernel: RIP: 0033:0x723fc3ca417b
-Oct 11 22:33:38 dom0 kernel: Code: 0f 1e fa 48 8b 05 1d ad 0c 00 64 c7
-00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8
-10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed ac 0c 00 f7
-d8 64 89 01 48
-Oct 11 22:33:38 dom0 kernel: RSP: 002b:00007ffc0f3b06a8 EFLAGS: 00000246
-ORIG_RAX: 0000000000000010
-Oct 11 22:33:38 dom0 kernel: RAX: ffffffffffffffda RBX: 0000000000000010
-RCX: 0000723fc3ca417b
-Oct 11 22:33:38 dom0 kernel: RDX: 00007ffc0f3b06d0 RSI: 0000000000004b72
-RDI: 0000000000000003
-Oct 11 22:33:38 dom0 kernel: RBP: 0000000000000200 R08: 0000000000000010
-R09: 0000723fc3d6fa40
-Oct 11 22:33:38 dom0 kernel: R10: 0000000000000072 R11: 0000000000000246
-R12: 0000000000000008
-Oct 11 22:33:38 dom0 kernel: R13: 00005750656256a0 R14: 0000000000000003
-R15: 00007ffc0f3b06d0
-Oct 11 22:33:38 dom0 kernel: irq event stamp: 9426
-Oct 11 22:33:38 dom0 kernel: hardirqs last  enabled at (9425):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:33:38 dom0 kernel: hardirqs last disabled at (9426):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:33:38 dom0 kernel: softirqs last  enabled at (8654):
-[<ffffffff8103b972>] fpu_clone+0x72/0x200
-Oct 11 22:33:38 dom0 kernel: softirqs last disabled at (8652):
-[<ffffffff8103b905>] fpu_clone+0x5/0x200
-Oct 11 22:33:38 dom0 kernel: ---[ end trace 6fec6583c02534b2 ]---
-Oct 11 22:33:48 dom0 kernel: [drm:drm_atomic_helper_wait_for_flip_done
-[drm_kms_helper]] *ERROR* [CRTC:67:crtc-0] flip_done timed out
-Oct 11 22:33:49 dom0 kernel: EXT4-fs (nvme0n1p2): mounted filesystem
-with ordered data mode. Opts: discard. Quota mode: none.
-Oct 11 22:33:56 dom0 kernel: [drm] Fence fallback timer expired on ring
-sdma0
-Oct 11 22:33:59 dom0 kernel: usb 6-1: USB disconnect, device number 2
-Oct 11 22:34:06 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:34:06 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CRTC:67:crtc-0] commit wait timed out
-Oct 11 22:34:17 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:34:17 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CONNECTOR:78:eDP-1] commit wait timed out
-Oct 11 22:34:27 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:34:27 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[PLANE:55:plane-3] commit wait timed out
-Oct 11 22:34:27 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:34:27 dom0 kernel: WARNING: CPU: 7 PID: 2636 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8689
-amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:34:27 dom0 kernel: Modules linked in: nf_tables nfnetlink vfat
-fat intel_rapl_msr wmi_bmof intel_rapl_common pcspkr uvcvideo
-videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 k10temp
-videobuf2_common videodev sp5100_tco mc i2c_piix4 iwlwifi cfg80211
-thinkpad_acpi platform_profile ipmi_devintf ledtrig_audio
-ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi rfkill typec
-wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool dm_persistent_data
-dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu
-crct10dif_pclmul crc32_pclmul crc32c_intel gpu_sched i2c_algo_bit
-drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm cqhci drm_kms_helper
-serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas xhci_hcd drm nvme
-mmc_core ehci_pci ehci_hcd nvme_core xen_acpi_processor xen_privcmd
-xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
-Oct 11 22:34:27 dom0 kernel: CPU: 7 PID: 2636 Comm: Xorg Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:34:27 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:34:27 dom0 kernel: RIP:
-e030:amdgpu_dm_commit_planes+0x98c/0x9a0 [amdgpu]
-Oct 11 22:34:27 dom0 kernel: Code: 8b 45 b0 48 c7 c7 a2 bc 8c c0 4c 89
-55 88 8b b0 80 05 00 00 e8 e5 04 be ff 4c 8b 55 88 0f b6 55 ab 49 8b 72
-08 e9 53 fa ff ff <0f> 0b e9 e2 fe ff ff e8 78 e4 82 c1 0f 1f 84 00 00
-00 00 00 0f 1f
-Oct 11 22:34:27 dom0 kernel: RSP: e02b:ffffc90042d8f960 EFLAGS: 00010002
-Oct 11 22:34:27 dom0 kernel: RAX: ffff888110500210 RBX: 00000000000025ad
-RCX: 00000000000021e8
-Oct 11 22:34:27 dom0 kernel: RDX: ffff88813f818e40 RSI: ffff888110500450
-RDI: ffff888104cec3f0
-Oct 11 22:34:27 dom0 kernel: RBP: ffffc90042d8fa20 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:34:27 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:34:27 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810a677cc0
-R15: ffff88810a6d5c00
-Oct 11 22:34:27 dom0 kernel: FS:  00007f896429fa40(0000)
-GS:ffff88813f800000(0000) knlGS:0000000000000000
-Oct 11 22:34:27 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:34:27 dom0 kernel: CR2: 00007cc75690e000 CR3: 00000001062e6000
-CR4: 0000000000050660
-Oct 11 22:34:27 dom0 kernel: Call Trace:
-Oct 11 22:34:27 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:34:27 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:34:27 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:34:27 dom0 kernel:  drm_client_modeset_commit+0x24/0x40 [drm]
-Oct 11 22:34:27 dom0 kernel:  drm_fb_helper_lastclose+0x45/0x80
-[drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel:  amdgpu_driver_lastclose_kms+0xa/0x10 [amdgpu]
-Oct 11 22:34:27 dom0 kernel:  drm_release+0xe1/0x110 [drm]
-Oct 11 22:34:27 dom0 kernel:  __fput+0x9d/0x260
-Oct 11 22:34:27 dom0 kernel:  task_work_run+0x5c/0x90
-Oct 11 22:34:27 dom0 kernel:  exit_to_user_mode_loop+0x1ce/0x1e0
-Oct 11 22:34:27 dom0 kernel:  exit_to_user_mode_prepare+0xe3/0x150
-Oct 11 22:34:27 dom0 kernel:  syscall_exit_to_user_mode+0x27/0x60
-Oct 11 22:34:27 dom0 kernel:  do_syscall_64+0x48/0x90
-Oct 11 22:34:27 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:34:27 dom0 kernel: RIP: 0033:0x7f896486ba17
-Oct 11 22:34:27 dom0 kernel: Code: 00 00 f7 d8 64 89 02 48 c7 c0 ff ff
-ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8
-03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0c
-e8 f3 fb ff ff
-Oct 11 22:34:27 dom0 kernel: RSP: 002b:00007fff9083b528 EFLAGS: 00000246
-ORIG_RAX: 0000000000000003
-Oct 11 22:34:27 dom0 kernel: RAX: 0000000000000000 RBX: 00005f57edbd09f0
-RCX: 00007f896486ba17
-Oct 11 22:34:27 dom0 kernel: RDX: 00005f57edbb1010 RSI: 00005f57edbd0b60
-RDI: 0000000000000014
-Oct 11 22:34:27 dom0 kernel: RBP: 0000000000000014 R08: 0000000000000000
-R09: 00007f896484fa40
-Oct 11 22:34:27 dom0 kernel: R10: 00005f57eba9c302 R11: 0000000000000246
-R12: 00005f57edbd0b60
-Oct 11 22:34:27 dom0 kernel: R13: 00005f57edbd0a30 R14: 0000000000000000
-R15: 0000000000000000
-Oct 11 22:34:27 dom0 kernel: irq event stamp: 51614
-Oct 11 22:34:27 dom0 kernel: hardirqs last  enabled at (51613):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:34:27 dom0 kernel: hardirqs last disabled at (51614):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:34:27 dom0 kernel: softirqs last  enabled at (51264):
-[<ffffffff820002f9>] __do_softirq+0x2f9/0x428
-Oct 11 22:34:27 dom0 kernel: softirqs last disabled at (51257):
-[<ffffffff810f50c0>] __irq_exit_rcu+0xd0/0x100
-Oct 11 22:34:27 dom0 kernel: ---[ end trace 6fec6583c02534b3 ]---
-Oct 11 22:34:27 dom0 kernel: ------------[ cut here ]------------
-Oct 11 22:34:27 dom0 kernel: WARNING: CPU: 7 PID: 2636 at
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:8276
-prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:34:27 dom0 kernel: Modules linked in: nf_tables nfnetlink vfat
-fat intel_rapl_msr wmi_bmof intel_rapl_common pcspkr uvcvideo
-videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 k10temp
-videobuf2_common videodev sp5100_tco mc i2c_piix4 iwlwifi cfg80211
-thinkpad_acpi platform_profile ipmi_devintf ledtrig_audio
-ipmi_msghandler snd r8169 ucsi_acpi soundcore typec_ucsi rfkill typec
-wmi video i2c_scmi fuse xenfs ip_tables dm_thin_pool dm_persistent_data
-dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu
-crct10dif_pclmul crc32_pclmul crc32c_intel gpu_sched i2c_algo_bit
-drm_ttm_helper sdhci_pci ghash_clmulni_intel ttm cqhci drm_kms_helper
-serio_raw cec sdhci ccp xhci_pci xhci_pci_renesas xhci_hcd drm nvme
-mmc_core ehci_pci ehci_hcd nvme_core xen_acpi_processor xen_privcmd
-xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
-Oct 11 22:34:27 dom0 kernel: CPU: 7 PID: 2636 Comm: Xorg Tainted:
-G        W        --------- ---  5.15.0-1.fc32.qubes.x86_64 #14
-Oct 11 22:34:27 dom0 kernel: Hardware name: LENOVO
-20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 11 22:34:27 dom0 kernel: RIP: e030:prepare_flip_isr+0x64/0x70 [amdgpu]
-Oct 11 22:34:27 dom0 kernel: Code: 00 48 c7 80 38 01 00 00 00 00 00 00
-66 90 c3 8b 97 80 05 00 00 48 c7 c6 d8 65 89 c0 48 c7 c7 d8 fa a1 c0 e9
-0e ed 1f c1 0f 0b <0f> 0b eb b4 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-41 57 41 56 41
-Oct 11 22:34:27 dom0 kernel: RSP: e02b:ffffc90042d8f958 EFLAGS: 00010082
-Oct 11 22:34:27 dom0 kernel: RAX: 0000000000000001 RBX: 00000000000025ad
-RCX: 00000000000021e8
-Oct 11 22:34:27 dom0 kernel: RDX: ffff88813f818e40 RSI: ffff888110500450
-RDI: ffff88810d35e800
-Oct 11 22:34:27 dom0 kernel: RBP: ffffc90042d8fa20 R08: 0000000000000002
-R09: 00000000000c04d8
-Oct 11 22:34:27 dom0 kernel: R10: 0000000000000000 R11: 0000000000080000
-R12: ffff888110500210
-Oct 11 22:34:27 dom0 kernel: R13: ffff88810d35e800 R14: ffff88810a677cc0
-R15: ffff88810a6d5c00
-Oct 11 22:34:27 dom0 kernel: FS:  00007f896429fa40(0000)
-GS:ffff88813f800000(0000) knlGS:0000000000000000
-Oct 11 22:34:27 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0:
-0000000080050033
-Oct 11 22:34:27 dom0 kernel: CR2: 00007cc75690e000 CR3: 00000001062e6000
-CR4: 0000000000050660
-Oct 11 22:34:27 dom0 kernel: Call Trace:
-Oct 11 22:34:27 dom0 kernel:  amdgpu_dm_commit_planes+0x87d/0x9a0 [amdgpu]
-Oct 11 22:34:27 dom0 kernel:  amdgpu_dm_atomic_commit_tail+0xbb2/0x1200
-[amdgpu]
-Oct 11 22:34:27 dom0 kernel:  commit_tail+0x94/0x130 [drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel:  drm_atomic_helper_commit+0x136/0x160
-[drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel: 
-drm_client_modeset_commit_atomic+0x249/0x290 [drm]
-Oct 11 22:34:27 dom0 kernel:  drm_client_modeset_commit_locked+0x58/0x80
-[drm]
-Oct 11 22:34:27 dom0 kernel:  drm_client_modeset_commit+0x24/0x40 [drm]
-Oct 11 22:34:27 dom0 kernel:  drm_fb_helper_lastclose+0x45/0x80
-[drm_kms_helper]
-Oct 11 22:34:27 dom0 kernel:  amdgpu_driver_lastclose_kms+0xa/0x10 [amdgpu]
-Oct 11 22:34:27 dom0 kernel:  drm_release+0xe1/0x110 [drm]
-Oct 11 22:34:27 dom0 kernel:  __fput+0x9d/0x260
-Oct 11 22:34:27 dom0 kernel:  task_work_run+0x5c/0x90
-Oct 11 22:34:27 dom0 kernel:  exit_to_user_mode_loop+0x1ce/0x1e0
-Oct 11 22:34:27 dom0 kernel:  exit_to_user_mode_prepare+0xe3/0x150
-Oct 11 22:34:27 dom0 kernel:  syscall_exit_to_user_mode+0x27/0x60
-Oct 11 22:34:27 dom0 kernel:  do_syscall_64+0x48/0x90
-Oct 11 22:34:27 dom0 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
-Oct 11 22:34:27 dom0 kernel: RIP: 0033:0x7f896486ba17
-Oct 11 22:34:27 dom0 kernel: Code: 00 00 f7 d8 64 89 02 48 c7 c0 ff ff
-ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8
-03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0c
-e8 f3 fb ff ff
-Oct 11 22:34:27 dom0 kernel: RSP: 002b:00007fff9083b528 EFLAGS: 00000246
-ORIG_RAX: 0000000000000003
-Oct 11 22:34:27 dom0 kernel: RAX: 0000000000000000 RBX: 00005f57edbd09f0
-RCX: 00007f896486ba17
-Oct 11 22:34:27 dom0 kernel: RDX: 00005f57edbb1010 RSI: 00005f57edbd0b60
-RDI: 0000000000000014
-Oct 11 22:34:27 dom0 kernel: RBP: 0000000000000014 R08: 0000000000000000
-R09: 00007f896484fa40
-Oct 11 22:34:27 dom0 kernel: R10: 00005f57eba9c302 R11: 0000000000000246
-R12: 00005f57edbd0b60
-Oct 11 22:34:27 dom0 kernel: R13: 00005f57edbd0a30 R14: 0000000000000000
-R15: 0000000000000000
-Oct 11 22:34:27 dom0 kernel: irq event stamp: 51614
-Oct 11 22:34:27 dom0 kernel: hardirqs last  enabled at (51613):
-[<ffffffff81df81c7>] _raw_spin_unlock_irqrestore+0x37/0x40
-Oct 11 22:34:27 dom0 kernel: hardirqs last disabled at (51614):
-[<ffffffff81df7fc5>] _raw_spin_lock_irqsave+0x75/0x90
-Oct 11 22:34:27 dom0 kernel: softirqs last  enabled at (51264):
-[<ffffffff820002f9>] __do_softirq+0x2f9/0x428
-Oct 11 22:34:27 dom0 kernel: softirqs last disabled at (51257):
-[<ffffffff810f50c0>] __irq_exit_rcu+0xd0/0x100
-Oct 11 22:34:27 dom0 kernel: ---[ end trace 6fec6583c02534b4 ]---
-Oct 11 22:34:37 dom0 kernel: [drm:drm_atomic_helper_wait_for_flip_done
-[drm_kms_helper]] *ERROR* [CRTC:67:crtc-0] flip_done timed out
-Oct 11 22:34:38 dom0 kernel: [drm] Fence fallback timer expired on ring
-sdma0
-Oct 11 22:34:48 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:34:48 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CRTC:67:crtc-0] commit wait timed out
-Oct 11 22:34:58 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:34:58 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[CONNECTOR:78:eDP-1] commit wait timed out
-Oct 11 22:35:08 dom0 kernel: [drm:drm_crtc_commit_wait [drm]] *ERROR*
-flip_done timed out
-Oct 11 22:35:08 dom0 kernel:
-[drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] *ERROR*
-[PLANE:55:plane-3] commit wait timed out
-Oct 11 22:35:08 dom0 kernel: ------------[ cut here ]------------
-
-Full log with drm.debug=1 can be be found at the original issue
-https://gitlab.freedesktop.org/drm/amd/-/issues/1715
-https://gitlab.freedesktop.org/drm/amd/uploads/c91af638cb8fb5f3c25130f1edabb47e/dmesg
-
-
-My original goal was to solve suspend/resume, that is why I'm testing
-out v5.15. During that investigation I have found that:
-* v5.15-rc2+ with pci=nomsi is quite resilient to crashing amdgpu drivers
-* Compiling with CONFIG_HSA_AMD=n makes a difference, I don't believe Xen
-  has proper support for HSA anyhow.
-* Compiling with CONFIG_AMD_PMC=y makes a difference, apparently qiurks
-  are enabled when not compiling as a module.
-
-I did a last honest try with v5.15-rc5 with this patch applied to get more
-data and I did find some more. The original problem show itself, but since
-amdgpu actually describes their firmware commands now, it became less cryptic.
-
-After this message the screen will be blank, I can still get passed the xscreensaver
-but the screen is dead. With pci=nomsi applied I can after suspending the laptop
-once more, get the screen back in order. This also occurs without starting X.
-
-Oct 17 22:49:11 dom0 kernel: nvme 0000:01:00.0: saving config space at offset 0x38 (reading 0x0)
-Oct 17 22:49:11 dom0 kernel: nvme 0000:01:00.0: saving config space at offset 0x3c (reading 0x1ff)
-Oct 17 22:49:11 dom0 kernel: usb 4-4: reset full-speed USB device number 3 using xhci_hcd
-Oct 17 22:49:11 dom0 kernel: nvme nvme0: 8/0/0 default/read/poll queues
-Oct 17 22:49:11 dom0 kernel: usb 1-2: reset high-speed USB device number 2 using xhci_hcd
-Oct 17 22:49:11 dom0 kernel: psmouse serio1: synaptics: queried max coordinates: x [..5678], y [..4694]
-Oct 17 22:49:11 dom0 kernel: psmouse serio1: synaptics: queried min coordinates: x [1266..], y [1162..]
-Oct 17 22:49:11 dom0 kernel: [drm] psp gfx command SETUP_TMR(0x5) failed and response status is (0x0)
-Oct 17 22:49:11 dom0 kernel: [drm:psp_hw_start [amdgpu]] *ERROR* PSP load tmr failed!
-Oct 17 22:49:11 dom0 kernel: [drm:psp_resume [amdgpu]] *ERROR* PSP resume failed
-Oct 17 22:49:11 dom0 kernel: [drm:amdgpu_device_fw_loading [amdgpu]] *ERROR* resume of IP block <psp> failed -22
-Oct 17 22:49:11 dom0 kernel: amdgpu 0000:07:00.0: amdgpu: amdgpu_device_ip_resume failed (-22).
-Oct 17 22:49:11 dom0 kernel: PM: dpm_run_callback(): pci_pm_resume+0x0/0xe0 returns -22
-Oct 17 22:49:11 dom0 kernel: amdgpu 0000:07:00.0: PM: failed to resume async: error -22
-Oct 17 22:49:11 dom0 kernel: PM: resume devices took 2.422 seconds
-Oct 17 22:49:11 dom0 kernel: OOM killer enabled.
-Oct 17 22:49:11 dom0 kernel: Restarting tasks ... done.
-Oct 17 22:49:11 dom0 kernel: PM: suspend exit
-
-Since I also had _a lot_ of debug-flags applied I also got this neat deadlock
-
-Oct 17 22:52:07 dom0 kernel: [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
-Oct 17 22:52:07 dom0 kernel: ACPI: \_SB_.PLTF.C002: Found 3 idle states
-Oct 17 22:52:07 dom0 kernel: ACPI: FW issue: working around C-state latencies out of order
-Oct 17 22:52:07 dom0 kernel: CPU2 is up
-Oct 17 22:52:07 dom0 kernel: ------------[ cut here ]------------
-Oct 17 22:52:07 dom0 kernel: installing Xen timer for CPU 3
-Oct 17 22:52:07 dom0 kernel: 
-Oct 17 22:52:07 dom0 kernel: ======================================================
-Oct 17 22:52:07 dom0 kernel: WARNING: possible circular locking dependency detected
-Oct 17 22:52:07 dom0 kernel: 5.15.0-0.rc5.0.fc32.qubes.x86_64 #1 Tainted: G        W        --------- --- 
-Oct 17 22:52:07 dom0 kernel: ------------------------------------------------------
-Oct 17 22:52:07 dom0 kernel: kworker/2:0/11917 is trying to acquire lock:
-Oct 17 22:52:07 dom0 kernel: ffffffff82962858 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0xf/0x30
-Oct 17 22:52:07 dom0 kernel: 
-                             but task is already holding lock:
-Oct 17 22:52:07 dom0 kernel: ffff8881406ab558 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x1e/0x80
-Oct 17 22:52:07 dom0 kernel: 
-                             which lock already depends on the new lock.
-Oct 17 22:52:07 dom0 kernel: 
-                             the existing dependency chain (in reverse order) is:
-Oct 17 22:52:07 dom0 kernel: 
-                             -> #2 (&rq->__lock){-.-.}-{2:2}:
-Oct 17 22:52:07 dom0 kernel:        __lock_acquire+0x3a0/0x6b0
-Oct 17 22:52:07 dom0 kernel:        lock_acquire+0xf5/0x300
-Oct 17 22:52:07 dom0 kernel:        _raw_spin_lock_nested+0x2a/0x40
-Oct 17 22:52:07 dom0 kernel:        raw_spin_rq_lock_nested+0x1e/0x80
-Oct 17 22:52:07 dom0 kernel:        task_fork_fair+0x39/0x180
-Oct 17 22:52:07 dom0 kernel:        sched_fork+0x115/0x290
-Oct 17 22:52:07 dom0 kernel:        copy_process+0xd2e/0x2b80
-Oct 17 22:52:07 dom0 kernel:        kernel_clone+0xa4/0x300
-Oct 17 22:52:07 dom0 kernel:        kernel_thread+0x55/0x70
-Oct 17 22:52:07 dom0 kernel:        rest_init+0x1e/0x280
-Oct 17 22:52:07 dom0 kernel:        start_kernel+0x65d/0x69b
-Oct 17 22:52:07 dom0 kernel:        xen_start_kernel+0x5fb/0x61c
-Oct 17 22:52:07 dom0 kernel:        reset_early_page_tables+0x0/0x9d
-Oct 17 22:52:07 dom0 kernel: 
-                             -> #1 (&p->pi_lock){-.-.}-{2:2}:
-Oct 17 22:52:07 dom0 kernel:        __lock_acquire+0x3a0/0x6b0
-Oct 17 22:52:07 dom0 kernel:        lock_acquire+0xf5/0x300
-Oct 17 22:52:07 dom0 kernel:        _raw_spin_lock_irqsave+0x48/0x60
-Oct 17 22:52:07 dom0 kernel:        try_to_wake_up+0x53/0x5f0
-Oct 17 22:52:07 dom0 kernel:        up+0x40/0x60
-Oct 17 22:52:07 dom0 kernel:        __up_console_sem+0x56/0x70
-Oct 17 22:52:07 dom0 kernel:        console_unlock+0x2ae/0x3c0
-Oct 17 22:52:07 dom0 kernel:        vprintk_emit+0x141/0x160
-Oct 17 22:52:07 dom0 kernel:        _printk+0x68/0x7f
-Oct 17 22:52:07 dom0 kernel:        acpi_register_gsi_xen.cold+0x61/0x81
-Oct 17 22:52:07 dom0 kernel:        acpi_pci_irq_enable+0xdd/0x240
-Oct 17 22:52:07 dom0 kernel:        do_pci_enable_device+0x8a/0x110
-Oct 17 22:52:07 dom0 kernel:        pci_enable_device_flags+0xcf/0x100
-Oct 17 22:52:07 dom0 kernel:        nvme_pci_enable+0x28/0x1e0 [nvme]
-Oct 17 22:52:07 dom0 kernel:        nvme_reset_work+0x61/0x490 [nvme]
-Oct 17 22:52:07 dom0 kernel:        process_one_work+0x294/0x590
-Oct 17 22:52:07 dom0 kernel:        worker_thread+0x49/0x310
-Oct 17 22:52:07 dom0 kernel:        kthread+0x120/0x140
-Oct 17 22:52:07 dom0 kernel:        ret_from_fork+0x22/0x30
-Oct 17 22:52:07 dom0 kernel: 
-                             -> #0 ((console_sem).lock){-...}-{2:2}:
-Oct 17 22:52:07 dom0 kernel:        check_prev_add+0x8f/0xbf0
-Oct 17 22:52:07 dom0 kernel:        validate_chain+0x38a/0x420
-Oct 17 22:52:07 dom0 kernel:        __lock_acquire+0x3a0/0x6b0
-Oct 17 22:52:07 dom0 kernel:        lock_acquire+0xf5/0x300
-Oct 17 22:52:07 dom0 kernel:        _raw_spin_lock_irqsave+0x48/0x60
-Oct 17 22:52:07 dom0 kernel:        down_trylock+0xf/0x30
-Oct 17 22:52:07 dom0 kernel:        __down_trylock_console_sem+0x32/0xa0
-Oct 17 22:52:07 dom0 kernel:        console_trylock_spinning+0x13/0x1e0
-Oct 17 22:52:07 dom0 kernel:        vprintk_emit+0xa8/0x160
-Oct 17 22:52:07 dom0 kernel:        _printk+0x68/0x7f
-Oct 17 22:52:07 dom0 kernel:        __warn_printk+0x51/0x93
-Oct 17 22:52:07 dom0 kernel:        __update_blocked_fair+0x4f4/0x510
-Oct 17 22:52:07 dom0 kernel:        update_blocked_averages+0xe3/0x280
-Oct 17 22:52:07 dom0 kernel:        newidle_balance+0x160/0x600
-Oct 17 22:52:07 dom0 kernel:        pick_next_task_fair+0x39/0x3f0
-Oct 17 22:52:07 dom0 kernel:        pick_next_task+0x4c/0xbb0
-Oct 17 22:52:07 dom0 kernel:        __schedule+0x135/0x600
-Oct 17 22:52:07 dom0 kernel:        schedule+0x59/0xc0
-Oct 17 22:52:07 dom0 kernel:        worker_thread+0xb3/0x310
-Oct 17 22:52:07 dom0 kernel:        kthread+0x120/0x140
-Oct 17 22:52:07 dom0 kernel:        ret_from_fork+0x22/0x30
-Oct 17 22:52:07 dom0 kernel: 
-                             other info that might help us debug this:
-Oct 17 22:52:07 dom0 kernel: Chain exists of:
-                               (console_sem).lock --> &p->pi_lock --> &rq->__lock
-Oct 17 22:52:07 dom0 kernel:  Possible unsafe locking scenario:
-Oct 17 22:52:07 dom0 kernel:        CPU0                    CPU1
-Oct 17 22:52:07 dom0 kernel:        ----                    ----
-Oct 17 22:52:07 dom0 kernel:   lock(&rq->__lock);
-Oct 17 22:52:07 dom0 kernel:                                lock(&p->pi_lock);
-Oct 17 22:52:07 dom0 kernel:                                lock(&rq->__lock);
-Oct 17 22:52:07 dom0 kernel:   lock((console_sem).lock);
-Oct 17 22:52:07 dom0 kernel: 
-                              *** DEADLOCK ***
-Oct 17 22:52:07 dom0 kernel: 1 lock held by kworker/2:0/11917:
-Oct 17 22:52:07 dom0 kernel:  #0: ffff8881406ab558 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x1e/0x80
-Oct 17 22:52:07 dom0 kernel: 
-                             stack backtrace:
-Oct 17 22:52:07 dom0 kernel: CPU: 2 PID: 11917 Comm: kworker/2:0 Tainted: G        W        --------- ---  5.15.0-0.rc5.0.fc32.qubes.x86_64 #1
-Oct 17 22:52:07 dom0 kernel: Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 17 22:52:07 dom0 kernel: Workqueue:  0x0 (events)
-Oct 17 22:52:07 dom0 kernel: Call Trace:
-Oct 17 22:52:07 dom0 kernel:  dump_stack_lvl+0x57/0x72
-Oct 17 22:52:07 dom0 kernel:  check_noncircular+0x10a/0x120
-Oct 17 22:52:07 dom0 kernel:  check_prev_add+0x8f/0xbf0
-Oct 17 22:52:07 dom0 kernel:  ? add_chain_cache+0x10d/0x2d0
-Oct 17 22:52:07 dom0 kernel:  ? load_balance+0x2b0/0x7f0
-Oct 17 22:52:07 dom0 kernel:  validate_chain+0x38a/0x420
-Oct 17 22:52:07 dom0 kernel:  __lock_acquire+0x3a0/0x6b0
-Oct 17 22:52:07 dom0 kernel:  lock_acquire+0xf5/0x300
-Oct 17 22:52:07 dom0 kernel:  ? down_trylock+0xf/0x30
-Oct 17 22:52:07 dom0 kernel:  ? vprintk_emit+0xa8/0x160
-Oct 17 22:52:07 dom0 kernel:  _raw_spin_lock_irqsave+0x48/0x60
-Oct 17 22:52:07 dom0 kernel:  ? down_trylock+0xf/0x30
-Oct 17 22:52:07 dom0 kernel:  down_trylock+0xf/0x30
-Oct 17 22:52:07 dom0 kernel:  ? vprintk_emit+0xa8/0x160
-Oct 17 22:52:07 dom0 kernel:  __down_trylock_console_sem+0x32/0xa0
-Oct 17 22:52:07 dom0 kernel:  console_trylock_spinning+0x13/0x1e0
-Oct 17 22:52:07 dom0 kernel:  vprintk_emit+0xa8/0x160
-Oct 17 22:52:07 dom0 kernel:  _printk+0x68/0x7f
-Oct 17 22:52:07 dom0 kernel:  ? lock_is_held_type+0xa5/0x120
-Oct 17 22:52:07 dom0 kernel:  __warn_printk+0x51/0x93
-Oct 17 22:52:07 dom0 kernel:  ? lock_is_held_type+0xa5/0x120
-Oct 17 22:52:07 dom0 kernel:  __update_blocked_fair+0x4f4/0x510
-Oct 17 22:52:07 dom0 kernel:  update_blocked_averages+0xe3/0x280
-Oct 17 22:52:07 dom0 kernel:  newidle_balance+0x160/0x600
-Oct 17 22:52:07 dom0 kernel:  pick_next_task_fair+0x39/0x3f0
-Oct 17 22:52:07 dom0 kernel:  pick_next_task+0x4c/0xbb0
-Oct 17 22:52:07 dom0 kernel:  ? dequeue_task_fair+0xd1/0x4a0
-Oct 17 22:52:07 dom0 kernel:  __schedule+0x135/0x600
-Oct 17 22:52:07 dom0 kernel:  schedule+0x59/0xc0
-Oct 17 22:52:07 dom0 kernel:  worker_thread+0xb3/0x310
-Oct 17 22:52:07 dom0 kernel:  ? process_one_work+0x590/0x590
-Oct 17 22:52:07 dom0 kernel:  kthread+0x120/0x140
-Oct 17 22:52:07 dom0 kernel:  ? set_kthread_struct+0x40/0x40
-Oct 17 22:52:07 dom0 kernel:  ret_from_fork+0x22/0x30
-Oct 17 22:52:07 dom0 kernel: cfs_rq->avg.load_avg || cfs_rq->avg.util_avg || cfs_rq->avg.runnable_avg
-Oct 17 22:52:07 dom0 kernel: WARNING: CPU: 2 PID: 11917 at kernel/sched/fair.c:3339 __update_blocked_fair+0x4f4/0x510
-Oct 17 22:52:07 dom0 kernel: Modules linked in: snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer nf_tables nfnetlink vfat fat intel_rapl_msr think_lmi firmware_attributes_class wmi_bmof intel_rapl_common uvcvideo pcspkr videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 videobuf2_common sp5100_tco k10temp i2c_piix4 videodev mc iwlwifi cfg80211 ipmi_devintf ipmi_msghandler thinkpad_acpi platform_profile ledtrig_audio rfkill snd r8169 soundcore video ucsi_acpi i2c_scmi typec_ucsi wmi typec fuse xenfs ip_tables dm_thin_pool dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel gpu_sched i2c_algo_bit serio_raw nvme ehci_pci drm_ttm_helper sdhci_pci ttm cqhci ehci_hcd drm_kms_helper sdhci nvme_core xhci_pci cec xhci_pci_renesas ccp mmc_core drm xhci_hcd xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
-Oct 17 22:52:07 dom0 kernel: CPU: 2 PID: 11917 Comm: kworker/2:0 Tainted: G        W        --------- ---  5.15.0-0.rc5.0.fc32.qubes.x86_64 #1
-Oct 17 22:52:07 dom0 kernel: Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
-Oct 17 22:52:07 dom0 kernel: Workqueue:  0x0 (events)
-Oct 17 22:52:07 dom0 kernel: RIP: e030:__update_blocked_fair+0x4f4/0x510
-Oct 17 22:52:07 dom0 kernel: Code: 01 00 00 48 89 90 08 0a 00 00 e9 e6 fc ff ff 45 31 ff e9 70 ff ff ff 48 c7 c7 c8 dc 5f 82 c6 05 a7 5f ab 01 01 e8 73 1c c4 00 <0f> 0b 41 8b 86 78 01 00 00 e9 a5 fc ff ff 66 66 2e 0f 1f 84 00 00
-Oct 17 22:52:07 dom0 kernel: RSP: e02b:ffffc90040627cc0 EFLAGS: 00010082
-Oct 17 22:52:07 dom0 kernel: RAX: 0000000000000000 RBX: ffff8881406abdb8 RCX: ffff888140698dd8
-Oct 17 22:52:07 dom0 kernel: RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI: ffff888140698dd0
-Oct 17 22:52:07 dom0 kernel: RBP: ffff8881406ab780 R08: 0000000000000001 R09: 0000000000000000
-Oct 17 22:52:07 dom0 kernel: R10: 0000000000000000 R11: ffffffffffffffff R12: 0000000000000010
-Oct 17 22:52:07 dom0 kernel: R13: ffff8881406abf38 R14: ffff8881406ab600 R15: 0000011e9f271699
-Oct 17 22:52:07 dom0 kernel: FS:  0000000000000000(0000) GS:ffff888140680000(0000) knlGS:0000000000000000
-Oct 17 22:52:07 dom0 kernel: CS:  10000e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-Oct 17 22:52:07 dom0 kernel: CR2: 00006300c5f02360 CR3: 0000000002826000 CR4: 0000000000050660
-Oct 17 22:52:07 dom0 kernel: Call Trace:
-Oct 17 22:52:07 dom0 kernel:  update_blocked_averages+0xe3/0x280
-Oct 17 22:52:07 dom0 kernel:  newidle_balance+0x160/0x600
-Oct 17 22:52:07 dom0 kernel:  pick_next_task_fair+0x39/0x3f0
-Oct 17 22:52:07 dom0 kernel:  pick_next_task+0x4c/0xbb0
-Oct 17 22:52:07 dom0 kernel:  ? dequeue_task_fair+0xd1/0x4a0
-Oct 17 22:52:07 dom0 kernel:  __schedule+0x135/0x600
-Oct 17 22:52:07 dom0 kernel:  schedule+0x59/0xc0
-Oct 17 22:52:07 dom0 kernel:  worker_thread+0xb3/0x310
-Oct 17 22:52:07 dom0 kernel:  ? process_one_work+0x590/0x590
-Oct 17 22:52:07 dom0 kernel:  kthread+0x120/0x140
-Oct 17 22:52:07 dom0 kernel:  ? set_kthread_struct+0x40/0x40
-Oct 17 22:52:07 dom0 kernel:  ret_from_fork+0x22/0x30
-Oct 17 22:52:07 dom0 kernel: irq event stamp: 526
-Oct 17 22:52:07 dom0 kernel: hardirqs last  enabled at (525): [<ffffffff81dfd104>] _raw_spin_unlock_irq+0x24/0x40
-Oct 17 22:52:07 dom0 kernel: hardirqs last disabled at (526): [<ffffffff81df513a>] __schedule+0x3aa/0x600
-Oct 17 22:52:07 dom0 kernel: softirqs last  enabled at (420): [<ffffffff811e69f1>] css_free_rwork_fn+0x71/0x350
-Oct 17 22:52:07 dom0 kernel: softirqs last disabled at (418): [<ffffffff811e69d6>] css_free_rwork_fn+0x56/0x350
-Oct 17 22:52:07 dom0 kernel: ---[ end trace 276648458889a290 ]---
-Oct 17 22:52:07 dom0 kernel: cpu 3 spinlock event irq 79
-Oct 17 22:52:07 dom0 kernel: [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
-Oct 17 22:52:07 dom0 kernel: ACPI: \_SB_.PLTF.C003: Found 3 idle states
-Oct 17 22:52:07 dom0 kernel: ACPI: FW issue: working around C-state latencies out of order
-Oct 17 22:52:07 dom0 kernel: CPU3 is up
-Oct 17 22:52:07 dom0 kernel: installing Xen timer for CPU 4
-Oct 17 22:52:07 dom0 kernel: cpu 4 spinlock event irq 85
-Oct 17 22:52:07 dom0 kernel: [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
-Oct 17 22:52:07 dom0 kernel: ACPI: \_SB_.PLTF.C004: Found 3 idle states
-Oct 17 22:52:07 dom0 kernel: ACPI: FW issue: working around C-state latencies out of order
- 
-Found in full:
-https://gitlab.freedesktop.org/drm/amd/uploads/478771dfe18ff303f072fcac9a3da16b/setup-tmr-failed.dmesg
-
-
-When booting without Xen things just work in v5.15. Here's a fresh lspci and dmesg
-from a working boot without Xen:
-
-https://gitlab.freedesktop.org/drm/amd/uploads/81059ddc533de1c7cf21fa98b76f217d/without-xen.lspci
-https://gitlab.freedesktop.org/drm/amd/uploads/f3df205cbd9e9e8b769c35f374f20f9d/without-xen.dmesg
-
-Previous mailing list discussion:
-https://lore.kernel.org/linux-pci/CAKf6xpvGyCKVHsvauP54=0j10fxis4XiiqBNWH+1cpkbtt_QJw@mail.gmail.com/
-
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0099a00af361..355b791e382f 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -148,6 +148,9 @@ static noinline void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 s
- 	raw_spinlock_t *lock = &desc->dev->msi_lock;
- 	unsigned long flags;
- 
-+	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+		return;
-+
- 	raw_spin_lock_irqsave(lock, flags);
- 	desc->msi_mask &= ~clear;
- 	desc->msi_mask |= set;
-@@ -181,6 +184,9 @@ static void pci_msix_write_vector_ctrl(struct msi_desc *desc, u32 ctrl)
- {
- 	void __iomem *desc_addr = pci_msix_desc_addr(desc);
- 
-+	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+		return;
-+
- 	writel(ctrl, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
- }
-
---
-2.31.1
-
+> ---
+> Changes in v5:
+> - Drop mention of Windows behavior from the commit msg, replace with a
+>   reference to the specs
+> - Improve documentation in Documentation/admin-guide/kernel-parameters.txt
+> - Reword the big comment added, use "PCI host bridge window" in it and drop
+>   all refences to Windows
+> 
+> Changes in v4:
+> - Rewrap the big comment block to fit in 80 columns
+> - Add Rafael's Acked-by
+> - Add Cc: stable@vger.kernel.org
+> 
+> Changes in v3:
+> - Commit msg tweaks (drop dmesg timestamps, typo fix)
+> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
+> - Add Mika's Reviewed-by
+> 
+> Changes in v2:
+> - Replace the per model DMI quirk approach with disabling E820 reservations
+>   checking for all systems with a BIOS year >= 2018
+> - Add documentation for the new kernel-parameters to
+>   Documentation/admin-guide/kernel-parameters.txt
+> ---
+> Other patches trying to address the same issue:
+> https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
+> https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
+> V1 patch:
+> https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  9 ++++++
+>  arch/x86/include/asm/pci_x86.h                | 10 +++++++
+>  arch/x86/kernel/resource.c                    |  4 +++
+>  arch/x86/pci/acpi.c                           | 28 +++++++++++++++++++
+>  arch/x86/pci/common.c                         |  6 ++++
+>  5 files changed, 57 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 43dc35fe5bc0..07f1615206d4 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3949,6 +3949,15 @@
+>  				please report a bug.
+>  		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
+>  				If you need to use this, please report a bug.
+> +		use_e820	[X86] Use E820 reservations to exclude parts of
+> +				PCI host bridge windows. This is a workaround
+> +				for BIOS defects in host bridge _CRS methods.
+> +				If you need to use this, please report a bug to
+> +				<linux-pci@vger.kernel.org>.
+> +		no_e820		[X86] Ignore E820 reservations for PCI host
+> +				bridge windows. This is the default on modern
+> +				hardware. If you need to use this, please report
+> +				a bug to <linux-pci@vger.kernel.org>.
+>  		routeirq	Do IRQ routing for all PCI devices.
+>  				This is normally done in pci_enable_device(),
+>  				so this option is a temporary workaround
+> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+> index 490411dba438..0bb4e7dd0ffc 100644
+> --- a/arch/x86/include/asm/pci_x86.h
+> +++ b/arch/x86/include/asm/pci_x86.h
+> @@ -39,6 +39,8 @@ do {						\
+>  #define PCI_ROOT_NO_CRS		0x100000
+>  #define PCI_NOASSIGN_BARS	0x200000
+>  #define PCI_BIG_ROOT_WINDOW	0x400000
+> +#define PCI_USE_E820		0x800000
+> +#define PCI_NO_E820		0x1000000
+>  
+>  extern unsigned int pci_probe;
+>  extern unsigned long pirq_table_addr;
+> @@ -64,6 +66,8 @@ void pcibios_scan_specific_bus(int busn);
+>  
+>  /* pci-irq.c */
+>  
+> +struct pci_dev;
+> +
+>  struct irq_info {
+>  	u8 bus, devfn;			/* Bus, device and function */
+>  	struct {
+> @@ -232,3 +236,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
+>  # define x86_default_pci_init_irq	NULL
+>  # define x86_default_pci_fixup_irqs	NULL
+>  #endif
+> +
+> +#if defined(CONFIG_PCI) && defined(CONFIG_ACPI)
+> +extern bool pci_use_e820;
+> +#else
+> +#define pci_use_e820 false
+> +#endif
+> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+> index 9b9fb7882c20..e8dc9bc327bd 100644
+> --- a/arch/x86/kernel/resource.c
+> +++ b/arch/x86/kernel/resource.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/ioport.h>
+>  #include <asm/e820/api.h>
+> +#include <asm/pci_x86.h>
+>  
+>  static void resource_clip(struct resource *res, resource_size_t start,
+>  			  resource_size_t end)
+> @@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
+>  	int i;
+>  	struct e820_entry *entry;
+>  
+> +	if (!pci_use_e820)
+> +		return;
+> +
+>  	for (i = 0; i < e820_table->nr_entries; i++) {
+>  		entry = &e820_table->entries[i];
+>  
+> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+> index 948656069cdd..72d473054262 100644
+> --- a/arch/x86/pci/acpi.c
+> +++ b/arch/x86/pci/acpi.c
+> @@ -21,6 +21,8 @@ struct pci_root_info {
+>  
+>  static bool pci_use_crs = true;
+>  static bool pci_ignore_seg = false;
+> +/* Consumed in arch/x86/kernel/resource.c */
+> +bool pci_use_e820 = false;
+>  
+>  static int __init set_use_crs(const struct dmi_system_id *id)
+>  {
+> @@ -160,6 +162,32 @@ void __init pci_acpi_crs_quirks(void)
+>  	       "if necessary, use \"pci=%s\" and report a bug\n",
+>  	       pci_use_crs ? "Using" : "Ignoring",
+>  	       pci_use_crs ? "nocrs" : "use_crs");
+> +
+> +	/*
+> +	 * Some BIOS-es contain a bug where they add addresses which map to
+> +	 * system RAM in the PCI host bridge window returned by the ACPI _CRS
+> +	 * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
+> +	 * allocating address space"). To avoid this Linux by default excludes
+> +	 * E820 reservations when allocating addresses since 2010.
+> +	 * In 2020 some systems have shown-up with E820 reservations which cover
+> +	 * the entire _CRS returned PCI host bridge window, causing all attempts
+> +	 * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
+> +	 *
+> +	 * Ideally Linux would fully stop using E820 reservations, but then
+> +	 * the old systems this was added for will regress.
+> +	 * Instead keep the old behavior for old systems, while ignoring the
+> +	 * E820 reservations for any systems from now on.
+> +	 */
+> +	if (year >= 0 && year < 2018)
+> +		pci_use_e820 = true;
+> +
+> +	if (pci_probe & PCI_NO_E820)
+> +		pci_use_e820 = false;
+> +	else if (pci_probe & PCI_USE_E820)
+> +		pci_use_e820 = true;
+> +
+> +	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
+> +	       pci_use_e820 ? "Using" : "Ignoring");
+>  }
+>  
+>  #ifdef	CONFIG_PCI_MMCONFIG
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index 3507f456fcd0..091ec7e94fcb 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
+>  	} else if (!strcmp(str, "nocrs")) {
+>  		pci_probe |= PCI_ROOT_NO_CRS;
+>  		return NULL;
+> +	} else if (!strcmp(str, "use_e820")) {
+> +		pci_probe |= PCI_USE_E820;
+> +		return NULL;
+> +	} else if (!strcmp(str, "no_e820")) {
+> +		pci_probe |= PCI_NO_E820;
+> +		return NULL;
+>  #ifdef CONFIG_PHYS_ADDR_T_64BIT
+>  	} else if (!strcmp(str, "big_root_window")) {
+>  		pci_probe |= PCI_BIG_ROOT_WINDOW;
+> -- 
+> 2.31.1
+> 
