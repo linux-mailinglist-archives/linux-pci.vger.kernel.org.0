@@ -2,140 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2095434BD8
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:13:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBB83434BE0
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:14:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbhJTNPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 09:15:22 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:44572 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbhJTNPW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 09:15:22 -0400
-Received: by mail-oi1-f171.google.com with SMTP id y207so9540201oia.11;
-        Wed, 20 Oct 2021 06:13:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2r3mbgEOKCAphWOTFN2e6UULnD2H9GQNAPamdyEgIXU=;
-        b=vyq964GmUK0EE+Mo4BBu5QcF5gxc+dFOTUkVcNM4wCnPiTDy4u/JHdjTHHY0FcVoAV
-         fS1cYytFQ1THR7l/OXCi6ib9Ilp3hVJfqR4r7PEoAWGa83zJiZInAzo7eN3OvvVS4G/s
-         Ui44YZ1wWgDTlBEAvKMY5kUGVPPIHHTxX4mN/DJQofpmWmCypb0IBTNWSdXJn9Zrb/Ap
-         y+4nYcwXlkSD1Tep2nIkaV6LCRRLNxF6gI9Yry56UfLTkv9cfEDtXe4zFyjYWTcA/U6C
-         MsGUIQWQmMCmMT1HFGTnGVufU8wZ3Pw1Qg2xB9al9TZ+G3VIrwbfMGU4pGmntupsXslQ
-         KjQg==
-X-Gm-Message-State: AOAM533QNlM3/R0gaid0xJAvUbBW1l++w+T7IC1k5IGEhQVKswYWnGpr
-        TzEnv6zFFqzjIXKullz3lg==
-X-Google-Smtp-Source: ABdhPJxjCjd44cknqX1CrRz3ImU1u4LvNQz115jwwKQoOTlss5OHW3iJ68+/FeioWfmP9Kusyp4lLA==
-X-Received: by 2002:aca:31c7:: with SMTP id x190mr9703609oix.143.1634735587326;
-        Wed, 20 Oct 2021 06:13:07 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id p14sm400670oov.0.2021.10.20.06.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 06:13:06 -0700 (PDT)
-Received: (nullmailer pid 2208400 invoked by uid 1000);
-        Wed, 20 Oct 2021 13:13:05 -0000
-Date:   Wed, 20 Oct 2021 08:13:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/24] PCI: Unify PCI error response checking
-Message-ID: <YXAV4bGehjAKK8XO@robh.at.kernel.org>
-References: <cover.1634306198.git.naveennaidu479@gmail.com>
- <da939a6cdb2dea96d16392ae152e1232212877d1.1634306198.git.naveennaidu479@gmail.com>
+        id S229911AbhJTNQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 09:16:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:30307 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229702AbhJTNQy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Oct 2021 09:16:54 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10142"; a="252261745"
+X-IronPort-AV: E=Sophos;i="5.87,167,1631602800"; 
+   d="scan'208";a="252261745"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2021 06:14:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,167,1631602800"; 
+   d="scan'208";a="483719534"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 20 Oct 2021 06:14:38 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mdBQU-000DMT-36; Wed, 20 Oct 2021 13:14:38 +0000
+Date:   Wed, 20 Oct 2021 21:14:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/aspm] BUILD SUCCESS
+ e1b0d0bb2032d18c7718168e670d8d3f31e552d7
+Message-ID: <61701630.mo41fJ0Qoc+Tv7TN%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da939a6cdb2dea96d16392ae152e1232212877d1.1634306198.git.naveennaidu479@gmail.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 08:08:44PM +0530, Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error.  There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
-> 
-> Use SET_PCI_ERROR_RESPONSE() to set the error response and
-> RESPONSE_IS_PCI_ERROR() to check the error response during hardware
-> read.
-> 
-> These definitions make error checks consistent and easier to find.
-> 
-> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> ---
->  drivers/pci/access.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index b3b2006ed1d2..03712866c818 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -417,10 +417,10 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
->  		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
->  		/*
->  		 * Reset *val to 0 if pci_read_config_word() fails, it may
-> -		 * have been written as 0xFFFF if hardware error happens
-> -		 * during pci_read_config_word().
-> +		 * have been written as 0xFFFF (PCI_ERROR_RESPONSE) if hardware error
-> +		 * happens during pci_read_config_word().
->  		 */
-> -		if (ret)
-> +		if (RESPONSE_IS_PCI_ERROR(val))
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
+branch HEAD: e1b0d0bb2032d18c7718168e670d8d3f31e552d7  PCI: Re-enable Downstream Port LTR after reset or hotplug
 
-What if there is no error (in ret) and the register value was actually 
-~0? We'd be corrupting the value.
+elapsed time: 883m
 
-In general, I think we should rely more on the error codes and less on 
-the ~0 value.
+configs tested: 158
+configs skipped: 3
 
->  			*val = 0;
->  		return ret;
->  	}
-> @@ -452,10 +452,10 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
->  		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
->  		/*
->  		 * Reset *val to 0 if pci_read_config_dword() fails, it may
-> -		 * have been written as 0xFFFFFFFF if hardware error happens
-> -		 * during pci_read_config_dword().
-> +		 * have been written as 0xFFFFFFFF (PCI_ERROR_RESPONSE) if hardware
-> +		 * error happens during pci_read_config_dword().
->  		 */
-> -		if (ret)
-> +		if (RESPONSE_IS_PCI_ERROR(val))
->  			*val = 0;
->  		return ret;
->  	}
-> @@ -529,7 +529,7 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
->  int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
->  {
->  	if (pci_dev_is_disconnected(dev)) {
-> -		*val = ~0;
-> +		SET_PCI_ERROR_RESPONSE(val);
->  		return PCIBIOS_DEVICE_NOT_FOUND;
->  	}
->  	return pci_bus_read_config_byte(dev->bus, dev->devfn, where, val);
-> @@ -539,7 +539,7 @@ EXPORT_SYMBOL(pci_read_config_byte);
->  int pci_read_config_word(const struct pci_dev *dev, int where, u16 *val)
->  {
->  	if (pci_dev_is_disconnected(dev)) {
-> -		*val = ~0;
-> +		SET_PCI_ERROR_RESPONSE(val);
->  		return PCIBIOS_DEVICE_NOT_FOUND;
->  	}
->  	return pci_bus_read_config_word(dev->bus, dev->devfn, where, val);
-> @@ -550,7 +550,7 @@ int pci_read_config_dword(const struct pci_dev *dev, int where,
->  					u32 *val)
->  {
->  	if (pci_dev_is_disconnected(dev)) {
-> -		*val = ~0;
-> +		SET_PCI_ERROR_RESPONSE(val);
->  		return PCIBIOS_DEVICE_NOT_FOUND;
->  	}
->  	return pci_bus_read_config_dword(dev->bus, dev->devfn, where, val);
-> -- 
-> 2.25.1
-> 
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+i386                 randconfig-c001-20211019
+i386                             alldefconfig
+powerpc                      mgcoge_defconfig
+sh                          r7780mp_defconfig
+arm                         hackkit_defconfig
+mips                        omega2p_defconfig
+powerpc                      cm5200_defconfig
+mips                        qi_lb60_defconfig
+xtensa                          iss_defconfig
+arm                           viper_defconfig
+mips                           gcw0_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                           u8500_defconfig
+powerpc                mpc7448_hpc2_defconfig
+powerpc                     ksi8560_defconfig
+powerpc                       maple_defconfig
+m68k                        m5407c3_defconfig
+arm                         lubbock_defconfig
+mips                         tb0287_defconfig
+powerpc                      ppc6xx_defconfig
+arm                             ezx_defconfig
+s390                             alldefconfig
+sh                            shmin_defconfig
+sh                          rsk7264_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                         orion5x_defconfig
+powerpc                     ppa8548_defconfig
+arm                       imx_v4_v5_defconfig
+um                           x86_64_defconfig
+powerpc                     stx_gp3_defconfig
+arm                            mps2_defconfig
+arm                          collie_defconfig
+sh                   sh7724_generic_defconfig
+x86_64                           alldefconfig
+arc                          axs103_defconfig
+parisc                generic-64bit_defconfig
+sh                              ul2_defconfig
+arc                     nsimosci_hs_defconfig
+sh                           se7722_defconfig
+powerpc                   bluestone_defconfig
+mips                     decstation_defconfig
+m68k                       m5275evb_defconfig
+arm                          ep93xx_defconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+powerpc                     skiroot_defconfig
+powerpc                        icon_defconfig
+arm                     davinci_all_defconfig
+sh                          polaris_defconfig
+arm                           corgi_defconfig
+sh                        edosk7760_defconfig
+powerpc                     pq2fads_defconfig
+m68k                        m5307c3_defconfig
+xtensa                  audio_kc705_defconfig
+sh                           se7780_defconfig
+arc                      axs103_smp_defconfig
+arm                        realview_defconfig
+powerpc                     tqm8540_defconfig
+mips                           ci20_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                      walnut_defconfig
+powerpc                        fsp2_defconfig
+arm                         palmz72_defconfig
+arm                         s3c2410_defconfig
+mips                      maltasmvp_defconfig
+arm                  randconfig-c002-20211019
+x86_64               randconfig-c001-20211019
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+i386                 randconfig-a004-20211020
+i386                 randconfig-a003-20211020
+i386                 randconfig-a002-20211020
+i386                 randconfig-a005-20211020
+i386                 randconfig-a006-20211020
+i386                 randconfig-a001-20211020
+x86_64               randconfig-a015-20211019
+x86_64               randconfig-a012-20211019
+x86_64               randconfig-a016-20211019
+x86_64               randconfig-a014-20211019
+x86_64               randconfig-a013-20211019
+x86_64               randconfig-a011-20211019
+i386                 randconfig-a014-20211019
+i386                 randconfig-a016-20211019
+i386                 randconfig-a011-20211019
+i386                 randconfig-a015-20211019
+i386                 randconfig-a012-20211019
+i386                 randconfig-a013-20211019
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+arm                  randconfig-c002-20211019
+mips                 randconfig-c004-20211019
+i386                 randconfig-c001-20211019
+s390                 randconfig-c005-20211019
+x86_64               randconfig-c007-20211019
+riscv                randconfig-c006-20211019
+powerpc              randconfig-c003-20211019
+x86_64               randconfig-a004-20211019
+x86_64               randconfig-a006-20211019
+x86_64               randconfig-a005-20211019
+x86_64               randconfig-a001-20211019
+x86_64               randconfig-a002-20211019
+x86_64               randconfig-a003-20211019
+i386                 randconfig-a001-20211019
+i386                 randconfig-a003-20211019
+i386                 randconfig-a004-20211019
+i386                 randconfig-a005-20211019
+i386                 randconfig-a002-20211019
+i386                 randconfig-a006-20211019
+riscv                randconfig-r042-20211020
+s390                 randconfig-r044-20211020
+hexagon              randconfig-r045-20211020
+hexagon              randconfig-r041-20211020
+hexagon              randconfig-r041-20211019
+hexagon              randconfig-r045-20211019
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
