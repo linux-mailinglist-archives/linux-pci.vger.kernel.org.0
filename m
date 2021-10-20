@@ -2,218 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB83434BE0
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:14:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B80F434BFD
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:24:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbhJTNQy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 09:16:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:30307 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229702AbhJTNQy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Oct 2021 09:16:54 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10142"; a="252261745"
-X-IronPort-AV: E=Sophos;i="5.87,167,1631602800"; 
-   d="scan'208";a="252261745"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2021 06:14:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,167,1631602800"; 
-   d="scan'208";a="483719534"
-Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 20 Oct 2021 06:14:38 -0700
-Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mdBQU-000DMT-36; Wed, 20 Oct 2021 13:14:38 +0000
-Date:   Wed, 20 Oct 2021 21:14:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/aspm] BUILD SUCCESS
- e1b0d0bb2032d18c7718168e670d8d3f31e552d7
-Message-ID: <61701630.mo41fJ0Qoc+Tv7TN%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229911AbhJTN0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 09:26:46 -0400
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:46735 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230179AbhJTN0q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 09:26:46 -0400
+Received: by mail-ot1-f49.google.com with SMTP id x27-20020a9d459b000000b0055303520cc4so8158617ote.13;
+        Wed, 20 Oct 2021 06:24:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RNWWP9bTOkCgW0tcCeT8WC0sybKGetWwgWvpGMhElmI=;
+        b=zMkxnps66cebgIuaa1c8X5LCCkbzZeSCVswtvPshAC1FBrABfrZ9/zHrWFcrkYmelK
+         AunibEHExD85LM8ncPEEsN1Ex2CX4KEXgYp5slXP3eZOUOi3Y4K9gfSX1SiNMx+MzOgE
+         t+cbk+nuFNwt0yRwGCtB7x94+OzqfgqWejJZDKXWASDo1s/em4VT6i3VHQMinibUCz6j
+         0aSp9+9An7FQaFtYZqXK6XT8GgcmFdUQqS5tm766kvhUq8x19qv8eWX1SLpvwZ2Nrwrx
+         3HEXcm437ik2tCQVvWe1Kd1bqN0/LEGV3f5vALz4v68b3/cOvxhcYOjNJImjX0MOWxae
+         06fw==
+X-Gm-Message-State: AOAM532d7FkWB/Qv1WivOmSdlGQnDELSYoqZtPXlV0+ALhvA/5cg1iT5
+        ZRgiLGhReEFPHbhJqKuf/vTIy7l5Tg==
+X-Google-Smtp-Source: ABdhPJzLB3PDzuaVVTWKIo94MOknTyjcODSHeAoxM/rtWZy+oDjpMr99UBRFJbGqlHrtrpiwAtmyXA==
+X-Received: by 2002:a9d:3e5c:: with SMTP id h28mr10960461otg.50.1634736271605;
+        Wed, 20 Oct 2021 06:24:31 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id i13sm442681oig.35.2021.10.20.06.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 06:24:30 -0700 (PDT)
+Received: (nullmailer pid 2224276 invoked by uid 1000);
+        Wed, 20 Oct 2021 13:24:30 -0000
+Date:   Wed, 20 Oct 2021 08:24:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Naveen Naidu <naveennaidu479@gmail.com>
+Cc:     bhelgaas@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/24] PCI: Add PCI_ERROR_RESPONSE and it's related
+ definitions
+Message-ID: <YXAYjkLyS53Bod3j@robh.at.kernel.org>
+References: <cover.1634306198.git.naveennaidu479@gmail.com>
+ <4516b02d3c0fe3593a1a9f59bab47e99cdb65f02.1634306198.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <4516b02d3c0fe3593a1a9f59bab47e99cdb65f02.1634306198.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
-branch HEAD: e1b0d0bb2032d18c7718168e670d8d3f31e552d7  PCI: Re-enable Downstream Port LTR after reset or hotplug
+On Fri, Oct 15, 2021 at 07:58:16PM +0530, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
+> 
+> Add a PCI_ERROR_RESPONSE definition for that and use it where
+> appropriate to make these checks consistent and easier to find.
+> 
+> Also add helper definitions SET_PCI_ERROR_RESPONSE and
+> RESPONSE_IS_PCI_ERROR to make the code more readable.
+> 
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  include/linux/pci.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..928c589bb5c4 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
+>  /* The number of legacy PCI INTx interrupts */
+>  #define PCI_NUM_INTX	4
+>  
+> +/*
+> + * Reading from a device that doesn't respond typically returns ~0.  A
+> + * successful read from a device may also return ~0, so you need additional
+> + * information to reliably identify errors.
+> + */
+> +#define PCI_ERROR_RESPONSE			(~0ULL)
+> +#define SET_PCI_ERROR_RESPONSE(val)	(*val = ((typeof(*val)) PCI_ERROR_RESPONSE))
+> +#define RESPONSE_IS_PCI_ERROR(val)	(*val == ((typeof(*val)) PCI_ERROR_RESPONSE))
 
-elapsed time: 883m
+No reason for val to be a pointer.
 
-configs tested: 158
-configs skipped: 3
+Also, macro parameters need () around them. val could be an expression 
+like 'ptr + 1' which would blow up for example.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allmodconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20211019
-i386                             alldefconfig
-powerpc                      mgcoge_defconfig
-sh                          r7780mp_defconfig
-arm                         hackkit_defconfig
-mips                        omega2p_defconfig
-powerpc                      cm5200_defconfig
-mips                        qi_lb60_defconfig
-xtensa                          iss_defconfig
-arm                           viper_defconfig
-mips                           gcw0_defconfig
-powerpc                 xes_mpc85xx_defconfig
-arm                           u8500_defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                     ksi8560_defconfig
-powerpc                       maple_defconfig
-m68k                        m5407c3_defconfig
-arm                         lubbock_defconfig
-mips                         tb0287_defconfig
-powerpc                      ppc6xx_defconfig
-arm                             ezx_defconfig
-s390                             alldefconfig
-sh                            shmin_defconfig
-sh                          rsk7264_defconfig
-powerpc                 mpc832x_mds_defconfig
-arm                         orion5x_defconfig
-powerpc                     ppa8548_defconfig
-arm                       imx_v4_v5_defconfig
-um                           x86_64_defconfig
-powerpc                     stx_gp3_defconfig
-arm                            mps2_defconfig
-arm                          collie_defconfig
-sh                   sh7724_generic_defconfig
-x86_64                           alldefconfig
-arc                          axs103_defconfig
-parisc                generic-64bit_defconfig
-sh                              ul2_defconfig
-arc                     nsimosci_hs_defconfig
-sh                           se7722_defconfig
-powerpc                   bluestone_defconfig
-mips                     decstation_defconfig
-m68k                       m5275evb_defconfig
-arm                          ep93xx_defconfig
-sh                          rsk7269_defconfig
-sh                            titan_defconfig
-powerpc                     skiroot_defconfig
-powerpc                        icon_defconfig
-arm                     davinci_all_defconfig
-sh                          polaris_defconfig
-arm                           corgi_defconfig
-sh                        edosk7760_defconfig
-powerpc                     pq2fads_defconfig
-m68k                        m5307c3_defconfig
-xtensa                  audio_kc705_defconfig
-sh                           se7780_defconfig
-arc                      axs103_smp_defconfig
-arm                        realview_defconfig
-powerpc                     tqm8540_defconfig
-mips                           ci20_defconfig
-powerpc                     tqm5200_defconfig
-powerpc                      walnut_defconfig
-powerpc                        fsp2_defconfig
-arm                         palmz72_defconfig
-arm                         s3c2410_defconfig
-mips                      maltasmvp_defconfig
-arm                  randconfig-c002-20211019
-x86_64               randconfig-c001-20211019
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                                defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-i386                 randconfig-a004-20211020
-i386                 randconfig-a003-20211020
-i386                 randconfig-a002-20211020
-i386                 randconfig-a005-20211020
-i386                 randconfig-a006-20211020
-i386                 randconfig-a001-20211020
-x86_64               randconfig-a015-20211019
-x86_64               randconfig-a012-20211019
-x86_64               randconfig-a016-20211019
-x86_64               randconfig-a014-20211019
-x86_64               randconfig-a013-20211019
-x86_64               randconfig-a011-20211019
-i386                 randconfig-a014-20211019
-i386                 randconfig-a016-20211019
-i386                 randconfig-a011-20211019
-i386                 randconfig-a015-20211019
-i386                 randconfig-a012-20211019
-i386                 randconfig-a013-20211019
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-arm                  randconfig-c002-20211019
-mips                 randconfig-c004-20211019
-i386                 randconfig-c001-20211019
-s390                 randconfig-c005-20211019
-x86_64               randconfig-c007-20211019
-riscv                randconfig-c006-20211019
-powerpc              randconfig-c003-20211019
-x86_64               randconfig-a004-20211019
-x86_64               randconfig-a006-20211019
-x86_64               randconfig-a005-20211019
-x86_64               randconfig-a001-20211019
-x86_64               randconfig-a002-20211019
-x86_64               randconfig-a003-20211019
-i386                 randconfig-a001-20211019
-i386                 randconfig-a003-20211019
-i386                 randconfig-a004-20211019
-i386                 randconfig-a005-20211019
-i386                 randconfig-a002-20211019
-i386                 randconfig-a006-20211019
-riscv                randconfig-r042-20211020
-s390                 randconfig-r044-20211020
-hexagon              randconfig-r045-20211020
-hexagon              randconfig-r041-20211020
-hexagon              randconfig-r041-20211019
-hexagon              randconfig-r045-20211019
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+>  /*
+>   * pci_power_t values must match the bits in the Capabilities PME_Support
+>   * and Control/Status PowerState fields in the Power Management capability.
+> -- 
+> 2.25.1
+> 
+> 
