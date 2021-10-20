@@ -2,160 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4AF4354EC
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 23:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E07EB435528
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 23:15:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231286AbhJTVJb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 17:09:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:39818 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230515AbhJTVJa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 17:09:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634764035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LudZt1LikP2qvwJT5NV0ZH9XpRMU1nt0Zd6YW0CIgBk=;
-        b=hZkMnLikmnN1HWB9pbRldxVfAOYLTh8c57Bk8rFf/kETT/I75Q2KekZc5oYoH26aObBDSf
-        AZNrdcFUSQhCCGVFRGiPQrYCuWoEERQ/rQprqbRvGI6aht1nAm+/hE4HfDsBl45wbiHVZt
-        Y+VwWEkgJR0awESFGbzD9AqTI6ynjvk=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-mNoICoQ1NlO8O939pC2iXQ-1; Wed, 20 Oct 2021 17:07:13 -0400
-X-MC-Unique: mNoICoQ1NlO8O939pC2iXQ-1
-Received: by mail-oo1-f71.google.com with SMTP id u11-20020a4a85cb000000b002b725ac13d8so3880829ooh.0
-        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 14:07:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LudZt1LikP2qvwJT5NV0ZH9XpRMU1nt0Zd6YW0CIgBk=;
-        b=ITidVhCahIeTeWSw+BwHQEl7SatHjkh+rfPmjYsz1w0CvFec5sJ1FLcu5YTeNGWp48
-         zSXYzqQB80aC/40BxRthR7y0C46b6zW9MSz6/2TenMeMjGTlwuRq1w937D5WFkMfbd+L
-         DnU53Th8uy+x5FLIjJOa7isKIVRyWZcpK8fuTdYeN2pdiL7y9laH80XNS39eKckByqHm
-         CBQe6RRL08X8DLRcyAaT7IO4rJZhb6B4rbaHU6aDtF66l0y070XdCwsRhs55q7qJ+M9q
-         UlojTbfX4pqiBQArIGKvRniLiqskV4A/6NXV3tFJTrl5kmhwufD9xEcki1gB3R7mCrQ1
-         jdzA==
-X-Gm-Message-State: AOAM532mJklC5QHsSi3qbSJK9t5zTWHJaYwJiO98Pfoqhbz9Ln16KrjA
-        jHOuzbJIVt04a54XDyLOAN2xCVvXFrveFwg17aVWOlYW07tUjm2T56I2Q3QCDBMqkNraC0bJFvE
-        vC5LeG+u6q3hGM/B7qInq
-X-Received: by 2002:a05:6808:124b:: with SMTP id o11mr1433377oiv.1.1634764032656;
-        Wed, 20 Oct 2021 14:07:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwSqTE6Jsjle0a7eGnYIXixW4xhZALBq3/tyZIF8DSzw72ba7CeI6EE3sHXL8OySnKnEaUa6w==
-X-Received: by 2002:a05:6808:124b:: with SMTP id o11mr1433350oiv.1.1634764032381;
-        Wed, 20 Oct 2021 14:07:12 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id o21sm598520oou.21.2021.10.20.14.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 14:07:12 -0700 (PDT)
-Date:   Wed, 20 Oct 2021 15:07:09 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211020150709.7cff2066.alex.williamson@redhat.com>
-In-Reply-To: <20211020185919.GH2744544@nvidia.com>
-References: <20211019105838.227569-1-yishaih@nvidia.com>
-        <20211019105838.227569-13-yishaih@nvidia.com>
-        <20211019124352.74c3b6ba.alex.williamson@redhat.com>
-        <20211019192328.GZ2744544@nvidia.com>
-        <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
-        <20211019230431.GA2744544@nvidia.com>
-        <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
-        <20211020105230.524e2149.alex.williamson@redhat.com>
-        <20211020185919.GH2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S231510AbhJTVRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 17:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231445AbhJTVRM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Oct 2021 17:17:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C3ED610EA;
+        Wed, 20 Oct 2021 21:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634764497;
+        bh=V/+W4v5tNf/2ivT8N+EbTjrcdmFRUPSG/ga808dBaC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=R/f+9p4e76pt2xgbttYPaiEwLEWIMzADvFUB/0U6ij35Y3LB6ATEJpgLLGSSC4TOu
+         6Ry7EHkWcrNypsT0HXUmmcCVg56VN0sAxtFq21gVNO3yYCFXI7jqC0/WYC4I6l4uA+
+         sH9FC4JfzD1tcsK936Zox75YD3Jf+t2dMm7KLZb63x5K/HpjjROoNfF1vUwG8qgkBx
+         yN6xm0N/xngEqEFLgWXcDRrrexGvdr2b1jCdhexqeuKwlPnaz3nShceWS9Ey+7RDpE
+         ekXEHip7TDoZz1BYEkzETe2ooqkHYVtLh/VyQ4nsWxyDBm31z/6i9WUrfXo/Bla8X6
+         m9WA40qY89eMQ==
+Date:   Wed, 20 Oct 2021 16:14:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Message-ID: <20211020211455.GA2641031@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bfbac749-7434-1497-039b-3b8bc4dc5499@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 20 Oct 2021 15:59:19 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Wed, Oct 20, 2021 at 12:23:26PM +0200, Hans de Goede wrote:
+> On 10/19/21 23:52, Bjorn Helgaas wrote:
+> > On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
+> >> Some BIOS-es contain a bug where they add addresses which map to system
+> >> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> >> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> >> space").
+> >>
+> >> To work around this bug Linux excludes E820 reserved addresses when
+> >> allocating addresses from the PCI host bridge window since 2010.
+> >> ...
 
-> On Wed, Oct 20, 2021 at 10:52:30AM -0600, Alex Williamson wrote:
+> > I haven't seen anybody else eager to merge this, so I guess I'll stick
+> > my neck out here.
+> > 
+> > I applied this to my for-linus branch for v5.15.
 > 
-> > I'm wondering if we're imposing extra requirements on the !_RUNNING
-> > state that don't need to be there.  For example, if we can assume that
-> > all devices within a userspace context are !_RUNNING before any of the
-> > devices begin to retrieve final state, then clearing of the _RUNNING
-> > bit becomes the device quiesce point and the beginning of reading
-> > device data is the point at which the device state is frozen and
-> > serialized.  No new states required and essentially works with a slight
-> > rearrangement of the callbacks in this series.  Why can't we do that?  
+> Thank you, and sorry about the build-errors which the lkp
+> kernel-test-robot found.
 > 
-> It sounds worth checking carefully. I didn't come up with a major
-> counter scenario.
-> 
-> We would need to specifically define which user action triggers the
-> device to freeze and serialize. Reading pending_bytes I suppose?
+> I've just send out a patch which fixes these build-errors
+> (verified with both .config-s from the lkp reports).
+> Feel free to squash this into the original patch (or keep
+> them separate, whatever works for you).
 
-The first read of pending_bytes after clearing the _RUNNING bit would
-be the logical place to do this since that's what we define as the start
-of the cycle for reading the device state.
+Thanks, I squashed the fix in.
 
-"Freezing" the device is a valid implementation, but I don't think it's
-strictly required per the uAPI.  For instance there's no requirement
-that pending_bytes is reduced by data_size on each iteratio; we
-specifically only define that the state is complete when the user reads
-a pending_bytes value of zero.  So a driver could restart the device
-state if the device continues to change (though it's debatable whether
-triggering an -errno on the next migration region access might be a
-more supportable approach to enforce that userspace has quiesced
-external access).
+HOWEVER, I think it would be fairly risky to push this into v5.15.
+We would be relying on the assumption that current machines have all
+fixed the BIOS defect that 4dc2287c1805 addressed, and we have little
+evidence for that.
 
-> Since freeze is a device command we need to be able to report failure
-> and to move the state to error, that feels bad hidden inside reading
-> pending_bytes.
+I'm not sure there's significant benefit to having this in v5.15.
+Yes, the mainline v5.15 kernel would work on the affected machines,
+but I suspect most people with those machines are running distro
+kernels, not mainline kernels.
 
-That seems like the wrong model.  Reading pending_bytes can return
--errno should an error occur during freeze/serialize, but device_state
-is never implicitly modified.  Upon encountering an error reading
-pending_bytes, userspace would abort the migration and move the
-device_state to a new value.  This is the point at which the driver
-would return another -errno to indicate an unrecoverable internal
-error, or honor the requested new state.
+This issue has been around a long time, so it's not like a regression
+that we just introduced.  If we fixed these machines and regressed
+*other* machines, we'd be worse off than we are now.
 
-> > Maybe a clarification of the uAPI spec is sufficient to achieve this,
-> > ex. !_RUNNING devices may still update their internal state machine
-> > based on external access.  Userspace is expected to quiesce all external
-> > access prior to initiating the retrieval of the final device state from
-> > the data section of the migration region.  Failure to do so may result
-> > in inconsistent device state or optionally the device driver may induce
-> > a fault if a quiescent state is not maintained.  
-> 
-> But on the other hand this seem so subtle and tricky way to design a
-> uAPI that devices and users are unlikely to implement it completely
-> correctly.
+Convince me otherwise if you see this differently :)
 
-I think it's only tricky if device_state is implicitly modified by
-other actions, stopping all devices before collecting the state of any
-of them seems like a reasonable requirement.  It's the same requirement
-we'd add with an NDMA bit.
+In the meantime, here's another possibility for working around this.
+What if we discarded remove_e820_regions() completely, but aligned the
+problem _CRS windows a little more?  The 4dc2287c1805 case was this:
 
-> IMHO the point of the state is to control the current behavior of the
-> device - yes we can control behavior on other operations, but it feels
-> obfuscated.
+  BIOS-e820: 00000000bfe4dc00 - 00000000c0000000 (reserved)
+  pci_root PNP0A03:00: host bridge window [mem 0xbff00000-0xdfffffff]
 
-It is, don't do that.  Fail the migration region operation, fail the
-next device state transition if the internal error is irrecoverable.
- 
-> Especially when the userspace that needs to know about this isn't even
-> deployed yet, let's just do it cleanly?
+where the _CRS window was of size 0x20100000, i.e., 512M + 1M.  At
+least in this particular case, we could avoid the problem by throwing
+away that first 1M and aligning the window to a nice 3G boundary.
+Maybe it would be worth giving up a small fraction (less than 0.2% in
+this case) of questionable windows like this?
 
-That's an option, but again I'm wondering if we're imposing a
-requirement on the !_RUNNING state that doesn't really exist and a
-clean solution exists already.  Thanks,
-
-Alex
-
+Bjorn
