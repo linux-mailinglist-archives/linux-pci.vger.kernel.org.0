@@ -2,120 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB3864351B9
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 19:45:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D6A84352DC
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 20:42:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbhJTRrw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 13:47:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48906 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231332AbhJTRrd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 13:47:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634751918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2hBP0Hfu21rfryuWwyspO9zl4oca+bH25WuLkT22wcc=;
-        b=OGvo1JYIZpHrjIM3pTANYfRJwuYAHN/ZdgKgUAR6XI4ggBJCMjoQdTrDDHGY2NPlVmlJH5
-        EQagJ7sd6Peg2AoxTZGwHaFVBp6dDn6YE/UTM7qNXwLWODzE4tOKpQP1ozO+4Q+yf0FA6q
-        npRYwH0EOiUFsN9neeyur89BHO8PUQU=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-gyp8tgVAOwq0D_yEAvaw3Q-1; Wed, 20 Oct 2021 13:45:17 -0400
-X-MC-Unique: gyp8tgVAOwq0D_yEAvaw3Q-1
-Received: by mail-ot1-f70.google.com with SMTP id k102-20020a9d19ef000000b0054dd5fae7ceso4031898otk.20
-        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 10:45:17 -0700 (PDT)
+        id S231437AbhJTSo4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 14:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231220AbhJTSot (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 14:44:49 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7CBC06161C
+        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 11:42:34 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id i5so10529064pla.5
+        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 11:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=xV+lLzyHVxIjvZzd/hg4IldWQ3x8L8qi3sbsTagkSSs=;
+        b=TuIOj8YFyim2J8mil86Zn96KDzjOVdT3mOZFOySC0eF3BKCfEFNfmSWIlMnkkyInrm
+         ZmXm++geMhpKmeZTQ8P795YaTT6kpX+bbf5NLaZpf9tJOPqpEADX/dNMtvIFraHIx8cI
+         tVZLSbIA7Ku1qhn0dFdZoOSw3cIx+SMkVte+lcrTpvrh/0m8wr1EJO+nhCZ0i5eeNRoT
+         O5a4ieM253RqdB358hkbb2iCcixjQu+ZtluFPRUYMGwMt62Js55dGlZiYkvYP1nLHbYG
+         hwXNaC4P2htEUixW5rDr6QQLLLsELHS2+SqmsAEVQiCwmmCFnVEvaw62gA0V/5KgkHEW
+         KCXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2hBP0Hfu21rfryuWwyspO9zl4oca+bH25WuLkT22wcc=;
-        b=gTNFOaFRjiNoVmR44DJHzo80jAOY+rYAtpfIY1gBo0XDqbMs1wE64Dby6lSGR7JObW
-         c5HyPOsUR/YCmfMxP8eNkxSq5WH2UCPiKlDuAE2l97jzSToS+nf5s4SrPPxv2wsrLceW
-         wn8xFEFGwX3UFSjhJT6eIVy8AmpcPJFuA1w2bbIqEsoMWA3jJaGOF/XSfc5MH8g2SiXs
-         ypWJCuFeNwkEZDEpEl5LmKlMx+Va8u9E0ykuCb1WhCegWPMrkv+OocTEdK78L6ZXvbLV
-         s15k7ZeSPmGwdzYMe2jiuXEkufBVhsLrqgXb7DQMV20Oo4DHgdr/fgf+OcbDV+0I7YVq
-         /mfQ==
-X-Gm-Message-State: AOAM530NXaDcpl6mc/kn5eoTluSbJPSMXt7QDYmU6Iil1mP6qDcHITyy
-        riRFyDt2RNj/GpnsVsOWcamWlelX+l9z2Uq+MM4bDJKwcr4ApDSdmAVJLXwXWXXtfZ/FHJJicc/
-        3u/guOC9lkE62ksq4vpUZ
-X-Received: by 2002:aca:5f05:: with SMTP id t5mr764539oib.6.1634751916603;
-        Wed, 20 Oct 2021 10:45:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxKoHj9L/+cPOQcjxZIt11pD2g7gRAhKD9GAn7fGM9xPBRn3QxFkpALYapm7VHjLzF9mQtvwA==
-X-Received: by 2002:aca:5f05:: with SMTP id t5mr764508oib.6.1634751916398;
-        Wed, 20 Oct 2021 10:45:16 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id n187sm538797oif.52.2021.10.20.10.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 10:45:16 -0700 (PDT)
-Date:   Wed, 20 Oct 2021 11:45:14 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V2 mlx5-next 14/14] vfio/mlx5: Use its own PCI
- reset_done error handler
-Message-ID: <20211020114514.560ce2fa.alex.williamson@redhat.com>
-In-Reply-To: <20211020164629.GG2744544@nvidia.com>
-References: <20211019105838.227569-1-yishaih@nvidia.com>
-        <20211019105838.227569-15-yishaih@nvidia.com>
-        <20211019125513.4e522af9.alex.williamson@redhat.com>
-        <20211019191025.GA4072278@nvidia.com>
-        <5cf3fb6c-2ca0-f54e-3a05-27762d29b8e2@nvidia.com>
-        <20211020164629.GG2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=xV+lLzyHVxIjvZzd/hg4IldWQ3x8L8qi3sbsTagkSSs=;
+        b=PdoHRp9xNDKUHePqKWVYloigGpTmSQ0L9A70bIlHynThX8U8F1gWE5CrhSpSDOh7+u
+         aLssqUiCEsxjqpNRyvJJNHyu95rAI9rfLIuUzTSF4PubmBDGNbRdjiwwlMKX5CJosiiH
+         oLMIeDu66C8OcB1FvclKTv4UE4XaXs4+GjcW1t5r9syxjPi01Ll4z3HIKU7K+KJnbk8f
+         ue3Ko1fMiz/nktkxuRLu1JxgteCc9Pj2JcY/2j9Yd/ZkncYtrVXIIP6SPQa0tduCu5/i
+         G0MiWA474QQAfN1P432d2nVqHrHpSmlU1F1bCmSNdszO+bSXKJM03hgKYIe+O3UeR+Xr
+         v7dA==
+X-Gm-Message-State: AOAM533qBdliACwSvg8HiJs4TTNpc5VFZ1kQEXMKlPyz8DQ73jObTRCv
+        pQSHuXxyXz7dz4cLqHtlBKZgB5WawpqpCBzn2oo=
+X-Google-Smtp-Source: ABdhPJzMlVKDde9LbYNWDM/1d9cmmKmJna50ox2UtRQ5BXigGoqUohfxNV1dC0uKGxzY7XRY8se+oGY1em4GYxUNQPE=
+X-Received: by 2002:a17:90a:f0c9:: with SMTP id fa9mr775943pjb.107.1634755354163;
+ Wed, 20 Oct 2021 11:42:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6a10:bb0b:0:0:0:0 with HTTP; Wed, 20 Oct 2021 11:42:31
+ -0700 (PDT)
+Reply-To: uchennailobi@gmail.com
+From:   uchenna <ohehehe3055@gmail.com>
+Date:   Wed, 20 Oct 2021 11:42:31 -0700
+Message-ID: <CADYWKHznNhSp2heZ0x8Ua69=XN175PATdRwwuMEkcHP-3aXHKA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 20 Oct 2021 13:46:29 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Wed, Oct 20, 2021 at 11:46:07AM +0300, Yishai Hadas wrote:
-> 
-> > What is the expectation for a reasonable delay ? we may expect this system
-> > WQ to run only short tasks and be very responsive.  
-> 
-> If the expectation is that qemu will see the error return and the turn
-> around and issue FLR followed by another state operation then it does
-> seem strange that there would be a delay.
-> 
-> On the other hand, this doesn't seem that useful. If qemu tries to
-> migrate and the device fails then the migration operation is toast and
-> possibly the device is wrecked. It can't really issue a FLR without
-> coordinating with the VM, and it cannot resume the VM as the device is
-> now irrecoverably messed up.
-> 
-> If we look at this from a RAS perspective would would be useful here
-> is a way for qemu to request a fail safe migration data. This must
-> always be available and cannot fail.
-> 
-> When the failsafe is loaded into the device it would trigger the
-> device's built-in RAS features to co-ordinate with the VM driver and
-> recover. Perhaps qemu would also have to inject an AER or something.
-> 
-> Basically instead of the device starting in an "empty ready to use
-> state" it would start in a "failure detected, needs recovery" state.
-
-The "fail-safe recovery state" is essentially the reset state of the
-device.  If a device enters an error state during migration, I would
-think the ultimate recovery procedure would be to abort the migration,
-send an AER to the VM, whereby the guest would trigger a reset, and
-the RAS capabilities of the guest would handle failing over to a
-multipath device, ejecting the failing device, etc.
-
-However, regardless of the migration recovery strategy, userspace needs
-a means to get the device back into an initial state in a deterministic
-way without closing and re-opening the device (or polling for an
-arbitrary length of time).  That's the minimum viable product here.
-Thanks,
-
-Alex
-
+0JTQvtGA0L7Qs9C+0Lkg0LTRgNGD0LMsDQoNCtCa0LDQuiDQv9C+0LbQuNCy0LDQtdGI0Yw/INCv
+INC00YPQvNCw0Y4sINGH0YLQviDQstGLINCyINC/0L7RgNGP0LTQutC1INC4INC30LTQvtGA0L7Q
+stGLLiDQrdGC0L4g0YHQvtC+0LHRidC40YLRjA0K0YfRgtC+INGPINGD0YHQv9C10YjQvdC+INC3
+0LDQutC70Y7Rh9C40Lsg0YHQtNC10LvQutGDLiDQrdGC0L4g0LHRi9C70L4g0LTQsNCy0L3Qvg0K
+0LLRgNC10LzRjyDRgSDQvNC+0LzQtdC90YLQsCDQvdCw0YjQtdCz0L4g0L/QvtGB0LvQtdC00L3Q
+tdCz0L4g0L7QsdGJ0LXQvdC40Y8uINCaINGB0L7QttCw0LvQtdC90LjRjiwg0LLQsNGI0LUg0L/Q
+sNGA0YLQvdC10YDRgdGC0LLQvg0K0YHQviDQvNC90L7QuSDQvdC1INGD0LTQsNC70L7RgdGMINC3
+0LDQstC10YDRiNC40YLRjCDQv9C10YDQtdCy0L7QtCDRgdGA0LXQtNGB0YLQsi4g0K8g0LTRg9C8
+0LDRjiwg0L3QsNGB0YLQsNC70L4g0LLRgNC10LzRjw0K0LrQvtCz0LTQsCDQsdGL0LvQviDRgtCw
+0Log0LzQvdC+0LPQviDQtNCw0LLQu9C10L3QuNGPINC4INC30LDQvNC10YjQsNGC0LXQu9GM0YHR
+gtCy0LAsINGH0YLQviDQstGLINGB0YLQsNC70Lgg0LzQtdC90YzRiNC1DQrQt9Cw0LjQvdGC0LXR
+gNC10YHQvtCy0LDQvSDQsiDRgdC00LXQu9C60LUuDQoNCg0K0JIg0LvRjtCx0L7QvCDRgdC70YPR
+h9Cw0LUg0Y8g0YDQsNC0INGB0L7QvtCx0YnQuNGC0Ywg0LLQsNC8INC+INC80L7QtdC8INGD0YHQ
+v9C10YXQtSDQsiDQv9C+0LvRg9GH0LXQvdC40Lgg0YTQvtC90LTQsA0K0L/QtdGA0LXQtNCw0L3R
+iyDQv9GA0Lgg0YHQvtGC0YDRg9C00L3QuNGH0LXRgdGC0LLQtSDQvdC+0LLQvtCz0L4g0L/QsNGA
+0YLQvdC10YDQsC4g0K8g0YHQtdC50YfQsNGBINCyDQrQktC10L3QtdGB0YPRjdC70LAg0L7QsSDQ
+uNC90LLQtdGB0YLQuNGG0LjRj9GFLiDQntC00L3QsNC60L47INGPINC90LUg0LfQsNCx0YvQuyDR
+gtCy0L7QuCDQv9GA0L7RiNC70YvQtSDRg9GB0LjQu9C40Y8g0LgNCtC/0YvRgtCw0LXRgtGB0Y8g
+0L/QvtC80L7Rh9GMINC80L3QtSDQsiDQv9C10YDQtdCy0L7QtNC1INGB0YDQtdC00YHRgtCyLCDQ
+vdC10YHQvNC+0YLRgNGPINC90LAg0YLQviwg0YfRgtC+INC80YsNCtC90LUg0YHQvNC+0LMg0L/R
+gNC40LnRgtC4INC6INC60L7QvdC60YDQtdGC0L3QvtC80YMg0LLRi9Cy0L7QtNGDLg0KDQrQkiDQ
+t9C90LDQuiDQv9GA0LjQt9C90LDRgtC10LvRjNC90L7RgdGC0Lgg0LfQsCDQstCw0YjRgyDQv9C+
+0L/Ri9GC0LrRgyDQv9C+0LzQvtGH0YwsINGPINC4INC80L7QuSDQvdC+0LLRi9C5INC/0LDRgNGC
+0L3QtdGAINC00L7RgdGC0LjQs9C70LgNCtGA0LXRiNC10L3QuNC1INC+INGC0L7QvCwg0YfRgtC+
+INCy0Ysg0LfQsNGB0LvRg9C20LjQstCw0LXRgtC1INC60L7QvNC/0LXQvdGB0LDRhtC40LgsINC/
+0L7RjdGC0L7QvNGDINGN0YLQviDQv9C40YHRjNC80L4NCtGB0L7QvtCx0YnQsNGOINCy0LDQvCwg
+0YfRgtC+INGPINC+0YHRgtCw0LLQuNC7INC60L7QvNC/0LXQvdGB0LDRhtC40Y4g0LIg0YDQsNC3
+0LzQtdGA0LUgMzUwIDAwMCDQtNC+0LvQu9Cw0YDQvtCyINCh0KjQkA0K0L3QsCDQstCw0YjQtSDQ
+uNC80Y8sINGH0YLQvtCx0YsNCtCS0Ysg0L/QvtC00LXQu9C40YLQtdGB0Ywg0YHQviDQvNC90L7Q
+uSDRgNCw0LTQvtGB0YLRjNGOLiDQodC+0LLQtdGC0YPRjiDQvtCx0YDQsNGC0LjRgtGM0YHRjyDQ
+siDQsdCw0L3QuiBCVENJINC00LvRjyDQv9C+0LvRg9GH0LXQvdC40Y8NCtC/0LXRgNC10LLQvtC0
+ICQgMzUwLDAwMC4wMC4g0KfRgtC+0LHRiyDQuNC30LHQtdC20LDRgtGMINC00L7Qu9Cz0L7QuSDQ
+t9Cw0LTQtdGA0LbQutC4INCy0YvQv9C70LDRgtGLDQrQutC+0LzQv9C10L3RgdCw0YbQuNC+0L3Q
+vdC+0LPQviDRhNC+0L3QtNCwDQrQv9C10YDQtdCy0L7QtCwg0Y8g0L/QvtGA0YPRh9C40Lsg0LHQ
+sNC90LrRgyBCVENJINCy0YvQv9GD0YHRgtC40YLRjCDQvNC10LbQtNGD0L3QsNGA0L7QtNC90YPR
+jiDQsdCw0L3QutC+0LzQsNGC0L3Rg9GOINC60LDRgNGC0YMgdmlzYQ0K0Lgg0L7RgtC/0YDQsNCy
+0YzRgtC1INC10LPQviDQvdCwINC00L7QvNCw0YjQvdC40Lkg0LDQtNGA0LXRgSDQutGD0YDRjNC1
+0YDRgdC60L7QuSDRgdC70YPQttCx0L7QuS4NCg0K0JrQvtC90YLQsNC60YLQvdCw0Y8g0LjQvdGE
+0L7RgNC80LDRhtC40Y8g0LHQsNC90LrQsCDRg9C60LDQt9Cw0L3QsCDQvdC40LbQtToNCg0K0J3Q
+sNC30LLQsNC90LjQtSDQsdCw0L3QutCwOiBCVENJIEJhbmsNCtCt0LvQtdC60YLRgNC+0L3QvdGL
+0Lkg0LDQtNGA0LXRgTogYnRjYmFua3RnNDc4QGdtYWlsLmNvbQ0K0JDQtNGA0LXRgTogMTY5LCBC
+b3VsZXZhcmQgZHUgMTMgamFudmllciBCUCAzNjMgTG9tw6ksINCi0L7Qs9C+Lg0K0JrQvtC90YLQ
+sNC60YLQvdC+0LUg0LvQuNGG0L46INCzLdC9INCb0LXQvtC90LDRgNC0INCc0LDRgtC40LDRgQ0K
+DQrQodC+0L7QsdGJ0LjRgtC1INC80L3QtSwg0LrQsNC6INGC0L7Qu9GM0LrQviDQv9C+0LvRg9GH
+0LjRgtC1INC60LDRgNGC0YMgVmlzYSDQtNC70Y8g0LHQsNC90LrQvtC80LDRgtC+0LIg0L7RgiDQ
+sdCw0L3QutCwDQpCVENJLiDRhdC+0YLQtdC7INCx0Ysg0Y8NCtCS0LDQvCDRg9GB0L/QtdGF0L7Q
+siDQstC+INCy0YHQtdGFINC90LDRh9C40L3QsNC90LjRj9GFLg0KDQrQoSDRg9Cy0LDQttC10L3Q
+uNC10LwNCtCR0LDRgNGA0LjRgdGC0LXRgCDRg9GH0LXQvdC90LAg0LjQu9C+0LHQuA0K
