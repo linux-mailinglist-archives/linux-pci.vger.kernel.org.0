@@ -2,75 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83E1D434C47
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:41:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD0C2434C4A
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 15:42:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbhJTNnr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 09:43:47 -0400
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:46853 "EHLO
+        id S230049AbhJTNom (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 09:44:42 -0400
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:45039 "EHLO
         mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbhJTNnr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 09:43:47 -0400
-Received: by mail-oi1-f175.google.com with SMTP id o204so9630883oih.13;
-        Wed, 20 Oct 2021 06:41:32 -0700 (PDT)
+        with ESMTP id S229639AbhJTNom (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 09:44:42 -0400
+Received: by mail-oi1-f175.google.com with SMTP id y207so9648522oia.11;
+        Wed, 20 Oct 2021 06:42:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=R+f9jX4gENJ9ZTepD8KkqshKnHoLg5Qaf4KS0HjJ+5g=;
-        b=hmDTM4imIOVluJqVeOEtsi2VHf2gmChp5WS+X3FGKhMMsKW4dGNf26BQFQK2YWLd8L
-         VFHFtzADPmTuRuiCFZCFaKrDzVXmqung9Mv5kgGi4/RZ9tL6UNx5AB+SXayL3Rh6Ee2A
-         Sw3hTGPk+8PHYDhXEy1zGuecJ7dhrEvMg9qdFTcDKDg4GNWledZJILSCEqW2uS6/CI4g
-         mUN6xIyq79Gwf9b2yW+12dF3WQ6UyQ5Pro+5DfI0oP0bZy6esE6QPVdaSJWnssWUp63W
-         c5C9eyICXOK8TeHfUfE5uhtW2JNjnLv6OQGGSU3nWvcbs3Ouq5I4CyexmkNFl79K2idh
-         qMTw==
-X-Gm-Message-State: AOAM532uWNrmy41njGBQOk6dihm7jdlMFGFeqBszyLVsyVOdVL7EIJ0X
-        s+ZgsdIZtTwFuRC8WISeTjvXu/aOBA==
-X-Google-Smtp-Source: ABdhPJwUOSFqTpPy8Y5D71BOVCigV0itLv+Rj8nhwBqumAIK22KTKiHdOIOhP6DCgvowuCfdDs2saw==
-X-Received: by 2002:a05:6808:2389:: with SMTP id bp9mr9574873oib.140.1634737292382;
-        Wed, 20 Oct 2021 06:41:32 -0700 (PDT)
+        bh=C3zm8nKj/VABcyLNvlJFABEEbLCD2W5bXoiX6pdtUtw=;
+        b=0OSSiWrcURMGdYQcZWNf2AAWvQ6xL7LsH/JU57BzATJAKUldenOQemaNC0dm3MugPu
+         sGYrfU2gJonTAppQcW8DpUBqPNBj1hLY3YLG3WOb/V4hHaz+YghsvZEod7n1cX+WdLQ7
+         UQTIs8+kZwIvGzIbr+7pY6MTGUQ3+2k2ensfhDo3KITmvGoNSXc1c3lnOYLH9nbyRR67
+         E8tIy41Q+PlK+XqYMruumDhJm6slsiv89K6BIPENwnrok6Hjw9Xf/6xN7BfsVZ0IKcGS
+         lRVYGyGpFBKt73sRlRT7qxCU4nOZUwI5+vehXey1Eye4BcFmkJKeo0Sxp9oL8zCdilXx
+         vtdA==
+X-Gm-Message-State: AOAM5325bDdG/R7n6LaTT42tQOCHAxptATzsdTseuWBVmT4N+Dh7fgZ4
+        FE5S/ed/qa/E575d1ahhdi6TI0n/hQ==
+X-Google-Smtp-Source: ABdhPJy8z4v0lJpsQMD8Slg1JZ9MvgPFDcFKsDrCYO60tYePf2Ras0QIpJseUJhBtzS/Z/i4z8BVYQ==
+X-Received: by 2002:aca:3c87:: with SMTP id j129mr9607754oia.157.1634737347723;
+        Wed, 20 Oct 2021 06:42:27 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id s18sm465022otd.55.2021.10.20.06.41.31
+        by smtp.gmail.com with ESMTPSA id k4sm436183oic.48.2021.10.20.06.42.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 06:41:31 -0700 (PDT)
-Received: (nullmailer pid 2247038 invoked by uid 1000);
-        Wed, 20 Oct 2021 13:41:30 -0000
-Date:   Wed, 20 Oct 2021 08:41:30 -0500
+        Wed, 20 Oct 2021 06:42:27 -0700 (PDT)
+Received: (nullmailer pid 2248211 invoked by uid 1000);
+        Wed, 20 Oct 2021 13:42:26 -0000
+Date:   Wed, 20 Oct 2021 08:42:26 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Naveen Naidu <naveennaidu479@gmail.com>
 Cc:     bhelgaas@google.com,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v2 02/24] PCI: Set error response in config access
- defines when ops->read() fails
-Message-ID: <YXAciic84q49qoZm@robh.at.kernel.org>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/24] PCI: Remove redundant error fabrication when
+ device read fails
+Message-ID: <YXAcws0S2xBvjsDb@robh.at.kernel.org>
 References: <cover.1634306198.git.naveennaidu479@gmail.com>
- <b913b4966938b7cad8c049dc34093e6c4b2fae68.1634306198.git.naveennaidu479@gmail.com>
+ <0114a4a44ceacfbd6a7859d8613ca5942f5b35d7.1634306198.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b913b4966938b7cad8c049dc34093e6c4b2fae68.1634306198.git.naveennaidu479@gmail.com>
+In-Reply-To: <0114a4a44ceacfbd6a7859d8613ca5942f5b35d7.1634306198.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 07:58:17PM +0530, Naveen Naidu wrote:
-> Make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value with error
-> response (~0), when the PCI device read by a host controller fails.
+On Fri, Oct 15, 2021 at 08:08:45PM +0530, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error. There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
 > 
-> This ensures that the controller drivers no longer need to fabricate
-> (~0) value when they detect error. It also  gurantees that the error
-> response (~0) is always set when the controller drivers fails to read a
-> config register from a device.
+> The host controller drivers sets the error response values (~0) and
+> returns an error when faulty hardware read occurs. But the error
+> response value (~0) is already being set in PCI_OP_READ and
+> PCI_USER_READ_CONFIG whenever a read by host controller driver fails.
 > 
-> This makes error response fabrication consistent and helps in removal of
-> a lot of repeated code.
+> Thus, it's no longer necessary for the host controller drivers to
+> fabricate any error response.
 > 
-> Suggested-by: Rob Herring <robh@kernel.org>
+> This helps unify PCI error response checking and make error check
+> consistent and easier to find.
+> 
 > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 > ---
->  drivers/pci/access.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/pci/access.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
