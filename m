@@ -2,109 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E07EB435528
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 23:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 918DD435556
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 23:38:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231510AbhJTVRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 17:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231445AbhJTVRM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Oct 2021 17:17:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C3ED610EA;
-        Wed, 20 Oct 2021 21:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634764497;
-        bh=V/+W4v5tNf/2ivT8N+EbTjrcdmFRUPSG/ga808dBaC4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=R/f+9p4e76pt2xgbttYPaiEwLEWIMzADvFUB/0U6ij35Y3LB6ATEJpgLLGSSC4TOu
-         6Ry7EHkWcrNypsT0HXUmmcCVg56VN0sAxtFq21gVNO3yYCFXI7jqC0/WYC4I6l4uA+
-         sH9FC4JfzD1tcsK936Zox75YD3Jf+t2dMm7KLZb63x5K/HpjjROoNfF1vUwG8qgkBx
-         yN6xm0N/xngEqEFLgWXcDRrrexGvdr2b1jCdhexqeuKwlPnaz3nShceWS9Ey+7RDpE
-         ekXEHip7TDoZz1BYEkzETe2ooqkHYVtLh/VyQ4nsWxyDBm31z/6i9WUrfXo/Bla8X6
-         m9WA40qY89eMQ==
-Date:   Wed, 20 Oct 2021 16:14:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
- windows on newer systems
-Message-ID: <20211020211455.GA2641031@bhelgaas>
+        id S230330AbhJTVkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 17:40:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35762 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230287AbhJTVkd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 17:40:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634765897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XbdsG4EcQisr17Iskog0vXpruq6STxaIgx5C21IY1Zo=;
+        b=H1j3fNi78hTHI35eFdB4sohqnb/FPCjOEsYXidOKEUrJMaRZn0Sj6pKlJcj9MZW4CzLlS3
+        U2RS1P0TgmqWcH0s/Q286GL0M6E/SHr5GbinpUgULm9wOYArO9vh2GDVEkPPPJAKGbFVs3
+        9A84kDGgoiScfdEZfh8jSSxfIY2tQzk=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-592-p-biOCkvOdilTTTUuxJNAw-1; Wed, 20 Oct 2021 17:38:16 -0400
+X-MC-Unique: p-biOCkvOdilTTTUuxJNAw-1
+Received: by mail-ot1-f70.google.com with SMTP id z15-20020a9d71cf000000b0055036817463so4430223otj.0
+        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 14:38:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XbdsG4EcQisr17Iskog0vXpruq6STxaIgx5C21IY1Zo=;
+        b=txURxWSHXZcXMlW6nOA0f077zxOoYjQPZ19j620lDk2kz3Hjptkx99Huzj7qpEY6aU
+         V/JIe5r9HhU0hKiyuhQ5ZxGjc7UIBvUF+jBOKSV1K5qlTD0vv2Y5o0/o2FktYd0PQAJi
+         RIUaOXnE9Z/187DZG7CS3hDtk0swpiMlgzyV26LJcVQG91GR/occB5fAub+Wt9eubx8d
+         baiow5V++iS3oUZxxBBRHnJjce8krWq1rvAvnKw16zcuYJZwTBfwPE4IG4MnIHtlR0bh
+         moBXCfbMSnvCTC4KNZDjZ6OfSGS2AGRiFK5jT1wGFORKVyVchYplGzfq4pflirlHt8jV
+         HiFw==
+X-Gm-Message-State: AOAM530NSgb9t8KKDS5LBNLR3pHbvN6cMqFL6dJM9+I6JKKAKMnqdohT
+        /DH2HxltXUGYjPXnAQKE7HBhJwiD3PBMDuR/iaUq6/WTND3doocpLxCYtnmP4a78IzfxiBMHc7l
+        hm9wIYIwkgfM14qXBRWCZ
+X-Received: by 2002:a05:6830:23a6:: with SMTP id m6mr1395871ots.38.1634765896057;
+        Wed, 20 Oct 2021 14:38:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcYwv8zbsaoSRcNVZjvX/sdYTsJO3gGahLP/SP6a466G/UR5ZPiviXT+kWQPZGr7oDTSa6RQ==
+X-Received: by 2002:a05:6830:23a6:: with SMTP id m6mr1395858ots.38.1634765895851;
+        Wed, 20 Oct 2021 14:38:15 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id n17sm646213oic.21.2021.10.20.14.38.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 14:38:15 -0700 (PDT)
+Date:   Wed, 20 Oct 2021 15:38:14 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V2 mlx5-next 14/14] vfio/mlx5: Use its own PCI
+ reset_done error handler
+Message-ID: <20211020153814.61477e2e.alex.williamson@redhat.com>
+In-Reply-To: <20211020185721.GA334@nvidia.com>
+References: <20211019105838.227569-1-yishaih@nvidia.com>
+        <20211019105838.227569-15-yishaih@nvidia.com>
+        <20211019125513.4e522af9.alex.williamson@redhat.com>
+        <20211019191025.GA4072278@nvidia.com>
+        <5cf3fb6c-2ca0-f54e-3a05-27762d29b8e2@nvidia.com>
+        <20211020164629.GG2744544@nvidia.com>
+        <20211020114514.560ce2fa.alex.williamson@redhat.com>
+        <20211020185721.GA334@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bfbac749-7434-1497-039b-3b8bc4dc5499@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 12:23:26PM +0200, Hans de Goede wrote:
-> On 10/19/21 23:52, Bjorn Helgaas wrote:
-> > On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
-> >> Some BIOS-es contain a bug where they add addresses which map to system
-> >> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
-> >> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> >> space").
-> >>
-> >> To work around this bug Linux excludes E820 reserved addresses when
-> >> allocating addresses from the PCI host bridge window since 2010.
-> >> ...
+On Wed, 20 Oct 2021 15:57:21 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> > I haven't seen anybody else eager to merge this, so I guess I'll stick
-> > my neck out here.
+> On Wed, Oct 20, 2021 at 11:45:14AM -0600, Alex Williamson wrote:
+> > On Wed, 20 Oct 2021 13:46:29 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >   
+> > > On Wed, Oct 20, 2021 at 11:46:07AM +0300, Yishai Hadas wrote:
+> > >   
+> > > > What is the expectation for a reasonable delay ? we may expect this system
+> > > > WQ to run only short tasks and be very responsive.    
+> > > 
+> > > If the expectation is that qemu will see the error return and the turn
+> > > around and issue FLR followed by another state operation then it does
+> > > seem strange that there would be a delay.
+> > > 
+> > > On the other hand, this doesn't seem that useful. If qemu tries to
+> > > migrate and the device fails then the migration operation is toast and
+> > > possibly the device is wrecked. It can't really issue a FLR without
+> > > coordinating with the VM, and it cannot resume the VM as the device is
+> > > now irrecoverably messed up.
+> > > 
+> > > If we look at this from a RAS perspective would would be useful here
+> > > is a way for qemu to request a fail safe migration data. This must
+> > > always be available and cannot fail.
+> > > 
+> > > When the failsafe is loaded into the device it would trigger the
+> > > device's built-in RAS features to co-ordinate with the VM driver and
+> > > recover. Perhaps qemu would also have to inject an AER or something.
+> > > 
+> > > Basically instead of the device starting in an "empty ready to use
+> > > state" it would start in a "failure detected, needs recovery" state.  
 > > 
-> > I applied this to my for-linus branch for v5.15.
+> > The "fail-safe recovery state" is essentially the reset state of the
+> > device.  
 > 
-> Thank you, and sorry about the build-errors which the lkp
-> kernel-test-robot found.
+> This is only the case if qemu does work to isolate the recently FLR'd
+> device from the VM until the VM acknowledges that it understands it is
+> FLR'd.
 > 
-> I've just send out a patch which fixes these build-errors
-> (verified with both .config-s from the lkp reports).
-> Feel free to squash this into the original patch (or keep
-> them separate, whatever works for you).
+> At least it would have to remove it from CPU access and the IOMMU, as
+> though the memory enable bit was cleared.
+> 
+> Is it reasonable to do this using just qemu, AER and no device
+> support?
 
-Thanks, I squashed the fix in.
+I suspect yes, worst case could be a surprise hot-remove or DPC event,
+but IIRC Linux will reset a device on a fatal AER error regardless of
+the driver.
 
-HOWEVER, I think it would be fairly risky to push this into v5.15.
-We would be relying on the assumption that current machines have all
-fixed the BIOS defect that 4dc2287c1805 addressed, and we have little
-evidence for that.
+> > If a device enters an error state during migration, I would
+> > think the ultimate recovery procedure would be to abort the migration,
+> > send an AER to the VM, whereby the guest would trigger a reset, and
+> > the RAS capabilities of the guest would handle failing over to a
+> > multipath device, ejecting the failing device, etc.  
+> 
+> Yes, this is my thinking, except I would not abort the migration but
+> continue on to the new hypervisor and then do the RAS recovery with
+> the new device.
 
-I'm not sure there's significant benefit to having this in v5.15.
-Yes, the mainline v5.15 kernel would work on the affected machines,
-but I suspect most people with those machines are running distro
-kernels, not mainline kernels.
+Potentially a valid option, QEMU might optionally insert a subsection in
+the migration stream to indicate the device failed during the migration
+process.  The option might also allow migrating devices that don't
+support migration, ie. the recovery process on the target is the same.
+This is essentially a policy decision and I think QEMU probably leans
+more towards failing the migration and letting a management tool
+decided on the next course of action.  Thanks,
 
-This issue has been around a long time, so it's not like a regression
-that we just introduced.  If we fixed these machines and regressed
-*other* machines, we'd be worse off than we are now.
+Alex
 
-Convince me otherwise if you see this differently :)
-
-In the meantime, here's another possibility for working around this.
-What if we discarded remove_e820_regions() completely, but aligned the
-problem _CRS windows a little more?  The 4dc2287c1805 case was this:
-
-  BIOS-e820: 00000000bfe4dc00 - 00000000c0000000 (reserved)
-  pci_root PNP0A03:00: host bridge window [mem 0xbff00000-0xdfffffff]
-
-where the _CRS window was of size 0x20100000, i.e., 512M + 1M.  At
-least in this particular case, we could avoid the problem by throwing
-away that first 1M and aligning the window to a nice 3G boundary.
-Maybe it would be worth giving up a small fraction (less than 0.2% in
-this case) of questionable windows like this?
-
-Bjorn
