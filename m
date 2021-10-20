@@ -2,221 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 891C0434784
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 11:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4DD5434829
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 11:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbhJTJDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Oct 2021 05:03:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23593 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229600AbhJTJDp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Oct 2021 05:03:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634720491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hiiori2pDPMIM5jGb2jBjJEZ34cwSk9hIYaLjsY3xNQ=;
-        b=Q0GqC4M8N8m4WPkBDlQJBBkJEe227dpmWoOUyWOCW9A7VoH83ydELaIpaN2sJ9rPtXjkq7
-        7Tg4L3KbeDTAosaiamtPUN01mDfNk+VL2iyTMyhLNsJnf7O36EGHIGP6avBog5Z2DscCh5
-        ibA6m00xxU+KoBbFnKLQyYv11ttowCw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-d0mcwiDlMAq2xmsLN6jPhA-1; Wed, 20 Oct 2021 05:01:30 -0400
-X-MC-Unique: d0mcwiDlMAq2xmsLN6jPhA-1
-Received: by mail-ed1-f72.google.com with SMTP id l10-20020a056402230a00b003db6977b694so20311500eda.23
-        for <linux-pci@vger.kernel.org>; Wed, 20 Oct 2021 02:01:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=hiiori2pDPMIM5jGb2jBjJEZ34cwSk9hIYaLjsY3xNQ=;
-        b=12/UOmHtc993dBBLCL+HItoT7JD038OSzURLVTty5sjeuirOO+yLStNzbqsdIb5a1/
-         nwina9wtjVY3ySgjVTaOShqakIDYx2ozlaO+biIEhDYd1KA+ivyyowmKiucr0+4LX/ag
-         0NL62m+1BQtKmDyR0FopRRc7n1L0ELPvNhK2Aj8a6J/wW46Ie4qaeQeLeiWKE6Zk4e4I
-         GjOXcCvjpXemx6C4cnPoXgm4wDLKGuMwvP4eCmICVaPiTE2u50AOKVSW3WBKrv4anAJx
-         anmnawPtflJ+Pu8Q6vhTX1DTb/B83pfDqv5506JGal+dDS+YF74mw9+Lqkpd+yiQX8xs
-         6EpQ==
-X-Gm-Message-State: AOAM533BrFSkZv1xQtMliIZyaBydTwtYTtBLqlE/jb//Jp/4tVkLzIqJ
-        0+GLzQaXH2m2MJWQq+dBWATwmImX5OGdOLQ0UR11PhEmPIXT/Zr9ZmOPxuje9VIlGD/KAwrRtmE
-        CWoAJRx8QAQCdddlOAbUq
-X-Received: by 2002:a17:906:4f19:: with SMTP id t25mr44743209eju.176.1634720488745;
-        Wed, 20 Oct 2021 02:01:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfNwjSMauDQ85mzygTguVk3LpUvmBdqU1PjDUVgybcAVwRk6u0E5I3AKF20erJ8guOexlYJQ==
-X-Received: by 2002:a17:906:4f19:: with SMTP id t25mr44743191eju.176.1634720488551;
-        Wed, 20 Oct 2021 02:01:28 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q11sm820275edv.80.2021.10.20.02.01.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Oct 2021 02:01:28 -0700 (PDT)
-Message-ID: <b5bd6c72-9032-1267-d5a5-3fa628e6aad5@redhat.com>
-Date:   Wed, 20 Oct 2021 11:01:27 +0200
+        id S229704AbhJTJtE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Oct 2021 05:49:04 -0400
+Received: from mail-eopbgr1310115.outbound.protection.outlook.com ([40.107.131.115]:33766
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229632AbhJTJtD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Oct 2021 05:49:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MYLYptUtaketm/58abn+E6HMDK5s3PvFuZ8wN2HNDqWagHj+pBYA0UpODYePuhC9sNLQ9sfw7JUx7F5ULZcNinJwUD4KnI/w9PlfwsKfk/x+nwLQjDZF1UrSydxjwFEjGXQhDe47gp2/vx1f75MoeBPq3IlcWFgTVM0K7jl9LxHqanjEu8v/Y18z++e2s56+H4Qh3FxAA/4LNJeQWrLHcFvPcSFyrQpy3YIMUS70fGABJgjA76dscb0Wt3BPGizRpmIZobVXEo91YOPZNMKv/CsxSYuO1PnzSLNkPdj+gu6Hh6D/nyuKzN90yoKk4FXDcJxExjRmIby0qjLFsSBDTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yp7+v1Z5fpq+28LU14WutBeNjTzq9AsbOmyoS6FDwVg=;
+ b=TKY7xwMDR77Fs7oVnGLwjamugfTKV27uJh3cvtIDwZN9qHMVuTgoS2CQe7btcqa5GQ5eQB4xsrhe3cL7CajyZKTYA4/yYInEuy8WO71o9lJlk0OStftlwA6tu2dGdxSooWC87nZTQmhS44wg/2VNd4Nn1RdxFXxSKVFXi8oepWnixlqoNoXZj6owXtJbem6z/J2NMpE3Fn0Sx1gAEjZdvjESXATwhn2CxewEAi1KIEYOiUho1FNcurrSxDpUGpXsEy4qBSmXdYZWzchc3kClTilmWsUydwUhwOhvcDdLM38cE832DyZ4vJO0HccUx/g6++R0doXPEKtn7rEV6YJtig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yp7+v1Z5fpq+28LU14WutBeNjTzq9AsbOmyoS6FDwVg=;
+ b=A/wQ6h5z8g2d/vdfIsyZd64rR1Hy30Ofuc14qUGOtiPg7/iBeALlUPBKejPJqhpNo91JTDjAOs2c8lH3DA50wZmkStkua5GMhluAuHXniFYlinyMDnUAq5uD/6W53PoWUDMVPSsVP18I8SeCTqytLVGGp+5paOm5D9u8A2x9BRs=
+Authentication-Results: ellerman.id.au; dkim=none (message not signed)
+ header.d=none;ellerman.id.au; dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
+ SG2PR06MB2858.apcprd06.prod.outlook.com (2603:1096:4:1b::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4608.18; Wed, 20 Oct 2021 09:46:42 +0000
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::fc12:4e1b:cc77:6c0]) by SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::fc12:4e1b:cc77:6c0%6]) with mapi id 15.20.4628.016; Wed, 20 Oct 2021
+ 09:46:42 +0000
+From:   Wan Jiabing <wanjiabing@vivo.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kael_w@yeah.net, Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH] PCI/hotplug: Remove unneeded of_node_put() in pnv_php
+Date:   Wed, 20 Oct 2021 05:46:04 -0400
+Message-Id: <20211020094604.2106-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0129.apcprd02.prod.outlook.com
+ (2603:1096:202:16::13) To SG2PR06MB3367.apcprd06.prod.outlook.com
+ (2603:1096:4:78::19)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [helgaas-pci:for-linus 1/1] arch/x86/include/asm/pci_x86.h:142:8:
- warning: '__gnu_inline__' attribute only applies to functions
-Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <202110201321.kUDqiXb2-lkp@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <202110201321.kUDqiXb2-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Received: from localhost.localdomain (203.90.234.87) by HK2PR02CA0129.apcprd02.prod.outlook.com (2603:1096:202:16::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16 via Frontend Transport; Wed, 20 Oct 2021 09:46:41 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c7be830c-042f-4b98-45c2-08d993ae8570
+X-MS-TrafficTypeDiagnostic: SG2PR06MB2858:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SG2PR06MB2858897E79643157A0C00C1AABBE9@SG2PR06MB2858.apcprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UVgfnhQ3SwNIXgQAjAqEMR+KaJ7jc9EEfbLOaREhYju9NwcEmpXo8rqjefdt8qS17H0VnMSJlqZDssZP5n8X++NBI6VUWy7lQVo83PGR7X/DpdYQkVp/PKgQonejdUBVFEhZDRXB0aj2MA+5HLOcZXCbGAOBDCzI7HWUqQ0ZVErMy8hlHfEWnQe/sVb2V7tcSl2q/eGBpuX6dPh6iMUCp0kbGsrSXE5KjhTNSrhHH6UjfLvf2xhbDOEdKds3EWv4jOpvP1YfTlZybD7YWVzASXwa1SaeVPE6D8ElXTMoyEWeOJWEJ+Z4wIfzJna7tKTMttt/y01RH/LoZjnGm9PPQgmUYMcL0fHCPo/pCz0vj6g0Tvypg40sJ8aoYyJXNUJ4bEznbW5qQ9vF62Y7npFusuBx40vCGo82JZI8FIkF8WwJ4Bn5msmJgtiUWEb4/78isYC8Ve3WrhCRuv7GNoMg1gCvrGkJUg6qKAUNtk6QnLgGC+ecvm3OBZDyvSb9Nh0+JNNRJXe8bqQ1Tn+3B5UrOtAn6gKS1gdzzbe7oG1NeHuNQe5iqG06WuSjKYNtAmYVizeyLshFYQuYD2XPPpgRE+my3CujnyLDQXxMwBDgMkbUT//uisK0PhONcjbstV4FUwJBfEvEZl7ehGz8J74cb7c9V2hYJJ6n0c+OS3aQvnpxfctbo8aWbbJYfnEoIWBcq5TlcaAD1kvrXzFbSoZDqQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38350700002)(38100700002)(66556008)(66476007)(36756003)(4326008)(26005)(8936002)(1076003)(107886003)(2616005)(508600001)(86362001)(956004)(6512007)(6506007)(83380400001)(52116002)(66946007)(6486002)(316002)(5660300002)(4744005)(6666004)(110136005)(2906002)(186003)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mGiPirVU+UFwHvLM4sKbk0KR1zxvLAHWCKR5LsahkpdVnusmJTiyV6lFu0y9?=
+ =?us-ascii?Q?ZgF+aS45xNdqtMutFahyFgxVEQTdr4y9Z2o8ub4Zdr9SoPiJLTFmw5WgYtfH?=
+ =?us-ascii?Q?ltDeV76c8m8dL2elWgVRKGnXAY39NUskTKzD9YI7YH3x/5NlBeIzu06heyAJ?=
+ =?us-ascii?Q?MlLr46xjb25KGqM2F/kHi2Qd9jSFkMz9odpg6qljA4/iUcingkQKiT4yjTx6?=
+ =?us-ascii?Q?uRY5RS4bV9KtMjsCUfEss/6l9jwv0uLNkDaoWB8gyIuGb1A5an7xdWhkQLrw?=
+ =?us-ascii?Q?/hT2c2eJVWKQbN2b+4sEnWRaK6+JH/uP7EvzHnb5pgccZbh9rPClCrftQGNf?=
+ =?us-ascii?Q?pmaH3SDFbrt1zTSGuLa2mGGpcGm5jQBRTHRyWvrzYi0x4DFFZhTrdIXv1D50?=
+ =?us-ascii?Q?VQl4OCGTgUcqEBo5vVhvTqe8rxJW3oxumSZFoqfw/I6ecMqzTjRPYxEvu8EN?=
+ =?us-ascii?Q?//GkkQ6RzCteqbhtZwEFHUGmyXhMC2XbkxG7eMOkwLzu/PIQxN7zTE6AZls2?=
+ =?us-ascii?Q?o54LDn0MJqIsGv3wFFJhEbR0CGAN97FLHHLv/kUH/J7jhv3WnJt+ElYoIKEi?=
+ =?us-ascii?Q?nsEesnxYQdcl/OZcDbWymZjzPi/9symTA8z5CBebMffsjBkccy5F8xn5SaH8?=
+ =?us-ascii?Q?aC+kj3jDUdiymR44EibT9P+o3iPP6KBnWKkuYPIrIytnABqdOw1yzrb331Y5?=
+ =?us-ascii?Q?yvpM3AkbXIxLYm9yxnUQU0ChyhVvInd+QBbbe3R3fB3Qz0QwM/txZNeOpBge?=
+ =?us-ascii?Q?FFx2uUqD8p+54T8/V17OhEEPULMRQCvUAL5WgZcvK2jW7ftqwXk0+N50Vu4C?=
+ =?us-ascii?Q?oLT3YS+j0YZuwBIlELPQm83KDReQZVoCtEWhJDW1V7m4dJ+tjPZEDrZzOTS4?=
+ =?us-ascii?Q?R0XcSwATlp2aK0IiEnB7W5hd3HSRfE/X9Y5uzM7TVSM4sKBF2g9/VLxRmJ+T?=
+ =?us-ascii?Q?dt2rTIm8tzxZiPMff1C7rTVHZcnO/xIwDFSucvQmaCNY0gWp2TKAqUgeD849?=
+ =?us-ascii?Q?VedK9sI2bD+BF1Qvtf/lSJgtlyeUyNn2aaRTIKFlo4/mBM1IQ6YGHQTT9Q5q?=
+ =?us-ascii?Q?aly3kVtn6IKeicPWi83OaSj6cGyz5qH+DG3kLt8NlTFUZAxyEOqYI98MMTFJ?=
+ =?us-ascii?Q?iuGMSx8QivHwI8FUkO+TyeoufwH7k0nKLLBo4N4COzZSR4GgSXQ0C6cMG/o4?=
+ =?us-ascii?Q?LfIC0FqaSKOOuIqkd2wy6c0+wRRPsghzZwl3V/NH4mBxIdAHTEPIqHdCeVPJ?=
+ =?us-ascii?Q?/dhqKDVgHf0DV4yx88UcQp3041lwDaoMdxbhvBdvuLN38bulBw0rDdPH1S93?=
+ =?us-ascii?Q?QYmGO/E617c+JNCV/EDgisWW?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7be830c-042f-4b98-45c2-08d993ae8570
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2021 09:46:42.5124
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 11126903@vivo.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB2858
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Fix following coccicheck warning:
+./drivers/pci/hotplug/pnv_php.c:161:2-13: ERROR: probable double put.
 
-On 10/20/21 07:28, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-> head:   f10507a66e36dde76d71bef8ce6e1c873f441616
-> commit: f10507a66e36dde76d71bef8ce6e1c873f441616 [1/1] x86/PCI: Ignore E820 reservations for bridge windows on newer systems
-> config: i386-buildonly-randconfig-r004-20211019 (attached as .config)
-> compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 92a0389b0425a9535a99a0ce13ba0eeda2bce7ad)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=f10507a66e36dde76d71bef8ce6e1c873f441616
->         git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
->         git fetch --no-tags helgaas-pci for-linus
->         git checkout f10507a66e36dde76d71bef8ce6e1c873f441616
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 ARCH=i386 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from arch/x86/kernel/resource.c:4:
->    arch/x86/include/asm/pci_x86.h:99:8: error: unknown type name 'raw_spinlock_t'
->    extern raw_spinlock_t pci_config_lock;
->           ^
->    arch/x86/include/asm/pci_x86.h:135:19: error: expected ';' after top level declarator
->    extern void __init dmi_check_pciprobe(void);
->                      ^
->                      ;
->    arch/x86/include/asm/pci_x86.h:136:19: error: expected ';' after top level declarator
->    extern void __init dmi_check_skip_isa_align(void);
->                      ^
->                      ;
->    arch/x86/include/asm/pci_x86.h:142:8: error: 'inline' can only appear on functions
->    static inline int  __init pci_acpi_init(void)
->           ^
->    include/linux/compiler_types.h:149:16: note: expanded from macro 'inline'
->    #define inline inline __gnu_inline __inline_maybe_unused notrace
->                   ^
->    In file included from arch/x86/kernel/resource.c:4:
->>> arch/x86/include/asm/pci_x86.h:142:8: warning: '__gnu_inline__' attribute only applies to functions [-Wignored-attributes]
->    include/linux/compiler_types.h:149:23: note: expanded from macro 'inline'
->    #define inline inline __gnu_inline __inline_maybe_unused notrace
->                          ^
->    include/linux/compiler_attributes.h:152:56: note: expanded from macro '__gnu_inline'
->    #define __gnu_inline                    __attribute__((__gnu_inline__))
->                                                           ^
->    In file included from arch/x86/kernel/resource.c:4:
->>> arch/x86/include/asm/pci_x86.h:142:8: warning: '__no_instrument_function__' attribute only applies to functions and Objective-C methods [-Wignored-attributes]
->    include/linux/compiler_types.h:149:58: note: expanded from macro 'inline'
->    #define inline inline __gnu_inline __inline_maybe_unused notrace
->                                                             ^
->    include/linux/compiler_types.h:129:34: note: expanded from macro 'notrace'
->    #define notrace                 __attribute__((__no_instrument_function__))
->                                                   ^
->    In file included from arch/x86/kernel/resource.c:4:
->    arch/x86/include/asm/pci_x86.h:142:20: error: redefinition of '__init' with a different type: 'int' vs 'void'
->    static inline int  __init pci_acpi_init(void)
->                       ^
->    arch/x86/include/asm/pci_x86.h:136:13: note: previous declaration is here
->    extern void __init dmi_check_skip_isa_align(void);
->                ^
->    arch/x86/include/asm/pci_x86.h:142:26: error: expected ';' after top level declarator
->    static inline int  __init pci_acpi_init(void)
->                             ^
->                             ;
->    arch/x86/include/asm/pci_x86.h:148:12: error: redeclaration of '__init' with a different type: 'int' vs 'void'
->    extern int __init pcibios_init(void);
->               ^
->    arch/x86/include/asm/pci_x86.h:136:13: note: previous declaration is here
->    extern void __init dmi_check_skip_isa_align(void);
->                ^
->    arch/x86/include/asm/pci_x86.h:148:18: error: expected ';' after top level declarator
->    extern int __init pcibios_init(void);
->                     ^
->                     ;
->    arch/x86/include/asm/pci_x86.h:168:12: error: redeclaration of '__init' with a different type: 'int' vs 'void'
->    extern int __init pci_mmcfg_arch_init(void);
->               ^
->    arch/x86/include/asm/pci_x86.h:136:13: note: previous declaration is here
->    extern void __init dmi_check_skip_isa_align(void);
->                ^
->    arch/x86/include/asm/pci_x86.h:168:18: error: expected ';' after top level declarator
->    extern int __init pci_mmcfg_arch_init(void);
->                     ^
->                     ;
->    arch/x86/include/asm/pci_x86.h:169:19: error: expected ';' after top level declarator
->    extern void __init pci_mmcfg_arch_free(void);
->                      ^
->                      ;
->    arch/x86/include/asm/pci_x86.h:176:33: error: redeclaration of '__init' with a different type: 'struct pci_mmcfg_region *' vs 'void'
->    extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
->                                    ^
->    arch/x86/include/asm/pci_x86.h:169:13: note: previous declaration is here
->    extern void __init pci_mmcfg_arch_free(void);
->                ^
->    arch/x86/include/asm/pci_x86.h:176:39: error: expected ';' after top level declarator
->    extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
->                                          ^
->                                          ;
->    2 warnings and 13 errors generated.
+Device node iterators put the previous value of the index variable, so
+an explicit put causes a double put.
 
+Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+---
+ drivers/pci/hotplug/pnv_php.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The issue here is that <asm/pci_x86.h> is now included from
-arch/x86/kernel/resource.c and it seems that that file depends on some other
-headers already being included.
-
-I'm reproducing these errors now and I will provide a fix when I'm done.
-
-Regards,
-
-Hans
-
-
-
-> 
-> 
-> vim +/__gnu_inline__ +142 arch/x86/include/asm/pci_x86.h
-> 
-> 8dd779b19ce597 arch/x86/pci/pci.h             Robert Richter  2008-07-02  137  
-> 8dd779b19ce597 arch/x86/pci/pci.h             Robert Richter  2008-07-02  138  /* some common used subsys_initcalls */
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  139  #ifdef CONFIG_PCI
-> 8dd779b19ce597 arch/x86/pci/pci.h             Robert Richter  2008-07-02  140  extern int __init pci_acpi_init(void);
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  141  #else
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19 @142  static inline int  __init pci_acpi_init(void)
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  143  {
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  144  	return -EINVAL;
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  145  }
-> 5d32a66541c468 arch/x86/include/asm/pci_x86.h Sinan Kaya      2018-12-19  146  #endif
-> ab3b37937e8f4f arch/x86/include/asm/pci_x86.h Thomas Gleixner 2009-08-29  147  extern void __init pcibios_irq_init(void);
-> 8dd779b19ce597 arch/x86/pci/pci.h             Robert Richter  2008-07-02  148  extern int __init pcibios_init(void);
-> b72d0db9dd41da arch/x86/include/asm/pci_x86.h Thomas Gleixner 2009-08-29  149  extern int pci_legacy_init(void);
-> 9325a28ce2fa7c arch/x86/include/asm/pci_x86.h Thomas Gleixner 2009-08-29  150  extern void pcibios_fixup_irqs(void);
-> 5e544d618f0fb2 arch/i386/pci/pci.h            Andi Kleen      2006-09-26  151  
-> 
-> :::::: The code at line 142 was first introduced by commit
-> :::::: 5d32a66541c4683456507481a0944ed2985e75c7 PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set
-> 
-> :::::: TO: Sinan Kaya <okaya@kernel.org>
-> :::::: CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> 
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index f4c2e6e01be0..f3da4f95d73f 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -158,7 +158,6 @@ static void pnv_php_detach_device_nodes(struct device_node *parent)
+ 	for_each_child_of_node(parent, dn) {
+ 		pnv_php_detach_device_nodes(dn);
+ 
+-		of_node_put(dn);
+ 		of_detach_node(dn);
+ 	}
+ }
+-- 
+2.20.1
 
