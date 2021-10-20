@@ -2,153 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9F74434256
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 01:56:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B54A8434384
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 04:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbhJSX7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 19:59:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbhJSX7I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 19:59:08 -0400
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6062FC06161C
-        for <linux-pci@vger.kernel.org>; Tue, 19 Oct 2021 16:56:54 -0700 (PDT)
-Received: by mail-ua1-x930.google.com with SMTP id h19so3347015uax.5
-        for <linux-pci@vger.kernel.org>; Tue, 19 Oct 2021 16:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=usp.br; s=usp-google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=Psadu57ENx7zSGlF7FXcnUH65xKVT0cShGyA5O0uuR0=;
-        b=ODqOboJjNhOiXi81NalCiQ/twxF5ntHRKx/4pmyPa+DUDvNWPZnIUcbN3j7XTnTNQ2
-         yj8sIQ7h+Wy0If3tAzoMnSETtUqyQDtYV+NiZw3VBFkhIMRZtnwqraKDHWGM9tyPQYfY
-         K4BTFg3srrrjllX5xgEbhwnjuVlnZ2ZQqKxJmtYqbQr6a78vKNTJJa2dfwj5xyVOkpJQ
-         1tpPpuffgcDUkk2X5d3wsUtffRCIqsDoMDMQu/hFmYnzRwR9J/crf03ML7sZXXJBwu+d
-         E7RWh+E+eBA5wGaRkhjqjEiWmU030tL5K2mRunRpx2X7N8CGOS28ZNJl1fq+05Y3UYaZ
-         /+aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=Psadu57ENx7zSGlF7FXcnUH65xKVT0cShGyA5O0uuR0=;
-        b=V5nFMEq/+KvVG4XTpIRaPLyzFILR9gACjqk1kuPKEw6NJKj0780hJ+KfEFRO8cvQhf
-         KHsL6p5b3K7sbbZ+1KEXrecXfvaRejuz8dx7REjf1BUQ/K+OyVWomMo2hkS0bWOwabBg
-         D2nVqQguSIPB4rIyu8PG3jJNFiNxovasWw1kRP9lkijEVrlUMB9DjRjgMtepHfPhpnh0
-         7o8xQ0jWYqoZhWL21Kt7KHHaf4BQfXkwf+7x+FQwGYABCkgy31tE0wYNQsDRhech0jFr
-         t8iVCvHhg257xg0Z5FvadFNdi/NLmVFDHjP0E7IWTKDHi9Zn0bNCumaIsD1SJcYOdD1B
-         Lzfw==
-X-Gm-Message-State: AOAM531OPAF81DTwSrPFnjGEneXTfdftvRz5LxTr7EAS0eIGYPFUfqCd
-        lw6SesGAXGTYHV1RwtDmzV6vxw==
-X-Google-Smtp-Source: ABdhPJwlLA0sh0zRvKRqiCuIt3kikTSJXJ6xr4LhbZE4d6LdVlxFRUNKwXjavMBLiItZWWAv24aMlw==
-X-Received: by 2002:a9f:29a5:: with SMTP id s34mr3998999uas.122.1634687813539;
-        Tue, 19 Oct 2021 16:56:53 -0700 (PDT)
-Received: from fedora ([187.64.134.142])
-        by smtp.gmail.com with ESMTPSA id j11sm405367uaa.6.2021.10.19.16.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 16:56:53 -0700 (PDT)
-Date:   Tue, 19 Oct 2021 20:56:47 -0300
-From:   =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
-To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de
-Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: imx6: Replace legacy gpio interface for gpiod
- interface
-Message-ID: <YW9bPy5IHzuROhrl@fedora>
+        id S229741AbhJTCaX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 22:30:23 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:52231 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229653AbhJTCaW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 22:30:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Ut-jNXD_1634696886;
+Received: from 30.225.212.40(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Ut-jNXD_1634696886)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 20 Oct 2021 10:28:07 +0800
+Message-ID: <90a632cc-352f-1067-718a-a6b515bf87d7@linux.alibaba.com>
+Date:   Wed, 20 Oct 2021 10:28:06 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.2.0
+Subject: Re: [PATCH v3 0/2] PCI MCFG consolidation and APEI resource filterin
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20211019151258.GA2336650@bhelgaas>
+From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
+In-Reply-To: <20211019151258.GA2336650@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Considering the current transition of the GPIO subsystem, remove all
-dependencies of the legacy GPIO interface (linux/gpio.h and linux
-/of_gpio.h) and replace it with the descriptor-based GPIO approach.
 
-Signed-off-by: Maíra Canal <maira.canal@usp.br>
----
-V1 -> V2: Rewrite commit log and subject line to match PCI subsystem standard
----
- drivers/pci/controller/dwc/pci-imx6.c | 31 ++++++++++-----------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+On 19/10/2021 23:12, Bjorn Helgaas wrote:
+> On Tue, Oct 19, 2021 at 12:49:16PM +0800, Xuesong Chen wrote:
+>> Hello All,
+>>
+>> The idea of this patch set is very strainforward, it's somehow a refactor
+>> of the original codes to share some ones that they should do. Based on that,
+>> we can resolve the MCFG address access issue in APEI module on x86 in a 
+>> command way instead of the current arch-dependent one, while this issue also
+>> does happen on ARM64 platform.
+>>
+>> The logic of the series is very clear(IMO it's even time-wasting to explain that):
+> 
+> If you want people to look at and care about your changes, it is never
+> a waste of time to explain them.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 80fc98acf097..e5ee54e37d05 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -11,13 +11,12 @@
- #include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
- #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
- #include <linux/module.h>
--#include <linux/of_gpio.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
- #include <linux/pci.h>
-@@ -63,7 +62,7 @@ struct imx6_pcie_drvdata {
- 
- struct imx6_pcie {
- 	struct dw_pcie		*pci;
--	int			reset_gpio;
-+	struct gpio_desc    *reset_gpio;
- 	bool			gpio_active_high;
- 	struct clk		*pcie_bus;
- 	struct clk		*pcie_phy;
-@@ -526,11 +525,11 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	usleep_range(200, 500);
- 
- 	/* Some boards don't have PCIe reset GPIO. */
--	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-+	if (imx6_pcie->reset_gpio) {
-+		gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
- 					imx6_pcie->gpio_active_high);
- 		msleep(100);
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-+		gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
- 					!imx6_pcie->gpio_active_high);
- 	}
- 
-@@ -1025,22 +1024,14 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(pci->dbi_base);
- 
- 	/* Fetch GPIOs */
--	imx6_pcie->reset_gpio = of_get_named_gpio(node, "reset-gpio", 0);
- 	imx6_pcie->gpio_active_high = of_property_read_bool(node,
- 						"reset-gpio-active-high");
--	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
--		ret = devm_gpio_request_one(dev, imx6_pcie->reset_gpio,
--				imx6_pcie->gpio_active_high ?
--					GPIOF_OUT_INIT_HIGH :
--					GPIOF_OUT_INIT_LOW,
--				"PCIe reset");
--		if (ret) {
--			dev_err(dev, "unable to get reset gpio\n");
--			return ret;
--		}
--	} else if (imx6_pcie->reset_gpio == -EPROBE_DEFER) {
--		return imx6_pcie->reset_gpio;
--	}
-+	imx6_pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+			imx6_pcie->gpio_active_high ?  GPIOD_OUT_HIGH :
-+				GPIOD_OUT_LOW);
-+	if (IS_ERR(imx6_pcie->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(imx6_pcie->reset_gpio),
-+					  "unable to get reset gpio\n");
- 
- 	/* Fetch clocks */
- 	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
--- 
-2.31.1
+En, very good point and professional, I'll keep in mind ;-)
+> 
+>> Patch #1: Escalating the 'pci_mmcfg_list' and 'pci_mmcfg_region' to the
+>> pci.[c,h] which will shared by all the arches. A common sense, in some degree.
+>>
+>> Patch #2: Since the 'pci_mmcfg_list' now can be shared across all arches,
+>> the arch-specific fix method can be replaced by the new solution naturally.
+>>
+>> Now the v3 patch has been finalized, can we move forward to the next step? -
+>> either give the concerns/objections or pick it up.
+> 
+> It's helpful to your reviewers if you include a note about changes
+> between v2 and v3, as you did in your v2 0/2 cover letter.
+> 
+> It's also helpful if you thread the series with patches 1 and 2 as
+> responses to the cover letter.  That makes it easy to download the
+> patches using b4.  Here's a little more background:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v5.14#n320
 
+OK, I will rewrite it in the next version...
+> 
+>> Xuesong Chen (2):
+>>   PCI: MCFG: Consolidate the separate PCI MCFG table entry list
+>>   ACPI: APEI: Filter the PCI MCFG address with an arch-agnostic method
+>>
+>>  arch/x86/include/asm/pci_x86.h | 17 +---------------
+>>  arch/x86/pci/mmconfig-shared.c | 30 ----------------------------
+>>  drivers/acpi/apei/apei-base.c  | 45 ++++++++++++++++++++++++++++--------------
+>>  drivers/acpi/pci_mcfg.c        | 34 ++++++++++++-------------------
+>>  drivers/pci/pci.c              |  2 ++
+>>  include/linux/pci.h            | 17 ++++++++++++++++
+>>  6 files changed, 63 insertions(+), 82 deletions(-)
+>>
+>> -- 
+>> 1.8.3.1
+>>
