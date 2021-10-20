@@ -2,25 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54A8434384
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 04:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C16143438C
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Oct 2021 04:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbhJTCaX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Oct 2021 22:30:23 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:52231 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229653AbhJTCaW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 22:30:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Ut-jNXD_1634696886;
-Received: from 30.225.212.40(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Ut-jNXD_1634696886)
+        id S229691AbhJTChu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Oct 2021 22:37:50 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:48201 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229555AbhJTChr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Oct 2021 22:37:47 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Ut.30UJ_1634697329;
+Received: from 30.225.212.40(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Ut.30UJ_1634697329)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Oct 2021 10:28:07 +0800
-Message-ID: <90a632cc-352f-1067-718a-a6b515bf87d7@linux.alibaba.com>
-Date:   Wed, 20 Oct 2021 10:28:06 +0800
+          Wed, 20 Oct 2021 10:35:30 +0800
+Message-ID: <6f6c2933-b0a7-4fac-6342-3860f022229f@linux.alibaba.com>
+Date:   Wed, 20 Oct 2021 10:35:29 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
  Gecko/20100101 Thunderbird/91.2.0
-Subject: Re: [PATCH v3 0/2] PCI MCFG consolidation and APEI resource filterin
+Subject: Re: [PATCH v3 2/2] ACPI: APEI: Filter the PCI MCFG address with an
+ arch-agnostic method
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
         james.morse@arm.com, will@kernel.org, rafael@kernel.org,
@@ -28,9 +29,9 @@ Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
         bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-References: <20211019151258.GA2336650@bhelgaas>
+References: <20211019150405.GA2338201@bhelgaas>
 From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
-In-Reply-To: <20211019151258.GA2336650@bhelgaas>
+In-Reply-To: <20211019150405.GA2338201@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -38,55 +39,48 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 19/10/2021 23:12, Bjorn Helgaas wrote:
-> On Tue, Oct 19, 2021 at 12:49:16PM +0800, Xuesong Chen wrote:
->> Hello All,
+On 19/10/2021 23:04, Bjorn Helgaas wrote:
+> On Tue, Oct 19, 2021 at 12:50:33PM +0800, Xuesong Chen wrote:
+>> The commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
+>> level") fixes the issue that the ACPI/APEI can not access the PCI MCFG
+>> address on x86 platform, but this issue can also happen on other
+>> architectures, for instance, we got below error message on arm64 platform:
+>> ...
+>> APEI: Can not request [mem 0x50100000-0x50100003] for APEI EINJ Trigger registers
+>> ...
 >>
->> The idea of this patch set is very strainforward, it's somehow a refactor
->> of the original codes to share some ones that they should do. Based on that,
->> we can resolve the MCFG address access issue in APEI module on x86 in a 
->> command way instead of the current arch-dependent one, while this issue also
->> does happen on ARM64 platform.
+>> This patch will try to handle this case in a more common way instead of the
+>> original 'arch' specific solution, which will be beneficial to all the
+>> APEI-dependent platforms after that.
 >>
->> The logic of the series is very clear(IMO it's even time-wasting to explain that):
+>> Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
 > 
-> If you want people to look at and care about your changes, it is never
-> a waste of time to explain them.
+> The purpose of this patch is not to fix a problem reported by the
+> kernel test robot, so remove this tag.
 
-En, very good point and professional, I'll keep in mind ;-)
+Yes, will do
 > 
->> Patch #1: Escalating the 'pci_mmcfg_list' and 'pci_mmcfg_region' to the
->> pci.[c,h] which will shared by all the arches. A common sense, in some degree.
->>
->> Patch #2: Since the 'pci_mmcfg_list' now can be shared across all arches,
->> the arch-specific fix method can be replaced by the new solution naturally.
->>
->> Now the v3 patch has been finalized, can we move forward to the next step? -
->> either give the concerns/objections or pick it up.
+> I know the robot found a problem with a previous version of this
+> patch, but we treat that the same as a code review comment.  We
+> normally don't explicitly credit reviewers unless it was something
+> major, and then it would go in the commit log, not a "Reported-by"
+> tag.
 > 
-> It's helpful to your reviewers if you include a note about changes
-> between v2 and v3, as you did in your v2 0/2 cover letter.
+> It makes sense to credit the kernel test robot for things found in
+> Linus' tree, but it's a little too aggressive about suggesting the tag
+> for problems with unmerged changes.
 > 
-> It's also helpful if you thread the series with patches 1 and 2 as
-> responses to the cover letter.  That makes it easy to download the
-> patches using b4.  Here's a little more background:
+>> Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=v5.14#n320
+> This tag can only be added when Lorenzo explicitly supplies it
+> himself.  I do not see that on the mailing list, so please remove this
+> tag as well.  After Lorenzo supplies it, you can include it in future
+> postings as long as you don't make significant changes to the patch.
 
-OK, I will rewrite it in the next version...
+En, Lorenzo does have comments on the patch#2 and I also update that patch
+according to his feedback, so why the tag is here. OK, I'll add this tag
+if Lorenzo can supply it explicitly before I send the next version.
 > 
->> Xuesong Chen (2):
->>   PCI: MCFG: Consolidate the separate PCI MCFG table entry list
->>   ACPI: APEI: Filter the PCI MCFG address with an arch-agnostic method
->>
->>  arch/x86/include/asm/pci_x86.h | 17 +---------------
->>  arch/x86/pci/mmconfig-shared.c | 30 ----------------------------
->>  drivers/acpi/apei/apei-base.c  | 45 ++++++++++++++++++++++++++++--------------
->>  drivers/acpi/pci_mcfg.c        | 34 ++++++++++++-------------------
->>  drivers/pci/pci.c              |  2 ++
->>  include/linux/pci.h            | 17 ++++++++++++++++
->>  6 files changed, 63 insertions(+), 82 deletions(-)
->>
->> -- 
->> 1.8.3.1
->>
+> Bjorn
+> 
