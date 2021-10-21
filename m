@@ -2,68 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61FC643658F
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67FD9436591
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbhJUPP7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 11:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
+        id S232082AbhJUPQL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 11:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231980AbhJUPPX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:15:23 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB6FC061233;
-        Thu, 21 Oct 2021 08:13:07 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id na16-20020a17090b4c1000b0019f5bb661f9so811532pjb.0;
-        Thu, 21 Oct 2021 08:13:07 -0700 (PDT)
+        with ESMTP id S232069AbhJUPPj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:15:39 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87153C06122C;
+        Thu, 21 Oct 2021 08:13:13 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id f21so645644plb.3;
+        Thu, 21 Oct 2021 08:13:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UWK0fPhiFvF9dyvSZCI83CRyKYd+k4snQIY5xhFTQVg=;
-        b=WVXnrDKpBkRsnqHYlJch8EoBuAARA9XFKQRF8x5Gv2wL29rXOafMDIpA+eBkyyok3P
-         pB8vJ5wNh6f9MspxxjVwvnd1HTtHhrWk3mlEPGBSPWVyBOM06eJ7OAJF1+tkAjZU+lS+
-         +SpXqolra9sbekn0GqO3G6PGYsC5+AVtxGw6qsmph82e+9QLdwCpN31nrKOu8/EpDF9V
-         G1H0T7a1bRArKt8zlqOAOW5k3o/V4qAI38QvnJcrqacJ/KgiSv3YLYFh8wnp4VqVcwQW
-         VBeFQAxA01rwlWu9wcQF9JGj2qMvx3opSdu7VoceIRt1vj0WzqSoEATbWK95nm+xWxpX
-         9ZYg==
+        bh=g4G4Yffk64HxtbjZzw9/E8PSnsLTvUujtQvSwE3J4gU=;
+        b=cI4maM6sHC3cIMldIjQc1WksuleNIofwFqWYF4hgi1mSUPjEGy/WmXoWahcRKKe5+w
+         j+zLwnck9MFzmr8MftgklxRZ5wNxIbu4G2AheKg9ZMv2lHgNNhGgL2J7UsV3l6gjZExb
+         H4tZgM8wyBorCpeRi921+Tm3u0WVTydBr3Tj3cAhZ9aNPzvoqZ4hpLqS+KH5vxfSS8kl
+         RuDF/0hlWT9G4JzVK0afVRra+EpY2rFrGAa9crTmNU2ssX8sWEbik9C86qDFbaKzhp+l
+         Qiuu1E0eKf6ZEerz3y53kIBw8RH87UqQ0r1zBn0XyLQryf6q11P3qfumh997IU+rjQxH
+         8n1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UWK0fPhiFvF9dyvSZCI83CRyKYd+k4snQIY5xhFTQVg=;
-        b=7BsOoh4KLjOa0I8y/yGH5MM/Mon8zVjGetQZkEnQKO1gIa0HhM+CVfnnm625tNQ7de
-         hhb8M8WdPqqQrkfPRe7s53saxRX2saf1zKk9BvaYpmBOWstUJlYfsH6k3/uZavnW2Kec
-         HgDKMpiUzmnigFyt1t+jQLFfbLKgdTFafR8qB3aQhAQIlO2MtdzHWbzEuFODQnMS2j29
-         Mv0H4UnlKaQ/CRzZlxjH2bTFc+/LapCAxNeSGdBG3WZr8Zr1Ye7HdOR+jkGlmFzzLLnT
-         8u4UNgnBPvL2fEyaxp081c7yn2koBXVzd06xupCf1PMTcfOuNB9NZkxeemVlnIX9ii6N
-         Sr9g==
-X-Gm-Message-State: AOAM533FLHE5VOQm1g/IWoTBXEsnfiGyHRBP70uEql9oxk3YA72dQTxH
-        7ET09R27+dvb3n7xTIEuPqs=
-X-Google-Smtp-Source: ABdhPJyGJ4astve2/4iTWtMqGX88sDxmNxOV3i/wr3/3IzZRoR/OJj+5bCEstpuFYEt72kulysyHng==
-X-Received: by 2002:a17:90b:3809:: with SMTP id mq9mr7318159pjb.7.1634829186527;
-        Thu, 21 Oct 2021 08:13:06 -0700 (PDT)
+        bh=g4G4Yffk64HxtbjZzw9/E8PSnsLTvUujtQvSwE3J4gU=;
+        b=4BEaDgR7WXMTsTe4Hhmh2swoNTEFDsbhCIT0x5j0buBukkAk1fIyEAnqSafCC6pvZu
+         id86LgmFzf+pNx5RvmJ/8Bojrzk/Rdxj2yazemefd6HBhHEQ8PpxEoaQITfuItW/osXE
+         RMTc6vFaMlW0bGk9NBoda7nE6Jc70pxJdEvCguThwZEmMfz/ScZ4ua9N9750SpJAmLD+
+         me6RUVOSpO+a2IW4E+2y6+Yjpa1hWLvv5ezHhAgwOxemcRzbz3WPmqQl1QI8wXazyOsD
+         4Cix+I6cHPqbGQXC5o8YbPhi7WXEvHNmbisA/0VEUxvs1AAvmv9E7U4NyTnGIc5ohZys
+         Epog==
+X-Gm-Message-State: AOAM532gsgqLtreMI6/Hiw4FCDM3XDDG94+aztRg+NQQVbYurGGAoKAI
+        PzOptgrU4rYtj8/SRwMjWgM=
+X-Google-Smtp-Source: ABdhPJwuN72upSJVb5RV31HWJ0Rk/DS/k3MWELCcfxWrH5dP6+GQCb3WOGhj7YB/ramfc8/eTUFdtQ==
+X-Received: by 2002:a17:90b:1a87:: with SMTP id ng7mr7478114pjb.69.1634829192977;
+        Thu, 21 Oct 2021 08:13:12 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:29a4:d874:a949:6890:f95f])
-        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.13.01
+        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.13.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 08:13:06 -0700 (PDT)
+        Thu, 21 Oct 2021 08:13:12 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        skhan@linuxfoundation.org, Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-renesas-soc@vger.kernel.org (open list:PCI DRIVER FOR RENESAS
-        R-CAR)
-Subject: [PATCH v3 14/25] PCI: rcar: Remove redundant error fabrication when device read fails
-Date:   Thu, 21 Oct 2021 20:37:39 +0530
-Message-Id: <29e534503de9502e4a30a1cb970f72c20243cc7e.1634825082.git.naveennaidu479@gmail.com>
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org (open list:PCIE DRIVER FOR ROCKCHIP),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
+        support)
+Subject: [PATCH v3 15/25] PCI: rockchip: Remove redundant error fabrication when device read fails
+Date:   Thu, 21 Oct 2021 20:37:40 +0530
+Message-Id: <59113f443210c0c4d9d7696b22274c21ec2b7276.1634825082.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634825082.git.naveennaidu479@gmail.com>
 References: <cover.1634825082.git.naveennaidu479@gmail.com>
@@ -88,28 +87,27 @@ fabricate any error response.
 This helps unify PCI error response checking and make error check
 consistent and easier to find.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pcie-rcar-host.c | 4 +---
+ drivers/pci/controller/pcie-rockchip-host.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 8f3131844e77..1324cb984ed5 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -161,10 +161,8 @@ static int rcar_pcie_read_conf(struct pci_bus *bus, unsigned int devfn,
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index c52316d0bfd2..45a28880f322 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -221,10 +221,8 @@ static int rockchip_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+ {
+ 	struct rockchip_pcie *rockchip = bus->sysdata;
  
- 	ret = rcar_pcie_config_access(host, RCAR_PCI_ACCESS_READ,
- 				      bus, devfn, where, val);
--	if (ret != PCIBIOS_SUCCESSFUL) {
+-	if (!rockchip_pcie_valid_device(rockchip, bus, PCI_SLOT(devfn))) {
 -		*val = 0xffffffff;
-+	if (ret != PCIBIOS_SUCCESSFUL)
- 		return ret;
++	if (!rockchip_pcie_valid_device(rockchip, bus, PCI_SLOT(devfn)))
+ 		return PCIBIOS_DEVICE_NOT_FOUND;
 -	}
  
- 	if (size == 1)
- 		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
+ 	if (pci_is_root_bus(bus))
+ 		return rockchip_pcie_rd_own_conf(rockchip, where, size, val);
 -- 
 2.25.1
 
