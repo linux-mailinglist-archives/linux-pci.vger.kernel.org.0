@@ -2,60 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1761C436592
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2862B43659A
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:14:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232164AbhJUPQM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 11:16:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49596 "EHLO
+        id S230280AbhJUPQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 11:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232244AbhJUPPl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:15:41 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C719C061239;
-        Thu, 21 Oct 2021 08:13:17 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id r2so579960pgl.10;
-        Thu, 21 Oct 2021 08:13:17 -0700 (PDT)
+        with ESMTP id S232131AbhJUPQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:16:23 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A443C0432C5;
+        Thu, 21 Oct 2021 08:13:33 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id y4so673327plb.0;
+        Thu, 21 Oct 2021 08:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7LKQ8LDQCLH6CNvMc2EuzCtN+mwerjwkO6CrMvPuNtM=;
-        b=oCM89KnePSBKcy6kffqfID2nl/IafVElh379aYNbnhSVPjR/XU8OAJmQGIsU1XiOsM
-         Pc8vcBL8x0zsObp9BqaJut35pC5eqUIZTdw/ZkMv0oULb4PgYl/twh3esle884EXCvpj
-         zXe7Jir243mgAfmy0RbhQpuCzePGsE25KGsTYlnNxmGImKUyywSdQB6gEZZUEPQQGEVf
-         xAAJUIeSZGwEikgZR09/wVbUNzJuoSKof+ogQhnqaJ+Dq65ndV5jxg2/SAB9tneEVKLf
-         ZG5zjxKNZplXTQRWdr68P2CR2s4APH6S9zX2Aaqc2zOyqd+EXXDnWUdPgaQjg49Qx8SB
-         Pp5Q==
+        bh=nMMca6ogUWXi0ch4Y2WRyLimPI/FUHz8LX6jciCfSL0=;
+        b=Ebt87PGCiA5DfC2ykF3q2FI75oUe+I22DKgpYutQWfZKv6HY11WV3QxfBdoZ2IZ/8R
+         1dXQQC3ymsHSF7lHENRAW7heU7N3//R7ApODSTy2OPCTm8KgE/AdYPjd7BcjUw/JeXaQ
+         G6d0gMcA5ImCvXHdrbfxenldCzozNVINxVpHzZU2dtq0JEiZYMzTAf6eS7YcNzYATO7a
+         RFkZdTwYgxCgX5Yb7coZ5yE1oIPHu3K+j7/wBKwKhM9Xp01itiWZJ0+Ob03p93IpGsKR
+         d44pWrjLExUCkKCJyqzDEUK0sO+89IQael7QvcRgen995yz6PiWAjLUmDvrkj/EXLhly
+         Mjqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7LKQ8LDQCLH6CNvMc2EuzCtN+mwerjwkO6CrMvPuNtM=;
-        b=iN2Cr+HILSVXz4A3gnQPN904iKoP9a+qowq00dWr3q6KvY6pJ+eL5qrBfCEIqwRpss
-         o+4qnrenVjRtE4p3+nBFU/2JLEgavBHgTxL15/zfBzPuKH7V2HO8l18T4DfdxcE1kDTr
-         nv6Re7SpC/dPocPIBt18xy3O9317kBykBjk+IUVDTwVEUy/aXicA/QcqFJAHFAZO+SV2
-         l2ul79FvQk1oNXtIuyk6vHVoaS0LvV9JHv3jhxcVViznTK9CZyzB5Vh0FlczFEQXTgTd
-         YCi210qWw5817z1Z0VgLWFM2JDznw+y8VvgP7yoDCG4dVALOvXsEAr5EetwPuE1V3Bm4
-         E1Dg==
-X-Gm-Message-State: AOAM532Nra3cb5GXi4slq1emGjImE+aSTJiUaUfKtdzSbpy3QNhSJcs/
-        iaZx39TVpFnFm9KrSv5tQmvo3LcmrlhxnEVs
-X-Google-Smtp-Source: ABdhPJxznvgzZqfYWIDGri2iQZkrb65SSVK3bkT6SK4TKqrHIaofGr/C5IMiuCQcc4kOLZls5+zaAQ==
-X-Received: by 2002:a62:2c82:0:b0:44d:71c3:8a3 with SMTP id s124-20020a622c82000000b0044d71c308a3mr6267013pfs.84.1634829196915;
-        Thu, 21 Oct 2021 08:13:16 -0700 (PDT)
+        bh=nMMca6ogUWXi0ch4Y2WRyLimPI/FUHz8LX6jciCfSL0=;
+        b=qd9unDtwHQTHQKsmDNtVbxmg5VQhIxUGej9HhWtAwnoUPmBHYWnTgdPwRfh1bAXIln
+         jt+s0zy/asQsj3yX0ISliJZ+FesfV2t7CssmTNWZWuaw8Uudhh2oRkEUpOjuMaIvD9Hy
+         GfkV8LzHpKVKbN+xw25RMseGVvU4lb/A9pbtHBA4qJLd34FC7wpv1lFxpl6csl27w/Oo
+         a49oiW/V6AeQlBKRiaEMsi/rJszrynu/8FgSinQW68txn0+e7N+7pvpNdN1CdxhyNHIb
+         XXX34qR37f6ymodGaRf/PyCkXbOrJ2DPHVI1kQA+oL3IvU9vKYY2iWUkwD9H3P2LOiK7
+         Dk7Q==
+X-Gm-Message-State: AOAM533tju+/LJ+hBpLd/Cf74NXlGIgOZTBhnkNEdiN86VH1LFU2yADq
+        88ANzi0EHsmbY8pAk6tOF+k=
+X-Google-Smtp-Source: ABdhPJxlhCnhuhE7I8iz3HkOhUekSEuVNDqklOld2tfE6JglGG840MuyjWtZqqUSBBb9vuA4cFmhqg==
+X-Received: by 2002:a17:902:b68b:b0:13a:1239:b8d9 with SMTP id c11-20020a170902b68b00b0013a1239b8d9mr5741580pls.25.1634829212923;
+        Thu, 21 Oct 2021 08:13:32 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:29a4:d874:a949:6890:f95f])
-        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.13.14
+        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 08:13:16 -0700 (PDT)
+        Thu, 21 Oct 2021 08:13:32 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v3 16/25] PCI/ERR: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
-Date:   Thu, 21 Oct 2021 20:37:41 +0530
-Message-Id: <50db352f97df56d37f3af99c8999d6136436aaba.1634825082.git.naveennaidu479@gmail.com>
+        skhan@linuxfoundation.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [PATCH v3 17/25] PCI: vmd: Use RESPONSE_IS_PCI_ERROR() to check read from hardware
+Date:   Thu, 21 Oct 2021 20:37:42 +0530
+Message-Id: <5be1fdfdcf4b4a453117ef4dea0f71c9555fac24.1634825082.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634825082.git.naveennaidu479@gmail.com>
 References: <cover.1634825082.git.naveennaidu479@gmail.com>
@@ -72,90 +77,27 @@ CPU read, so most hardware fabricates ~0 data.
 Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
 data from hardware.
 
-This unifies PCI error response checking and make error checks
+This helps unify PCI error response checking and make error checks
 consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/pci.c   | 10 +++++-----
- drivers/pci/probe.c | 10 +++++-----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/pci/controller/vmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ce2ab62b64cf..4eaf29f004bd 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1077,7 +1077,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 		return -EIO;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a5987e52700e..bfe6b002ffec 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -538,7 +538,7 @@ static int vmd_get_phys_offsets(struct vmd_dev *vmd, bool native_hint,
+ 		int ret;
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
--	if (pmcsr == (u16) ~0) {
-+	if (RESPONSE_IS_PCI_ERROR(pmcsr)) {
- 		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
- 			pci_power_name(dev->current_state),
- 			pci_power_name(state));
-@@ -1239,16 +1239,16 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- 	 * After reset, the device should not silently discard config
- 	 * requests, but it may still indicate that it needs more time by
- 	 * responding to them with CRS completions.  The Root Port will
--	 * generally synthesize ~0 data to complete the read (except when
--	 * CRS SV is enabled and the read was for the Vendor ID; in that
--	 * case it synthesizes 0x0001 data).
-+	 * generally synthesize ~0 (PCI_ERROR_RESPONSE) data to complete
-+	 * the read (except when CRS SV is enabled and the read was for the
-+	 * Vendor ID; in that case it synthesizes 0x0001 data).
- 	 *
- 	 * Wait for the device to return a non-CRS completion.  Read the
- 	 * Command register instead of Vendor ID so we don't have to
- 	 * contend with the CRS SV value.
- 	 */
- 	pci_read_config_dword(dev, PCI_COMMAND, &id);
--	while (id == ~0) {
-+	while (RESPONSE_IS_PCI_ERROR(id)) {
- 		if (delay > timeout) {
- 			pci_warn(dev, "not ready %dms after %s; giving up\n",
- 				 delay - 1, reset_type);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index d9fc02a71baa..8bf4034ddbd4 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -206,14 +206,14 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
- 	 * memory BAR or a ROM, bit 0 must be clear; if it's an io BAR, bit
- 	 * 1 must be clear.
- 	 */
--	if (sz == 0xffffffff)
-+	if (RESPONSE_IS_PCI_ERROR(sz))
- 		sz = 0;
+ 		ret = pci_read_config_dword(dev, PCI_REG_VMLOCK, &vmlock);
+-		if (ret || vmlock == ~0)
++		if (ret || RESPONSE_IS_PCI_ERROR(vmlock))
+ 			return -ENODEV;
  
- 	/*
- 	 * I don't know how l can have all bits set.  Copied from old code.
- 	 * Maybe it fixes a bug on some ancient platform.
- 	 */
--	if (l == 0xffffffff)
-+	if (RESPONSE_IS_PCI_ERROR(l))
- 		l = 0;
- 
- 	if (type == pci_bar_unknown) {
-@@ -1660,7 +1660,7 @@ static int pci_cfg_space_size_ext(struct pci_dev *dev)
- 
- 	if (pci_read_config_dword(dev, pos, &status) != PCIBIOS_SUCCESSFUL)
- 		return PCI_CFG_SPACE_SIZE;
--	if (status == 0xffffffff || pci_ext_cfg_is_aliased(dev))
-+	if (RESPONSE_IS_PCI_ERROR(status) || pci_ext_cfg_is_aliased(dev))
- 		return PCI_CFG_SPACE_SIZE;
- 
- 	return PCI_CFG_SPACE_EXP_SIZE;
-@@ -2336,8 +2336,8 @@ bool pci_bus_generic_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- 	if (pci_bus_read_config_dword(bus, devfn, PCI_VENDOR_ID, l))
- 		return false;
- 
--	/* Some broken boards return 0 or ~0 if a slot is empty: */
--	if (*l == 0xffffffff || *l == 0x00000000 ||
-+	/* Some broken boards return 0 or ~0 (PCI_ERROR_RESPONSE) if a slot is empty: */
-+	if (RESPONSE_IS_PCI_ERROR(*l) || *l == 0x00000000 ||
- 	    *l == 0x0000ffff || *l == 0xffff0000)
- 		return false;
- 
+ 		if (MB2_SHADOW_EN(vmlock)) {
 -- 
 2.25.1
 
