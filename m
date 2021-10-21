@@ -2,132 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF3543674A
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 18:08:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C964367CA
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 18:30:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231182AbhJUQK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 12:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230103AbhJUQK5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Oct 2021 12:10:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1AEFD611CB;
-        Thu, 21 Oct 2021 16:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634832521;
-        bh=3wcwNbtDNknQedZoy24cZfK1CiOqshIYIk3e2c4B9Rw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XWhJ08GGIqTZw+TvT/nMCDAy7quf2FJv33jj0Ily06vxkI8rUxTQELDkeHb0u+NFl
-         MD0Lx9+x7lhMM3GIAZfA1T2u0eNmQAG1bqpXTvz67evSI6p28cRymuvwfzx0MmCdPZ
-         Eu9kyx0IRx+BQHrjfg6pUkXIBKHVfUT3rJ6PyHjkKsGXSiMQ2s0MWrlq5f/6WPUXfA
-         12KC4ZTUvETH0cKn32kcKsPv7RGUIftWATLF8XYn+cHxWi3nvl7PC2jb98L+8EJMFN
-         xtCzC0AmpDoL2r37xWXDC3EUt/EyyEmL8iLEASXb2kkCdjx5XS/xqqOzJAGW3sGtIs
-         FzUF2rqmMe78Q==
-Received: by pali.im (Postfix)
-        id D8DB085E; Thu, 21 Oct 2021 18:08:38 +0200 (CEST)
-Date:   Thu, 21 Oct 2021 18:08:38 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
+        id S231749AbhJUQct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 12:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230072AbhJUQct (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 12:32:49 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD1BC061764;
+        Thu, 21 Oct 2021 09:30:33 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id u6-20020a17090a3fc600b001a00250584aso3539654pjm.4;
+        Thu, 21 Oct 2021 09:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Lc2V8kW9DWjIh5PwTRqiTR+Qdm9DCZ56d3CfgkVtsAg=;
+        b=KuDBSYgshNz9/GCM1Jkbz7X3nsWyxLk7hvxcjDbgj2f+N3J2vjdaq7KVZsGcSNocHf
+         pMaNHrJ5ZwHL38XdgC6QleKmA2D81frhRfhI9iPcj9GYH78bb1Nlt2LXE6s4eakmlC1C
+         YY2KiZqTVXORECOLw0be0vs2dOsf2m1cyKFZB9E5TJvohcma/0P8dxtyYEikqf591vPp
+         X4fBU35cfhcGSzdmFwJnJgWcj03FLgViEoeTO3fzri7jaHSUdzlZtW6qkhhEmFtYWPcp
+         ApO6iqy1iDToJt+y0rvB5+29nVoGOieKLQJYFCO7E6YzBy5afnoHSPUxsk03JZHQSjIT
+         +2hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Lc2V8kW9DWjIh5PwTRqiTR+Qdm9DCZ56d3CfgkVtsAg=;
+        b=uMc8ynu91NGAqwVK0h4gsHhm9C56KOTS9j/5wQCeU/e/chrne687ClL9x8Uu1pYTKs
+         GNfl3iyXHfFF/78OHPK/7Zn7Nm1DNuHlc72zyz8BzfcKF2cz86Q4Aws/zCwjMvEBOiB5
+         aeW1ho4eS5aZVvdtsPaSg7VvRniT1R0Pzw/2nldUkHLgTkLdu/YMPO5d21IPESCS9dsv
+         4ZyI5I+Pyv+F2HFRIJhq8VksutxZNXCDcAl7chEYaodS0O6f+dZF5JcYfVQVvrnCwKYe
+         PX1n+GbMk6u+XE0R6c4iE/D/VYVd+DXVgUm2/hGw8i/4pQxR22sG7KR5KdRcx3qxY+j9
+         i+cg==
+X-Gm-Message-State: AOAM530izInSzUL8Qs+mW8Cm3eE9agHr/QxnY68t/AAyhLCYl49xjtVq
+        doKm57klVSyZk661ELZjC+o=
+X-Google-Smtp-Source: ABdhPJxOnUbbOM9WGG3ZOvhQwiI9j78jVo97pCwncL8rKO/wgLLb9naCikt2yiq01L3UPck2/PDSEA==
+X-Received: by 2002:a17:90a:9bca:: with SMTP id b10mr7852273pjw.133.1634833832448;
+        Thu, 21 Oct 2021 09:30:32 -0700 (PDT)
+Received: from theprophet ([2406:7400:63:29a4:d874:a949:6890:f95f])
+        by smtp.gmail.com with ESMTPSA id d60sm9876076pjk.49.2021.10.21.09.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 09:30:31 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 22:00:21 +0530
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        skhan@linuxfoundation.org, Robert Richter <rric@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Toan Le <toan@os.amperecomputing.com>
-Subject: Re: [PATCH v3 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related
- definitions
-Message-ID: <20211021160838.r7t7fmmeseaecfac@pali>
-References: <cover.1634825082.git.naveennaidu479@gmail.com>
- <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v4 1/8] PCI/AER: Remove ID from aer_agent_string[]
+Message-ID: <20211021163021.r4ekhfol42ftw5zw@theprophet>
+References: <22b2dae2a6ac340d9d45c28481d746ec1064cd6c.1633453452.git.naveennaidu479@gmail.com>
+ <20211021012826.GA2655655@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211021012826.GA2655655@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 21 October 2021 20:37:26 Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error.  There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
+On 20/10, Bjorn Helgaas wrote:
+> On Tue, Oct 05, 2021 at 10:48:08PM +0530, Naveen Naidu wrote:
+> > Currently, we do not print the "id" field in the AER error logs. Yet the
+> > aer_agent_string[] has the word "id" in it. The AER error log looks
+> > like:
+> > 
+> >   pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+> > 
+> > Without the "id" field in the error log, The aer_agent_string[]
+> > (eg: "Receiver ID") does not make sense. A user reading the
+> > aer_agent_string[] in the log, might inadvertently look for an "id"
+> > field and not finding it might lead to confusion.
+> > 
+> > Remove the "ID" from the aer_agent_string[].
+> > 
+> > The following are sample dummy errors inject via aer-inject.
 > 
-> Add a PCI_ERROR_RESPONSE definition for that and use it where
-> appropriate to make these checks consistent and easier to find.
+> I like this, and the problem it fixes was my fault because
+> these "ID" strings should have been removed by 010caed4ccb6.
 > 
-> Also add helper definitions SET_PCI_ERROR_RESPONSE and
-> RESPONSE_IS_PCI_ERROR to make the code more readable.
-> 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> If it's straightforward enough, it would be nice to have the
+> aer-inject command line here in the commit log to make it easier
+> for people to play with this.
+>
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Thank you for the review. Do you mean something like:
 
-> ---
->  include/linux/pci.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..689c8277c584 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
->  /* The number of legacy PCI INTx interrupts */
->  #define PCI_NUM_INTX	4
->  
-> +/*
-> + * Reading from a device that doesn't respond typically returns ~0.  A
-> + * successful read from a device may also return ~0, so you need additional
-> + * information to reliably identify errors.
-> + */
-> +#define PCI_ERROR_RESPONSE     (~0ULL)
-> +#define SET_PCI_ERROR_RESPONSE(val)    (*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
-> +#define RESPONSE_IS_PCI_ERROR(val) ((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
-> +
->  /*
->   * pci_power_t values must match the bits in the Capabilities PME_Support
->   * and Control/Status PowerState fields in the Power Management capability.
-> -- 
-> 2.25.1
-> 
+The following sample dummy errors are injected via aer-inject via the
+following steps:
+
+  1. The steps to compile the aer-inject tool is mentioned in (Section
+     4. Software error inject) of the document [1]
+
+     [1]: https://www.kernel.org/doc/Documentation/PCI/pcieaer-howto.txt
+
+     Make sure to place the aer-inject executable at the home directory
+     of the qemu system or at any other place.
+
+  2. Emulate a PCIE architecture using qemu, A sample looks like
+     following:
+     
+		qemu-system-x86_64 -kernel ../linux/arch/x86_64/boot/bzImage \
+        -initrd  buildroot-build/images/rootfs.cpio.gz \
+        -append "console=ttyS0"  \
+        -enable-kvm -nographic \
+        -M q35 \
+        -device pcie-root-port,bus=pcie.0,id=rp1,slot=1 \
+        -device pcie-pci-bridge,id=br1,bus=rp1 \
+        -device e1000,bus=br1,addr=8
+       
+    Note that the PCIe features are available only when using the 
+    'q35' Machine [2]
+    [2]: https://github.com/qemu/qemu/blob/master/docs/pcie.txt
+
+  3. Once the qemu system starts up, create a sample aer-file or use any
+     example aer file from [3]
+
+     [3]:
+     https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git/tree/examples
+
+  4. Inject any aer-error using
+      
+      ./aer-inject aer-file
+
+This does look a tad bit longer for a commit log so I am unsure if you
+would like to have it there. If you are okay with it, I would be happy
+to add it to that :)
+
+> > Before
+> > =======
+> > 
+> > In 010caed4ccb6 ("PCI/AER: Decode Error Source Requester ID"),
+> > the "id" field was removed from the AER error logs, so currently AER
+> > logs look like:
+> > 
+> >   pcieport 0000:00:03.0: AER: Corrected error received: 0000:00:03:0
+> >   pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID) <--- no id field
+> >   pcieport 0000:00:03.0:   device [1b36:000c] error status/mask=00000040/0000e000
+> >   pcieport 0000:00:03.0:    [ 6] BadTLP
+> > 
+> > After
+> > ======
+> > 
+> >   pcieport 0000:00:03.0: AER: Corrected error received: 0000:00:03.0
+> >   pcieport 0000:00:03.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver)
+> >   pcieport 0000:00:03.0:   device [1b36:000c] error status/mask=00000040/0000e000
+> >   pcieport 0000:00:03.0:    [ 6] BadTLP
+> > 
+> > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 9784fdcf3006..241ff361b43c 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -516,10 +516,10 @@ static const char *aer_uncorrectable_error_string[] = {
+> >  };
+> >  
+> >  static const char *aer_agent_string[] = {
+> > -	"Receiver ID",
+> > -	"Requester ID",
+> > -	"Completer ID",
+> > -	"Transmitter ID"
+> > +	"Receiver",
+> > +	"Requester",
+> > +	"Completer",
+> > +	"Transmitter"
+> >  };
+> >  
+> >  #define aer_stats_dev_attr(name, stats_array, strings_array,		\
+> > @@ -703,7 +703,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+> >  	const char *level;
+> >  
+> >  	if (!info->status) {
+> > -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> > +		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent)\n",
+> >  			aer_error_severity_string[info->severity]);
+> >  		goto out;
+> >  	}
+> > -- 
+> > 2.25.1
+> > 
+> > _______________________________________________
+> > Linux-kernel-mentees mailing list
+> > Linux-kernel-mentees@lists.linuxfoundation.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
