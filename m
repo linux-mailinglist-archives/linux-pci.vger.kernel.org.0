@@ -2,139 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D80AA436134
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 14:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42EFA436194
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 14:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231570AbhJUMT2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 08:19:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:41900 "EHLO foss.arm.com"
+        id S230231AbhJUM3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 08:29:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:42006 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231561AbhJUMT1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Oct 2021 08:19:27 -0400
+        id S231297AbhJUM3t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Oct 2021 08:29:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EC041063;
-        Thu, 21 Oct 2021 05:17:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7424ED1;
+        Thu, 21 Oct 2021 05:27:32 -0700 (PDT)
 Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458063F73D;
-        Thu, 21 Oct 2021 05:17:10 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 13:17:05 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 663083F73D;
+        Thu, 21 Oct 2021 05:27:31 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 13:27:29 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, kishon@ti.com
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Songxiaowei <songxiaowei@hisilicon.com>,
         Binghui Wang <wangbinghui@hisilicon.com>,
-        Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v15 00/13] Add support for Hikey 970 PCIe
-Message-ID: <20211021121704.GA12568@lpieralisi>
-References: <cover.1634812676.git.mchehab+huawei@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v14 05/11] PCI: kirin: give more time for PERST# reset to
+ finish
+Message-ID: <20211021122728.GB12568@lpieralisi>
+References: <cover.1634622716.git.mchehab+huawei@kernel.org>
+ <9a365cffe5af9ec5a1f79638968c3a2efa979b65.1634622716.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1634812676.git.mchehab+huawei@kernel.org>
+In-Reply-To: <9a365cffe5af9ec5a1f79638968c3a2efa979b65.1634622716.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Kishon]
+On Tue, Oct 19, 2021 at 07:06:42AM +0100, Mauro Carvalho Chehab wrote:
+> Before code refactor, the PERST# signals were sent at the
+> end of the power_on logic. Then, the PCI core would probe for
+> the buses and add them.
+> 
+> The new logic changed it to send PERST# signals during
+> add_bus operation. That altered the timings.
+> 
+> Also, HiKey 970 require a little more waiting time for
+> the PCI bridge - which is outside the SoC - to finish
+> the PERST# reset, and then initialize the eye diagram.
+> 
 
-On Thu, Oct 21, 2021 at 11:45:07AM +0100, Mauro Carvalho Chehab wrote:
-> Hi Lorenzo,
+Ok, now you explained it and we should move this explanation
+in the commit log that this change is affecting (I mean we
+should squash this patch with the patch that actually requires it
+- I am not sure whether it is patch 6 or another one).
+
+I can do it for you; I thought it would be a standalone change
+but it actually isn't, because it is brought about by the
+changes you are making and therefore there it belongs.
+
+Thanks for explaining it and apologies for the churn.
+
+Lorenzo
+
+> So, increase the waiting time for the PERST# signals to
+> what's required for it to also work with HiKey 970.
 > 
-> I split patch 09/10 from v13 into three patches, in order to have one logical
-> change per patch, adding a proper descriptio to each of them. The final
-> code didn change.
-> 
-> The pcie-kirin PCIe driver contains internally a PHY interface for
-> Kirin 960, but it misses support for Kirin 970. A new PHY driver
-> for it was added at drivers/phy/hisilicon/phy-hi3670-pcie.c
-> (already merged via PHY tree).
-> 
-> Add support for Kirin 970 PHY driver at the pcie-kirin.c.
-> 
-> While here, also add the needed logic to compile it as module and
-> to allow to dynamically remove the driver in runtime.
-> 
-> Tested on HiKey970:
-> 
->   # lspci -D -PP
->   0000:00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3670 (rev 01)
->   0000:00:00.0/01:00.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:01.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:04.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:05.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:07.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:09.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
->   0000:00:00.0/01:00.0/02:01.0/03:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd Device a809
->   0000:00:00.0/01:00.0/02:07.0/06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 07)
-> 
-> Tested on HiKey960:
-> 
->   # lspci -D 
->   0000:00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3660 (rev 01)
-> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
 > 
-> v15:
->   - The power-off fix patch was split into 3, in order to have one logical change
->     per patch.
->   -  Removed Fixes: tag from the poweroff patch;
->   - Adjusted capitalization of two patch summary lines
->   - No functional changes. The diff of this series is identical to v14.
+> See [PATCH v14 00/11] at: https://lore.kernel.org/all/cover.1634622716.git.mchehab+huawei@kernel.org/
 > 
-> v14:
->   - Split a timeout logic from patch 4, placing it on a separate patch;
->   - Added fixes: and cc: tags to the power_off fixup patch;
->   - change a typecast from of_data to long, in order to avoid a warning on
->     some randconfigs;
->   - removed uneeded brackets at the power_off patch;
->   - reordered struct device pointers at kirin_pcie_get_resource();
->   - added a c/c to kishon at the PHY-related patches.
+>  drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v13:
->   - Added Xiaowei's ack for the series.
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index de375795a3b8..bc329673632a 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -113,7 +113,7 @@ struct kirin_pcie {
+>  #define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
+>  
+>  /* Time for delay */
+> -#define REF_2_PERST_MIN		20000
+> +#define REF_2_PERST_MIN		21000
+>  #define REF_2_PERST_MAX		25000
+>  #define PERST_2_ACCESS_MIN	10000
+>  #define PERST_2_ACCESS_MAX	12000
+> -- 
+> 2.31.1
 > 
-> v12:
->   - Change a comment at patch 1 to not use c99 style.
-> 
-> v11:
->   - patch 5 changed to use the right PCIe topology
->   - all other patches are identical to v10.
-> 
-> v10:
->   - patch 1: dropped magic numbers from PHY driver
->   - patch 5: allow pcie child nodes without reset-gpios
->   - all other patches are identical to v9.
-> 
-> v9:
->   - Did some cleanups at patches 1 and 5
-> 
-> Mauro Carvalho Chehab (13):
->   PCI: kirin: Reorganize the PHY logic inside the driver
->   PCI: kirin: Add support for a PHY layer
->   PCI: kirin: Use regmap for APB registers
->   PCI: kirin: Add support for bridge slot DT schema
->   PCI: kirin: Give more time for PERST# reset to finish
->   PCI: kirin: Add Kirin 970 compatible
->   PCI: kirin: Add MODULE_* macros
->   PCI: kirin: Allow building it as a module
->   PCI: kirin: Add power_off support for Kirin 960 PHY
->   PCI: kirin: Move the power-off code to a common routine
->   PCI: kirin: Disable clkreq during poweroff sequence
->   PCI: kirin: De-init the dwc driver
->   PCI: kirin: Allow removing the driver
-> 
->  drivers/pci/controller/dwc/Kconfig      |   2 +-
->  drivers/pci/controller/dwc/pcie-kirin.c | 643 ++++++++++++++++++------
->  2 files changed, 497 insertions(+), 148 deletions(-)
-
-Hi Kishon,
-
-can I ask you please to have a look at patches [1,2] ?
-
-I'd like to merge this series for v5.16, please let me know.
-
-Thanks,
-Lorenzo
