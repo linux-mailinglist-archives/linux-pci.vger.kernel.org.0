@@ -2,185 +2,322 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5ED9436865
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 18:53:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62F80436883
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 18:58:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231777AbhJUQz7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 12:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231220AbhJUQz7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 12:55:59 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15646C061764;
-        Thu, 21 Oct 2021 09:53:43 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id j190so903839pgd.0;
-        Thu, 21 Oct 2021 09:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OlNOkFhzU3j5XM9ZPcyVDkeJMjH142Uqr0gwlxi3bRA=;
-        b=F5RVO766FluIl4AToZJDQXmFsz16TOfeR7UbrhvTAIJUkO7hxlIfOQUoMjb75kUCJF
-         MVbV3rFlfwOn1fWzB0kel2RZgGB/ug+w5h+EIcUOPxTxWZ6XhPPcT1fUzRqdTP0sc3YH
-         pa7f0k1fokCzZ2ATX4pPZcjGocYjRUCljb0rUvMrEEP8CTZZalHAsXJDfsPhKUaWF74f
-         U/m1gMCbv69Ob6kvEGgWZg/gweXrLoUpz06n9Y/VbKNdLNh3WueHuiokW2ubnPnkiyem
-         AoyYHComkiqxLJRMIz0fXglYOOTvJArUNTKaoNTd2PWGFggTyJ0Iq1UVo3kqPVowRlMS
-         Sing==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OlNOkFhzU3j5XM9ZPcyVDkeJMjH142Uqr0gwlxi3bRA=;
-        b=yTEsW9X+O5Hx2jPib44Sr3f5FiaVoBdZE18JfZIGqgUiUkjrTOzGzQdMfZVDgczB8i
-         yzM19z0ftelBHfH2Xqk5WJpsWQgQDb20eEV8DFfAgNgHrM8HArTCc/frONz6JyPuZ8k/
-         hKoEJ11ONeIUqs/PKvlgNF4QPC30Vam7HbX8FrOVpYj0leVA3aTtfL7f0gvZOmle+Kkv
-         M2dj8Vnwj3bmvjiEaCT8j8dxj72H7L2YBY89NS+1U+gz4rdBYAu9veL/sD/dE1i/EQYW
-         K+SyYKKsM1xsW5pQ0t/MSdWCGEagz86SNdSrgrAy1gxxtcsX+BCIwHUH53dmEBO28FNX
-         D2JA==
-X-Gm-Message-State: AOAM532cmCOukPEfByKDumeGUQ+KZywefz06UqfXUC4024wbAP7JZqQy
-        +3WWmmf7AK2khPIl92cV1TA=
-X-Google-Smtp-Source: ABdhPJzmj35HHVG/6CI1U59JcAVVWqK32Kb2AQrdfLKvvjhRvJ2S69LK41LYA5SFNSc3yXRLlJ4kTQ==
-X-Received: by 2002:a63:b007:: with SMTP id h7mr5193594pgf.443.1634835222405;
-        Thu, 21 Oct 2021 09:53:42 -0700 (PDT)
-Received: from theprophet ([2406:7400:63:29a4:d874:a949:6890:f95f])
-        by smtp.gmail.com with ESMTPSA id r31sm10005050pjg.28.2021.10.21.09.53.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 09:53:41 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 22:23:30 +0530
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Keith Busch <kbusch@kernel.org>, Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>
-Subject: Re: [PATCH v4 5/8] PCI/DPC: Converge EDR and DPC Path of clearing
- AER registers
-Message-ID: <20211021165330.lcqajtwej4s7oadt@theprophet>
-References: <0a443323ab64ba8c0fc6caa03ca56ecd4d038ea3.1633453452.git.naveennaidu479@gmail.com>
- <20211021020934.GA2658296@bhelgaas>
+        id S231745AbhJURAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 13:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231509AbhJURAN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Oct 2021 13:00:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 34D7C61505;
+        Thu, 21 Oct 2021 16:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634835477;
+        bh=4zPdjIuTMalS3etmWOWAm6Y1a2zeL7J/GOFHCrstb+g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Qu/rp9FHCcPg2R1Jb5waXx7nsOgmNRPiW5ChsRQLXgPMCgYfaj1vvEPatgOnEtk5U
+         vFgvJTgmhLHM4b5e5rIfOAE7IK1BPDXNFxRQQDTHQri4BwgrCH/YgfB9HOuqDZDWBM
+         Ev7AlZGRSbjYQXkAhOWKTERbsiuDNL7pEENcuS0DlYDoz2p7rzCY2eo40WSOOCObMe
+         Q1kTsRUYujGK6JxqRBcHqWA+mhoCf4oJgmccGb/H8Q+XJZHjI85JPTkjN5Hvf7vaIH
+         u9lY6GZySz24Av/gXarFzbcEJB+G/OuIqrbClMU4nCuqWJ8wwn4AVZfdOgqhjlCgLc
+         z0q0bM/6YL5KA==
+Date:   Thu, 21 Oct 2021 11:57:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xuesong Chen <xuesong.chen@linux.alibaba.com>
+Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Huang Ying <ying.huang@intel.com>,
+        Gong <gong.chen@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] ACPI: APEI: Filter the PCI MCFG address with an
+ arch-agnostic method
+Message-ID: <20211021165755.GA2697570@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211021020934.GA2658296@bhelgaas>
+In-Reply-To: <7716ac99-34a1-2364-03ee-6ecd92b39f5b@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/10, Bjorn Helgaas wrote:
-> [+cc Keith, Sinan, Oza]
-> 
-> On Tue, Oct 05, 2021 at 10:48:12PM +0530, Naveen Naidu wrote:
-> > In the EDR path, AER registers are cleared *after* DPC error event is
-> > processed. The process stack in EDR is:
+On Thu, Oct 21, 2021 at 11:46:40PM +0800, Xuesong Chen wrote:
+> On 21/10/2021 02:50, Bjorn Helgaas wrote:
+> > On Wed, Oct 20, 2021 at 11:16:38AM +0800, Xuesong Chen wrote:
+> >> On 20/10/2021 03:23, Bjorn Helgaas wrote:
+> >>> On Tue, Oct 19, 2021 at 12:50:33PM +0800, Xuesong Chen wrote:
+
+> >>>> This patch will try to handle this case in a more common way
+> >>>> instead of the original 'arch' specific solution, which will be
+> >>>> beneficial to all the APEI-dependent platforms after that.
+> >>>
+> >>> This actually doesn't say anything about what the patch does or
+> >>> how it works.  It says "handles this case in a more common way"
+> >>> but with no details.
+> >>
+> >> Good suggestion, I'll give more details about that...
+> >>
+> >>> The EINJ table contains "injection instructions" that can read
+> >>> or write "register regions" described by generic address
+> >>> structures (see ACPI v6.3, sec 18.6.2 and 18.6.3), and
+> >>> __einj_error_trigger() requests those register regions with
+> >>> request_mem_region() or request_region() before executing the
+> >>> injections instructions.
+> >>>
+> >>> IIUC, this patch basically says "if this region is part of the
+> >>> MCFG area, we don't need to reserve it." That leads to the
+> >>> questions of why we need to reserve *any* of the areas
+> >>
+> >> AFAIK, the MCFG area is reserved since the ECAM module will
+> >> provide a generic Kernel Programming Interfaces(KPI), e.g,
+> >> pci_generic_config_read(...), so all the drivers are allowed to
+> >> access the pci config space only by those KPIs in a consistent
+> >> and safe way, direct raw access will break the rule.  Correct me
+> >> if I am missing sth.
+> >>
+> >>> and why it's safe to simply skip reserving regions that are part
+> >>> of the MCFG area.
+> >>
+> >> Actual there is a commit d91525eb8ee6("ACPI, EINJ: Enhance error
+> >> injection tolerance level") before to address this issue, the
+> >> entire commit log as below:
+> >>
+> >>     Some BIOSes utilize PCI MMCFG space read/write opertion to trigger
+> >>     specific errors. EINJ will report errors as below when hitting such
+> >>     cases:
+> >>     
+> >>     APEI: Can not request [mem 0x83f990a0-0x83f990a3] for APEI EINJ Trigger registers
+> >>     
+> >>     It is because on x86 platform ACPI based PCI MMCFG logic has
+> >>     reserved all MMCFG spaces so that EINJ can't reserve it again.
+> >>     We already trust the ACPI/APEI code when using the EINJ interface
+> >>     so it is not a big leap to also trust it to access the right
+> >>     MMCFG addresses. Skip address checking to allow the access.
 > > 
-> >   edr_handle_event()
-> >     dpc_process_error()
-> >     pci_aer_raw_clear_status()
-> >     pcie_do_recovery()
+> > I'm not really convinced by that justification because I don't
+> > think the issue here is *trust*.  If all we care about is trust,
+> > and we trust the ACPI/APEI code, why do we need to reserve
+> > anything at all when executing EINJ actions?
 > > 
-> > But in DPC path, AER status registers are cleared *while* processing
-> > the error. The process stack in DPC is:
+> > I think the resource reservation issue is about coordinating
+> > multiple users of the address space.  A driver reserves the MMIO
+> > address space of a device it controls so no other driver can
+> > reserve it at the same time and cause conflicts.
 > > 
-> >   dpc_handler()
-> >     dpc_process_error()
-> >       pci_aer_clear_status()
-> >     pcie_do_recovery()
-> 
-> These are accurate but they both include dpc_process_error(), so we
-> need a hint to show why the one here is different from the one in the
-> EDR path, e.g.,
-> 
->   dpc_handler
->     dpc_process_error
->       if (reason == 0)
->         pci_aer_clear_status    # uncorrectable errors only
->     pcie_do_recovery
-> 
-> > In EDR path, AER status registers are cleared irrespective of whether
-> > the error was an RP PIO or unmasked uncorrectable error. But in DPC, the
-> > AER status registers are cleared only when it's an unmasked uncorrectable
-> > error.
+> > I'm not really convinced by this mutual exclusion argument either,
+> > because I haven't yet seen a situation where we say "EINJ needs a
+> > resource that's already in use by somebody else, so we can't use
+> > EINJ."  When conflicts arise, the response is always "we'll just
+> > stop reserving this conflicting resource but use it anyway."
 > > 
-> > This leads to two different behaviours for the same task (handling of
-> > DPC errors) in FFS systems and when native OS has control.
-> 
-> FFS?
->
-
-Firmware First Systems
-
-> I'd really like to have a specific example of how a user would observe
-> this difference.  I know you probably don't have two systems to
-> compare like that, but maybe we can work it out manually.
-> 
-
-Apologies again! Reading through the code again and the specification, I
-realize that my understanding was very incorrect at the time of making
-this patch. I grossly oversimplified EDR and DPC when I was learning
-about it.
-
-I'll drop this patch when I send the v5 for the series.
-
-Apologies again ^^'
-
-> I guess you're saying the problem is in the native DPC handling, and
-> we don't clear the AER status registers for ERR_NONFATAL,
-> ERR_NONFATAL, etc., right?
-> 
-
-But yes, I did have this question though (I wasn't able to find the
-answers to it when reading the spec). Why do we not clear the entire
-ERR_NONFATAL and ERR_FATAL registers in the DPC path just like EDR does
-using the pci_aer_raw_clear_status() before going to pcie_do_recovery()
-
-I am sure I might have missed something in the spec. I guess I'll
-look/re-read these bits again.
-
-Thanks for the review :)
-
-> I think the current behavior is from 8aefa9b0d910 ("PCI/DPC: Print AER
-> status in DPC event handling"), where Keith explicitly mentions those
-> cases.  The commit log here should connect back to that and explain
-> whether something has changed.
-> 
-> I cc'd Keith and the reviewers of that change in case any of them have
-> time to dig into this again.
-> 
-> > Bring the same semantics for clearing the AER status register in EDR
-> > path and DPC path.
+> > I think the only real value in apei_resources_request() is a
+> > little bit of documentation in /proc/iomem.  For ERST and EINJ,
+> > even that only lasts for the tiny period when we're actually
+> > executing an action.
 > > 
-> > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> > ---
-> >  drivers/pci/pcie/dpc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > So convince me there's a reason why we shouldn't just remove
+> > apei_resources_request() completely :)
+> 
+> I have to confess that currently I have no strong evidence/reason to
+> convince you that it's absolute safe to remove
+> apei_resources_request(),  probably in some conditions it *does*
+> require to follow the mutual exclusion usage model.  The ECAM/MCFG
+> maybe a special case not like other normal device driver, since all
+> its MCFG space has been reserved during the initialization. Anyway,
+> it's another topic and good point well worth discussing in the
+> future.
+
+This is missing the point.  It's not the MCFG reservation during
+initialization that would make this safe.  What would make it safe is
+the fact that ECAM does not require mutual exclusion.
+
+When the hardware implements ECAM correctly, PCI config accesses do
+not require locking because a config access requires a single MMIO
+load or store.
+
+Many non-ECAM config accessors *do* require locking because they use
+several register accesses, e.g., the 0xCF8/0xCFC address/data pairs
+used by pci_conf1_read().  If EINJ actions used these, we would have
+to enforce mutual exclusion between EINJ config accesses and those
+done by other drivers.
+
+Some ARM64 platforms do not implement ECAM correctly, e.g.,
+tegra194_map_bus() programs an outbound ATU and xgene_pcie_map_bus()
+sets an RTDID register before the MMIO load/store.  Platforms like
+this *do* require mutual exclusion between an EINJ config access and
+other config accesses.
+
+These platforms are supported via quirks in pci_mcfg.c, so they will
+have resources in the pci_mcfg_list, and if we just ignore all the
+MCFG resources in apei_resources_request(), there will be nothing to
+prevent ordinary driver config accesses from being corrupted by EINJ
+accesses.
+
+I think in general, is probably *is* safe to remove MCFG resources
+from the APEI reservations, but it would be better if we had some way
+to prevent EINJ from using MCFG on platforms like tegra194 and xgene.
+
+> From the patch set itself, I don't think it's a nice idea to make a
+> dramatic change regarding the apei_resources_request() part, I
+> suggest to keep the original rationale untouched and based on that
+> to fix the real issue at hand in a more generic way.
+
+There *was* no original rationale.  The whole point of this
+conversation is to figure out what the real rationale is.
+
+> >> Except that the above explanation, IMO the EINJ is only a RAS
+> >> debug framework, in this code path, sometimes we need to acesss
+> >> the address within the MCFG space directly to trigger kind of HW
+> >> error, which behavior does not like the normal device driver's,
+> >> in this case some possible unsafe operations (bypass the ecam
+> >> ops) can be mitigated because the touched device will generate
+> >> some HW errors and the RAS handling part will preempt its
+> >> corresponding drivers to fix/log the HW error, that's my
+> >> understanding about that.
 > > 
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index faf4a1e77fab..68899a3db126 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -288,7 +288,6 @@ void dpc_process_error(struct pci_dev *pdev)
-> >  		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> >  		 aer_get_device_error_info(pdev, &info)) {
-> >  		aer_print_error(pdev, &info);
-> > -		pci_aer_clear_status(pdev);
-> >  	}
-> >  }
-> >  
-> > @@ -297,6 +296,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
-> >  	struct pci_dev *pdev = context;
-> >  
-> >  	dpc_process_error(pdev);
-> > +	pci_aer_clear_status(pdev);
-> >  
-> >  	/* We configure DPC so it only triggers on ERR_FATAL */
-> >  	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
-> > -- 
-> > 2.25.1
-> > 
-> > _______________________________________________
-> > Linux-kernel-mentees mailing list
-> > Linux-kernel-mentees@lists.linuxfoundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+> >>>> Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
+> >>>> Reported-by: kernel test robot <lkp@intel.com>
+> >>>> Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> >>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >>>> Cc: James Morse <james.morse@arm.com>
+> >>>> Cc: Will Deacon <will@kernel.org>
+> >>>> Cc: Rafael. J. Wysocki <rafael@kernel.org>
+> >>>> Cc: Tony Luck <tony.luck@intel.com>
+> >>>> Cc: Tomasz Nowicki <tn@semihalf.com>
+> >>>> ---
+> >>>>  arch/x86/pci/mmconfig-shared.c | 28 --------------------------
+> >>>>  drivers/acpi/apei/apei-base.c  | 45 ++++++++++++++++++++++++++++--------------
+> >>>>  2 files changed, 30 insertions(+), 43 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+> >>>> index 0b961fe6..12f7d96 100644
+> >>>> --- a/arch/x86/pci/mmconfig-shared.c
+> >>>> +++ b/arch/x86/pci/mmconfig-shared.c
+> >>>> @@ -605,32 +605,6 @@ static int __init pci_parse_mcfg(struct acpi_table_header *header)
+> >>>>  	return 0;
+> >>>>  }
+> >>>>  
+> >>>> -#ifdef CONFIG_ACPI_APEI
+> >>>> -extern int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
+> >>>> -				     void *data), void *data);
+> >>>> -
+> >>>> -static int pci_mmcfg_for_each_region(int (*func)(__u64 start, __u64 size,
+> >>>> -				     void *data), void *data)
+> >>>> -{
+> >>>> -	struct pci_mmcfg_region *cfg;
+> >>>> -	int rc;
+> >>>> -
+> >>>> -	if (list_empty(&pci_mmcfg_list))
+> >>>> -		return 0;
+> >>>> -
+> >>>> -	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
+> >>>> -		rc = func(cfg->res.start, resource_size(&cfg->res), data);
+> >>>> -		if (rc)
+> >>>> -			return rc;
+> >>>> -	}
+> >>>> -
+> >>>> -	return 0;
+> >>>> -}
+> >>>> -#define set_apei_filter() (arch_apei_filter_addr = pci_mmcfg_for_each_region)
+> >>>> -#else
+> >>>> -#define set_apei_filter()
+> >>>> -#endif
+> >>>> -
+> >>>>  static void __init __pci_mmcfg_init(int early)
+> >>>>  {
+> >>>>  	pci_mmcfg_reject_broken(early);
+> >>>> @@ -665,8 +639,6 @@ void __init pci_mmcfg_early_init(void)
+> >>>>  		else
+> >>>>  			acpi_table_parse(ACPI_SIG_MCFG, pci_parse_mcfg);
+> >>>>  		__pci_mmcfg_init(1);
+> >>>> -
+> >>>> -		set_apei_filter();
+> >>>>  	}
+> >>>>  }
+> >>>>  
+> >>>> diff --git a/drivers/acpi/apei/apei-base.c b/drivers/acpi/apei/apei-base.c
+> >>>> index c7fdb12..daae75a 100644
+> >>>> --- a/drivers/acpi/apei/apei-base.c
+> >>>> +++ b/drivers/acpi/apei/apei-base.c
+> >>>> @@ -21,6 +21,7 @@
+> >>>>  #include <linux/kernel.h>
+> >>>>  #include <linux/module.h>
+> >>>>  #include <linux/init.h>
+> >>>> +#include <linux/pci.h>
+> >>>>  #include <linux/acpi.h>
+> >>>>  #include <linux/slab.h>
+> >>>>  #include <linux/io.h>
+> >>>> @@ -448,13 +449,34 @@ static int apei_get_nvs_resources(struct apei_resources *resources)
+> >>>>  	return acpi_nvs_for_each_region(apei_get_res_callback, resources);
+> >>>>  }
+> >>>>  
+> >>>> -int (*arch_apei_filter_addr)(int (*func)(__u64 start, __u64 size,
+> >>>> -				     void *data), void *data);
+> >>>> -static int apei_get_arch_resources(struct apei_resources *resources)
+> >>>> +#ifdef CONFIG_PCI
+> >>>> +extern struct list_head pci_mmcfg_list;
+> >>>> +static int apei_filter_mcfg_addr(struct apei_resources *res,
+> >>>> +			struct apei_resources *mcfg_res)
+> >>>> +{
+> >>>> +	int rc = 0;
+> >>>> +	struct pci_mmcfg_region *cfg;
+> >>>> +
+> >>>> +	if (list_empty(&pci_mmcfg_list))
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	apei_resources_init(mcfg_res);
+> >>>> +	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
+> >>>> +		rc = apei_res_add(&mcfg_res->iomem, cfg->res.start, resource_size(&cfg->res));
+> >>>> +		if (rc)
+> >>>> +			return rc;
+> >>>> +	}
+> >>>>  
+> >>>> +	/* filter the mcfg resource from current APEI's */
+> >>>> +	return apei_resources_sub(res, mcfg_res);
+> >>>> +}
+> >>>> +#else
+> >>>> +static inline int apei_filter_mcfg_addr(struct apei_resources *res,
+> >>>> +			struct apei_resources *mcfg_res)
+> >>>>  {
+> >>>> -	return arch_apei_filter_addr(apei_get_res_callback, resources);
+> >>>> +	return 0;
+> >>>>  }
+> >>>> +#endif
+> >>>>  
+> >>>>  /*
+> >>>>   * IO memory/port resource management mechanism is used to check
+> >>>> @@ -486,15 +508,9 @@ int apei_resources_request(struct apei_resources *resources,
+> >>>>  	if (rc)
+> >>>>  		goto nvs_res_fini;
+> >>>>  
+> >>>> -	if (arch_apei_filter_addr) {
+> >>>> -		apei_resources_init(&arch_res);
+> >>>> -		rc = apei_get_arch_resources(&arch_res);
+> >>>> -		if (rc)
+> >>>> -			goto arch_res_fini;
+> >>>> -		rc = apei_resources_sub(resources, &arch_res);
+> >>>> -		if (rc)
+> >>>> -			goto arch_res_fini;
+> >>>> -	}
+> >>>> +	rc = apei_filter_mcfg_addr(resources, &arch_res);
+> >>>> +	if (rc)
+> >>>> +		goto arch_res_fini;
+> >>>>  
+> >>>>  	rc = -EINVAL;
+> >>>>  	list_for_each_entry(res, &resources->iomem, list) {
+> >>>> @@ -544,8 +560,7 @@ int apei_resources_request(struct apei_resources *resources,
+> >>>>  		release_mem_region(res->start, res->end - res->start);
+> >>>>  	}
+> >>>>  arch_res_fini:
+> >>>> -	if (arch_apei_filter_addr)
+> >>>> -		apei_resources_fini(&arch_res);
+> >>>> +	apei_resources_fini(&arch_res);
+> >>>>  nvs_res_fini:
+> >>>>  	apei_resources_fini(&nvs_resources);
+> >>>>  	return rc;
+> >>>> -- 
+> >>>> 1.8.3.1
+> >>>>
