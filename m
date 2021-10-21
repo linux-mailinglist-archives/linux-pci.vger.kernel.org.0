@@ -2,101 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1CED43652A
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED8CC436532
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:10:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbhJUPMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 11:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48812 "EHLO
+        id S231640AbhJUPMh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 11:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230471AbhJUPME (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:12:04 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878B0C0613B9;
-        Thu, 21 Oct 2021 08:09:48 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id q10-20020a17090a1b0a00b001a076a59640so5972767pjq.0;
-        Thu, 21 Oct 2021 08:09:48 -0700 (PDT)
+        with ESMTP id S231767AbhJUPMe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:12:34 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19CCC061348;
+        Thu, 21 Oct 2021 08:10:16 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id nn3-20020a17090b38c300b001a03bb6c4ebso781421pjb.1;
+        Thu, 21 Oct 2021 08:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TfHsGP2yi6lWLecTIcZVrIhetTubqUKD7yLErDw3x2w=;
-        b=EUZaSbSsvxfgQPDyiZv6K9FvbiaFo8lnIoEmpC0ubPuoqxNOuIOf4K8ZsIh578ws0Z
-         2EDdrEbYHum8lqROFe1C/onYlVaB50CDb5AwppL0LpxiFNIEWdnc8cQjEFdXeAobfidj
-         x8qfJAw0gdtPVdlvPc21q9Yxry610dr7WFKlVHFUO1eyzNlo/F03H3hyjJckpZwfON5S
-         b21ly6HIsBApY6VwbYgoI1P/Fu0X1AZm7c/Cai3cT3TlLzr9REQ44ISEUK3PawQUbAVm
-         ZC1Qe6WDuHchsm5VVBggdsA8zJ1Xgd6h2KTs8gi19LGsz2M2EyYOMMdey6IAUQiBbt/o
-         +Ubw==
+        bh=szm9mPrVF9g7VHjr68cY48MjU0fXHj5hkhxS0Uhiec4=;
+        b=kzhKz8HKnq/yurgUnRRmdMnpoO4/E0k9gxB0o6nvZkLULxDO/GXx/MQ04A4PT92FZ1
+         fGMd51fYe7BJJomc6FYPAhwkSJFS+5njkw33/E4TIiIkQoZrPJ7HEzZsbiOLaz28kbju
+         sYjWzeIr1owBkBsMQRiYSiissNBK0MhsxWMadZlUsbqzUctoqzURKC8Qjxvfb8+ZfmzT
+         rGtm3yAMC0z7Fs3AFOyuk0RAvdNarXTjk4G4e2l+GVhhzS2x892CfRbvf8H70szLOkx2
+         E3V5M98AYF9SrcgGsJOG7OAZPAy2TTdHAb7DSeiYO82oiXtqtYbl82JDl4HjQPHm7LQE
+         evpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TfHsGP2yi6lWLecTIcZVrIhetTubqUKD7yLErDw3x2w=;
-        b=hMbFAjGWeF5HtbledEOQn4mwZraG0Xq7EPug3qqVmFqva9+xVpfhr92V8sp5Go/A2z
-         7K2Xkf41Vs+TSkjHdxEXOLvE8hjZwn8npusOvhX1xqwAonW7WRPTe9b3gPx6B+9I62nx
-         VffquK5koCdh2V+luLBRZ773jo4pVTQyA40mTewdoLMYx9OZaC75EUfaPM9DRP5k8EOk
-         7xoZA7KEebk4i+8CZ/n0GSFLMT/6/jGZbBwch5WY2NULN8fbU9oLoCfNvjG5flVbvuWO
-         LzxclB3tccZ/bswlwqs39OQ+xje343oWOhhUX3gnZoYELpST+2PiQO9ecHMY2KyhoE3k
-         1RrQ==
-X-Gm-Message-State: AOAM532ez8WxjX+rGe/jMsP55a6mNCPyXRAgkx3aY+n78rIN5G7Ynabl
-        cgXqskLRqVEh+QN3mBXDQmg=
-X-Google-Smtp-Source: ABdhPJxCZzHdSx53dvdDywLg2snzLq3kKzeBkBrose+fBiquWSSELbthuFAJlsRxyfUjW/fn7V8LMg==
-X-Received: by 2002:a17:902:d4d1:b0:13f:af7:9068 with SMTP id o17-20020a170902d4d100b0013f0af79068mr5714981plg.20.1634828988016;
-        Thu, 21 Oct 2021 08:09:48 -0700 (PDT)
+        bh=szm9mPrVF9g7VHjr68cY48MjU0fXHj5hkhxS0Uhiec4=;
+        b=HQNepnpzmm4yiYUQhCUcNdy3S4unfYqj3jomrhjsW/TtBylvYMWZvThALknY6w09Mn
+         u4I1kMZCM7rAbaVB/XFSXf+Kz9w2MkVJqec4hT5hPF1sw+gttjpdkhZUteLTO/XAc63K
+         vC75NmKzSNcj9VS3mD14yQT+mWkhn2XgfD+AIr7+5Thae0+Q/HSGvalIW7kBmaez90Dj
+         mfHc4FV+/znk2Rpyce3E9ZxDTJjExTj48QxrnxX+jcYDDQFF3io+jRFUPtL2VSzDO3cF
+         goTD3F9SAN0Mi/yZFqgBgu7pissO8u3bJSWMqlJOVaH+VeQDdEsRe3fNNI3oCJufCkDv
+         cuKQ==
+X-Gm-Message-State: AOAM533LIqz2NaqDFzCn4DPW5xlUNUJZWGmkAN9g+nhQ/ZB4Vssu1i2j
+        spsEgjgb16Rrso+veIZ8Wv8=
+X-Google-Smtp-Source: ABdhPJwVrzLwzW5dNVxm5WaGcslw2IFkRx5KjyYZwwVA7XYHIn4ISCyJaDYSwbRx4bq3u4ZOxnFu2w==
+X-Received: by 2002:a17:90a:4306:: with SMTP id q6mr7327842pjg.202.1634829016181;
+        Thu, 21 Oct 2021 08:10:16 -0700 (PDT)
 Received: from localhost.localdomain ([2406:7400:63:29a4:d874:a949:6890:f95f])
-        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.09.30
+        by smtp.gmail.com with ESMTPSA id c9sm5508027pgq.58.2021.10.21.08.10.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 08:09:47 -0700 (PDT)
+        Thu, 21 Oct 2021 08:10:15 -0700 (PDT)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        skhan@linuxfoundation.org, Robert Richter <rric@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM IPROC ARM
-        ARCHITECTURE), Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Amey Narkhede <ameynarkhede03@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Toan Le <toan@os.amperecomputing.com>
-Subject: [PATCH v3 02/25] PCI: Set error response in config access defines when ops->read() fails
-Date:   Thu, 21 Oct 2021 20:37:27 +0530
-Message-Id: <56642edd0d6bf8a8e3d20b5fcc088fd6389b827f.1634825082.git.naveennaidu479@gmail.com>
+        skhan@linuxfoundation.org
+Subject: [PATCH v3 03/25] PCI: Use SET_PCI_ERROR_RESPONSE() when device not found
+Date:   Thu, 21 Oct 2021 20:37:28 +0530
+Message-Id: <70e5763e4aa58876a7129ac3ccf600efd27162c4.1634825082.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1634825082.git.naveennaidu479@gmail.com>
 References: <cover.1634825082.git.naveennaidu479@gmail.com>
@@ -106,52 +65,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value with error
-response (~0), when the PCI device read by a host controller fails.
+An MMIO read from a PCI device that doesn't exist or doesn't respond
+causes a PCI error. There's no real data to return to satisfy the
+CPU read, so most hardware fabricates ~0 data.
 
-This ensures that the controller drivers no longer need to fabricate
-(~0) value when they detect error. It also  gurantees that the error
-response (~0) is always set when the controller drivers fails to read a
-config register from a device.
+Use SET_PCI_ERROR_RESPONSE() to set the error response, when a faulty
+read occurs.
 
-This makes error response fabrication consistent and helps in removal of
-a lot of repeated code.
+This helps unify PCI error response checking and make error check
+consistent and easier to find.
 
-Suggested-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/access.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/pci/access.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 46935695cfb9..0f732ba2f71a 100644
+index 0f732ba2f71a..a6bcbad04d89 100644
 --- a/drivers/pci/access.c
 +++ b/drivers/pci/access.c
-@@ -42,7 +42,10 @@ int noinline pci_bus_read_config_##size \
- 	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
- 	pci_lock_config(flags);						\
- 	res = bus->ops->read(bus, devfn, pos, len, &data);		\
--	*value = (type)data;						\
-+	if (res)							\
-+		SET_PCI_ERROR_RESPONSE(value);				\
-+	else								\
-+		*value = (type)data;					\
- 	pci_unlock_config(flags);					\
- 	return res;							\
- }
-@@ -228,7 +231,10 @@ int pci_user_read_config_##size						\
- 	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
- 					pos, sizeof(type), &data);	\
- 	raw_spin_unlock_irq(&pci_lock);				\
--	*val = (type)data;						\
-+	if (ret)							\
-+		SET_PCI_ERROR_RESPONSE(val);				\
-+	else								\
-+		*val = (type)data;					\
- 	return pcibios_err_to_errno(ret);				\
- }									\
- EXPORT_SYMBOL_GPL(pci_user_read_config_##size);
+@@ -529,7 +529,7 @@ EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
+ int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
+ {
+ 	if (pci_dev_is_disconnected(dev)) {
+-		*val = ~0;
++		SET_PCI_ERROR_RESPONSE(val);
+ 		return PCIBIOS_DEVICE_NOT_FOUND;
+ 	}
+ 	return pci_bus_read_config_byte(dev->bus, dev->devfn, where, val);
+@@ -539,7 +539,7 @@ EXPORT_SYMBOL(pci_read_config_byte);
+ int pci_read_config_word(const struct pci_dev *dev, int where, u16 *val)
+ {
+ 	if (pci_dev_is_disconnected(dev)) {
+-		*val = ~0;
++		SET_PCI_ERROR_RESPONSE(val);
+ 		return PCIBIOS_DEVICE_NOT_FOUND;
+ 	}
+ 	return pci_bus_read_config_word(dev->bus, dev->devfn, where, val);
+@@ -550,7 +550,7 @@ int pci_read_config_dword(const struct pci_dev *dev, int where,
+ 					u32 *val)
+ {
+ 	if (pci_dev_is_disconnected(dev)) {
+-		*val = ~0;
++		SET_PCI_ERROR_RESPONSE(val);
+ 		return PCIBIOS_DEVICE_NOT_FOUND;
+ 	}
+ 	return pci_bus_read_config_dword(dev->bus, dev->devfn, where, val);
 -- 
 2.25.1
 
