@@ -2,346 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E26D3436049
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 13:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D80AA436134
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 14:17:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbhJULco (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 07:32:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24651 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230325AbhJULcm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 07:32:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634815826;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mfc1QygQ/fCgvVOrbFl32ccsfwnckQuRrXWElGIUywE=;
-        b=GfbiMr4vwyGVAKi7+y2hYgJN0KFMAhJcGfBkiAqeO/1LLRSzIl4cWrM3adq5ML/GKtw/Ng
-        OWe5jaKzZu9Yw2tESG/Uww5Q/w4vda8FMlzF5gQtEp9+sDTp/BFCzP3PlDVp4bqOZMn7pf
-        WLfqjcBcDANcnHRJ/QzQ/K1OJmoUu08=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-604--35z4Oa4PqK_GmrpwaJJog-1; Thu, 21 Oct 2021 07:30:25 -0400
-X-MC-Unique: -35z4Oa4PqK_GmrpwaJJog-1
-Received: by mail-ed1-f70.google.com with SMTP id c30-20020a50f61e000000b003daf3955d5aso20124edn.4
-        for <linux-pci@vger.kernel.org>; Thu, 21 Oct 2021 04:30:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=mfc1QygQ/fCgvVOrbFl32ccsfwnckQuRrXWElGIUywE=;
-        b=RXtbuuZ2uJa+sF1v5ArIKB2Nlz5Io2Q7geFCiqtclgdPeHk/QSRg/5AI6sI6LxykXI
-         vIvPP4/8DHiRnLu/ltbEJ/tCBgUZr2NgtmZNTcYeLHUjGivX9jyl6ZZfDjW/Oam3GrSX
-         dFD8paUJqnY7GKBcS3YxE+woQ3REEZqNbjdmMyjNbFofbwWELD6UNoQ+xl6uX9EUWjQQ
-         IprUof6I0GPD25HdpQVqJB6Sw8nflomfnauL6s0Eb65rT5l+P1VFzxy2jxFho3PZ9upW
-         AYeraY3+1+rc+Y2VkITFsH1WOwik9R2cI3370Jvi85Z/0AwW0Drv0/dvVjZ7ijUm3DJD
-         TpYg==
-X-Gm-Message-State: AOAM531gC0O21y3JJncO7LaW2yF+hQbRfzSTU3pHlgxCrKYVpO2fe2OU
-        YMiL7D/Ajr0jKWeQk3QuO6WvCMCE2RCzrdPzAC9wpQeh5rUCoRkU+mgzeA8O8rIfXX45binQyzs
-        S8IrpjFWbShnpja0jtmqc
-X-Received: by 2002:a17:906:7fc9:: with SMTP id r9mr6339530ejs.542.1634815824179;
-        Thu, 21 Oct 2021 04:30:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzcOZbiMc90MtLQXfXC32XTSoeiFSc8N7qUI4Vci4dj2avy+BNMirgXMcO7p7irVTbQKn7xMA==
-X-Received: by 2002:a17:906:7fc9:: with SMTP id r9mr6339482ejs.542.1634815823801;
-        Thu, 21 Oct 2021 04:30:23 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id t6sm2750974edj.27.2021.10.21.04.30.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Oct 2021 04:30:23 -0700 (PDT)
-Message-ID: <c348daef-ba20-6a43-5424-d6e38b42557b@redhat.com>
-Date:   Thu, 21 Oct 2021 13:30:22 +0200
+        id S231570AbhJUMT2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 08:19:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:41900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231561AbhJUMT1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Oct 2021 08:19:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EC041063;
+        Thu, 21 Oct 2021 05:17:11 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458063F73D;
+        Thu, 21 Oct 2021 05:17:10 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 13:17:05 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, kishon@ti.com
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Rob Herring <robh@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v15 00/13] Add support for Hikey 970 PCIe
+Message-ID: <20211021121704.GA12568@lpieralisi>
+References: <cover.1634812676.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
- windows on newer systems
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20211019215240.GA2411590@bhelgaas>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211019215240.GA2411590@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1634812676.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-<note this is a resend to see if some bounces which I was getting
- from vger are resolved, please ignore>
+[+Kishon]
 
-Hi,
-
-On 10/19/21 23:52, Bjorn Helgaas wrote:
-> On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
->> Some BIOS-es contain a bug where they add addresses which map to system
->> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
->> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
->> space").
->>
->> To work around this bug Linux excludes E820 reserved addresses when
->> allocating addresses from the PCI host bridge window since 2010.
->>
->> Recently (2020) some systems have shown-up with E820 reservations which
->> cover the entire _CRS returned PCI bridge memory window, causing all
->> attempts to assign memory to PCI BARs which have not been setup by the
->> BIOS to fail. For example here are the relevant dmesg bits from a
->> Lenovo IdeaPad 3 15IIL 81WE:
->>
->>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->>
->> The ACPI specifications appear to allow this new behavior:
->>
->> The relationship between E820 and ACPI _CRS is not really very clear.
->> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
->>
->>   This range of addresses is in use or reserved by the system and is
->>   not to be included in the allocatable memory pool of the operating
->>   system's memory manager.
->>
->> and it may be used when:
->>
->>   The address range is in use by a memory-mapped system device.
->>
->> Furthermore, sec 15.2 says:
->>
->>   Address ranges defined for baseboard memory-mapped I/O devices, such
->>   as APICs, are returned as reserved.
->>
->> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
->> and its apertures are in use and certainly should not be included in
->> the general allocatable pool, so the fact that some BIOS-es reports
->> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
->>
->> So it seems that the excluding of E820 reserved addresses is a mistake.
->>
->> Ideally Linux would fully stop excluding E820 reserved addresses,
->> but then the old systems this was added for will regress.
->> Instead keep the old behavior for old systems, while ignoring
->> the E820 reservations for any systems from now on.
->>
->> Old systems are defined here as BIOS year < 2018, this was chosen to
->> make sure that pci_use_e820 will not be set on the currently affected
->> systems, while at the same time also taking into account that the
->> systems for which the E820 checking was originally added may have
->> received BIOS updates for quite a while (esp. CVE related ones),
->> giving them a more recent BIOS year then 2010.
->>
->> Also add pci=no_e820 and pci=use_e820 options to allow overriding
->> the BIOS year heuristic.
->>
->> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
->> BugLink: https://bugs.launchpad.net/bugs/1878279
->> BugLink: https://bugs.launchpad.net/bugs/1931715
->> BugLink: https://bugs.launchpad.net/bugs/1932069
->> BugLink: https://bugs.launchpad.net/bugs/1921649
->> Cc: Benoit Grégoire <benoitg@coeus.ca>
->> Cc: Hui Wang <hui.wang@canonical.com>
->> Cc: stable@vger.kernel.org
->> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Thu, Oct 21, 2021 at 11:45:07AM +0100, Mauro Carvalho Chehab wrote:
+> Hi Lorenzo,
 > 
-> I haven't seen anybody else eager to merge this, so I guess I'll stick
-> my neck out here.
+> I split patch 09/10 from v13 into three patches, in order to have one logical
+> change per patch, adding a proper descriptio to each of them. The final
+> code didn change.
 > 
-> I applied this to my for-linus branch for v5.15.
-
-Thank you, and sorry about the build-errors which the lkp
-kernel-test-robot found.
-
-I've just send out a patch which fixes these build-errors
-(verified with both .config-s from the lkp reports).
-Feel free to squash this into the original patch (or keep
-them separate, whatever works for you).
-
-Regards,
-
-Hans
-
-
->> ---
->> Changes in v5:
->> - Drop mention of Windows behavior from the commit msg, replace with a
->>   reference to the specs
->> - Improve documentation in Documentation/admin-guide/kernel-parameters.txt
->> - Reword the big comment added, use "PCI host bridge window" in it and drop
->>   all refences to Windows
->>
->> Changes in v4:
->> - Rewrap the big comment block to fit in 80 columns
->> - Add Rafael's Acked-by
->> - Add Cc: stable@vger.kernel.org
->>
->> Changes in v3:
->> - Commit msg tweaks (drop dmesg timestamps, typo fix)
->> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
->> - Add Mika's Reviewed-by
->>
->> Changes in v2:
->> - Replace the per model DMI quirk approach with disabling E820 reservations
->>   checking for all systems with a BIOS year >= 2018
->> - Add documentation for the new kernel-parameters to
->>   Documentation/admin-guide/kernel-parameters.txt
->> ---
->> Other patches trying to address the same issue:
->> https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
->> https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
->> V1 patch:
->> https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
->> ---
->>  .../admin-guide/kernel-parameters.txt         |  9 ++++++
->>  arch/x86/include/asm/pci_x86.h                | 10 +++++++
->>  arch/x86/kernel/resource.c                    |  4 +++
->>  arch/x86/pci/acpi.c                           | 28 +++++++++++++++++++
->>  arch/x86/pci/common.c                         |  6 ++++
->>  5 files changed, 57 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 43dc35fe5bc0..07f1615206d4 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -3949,6 +3949,15 @@
->>  				please report a bug.
->>  		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
->>  				If you need to use this, please report a bug.
->> +		use_e820	[X86] Use E820 reservations to exclude parts of
->> +				PCI host bridge windows. This is a workaround
->> +				for BIOS defects in host bridge _CRS methods.
->> +				If you need to use this, please report a bug to
->> +				<linux-pci@vger.kernel.org>.
->> +		no_e820		[X86] Ignore E820 reservations for PCI host
->> +				bridge windows. This is the default on modern
->> +				hardware. If you need to use this, please report
->> +				a bug to <linux-pci@vger.kernel.org>.
->>  		routeirq	Do IRQ routing for all PCI devices.
->>  				This is normally done in pci_enable_device(),
->>  				so this option is a temporary workaround
->> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
->> index 490411dba438..0bb4e7dd0ffc 100644
->> --- a/arch/x86/include/asm/pci_x86.h
->> +++ b/arch/x86/include/asm/pci_x86.h
->> @@ -39,6 +39,8 @@ do {						\
->>  #define PCI_ROOT_NO_CRS		0x100000
->>  #define PCI_NOASSIGN_BARS	0x200000
->>  #define PCI_BIG_ROOT_WINDOW	0x400000
->> +#define PCI_USE_E820		0x800000
->> +#define PCI_NO_E820		0x1000000
->>  
->>  extern unsigned int pci_probe;
->>  extern unsigned long pirq_table_addr;
->> @@ -64,6 +66,8 @@ void pcibios_scan_specific_bus(int busn);
->>  
->>  /* pci-irq.c */
->>  
->> +struct pci_dev;
->> +
->>  struct irq_info {
->>  	u8 bus, devfn;			/* Bus, device and function */
->>  	struct {
->> @@ -232,3 +236,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
->>  # define x86_default_pci_init_irq	NULL
->>  # define x86_default_pci_fixup_irqs	NULL
->>  #endif
->> +
->> +#if defined(CONFIG_PCI) && defined(CONFIG_ACPI)
->> +extern bool pci_use_e820;
->> +#else
->> +#define pci_use_e820 false
->> +#endif
->> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
->> index 9b9fb7882c20..e8dc9bc327bd 100644
->> --- a/arch/x86/kernel/resource.c
->> +++ b/arch/x86/kernel/resource.c
->> @@ -1,6 +1,7 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include <linux/ioport.h>
->>  #include <asm/e820/api.h>
->> +#include <asm/pci_x86.h>
->>  
->>  static void resource_clip(struct resource *res, resource_size_t start,
->>  			  resource_size_t end)
->> @@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
->>  	int i;
->>  	struct e820_entry *entry;
->>  
->> +	if (!pci_use_e820)
->> +		return;
->> +
->>  	for (i = 0; i < e820_table->nr_entries; i++) {
->>  		entry = &e820_table->entries[i];
->>  
->> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
->> index 948656069cdd..72d473054262 100644
->> --- a/arch/x86/pci/acpi.c
->> +++ b/arch/x86/pci/acpi.c
->> @@ -21,6 +21,8 @@ struct pci_root_info {
->>  
->>  static bool pci_use_crs = true;
->>  static bool pci_ignore_seg = false;
->> +/* Consumed in arch/x86/kernel/resource.c */
->> +bool pci_use_e820 = false;
->>  
->>  static int __init set_use_crs(const struct dmi_system_id *id)
->>  {
->> @@ -160,6 +162,32 @@ void __init pci_acpi_crs_quirks(void)
->>  	       "if necessary, use \"pci=%s\" and report a bug\n",
->>  	       pci_use_crs ? "Using" : "Ignoring",
->>  	       pci_use_crs ? "nocrs" : "use_crs");
->> +
->> +	/*
->> +	 * Some BIOS-es contain a bug where they add addresses which map to
->> +	 * system RAM in the PCI host bridge window returned by the ACPI _CRS
->> +	 * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
->> +	 * allocating address space"). To avoid this Linux by default excludes
->> +	 * E820 reservations when allocating addresses since 2010.
->> +	 * In 2020 some systems have shown-up with E820 reservations which cover
->> +	 * the entire _CRS returned PCI host bridge window, causing all attempts
->> +	 * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
->> +	 *
->> +	 * Ideally Linux would fully stop using E820 reservations, but then
->> +	 * the old systems this was added for will regress.
->> +	 * Instead keep the old behavior for old systems, while ignoring the
->> +	 * E820 reservations for any systems from now on.
->> +	 */
->> +	if (year >= 0 && year < 2018)
->> +		pci_use_e820 = true;
->> +
->> +	if (pci_probe & PCI_NO_E820)
->> +		pci_use_e820 = false;
->> +	else if (pci_probe & PCI_USE_E820)
->> +		pci_use_e820 = true;
->> +
->> +	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
->> +	       pci_use_e820 ? "Using" : "Ignoring");
->>  }
->>  
->>  #ifdef	CONFIG_PCI_MMCONFIG
->> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
->> index 3507f456fcd0..091ec7e94fcb 100644
->> --- a/arch/x86/pci/common.c
->> +++ b/arch/x86/pci/common.c
->> @@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
->>  	} else if (!strcmp(str, "nocrs")) {
->>  		pci_probe |= PCI_ROOT_NO_CRS;
->>  		return NULL;
->> +	} else if (!strcmp(str, "use_e820")) {
->> +		pci_probe |= PCI_USE_E820;
->> +		return NULL;
->> +	} else if (!strcmp(str, "no_e820")) {
->> +		pci_probe |= PCI_NO_E820;
->> +		return NULL;
->>  #ifdef CONFIG_PHYS_ADDR_T_64BIT
->>  	} else if (!strcmp(str, "big_root_window")) {
->>  		pci_probe |= PCI_BIG_ROOT_WINDOW;
->> -- 
->> 2.31.1
->>
+> The pcie-kirin PCIe driver contains internally a PHY interface for
+> Kirin 960, but it misses support for Kirin 970. A new PHY driver
+> for it was added at drivers/phy/hisilicon/phy-hi3670-pcie.c
+> (already merged via PHY tree).
 > 
+> Add support for Kirin 970 PHY driver at the pcie-kirin.c.
+> 
+> While here, also add the needed logic to compile it as module and
+> to allow to dynamically remove the driver in runtime.
+> 
+> Tested on HiKey970:
+> 
+>   # lspci -D -PP
+>   0000:00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3670 (rev 01)
+>   0000:00:00.0/01:00.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:01.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:04.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:05.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:07.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:09.0 PCI bridge: PLX Technology, Inc. PEX 8606 6 Lane, 6 Port PCI Express Gen 2 (5.0 GT/s) Switch (rev ba)
+>   0000:00:00.0/01:00.0/02:01.0/03:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd Device a809
+>   0000:00:00.0/01:00.0/02:07.0/06:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 07)
+> 
+> Tested on HiKey960:
+> 
+>   # lspci -D 
+>   0000:00:00.0 PCI bridge: Huawei Technologies Co., Ltd. Device 3660 (rev 01)
+> 
+> ---
+> 
+> v15:
+>   - The power-off fix patch was split into 3, in order to have one logical change
+>     per patch.
+>   -  Removed Fixes: tag from the poweroff patch;
+>   - Adjusted capitalization of two patch summary lines
+>   - No functional changes. The diff of this series is identical to v14.
+> 
+> v14:
+>   - Split a timeout logic from patch 4, placing it on a separate patch;
+>   - Added fixes: and cc: tags to the power_off fixup patch;
+>   - change a typecast from of_data to long, in order to avoid a warning on
+>     some randconfigs;
+>   - removed uneeded brackets at the power_off patch;
+>   - reordered struct device pointers at kirin_pcie_get_resource();
+>   - added a c/c to kishon at the PHY-related patches.
+> 
+> v13:
+>   - Added Xiaowei's ack for the series.
+> 
+> v12:
+>   - Change a comment at patch 1 to not use c99 style.
+> 
+> v11:
+>   - patch 5 changed to use the right PCIe topology
+>   - all other patches are identical to v10.
+> 
+> v10:
+>   - patch 1: dropped magic numbers from PHY driver
+>   - patch 5: allow pcie child nodes without reset-gpios
+>   - all other patches are identical to v9.
+> 
+> v9:
+>   - Did some cleanups at patches 1 and 5
+> 
+> Mauro Carvalho Chehab (13):
+>   PCI: kirin: Reorganize the PHY logic inside the driver
+>   PCI: kirin: Add support for a PHY layer
+>   PCI: kirin: Use regmap for APB registers
+>   PCI: kirin: Add support for bridge slot DT schema
+>   PCI: kirin: Give more time for PERST# reset to finish
+>   PCI: kirin: Add Kirin 970 compatible
+>   PCI: kirin: Add MODULE_* macros
+>   PCI: kirin: Allow building it as a module
+>   PCI: kirin: Add power_off support for Kirin 960 PHY
+>   PCI: kirin: Move the power-off code to a common routine
+>   PCI: kirin: Disable clkreq during poweroff sequence
+>   PCI: kirin: De-init the dwc driver
+>   PCI: kirin: Allow removing the driver
+> 
+>  drivers/pci/controller/dwc/Kconfig      |   2 +-
+>  drivers/pci/controller/dwc/pcie-kirin.c | 643 ++++++++++++++++++------
+>  2 files changed, 497 insertions(+), 148 deletions(-)
 
+Hi Kishon,
+
+can I ask you please to have a look at patches [1,2] ?
+
+I'd like to merge this series for v5.16, please let me know.
+
+Thanks,
+Lorenzo
