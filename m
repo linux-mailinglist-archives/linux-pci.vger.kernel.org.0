@@ -2,123 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F212F4366F3
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:58:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC8243671C
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231861AbhJUQAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 12:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59818 "EHLO mail.kernel.org"
+        id S232128AbhJUQCK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 12:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231849AbhJUQAb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Oct 2021 12:00:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7965B611F2;
-        Thu, 21 Oct 2021 15:58:15 +0000 (UTC)
+        id S232176AbhJUQBh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Oct 2021 12:01:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 92059611F2;
+        Thu, 21 Oct 2021 15:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634831895;
-        bh=L8SsVdAZqmcgc/l54J3ELRGN7EmFDhRqTkhV3QJ2iKQ=;
+        s=k20201202; t=1634831960;
+        bh=KPsjXWIvxRCwuDpa6Tvl31WU0C1Lqvs1IzWAmvt1LIM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g68FH0cq70aXjdoLx1elPMm198APq1afbrCj255hNtE16R57d8oXEDmN7iTTXrpTW
-         b9j+sr38KKZXJI8hErEfOfBkZPSwM8wXM+XVw9Ans7H1LmqDGws8Bt061fGGwjpKr5
-         yY9n9zmu1e5y2pboT41A4tSMKzkRUNymNPE6ftIrcIpAvU3vm2pmgwtlEFfgjJxoQO
-         DBWNCZFk3Wo6qxHitCTMYnAUlXtiQ9ceUqtvEAQPjO9jx/20veksxxDjZ8NrxEsq5h
-         NtwIwY2i9gGtMiQQrZFGkXwUnTo51SirTAeX5kW80tDOcCXgxQWlpwVHGfdXNMfXkS
-         MytNmg154KS0A==
+        b=XbjTRlbgoq1kwcCmsdjF6aOe2HMQK3qhZn4f6pwey2aCZwN/CceqGeZEd1NVVct/O
+         kAtaIu0D2RzfDizb0fIaGV7yHSP7jJbkgt55srwlnfMkB82DUjcz0CJqbBsQUy4uWY
+         IBoamL9aWl4OH1LwOg86ZcJBhBfrYJAu2hgznF4gLGRNWK5xVQ5rD6BityDTdeNgwS
+         cRnb8Wpu7DVARlwxGUaTouRT4DDc4QAdUViv1b/jQiIFIHaDQG/uaFhrUhuqvsqihO
+         mh/P73eh7rmz07vr2UZwwLI5zkWoGq4S3mbrF3PmKMvhKpfCLTXNCiUnOpogyL0ERX
+         wqANqVprTGV4Q==
 Received: by pali.im (Postfix)
-        id 20E5C85E; Thu, 21 Oct 2021 17:58:13 +0200 (CEST)
-Date:   Thu, 21 Oct 2021 17:58:12 +0200
+        id 6EFCD85E; Thu, 21 Oct 2021 17:59:18 +0200 (CEST)
+Date:   Thu, 21 Oct 2021 17:59:18 +0200
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Naveen Naidu <naveennaidu479@gmail.com>
 Cc:     bhelgaas@google.com,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        skhan@linuxfoundation.org, Robert Richter <rric@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:PCI DRIVER FOR AARDVARK (Marvell Armada 3700)" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 11/25] PCI: aardvark: Remove redundant error
- fabrication when device read fails
-Message-ID: <20211021155812.qwihgqo6dk73433w@pali>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Toan Le <toan@os.amperecomputing.com>
+Subject: Re: [PATCH v3 02/25] PCI: Set error response in config access
+ defines when ops->read() fails
+Message-ID: <20211021155918.kigwwylvdmsuyd3z@pali>
 References: <cover.1634825082.git.naveennaidu479@gmail.com>
- <cbf7437d33551cd267135d2ed2a33bb789369e85.1634825082.git.naveennaidu479@gmail.com>
+ <56642edd0d6bf8a8e3d20b5fcc088fd6389b827f.1634825082.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cbf7437d33551cd267135d2ed2a33bb789369e85.1634825082.git.naveennaidu479@gmail.com>
+In-Reply-To: <56642edd0d6bf8a8e3d20b5fcc088fd6389b827f.1634825082.git.naveennaidu479@gmail.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 21 October 2021 20:37:36 Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error. There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
+On Thursday 21 October 2021 20:37:27 Naveen Naidu wrote:
+> Make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value with error
+> response (~0), when the PCI device read by a host controller fails.
 > 
-> The host controller drivers sets the error response values (~0) and
-> returns an error when faulty hardware read occurs. But the error
-> response value (~0) is already being set in PCI_OP_READ and
-> PCI_USER_READ_CONFIG whenever a read by host controller driver fails.
+> This ensures that the controller drivers no longer need to fabricate
+> (~0) value when they detect error. It also  gurantees that the error
+> response (~0) is always set when the controller drivers fails to read a
+> config register from a device.
 > 
-> Thus, it's no longer necessary for the host controller drivers to
-> fabricate any error response.
+> This makes error response fabrication consistent and helps in removal of
+> a lot of repeated code.
 > 
-> This helps unify PCI error response checking and make error check
-> consistent and easier to find.
-> 
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 
 Reviewed-by: Pali Rohár <pali@kernel.org>
 
 > ---
->  drivers/pci/controller/pci-aardvark.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+>  drivers/pci/access.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 596ebcfcc82d..1af772c76d06 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -893,10 +893,8 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
->  	u32 reg;
->  	int ret;
->  
-> -	if (!advk_pcie_valid_device(pcie, bus, devfn)) {
-> -		*val = 0xffffffff;
-> +	if (!advk_pcie_valid_device(pcie, bus, devfn))
->  		return PCIBIOS_DEVICE_NOT_FOUND;
-> -	}
->  
->  	if (pci_is_root_bus(bus))
->  		return pci_bridge_emul_conf_read(&pcie->bridge, where,
-> @@ -920,7 +918,6 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
->  			*val = CFG_RD_CRS_VAL;
->  			return PCIBIOS_SUCCESSFUL;
->  		}
-> -		*val = 0xffffffff;
->  		return PCIBIOS_SET_FAILED;
->  	}
->  
-> @@ -955,16 +952,13 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
->  			*val = CFG_RD_CRS_VAL;
->  			return PCIBIOS_SUCCESSFUL;
->  		}
-> -		*val = 0xffffffff;
->  		return PCIBIOS_SET_FAILED;
->  	}
->  
->  	/* Check PIO status and get the read result */
->  	ret = advk_pcie_check_pio_status(pcie, allow_crs, val);
-> -	if (ret < 0) {
-> -		*val = 0xffffffff;
-> +	if (ret < 0)
->  		return PCIBIOS_SET_FAILED;
-> -	}
->  
->  	if (size == 1)
->  		*val = (*val >> (8 * (where & 3))) & 0xff;
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 46935695cfb9..0f732ba2f71a 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -42,7 +42,10 @@ int noinline pci_bus_read_config_##size \
+>  	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
+>  	pci_lock_config(flags);						\
+>  	res = bus->ops->read(bus, devfn, pos, len, &data);		\
+> -	*value = (type)data;						\
+> +	if (res)							\
+> +		SET_PCI_ERROR_RESPONSE(value);				\
+> +	else								\
+> +		*value = (type)data;					\
+>  	pci_unlock_config(flags);					\
+>  	return res;							\
+>  }
+> @@ -228,7 +231,10 @@ int pci_user_read_config_##size						\
+>  	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
+>  					pos, sizeof(type), &data);	\
+>  	raw_spin_unlock_irq(&pci_lock);				\
+> -	*val = (type)data;						\
+> +	if (ret)							\
+> +		SET_PCI_ERROR_RESPONSE(val);				\
+> +	else								\
+> +		*val = (type)data;					\
+>  	return pcibios_err_to_errno(ret);				\
+>  }									\
+>  EXPORT_SYMBOL_GPL(pci_user_read_config_##size);
 > -- 
 > 2.25.1
 > 
