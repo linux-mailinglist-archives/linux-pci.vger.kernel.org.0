@@ -2,163 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 531A6435EDD
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 12:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 831E1435F5E
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 12:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230105AbhJUKUt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 06:20:49 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:51368 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229567AbhJUKUs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 06:20:48 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19L5JEpG019672;
-        Thu, 21 Oct 2021 03:18:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=gfhxrGBwWVjBRpTWPvTDeGMy4MeU7AL3eb9qIv7riYw=;
- b=K0RRSyVa+mKr6I/njktJyq5CbOJaMUfwl13dUSXMgzH0JX7LFIbCpJ1jew6BeCYR5GE4
- lS2x6vuW1NoHc6y/hw9avh+ZxvXdIiXLWkQqzJ6U5CwLeXehMK7C9nNomckEIPYN5Fp/
- tfJkF/wUT4YIE0+NZIHXCNgOvs3U/j4WaXgABlDohoBEhoPzef9fT/txH4x31W3PXilG
- OmZTRX+0pLch6299lgmVku5LXqckLT3Gz7kLN7T//iAveY864emOplPIWdBaj2UQ4Fk1
- F6hlFXd/G9fqUj/cl5OsCOAOveE3Eehc0uIyRdSl9P+01DjDlzQKfM2ROflwWwpXPvFn HQ== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 3btpcpbvya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Oct 2021 03:18:22 -0700
+        id S230077AbhJUKlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 06:41:35 -0400
+Received: from mail-dm6nam11on2045.outbound.protection.outlook.com ([40.107.223.45]:53760
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229567AbhJUKlf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Oct 2021 06:41:35 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MJJ1hSZZLStUW9RdJ0xrdDDyxcxYJUow87TG+uGqcGE7ICOq+YxM9xaUzgTP13AaPJaD2I0t4uu/Gqyj/lA7/q9rCQfnOAfX87dOESmkH5yAfsKBjYaexfAqehO+wvLDnn4xUbOGNV5dwvtf7R/ml5IcDsc6nRsRGfLoN0cL1cWJ6FsthocRBPneaOvXi0gPTYkibQceJKI4q/BN1tHwx49Ds5n4oPpOC58wpxLtoI4RiyqWcAOY3nPMm3tOr66onu4d8Nem3WOpYWGxn1lmhHTm5HU0E3YIlvuHDXTeZ4fqVpHYnJxYoXH1av1mn2UMK7CVIK3NHW49EoBBmyukiw==
+ b=POLcuibGEHlvt4cEm24WX1HBnBpjPvZ+NheGSB7ZwtTmCuq66iAVnIzeLF/wslJHpTSxfqBxt5phvO0lw7uXejLF4fCnOpahKuxlGJyf6ay6KtzZMAgNr5qGZbftbPdrth4i03fedcE38FwkdJ75tdO0Bn8/siUviyjqcXARn+9AlknXdIcjidC6WinP9WECtiMxLijDSMCYDLXdKPtsRtANngAHlG6fHpNnJD5DY9u+qMcRSDng8iIPJ6YrcZPbyl9KzPCkSTMrTAsMhbBikhPHVuLePzvis3jzWq9yhoN2eTOEXySrcecIJCYjzj1Pqw8NF1/dj1OIye+SxQnxBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gfhxrGBwWVjBRpTWPvTDeGMy4MeU7AL3eb9qIv7riYw=;
- b=JEbMmgGtUhVOrp5SDynuzU4vqIFupyTy8Y67QyVE9LGdi4DE91oRyAMti6YSlvi4FC2kfY7A4cvYZou990THaApmRDAs8K4CU+okgdx9F6GWOQ5P8A+KXvU0P10yosca0R2V5KUt9T50KwAHG6486124q01zRuG2sgfEDe5L5UHMf4K6kHL6VDIDIWOQSV0o2Kf91Fd6We1p7O2dMNOXUPZHQgW2+ZC/RJfunC2F7EQEfs5sSPDFgh9+3RNmMT8klGGzETOa+SilRm01AML43s/yr2pr1f3Ah+sK1FFr9MOyfuWZ1mpj36840fI1v0GqPNvqYhX05fyNKh/C/qGSlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ bh=ruNyPvSH4vcqoUZb9xHutQSk2AmaTvOrLoaT8BT3m+Q=;
+ b=N/nmFLy5gSLSfxAqsOlMAIzjkFp7WPNH4Ugp9nzCts/JfDzj786gEcvK3z3KFsoBDV3zdiXtj8rHsFUA4ZHF52qYm7279A+vOCm6UCSn1MVHzDsTuB/EXVMFz+rDiydYwaFtoWOR9Ou4lxB79CjApwWkcy0RYlOh9Aucvlo4m7HyvFev4W/d/lt/X3iJA8bX4Vsx8HCJXdaUCu6gc6uOuD8IL4mM4FfTmj0mdMLQDAR5T+BZBhs4j3quAt9PuyIh04NFnx67UShZEXnTPyZwnPt4LfaCta1qF4iwPM2y+2iIuAEn7YY2mq/JrT1tKFHVjUhqgbD2Uxnc02tiafxwfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfhxrGBwWVjBRpTWPvTDeGMy4MeU7AL3eb9qIv7riYw=;
- b=dfDqyw8PMLhgZeBKsS1rBju/5EMakKNWxprvTVgiaKW2YLuaub1OMwGYs5DRHK/fHUuX4mvmWTw6QldUfxyv2P0nrztgpjptwHDs6ovP+I/i+L/eoTuoVSj0NB2oF+HplpW3gB8/HEsGU66WUhrkbnzaZF6/OHBgHEy9KxQF6SU=
-Received: from MN2PR07MB6208.namprd07.prod.outlook.com (2603:10b6:208:111::32)
- by MN2PR07MB6014.namprd07.prod.outlook.com (2603:10b6:208:103::21) with
+ bh=ruNyPvSH4vcqoUZb9xHutQSk2AmaTvOrLoaT8BT3m+Q=;
+ b=bv7QHVAiGTcRXQiU/HjMKD2WzBpYpHUSaUC14IADvBYVr6+mqHNWKl5m8DoAk0scZQxYD21pzGsX1NqvOozCQ4RsSt5uUT3xElcjpx5kGhFa1hw7jzo+Me2FQ23+enqr6HgUnDAWIv2em3/ZHNUxUMyQxxGmEHfFBAgoXV98Hoa/KfqL5/485vlRV2f4MWxyHcOXVveDOGmPWUIxRer3IA9TLEX2VNmJTDMS0T7K2zS1Kz3PgG4ZNeTFK6trUSckWTAbW+/bopk0aJiFIov9rgBTSLp2qm5TQ/tHrGxIKhX48nuHJp4CGPTeMn46me5JdrfZkPQcJvXZKKYjR3xCyg==
+Received: from BN9PR03CA0105.namprd03.prod.outlook.com (2603:10b6:408:fd::20)
+ by BY5PR12MB3890.namprd12.prod.outlook.com (2603:10b6:a03:1a7::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.16; Thu, 21 Oct
- 2021 10:18:20 +0000
-Received: from MN2PR07MB6208.namprd07.prod.outlook.com
- ([fe80::f4cf:ee63:9681:a238]) by MN2PR07MB6208.namprd07.prod.outlook.com
- ([fe80::f4cf:ee63:9681:a238%3]) with mapi id 15.20.4628.018; Thu, 21 Oct 2021
- 10:18:20 +0000
-From:   Tom Joseph <tjoseph@cadence.com>
-To:     Li Chen <lchen@ambarella.com>, Bjorn Helgaas <helgaas@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] PCI: cadence: Add missing return in
- cdns_plat_pcie_probe()
-Thread-Topic: [PATCH v2] PCI: cadence: Add missing return in
- cdns_plat_pcie_probe()
-Thread-Index: AdfGJXsneGNhzEUJSnSJFpIT3qRvIQAOh/JQ
-Date:   Thu, 21 Oct 2021 10:18:20 +0000
-Message-ID: <MN2PR07MB6208A13335A5C2458E8DDBE3A1BF9@MN2PR07MB6208.namprd07.prod.outlook.com>
-References: <DM6PR19MB40271B93057D949310F0B0EDA0BF9@DM6PR19MB4027.namprd19.prod.outlook.com>
-In-Reply-To: <DM6PR19MB40271B93057D949310F0B0EDA0BF9@DM6PR19MB4027.namprd19.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcdGpvc2VwaFxhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTM0Y2Q3YzQ2LTMyNTgtMTFlYy04OTVmLTUwN2I5ZDg0NGVhMlxhbWUtdGVzdFwzNGNkN2M0Ny0zMjU4LTExZWMtODk1Zi01MDdiOWQ4NDRlYTJib2R5LnR4dCIgc3o9Ijg2OSIgdD0iMTMyNzkyODUwOTc2NTA0MjE4IiBoPSJYb2tOU0U5TEdDTjZ3WElZaVpza1ZUaVZqNzQ9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: ambarella.com; dkim=none (message not signed)
- header.d=none;ambarella.com; dmarc=none action=none header.from=cadence.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 15916d09-9d68-4c89-e4e4-08d9947c1b37
-x-ms-traffictypediagnostic: MN2PR07MB6014:
-x-microsoft-antispam-prvs: <MN2PR07MB6014D8456FF1F085CE8857AEA1BF9@MN2PR07MB6014.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: itUEgKQ5vkMGk2clrTD+UzoPcUx+V+r1avtAAjVZHlXZUkxh0lqR0DaReBkPYaAV8/ElT7d6h1itf4jVoHgMD3nI3fLQZ/+8tT1/0oqJ1uR9ChDF7XboGL9Ll2f0vdUQufHUi1aekmksXOx+ExB4e2vE7ryXanzqMmTD29w8kmP2q6ya8i9cbJmNz4FMBNNlYCHxwksQ63I8/eTZsWjtBp/jB6gpKRZ9y1FHZJqJDtXRO5HfPytFsCLeo0SthrBEj5cRCA9iYKU3dRr/om9N+0bX2PMqyb6Qk7sv3zUQ/S0mMYA2/W1ySqTwBsU4LHJr5npeiQxOQVXhwErbJvUXKzmvra+akF4B6muMldTBVql7g0ZtzgGR9ec9cphDF73MqMAlnaS2nf9SrZTg96GHtzI97Unubpx2rwztfe0ZW99DqrRaFLm4MGKBItotwpaE9aJXFDtiXLb1KdrTuUc1Vfa2VWxprrKPkhZGUcbL5lkBjmtYNPSXIE/mhDx6v2oFVCkPTE4Z5yHlnjWmRFgbp+9uQuHKSkNMiuADvUDcjGEcXQRoS8LNSxSUXt/rRbUz6wKYuudQQK2OqbFiTFMSK55VHF0CCxDBFKfQL6pvKkKTI0P4EKxbnALamcFt1hhyYalyXAZdJUBc5ASwbt0BzPfeh6bBNn1PyryPo87EZP2/hOpCIR4PytrxyhrrcziZawXvSGboRwcHPiQuPyQmdcmrn5Kr2GVfefElWRHnn32fb7KCNQg06aitCC7loq1D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR07MB6208.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(36092001)(76116006)(186003)(86362001)(8936002)(6506007)(66476007)(64756008)(38100700002)(110136005)(4326008)(8676002)(33656002)(55016002)(66446008)(53546011)(9686003)(5660300002)(316002)(83380400001)(2906002)(122000001)(52536014)(7696005)(66556008)(508600001)(26005)(66946007)(54906003)(71200400001)(38070700005)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+S/8MZma1/4toiNbwQMEHPwgrVzAuVHXYwe0NX8u7vCc261MJmLkpvIHVvRX?=
- =?us-ascii?Q?NgaW4IA4aeKXTa2su1BQshlOiE7UHOc9lxxc14Wme3cLwMxUTt5iaBggIqCl?=
- =?us-ascii?Q?Hah0EHbH5CKfmcacaKsaJFZ+PVWzNwQCKvN+i/eR1gS7B84Dwq41o+aCNMpq?=
- =?us-ascii?Q?DlD6JtwXIarpG86SC49z01qoOBm3t/u6vw9uIBrhnjEP6JmSTUhlQrARnvzP?=
- =?us-ascii?Q?4OQr3AR2hMa4PSmPeqf2sUASA0X9NWr2CPDu95pDjdQNmD9KhdEx0jDieVe/?=
- =?us-ascii?Q?3P/BBtteHXj8n3ra27fHr35zIAhItfT7MTPtO99I/1bjOeIDaq8mrTzzZ0yK?=
- =?us-ascii?Q?0HLz0yJ8hedW//b7Pp3ye6FAw8xot4+eO8fuBfSf4SdEkg0ubUqftyWC/BG2?=
- =?us-ascii?Q?asQrtvif/NTThUTam4lO5x5z4QbJzcR6OWO+nSyYMkqV8WpTC8kMtb7opIMo?=
- =?us-ascii?Q?BCm6/6sh7o3iCMDWwZvojSvYrltWlzl4wJ5mutk2j/XNlm/pXbGyq+RcUun3?=
- =?us-ascii?Q?6ZtKKX5tLzZUo5xf0K4y7BSgaJeeNuJtunXz92JQeNcEN/FORqatGK/gsdX1?=
- =?us-ascii?Q?JIfRhgAUbyHsZfmB5JEDwATe77+en/4QpSgoHazeSnNFZ9GgheUfG8F4c/bB?=
- =?us-ascii?Q?asCwc8KiOvibc4Zrc947OXQwPO1LIlveqtOvoDfg6PTqjbAqtklT/rXI+7U+?=
- =?us-ascii?Q?W6di5QjlKaCQ0k93+9sj8yieWtGKjlbmj8GgazWPOhRUXNaidSKUNVZIViIk?=
- =?us-ascii?Q?nGBrEUxNg3u7yn7erD4cjwFnDNmxn/ZdYot3y3N2VBc4Bflh19oQwnmrUY1i?=
- =?us-ascii?Q?rVnqwNgVEfPvC98v0p0+TVx3758jPg/U2yyolABITmHrZtM+0ql6QrNLq3XN?=
- =?us-ascii?Q?Jr11Cy6wtxUI/nzI3KFQHlm6h8DOksi+4YLSUmTdnpM8AlrOOKK1pSbtSU5N?=
- =?us-ascii?Q?o51cVPgmT8vD7b84nhhGfH4RjuhKkmpPmQsmVrOhByE8idcxcwSZxDvbVJR6?=
- =?us-ascii?Q?c++3CVjjkLUUbrP7Q2ttTuWeqIR+FVZ/0Wpl0lZeue0ZPMBW3vUKU2PS71Jc?=
- =?us-ascii?Q?1ST3IZx/HfjOlQokv8qBR+nT2cNvfZuJILb7a4fDSmDPv/BOrtvytLNsfmf6?=
- =?us-ascii?Q?fXWpL+Mv4BwZ+vfZ90bRDZz/MQvxuHIu5ATbJ31weQjPRh1oG80Luntq2z+k?=
- =?us-ascii?Q?8wqnjnNiC9MW3QAeE4RdgTs5OWADtFEDgjVlh+8UEHO75wTW4UHSJAqpWua+?=
- =?us-ascii?Q?DKKVdnStxL3OcPvp7kEPhgQX0gy+dYl1obZ4jXaM9My+5bH/pRySHUugHpEF?=
- =?us-ascii?Q?wCZIdXPS5hK9jRh9UWtUL6Fv?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.15; Thu, 21 Oct
+ 2021 10:39:16 +0000
+Received: from BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:fd:cafe::bd) by BN9PR03CA0105.outlook.office365.com
+ (2603:10b6:408:fd::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend
+ Transport; Thu, 21 Oct 2021 10:39:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ BN8NAM11FT019.mail.protection.outlook.com (10.13.176.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4628.16 via Frontend Transport; Thu, 21 Oct 2021 10:39:15 +0000
+Received: from [172.27.15.75] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 21 Oct
+ 2021 10:39:10 +0000
+Subject: Re: [PATCH V2 mlx5-next 14/14] vfio/mlx5: Use its own PCI reset_done
+ error handler
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+CC:     <bhelgaas@google.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
+References: <20211019105838.227569-1-yishaih@nvidia.com>
+ <20211019105838.227569-15-yishaih@nvidia.com>
+ <20211019125513.4e522af9.alex.williamson@redhat.com>
+ <20211019191025.GA4072278@nvidia.com>
+ <5cf3fb6c-2ca0-f54e-3a05-27762d29b8e2@nvidia.com>
+ <20211020164629.GG2744544@nvidia.com>
+ <20211020114514.560ce2fa.alex.williamson@redhat.com>
+From:   Yishai Hadas <yishaih@nvidia.com>
+Message-ID: <36fffe2a-cc37-7f65-1a99-558d24fce837@nvidia.com>
+Date:   Thu, 21 Oct 2021 13:39:06 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR07MB6208.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15916d09-9d68-4c89-e4e4-08d9947c1b37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2021 10:18:20.2779
+In-Reply-To: <20211020114514.560ce2fa.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a593dd90-5666-45d8-29b4-08d9947f079d
+X-MS-TrafficTypeDiagnostic: BY5PR12MB3890:
+X-Microsoft-Antispam-PRVS: <BY5PR12MB3890C3DC0602B33498918394C3BF9@BY5PR12MB3890.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /hhJhY0yIuFcmCaWpp3ROrRBi/h15ool0ziZwtyTvW4Y8pTWQRrDi6IhNHgfeLJLUYsLh8WKH8G7uyZiFzNi1twQJ1xh78IPots7FgApWuaqBIvp7o9z6FmaHKCrT0Dk+AyFwsQGLDkBq6+zt7j13znzIL0MtDdif9Enz1wx+nzzazEqFrVcmyYm+tD1nQOytIziQMtdXTKlNjGFO9+Ki8RUve68Y0QyimkL/SQ4lZNcfX00FICIUavtgPxHxGjPRNzpQPa1daxqBR222I8uYj9e9QkhxBycbJ/Gk3jRJ5Q8OwIruepSn1xrbrmcKGtDecb69E0mXyaQnqUiGXBNbaXp+7MBVup+dbW7h+Wqa53UZ33IKcjZSxHopAuZqmYIBTR+MQt+lJBgxrwn2FOULsR+VMmDRrspJS+PPjo7ljNriE8iE9PdE9kUcMWqw96rBqOSOCIiyuT3FaXhhMeOWteAKazijmTL5pUP5gaLPHdHK9gbMBBa1fuk8rgHKg8WkviBviQphJIHky+HVvlqNdcvBm3sL0T0vImpbn2Naw5QGxtHRIqOkWI+ZsOLdlMxEQCVYnrVPUDS7+8uUchhd55S1u2H0+EW5EkgJ3Jr3KDcN0575lAAA4H3TA8BPWcKo1q5tlwiXSsC8LEGv1Kr6WRW+WCr0/Qb+zFIItmXi0QOLGPFudUhtDlOTbyOfbSp51gi8zDQYy/lB7aoai7LNoUvzy2NUUlVw5W1NR+Svv8=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(186003)(8676002)(4326008)(16526019)(8936002)(336012)(26005)(70206006)(47076005)(426003)(6666004)(16576012)(54906003)(53546011)(110136005)(2616005)(5660300002)(70586007)(508600001)(36906005)(316002)(36756003)(31686004)(31696002)(82310400003)(7636003)(356005)(86362001)(2906002)(6636002)(36860700001)(4744005)(107886003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2021 10:39:15.3496
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tjoseph@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6014
-X-Proofpoint-GUID: Q3NO_HN6KWa_co8MuGVbaOYkxHNuAO0D
-X-Proofpoint-ORIG-GUID: Q3NO_HN6KWa_co8MuGVbaOYkxHNuAO0D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-21_02,2021-10-20_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=999
- spamscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 adultscore=0
- malwarescore=0 mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110210053
+X-MS-Exchange-CrossTenant-Network-Message-Id: a593dd90-5666-45d8-29b4-08d9947f079d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3890
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Li,
+On 10/20/2021 8:45 PM, Alex Williamson wrote:
+> However, regardless of the migration recovery strategy, userspace needs
+> a means to get the device back into an initial state in a deterministic
+> way without closing and re-opening the device (or polling for an
+> arbitrary length of time).  That's the minimum viable product here.
+> Thanks,
+>
+> Alex
+>
 
- Thanks a lot for the patch!!
+OK, in V3 I'll use the algorithm that Jason has suggested in this mail 
+thread to let things be done in a
+deterministic way without using a WQ.
 
-> -----Original Message-----
-> From: Li Chen <lchen@ambarella.com>
-> Sent: 21 October 2021 03:50
-> Subject: [PATCH v2] PCI: cadence: Add missing return in
-> cdns_plat_pcie_probe()
->=20
-> When cdns_plat_pcie_probe() succeeds, return success instead of
-> falling into the error handling code.
->=20
-> Signed-off-by: Xuliang Zhang <xlzhanga@ambarella.com>
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core libr=
-ary")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Li Chen <lchen@ambarella.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-plat.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-Acked-by: Tom Joseph <tjoseph@cadence.com>
+Thanks,
+Yishai
