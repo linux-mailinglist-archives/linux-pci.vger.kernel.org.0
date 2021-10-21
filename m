@@ -2,119 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A50436B4E
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 21:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EC6E436D05
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 23:47:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232013AbhJUT0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 15:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbhJUT0D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 15:26:03 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D9BC0613B9;
-        Thu, 21 Oct 2021 12:23:47 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a17so3220372uax.12;
-        Thu, 21 Oct 2021 12:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/iZOrd1VHON6EXEVnr2OGsIIn2iCBQ+KTNa7mjlDUM0=;
-        b=oxB1oSOsP0sTjaOmhjon770YW0M1lJJYpt6kycMBP4ougazTjT4o4QoXDq6Lu79V2S
-         hjfZ+0HAa+wQ3rbYJ02VZQpNntDOWduBrCMRiT8+7CxerTMUTtIztOyT/oS/pdduADuV
-         NjeLE7OR3qqPYyrhR0gzYFzM6rSU6kKOVnNjaT6c/eiRNHvJ1AkRZxr6imxPRMEJsjk6
-         vy4+mZ/dXprzxb4DiQbaACRAW+3Q8NKkcPGqXO2xk98sOl08oX6Eo5Ftm9DZnkGJrtQT
-         IxCvjQorWaca5/mxyq5+P3Cloteu4eXEI7h5v8/L7Xgr+VyDcUAbGMTKMJGAS7vjxjzY
-         f2/A==
+        id S231921AbhJUVtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 17:49:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32111 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231440AbhJUVtt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 17:49:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634852853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QX0K+ol2Lenj9SRy5tdw8mHtG1vzf/+KLfCSzAQPQCc=;
+        b=AcvFoXQJVjlFGjiW574jVmhaXUJS4qJczPZICVIS0snRwyb4a3NX2VhcsRSskCYooRtfk1
+        SsP4ntawcLyzzZnUQK4PZ2rJqWdXZyc+U3U60JOWsybbf6xaL0SeAahar1nTRAueqoJyR+
+        g/mbX+4QGNCSyaIvU6Qn5D/XMcUW884=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-Tq5sQR3IPR2d_kF1zBBwZg-1; Thu, 21 Oct 2021 17:47:31 -0400
+X-MC-Unique: Tq5sQR3IPR2d_kF1zBBwZg-1
+Received: by mail-ot1-f72.google.com with SMTP id b22-20020a056830311600b00552b48856bdso905683ots.6
+        for <linux-pci@vger.kernel.org>; Thu, 21 Oct 2021 14:47:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/iZOrd1VHON6EXEVnr2OGsIIn2iCBQ+KTNa7mjlDUM0=;
-        b=yd3+F7XFNkuYmuLuGF8VWGFBf+qsB9wwSiaUuzvh/FsUVV/M3Hjv4QWYWX4hqrXgPq
-         LcS1uhhmGkl+CTa6gTuUQygXipqzP7dOui337SptEXG1d0MX28/TOGLYDl/TIOPpTY0M
-         bVx/ERoDx5kwpYGTY1lRXXXHjDGlUp6Ut0f8rdJSjPKuB99CPMcFN3JG/IWjG7OcGZ8x
-         W2GWxSmb0fP6yei8+WKgWBfXTm5U6R7vgi1Kt7LjPQEVpQP9hKSUpygWXpWjfRIHVXWZ
-         1mps41XoAZDanzD7LQPRn8iTrA3FL+j0sOkJQk+ax+yKP5+46BT0AFGlkRIB4Po39L6B
-         9Hnw==
-X-Gm-Message-State: AOAM531aHj+cuQqGVPMO5TJHcuJsWhg6BikVjZ1tR4+k0Dt/eTJK3HGD
-        mLREovvCulXpNM7y6rkha5I2u8DSx8+/cRDFc7E=
-X-Google-Smtp-Source: ABdhPJyl+qrRv/nOh0WSig9UsFs43pWf6wVkaq74TeHbHFuOzbysXm1dvud4VyCuBvqj0AKn04lPsWGHcuy+eAYMdrA=
-X-Received: by 2002:a05:6102:e11:: with SMTP id o17mr8846106vst.55.1634844226344;
- Thu, 21 Oct 2021 12:23:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QX0K+ol2Lenj9SRy5tdw8mHtG1vzf/+KLfCSzAQPQCc=;
+        b=UsgO7wBhWPZMiN1kdK4p3jKZZqyujG7ZU3TJ3aPO/wEb+AcfLa2m4ahfft62QnHuuA
+         knvpGl8nry6WpwAjxLqyijS9ty9gJKxU8BhEZiZk9q3CL7HmQuVvVy/csL53MG9CZEmv
+         VioW4XP4ZCNQCGR9TIdK5TjhPxenuBQvME3PmIchAm9JQ9kdZQjX2E3P6PZYFIGba3zK
+         R1wRTMi7ZCbCGfkc0GDgVS+zq8+V2f+htWArO4BOvawCCtW5snLPq3ek20tJX1tNo/Vw
+         rg7FNB/gLQAOJ9XKZ6gpfySjCUxpZK1gY/QgXXswevJxvvG/ja99EjDJvv2PD5leYiaI
+         /DxQ==
+X-Gm-Message-State: AOAM531KchaiCjyeKpdL4xaGU3cGs1FCgvnj23s7XlRhWMpUtp043wqr
+        LGvwYB5REG/7DBL7KkSbG0gYU1Qm9zgELrqANAHVvW0nwyEi+eymyMLaD+GpwQD89IRB37rzWu+
+        DBf/lfAiMT4rhFLZ6caRr
+X-Received: by 2002:a9d:4b95:: with SMTP id k21mr6844964otf.345.1634852851214;
+        Thu, 21 Oct 2021 14:47:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyGtR3NFRWaPJeO+7/DPajK4J4hqs651VUuk49wM4FBsssY4SSkK+siLHZJ+Vceo3C1DN8erg==
+X-Received: by 2002:a9d:4b95:: with SMTP id k21mr6844926otf.345.1634852850828;
+        Thu, 21 Oct 2021 14:47:30 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id s18sm1307854otd.55.2021.10.21.14.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 14:47:30 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 15:47:29 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211021154729.0e166e67.alex.williamson@redhat.com>
+In-Reply-To: <87o87isovr.fsf@redhat.com>
+References: <20211019105838.227569-1-yishaih@nvidia.com>
+        <20211019105838.227569-13-yishaih@nvidia.com>
+        <20211019124352.74c3b6ba.alex.williamson@redhat.com>
+        <20211019192328.GZ2744544@nvidia.com>
+        <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
+        <20211019230431.GA2744544@nvidia.com>
+        <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
+        <20211020105230.524e2149.alex.williamson@redhat.com>
+        <20211020185919.GH2744544@nvidia.com>
+        <20211020150709.7cff2066.alex.williamson@redhat.com>
+        <87o87isovr.fsf@redhat.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <CAMhs-H-BA+KzEwuDPzcmrDPdgJBFA2XdYTBvT4R4MEOUB=WQ1g@mail.gmail.com>
- <20211021181145.GA2708516@bhelgaas>
-In-Reply-To: <20211021181145.GA2708516@bhelgaas>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 21 Oct 2021 21:23:35 +0200
-Message-ID: <CAMhs-H8pTmbG0idbPWjnW4faFj0F4TKwSSK6wzwepbqWSEtx4w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] PCI: mt7621: Add MediaTek MT7621 PCIe host
- controller driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-staging@lists.linux.dev,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 8:11 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Oct 21, 2021 at 07:27:21PM +0200, Sergio Paracuellos wrote:
-> > On Thu, Oct 21, 2021 at 5:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > Since this is a PCIe (not conventional PCI) controller, I vote for
-> > > renaming these from:
-> > >
-> > >   PCI_MT7621
-> > >   Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > >   drivers/pci/controller/pci-mt7621.c
-> > >
-> > > to:
-> > >
-> > >   PCIE_MT7621
-> > >   Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-> > >   drivers/pci/controller/pcie-mt7621.c
-> > >
-> > > We have a mix of these, with many of the early PCIe drivers being
-> > > named "pci", but I think that was my mistake and there's no reason to
-> > > continue it.
-> >
-> > I see.
-> >
-> > >
-> > > I can do this locally unless somebody objects.
-> >
-> > I have no problem at all. Only one question. Do you mean to change
-> > compatible string also, or only the name of the file? Let me know if I
-> > have to do anything.
->
-> I didn't change the compatible string, to avoid a DT incompatibility.
-> But I *did* change the Kconfig symbol to PCIE_MT7621, which could
-> require changes to out-of-tree .configs.  I'm open to suggestions
-> either way for both things.
+On Thu, 21 Oct 2021 11:34:00 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-IMHO, I do think we should not worry about out-of-tree stuff at all.
-If the correct way to define the Kconfig symbol or the compatible
-string is to change them, just do that. MT7621 SoC is extensively used
-by openWRT community. As far as I have seen until now, the way of
-doing things there is to take the latest long term kernel (now they
-are using 5.4 as stable and 5.10 as testing kernel), apply a bunch of
-patches they have and do a complete build of both kernel, device tree
-and rootfs. So I guess it is not a big problem if we also change
-compatible string since when an update is performed for a device all
-of the stuff is just replaced. Maybe I am wrong and John has a
-different opinion... John, any comments on this?
+> On Wed, Oct 20 2021, Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+> > On Wed, 20 Oct 2021 15:59:19 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >  
+> >> On Wed, Oct 20, 2021 at 10:52:30AM -0600, Alex Williamson wrote:
+> >>   
+> >> > I'm wondering if we're imposing extra requirements on the !_RUNNING
+> >> > state that don't need to be there.  For example, if we can assume that
+> >> > all devices within a userspace context are !_RUNNING before any of the
+> >> > devices begin to retrieve final state, then clearing of the _RUNNING
+> >> > bit becomes the device quiesce point and the beginning of reading
+> >> > device data is the point at which the device state is frozen and
+> >> > serialized.  No new states required and essentially works with a slight
+> >> > rearrangement of the callbacks in this series.  Why can't we do that?    
+> >> 
+> >> It sounds worth checking carefully. I didn't come up with a major
+> >> counter scenario.
+> >> 
+> >> We would need to specifically define which user action triggers the
+> >> device to freeze and serialize. Reading pending_bytes I suppose?  
+> >
+> > The first read of pending_bytes after clearing the _RUNNING bit would
+> > be the logical place to do this since that's what we define as the start
+> > of the cycle for reading the device state.
+> >
+> > "Freezing" the device is a valid implementation, but I don't think it's
+> > strictly required per the uAPI.  For instance there's no requirement
+> > that pending_bytes is reduced by data_size on each iteratio; we
+> > specifically only define that the state is complete when the user reads
+> > a pending_bytes value of zero.  So a driver could restart the device
+> > state if the device continues to change (though it's debatable whether
+> > triggering an -errno on the next migration region access might be a
+> > more supportable approach to enforce that userspace has quiesced
+> > external access).  
+> 
+> Hm, not so sure. From my reading of the uAPI, transitioning from
+> pre-copy to stop-and-copy (i.e. clearing _RUNNING) implies that we
+> freeze the device (at least, that's how I interpret "On state transition
+> from pre-copy to stop-and-copy, the driver must stop the device, save
+> the device state and send it to the user application through the
+> migration region.")
 
-Best regards,
-    Sergio Paracuellos
+"[S]end it to the user application through the migration region" is
+certainly not something that's encompassed just by clearing the _RUNNING
+bit.  There's a sequence of operations there.  If the device is
+quiesced for outbound DMA and frozen from inbound DMA (or can
+reasonably expect no further inbound DMA) before the user reads the
+data, I think that meets the description.
+
+We can certainly clarify the spec in the process if we agree that we
+can do this without adding another state bit.
+
+I recall that we previously suggested a very strict interpretation of
+clearing the _RUNNING bit, but again I'm questioning if that's a real
+requirement or simply a nice-to-have feature for some undefined
+debugging capability.  In raising the p2p DMA issue, we can see that a
+hard stop independent of other devices is not really practical but I
+also don't see that introducing a new state bit solves this problem any
+more elegantly than proposed here.  Thanks,
+
+Alex
+
