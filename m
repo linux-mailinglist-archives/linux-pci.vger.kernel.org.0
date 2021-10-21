@@ -2,115 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A320D4365EC
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:22:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F0994365F8
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Oct 2021 17:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbhJUPYQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Oct 2021 11:24:16 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:13291 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230103AbhJUPYP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:24:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1634829719; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=hFNY86HNWJlxxkl6jhM5IJFAs+sbpZ936meShRU6elQ=;
- b=gsqf2t9lSdpvbURV8CMsGd80IIXIP6wrbfVqGDuZmhDHYpj2PYgNu2xeAjgtEGbtIIZ152Gy
- 8hCrKe2PBpqMrRvynJFLjAkDCFUy9bM76OLTp157/e+k4ykcknCD3LQ3hc8viKOa/VmLzG8G
- 9yuAvRTaKxVAQwhi/cSUIKB9HPo=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 61718589bc302969584722aa (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 Oct 2021 15:21:45
- GMT
-Sender: pmaliset=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 34E46C43638; Thu, 21 Oct 2021 15:21:45 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmaliset)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DF53C4360D;
-        Thu, 21 Oct 2021 15:21:44 +0000 (UTC)
+        id S231865AbhJUPZW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Oct 2021 11:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231795AbhJUPZW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Oct 2021 11:25:22 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F3DC061764;
+        Thu, 21 Oct 2021 08:23:06 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id a15-20020a17090a688f00b001a132a1679bso3423769pjd.0;
+        Thu, 21 Oct 2021 08:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=u8MgP9EyHiwfzS+PfrhohOi5W9AFD7yrctxjYPpGCNs=;
+        b=WVm5YA3svbpKDgEwEWf79YIA2d+HMr3vgMUHlvL/Q51sZB1k2BjB9D7OsHHe/c6ZKR
+         3jo0jGxj8JujkkKMJhKYdcEd/cKgCG0WMlt9XvJeSW+eGf4jQaIAEAeYa55sICeLOZaV
+         htM63ArD0dzfszA64bl2Zs+CReRT/73uwp0oWQt18dn/jQqZQcB8udEnM7Cj6mWPDiuE
+         +4kAM3z3gaanSnhrYgy4hAfp6xgol2yZl7O0uBcvhdh1I+5SN3IPuyoCebu8a/jyf57v
+         prYMYOkeURk7aJQt/MlEV0Wq7OhpA/mwL0HPnkGLFh6zkUpJ9CRl1VMFMi7W9FYDW+jz
+         SLzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u8MgP9EyHiwfzS+PfrhohOi5W9AFD7yrctxjYPpGCNs=;
+        b=Nni676keI8Kib+udjH0zD31AIRYHuq6+JObt/qbLAn+RCBE+s3ZsBVJMswX4hAH12S
+         4ezBYlmRucBb155CyLAmsQMzRyL3N+m68IgLqSDFBL5D9f6RhEFai+uxR0DDikdlfSRo
+         MrDMjyrSr8QqqklZsPDjzcfChPZk0foVl9huNrmAIm4EfRBBVzzEYY4PdMnjo0Mp2ffL
+         4cRq58KdNMjMVxJuCsPv+9h08dRNr5yQTzMDBzkgbTPd4uagG6FH9BFy2STYcnk16jFO
+         OQeopQsKrZPkJzJwKEkvwt/0V2HrOyO9oaFSbgHDyJTQigsW1/0eryrmqs26FLQkC6T/
+         1ceQ==
+X-Gm-Message-State: AOAM531Pp+0Hf6s3QUuORI9rz9exeMQ1+6zsuseTnM9H3XVfro++X+Kr
+        8YCUcLC9nO9Y/Zv3NgDfUxQ=
+X-Google-Smtp-Source: ABdhPJyM7v0zXEyGqjciHtSAM+WG0z/jW2TYz2BvKHQIg0x3oAjMjTZKgmIFXVMU8//fhdvqmoiD5g==
+X-Received: by 2002:a17:90a:4b47:: with SMTP id o7mr7491151pjl.198.1634829785570;
+        Thu, 21 Oct 2021 08:23:05 -0700 (PDT)
+Received: from theprophet ([2406:7400:63:29a4:d874:a949:6890:f95f])
+        by smtp.gmail.com with ESMTPSA id f84sm6347400pfa.25.2021.10.21.08.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Oct 2021 08:23:05 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 20:52:53 +0530
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     bhelgaas@google.com
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, Lukas Wunner <lukas@wunner.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: Re: [PATCH v3 18/25] PCI: pciehp: Use RESPONSE_IS_PCI_ERROR() to
+ check read from hardware
+Message-ID: <20211021152253.pqc6xp3vnv5fpczj@theprophet>
+References: <cover.1634825082.git.naveennaidu479@gmail.com>
+ <c21290fe02a7a342a8b93c692586b6a2b6cde9e0.1634825082.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 21 Oct 2021 20:51:44 +0530
-From:   Prasad Malisetty <pmaliset@codeaurora.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     svarbanov@mm-sol.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, lorenzo.pieralisi@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vbadigan@codeaurora.org,
-        kw@linux.com, bhelgaas@google.com
-Subject: Re: [PATCH v1] PCI: qcom: Fix incorrect register offset in pcie init
-In-Reply-To: <20211021073647.GA7580@workstation>
-References: <1634237929-25459-1-git-send-email-pmaliset@codeaurora.org>
- <20211021073647.GA7580@workstation>
-Message-ID: <b70c914a581e6362fe340c499e87fed9@codeaurora.org>
-X-Sender: pmaliset@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c21290fe02a7a342a8b93c692586b6a2b6cde9e0.1634825082.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-10-21 13:06, Manivannan Sadhasivam wrote:
-> On Fri, Oct 15, 2021 at 12:28:49AM +0530, Prasad Malisetty wrote:
->> In pcie_init_2_7_0 one of the register writes using incorrect offset
->> as per the platform register definitions 
->> (PCIE_PARF_AXI_MSTR_WR_ADDR_HALT
->> offset value should be 0x1A8 instead 0x178).
->> Update the correct offset value for SDM845 platform.
->> 
->> fixes: ed8cc3b1 ("PCI: qcom: Add support for SDM845 PCIe controller")
->> 
->> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+On 21/10, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
 > 
-> After incorporating the reviews from Bjorn H,
+> Use RESPONSE_IS_PCI_ERROR() to check the response we get when we read
+> data from hardware.
 > 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> This helps unify PCI error response checking and make error checks
+> consistent and easier to find.
 > 
-> Thanks,
-> Mani
+> Compile tested only.
+> 
+> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  drivers/pci/hotplug/pciehp_hpc.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 3024d7e85e6a..f472f83f6cce 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -89,7 +89,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+>  
+>  	do {
+>  		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> -		if (slot_status == (u16) ~0) {
+> +		if (RESPONSE_IS_PCI_ERROR(slot_status)) {
+>  			ctrl_info(ctrl, "%s: no response from device\n",
+>  				  __func__);
+>  			return 0;
+> @@ -165,7 +165,7 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+>  	pcie_wait_cmd(ctrl);
+>  
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTCTL, &slot_ctrl);
+> -	if (slot_ctrl == (u16) ~0) {
+> +	if (RESPONSE_IS_PCI_ERROR(slot_ctrl)) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+>  		goto out;
+>  	}
+> @@ -236,7 +236,7 @@ int pciehp_check_link_active(struct controller *ctrl)
+>  	int ret;
+>  
+>  	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(lnk_status))
+>  		return -ENODEV;
+>  
+>  	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> @@ -443,7 +443,7 @@ int pciehp_card_present(struct controller *ctrl)
+>  	int ret;
+>  
+>  	ret = pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> -	if (ret == PCIBIOS_DEVICE_NOT_FOUND || slot_status == (u16)~0)
+> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || RESPONSE_IS_PCI_ERROR(slot_status))
+>  		return -ENODEV;
+>  
+>  	return !!(slot_status & PCI_EXP_SLTSTA_PDS);
+> @@ -621,7 +621,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  
+>  read_status:
+>  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+> -	if (status == (u16) ~0) {
+> +	if (RESPONSE_IS_PCI_ERROR(status)) {
+>  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+>  		if (parent)
+>  			pm_runtime_put(parent);
+> -- 
+> 2.25.1
 > 
 
-Thanks Mani for the review. I will incorporate the changes as suggested 
-by Bjorn H in next patch version.
+Lukas, I have not added your Acked-by tag from the v1 [1] of the patch 
+series, since the RESPONSE_IS_PCI_ERROR macro definition slightly 
+changed. I hope this was the right thing to do.
 
--Prasad
->> ---
->>  drivers/pci/controller/dwc/pcie-qcom.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c 
->> b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 8a7a300..5bce152 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -1230,9 +1230,9 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie 
->> *pcie)
->>  	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
->> 
->>  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
->> -		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
->> +		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
->>  		val |= BIT(31);
->> -		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
->> +		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
->>  	}
->> 
->>  	return 0;
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+[1]: https://lore.kernel.org/linux-pci/20211011194740.GA14357@wunner.de/
+
+Also, regarding your comments from v1 patch series [1] about re-naming
+the RESPONSE_IS_PCI_ERROR to RESPONSE_IS_PCI_TIMEOUT. We could indeed 
+change the change to RESPONSE_IS_PCI_TIMEOUT for pciehp, but then 
+I'm afraid that picehp would be the odd one out. I mean, since in all 
+the other places we are using RESPONE_IS_PCI_TIMEOUT to see if any 
+error occured while reading from a device.
+
+RESPONSE_IS_PCI_ERROR stills gives an idea to the readers that some PCI
+error occured. It was my understanding that timeout is also a kind of
+PCI error (I might be horribly wrong here, given my very less experience
+with PCI subsystem) so it would be okay to use RESPONSE_IS_PCI_ERROR
+here.
+
+If that is not the case please let me know. But I am not sure what to
+do here? If RESPONSE_IS_PCI_ERROR does not fit here, should the right
+option would be to revert/remove this patch from the series?
+
+Thanks,
+Naveen
+
