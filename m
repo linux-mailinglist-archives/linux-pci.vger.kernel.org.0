@@ -2,98 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38D0C437E93
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 21:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A19C437ECF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 21:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233939AbhJVT1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Oct 2021 15:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232480AbhJVT1U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Oct 2021 15:27:20 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFCCC061764
-        for <linux-pci@vger.kernel.org>; Fri, 22 Oct 2021 12:25:02 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id v17so2274062wrv.9
-        for <linux-pci@vger.kernel.org>; Fri, 22 Oct 2021 12:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RUp2XLqq8Lwi/bCtW75kgwYY33nabu26v+zSnuqstFo=;
-        b=H78BuiGGtS652wLIuHe5+8En2woNN+Zx3w5mN1mw6MZuDHZI2AZVfeG2SVm1RLTzfY
-         gbvClSs1QexiFf64RI18qjMk88x0e8HWu6lzTL6tdUUqu/qXPu4RRo4MwgUCI5ABDuCd
-         Zg05VhGgagMRpRVH5U+hZII1ifD2CgO3NuI48=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RUp2XLqq8Lwi/bCtW75kgwYY33nabu26v+zSnuqstFo=;
-        b=f2fZh41ooc47ZH7+Ntc4JQg/hrNuEwy8Nj9YecTfZMQHisMEdpl+ZcW2faK1GZ2yDc
-         pcpNPuJgCkW3EKrRPUWIpSmxWF14x+l6aOzd8v89+obbC9lgzw0CDvVUJRB9/TQhVt3D
-         fOS1eMvEVmJ31hHgwyMRyDYi8IBohKxzjG1JMxPj652/uEAVnOlKlp3kA9Atqo6SLqUx
-         W7vBTExp7NtJF9yMc7ZuU5aWprnzvJmqwWja9KSfyLz3c6/WykhFCeqDZyoRMSUcSvBT
-         c9gh63jqlmTkr/qndBMKGAumEMS91RPM+hx7QcHyHK/TpUE431RwFTXGxGnJUdxmTCsH
-         WP7g==
-X-Gm-Message-State: AOAM531RAq58KlVDjEyNmfeIzJ1tXL18APZbyytEoW0VaV9fR1JgdprC
-        bz45aiL/bT5kjzbAEmW9ImKwbD0SMJxOLPzQggz+Cw==
-X-Google-Smtp-Source: ABdhPJyMDc6EZKx2boNeX0DtFA+guxiLLagh2B2rcpBWIQ8n27Nr50828eKBi9y39j6/fsELyTRrOGfZJB/2CW0Qav8=
-X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr2224362wrx.128.1634930701241;
- Fri, 22 Oct 2021 12:25:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-2-jim2101024@gmail.com>
- <YXLPZ4CsQMjHPpJS@sirena.org.uk>
-In-Reply-To: <YXLPZ4CsQMjHPpJS@sirena.org.uk>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 22 Oct 2021 15:24:50 -0400
-Message-ID: <CA+-6iNz3PMsYDds_uoh_xNoPop-tLn1O9U9wnTmTx+pZyN5ZFA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        id S232557AbhJVTtn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Oct 2021 15:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232291AbhJVTtn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 Oct 2021 15:49:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B6C1C6054F;
+        Fri, 22 Oct 2021 19:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634932045;
+        bh=elylJ5DK71Sd3YVpxunlz+xGpKaVn2wMbBAxU/va2o4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I8HqeFePwlc4fnnseqePAzUxdq1pw7MQtR2B/h6KZGC9SiBkH6zb/3JU74UkQbRxx
+         teKkwL6v+HybfBazbznSb/OdvLjfzqBJl4rJJ3j0DJA8ibSgvA9sLpSVQG9sxTggCk
+         OiS0veFA0kcfGIUgn7IDKNdRwiwfCDxJ8NeJIJDjm6/fHPkClc+dEzfGYhcagH9J4f
+         EAVW1WYly/cJFB2PIMEiYrCH/1twjIGTOhLupA5Fu4begjRRqshekSO9QS7ad2rGg+
+         faLNSVswu0ToC90QGxJvXH6nQPtAfuhpvSeNuSbZGwgf0Z/61bixtM+zXCoNMCjWFj
+         A1vcYPC00G+aA==
+Date:   Fri, 22 Oct 2021 20:47:21 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Rob Herring <robh@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
         <linux-pci@vger.kernel.org>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v5 4/6] PCI: brcmstb: Add control of subdevice voltage
+ regulators
+Message-ID: <YXMVSVpeC1Kqsg5x@sirena.org.uk>
+References: <20211022140714.28767-1-jim2101024@gmail.com>
+ <20211022140714.28767-5-jim2101024@gmail.com>
+ <YXLLRLwMG7nEwQoi@sirena.org.uk>
+ <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/HP9my2BKYsQFs5z"
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
+X-Cookie: I program, therefore I am.
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 10:49 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Oct 22, 2021 at 10:06:54AM -0400, Jim Quinlan wrote:
->
-> > The use of a regulator property in the pcie EP subnode such as
-> > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> > file at
-> >
-> > https://github.com/devicetree-org/dt-schema/pull/54
->
-> This contains updates to add the generic PCIe supply rails, not the
-> brcm-ep-a and brcm-ep-b supplies (which as I said on the other patch
-> look like they ought to be renamed).  That's fine since they're
-> obviously not generic PCIe things but this means that those bindings
-> need to be added to the device specific bindings here.  Currently
-> there's only an update to the examples.
 
-Just to be clear, and assuming that the brcm-ep-[ab] supply names are
-green-lighted by you and Rob, are you saying
-I have to update the github site or our YAML file?  If the latter, it
-seems odd to be describing
-an EP-device property in the YAML for an RC driver since the github
-site already describes the EP-device.
+--/HP9my2BKYsQFs5z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Jim
+On Fri, Oct 22, 2021 at 03:15:59PM -0400, Jim Quinlan wrote:
+
+> Each different SOC./board we deal with may present different ways of
+> making the EP device power on.  We are using
+> an abstraction name "brcm-ep-a"  to represent some required regulator
+> to make the EP  work for a specific board.  The RC
+> driver cannot hard code a descriptive name as it must work for all
+> boards designed by us, others, and third parties.
+> The EP driver also doesn't know  or care about the regulator name, and
+> this driver is often closed source and often immutable.  The EP
+> device itself may come from Brcm, a third party,  or sometimes a competitor.
+
+> Basically, we find using a generic name such as "brcm-ep-a-supply"
+> quite handy and many of our customers embrace this feature.
+> I know that Rob was initially against such a generic name, but I
+> vaguely remember him seeing some merit to this, perhaps a tiny bit :-)
+> Or my memory is shot, which could very well be the case.
+
+That sounds like it just shouldn't be a regulator at all, perhaps the
+board happens to need a regulator there but perhaps it needs a clock,
+GPIO or some specific sequence of actions.  It sounds like you need some
+sort of quirking mechanism to cope with individual boards with board
+specific bindings.
+
+I'd suggest as a first pass omitting this and then looking at some
+actual systems later when working out how to support them, no sense in
+getting the main thing held up by difficult edge cases.
+
+> > > +     /* This is for Broadcom STB/CM chips only */
+> > > +     if (pcie->type == BCM2711)
+> > > +             return 0;
+
+> > It is a relief that other chips have managed to work out how to avoid
+> > requiring power.
+
+> I'm not sure that the other Broadcom groups have our customers, our
+> customers' requirements, and the amount and variation of boards that
+> run our PCIe driver on the SOC.
+
+Sure, but equally they might (even if they didn't spot it yet) and in
+general it's safer to err on the side of describing the hardware so we
+can use that information later.
+
+--/HP9my2BKYsQFs5z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmFzFUgACgkQJNaLcl1U
+h9CPbAf5AVRviOjhrMlt1aIvh3qkAFN8NkUZHgZBQPGwUahIDnxp+i29MMtN1EeA
+RqnOwIlsoDbAybJGGG07q1nfLST16wGxF29Ohunl+grK9vnPrPQjvM+SGC+YMqBW
+4IoTaOtrWzLOZJMNKu/hEIZ4GJg2lK/yczvN+bEy1c2r+FXOvkz6sz3O8HuJIVWo
+Ig3asBtnmrtjG4fboMjP8EiK0fOaZ9G+pzOgXYRHpKUsCrARrq+ZPnE652ZNyeIR
+X+UGa5X5Du8E0B/9fr3EJw1jKkYCgonZwHPKzJPWr5IzAw35h9jl7M26otE6y8X/
+Lh6SPgA1sZftF8kVE0QnHE0xZUjJQQ==
+=pd7f
+-----END PGP SIGNATURE-----
+
+--/HP9my2BKYsQFs5z--
