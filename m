@@ -2,158 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34DCF437C58
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 19:57:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EA18437CA5
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 20:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233944AbhJVR71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Oct 2021 13:59:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48426 "EHLO mail.kernel.org"
+        id S233969AbhJVSk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Oct 2021 14:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233819AbhJVR70 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 Oct 2021 13:59:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B9C06101C;
-        Fri, 22 Oct 2021 17:57:08 +0000 (UTC)
+        id S233803AbhJVSk2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 Oct 2021 14:40:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8303B60238;
+        Fri, 22 Oct 2021 18:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634925428;
-        bh=mjxGUB1lWFasyPHvOk10jf2o29FoUADtMwLA4yTPl+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mERG243251H/cSXkfHQxreKEx6kldD18D7JGgdZyArmX6plJfdDX5DXc3J27jt5KQ
-         RkRKil6Xf031C8QewpRj8hmOyfghWYfxsLhiTTW8Ugw1Pj1kJNzyg+AL5YMt6OoZrJ
-         qrNTnCW7oTGOFdlGdVH/cAKwraZNloGEWIOzF7bc7Ao0p06lDMom/2GRCtupApNrz5
-         xH3eXxooVGkt/dygnXQ1GmN04cASWnk7XzRcC1P+E4FCkepYvuTFWo5qnqXV2yBsXg
-         xtKol1R81BW62VZ3US8cY8Ep+dugJiQyW9JHCMvD15EkLjw3NzgGniLcVQdYAdSdlW
-         glf7ZO/eHz+mQ==
+        s=k20201202; t=1634927890;
+        bh=dCm4xtYxwp5HabhpWiIUn/wplxFMoicjHU3dArZzlHI=;
+        h=Date:From:To:Subject:From;
+        b=pqX8sMctbtiwhEGjr/EM7/vlPYW1wmlEURVdnHc7vXZzNNAFk7VMG+p67+2/r0Xpm
+         pihavqsuil3fhESuuznEF4CvstCJov/1WG0mmSvnU76QPN60Z6mwI2cP3oyDFhMR6v
+         O3euAhcX97/c70moTofGPVoueyMC7weGCpnVtHNaOuoOWGX5Y/G4QeuZ/QHxd4Khao
+         1uRTSmx30T0btk5Jb33qrOJk1Bzay4DPn5k1ZFgs8TZtpvCUCR6XPf7s6Cb8sS8WiG
+         Kt0pcHxw9OVbcgXc6YfdXDJxW+PjisOWwlkySLl90qr6Kf/E/irKjYDmwglEk36f44
+         xgXB0umC/QrbQ==
 Received: by pali.im (Postfix)
-        id 368187F6; Fri, 22 Oct 2021 19:57:06 +0200 (CEST)
-Date:   Fri, 22 Oct 2021 19:57:06 +0200
+        id 317787F6; Fri, 22 Oct 2021 20:38:08 +0200 (CEST)
+Date:   Fri, 22 Oct 2021 20:38:08 +0200
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, nsaenz@kernel.org, bhelgaas@google.com,
-        rjw@rjwysocki.net, lenb@kernel.org, robh@kernel.org, kw@linux.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI: brcmstb: Add ACPI config space quirk
-Message-ID: <20211022175706.gzu5jz23vjkcnkqk@pali>
-References: <20211005153209.GA1083986@bhelgaas>
- <d4b34193-31e5-2f95-6365-b58239c0dabb@arm.com>
- <20211005194301.enb5jddzdgczcolx@pali>
- <694bb355-3b5e-9801-3772-ff784b49a603@arm.com>
- <6be712f8-c794-aa55-8679-5ddb5a16bcef@gmail.com>
- <f648bc89-f08b-e806-45f9-5a1b61686e19@gmail.com>
- <20211022171728.vlxb3sfebfpgijmp@pali>
- <3a956549-3304-5a4c-3058-eccfac44d31b@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: RFC: Extend probing of native PCIe controllers
+Message-ID: <20211022183808.jdeo7vntnagqkg7g@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a956549-3304-5a4c-3058-eccfac44d31b@gmail.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 22 October 2021 10:29:48 Florian Fainelli wrote:
-> On 10/22/21 10:17 AM, Pali Rohár wrote:
-> > On Friday 22 October 2021 10:04:36 Florian Fainelli wrote:
-> >> On 10/5/21 7:07 PM, Florian Fainelli wrote:
-> >>>
-> >>>
-> >>> On 10/5/2021 3:25 PM, Jeremy Linton wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On 10/5/21 2:43 PM, Pali Rohár wrote:
-> >>>>> Hello!
-> >>>>>
-> >>>>> On Tuesday 05 October 2021 10:57:18 Jeremy Linton wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> On 10/5/21 10:32 AM, Bjorn Helgaas wrote:
-> >>>>>>> On Thu, Aug 26, 2021 at 02:15:55AM -0500, Jeremy Linton wrote:
-> >>>>>>>> Additionally, some basic bus/device filtering exist to avoid sending
-> >>>>>>>> config transactions to invalid devices on the RP's primary or
-> >>>>>>>> secondary bus. A basic link check is also made to assure that
-> >>>>>>>> something is operational on the secondary side before probing the
-> >>>>>>>> remainder of the config space. If either of these constraints are
-> >>>>>>>> violated and a config operation is lost in the ether because an EP
-> >>>>>>>> doesn't respond an unrecoverable SERROR is raised.
-> >>>>>>>
-> >>>>>>> It's not "lost"; I assume the root port raises an error because it
-> >>>>>>> can't send a transaction over a link that is down.
-> >>>>>>
-> >>>>>> The problem is AFAIK because the root port doesn't do that.
-> >>>>>
-> >>>>> Interesting! Does it mean that PCIe Root Complex / Host Bridge (which I
-> >>>>> guess contains also logic for Root Port) does not signal transaction
-> >>>>> failure for config requests? Or it is just your opinion? Because I'm
-> >>>>> dealing with similar issues and I'm trying to find a way how to detect
-> >>>>> if some PCIe IP signal transaction error via AXI SLVERR response OR it
-> >>>>> just does not send any response back. So if you know some way how to
-> >>>>> check which one it is, I would like to know it too.
-> >>>>
-> >>>> This is my _opinion_ based on what I've heard of some other IP
-> >>>> integration issues, and what i've seen poking at this one from the
-> >>>> perspective of a SW guy rather than a HW guy. So, basically worthless.
-> >>>> But, you should consider that most of these cores/interconnects aren't
-> >>>> aware of PCIe completion semantics so its the root ports
-> >>>> responsibility to say, gracefully translate a non-posted write that
-> >>>> doesn't have a completion for the interconnects its attached to,
-> >>>> rather than tripping something generic like a SLVERR.
-> >>>>
-> >>>> Anyway, for this I would poke around the pile of exception registers,
-> >>>> with your specific processors manual handy because a lot of them are
-> >>>> implementation defined.
-> >>>
-> >>> I should be able to get you an answer in the new few days whether
-> >>> configuration space requests also generate an error towards the ARM CPU,
-> >>> since memory space requests most definitively do.
-> >>
-> >> Did not get an answer from the design team, but going through our bug
-> >> tracker, there were evidences of configuration space accesses also
-> >> generating external aborts:
-> >>
-> >> [    8.988237] Unhandled fault: synchronous external abort (0x96000210) at 0xffffff8009539004
-> >> [    9.026698] PC is at pci_generic_config_read32+0x30/0xb0
-> > 
-> > So this is error caused by reading from config space.
-> > 
-> > Can you check if also writing to config space can trigger some crash? If
-> > yes, I would like to know if write would be also synchronous or rather
-> > asynchronous abort.
-> 
-> Yes it does and AFAICT it always shows up as a system error interrupt,
-> here is an example:
-> 
-> # setpci -d *:* latency_timer=40
-> [   25.909644] SError Interrupt on CPU2, code 0xbf000002 -- SError
-> [   25.909652] pc : pci_user_write_config_byte+0x6c/0x78
-> [   25.909706] Kernel panic - not syncing: Asynchronous SError Interrupt
+Hello!
 
-Ok! So writing to config space cause asynchronous abort.
+In this email I'm describing how I see that probing of native PCIe
+controller drivers is implemented, how it should be implemented and how
+to extend / simplify core code for controller drivers.
 
-Looking at the codes and 0x96000210 on all ARMv8 should be Data Abort.
-0xbf...... on ARMv8 is SError interrupt and other bits are CPU core
-specific. What CPU core do you have on this machine? I have just decoder
-for A53 core and on this core value 0xbf000002 means "SLVERR on external
-access". But I guess that it would mean also SLVERR for your CPU core.
 
-Because Exactly same behavior I'm seeing with PCIe controller on A3720
-SoC which has A53 core. It looks like that PCIe controller translates
-PCIe CA and UR responses to AXI SLVERR responses which are delivered to
-CPU and kernel just see these fatal error interrupts. And same issue is
-not only for config requests but also for memory read / write commands.
+Native PCIe controller drivers needs to fill struct pci_host_bridge and
+then call pci_host_probe(). Function pci_host_probe() starts probing and
+enumerating buses and register PCIe devices to system.
 
-In my case PCIe controller really receives response (timeout does not
-occur) from PCIe core (which probably timeouts as it cannot send message
-when link is down) but instead of translating them to SLVOK with
-fabricated 0xffffffff response it sends to CPU that fatal SLVERR.
+But initialization of PCIe controller and cards on buses (other end of
+PCIe link) is more complicated and basically every native PCIe
+controller driver needs to do initialization PCIe link prior calling
+pci_host_probe(). Steps which controller drivers are doing are de-facto
+standard steps defined in PCIe base or CEM specification.
 
-I was told that the fix for this kind of issue is to "reconfigure" PCIe
-controller to never send SLVERR to CPU. And instead fabricate 0xffffffff
-SLVOK response. It should be configurable in PCIe wrapper or PCIe glue
-IP which do connection between CPU / AXI and PCIe core.
+The most problematic step is to reset endpoint card and wait until
+endpoint card start. Reset of endpoint card is done by standard PERST#
+signal (defined in PCIe CEM spec) and in most cases board export control
+of this signal to OS via GPIO (few board and drivers have this signal
+connected to PCIe controller and then PCIe controller has some specific
+registers to control this signal). Reset via PERST# signal is defined in
+PCIe CEM and base specs as "PCIe Warm Reset".
 
-I do not know if there is any way how to "ignores" these SLVERR
-responses from PCIe controller sent to CPU.
+As discussed in the following email thread, this PCIe Warm Reset should
+not depend on PCIe controller as it resets card on the other end of PCIe
+controller. But currently every native PCIe controller driver does PCIe
+Warm Reset by its own for randomly chosen time period. There is open
+question how long should be endpoint card in Warm Reset state:
+https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+
+Initialization of PCIe endpoint card is described in PCIe CEM spec in
+Figure 2-10: Power Up. Other informations are in PCIe base spec in 6.6.1
+Conventional Reset section.
+
+If I understand specifications correctly then OS initialization steps
+should be following (please correct me if I'm wrong!):
+
+1) Put PERST# to low which enter endpoint card into reset state
+2) Enable AUX power (3.3V) and wait until is stable
+3) Enable main power (12V/3.3V) and wait until is stable
+4) Enable refclock and wait until is stable
+5) Enable LTSSM on PCIe controller to start link training
+6) Put PERST# to high which exit endpoint card from reset state
+7) Wait until link training completes
+8) Wait another 100ms prior accessing config space of endpoint card
+
+Minimal time period between "after step 3)" and "before step 6)" is T_PVPERL = 100ms
+Minimal time period between "after step 4)" and "before step 6)" is T_PERSTCLK = 100us
+
+After step 6) is end of Fundamental Reset and PCIe controller needs to
+be in LTSSM Detect state within 20ms. So enabling it prior putting
+PERST# to high should achieve it.
+
+Competition of link training is indicated by standard DLLLA bit in Root
+Port config space. Support for DLLLA bit is optional and is indicated by
+DLLLARC bit in Root Port config space. Lot of PCIe controllers do not
+support this standard DLLLA bit, but have their own specific register
+for it.
+
+Similarly is defined power down of PCIe card in PCIe CEM spec in Figure
+2-13: Power Down. If I understand it correctly steps are:
+
+1) Put endpoint card into D3hot state, so PCIe link goes inactive
+2) Put PERST# to low, so endpoint card enters reset state
+3) Disable main power (12V/3.3V)
+4) Disable refclock
+
+In case of surprise power down, PERST# needs to go low in 500ns.
+
+In PCIe base spec in section 5.2 Link State Power Management is
+described that preparation for removing the main power source can be
+done also by sending PCIe PME_Turn_Off Message by Root Complex. IIRC
+there is no standard way how to send PCIe PME_Turn_Off message.
+
+
+
+
+I see that basically every PCIe controller driver is doing its own
+implementation of PCIe Warm Reset and waiting until PCIe link is ready
+prior calling pci_host_probe().
+
+Based on all above details I would like to propose following extending
+of struct pci_host_bridge and pci_host_probe() function to de-duplicate
+native PCIe controller driver code:
+
+1) extend struct pci_host_bridge to provide callbacks for:
+   * enable / disable main power source
+   * enable / disable refclock
+   * enable / disable LTSSM link training (if PCIe link should go into Detect / Polling state)
+   * enable / disable PERST# signal
+   * returning boolean if endpoint card is present (physically in PCIe/mPCIe/m.2/... slot)
+   * returning boolean if link training completed
+   * sending PCIe PME_Turn_Off message
+
+2) implement asynchronous initialization of PCIe link and enumeration of
+   PCIe bus behind the PCIe Root Port from pci_host_probe() based on new
+   callbacks added in 1)
+   --> so native PCIe controller drivers do not have to do it manually
+   --> during this initialization can be done also PCIe Hot Reset
+
+3) implement PCIe Hot Reset as reset method via PERST# signal and put it
+   into pci_reset_fn_methods[] array
+
+4) implement PCIe Cold Reset as reset method via power down / up and put
+   it into pci_reset_fn_methods[] array
+
+5) as enabling / disabling power supply and toggling PERST# signal is
+   implemented via GPIO, add some generic implementation for callback
+   functions which will use named gpios (e.g. from DT)
+
+This could simplify implementations of native PCIe controller drivers by
+calling initialization steps in correct order with correct timeouts and
+drivers do not have to do copy+paste same common code or reimplement it
+with own constants and macros for timeouts, etc...
+
+Also it should enable access to PCIe Root Port as this device is part of
+Root Complex and should be available also when link is down or link
+training was not completed. Currently some PCIe controllers are not
+registered into system when link is down (e.g. card is disconnected or
+card has some issue). Which also prevents access to PCIe Root Port
+device. And in some cases it could speed up boot process as pci
+controller driver does not have to actively wait for link and let kernel
+do initialization of other devices.
+
+What do you think about this idea?
+
+
+PS: Excuse me if I wrote some mistakes here, I'm still learning how PCIe
+is working and how is PCI subsystem implemented.
