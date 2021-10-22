@@ -2,178 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EA18437CA5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 20:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 450E5437E73
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 21:16:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233969AbhJVSk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Oct 2021 14:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233803AbhJVSk2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 Oct 2021 14:40:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8303B60238;
-        Fri, 22 Oct 2021 18:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634927890;
-        bh=dCm4xtYxwp5HabhpWiIUn/wplxFMoicjHU3dArZzlHI=;
-        h=Date:From:To:Subject:From;
-        b=pqX8sMctbtiwhEGjr/EM7/vlPYW1wmlEURVdnHc7vXZzNNAFk7VMG+p67+2/r0Xpm
-         pihavqsuil3fhESuuznEF4CvstCJov/1WG0mmSvnU76QPN60Z6mwI2cP3oyDFhMR6v
-         O3euAhcX97/c70moTofGPVoueyMC7weGCpnVtHNaOuoOWGX5Y/G4QeuZ/QHxd4Khao
-         1uRTSmx30T0btk5Jb33qrOJk1Bzay4DPn5k1ZFgs8TZtpvCUCR6XPf7s6Cb8sS8WiG
-         Kt0pcHxw9OVbcgXc6YfdXDJxW+PjisOWwlkySLl90qr6Kf/E/irKjYDmwglEk36f44
-         xgXB0umC/QrbQ==
-Received: by pali.im (Postfix)
-        id 317787F6; Fri, 22 Oct 2021 20:38:08 +0200 (CEST)
-Date:   Fri, 22 Oct 2021 20:38:08 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: RFC: Extend probing of native PCIe controllers
-Message-ID: <20211022183808.jdeo7vntnagqkg7g@pali>
+        id S232855AbhJVTSa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Oct 2021 15:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232358AbhJVTSa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Oct 2021 15:18:30 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415FCC061764
+        for <linux-pci@vger.kernel.org>; Fri, 22 Oct 2021 12:16:12 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id y132-20020a1c7d8a000000b0032ca5765d6cso959566wmc.0
+        for <linux-pci@vger.kernel.org>; Fri, 22 Oct 2021 12:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oEAmkv1pjl7JjH6MEH5XGy7T6DQ3usFjVUbp0ytNU9A=;
+        b=POpdBM5gLe/dm2OSlr6qLVrH8LhMwWMuEqTW7mZGgv2BfnUsxuqUvVIap767IC/W93
+         oOCh8IOC+vkYgAagu4iZ38nzjhP8xX1wektHeMQRU9paqAJPepazVluV+bWHOfUTS5Ta
+         PNJMIt1P7GyHKKRnz+fg9+Fozhmhb4ETqQiUQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oEAmkv1pjl7JjH6MEH5XGy7T6DQ3usFjVUbp0ytNU9A=;
+        b=isA7TrFZE9PxvyGCp1a5fZOe3McdSyHAveZpjY9+zrcDC7zX5FbiZ6YWR0OPvb1AZf
+         lzpDa2RHq9VJZ5jT4eqE2fWpRdsGxRup+DRWuxtKUnOPfC3sCnjVYFMoHqLKxovhdDOl
+         Cb3iNs8lub5ZtBvokXESo52zr+Qjnn2xowEe88THO/7qJZtBTSut4TWgh4KD4gTCcvlx
+         egTfi82D0f+UrS/V4PRkEwm8/z/LC9YhF7mSuFVcDGjcadIrXlP57WtX9tG8zOPkh+Kf
+         quBVTuC32RPwZNqFSGU/FxXm/pGl5AP/4WV6x1dcJuB7K1gkhIKpK0pl7PmowjhZoeXX
+         tvFw==
+X-Gm-Message-State: AOAM530M6FENLNJyKJHpoF48072lGpVH2ctQzEArOMlzktkqyd6YO7/H
+        K4zdHwdLW6ScMJd6r36SMBzLPUWYthDkBspt8xJiJg==
+X-Google-Smtp-Source: ABdhPJxznCu+WcHErA4OK6hbVaioEGVYhtdrI6+wpuzeBvigNepsP6VPg9kfpEKXCCnNxJkRkt1H/M2SiT4zcC9JtEg=
+X-Received: by 2002:a1c:750b:: with SMTP id o11mr1742971wmc.5.1634930170743;
+ Fri, 22 Oct 2021 12:16:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-5-jim2101024@gmail.com>
+ <YXLLRLwMG7nEwQoi@sirena.org.uk>
+In-Reply-To: <YXLLRLwMG7nEwQoi@sirena.org.uk>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Fri, 22 Oct 2021 15:15:59 -0400
+Message-ID: <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] PCI: brcmstb: Add control of subdevice voltage regulators
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+On Fri, Oct 22, 2021 at 10:31 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Oct 22, 2021 at 10:06:57AM -0400, Jim Quinlan wrote:
+>
+> > +static const char * const supplies[] = {
+> > +     "vpcie3v3-supply",
+> > +     "vpcie3v3aux-supply",
+> > +     "brcm-ep-a-supply",
+> > +     "brcm-ep-b-supply",
+> > +};
+>
+> Why are you including "-supply" in the names here?  That will lead to
+> a double -supply when we look in the DT which probably isn't what you're
+> looking for.
+I'm not sure how this got past testing; will fix.
 
-In this email I'm describing how I see that probing of native PCIe
-controller drivers is implemented, how it should be implemented and how
-to extend / simplify core code for controller drivers.
+>
+> Also are you *sure* that the device has supplies with names like
+> "brcm-ep-a"?  That seems rather unidiomatic for electrical engineering,
+> the names here are supposed to correspond to the names used in the
+> datasheet for the part.
+I try to explain this in the commit message of"PCI: allow for callback
+to prepare nascent subdev".  Wrt to the names,
 
+       "These regulators typically govern the actual power supply to the
+        endpoint chip.  Sometimes they may be a the official PCIe socket
+        power -- such as 3.3v or aux-3.3v.  Sometimes they are truly
+        the regulator(s) that supply power to the EP chip."
 
-Native PCIe controller drivers needs to fill struct pci_host_bridge and
-then call pci_host_probe(). Function pci_host_probe() starts probing and
-enumerating buses and register PCIe devices to system.
+Each different SOC./board we deal with may present different ways of
+making the EP device power on.  We are using
+an abstraction name "brcm-ep-a"  to represent some required regulator
+to make the EP  work for a specific board.  The RC
+driver cannot hard code a descriptive name as it must work for all
+boards designed by us, others, and third parties.
+The EP driver also doesn't know  or care about the regulator name, and
+this driver is often closed source and often immutable.  The EP
+device itself may come from Brcm, a third party,  or sometimes a competitor.
 
-But initialization of PCIe controller and cards on buses (other end of
-PCIe link) is more complicated and basically every native PCIe
-controller driver needs to do initialization PCIe link prior calling
-pci_host_probe(). Steps which controller drivers are doing are de-facto
-standard steps defined in PCIe base or CEM specification.
+Basically, we find using a generic name such as "brcm-ep-a-supply"
+quite handy and many of our customers embrace this feature.
+I know that Rob was initially against such a generic name, but I
+vaguely remember him seeing some merit to this, perhaps a tiny bit :-)
+Or my memory is shot, which could very well be the case.
 
-The most problematic step is to reset endpoint card and wait until
-endpoint card start. Reset of endpoint card is done by standard PERST#
-signal (defined in PCIe CEM spec) and in most cases board export control
-of this signal to OS via GPIO (few board and drivers have this signal
-connected to PCIe controller and then PCIe controller has some specific
-registers to control this signal). Reset via PERST# signal is defined in
-PCIe CEM and base specs as "PCIe Warm Reset".
+>
+> > +     /* This is for Broadcom STB/CM chips only */
+> > +     if (pcie->type == BCM2711)
+> > +             return 0;
+>
+> It is a relief that other chips have managed to work out how to avoid
+> requiring power.
+I'm not sure that the other Broadcom groups have our customers, our
+customers' requirements, and the amount and variation of boards that
+run our PCIe driver on the SOC.
 
-As discussed in the following email thread, this PCIe Warm Reset should
-not depend on PCIe controller as it resets card on the other end of PCIe
-controller. But currently every native PCIe controller driver does PCIe
-Warm Reset by its own for randomly chosen time period. There is open
-question how long should be endpoint card in Warm Reset state:
-https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
-
-Initialization of PCIe endpoint card is described in PCIe CEM spec in
-Figure 2-10: Power Up. Other informations are in PCIe base spec in 6.6.1
-Conventional Reset section.
-
-If I understand specifications correctly then OS initialization steps
-should be following (please correct me if I'm wrong!):
-
-1) Put PERST# to low which enter endpoint card into reset state
-2) Enable AUX power (3.3V) and wait until is stable
-3) Enable main power (12V/3.3V) and wait until is stable
-4) Enable refclock and wait until is stable
-5) Enable LTSSM on PCIe controller to start link training
-6) Put PERST# to high which exit endpoint card from reset state
-7) Wait until link training completes
-8) Wait another 100ms prior accessing config space of endpoint card
-
-Minimal time period between "after step 3)" and "before step 6)" is T_PVPERL = 100ms
-Minimal time period between "after step 4)" and "before step 6)" is T_PERSTCLK = 100us
-
-After step 6) is end of Fundamental Reset and PCIe controller needs to
-be in LTSSM Detect state within 20ms. So enabling it prior putting
-PERST# to high should achieve it.
-
-Competition of link training is indicated by standard DLLLA bit in Root
-Port config space. Support for DLLLA bit is optional and is indicated by
-DLLLARC bit in Root Port config space. Lot of PCIe controllers do not
-support this standard DLLLA bit, but have their own specific register
-for it.
-
-Similarly is defined power down of PCIe card in PCIe CEM spec in Figure
-2-13: Power Down. If I understand it correctly steps are:
-
-1) Put endpoint card into D3hot state, so PCIe link goes inactive
-2) Put PERST# to low, so endpoint card enters reset state
-3) Disable main power (12V/3.3V)
-4) Disable refclock
-
-In case of surprise power down, PERST# needs to go low in 500ns.
-
-In PCIe base spec in section 5.2 Link State Power Management is
-described that preparation for removing the main power source can be
-done also by sending PCIe PME_Turn_Off Message by Root Complex. IIRC
-there is no standard way how to send PCIe PME_Turn_Off message.
-
-
-
-
-I see that basically every PCIe controller driver is doing its own
-implementation of PCIe Warm Reset and waiting until PCIe link is ready
-prior calling pci_host_probe().
-
-Based on all above details I would like to propose following extending
-of struct pci_host_bridge and pci_host_probe() function to de-duplicate
-native PCIe controller driver code:
-
-1) extend struct pci_host_bridge to provide callbacks for:
-   * enable / disable main power source
-   * enable / disable refclock
-   * enable / disable LTSSM link training (if PCIe link should go into Detect / Polling state)
-   * enable / disable PERST# signal
-   * returning boolean if endpoint card is present (physically in PCIe/mPCIe/m.2/... slot)
-   * returning boolean if link training completed
-   * sending PCIe PME_Turn_Off message
-
-2) implement asynchronous initialization of PCIe link and enumeration of
-   PCIe bus behind the PCIe Root Port from pci_host_probe() based on new
-   callbacks added in 1)
-   --> so native PCIe controller drivers do not have to do it manually
-   --> during this initialization can be done also PCIe Hot Reset
-
-3) implement PCIe Hot Reset as reset method via PERST# signal and put it
-   into pci_reset_fn_methods[] array
-
-4) implement PCIe Cold Reset as reset method via power down / up and put
-   it into pci_reset_fn_methods[] array
-
-5) as enabling / disabling power supply and toggling PERST# signal is
-   implemented via GPIO, add some generic implementation for callback
-   functions which will use named gpios (e.g. from DT)
-
-This could simplify implementations of native PCIe controller drivers by
-calling initialization steps in correct order with correct timeouts and
-drivers do not have to do copy+paste same common code or reimplement it
-with own constants and macros for timeouts, etc...
-
-Also it should enable access to PCIe Root Port as this device is part of
-Root Complex and should be available also when link is down or link
-training was not completed. Currently some PCIe controllers are not
-registered into system when link is down (e.g. card is disconnected or
-card has some issue). Which also prevents access to PCIe Root Port
-device. And in some cases it could speed up boot process as pci
-controller driver does not have to actively wait for link and let kernel
-do initialization of other devices.
-
-What do you think about this idea?
-
-
-PS: Excuse me if I wrote some mistakes here, I'm still learning how PCIe
-is working and how is PCI subsystem implemented.
+Jim
