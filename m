@@ -2,149 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 523374378AE
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 16:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B65C34378B0
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 16:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232868AbhJVOJj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Oct 2021 10:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
+        id S233056AbhJVOJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Oct 2021 10:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231741AbhJVOJj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Oct 2021 10:09:39 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E35CC061764;
-        Fri, 22 Oct 2021 07:07:21 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id f5so3390892pgc.12;
-        Fri, 22 Oct 2021 07:07:21 -0700 (PDT)
+        with ESMTP id S232942AbhJVOJl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Oct 2021 10:09:41 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311D3C061764;
+        Fri, 22 Oct 2021 07:07:24 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id na16-20020a17090b4c1000b0019f5bb661f9so3188462pjb.0;
+        Fri, 22 Oct 2021 07:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=/agOmz3U1kToZEfpYBZeBgjrCZIKo2iOjjILiNmM8SI=;
-        b=d3sxm3/W05ryib4Gky/py2cbH7wU13kNcndQ+arph/+tRLtrUST0ILkziVU5hRxdFL
-         tFkN2D9lSgK0UdB04rd4/e6nrWxa+ctJ31FRpvMB7NugBGNVBuACNtzAtpdOAIp1xk21
-         lFP8iGhBKr/1dU1KB37z+MQ4rbY9WxnDCFYaUygZm/6W69Hrf2qpo7w7aN7/HCFWVk3r
-         tx2er1jnuRbGsrKXsBbTGSNCw+/o48o0zckbQ2sHe7JSfd9zn1/mom01ueO+1JRFdMqz
-         pjQtYoOYwbgzyNqh8uafiDxRwJdVMzaCvMOpABzEkRdLb8EGgeD55xdoxY3ddqWsvjeH
-         AXpw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Bsq6iuwj06pXXhljM7U8duGAiebZpibGfx/z6iMK0J4=;
+        b=C3oxmrJLdQJyvbXE2u/UmMh56GtIKnVFUbbbek+adMcBUXo2Jsx5Bp0OK86COwfYjl
+         6oNXF6MQkJdRLBop4PBpT74JWoeLF6CvL77w1AqwE/EqQGfbzF8AV1ER1KQhE7e4e8E4
+         9HQYVZiaFnsb9tiT/nFRte1xEudbuvXxGc1c/kp9PZhRParOR8Dm/H8kAIUZjNJtuqew
+         wdnEvZHd7XGsJnPIwIBEV8huYFWG37tomRsnZaK3ZxLT0kSZ4UNa2xoAXUPh6JhGDWng
+         B+KYfUxxO3eVcyrSQ7blsSqSMF+/YPpT5qZT7FQJDHcGEFi6m4Gr2jXvDiqkoRMQZ3C9
+         zrTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/agOmz3U1kToZEfpYBZeBgjrCZIKo2iOjjILiNmM8SI=;
-        b=D6enRBDG0ZuPrSDgiuL3rZFloyptC06bdbXdd0l2HgdLvO6HFYdIOzc1ecEgjoVN1a
-         8R3d6CBocGeju42e6DV9RQuhV7ob3yEOhu/45a+WCkXxvTnu94RmpowyNQe1arTLgRHL
-         MK1x8+fGZefSFZijsm7Fm7bf4fkeFo8TF4KlVxQXE1Po+V3PuGn4Cr4fPDuHAf1jLooM
-         Wo+AjUwiAZ6JsbmOLb08E1Pl2KJscSlPYuoGwQ2TqF3+g02NTGVJ8OpXK8WLI1DggkCM
-         2D8MYHLp90P1n83Gv/QTX1J1mUXGDubJNNi95mkw5OxooGekU08ZJ0RMogoQoPwDVfG4
-         56cg==
-X-Gm-Message-State: AOAM533afWKl5n6e6p94nfQDTr8ckK25kwbv352I1HoDE2gpFyS+l2nE
-        q+R97MLH0QHBOpCW/B2WV7ZfdhzqjSu7cA==
-X-Google-Smtp-Source: ABdhPJzhIgzFcIrVWCevrBOk6am7e3ctM7HrhXOX6Kb2DYJntrfUXK6b1J+DZKiZ++UxKQu4kB7wyw==
-X-Received: by 2002:a65:6a0a:: with SMTP id m10mr9514pgu.82.1634911640310;
-        Fri, 22 Oct 2021 07:07:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Bsq6iuwj06pXXhljM7U8duGAiebZpibGfx/z6iMK0J4=;
+        b=zM3IYlaXKeoduGevCkqzIj1fJtzsKpEPHFVq3L50rkoHvjslqWVpiV+94UvTNEjjtF
+         MxPJ5I6oaSe43uc750mtwS32PHU8bXkmT23V4AtVLPqgxRIvLkn487shz3O/k/v2Otoe
+         h2k4C4w5hEI6+ZEXDJQPqdPszDqNGE1rZYnt7jEaa1SI6/g6NANmlxvAOPPIl5cxrcB0
+         AIDN9yXq9ZovPBffGL1TDL0X7K6EkWewmq3lJeD5YjTG9gEYhEwMA6SQY7fIlxoVZlzu
+         tN7iQCJAlKioyeGm8Lo5oVYXeeJXkzNAE+/X1cPvdSnnyQHv1UmjFOpwr/0urnWhMlWG
+         B3+w==
+X-Gm-Message-State: AOAM530tW0R4RBwvtA3w110Dt92j8HF/fHU7JZtQnoQfBQVirOZIzkIV
+        nU6SecwwqtbZP+9yCXEctcSW6VapTKswPQ==
+X-Google-Smtp-Source: ABdhPJxdUhmGq4ZRKzaK21X94AipnqDq19/Ap75RlGsTHAeeHI/6xlZ2h4zOKCpYrE7eNmTk8pBTBw==
+X-Received: by 2002:a17:902:7616:b0:13f:354a:114f with SMTP id k22-20020a170902761600b0013f354a114fmr52600pll.8.1634911642661;
+        Fri, 22 Oct 2021 07:07:22 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id e12sm9482990pfl.67.2021.10.22.07.07.17
+        by smtp.gmail.com with ESMTPSA id e12sm9482990pfl.67.2021.10.22.07.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Oct 2021 07:07:19 -0700 (PDT)
+        Fri, 22 Oct 2021 07:07:22 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Claire Chang <tientzu@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list),
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        Saravana Kannan <saravanak@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 0/6] PCI: brcmstb: have host-bridge turn on sub-device power
-Date:   Fri, 22 Oct 2021 10:06:53 -0400
-Message-Id: <20211022140714.28767-1-jim2101024@gmail.com>
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
+Date:   Fri, 22 Oct 2021 10:06:54 -0400
+Message-Id: <20211022140714.28767-2-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211022140714.28767-1-jim2101024@gmail.com>
+References: <20211022140714.28767-1-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v5 [NOTE: It has been a while since v4.  Sorry]
-     -- See "PCI: allow for callback to prepare nascent subdev"
-        commit message for the cornerstone of this patchset
-        and the reasons behind it.  This is a new commit.
-     -- The RC driver now looks into its DT children and
-        turns on regulators for a sub-device, and this occurs
-	prior to PCIe link as it must.
-     -- Dropped commits not related to the focus of this patchset.
+Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+allows optional regulators to be attached and controlled by the PCIe RC
+driver.  That being said, this driver searches in the DT subnode (the EP
+node, eg pci@0,0) for the regulator property.
 
-v4 [NOTE: I'm not sure this fixes RobH and MarkB constraints but I'd
-          like to use this pullreq as a basis for future discussion.]
-   [Commit: Add bindings for ...]
-     -- Fix syntax error in YAML bindings example (RobH)
-     -- {vpcie12v,vpcie3v3}-supply props are back in root complex DT node
-        (I believe RobH said this was okay)
-   [Commit: Add control of ..]
-     -- Do not do global search for regulator; now we look specifically
-        for the property {vpcie12v,vpcie3v3}-supply in the root complex
-	DT node and then call devm_regulator_bulk_get() (MarkB)
-     -- Use devm_regulator_bulk_get() (Bjorn)
-     -- s/EP/slot0 device/ (Bjorn)
-     -- Spelling, capitalization (Bjorn)
-     -- Have brcm_phy_stop() return a void (Bjorn)
-   [Commit: Do not turn off ...]
-     -- Capitalization (Bjorn)
-   [Commit: Check return value ...]
-     -- Commit message content (Bjorn)
-     -- Move 6/6 hunk to 2/6 where it belongs (Bjorn)
-     -- Move the rest of 6/6 before all other commits (Bjorn)
+The use of a regulator property in the pcie EP subnode such as
+"vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+file at
 
-v3 -- Driver now searches for EP DT subnode for any regulators to turn on.
-      If present, these regulators have the property names
-      "vpcie12v-supply" and "vpcie3v3-supply".  The existence of these
-      regulators in the EP subnode are currently pending as a pullreq
-      in pci-bus.yaml at
-      https://github.com/devicetree-org/dt-schema/pull/54
-      (MarkB, RobH).
-   -- Check return of brcm_set_regulators() (Florian)
-   -- Specify one regulator string per line for easier update (Florian)
-   -- Author/Committer/Signoff email changed from that of V2 from
-      'james.quinlan@broadcom.com' to 'jim2101024@gmail.com'.
+https://github.com/devicetree-org/dt-schema/pull/54
 
-v2 -- Use regulator bulk API rather than multiple calls (MarkB).
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+---
+ .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-v1 -- Bindings are added for fixed regulators that may power the EP device.
-   -- The brcmstb RC driver is modified to control these regulators
-      during probe, suspend, and resume.
-   -- 7216 type SOCs have additional error reporting HW and a
-      panic handler is added to dump its info.
-   -- A missing return value check is added.
-
-Jim Quinlan (6):
-  dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
-  PCI: allow for callback to prepare nascent subdev
-  PCI: brcmstb: split brcm_pcie_setup() into two funcs
-  PCI: brcmstb: Add control of subdevice voltage regulators
-  PCI: brcmstb: Do not turn off regulators if EP can wake up
-  PCI: brcmstb: change brcm_phy_stop() to return void
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  23 ++
- drivers/base/core.c                           |   5 +
- drivers/pci/controller/pcie-brcmstb.c         | 231 ++++++++++++++++--
- drivers/pci/probe.c                           |  47 +++-
- include/linux/device.h                        |   3 +
- include/linux/pci.h                           |   3 +
- 6 files changed, 286 insertions(+), 26 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index b9589a0daa5c..fec13e4f6eda 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -154,5 +154,28 @@ examples:
+                                  <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
+                     brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
++
++                    /* PCIe bridge */
++                    pci@0,0 {
++                            #address-cells = <3>;
++                            #size-cells = <2>;
++                            reg = <0x0 0x0 0x0 0x0 0x0>;
++                            device_type = "pci";
++                            ranges;
++
++                            /* PCIe endpoint */
++                            pci@0,0 {
++                                    device_type = "pci";
++                                    assigned-addresses = <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
++                                    reg = <0x0 0x0 0x0 0x0 0x0>;
++                                    compatible = "pci14e4,1688";
++                                    vpcie3v3-supply = <&vreg7>;
++
++                                    #address-cells = <3>;
++                                    #size-cells = <2>;
++
++                                    ranges;
++                            };
++                    };
+             };
+     };
 -- 
 2.17.1
 
