@@ -2,60 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08E1443727A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 09:01:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C335E4372D5
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Oct 2021 09:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230428AbhJVHEH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Oct 2021 03:04:07 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:51733 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbhJVHEG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Oct 2021 03:04:06 -0400
-X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Oct 2021 03:04:06 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id A42C028005312;
-        Fri, 22 Oct 2021 09:01:48 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 979BF16E5C7; Fri, 22 Oct 2021 09:01:48 +0200 (CEST)
-Date:   Fri, 22 Oct 2021 09:01:48 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: Re: [PATCH v3 18/25] PCI: pciehp: Use RESPONSE_IS_PCI_ERROR() to
- check read from hardware
-Message-ID: <20211022070148.GB17656@wunner.de>
-References: <cover.1634825082.git.naveennaidu479@gmail.com>
- <c21290fe02a7a342a8b93c692586b6a2b6cde9e0.1634825082.git.naveennaidu479@gmail.com>
- <20211021152253.pqc6xp3vnv5fpczj@theprophet>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211021152253.pqc6xp3vnv5fpczj@theprophet>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S231941AbhJVHkI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Oct 2021 03:40:08 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45906 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231773AbhJVHkI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 Oct 2021 03:40:08 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D7651201B52;
+        Fri, 22 Oct 2021 09:37:49 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9FC132005EC;
+        Fri, 22 Oct 2021 09:37:49 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D5BB183AC94;
+        Fri, 22 Oct 2021 15:37:48 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH v3 0/7] PCI: imx6: refine codes and add compliance tests mode support
+Date:   Fri, 22 Oct 2021 15:12:23 +0800
+Message-Id: <1634886750-13861-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 08:52:53PM +0530, Naveen Naidu wrote:
-> Lukas, I have not added your Acked-by tag from the v1 [1] of the patch 
-> series, since the RESPONSE_IS_PCI_ERROR macro definition slightly 
-> changed. I hope this was the right thing to do.
-[...]
-> If that is not the case please let me know. But I am not sure what to
-> do here? If RESPONSE_IS_PCI_ERROR does not fit here, should the right
-> option would be to revert/remove this patch from the series?
+This series patches refine pci-imx6 driver and do the following changes.
+- Encapsulate the clock enable into one standalone function
+- Add the error propagation from host_init
+- Add one new host_exit callback, used to balance the usage of the
+  regulator and clocks when link never came up
+- Add the compliance tests mode support
 
-My Acked-by still stands.  As for the macro name, I'm fine with
-whatever Bjorn and the community settle on. :)
+Main changes from v2 to v3:
+- Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into
+  first two patches.
+- Add a Fixes tag into #3 patch.
+- Split the #4 of v2 to two patches, one is clock disable codes move,
+  the other one is the acutal clock unbalance fix.
+- Add a new host_exit() callback into dw_pcie_host_ops, then it could be
+  invoked to handle the unbalance issue in the error handling after
+  host_init() function when link is down.
+- Add a new host_exit() callback for i.MX PCIe driver to handle this case
+  in the error handling after host_init.
 
-Thanks,
+Main changes from v1 to v2:
+Regarding Lucas' comments.
+  - Move the placement of the new imx6_pcie_clk_enable() to avoid the
+    forward declarition.
+  - Seperate the second patch of v1 patch-set to three patches.
+  - Use the module_param to replace the kernel command line.
+Regarding Bjorn's comments:
+  - Use the cover-letter for a multi-patch series.
+  - Correct the subject line, and refine the commit logs. For example,
+    remove the timestamp of the logs.
 
-Lukas
+drivers/pci/controller/dwc/pci-imx6.c             | 176 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------
+drivers/pci/controller/dwc/pcie-designware-host.c |   5 ++-
+drivers/pci/controller/dwc/pcie-designware.h      |   1 +
+3 files changed, 119 insertions(+), 63 deletions(-)
+
+[PATCH v3 1/7] PCI: imx6: Encapsulate the clock enable into one
+[PATCH v3 2/7] PCI: imx6: Add the error propagation from host_init
+[PATCH v3 3/7] PCI: imx6: Fix the regulator dump when link never came
+[PATCH v3 4/7] PCI: imx6: move the clock disable function to a proper
+[PATCH v3 5/7] PCI: dwc: add a new callback host exit function into
+[PATCH v3 6/7] PCI: imx6: Fix the reference handling unbalance when
+[PATCH v3 7/7] PCI: imx6: Add the compliance tests mode support
