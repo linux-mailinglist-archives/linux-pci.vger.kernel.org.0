@@ -2,208 +2,564 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC5243879F
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Oct 2021 10:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE8F14388D2
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Oct 2021 14:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbhJXIep (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Oct 2021 04:34:45 -0400
-Received: from mail-bn8nam12on2064.outbound.protection.outlook.com ([40.107.237.64]:2241
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231837AbhJXIel (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 24 Oct 2021 04:34:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jbt6QkBRvvCDYkgJpYopV1OvRhZLVROVKJh5E5oau+koEFOOhLAHM0y8HEEeEeiHxANH7GAZdj2kRpJ0+L3QPvphvUtdAPGxgU0a3hbGr83WlWNeD/Ho2btYZ7aInveCGVjj+4zTDgVRK+F5MjITJscb/Z6j+Eoo2XIEAovp/AS+I34eEYz4IDm141gqgJQ2pADxIlIgvyTRYyvpUqjdiEgPRAH0VEwY9NOco+fLPlMDVaFJLnY8+F1oY1oAB8kIh8yApOtI4vyQWHN08+1ILt8riws3L+z9sCwrw4e15uEUdThtMIcAhICx06uLLIWEvsvxr8LIpFZjtHM/t9i/8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u3KOUx0jSz7QZczP3nf+xaTthk7sMn9JiO4/y8JK+/4=;
- b=k66Qw8zgxNP8zCYUgmJtRauBcxUamKrzYcDz5k2Gcegx394tqU+iFmuU1pUPMySzmtJv8oalTck7Q6C8Db0rlaFFC/3dM58G3EHD1xt74EhyEE6CwZ6ZHJuCVVjP/WRU9I8KpDnXCquA1Wen8wZmnSBkgSA64hzR3pXuCW3Btqr0r7nvEX4JMsg3hGFB//vyWL16sMp/o+jJXgLVb87XiGgcAvX9wA4GvvZzFTioTE2bIhppyLX7UIVEJI1vMOjdQ+yB/DbFQ1xmnLzgnV6Ew54HBfrd7VWkOMaqIsFX/3vJxRlNyurDNo1suG4KBkte3X8Muy7d50G8BgNWQN1Ajw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u3KOUx0jSz7QZczP3nf+xaTthk7sMn9JiO4/y8JK+/4=;
- b=uMmGfyb88Lxy/GPGPdMF/WwDZjGC32p9BsOE2WnveERg2sHbz2Bb3/x8Z4A/bjMKkAGsJdr0rMXdLU/8FATRXFimgWQ6fAheTByKNkZdStK2gcCJssj7zGL96XhMsmEC7f+9bumhnjTxcH//RTnxY5BwdhmIHc1nv9J5zNxyzk0KlFqe5CepTuK0C7FmzOdUoSpj2+m5HdmFHHyr42k7imC/3jiHSFPzyqe5XXzub8dG1U0g9R2qKIPtYvF7gDw3F2MU35St6ahwC4A8BF4/4pzAhG4Q1X+c8QeCWq9izoNM6DD51tgnbjFVgSzGta2r1PMnDmR6W8dXa7FNZ/owHA==
-Received: from BN9PR03CA0274.namprd03.prod.outlook.com (2603:10b6:408:f5::9)
- by SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Sun, 24 Oct
- 2021 08:32:19 +0000
-Received: from BN8NAM11FT052.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:f5:cafe::2a) by BN9PR03CA0274.outlook.office365.com
- (2603:10b6:408:f5::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18 via Frontend
- Transport; Sun, 24 Oct 2021 08:32:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.32; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.32) by
- BN8NAM11FT052.mail.protection.outlook.com (10.13.177.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4628.16 via Frontend Transport; Sun, 24 Oct 2021 08:32:18 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Sun, 24 Oct
- 2021 01:32:16 -0700
-Received: from vdi.nvidia.com (172.20.187.6) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Sun, 24 Oct 2021 01:32:13 -0700
-From:   Yishai Hadas <yishaih@nvidia.com>
-To:     <alex.williamson@redhat.com>, <bhelgaas@google.com>,
-        <jgg@nvidia.com>, <saeedm@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
-        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>,
-        <yishaih@nvidia.com>, <maorg@nvidia.com>
-Subject: [PATCH V3 mlx5-next 13/13] vfio/mlx5: Use its own PCI reset_done error handler
-Date:   Sun, 24 Oct 2021 11:30:19 +0300
-Message-ID: <20211024083019.232813-14-yishaih@nvidia.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20211024083019.232813-1-yishaih@nvidia.com>
-References: <20211024083019.232813-1-yishaih@nvidia.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a42e7dc8-e167-4755-d7ad-08d996c8cadc
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB45575F38ECFAAB578A5A64D2C3829@SA0PR12MB4557.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GQLOq7kvD7UzwGHgaReJB/QDL+y8JDN8OjF0Mvxwm4rz7MbgyLM2V+8lkTCs2ij00iL27BMr1ns7DeEeNERfvgkomfZOECdFgLZxr1D2ojTwmZE2M6JMNLm8WN9wcFSdBBcJ7/QAcgMMdp5HRjXJ3UknVoAJBRAVLCJ+ru58sTmOFKTHblaRZDe1WQAV3coBq2aopstbwF/TLTIgAFcWMqDtvQKdtkTTMaVyDGquBqcG6Ezolzzo4XcQd//q9IXnC/XcqmsYdrb5y3Q+GT71cXHf2Hd4qtcZjINmnTUwWQV5RXYRP3LrZEebDUnQbHvbwpRpfqBHxhsL9O5vxnprHIjGH1tzWaJRpgGQk7yspiOpDAT7fz59mOBCCZeeyRxxC5r9cay7MvYqKkCfiTLxrJT4n5O4QWiuVPgmTFD2J0x4TIJMUQsZUFUoP1VcU3zDWq3PyX1ImG0HYeLMiiqCfwbi70h5k+XOyU2MdHyiQiCHJR8RRL3qyxUu+bTIHKvejZL1E4J6EjoqBlmHFcc7X05hniLskB73/Jc4ZD0k6boCI9KWwmX+EuiGmJ5J4987AnpmNwvbVhTXKpaBqQRDO0GpSPDHyzaQb/XEnl5S3mAf9OQgLfON6MtBvznU1KlZQlTDr7FyHxNh+qnAVQwShY+odd2dGJo9sO2zQqaji/JEcjayVLPRaJnj9/ULdlgmgyC+ieIt8+awHbwhO7T2Sw==
-X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(8936002)(36756003)(70586007)(47076005)(82310400003)(107886003)(336012)(110136005)(4326008)(1076003)(356005)(83380400001)(186003)(36860700001)(8676002)(508600001)(54906003)(316002)(2616005)(5660300002)(7636003)(7696005)(426003)(86362001)(2906002)(26005)(70206006)(6636002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2021 08:32:18.8403
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a42e7dc8-e167-4755-d7ad-08d996c8cadc
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT052.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4557
+        id S231469AbhJXMTV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Oct 2021 08:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229867AbhJXMTV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 24 Oct 2021 08:19:21 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D81A60174;
+        Sun, 24 Oct 2021 12:17:00 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mecQs-001Bn6-7B; Sun, 24 Oct 2021 13:16:58 +0100
+Date:   Sun, 24 Oct 2021 13:16:57 +0100
+Message-ID: <87mtmyty6e.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v3 1/2] PCI: hv: Make the code arch neutral by adding arch specific interfaces
+In-Reply-To: <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+References: <1634226794-9540-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sunilmut@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Register its own handler for pci_error_handlers.reset_done and update
-state accordingly.
+On Thu, 14 Oct 2021 16:53:13 +0100,
+Sunil Muthuswamy <sunilmut@linux.microsoft.com> wrote:
+> 
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> 
+> Encapsulate arch dependencies in Hyper-V vPCI through a set of interfaces,
+> listed below. Adding these arch specific interfaces will allow for an
+> implementation for other arch, such as ARM64.
+> 
+> Implement the interfaces for X64, which is essentially just moving over the
+> current implementation.
 
-Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/vfio/pci/mlx5/main.c | 54 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
+Nit: use architecture names and capitalisation that match their use in
+the kernel (arm64, x86) instead of the MS-specific lingo.
 
-diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
-index 4b21b388dcc5..ca7e5692a7ff 100644
---- a/drivers/vfio/pci/mlx5/main.c
-+++ b/drivers/vfio/pci/mlx5/main.c
-@@ -55,8 +55,11 @@ struct mlx5vf_pci_migration_info {
- struct mlx5vf_pci_core_device {
- 	struct vfio_pci_core_device core_device;
- 	u8 migrate_cap:1;
-+	u8 defered_reset:1;
- 	/* protect migration state */
- 	struct mutex state_mutex;
-+	/* protect the reset_done flow */
-+	spinlock_t reset_lock;
- 	struct mlx5vf_pci_migration_info vmig;
- };
- 
-@@ -471,6 +474,47 @@ mlx5vf_pci_migration_data_rw(struct mlx5vf_pci_core_device *mvdev,
- 	return count;
- }
- 
-+/* This function is called in all state_mutex unlock cases to
-+ * handle a 'defered_reset' if exists.
-+ */
-+static void mlx5vf_state_mutex_unlock(struct mlx5vf_pci_core_device *mvdev)
-+{
-+again:
-+	spin_lock(&mvdev->reset_lock);
-+	if (mvdev->defered_reset) {
-+		mvdev->defered_reset = false;
-+		spin_unlock(&mvdev->reset_lock);
-+		mlx5vf_reset_mig_state(mvdev);
-+		mvdev->vmig.vfio_dev_state = VFIO_DEVICE_STATE_RUNNING;
-+		goto again;
-+	}
-+	spin_unlock(&mvdev->reset_lock);
-+	mutex_unlock(&mvdev->state_mutex);
-+}
-+
-+static void mlx5vf_pci_aer_reset_done(struct pci_dev *pdev)
-+{
-+	struct mlx5vf_pci_core_device *mvdev = dev_get_drvdata(&pdev->dev);
-+
-+	if (!mvdev->migrate_cap)
-+		return;
-+
-+	/* As the higher VFIO layers are holding locks across reset and using
-+	 * those same locks with the mm_lock we need to prevent ABBA deadlock
-+	 * with the state_mutex and mm_lock.
-+	 * In case the state_mutex was taken alreday we differ the cleanup work
-+	 * to the unlock flow of the other running context.
-+	 */
-+	spin_lock(&mvdev->reset_lock);
-+	mvdev->defered_reset = true;
-+	if (!mutex_trylock(&mvdev->state_mutex)) {
-+		spin_unlock(&mvdev->reset_lock);
-+		return;
-+	}
-+	spin_unlock(&mvdev->reset_lock);
-+	mlx5vf_state_mutex_unlock(mvdev);
-+}
-+
- static ssize_t mlx5vf_pci_mig_rw(struct vfio_pci_core_device *vdev,
- 				 char __user *buf, size_t count, loff_t *ppos,
- 				 bool iswrite)
-@@ -539,7 +583,7 @@ static ssize_t mlx5vf_pci_mig_rw(struct vfio_pci_core_device *vdev,
- 	}
- 
- end:
--	mutex_unlock(&mvdev->state_mutex);
-+	mlx5vf_state_mutex_unlock(mvdev);
- 	return ret;
- }
- 
-@@ -634,6 +678,7 @@ static int mlx5vf_pci_probe(struct pci_dev *pdev,
- 			if (MLX5_CAP_GEN(mdev, migration)) {
- 				mvdev->migrate_cap = 1;
- 				mutex_init(&mvdev->state_mutex);
-+				spin_lock_init(&mvdev->reset_lock);
- 			}
- 			mlx5_vf_put_core_dev(mdev);
- 		}
-@@ -668,12 +713,17 @@ static const struct pci_device_id mlx5vf_pci_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, mlx5vf_pci_table);
- 
-+const struct pci_error_handlers mlx5vf_err_handlers = {
-+	.reset_done = mlx5vf_pci_aer_reset_done,
-+	.error_detected = vfio_pci_aer_err_detected,
-+};
-+
- static struct pci_driver mlx5vf_pci_driver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = mlx5vf_pci_table,
- 	.probe = mlx5vf_pci_probe,
- 	.remove = mlx5vf_pci_remove,
--	.err_handler = &vfio_pci_core_err_handlers,
-+	.err_handler = &mlx5vf_err_handlers,
- };
- 
- static void __exit mlx5vf_pci_cleanup(void)
+> 
+> List of added interfaces:
+>  - hv_pci_irqchip_init()
+>  - hv_pci_irqchip_free()
+>  - hv_msi_get_int_vector()
+>  - hv_set_msi_entry_from_desc()
+>  - hv_msi_prepare()
+> 
+> There are no functional changes expected from this patch.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> In v2 & v3:
+>  Changes are described in the cover letter.
+> 
+>  MAINTAINERS                                 |  2 +
+>  arch/x86/include/asm/hyperv-tlfs.h          | 33 ++++++++++++
+>  arch/x86/include/asm/mshyperv.h             |  7 ---
+>  drivers/pci/controller/Makefile             |  2 +-
+>  drivers/pci/controller/pci-hyperv-irqchip.c | 57 +++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv-irqchip.h | 20 ++++++++
+>  drivers/pci/controller/pci-hyperv.c         | 52 ++++++++++++-------
+>  include/asm-generic/hyperv-tlfs.h           | 33 ------------
+>  8 files changed, 146 insertions(+), 60 deletions(-)
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.c
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ca6d6fde85cf..ba8c979c17b2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8688,6 +8688,8 @@ F:	drivers/iommu/hyperv-iommu.c
+>  F:	drivers/net/ethernet/microsoft/
+>  F:	drivers/net/hyperv/
+>  F:	drivers/pci/controller/pci-hyperv-intf.c
+> +F:	drivers/pci/controller/pci-hyperv-irqchip.c
+> +F:	drivers/pci/controller/pci-hyperv-irqchip.h
+>  F:	drivers/pci/controller/pci-hyperv.c
+>  F:	drivers/scsi/storvsc_drv.c
+>  F:	drivers/uio/uio_hv_generic.c
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 2322d6bd5883..fdf3d28fbdd5 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -585,6 +585,39 @@ enum hv_interrupt_type {
+>  	HV_X64_INTERRUPT_TYPE_MAXIMUM           = 0x000A,
+>  };
+>  
+> +union hv_msi_address_register {
+> +	u32 as_uint32;
+> +	struct {
+> +		u32 reserved1:2;
+> +		u32 destination_mode:1;
+> +		u32 redirection_hint:1;
+> +		u32 reserved2:8;
+> +		u32 destination_id:8;
+> +		u32 msi_base:12;
+> +	};
+> +} __packed;
+> +
+> +union hv_msi_data_register {
+> +	u32 as_uint32;
+> +	struct {
+> +		u32 vector:8;
+> +		u32 delivery_mode:3;
+> +		u32 reserved1:3;
+> +		u32 level_assert:1;
+> +		u32 trigger_mode:1;
+> +		u32 reserved2:16;
+> +	};
+> +} __packed;
+> +
+> +/* HvRetargetDeviceInterrupt hypercall */
+> +union hv_msi_entry {
+> +	u64 as_uint64;
+> +	struct {
+> +		union hv_msi_address_register address;
+> +		union hv_msi_data_register data;
+> +	} __packed;
+> +};
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index adccbc209169..c2b9ab94408e 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -176,13 +176,6 @@ bool hv_vcpu_is_preempted(int vcpu);
+>  static inline void hv_apic_init(void) {}
+>  #endif
+>  
+> -static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> -					      struct msi_desc *msi_desc)
+> -{
+> -	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
+> -	msi_entry->data.as_uint32 = msi_desc->msg.data;
+> -}
+> -
+>  struct irq_domain *hv_create_pci_msi_domain(void);
+>  
+>  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index aaf30b3dcc14..2c301d0fc23b 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -2,7 +2,7 @@
+>  obj-$(CONFIG_PCIE_CADENCE) += cadence/
+>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>  obj-$(CONFIG_PCI_IXP4XX) += pci-ixp4xx.o
+> -obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+> +obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o pci-hyperv-irqchip.o
+>  obj-$(CONFIG_PCI_HYPERV_INTERFACE) += pci-hyperv-intf.o
+>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
+> diff --git a/drivers/pci/controller/pci-hyperv-irqchip.c b/drivers/pci/controller/pci-hyperv-irqchip.c
+> new file mode 100644
+> index 000000000000..36fa862f8bc5
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-irqchip.c
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Hyper-V vPCI irqchip.
+> + *
+> + * Copyright (C) 2021, Microsoft, Inc.
+> + *
+> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
+> + */
+> +
+> +#include <asm/mshyperv.h>
+> +#include <linux/acpi.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irq.h>
+> +#include <linux/msi.h>
+> +
+> +#ifdef CONFIG_X86_64
+> +int hv_pci_irqchip_init(struct irq_domain **parent_domain,
+> +			bool *fasteoi_handler,
+> +			u8 *delivery_mode)
+> +{
+> +	*parent_domain = x86_vector_domain;
+> +	*fasteoi_handler = false;
+> +	*delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(hv_pci_irqchip_init);
+
+Why do you need to export any of these symbols? Even if the two
+objects are compiled separately, there is absolutely no need to make
+them two separate modules.
+
+Also, returning 3 values like this makes little sense. Pass a pointer
+to the structure that requires them and populate it as required. Or
+simply #define those that are constants.
+
+> +
+> +void hv_pci_irqchip_free(void) {}
+> +EXPORT_SYMBOL(hv_pci_irqchip_free);
+> +
+> +unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> +{
+> +	struct irq_cfg *cfg = irqd_cfg(data);
+> +
+> +	return cfg->vector;
+> +}
+> +EXPORT_SYMBOL(hv_msi_get_int_vector);
+> +
+> +void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				struct msi_desc *msi_desc)
+> +{
+> +	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
+> +	msi_entry->data.as_uint32 = msi_desc->msg.data;
+> +}
+> +EXPORT_SYMBOL(hv_set_msi_entry_from_desc);
+> +
+> +int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +		   int nvec, msi_alloc_info_t *info)
+> +{
+> +	return pci_msi_prepare(domain, dev, nvec, info);
+> +}
+> +EXPORT_SYMBOL(hv_msi_prepare);
+
+This looks like a very unnecessary level of indirection, given that
+you end-up with an empty callback in the arm64 code. The following
+works just as well and avoids useless callbacks:
+
+#ifdef CONFIG_ARM64
+#define pci_msi_prepare	NULL
+#endif
+
+I also wish that pci_msi_prepare was called x86_pci_msi_prepare, but
+that's another debate...
+
+> +
+> +#endif
+> +
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/pci/controller/pci-hyperv-irqchip.h b/drivers/pci/controller/pci-hyperv-irqchip.h
+> new file mode 100644
+> index 000000000000..00549809e6c4
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-irqchip.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Architecture specific vector management for the Hyper-V vPCI.
+> + *
+> + * Copyright (C) 2021, Microsoft, Inc.
+> + *
+> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
+> + */
+> +
+> +int hv_pci_irqchip_init(struct irq_domain **parent_domain,
+> +			bool *fasteoi_handler,
+> +			u8 *delivery_mode);
+> +
+> +void hv_pci_irqchip_free(void);
+> +unsigned int hv_msi_get_int_vector(struct irq_data *data);
+> +void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				struct msi_desc *msi_desc);
+> +
+> +int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +		   int nvec, msi_alloc_info_t *info);
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index eaec915ffe62..2d3916206986 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -43,14 +43,12 @@
+>  #include <linux/pci-ecam.h>
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+> -#include <linux/irqdomain.h>
+> -#include <asm/irqdomain.h>
+> -#include <asm/apic.h>
+>  #include <linux/irq.h>
+>  #include <linux/msi.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/refcount.h>
+>  #include <asm/mshyperv.h>
+> +#include "pci-hyperv-irqchip.h"
+>  
+>  /*
+>   * Protocol versions. The low word is the minor version, the high word the
+> @@ -81,6 +79,10 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
+>  	PCI_PROTOCOL_VERSION_1_1,
+>  };
+>  
+> +static struct irq_domain *parent_domain;
+> +static bool fasteoi;
+> +static u8 delivery_mode;
+
+See my earlier comment about how clumsy this is.
+
+> +
+>  #define PCI_CONFIG_MMIO_LENGTH	0x2000
+>  #define CFG_PAGE_OFFSET 0x1000
+>  #define CFG_PAGE_SIZE (PCI_CONFIG_MMIO_LENGTH - CFG_PAGE_OFFSET)
+> @@ -1217,7 +1219,6 @@ static void hv_irq_mask(struct irq_data *data)
+>  static void hv_irq_unmask(struct irq_data *data)
+>  {
+>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_retarget_device_interrupt *params;
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+> @@ -1246,11 +1247,12 @@ static void hv_irq_unmask(struct irq_data *data)
+>  			   (hbus->hdev->dev_instance.b[7] << 8) |
+>  			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+>  			   PCI_FUNC(pdev->devfn);
+> -	params->int_target.vector = cfg->vector;
+> +	params->int_target.vector = hv_msi_get_int_vector(data);
+>  
+>  	/*
+> -	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
+> -	 * setting the HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
+> +	 * For x64, honoring apic->delivery_mode set to
+> +	 * APIC_DELIVERY_MODE_FIXED by setting the
+> +	 * HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
+>  	 * spurious interrupt storm. Not doing so does not seem to have a
+>  	 * negative effect (yet?).
+
+And what does it mean on other architectures?
+
+>  	 */
+> @@ -1347,7 +1349,7 @@ static u32 hv_compose_msi_req_v1(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
+>  
+>  	/*
+>  	 * Create MSI w/ dummy vCPU set, overwritten by subsequent retarget in
+> @@ -1377,7 +1379,7 @@ static u32 hv_compose_msi_req_v2(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
+>  	cpu = hv_compose_msi_req_get_cpu(affinity);
+>  	int_pkt->int_desc.processor_array[0] =
+>  		hv_cpu_number_to_vp_number(cpu);
+> @@ -1397,7 +1399,7 @@ static u32 hv_compose_msi_req_v3(
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.reserved = 0;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
+>  	cpu = hv_compose_msi_req_get_cpu(affinity);
+>  	int_pkt->int_desc.processor_array[0] =
+>  		hv_cpu_number_to_vp_number(cpu);
+> @@ -1419,7 +1421,6 @@ static u32 hv_compose_msi_req_v3(
+>   */
+>  static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_pcibus_device *hbus;
+>  	struct vmbus_channel *channel;
+>  	struct hv_pci_dev *hpdev;
+> @@ -1470,7 +1471,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
+>  
+>  	case PCI_PROTOCOL_VERSION_1_2:
+> @@ -1478,14 +1479,14 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
+>  
+>  	case PCI_PROTOCOL_VERSION_1_4:
+>  		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
+>  
+>  	default:
+> @@ -1601,7 +1602,7 @@ static struct irq_chip hv_msi_irq_chip = {
+>  };
+>  
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.msi_prepare	= pci_msi_prepare,
+> +	.msi_prepare	= hv_msi_prepare,
+>  	.msi_free	= hv_msi_free,
+>  };
+>  
+> @@ -1625,12 +1626,13 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+>  	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>  		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+>  		MSI_FLAG_PCI_MSIX);
+> -	hbus->msi_info.handler = handle_edge_irq;
+> -	hbus->msi_info.handler_name = "edge";
+> +	hbus->msi_info.handler =
+> +		fasteoi ? handle_fasteoi_irq : handle_edge_irq;
+> +	hbus->msi_info.handler_name = fasteoi ? "fasteoi" : "edge";
+
+The fact that you somehow need to know what the GIC is using as a flow
+handler is a sure sign that you are doing something wrong. In a
+hierarchical setup, only the root of the hierarchy should ever know
+about that. Having anything there is actively wrong.
+
+>  	hbus->msi_info.data = hbus;
+>  	hbus->irq_domain = pci_msi_create_irq_domain(hbus->fwnode,
+>  						     &hbus->msi_info,
+> -						     x86_vector_domain);
+> +						     parent_domain);
+>  	if (!hbus->irq_domain) {
+>  		dev_err(&hbus->hdev->device,
+>  			"Failed to build an MSI IRQ domain\n");
+> @@ -3531,13 +3533,21 @@ static void __exit exit_hv_pci_drv(void)
+>  	hvpci_block_ops.read_block = NULL;
+>  	hvpci_block_ops.write_block = NULL;
+>  	hvpci_block_ops.reg_blk_invalidate = NULL;
+> +
+> +	hv_pci_irqchip_free();
+>  }
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	int ret;
+> +
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+>  
+> +	ret = hv_pci_irqchip_init(&parent_domain, &fasteoi, &delivery_mode);
+> +	if (ret)
+> +		return ret;
+
+Having established that the fasteoi thing is nothing but a bug, that
+the delivery_mode is a constant, and that all that matters is actually
+the parent domain which is a global pointer on x86, and something that
+gets allocated on arm64, you can greatly simplify the whole thing:
+
+#ifdef CONFIG_X86
+#define DELIVERY_MODE	APIC_DELIVERY_MODE_FIXED
+#define FLOW_HANDLER	handle_edge_irq
+#define FLOW_NAME	"edge"
+
+static struct irq_domain *hv_pci_get_root_domain(void)
+{
+	return x86_vector_domain;
+}
+#endif
+
+#ifdef CONFIG_ARM64
+#define DELIVERY_MODE	0
+#define FLOW_HANDLER	NULL
+#define FLOW_NAME	NULL
+#define pci_msi_prepare	NULL
+
+static struct irq_domain *hv_pci_get_root_domain(void)
+{
+	[...]
+}
+#endif
+
+as once you look at it seriously, the whole "separate file for the IRQ
+code" is totally unnecessary (as Michael pointed out earlier), because
+the abstractions you are adding are for most of them unnecessary.
+
+> +
+>  	/* Set the invalid domain number's bit, so it will not be used */
+>  	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+>  
+> @@ -3546,7 +3556,11 @@ static int __init init_hv_pci_drv(void)
+>  	hvpci_block_ops.write_block = hv_write_config_block;
+>  	hvpci_block_ops.reg_blk_invalidate = hv_register_block_invalidate;
+>  
+> -	return vmbus_driver_register(&hv_pci_drv);
+> +	ret = vmbus_driver_register(&hv_pci_drv);
+> +	if (ret)
+> +		hv_pci_irqchip_free();
+> +
+> +	return ret;
+>  }
+>  
+>  module_init(init_hv_pci_drv);
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 56348a541c50..45cc0c3b8ed7 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -539,39 +539,6 @@ enum hv_interrupt_source {
+>  	HV_INTERRUPT_SOURCE_IOAPIC,
+>  };
+>  
+> -union hv_msi_address_register {
+> -	u32 as_uint32;
+> -	struct {
+> -		u32 reserved1:2;
+> -		u32 destination_mode:1;
+> -		u32 redirection_hint:1;
+> -		u32 reserved2:8;
+> -		u32 destination_id:8;
+> -		u32 msi_base:12;
+> -	};
+> -} __packed;
+> -
+> -union hv_msi_data_register {
+> -	u32 as_uint32;
+> -	struct {
+> -		u32 vector:8;
+> -		u32 delivery_mode:3;
+> -		u32 reserved1:3;
+> -		u32 level_assert:1;
+> -		u32 trigger_mode:1;
+> -		u32 reserved2:16;
+> -	};
+> -} __packed;
+> -
+> -/* HvRetargetDeviceInterrupt hypercall */
+> -union hv_msi_entry {
+> -	u64 as_uint64;
+> -	struct {
+> -		union hv_msi_address_register address;
+> -		union hv_msi_data_register data;
+> -	} __packed;
+> -};
+> -
+>  union hv_ioapic_rte {
+>  	u64 as_uint64;
+>  
+
+Thanks,
+
+	M.
+
 -- 
-2.18.1
-
+Without deviation from the norm, progress is not possible.
