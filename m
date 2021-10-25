@@ -2,212 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3D943A7EA
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 00:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BA1443A844
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 01:37:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235166AbhJYWy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 18:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235789AbhJYWyx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 18:54:53 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEAEC061227;
-        Mon, 25 Oct 2021 15:51:35 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id t21so8939905plr.6;
-        Mon, 25 Oct 2021 15:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=81AJNMnFxRWUqJjijgRXknq5Pna9QzgGgJMBSF89pBE=;
-        b=VrKyvOaQP5K8pq1kWushtEbX6vFeMxgzWBmx6Tx6ks40hKKRlI93Bo68TA3WK9+Ocq
-         Gqtp950zOM0xO+SCXqu3Wskmv6KwX75D5RN46F0Wkc2D4nywXFNNTCXlZ893yNvn3BON
-         AzgXkC9UsRQ51NTzZYcQ5Z7enYfVJ2N8LtnG2z+74uDkWnUrsegSwyqiVOfPT0hUTXgJ
-         LrLhJK5ZgXepcCSF5PwYG8RZjfWdaXY3/GLeFysUZ/4G7j6b2Elkh77M6QAW1WGBhM31
-         mCx6iOGbgg3cseuHtcgqe8LiAMMSbr2yOzZFeTQ+0rbo0YbAq11ZcU9vg1v3r5MyLiCF
-         0+/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=81AJNMnFxRWUqJjijgRXknq5Pna9QzgGgJMBSF89pBE=;
-        b=jiq1Dxfig8+w0S362LrFCLSSeYW6BFOvZVG4HuilzEclzRlGBT8ZF4j3JE+HkmcGWR
-         cThaKDdMj8x9GCF3GaIVD0+kd2meya/s49bdMdsD77O7cTNEXgx6ViImrluBurYMq03B
-         2OihrMrUJ0l3XSOjDQsZsbok8ZpoLBW5sDItEQLjEeqHfyMnmIw6Dnob7ERwJrx8Lp1h
-         IF/ZAgZ36ILsp+CZBiAxPHT1CQ7/yl87CIXCreCw4AcYs66TlJhGceMKOr8GYvmCD8pq
-         IxmpC0YxzVp0489iQwXUxrDv/xd100hZK1m75d2Oat0UfricofzYOLwqIlKWigY4nQc0
-         D8gw==
-X-Gm-Message-State: AOAM5312KnQcfW3Hhi9wiqPKdF1eWlizImLnj/4MU1uy7LYBJjh4E/kb
-        SW2DVJSida171tK8fq6wMN1JxImZz3U=
-X-Google-Smtp-Source: ABdhPJzxSbQ66PzcTLSO+Bfscalmt8f1RSlJLotiWFdKAvnUinoFG/Rfh0U1skgADEkKwTdO5suZKw==
-X-Received: by 2002:a17:90a:6b0a:: with SMTP id v10mr38840829pjj.130.1635202294456;
-        Mon, 25 Oct 2021 15:51:34 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id oc12sm3906084pjb.17.2021.10.25.15.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Oct 2021 15:51:33 -0700 (PDT)
-Subject: Re: [PATCH v5 4/6] PCI: brcmstb: Add control of subdevice voltage
- regulators
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20211022140714.28767-1-jim2101024@gmail.com>
- <20211022140714.28767-5-jim2101024@gmail.com>
- <YXLLRLwMG7nEwQoi@sirena.org.uk>
- <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
- <YXMVSVpeC1Kqsg5x@sirena.org.uk>
- <CA+-6iNxQAekCQTJKE5L7LO6QF+UC6xnyE=XVq_7z3=4hp8ASXQ@mail.gmail.com>
- <YXbF+VxZKkiHEu9c@sirena.org.uk>
- <2eec973e-e9f0-1ef7-a090-734dab5db815@gmail.com>
- <YXczHKg77Z5oIJX3@robh.at.kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <54855dfe-f91a-f2eb-dc28-28de468449c1@gmail.com>
-Date:   Mon, 25 Oct 2021 15:51:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S235164AbhJYXkC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Oct 2021 19:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234889AbhJYXkB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Oct 2021 19:40:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 89FF260187;
+        Mon, 25 Oct 2021 23:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635205058;
+        bh=xZuKP0UCTTapRVjN9lDtmo7bL5KlII2WBEwLuNEyNp4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=X294QY26/tHF2bGr/FF+NcS7TQJWsGxCzYVHQHrYygTawrmUqlGO8mmtHYRyZkJef
+         5rnJCBX6j98l1Pj6gLN7t4ZlAqaEuJuSMLReKkwwt3oBWVzxM8vV0CvZ8Me9FdZsz/
+         oI7Rq3zbHHq+cqm/MJZwYXmWyn5wgONJM7Ohj9F7K397SSizkhje71uKksH621ImbQ
+         VOTPcvtIJThOgQyZwImt7kqJWE8UKbsXgQJAGLDt/fks6MrxPO1ogL2exfuub4i2ew
+         lH90U9ROt1HL/Su36R6vAeuEP3C02XdEZ5+jnFcMvu/3n77+mBmIwvUB6/WGiW6rEm
+         TkpJMnC5VmgQA==
+Date:   Mon, 25 Oct 2021 18:37:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xuesong Chen <xuesong.chen@linux.alibaba.com>
+Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Huang Ying <ying.huang@intel.com>
+Subject: Re: [PATCH v3 2/2] ACPI: APEI: Filter the PCI MCFG address with an
+ arch-agnostic method
+Message-ID: <20211025233737.GA50860@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <YXczHKg77Z5oIJX3@robh.at.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36685ccd-f1d6-5db4-f282-878d29515f8b@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/25/21 3:43 PM, Rob Herring wrote:
-> On Mon, Oct 25, 2021 at 03:04:34PM -0700, Florian Fainelli wrote:
->> On 10/25/21 7:58 AM, Mark Brown wrote:
->>> On Mon, Oct 25, 2021 at 09:50:09AM -0400, Jim Quinlan wrote:
->>>> On Fri, Oct 22, 2021 at 3:47 PM Mark Brown <broonie@kernel.org> wrote:
->>>>> On Fri, Oct 22, 2021 at 03:15:59PM -0400, Jim Quinlan wrote:
->>>
->>>>> That sounds like it just shouldn't be a regulator at all, perhaps the
->>>>> board happens to need a regulator there but perhaps it needs a clock,
->>>>> GPIO or some specific sequence of actions.  It sounds like you need some
->>>>> sort of quirking mechanism to cope with individual boards with board
->>>>> specific bindings.
->>>
->>>> The boards involved may have no PCIe sockets, or run the gamut of the different
->>>> PCIe sockets.  They all offer gpio(s) to turn off/on their power supply(s) to
->>>> make their PCIe device endpoint functional.  It is not viable to add
->>>> new Linux quirk or DT
->>>> code for each board.  First is the volume and variety of the boards
->>>> that use our SOCs.. Second, is
->>>> our lack of information/control:  often, the board is designed by one
->>>> company (not us), and
->>>> given to another company as the middleman, and then they want the
->>>> features outlined
->>>> in my aforementioned commit message.
->>>
->>> Other vendors have plenty of variation in board design yet we still have
->>> device trees that describe the hardware, I can't see why these systems
->>> should be so different.  It is entirely normal for system integrators to
->>> collaborate on this and even upstream their own code, this happens all
->>> the time, there is no need for everything to be implemented directly the
->>> SoC vendor.
->>
->> This is all well and good and there is no disagreement here that it
->> should just be that way but it does not reflect what Jim and I are
->> confronted with on a daily basis. We work in a tightly controlled
->> environment using a waterfall approach, whatever we come up with as a
->> SoC vendor gets used usually without further modification by the OEMs,
->> when OEMs do change things we have no visibility into anyway.
->>
->> We have a boot loader that goes into great lengths to tailor the FDT
->> blob passed to the kernel to account for board-specific variations, PCIe
->> voltage regulators being just one of those variations. This is usually
->> how we quirk and deal with any board specific details, so I fail to
->> understand what you mean by "quirks that match a common pattern".
->>
->> Also, I don't believe other vendors are quite as concerned with
->> conserving power as we are, it could be that they are just better at it
->> through different ways, or we have a particular sensitivity to the subject.
->>
->>>
->>> If there are generic quirks that match a common pattern seen in a lot of
->>> board then properties can be defined for those, this is in fact the
->>> common case.  This is no reason to just shove in some random thing that
->>> doesn't describe the hardware, that's a great way to end up stuck with
->>> an ABI that is fragile and difficult to understand or improve.
->>
->> I would argue that at least 2 out of the 4 supplies proposed do describe
->> hardware signals. The latter two are more abstract to say the least,
->> however I believe it is done that way because they are composite
->> supplies controlling both the 12V and 3.3V supplies coming into a PCIe
->> device (Jim is that right?). So how do we call the latter supply then?
->> vpcie12v3v...-supply?
->>
->>> Potentially some of these things should be being handled in the bindings
->>> and drivers drivers for the relevant PCI devices rather than in the PCI
->>> controller.
->>
->> The description and device tree binding can be and should be in a PCI
->> device binding rather than pci-bus.yaml.
->>
->> The handling however goes back to the chicken and egg situation that we
->> talked about multiple times before: no supply -> no link UP -> no
->> enumeration -> no PCI device, therefore no driver can have a chance to
->> control the regulator. These are not hotplug capable systems by the way,
->> but even if they were, we would still run into the same problem. Given
->> that most reference boards do have mechanical connectors that people can
->> plug random devices into, we cannot provide a compatible string
->> containing the PCI vendor/device ID ahead of time because we don't know
->> what will be plugged in. 
+On Fri, Oct 22, 2021 at 05:52:15PM +0800, Xuesong Chen wrote:
+> On 22/10/2021 00:57, Bjorn Helgaas wrote:
+> > On Thu, Oct 21, 2021 at 11:46:40PM +0800, Xuesong Chen wrote:
+> >> On 21/10/2021 02:50, Bjorn Helgaas wrote:
+> >>> On Wed, Oct 20, 2021 at 11:16:38AM +0800, Xuesong Chen wrote:
+> >>>> On 20/10/2021 03:23, Bjorn Helgaas wrote:
+> >>>>> On Tue, Oct 19, 2021 at 12:50:33PM +0800, Xuesong Chen wrote:
+> > 
+> >>>>>> This patch will try to handle this case in a more common way
+> >>>>>> instead of the original 'arch' specific solution, which will be
+> >>>>>> beneficial to all the APEI-dependent platforms after that.
+> >>>>>
+> >>>>> This actually doesn't say anything about what the patch does or
+> >>>>> how it works.  It says "handles this case in a more common way"
+> >>>>> but with no details.
+> >>>>
+> >>>> Good suggestion, I'll give more details about that...
+> >>>>
+> >>>>> The EINJ table contains "injection instructions" that can read
+> >>>>> or write "register regions" described by generic address
+> >>>>> structures (see ACPI v6.3, sec 18.6.2 and 18.6.3), and
+> >>>>> __einj_error_trigger() requests those register regions with
+> >>>>> request_mem_region() or request_region() before executing the
+> >>>>> injections instructions.
+> >>>>>
+> >>>>> IIUC, this patch basically says "if this region is part of the
+> >>>>> MCFG area, we don't need to reserve it." That leads to the
+> >>>>> questions of why we need to reserve *any* of the areas
+> >>>>
+> >>>> AFAIK, the MCFG area is reserved since the ECAM module will
+> >>>> provide a generic Kernel Programming Interfaces(KPI), e.g,
+> >>>> pci_generic_config_read(...), so all the drivers are allowed to
+> >>>> access the pci config space only by those KPIs in a consistent
+> >>>> and safe way, direct raw access will break the rule.  Correct me
+> >>>> if I am missing sth.
+> >>>>
+> >>>>> and why it's safe to simply skip reserving regions that are part
+> >>>>> of the MCFG area.
+> >>>>
+> >>>> Actual there is a commit d91525eb8ee6("ACPI, EINJ: Enhance error
+> >>>> injection tolerance level") before to address this issue, the
+> >>>> entire commit log as below:
+> >>>>
+> >>>>     Some BIOSes utilize PCI MMCFG space read/write opertion to trigger
+> >>>>     specific errors. EINJ will report errors as below when hitting such
+> >>>>     cases:
+> >>>>     
+> >>>>     APEI: Can not request [mem 0x83f990a0-0x83f990a3] for APEI EINJ Trigger registers
+> >>>>     
+> >>>>     It is because on x86 platform ACPI based PCI MMCFG logic has
+> >>>>     reserved all MMCFG spaces so that EINJ can't reserve it again.
+> >>>>     We already trust the ACPI/APEI code when using the EINJ interface
+> >>>>     so it is not a big leap to also trust it to access the right
+> >>>>     MMCFG addresses. Skip address checking to allow the access.
+> >>>
+> >>> I'm not really convinced by that justification because I don't
+> >>> think the issue here is *trust*.  If all we care about is trust,
+> >>> and we trust the ACPI/APEI code, why do we need to reserve
+> >>> anything at all when executing EINJ actions?
+> >>>
+> >>> I think the resource reservation issue is about coordinating
+> >>> multiple users of the address space.  A driver reserves the MMIO
+> >>> address space of a device it controls so no other driver can
+> >>> reserve it at the same time and cause conflicts.
+> >>>
+> >>> I'm not really convinced by this mutual exclusion argument either,
+> >>> because I haven't yet seen a situation where we say "EINJ needs a
+> >>> resource that's already in use by somebody else, so we can't use
+> >>> EINJ."  When conflicts arise, the response is always "we'll just
+> >>> stop reserving this conflicting resource but use it anyway."
+> >>>
+> >>> I think the only real value in apei_resources_request() is a
+> >>> little bit of documentation in /proc/iomem.  For ERST and EINJ,
+> >>> even that only lasts for the tiny period when we're actually
+> >>> executing an action.
+> >>>
+> >>> So convince me there's a reason why we shouldn't just remove
+> >>> apei_resources_request() completely :)
+> >>
+> >> I have to confess that currently I have no strong evidence/reason to
+> >> convince you that it's absolute safe to remove
+> >> apei_resources_request(),  probably in some conditions it *does*
+> >> require to follow the mutual exclusion usage model.  The ECAM/MCFG
+> >> maybe a special case not like other normal device driver, since all
+> >> its MCFG space has been reserved during the initialization. Anyway,
+> >> it's another topic and good point well worth discussing in the
+> >> future.
+> > 
+> > This is missing the point.  It's not the MCFG reservation during
+> > initialization that would make this safe.  What would make it safe is
+> > the fact that ECAM does not require mutual exclusion.
+> > 
+> > When the hardware implements ECAM correctly, PCI config accesses do
+> > not require locking because a config access requires a single MMIO
+> > load or store.
+>
+> I don't quite understand here, we're talking about
+> apei_resources_request() which is a mechanism to void resource
+> conflict,"request_mem_region() tells the kernel that your driver is
+> going to use this range of I/O addresses, which will prevent other
+> drivers to make any overlapping call to the same region through
+> request_mem_region()", but according to the context of 'a single
+> MMIO load or store', are you talking about something like the mutex
+> lock primitive?
+
+My point was that when ECAM is implemented correctly, a CPU does a
+single MMIO load to do a PCI config read and a single MMIO store to do
+a PCI config write.  In that case there no need for any locking, so
+there's no need for APEI to reserve those resources.
+
+This is what d91525eb8ee6 ("ACPI, EINJ: Enhance error injection
+tolerance level") does.  That code change makes sense, but the commit
+log does not -- it has nothing to do with trusting the ACPI/APEI code;
+it's just that no matter what the EINJ actions do with the MCFG
+regions, they cannot interfere with other drivers.
+
+> > Many non-ECAM config accessors *do* require locking because they use
+> > several register accesses, e.g., the 0xCF8/0xCFC address/data pairs
+> > used by pci_conf1_read().  If EINJ actions used these, we would have
+> > to enforce mutual exclusion between EINJ config accesses and those
+> > done by other drivers.
 > 
-> I thought you didn't have connectors or was it just they are 
-> non-standard? If the latter case, what are the supply rails for the 
-> connector?
+> I take a look at the pci_conf1_read() function, there's only a pair of
+> raw_spin_lock_irqsave() and raw_spin_unlock_irqrestore(), if that's the
+> mutual exclusion you mentioned, seems it's not related to the
+> apei_resources_request() we're talking about... 
 
-We now have reference boards with full-sized x1 and x4 connectors in
-addition to half sized and full-sized mini-PCIe connectors and the
-soldered down Wi-Fi on board (WOMBO) and the Multi-chip Module packages
-(MCM).
+This was an example of a case where EINJ mutual exclusion *would* be
+required.  I do not expect EINJ actions to use the 0xCF8/0xCFC
+registers because there is no mechanism to coordinate that with the OS
+use of the same registers.
 
-When using connectors we would use the standard PCIe pinout nomenclature
-however for the latter two, there appears to be a variety of
-non-standard stuff being done there. We reviewed some schematics with
-Jim and it looks like some of the usages for the regulators are just
-laziness on the Wi-Fi driver side, like asking the kernel to keep the
-radio on (PA, LNA etc.) as if it was as critical and necessary as the
-12V and 3.3V supplies that actually power on the PCIe end-point... We
-will get those fixed hopefully.
-
+> > Some ARM64 platforms do not implement ECAM correctly, e.g.,
+> > tegra194_map_bus() programs an outbound ATU and xgene_pcie_map_bus()
+> > sets an RTDID register before the MMIO load/store.  Platforms like
+> > this *do* require mutual exclusion between an EINJ config access and
+> > other config accesses.
 > 
-> I'd be okay if there's no compatible as long as there's not a continual 
-> stream of DT properties trying to describe power sequencing 
-> requirements.
+> What's the mutual exclusion for those quirk functions (tegra194 and
+> xgene)?  *mutual* is not applied for single side. I can see neither
+> locking nor request_mem_region() in those bus map functions. 
 
-Have not looked whether Dmitry's power sequencing generalizing is
-helping us here:
+These currently depend on the pci_lock.  See PCI_OP_READ() in
+drivers/pci/access.c.
 
-https://www.spinics.net/lists/linux-bluetooth/msg93564.html
+EINJ actions cannot acquire the pci_lock, so EINJ actions cannot
+safely use ECAM space on those platforms.
 
-it still looks like the PCIe host controller is involved in requesting
-the power sequence.
-
+> > These platforms are supported via quirks in pci_mcfg.c, so they will
+> > have resources in the pci_mcfg_list, and if we just ignore all the
+> > MCFG resources in apei_resources_request(), there will be nothing to
+> > prevent ordinary driver config accesses from being corrupted by EINJ
+> > accesses.
+> > 
+> > I think in general, is probably *is* safe to remove MCFG resources
+> > from the APEI reservations, but it would be better if we had some way
+> > to prevent EINJ from using MCFG on platforms like tegra194 and xgene.
 > 
->> In the case of a MCM, we would, but then we
->> only solved about 15% of the boards we need to support, so we have not
->> really progressed much.
-> 
-> MCM is multi-chip module?
+> Just as I mentioned, since there's no mutual exclusion applied for
+> the tegra194 and xgene (correct me if I am wrong), putting their MCFG
+> resources into the APEI reservation (so the apei_resources_request()
+> applied) does nothing 
 
-Correct, see above.
--- 
-Florian
+I think apei_resources_request() should continue to reserve MCFG areas
+on tegra194 and xgene, but it does not need to reserve them on other
+ARM64 platforms.
+
+Bjorn
