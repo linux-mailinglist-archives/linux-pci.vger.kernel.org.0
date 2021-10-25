@@ -2,115 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7019439CFC
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 19:08:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2DBF439D6D
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 19:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234690AbhJYRKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 13:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
+        id S233264AbhJYRY3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Oct 2021 13:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235207AbhJYRJJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Oct 2021 13:09:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7385960EE3;
-        Mon, 25 Oct 2021 17:06:46 +0000 (UTC)
+        id S231220AbhJYRY2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Oct 2021 13:24:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 261E36058D;
+        Mon, 25 Oct 2021 17:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635181606;
-        bh=uhJMDAp/6lANSR2wbX+jf2O7qM4e7RYNtaW7xvDtw/4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uaJRVHXZzko8RT7ie/I6pDSvZITLf0raKfzP1f6fJ0hED+h9PyLG4hIHpRq7eQG9M
-         HTEaNZyJa21bX7pk/2BRj35jfZxMYlq4ahI3zGdUZnpBozvExg5FOiGaGkIjXukt5x
-         ChojxwF8LN8pZ+q6htwYxpvB1H+7d9mZRcTd1OlN7A40s3WkS6sV5NGParlOSQnzfY
-         7M6JJZCP0lugvcvKRNtsc1hV4XVd3BxJ75v59qD6km+4vBnMVxH8bDYKc1TSTub2TX
-         LKKjQkZdyKEhB0LzTaEqQ5t795cADx0QzmrbcsPVaDNBFdEj4BWkQO8pSqhFrcV8vd
-         Nr4RZzXfL1vLQ==
-Date:   Mon, 25 Oct 2021 12:06:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     linux-pci@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        s=k20201202; t=1635182526;
+        bh=Ehduh8rsnuoncesy2bv8xUGwuttZRJbErzBa2Fji4Sw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XZHEAb34P0MRyx3iYavzTLjPxhYBrpH1pFfapcYOUCJwH5Y1OQK0yroC/j/QW9726
+         aHURbTUbRcpPK7+QXL0kncF2O3S6Ydp6BL1RVjQ9FsWN/3nthGIg26wSRRkyle5g69
+         lG362kVbyKBcxWrPuG32xhicps52Zjms7iM1qmdTQ9nr0e6O6+jMHRIKSFTF5Ku4EB
+         si2SpCD169S5lgUEzHq2M1LI3X3Q4BYnNonpFQVV7oc+5vAEhbYKUmKeaggp8n/og8
+         8e39HaLc+ZN75gwyHqXc4X24E0al9c6M51hDTAIJ5iXVyZJPXjqToMIzQt2vcw6NXt
+         K04MnxJFvxYDg==
+Received: by pali.im (Postfix)
+        id ADA1D98A; Mon, 25 Oct 2021 19:22:03 +0200 (CEST)
+Date:   Mon, 25 Oct 2021 19:22:03 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: PCI/VPD: recursive loop issue with lspci
-Message-ID: <20211025170645.GA10265@bhelgaas>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: RFC: Change PCI DTS scheme for port/link specific properties
+Message-ID: <20211025172203.yeecufmhc5c7zdgz@pali>
+References: <20211023144252.z7ou2l2tvm6cvtf7@pali>
+ <CAL_JsqLwGtEVrAc1SFUBfQp22Vxp8hb5Kft1B9t_nFMZ=q8M-g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2f7e3770-ab47-42b5-719c-f7c661c07d28@socionext.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLwGtEVrAc1SFUBfQp22Vxp8hb5Kft1B9t_nFMZ=q8M-g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 12:51:07AM +0900, Kunihiko Hayashi wrote:
-> Hi all,
+On Monday 25 October 2021 10:39:42 Rob Herring wrote:
+> On Sat, Oct 23, 2021 at 9:43 AM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > Hello Rob!
+> >
+> > I think that the current DT scheme for PCI buses and devices defined in
+> > Linux kernel tree has wrong definitions of port/link specific properties:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt
+> >
+> > Port or link specific properties are at least: max-link-speed,
+> > reset-gpios and supports-clkreq. And are currently defined as properties
+> > of host bridges.
 > 
-> I found that "lspci -vv" causes a recursive loop in the linux-next kernel.
-> As a result, the kernel crashed on stack overflow.
-> 
-> This issue was reproduced using Akebi96 board with UniPhier LD20 and DWC3 PCIe
-> controller, and R8169 ethernet card.
-> 
-> # lspci -s 01:00.0 -vv
-> 01:00.0 Class 0200: Device 10ec:8168 (rev 06)
-> [   19.152157] Insufficient stack space to handle exception!
-> ...
-> [   19.152449] Hardware name: Akebi96 (DT)
-> [   19.152455] Call trace:
-> [   19.152458]  dump_backtrace+0x0/0x1b0
-> [   19.152484]  show_stack+0x20/0x30
-> [   19.152503]  dump_stack_lvl+0x68/0x84
-> [   19.152525]  dump_stack+0x18/0x34
-> [   19.152542]  panic+0x154/0x34c
-> [   19.152556]  nmi_panic+0x94/0x98
-> [   19.152577]  panic_bad_stack+0xec/0x100
-> [   19.152590]  handle_bad_stack+0x38/0x68
-> [   19.152606]  __bad_stack+0x8c/0x90
-> [   19.152620]  pci_vpd_read+0xc/0x1f8
-> [   19.152639]  pci_vpd_size+0x58/0x1a0
-> [   19.152651]  pci_vpd_read+0x1a0/0x1f8
-> [   19.152669]  __pci_read_vpd+0x94/0xc0
-> [   19.152681]  pci_vpd_size+0x58/0x1a0
-> [   19.152692]  pci_vpd_read+0x1a0/0x1f8
-> [   19.152710]  __pci_read_vpd+0x94/0xc0
-> [   19.152722]  pci_vpd_size+0x58/0x1a0
-> [   19.152734]  pci_vpd_read+0x1a0/0x1f8
-> [   19.152752]  __pci_read_vpd+0x94/0xc0
-> ...
-> [   19.155039]  pci_vpd_size+0x58/0x1a0
-> [   19.155051]  pci_vpd_read+0x1a0/0x1f8
-> [   19.155069]  __pci_read_vpd+0x94/0xc0
-> [   19.155081]  pci_vpd_size+0x58/0x1a0
-> [   19.155093]  pci_vpd_read+0x1a0/0x1f8
-> [   19.155111]  __pci_read_vpd+0x94/0xc0
-> [   19.155124]  pci_vpd_size+0x58/0x1a0
-> [   19.155136]  pci_vpd_read+0x1a0/0x1f8
-> [   19.155153]  __pci_read_vpd+0x94/0xc0
-> [   19.155166]  vpd_read+0x28/0x38
-> [   19.155177]  sysfs_kf_bin_read+0x74/0x98
-> 
-> In the following commit, initialization of dev->vpd.len has been removed.
-> 
->     commit 80484b7f8db101119928c73e7ce09ae6be54e45c
->         PCI/VPD: Use pci_read_vpd_any() in pci_vpd_size()
-> 
-> When calling pci_read_vpd_any(), if dev->vpd.len is zero, pci_vpd_size()
-> will continue to be called recursively.
-> 
->     pci_vpd_available()			// dev->vpd.len == 0
->      -> pci_vpd_size()
->         -> pci_read_vpd_any()
->            -> __pci_read_vpd()
->               -> pci_vpd_read()
->                  -> pci_vpd_available()	// dev->vpd.len == 0
->                     -> pci_vpd_size()
->                        ...
-> 
-> This issue didn't occur before applying this commit.
-> Does anyone run into the same issue?
+> pci-bus.yaml in dtschema is what matters now and it's a bit more flexible.
 
-Likely this patch:
+I do not see any pci-bus.yaml file in linux kernel tree... It is missing
+or it is external?
 
-  https://lore.kernel.org/r/6211be8a-5d10-8f3a-6d33-af695dc35caf@gmail.com
+> > Host Bridge contains one or more PCIe Root Ports (each represented as
+> > PCI Bridge device) and to each PCIe Root Port can be connected exactly
+> > one PCIe Upstream device.
+> >
+> > PCIe Upstream device can be either endpoint PCIe card or it can be also
+> > PCIe switch is consists of exactly one Upstream Port (represented as PCI
+> > Bridge device) and then one or more Downstream Port devices (each
+> > represent as PCI Bridge device). To each Downstream Port can be
+> > connected again exactly one PCIe Upstream device.
+> >
+> > Port or link specific properties (e.g. max-link-speed, reset-gpios and
+> > supports-clkreq) define "the PCIe link" between the Root/Downstream
+> > device and Endpoint/Upstream device. And it is basically Root/Downstream
+> > device which configures the port or link. So I think that these
+> > properties should not be in Host Bridge DTS node, but rather in DTS node
+> > which represents Root Port (or Downstream Port in case of PCIe switches).
+> 
+> I tend to agree, but that ship has sailed because we don't tend to
+> have a RP node in DT. Most host bridges also tend to be a single RP.
+> In those cases, the properties come from whatever node we have.
 
-which I obviously need to move to the top of my list.  If you can
-confirm that this fixes it, that would be awesome!
+For, for cases with single root port on host bridge bus, it could be
+possible to have these port/link properties directly in host bridge
+node. As it is unambiguous what they describe and to which hw part they
+belong.
 
-Bjorn
+> Certainly if there are multiple RPs on the host bridge bus (bus 0),
+> then we need multiple child nodes for the RPs. IIRC, some host
+> bindings do this already.
+
+Yes, some of them are doing it. And it would be a good if it is a
+requirement for all new multi-port bindings and pcie controller drivers.
+
+As it is a mess if every driver define these properties by its own.
+Having one common / standard driver agnostic way for defining
+complicated topology is really better.
+
+> > Mauro wrote in another email, that he has PCIe topology with
+> > single-root-port host bridge to which is connected multi-port PCIe
+> > switch and he needs to control reset-gpios of devices connected to
+> > downstream ports of PCIe switch.
+> 
+> I did a lot of work on that to get it right in terms of having the
+> right nodes matching the bus hierarchy and resets distributed in the
+> nodes.
+> 
+> >
+> > Current pci.txt DT scheme is fully unsuitable for this kind of setup as
+> > basically PCIe switch is completely independent device of host bridge
+> > and so host bridge really should not define in its node properties which
+> > do not belong to host bridge itself.
+> >
+> > Rob, what do you think, how to solve this issue?
+> >
+> > I would suggest to define that max-link-speed, reset-gpios and
+> > supports-clkreq properties should be in node for Root Port and
+> > Downstream Port devices and not in host bridge nodes.
+> >
+> > So DTS for PCIe controller which has 2 root ports where to first root
+> > port is connected PCIe switch with 2 cards and to second root port is
+> > connected just endpoint card:
+> >
+> > pcie-host-bridge {
+> >         compatible = "vendor-controller-string"; /* e.g. designware, etc... */
+> >
+> >         pcie-root-port-1@0,0 {
+> 
+> pcie@0,0 and 'device_type = "pci"' are needed to indicate this is a
+> bridge node and apply the schema.
+
+Ok. I probably omitted more properties here. I just wanted to show
+example how link speeds and PERST# pins are defined here.
+
+> >                 reg = <0x00000000 0 0 0 0>; /* root port at device 0 */
+> >                 reset-gpios = ...; /* resets card connected to root-port-1 which is pcie-switch-1-upstream-port */
+> >                 max-link-speed = <3> /* link between root-port-1 and switch is GEN3 */
+> >
+> >                 pcie-switch-1-upstream-port@0,0 {
+> >                         reg = ...; /* upstream port at device 0 */
+> >
+> >                         pcie-switch-1-downstream-port-1@X,0 {
+> >                                 reg = ...; /* downstream port 1 at switch specific address */
+> >                                 reset-gpios = ...; /* resets card connected to switch's port 1 */
+> >                                 max-link-speed = <1> /* link between this port and card is GEN1 */
+> >
+> >                                 /* optional node for endpoint card */
+> >                                 /* pcie-card@0,0 { ... }; */
+> >                         };
+> >
+> >                         pcie-switch-1-downstream-port-2@Y,0 {
+> >                                 reg = ...; /* downstream port 2 at switch specific address */
+> >                                 reset-gpios = ...; /* resets card connected to switch's port 2 */
+> >                                 max-link-speed = <1> /* link between this port and card is GEN1 */
+> >
+> >                                 /* optional node for endpoint card */
+> >                                 /* pcie-card@0,0 { ... }; */
+> >                         };
+> >                 };
+> >         };
+> >
+> >         pcie-root-port-2@1,0 {
+> >                 reg = <0x00000800 0 0 0 0>; /* root port at device 1 */
+> >                 reset-gpios = ...; /* resets card connected to root-port-2 */
+> >                 max-link-speed = <2> /* link between root-port-2 and card below is just GEN2 */
+> >
+> >                 /* optional node for endpoint card */
+> >                 /* pcie-card@0,0 { ... }; */
+> >         };
+> > };
+> >
+> > Any opinion?
