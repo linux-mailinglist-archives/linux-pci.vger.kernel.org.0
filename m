@@ -2,203 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 995404396FF
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 15:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D884397DB
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 15:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbhJYNFU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 09:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48424 "EHLO
+        id S232645AbhJYNwq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Oct 2021 09:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233119AbhJYNFU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 09:05:20 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31B2DC061767
-        for <linux-pci@vger.kernel.org>; Mon, 25 Oct 2021 06:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=MIME-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c8EMxo0D+O3WAka+vwBFAJeHYm1siAdmlyf4Bw+Pm/o=; b=vSObtoJz89BcMXvzqUC5mekD6o
-        h7848MNe4YNpZHxiQrskZ7CLDyJioI5pfwiuLGeLMBDYGZTj7T3LqdUNB0w5Uk9Y21LURUxbvgNgF
-        I/GnANMSErUaJamj9pQCF32g+OuWwQruRu6EbEFWIvF4J8FM6xZXL/q7COja0c46AO8O9BWdjQe4Q
-        WEt6ZQOOJBm9Pkw6PiqpTCJRNgFaiREAsNgkD5umSqsJckc/l3mkVRMMi3VWWGGwe6M6yHk72VDMk
-        JBUEcfRAOHB+Btp/t7pDRwJlvu0oyBwmlrcAShL9sT2LDT0v8SAuCm1IEBSndEzQdQlywn15nZlTj
-        pfDKTaPg==;
-Received: from [2001:8b0:10b:1::3ae] (helo=u3832b3a9db3152.ant.amazon.com)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mezcf-00GTx4-Tw; Mon, 25 Oct 2021 13:02:42 +0000
-Message-ID: <acaca10c50155b75c82c6370236231856b30ade4.camel@infradead.org>
-Subject: Re: [PATCH] PCI/MSI: Fix masking MSI/MSI-X on Xen PV
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Roger Pau =?ISO-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-Cc:     Jason Andryuk <jandryuk@gmail.com>, josef@oderland.se,
-        boris.ostrovsky@oracle.com, helgaas@kernel.org, jgross@suse.com,
-        linux-pci@vger.kernel.org, maz@kernel.org, tglx@linutronix.de,
-        xen-devel@lists.xenproject.org
-Date:   Mon, 25 Oct 2021 14:02:38 +0100
-In-Reply-To: <YXaqENqdjx0lJ+Fx@MacBook-Air-de-Roger.local>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
-         <20211025012503.33172-1-jandryuk@gmail.com>
-         <eb38c1d2707d03bf675d7b15f014cbe741de0998.camel@infradead.org>
-         <YXaYe/RF6NWFKxGj@MacBook-Air-de-Roger.local>
-         <72d763d055929b8c81f0c8deab14b33bd252c946.camel@infradead.org>
-         <YXaqENqdjx0lJ+Fx@MacBook-Air-de-Roger.local>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-        boundary="=-V1kHLu/k0PYZMWhWaXbr"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        with ESMTP id S232207AbhJYNwo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 09:52:44 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E69C061767
+        for <linux-pci@vger.kernel.org>; Mon, 25 Oct 2021 06:50:22 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id s19so12880598wra.2
+        for <linux-pci@vger.kernel.org>; Mon, 25 Oct 2021 06:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zO//Njv5YS97vppMMVlVgZZUjNA2rAR2HbiLnMq5guY=;
+        b=WAJHDBQ9M9IsmiDeUxxWHPYr+sCVbX/bI2CcVAuFyyhDOTB2poQayGA0ZinLaHiK9y
+         z8cSONPK2YzrZZk6ypTUZDOu0KGjHbgqLFQDpCEtdMxXzFE0/TEjs1XeGc79+Ors7i1o
+         +IzpvsLL/wXEfoqgwUVj6L1+8+4k5FfGIlkDs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zO//Njv5YS97vppMMVlVgZZUjNA2rAR2HbiLnMq5guY=;
+        b=dTRsmUmdTLWIb0Rh+xUllq7mB36xQE5Q4IE7XqNywbphk0yWfHOy0QzeuGZjB4iz3m
+         pHdX2smSYxT70evHmGNSG0VHRgvfe3p693Y0s7qqaq8rqmQwcdIijf/oFJF2ZCJfdGeR
+         JcyvQBUE81RpYL33JXlhmL5DRZbaJSA5O8oZFYMoAycDHF2YRmOg+TxYUgZgu38PKNvR
+         EdxrtpNLLospZ2ubVZOs23qiTrlNhP3wmNQNaKNaLOGjJDpxVSulCkDelS6tWopjpZMw
+         vNQVrHf3/zB5DT8NEe4Nxl971NeDKTBlC72lH9LWbo5sZHhFNWO90knjxen27erhGva9
+         sZqg==
+X-Gm-Message-State: AOAM5316BQPqddVY2Iz2nYP6gSFguBn78X1TISaio5AxrgAlpczHEiUR
+        PykHKFaq9BHRGluLmWe3I0W3CR3/haQJ4CNgGzw48A==
+X-Google-Smtp-Source: ABdhPJz5aj5JNuMgfqZUwaXY/cwE1jkvjSaX9jTe8FLYMARW9hORElaPxrAsk3O1APxlNE9m9YAEL0HbosNKjgNmgu4=
+X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr24072888wrx.128.1635169820558;
+ Mon, 25 Oct 2021 06:50:20 -0700 (PDT)
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-5-jim2101024@gmail.com>
+ <YXLLRLwMG7nEwQoi@sirena.org.uk> <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
+ <YXMVSVpeC1Kqsg5x@sirena.org.uk>
+In-Reply-To: <YXMVSVpeC1Kqsg5x@sirena.org.uk>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Mon, 25 Oct 2021 09:50:09 -0400
+Message-ID: <CA+-6iNxQAekCQTJKE5L7LO6QF+UC6xnyE=XVq_7z3=4hp8ASXQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] PCI: brcmstb: Add control of subdevice voltage regulators
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Oct 22, 2021 at 3:47 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Oct 22, 2021 at 03:15:59PM -0400, Jim Quinlan wrote:
+>
+> > Each different SOC./board we deal with may present different ways of
+> > making the EP device power on.  We are using
+> > an abstraction name "brcm-ep-a"  to represent some required regulator
+> > to make the EP  work for a specific board.  The RC
+> > driver cannot hard code a descriptive name as it must work for all
+> > boards designed by us, others, and third parties.
+> > The EP driver also doesn't know  or care about the regulator name, and
+> > this driver is often closed source and often immutable.  The EP
+> > device itself may come from Brcm, a third party,  or sometimes a competitor.
+>
+> > Basically, we find using a generic name such as "brcm-ep-a-supply"
+> > quite handy and many of our customers embrace this feature.
+> > I know that Rob was initially against such a generic name, but I
+> > vaguely remember him seeing some merit to this, perhaps a tiny bit :-)
+> > Or my memory is shot, which could very well be the case.
+>
+> That sounds like it just shouldn't be a regulator at all, perhaps the
+> board happens to need a regulator there but perhaps it needs a clock,
+> GPIO or some specific sequence of actions.  It sounds like you need some
+> sort of quirking mechanism to cope with individual boards with board
+> specific bindings.
+The boards involved may have no PCIe sockets, or run the gamut of the different
+PCIe sockets.  They all offer gpio(s) to turn off/on their power supply(s) to
+make their PCIe device endpoint functional.  It is not viable to add
+new Linux quirk or DT
+code for each board.  First is the volume and variety of the boards
+that use our SOCs.. Second, is
+our lack of information/control:  often, the board is designed by one
+company (not us), and
+given to another company as the middleman, and then they want the
+features outlined
+in my aforementioned commit message.
 
---=-V1kHLu/k0PYZMWhWaXbr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+>
+> I'd suggest as a first pass omitting this and then looking at some
+> actual systems later when working out how to support them, no sense in
+> getting the main thing held up by difficult edge cases.
 
-On Mon, 2021-10-25 at 14:58 +0200, Roger Pau Monn=C3=A9 wrote:
-> On Mon, Oct 25, 2021 at 12:53:31PM +0100, David Woodhouse wrote:
-> > On Mon, 2021-10-25 at 13:43 +0200, Roger Pau Monn=C3=A9 wrote:
-> > > It's kind of optional for HVM guests, as it depends on
-> > > XENFEAT_hvm_pirqs, which sadly gets unconditionally set for HVM
-> > > guests, thus dropping any benefits from having hardware assisted APIC
-> > > virtualization or posted interrupts support.
-> >=20
-> > Indeed. After implementing PIRQ support for Xen guests running under
-> > KVM, I spent a "happy" couple of days swearing at it because it
-> > actually *worked* if something would just *unmask* the f***ing MSI, but
-> > the guest inexplicably (to me) didn't do that.
-> >=20
-> > Took me a while to work out that Xen itself is *snooping* on the MSI
-> > table writes even while they are *masked*, to capture the magic MSI
-> > message (with vector=3D=3D0) which means it's actually a PIRQ# in the
-> > destination ID bits, and then magically unmask the MSI when the guest
-> > binds that PIRQ to an event channel.
-> >=20
-> > I did not enjoy implementing that part.
->=20
-> I can see that. It's even better because none of this is actually
-> documented.
+These are not edge cases -- some of these are major customers.
 
-Indeed. I still haven't worked out if/how Xen actually *masks* the
-corresponding MSI-X again. It can't do so when the evtchn is masked,
-since that's just a bit in the shinfo page. So while the evtchn is
-masked, the MSI can still be screaming into the void?
+Regards,
+Jim
 
-Perhaps it does so when the PIRQ is unbound from the evtchn?
-
-> > FWIW the *guest* could potentlaly be smarter here and elect not to use
-> > PIRQs when hardware assisted vAPIC is present. Aren't there some bits
-> > in the CPUID that Xen advertises, which indicate that?=20
->=20
-> Yes, it's in leaf 0x40000x04. FWIW, I would also be fine with removing
-> XENFEAT_hvm_pirqs, as I don't think diverging from the hardware
-> specifications gives us much benefit. We avoid a couple of vm exits
-> for sure, but the cost of having all those modifications in guest
-> OSes is not worth it.
-
-These days with posted interrupts, it doesn't even save us any vmexits;
-it's all that additional guest complexity just to give us *more*
-vmexits than we would have had :)
-
---=-V1kHLu/k0PYZMWhWaXbr
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEx
-MDI1MTMwMjM4WjAvBgkqhkiG9w0BCQQxIgQgwcYS7ZEvWujlXRlgpsmZFl95cMivIcpFYn9aUQgB
-9Z0wgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAAFH/ezTDAkRk3iSxoku56PXDAE3XsCZU6txNn5gvZQ6qd2jxCpwuSwUMwmmHqSS
-aGTeNddLduCGderDSsYtqav8+4sVzOjwcB17DOwP2PKQ+uchRrlK242WJWpthjnezA80t+wDOKKp
-yCxMXbp8IfzCJl9Sa4ctID+YQlTjHf6jlfADOoMgZf3VjreihxSfLpxT+Vxv2Y0fnYn/MHsXeuoq
-Yoh6P0oa8nL6MB78c94Raj1uw8zL5rShB6g8sHr065dFrrXqvSU4C6+iGfhffNsYWhPP+ai6u9Em
-zkfAa84CcIYgD1Q2uqjDPnLch2Nryd9pm1/fZEMZDRbDZXwqUv8AAAAAAAA=
-
-
---=-V1kHLu/k0PYZMWhWaXbr--
-
+>
+> > > > +     /* This is for Broadcom STB/CM chips only */
+> > > > +     if (pcie->type == BCM2711)
+> > > > +             return 0;
+>
+> > > It is a relief that other chips have managed to work out how to avoid
+> > > requiring power.
+>
+> > I'm not sure that the other Broadcom groups have our customers, our
+> > customers' requirements, and the amount and variation of boards that
+> > run our PCIe driver on the SOC.
+>
+> Sure, but equally they might (even if they didn't spot it yet) and in
+> general it's safer to err on the side of describing the hardware so we
+> can use that information later.
