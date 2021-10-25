@@ -2,163 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20400439BFC
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 18:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B568F439CFB
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 19:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234036AbhJYQsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 12:48:46 -0400
-Received: from office.oderland.com ([91.201.60.5]:45030 "EHLO
-        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231127AbhJYQsp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 12:48:45 -0400
-Received: from [193.180.18.161] (port=40536 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1mf376-005OVn-VK; Mon, 25 Oct 2021 18:46:20 +0200
-Message-ID: <b76373a7-1e1d-3aae-66ba-09221c752c11@oderland.se>
-Date:   Mon, 25 Oct 2021 18:46:18 +0200
+        id S234514AbhJYRKw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Oct 2021 13:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235070AbhJYRIE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 13:08:04 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A7DC0432DB;
+        Mon, 25 Oct 2021 10:01:24 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id t11so8349282plq.11;
+        Mon, 25 Oct 2021 10:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8HZsp9BvdntOEBLsd033W6ZW3RXr9hJrrgi/DSIEiZc=;
+        b=B/oKHfT/wUi2uwyEuNgWcKyEN7bNb1zznXch9q1rURws+JRljbJEIPz0+rgscXU0+Y
+         SCs5Z+HviUmO/AG6Z/ANiKZe4sA5pzDCa+CIEjE3N5dq9PnkcFuiSkw3lDaQaV/ep//u
+         ML0AA4vKJiuK7hluPphy+3uxXyhhohyLOWd/UXwTy3rPg2TO7smbF3Fwk9xJQHUp31bm
+         LBfNWATE8ZnQ0WXPUVZXg8XJ+cEYa++C35DWFIZz9KbWcTReIP/lY78+rYfYbXko3beJ
+         y/jCN5CcI/o3LdBpkqsUiU46xGnE0j44QUDcKmtzvDotdBtawKt/3XJNuzWrpRHLrlmY
+         C2gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8HZsp9BvdntOEBLsd033W6ZW3RXr9hJrrgi/DSIEiZc=;
+        b=LzVIrOiQz7aP54qQ9wP8e29Vd1NsBcrcdIUQIBOO9+bRetqRULVYkAiSWk7ZJ6/m7j
+         QwIFlgjOuDLPXwKn1TzpVEBGGdnJ/vVKHl4+Ao2qyfVIMWdCjp1juuprRBtb+Sikxotn
+         A/iUqPKwdCP+Qyn1UtbUpipmnOhuYACXJpYcejNqriODD8dZvQ5XU6aufqclEmXvfl1J
+         YsddjLYWHmSHJ5XKNCcbueJwMamu1Qjd2cu/aLiRFyZoWTpMtLgnP/llcOHBRlrd72MR
+         HmO+z4TdegwYghOOH0MihZUM/IeuYIrM5hKoWWfTOrNSyypbd6F2nHtpiaiu1RRvFcAG
+         vxkQ==
+X-Gm-Message-State: AOAM532i+I/SpVnpfryuYgvBjU9S7vLOsLcAahDe8iEUTJPj5RcARA5x
+        z8mARF1zG776UgGGA5O62bw=
+X-Google-Smtp-Source: ABdhPJwUXQUjwnugVGLJbHKCyPdLUZ/UBQqXh8Cy82r1VP1k13Hq1CAUhdRWR7+Izqw0iqyEfe89ug==
+X-Received: by 2002:a17:90a:2c9:: with SMTP id d9mr22098933pjd.73.1635181283642;
+        Mon, 25 Oct 2021 10:01:23 -0700 (PDT)
+Received: from localhost.localdomain ([2406:7400:63:df8b:7255:8580:2394:764c])
+        by smtp.gmail.com with ESMTPSA id g18sm5100858pfj.67.2021.10.25.10.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Oct 2021 10:01:23 -0700 (PDT)
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     bhelgaas@google.com, ruscur@russell.cc, oohall@gmail.com
+Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Keith Busch <kbusch@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: [PATCH v5 0/5] Fix long standing AER Error Handling Issues
+Date:   Mon, 25 Oct 2021 22:30:59 +0530
+Message-Id: <cover.1635179600.git.naveennaidu479@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
- Thunderbird/93.0
-Content-Language: en-US
-To:     Jason Andryuk <jandryuk@gmail.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        xen-devel <xen-devel@lists.xenproject.org>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
- <20211025012503.33172-1-jandryuk@gmail.com>
- <CAKf6xptSbuj3VGxzed1uPx59cA_BRJY5FDHczX744rvnTHB8Lg@mail.gmail.com>
-From:   Josef Johansson <josef@oderland.se>
-Subject: Re: [PATCH] PCI/MSI: Fix masking MSI/MSI-X on Xen PV
-In-Reply-To: <CAKf6xptSbuj3VGxzed1uPx59cA_BRJY5FDHczX744rvnTHB8Lg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/25/21 14:27, Jason Andryuk wrote:
-> On Sun, Oct 24, 2021 at 9:26 PM Jason Andryuk <jandryuk@gmail.com> wrote:
->> commit fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask
->> functions") introduce functions pci_msi_update_mask() and
->> pci_msix_write_vector_ctrl() that is missing checks for
->> pci_msi_ignore_mask that exists in commit 446a98b19fd6 ("PCI/MSI: Use
->> new mask/unmask functions").  The checks are in place at the high level
->> __pci_msi_mask_desc()/__pci_msi_unmask_desc(), but some functions call
->> directly to the helpers.
->>
->> Push the pci_msi_ignore_mask check down to the functions that make
->> the actual writes.  This keeps the logic local to the writes that need
->> to be bypassed.
->>
->> With Xen PV, the hypervisor is responsible for masking and unmasking the
->> interrupts, which pci_msi_ignore_mask is used to indicate.
->>
->> This change avoids lockups in amdgpu drivers under Xen during boot.
->>
->> Fixes: commit 446a98b19fd6 ("PCI/MSI: Use new mask/unmask functions")
->> Reported-by: Josef Johansson <josef@oderland.se>
->> Signed-off-by: Jason Andryuk <jandryuk@gmail.com>
->> ---
-> I should have written that this is untested.  If this is the desired
-> approach, Josef should test that it solves his boot hangs.
->
-> Regards,
-> Jason
+This patch series aims at fixing some of the AER error handling issues
+we have.
 
-I've tested this today, both the above patch, but also my own below
-where I'm patching inside __pci_write_msi_msg,
-which is the outcome of the patch above.
+Currently we have the following issues: 
+  
+  1. Confusing message in aer_print_error()
+  2. aer_err_info not being initialized completely in DPC path before 
+     we print the AER logs
+  3. A bug [1] in clearing of AER registers in the native AER path
 
-I found that both solves the boot hang, but both have severe effects
-on suspends/resume later on. The below patch without patching
-__pci_write_msi_msg seems to be ideal, solves boot problems but not
-causing too much others. There seems to me that there's undocumented
-dragons here. Doing more test later today.
+[1] https://lore.kernel.org/linux-pci/20151229155822.GA17321@localhost/
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 4b4792940e86..e97eea1bc93a 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -148,6 +148,9 @@ static noinline void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 s
- 	raw_spinlock_t *lock = &desc->dev->msi_lock;
- 	unsigned long flags;
- 
-+	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+		return;
-+
- 	raw_spin_lock_irqsave(lock, flags);
- 	desc->msi_mask &= ~clear;
- 	desc->msi_mask |= set;
-@@ -186,6 +189,9 @@ static void pci_msix_write_vector_ctrl(struct msi_desc *desc, u32 ctrl)
- 
- static inline void pci_msix_mask(struct msi_desc *desc)
- {
-+	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+		return;
-+
- 	desc->msix_ctrl |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 	pci_msix_write_vector_ctrl(desc, desc->msix_ctrl);
- 	/* Flush write to device */
-@@ -194,15 +200,15 @@ static inline void pci_msix_mask(struct msi_desc *desc)
- 
- static inline void pci_msix_unmask(struct msi_desc *desc)
- {
-+	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+		return;
-+
- 	desc->msix_ctrl &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 	pci_msix_write_vector_ctrl(desc, desc->msix_ctrl);
- }
- 
- static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
- {
--	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
--		return;
--
- 	if (desc->msi_attrib.is_msix)
- 		pci_msix_mask(desc);
- 	else if (desc->msi_attrib.maskbit)
-@@ -211,9 +217,6 @@ static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
- 
- static void __pci_msi_unmask_desc(struct msi_desc *desc, u32 mask)
- {
--	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
--		return;
--
- 	if (desc->msi_attrib.is_msix)
- 		pci_msix_unmask(desc);
- 	else if (desc->msi_attrib.maskbit)
-@@ -307,7 +310,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- 		 * entry while the entry is unmasked, the result is
- 		 * undefined."
- 		 */
--		if (unmasked)
-+		if (unmasked && !pci_msi_ignore_mask)
- 			pci_msix_write_vector_ctrl(entry, ctrl | PCI_MSIX_ENTRY_CTRL_MASKBIT);
- 
- 		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
-@@ -450,8 +453,9 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
- 				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
- 
- 	arch_restore_msi_irqs(dev);
--	for_each_pci_msi_entry(entry, dev)
--		pci_msix_write_vector_ctrl(entry, entry->msix_ctrl);
-+	if (!(pci_msi_ignore_mask || entry->msi_attrib.is_virtual))
-+		for_each_pci_msi_entry(entry, dev)
-+			pci_msix_write_vector_ctrl(entry, entry->msix_ctrl);
- 
- 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
- }
+The patch series fixes the above things.
+
+PATCH 1: 
+  - Fixes the first issue
+  - This patch is independent of other patches and can be applied
+    seperately
+
+PATCH 2 - 3:
+  - Fixes the second issue
+  - Patch 3 is depended on Patch 2 in the series
+
+PATCH 4
+  - Fixes the bug in clearing of AER registers which leades to
+    AER message spew [1]
+
+PATCH 5:
+  - Adds extra information (devctl register) in AER error logs.
+  - Patch 5 depends on Patch 4 of the series
+
+Thanks,
+Naveen Naidu
+
+Changelog
+=========
+v5:
+    - Edit the commit message of Patch 1 and Patch 5 to include how to
+      test the AER messages using aer-inject.
+    - Edit Patch 3 to initialize info.id depending on the trigger
+      reason.
+    - Drop few patches (v4 4/8, 5/8 7/8) since they were wrong.
+
+v4:
+    - Fix logical error in 6/8, in the previous version of the patch set
+      there was a bug, in how I added the devices to the queue.
+
+v3:
+    - Edit the commit messages to be in imperative style and split the
+      commits to be more atomic.
+
+v2:
+    - Add [PATCH 7] which includes the device control register 
+      information in AER error logs.
+
+Naveen Naidu (5):
+  [PATCH v5 1/5] PCI/AER: Remove ID from aer_agent_string[]
+  [PATCH v5 2/5] PCI: Cleanup struct aer_err_info
+  [PATCH v5 3/5] PCI/DPC: Initialize info.id in dpc_process_error()
+  [PATCH v5 4/5] PCI/AER: Clear error device AER registers in aer_irq()
+  [PATCH v5 5/5] PCI/AER: Include DEVCTL in aer_print_error()
+
+ drivers/pci/pci.h      |  23 +++-
+ drivers/pci/pcie/aer.c | 269 ++++++++++++++++++++++++++++-------------
+ drivers/pci/pcie/dpc.c |  16 ++-
+ 3 files changed, 214 insertions(+), 94 deletions(-)
+
+-- 
+2.25.1
 
