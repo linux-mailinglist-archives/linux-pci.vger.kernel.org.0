@@ -2,155 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C942E439658
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 14:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9421643965C
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 14:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233039AbhJYMcF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 08:32:05 -0400
-Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:52192
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232582AbhJYMcE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Oct 2021 08:32:04 -0400
+        id S233039AbhJYMd6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Oct 2021 08:33:58 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:47452 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232582AbhJYMd6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 08:33:58 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19P7i5eK021540;
+        Mon, 25 Oct 2021 05:31:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=K1PYtbv/VaaQ1kphs3Y5cL44ARkzArrdsRK925kZZ2w=;
+ b=svTayc4rR2ki71Y+ioC0OTEcf4LkVRRUG/qJYcU+I98ueO8hiXWe8plxNvijGI1hJVCD
+ Y2FRML7rfThbI5BlkePSXxD2KMHtcRLjZr6ti6cOGNhYn8MT8lKt4/yzpSrl4bv/qp9C
+ ALJ06GyART7LCBV/KHwW5qYG9Gah6lTRFbJF3zb1rfNotaTkhpsuSlDuUS6oEdmf5xW2
+ JzCsAWg5MHjNNWJPJQiZKaiXVjeW/nc7kbvqcsseVLhKnJD/hYKTjc8hGs1bKmGYATgd
+ qnKvlpH5W0i1tKJ7mzPvVnJ9DK20XWrZIMzUbjdxVvq0/x1qRffonlRBc7hIRbnXJPVb kg== 
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2044.outbound.protection.outlook.com [104.47.73.44])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 3bwrew8vhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Oct 2021 05:31:21 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mdR4vjs6RBTQyhQTXE36nyKq+xmfLj+sXNVYLrqiixAaXM4DJ/RVbtrWKgdunSP1ChFcp/bcpFdBM6OkULzH8M647HzYhVNJxXicCfj8iWoSURLE+Y3AtBgTgmAxdLqxgcCs3TPhSh85JQafO2HcmC5jKU9wGtH4iLzVdZF1oXkT5Fr4N6vPqGDTJPZQjXfCK//z5XrzEe34KnbnWUoNPzJX9vbvFTC5tmWtbg0e1gqOLpF6Daytqknx/W2gzD0Juq94CNjfrIyNCVk+nAg05A6iXbS7go9u/Y+5D88pxOKoHIoN4GLuUNIXFwVepiBMGVI2cSu/e5D45f9m2yu1OA==
+ b=D1ysAjcPIWx8JooVr1DMI1H2/wDW4UGKQKdXVbXYrWi6QyMeOEwcqhDHXDOSloda4nC4+cP9+XXc8SsuI98w8hUvUa/KpmIlqYWNnF45GgKsXm2dWGmANA9KLT/U8ZepfJQZ8I8LdcXq++Z0s3nzPGj3BLiTWFJsz+9C5U19ojWuGutshicjMvcmQvIXbBx4ETTATZxJ0rBR67NxiS6Ke0RYxBwQyZlDo8RLhaF4L8G1Osq5of4OLgJgSdywGPtjN4Dz7aMQjIxwKacMNx85U01zOngCBxqHcahfe3SGK/tGfHrFY0wiS7uh8n0xom9QEe83ppoDJecJzSaDAPXVpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J073eYuArjfHrxNsCd03JZSP94vs07MSo6+SoNPefjg=;
- b=ik5Dl0hDpMrt8cv2RspBSX75muGG6V2qRsiOKCtmbSvs2Stq28W48sHIwUs34Pwr3pug6Eq92xnIHTNDtLFmKFR06Rr8C56y6bXFNr7HzMiVZ1n7NltvyYeWXA0Kagmffmlzd8eBjjHssPBN4ICwRviipNjz5P/j2M1xqvJc6SdtDt3lZ5tasE8VlouXHzA5UofMrkKzwkKKRLBEdNNHIwzqcUkpRxzVY5++RrV1wAQ6jC6HUbNuXfLWPFYdzDsfYQ5Mdy0x0Wliz/AlDpaW2llPdI0VAVlaoVR+IwFnAUWdGgDNFPkZdz0kYJpTeCan+EL0axvqo/XkQ99D5VfHSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ bh=K1PYtbv/VaaQ1kphs3Y5cL44ARkzArrdsRK925kZZ2w=;
+ b=Rr7Fs1Fij+M3N14CKRZj4+EAEWo/uTDL0l9AunnD/H5wmqegy83xM2rRsWjc4jQDaRInxAPXarfBbKnSjDi+oGl8pCNk6QX12/Qzwfc9kkXU1TQWHK4tWuKnFj9fgAqF8+5ggAQXJo2jUpHt6XyodC09reRy47dQl8pLXFy7AVxUagxjJ/dWCtmhahe2+CTYpsZb3o1UJq7mOeHKnxpGSG4Ll6XZO7a+WVlo/0c1qRYeM1z1CR/U1V+oX+wZv6NRjk8uLmel/G16rz6IVhoQbyAiQX992UtWKUe72Yp9sg6vQEw2YgcTp6M/pdKh3Q/ojfTPtbj++tqUgASRV2lYcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.147) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J073eYuArjfHrxNsCd03JZSP94vs07MSo6+SoNPefjg=;
- b=QbzP89aVf2T0gwUpm3SfT2vNMPfXeLvdj9/VqCQ38VNgBLf7uz07w8pxuayqDSjQBDV+qumjupcmPJvLUYmYGGDdVwSASMG7RCo92roU8Pw0zNdFzUZFHoqyqe9Y/Ce9nQJxRQn7KBpMQd4iOAl6A7tMCrnaFpakPOJiDU5C/9EXz3sAR8wdBn4PsCSTaigkytZz6AUR5Pl+KA4gwf2PFnZlid2BMp4ISBtL72YjcCPr94LqeZoJf8yKKGqn4LjyY4WUvEeNup9ZfoygeJTAHLcr3v2bbRrkjdLAT/dbSOL4BaClhSv+OGg7xvA0Gdq8UKpSAmjLN7052q+y7Rs4rg==
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL0PR12MB5524.namprd12.prod.outlook.com (2603:10b6:208:1cd::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16; Mon, 25 Oct
- 2021 12:29:40 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4628.020; Mon, 25 Oct 2021
- 12:29:39 +0000
-Date:   Mon, 25 Oct 2021 09:29:38 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211025122938.GR2744544@nvidia.com>
-References: <20211019124352.74c3b6ba.alex.williamson@redhat.com>
- <20211019192328.GZ2744544@nvidia.com>
- <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
- <20211019230431.GA2744544@nvidia.com>
- <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
- <20211020105230.524e2149.alex.williamson@redhat.com>
- <20211020185919.GH2744544@nvidia.com>
- <20211020150709.7cff2066.alex.williamson@redhat.com>
- <87o87isovr.fsf@redhat.com>
- <20211021154729.0e166e67.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211021154729.0e166e67.alex.williamson@redhat.com>
-X-ClientProxiedBy: MN2PR02CA0026.namprd02.prod.outlook.com
- (2603:10b6:208:fc::39) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+ bh=K1PYtbv/VaaQ1kphs3Y5cL44ARkzArrdsRK925kZZ2w=;
+ b=599knwWOFuSi0Kf1JnkmrzSNNQguUD2gAV5kg30INTT/+FqOs8fOxomgeLu381VVrU+407dReRwmDOkKOUe7m/55zl9Ym6qSdNmOkbf8HwSEb8v6CeoYyBAYQ4J6RIr9TuqSr2nFzDUXu4RDqx+e4kW/l1S/mcIg4/0/osBj1Po=
+Received: from BN6PR2001CA0010.namprd20.prod.outlook.com
+ (2603:10b6:404:b4::20) by BYAPR07MB5670.namprd07.prod.outlook.com
+ (2603:10b6:a03:9f::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Mon, 25 Oct
+ 2021 12:31:18 +0000
+Received: from BN8NAM12FT043.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:404:b4:cafe::da) by BN6PR2001CA0010.outlook.office365.com
+ (2603:10b6:404:b4::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18 via Frontend
+ Transport; Mon, 25 Oct 2021 12:31:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 158.140.1.147)
+ smtp.mailfrom=cadence.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.147 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.147; helo=sjmaillnx1.cadence.com;
+Received: from sjmaillnx1.cadence.com (158.140.1.147) by
+ BN8NAM12FT043.mail.protection.outlook.com (10.13.183.68) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4649.8 via Frontend Transport; Mon, 25 Oct 2021 12:31:18 +0000
+Received: from mailsj9.global.cadence.com (mailsj9.cadence.com [10.202.56.202])
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 19PCVHnM019618
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 Oct 2021 05:31:17 -0700
+Received: from mailsj8.global.cadence.com (10.202.56.201) by
+ mailsj9.global.cadence.com (10.202.56.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Mon, 25 Oct 2021 05:31:17 -0700
+Received: from ipgpd01.cadence.com (158.140.83.21) by
+ mailsj8.global.cadence.com (10.202.56.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2
+ via Frontend Transport; Mon, 25 Oct 2021 05:31:17 -0700
+Received: from ipgpd01.cadence.com (localhost.localdomain [127.0.0.1])
+        by ipgpd01.cadence.com (8.14.4/8.14.4) with ESMTP id 19PCVHrs089906;
+        Mon, 25 Oct 2021 05:31:17 -0700
+Received: (from pthombar@localhost)
+        by ipgpd01.cadence.com (8.14.4/8.14.4/Submit) id 19PCVGeh089905;
+        Mon, 25 Oct 2021 05:31:16 -0700
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     <bhelgaas@google.com>, <kishon@ti.com>, <tjoseph@cadence.com>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <pthombar@cadence.com>
+Subject: [PATCH v2] PCI: cadence: Clear FLR in device capabilities register
+Date:   Mon, 25 Oct 2021 05:31:15 -0700
+Message-ID: <1635165075-89864-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR02CA0026.namprd02.prod.outlook.com (2603:10b6:208:fc::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend Transport; Mon, 25 Oct 2021 12:29:39 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mez6g-001RfD-FP; Mon, 25 Oct 2021 09:29:38 -0300
+Content-Type: text/plain
+X-CrossPremisesHeadersFilteredBySendConnector: mailsj9.global.cadence.com
+X-OrganizationHeadersPreserved: mailsj9.global.cadence.com
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a2dfe8f3-6cf3-4189-1fd9-08d997b31d43
-X-MS-TrafficTypeDiagnostic: BL0PR12MB5524:
-X-Microsoft-Antispam-PRVS: <BL0PR12MB55245BC1E2D00CA0000ADC16C2839@BL0PR12MB5524.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: 9324026e-6d4e-4b77-60a9-08d997b3581f
+X-MS-TrafficTypeDiagnostic: BYAPR07MB5670:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB56701C2292BFC8D9EBA3A3ABC1839@BYAPR07MB5670.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xsE2vk1SpQpPGnQGAPdwyW4G7BDFs0SdM9xcPv3t1S7Ws+HGzaLDRuZzq0gtvmi9IUuCVFiAAwV0stZjgYp0rTUH24Z4BKN/gU0KkY/GHqDeSyDT3FWXSYVjj0hhzQcSWrtw5pe20aFdkz+3e6JpVLoZMdogK0y6sD6b0mSmBn7NrTzxEAxUYn1CILrT6feu8J5XN0GB80cQyAFHdvWHQL7j1sUvIoCLybBdGmZLFIhd/CGpM6t5qRhrzpzAeBcysZFq6u9qVolW68pKQo3/V3PS70vkfzWJNNIeeofQ9cPqq6MwzU/A+Fsre7QHseabtZoIYkLIlkE1Kr6eivWaZ0KduVfI55MfBg8WIZ1WQ+RYIh13jQrP5Q0S6tuuwBLivgsHakCgYvzYW+xCQrCTqHdV4UHvE9TwSuL4ZIpGX+j+iliJzVPVrEsPmJLDM1cyzrWcE7gBxD9cD0Np9DfI7kXxsDxAkVWvfmiHjDb20m0Y9EM6irgtW0on4fZ+POYZNkD9gNjDG1/VX9eDo7BOZkca/dPKmv8hS25pPm7IxGjtVmtpbq84qDUY1aIOz6DeYm8ADAvXDbcoMDcDBf3zN4OEZ3Hcuhmd7HCHN5VKuR8XBTEGuaT/u5y5UqVUcVT6cAo8GYmKY1T11yTQUpNcAg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38100700002)(86362001)(8936002)(8676002)(54906003)(66476007)(1076003)(83380400001)(316002)(5660300002)(508600001)(26005)(2906002)(6916009)(66946007)(186003)(4326008)(426003)(33656002)(36756003)(9746002)(9786002)(2616005)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RVZbb8bA75kajrpuQWCZ1pCDdwHcpNKO0pgrZ+imIxOEHRgXbvRKOUiPmblU?=
- =?us-ascii?Q?7xLmRUKUYLsyFBzUhnMbdul3WEsZzgiAUONTQDZv9IjpbKWnVG7iZih1LbwV?=
- =?us-ascii?Q?ICgEL1Kb/Ime/EVhmKMbE3DGXTC8cFLTRvD0Nq35ocjcUaDVFKAPhFqzFC8S?=
- =?us-ascii?Q?Wj69ay0eGQucDoW8iowsOjk+jrQUB7s2+GPCrU+R/hODLgI2fdtrrpNXDp3o?=
- =?us-ascii?Q?9P/Mqy9Yxu76Dr1qPFCOFjAjFKewlgHfHUYQOTlkFQXxyCqSb5JAKsFeN3bX?=
- =?us-ascii?Q?BXUTZWtC1y49Mm7n2y95GUlOYCvoFzju411N+mBGV7uhiUiWnBQ2BJT8xmme?=
- =?us-ascii?Q?xcerMNaTHn1T3wynS0Tj9N19zMZzesa9F+lKhIRzhofVUGzBpRhDEdW//TRT?=
- =?us-ascii?Q?KRtBLANvrbpM9Q3x0Bp4m3LoRr9gt1F4t85SOJNbtflBb7FSo3q21N0HyFQl?=
- =?us-ascii?Q?938QTYCsr0p4oBGIUPzWsYlCer8fu1C7zBvBvGbQMxv+rnt4LfpvDRg4g1Pq?=
- =?us-ascii?Q?GIyskYpQLxMgW3KaCQ/cDi2YAG4qiGQja2+Qtj1DnCe1BiDA5Kdhk5Lt0vYs?=
- =?us-ascii?Q?Vjkx2cFBEU3MAyCi6+WY1ndQQ3kO/3bSFnZcNP98DcHf0R0t9HWyv0KIdjjK?=
- =?us-ascii?Q?aA5anQqC4+46NK6YtBHJWbREMkZhAcVvDLrN7Tvu3eYLOxBaiQPOCsFOiyDr?=
- =?us-ascii?Q?CsviYq3mYc7JFWkPPy/lJG5D4WJ5z9qCvcbGZJ7pwMSceNsZ8FZAPwKGc7jV?=
- =?us-ascii?Q?uLuusqCyhTVXbtsDMNTe39KX5r8ZnTr+lhrL1Vl7XITHoWQGjutwnjhcVjM4?=
- =?us-ascii?Q?dhSTLaz7ERAgpUiNdMOiBEj9k/IBa0W3BFfVQ4TugbE1wcx7DjgcjyISuVUq?=
- =?us-ascii?Q?5lxkcp23E5KHKDXPSjdbQ6ZK8cKcaPYfgkIAhUIXGsmgE2IZm4im0foyYTkL?=
- =?us-ascii?Q?DqCTIzm1LtMDw+CW32J69wkDCUKq91rAMYyCdUv/8X0rk9gcPjm9Y33PmUIk?=
- =?us-ascii?Q?Qb/LbsSxAaDks5x20wqzZ88R3BEI6f2gvQJoKutsk/Bh7hT+aWhmcZgAlQQT?=
- =?us-ascii?Q?eNmnmd0Qyu9wfLbFOYnMQI8SgrNDAkRwXRWY+zp+IOtCa/fYxxjrfJbl/gHp?=
- =?us-ascii?Q?/sc83K+xIWx5GDgiB48T9silldPqNBSs40IS0WXshHFKfHPSE/cDGyjyOROq?=
- =?us-ascii?Q?kySJE2/16xK2hhwo/H8wb9hWd9aaq2pB0ADMjJl8GAhvYImMoJkY3UCcW+FE?=
- =?us-ascii?Q?xH6ybX2MZuhoMbDDKZHGo168YBvnucBUdR23Kejg7cnWtAyXv7B4f7wOb+8P?=
- =?us-ascii?Q?u0miyqz9unw5YhhYhOawln2ipMidlMNah1Sj6qCQXunkRakOXQ3N7DAmZcoB?=
- =?us-ascii?Q?Npfko1Ah9tbh0tp2pSaVW/WfIrA1MCmBAn/XBDKnz1hlc+HV/ZS0Yo/LzxpJ?=
- =?us-ascii?Q?FTt5KWadZXaX9QPHQwWvLEPm2SrFw0g7Mtu6JId6/wW0ll+ua1d7zOXs2LRH?=
- =?us-ascii?Q?l/QRCFJ/NUVGybEykAnm/ZO6RRwPXr0WbMbyiuweM5uaoLvCxKyOx7yKYeim?=
- =?us-ascii?Q?91BNubstmiXsGHMqJwE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2dfe8f3-6cf3-4189-1fd9-08d997b31d43
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2021 12:29:39.6967
+X-Microsoft-Antispam-Message-Info: p5mq+y+60ru8WH88zbADxsQIXpSBXWcpB5xnrUdfPpUujXobRlJV5u6+hb7Jkr9xhheU1jt/rJ4cqPx9HctuEDwik+j99qbL6ELL8FlB4XE7hWO5diredb3iL/VP4EHcCpHGqv+FaYL0uTZaWaFEawAG74es0KS3sNED/9LqeyAdgHX3CBD2Izc21JwVGBqDucKJeEdMsx+alLKWVU1BUSMm3AmiLanNX1TZSXYA3+404HPwUv3DNYLzVIlEoGlZQLxgO9inGnVSmQlf3SPD7hg+FUzxv12uLzM9UBO4ff4wIVZ0JnZGskQqkkAD2RnkUBAgWGp+ZOODkgo+tZjiMP6HeYYEZ7JUPoRETvNwbgzUCeVGsRIo5DOQ1svJjhYzsYcLapdzN4vcj823Kz7knEfU9IVMzXw+n01d2q0tg+WsFGXVafrBp7PLkTV99V7kOY5+AIBAONBH6vw3uuIrkwPlwchk6Hjz//fTHIlfIhwe0jsrKxD0aMPS15WKyNCMdT13oXGSR8tZVPJQoZD3bXrSwDrXICm5AmIQ4IgimKhZzVElKufu3RTIU7BDU3IamTicgHIh2DmF7b1YPq7HYCTjU9tqx1A8f22kJyWgzMLAbw6ffivcIiMNvFQQG/gPkyjF5cwR+epIjzBbUVVae3Mtp+3ptQp+rxe86ja0FnJFd74+jDmhLaa/Nf76ueKuw/iXLmXZTVk1HPLIsIPGVyGolBX+ViABJs0neN//Kq0=
+X-Forefront-Antispam-Report: CIP:158.140.1.147;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx1.cadence.com;PTR:unknown.Cadence.COM;CAT:NONE;SFS:(4636009)(36092001)(36840700001)(46966006)(36756003)(356005)(110136005)(54906003)(8676002)(42186006)(70206006)(83380400001)(26005)(70586007)(36860700001)(4326008)(36906005)(7636003)(186003)(5660300002)(2906002)(508600001)(316002)(8936002)(82310400003)(47076005)(336012)(426003)(2616005)(107886003)(86362001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2021 12:31:18.1548
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bekFGLX9s9fQLsWp1MifZ9W4mKckQUTzdsvQJf22h3djAQwLPGDuXEkzqOIvgxvo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB5524
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9324026e-6d4e-4b77-60a9-08d997b3581f
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.147];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT043.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5670
+X-Proofpoint-ORIG-GUID: JOFIqNEuppPupMNN8V-WQIpzeopdHl-f
+X-Proofpoint-GUID: JOFIqNEuppPupMNN8V-WQIpzeopdHl-f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-10-25_04,2021-10-25_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ bulkscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110250076
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 03:47:29PM -0600, Alex Williamson wrote:
-> I recall that we previously suggested a very strict interpretation of
-> clearing the _RUNNING bit, but again I'm questioning if that's a real
-> requirement or simply a nice-to-have feature for some undefined
-> debugging capability.  In raising the p2p DMA issue, we can see that a
-> hard stop independent of other devices is not really practical but I
-> also don't see that introducing a new state bit solves this problem any
-> more elegantly than proposed here.  Thanks,
+From: Parshuram Thombare <pthombar@cadence.com>
 
-I still disagree with this - the level of 'frozenness' of a device is
-something that belongs in the defined state exposed to userspace, not
-as a hidden internal state that userspace can't see.
+Clear FLR (Function Level Reset) from device capabilities
+registers for all physical functions.
 
-It makes the state transitions asymmetric between suspend/resume as
-resume does have a defined uAPI state for each level of frozeness and
-suspend does not.
+During FLR, the Margining Lane Status and Margining Lane Control
+registers should not be reset, as per PCIe specification.
+However, the controller incorrectly resets these registers upon FLR.
+This causes PCISIG compliance FLR test to fail. Hence preventing
+all functions from advertising FLR support if flag quirk_disable_flr
+is set.
 
-With the extra bit resume does:
-  
-  0000, 0100, 1000, 0001
+Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+---
+Changes since v1:
+Changes suggested by Bjorn in the description.
 
-And suspend does:
+---
+ drivers/pci/controller/cadence/pci-j721e.c       |  3 +++
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 18 +++++++++++++++++-
+ drivers/pci/controller/cadence/pcie-cadence.h    |  3 +++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-  0001, 1001, 0010, 0000
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index ffb176d..635e36c 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -70,6 +70,7 @@ struct j721e_pcie_data {
+ 	enum j721e_pcie_mode	mode;
+ 	unsigned int		quirk_retrain_flag:1;
+ 	unsigned int		quirk_detect_quiet_flag:1;
++	unsigned int		quirk_disable_flr:1;
+ 	u32			linkdown_irq_regfield;
+ 	unsigned int		byte_access_allowed:1;
+ };
+@@ -308,6 +309,7 @@ static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+ static const struct j721e_pcie_data j7200_pcie_ep_data = {
+ 	.mode = PCI_MODE_EP,
+ 	.quirk_detect_quiet_flag = true,
++	.quirk_disable_flr = true,
+ };
+ 
+ static const struct j721e_pcie_data am64_pcie_rc_data = {
+@@ -510,6 +512,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 			goto err_get_sync;
+ 		}
+ 		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++		ep->quirk_disable_flr = data->quirk_disable_flr;
+ 
+ 		cdns_pcie = &ep->pcie;
+ 		cdns_pcie->dev = dev;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index 88e05b9..4b1c4bc 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -565,7 +565,8 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct cdns_pcie *pcie = &ep->pcie;
+ 	struct device *dev = pcie->dev;
+-	int ret;
++	int max_epfs = sizeof(epc->function_num_map) * 8;
++	int ret, value, epf;
+ 
+ 	/*
+ 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+@@ -573,6 +574,21 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+ 	 */
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, epc->function_num_map);
+ 
++	if (ep->quirk_disable_flr) {
++		for (epf = 0; epf < max_epfs; epf++) {
++			if (!(epc->function_num_map & BIT(epf)))
++				continue;
++
++			value = cdns_pcie_ep_fn_readl(pcie, epf,
++					CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET +
++					PCI_EXP_DEVCAP);
++			value &= ~PCI_EXP_DEVCAP_FLR;
++			cdns_pcie_ep_fn_writel(pcie, epf,
++					CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET +
++					PCI_EXP_DEVCAP, value);
++		}
++	}
++
+ 	ret = cdns_pcie_start_link(pcie);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to start link\n");
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 262421e..e978e7c 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -123,6 +123,7 @@
+ 
+ #define CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET	0x90
+ #define CDNS_PCIE_EP_FUNC_MSIX_CAP_OFFSET	0xb0
++#define CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET	0xc0
+ #define CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET	0x200
+ 
+ /*
+@@ -357,6 +358,7 @@ struct cdns_pcie_epf {
+  *        minimize time between read and write
+  * @epf: Structure to hold info about endpoint function
+  * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
++ * @quirk_disable_flr: Disable FLR (Function Level Reset) quirk flag
+  */
+ struct cdns_pcie_ep {
+ 	struct cdns_pcie	pcie;
+@@ -372,6 +374,7 @@ struct cdns_pcie_ep {
+ 	spinlock_t		lock;
+ 	struct cdns_pcie_epf	*epf;
+ 	unsigned int		quirk_detect_quiet_flag:1;
++	unsigned int		quirk_disable_flr:1;
+ };
+ 
+ 
+-- 
+1.9.1
 
-However, without the extra bit suspend is only
-  
-  001,  010, 000
-
-With hidden state inside the 010
-
-Jason
