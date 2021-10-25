@@ -2,134 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3596438CFE
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 03:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AB1438CFC
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Oct 2021 03:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231771AbhJYB2X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Oct 2021 21:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60464 "EHLO
+        id S230214AbhJYB1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Oct 2021 21:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbhJYB2W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Oct 2021 21:28:22 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C824C061745
-        for <linux-pci@vger.kernel.org>; Sun, 24 Oct 2021 18:26:01 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id bp7so10239678qkb.12
-        for <linux-pci@vger.kernel.org>; Sun, 24 Oct 2021 18:26:01 -0700 (PDT)
+        with ESMTP id S229668AbhJYB1r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Oct 2021 21:27:47 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E036C061745
+        for <linux-pci@vger.kernel.org>; Sun, 24 Oct 2021 18:25:26 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id p16so8796082lfa.2
+        for <linux-pci@vger.kernel.org>; Sun, 24 Oct 2021 18:25:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VTEYBOVFC48ADDa8N43omwk7puK0joc4PFn0uiGMRcg=;
-        b=jKwWtJj2+XorNlj49nPSke8a/Qft4zbyuljV+uV1cJ7UmjuQuKWRkIXvggCUofTGt2
-         fVLAFa4nO7JOjDgshLvnReog5af2DO50+AKqbFHsLrCtSaIDbdw/d+yolCFh41KxOSfN
-         JVrb5fOhJaDW0VdpOkD29CdgWJIRr413QXPcsaa21SPYZeWR1awOiKVnY5bYaAwYT63e
-         bcdon+VyuSQ/O2n5n6MdhWxvzdZFckaSws/nc0JIcHPY8GX9nTah8n3p2z6eDL8M3BFF
-         ZdhsE+C9QKoA/Bmsq03tfGHaljFw1Onk2KR26sai4r2EtPJtDmHiT1O6XklkU9XdFD90
-         +Usw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p5T2EfZYyfkG5Z23knzLOru2yfkRV1ugrXppMS5fiXY=;
+        b=Ib86kGbYxPnQQ465yraknbQ9FzDUdsN6TPf0FYNMjVQ4o9TlU/LiuoeQ96nw8tSGpK
+         ZyFyHdjITivDnXfzYT5Cd8pgiPWYGA1SgIkRy3wPrlyb7ghApKTQWeIRu/OIarztdebG
+         TUoMFWg6oRTaIJJpxvia64iVZGUiMn3SOQ9tFEAYJtAyV32MkvH71LW+hV/W3/iO+Z47
+         aMJQ/B0nRzVkHubd7seq8mX1eiEz4EXDTSUZgoel7CnqvApk0Tu1ykRTtGntcrDH//0g
+         jUbl63Fb4BlO6geV1yKO6vmpxEdrfTW14vkQrBEOyhtkr3yqtZ3loBGUeaYjZ768VsYW
+         QSwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VTEYBOVFC48ADDa8N43omwk7puK0joc4PFn0uiGMRcg=;
-        b=c6BklCf1EYRYyKDKy7MCrWgCH/MRMbe+w6IQsMu0YdROUsdWBVf/nv7pq9NerrhWUq
-         LGxJ5pmKTBcfaewiefF4uFnhu4hSxf6tH9qLCM6m5++lxg8uovi3CRG93I+Xy6p0oXx4
-         +UBNSTDOP7DXCJO973gfOF86Pnnb1U1QlU9/jf4rVJFS91cTTvLTp7pV5hOsXRS3rS+B
-         0Df0l2iqhVt4qk1wTcyhMl3LDRQIJ8B0LfY+oM073gdg3VIT/gmQCY6LPsNfG8H1b1p7
-         kLiBfUWAy9FOFVeFvQ3EfBsV3wjCws2WG1qrZpGWtz+CeB4yac6uQspoITFSzEK+kqNG
-         Urhw==
-X-Gm-Message-State: AOAM5308lVHkq5LX6AxiwRictiOSrT7a/RF/vTGccH/3SaF2B6McDCI4
-        uD/dMAZYBfecIQ8ylzCf6kk=
-X-Google-Smtp-Source: ABdhPJxdhx9YsyD2piku1kRFpYGiExJbAde47xpWYo9zrILaPmf8HpF05Y/EzU1HwylCgQrMbg2KWQ==
-X-Received: by 2002:a05:620a:45a3:: with SMTP id bp35mr11126547qkb.262.1635125160419;
-        Sun, 24 Oct 2021 18:26:00 -0700 (PDT)
-Received: from shine.lan ([2001:470:8:67e:51e0:9342:22f6:f52e])
-        by smtp.gmail.com with ESMTPSA id r186sm7786376qkf.128.2021.10.24.18.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Oct 2021 18:26:00 -0700 (PDT)
-From:   Jason Andryuk <jandryuk@gmail.com>
-To:     josef@oderland.se
-Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jandryuk@gmail.com,
-        jgross@suse.com, linux-pci@vger.kernel.org, maz@kernel.org,
-        tglx@linutronix.de, xen-devel@lists.xenproject.org
-Subject: [PATCH] PCI/MSI: Fix masking MSI/MSI-X on Xen PV
-Date:   Sun, 24 Oct 2021 21:25:03 -0400
-Message-Id: <20211025012503.33172-1-jandryuk@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p5T2EfZYyfkG5Z23knzLOru2yfkRV1ugrXppMS5fiXY=;
+        b=4PBM2X4Q4khvuYuS3sh7oO1J44yLMAfrc3cdgMcUqm9T7b5opvHDAVTZ06RNrkIXQN
+         KAHn96cMFQiH8p/J80MicNhqQAOVIpJurJoGUfvCCAz7wemoYb1kMRdOSzk2ZC/1VIK/
+         b0WWZOmjVYjXbepXTOfctFZSIk6jeBXHqQWduSHoe+SPdJ/L0OXG3f2Wyq4Zvtt5PTQw
+         iW7MZIAUAa4zHUxyTr1C3BbnzRfF2yoqUHvS/MbNOYnbPVPUdu1pv4D//S7fzCpZVApf
+         ymfAGz+DOKKwqW89Vv9Xg2LeT9se/8tF8E4Ml83PcKN+Qzu3N7s49gHNh1/gQioCP6aj
+         tQXg==
+X-Gm-Message-State: AOAM530QG8kl4/LxFzvwWfFqrC4yjM+EgTwiAT0zw/uYXgXAPQBijab6
+        iTJ4iffzM1LAN4v4PBAegYs/LPLisTSspZNhcGnW5h0asFs=
+X-Google-Smtp-Source: ABdhPJy6M/gmp5NOw/fxpoOY/JQYXFqfbnkhNuBYl7lMg+mAJmReG67HNIqVK4RLFOxAbBbxWLTE+SmFI33ykmdhpKo=
+X-Received: by 2002:a05:6512:b21:: with SMTP id w33mr13882544lfu.447.1635125124623;
+ Sun, 24 Oct 2021 18:25:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211019202906.GA2397931@bhelgaas> <5f050b30-fa1c-8387-0d6b-a667851b34b0@oderland.se>
+ <877de7dfl2.wl-maz@kernel.org> <CAKf6xpt=ZYGyJXMwM7ccOWkx71R0O-QeLjkBF-LtdDcbSnzHsA@mail.gmail.com>
+ <3434cb2d-4060-7969-d4c4-089c68190527@oderland.se> <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
+In-Reply-To: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
+From:   Jason Andryuk <jandryuk@gmail.com>
+Date:   Sun, 24 Oct 2021 21:25:12 -0400
+Message-ID: <CAKf6xpvZ8fxuBY4BZ51UZzF92zDUcvfav9_pOT7F3w-Bc8YkwA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Re-add checks for skip masking MSI-X on Xen PV
+To:     Josef Johansson <josef@oderland.se>
+Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask
-functions") introduce functions pci_msi_update_mask() and
-pci_msix_write_vector_ctrl() that is missing checks for
-pci_msi_ignore_mask that exists in commit 446a98b19fd6 ("PCI/MSI: Use
-new mask/unmask functions").  The checks are in place at the high level
-__pci_msi_mask_desc()/__pci_msi_unmask_desc(), but some functions call
-directly to the helpers.
+On Sun, Oct 24, 2021 at 2:55 PM Josef Johansson <josef@oderland.se> wrote:
 
-Push the pci_msi_ignore_mask check down to the functions that make
-the actual writes.  This keeps the logic local to the writes that need
-to be bypassed.
+> I ended up with this patch, I also masked pci_set_mask and
+> pci_set_unmask, even though patching __pci_restore_msi_state and
+> __pci_restore_msi_state solved this problem, I found that it did not
+> properly make the system be able to survive flip_done timeout related
+> problems during suspend/resume. Would this be something you had in mind
+> Marc? I will make one more try with just patching
+> __pci_restore_msi_state and __pci_restore_msix_state just to make sure.
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c index
+> 4b4792940e86..0b2225066778 100644 --- a/drivers/pci/msi.c +++
+> b/drivers/pci/msi.c @@ -420,7 +420,8 @@ static void
+> __pci_restore_msi_state(struct pci_dev *dev) arch_restore_msi_irqs(dev);
+> pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &control); -
+> pci_msi_update_mask(entry, 0, 0); + if (!(pci_msi_ignore_mask ||
+> entry->msi_attrib.is_virtual)) + pci_msi_update_mask(entry, 0, 0);
+> control &= ~PCI_MSI_FLAGS_QSIZE; control |= (entry->msi_attrib.multiple
 
-With Xen PV, the hypervisor is responsible for masking and unmasking the
-interrupts, which pci_msi_ignore_mask is used to indicate.
+This patch was mangled.
 
-This change avoids lockups in amdgpu drivers under Xen during boot.
+> This makes sense the patch would be like so, I'm testing this out now
+> hoping it will
+>
+> perform as good. Now the check is performed in four places
 
-Fixes: commit 446a98b19fd6 ("PCI/MSI: Use new mask/unmask functions")
-Reported-by: Josef Johansson <josef@oderland.se>
-Signed-off-by: Jason Andryuk <jandryuk@gmail.com>
----
- drivers/pci/msi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Close.  I'll reply with my compiled, but untested patch of what I was thinking.
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 4b4792940e86..478536bafc39 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -148,6 +148,9 @@ static noinline void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 s
- 	raw_spinlock_t *lock = &desc->dev->msi_lock;
- 	unsigned long flags;
- 
-+	if (pci_msi_ignore_mask)
-+		return;
-+
- 	raw_spin_lock_irqsave(lock, flags);
- 	desc->msi_mask &= ~clear;
- 	desc->msi_mask |= set;
-@@ -181,6 +184,9 @@ static void pci_msix_write_vector_ctrl(struct msi_desc *desc, u32 ctrl)
- {
- 	void __iomem *desc_addr = pci_msix_desc_addr(desc);
- 
-+	if (pci_msi_ignore_mask)
-+		return;
-+
- 	writel(ctrl, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
- }
- 
-@@ -200,7 +206,7 @@ static inline void pci_msix_unmask(struct msi_desc *desc)
- 
- static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
- {
--	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+	if (desc->msi_attrib.is_virtual)
- 		return;
- 
- 	if (desc->msi_attrib.is_msix)
-@@ -211,7 +217,7 @@ static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
- 
- static void __pci_msi_unmask_desc(struct msi_desc *desc, u32 mask)
- {
--	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-+	if (desc->msi_attrib.is_virtual)
- 		return;
- 
- 	if (desc->msi_attrib.is_msix)
--- 
-2.30.2
+> That leaves me with a though, will this set masked, and should be checked as well?
+>
+> void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+> {
+>         struct pci_dev *dev = msi_desc_to_pci_dev(entry);
+>
+>         if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
+>                 /* Don't touch the hardware now */
+>         } else if (entry->msi_attrib.is_msix) {
+>                 void __iomem *base = pci_msix_desc_addr(entry);
+>                 u32 ctrl = entry->msix_ctrl;
+>                 bool unmasked = !(ctrl & PCI_MSIX_ENTRY_CTRL_MASKBIT);
+>
+>                 if (entry->msi_attrib.is_virtual)
+>                         goto skip;
+>
+>                 /*
+>                  * The specification mandates that the entry is masked
+>                  * when the message is modified:
+>                  *
+>                  * "If software changes the Address or Data value of an
+>                  * entry while the entry is unmasked, the result is
+>                  * undefined."
+>                  */
+>                 if (unmasked)
+> >>>                     pci_msix_write_vector_ctrl(entry, ctrl | PCI_MSIX_ENTRY_CTRL_MASKBIT);
 
+My patch adds a check in pci_msix_write_vector_ctrl(), but the comment
+above means PV Xen's behavior may be incorrect if Linux is calling
+this function and modifying the message.
+
+Regards,
+Jason
