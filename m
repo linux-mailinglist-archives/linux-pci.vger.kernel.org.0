@@ -2,230 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 906EA43B295
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 14:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B183F43B30A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 15:14:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbhJZMpQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 08:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234908AbhJZMpQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 08:45:16 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6506FC061220
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 05:42:52 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id x27so16806586lfu.5
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 05:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HuPXxQ3Dx5OU5hbFOWVQiDy9S2Ab/pqOebTTCbBX458=;
-        b=yp/FjIP2ZykqVytABuEpEZO1uJnOPB/r5RSZXjwbbGVBknnnCJfGJQWPwFNhzbdWPx
-         5b0kfYV+PNchKANblo/AR1ip8GVyob81fsovi0Seo2WABuCQICdFeaudXFmfExFdFG+V
-         vObP8NA2YVpVe/PTSjnGvAnp5xI0ba/iq0RzglKYLQwkak+gTB+X/V98elp1ND8v/hmj
-         X0p+SnQmWdwr0VDaP1vCO6RbHkUkp2EC7S2H4hUoeLdabKo9lVnUhC3mSHjiYBx9j8DS
-         GqaG7gfuZpk7F5dsJE0ISRS6s48eNw/ffU02WhE6I6mUPjU0OcLCph0+shE4xvcCFSSA
-         eUgQ==
+        id S233612AbhJZNRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 09:17:18 -0400
+Received: from mail-oi1-f172.google.com ([209.85.167.172]:34669 "EHLO
+        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230324AbhJZNRS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 09:17:18 -0400
+Received: by mail-oi1-f172.google.com with SMTP id w193so847424oie.1;
+        Tue, 26 Oct 2021 06:14:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HuPXxQ3Dx5OU5hbFOWVQiDy9S2Ab/pqOebTTCbBX458=;
-        b=8EZlyTW2x/IJ1HJVH5gpX2UBTaAE+7BI93AjoDj9H6nllQRukYu7teVWma0JleW9sU
-         ucCF27vsS6x1pZiQPa9zfju+8s9h2XOFcjD1WIkI/DVvRGdlNxPhyWnMDaZoL+6zkYdA
-         QRWsnkkSdtKzHuOztN+WWDR0/WFskYCG0r8MqUzicpK3CwlnYDYKi6MoxqGocibwGJP7
-         kjOQgYpGiTS4SAYEGwzqOiJ8DHOvsLQ+vQD/AiTbYKszTbTWh6G0E0ILyNoZMvgCn9IW
-         jw34c1g+xJE8yROc7B53OPhr003YDDAZ0kFUF/kR4a5nh0NyVYOOCc+//ZMmghk5Ub5P
-         Ra7Q==
-X-Gm-Message-State: AOAM531tDd9ODEkYCpzw7ZxUrUYgr0XbqQhBnqT9aZIR6EI2YLx4WoM/
-        BPy098Fmqf8sjzau/0q0IbvDErfCjpvfvA==
-X-Google-Smtp-Source: ABdhPJwtr6cFDc91FwGgkx11o3XI6XVYbNqXOl252C5qhPNnoAkCmQISNhEGbYqHen0kRK1NV8MKuw==
-X-Received: by 2002:a05:6512:108e:: with SMTP id j14mr23034146lfg.274.1635252170309;
-        Tue, 26 Oct 2021 05:42:50 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id o26sm2017103ljg.92.2021.10.26.05.42.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Oct 2021 05:42:49 -0700 (PDT)
-Subject: Re: [PATCH v12 2/5] arm64: dts: qcom: sc7280: Add PCIe and PHY
- related nodes
-To:     Prasad Malisetty <pmaliset@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, swboyd@chromium.org, lorenzo.pieralisi@arm.com,
-        svarbanov@mm-sol.com
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, mka@chromium.org, vbadigan@codeaurora.org,
-        sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
-        linux-pci@vger.kernel.org
-References: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org>
- <1633628923-25047-3-git-send-email-pmaliset@codeaurora.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <70502702-3f55-46f2-46e4-d3dda4f0294d@linaro.org>
-Date:   Tue, 26 Oct 2021 15:42:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cPN8L2jX6Nco49lUubWlVKZG7LZSldfvtFfxWeGXbNA=;
+        b=bUzhTgrQ5Rdk49QBX9hpGaZgPmPga3eMqCyf6VrvD5Ufc3OehEAyqC9stGglsg/A3q
+         xI4/CnKBx24pBaFdVyN1H5EFWKVLltRmBVuyDPnLLCCouNYD9vOPUe9AeTwAimUhDFVB
+         /MNnlgKH1Xnq+KbYZhY/f6KYb0rHZyrsP6/wPzs/tEsgroOvW984a+053koIvHJZo01M
+         2decbRPQq1AFA+xHGEA6RQRSePUfOfffP6siJgsbeoN9fACG03IEeAcumDkkL8S06ZbD
+         A6/e+ktJTQLy1g3PofPfnXf0+tBDDnONxvmgynLGYlvp0Zaaq3ERI0Gn0FXOeiCFJlDG
+         ka5w==
+X-Gm-Message-State: AOAM533JnqO+aHayJ+U34X+xygcD0QZSwkTvK8QDGBCmTcTMBQhwVRQv
+        JdpCnCXaTuzusg/Yp6zqNLIgwvVcgXQeB2w12cn+1HTk
+X-Google-Smtp-Source: ABdhPJxHStW+YF/bxjfqNV/7TMKIMqO+XToazdK7i4TI1rcKW4Not9y8Zrrin3yOcL4dprCRT3f0PywukIPFA9L2kZY=
+X-Received: by 2002:a05:6808:1286:: with SMTP id a6mr24500110oiw.51.1635254094204;
+ Tue, 26 Oct 2021 06:14:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1633628923-25047-3-git-send-email-pmaliset@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <YW5OdIyFkTYo0h3W@Dennis-MBP.local>
+In-Reply-To: <YW5OdIyFkTYo0h3W@Dennis-MBP.local>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 Oct 2021 15:14:37 +0200
+Message-ID: <CAJZ5v0g=+_fATmSrLWiTirmr0MkihKpy7wp-9aFpWVK_RLhp6g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PCI: MCFG: Consolidate the separate PCI MCFG table
+ entry list
+To:     Xuesong Chen <xuesong.chen@linux.alibaba.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 07/10/2021 20:48, Prasad Malisetty wrote:
-> Add PCIe controller and PHY nodes for sc7280 SOC.
-> 
-> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Tue, Oct 19, 2021 at 6:50 AM Xuesong Chen
+<xuesong.chen@linux.alibaba.com> wrote:
+>
+> The PCI MCFG entry list is discrete on x86 and other arches like ARM64
+> in current implementation, this list variable can be consolidated for
+> unnecessary duplication and other purposes, for example, we can remove
+> some of the arch-specific codes in the APEI/EINJ module and re-implement
+> it in a more common arch-agnostic way.
+>
+> To reduce the redundancy, it:
+>   - Moves the "struct pci_mmcfg_region" definition from
+>     arch/x86/include/asm/pci_x86.h to include/linux/pci.h, where it
+>     can be shared across arches.
+>
+>   - Moves pci_mmcfg_list (a list of pci_mmcfg_region structs) from
+>     arch/x86/pci/mmconfig-shared.c to drivers/pci/pci.c, where it can
+>     be shared across arches.
+>
+>   - On x86 (which does not enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
+>     built in arch/x86/pci/mmconfig-shared.c as before.
+>
+>   - Removes the "struct mcfg_entry" from drivers/acpi/pci_mcfg.c.
+>
+>   - Replaces pci_mcfg_list (previously a list of mcfg_entry structs)
+>     in drivers/acpi/pci_mcfg.c with the newly-shared pci_mmcfg_list (a
+>     list of pci_mmcfg_region structs).
+>
+>   - On ARM64 (which does enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
+>     built in drivers/acpi/pci_mcfg.c.
+>
+> Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+I'm guessing that I'm expected to pick up this one?
+
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Rafael. J. Wysocki <rafael@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Tomasz Nowicki <tn@semihalf.com>
 > ---
->   arch/arm64/boot/dts/qcom/sc7280.dtsi | 118 +++++++++++++++++++++++++++++++++++
->   1 file changed, 118 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 39635da..cde814f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -1563,6 +1563,117 @@
->   			qcom,bcm-voters = <&apps_bcm_voter>;
->   		};
->   
-> +		pcie1: pci@1c08000 {
-> +			compatible = "qcom,pcie-sc7280";
-> +			reg = <0 0x01c08000 0 0x3000>,
-> +			      <0 0x40000000 0 0xf1d>,
-> +			      <0 0x40000f20 0 0xa8>,
-> +			      <0 0x40001000 0 0x1000>,
-> +			      <0 0x40100000 0 0x100000>;
+>  arch/x86/include/asm/pci_x86.h | 17 +----------------
+>  arch/x86/pci/mmconfig-shared.c |  2 --
+>  drivers/acpi/pci_mcfg.c        | 34 +++++++++++++---------------------
+>  drivers/pci/pci.c              |  2 ++
+>  include/linux/pci.h            | 17 +++++++++++++++++
+>  5 files changed, 33 insertions(+), 39 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+> index 490411d..1f4257c 100644
+> --- a/arch/x86/include/asm/pci_x86.h
+> +++ b/arch/x86/include/asm/pci_x86.h
+> @@ -146,20 +146,7 @@ static inline int  __init pci_acpi_init(void)
+>  extern void pcibios_fixup_irqs(void);
+>
+>  /* pci-mmconfig.c */
+> -
+> -/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
+> -#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
+> -
+> -struct pci_mmcfg_region {
+> -       struct list_head list;
+> -       struct resource res;
+> -       u64 address;
+> -       char __iomem *virt;
+> -       u16 segment;
+> -       u8 start_bus;
+> -       u8 end_bus;
+> -       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
+> -};
+> +struct pci_mmcfg_region;
+>
+>  extern int __init pci_mmcfg_arch_init(void);
+>  extern void __init pci_mmcfg_arch_free(void);
+> @@ -174,8 +161,6 @@ extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
+>
+>  extern struct list_head pci_mmcfg_list;
+>
+> -#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
+> -
+>  /*
+>   * On AMD Fam10h CPUs, all PCI MMIO configuration space accesses must use
+>   * %eax.  No other source or target registers may be used.  The following
+> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+> index 758cbfe..0b961fe6 100644
+> --- a/arch/x86/pci/mmconfig-shared.c
+> +++ b/arch/x86/pci/mmconfig-shared.c
+> @@ -31,8 +31,6 @@
+>  static DEFINE_MUTEX(pci_mmcfg_lock);
+>  #define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
+>
+> -LIST_HEAD(pci_mmcfg_list);
+> -
+>  static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
+>  {
+>         if (cfg->res.parent)
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 53cab97..d9506b0 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -13,14 +13,7 @@
+>  #include <linux/pci-acpi.h>
+>  #include <linux/pci-ecam.h>
+>
+> -/* Structure to hold entries from the MCFG table */
+> -struct mcfg_entry {
+> -       struct list_head        list;
+> -       phys_addr_t             addr;
+> -       u16                     segment;
+> -       u8                      bus_start;
+> -       u8                      bus_end;
+> -};
+> +extern struct list_head pci_mmcfg_list;
+>
+>  #ifdef CONFIG_PCI_QUIRKS
+>  struct mcfg_fixup {
+> @@ -214,16 +207,13 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
+>  #endif
+>  }
+>
+> -/* List to save MCFG entries */
+> -static LIST_HEAD(pci_mcfg_list);
+> -
+>  int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
+>                     const struct pci_ecam_ops **ecam_ops)
+>  {
+>         const struct pci_ecam_ops *ops = &pci_generic_ecam_ops;
+>         struct resource *bus_res = &root->secondary;
+>         u16 seg = root->segment;
+> -       struct mcfg_entry *e;
+> +       struct pci_mmcfg_region *e;
+>         struct resource res;
+>
+>         /* Use address from _CBA if present, otherwise lookup MCFG */
+> @@ -233,10 +223,10 @@ int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
+>         /*
+>          * We expect the range in bus_res in the coverage of MCFG bus range.
+>          */
+> -       list_for_each_entry(e, &pci_mcfg_list, list) {
+> -               if (e->segment == seg && e->bus_start <= bus_res->start &&
+> -                   e->bus_end >= bus_res->end) {
+> -                       root->mcfg_addr = e->addr;
+> +       list_for_each_entry(e, &pci_mmcfg_list, list) {
+> +               if (e->segment == seg && e->start_bus <= bus_res->start &&
+> +                   e->end_bus >= bus_res->end) {
+> +                       root->mcfg_addr = e->address;
+>                 }
+>
+>         }
+> @@ -268,7 +258,7 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
+>  {
+>         struct acpi_table_mcfg *mcfg;
+>         struct acpi_mcfg_allocation *mptr;
+> -       struct mcfg_entry *e, *arr;
+> +       struct pci_mmcfg_region *e, *arr;
+>         int i, n;
+>
+>         if (header->length < sizeof(struct acpi_table_mcfg))
+> @@ -285,10 +275,12 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
+>
+>         for (i = 0, e = arr; i < n; i++, mptr++, e++) {
+>                 e->segment = mptr->pci_segment;
+> -               e->addr =  mptr->address;
+> -               e->bus_start = mptr->start_bus_number;
+> -               e->bus_end = mptr->end_bus_number;
+> -               list_add(&e->list, &pci_mcfg_list);
+> +               e->address =  mptr->address;
+> +               e->start_bus = mptr->start_bus_number;
+> +               e->end_bus = mptr->end_bus_number;
+> +               e->res.start = e->address + PCI_MMCFG_BUS_OFFSET(e->start_bus);
+> +               e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
+> +               list_add(&e->list, &pci_mmcfg_list);
+>         }
+>
+>  #ifdef CONFIG_PCI_QUIRKS
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62..899004e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -47,6 +47,8 @@
+>  int pci_pci_problems;
+>  EXPORT_SYMBOL(pci_pci_problems);
+>
+> +LIST_HEAD(pci_mmcfg_list);
 > +
-> +			reg-names = "parf", "dbi", "elbi", "atu", "config";
-> +			device_type = "pci";
-> +			linux,pci-domain = <1>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <2>;
+>  unsigned int pci_pm_d3hot_delay;
+>
+>  static void pci_pme_list_scan(struct work_struct *work);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6f..71e4c06 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -55,6 +55,23 @@
+>  #define PCI_RESET_PROBE                true
+>  #define PCI_RESET_DO_RESET     false
+>
+> +#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
 > +
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
+> +/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
+> +#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
 > +
-> +			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
+> +/* pci mcfg region */
+> +struct pci_mmcfg_region {
+> +       struct list_head list;
+> +       struct resource res;
+> +       u64 address;
+> +       char __iomem *virt;
+> +       u16 segment;
+> +       u8 start_bus;
+> +       u8 end_bus;
+> +       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
+> +};
 > +
-> +			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &intc 0 438 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &intc 0 439 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> +				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-> +				 <&pcie1_lane 0>,
-
-This should be just <&pcie1_lane>, as the phy doesn't have clock cells.
-
-> +				 <&rpmhcc RPMH_CXO_CLK>,
-> +				 <&gcc GCC_PCIE_1_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-> +				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
-> +
-> +			clock-names = "pipe",
-> +				      "pipe_mux",
-> +				      "phy_pipe",
-> +				      "ref",
-> +				      "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a",
-> +				      "tbu",
-> +				      "ddrss_sf_tbu";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
-> +			assigned-clock-rates = <19200000>;
-> +
-> +			resets = <&gcc GCC_PCIE_1_BCR>;
-> +			reset-names = "pci";
-> +
-> +			power-domains = <&gcc GCC_PCIE_1_GDSC>;
-> +
-> +			phys = <&pcie1_lane>;
-> +			phy-names = "pciephy";
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pcie1_clkreq_n>;
-> +
-> +			iommus = <&apps_smmu 0x1c80 0x1>;
-> +
-> +			iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
-> +				    <0x100 &apps_smmu 0x1c81 0x1>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie1_phy: phy@1c0e000 {
-> +			compatible = "qcom,sm8250-qmp-gen3x2-pcie-phy";
-> +			reg = <0 0x01c0e000 0 0x1c0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_CLKREF_EN>,
-> +				 <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
-> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-> +
-> +			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-> +			reset-names = "phy";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE1_PHY_RCHNG_CLK>;
-> +			assigned-clock-rates = <100000000>;
-> +
-> +			status = "disabled";
-> +
-> +			pcie1_lane: lanes@1c0e200 {
-> +				reg = <0 0x01c0e200 0 0x170>,
-> +				      <0 0x01c0e400 0 0x200>,
-> +				      <0 0x01c0ea00 0 0x1f0>,
-> +				      <0 0x01c0e600 0 0x170>,
-> +				      <0 0x01c0e800 0 0x200>,
-> +				      <0 0x01c0ee00 0 0xf4>;
-> +				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-> +				clock-names = "pipe0";
-> +
-> +				#phy-cells = <0>;
-> +				#clock-cells = <1>;
-> +				clock-output-names = "pcie_1_pipe_clk";
-> +			};
-> +		};
-> +
->   		ipa: ipa@1e40000 {
->   			compatible = "qcom,sc7280-ipa";
->   
-> @@ -2676,6 +2787,13 @@
->   			gpio-ranges = <&tlmm 0 0 175>;
->   			wakeup-parent = <&pdc>;
->   
-> +			pcie1_clkreq_n: pcie1-clkreq-n {
-> +				pins = "gpio79";
-> +				function = "pcie1_clkreqn";
-> +				drive-strength = <2>;
-> +				bias-pull-up;
-> +			};
-> +
->   			qspi_clk: qspi-clk {
->   				pins = "gpio14";
->   				function = "qspi_clk";
-> 
-
-
--- 
-With best wishes
-Dmitry
+>  /*
+>   * The PCI interface treats multi-function devices as independent
+>   * devices.  The slot/function address of each device is encoded
+> --
+> 1.8.3.1
+>
