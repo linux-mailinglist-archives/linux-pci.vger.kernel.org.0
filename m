@@ -2,97 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89D2343B7B2
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 18:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB72A43B7E5
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 19:06:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237621AbhJZRAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 13:00:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35093 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236231AbhJZRAw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 13:00:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635267503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RT0f5R5Twi94kzA8iIwbfKM5SjvkjYQA1GvTSxCPDNE=;
-        b=ie+50nf4cZROi9cPcHoG8ZaZEmYXlPu1agV5iRARmTCUI/2nppyVlpUy8mty0FDeQx6gMK
-        vxgWLZdr+4WdR4M+WJyeT25hoQjJTyIS3o172D6VEGCf5YWHn6G5V7uTOfaAjjFNOKl00O
-        0Rvmffk63dtjyWvxStetyeLoHvgZwH4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-vCyWaVC1NYeMftwcco5klg-1; Tue, 26 Oct 2021 12:58:21 -0400
-X-MC-Unique: vCyWaVC1NYeMftwcco5klg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74BFE10A8E13;
-        Tue, 26 Oct 2021 16:58:19 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6008160862;
-        Tue, 26 Oct 2021 16:58:01 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Leon Romanovsky <leonro@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, kwankhede@nvidia.com,
-        mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V4 mlx5-next 06/13] vfio: Fix
- VFIO_DEVICE_STATE_SET_ERROR macro
-In-Reply-To: <YXgv29Og1Ds2mMSS@unreal>
-Organization: Red Hat GmbH
-References: <20211026090605.91646-1-yishaih@nvidia.com>
- <20211026090605.91646-7-yishaih@nvidia.com> <87pmrrdcos.fsf@redhat.com>
- <YXgqO0/jUFvDWVHv@unreal> <87h7d3d9x3.fsf@redhat.com>
- <YXgv29Og1Ds2mMSS@unreal>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Tue, 26 Oct 2021 18:57:59 +0200
-Message-ID: <87bl3bd8q0.fsf@redhat.com>
+        id S234439AbhJZRJO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 13:09:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:35102 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234147AbhJZRJN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 13:09:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7246F1FB;
+        Tue, 26 Oct 2021 10:06:49 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F07683F70D;
+        Tue, 26 Oct 2021 10:06:47 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 18:06:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Songxiaowei <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v14 05/11] PCI: kirin: give more time for PERST# reset to
+ finish
+Message-ID: <20211026170641.GA20573@lpieralisi>
+References: <cover.1634622716.git.mchehab+huawei@kernel.org>
+ <9a365cffe5af9ec5a1f79638968c3a2efa979b65.1634622716.git.mchehab+huawei@kernel.org>
+ <20211022151624.mgsgobjsjgyevnyt@pali>
+ <20211023103059.6add00e6@sal.lan>
+ <20211025102511.GA10529@lpieralisi>
+ <20211025114011.0eca7ccc@sal.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211025114011.0eca7ccc@sal.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26 2021, Leon Romanovsky <leonro@nvidia.com> wrote:
+On Mon, Oct 25, 2021 at 11:40:11AM +0100, Mauro Carvalho Chehab wrote:
+> Em Mon, 25 Oct 2021 11:25:11 +0100
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> escreveu:
+> 
+> > On Sat, Oct 23, 2021 at 10:30:59AM +0100, Mauro Carvalho Chehab wrote:
+> > > Hi Pali,
+> > > 
+> > > Em Fri, 22 Oct 2021 17:16:24 +0200
+> > > Pali Rohár <pali@kernel.org> escreveu:
+> > >   
+> > > > On Tuesday 19 October 2021 07:06:42 Mauro Carvalho Chehab wrote:  
+> > > > > Before code refactor, the PERST# signals were sent at the
+> > > > > end of the power_on logic. Then, the PCI core would probe for
+> > > > > the buses and add them.
+> > > > > 
+> > > > > The new logic changed it to send PERST# signals during
+> > > > > add_bus operation. That altered the timings.
+> > > > > 
+> > > > > Also, HiKey 970 require a little more waiting time for
+> > > > > the PCI bridge - which is outside the SoC - to finish
+> > > > > the PERST# reset, and then initialize the eye diagram.    
+> > > > 
+> > > > Hello! Which PCIe port do you mean by PCI bridge device? Do you mean
+> > > > PCIe Root Port? Or upstream port on some external PCIe switch connected
+> > > > via PCIe bus to the PCIe Root Port? Because all of these (virtual) PCIe
+> > > > devices are presented as PCI bridge devices, so it is not clear to which
+> > > > device it refers.  
+> > > 
+> > > HiKey 970 uses an external PCI bridge chipset (a Broadcom PEX 8606[1]),
+> > > with 3 elements connected to the bus: an Ethernet card, a M.2 slot and
+> > > a mini PCIe slot. It seems HiKey 970 is unique with regards to PERST# signal,
+> > > as there are 4 independent PERST# signals there:
+> > > 
+> > > 	- one for PEX 8606 (the PCIe root port);
+> > > 	- one for Ethernet;
+> > > 	- one for M.2;
+> > > 	- one for mini-PCIe.
+> > > 
+> > > After sending the PCIe PERST# signals, the device has to wait for 21 ms
+> > > before adjusting the eye diagram.
+> > > 
+> > > [1] https://docs.broadcom.com/docs/PEX_8606_AIC_RDK_HRM_v1.3_06Aug10.pdf
+> > >   
+> > > > Normally PERST# signal is used to reset endpoint card, other end of PCIe
+> > > > link and so PERST# signal should not affect PCIe Root Port at all.  
+> > > 
+> > > That's not the case, as PEX 8606 needs to complete its reset sequence
+> > > for the rest of the devices to be visible. If the wait time is reduced
+> > > or removed, the devices behind it won't be detected.  
+> > 
+> > These pieces of information should go into the commit log (or I can add
+> > a Link: tag to this discussion) - it is fundamental to understand these
+> > changes.
+> > 
+> > I believe we can merge this series but we have to document this
+> > discussion appropriately.
+> 
+> IMO, the best is to add a Link: to the discussion:
+> 
+> Link: https://lore.kernel.org/all/9a365cffe5af9ec5a1f79638968c3a2efa979b65.1634622716.git.mchehab+huawei@kernel.org/
+> 
+> But if you prefer otherwise and want me to re-submit the series, please
+> let me know.
 
-> On Tue, Oct 26, 2021 at 06:32:08PM +0200, Cornelia Huck wrote:
->> On Tue, Oct 26 2021, Leon Romanovsky <leonro@nvidia.com> wrote:
->> 
->> > On Tue, Oct 26, 2021 at 05:32:19PM +0200, Cornelia Huck wrote:
->> >> On Tue, Oct 26 2021, Yishai Hadas <yishaih@nvidia.com> wrote:
->> >> 
->> >> > Fixed the non-compiled macro VFIO_DEVICE_STATE_SET_ERROR (i.e. SATE
->> >> > instead of STATE).
->> >> >
->> >> > Fixes: a8a24f3f6e38 ("vfio: UAPI for migration interface for device state")
->> >> > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
->> >> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
->> >> 
->> >> This s-o-b chain looks weird; your s-o-b always needs to be last.
->> >
->> > It is not such clear as it sounds.
->> >
->> > Yishai is author of this patch and at some point of time, this patch passed
->> > through my tree and it will pass again, when we will merge it. This is why
->> > my SOB is last and not Yishai's.
->> 
->> Strictly speaking, the chain should be Yishai->you->Yishai and you'd add
->> your s-o-b again when you pick it. Yeah, that looks like overkill; the
->> current state just looks weird to me, but I'll shut up now.
->
-> We will get checkpatch warning about duplicated signature.
->
-> WARNING: Duplicate signature
-> #11:
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> total: 0 errors, 1 warnings, 86 lines checked
+I will squash this patch with the previous one (that describes
+the bridge PERST# requirements) and add the Link above to the
+commit log.
 
-...this looks more like a bug in checkpatch to me, as it is possible for
-a patch to go through the same person twice.
-
-But I'll really shut up now.
-
+Lorenzo
