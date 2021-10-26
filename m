@@ -2,277 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B183F43B30A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 15:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86ED543B31D
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 15:22:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233612AbhJZNRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 09:17:18 -0400
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:34669 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230324AbhJZNRS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 09:17:18 -0400
-Received: by mail-oi1-f172.google.com with SMTP id w193so847424oie.1;
-        Tue, 26 Oct 2021 06:14:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cPN8L2jX6Nco49lUubWlVKZG7LZSldfvtFfxWeGXbNA=;
-        b=bUzhTgrQ5Rdk49QBX9hpGaZgPmPga3eMqCyf6VrvD5Ufc3OehEAyqC9stGglsg/A3q
-         xI4/CnKBx24pBaFdVyN1H5EFWKVLltRmBVuyDPnLLCCouNYD9vOPUe9AeTwAimUhDFVB
-         /MNnlgKH1Xnq+KbYZhY/f6KYb0rHZyrsP6/wPzs/tEsgroOvW984a+053koIvHJZo01M
-         2decbRPQq1AFA+xHGEA6RQRSePUfOfffP6siJgsbeoN9fACG03IEeAcumDkkL8S06ZbD
-         A6/e+ktJTQLy1g3PofPfnXf0+tBDDnONxvmgynLGYlvp0Zaaq3ERI0Gn0FXOeiCFJlDG
-         ka5w==
-X-Gm-Message-State: AOAM533JnqO+aHayJ+U34X+xygcD0QZSwkTvK8QDGBCmTcTMBQhwVRQv
-        JdpCnCXaTuzusg/Yp6zqNLIgwvVcgXQeB2w12cn+1HTk
-X-Google-Smtp-Source: ABdhPJxHStW+YF/bxjfqNV/7TMKIMqO+XToazdK7i4TI1rcKW4Not9y8Zrrin3yOcL4dprCRT3f0PywukIPFA9L2kZY=
-X-Received: by 2002:a05:6808:1286:: with SMTP id a6mr24500110oiw.51.1635254094204;
- Tue, 26 Oct 2021 06:14:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <YW5OdIyFkTYo0h3W@Dennis-MBP.local>
-In-Reply-To: <YW5OdIyFkTYo0h3W@Dennis-MBP.local>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 Oct 2021 15:14:37 +0200
-Message-ID: <CAJZ5v0g=+_fATmSrLWiTirmr0MkihKpy7wp-9aFpWVK_RLhp6g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PCI: MCFG: Consolidate the separate PCI MCFG table
- entry list
-To:     Xuesong Chen <xuesong.chen@linux.alibaba.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        id S236181AbhJZNZC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 09:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231178AbhJZNZC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 09:25:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5BFFD60EB9;
+        Tue, 26 Oct 2021 13:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635254558;
+        bh=/KUvPPMxXbje75GPUHbAEgXl10p2kIaA2/60Ct5288Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Il4ZnHvswG9jP2UhgtSN2YBo33pc5SfnkXbebj0HsWWUfdPGbCOO151mZITcEWbDZ
+         P7SW+LVyLKNJ+hk4UK+cvIkXYphawRlpRNikKI3fpNgKYz3TCHl9JkCj0h0NzLKRhA
+         Z3LmxpjL8WrdBV8obJPkJp3Beawjl8Mar/kA8avpECEOYL+V486MPO/Da32WNPvCj3
+         YmuerP4XTW7Qzx6tua2wrc48360k0XCjMPRIliWZ3LEYFCjGrMndnAWzTZ+VJK1g2g
+         qiaYxEMY8W9SQNXaeBWAQqfBNnPzX97NLSS27rVk3/4ErG0b3lfe0pmdwT4iw6rHOC
+         qGoAJhp1NUD+Q==
+Date:   Tue, 26 Oct 2021 14:22:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Rob Herring <robh@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 4/6] PCI: brcmstb: Add control of subdevice voltage
+ regulators
+Message-ID: <YXgBGWCOF3LVXcuC@sirena.org.uk>
+References: <20211022140714.28767-1-jim2101024@gmail.com>
+ <20211022140714.28767-5-jim2101024@gmail.com>
+ <YXLLRLwMG7nEwQoi@sirena.org.uk>
+ <CA+-6iNzmkB5sUL6aqA6229BhxBhF3RKvGsLh0JCYQwP_2wSGaQ@mail.gmail.com>
+ <YXMVSVpeC1Kqsg5x@sirena.org.uk>
+ <CA+-6iNxQAekCQTJKE5L7LO6QF+UC6xnyE=XVq_7z3=4hp8ASXQ@mail.gmail.com>
+ <YXbF+VxZKkiHEu9c@sirena.org.uk>
+ <2eec973e-e9f0-1ef7-a090-734dab5db815@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gDFq9v3imEYJoQxi"
+Content-Disposition: inline
+In-Reply-To: <2eec973e-e9f0-1ef7-a090-734dab5db815@gmail.com>
+X-Cookie: Times approximate.
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 6:50 AM Xuesong Chen
-<xuesong.chen@linux.alibaba.com> wrote:
->
-> The PCI MCFG entry list is discrete on x86 and other arches like ARM64
-> in current implementation, this list variable can be consolidated for
-> unnecessary duplication and other purposes, for example, we can remove
-> some of the arch-specific codes in the APEI/EINJ module and re-implement
-> it in a more common arch-agnostic way.
->
-> To reduce the redundancy, it:
->   - Moves the "struct pci_mmcfg_region" definition from
->     arch/x86/include/asm/pci_x86.h to include/linux/pci.h, where it
->     can be shared across arches.
->
->   - Moves pci_mmcfg_list (a list of pci_mmcfg_region structs) from
->     arch/x86/pci/mmconfig-shared.c to drivers/pci/pci.c, where it can
->     be shared across arches.
->
->   - On x86 (which does not enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
->     built in arch/x86/pci/mmconfig-shared.c as before.
->
->   - Removes the "struct mcfg_entry" from drivers/acpi/pci_mcfg.c.
->
->   - Replaces pci_mcfg_list (previously a list of mcfg_entry structs)
->     in drivers/acpi/pci_mcfg.c with the newly-shared pci_mmcfg_list (a
->     list of pci_mmcfg_region structs).
->
->   - On ARM64 (which does enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
->     built in drivers/acpi/pci_mcfg.c.
->
-> Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-I'm guessing that I'm expected to pick up this one?
+--gDFq9v3imEYJoQxi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Rafael. J. Wysocki <rafael@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Tomasz Nowicki <tn@semihalf.com>
-> ---
->  arch/x86/include/asm/pci_x86.h | 17 +----------------
->  arch/x86/pci/mmconfig-shared.c |  2 --
->  drivers/acpi/pci_mcfg.c        | 34 +++++++++++++---------------------
->  drivers/pci/pci.c              |  2 ++
->  include/linux/pci.h            | 17 +++++++++++++++++
->  5 files changed, 33 insertions(+), 39 deletions(-)
->
-> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-> index 490411d..1f4257c 100644
-> --- a/arch/x86/include/asm/pci_x86.h
-> +++ b/arch/x86/include/asm/pci_x86.h
-> @@ -146,20 +146,7 @@ static inline int  __init pci_acpi_init(void)
->  extern void pcibios_fixup_irqs(void);
->
->  /* pci-mmconfig.c */
-> -
-> -/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
-> -#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
-> -
-> -struct pci_mmcfg_region {
-> -       struct list_head list;
-> -       struct resource res;
-> -       u64 address;
-> -       char __iomem *virt;
-> -       u16 segment;
-> -       u8 start_bus;
-> -       u8 end_bus;
-> -       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
-> -};
-> +struct pci_mmcfg_region;
->
->  extern int __init pci_mmcfg_arch_init(void);
->  extern void __init pci_mmcfg_arch_free(void);
-> @@ -174,8 +161,6 @@ extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
->
->  extern struct list_head pci_mmcfg_list;
->
-> -#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
-> -
->  /*
->   * On AMD Fam10h CPUs, all PCI MMIO configuration space accesses must use
->   * %eax.  No other source or target registers may be used.  The following
-> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> index 758cbfe..0b961fe6 100644
-> --- a/arch/x86/pci/mmconfig-shared.c
-> +++ b/arch/x86/pci/mmconfig-shared.c
-> @@ -31,8 +31,6 @@
->  static DEFINE_MUTEX(pci_mmcfg_lock);
->  #define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
->
-> -LIST_HEAD(pci_mmcfg_list);
-> -
->  static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
->  {
->         if (cfg->res.parent)
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index 53cab97..d9506b0 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -13,14 +13,7 @@
->  #include <linux/pci-acpi.h>
->  #include <linux/pci-ecam.h>
->
-> -/* Structure to hold entries from the MCFG table */
-> -struct mcfg_entry {
-> -       struct list_head        list;
-> -       phys_addr_t             addr;
-> -       u16                     segment;
-> -       u8                      bus_start;
-> -       u8                      bus_end;
-> -};
-> +extern struct list_head pci_mmcfg_list;
->
->  #ifdef CONFIG_PCI_QUIRKS
->  struct mcfg_fixup {
-> @@ -214,16 +207,13 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
->  #endif
->  }
->
-> -/* List to save MCFG entries */
-> -static LIST_HEAD(pci_mcfg_list);
-> -
->  int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
->                     const struct pci_ecam_ops **ecam_ops)
->  {
->         const struct pci_ecam_ops *ops = &pci_generic_ecam_ops;
->         struct resource *bus_res = &root->secondary;
->         u16 seg = root->segment;
-> -       struct mcfg_entry *e;
-> +       struct pci_mmcfg_region *e;
->         struct resource res;
->
->         /* Use address from _CBA if present, otherwise lookup MCFG */
-> @@ -233,10 +223,10 @@ int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
->         /*
->          * We expect the range in bus_res in the coverage of MCFG bus range.
->          */
-> -       list_for_each_entry(e, &pci_mcfg_list, list) {
-> -               if (e->segment == seg && e->bus_start <= bus_res->start &&
-> -                   e->bus_end >= bus_res->end) {
-> -                       root->mcfg_addr = e->addr;
-> +       list_for_each_entry(e, &pci_mmcfg_list, list) {
-> +               if (e->segment == seg && e->start_bus <= bus_res->start &&
-> +                   e->end_bus >= bus_res->end) {
-> +                       root->mcfg_addr = e->address;
->                 }
->
->         }
-> @@ -268,7 +258,7 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
->  {
->         struct acpi_table_mcfg *mcfg;
->         struct acpi_mcfg_allocation *mptr;
-> -       struct mcfg_entry *e, *arr;
-> +       struct pci_mmcfg_region *e, *arr;
->         int i, n;
->
->         if (header->length < sizeof(struct acpi_table_mcfg))
-> @@ -285,10 +275,12 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
->
->         for (i = 0, e = arr; i < n; i++, mptr++, e++) {
->                 e->segment = mptr->pci_segment;
-> -               e->addr =  mptr->address;
-> -               e->bus_start = mptr->start_bus_number;
-> -               e->bus_end = mptr->end_bus_number;
-> -               list_add(&e->list, &pci_mcfg_list);
-> +               e->address =  mptr->address;
-> +               e->start_bus = mptr->start_bus_number;
-> +               e->end_bus = mptr->end_bus_number;
-> +               e->res.start = e->address + PCI_MMCFG_BUS_OFFSET(e->start_bus);
-> +               e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
-> +               list_add(&e->list, &pci_mmcfg_list);
->         }
->
->  #ifdef CONFIG_PCI_QUIRKS
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ce2ab62..899004e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -47,6 +47,8 @@
->  int pci_pci_problems;
->  EXPORT_SYMBOL(pci_pci_problems);
->
-> +LIST_HEAD(pci_mmcfg_list);
-> +
->  unsigned int pci_pm_d3hot_delay;
->
->  static void pci_pme_list_scan(struct work_struct *work);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6f..71e4c06 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -55,6 +55,23 @@
->  #define PCI_RESET_PROBE                true
->  #define PCI_RESET_DO_RESET     false
->
-> +#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
-> +
-> +/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
-> +#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
-> +
-> +/* pci mcfg region */
-> +struct pci_mmcfg_region {
-> +       struct list_head list;
-> +       struct resource res;
-> +       u64 address;
-> +       char __iomem *virt;
-> +       u16 segment;
-> +       u8 start_bus;
-> +       u8 end_bus;
-> +       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
-> +};
-> +
->  /*
->   * The PCI interface treats multi-function devices as independent
->   * devices.  The slot/function address of each device is encoded
-> --
-> 1.8.3.1
->
+On Mon, Oct 25, 2021 at 03:04:34PM -0700, Florian Fainelli wrote:
+> On 10/25/21 7:58 AM, Mark Brown wrote:
+
+> > Other vendors have plenty of variation in board design yet we still have
+> > device trees that describe the hardware, I can't see why these systems
+> > should be so different.  It is entirely normal for system integrators to
+> > collaborate on this and even upstream their own code, this happens all
+> > the time, there is no need for everything to be implemented directly the
+> > SoC vendor.
+
+> This is all well and good and there is no disagreement here that it
+> should just be that way but it does not reflect what Jim and I are
+> confronted with on a daily basis. We work in a tightly controlled
+> environment using a waterfall approach, whatever we come up with as a
+> SoC vendor gets used usually without further modification by the OEMs,
+> when OEMs do change things we have no visibility into anyway.
+
+This doesn't really sound terribly unusual frankly, which means it
+shouldn't be insurmountable.  It also doesn't sound like a great
+approach to base ABIs around.
+
+> We have a boot loader that goes into great lengths to tailor the FDT
+> blob passed to the kernel to account for board-specific variations, PCIe
+> voltage regulators being just one of those variations. This is usually
+> how we quirk and deal with any board specific details, so I fail to
+> understand what you mean by "quirks that match a common pattern".
+
+If more than one board needs the same accomodation, for example if it's
+common for a reset line to be GPIO controlled, then a common property
+could be used by many different boards rather than requiring each
+individual board to have board specific code.  This is on some level
+what most DT properties boil down to.
+
+> Also, I don't believe other vendors are quite as concerned with
+> conserving power as we are, it could be that they are just better at it
+> through different ways, or we have a particular sensitivity to the subject.
+
+I'm fairly sure that for example phone vendors pay a bit of attention to
+power consumption.
+
+> > If there are generic quirks that match a common pattern seen in a lot of
+> > board then properties can be defined for those, this is in fact the
+> > common case.  This is no reason to just shove in some random thing that
+> > doesn't describe the hardware, that's a great way to end up stuck with
+> > an ABI that is fragile and difficult to understand or improve.
+
+> I would argue that at least 2 out of the 4 supplies proposed do describe
+> hardware signals. The latter two are more abstract to say the least,
+> however I believe it is done that way because they are composite
+> supplies controlling both the 12V and 3.3V supplies coming into a PCIe
+> device (Jim is that right?). So how do we call the latter supply then?
+> vpcie12v3v...-supply?
+
+The binding for a consumer should reflect what's going into that
+consumer, this means that if you have 12V and 3.3V supplies then the
+device should have two distinct supplies for that.  The device binding
+should not change based on how those supplies are provided or any
+relationship between the supplies outside the device, there should
+definitely be no reason to define any new supplies for this purpose -
+that would reflect a fundamental misunderstanding of the abstractions in
+the API.
+
+If (as it sounds) you've got systems with two supplies with GPIO enables
+controlled by a single GPIO then you should just describe that directly
+in device tree, this is quite common and there is support in there
+already for identifying and reference counting the shared GPIO in that
+case.
+
+> > Potentially some of these things should be being handled in the bindings
+> > and drivers drivers for the relevant PCI devices rather than in the PCI
+> > controller.
+
+> The description and device tree binding can be and should be in a PCI
+> device binding rather than pci-bus.yaml.
+
+Well, it's a bit of a shared responsibility where the thing being
+provided is a standards conforming connector rather than there being an
+embedded device with much more potential for variation.
+
+> The handling however goes back to the chicken and egg situation that we
+> talked about multiple times before: no supply -> no link UP -> no
+> enumeration -> no PCI device, therefore no driver can have a chance to
+> control the regulator. These are not hotplug capable systems by the way,
+> but even if they were, we would still run into the same problem. Given
+> that most reference boards do have mechanical connectors that people can
+> plug random devices into, we cannot provide a compatible string
+> containing the PCI vendor/device ID ahead of time because we don't know
+> what will be plugged in. In the case of a MCM, we would, but then we
+> only solved about 15% of the boards we need to support, so we have not
+> really progressed much.
+
+I would expect it's possible to make a PCI binding for a standard
+physical layer bus connection as part of the generic PCI bindings, for
+example by using some standard invalid ID for the device ID that can't
+exist in a physical system or just omitting the device ID.  That seems
+like a fairly clear case of being able to describe actual hardware that
+physically exists - you can see the physical socket on the board.
+
+> > In any case whatever gets done needs to be documented in the bindings
+> > documents.
+
+> Is not that what patch #1 does?
+
+It just updated the example, it didn't document any new properties.  The
+standard supplies are documented in the patch to the core standard that
+was referenced so they're fine but not the extra Broadcom specific ones
+that I've raised concerns with.
+
+--gDFq9v3imEYJoQxi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmF4ARgACgkQJNaLcl1U
+h9BKWAf/RCzQQJ5dg/BIDAAzLJyI3ncPdc8Q0uGqF2RUSCAIB5ebCQggNoN+koOG
+T85DeEL9jcnOuSOrKd4wS6/wxVn6hwLjFdO3PnXws6yIh4b/QcD5ZLviXxHrmv1y
+cKcViwvCRdz+rR71nls+fOfyrT6oeNP+NOMM4wQ1ksAG8j447XaCgrObLI8YQp13
+34Cefvn4f/nUs9TILZYv8m4YUbwT4iBrVuaUZOoNuqioRPdMxQ4aFse9C5f45pnA
+qLo/VdjO59OcEQgYEpPju4HOXKx22KGGjgQ9BwABE54s3RxNT5mFAMTQ8dgDIxsd
+oeDwJ7YTCjsl5SUljtOPW9/TJObNNQ==
+=Cpic
+-----END PGP SIGNATURE-----
+
+--gDFq9v3imEYJoQxi--
