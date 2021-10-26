@@ -2,168 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76AF343B482
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 16:42:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E3743B4CA
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 16:51:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236862AbhJZOol (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 10:44:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:24938 "EHLO
+        id S236110AbhJZOxw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 10:53:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60868 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236868AbhJZOok (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 10:44:40 -0400
+        by vger.kernel.org with ESMTP id S235211AbhJZOxv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 10:53:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635259336;
+        s=mimecast20190719; t=1635259887;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KiAOMFFmr8a+X0LpJnX8Lz9+s9dbAEJz1395MTiVhXQ=;
-        b=CCaG1lAwdcQPW12jmqxSqty6dHq9SBiEeQzsMrxhMZyHSDNXkXC1ok/pjudSrDS/nDaEyU
-        vIFpM2oHEqJgKZVWAwkuiTO3S+U93DCJHk6DWIP+J7JT4maHfI3fol2tLqhYo+O4Jhzhe+
-        rMO/EKwOdi1jnMu3aaxFLxShO18wvKI=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-Vkktk5D3OyuYrb4r9DlYNw-1; Tue, 26 Oct 2021 10:42:15 -0400
-X-MC-Unique: Vkktk5D3OyuYrb4r9DlYNw-1
-Received: by mail-oi1-f200.google.com with SMTP id u9-20020a056808000900b0029888aec6fbso2669261oic.6
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 07:42:15 -0700 (PDT)
+        bh=QiyqNdatw3NhazMeX0fRhEhJxRWOX6NB4RyRlxaJtOo=;
+        b=CJTNyxjEjxajVy+bxeJtcR7deSuasp7rw9ea3QnRKTFFXt/7n3ypr7LLifWLxf7VQ/FMnu
+        X9hVwkJXyLO6ihNIzsj94M+WSOZpwS2e9bpBPq2Zsvcqrxqk5QI22sabjDIPwn/0JnpWNH
+        XVGpB6xXaoDqLHa41+K1m9YoJ+RV/ko=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-_xQwcTyqPQ6JjAjvpnfVPg-1; Tue, 26 Oct 2021 10:51:26 -0400
+X-MC-Unique: _xQwcTyqPQ6JjAjvpnfVPg-1
+Received: by mail-wm1-f71.google.com with SMTP id q13-20020a1ca70d000000b0032ca7b7fad6so1100647wme.0
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 07:51:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KiAOMFFmr8a+X0LpJnX8Lz9+s9dbAEJz1395MTiVhXQ=;
-        b=KPoV30cTlGNyYPckZWn16XP2cV3jLAL2hKrRnmExn9/F03XDe5eAfzZ8IsKRba19xT
-         D7MsWoJCb6oYHiCkm0tezd7TFuEurgzfb3Hw6SRykkfFJle3qXSOBPCYpge2CjFb3WJr
-         SJcG163Tdqd+CzxLYvxfdE0fRhZLhZa7FWPiOl49R7afyU3v2SbWzJdQJl1UIgGhf1Hy
-         BYFBGC8Sbhp9thhFV5gs0Ou1zFcIuu/547zTTZFIWVsKvrQXKVQuw3BMsYNPDRrOkJE3
-         ModRO4iriSFXAvBdXduLq5AtdgVhYDwnUazMyErK0Biuc7zOS2CpENlHB7Sg+BS0Lagb
-         pSQw==
-X-Gm-Message-State: AOAM530AqyE4YecwoXogzJHHF8fUEEMV0OVJwduimVFFDBz4sZZ4mJhv
-        K2KmrNT5aLTOz7UUzsgZ73vGeAh2w3O+oGQlM8OoK1hdZ5gcREUf114NF7lcyOxIUuJG/24WDcg
-        V2zqRADMQQodKRmDy7VmO
-X-Received: by 2002:a9d:60dd:: with SMTP id b29mr19581586otk.117.1635259334741;
-        Tue, 26 Oct 2021 07:42:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyST1/XzJTg/5DfqLHtgP59NLmCW5cCEnBVzPC+ydnvMqHEPhvPl7zdCTaW1rzIoB4jsSg6sg==
-X-Received: by 2002:a9d:60dd:: with SMTP id b29mr19581565otk.117.1635259334446;
-        Tue, 26 Oct 2021 07:42:14 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id w12sm3544794oor.42.2021.10.26.07.42.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QiyqNdatw3NhazMeX0fRhEhJxRWOX6NB4RyRlxaJtOo=;
+        b=hOIfUSm4yJCFzfCHVkMI8SDTplZOAJh707p5IRVydeQUbDWyl5ZLkKBzWIgTOoFeE6
+         Tep6lkU4CH0Rc7AYeUR6FVMwTiKQ5gkGbLmP/3n5ZnsbCjmjJRnAPNEnOrVid7auLimi
+         PoiSbtqaycmVxAYOWilKIqDHIVX0CkXQ9VIyjna0DgH8SaSi5cLJ9xZ2lB+cHPrAzp8R
+         GX/aNdJ8uQEbQcf5xyagZINMpPcZlOMa15MtFQv8xJPA1kgNXD46110zMFzpTDExN7J/
+         8PZS9/PYWRpeH3EoyhRxGzc9jGXViScP5stTAzDKORSao+h36NpWuJ7Nb4SYIcTBgxK+
+         B8jQ==
+X-Gm-Message-State: AOAM5328WZzBVLs5TWk659+wyJxGjLk6eYfbryIwmJ3skpce94YawTI9
+        hscgwF08VZQmJunzXw9aAr60kZo5J9iNJwOoGwUAmdj5+N+iMrl6Tk+jJz4aNrlfN7pLOYEUCYE
+        JLauO/u8xaRvAzLzrKj2g
+X-Received: by 2002:a7b:cb56:: with SMTP id v22mr33926995wmj.77.1635259884719;
+        Tue, 26 Oct 2021 07:51:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmzKviO2aTymPZ9XHNdwt+tg8/6pDTBfRAG1Cu7P2+mHxfgMMP94xGln5DErv9xT3PJAICxw==
+X-Received: by 2002:a7b:cb56:: with SMTP id v22mr33926975wmj.77.1635259884518;
+        Tue, 26 Oct 2021 07:51:24 -0700 (PDT)
+Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
+        by smtp.gmail.com with ESMTPSA id n15sm2162091wmq.3.2021.10.26.07.51.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Oct 2021 07:42:14 -0700 (PDT)
-Date:   Tue, 26 Oct 2021 08:42:12 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        Tue, 26 Oct 2021 07:51:23 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 15:51:21 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, bhelgaas@google.com,
         saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
         netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
         kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+        Cornelia Huck <cohuck@redhat.com>
 Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
  for mlx5 devices
-Message-ID: <20211026084212.36b0142c.alex.williamson@redhat.com>
-In-Reply-To: <20211025145646.GX2744544@nvidia.com>
-References: <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
-        <20211019230431.GA2744544@nvidia.com>
-        <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
-        <20211020105230.524e2149.alex.williamson@redhat.com>
-        <20211020185919.GH2744544@nvidia.com>
-        <20211020150709.7cff2066.alex.williamson@redhat.com>
-        <87o87isovr.fsf@redhat.com>
-        <20211021154729.0e166e67.alex.williamson@redhat.com>
-        <20211025122938.GR2744544@nvidia.com>
-        <20211025082857.4baa4794.alex.williamson@redhat.com>
-        <20211025145646.GX2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Message-ID: <YXgV6ehhsSlydiEl@work-vm>
+References: <20211019124352.74c3b6ba.alex.williamson@redhat.com>
+ <20211019192328.GZ2744544@nvidia.com>
+ <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
+ <20211019230431.GA2744544@nvidia.com>
+ <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
+ <20211020105230.524e2149.alex.williamson@redhat.com>
+ <YXbceaVo0q6hOesg@work-vm>
+ <20211025115535.49978053.alex.williamson@redhat.com>
+ <YXb7wejD1qckNrhC@work-vm>
+ <20211026082920.1f302a45.alex.williamson@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211026082920.1f302a45.alex.williamson@redhat.com>
+User-Agent: Mutt/2.0.7 (2021-05-04)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 25 Oct 2021 11:56:46 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+* Alex Williamson (alex.williamson@redhat.com) wrote:
+> On Mon, 25 Oct 2021 19:47:29 +0100
+> "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> 
+> > * Alex Williamson (alex.williamson@redhat.com) wrote:
+> > > On Mon, 25 Oct 2021 17:34:01 +0100
+> > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> > >   
+> > > > * Alex Williamson (alex.williamson@redhat.com) wrote:  
+> > > > > [Cc +dgilbert, +cohuck]
+> > > > > 
+> > > > > On Wed, 20 Oct 2021 11:28:04 +0300
+> > > > > Yishai Hadas <yishaih@nvidia.com> wrote:
+> > > > >     
 
-> On Mon, Oct 25, 2021 at 08:28:57AM -0600, Alex Williamson wrote:
-> > On Mon, 25 Oct 2021 09:29:38 -0300
-> > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >   
-> > > On Thu, Oct 21, 2021 at 03:47:29PM -0600, Alex Williamson wrote:  
-> > > > I recall that we previously suggested a very strict interpretation of
-> > > > clearing the _RUNNING bit, but again I'm questioning if that's a real
-> > > > requirement or simply a nice-to-have feature for some undefined
-> > > > debugging capability.  In raising the p2p DMA issue, we can see that a
-> > > > hard stop independent of other devices is not really practical but I
-> > > > also don't see that introducing a new state bit solves this problem any
-> > > > more elegantly than proposed here.  Thanks,    
-> > > 
-> > > I still disagree with this - the level of 'frozenness' of a device is
-> > > something that belongs in the defined state exposed to userspace, not
-> > > as a hidden internal state that userspace can't see.
-> > > 
-> > > It makes the state transitions asymmetric between suspend/resume as
-> > > resume does have a defined uAPI state for each level of frozeness and
-> > > suspend does not.
-> > > 
-> > > With the extra bit resume does:
-> > >   
-> > >   0000, 0100, 1000, 0001
-> > > 
-> > > And suspend does:
-> > > 
-> > >   0001, 1001, 0010, 0000
-> > > 
-> > > However, without the extra bit suspend is only
-> > >   
-> > >   001,  010, 000
-> > > 
-> > > With hidden state inside the 010  
+<snip>
+
+> > > In a way.  We're essentially recognizing that we cannot stop a single
+> > > device in isolation of others that might participate in peer-to-peer
+> > > DMA with that device, so we need to make a pass to quiesce each device
+> > > before we can ask the device to fully stop.  This new device state bit
+> > > is meant to be that quiescent point, devices can accept incoming DMA
+> > > but should cease to generate any.  Once all device are quiesced then we
+> > > can safely stop them.  
 > > 
-> > And what is the device supposed to do if it receives a DMA while in
-> > this strictly defined stopped state?  If it generates an unsupported
-> > request, that can trigger a fatal platform error.    
+> > It may need some further refinement; for example in that quiesed state
+> > do counters still tick? will a NIC still respond to packets that don't
+> > get forwarded to the host?
 > 
-> I don't see that this question changes anything, we always have a
-> state where the device is unable to respond to incoming DMA.
+> I'd think no, but I imagine it's largely device specific to what extent
+> a device can be fully halted yet minimally handle incoming DMA.
 
-I think that depends on the device implementation.  If all devices can
-receive incoming DMA, but all devices are also quiesced not to send
-DMA, there's not necessarily a need to put the device in a state where
-it errors TLPs.  This ventures into conversations about why assigning
-VFs can be considered safer than assigning PFs, users cannot disable
-memory space of VFs and therefore cannot generate URs on writes to
-MMIO, which may generate fatal faults on some platforms.  If we create
-a uAPI that requires dropping TLPs, then we provide userspace with a
-means to specifically generate those faults.
+That's what worries me; we're adding a new state here as we understand
+more about trying to implement a device; but it seems that we need to
+nail something down as to what the state means.
 
-> In all cases entry to this state is triggered only by user space
-> action, if userspace does the ioctls in the wrong order then it will
-> hit it.
-
-And if userspace does not quiesce DMA and gets an intermediate device
-state, that's a failure to follow the protocol.
-
-> > If it silently drops the DMA, then we have data loss.  We're
-> > defining a catch-22 scenario for drivers versus placing the onus on
-> > the user to quiesce the set of devices in order to consider the
-> > migration status as valid.    
+> > Note I still think you need a way to know when you have actually reached
+> > these states; setting a bit in a register is asking nicely for a device
+> > to go into a state - has it got there?
 > 
-> The device should error the TLP.
+> It's more than asking nicely, we define the device_state bits as
+> synchronous, the device needs to enter the state before returning from
+> the write operation or return an errno.
 
-That's a bit of a landmine as outlined above.
- 
-> Userspace must globally fence access to the device before it enters
-> the device into the state where it errors TLPs.
+I don't see how it can be synchronous in practice; can it really wait to
+complete if it has to take many cycles to finish off an inflight DMA
+before it transitions?
+
+> > > > Now, you could be a *little* more sloppy; you could allow a device carry
+> > > > on doing stuff purely with it's own internal state up until the point
+> > > > it needs to serialise; but that would have to be strictly internal state
+> > > > only - if it can change any other devices state (or issue an interrupt,
+> > > > change RAM etc) then you get into ordering issues on the serialisation
+> > > > of multiple devices.  
+> > > 
+> > > Yep, that's the proposal that doesn't require a uAPI change, we loosen
+> > > the definition of stopped to mean the device can no longer generate DMA
+> > > or interrupts and all internal processing outside or responding to
+> > > incoming DMA should halt (essentially the same as the new quiescent
+> > > state above).  Once all devices are in this state, there should be no
+> > > incoming DMA and we can safely collect per device migration data.  If
+> > > state changes occur beyond the point in time where userspace has
+> > > initiated the collection of migration data, drivers have options for
+> > > generating errors when userspace consumes that data.  
+> > 
+> > How do you know that last device has actually gone into that state?
 > 
-> This is also why I don't like it being so transparent as it is
-> something userspace needs to care about - especially if the HW cannot
-> support such a thing, if we intend to allow that.
+> Each device cannot, the burden is on the user to make sure all devices
+> are stopped before proceeding to read migration data.
 
-Userspace does need to care, but userspace's concern over this should
-not be able to compromise the platform and therefore making VF
-assignment more susceptible to fatal error conditions to comply with a
-migration uAPI is troublesome for me.  Thanks,
+Yeh this really ties to the previous question; if it's synchronous
+you're OK.
 
-Alex
+> > Also be careful; it feels much more delicate where something might
+> > accidentally start a transaction.
+> 
+> This sounds like a discussion of theoretically broken drivers.  Like
+> the above device_state, drivers still have a synchronization point when
+> the user reads the pending_bytes field to initiate retrieving the
+> device state.  If the implementation requires the device to be fully
+> stopped to snapshot the device state to provide to the user, this is
+> where that would happen.  Thanks,
+
+Yes, but I worry that some ways of definining it are harder to get right
+in drivers, so less likely to be theoretical.
+
+Dave
+
+> Alex
+> 
+-- 
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
 
