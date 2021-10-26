@@ -2,123 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF07343BD11
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 00:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C171643BD21
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 00:21:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236315AbhJZWO7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 18:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43176 "EHLO mail.kernel.org"
+        id S239905AbhJZWYO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 18:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235479AbhJZWOy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Oct 2021 18:14:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4EA1A60187;
-        Tue, 26 Oct 2021 22:12:29 +0000 (UTC)
+        id S235758AbhJZWYN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 18:24:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E2BAD60F02;
+        Tue, 26 Oct 2021 22:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635286349;
-        bh=f0InZtaTABxRgkFDwD56MVn+oTu5irhQQZAi/3/msj0=;
+        s=k20201202; t=1635286909;
+        bh=Ti9ROmEWB++H0DVAD/4QLbK3bMpQv6DTgwhjoKZgM3Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eVfyP8FqtA1n8D5OWXStSgLXfcOCjjhtfYG0iGz3qdEhj5eWlVY36hYXHgbrnGk1c
-         /wGfKE4R39glaSVOjwEltUtX8dtkN/LNJ2rxHvpYIsEijHp8IlV8CYby008Gpf7hu3
-         WsCX48aQGbKxfz6bBLBCHYjrZwUXVaCRUmoaMVqiV3PeRXiiSTrWG0X+UJKC/Ve8+N
-         L/vw6E/9+3zM7zULxQ1jCW4OZ7OUqGNdxJPXT/P+JbNOgnnN9kSo/HrOAGtOVYqPd/
-         FPgvXv1OZ6gumSOki3100RYLSrH4qh84lRoH5EZubf1On6j3YJHDiWJGY9Uyp65/DA
-         Ouq0E0VNMuwrg==
-Date:   Tue, 26 Oct 2021 17:12:27 -0500
+        b=PcI2FaCRlJY+KWzLUhYhOcAar43cbCPaiPFaGHtK9GQiTU5oUu5Cg99gBUjLkKFDY
+         tsN2yWVZsuWG3Ldj/Eqxztu7tqHfh7OuGgEb9ljzY1EB3AiFARjrB2lR/PhwkmxHaY
+         istohXv3cDHFL4Oz43TW05RJHlKH4+npN5TIF+kxSxOwART2KIjH3FajjF63TN3Iq5
+         7pIc3qIGTRh/KW7iiKIHsUTid1qRNbfxJJbd5S8tasOWHQ5fLcLUvwQp0l/7lM9KTV
+         uxMaXqC+YxKabTJKA8IM7Q9sguYdy/4/br4qcOeCjOKvp2Tu/6EIjzwfrUpOtrvaV7
+         ghfJpn4scpUdg==
+Date:   Tue, 26 Oct 2021 17:21:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Slivka, Danijel" <Danijel.Slivka@amd.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH] PCI: Fix accessing freed memory in
- pci_remove_resource_files
-Message-ID: <20211026221227.GA172193@bhelgaas>
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [RESEND v2 4/5] PCI: imx6: Fix the clock reference handling
+ unbalance when link never came up
+Message-ID: <20211026222147.GA173173@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210510225733.GA2307664@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB867639048E1F4F0AAC2347048C839@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 10, 2021 at 05:57:33PM -0500, Bjorn Helgaas wrote:
-> On Mon, May 10, 2021 at 03:02:45PM +0000, Slivka, Danijel wrote:
-> > Hi Bjorn,
+On Mon, Oct 25, 2021 at 02:35:36AM +0000, Richard Zhu wrote:
+> > -----Original Message-----
+> > From: Krzysztof Wilczyński <kw@linux.com>
+> > Sent: Saturday, October 23, 2021 5:54 PM
+> > To: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>; l.stach@pengutronix.de;
+> > bhelgaas@google.com; lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org;
+> > dl-linux-imx <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org;
+> > linux-kernel@vger.kernel.org; kernel@pengutronix.de
+> > Subject: Re: [RESEND v2 4/5] PCI: imx6: Fix the clock reference handling
+> > unbalance when link never came up
+
+> > I hope you don't mind me asking, but how is an empty default case in the
+> > switch statement helping IMX6Q and IMX6QP?  What does it achieve for
+> > these two controllers specifically?
 > > 
-> > Yes, I get segmentation fault on unloading custom module during the
-> > check of error handling case.
-> >
-> > There is no directly visible access to res_attr fields, as you
-> > mentioned, other than the one in a call chain after a check in
-> > pci_remove_resource_files() which seems to cause the issue
-> > (accessing name).
-> >
-> > Load and unload module will invoke pci_enable_sriov() and
-> > disable_pci_sriov() respectively that are both having a call of
-> > pci_remove_resource_files() in call chain.
-> >
-> > In that function existing check is not behaving as expected since
-> > memory is freed but pointers left dangling. 
-> >
-> > Below is call trace and detail description. 
-> > 
-> > During loading of module pci_enable_sriov() is called, I have
-> > following invoking sequence:
-> >
-> > device_create_file
-> > pci_create_capabilities_sysfs
-> > pci_create_sysfs_dev_files
-> > pci_bus_add_device
-> > pci_iov_add_virtfn
-> > sriov_enable
-> > pci_enable_sriov
-> 
-> OK.  For anybody following along, this call path changed in v5.13-rc1,
-> so pci_create_capabilities_sysfs() longer exists.  But looking at
-> v5.12, I think the sequence you're seeing is:
-> 
->   pci_create_sysfs_dev_files
->     pci_create_capabilities_sysfs
->       retval = device_create_file(&dev->dev, &dev_attr_reset)
->       return retval		# I guess this what failed, right?
->     if (retval) goto err_rom_file
->     err_rom_file:
->     ...
->     pci_remove_resource_files
->       sysfs_remove_bin_file(pdev->res_attr[i])
->       kfree(pdev->res_attr[i])
->       # pdev->res_attr[i] not set to NULL in v5.12
-> 
-> Later, on module unload, we have this sequence:
-> 
->   pci_disable_sriov
->     sriov_disable
->       sriov_del_vfs
->         pci_iov_remove_virtfn
->           pci_stop_and_remove_bus_device
->             pci_stop_bus_device
->               pci_stop_dev
->                 pci_remove_sysfs_dev_files
->                   pci_remove_resource_files
->                     sysfs_remove_bin_file(pdev->res_attr[i])
->                     # pdev->res_attr[i] points to a freed object
-> 
-> Definitely seems like a problem.  Hmmm.  I'm not really a fan of
-> checking the pointer to see whether it's been freed.  That seems like
-> a band-aid.
+> [Richard Zhu] Never mind. 😊.
+> There might be following building warning if the "default:break" is removed.
+> "  CC      drivers/pci/controller/dwc/pci-imx6.o
+> drivers/pci/controller/dwc/pci-imx6.c: In function ‘imx6_pcie_clk_disable’:
+> drivers/pci/controller/dwc/pci-imx6.c:527:2: warning: enumeration value ‘IMX6Q’ not handled in switch [-Wswitch]
+>   527 |  switch (imx6_pcie->drvdata->variant) {
+>       |  ^~~~~~
+> drivers/pci/controller/dwc/pci-imx6.c:527:2: warning: enumeration value ‘IMX6QP’ not handled in switch [-Wswitch]"
 
-This patch does:
+Sorry, I didn't see this until after asking the same question as
+Krzysztof.
 
-  +			pdev->res_attr[i] = NULL;
-  +			pdev->res_attr_wc[i] = NULL;
-
-which I think essentially relies on the fact that kfree(NULL) is a
-no-op.
-
-I'm going to drop this for now because I don't want to rely on that.
-I'd rather avoid doing the kfree() altogether.
-
-IIRC this happens when device_create_file() fails, and it likely fails
-because of a race when creating the sysfs files, which would explain
-why we don't see lots of reports of this.
+Sigh.  That's a really annoying gcc warning, but I guess I won't fight
+it ;)
 
 Bjorn
