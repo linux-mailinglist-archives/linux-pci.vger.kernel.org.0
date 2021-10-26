@@ -2,180 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20ECB43BC5F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 23:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60FD343BC63
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 23:28:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239598AbhJZVaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 17:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239576AbhJZVaK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 17:30:10 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9490AC061570
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 14:27:45 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 131-20020a1c0489000000b0032cca9883b5so3130517wme.0
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 14:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7BSGmDT4IT0OUdG2TZ/MzDANj3hoY1OlScqOboO0Qhw=;
-        b=WZRxOw049q3Fx2iR3QUGKrLSKHzSP2D+0fTkEtSQb7K42EgNzs3DXjXYToOYAahTK5
-         M9o3wZh+Pgfpp19W+gvdt/bfxeG5B7zK88RbykUWlBte9FiaHf2GG2i2xY285bA4Nkv/
-         Z7E4TmloJo80l2n6UaLf66Q5BMufYekR1xdjo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7BSGmDT4IT0OUdG2TZ/MzDANj3hoY1OlScqOboO0Qhw=;
-        b=0oGd0RszmzDqGJnu5Ub5Ma+NWpk/cll6auCP0P/f+D4Qb1nTzMrsi28XqILQX03jUk
-         g9zfbVEnO6AuHXW4pJUALm51D0xX2Yf9GHWWJFn+ARg6HwMQc/g3qrHWxmXjX26Ztgxl
-         0w8+AXfWUJ/EB2P2jxAS4FCIrCqI80PHp40qXVVaYSPNodNVEWiT2kaUiN74/QketzqN
-         XFBfNNBv4tIJN2q+dMdwllD4IhQjO/lLuSDKJEe2Fju7jH+vrs167ubHuA5oVaVsw6X+
-         Ain43lvt9Z14K0ABBjTXqx9EedGgPIOAO5xeFhPZpsWlajl+kYlTXjwoXFWj18oKBlnU
-         fnHw==
-X-Gm-Message-State: AOAM533leH4U6Lm8xlc7zTMUk6/rp9ZdW3YlvCcxZAEf3npMcVzAhcRK
-        TF3rdIsbPTYdURMDYxVIgjvAPjBntABeU1Cdvq5y2Q==
-X-Google-Smtp-Source: ABdhPJzSeyu2KoXgWREowvWJB3JrbiTRS4JmQkoMKCywaoYbUrxgjdhV4pnrxU7UwlvIMMdCg+GOtPymbOmJcbiMnKk=
-X-Received: by 2002:a7b:cc11:: with SMTP id f17mr1358358wmh.122.1635283664104;
- Tue, 26 Oct 2021 14:27:44 -0700 (PDT)
+        id S239617AbhJZVbH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 17:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239602AbhJZVbC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 17:31:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 43F1F60EC0;
+        Tue, 26 Oct 2021 21:28:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635283717;
+        bh=vZzMrLdzjVgl45kMa17jL2Gl11RNsZN64ShKJDy3pBs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p69Of5Nb8lT9mXleEJ1X0d8EgyRhLVY3JWLEhq4dV5LvQoLSGE6IjjVmB2ugvbE6q
+         ZnODEE/9YODv39TDzYi9ddPt0Iezj+52j+mUAYF7h/S8QOB7TAajXY8Cb7PPCd3NOd
+         vzqenPmN5PL7CMYm3kW7OP6jW6beiPdgxA3aOiwZKI7CNH0Xl73y3z78MOuHnN8/cz
+         lp8jUuKqJdxQhvbTude5bSSzTNqgfcPOKpisdhNwmhMnGhpedBhE0shRS62wnyjX6z
+         WqaQd+y7y0RXz3gwJfx2tubVHtmrNnTiroOldWkm+Ua7obGjHMsSOAf8q6J38miK/G
+         oNXC3oPQfFd7w==
+Date:   Tue, 26 Oct 2021 16:28:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robin McCorkell <robin@mccorkell.me.uk>
+Cc:     linux-pci@vger.kernel.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Nirmoy Das <nirmoy.das@amd.com>
+Subject: Re: [PATCH] Limit AMD Radeon rebar hack to a single revision
+Message-ID: <20211026212835.GA167500@bhelgaas>
 MIME-Version: 1.0
-References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-2-jim2101024@gmail.com>
- <YXcup7d6ROmmPCuD@robh.at.kernel.org>
-In-Reply-To: <YXcup7d6ROmmPCuD@robh.at.kernel.org>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Tue, 26 Oct 2021 17:27:32 -0400
-Message-ID: <CA+-6iNyxYm4Sf6EsKjmedi8RF-CZKsXs9KXMjaTd_xqnyFL8ZA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211026204639.21178-1-robin@mccorkell.me.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 6:24 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Oct 22, 2021 at 10:06:54AM -0400, Jim Quinlan wrote:
-> > Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
-> > allows optional regulators to be attached and controlled by the PCIe RC
-> > driver.  That being said, this driver searches in the DT subnode (the EP
-> > node, eg pci@0,0) for the regulator property.
-> >
-> > The use of a regulator property in the pcie EP subnode such as
-> > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> > file at
-> >
-> > https://github.com/devicetree-org/dt-schema/pull/54
-> >
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index b9589a0daa5c..fec13e4f6eda 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -154,5 +154,28 @@ examples:
-> >                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-> >                      brcm,enable-ssc;
-> >                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
-> > +
-> > +                    /* PCIe bridge */
->
-> More specifically, the root port.
->
-> > +                    pci@0,0 {
-> > +                            #address-cells = <3>;
-> > +                            #size-cells = <2>;
-> > +                            reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +                            device_type = "pci";
-> > +                            ranges;
-> > +
-> > +                            /* PCIe endpoint */
-> > +                            pci@0,0 {
-> > +                                    device_type = "pci";
->
-> This means this device is a PCI bridge which wouldn't typically be the
-> endpoint. Is that intended?
-Hi Rob,
+[+cc Christian, Nirmoy, authors of 907830b0fc9e]
 
-I'm not sure I understand what you are saying --  do you want the
-innermost node to be named something like ep-pci@0,0, and its
-containing node pci-bridge@0,0?   Or, more likely, I'm missing the
-point.  If my DT subtree is this
+Subject line should look like previous ones for this file, e.g.,
 
-pcie@8b10000 {
-    compatible = "brcm,bcm7278-pcie";
-    ....
-    pci-bridge@0,0 {
-        reg = <0x0 0x0 0x0 0x0 0x0>; /* bus 0 */
-        .....
-        pci-ep@0,0,0 {
-            reg = <0x10000 0x0 0x0 0x0 0x0>;  /* bus 1 */
-            vpcie3v3-supply = <&vreg8>;
-            ...
-        }
-    }
-}
+  88769e64cf99 ("PCI: Add ACS quirk for Pericom PI7C9X2G switches")
+  e3f4bd3462f6 ("PCI: Mark Atheros QCA6174 to avoid bus reset")
+  60b78ed088eb ("PCI: Add AMD GPU multi-function power dependencies")
+  8304a3a199ee ("PCI: Set dma-can-stall for HiSilicon chips")
+  8c09e896cef8 ("PCI: Allow PASID on fake PCIe devices without TLP prefixes")
+  32837d8a8f63 ("PCI: Add ACS quirks for Cavium multi-function devices")
+  e0bff4322092 ("PCI: Increase D3 delay for AMD Renoir/Cezanne XHCI")
+  ...
+  907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 5600 XT Pulse")
 
-then the of_nodes appear to align correctly with the devices:
+Would be good to mention "Sapphire RX 5600 XT Pulse" explicitly since
+that's what 907830b0fc9e said.
 
-$ cd /sys/devices/platform/
-$ cat 8b10000.pcie/of_node/name
-pcie
-$ cat 8b10000.pcie/pci0000:00/0000:00:00.0/of_node
-pci-bridge
-$ cat 8b10000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/of_node/name
-pci-ep
+On Tue, Oct 26, 2021 at 09:46:38PM +0100, Robin McCorkell wrote:
+> A particular RX 5600 device requires a hack in the rebar logic, but the
+> current branch is too general and catches other devices too, breaking
+> them. This patch changes the branch to be more selective on the
+> particular revision.
+> 
+> See also: https://gitlab.freedesktop.org/drm/amd/-/issues/1707
 
-and the EP device works of course.  I've even printed out the
-device_node structure in the EP driver's probe and it is as expected.
-I've noticed that examples such as
-"arch/arm64/boot/dts/nvidia/tegra186.dtsi" have the EP node (eg
-pci@1,0) directly under the
-host bridge DT node (pcie@10003000).  I did try doing that, but the EP
-device's probe is given a NUL device_node pointer.
+There's a lot of legwork in the bug report to bisect this, but no
+explanation of what the root cause turned out to be.
 
-I don't think it matters but our PCIe controllers only have a single root port.
+907830b0fc9e says RX 5600 XT Pulse advertises 256MB-1GB BAR 0 sizes but
+actually supports up to 8GB.
 
-Please advise,
-Jim
+Does this patch mean your RX 5600 XT Pulse supports fewer sizes and 
+advertises them correctly?  And consequently we resize BAR 0 to
+something that's too big, and something fails when we try to access
+the part the isn't actually implemented by the device? 
 
->
-> > +                                    assigned-addresses = <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
-> > +                                    reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +                                    compatible = "pci14e4,1688";
-> > +                                    vpcie3v3-supply = <&vreg7>;
-> > +
-> > +                                    #address-cells = <3>;
-> > +                                    #size-cells = <2>;
-> > +
-> > +                                    ranges;
-> > +                            };
-> > +                    };
-> >              };
-> >      };
-> > --
-> > 2.17.1
-> >
-> >
+It would be useful to attach your "lspci -vv" output to the bug
+report.
+
+> This patch fixes intermittent freezes on other RX 5600 devices where the
+> hack is unnecessary. Credit to all contributors in the linked issue on
+> the AMD bug tracker.
+
+Thanks.  This would need a signed-off-by [1].
+
+We should also include a "Fixes:" line for the commit the problem was
+bisected to, 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire
+RX 5600 XT Pulse"), if I understand correctly, e.g.,
+
+  Fixes: 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 5600 XT Pulse")
+
+And probably a stable tag, since 907830b0fc9e appeared in v5.12, e.g.,
+
+  Cc: stable@vger.kernel.org	# v5.12+
+
+If stable maintainers backported 907830b0fc9e to earlier kernels, as
+it appears they have, it's up to them to watch for fixes to
+907830b0fc9e.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.14#n365
+
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce2ab62b64cf..1fe75243019e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3647,7 +3647,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+>  
+>  	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
+>  	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
+> -	    bar == 0 && cap == 0x7000)
+> +	    pdev->revision == 0xC1 && bar == 0 && cap == 0x7000)
+
+I'd like to get the AMD folks to chime in and confirm that revision
+0xC1 is the only one that requires this quirk.
+
+>  		cap = 0x3f000;
+>  
+>  	return cap >> 4;
+> -- 
+> 2.31.1
+> 
