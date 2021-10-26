@@ -2,116 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E57843AE3F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 10:40:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A83843AE60
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 10:52:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234592AbhJZInM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 04:43:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44721 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234304AbhJZInF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 04:43:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635237640;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xfjmzkgFWA1L7jlAQ35kT9YQRKqeL4m1Zaudd45fWoU=;
-        b=ShYDxjJoAL0zHPJIsgxBqRRUU9KBSnaUelwjo5igSvjC7u1vGPTA839Mf0Vj0QuuuArrxM
-        nEbeLlWQylYMhCRW/NyQ7apSZnEVC+ME225nnTa3G/u4PJ/nqIU3XfEaD710RxJmOoalnF
-        HI42iDZ0vgaf19jm+LozJvu7GXwLB98=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-4D7NVjZMNYS_sLvSWAevdQ-1; Tue, 26 Oct 2021 04:40:38 -0400
-X-MC-Unique: 4D7NVjZMNYS_sLvSWAevdQ-1
-Received: by mail-wr1-f72.google.com with SMTP id g15-20020a5d64ef000000b0016a1331535eso1026121wri.10
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 01:40:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xfjmzkgFWA1L7jlAQ35kT9YQRKqeL4m1Zaudd45fWoU=;
-        b=bZZBsDe/oh7ySHpq1dzB4fhMFVNWv274Rd+jGgNHZLhCovC7HblwsdqWub5CMhhR45
-         j94TDhUCSX4leibYhaDSoCP0a+nwxBc9xdVQ4W/iDaWP5ebkN33IGzwZH0FIMUiIx4c3
-         wj9B0mJNScFLs2cljGp3Tg3odg9Xg6WvHPsa12zzfj9qhIahnVJXecuYovFB5SoYtXEa
-         kjBTxxDWLb4axwg2OejVXv8wF33Y9eocmkp/PB+HhI2l4B/kCXiUueExqB2CAtooQpm9
-         /3y+XyBrLLhkc8K97jWhweql2y6LGeKQBqYT8zLrfVkdO8XY80bHKJ+7I2yY/+ZhzWmm
-         RUeg==
-X-Gm-Message-State: AOAM530wxQG0PS2UxF8ueD+FOqQmH1LY+YacaRbSqSvE7Yt3D9Bkb12P
-        sklNZPqtbQpTp4wxaxNj36UJYrh7WQyviTHM/xEXLpcBPB+irf/zEM8v1JYYEs77l/ZWFbwXBhW
-        iSifGTEU01XcwF0Iot7Xw
-X-Received: by 2002:a5d:6c61:: with SMTP id r1mr17547135wrz.54.1635237637570;
-        Tue, 26 Oct 2021 01:40:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz5GdEzMaju+58GxCQgRDsiOrRrD/jJb7jUfrLgVL9mXDAbPVNJiHhiKtV/0v4Tq6aEaUO8Rg==
-X-Received: by 2002:a5d:6c61:: with SMTP id r1mr17547112wrz.54.1635237637425;
-        Tue, 26 Oct 2021 01:40:37 -0700 (PDT)
-Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
-        by smtp.gmail.com with ESMTPSA id d1sm18850117wrr.72.2021.10.26.01.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Oct 2021 01:40:36 -0700 (PDT)
-Date:   Tue, 26 Oct 2021 09:40:34 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <YXe/AvwQcAxJ/hXQ@work-vm>
-References: <20211019124352.74c3b6ba.alex.williamson@redhat.com>
- <20211019192328.GZ2744544@nvidia.com>
- <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
- <20211019230431.GA2744544@nvidia.com>
- <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
- <20211020105230.524e2149.alex.williamson@redhat.com>
- <YXbceaVo0q6hOesg@work-vm>
- <20211025115535.49978053.alex.williamson@redhat.com>
- <YXb7wejD1qckNrhC@work-vm>
- <20211025191509.GB2744544@nvidia.com>
-MIME-Version: 1.0
+        id S231446AbhJZIyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 04:54:51 -0400
+Received: from mail-eopbgr70101.outbound.protection.outlook.com ([40.107.7.101]:17045
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231404AbhJZIyu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 04:54:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZaR+/2AuGS2x6X7iauBG9tsQN8NMHxNsxGJQ30OXvRhWTNVSmTrSb7Z66ZenBgJhiKrlRLLXQg9Dhpv8k/O/1WdH5vlkxBBrU+B1tu02uK+E+2IPKfsFX7hu5aM2F+BtVoZLocShAimn+3oG84CsbMSdMDsrvNAa8XmQKI/fVAqPSZ1nR1F+v2JgvSDiGjxqFgL5Z3A+XDo9EdnETYvDrG0pbSTSZXvYTn5eSecKqMudV8CLIA9n+llVBn2L1t5XZEMciwfmLp+Fji4ZwAnswrQeAszYnLEK+jNDyWHVgYe3GAzTsm933mVRylgyt6MEfg47xw+0Erij4n3EGUtn/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RnrBUrSicPV5gZjGJ5abugqoUCEUOuzXB9oT7iwHJhc=;
+ b=W4eaprJ2vUVtmjt7V020I/qRQcFvPQc5bLHQh0PzXiEoXBGtXwJztCVJOuOe6Vgv5yRGXSJ2eFQPZfa0cORGunJd2lHknvfwXFoUsPDjco4FxVt8Sy1Xu1QU1m2i+3hv+D0rK61mE38kvZG7qZi9XT32db/PHbOxYmZxJgx/6nzHAR5vL7RiXNfqREe6PfEvGpp5Dt+uSCbSiN9LMfh7roc03s/QHwnKtl2igfmdn33Wem9kIcsq9c8wps2msaPZ+yGXZkW2JDTVPPkWhCqQzLQtNETTlgzocUqZjHoM5xMI3k3VyeOxIo1mIXXxDqTB9934AKvp6htoLDYDgStheQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RnrBUrSicPV5gZjGJ5abugqoUCEUOuzXB9oT7iwHJhc=;
+ b=q1XcOsgcp33jidpGHBFTzWVBvBuWcERJLuaLAVmUXH0G+hKAN2z7CS9IZ+aYLuIanm+G7jwjBNnNiiF+yiOkQKT7DBHtJFBgXTqhHV4VE08n6xCeidkMaN77Iba3Z/ojYSoVoTt1PdGCKYmvoK+kZJn+8ai5qjY1ClvH/6Lm2tE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=toradex.com;
+Received: from DBAPR05MB7445.eurprd05.prod.outlook.com (2603:10a6:10:1a0::8)
+ by DB9PR05MB8298.eurprd05.prod.outlook.com (2603:10a6:10:23d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18; Tue, 26 Oct
+ 2021 08:52:22 +0000
+Received: from DBAPR05MB7445.eurprd05.prod.outlook.com
+ ([fe80::98f8:53ac:8110:c783]) by DBAPR05MB7445.eurprd05.prod.outlook.com
+ ([fe80::98f8:53ac:8110:c783%3]) with mapi id 15.20.4628.020; Tue, 26 Oct 2021
+ 08:52:22 +0000
+Date:   Tue, 26 Oct 2021 10:52:21 +0200
+From:   Francesco Dolcini <francesco.dolcini@toradex.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Francesco Dolcini <francesco.dolcini@toradex.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 3/7] PCI: imx6: Fix the regulator dump when link never
+ came up
+Message-ID: <20211026085221.GA87230@francesco-nb.int.toradex.com>
+References: <1634886750-13861-1-git-send-email-hongxing.zhu@nxp.com>
+ <1634886750-13861-4-git-send-email-hongxing.zhu@nxp.com>
+ <20211025111312.GA31419@francesco-nb.int.toradex.com>
+ <YXaTxDJjhpcj5XBV@sirena.org.uk>
+ <AS8PR04MB8676A0F3DA3248C6A27801148C849@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211025191509.GB2744544@nvidia.com>
-User-Agent: Mutt/2.0.7 (2021-05-04)
+In-Reply-To: <AS8PR04MB8676A0F3DA3248C6A27801148C849@AS8PR04MB8676.eurprd04.prod.outlook.com>
+X-ClientProxiedBy: ZR0P278CA0102.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:23::17) To DBAPR05MB7445.eurprd05.prod.outlook.com
+ (2603:10a6:10:1a0::8)
+MIME-Version: 1.0
+Received: from francesco-nb.toradex.int (31.10.206.124) by ZR0P278CA0102.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:23::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend Transport; Tue, 26 Oct 2021 08:52:22 +0000
+Received: by francesco-nb.toradex.int (Postfix, from userid 1000)       id 5F38A10A3730; Tue, 26 Oct 2021 10:52:21 +0200 (CEST)
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ec9b0aad-dce0-49b9-e758-08d9985dece1
+X-MS-TrafficTypeDiagnostic: DB9PR05MB8298:
+X-Microsoft-Antispam-PRVS: <DB9PR05MB8298DE3599918D2D966D1515E2849@DB9PR05MB8298.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bl8nOKTd2yeXbIxrmfYX3RENOGU/mM+OkAurYH4OYAycPyf8FOnSuJ+kWYh9jbg7k1Mwhfda+ufs+qxkAsR1h1GWpw8RA11sJZr2pdQeKh2Utok7mvksxHWTKHCKpCg+IR0GGzEsmoNn9Mi2ycgVeJ6uFdKTmYjfkHK8Rd7qjd9Mu8w9QynLWnW0CVLyM35zo6yi3DdFnrZB33T+Viu3knmzjJ64BE8dgsdwCCuHqq4pz1G24J/fDV5YgN79WNFoyNkzSn99yLf8p1kjM5efJL15sMtWzAe4jwOL1W49O4l7LgYgmLvZmt7WHJS0VFUF/TvLMnp9DpyvSAlFTJ9V+7GxSCNJwg7oK+jO9K5EdLqgg5ZlpZTMIaKT1X5BpzFz+bZ7r7800cgeAhtOmC3zGA5HHZQfvpeSKM7lwAxVjAbEy1X3SzMlRV+66K6K4/KonCS+EQJr0dsH2VDzdQgcohtWMpTElegOgrfyhxmJxLEmQVfvO07EqyRu96AgUmGiT/es/vDAPA37YEQfn7ruh3PMCEPTm96FAvPZiwL5WHva7goszoDMH92Z519dcGU4pMSiuZWd1RC8NUeY8TFrsW2gZVH/X+hICiFID09heB6P1XzsG8sALuBNa6dYPpqKNPlIEVi+44OIw7XYFtbHAvfbaz6g4NOXJovaAAJNR3EvMZqbiW3tOa+Rh1s9pcd32UY3rvKsgRLzpo/cqI87gw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBAPR05MB7445.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(33656002)(2906002)(38350700002)(7416002)(4744005)(38100700002)(83380400001)(44832011)(1076003)(54906003)(186003)(508600001)(66476007)(86362001)(26005)(6266002)(42186006)(52116002)(8936002)(5660300002)(316002)(66556008)(4326008)(66946007)(6916009)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EZw2rhPHtSEvTvdiBQtCst/AvAnNMPM+QQPsAltlz1JBc0SlnMNYNFhZmacF?=
+ =?us-ascii?Q?w2kh4jT1kek2EOQ8RfLpyf0/VfYx24TsPQJEN/bK0GKFooZWFzTxeGjDw8QN?=
+ =?us-ascii?Q?1kgTx2DX2RoZ3Zitt9xjQfyN3diaAPMQMuOhzxd+Sb39dUvz+BSt2Kx9nwbS?=
+ =?us-ascii?Q?WVPr2vaXejsqWbw9vROndhC4g+eyF64/MxZgjjNvrirHjRht2qG863kX+zUa?=
+ =?us-ascii?Q?LOQd1awtHWN/2bWPMXU/lyoKQ7BUn4eBesN58rQvzDyzJIx2xJgijnB7C6tJ?=
+ =?us-ascii?Q?QBnbbxOaTYY6ywAJNIYBEh/iaRrsS9NIcKkMlg/E1x2WH1yE93elmsDRpwO9?=
+ =?us-ascii?Q?oaSeTLx2zLWCbCKEYWoi6SZacSNLaDFw9baOcI5moPMTDRrPqYRJ/qp/nUps?=
+ =?us-ascii?Q?gsRSBjptcLTrJfQVwlffTu2aefK7cz7fxB/J3ilbB+eabD6x5sBF7w79uuep?=
+ =?us-ascii?Q?lrGdYj5EQiOdfzU2AddR1fMuUzQ2pohsmzx7i2+yEBDOuTCgwPDHCpnbnpAS?=
+ =?us-ascii?Q?Gab/saeL7NKhX+J2xOkpqHwqr2vkPIh+rjBCVOqP85+UyuEy+0Mt+oTHTPrh?=
+ =?us-ascii?Q?quYy05Rd/jS2uBKMNF2xw79Ut++wvqkKJ7ZoZXYSsyN4ZV02EnfeByjjKF9U?=
+ =?us-ascii?Q?/fiQ2vscVGzPQf0FRIh0o1VV9BmmgrumuwYdhFPkfykGlRx++ksb3WIpdzGB?=
+ =?us-ascii?Q?LwN6UeWeSGcbW1sfXCaGYp2Ikjo5e3D/MHcXZf0cFEjNHMGaGjqTy/oKRUo3?=
+ =?us-ascii?Q?/TwJV830jRiqkd+2/IBhi1uUa+quP6MZkRlxlqmwu6YFd7/C5alVxbVNCJ4A?=
+ =?us-ascii?Q?FyIy78vY8v7Oy4s7/V1l3tm3kFs/AEVf+hZFyxG4GEQhuZ8rNUOKyx1qTVo3?=
+ =?us-ascii?Q?9qv4WG3HNHJ3PSyBKwu5bFiLjOdPVpX5KaePHIgeJ7HHm+ishevgP5FzJfwa?=
+ =?us-ascii?Q?u9wEPlaeq3tPIZ8SgJ9KJfPHJrt9bWxLX5ZKkJidBLe35kDx6Mw6XyIv8qqI?=
+ =?us-ascii?Q?amUKkh/a0RMuBBbpK/LVOfJL5mMLVkapKylBH/28+9PhUHDbjwF371i1V8cr?=
+ =?us-ascii?Q?Qjsj+SfYISlsr65myEOYRCyQBc47JXDeD0KdQvPCp0C7EGICNnbXvryTvFGe?=
+ =?us-ascii?Q?ZN9OmLIpz5SVX4zifPZMcF6VQZ4N+y/EtexoceRL+uiWNDuj6gyPJlp1hhNP?=
+ =?us-ascii?Q?UZdP37ILERIWL1A0wUwDSYiLVW7p5hC2HLrizBX3KvVbcrXp/9HF1m9b25av?=
+ =?us-ascii?Q?vowq3SCYxZkC49yYx5mIMTeF2OR4fZedYul7HnzCPydj+kLJXTJf0f4awCm8?=
+ =?us-ascii?Q?6xE+UwQRT13ASLC7YpfpyZYUL/EBBgL8JyRqsq0214dhetg8FE59eryf0v5z?=
+ =?us-ascii?Q?5oLkr6RTXpTR2dXWnc/MUElYFPdOs/HLsjvxgKhAo081eJzg7ZkwiBGPP4/V?=
+ =?us-ascii?Q?u4rc46D7vMWwKm3GHwI7803Rda2eFy4040KKBeqPM3QZHMkjbUgRt5yhooM0?=
+ =?us-ascii?Q?FFStLwC+aczD+EROi1fS8pG4qiHTcTn8pH652BiIxjBBRTXYYcetHniR8VjA?=
+ =?us-ascii?Q?lFjLl8g3BJUpFW6CKZYfjw8PrT5yNSelh6XpPLNgT6L9R7NWBzr10rh1mNjS?=
+ =?us-ascii?Q?kYCpb97AjTc0g5s6NltaHig4M+Jg21lQykv5+BW4X5hLt48bsp3vsk25AQFG?=
+ =?us-ascii?Q?W68WCR2CwIZ+Hzrk48dZAqwvOV0=3D?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec9b0aad-dce0-49b9-e758-08d9985dece1
+X-MS-Exchange-CrossTenant-AuthSource: DBAPR05MB7445.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2021 08:52:22.4578
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iW1GRISOX0BBZfJKsC95DK0hhVRpjZXOhJ9T76ILxs7wFdE/EoUV5lrQzTGelGpKX7JdYVYVrASC1Hcz684VWGEaET0SWBkk+EMzERiBmGs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR05MB8298
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-* Jason Gunthorpe (jgg@nvidia.com) wrote:
-> On Mon, Oct 25, 2021 at 07:47:29PM +0100, Dr. David Alan Gilbert wrote:
+On Tue, Oct 26, 2021 at 02:18:18AM +0000, Richard Zhu wrote:
+> The _enabled check is used because that this regulator is optional in the HW design.
+> To make the codes clean and aligned on different HW boards, the _enabled check is added.
 > 
-> > It may need some further refinement; for example in that quiesed state
-> > do counters still tick? will a NIC still respond to packets that don't
-> > get forwarded to the host?
-> 
-> At least for the mlx5 NIC the two states are 'able to issue outbound
-> DMA' and 'all internal memories and state are frozen and unchanging'.
+> The root cause is that the error return is not handled properly by the controller driver.
+> I.MX PCIe controller doesn't support the Hot-Plug, and it would return -110 error
+> when PCIe link never came up. Thus, the _probe would be failed in the end.
+> The clocks/regulator usage balance should be considered by i.MX PCIe controller, that's all.
+> It's not a general case, and the problem is not caused by the regulator support.
 
-Yeh, so my point was just that if you're adding a new state to this
-process, you need to define the details like that.
+Hello Richard,
+I have one curiosity on this topic. Does this works well in case the regulator
+is shared? I just want to be sure that if the regulator is shared everything is working fine
+even if the PCI-E link is not used or not coming up for any reason.
 
-Dave
-
-> The later means it should not respond/count/etc to network packets
-> either.
-> 
-> Roughly it is
->  'able to mutate external state' / 'able to mutate internal state'
-> 
-> The invariant should be that successive calls to serialize the
-> internal state while frozen should return the same serialization.
-> 
-> We may find that migratable PCI functions must have some limited
-> functionality. Ie anything with a realtime compoment - for instance a
-> sync-ethernet clock synchronization control loop, may become
-> challenging to migrate without creating a serious functional
-> distortion.
-> 
-> Jason
-> 
--- 
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+Francesco
 
