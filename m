@@ -2,164 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4008C43BC2F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 23:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20ECB43BC5F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 23:27:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239476AbhJZVTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 17:19:48 -0400
-Received: from office.oderland.com ([91.201.60.5]:59332 "EHLO
-        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235727AbhJZVTp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 17:19:45 -0400
-Received: from [193.180.18.161] (port=39964 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1mfToo-00AHKb-4f; Tue, 26 Oct 2021 23:17:14 +0200
-Message-ID: <ad39ee7a-3c50-58c1-6e8e-e384e4d054c6@oderland.se>
-Date:   Tue, 26 Oct 2021 23:17:10 +0200
+        id S239598AbhJZVaK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 17:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239576AbhJZVaK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 17:30:10 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9490AC061570
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 14:27:45 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 131-20020a1c0489000000b0032cca9883b5so3130517wme.0
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 14:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7BSGmDT4IT0OUdG2TZ/MzDANj3hoY1OlScqOboO0Qhw=;
+        b=WZRxOw049q3Fx2iR3QUGKrLSKHzSP2D+0fTkEtSQb7K42EgNzs3DXjXYToOYAahTK5
+         M9o3wZh+Pgfpp19W+gvdt/bfxeG5B7zK88RbykUWlBte9FiaHf2GG2i2xY285bA4Nkv/
+         Z7E4TmloJo80l2n6UaLf66Q5BMufYekR1xdjo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7BSGmDT4IT0OUdG2TZ/MzDANj3hoY1OlScqOboO0Qhw=;
+        b=0oGd0RszmzDqGJnu5Ub5Ma+NWpk/cll6auCP0P/f+D4Qb1nTzMrsi28XqILQX03jUk
+         g9zfbVEnO6AuHXW4pJUALm51D0xX2Yf9GHWWJFn+ARg6HwMQc/g3qrHWxmXjX26Ztgxl
+         0w8+AXfWUJ/EB2P2jxAS4FCIrCqI80PHp40qXVVaYSPNodNVEWiT2kaUiN74/QketzqN
+         XFBfNNBv4tIJN2q+dMdwllD4IhQjO/lLuSDKJEe2Fju7jH+vrs167ubHuA5oVaVsw6X+
+         Ain43lvt9Z14K0ABBjTXqx9EedGgPIOAO5xeFhPZpsWlajl+kYlTXjwoXFWj18oKBlnU
+         fnHw==
+X-Gm-Message-State: AOAM533leH4U6Lm8xlc7zTMUk6/rp9ZdW3YlvCcxZAEf3npMcVzAhcRK
+        TF3rdIsbPTYdURMDYxVIgjvAPjBntABeU1Cdvq5y2Q==
+X-Google-Smtp-Source: ABdhPJzSeyu2KoXgWREowvWJB3JrbiTRS4JmQkoMKCywaoYbUrxgjdhV4pnrxU7UwlvIMMdCg+GOtPymbOmJcbiMnKk=
+X-Received: by 2002:a7b:cc11:: with SMTP id f17mr1358358wmh.122.1635283664104;
+ Tue, 26 Oct 2021 14:27:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
- Thunderbird/93.0
-Content-Language: en-US
-From:   Josef Johansson <josef@oderland.se>
-To:     Jason Andryuk <jandryuk@gmail.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        xen-devel <xen-devel@lists.xenproject.org>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
- <20211025012503.33172-1-jandryuk@gmail.com>
- <CAKf6xptSbuj3VGxzed1uPx59cA_BRJY5FDHczX744rvnTHB8Lg@mail.gmail.com>
- <b76373a7-1e1d-3aae-66ba-09221c752c11@oderland.se>
-Subject: Re: [PATCH] PCI/MSI: Fix masking MSI/MSI-X on Xen PV
-In-Reply-To: <b76373a7-1e1d-3aae-66ba-09221c752c11@oderland.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-2-jim2101024@gmail.com>
+ <YXcup7d6ROmmPCuD@robh.at.kernel.org>
+In-Reply-To: <YXcup7d6ROmmPCuD@robh.at.kernel.org>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Tue, 26 Oct 2021 17:27:32 -0400
+Message-ID: <CA+-6iNyxYm4Sf6EsKjmedi8RF-CZKsXs9KXMjaTd_xqnyFL8ZA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/25/21 18:46, Josef Johansson wrote:
-> On 10/25/21 14:27, Jason Andryuk wrote:
->> On Sun, Oct 24, 2021 at 9:26 PM Jason Andryuk <jandryuk@gmail.com> wrote:
->>> commit fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask
->>> functions") introduce functions pci_msi_update_mask() and
->>> pci_msix_write_vector_ctrl() that is missing checks for
->>> pci_msi_ignore_mask that exists in commit 446a98b19fd6 ("PCI/MSI: Use
->>> new mask/unmask functions").  The checks are in place at the high level
->>> __pci_msi_mask_desc()/__pci_msi_unmask_desc(), but some functions call
->>> directly to the helpers.
->>>
->>> Push the pci_msi_ignore_mask check down to the functions that make
->>> the actual writes.  This keeps the logic local to the writes that need
->>> to be bypassed.
->>>
->>> With Xen PV, the hypervisor is responsible for masking and unmasking the
->>> interrupts, which pci_msi_ignore_mask is used to indicate.
->>>
->>> This change avoids lockups in amdgpu drivers under Xen during boot.
->>>
->>> Fixes: commit 446a98b19fd6 ("PCI/MSI: Use new mask/unmask functions")
->>> Reported-by: Josef Johansson <josef@oderland.se>
->>> Signed-off-by: Jason Andryuk <jandryuk@gmail.com>
->>> ---
->> I should have written that this is untested.  If this is the desired
->> approach, Josef should test that it solves his boot hangs.
->>
->> Regards,
->> Jason
-> I've tested this today, both the above patch, but also my own below
-> where I'm patching inside __pci_write_msi_msg,
-> which is the outcome of the patch above.
-I tested a lot of kernels today. To create a good baseline I compiled
-without any of our patches here
-and with my config flags set.
+On Mon, Oct 25, 2021 at 6:24 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Oct 22, 2021 at 10:06:54AM -0400, Jim Quinlan wrote:
+> > Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+> > allows optional regulators to be attached and controlled by the PCIe RC
+> > driver.  That being said, this driver searches in the DT subnode (the EP
+> > node, eg pci@0,0) for the regulator property.
+> >
+> > The use of a regulator property in the pcie EP subnode such as
+> > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+> > file at
+> >
+> > https://github.com/devicetree-org/dt-schema/pull/54
+> >
+> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > ---
+> >  .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > index b9589a0daa5c..fec13e4f6eda 100644
+> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -154,5 +154,28 @@ examples:
+> >                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+> >                      brcm,enable-ssc;
+> >                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+> > +
+> > +                    /* PCIe bridge */
+>
+> More specifically, the root port.
+>
+> > +                    pci@0,0 {
+> > +                            #address-cells = <3>;
+> > +                            #size-cells = <2>;
+> > +                            reg = <0x0 0x0 0x0 0x0 0x0>;
+> > +                            device_type = "pci";
+> > +                            ranges;
+> > +
+> > +                            /* PCIe endpoint */
+> > +                            pci@0,0 {
+> > +                                    device_type = "pci";
+>
+> This means this device is a PCI bridge which wouldn't typically be the
+> endpoint. Is that intended?
+Hi Rob,
 
-CONFIG_AMD_PMC=y
-# CONFIG_HSA_AMD is not set
-# CONFIG_CRYPTO_DEV_CCP is not set
+I'm not sure I understand what you are saying --  do you want the
+innermost node to be named something like ep-pci@0,0, and its
+containing node pci-bridge@0,0?   Or, more likely, I'm missing the
+point.  If my DT subtree is this
 
-The kernel stopped as before, and hung.
+pcie@8b10000 {
+    compatible = "brcm,bcm7278-pcie";
+    ....
+    pci-bridge@0,0 {
+        reg = <0x0 0x0 0x0 0x0 0x0>; /* bus 0 */
+        .....
+        pci-ep@0,0,0 {
+            reg = <0x10000 0x0 0x0 0x0 0x0>;  /* bus 1 */
+            vpcie3v3-supply = <&vreg8>;
+            ...
+        }
+    }
+}
 
-Test number 2 was to boot with amdgpu.msi=0.
-This still resulted in a bad boot since all the xhcd drivers complained.
-We can be sure that it's not amdgpu per se.
+then the of_nodes appear to align correctly with the devices:
 
-Test number 3 was with Jason's patch. It worked, but suspend/resume is
-not working well.
-Generally it's not behaving like other kernels do, which makes it
-actually change the behavior.
-Now with test 4 I tried that thought, maybe this is still a good change?
-I'm deprived of a good baseline in all this, so it's very hard to
-navigate between all the variables.
+$ cd /sys/devices/platform/
+$ cat 8b10000.pcie/of_node/name
+pcie
+$ cat 8b10000.pcie/pci0000:00/0000:00:00.0/of_node
+pci-bridge
+$ cat 8b10000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/of_node/name
+pci-ep
 
-Test number 4 was with Jason's patch plus the amdgpu-patch below.
-It worked, even suspend/resume, 2 times, but then it all crashed and
-burn with quite interesting stacktraces. Are amdgpu doing it wrong here
-or is it just me nitpicking?
+and the EP device works of course.  I've even printed out the
+device_node structure in the EP driver's probe and it is as expected.
+I've noticed that examples such as
+"arch/arm64/boot/dts/nvidia/tegra186.dtsi" have the EP node (eg
+pci@1,0) directly under the
+host bridge DT node (pcie@10003000).  I did try doing that, but the EP
+device's probe is given a NUL device_node pointer.
 
-index cc2e0c9cfe0a..f125597eb991 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
-@@ -279,17 +279,8 @@ static bool amdgpu_msi_ok(struct amdgpu_device *adev)
- 
- static void amdgpu_restore_msix(struct amdgpu_device *adev)
- {
--	u16 ctrl;
--
--	pci_read_config_word(adev->pdev, adev->pdev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
--	if (!(ctrl & PCI_MSIX_FLAGS_ENABLE))
--		return;
--
--	/* VF FLR */
--	ctrl &= ~PCI_MSIX_FLAGS_ENABLE;
--	pci_write_config_word(adev->pdev, adev->pdev->msix_cap + PCI_MSIX_FLAGS, ctrl);
--	ctrl |= PCI_MSIX_FLAGS_ENABLE;
--	pci_write_config_word(adev->pdev, adev->pdev->msix_cap + PCI_MSIX_FLAGS, ctrl);
-+	// checks if msix is enabled also
-+	pci_restore_msi_state(adev->pdev);
- }
- 
- /**
+I don't think it matters but our PCIe controllers only have a single root port.
 
-During the tests I fiddled with dpm settings, and it does have an effect
-one the graphical output during suspend/resume. So maybe there's
-hardware problems at play here as well.
+Please advise,
+Jim
 
-I also looked through the code before and after Thomas' changes, and I
-can't see that
-this patch should make any functional difference compared to before the
-MSI series of patches.
-It's even such that is_virtual should be checked withing vector_ctrl. I
-find Jason's patch
-quite nice since it really places the checks on few places making it
-easier not to slip.
-Compared to my attempt that even failed because I forgot one more place
-to put the checks.
-
-With that said I would really like some more tests on this with
-different chipsets, on Xen.
-Any takers?
-
-What I'm seeing is that there's no readl() in pci_msix_unmask(), it was
-one in the code path before.
-I'm very much unsure if there should be one there though.
-
-We can really do a better job at the documentation for
-pci_msi_ignore_mask, at least in msi.c,
-maybe that should be a different patch adding some comments such that
-driver folks really see
-the benefits of using the built in restore functions e.g.
-
-This became so much bigger project than I thought, thanks all for
-chiming in on it.
+>
+> > +                                    assigned-addresses = <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+> > +                                    reg = <0x0 0x0 0x0 0x0 0x0>;
+> > +                                    compatible = "pci14e4,1688";
+> > +                                    vpcie3v3-supply = <&vreg7>;
+> > +
+> > +                                    #address-cells = <3>;
+> > +                                    #size-cells = <2>;
+> > +
+> > +                                    ranges;
+> > +                            };
+> > +                    };
+> >              };
+> >      };
+> > --
+> > 2.17.1
+> >
+> >
