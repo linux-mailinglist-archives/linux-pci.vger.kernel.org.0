@@ -2,274 +2,303 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE7843B3A0
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 16:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B0143B41C
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 16:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236389AbhJZOK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 10:10:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:59598 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236390AbhJZOKw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Oct 2021 10:10:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF7E2D6E;
-        Tue, 26 Oct 2021 07:08:27 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F3423F73D;
-        Tue, 26 Oct 2021 07:08:26 -0700 (PDT)
-Date:   Tue, 26 Oct 2021 15:08:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Xuesong Chen <xuesong.chen@linux.alibaba.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] PCI: MCFG: Consolidate the separate PCI MCFG
- table entry list
-Message-ID: <20211026140820.GA19689@lpieralisi>
-References: <YW5OdIyFkTYo0h3W@Dennis-MBP.local>
- <CAJZ5v0g=+_fATmSrLWiTirmr0MkihKpy7wp-9aFpWVK_RLhp6g@mail.gmail.com>
+        id S236620AbhJZObz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 10:31:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24269 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236575AbhJZObt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 10:31:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635258565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2kYAPX2VGBsH1X6cP0RtYj20ucdCaNWXLNB7+ktwG10=;
+        b=iCDtiMHYyxskv2UBWbFOJNhn7r0c/fc15JNZJLvm+tiBQh7qXWhj5pYlOM8+GOh9qivlzf
+        LtzsiSyuZVFp3eQbzSjZCiW8yjwveiT0BZIhJr5x0FioN2l2iiJ8CCiVt7KokstTAjDVqW
+        4NsKsDaFm0F7jatP+1nfiOeIrclA4T8=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-OzFMW8nGNXuLQoeIFvsVig-1; Tue, 26 Oct 2021 10:29:24 -0400
+X-MC-Unique: OzFMW8nGNXuLQoeIFvsVig-1
+Received: by mail-ot1-f69.google.com with SMTP id o23-20020a9d7197000000b0054e537c6628so9161839otj.14
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 07:29:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2kYAPX2VGBsH1X6cP0RtYj20ucdCaNWXLNB7+ktwG10=;
+        b=1uWgIWLB32OhYItg7W9D4//XE7w289nMYOAB3MblTP7wQ/syUw6cAiVdiwwD/AnTFg
+         qcSWERgSwvTld0AJdxGDoNqMAj17dlCFBNoNM0EPL7oWgbNAFMnK+gK9EM+xs5rtaZOf
+         qFeKM8HvTYw/Yxe1i1Cfii1xKLy5C2DQtqEADusMSF9ZYN77C2W4u0cJJAoW3AE9piTD
+         o/DmQDKWRwOj3CjpkqzNPV3AGUg+wZSQva/RWXR6/wbmv1IRpStsOhoiR1uwiRUSQSY6
+         7nbZQMg3N0ua5xnVIjW4NzHvGgFxToH+r+drbD8lTCbxEMnu0rEptnfUqyrQLp+/pVqu
+         xGlQ==
+X-Gm-Message-State: AOAM531zbwWNoaep5R1LYkyE/iaTKc/8Mi9krVpSsNa4zpDo4oYl1mPE
+        Cddeng1XvMLkY9Nd6Jlxi8IK7N/QLrB7HbP/aDCOQaganX0UDe0eiWytHbWTVXyleTICeSd6fRE
+        Y5gUD6wyzBU/+34c6VbDP
+X-Received: by 2002:a05:6830:142:: with SMTP id j2mr19958157otp.252.1635258563319;
+        Tue, 26 Oct 2021 07:29:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxG4KUMnqa1iY9x1BOCXowMXBHg3LGdshyNNXldXqNcmbfhcg/JpKs4aVIrfaxlvz4ZhAYNFg==
+X-Received: by 2002:a05:6830:142:: with SMTP id j2mr19958135otp.252.1635258562996;
+        Tue, 26 Oct 2021 07:29:22 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id v24sm3822218oou.45.2021.10.26.07.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Oct 2021 07:29:22 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 08:29:20 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211026082920.1f302a45.alex.williamson@redhat.com>
+In-Reply-To: <YXb7wejD1qckNrhC@work-vm>
+References: <20211019105838.227569-1-yishaih@nvidia.com>
+        <20211019105838.227569-13-yishaih@nvidia.com>
+        <20211019124352.74c3b6ba.alex.williamson@redhat.com>
+        <20211019192328.GZ2744544@nvidia.com>
+        <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
+        <20211019230431.GA2744544@nvidia.com>
+        <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
+        <20211020105230.524e2149.alex.williamson@redhat.com>
+        <YXbceaVo0q6hOesg@work-vm>
+        <20211025115535.49978053.alex.williamson@redhat.com>
+        <YXb7wejD1qckNrhC@work-vm>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0g=+_fATmSrLWiTirmr0MkihKpy7wp-9aFpWVK_RLhp6g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 03:14:37PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Oct 19, 2021 at 6:50 AM Xuesong Chen
-> <xuesong.chen@linux.alibaba.com> wrote:
-> >
-> > The PCI MCFG entry list is discrete on x86 and other arches like ARM64
-> > in current implementation, this list variable can be consolidated for
-> > unnecessary duplication and other purposes, for example, we can remove
-> > some of the arch-specific codes in the APEI/EINJ module and re-implement
-> > it in a more common arch-agnostic way.
-> >
-> > To reduce the redundancy, it:
-> >   - Moves the "struct pci_mmcfg_region" definition from
-> >     arch/x86/include/asm/pci_x86.h to include/linux/pci.h, where it
-> >     can be shared across arches.
-> >
-> >   - Moves pci_mmcfg_list (a list of pci_mmcfg_region structs) from
-> >     arch/x86/pci/mmconfig-shared.c to drivers/pci/pci.c, where it can
-> >     be shared across arches.
-> >
-> >   - On x86 (which does not enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
-> >     built in arch/x86/pci/mmconfig-shared.c as before.
-> >
-> >   - Removes the "struct mcfg_entry" from drivers/acpi/pci_mcfg.c.
-> >
-> >   - Replaces pci_mcfg_list (previously a list of mcfg_entry structs)
-> >     in drivers/acpi/pci_mcfg.c with the newly-shared pci_mmcfg_list (a
-> >     list of pci_mmcfg_region structs).
-> >
-> >   - On ARM64 (which does enable CONFIG_ACPI_MCFG), pci_mmcfg_list is
-> >     built in drivers/acpi/pci_mcfg.c.
-> >
-> > Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
-> > Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> 
-> I'm guessing that I'm expected to pick up this one?
+On Mon, 25 Oct 2021 19:47:29 +0100
+"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
 
-I did not provide a Reviewed-by: tag for this patch (and I don't
-think Bjorn provided his either).
+> * Alex Williamson (alex.williamson@redhat.com) wrote:
+> > On Mon, 25 Oct 2021 17:34:01 +0100
+> > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> >  =20
+> > > * Alex Williamson (alex.williamson@redhat.com) wrote: =20
+> > > > [Cc +dgilbert, +cohuck]
+> > > >=20
+> > > > On Wed, 20 Oct 2021 11:28:04 +0300
+> > > > Yishai Hadas <yishaih@nvidia.com> wrote:
+> > > >    =20
+> > > > > On 10/20/2021 2:04 AM, Jason Gunthorpe wrote:   =20
+> > > > > > On Tue, Oct 19, 2021 at 02:58:56PM -0600, Alex Williamson wrote=
+:     =20
+> > > > > >> I think that gives us this table:
+> > > > > >>
+> > > > > >> |   NDMA   | RESUMING |  SAVING  |  RUNNING |
+> > > > > >> +----------+----------+----------+----------+ ---
+> > > > > >> |     X    |     0    |     0    |     0    |  ^
+> > > > > >> +----------+----------+----------+----------+  |
+> > > > > >> |     0    |     0    |     0    |     1    |  |
+> > > > > >> +----------+----------+----------+----------+  |
+> > > > > >> |     X    |     0    |     1    |     0    |
+> > > > > >> +----------+----------+----------+----------+  NDMA value is e=
+ither compatible
+> > > > > >> |     0    |     0    |     1    |     1    |  to existing beh=
+avior or don't
+> > > > > >> +----------+----------+----------+----------+  care due to red=
+undancy vs
+> > > > > >> |     X    |     1    |     0    |     0    |  !_RUNNING/INVAL=
+ID/ERROR
+> > > > > >> +----------+----------+----------+----------+
+> > > > > >> |     X    |     1    |     0    |     1    |  |
+> > > > > >> +----------+----------+----------+----------+  |
+> > > > > >> |     X    |     1    |     1    |     0    |  |
+> > > > > >> +----------+----------+----------+----------+  |
+> > > > > >> |     X    |     1    |     1    |     1    |  v
+> > > > > >> +----------+----------+----------+----------+ ---
+> > > > > >> |     1    |     0    |     0    |     1    |  ^
+> > > > > >> +----------+----------+----------+----------+  Desired new use=
+ful cases
+> > > > > >> |     1    |     0    |     1    |     1    |  v
+> > > > > >> +----------+----------+----------+----------+ ---
+> > > > > >>
+> > > > > >> Specifically, rows 1, 3, 5 with NDMA =3D 1 are valid states a =
+user can
+> > > > > >> set which are simply redundant to the NDMA =3D 0 cases.     =20
+> > > > > > It seems right
+> > > > > >     =20
+> > > > > >> Row 6 remains invalid due to lack of support for pre-copy (_RE=
+SUMING
+> > > > > >> | _RUNNING) and therefore cannot be set by userspace.  Rows 7 =
+& 8
+> > > > > >> are error states and cannot be set by userspace.     =20
+> > > > > > I wonder, did Yishai's series capture this row 6 restriction? Y=
+ishai?     =20
+> > > > >=20
+> > > > >=20
+> > > > > It seems so,=C2=A0 by using the below check which includes the=20
+> > > > > !VFIO_DEVICE_STATE_VALID clause.
+> > > > >=20
+> > > > > if (old_state =3D=3D VFIO_DEVICE_STATE_ERROR ||
+> > > > >  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 !VFIO_DEVICE_STATE_VALID(s=
+tate) ||
+> > > > >  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 (state & ~MLX5VF_SUPPORTED=
+_DEVICE_STATES))
+> > > > >  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > > > >=20
+> > > > > Which is:
+> > > > >=20
+> > > > > #define VFIO_DEVICE_STATE_VALID(state) \
+> > > > >  =C2=A0=C2=A0=C2=A0 (state & VFIO_DEVICE_STATE_RESUMING ? \
+> > > > >  =C2=A0=C2=A0=C2=A0 (state & VFIO_DEVICE_STATE_MASK) =3D=3D VFIO_=
+DEVICE_STATE_RESUMING : 1)
+> > > > >    =20
+> > > > > >     =20
+> > > > > >> Like other bits, setting the bit should be effective at the co=
+mpletion
+> > > > > >> of writing device state.  Therefore the device would need to f=
+lush any
+> > > > > >> outbound DMA queues before returning.     =20
+> > > > > > Yes, the device commands are expected to achieve this.
+> > > > > >     =20
+> > > > > >> The question I was really trying to get to though is whether w=
+e have a
+> > > > > >> supportable interface without such an extension.  There's curr=
+ently
+> > > > > >> only an experimental version of vfio migration support for PCI=
+ devices
+> > > > > >> in QEMU (afaik),     =20
+> > > > > > If I recall this only matters if you have a VM that is causing
+> > > > > > migratable devices to interact with each other. So long as the =
+devices
+> > > > > > are only interacting with the CPU this extra step is not strict=
+ly
+> > > > > > needed.
+> > > > > >
+> > > > > > So, single device cases can be fine as-is
+> > > > > >
+> > > > > > IMHO the multi-device case the VMM should probably demand this =
+support
+> > > > > > from the migration drivers, otherwise it cannot know if it is s=
+afe for
+> > > > > > sure.
+> > > > > >
+> > > > > > A config option to override the block if the admin knows there =
+is no
+> > > > > > use case to cause devices to interact - eg two NVMe devices wit=
+hout
+> > > > > > CMB do not have a useful interaction.
+> > > > > >     =20
+> > > > > >> so it seems like we could make use of the bus-master bit to fi=
+ll
+> > > > > >> this gap in QEMU currently, before we claim non-experimental
+> > > > > >> support, but this new device agnostic extension would be requi=
+red
+> > > > > >> for non-PCI device support (and PCI support should adopt it as
+> > > > > >> available).  Does that sound right?  Thanks,     =20
+> > > > > > I don't think the bus master support is really a substitute, tr=
+ipping
+> > > > > > bus master will stop DMA but it will not do so in a clean way a=
+nd is
+> > > > > > likely to be non-transparent to the VM's driver.
+> > > > > >
+> > > > > > The single-device-assigned case is a cleaner restriction, IMHO.
+> > > > > >
+> > > > > > Alternatively we can add the 4th bit and insist that migration =
+drivers
+> > > > > > support all the states. I'm just unsure what other HW can do, I=
+ get
+> > > > > > the feeling people have been designing to the migration descrip=
+tion in
+> > > > > > the header file for a while and this is a new idea.   =20
+> > > >=20
+> > > > I'm wondering if we're imposing extra requirements on the !_RUNNING
+> > > > state that don't need to be there.  For example, if we can assume t=
+hat
+> > > > all devices within a userspace context are !_RUNNING before any of =
+the
+> > > > devices begin to retrieve final state, then clearing of the _RUNNING
+> > > > bit becomes the device quiesce point and the beginning of reading
+> > > > device data is the point at which the device state is frozen and
+> > > > serialized.  No new states required and essentially works with a sl=
+ight
+> > > > rearrangement of the callbacks in this series.  Why can't we do tha=
+t?   =20
+> > >=20
+> > > So without me actually understanding your bit encodings that closely,=
+ I
+> > > think the problem is we have to asusme that any transition takes time.
+> > > From the QEMU point of view I think the requirement is when we stop t=
+he
+> > > machine (vm_stop_force_state(RUN_STATE_FINISH_MIGRATE) in
+> > > migration_completion) that at the point that call returns (with no
+> > > error) all devices are idle.  That means you need a way to command the
+> > > device to go into the stopped state, and probably another to make sure
+> > > it's got there. =20
+> >=20
+> > In a way.  We're essentially recognizing that we cannot stop a single
+> > device in isolation of others that might participate in peer-to-peer
+> > DMA with that device, so we need to make a pass to quiesce each device
+> > before we can ask the device to fully stop.  This new device state bit
+> > is meant to be that quiescent point, devices can accept incoming DMA
+> > but should cease to generate any.  Once all device are quiesced then we
+> > can safely stop them. =20
+>=20
+> It may need some further refinement; for example in that quiesed state
+> do counters still tick? will a NIC still respond to packets that don't
+> get forwarded to the host?
 
-That's valid also for patch 2:
+I'd think no, but I imagine it's largely device specific to what extent
+a device can be fully halted yet minimally handle incoming DMA.
+=20
+> Note I still think you need a way to know when you have actually reached
+> these states; setting a bit in a register is asking nicely for a device
+> to go into a state - has it got there?
 
-https://lore.kernel.org/linux-pci/20211019150405.GA2338201@bhelgaas
+It's more than asking nicely, we define the device_state bits as
+synchronous, the device needs to enter the state before returning from
+the write operation or return an errno.
 
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Rafael. J. Wysocki <rafael@kernel.org>
-> > Cc: Tony Luck <tony.luck@intel.com>
-> > Cc: Tomasz Nowicki <tn@semihalf.com>
-> > ---
-> >  arch/x86/include/asm/pci_x86.h | 17 +----------------
-> >  arch/x86/pci/mmconfig-shared.c |  2 --
-> >  drivers/acpi/pci_mcfg.c        | 34 +++++++++++++---------------------
-> >  drivers/pci/pci.c              |  2 ++
-> >  include/linux/pci.h            | 17 +++++++++++++++++
-> >  5 files changed, 33 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-> > index 490411d..1f4257c 100644
-> > --- a/arch/x86/include/asm/pci_x86.h
-> > +++ b/arch/x86/include/asm/pci_x86.h
-> > @@ -146,20 +146,7 @@ static inline int  __init pci_acpi_init(void)
-> >  extern void pcibios_fixup_irqs(void);
-> >
-> >  /* pci-mmconfig.c */
-> > -
-> > -/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
-> > -#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
-> > -
-> > -struct pci_mmcfg_region {
-> > -       struct list_head list;
-> > -       struct resource res;
-> > -       u64 address;
-> > -       char __iomem *virt;
-> > -       u16 segment;
-> > -       u8 start_bus;
-> > -       u8 end_bus;
-> > -       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
-> > -};
-> > +struct pci_mmcfg_region;
-> >
-> >  extern int __init pci_mmcfg_arch_init(void);
-> >  extern void __init pci_mmcfg_arch_free(void);
-> > @@ -174,8 +161,6 @@ extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
-> >
-> >  extern struct list_head pci_mmcfg_list;
-> >
-> > -#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
-> > -
-> >  /*
-> >   * On AMD Fam10h CPUs, all PCI MMIO configuration space accesses must use
-> >   * %eax.  No other source or target registers may be used.  The following
-> > diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> > index 758cbfe..0b961fe6 100644
-> > --- a/arch/x86/pci/mmconfig-shared.c
-> > +++ b/arch/x86/pci/mmconfig-shared.c
-> > @@ -31,8 +31,6 @@
-> >  static DEFINE_MUTEX(pci_mmcfg_lock);
-> >  #define pci_mmcfg_lock_held() lock_is_held(&(pci_mmcfg_lock).dep_map)
-> >
-> > -LIST_HEAD(pci_mmcfg_list);
-> > -
-> >  static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
-> >  {
-> >         if (cfg->res.parent)
-> > diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> > index 53cab97..d9506b0 100644
-> > --- a/drivers/acpi/pci_mcfg.c
-> > +++ b/drivers/acpi/pci_mcfg.c
-> > @@ -13,14 +13,7 @@
-> >  #include <linux/pci-acpi.h>
-> >  #include <linux/pci-ecam.h>
-> >
-> > -/* Structure to hold entries from the MCFG table */
-> > -struct mcfg_entry {
-> > -       struct list_head        list;
-> > -       phys_addr_t             addr;
-> > -       u16                     segment;
-> > -       u8                      bus_start;
-> > -       u8                      bus_end;
-> > -};
-> > +extern struct list_head pci_mmcfg_list;
-> >
-> >  #ifdef CONFIG_PCI_QUIRKS
-> >  struct mcfg_fixup {
-> > @@ -214,16 +207,13 @@ static void pci_mcfg_apply_quirks(struct acpi_pci_root *root,
-> >  #endif
-> >  }
-> >
-> > -/* List to save MCFG entries */
-> > -static LIST_HEAD(pci_mcfg_list);
-> > -
-> >  int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
-> >                     const struct pci_ecam_ops **ecam_ops)
-> >  {
-> >         const struct pci_ecam_ops *ops = &pci_generic_ecam_ops;
-> >         struct resource *bus_res = &root->secondary;
-> >         u16 seg = root->segment;
-> > -       struct mcfg_entry *e;
-> > +       struct pci_mmcfg_region *e;
-> >         struct resource res;
-> >
-> >         /* Use address from _CBA if present, otherwise lookup MCFG */
-> > @@ -233,10 +223,10 @@ int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *cfgres,
-> >         /*
-> >          * We expect the range in bus_res in the coverage of MCFG bus range.
-> >          */
-> > -       list_for_each_entry(e, &pci_mcfg_list, list) {
-> > -               if (e->segment == seg && e->bus_start <= bus_res->start &&
-> > -                   e->bus_end >= bus_res->end) {
-> > -                       root->mcfg_addr = e->addr;
-> > +       list_for_each_entry(e, &pci_mmcfg_list, list) {
-> > +               if (e->segment == seg && e->start_bus <= bus_res->start &&
-> > +                   e->end_bus >= bus_res->end) {
-> > +                       root->mcfg_addr = e->address;
-> >                 }
-> >
-> >         }
-> > @@ -268,7 +258,7 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
-> >  {
-> >         struct acpi_table_mcfg *mcfg;
-> >         struct acpi_mcfg_allocation *mptr;
-> > -       struct mcfg_entry *e, *arr;
-> > +       struct pci_mmcfg_region *e, *arr;
-> >         int i, n;
-> >
-> >         if (header->length < sizeof(struct acpi_table_mcfg))
-> > @@ -285,10 +275,12 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
-> >
-> >         for (i = 0, e = arr; i < n; i++, mptr++, e++) {
-> >                 e->segment = mptr->pci_segment;
-> > -               e->addr =  mptr->address;
-> > -               e->bus_start = mptr->start_bus_number;
-> > -               e->bus_end = mptr->end_bus_number;
-> > -               list_add(&e->list, &pci_mcfg_list);
-> > +               e->address =  mptr->address;
-> > +               e->start_bus = mptr->start_bus_number;
-> > +               e->end_bus = mptr->end_bus_number;
-> > +               e->res.start = e->address + PCI_MMCFG_BUS_OFFSET(e->start_bus);
-> > +               e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
-> > +               list_add(&e->list, &pci_mmcfg_list);
-> >         }
-> >
-> >  #ifdef CONFIG_PCI_QUIRKS
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index ce2ab62..899004e 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -47,6 +47,8 @@
-> >  int pci_pci_problems;
-> >  EXPORT_SYMBOL(pci_pci_problems);
-> >
-> > +LIST_HEAD(pci_mmcfg_list);
-> > +
-> >  unsigned int pci_pm_d3hot_delay;
-> >
-> >  static void pci_pme_list_scan(struct work_struct *work);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index cd8aa6f..71e4c06 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -55,6 +55,23 @@
-> >  #define PCI_RESET_PROBE                true
-> >  #define PCI_RESET_DO_RESET     false
-> >
-> > +#define PCI_MMCFG_BUS_OFFSET(bus)      ((bus) << 20)
-> > +
-> > +/* "PCI MMCONFIG %04x [bus %02x-%02x]" */
-> > +#define PCI_MMCFG_RESOURCE_NAME_LEN (22 + 4 + 2 + 2)
-> > +
-> > +/* pci mcfg region */
-> > +struct pci_mmcfg_region {
-> > +       struct list_head list;
-> > +       struct resource res;
-> > +       u64 address;
-> > +       char __iomem *virt;
-> > +       u16 segment;
-> > +       u8 start_bus;
-> > +       u8 end_bus;
-> > +       char name[PCI_MMCFG_RESOURCE_NAME_LEN];
-> > +};
-> > +
-> >  /*
-> >   * The PCI interface treats multi-function devices as independent
-> >   * devices.  The slot/function address of each device is encoded
-> > --
-> > 1.8.3.1
-> >
+> > > Now, you could be a *little* more sloppy; you could allow a device ca=
+rry
+> > > on doing stuff purely with it's own internal state up until the point
+> > > it needs to serialise; but that would have to be strictly internal st=
+ate
+> > > only - if it can change any other devices state (or issue an interrup=
+t,
+> > > change RAM etc) then you get into ordering issues on the serialisation
+> > > of multiple devices. =20
+> >=20
+> > Yep, that's the proposal that doesn't require a uAPI change, we loosen
+> > the definition of stopped to mean the device can no longer generate DMA
+> > or interrupts and all internal processing outside or responding to
+> > incoming DMA should halt (essentially the same as the new quiescent
+> > state above).  Once all devices are in this state, there should be no
+> > incoming DMA and we can safely collect per device migration data.  If
+> > state changes occur beyond the point in time where userspace has
+> > initiated the collection of migration data, drivers have options for
+> > generating errors when userspace consumes that data. =20
+>=20
+> How do you know that last device has actually gone into that state?
+
+Each device cannot, the burden is on the user to make sure all devices
+are stopped before proceeding to read migration data.
+
+> Also be careful; it feels much more delicate where something might
+> accidentally start a transaction.
+
+This sounds like a discussion of theoretically broken drivers.  Like
+the above device_state, drivers still have a synchronization point when
+the user reads the pending_bytes field to initiate retrieving the
+device state.  If the implementation requires the device to be fully
+stopped to snapshot the device state to provide to the user, this is
+where that would happen.  Thanks,
+
+Alex
+
