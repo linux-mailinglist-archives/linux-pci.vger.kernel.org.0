@@ -2,72 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2065643B5B6
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 17:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68A2E43B616
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 17:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236990AbhJZPkD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 11:40:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36198 "EHLO
+        id S237100AbhJZPyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 11:54:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45756 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236983AbhJZPkC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 11:40:02 -0400
+        by vger.kernel.org with ESMTP id S237153AbhJZPxZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 11:53:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635262657;
+        s=mimecast20190719; t=1635263460;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=I9aArYQBYTlIeaGnK89lJ08k0OM+ZE9Vpe6hYzP2dBQ=;
-        b=IWnSQPs0hM/IMVVEsFMYeE9CHFVTZEpE/P1/Dr0eoTe9gZHbltFrDe+8lMz3k0smntcWox
-        Vp2Fwog//CkCGcWZn1Vz9IwOddLbJakIUA8LnOfFTjgjOZSRe7+w09krZM9X/SjDxAUDAN
-        e9cqO/V7v3f4kXMBbEbhY89XCAy9iWI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-S2amtw1HN12UHe5IEHa8SA-1; Tue, 26 Oct 2021 11:37:34 -0400
-X-MC-Unique: S2amtw1HN12UHe5IEHa8SA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A93A100C672;
-        Tue, 26 Oct 2021 15:37:32 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07E615DF21;
-        Tue, 26 Oct 2021 15:37:31 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
-Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        bh=7tz1ztkDJ8/mfxOMQDKDmzGKJgDrZn1JGVp6nZRCrRs=;
+        b=BqMHxZbduQ8KSNVo+eNZb2DIgYv8XZF4lXY/AnCTbV/OIIi0JHxVJ9nvmpK+Cnxk1DxfOq
+        u8YBXZle67hM5+O5+U+zDoC7cFtTIghm4KX6HO3o07zVGe/ceDY3mSXGJwOosOjYaHmNMX
+        cddDf6yp2mwgltdp5AnGxq9TcJbW4Ew=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-gIezQE8SMbeMKRJyWs3djg-1; Tue, 26 Oct 2021 11:50:59 -0400
+X-MC-Unique: gIezQE8SMbeMKRJyWs3djg-1
+Received: by mail-ot1-f72.google.com with SMTP id 70-20020a9d0ecc000000b0054e6d44e1adso9331190otj.2
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 08:50:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7tz1ztkDJ8/mfxOMQDKDmzGKJgDrZn1JGVp6nZRCrRs=;
+        b=NGSF/lZP/LNq6oeumAYMoGqJuu0cOjXwiIXWauBDT0G6pPg24NN6tPwa22004IC1ss
+         fsDJ3HVV1UOLPNqe1HFoMTx+8+ispyceCA3MBDjhbergCV5TL3AeZeO2d14vHqELp/gu
+         LTifc5jzI8ft+GQFZsbWTG58jXG5D9Mi1qCIFcn+glPHe1eVk4gBcxGuRUE9GhXbwrxr
+         ieo1KsVpfM+T0ntfB2YswUtNsxaYONWuVDh85rEAdDpySCSaRGdpEOw1EU7ZdPhf3Pxs
+         FHN4e7NpKRbURMhgWMINLRXQiBLA7Yfpy2kyUhaZotpjCotNd9ztuLQlvOhrrVvhV56e
+         miOw==
+X-Gm-Message-State: AOAM5329d5BqVvFLZD8gfDKqvRpHnJdzHakbcfZgF/++gga3bCyN1vIw
+        bT4n/YCxN6qhUS0LSfSn/Bo96136AmNUIsgD0x1kiRcveqHEcDeTSu6g4mNKYqijIKIHZB1pvvc
+        EyvAIF94+WqnljreslASv
+X-Received: by 2002:a05:6808:1302:: with SMTP id y2mr28467706oiv.24.1635263458705;
+        Tue, 26 Oct 2021 08:50:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwKwVU0S0IFXJyByTOQvRXw6ryzeoMp+YocfGDa8qsGEiNUdjdaki5Abf+Y8mGKt7upXgiSw==
+X-Received: by 2002:a05:6808:1302:: with SMTP id y2mr28467689oiv.24.1635263458562;
+        Tue, 26 Oct 2021 08:50:58 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id l9sm4675881oie.15.2021.10.26.08.50.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Oct 2021 08:50:58 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 09:50:57 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        jgg@nvidia.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
         maorg@nvidia.com
-Subject: Re: [PATCH V4 mlx5-next 07/13] vfio: Add a macro for
- VFIO_DEVICE_STATE_ERROR
-In-Reply-To: <20211026090605.91646-8-yishaih@nvidia.com>
-Organization: Red Hat GmbH
+Subject: Re: [PATCH V4 mlx5-next 06/13] vfio: Fix
+ VFIO_DEVICE_STATE_SET_ERROR macro
+Message-ID: <20211026095057.1024c132.alex.williamson@redhat.com>
+In-Reply-To: <87pmrrdcos.fsf@redhat.com>
 References: <20211026090605.91646-1-yishaih@nvidia.com>
- <20211026090605.91646-8-yishaih@nvidia.com>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Tue, 26 Oct 2021 17:37:30 +0200
-Message-ID: <87mtmvdcg5.fsf@redhat.com>
+        <20211026090605.91646-7-yishaih@nvidia.com>
+        <87pmrrdcos.fsf@redhat.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26 2021, Yishai Hadas <yishaih@nvidia.com> wrote:
+On Tue, 26 Oct 2021 17:32:19 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-> Add a macro for VFIO_DEVICE_STATE_ERROR to be used to set/check an error
-> state.
->
-> In addition, update existing macros that include _SAVING | _RESUMING to
-> use it.
->
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> ---
->  include/uapi/linux/vfio.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
+> On Tue, Oct 26 2021, Yishai Hadas <yishaih@nvidia.com> wrote:
+> 
+> > Fixed the non-compiled macro VFIO_DEVICE_STATE_SET_ERROR (i.e. SATE
+> > instead of STATE).
+> >
+> > Fixes: a8a24f3f6e38 ("vfio: UAPI for migration interface for device state")
+> > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>  
+> 
+> This s-o-b chain looks weird; your s-o-b always needs to be last.
+> 
+> > ---
+> >  include/uapi/linux/vfio.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index ef33ea002b0b..114ffcefe437 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -622,7 +622,7 @@ struct vfio_device_migration_info {
+> >  					      VFIO_DEVICE_STATE_RESUMING))
+> >  
+> >  #define VFIO_DEVICE_STATE_SET_ERROR(state) \
+> > -	((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_SATE_SAVING | \
+> > +	((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_STATE_SAVING | \
+> >  					     VFIO_DEVICE_STATE_RESUMING)
+> >  
+> >  	__u32 reserved;  
+> 
+> Change looks fine, although we might consider merging it with the next
+> patch? Anyway,
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+I had requested it separate a couple revisions ago since it's a fix.
+Thanks,
+
+Alex
 
