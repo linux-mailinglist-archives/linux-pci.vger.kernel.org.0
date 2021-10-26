@@ -2,59 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48BC343B7A2
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 18:53:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D2343B7B2
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 18:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237584AbhJZQ4P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 12:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237590AbhJZQ4O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Oct 2021 12:56:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B37B601FF;
-        Tue, 26 Oct 2021 16:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635267230;
-        bh=8ZHAjFaWjzftQ0tMBWTtPlq3XYzflHXIiSKtmYcBIWA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MPfsdWbMcP3/Ka30zCA25xKnFSe6bR4Q2r20k6zcNycONHZ1Eizlg4nIk/ML/a4nx
-         pck8w2FgTDE95ucyuZ0AAvJL4f45jTGNPdZcl8AIuOm3a0odY53jdx5ah9zj1/Syzt
-         kHRllOHX3mc+lumN/0rpr1AELGHik0isjAx4IMsdSWLW0z10QnNpkbz8fiQ8MqL1on
-         /L63n20nJdRUYV64wx/dlPVcVqZ49svDIQuYDo7tyCfIryttln9ZEwb3yILEfaAU/0
-         UjiCi/D8lSXJFVQa5ZJT47L3ftgsCJgWWHy44DtH+hfZj6hCyAuKnXazoGfi2X1KwL
-         WDZaPg58hqheg==
-Date:   Tue, 26 Oct 2021 11:53:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v2 3/3] PCI/ASPM: Add LTR sysfs attributes
-Message-ID: <20211026165348.GA146058@bhelgaas>
+        id S237621AbhJZRAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 13:00:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35093 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236231AbhJZRAw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 13:00:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635267503;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RT0f5R5Twi94kzA8iIwbfKM5SjvkjYQA1GvTSxCPDNE=;
+        b=ie+50nf4cZROi9cPcHoG8ZaZEmYXlPu1agV5iRARmTCUI/2nppyVlpUy8mty0FDeQx6gMK
+        vxgWLZdr+4WdR4M+WJyeT25hoQjJTyIS3o172D6VEGCf5YWHn6G5V7uTOfaAjjFNOKl00O
+        0Rvmffk63dtjyWvxStetyeLoHvgZwH4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-vCyWaVC1NYeMftwcco5klg-1; Tue, 26 Oct 2021 12:58:21 -0400
+X-MC-Unique: vCyWaVC1NYeMftwcco5klg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74BFE10A8E13;
+        Tue, 26 Oct 2021 16:58:19 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6008160862;
+        Tue, 26 Oct 2021 16:58:01 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Leon Romanovsky <leonro@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, kwankhede@nvidia.com,
+        mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V4 mlx5-next 06/13] vfio: Fix
+ VFIO_DEVICE_STATE_SET_ERROR macro
+In-Reply-To: <YXgv29Og1Ds2mMSS@unreal>
+Organization: Red Hat GmbH
+References: <20211026090605.91646-1-yishaih@nvidia.com>
+ <20211026090605.91646-7-yishaih@nvidia.com> <87pmrrdcos.fsf@redhat.com>
+ <YXgqO0/jUFvDWVHv@unreal> <87h7d3d9x3.fsf@redhat.com>
+ <YXgv29Og1Ds2mMSS@unreal>
+User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
+Date:   Tue, 26 Oct 2021 18:57:59 +0200
+Message-ID: <87bl3bd8q0.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p7cqnGmySsxSz1xTmUp=_O_vApMuvcg-cBFUHButpva7Q@mail.gmail.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 10:28:38AM +0800, Kai-Heng Feng wrote:
+On Tue, Oct 26 2021, Leon Romanovsky <leonro@nvidia.com> wrote:
 
-> What if we fallback to the original approach and use the VMD driver
-> to enable ASPM and LTR values?  At least I think Intel should be
-> able to provide correct values for their SoC.
+> On Tue, Oct 26, 2021 at 06:32:08PM +0200, Cornelia Huck wrote:
+>> On Tue, Oct 26 2021, Leon Romanovsky <leonro@nvidia.com> wrote:
+>> 
+>> > On Tue, Oct 26, 2021 at 05:32:19PM +0200, Cornelia Huck wrote:
+>> >> On Tue, Oct 26 2021, Yishai Hadas <yishaih@nvidia.com> wrote:
+>> >> 
+>> >> > Fixed the non-compiled macro VFIO_DEVICE_STATE_SET_ERROR (i.e. SATE
+>> >> > instead of STATE).
+>> >> >
+>> >> > Fixes: a8a24f3f6e38 ("vfio: UAPI for migration interface for device state")
+>> >> > Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+>> >> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+>> >> 
+>> >> This s-o-b chain looks weird; your s-o-b always needs to be last.
+>> >
+>> > It is not such clear as it sounds.
+>> >
+>> > Yishai is author of this patch and at some point of time, this patch passed
+>> > through my tree and it will pass again, when we will merge it. This is why
+>> > my SOB is last and not Yishai's.
+>> 
+>> Strictly speaking, the chain should be Yishai->you->Yishai and you'd add
+>> your s-o-b again when you pick it. Yeah, that looks like overkill; the
+>> current state just looks weird to me, but I'll shut up now.
+>
+> We will get checkpatch warning about duplicated signature.
+>
+> WARNING: Duplicate signature
+> #11:
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> total: 0 errors, 1 warnings, 86 lines checked
 
-Can you post the patches for that?  I'm not sure exactly what the
-original approach was.  Are these the same as the downstream support
-you mention below?
+...this looks more like a bug in checkpatch to me, as it is possible for
+a patch to go through the same person twice.
 
-> So what other options do we have if we want to enable VMD ASPM while
-> keeping CONFIG_PCIEASPM_DEFAULT=y?  Right now we enabled the VMD
-> ASPM/LTR bits in downstream kernel, but other distro users may want
-> to have upstream support for this.
+But I'll really shut up now.
+
