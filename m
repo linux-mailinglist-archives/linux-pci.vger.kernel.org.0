@@ -2,161 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 919D543ABDC
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 07:49:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E57843AE3F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 10:40:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234846AbhJZFvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Oct 2021 01:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbhJZFvx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 01:51:53 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216F9C061745;
-        Mon, 25 Oct 2021 22:49:30 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id e10so26961646uab.3;
-        Mon, 25 Oct 2021 22:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bt8gnFZ7zRXlSxTO50E3NK4ULqXSpvY8WAtWfScUzG0=;
-        b=XvlFPA3yn+iFCXaotivzTIsO+qWlf16GeSElUXWhG3T3M9m/Cj9lW+Yis0yZVM7Cli
-         vKCdl96OEhYMK1MTRZawjaTvU6V4HpDmET0j42lb6aoehCLXEEFXiZ2MeNJteE/GGM7o
-         9mQsk2a1v+CRVPTfZblzsemULBqhRmIKc89xxSl9927Sg0jgb3sKpwM3FnEcPd/RJa7Z
-         nV7eA2eiYNuGBo6WxrF0ARaFqnkRGFn/OQRspkOZO0TLHN3fOJkXFr0LNIgw3kN+i55d
-         UIa5jCN2Xz0OQEeYBxiXb1zz2oYugJ41JVM93ww9jae/5a/JfwWAvARto7/adB/1YE9c
-         +h1Q==
+        id S234592AbhJZInM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 04:43:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44721 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234304AbhJZInF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Oct 2021 04:43:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635237640;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xfjmzkgFWA1L7jlAQ35kT9YQRKqeL4m1Zaudd45fWoU=;
+        b=ShYDxjJoAL0zHPJIsgxBqRRUU9KBSnaUelwjo5igSvjC7u1vGPTA839Mf0Vj0QuuuArrxM
+        nEbeLlWQylYMhCRW/NyQ7apSZnEVC+ME225nnTa3G/u4PJ/nqIU3XfEaD710RxJmOoalnF
+        HI42iDZ0vgaf19jm+LozJvu7GXwLB98=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-4D7NVjZMNYS_sLvSWAevdQ-1; Tue, 26 Oct 2021 04:40:38 -0400
+X-MC-Unique: 4D7NVjZMNYS_sLvSWAevdQ-1
+Received: by mail-wr1-f72.google.com with SMTP id g15-20020a5d64ef000000b0016a1331535eso1026121wri.10
+        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 01:40:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bt8gnFZ7zRXlSxTO50E3NK4ULqXSpvY8WAtWfScUzG0=;
-        b=40TUtplK/NQHD0Uo3olavEDjG6+2VitGt89BuljoXrSrA5ScS+oj67x7nBqvqJg7vT
-         4oLRV4Fta6CbLINaMHn6W9f+nY3rR88QDReX+TKRhQxG8tX6hA36MdFr7/h0HESno3YE
-         hKDF+SxrlkPm5sFLa0G/hVtDRD3jQ3mX+mJydOh2YHOrYq+n+EbOs1qu/pD1O58w+CIG
-         khYeo7HcqRsW3SX/gEQ7EOFZmZuaGKw7pnr6Zra6BplTrUSzhizMopT98k2wNCPDty9A
-         pJso1xSLhF5KUIMI4RuIZHLam5G4TKGBVtlJvcn5ujFlakQ+nQyVv0QSA+Bamoo1Z9zb
-         4mEA==
-X-Gm-Message-State: AOAM5322/cFDImA8sTEQMpzgF1VDI525lZoSbeLznrUkvPFnIwsMX+uc
-        1ULmGI9j2JuILv+QUaN0UwlVX7Sejv9uT3C99gc=
-X-Google-Smtp-Source: ABdhPJwwQ1QduqebQ2QK3PagmHcpgq321TdFHCBaZL1Z8yoc0Ad/iVuajzcpNOgd85uNPT6zLUnZgT57V0K/7wzLMZM=
-X-Received: by 2002:a9f:3523:: with SMTP id o32mr13839895uao.131.1635227368384;
- Mon, 25 Oct 2021 22:49:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xfjmzkgFWA1L7jlAQ35kT9YQRKqeL4m1Zaudd45fWoU=;
+        b=bZZBsDe/oh7ySHpq1dzB4fhMFVNWv274Rd+jGgNHZLhCovC7HblwsdqWub5CMhhR45
+         j94TDhUCSX4leibYhaDSoCP0a+nwxBc9xdVQ4W/iDaWP5ebkN33IGzwZH0FIMUiIx4c3
+         wj9B0mJNScFLs2cljGp3Tg3odg9Xg6WvHPsa12zzfj9qhIahnVJXecuYovFB5SoYtXEa
+         kjBTxxDWLb4axwg2OejVXv8wF33Y9eocmkp/PB+HhI2l4B/kCXiUueExqB2CAtooQpm9
+         /3y+XyBrLLhkc8K97jWhweql2y6LGeKQBqYT8zLrfVkdO8XY80bHKJ+7I2yY/+ZhzWmm
+         RUeg==
+X-Gm-Message-State: AOAM530wxQG0PS2UxF8ueD+FOqQmH1LY+YacaRbSqSvE7Yt3D9Bkb12P
+        sklNZPqtbQpTp4wxaxNj36UJYrh7WQyviTHM/xEXLpcBPB+irf/zEM8v1JYYEs77l/ZWFbwXBhW
+        iSifGTEU01XcwF0Iot7Xw
+X-Received: by 2002:a5d:6c61:: with SMTP id r1mr17547135wrz.54.1635237637570;
+        Tue, 26 Oct 2021 01:40:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5GdEzMaju+58GxCQgRDsiOrRrD/jJb7jUfrLgVL9mXDAbPVNJiHhiKtV/0v4Tq6aEaUO8Rg==
+X-Received: by 2002:a5d:6c61:: with SMTP id r1mr17547112wrz.54.1635237637425;
+        Tue, 26 Oct 2021 01:40:37 -0700 (PDT)
+Received: from work-vm (cpc109025-salf6-2-0-cust480.10-2.cable.virginm.net. [82.30.61.225])
+        by smtp.gmail.com with ESMTPSA id d1sm18850117wrr.72.2021.10.26.01.40.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Oct 2021 01:40:36 -0700 (PDT)
+Date:   Tue, 26 Oct 2021 09:40:34 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <YXe/AvwQcAxJ/hXQ@work-vm>
+References: <20211019124352.74c3b6ba.alex.williamson@redhat.com>
+ <20211019192328.GZ2744544@nvidia.com>
+ <20211019145856.2fa7f7c8.alex.williamson@redhat.com>
+ <20211019230431.GA2744544@nvidia.com>
+ <5a496713-ae1d-11f2-1260-e4c1956e1eda@nvidia.com>
+ <20211020105230.524e2149.alex.williamson@redhat.com>
+ <YXbceaVo0q6hOesg@work-vm>
+ <20211025115535.49978053.alex.williamson@redhat.com>
+ <YXb7wejD1qckNrhC@work-vm>
+ <20211025191509.GB2744544@nvidia.com>
 MIME-Version: 1.0
-References: <CAMhs-H90rD8aHJ+txDzFZ62Ej9_TY=BZMT+1058d=Pm_LfYwPA@mail.gmail.com>
- <20211025211236.GA31293@bhelgaas>
-In-Reply-To: <20211025211236.GA31293@bhelgaas>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 26 Oct 2021 07:49:16 +0200
-Message-ID: <CAMhs-H_HL3OxfN7dCwbeqjwwufaNWEJJCfQeYk+42CVK8=69Ew@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] PCI: mt7621: Add MediaTek MT7621 PCIe host
- controller driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-staging@lists.linux.dev,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211025191509.GB2744544@nvidia.com>
+User-Agent: Mutt/2.0.7 (2021-05-04)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 11:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Oct 22, 2021 at 11:13:39AM +0200, Sergio Paracuellos wrote:
-> > On Fri, Oct 22, 2021 at 10:35 AM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > >
-> > > On Thu, Oct 21, 2021 at 09:23:35PM +0200, Sergio Paracuellos wrote:
-> > > > On Thu, Oct 21, 2021 at 8:11 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Oct 21, 2021 at 07:27:21PM +0200, Sergio Paracuellos wrote:
-> > > > > > On Thu, Oct 21, 2021 at 5:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > Since this is a PCIe (not conventional PCI) controller, I
-> > > > > > > vote for renaming these from:
-> > > > > > >
-> > > > > > >   PCI_MT7621
-> > > > > > >   Documentation/devicetree/bindings/pci/mediatek,mt7621-pci.yaml
-> > > > > > >   drivers/pci/controller/pci-mt7621.c
-> > > > > > >
-> > > > > > > to:
-> > > > > > >
-> > > > > > >   PCIE_MT7621
-> > > > > > >   Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-> > > > > > >   drivers/pci/controller/pcie-mt7621.c
-> > > > > > >
-> > > > > > > We have a mix of these, with many of the early PCIe
-> > > > > > > drivers being named "pci", but I think that was my mistake
-> > > > > > > and there's no reason to continue it.
-> > > > > >
-> > > > > > I see.
-> > > > > >
-> > > > > > > I can do this locally unless somebody objects.
-> > > > > >
-> > > > > > I have no problem at all. Only one question. Do you mean to
-> > > > > > change compatible string also, or only the name of the file?
-> > > > > > Let me know if I have to do anything.
-> > > > >
-> > > > > I didn't change the compatible string, to avoid a DT
-> > > > > incompatibility.  But I *did* change the Kconfig symbol to
-> > > > > PCIE_MT7621, which could require changes to out-of-tree
-> > > > > .configs.  I'm open to suggestions either way for both things.
-> > > >
-> > > > IMHO, I do think we should not worry about out-of-tree stuff at
-> > > > all.
-> > >
-> > > For Kconfig I tend to agree. For DT I see some "bindings" in the
-> > > staging tree are being deleted and published as official DT
-> > > bindings with this patchset but I believe we still have to keep
-> > > the compatible string backward compatibility regardless because
-> > > there may be firmware out there using it.
-> >
-> > The bindings txt file removed in staging with this patchset was also
-> > added by me three years ago[0], and has been changing until the YAML
-> > bindings are reviewed by Rob and driver updated accordly in this
-> > patchset.
-> >
-> > OpenWRT maintains its own file[1] which I don't know is updated or
-> > not according to the one in staging which I am pretending to
-> > properly mainline for 5.17. But yes, I agree there might be firmware
-> > out there using current compatible string.
-> >
-> > [0]: Commit 5451e22618b8 ("staging: mt7621-pci: dt-bindings: add dt
-> > bindings for mt7621 pcie controller")
-> > [1]: https://github.com/openwrt/openwrt/blob/master/target/linux/ramips/dts/mt7621.dtsi
->
-> OK, for now I left my rework as-is:
->
->   - changed CONFIG_PCI_MT7621 to CONFIG_PCIE_MT7621
->   - renamed mediatek,mt7621-pci.yaml to mediatek,mt7621-pcie.yaml
->   - renamed pci-mt7621.c to pcie-mt7621.c
->   - kept DT compatible string "mediatek,mt7621-pci" in .yaml and .c
->
-> I reason that the Kconfig and filename changes only affect people
-> building kernels or DTs, but a compatible string change would force a
-> DT update to be synchronized with a kernel update.
+* Jason Gunthorpe (jgg@nvidia.com) wrote:
+> On Mon, Oct 25, 2021 at 07:47:29PM +0100, Dr. David Alan Gilbert wrote:
+> 
+> > It may need some further refinement; for example in that quiesed state
+> > do counters still tick? will a NIC still respond to packets that don't
+> > get forwarded to the host?
+> 
+> At least for the mlx5 NIC the two states are 'able to issue outbound
+> DMA' and 'all internal memories and state are frozen and unchanging'.
 
-This is all ok for me, Bjorn. Thanks for doing this. I guess even if
-we don't force people to a DT update to synchronize things, since
-bindings have been changed until they have been approved, I guess most
-people must upgrade from early not approved DT early versions in any
-case. But in any case I guess that maintaining the compatible string
-is the safest thing to do.
+Yeh, so my point was just that if you're adding a new state to this
+process, you need to define the details like that.
 
->
-> Happy to change this if necessary.
+Dave
 
-Best regards,
-    Sergio Paracuellos
+> The later means it should not respond/count/etc to network packets
+> either.
+> 
+> Roughly it is
+>  'able to mutate external state' / 'able to mutate internal state'
+> 
+> The invariant should be that successive calls to serialize the
+> internal state while frozen should return the same serialization.
+> 
+> We may find that migratable PCI functions must have some limited
+> functionality. Ie anything with a realtime compoment - for instance a
+> sync-ethernet clock synchronization control loop, may become
+> challenging to migrate without creating a serious functional
+> distortion.
+> 
+> Jason
+> 
+-- 
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
 
->
-> Bjorn
