@@ -2,130 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 021DF43AADC
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 05:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F86943AB08
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Oct 2021 06:15:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234032AbhJZD4d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Oct 2021 23:56:33 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:43204
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233865AbhJZD4d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Oct 2021 23:56:33 -0400
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com [209.85.161.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4576A3F320
-        for <linux-pci@vger.kernel.org>; Tue, 26 Oct 2021 03:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1635220449;
-        bh=kZhcWeItYaRn2Q+IUotz7XPZmZ0X9JIZ6LR4JyyCG6I=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=tTDulzASt3/eOzKhHqGvw3YcJz5V5bD/Ar0WvVCzyI3uFiskhOaBb4NnWSqmCitN+
-         e0r5OBsnudTrsHljzJSivnoc/ihtB4OVlbmViZ+rZSuG2K64USAsAIHkV/ozjEE16c
-         bpqdQlPoFavZf9QXvmT6naELsgq1Ef5PbRSGIWrapqga/IyXf3nVEwYae3XgrT/BEX
-         /8A7VyRmvPql6qo3Y1ua5JmmHqLmpVhrVn72F8Gpw4RvLSgaWOo4RXppgVkByFoS2w
-         tofoTAAJPUw1j2kuFW838aKKkZmAG8rSyWhk0AsWTF5LN5pdX/Q6beiUDwyd8WdQqD
-         0aCbob9UnfL1g==
-Received: by mail-oo1-f72.google.com with SMTP id u18-20020a4a6c52000000b002b6eeeabd60so5330910oof.16
-        for <linux-pci@vger.kernel.org>; Mon, 25 Oct 2021 20:54:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZhcWeItYaRn2Q+IUotz7XPZmZ0X9JIZ6LR4JyyCG6I=;
-        b=JpSDqW1TVA1Paa1Z0FbS4ErsiIdOit+tTIRNHxfmzgladKgRshF+Np6pOGy8EMk9C1
-         lBQkdML9sXpNF3AKnrzCt906CJxhwWRXWMp3YRInP3GkHMP3kEjFBpC3IjJsAjMv4k6k
-         3Hz35g+QfDWOgheqqrPQYBm7L57t63mTgN2tMNcnRrNNv/EvDz8oEwOZqdFDJdT43Jv5
-         TEmkCArIkbTxlSX+KMhHSCIsd0tLZFwcC3QxAM4wg/qyBTdA6YF65aFRuWHF+5K/FT0V
-         3rUUoSEFhJ6krvj6FMFdydLAM5/wmqlxXA4mGOAFCtf5bnCMA9v52SQIsYB+SYzceJMJ
-         GGeA==
-X-Gm-Message-State: AOAM533iMrU3hWPJF+bbgPQ8VBkV1EbSXru7tiOEVGaJyCNDmObbAbu+
-        E6LBmfkagrjBUiQxbJfCjTMBfuer5yZKW1Cza7SBFNG8iq625fQ+NgEvrdyY6Zf6KSK/2+FugMk
-        4UgZMuoGs/GQLT1NY/UV5JlLNxBFJAkMTqtGrzJ6w4SgbK7sYNJVpBg==
-X-Received: by 2002:a05:6830:1f55:: with SMTP id u21mr17726428oth.233.1635220448144;
-        Mon, 25 Oct 2021 20:54:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzDNWrIRoaXDuL/UzlYuaqCo7n4hiSiCoSfk+ehSUmXeWJblkVKdUJowBaTHmvH57YUmnxSB1e7qALZKTOymuw=
-X-Received: by 2002:a05:6830:1f55:: with SMTP id u21mr17726410oth.233.1635220447919;
- Mon, 25 Oct 2021 20:54:07 -0700 (PDT)
+        id S230049AbhJZESF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Oct 2021 00:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229487AbhJZESE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Oct 2021 00:18:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BDDD360EDF;
+        Tue, 26 Oct 2021 04:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635221741;
+        bh=Upw18BMnAJNHZIJJpkphWj/uFqecyQTLJdSZFRJJJPU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rzAfIKq2hSoaUzW7YoqAGIOnLTuzUnaq2pQdkh0Iug5i0X7VdQz6TG/2QxUbIg80t
+         2LBsKVXMtntLEKIhEGSzVo8H8nvxZalkrQS8XWjlT8PPIjj0TF8Y8NezKGjRHRo+6+
+         WRehkG7fs1xGbuooYpfn1xccuePsl7oKhBX5eDU7h4f4uCg1wzT2aVvPyWad5MZ7cD
+         oCCmVtikSjUPj9qU9FlSYA3Mxn/NbT7jexhdTVuCwdjN6LhCsooiozVuhYlEkLwDe4
+         QOYpytUkqhZws97aGeK3Bmw49JefgJmPlS5/mZgY6DxNhIl9G5ygHkM5HnUofhhRKr
+         6wmGShRuGQ+wQ==
+Date:   Mon, 25 Oct 2021 21:15:38 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Li Chen <lchen@ambarella.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [EXT] Re: nvme may get timeout from dd when using different
+ non-prefetch mmio outbound/ranges
+Message-ID: <20211026041538.GB2335242@dhcp-10-100-145-180.wdc.com>
+References: <CH2PR19MB4024E04EBD0E4958F0BBB2ACA0809@CH2PR19MB4024.namprd19.prod.outlook.com>
+ <20211025154739.GA4760@bhelgaas>
+ <20211025162158.GA2335242@dhcp-10-100-145-180.wdc.com>
+ <CH2PR19MB4024372120E0E74C8F2CB685A0849@CH2PR19MB4024.namprd19.prod.outlook.com>
 MIME-Version: 1.0
-References: <20211016075442.650311-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20211016075442.650311-1-kai.heng.feng@canonical.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Tue, 26 Oct 2021 11:53:56 +0800
-Message-ID: <CAAd53p5tOveDd_dFm=EOyc4z3wMhHcOXVx7WQZpSuAaeDLCysQ@mail.gmail.com>
-Subject: Re: [RFC] [PATCH net-next v7 0/4] r8169: Implement dynamic ASPM
- mechanism for recent 1.0/2.5Gbps Realtek NICs
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        nic_swsd <nic_swsd@realtek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR19MB4024372120E0E74C8F2CB685A0849@CH2PR19MB4024.namprd19.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Heiner,
+On Tue, Oct 26, 2021 at 03:40:54AM +0000, Li Chen wrote:
+> My nvme is " 05:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller 980". From its datasheet, https://s3.ap-northeast-2.amazonaws.com/global.semi.static/Samsung_NVMe_SSD_980_Data_Sheet_Rev.1.1.pdf, it says nothing about CMB/SQEs, so I'm not sure. Is there other ways/tools(like nvme-cli) to query?
 
-On Sat, Oct 16, 2021 at 3:54 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> The purpose of the series is to get comments and reviews so we can merge
-> and test the series in downstream kernel.
->
-> The latest Realtek vendor driver and its Windows driver implements a
-> feature called "dynamic ASPM" which can improve performance on it's
-> ethernet NICs.
->
-> Heiner Kallweit pointed out the potential root cause can be that the
-> buffer is to small for its ASPM exit latency.
->
-> So bring the dynamic ASPM to r8169 so we can have both nice performance
-> and powersaving at the same time.
->
-> For the slow/fast alternating traffic pattern, we'll need some real
-> world test to know if we need to lower the dynamic ASPM interval.
+The driver will export a sysfs property for it if it is supported:
 
-Do you think we can include this to downstream kernel in its current form?
+  # cat /sys/class/nvme/nvme0/cmb
 
-Kai-Heng
+If the file doesn't exist, then /dev/nvme0 doesn't have the capability.
 
->
-> v6:
-> https://lore.kernel.org/netdev/20211007161552.272771-1-kai.heng.feng@canonical.com/
->
-> v5:
-> https://lore.kernel.org/netdev/20210916154417.664323-1-kai.heng.feng@canonical.com/
->
-> v4:
-> https://lore.kernel.org/netdev/20210827171452.217123-1-kai.heng.feng@canonical.com/
->
-> v3:
-> https://lore.kernel.org/netdev/20210819054542.608745-1-kai.heng.feng@canonical.com/
->
-> v2:
-> https://lore.kernel.org/netdev/20210812155341.817031-1-kai.heng.feng@canonical.com/
->
-> v1:
-> https://lore.kernel.org/netdev/20210803152823.515849-1-kai.heng.feng@canonical.com/
->
-> Kai-Heng Feng (4):
->   PCI/ASPM: Add pcie_aspm_capable()
->   r8169: Enable chip-specific ASPM regardless of PCIe ASPM status
->   r8169: Use mutex to guard config register locking
->   r8169: Implement dynamic ASPM mechanism
->
->  drivers/net/ethernet/realtek/r8169_main.c | 70 ++++++++++++++++++++---
->  drivers/pci/pcie/aspm.c                   | 11 ++++
->  include/linux/pci.h                       |  2 +
->  3 files changed, 74 insertions(+), 9 deletions(-)
->
-> --
-> 2.32.0
->
+> > > I don't know how to interpret "ranges".  Can you supply the dmesg and
+> > > "lspci -vvs 0000:05:00.0" output both ways, e.g.,
+> > >
+> > >   pci_bus 0000:00: root bus resource [mem 0x7f800000-0xefffffff window]
+> > >   pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
+> > >   pci 0000:05:00.0: [vvvv:dddd] type 00 class 0x...
+> > >   pci 0000:05:00.0: reg 0x10: [mem 0x.....000-0x.....fff ...]
+> > >
+> > > > Question:
+> > > > 1.  Why dd can cause nvme timeout? Is there more debug ways?
+> > 
+> > That means the nvme controller didn't provide a response to a posted
+> > command within the driver's latency tolerance.
+> 
+> FYI, with the help of pci bridger's vendor, they find something interesting: "From catc log, I saw some memory read pkts sent from SSD card, but its memory range is within the memory range of switch down port. So, switch down port will replay UR pkt. It seems not normal." and "Why SSD card send out some memory pkts which memory address is within switch down port's memory range. If so, switch will response UR pkts". I also don't understand how can this happen?
+
+I think we can safely assume you're not attempting peer-to-peer, so that
+behavior as described shouldn't be happening. It sounds like the memory
+windows may be incorrect. The dmesg may help to show if something appears
+wrong.
