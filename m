@@ -2,107 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D56C343C44E
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 09:47:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8891A43C4B7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 10:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231620AbhJ0Htu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 03:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240629AbhJ0Htt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 03:49:49 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093C9C061767
-        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 00:47:25 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id r184so4073686ybc.10
-        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 00:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=MVMTrH1UCkQ+yPnBwjzQff/YGDvB/uKrHBn+RN9RElI=;
-        b=h0LGpp56FdF5wH5H3OnVwynMj/lCOVG2RZN4iJE8gVIrFvxtUg++K4KJIJ2TtC7tbJ
-         NEsHnlZII/iOpb3HP80bbwvTyOVFzUok4Lpe6LKwlctQAL3oizE4rZjDOq2e0OALpmC/
-         6uSrNDcv+mU9kdYfgwaq20SjXSaLEfHKNxrw50GP2+bzA+L/QiiIkDohvAlnow2HEYJV
-         i3QRY29w4KgryqeGaQwxNuh3rNIT4mfmhgoVHwfVovO7SMSYJfMdGLUrlPua5tZ11BzU
-         uIL3Xy9Q3RF4kj2pb9W4lNNuKxsUYIIkItRup+sZZ54aMDv4BoYUXauZBSPbmoq9uJqx
-         p1dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=MVMTrH1UCkQ+yPnBwjzQff/YGDvB/uKrHBn+RN9RElI=;
-        b=xtxaAGlQI+hTFr3aw2tT20gcPZonuih2EFP8Gna50kDK9lMGxOl1suRA1ejDg06TcF
-         gnyy+uuEd9k0V5zCXYWjzuqfm99818PS9cR1vyF2LN3F16S6n9IgFC7+Yr+GJ/uQ2DuY
-         QGSsmq+bwMgaK5RFotDpOVMke8cz3z+YNUE0npdzc2R2Zu48ZbbGfi+Q1H2cRU/gUP8q
-         so6UNDDrLVzYSIHOuH17vH+TQcL5A59mQ3EOW5boIebf9tzkvoFVjf3QBZrtRijBYZqs
-         4YpBGlAsIMOY003KRmG9rVnbYzeyMwPcldZdr/kbEVQpnPrmZMkzdOUG2yD0l/p1k4Qn
-         JiIg==
-X-Gm-Message-State: AOAM533lMYsPgpGysF5hd1p6x/KMceoGRpJ6diOdK52eNoQGs92dSd/b
-        DEjo2KMwIVABMcqqvNXJhN68p1UBeK3/wKQ6MRo=
-X-Google-Smtp-Source: ABdhPJyvV+5cWPz/9h+YZNYG/saipAtytEmFfxCTxbI+Fk741ARwe530lMnDjO9bhWRsM8BCgvu2Mc6I/IbmLOH1woY=
-X-Received: by 2002:a05:6902:1024:: with SMTP id x4mr18674680ybt.126.1635320844256;
- Wed, 27 Oct 2021 00:47:24 -0700 (PDT)
+        id S240781AbhJ0INL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 04:13:11 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:55690 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240780AbhJ0INL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 04:13:11 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Uts4e-Z_1635322242;
+Received: from localhost.localdomain(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Uts4e-Z_1635322242)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 27 Oct 2021 16:10:43 +0800
+From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
+To:     helgaas@kernel.org
+Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xuesong.chen@linux.alibaba.com
+Subject: [PATCH v4 0/4] PCI MCFG consolidation and APEI resource filtering
+Date:   Wed, 27 Oct 2021 16:10:35 +0800
+Message-Id: <20211027081035.53370-1-xuesong.chen@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <YW5OTMz+x8zrsqkF@Dennis-MBP.local>
+References: <YW5OTMz+x8zrsqkF@Dennis-MBP.local>
 MIME-Version: 1.0
-Received: by 2002:a81:294f:0:0:0:0:0 with HTTP; Wed, 27 Oct 2021 00:47:21
- -0700 (PDT)
-Reply-To: mohammadahmed7760@gmail.com
-From:   Mohammad Ahmed <mohammadahmed77222@gmail.com>
-Date:   Wed, 27 Oct 2021 00:47:21 -0700
-Message-ID: <CAKR5VEh7fU5_5530QOtQd3KhGiSDNJ_7Ya_h6J1bMNa488wzqg@mail.gmail.com>
-Subject: URGENT ASSISTANCE NEEDED FROM MR.MOHAMMAD AHMED / CAN I TRUST YOU
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My Dear Friend.
+The issue of commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
+level") on x86 is also happened on our own ARM64 platform. We sent a patch[1]
+trying to fix this issue in an arch-specific way as x86 does at first, but
+according to the suggestion from Lorenzo Pieralisi and Catalin Marinas, we can
+consolidate the PCI MCFG part then fix it in a more common way, that's why this
+patch series comes.
 
-Greetings.
+[1] https://marc.info/?l=linux-arm-kernel&m=163108478627166&w=2
 
-I know this message will come to you as a surprise; My name is Mr.
-Mohammad Ahmed a banker with Bank of Africa Burkina Faso West Africa,
-Please i want to transfer an abandoned fund in total sum of 13.5
-Million United States Dollars into your account , if you are
-interested do not hesitate to get back to me with your personal
-information for trust and confident to enable me feed you with more
-detail such as to let you know source of the fund and how it will be
-transfer into your account.
+---
+Change from v3 to v4:
+  - Add a new patch (patch #3) to address the quirk ECAM access issue. Because
+    the normal ECAM config space can be accessed in a lockless way, so we don't
+    need the mutual exclusion with the EINJ action. But those quirks maybe break
+    this rule and corrupt the configuration access, reserve its MCFG address
+    regions in this case to avoid that happens. 
+  
+  - Add another patch (patch #4) to log the PCI MCFG entry parse message per
+    the suggestion from Bjorn Helgaas. The output on ARM64 as:
+    ACPI: MCFG entry for domain 0000 [bus 00-0f] at [mem 0x50000000-0x50ffffff] (base 0x50000000)
+  
+  - Commit message updated with more details of patch #2
 
-My dear you will provide account for transfer of the fund and once the
-fund transferred into your account 50% is for you and 50% for me and
-do not entertain any atom for fear for the transaction will be done
-legal and official on your behalf without any problem.
+Change from v2 to v3:
+  - Address the comments of Lorenzo Pieralisi about the CONFIG_PCI
+    dependence issue in APEI module (patch #2)
 
-The transaction is risk free and there will be no harm, I will like
-you to respond back to me immediately after reading this message to
-enable us proceed ahead for mutual benefit.
+Change from v1 to v2:
+  - Fix the "undefined reference to `pci_mmcfg_list'" build error in case
+    of PCI_CONFIG=n, reported by the kernel test robot
 
-I know the source of the fund very well and I assure you of receiving
-it into your account without any problem, Read this message and if we
-have business urgently get back to me with your personal information
-as listed bellow for more trust and confident.
+Xuesong Chen (4):
+  PCI: MCFG: Consolidate the separate PCI MCFG table entry list
+  ACPI: APEI: Filter the PCI MCFG address with an arch-agnostic method
+  ACPI: APEI: Reserve the MCFG address for quirk ECAM implementation
+  PCI: MCFG: Add the MCFG entry parse log message
 
-I am ready to share with you 50% for you and 50% for me and by
-indicating your interest and capability to execute the business with
-me after reading message, I will send you more details on how the fund
-will be officially transfer in your account for the transaction will
-be executed  in your favor without any problem for the only thing i
-want from you is to be honest with me during the transaction official
-process.
-I am looking forward to hear back from you urgently.
+ arch/x86/include/asm/pci_x86.h | 17 +----------
+ arch/x86/pci/mmconfig-shared.c | 30 -------------------
+ drivers/acpi/apei/apei-base.c  | 68 ++++++++++++++++++++++++++++++++----------
+ drivers/acpi/pci_mcfg.c        | 46 +++++++++++++++-------------
+ drivers/pci/pci.c              |  2 ++
+ drivers/pci/quirks.c           |  2 ++
+ include/linux/pci.h            | 18 +++++++++++
+ 7 files changed, 101 insertions(+), 82 deletions(-)
 
-1. Full name:.........
-2. Home Address:.........
-3. Phone.............
-4. Occupation:.............
-5. Age:............
-6. Country:........
-7. Sex........
-8. Your Passport or ID card or Driving License
+-- 
+1.8.3.1
 
-Thanks.
-
-Yours faithfully
-
-Mr. Mohammad Ahmed.
