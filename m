@@ -2,104 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EEA043C573
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 10:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 753E443C689
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 11:35:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239565AbhJ0IsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 04:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232108AbhJ0Ir7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 04:47:59 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3279AC061570
-        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 01:45:34 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1635324332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k/OESFTM/lB7AHIqBru+EjPila2/PBI8kXu3SGoA/xs=;
-        b=1O7+Xe0fRLruaNrwt8+UW83HybEoVPrPKRTGETsTswE/iA/L5454bGK3qIYEbl9hRTW9Ox
-        F6I1PFpxkR0r5V6M7fHwef+wMYi6DsnfmXmZSe7xe30jDCwgnEeB6tvmDMOtGZjllIDGBq
-        DzLseKGvv+IFI8p5By1CxI7Qg8WeEYRroNnVVrcwdZmq3lebirT0UaOFhsT1MjdBF1UCTv
-        MF6QfB6TiAypPRSmkDrsqCelULxefGlwNtwWntgXG5A68wuszcnZA4Ody+EIMRxHjwbKt0
-        t8heATqPGiqC3zT3bPdCgfm5mL9yM5ksIuo5VbOMSXTbnsp6K4dA/aP/znRisw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1635324332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=k/OESFTM/lB7AHIqBru+EjPila2/PBI8kXu3SGoA/xs=;
-        b=xF3jfcyPV3qmiqlxQdURqI+hvdEKKydZtWMoHAKqSJp61D2nH7H+nNIm7zqY4TrS4q4QPP
-        6UpaskOsn1qEC3Aw==
-To:     Jason Andryuk <jandryuk@gmail.com>, josef@oderland.se
-Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jandryuk@gmail.com,
-        jgross@suse.com, linux-pci@vger.kernel.org, maz@kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] PCI/MSI: Fix masking MSI/MSI-X on Xen PV
-In-Reply-To: <20211025012503.33172-1-jandryuk@gmail.com>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
- <20211025012503.33172-1-jandryuk@gmail.com>
-Date:   Wed, 27 Oct 2021 10:45:31 +0200
-Message-ID: <87fssmg8k4.ffs@tglx>
+        id S241214AbhJ0JhX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 05:37:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45304 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241199AbhJ0JhV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 05:37:21 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10149"; a="230394517"
+X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
+   d="scan'208";a="230394517"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2021 02:34:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
+   d="scan'208";a="465671139"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 27 Oct 2021 02:34:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 76177BB; Wed, 27 Oct 2021 12:34:37 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] PCI: brcmstb: Use GENMASK() as __GENMASK() is for internal use only
+Date:   Wed, 27 Oct 2021 12:34:33 +0300
+Message-Id: <20211027093433.4832-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 24 2021 at 21:25, Jason Andryuk wrote:
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 4b4792940e86..478536bafc39 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -148,6 +148,9 @@ static noinline void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 s
->  	raw_spinlock_t *lock = &desc->dev->msi_lock;
->  	unsigned long flags;
->  
-> +	if (pci_msi_ignore_mask)
-> +		return;
-> +
->  	raw_spin_lock_irqsave(lock, flags);
->  	desc->msi_mask &= ~clear;
->  	desc->msi_mask |= set;
-> @@ -181,6 +184,9 @@ static void pci_msix_write_vector_ctrl(struct msi_desc *desc, u32 ctrl)
->  {
->  	void __iomem *desc_addr = pci_msix_desc_addr(desc);
->  
-> +	if (pci_msi_ignore_mask)
-> +		return;
-> +
->  	writel(ctrl, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
-> @@ -200,7 +206,7 @@ static inline void pci_msix_unmask(struct msi_desc *desc)
->  
->  static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
->  {
-> -	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-> +	if (desc->msi_attrib.is_virtual)
->  		return;
->  
->  	if (desc->msi_attrib.is_msix)
-> @@ -211,7 +217,7 @@ static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
->  
->  static void __pci_msi_unmask_desc(struct msi_desc *desc, u32 mask)
->  {
-> -	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-> +	if (desc->msi_attrib.is_virtual)
->  		return;
->  
->  	if (desc->msi_attrib.is_msix)
+Use GENMASK() as __GENMASK() is for internal use only.
 
-No, really. This is horrible and incomplete. The right thing to do is to
-move the check back into the low level accessors and remove it from the
-call sites simply because the low level accessors can be reached not
-only from the mask/unmask functions. But the above also fails to respect
-msi_attrib.maskbit... I'll send out a proper fix in a few.
+Fixes: 3baec684a531 ("PCI: brcmstb: Accommodate MSI for older chips")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 1fc7bd49a7ad..51522510c08c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -619,7 +619,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
+ 
+ static void brcm_msi_set_regs(struct brcm_msi *msi)
+ {
+-	u32 val = __GENMASK(31, msi->legacy_shift);
++	u32 val = GENMASK(31, msi->legacy_shift);
+ 
+ 	writel(val, msi->intr_base + MSI_INT_MASK_CLR);
+ 	writel(val, msi->intr_base + MSI_INT_CLR);
+-- 
+2.33.0
 
-        tglx
