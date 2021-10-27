@@ -2,108 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57B5843D5E5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 23:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D33A343D691
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 00:28:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232533AbhJ0Vk1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 17:40:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41594 "EHLO mail.kernel.org"
+        id S229612AbhJ0WbH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 18:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232045AbhJ0VkX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 17:40:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5303360D42;
-        Wed, 27 Oct 2021 21:37:57 +0000 (UTC)
+        id S229498AbhJ0WbH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 18:31:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 33D83610CA;
+        Wed, 27 Oct 2021 22:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635370677;
-        bh=vLiIfNu/LBHkvASsSz6r5IhCi/TCTkMibmd4RzIo5SE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r1PDHPT+08Enf9PlduEp8ddfwQUMPja4rCnQKhPSOgmlm1EBbTUZRDB3IcbDeQjP1
-         qfigBf9vX5z/PCnvL5NMx7JaDpA63Ru8oo5ESUJ9Hk1hJZgJgqFcVnLPp7uEmmV/R7
-         +muYlfp9JcaP3f7Dtw2KJPYdvgoYFWXhuu8EHx5LNC98kZ0d2+qaTVMPNEDSo3SNuG
-         HaB4gcSEn9/xy39dY5ng1qZ8MoR8snl1al+ntiz9XVbbHqXzHbkIWq3f7274Zwf98F
-         MEOMKAp9H5oRspDIr6IDipytX89HIZbwAOitIyRC6BIBavrdAE8ctAN2tCcc7XcNHu
-         CyMezx2VSVCTg==
-Received: by pali.im (Postfix)
-        id 0B651894; Wed, 27 Oct 2021 23:37:54 +0200 (CEST)
-Date:   Wed, 27 Oct 2021 23:37:54 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Rob Herring <robh@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-Message-ID: <20211027213754.bnswkijrqinackgt@pali>
-References: <CA+-6iNyxYm4Sf6EsKjmedi8RF-CZKsXs9KXMjaTd_xqnyFL8ZA@mail.gmail.com>
- <20211027165857.GA229979@bhelgaas>
+        s=k20201202; t=1635373721;
+        bh=2MWgc9xFJRquKdCnmaoqSNxkbFX03ApCi5nyauPyOmc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cBdBzfdAdAkINzIgbrXaO5y9l2A+BINrDk7mb2q4gy2VVb7IeswvNWiznzS9b16kU
+         w8QJTrNU+X7HHj8YmbAqp1bXVkdC8A9568J/e9QHNqcsPqcXxf7UZLK/jyDH3N5h/j
+         e9P+imTe94dnr2jS//Kg+ogY1e4MmZLaXlWzEbK3t8k8q5XwQb0VEimyqdyUNnSMRd
+         c4yG6gkw8MkBzpradbuwGKNe9di2GvXAVt0mIFqNfU+BeA/W1h0RPfztQeIBctzHEb
+         m4r0dtUnWjW7IKS1ofXGsTprat02WqXE1Fsi+uOeEsyHQ9WtLSwAfgdVPiyxvFjh0d
+         dNZLq6I3YAwjw==
+Date:   Wed, 27 Oct 2021 17:28:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
+        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH V10 4/8] PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe
+ Endpoint devices
+Message-ID: <20211027222839.GA252933@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211027165857.GA229979@bhelgaas>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211009104938.48225-5-liudongdong3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 27 October 2021 11:58:57 Bjorn Helgaas wrote:
-> On Tue, Oct 26, 2021 at 05:27:32PM -0400, Jim Quinlan wrote:
+On Sat, Oct 09, 2021 at 06:49:34PM +0800, Dongdong Liu wrote:
+> PCIe spec 5.0 r1.0 section 2.2.6.2 says:
 > 
-> > I don't think it matters but our PCIe controllers only have a single
-> > root port.
+>   If an Endpoint supports sending Requests to other Endpoints (as
+>   opposed to host memory), the Endpoint must not send 10-Bit Tag
+>   Requests to another given Endpoint unless an implementation-specific
+>   mechanism determines that the Endpoint supports 10-Bit Tag Completer
+>   capability.
 > 
-> Just to kibitz, and I don't know anything about the DT binding under
-> discussion here, but I would prefer if DTs and drivers did not have
-> the "single root port" assumption baked deeply in them.
+> Add a 10bit_tag sysfs file, write 0 to disable 10-Bit Tag Requester
+> when the driver does not bind the device. The typical use case is for
+> p2pdma when the peer device does not support 10-Bit Tag Completer.
+> Write 1 to enable 10-Bit Tag Requester when RC supports 10-Bit Tag
+> Completer capability. The typical use case is for host memory targeted
+> by DMA Requests. The 10bit_tag file content indicate current status of
+> 10-Bit Tag Requester Enable.
 
-+1
+Don't we have a hole here?  We're adding knobs to control 10-Bit Tag
+usage, but don't we have basically the same issues with Extended
+(8-bit) Tags?
 
-Please look also at my proposal for similar/same issue:
-https://lore.kernel.org/linux-pci/20211023144252.z7ou2l2tvm6cvtf7@pali/t/#u
+I wonder if we should be adding a more general "tags" file that can
+manage both 8-bit and 10-bit tag usage.
 
-> I expect some controllers to support multiple root ports, and it would
-> be really nice if the DTs and drivers all had similar structures with
-> the single-root-port controllers just being the N=1 case.
-> 
-> For example, some drivers put their per-root port stuff in
-> *_add_pcie_port() functions, which I think is a nice way to do it
-> because it leaves the door open for calling *_add_pcie_port() in a
-> loop.
-> 
-> Ironically, the only driver I see that looks like it currently
-> supports multiple root ports is pci-mvebu.c, and it doesn't have an
-> _add_pcie_port() function.
+> +static struct device_attribute dev_attr_10bit_tag = __ATTR(10bit_tag, 0644,
+> +							   pci_10bit_tag_show,
+> +							   pci_10bit_tag_store);
 
-Ironically, pci-mvebu.c is doing it wrong because HW has basically N
-fully independent HW host bridges and pci-mvebu.c driver is registering
-one kernel virtual host bridge device and is merging root ports of all
-host bridges into this one "virtual" bus which belongs to that kernel
-virtual host bridge... Plus root ports are also "virtual" because they
-are broken in HW. So correctly pci-mvebu.c should have been split into
-separate host bridge DTS nodes, but due to backward compatibility it is
-not possible.
-
-> Having this sort of consistent structure and naming across drivers is
-> a huge help for ongoing maintenance.
-> 
-> Bjorn
-
-+1
-
-That is why I sent that my proposal. Defining this as a common way for
-(new) drivers would really helps a lot all maintenance.
+I think this should use DEVICE_ATTR().  Or even better, if the name
+doesn't start with a digit, DEVICE_ATTR_RW().
