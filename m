@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B911643C8A3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 13:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5CB43C8A8
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 13:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234681AbhJ0Lei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 07:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
+        id S241653AbhJ0Len (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 07:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230336AbhJ0Leh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 07:34:37 -0400
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4701C061570;
-        Wed, 27 Oct 2021 04:32:12 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id t201-20020a4a3ed2000000b002b8c98da3edso810125oot.8;
-        Wed, 27 Oct 2021 04:32:12 -0700 (PDT)
+        with ESMTP id S241655AbhJ0Lem (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 07:34:42 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2AEC061570;
+        Wed, 27 Oct 2021 04:32:17 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id o83so3007774oif.4;
+        Wed, 27 Oct 2021 04:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PLuqEnTXe47rulVjhxN/gWoxn9OAXwjIoRJGGQuOV8g=;
-        b=h8Z8RlLV8LM+pMediEGJWDOLVHznhnkpCSQuXO1FYmE45rAzSX/f863SQmiaeghzNa
-         WhWV43HA6pPEupSoPRBFj9ifCmdlhY/P3Cc2D4ZyX3sOI/ZFFGJBlLAv71K/Tj1KD0Xz
-         8pVVqz5qi8ZIiRTsoL4dr3uAN/lveNATuxj0d0Xn/cSS+HxMjRbeImLDEyjdkstOIKtV
-         wZXuxmD++hsxEVivGZyst6WtMSs8bsMjEu6nX/h8FE1VrtcjuTcqS9nKPhfkxT/LUb7o
-         ZcjL+UkELp0YyOa4FnseLXRCr7IKhTz1rA571q8XfyUGHcXx/780tH2R5AWiFliCKW3L
-         NlPA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ulhn4KODo+M8bQOCOaLaS+XZsUOCyPb8RqRWLn0FhBo=;
+        b=NdNt/0mG63IMHrYdKrGRchjJA3NLl73blNkn2CLJ9iW1ZGGJ4MjZszel2piHsEUbqg
+         fgJkDpG5l92TH9cRhCifTd3dJGqR9XvpH/s3lIz3TJQYunHu+bpJkkR5GyuJd4glmzNB
+         MoeygbQ1FmfFSAd4XsZFnkJEpN7S5ohnzRxB9oy340onnnsQ92ug9E0NfVPwaQJM0p2H
+         fkA00Po14HGp91tFWr71+2Cx+EFhyptZPPomx/++zsiPJDHj0OyNQiAhrUB2d5MZ5Lxs
+         WeuOdKgc5Qki/ja4jIgfWIws7UAV5wdOydVxdhtqR8zZuXLxcC8AsaXp5v7b3N5g/F9w
+         Rxzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PLuqEnTXe47rulVjhxN/gWoxn9OAXwjIoRJGGQuOV8g=;
-        b=sR5ODlflnithXiChwukSNWE/IXStky7mzireIcnOC4gwoDPvs/QC4vIFU02svFoA92
-         sOL5efb2ODRmKQ596K91OtNa2znUBopWDHQl8HglRdn4LUWwHeMYa0CLlM7PEub0RIPY
-         swhKQIJvckDSTj8lfTLTIRDEkV3GKL2aTtGr2i4w770rxseUuxKBk/qMe+4yv1ZswyJb
-         soIFHbstbb2EmwwEiiO8h2XLA/az/ZBlzLr6+RLeVfEctjpQaOnGkxE/AlGA0d/LSXjP
-         mI4x/VI/zM0ITgiov5GoYXyBsvkFQJgQjuWKrZ9Ps0ot/8dSZ1NN4icVxg9Fy98Jv+gT
-         e5dg==
-X-Gm-Message-State: AOAM530NAhLhtceKG3YgI7I/btmriRQtBVx/A5f2z9UxubNcasi668uP
-        rxm+tveJ+aXY1oqdezI4v1ahpTRBuyvUVQ==
-X-Google-Smtp-Source: ABdhPJyYBY1m3ap3FTqF0Co+JOPNyvzi6NT3ywXO6Cyx7Bb7muZ84qjTwTFjt/pXvvyQN/ioacabnw==
-X-Received: by 2002:a4a:e848:: with SMTP id j8mr3587427ooj.61.1635334331976;
-        Wed, 27 Oct 2021 04:32:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ulhn4KODo+M8bQOCOaLaS+XZsUOCyPb8RqRWLn0FhBo=;
+        b=oNLyE/51ITDO5ZbvQDrwjFXKq1FqbN+HPe1UFYhFMgKaVfzmx6ytrN/8sQ9I5Fq1CT
+         9AHOuklk2LFJabcSSgARp8AaHUWej07ON+6b5e4SK0fVRW85E5vgAq+cuaf7iTarA2+E
+         OHRoWdWgGa7JHB320XhsiY0hGC9XA4I+fW5cYECaSp2dPMbN/oDufjXy9F0wdc2sdkMZ
+         JGtgxV05jDu7VyR4/SoM1B3PwROQPrPuBe46Pi+5Qr27RWkAEDFh1qE5BnXOxm3enOoj
+         fu5c1UU5uAd9Ij0c3s3zkGky8pED0lpfkFrNBL5ytZVIxQNeq/dTWS/KhyVU1C3R+qjc
+         k8Jw==
+X-Gm-Message-State: AOAM533/H6QXA09akBnGNvdEp/JkfwZiZcQQ6YfzrgdZevJCFm/FB047
+        bG3NLV8pnVf7Fpm51yjT2nc=
+X-Google-Smtp-Source: ABdhPJyDtqXolJD9smrK9+TJiNjHaGA863agytaUNdu/NWWpgx1LiqcUGcw3mrk5rjhk7cXU0TEVEg==
+X-Received: by 2002:aca:3343:: with SMTP id z64mr3098600oiz.100.1635334337149;
+        Wed, 27 Oct 2021 04:32:17 -0700 (PDT)
 Received: from localhost.localdomain ([8.26.182.170])
-        by smtp.gmail.com with ESMTPSA id e23sm5430106oih.40.2021.10.27.04.32.06
+        by smtp.gmail.com with ESMTPSA id e23sm5430106oih.40.2021.10.27.04.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 04:32:11 -0700 (PDT)
+        Wed, 27 Oct 2021 04:32:16 -0700 (PDT)
 From:   Yanteng Si <siyanteng01@gmail.com>
 X-Google-Original-From: Yanteng Si <siyanteng@loongson.cn>
 To:     sergio.paracuellos@gmail.com
@@ -57,10 +57,12 @@ Cc:     Yanteng Si <siyanteng@loongson.cn>, lorenzo.pieralisi@arm.com,
         linux-mediatek@lists.infradead.org, tsbogend@alpha.franken.de,
         linux-mips@vger.kernel.org, chenhuacai@kernel.org,
         sterlingteng@gmail.com
-Subject: [PATCH 0/2] drivers/mt7621: Fix build error ERROR: modpost:
-Date:   Wed, 27 Oct 2021 19:31:38 +0800
-Message-Id: <cover.1635333327.git.siyanteng@loongson.cn>
+Subject: [PATCH 1/2] PCI: mt7621: Add MODULE_* macros to MT7621 PCIe host controller driver
+Date:   Wed, 27 Oct 2021 19:31:39 +0800
+Message-Id: <50f5f509c15251fb10b0c87304d272e2c89841f0.1635333327.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1635333327.git.siyanteng@loongson.cn>
+References: <cover.1635333327.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -69,27 +71,28 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Since commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
 the MT7621 PCIe host controller driver is built as a module but no MODULE_*() attributes
-were specified, causing a build error due to missing license information. At the same time,
-modpost complains once these drivers become modules.
+were specified, causing a build error due to missing license information.
 
 ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
-ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
 
-Let's just fix them.
+Fix this by adding MODULE attributes to the driver.
 
-Yanteng Si (2):
-  PCI: mt7621: Add MODULE_* macros to MT7621 PCIe host controller driver
-  PCI: mt7621: Export mips_cm/cpc/gcr_* to modules
-
- arch/mips/kernel/mips-cm.c           | 5 +++++
- arch/mips/kernel/mips-cpc.c          | 1 +
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
  drivers/pci/controller/pcie-mt7621.c | 2 ++
- 3 files changed, 8 insertions(+)
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+index b60dfb45ef7b..668b737f86fb 100644
+--- a/drivers/pci/controller/pcie-mt7621.c
++++ b/drivers/pci/controller/pcie-mt7621.c
+@@ -598,3 +598,5 @@ static struct platform_driver mt7621_pci_driver = {
+ 	},
+ };
+ builtin_platform_driver(mt7621_pci_driver);
++
++MODULE_LICENSE("GPL v2");
+\ No newline at end of file
 -- 
 2.27.0
 
