@@ -2,160 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2CE843D355
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 22:54:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11F1143D4CF
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 23:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244120AbhJ0U5Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 16:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
+        id S232387AbhJ0VYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 17:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240812AbhJ0U5P (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 16:57:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B45EC60720;
-        Wed, 27 Oct 2021 20:54:49 +0000 (UTC)
+        id S232208AbhJ0VXP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 17:23:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D111610CA;
+        Wed, 27 Oct 2021 21:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635368089;
-        bh=XgfuZcgNeU1o4U066Dxlyrpi/I12+1zWGV5m7Pxr82o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OAbuJSfW5zjl/83ERQgTJgfEqJH2MF247qK72qSkpWBTuB8UEQaozQ0pWecCNQIof
-         F3FXeEPLO9w032V5cxRglK2SL+lfHrzXp0pK9IGXZsScFgs0HWAgdX55DcLXE2rLok
-         1/QbL1X46U8XQ1hMc2HjIkRoPAR7mzfx+oln2jKmf+D+SR1UtmKiTD9Uudb9bFSGhk
-         8Iyi1Nuug5WA+ZKfaGAu0ragHv8Yaxkestd04NdJO9iOcvUwy8v7mPmQhyvUtE3Jeh
-         Fuw4p+bS3s4j++kYt4eJ/OU9IrFeaB8mQzDPZHVuDvsbFzhLYT5jDwJShK4Ohm8Wuz
-         iioEHUZjCr5Lw==
-Received: by mail-ed1-f47.google.com with SMTP id 5so15159787edw.7;
-        Wed, 27 Oct 2021 13:54:49 -0700 (PDT)
-X-Gm-Message-State: AOAM5301dt+M1dtUD1uU4RdRYvXsbi/v5iVDBdgJeC0XBYdJk97iaM66
-        8i+JXwFLWVyup+gKhRndE4dk42riT2E1+H1gWQ==
-X-Google-Smtp-Source: ABdhPJziWywQQgYkEV9nIVhn4taCV9SnGHbldytyVbi1hcGiHMRYrSHL+de7NgTWJFbhsKP3lA23o5z0r7J4t3mLimY=
-X-Received: by 2002:a17:907:7d8b:: with SMTP id oz11mr42058018ejc.84.1635368088211;
- Wed, 27 Oct 2021 13:54:48 -0700 (PDT)
+        s=k20201202; t=1635369649;
+        bh=XAKQElgr6BBu1UxLggaDKytR7eU4feqnPzmw0g25Rh0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p0b4YLUwvJPjelhXK6tuNGSLxPc8W57wzTHLdwcnMUmPB94v3hsvXslXLq1TZ7GY3
+         sL93c85du1ZkOYvv6Pe8m//9lhA+RCJvKPQ3Uxy4IpiUrRzmmHS2TjXc+bDuZhbHC1
+         l+E73WotWsbVG9NLfon08np6Kd/XgVf0Jxca7lyT4yX6vB73LFYEef0IfwG2arUu8/
+         99lPcmeJ/rIFzzRSmhPjxtiZo5dpdJB8a4yC6OHadP/Fj4Qj6F80bnWXW+gPhJdbdy
+         kbLLEj07eEaOlMSzDYq1FQHtoTNtzXOYOJc/bLD1mWl8TMf9oIuR/1QaiRsDmFW7pE
+         HwI4EGZ6WMvrg==
+Date:   Wed, 27 Oct 2021 16:20:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
+        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH V10 6/8] PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
+Message-ID: <20211027212048.GA252528@bhelgaas>
 MIME-Version: 1.0
-References: <20211022140714.28767-1-jim2101024@gmail.com> <20211022140714.28767-2-jim2101024@gmail.com>
- <YXcup7d6ROmmPCuD@robh.at.kernel.org> <CA+-6iNyxYm4Sf6EsKjmedi8RF-CZKsXs9KXMjaTd_xqnyFL8ZA@mail.gmail.com>
-In-Reply-To: <CA+-6iNyxYm4Sf6EsKjmedi8RF-CZKsXs9KXMjaTd_xqnyFL8ZA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 27 Oct 2021 15:54:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLBqjEOB_rUJ-7KW7Pr4DH-VmxkDJpEZ_YNE4Vvz8kEsQ@mail.gmail.com>
-Message-ID: <CAL_JsqLBqjEOB_rUJ-7KW7Pr4DH-VmxkDJpEZ_YNE4Vvz8kEsQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211009104938.48225-7-liudongdong3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 4:27 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
->
-> On Mon, Oct 25, 2021 at 6:24 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri, Oct 22, 2021 at 10:06:54AM -0400, Jim Quinlan wrote:
-> > > Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
-> > > allows optional regulators to be attached and controlled by the PCIe RC
-> > > driver.  That being said, this driver searches in the DT subnode (the EP
-> > > node, eg pci@0,0) for the regulator property.
-> > >
-> > > The use of a regulator property in the pcie EP subnode such as
-> > > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> > > file at
-> > >
-> > > https://github.com/devicetree-org/dt-schema/pull/54
-> > >
-> > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > > ---
-> > >  .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > index b9589a0daa5c..fec13e4f6eda 100644
-> > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > @@ -154,5 +154,28 @@ examples:
-> > >                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-> > >                      brcm,enable-ssc;
-> > >                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
-> > > +
-> > > +                    /* PCIe bridge */
-> >
-> > More specifically, the root port.
-> >
-> > > +                    pci@0,0 {
-> > > +                            #address-cells = <3>;
-> > > +                            #size-cells = <2>;
-> > > +                            reg = <0x0 0x0 0x0 0x0 0x0>;
-> > > +                            device_type = "pci";
-> > > +                            ranges;
-> > > +
-> > > +                            /* PCIe endpoint */
-> > > +                            pci@0,0 {
-> > > +                                    device_type = "pci";
-> >
-> > This means this device is a PCI bridge which wouldn't typically be the
-> > endpoint. Is that intended?
-> Hi Rob,
->
-> I'm not sure I understand what you are saying --  do you want the
-> innermost node to be named something like ep-pci@0,0, and its
-> containing node pci-bridge@0,0?   Or, more likely, I'm missing the
-> point.  If my DT subtree is this
+On Sat, Oct 09, 2021 at 06:49:36PM +0800, Dongdong Liu wrote:
+> Add a 10-Bit Tag check in the P2PDMA code to ensure that a device with
+> 10-Bit Tag Requester doesn't interact with a device that does not
+> support 10-Bit Tag Completer. 
 
-I'm confused as to how a bridge is the endpoint. If it is a bridge
-(which 'device_type = "pci"' means it is), then there should be
-another PCI device under it. That may or may not have a DT node.
+Shouldn't this also take into account Extended Tags (8 bits)?  I think
+the only tag size guaranteed to be supported is 5 bits.
 
-> pcie@8b10000 {
->     compatible = "brcm,bcm7278-pcie";
->     ....
->     pci-bridge@0,0 {
->         reg = <0x0 0x0 0x0 0x0 0x0>; /* bus 0 */
->         .....
->         pci-ep@0,0,0 {
->             reg = <0x10000 0x0 0x0 0x0 0x0>;  /* bus 1 */
->             vpcie3v3-supply = <&vreg8>;
->             ...
->         }
->     }
-> }
->
-> then the of_nodes appear to align correctly with the devices:
->
-> $ cd /sys/devices/platform/
-> $ cat 8b10000.pcie/of_node/name
-> pcie
-> $ cat 8b10000.pcie/pci0000:00/0000:00:00.0/of_node
-> pci-bridge
-> $ cat 8b10000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/of_node/name
-> pci-ep
+> Before that happens, the kernel should emit a warning.
 
-What does 'lspci -tv' show?
+The warning is nice, but the critical thing is that the P2PDMA mapping
+should fail so we don't attempt DMA in this situation.  I guess that's
+sort of what you're saying with "ensure that a device ... doesn't
+interact with a device ..."
 
->
-> and the EP device works of course.  I've even printed out the
-> device_node structure in the EP driver's probe and it is as expected.
-> I've noticed that examples such as
-> "arch/arm64/boot/dts/nvidia/tegra186.dtsi" have the EP node (eg
-> pci@1,0) directly under the
-> host bridge DT node (pcie@10003000).  I did try doing that, but the EP
-> device's probe is given a NUL device_node pointer.
-
-If you want a complex example I know that's right, then see hikey970.
-
-Rob
+> "echo 0 > /sys/bus/pci/devices/.../10bit_tag" to disable 10-Bit Tag
+> Requester for PF device.
+> 
+> "echo 0 > /sys/bus/pci/devices/.../sriov_vf_10bit_tag_ctl" to disable
+> 10-Bit Tag Requester for VF device.
+> 
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/p2pdma.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 50cdde3e9a8b..804e390f4c22 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/random.h>
+>  #include <linux/seq_buf.h>
+>  #include <linux/xarray.h>
+> +#include "pci.h"
+>  
+>  enum pci_p2pdma_map_type {
+>  	PCI_P2PDMA_MAP_UNKNOWN = 0,
+> @@ -410,6 +411,50 @@ static unsigned long map_types_idx(struct pci_dev *client)
+>  		(client->bus->number << 8) | client->devfn;
+>  }
+>  
+> +static bool pci_10bit_tags_unsupported(struct pci_dev *a,
+> +				       struct pci_dev *b,
+> +				       bool verbose)
+> +{
+> +	bool req;
+> +	bool comp;
+> +	u16 ctl;
+> +	const char *str = "10bit_tag";
+> +
+> +	if (a->is_virtfn) {
+> +#ifdef CONFIG_PCI_IOV
+> +		req = !!(a->physfn->sriov->ctrl &
+> +			 PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN);
+> +#endif
+> +	} else {
+> +		pcie_capability_read_word(a, PCI_EXP_DEVCTL2, &ctl);
+> +		req = !!(ctl & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN);
+> +	}
+> +
+> +	comp = !!(b->devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_COMP);
+> +	/* 10-bit tags not enabled on requester */
+> +	if (!req)
+> +		return false;
+> +
+> +	 /* Completer can handle anything */
+> +	if (comp)
+> +		return false;
+> +
+> +	if (!verbose)
+> +		return true;
+> +
+> +	pci_warn(a, "cannot be used for peer-to-peer DMA as 10-Bit Tag Requester enable is set for this device, but peer device (%s) does not support the 10-Bit Tag Completer\n",
+> +		 pci_name(b));
+> +
+> +	if (a->is_virtfn)
+> +		str = "sriov_vf_10bit_tag_ctl";
+> +
+> +	pci_warn(a, "to disable 10-Bit Tag Requester for this device, echo 0 > /sys/bus/pci/devices/%s/%s\n",
+> +		 pci_name(a), str);
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * Calculate the P2PDMA mapping type and distance between two PCI devices.
+>   *
+> @@ -532,6 +577,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>  	}
+>  done:
+> +	if (pci_10bit_tags_unsupported(client, provider, verbose))
+> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+> +
+>  	rcu_read_lock();
+>  	p2pdma = rcu_dereference(provider->p2pdma);
+>  	if (p2pdma)
+> -- 
+> 2.22.0
+> 
