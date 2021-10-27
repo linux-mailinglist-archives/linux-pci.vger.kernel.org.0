@@ -2,172 +2,268 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFB0243C6E7
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 11:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1180F43C6F7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 11:57:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231161AbhJ0J4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 05:56:52 -0400
-Received: from office.oderland.com ([91.201.60.5]:47494 "EHLO
-        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbhJ0J4w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 05:56:52 -0400
-Received: from [193.180.18.161] (port=57000 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1mffdX-00APdA-AN; Wed, 27 Oct 2021 11:54:23 +0200
-Message-ID: <d1cc20aa-5c5c-6c7b-2e5d-bc31362ad891@oderland.se>
-Date:   Wed, 27 Oct 2021 11:54:19 +0200
+        id S238970AbhJ0KAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 06:00:20 -0400
+Received: from mail-dm6nam11on2080.outbound.protection.outlook.com ([40.107.223.80]:56897
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237126AbhJ0KAT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 06:00:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cqppDfk32GioBqXyXdDQ0x9Ajzmk1NGaNx8wf+/byAwZ+US1IPDqAxCTs0MZah3qzkbHs9v5D9B5Ca0xtjup/C+GGhWCVq8TLlsPh3D11PP1UI8OvEVaDprF09b79+H8rc24HmuZTFCIOofxg35jxh374+i091u33C7F7n9WWsQA2+w9U/4cWBvfUuYaz/NKbzmgqztUfC7uZ0qo9uxp3siOFy4JWT04v9weVzbVfPNkDq5D2yDf6O26X514ffaRkhFJkrCTFrfmY3C3PefQ5SwanMABI+RBLzs2a1hwmlJXGmwKG572M3IlrkryuKjiCAVFe6hVssZc2XB3y5AeTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+pj71FOrREwXZnQJ+ws2/x15UDHi6wj45n6oOYAQVn8=;
+ b=ogtKIZCsHI4ksATroYBqiL5+i1mnBmKhea14Bbq+2B9I+A3tzulo81/yx4E6oL+dVuCQ30gAP0711E085hPXvtbI4N/rNTTjO1C7+T9Aw1WUpG8MxYtT8Ob64cN4UH5e02bHJYe+/15D/luj9gDKPMhnpwlrYRNho2tfuQbxbikUcMk6UxCM6UDZ529jXb4CLMbc3nyEGGtZA3Tlm+IfepW99wXkEMNA2vJ3ifAB1nGJidLvAe2PQB2M3tOmMg0ZmBvKh9nV5tat6lHrgBKHmRRsC+JXfiIZzF4feOkQ3dAbd2RfLeiNvhBti3XDmbHYaVF8rHtakuH8yHrBWyV/SA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.36) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+pj71FOrREwXZnQJ+ws2/x15UDHi6wj45n6oOYAQVn8=;
+ b=WzPDWJ/5/YJl5DIncBdBrgm6HCO6bN4lE3CbgiyPsTo5pOlLdzj69B5EL7MRkVsT3UgQ7WeDrmEyU8hOz6PWlUB9l+0tx2Ex2Um8Q3OqFnn8vKTBBEROjK41PtSsJbZv7fmJYXSClS+/j46C3wd6E9wQjmRnlPNsOioWEO8mn/OpqAw/PP9GpBZpet7qkG9ZIFnQaHMmSi/yiQNhE0AGGN/P2naGddma86ZPAbWPQJhrA917EMy0eOic1QYRbZDyeDxp1QZBnCv+2INQPKJnnSc8MLKWmlLf3hVNdfjBY4mpwn3wuKQsH2ftzc/8yKs3gmPMlGymQay3HtwSdLsUZA==
+Received: from BN6PR16CA0007.namprd16.prod.outlook.com (2603:10b6:404:f5::17)
+ by CH2PR12MB4214.namprd12.prod.outlook.com (2603:10b6:610:aa::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Wed, 27 Oct
+ 2021 09:57:52 +0000
+Received: from BN8NAM11FT007.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:f5:cafe::31) by BN6PR16CA0007.outlook.office365.com
+ (2603:10b6:404:f5::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.20 via Frontend
+ Transport; Wed, 27 Oct 2021 09:57:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ BN8NAM11FT007.mail.protection.outlook.com (10.13.177.109) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4649.14 via Frontend Transport; Wed, 27 Oct 2021 09:57:51 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 27 Oct
+ 2021 09:57:50 +0000
+Received: from vdi.nvidia.com (172.20.187.5) by mail.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Wed, 27 Oct 2021 09:57:47 +0000
+From:   Yishai Hadas <yishaih@nvidia.com>
+To:     <alex.williamson@redhat.com>, <bhelgaas@google.com>,
+        <jgg@nvidia.com>, <saeedm@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>,
+        <yishaih@nvidia.com>, <maorg@nvidia.com>
+Subject: [PATCH V5 mlx5-next 00/13] Add mlx5 live migration driver
+Date:   Wed, 27 Oct 2021 12:56:45 +0300
+Message-ID: <20211027095658.144468-1-yishaih@nvidia.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
- Thunderbird/93.0
-Subject: Re: [PATCH] PCI/MSI: Move non-mask check back into low level
- accessors
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jgross@suse.com,
-        linux-pci@vger.kernel.org, maz@kernel.org,
-        xen-devel@lists.xenproject.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jason Andryuk <jandryuk@gmail.com>
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
- <20211025012503.33172-1-jandryuk@gmail.com> <87fssmg8k4.ffs@tglx>
- <87cznqg5k8.ffs@tglx>
-From:   Josef Johansson <josef@oderland.se>
-In-Reply-To: <87cznqg5k8.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3834bcc3-a900-4148-7325-08d999303da2
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4214:
+X-Microsoft-Antispam-PRVS: <CH2PR12MB4214A54A43C7DDF2B623FFCCC3859@CH2PR12MB4214.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4ckJOIohZqGg8CzVnLUi7L/UY/B9QBi862VBBFr3/pHo1uEKQy5cmhLtkpmGWJPPnqwlGj43ZtNTiEAdvowk0c21wd0MuoPE4qBc5Vq1dg0Osq7Kc7lkf/0/2hcXwaOeYmFUTlWEcvhin/s5Ztf0m/WdYWiKKPBocv7I1BGDGLnsqCacN6+uwsKU+RI1g29sH27HRWbd15dgpgLKveuW+ah0geq7m47+e4bgho+oaT0BhpXnNn5zlIsyKfacqzcfJwV5JgEM5HQFYOecDDtdc1T0qApStbXL6L7xhgWH54dumH6KnDndiQkYWGFY/qBXxuVWGjVV+SIKYcXiDPKGKw4sBqwhgrYd62oLr5BcXjAZ3nxuoLRWoeIb+OLRk2bIyIZGQayXiECuy1MZYeM7hzn5gYDQzpOG3Ow0bPK7RqNjNJA7nbj/VQaqinHXpJtDPB2OX4wF7fsZzNueHc/OYfFUjmhKs2ijwjkGFPWxbZWM6i1zSKQq1BPYwMW3qYcMXV2yArPJs0hJYV6M7WRihEuzWMPaRYOfGPr50VUvNderbS72KZGBDy/diiMTGbg6N7KWtU6oxZwkPHWqr1b9KBZOfdtrpEoGftzbIl2dymQ5rH5Vb6XVJlmND3J93ohkLVsi6YKHi7d6Q/6kc0DSKjq3uZ50eNklclE/gkthp+UdTlZyzaPM51ex9oTvloU5RaNXj/6wcHOd0wjz+PAJdw==
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(186003)(107886003)(316002)(70206006)(110136005)(54906003)(47076005)(7636003)(70586007)(26005)(426003)(2616005)(36756003)(86362001)(36860700001)(82310400003)(336012)(83380400001)(356005)(8936002)(4326008)(7696005)(5660300002)(2906002)(1076003)(508600001)(8676002)(6636002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2021 09:57:51.9373
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3834bcc3-a900-4148-7325-08d999303da2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT007.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4214
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/27/21 11:50, Thomas Gleixner wrote:
-> The recent rework of PCI/MSI[X] masking moved the non-mask checks from the
-> low level accessors into the higher level mask/unmask functions.
->
-> This missed the fact that these accessors can be invoked from other places
-> as well. The missing checks break XEN-PV which sets pci_msi_ignore_mask and
-> also violates the virtual MSIX and the msi_attrib.maskbit protections.
->
-> Instead of sprinkling checks all over the place, lift them back into the
-> low level accessor functions. To avoid checking three different conditions
-> combine them into one property of msi_desc::msi_attrib.
->
-> Reported-by: Josef Johansson <josef@oderland.se>
-> Fixes: fcacdfbef5a1 ("PCI/MSI: Provide a new set of mask and unmask functions")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Andryuk <jandryuk@gmail.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: xen-devel <xen-devel@lists.xenproject.org>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> ---
->  drivers/pci/msi.c   |   26 ++++++++++++++------------
->  include/linux/msi.h |    2 +-
->  2 files changed, 15 insertions(+), 13 deletions(-)
->
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -148,6 +148,9 @@ static noinline void pci_msi_update_mask
->  	raw_spinlock_t *lock = &desc->dev->msi_lock;
->  	unsigned long flags;
->  
-> +	if (!desc->msi_attrib.can_mask)
-> +		return;
-> +
->  	raw_spin_lock_irqsave(lock, flags);
->  	desc->msi_mask &= ~clear;
->  	desc->msi_mask |= set;
-> @@ -181,7 +184,8 @@ static void pci_msix_write_vector_ctrl(s
->  {
->  	void __iomem *desc_addr = pci_msix_desc_addr(desc);
->  
-> -	writel(ctrl, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
-> +	if (desc->msi_attrib.can_mask)
-> +		writel(ctrl, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
->  static inline void pci_msix_mask(struct msi_desc *desc)
-> @@ -200,23 +204,17 @@ static inline void pci_msix_unmask(struc
->  
->  static void __pci_msi_mask_desc(struct msi_desc *desc, u32 mask)
->  {
-> -	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-> -		return;
-> -
->  	if (desc->msi_attrib.is_msix)
->  		pci_msix_mask(desc);
-> -	else if (desc->msi_attrib.maskbit)
-> +	else
->  		pci_msi_mask(desc, mask);
->  }
->  
->  static void __pci_msi_unmask_desc(struct msi_desc *desc, u32 mask)
->  {
-> -	if (pci_msi_ignore_mask || desc->msi_attrib.is_virtual)
-> -		return;
-> -
->  	if (desc->msi_attrib.is_msix)
->  		pci_msix_unmask(desc);
-> -	else if (desc->msi_attrib.maskbit)
-> +	else
->  		pci_msi_unmask(desc, mask);
->  }
->  
-> @@ -484,7 +482,8 @@ msi_setup_entry(struct pci_dev *dev, int
->  	entry->msi_attrib.is_64		= !!(control & PCI_MSI_FLAGS_64BIT);
->  	entry->msi_attrib.is_virtual    = 0;
->  	entry->msi_attrib.entry_nr	= 0;
-> -	entry->msi_attrib.maskbit	= !!(control & PCI_MSI_FLAGS_MASKBIT);
-> +	entry->msi_attrib.can_mask	= !pci_msi_ignore_mask &&
-> +					  !!(control & PCI_MSI_FLAGS_MASKBIT);
->  	entry->msi_attrib.default_irq	= dev->irq;	/* Save IOAPIC IRQ */
->  	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
->  	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
-> @@ -495,7 +494,7 @@ msi_setup_entry(struct pci_dev *dev, int
->  		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
->  
->  	/* Save the initial mask status */
-> -	if (entry->msi_attrib.maskbit)
-> +	if (entry->msi_attrib.can_mask)
->  		pci_read_config_dword(dev, entry->mask_pos, &entry->msi_mask);
->  
->  out:
-> @@ -638,10 +637,13 @@ static int msix_setup_entries(struct pci
->  		entry->msi_attrib.is_virtual =
->  			entry->msi_attrib.entry_nr >= vec_count;
->  
-> +		entry->msi_attrib.can_mask	= !pci_msi_ignore_mask &&
-> +						  !entry->msi_attrib.is_virtual;
-> +
->  		entry->msi_attrib.default_irq	= dev->irq;
->  		entry->mask_base		= base;
->  
-> -		if (!entry->msi_attrib.is_virtual) {
-> +		if (!entry->msi_attrib.can_mask) {
->  			addr = pci_msix_desc_addr(entry);
->  			entry->msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  		}
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -148,7 +148,7 @@ struct msi_desc {
->  				u8	is_msix		: 1;
->  				u8	multiple	: 3;
->  				u8	multi_cap	: 3;
-> -				u8	maskbit		: 1;
-> +				u8	can_mask	: 1;
->  				u8	is_64		: 1;
->  				u8	is_virtual	: 1;
->  				u16	entry_nr;
+This series adds mlx5 live migration driver for VFs that are migrated
+capable.
+
+It uses vfio_pci_core to register to the VFIO subsystem and then
+implements the mlx5 specific logic in the migration area.
+
+The migration implementation follows the definition from uapi/vfio.h and
+uses the mlx5 VF->PF command channel to achieve it.
+
+As part of the migration process the VF doesn't ride on mlx5_core, the
+device is driving *two* different PCI devices, the PF owned by mlx5_core
+and the VF owned by the mlx5 vfio driver.
+
+The mlx5_core of the PF is accessed only during the narrow window of the
+VF's ioctl that requires its services.
+
+To let that work properly a new API was added in the PCI layer (i.e.
+pci_iov_get_pf_drvdata) that lets the VF access safely to the PF
+drvdata. It was used in this series as part of mlx5_core and mlx5_vdpa
+when a VF needed that functionality.
+
+In addition, mlx5_core was aligned with other drivers to disable SRIOV
+before PF has gone as part of the remove_one() call back.
+
+This enables proper usage of the above new PCI API and prevents some
+warning message that exists today when it's not done.
+
+The series also exposes from the PCI sub system an API named
+pci_iov_vf_id() to get the index of the VF. The PCI core uses this index
+internally, often called the vf_id, during the setup of the VF, eg
+pci_iov_add_virtfn().
+
+The returned VF index is needed by the mlx5 vfio driver for its internal
+operations to configure/control its VFs as part of the migration
+process.
+
+With the above functionality in place the driver implements the
+suspend/resume flows to work over QEMU.
+
+Changes from V4:
+vfio:
+- Add some Reviewed-by.
+- Rename to vfio_pci_core_aer_err_detected() as Alex asked.
+vfio/mlx5:
+- Improve to enter the error state only if unquiesce also fails.
+- Fix some typos.
+- Use the multi-line comment style as in drivers/vfio.
+
+Changes from V3:
+vfio/mlx5:
+- Align with mlx5 latest specification to create the MKEY with full read
+  write permissions.
+- Fix unlock ordering in mlx5vf_state_mutex_unlock() to prevent some
+  race.
+
+Changes from V2:
+vfio:
+- Put and use the new macro VFIO_DEVICE_STATE_SET_ERROR as Alex asked.
+vfio/mlx5:
+- Improve/fix state checking as was asked by Alex & Jason.
+- Let things be done in a deterministic way upon 'reset_done' following
+  the suggested algorithm by Jason.
+- Align with mlx5 latest specification when calling the SAVE command.
+- Fix some typos.
+vdpa/mlx5:
+- Drop the patch from the series based on the discussion in the mailing
+  list.
+
+Changes from V1:
+PCI/IOV:
+- Add actual interface in the subject as was asked by Bjorn and add
+  his Acked-by.
+- Move to check explicitly for !dev->is_virtfn as was asked by Alex.
+vfio:
+- Come with a separate patch for fixing the non-compiled
+  VFIO_DEVICE_STATE_SET_ERROR macro.
+- Expose vfio_pci_aer_err_detected() to be set by drivers on their own
+  pci error handles.
+- Add a macro for VFIO_DEVICE_STATE_ERROR in the uapi header file as was
+  suggested by Alex.
+vfio/mlx5:
+- Improve to use xor as part of checking the 'state' change command as
+  was suggested by Alex.
+- Set state to VFIO_DEVICE_STATE_ERROR when an error occurred instead of
+  VFIO_DEVICE_STATE_INVALID.
+- Improve state checking as was suggested by Jason.
+- Use its own PCI reset_done error handler as was suggested by Jason and
+  fix the locking scheme around the state mutex to work properly.
+
+Changes from V0:
+PCI/IOV:
+- Add an API (i.e. pci_iov_get_pf_drvdata()) that allows SRVIO VF
+  drivers to reach the drvdata of a PF.
+net/mlx5:
+- Add an extra patch to disable SRIOV before PF removal.
+- Adapt to use the above PCI/IOV API as part of mlx5_vf_get_core_dev().
+- Reuse the exported PCI/IOV virtfn index function call (i.e.
+  pci_iov_vf_id().
+vfio:
+- Add support in the pci_core to let a driver be notified when
+  'reset_done' to let it sets its internal state accordingly.
+- Add some helper stuff for 'invalid' state handling.
+vfio/mlx5:
+- Move to use the 'command mode' instead of the 'state machine'
+  scheme as was discussed in the mailing list.
+-Handle the RESET scenario when called by vfio_pci_core to sets
+ its internal state accordingly.
+- Set initial state as RUNNING.
+- Put the driver files as sub-folder under drivers/vfio/pci named mlx5
+  and update the MAINTAINER file as was asked.
+vdpa/mlx5:
+Add a new patch to use mlx5_vf_get_core_dev() to get the PF device.
+
+---------------------------------------------------------------
+Alex,
+
+This series touches our ethernet and RDMA drivers, so we will need to
+route the patches through separate shared branch (mlx5-next) in order to
+eliminate the chances of merge conflicts between different subsystems.
+
+Are you fine with taking this V5 series through mlx5-next and we'll send
+a PR to you to include ?
+
 Thanks,
-I'll test this out ASAP.
+Yishai
+
+Jason Gunthorpe (2):
+  PCI/IOV: Add pci_iov_vf_id() to get VF index
+  PCI/IOV: Add pci_iov_get_pf_drvdata() to allow VF reaching the drvdata
+    of a PF
+
+Leon Romanovsky (1):
+  net/mlx5: Reuse exported virtfn index function call
+
+Yishai Hadas (10):
+  net/mlx5: Disable SRIOV before PF removal
+  net/mlx5: Expose APIs to get/put the mlx5 core device
+  vfio: Fix VFIO_DEVICE_STATE_SET_ERROR macro
+  vfio: Add a macro for VFIO_DEVICE_STATE_ERROR
+  vfio/pci_core: Make the region->release() function optional
+  net/mlx5: Introduce migration bits and structures
+  vfio/mlx5: Expose migration commands over mlx5 device
+  vfio/mlx5: Implement vfio_pci driver for mlx5 devices
+  vfio/pci: Expose vfio_pci_core_aer_err_detected()
+  vfio/mlx5: Use its own PCI reset_done error handler
+
+ MAINTAINERS                                   |   6 +
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  44 +
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   1 +
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   |  17 +-
+ drivers/pci/iov.c                             |  43 +
+ drivers/vfio/pci/Kconfig                      |   3 +
+ drivers/vfio/pci/Makefile                     |   2 +
+ drivers/vfio/pci/mlx5/Kconfig                 |  10 +
+ drivers/vfio/pci/mlx5/Makefile                |   4 +
+ drivers/vfio/pci/mlx5/cmd.c                   | 356 +++++++++
+ drivers/vfio/pci/mlx5/cmd.h                   |  43 +
+ drivers/vfio/pci/mlx5/main.c                  | 750 ++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_core.c              |  10 +-
+ include/linux/mlx5/driver.h                   |   3 +
+ include/linux/mlx5/mlx5_ifc.h                 | 147 +++-
+ include/linux/pci.h                           |  15 +-
+ include/linux/vfio_pci_core.h                 |   2 +
+ include/uapi/linux/vfio.h                     |   8 +-
+ 18 files changed, 1440 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/vfio/pci/mlx5/Kconfig
+ create mode 100644 drivers/vfio/pci/mlx5/Makefile
+ create mode 100644 drivers/vfio/pci/mlx5/cmd.c
+ create mode 100644 drivers/vfio/pci/mlx5/cmd.h
+ create mode 100644 drivers/vfio/pci/mlx5/main.c
+
+-- 
+2.18.1
+
