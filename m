@@ -2,71 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 753E443C689
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 11:35:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A44A43C6C2
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 11:47:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241214AbhJ0JhX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 05:37:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45304 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241199AbhJ0JhV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 05:37:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10149"; a="230394517"
-X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
-   d="scan'208";a="230394517"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2021 02:34:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
-   d="scan'208";a="465671139"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 27 Oct 2021 02:34:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 76177BB; Wed, 27 Oct 2021 12:34:37 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] PCI: brcmstb: Use GENMASK() as __GENMASK() is for internal use only
-Date:   Wed, 27 Oct 2021 12:34:33 +0300
-Message-Id: <20211027093433.4832-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+        id S241268AbhJ0Jtm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 05:49:42 -0400
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:45784 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232462AbhJ0Jtl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 05:49:41 -0400
+Received: by mail-wr1-f54.google.com with SMTP id o14so3019497wra.12;
+        Wed, 27 Oct 2021 02:47:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OFu06dK+pr0CiCz8sOgcK79FrtlXeRSMwN2V1c19Y+g=;
+        b=PVekN6iOoXgZF0K9+CAc42vb4oTIIJR5LYCBa38gd5Z68NVsXm13ni+VM/3Wo+ldmB
+         HD7p2gxb766IZM7gHbvIq0KC4WGSVmfmdv1pQwzZCprbjdzDYicLPjXgSmrym3K37+XP
+         0UOlpJDfdAMrM8nRMJ1D4au5487jrjQOpSWrM7+Pk1HtPFqovUgzMsMhzq/4gB49bgZV
+         T2hDGICrpKarKQMXyLuCMW75vUTI8cT1eSuQqjBfwUOebwqSa3ArvTUTp5pGrGPcS4Wz
+         ajcGmBvbRBfh2UCdPx0mXubCp6iLP3mw1ObnrjWp5dukWrgHQXhssb96KEnuLJQJoEfi
+         nKNg==
+X-Gm-Message-State: AOAM5303xyf4Z/bJ56V0iVOzzcNoFfDPMB1HLY+eeFOnfAFQeP+dM2bX
+        H2SRhl5FcVOqi0Thx+//5DV60AlfLXA=
+X-Google-Smtp-Source: ABdhPJwnwnvVmMMBHLZ9z8B7mrpO+Zjk/N650wkrIJV7BDv209YQktd8CepVv/XntNMIpr0kXmBYLg==
+X-Received: by 2002:a5d:6d8e:: with SMTP id l14mr38980717wrs.304.1635328035591;
+        Wed, 27 Oct 2021 02:47:15 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id t12sm3051361wmq.44.2021.10.27.02.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Oct 2021 02:47:15 -0700 (PDT)
+Date:   Wed, 27 Oct 2021 11:47:14 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Robin McCorkell <robin@mccorkell.me.uk>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Limit REBAR quirk to just Sapphire RX 5600 XT
+ Pulse
+Message-ID: <YXkgIjURbhdWo4YX@rocinante>
+References: <20211026212835.GA167500@bhelgaas>
+ <20211026214513.25986-1-robin@mccorkell.me.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211026214513.25986-1-robin@mccorkell.me.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use GENMASK() as __GENMASK() is for internal use only.
+[+CC adding Bjorn as the PCI sub-system maintainer]
 
-Fixes: 3baec684a531 ("PCI: brcmstb: Accommodate MSI for older chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Robin,
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 1fc7bd49a7ad..51522510c08c 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -619,7 +619,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
- 
- static void brcm_msi_set_regs(struct brcm_msi *msi)
- {
--	u32 val = __GENMASK(31, msi->legacy_shift);
-+	u32 val = GENMASK(31, msi->legacy_shift);
- 
- 	writel(val, msi->intr_base + MSI_INT_MASK_CLR);
- 	writel(val, msi->intr_base + MSI_INT_CLR);
--- 
-2.33.0
+Thank you for sending the patch over!
 
+> A particular RX 5600 device requires a hack in the rebar logic, but the
+> current branch is too general and catches other devices too, breaking
+> them. This patch changes the branch to be more selective on the
+> particular revision.
+> 
+> This patch fixes intermittent freezes on other RX 5600 devices where the
+> hack is unnecessary. Credit to all contributors in the linked issue on
+> the AMD bug tracker.
+> 
+> See also: https://gitlab.freedesktop.org/drm/amd/-/issues/1707
+[...]
+
+The commit message could be improved a little bit so that it's more in
+preferred imperative tone describing what precisely is broken and how it
+fixes the problem for Sapphire RX 5600 XT and other ATI cards.  Also,
+consistent capitalisation of "REBAR" between the subject and the commit
+message would be a plus.
+
+There is also no need to add "this patch" - we also know that this is this
+very patch, especially since this isn't a series that comprises of multiple
+other patches.
+
+Also, sine this is a v2, it would be nice to include a small changelog,
+even if the change is trivial, with helps as people don't have to go and
+read other e-mail threads to find out what was changed and why.
+
+> Reported-by: Simon May <@Socob on gitlab.freedesktop.com>
+> Tested-by: Kain Centeno <@kaincenteno on gitlab.freedesktop.com>
+> Tested-by: Tobias Jakobi <@tobiasjakobi on gitlab.freedesktop.com>
+> Suggested-by: lijo lazar <@lijo on gitlab.freedesktop.com>
+
+The above would be "gitlab.freedesktop.org", I believe.  Having said that,
+I am not sure if we can accept username handles to some remote Git hosting
+platform in lieu of proper, so to speak, e-mail addresses.
+
+[...]
+>  	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
+>  	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
+> -	    bar == 0 && cap == 0x7000)
+> +	    pdev->revision == 0xC1 && bar == 0 && cap == 0x7000)
+
+A small nitpick: lowercase hexadecimal values to match how it's been used
+in other places.
+
+	Krzysztof
