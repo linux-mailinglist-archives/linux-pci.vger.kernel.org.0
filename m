@@ -2,72 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D33A343D691
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 00:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE75943D6C7
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 00:38:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbhJ0WbH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 18:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52064 "EHLO mail.kernel.org"
+        id S229723AbhJ0WlN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 18:41:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229498AbhJ0WbH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 18:31:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 33D83610CA;
-        Wed, 27 Oct 2021 22:28:41 +0000 (UTC)
+        id S229705AbhJ0WlN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 18:41:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E6526610CB;
+        Wed, 27 Oct 2021 22:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635373721;
-        bh=2MWgc9xFJRquKdCnmaoqSNxkbFX03ApCi5nyauPyOmc=;
+        s=k20201202; t=1635374327;
+        bh=35c80/puX4yheOLYZ+/8XIuODUrQTE7OA/dywvGPSWc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cBdBzfdAdAkINzIgbrXaO5y9l2A+BINrDk7mb2q4gy2VVb7IeswvNWiznzS9b16kU
-         w8QJTrNU+X7HHj8YmbAqp1bXVkdC8A9568J/e9QHNqcsPqcXxf7UZLK/jyDH3N5h/j
-         e9P+imTe94dnr2jS//Kg+ogY1e4MmZLaXlWzEbK3t8k8q5XwQb0VEimyqdyUNnSMRd
-         c4yG6gkw8MkBzpradbuwGKNe9di2GvXAVt0mIFqNfU+BeA/W1h0RPfztQeIBctzHEb
-         m4r0dtUnWjW7IKS1ofXGsTprat02WqXE1Fsi+uOeEsyHQ9WtLSwAfgdVPiyxvFjh0d
-         dNZLq6I3YAwjw==
-Date:   Wed, 27 Oct 2021 17:28:39 -0500
+        b=ioYqQkE9e25oMHOczxXd/NIP7hUxvsSeSoiPPbAFJvi+sE/eBcpfXZkhptKtnSkZa
+         u//RA1vKiJsJBzFmLgTJrxNwo47hxfVztMNHYhpJW1SjaZ7MwYgfVJQBIqO5lPmwj2
+         6VkVBtSRv0Z2E99iagSdOKwBJtlUq6+6wz7UaUJpuh3GkYrHp4TJAOJrE7sqR+RPQB
+         o0iTCLNzpCbV7+zr0bwDHX02WtXNsPhlu8wEwGBdZMMLCkgVFNJn7y8kOfyCJhhpRp
+         I78qW6/7i46Wq1zYGdpjEqS0g8GqeTaVJSPsWzbHJY4lOk1veHKKkCPmA6+fiMdTZU
+         eOvFUcewS94Aw==
+Date:   Wed, 27 Oct 2021 17:38:45 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V10 4/8] PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe
- Endpoint devices
-Message-ID: <20211027222839.GA252933@bhelgaas>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: Update information related to the PCI
+ sub-system
+Message-ID: <20211027223845.GA257469@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211009104938.48225-5-liudongdong3@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211027105041.24087-1-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 09, 2021 at 06:49:34PM +0800, Dongdong Liu wrote:
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says:
+On Wed, Oct 27, 2021 at 10:50:41AM +0000, Krzysztof Wilczyński wrote:
+> Update the following information related to the PCI sub-system which
+> includes the PCI drivers, PCI native host bridge and end-point drivers,
+> and the PCI end-point sub-system.
 > 
->   If an Endpoint supports sending Requests to other Endpoints (as
->   opposed to host memory), the Endpoint must not send 10-Bit Tag
->   Requests to another given Endpoint unless an implementation-specific
->   mechanism determines that the Endpoint supports 10-Bit Tag Completer
->   capability.
+>  - Sort fields as per preferred order
+>  - Sort files in the alphabetical order
+>  - Update old Patchwork URLs
+>  - Update Git repository for the PCI end-point sub-system
+>  - Add Bugzilla link
+>  - Add link to the official IRC channel
+>  - Add files "drivers/pci/pci-bridge-emul.{c,h}" to the right
+>    section so that proper ownership is returned for both files
+>    from the get_maintainer.pl script
 > 
-> Add a 10bit_tag sysfs file, write 0 to disable 10-Bit Tag Requester
-> when the driver does not bind the device. The typical use case is for
-> p2pdma when the peer device does not support 10-Bit Tag Completer.
-> Write 1 to enable 10-Bit Tag Requester when RC supports 10-Bit Tag
-> Completer capability. The typical use case is for host memory targeted
-> by DMA Requests. The 10bit_tag file content indicate current status of
-> 10-Bit Tag Requester Enable.
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 
-Don't we have a hole here?  We're adding knobs to control 10-Bit Tag
-usage, but don't we have basically the same issues with Extended
-(8-bit) Tags?
+Applied to pci/misc for v5.16, thanks!
 
-I wonder if we should be adding a more general "tags" file that can
-manage both 8-bit and 10-bit tag usage.
-
-> +static struct device_attribute dev_attr_10bit_tag = __ATTR(10bit_tag, 0644,
-> +							   pci_10bit_tag_show,
-> +							   pci_10bit_tag_store);
-
-I think this should use DEVICE_ATTR().  Or even better, if the name
-doesn't start with a digit, DEVICE_ATTR_RW().
+> ---
+> Changes in v2:
+>   Add "drivers/pci/pci-bridge-emul.h" file that was missing as per the
+>   feedback from Pali Rohár.
+>   Update the PCI end-point sub-system Git repository link as per the
+>   feedback from Kishon Vijay Abraham I.
+> 
+>  MAINTAINERS | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 80eebc1d9ed5..4436959c2f73 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14459,9 +14459,12 @@ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>  R:	Krzysztof Wilczyński <kw@linux.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> +B:	https://bugzilla.kernel.org
+> +C:	irc://irc.oftc.net/linux-pci
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+>  F:	Documentation/PCI/endpoint/*
+>  F:	Documentation/misc-devices/pci-endpoint-test.rst
+> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git
+>  F:	drivers/misc/pci_endpoint_test.c
+>  F:	drivers/pci/endpoint/
+>  F:	tools/pci/
+> @@ -14507,15 +14510,21 @@ R:	Rob Herring <robh@kernel.org>
+>  R:	Krzysztof Wilczyński <kw@linux.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> +B:	https://bugzilla.kernel.org
+> +C:	irc://irc.oftc.net/linux-pci
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+>  F:	drivers/pci/controller/
+> +F:	drivers/pci/pci-bridge-emul.c
+> +F:	drivers/pci/pci-bridge-emul.h
+>  
+>  PCI SUBSYSTEM
+>  M:	Bjorn Helgaas <bhelgaas@google.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
+> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> +B:	https://bugzilla.kernel.org
+> +C:	irc://irc.oftc.net/linux-pci
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+>  F:	Documentation/PCI/
+>  F:	Documentation/devicetree/bindings/pci/
+> -- 
+> 2.33.1
+> 
