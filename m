@@ -2,238 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AC4543D101
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 20:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A2F143D163
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Oct 2021 21:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243636AbhJ0SrU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 14:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243626AbhJ0SrO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 14:47:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A22660E76;
-        Wed, 27 Oct 2021 18:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635360288;
-        bh=P5yLl7M6j8WXMUBkjZKhCa3NLYC75+dQ7leokmuKCNw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SdXvucGRGOCF4crEPl98yNVPCE5vq9Umht4MAKCGY02SQ06l9oLbrZoW8SSFxS/WR
-         3qTEyaFXzcZ/0KHIYzp2ljSpb3qidlgtYWUeo4dMZ6xHmNHV4Oby5LzvsH/yxcdUrl
-         kwAMqVhXCvSfnlBx3fDanMR1gng7IqsrR3RUW9OM12HgLN9k2u5Q4MxLu0PRYinDM/
-         V+H1eAbPiXw4FaXJD7pKIJB3DuGM4ddYL2IS3JD1LLc9yDLCX7HMsTT8saCVxnvUlo
-         n2vgTv6KuX1GHvqGBQ23TOPw26rUpAwOkQqZNktTIbsRM+Q9vrtlcQ2qcp6Sm4iNsI
-         AETKJ+IpvrZ8w==
-Date:   Wed, 27 Oct 2021 13:44:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Use unsigned int type explicitly when declaring
- variables
-Message-ID: <20211027184446.GA240215@bhelgaas>
+        id S240536AbhJ0THw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 15:07:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31353 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237077AbhJ0THv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 15:07:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635361525;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O4yfqS02aUffRcN2ytxZ7WbUoLeVw/KvRKeeY+nzKuw=;
+        b=LX+6dEHGpXBXmmn9MdufcZAmpi7ndXXkJGMcRJ7cHjKHE4vvFwD0qDcZDf2lqXZ948E9dP
+        9jltFSnbe6ylbbJTc7fYk05NX1epe7vQ/yz2Fd96bZNPxAudppMQqKw3VPH1u7vk/R0+BM
+        2/EcBwSpp01L0MhSULHCD9ASiqLdIhU=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-566-w1Jrw6VCNVqFR_saKPwtDQ-1; Wed, 27 Oct 2021 15:05:23 -0400
+X-MC-Unique: w1Jrw6VCNVqFR_saKPwtDQ-1
+Received: by mail-oi1-f198.google.com with SMTP id i6-20020aca3b06000000b002995573eb5dso1763490oia.10
+        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 12:05:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O4yfqS02aUffRcN2ytxZ7WbUoLeVw/KvRKeeY+nzKuw=;
+        b=bzn+/xzCE3nP0WvgBWGYrY+E1u5fKi74XiHfcTgU1DU5vB14WuexVWDax6vKafAk7I
+         VCxvYnaXL1Y+fzT3TuMpfIhni591KSlOYahrx3LDgXjH8w+as7geADep6+bgqMFddS6H
+         IhGQsL8dSXhAJA+SeCt7ECgpQxzJElrndoROS47Ef/I/mAshB/H2DxeGX01htLh1rkrM
+         g3BxghGHoVwTN7WRx/3Cd7fzam8WQhC4FXDqNxf/36hPVecH9wZAh0EyzHa3hz2MYp7f
+         csb/1r/qgoO3jfZcYhpLURR+7KTb8TUbpej8QqpOOxDGfsjVMWsBFaUnDzxlacJ2thmI
+         yw1g==
+X-Gm-Message-State: AOAM530xgEpQMxVbHq+WQNXZc8pOiQpXxmn1c6Bnr3DBiCs1/f+B7i+6
+        l26sJLgBdBq16JJFR8gDvGP5pnRXOrd+2r1MZiwT895LnPc0nb+bDqIEO72KCd2oDIZ5AYPj6Q0
+        Ir08hA5QICSxQmMobkrz2
+X-Received: by 2002:a54:4616:: with SMTP id p22mr5021285oip.96.1635361523016;
+        Wed, 27 Oct 2021 12:05:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzFM+Cz5lXh23pqTW76bAGRqwtXY3wmttTlhsrmR78I98eJDUGGmUd4LUJuJppVWjEQ1+MClA==
+X-Received: by 2002:a54:4616:: with SMTP id p22mr5021246oip.96.1635361522696;
+        Wed, 27 Oct 2021 12:05:22 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id 187sm276901oig.19.2021.10.27.12.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Oct 2021 12:05:22 -0700 (PDT)
+Date:   Wed, 27 Oct 2021 13:05:20 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211027130520.33652a49.alex.williamson@redhat.com>
+In-Reply-To: <20211026234300.GA2744544@nvidia.com>
+References: <20211020185919.GH2744544@nvidia.com>
+        <20211020150709.7cff2066.alex.williamson@redhat.com>
+        <87o87isovr.fsf@redhat.com>
+        <20211021154729.0e166e67.alex.williamson@redhat.com>
+        <20211025122938.GR2744544@nvidia.com>
+        <20211025082857.4baa4794.alex.williamson@redhat.com>
+        <20211025145646.GX2744544@nvidia.com>
+        <20211026084212.36b0142c.alex.williamson@redhat.com>
+        <20211026151851.GW2744544@nvidia.com>
+        <20211026135046.5190e103.alex.williamson@redhat.com>
+        <20211026234300.GA2744544@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211013014136.1117543-1-kw@linux.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 01:41:36AM +0000, Krzysztof Wilczyński wrote:
-> The bare "unsigned" type implicitly means "unsigned int", but as per the
-> preferred coding style the preference is to spell the completely type
-> name explicitly to remove any possible ambiguity from the code.
-> 
-> Thus, update the bare use of "unsigned" to the preferred "unsigned int"
-> to keep the style consistent throughout the kernel code base.
-> 
->  No change to functionality intended.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+On Tue, 26 Oct 2021 20:43:00 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-OK, you convinced me :)
-
-Applied to pci/misc for v5.16, thanks!
-
-> ---
->  drivers/pci/controller/pci-thunder-ecam.c |  4 ++--
->  drivers/pci/msi.c                         |  3 ++-
->  drivers/pci/pci.c                         |  5 +++--
->  drivers/pci/probe.c                       |  7 ++++---
->  drivers/pci/quirks.c                      | 12 ++++++------
->  drivers/pci/rom.c                         |  2 +-
->  drivers/pci/setup-bus.c                   |  2 +-
->  7 files changed, 19 insertions(+), 16 deletions(-)
+> On Tue, Oct 26, 2021 at 01:50:46PM -0600, Alex Williamson wrote:
+> > On Tue, 26 Oct 2021 12:18:51 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >   
+> > > On Tue, Oct 26, 2021 at 08:42:12AM -0600, Alex Williamson wrote:
+> > >   
+> > > > > This is also why I don't like it being so transparent as it is
+> > > > > something userspace needs to care about - especially if the HW cannot
+> > > > > support such a thing, if we intend to allow that.    
+> > > > 
+> > > > Userspace does need to care, but userspace's concern over this should
+> > > > not be able to compromise the platform and therefore making VF
+> > > > assignment more susceptible to fatal error conditions to comply with a
+> > > > migration uAPI is troublesome for me.    
+> > > 
+> > > It is an interesting scenario.
+> > > 
+> > > I think it points that we are not implementing this fully properly.
+> > > 
+> > > The !RUNNING state should be like your reset efforts.
+> > > 
+> > > All access to the MMIO memories from userspace should be revoked
+> > > during !RUNNING
+> > > 
+> > > All VMAs zap'd.
+> > > 
+> > > All IOMMU peer mappings invalidated.
+> > > 
+> > > The kernel should directly block userspace from causing a MMIO TLP
+> > > before the device driver goes to !RUNNING.
+> > > 
+> > > Then the question of what the device does at this edge is not
+> > > relevant as hostile userspace cannot trigger it.
+> > > 
+> > > The logical way to implement this is to key off running and
+> > > block/unblock MMIO access when !RUNNING.
+> > > 
+> > > To me this strongly suggests that the extra bit is the correct way
+> > > forward as the driver is much simpler to implement and understand if
+> > > RUNNING directly controls the availability of MMIO instead of having
+> > > an irregular case where !RUNNING still allows MMIO but only until a
+> > > pending_bytes read.
+> > > 
+> > > Given the complexity of this can we move ahead with the current
+> > > mlx5_vfio and Yishai&co can come with some followup proposal to split
+> > > the freeze/queice and block MMIO?  
+> > 
+> > I know how much we want this driver in, but I'm surprised that you're
+> > advocating to cut-and-run with an implementation where we've identified
+> > a potentially significant gap with some hand waving that we'll resolve
+> > it later.  
 > 
-> diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-> index ffd84656544f..e9d5ca245f5e 100644
-> --- a/drivers/pci/controller/pci-thunder-ecam.c
-> +++ b/drivers/pci/controller/pci-thunder-ecam.c
-> @@ -17,7 +17,7 @@ static void set_val(u32 v, int where, int size, u32 *val)
->  {
->  	int shift = (where & 3) * 8;
->  
-> -	pr_debug("set_val %04x: %08x\n", (unsigned)(where & ~3), v);
-> +	pr_debug("set_val %04x: %08x\n", (unsigned int)(where & ~3), v);
->  	v >>= shift;
->  	if (size == 1)
->  		v &= 0xff;
-> @@ -187,7 +187,7 @@ static int thunder_ecam_config_read(struct pci_bus *bus, unsigned int devfn,
->  
->  	pr_debug("%04x:%04x - Fix pass#: %08x, where: %03x, devfn: %03x\n",
->  		 vendor_device & 0xffff, vendor_device >> 16, class_rev,
-> -		 (unsigned) where, devfn);
-> +		 (unsigned int)where, devfn);
->  
->  	/* Check for non type-00 header */
->  	if (cfg_type == 0) {
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 0099a00af361..bdc6ba7f39f0 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -579,7 +579,8 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
->  	return ret;
->  }
->  
-> -static void __iomem *msix_map_region(struct pci_dev *dev, unsigned nr_entries)
-> +static void __iomem *msix_map_region(struct pci_dev *dev,
-> +				     unsigned int nr_entries)
->  {
->  	resource_size_t phys_addr;
->  	u32 table_offset;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ce2ab62b64cf..fa4f27f747fd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6324,11 +6324,12 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from,
-> +		       unsigned int nr_devfns)
->  {
->  	int devfn_to;
->  
-> -	nr_devfns = min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
-> +	nr_devfns = min(nr_devfns, (unsigned int)MAX_NR_DEVFNS - devfn_from);
->  	devfn_to = devfn_from + nr_devfns - 1;
->  
->  	if (!dev->dma_alias_mask)
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index d9fc02a71baa..51c0a33640e6 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2550,11 +2550,12 @@ struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
->  }
->  EXPORT_SYMBOL(pci_scan_single_device);
->  
-> -static unsigned next_fn(struct pci_bus *bus, struct pci_dev *dev, unsigned fn)
-> +static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
-> +			    unsigned int fn)
->  {
->  	int pos;
->  	u16 cap = 0;
-> -	unsigned next_fn;
-> +	unsigned int next_fn;
->  
->  	if (pci_ari_enabled(bus)) {
->  		if (!dev)
-> @@ -2613,7 +2614,7 @@ static int only_one_child(struct pci_bus *bus)
->   */
->  int pci_scan_slot(struct pci_bus *bus, int devfn)
->  {
-> -	unsigned fn, nr = 0;
-> +	unsigned int fn, nr = 0;
->  	struct pci_dev *dev;
->  
->  	if (only_one_child(bus) && (devfn > 0))
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 4537d1ea14fd..67107840ce84 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -501,7 +501,7 @@ static void quirk_s3_64M(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_S3,	PCI_DEVICE_ID_S3_868,		quirk_s3_64M);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_S3,	PCI_DEVICE_ID_S3_968,		quirk_s3_64M);
->  
-> -static void quirk_io(struct pci_dev *dev, int pos, unsigned size,
-> +static void quirk_io(struct pci_dev *dev, int pos, unsigned int size,
->  		     const char *name)
->  {
->  	u32 region;
-> @@ -552,7 +552,7 @@ static void quirk_cs5536_vsa(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CS5536_ISA, quirk_cs5536_vsa);
->  
->  static void quirk_io_region(struct pci_dev *dev, int port,
-> -				unsigned size, int nr, const char *name)
-> +			    unsigned int size, int nr, const char *name)
->  {
->  	u16 region;
->  	struct pci_bus_region bus_region;
-> @@ -666,7 +666,7 @@ static void piix4_io_quirk(struct pci_dev *dev, const char *name, unsigned int p
->  	base = devres & 0xffff;
->  	size = 16;
->  	for (;;) {
-> -		unsigned bit = size >> 1;
-> +		unsigned int bit = size >> 1;
->  		if ((bit & mask) == bit)
->  			break;
->  		size = bit;
-> @@ -692,7 +692,7 @@ static void piix4_mem_quirk(struct pci_dev *dev, const char *name, unsigned int
->  	mask = (devres & 0x3f) << 16;
->  	size = 128 << 16;
->  	for (;;) {
-> -		unsigned bit = size >> 1;
-> +		unsigned int bit = size >> 1;
->  		if ((bit & mask) == bit)
->  			break;
->  		size = bit;
-> @@ -806,7 +806,7 @@ static void ich6_lpc_acpi_gpio(struct pci_dev *dev)
->  				"ICH6 GPIO");
->  }
->  
-> -static void ich6_lpc_generic_decode(struct pci_dev *dev, unsigned reg,
-> +static void ich6_lpc_generic_decode(struct pci_dev *dev, unsigned int reg,
->  				    const char *name, int dynsize)
->  {
->  	u32 val;
-> @@ -850,7 +850,7 @@ static void quirk_ich6_lpc(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ICH6_0, quirk_ich6_lpc);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_ICH6_1, quirk_ich6_lpc);
->  
-> -static void ich7_lpc_generic_decode(struct pci_dev *dev, unsigned reg,
-> +static void ich7_lpc_generic_decode(struct pci_dev *dev, unsigned int reg,
->  				    const char *name)
->  {
->  	u32 val;
-> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-> index 8fc9a4e911e3..e18d3a4383ba 100644
-> --- a/drivers/pci/rom.c
-> +++ b/drivers/pci/rom.c
-> @@ -85,7 +85,7 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->  {
->  	void __iomem *image;
->  	int last_image;
-> -	unsigned length;
-> +	unsigned int length;
->  
->  	image = rom;
->  	do {
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 2ce636937c6e..547396ec50b5 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1525,7 +1525,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
->  {
->  	struct pci_dev *dev = bus->self;
->  	struct resource *r;
-> -	unsigned old_flags = 0;
-> +	unsigned int old_flags = 0;
->  	struct resource *b_res;
->  	int idx = 1;
->  
-> -- 
-> 2.33.0
+> I don't view it as cut and run, but making reasonable quanta of
+> progress with patch series of reviewable size and scope.
 > 
+> At a certain point we need to get the base level of functionality,
+> that matches the currently defined ABI merged so we can talk about
+> where the ABI needs to go.
+> 
+> If you are uncomfortable about this from a uABI stability perspective
+> then mark the driver EXPERIMENTAL and do not merge any other migration
+> drivers until the two details are fully sorted out.
+> 
+> As far as the actual issue, if you hadn't just discovered it now
+> nobody would have known we have this gap - much like how the very
+> similar reset issue was present in VFIO for so many years until you
+> plugged it.
+
+But the fact that we did discover it is hugely important.  We've
+identified that the potential use case is significantly limited and
+that userspace doesn't have a good mechanism to determine when to
+expose that limitation to the user.  We're tossing around solutions
+that involve extensions, if not changes to the uAPI.  It's Wednesday of
+rc7.
+
+I feel like we've already been burned by making one of these
+"reasonable quanta of progress" to accept and mark experimental
+decisions with where we stand between defining the uAPI in the kernel
+and accepting an experimental implementation in QEMU.  Now we have
+multiple closed driver implementations (none of which are contributing
+to this discussion), but thankfully we're not committed to supporting
+them because we have no open implementations.  I think we could get away
+with ripping up the uAPI if we really needed to.  
+
+> > Deciding at some point in the future to forcefully block device MMIO
+> > access from userspace when the device stops running is clearly a user
+> > visible change and therefore subject to the don't-break-userspace
+> > clause.    
+> 
+> I don't think so, this was done for reset retroactively after
+> all. Well behaved qmeu should have silenced all MMIO touches as part
+> of the ABI contract anyhow.
+
+That's not obvious to me and I think it conflates access to the device
+and execution of the device.  If it's QEMU's responsibility to quiesce
+access to the device anyway, why does the kernel need to impose this
+restriction.  I'd think we'd generally only impose such a restriction
+if the alternative allows the user to invoke bad behavior outside the
+scope of their use of the device or consistency of the migration data.
+It appears that any such behavior would be implementation specific here.
+
+> The "don't-break-userspace" is not an absolute prohibition, Linus has
+> been very clear this limitation is about direct, ideally demonstrable,
+> breakage to actually deployed software.
+
+And if we introduce an open driver that unblocks QEMU support to become
+non-experimental, I think that's where we stand.
+
+> > That might also indicate that "freeze" is only an implementation
+> > specific requirement.  Thanks,  
+> 
+> It doesn't matter if a theoretical device can exist that doesn't need
+> "freeze" - this device does, and so it is the lowest common
+> denominator for the uAPI contract and userspace must abide by the
+> restriction.
+
+Sorry, "to the victor go the spoils" is not really how I strictly want
+to define a uAPI contract with userspace.  If we're claiming that
+userspace is responsible for quiescing devices and we're providing a
+means for that to occur, and userspace is already responsible for
+managing MMIO access, then the only reason the kernel would forcefully
+impose such a restriction itself would be to protect the host and the
+implementation of that would depend on whether this is expected to be a
+universal or device specific limitation.  Thanks,
+
+Alex
+
