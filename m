@@ -2,119 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE75943D6C7
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 00:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FD1D43D752
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 01:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbhJ0WlN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 18:41:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
+        id S230305AbhJ0XOC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Oct 2021 19:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229705AbhJ0WlN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Oct 2021 18:41:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E6526610CB;
-        Wed, 27 Oct 2021 22:38:46 +0000 (UTC)
+        id S230248AbhJ0XOC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Oct 2021 19:14:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 39EE261039;
+        Wed, 27 Oct 2021 23:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635374327;
-        bh=35c80/puX4yheOLYZ+/8XIuODUrQTE7OA/dywvGPSWc=;
+        s=k20201202; t=1635376296;
+        bh=KupXla6YPxmj/KDqeXF6aCfkYzKjNPRj7wkgKckspAw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ioYqQkE9e25oMHOczxXd/NIP7hUxvsSeSoiPPbAFJvi+sE/eBcpfXZkhptKtnSkZa
-         u//RA1vKiJsJBzFmLgTJrxNwo47hxfVztMNHYhpJW1SjaZ7MwYgfVJQBIqO5lPmwj2
-         6VkVBtSRv0Z2E99iagSdOKwBJtlUq6+6wz7UaUJpuh3GkYrHp4TJAOJrE7sqR+RPQB
-         o0iTCLNzpCbV7+zr0bwDHX02WtXNsPhlu8wEwGBdZMMLCkgVFNJn7y8kOfyCJhhpRp
-         I78qW6/7i46Wq1zYGdpjEqS0g8GqeTaVJSPsWzbHJY4lOk1veHKKkCPmA6+fiMdTZU
-         eOvFUcewS94Aw==
-Date:   Wed, 27 Oct 2021 17:38:45 -0500
+        b=JP/IXa/AtHXZjOK8OOVkusbwcJ0+wmuhjsoZdzhuQzYvfbNTLj9cMuc5hbT+99OaQ
+         CU4Tjg87Pe2GxOvGEqyS9v+df74g04Ls1UC1r+IXcaYKmn/nyqns4h0k0LUNmdSXZD
+         YZRpC2Q36KRXevnEbf1U63vhL2iPilwZNkptidUX7vh4NlKdKY4zItXRhbXtH9evhH
+         VPwzD9cTou0f5J6WhiM6ZAanZITObAc5kdTkJI/rfRPMcxO43q+tVmqvsARYU2tdbY
+         A0zTWL0WNMrMYpfDFemz8SreLax956zfOHlyWQR9NkuT6BpXhejuxXifLa+5jXoHqv
+         CTy8FoOa31rsw==
+Date:   Wed, 27 Oct 2021 18:11:34 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: Update information related to the PCI
- sub-system
-Message-ID: <20211027223845.GA257469@bhelgaas>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
+        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH V10 6/8] PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
+Message-ID: <20211027231134.GA258571@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211027105041.24087-1-kw@linux.com>
+In-Reply-To: <20211009104938.48225-7-liudongdong3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 10:50:41AM +0000, Krzysztof Wilczyński wrote:
-> Update the following information related to the PCI sub-system which
-> includes the PCI drivers, PCI native host bridge and end-point drivers,
-> and the PCI end-point sub-system.
-> 
->  - Sort fields as per preferred order
->  - Sort files in the alphabetical order
->  - Update old Patchwork URLs
->  - Update Git repository for the PCI end-point sub-system
->  - Add Bugzilla link
->  - Add link to the official IRC channel
->  - Add files "drivers/pci/pci-bridge-emul.{c,h}" to the right
->    section so that proper ownership is returned for both files
->    from the get_maintainer.pl script
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+On Sat, Oct 09, 2021 at 06:49:36PM +0800, Dongdong Liu wrote:
+> Add a 10-Bit Tag check in the P2PDMA code to ensure that a device with
+> 10-Bit Tag Requester doesn't interact with a device that does not
+> support 10-Bit Tag Completer. Before that happens, the kernel should
+> emit a warning.
 
-Applied to pci/misc for v5.16, thanks!
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-> ---
-> Changes in v2:
->   Add "drivers/pci/pci-bridge-emul.h" file that was missing as per the
->   feedback from Pali Rohár.
->   Update the PCI end-point sub-system Git repository link as per the
->   feedback from Kishon Vijay Abraham I.
-> 
->  MAINTAINERS | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 80eebc1d9ed5..4436959c2f73 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14459,9 +14459,12 @@ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->  R:	Krzysztof Wilczyński <kw@linux.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
-> +B:	https://bugzilla.kernel.org
-> +C:	irc://irc.oftc.net/linux-pci
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
->  F:	Documentation/PCI/endpoint/*
->  F:	Documentation/misc-devices/pci-endpoint-test.rst
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/pci-endpoint.git
->  F:	drivers/misc/pci_endpoint_test.c
->  F:	drivers/pci/endpoint/
->  F:	tools/pci/
-> @@ -14507,15 +14510,21 @@ R:	Rob Herring <robh@kernel.org>
->  R:	Krzysztof Wilczyński <kw@linux.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
-> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
-> +B:	https://bugzilla.kernel.org
-> +C:	irc://irc.oftc.net/linux-pci
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
->  F:	drivers/pci/controller/
-> +F:	drivers/pci/pci-bridge-emul.c
-> +F:	drivers/pci/pci-bridge-emul.h
->  
->  PCI SUBSYSTEM
->  M:	Bjorn Helgaas <bhelgaas@google.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
-> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
-> +B:	https://bugzilla.kernel.org
-> +C:	irc://irc.oftc.net/linux-pci
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
->  F:	Documentation/PCI/
->  F:	Documentation/devicetree/bindings/pci/
+> @@ -532,6 +577,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>  	}
+>  done:
+> +	if (pci_10bit_tags_unsupported(client, provider, verbose))
+> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+
+I need to be convinced that this check is in the right spot to catch
+all potential P2PDMA situations.  The pci_p2pmem_find() and
+pci_p2pdma_distance() interfaces eventually call
+calc_map_type_and_dist().  But those interfaces don't actually produce
+DMA bus addresses, and I'm not convinced that all P2PDMA users use
+them.
+
+nvme *does* use them, but infiniband (rdma_rw_map_sg()) does not, and
+it calls pci_p2pdma_map_sg().
+
+amdgpu_dma_buf_attach() calls pci_p2pdma_distance_many() but I don't
+know where it sets up P2PDMA transactions.
+
+cxgb4 and qed mention "peer2peer", but I don't know whether they are
+related; they don't seem to use any pci_p2p.* interfaces.
+
+>  	rcu_read_lock();
+>  	p2pdma = rcu_dereference(provider->p2pdma);
+>  	if (p2pdma)
 > -- 
-> 2.33.1
+> 2.22.0
 > 
