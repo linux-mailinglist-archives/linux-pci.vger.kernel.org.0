@@ -2,98 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3B343DA03
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 05:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E14B743DA15
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 06:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbhJ1D5b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Oct 2021 23:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        id S229758AbhJ1EHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 00:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbhJ1D5b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Oct 2021 23:57:31 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F02C061570
-        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 20:55:04 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 131so288609ybc.7
-        for <linux-pci@vger.kernel.org>; Wed, 27 Oct 2021 20:55:04 -0700 (PDT)
+        with ESMTP id S229488AbhJ1EHy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 00:07:54 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF6AC061570;
+        Wed, 27 Oct 2021 21:05:25 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id l24-20020a9d1c98000000b00552a5c6b23cso6753645ota.9;
+        Wed, 27 Oct 2021 21:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to;
-        bh=AEx5242DUOrQIu4AE2b3yDQzUe5Y4ooMVP+teipdFSA=;
-        b=gCD/WXThtTevsHjbdEDdRygDwT0WwkK5y701wwcwyWjFbc/K4wVn0PEvj/WqY5ClXL
-         fHGST/4XHIh4/A1Co2Ma1ocj4sA+rGOpZ+nJW8Ld9BfDGWwrEHoH8JjuHCfVneqVHMep
-         WSu1fu3mBe+qVYsfDdLUqfPgS26Zr+7gUpVM9IJ+nMmidxTGX4AyHZBHuW9iPbrotoRd
-         X+19e1jLAYuXkza06lY7/Fcis4RcafNfHazWxkDPHoJGK+JvgtsNwKyW/fJCcqle+YTI
-         Br9CDrPvIz4FElxSwaigXTKpzYL6vofhjOhkyTh5y51UP3/ChV2bsTx6Sqb+RacTg/hO
-         4ihw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JAFmGbzliFdK9YUpB9Pr3vqgYOv/hA15ip0ARBAHB14=;
+        b=C35/2Awskpi7sNIUy/6w5UofmU1anZCwUM80cB/vCG2/CefovGQ81gUT5vvZIyDwQ9
+         7xPfVeN1qtXyaLFSWnOO07fQpkIVjXDcQ++qr5HZuEcOhxPFKAcIM2LosLW8suU1RioL
+         jekV9t5MxCv2imE6VA/bSzlZ8JgY8T3LrpDc+o1ntSTNG1OHFJUw2rZziJCLaH8rUAYC
+         sGJ/RYuMDmYdAmKkovwp9N0mSAEE8UABBpO9WYb5TG23mfO8aG9Qe5lVur98yK6clk8V
+         W/lRi4ViEwlmbMurcCZii2sDailHkp8rhSpN+4ghEn8bAXqtslxbwpeTxup7TIQH7tRs
+         Ozpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to;
-        bh=AEx5242DUOrQIu4AE2b3yDQzUe5Y4ooMVP+teipdFSA=;
-        b=dpuDqUW6ctlS0nuFabiGFbhhds/ivMFQ4cCQUwW78fLmQBLarD9Ee6lzk2ePDXJYDg
-         9mTm+xeb7FYKwtrZrXj3N+OQryfdaA4N0kem/6JKmbPd+eXpOr4Hz70BHZPrhBIn5y7y
-         h3Y+DuADg1VUQmgVayZIFn9eFZYNAs1D5+fhxHOmGqLX42DWBWp1tJkZ73pBrnR6mshf
-         xD+OjlhpzLKrpvMRG9zFPoymaAHBlqeZNKfmmDDMX78a2M8ENVy+dGpFvNsN1NbK4poy
-         ip/ZqoxNX0qIDLlDf3wisUkCbHQ3ZWBJzCpDlkI/SgL5hId40OdoahgKDCj/sOL4xmLf
-         Ganw==
-X-Gm-Message-State: AOAM531cR+hpvxHzuzzY+528yyM0AZeCm2F89NyeTxqQSKLEhghDxlwD
-        1sc+qGogokCKogW3i2di0GXHq213FvQfV98zlgJPFctaVMQ=
-X-Google-Smtp-Source: ABdhPJxulSnT48XmSpuFiNvgphSm9+k/L7KJul6/6r8L7m2/Vg+gVTiGSQ/DAq/qhUhrJXdCCKfYUeLJPEk1oQJdWVA=
-X-Received: by 2002:a25:7c42:: with SMTP id x63mr1834706ybc.477.1635393303913;
- Wed, 27 Oct 2021 20:55:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JAFmGbzliFdK9YUpB9Pr3vqgYOv/hA15ip0ARBAHB14=;
+        b=RZv5nak1F4+H5j8+P1zdQV7CDO6q8tcjcZuxpDmTCmxnfOa/FehCIYH0aU6uxoR08r
+         ouh9eoH4mRHulXkrmy5/7MAKn1TXhO8U7Qvc4uN13msrsGyhxUKJgneK4UplFOdz7UBw
+         ZUlKrAe1ce43TWij1kqJVHdBcp3Wp6QhL8zImp3KPLsSrRYxTN/XE30cslTQja7LqqCI
+         y3BWne7OT/VH/RdMeJY8qFEoaNoDXinD8w/RiJqBkwAP1szIEOdmWqCjLRSvkZrPwISi
+         dotuaJ0RhZzHjGy23T+52pEYBpXmOeaBzDVKBF3G4QXG2Rp9SuqdW6nnK8eRM1G3LzDm
+         LC7A==
+X-Gm-Message-State: AOAM532qm/qT9I0+SRL+nyxyFVrBhJLE6OKtpDvPSAQM6MgGfnoCnDMT
+        3k/eLutf+zC5Fz6H1ItyLCg=
+X-Google-Smtp-Source: ABdhPJx4B5/4gp731H1f4QXFtngh+vXOd8jkpnUjaTWTt4quVnYpOJCHW3DbJdeqr7RLQ9eYEXjimw==
+X-Received: by 2002:a05:6830:1e95:: with SMTP id n21mr1482616otr.141.1635393924615;
+        Wed, 27 Oct 2021 21:05:24 -0700 (PDT)
+Received: from localhost.localdomain ([8.26.182.76])
+        by smtp.gmail.com with ESMTPSA id v13sm720310otn.41.2021.10.27.21.05.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Oct 2021 21:05:24 -0700 (PDT)
+From:   Yanteng Si <siyanteng01@gmail.com>
+X-Google-Original-From: Yanteng Si <siyanteng@loongson.cn>
+To:     tsbogend@alpha.franken.de, sergio.paracuellos@gmail.com,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     Yanteng Si <siyanteng@loongson.cn>, sfr@canb.auug.org.au,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, matthias.bgg@gmail.com,
+        p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        chenhuacai@kernel.org, sterlingteng@gmail.com,
+        linux-next@vger.kernel.org
+Subject: [PATCH v2 0/3] MIPS: Fix build error ERROR: modpost:
+Date:   Thu, 28 Oct 2021 12:04:51 +0800
+Message-Id: <cover.1635390750.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Received: by 2002:a05:7000:97cb:0:0:0:0 with HTTP; Wed, 27 Oct 2021 20:55:03
- -0700 (PDT)
-In-Reply-To: <CA+nuEB8MTEksJDdC7C8x_Ag3RRe=u4KDz4qPMpo20MtLTPK-JQ@mail.gmail.com>
-References: <CA+nuEB9ZyD-uX3GFV=9LDWXibqekwvNDV+UEu8EwyL7NG6YjsA@mail.gmail.com>
- <CA+nuEB8MTEksJDdC7C8x_Ag3RRe=u4KDz4qPMpo20MtLTPK-JQ@mail.gmail.com>
-From:   Amol <suratiamol@gmail.com>
-Date:   Thu, 28 Oct 2021 09:25:03 +0530
-Message-ID: <CA+nuEB8aQkayQR70goE_R0x4nDJRzdg=+e_DxonHsdAspEXuSQ@mail.gmail.com>
-Subject: Re: pci_check_and_set_intx_mask(dev, true)
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/10/2021, Amol <suratiamol@gmail.com> wrote:
-> On 28/10/2021, Amol <suratiamol@gmail.com> wrote:
->> Hello,
->>
->> If pci_check_and_set_intx_mask is called with the intention of masking,
->> and if there indeed is an IRQ pending, then the comparison
->> "mask != irq_pending" evaluates to false: the 'mask' variable is 1, and
->
-> Correction: Evaluates to true. Causes the function to return without
-> masking.
->
->> 'irq_pending' is 0x80, in that case.
->>
->> This state causes the function to return without masking, contrary to the
->> behaviour expected of it as given by a comment:
->>
->> "Check if the device dev has its INTx line asserted, mask it and return
->> true
->> in that case. False is returned if no interrupt was pending."
->>
->> My vfio/pcipassthrough setup sees INTx line asserted as the VM is being
->> shutdown, but the line is not masked; the host kernel panics saying
->> "nobody cared" - there's no handler.
->>
->> Is the inconsistency with the pci intx masking really a problem, or just
->> a
->> misunderstanding on my part?
+v2:
 
-It is indeed a misunderstanding on my part. I missed the fact that the
-datatype involved here is _Bool; the compiler must be emitting extra
-instructions to convert non-zero values to 1.
+* Pick Sevrgio's Acked-by tag to Patch 1/3;
+* Rewrite prefix;
+* Use EXPORT_SYMBOL_GPL();
+* Add haojun's patch into my thread and rewrite commit message.(Patch 3/3)
 
-Apologies for the spam.
+note: These errors are generated in the *linux-next.git*.
 
->>
->> Thanks,
->> Amol
->>
->
+https://lore.kernel.org/linux-mips/cover.1635333327.git.siyanteng@loongson.cn/T/#t
+
+v1:
+
+Since commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
+the MT7621 PCIe host controller driver is built as a module but no MODULE_*() attributes
+were specified, causing a build error due to missing license information. At the same time,
+modpost complains once these drivers become modules.
+
+ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
+ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+
+Let's just fix them.
+
+Wang Haojun (1):
+  MIPS: Export board_be_handler to modules
+
+Yanteng Si (2):
+  MIPS: mt7621: Add MODULE_* macros to MT7621 PCIe host controller
+    driver
+  MIPS: Export mips_cm/cpc/gcr_* to modules
+
+ arch/mips/kernel/mips-cm.c           | 5 +++++
+ arch/mips/kernel/mips-cpc.c          | 1 +
+ arch/mips/kernel/traps.c             | 1 +
+ drivers/pci/controller/pcie-mt7621.c | 2 ++
+ 4 files changed, 9 insertions(+)
+
+-- 
+2.27.0
+
