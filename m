@@ -2,89 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FA2343DF5E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 12:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D69B43DFC4
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 13:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbhJ1Kyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 06:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbhJ1Kyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 06:54:49 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E059C06122C
-        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id m17so21998652edc.12
-        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=MqgQiMnth4O6zLvpsYbAhVLW1BorpgoCleWwfkY0/i+i6OSDuXRZO1jIKzpTTrmehO
-         XtsLWdXiTcL+XCe4naFtf2tTUJnbwwmDpuUkpvRhLd+LEnuxY7nNr11hmTRUVX1WOHsO
-         bN0u1arCg4gm9LHdXRMZFcXOD22U5gDGuBOuhPo6qvWbt6nA2j/p/5IZ88XFHrEsiSW3
-         12hentYJMlWeUfa2lUQkLm+5/fvMSizrI7wGoF2taOa3dgGUV5HKZWb0yAAH7nAXVevJ
-         tDC/xbHNLzSn310XeD3Gkoobjl6MPBQzT5DSLzerNBdTKOdmyp3xvfvOyo80qVUTZIED
-         gaRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=DoTlVwZWw+8MzGd0kggx1lf6pHorgnhfuVpaCqfVcUCXwePsOJF2oTxHUlOdpCMIfQ
-         o3FGU2qzXOeewjLxUEYhIQdyEK96LQWgLpgd8XMuCq/AxA2Z91AB1p4XMKrTcDYYMlFO
-         4TE5WxkxTAX65UvzD+7+5PBLcaVk6V+XzV1jZBGE20TJYI6zF/WnWWzZYtlkQQH2shxq
-         Dnd5BsOUFFBDaYFSVOavnhN/6q9FMvC+v/r3eyR+WSFusm3lT6qHCMONeX3CQLJ3xic9
-         3vnhNR62itx+SMCU1QbO7G7iiAyXIyispAp3mLC8+vkxnTdhuHCa/mq5EorLpQ0BoM7N
-         D/0g==
-X-Gm-Message-State: AOAM530ZV5Z/QWfMddDL5kB3S7kC9WT8EX3x7/8QwlonAoHP9WamP3wg
-        56LTGuHBeGZpGHEMDRqRdzNadt4W4MPzmWGbWGqe5bm76Qzxx10r
-X-Google-Smtp-Source: ABdhPJw39EF9dJlXS9lAFrZ3adXxB8DVzXcygVzA3uRLiZxWlggxaB9ElCxkEB0P82xisoA6G442GD5iqMe2hCgLIt8=
-X-Received: by 2002:a2e:9a83:: with SMTP id p3mr3750290lji.145.1635418330269;
- Thu, 28 Oct 2021 03:52:10 -0700 (PDT)
+        id S230059AbhJ1LLK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 07:11:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:53520 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229868AbhJ1LLK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 07:11:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B5C41063;
+        Thu, 28 Oct 2021 04:08:43 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E97A33F5A1;
+        Thu, 28 Oct 2021 04:08:42 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 12:08:35 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 10/14] PCI: aardvark: Enable MSI-X support
+Message-ID: <20211028110835.GA1846@lpieralisi>
+References: <20211012164145.14126-1-kabel@kernel.org>
+ <20211012164145.14126-11-kabel@kernel.org>
+ <20211027141246.GA27543@lpieralisi>
+ <20211027142307.lrrix5yfvroxl747@pali>
 MIME-Version: 1.0
-Received: by 2002:ab3:6f89:0:0:0:0:0 with HTTP; Thu, 28 Oct 2021 03:52:09
- -0700 (PDT)
-Reply-To: aabdulwalialhashmi@gmail.com
-From:   Abdulwali Alhashmi <husamalsayed.hs@gmail.com>
-Date:   Thu, 28 Oct 2021 03:52:09 -0700
-Message-ID: <CAF6yYCeS=rm8=_71-kMjVo4oaVK57w9X52R_yv1HDrBe7vh-sA@mail.gmail.com>
-Subject: PLEASE GET BACK TO ME IF I CAN I TRUST YOU
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211027142307.lrrix5yfvroxl747@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Greetings,
+On Wed, Oct 27, 2021 at 04:23:07PM +0200, Pali Rohár wrote:
+> On Wednesday 27 October 2021 15:12:46 Lorenzo Pieralisi wrote:
+> > On Tue, Oct 12, 2021 at 06:41:41PM +0200, Marek Behún wrote:
+> > > From: Pali Rohár <pali@kernel.org>
+> > > 
+> > > According to PCI 3.0 specification, sending both MSI and MSI-X interrupts
+> > > is done by DWORD memory write operation to doorbell message address. The
+> > > write operation for MSI has zero upper 16 bits and the MSI interrupt number
+> > > in the lower 16 bits, while the write operation for MSI-X contains a 32-bit
+> > > value from MSI-X table.
+> > > 
+> > > Since the driver only uses interrupt numbers from range 0..31, the upper
+> > > 16 bits of the DWORD memory write operation to doorbell message address
+> > > are zero even for MSI-X interrupts. Thus we can enable MSI-X interrupts.
+> > 
+> > It is the controller driver that defines the MSI-X data field yes, what
+> > I don't get is why we have to add this comment in the commit log.
+> > 
+> > Basically Aardvark can support MSI-X up to 32 MSI-X vectors and you
+> > are enabling them with this patch.
+> > 
+> > Is there anything *else* I am missing wrt 16-bit/32-bit data fields
+> > that we need to know ?
+> > 
+> > > Testing proves that kernel can correctly receive MSI-X interrupts from
+> > > PCIe cards which supports both MSI and MSI-X interrupts.
+> > 
+> > I don't understand what you want to convey with this commit log.
+> > 
+> > To me, the whole comment does not add anything (if I understood it),
+> > please let me know what you want to express with it.
+> > 
+> > To me this patch enables MSI-X support because the HW can support them,
+> > that's it.
+> 
+> My understanding is that MSI-X by definition uses 32-bit write
+> operations to doorbell address and so, HW needs to support catching of
+> 32-bit write operations.
+> 
+> Aardvark hw seems to support only 16-bit write operation to doorbell
+> address. But our testing proved that hw can catch also lower 16-bits of
+> 32-bit write operation to doorbell address.
+> 
+> So if driver enforces that every 32-bit write operation to doorbell
+> address would have upper 16-bit zeroed then MSI-X should work.
 
-Firstly, I apologize for encroaching into your privacy in this manner
-as it may seem unethical though it is a matter of great importance.
+That's clearer than the current commit log.
 
-I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
+> In commit message I originally tried to explain it that after applying
+> all previous patches which are fixing MSI and Multi-MSI support (part of
+> them is enforcement to use only MSI numbers 0..31), it makes driver
+> compatible with also MSI-X interrupts.
+> 
+> If you want to rewrite commit message, let us know, there is no problem.
 
-I am contacting you because my status would not permit me to do this
-alone as it is concerning our customer and an investment placed under
-our bank's management over 5 years ago.
+I think we should.
 
-I have a proposal I would love to discuss with you which will be very
-beneficial to both of us. It's regarding my late client who has a huge
-deposit with my bank.
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Reviewed-by: Marek Behún <kabel@kernel.org>
 
-He is from your country and shares the same last name with you.
+By the way, this tag should be removed. Marek signed it off, that
+applies to other patches in this series as well.
 
-I want to seek your consent to present you as the next of kin to my
-late client who died and left a huge deposit with my bank.
+Lorenzo
 
-I would respectfully request that you keep the contents of this mail
-confidential and respect the integrity of the information you come by
-as a result of this mail.
-
-Please kindly get back to me for more details if I can TRUST YOU.{
-aabdulwalialhashmi@gmail.com }
-
-Regards
-Abdulwali Alhashmi
-Treasury and Deposit Management,
-Cayman National Bank Cayman Islands
+> > > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index b703b271c6b1..337b61508799 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -1274,7 +1274,7 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+> > >  
+> > >  	msi_di = &pcie->msi_domain_info;
+> > >  	msi_di->flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> > > -		MSI_FLAG_MULTI_PCI_MSI;
+> > > +			MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX;
+> > >  	msi_di->chip = msi_ic;
+> > >  
+> > >  	pcie->msi_inner_domain =
+> > > -- 
+> > > 2.32.0
+> > > 
