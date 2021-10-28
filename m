@@ -2,272 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEA3E43E527
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 17:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A19343E57B
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 17:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbhJ1PdH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 11:33:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32860 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230070AbhJ1PdH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 11:33:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635435039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZshgRYyHAdt1PeMoc+6tLxE9wsgBE8CpYOKrXJsLZ+w=;
-        b=Hi4Q/NdTksmyvYL5ABRGtSjEwQMjy3FRScQPtaZeSH2XR1iX+kKlW9sU8dY3eyED+1NszG
-        m9iBqZ37JUzJN/WPRE/hel4HoUTak8RINmsBitJvb0ladsuNGkcE9ZJmPVCJUboTos7Pd8
-        woPNmAq4RkrCxfwOwe+ayD53gA4y7qc=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-393-5RJxEGVIMYmL5FI6hIE7tA-1; Thu, 28 Oct 2021 11:30:38 -0400
-X-MC-Unique: 5RJxEGVIMYmL5FI6hIE7tA-1
-Received: by mail-oo1-f71.google.com with SMTP id h15-20020a4a6b4f000000b002b6fa118bfeso2839385oof.18
-        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 08:30:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZshgRYyHAdt1PeMoc+6tLxE9wsgBE8CpYOKrXJsLZ+w=;
-        b=Psba5Cn94Nj6t2u96RQYK0PXjuSuN3JMHQ3Im5HGnSqjotn0F4KqF2oKF9gKgCbUpy
-         l1NYvDW4hD/dc4Cbm/x8+3LNVJ8wH1BRDFXVO87R2F3djnKHiBNM34dkaMA3rSVRgtvi
-         ji5ZoBpelH56pgDVIahxbkohMTCXANpgk2WHPlu2FfSj+1lh0lHJr0BUFdCSEc092um5
-         keeBCMLvVsoyD/9eyGL9i8OJhre8M5bqxiy11pL4Ahyw9l/Y0TM4YIBfsSdcvsGH0x6p
-         O1wW2TZC8cWbbvEb4XiZQ0F0uIAh+3TQuvNFaFDvqtF2SpJniz20S66SuwFcLyO72Ckz
-         3cAw==
-X-Gm-Message-State: AOAM532YSs0fx+7bqH/QOc6saNQbTwyQl4n8hXZlJ5btYVZxtz4ixIzi
-        t58aGP56sgSjCXFPWu0sBFbV2+VXNuvwbSi+OC0sXnsd4VKTtnavrbG9kn612ZfzZGVSdbYd13o
-        Ap8/jV2yczsFQ7MuQ9L22
-X-Received: by 2002:a05:6830:1e11:: with SMTP id s17mr4074650otr.100.1635435037504;
-        Thu, 28 Oct 2021 08:30:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzpNMCCzEm/qWgDKhdT5NLeUiAirUH23ASGGy1T4UcITEIIqA9L5QZiXzArSRzkZFMWgtRDdw==
-X-Received: by 2002:a05:6830:1e11:: with SMTP id s17mr4074605otr.100.1635435037190;
-        Thu, 28 Oct 2021 08:30:37 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id be2sm1197935oib.1.2021.10.28.08.30.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 08:30:36 -0700 (PDT)
-Date:   Thu, 28 Oct 2021 09:30:35 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211028093035.17ecbc5d.alex.williamson@redhat.com>
-In-Reply-To: <20211027192345.GJ2744544@nvidia.com>
-References: <87o87isovr.fsf@redhat.com>
- <20211021154729.0e166e67.alex.williamson@redhat.com>
- <20211025122938.GR2744544@nvidia.com>
- <20211025082857.4baa4794.alex.williamson@redhat.com>
- <20211025145646.GX2744544@nvidia.com>
- <20211026084212.36b0142c.alex.williamson@redhat.com>
- <20211026151851.GW2744544@nvidia.com>
- <20211026135046.5190e103.alex.williamson@redhat.com>
- <20211026234300.GA2744544@nvidia.com>
- <20211027130520.33652a49.alex.williamson@redhat.com>
- <20211027192345.GJ2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S229658AbhJ1PyX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 11:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229565AbhJ1PyW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 11:54:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F380E60F56;
+        Thu, 28 Oct 2021 15:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635436315;
+        bh=RQCFu2bzuvPr4JUWn0qTIZR5mpfWaOO3X14IYifWvn8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sC7qClxFYhK47iMi9WkAbGDJ3RCz0GuemIOFh4wX4S4ZB3sP6LwPATPJaX78wPl8f
+         3wHLb4hB4v2p5U3UfF5pODsxqKt032wjEpElNl8cKof6lwcHseCXnHzVVbhUgGnIzy
+         QhmoXYIe68pCbqoLScNzKdfZke4QshK9FC3LGZx7qo6EZ/IFqU1L2prE2dci0uKtYF
+         UdrlkHZjGqeO9Y8tq8NewnkO5VQ2tTqg/UTYLM8FaPCRr250Xd0TqLT+f1b+JKAnO5
+         ysdRvF8UUguZic+5uKFbt/r+GbSR4hCY8w/lwC/hImqKrCXjC7/JG53r7vEXpdz22f
+         hQTJpBXk8ey+A==
+Date:   Thu, 28 Oct 2021 17:51:50 +0200
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 10/14] PCI: aardvark: Enable MSI-X support
+Message-ID: <20211028175150.7faa6481@thinkpad>
+In-Reply-To: <87r1c59nqf.wl-maz@kernel.org>
+References: <20211012164145.14126-1-kabel@kernel.org>
+        <20211012164145.14126-11-kabel@kernel.org>
+        <20211027141246.GA27543@lpieralisi>
+        <20211027142307.lrrix5yfvroxl747@pali>
+        <20211028110835.GA1846@lpieralisi>
+        <20211028111302.gfd73ifoyudttpee@pali>
+        <20211028113030.GA2026@lpieralisi>
+        <20211028113724.gm6zhqt7qcyxtgkq@pali>
+        <87r1c59nqf.wl-maz@kernel.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 27 Oct 2021 16:23:45 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Thu, 28 Oct 2021 16:24:08 +0100
+Marc Zyngier <maz@kernel.org> wrote:
 
-> On Wed, Oct 27, 2021 at 01:05:20PM -0600, Alex Williamson wrote:
-> 
-> > > As far as the actual issue, if you hadn't just discovered it now
-> > > nobody would have known we have this gap - much like how the very
-> > > similar reset issue was present in VFIO for so many years until you
-> > > plugged it.  
-> > 
-> > But the fact that we did discover it is hugely important.  We've
-> > identified that the potential use case is significantly limited and
-> > that userspace doesn't have a good mechanism to determine when to
-> > expose that limitation to the user.    
-> 
-> Huh?
-> 
-> We've identified that, depending on device behavior, the kernel may
-> need to revoke MMIO access to protect itself from hostile userspace
-> triggering TLP Errors or something.
-> 
-> Well behaved userspace must already stop touching the MMIO on the
-> device when !RUNNING - I see no compelling argument against that
-> position.
+> On Thu, 28 Oct 2021 12:37:24 +0100,
+> Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> >=20
+> > On Thursday 28 October 2021 12:30:30 Lorenzo Pieralisi wrote: =20
+> > > On Thu, Oct 28, 2021 at 01:13:02PM +0200, Pali Roh=C3=A1r wrote:
+> > >=20
+> > > [...]
+> > >  =20
+> > > > > > In commit message I originally tried to explain it that after a=
+pplying
+> > > > > > all previous patches which are fixing MSI and Multi-MSI support=
+ (part of
+> > > > > > them is enforcement to use only MSI numbers 0..31), it makes dr=
+iver
+> > > > > > compatible with also MSI-X interrupts.
+> > > > > >=20
+> > > > > > If you want to rewrite commit message, let us know, there is no=
+ problem. =20
+> > > > >=20
+> > > > > I think we should.
+> > > > >  =20
+> > > > > > > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > > > > > > > Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org> =20
+> > > > >=20
+> > > > > By the way, this tag should be removed. Marek signed it off, that
+> > > > > applies to other patches in this series as well. =20
+> > > >=20
+> > > > Ok! Is this the only issue with this patch series? Or something oth=
+er
+> > > > needs to be fixed? =20
+> > >=20
+> > > The series looks fine to me - only thing for patch[4-10] I'd like
+> > > to have evidence MarcZ is happy with the approach =20
+> >=20
+> > Marc, could you look at patches 4-10 if you are happy with them? Link:
+> > https://lore.kernel.org/linux-pci/20211012164145.14126-5-kabel@kernel.o=
+rg/ =20
+>=20
+> Started with patch #4, and saw that you are still using
+> irq_find_mapping + generic_handle_irq which I objected to every time I
+> looked at this patch ([1], [2]).
+>=20
+> My NAK still stands, and I haven't looked any further, because you
+> obviously don't really care about review comments.
+>=20
+> 	M.
+>=20
+> [1] https://lore.kernel.org/r/8735r0qfab.wl-maz@kernel.org
+> [2] https://lore.kernel.org/r/871r6kqf2d.wl-maz@kernel.org
+>=20
 
-Not touching MMIO is not specified in our uAPI protocol, nor is it an
-obvious assumption to me, nor is it sufficient to assume well behaved
-userspace in the implementation of a kernel interface.
+Marc, we have ~70 patches ready for the aardvark controller driver.
 
-> We've been investigating how the mlx5 HW will behave in corner cases,
-> and currently it looks like mlx5 vfio will not generate error TLPs, or
-> corrupt the device itself due to MMIO operations when !RUNNING. So the
-> driver itself, as written, probably does not currently have a bug
-> here, or need changes.
+It is patch 53 [1] that converts the old irq_find_mapping() +
+generic_handle_irq() API to the new API, so it isn't that Pali did
+not address your comments, it is that, due to convenience, he addressed
+them in a later patch.
 
-This is a system level observation or is it actually looking at the
-bus?  An Unsupported Request on MMIO write won't even generate an AER
-on some systems, but others can trigger a fatal error on others.
+The last time Pali sent a larger number of paches (in a previous
+version, which was 42 patches [1]), it was requested that we split the
+series into smaller sets, so that it is easier to merge.
 
-That sounds like potentially good news, but either way we're still also
-discussing a fundamental gap in the uAPI for quiescing multiple devices
-in a coordinated way and how we actually define !_RUNNING.
+Since then some more changes accumulated, resulting in the current ~70
+patches, which I have been sending in smaller batches.
 
-> > We're tossing around solutions that involve extensions, if not
-> > changes to the uAPI.  It's Wednesday of rc7.  
-> 
-> The P2P issue is seperate, and as I keep saying, unless you want to
-> block support for any HW that does not have freeze&queice userspace
-> must be aware of this ability and it is logical to design it as an
-> extension from where we are now.
+I could rebase the entire thing so that the patch changing the usage of
+the old irq_find_mapping() + generic_handle_irq() API is first. But
+that would require rebasing and testing all the patches one by one,
+since the patches in-between touch everything almost everything else.
 
-Is this essentially suggesting that the uAPI be clarified to state
-that the base implementation is only applicable to userspace contexts
-with a single migratable vfio device instance?  Does that need to
-preemptively include /dev/iommu generically, ie. anything that could
-potentially have an IOMMU mapping to the device?
+If it is really that problematic to review the changes while they use
+the old API, please let me know and I will rebase it. But if you could
+find it in yourself to review the patches with old API usage, it would
+really save a lot of time and the result will be the same, to your
+satisfaction.
 
-I agree that it would be easier to add a capability to expose
-multi-device compatibility than to try to retrofit one to expose a
-restriction.
+Marek
 
-> > I feel like we've already been burned by making one of these
-> > "reasonable quanta of progress" to accept and mark experimental
-> > decisions with where we stand between defining the uAPI in the kernel
-> > and accepting an experimental implementation in QEMU.    
-> 
-> I won't argue there..
-> 
-> > Now we have multiple closed driver implementations (none of which
-> > are contributing to this discussion), but thankfully we're not
-> > committed to supporting them because we have no open
-> > implementations.  I think we could get away with ripping up the uAPI
-> > if we really needed to.  
-> 
-> Do we need to?
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/commit/?h=3D=
+pci-aardvark&id=3Dc77d04754fbe85ed37fd7517cee253022f8428fe
 
-I'd prefer not.
-
-> > > > Deciding at some point in the future to forcefully block device MMIO
-> > > > access from userspace when the device stops running is clearly a user
-> > > > visible change and therefore subject to the don't-break-userspace
-> > > > clause.      
-> > > 
-> > > I don't think so, this was done for reset retroactively after
-> > > all. Well behaved qmeu should have silenced all MMIO touches as part
-> > > of the ABI contract anyhow.  
-> > 
-> > That's not obvious to me and I think it conflates access to the device
-> > and execution of the device.  If it's QEMU's responsibility to quiesce
-> > access to the device anyway, why does the kernel need to impose this
-> > restriction.  I'd think we'd generally only impose such a restriction
-> > if the alternative allows the user to invoke bad behavior outside the
-> > scope of their use of the device or consistency of the migration data.
-> > It appears that any such behavior would be implementation specific here.  
-> 
-> I think if an implementation has a problem, like error TLPs, then yes,
-> it must fence. The conservative specification of the uAPI is that
-> userspace should not allow MMIO when !RUNNING.
-> 
-> If we ever get any implementation that needs this to fence then we
-> should do it for all implementations just out of consistency.
-
-Like I've indicated, this is not an obvious corollary of the !_RUNNING
-state to me.  I'd tend more towards letting userspace do what they want
-and only restrict as necessary to protect the host.  For example the
-state of the device when !_RUNNING may be changed by external stimuli,
-including MMIO and DMA accesses, but the device does not independently
-advance state.
-
-Also, I think we necessarily require config space read-access to
-support migration, which begs the question specifically which regions,
-if any, are restricted when !_RUNNING?  Could we get away with zapping
-mmaps (sigbus on fault) but allowing r/w access?
-
-> > > The "don't-break-userspace" is not an absolute prohibition, Linus has
-> > > been very clear this limitation is about direct, ideally demonstrable,
-> > > breakage to actually deployed software.  
-> > 
-> > And if we introduce an open driver that unblocks QEMU support to become
-> > non-experimental, I think that's where we stand.  
-> 
-> Yes, if qemu becomes deployed, but our testing shows qemu support
-> needs a lot of work before it is deployable, so that doesn't seem to
-> be an immediate risk.
-
-Good news... I guess...  but do we know what other uAPI changes might
-be lurking without completing that effort?
-
-> > > > That might also indicate that "freeze" is only an implementation
-> > > > specific requirement.  Thanks,    
-> > > 
-> > > It doesn't matter if a theoretical device can exist that doesn't need
-> > > "freeze" - this device does, and so it is the lowest common
-> > > denominator for the uAPI contract and userspace must abide by the
-> > > restriction.  
-> > 
-> > Sorry, "to the victor go the spoils" is not really how I strictly want
-> > to define a uAPI contract with userspace.    
-> 
-> This is not the "victor go the spoils" this is meeting the least
-> common denominator of HW we have today.
->
-> If some fictional HW can be more advanced and can snapshot not freeze,
-> that is great, but it doesn't change one bit that mlx5 cannot and will
-> not work that way. Since mlx5 must be supported, there is no choice
-> but to define the uAPI around its limitations.
-
-But it seems like you've found that mlx5 is resilient to these things
-that you're also deeming necessary to restrict.
-
-> snapshot devices are strictly a superset of freeze devices, they can
-> emulate freeze by doing snapshot at the freeze operation.
-
-True.
-
-> In all cases userspace should not touch the device when !RUNNING to
-> preserve generality to all implementations.
-
-Not and obvious conclusion to me.
-
-> > If we're claiming that userspace is responsible for quiescing
-> > devices and we're providing a means for that to occur, and userspace
-> > is already responsible for managing MMIO access, then the only
-> > reason the kernel would forcefully impose such a restriction itself
-> > would be to protect the host and the implementation of that would
-> > depend on whether this is expected to be a universal or device
-> > specific limitation.    
-> 
-> I think the best way forward is to allow for revoke to happen if we
-> ever need it (by specification), and not implement it right now.
-> 
-> So, I am not left with a clear idea what is still open that you see as
-> blocking. Can you summarize?
-
-It seems we have numerous uAPI questions floating around, including
-whether the base specification is limited to a single physical device
-within the user's IOMMU context, what the !_RUNNING state actually
-implies about the device state, expectations around userspace access
-to device regions while in this state, and who is responsible for
-limiting such access, and uncertainty what other uAPI changes are
-necessary as QEMU support is stabilized.
-
-Why should we rush a driver in just before the merge window and
-potentially increase our experimental driver debt load rather than
-continue to co-develop kernel and userspace drivers and maybe also
-get input from the owners of the existing out-of-tree drivers?  Thanks,
-
-Alex
-
+[2]
+https://patchwork.kernel.org/project/linux-pci/cover/20210506153153.30454-1=
+-pali@kernel.org/
