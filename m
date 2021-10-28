@@ -2,90 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D737243E8B7
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 20:57:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3214743E9D4
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 22:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230384AbhJ1S7j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 14:59:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57116 "EHLO mail.kernel.org"
+        id S230498AbhJ1Upu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 16:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231132AbhJ1S7i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 14:59:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 922B1610CA;
-        Thu, 28 Oct 2021 18:57:10 +0000 (UTC)
+        id S230404AbhJ1Upt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 16:45:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 010F660F92;
+        Thu, 28 Oct 2021 20:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635447431;
-        bh=0v5e9CTnatZ5QZIboPa/3Ck7k53KXq9StP9XVz31j04=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7GKA/xeq39IC1dUy9IaJ6VtyrvLseUzuCcTf1UAgjnrEtryvbVEOKyv+yoWAne8e
-         XGH2uGGrdcG0lHkO1F5vOdrTqU+dVy8oTjDKAAxbdTgoNDOrWAVGdi52x8gEKvVxT6
-         cRluGM5XHa4xHxC3bkBgCvDG9sTRPoGn5RVTLP8jr8Feq1bMZt7LumZFOGs1wYuqnR
-         kEvu2PYjx5dGDPR+C1sfcz4UbsIJVM276aiwPrYOsrSpxleb2aOyBvMhHEoBFwGPkU
-         ulgNQyROi1n5TtdqoK3w8YYaZOW5NsRUrSNxPsB4w+ZqxnUxs3QUiDnkcLTqcQjb/K
-         p96sI7kgxx9+A==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 7/7] PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge
-Date:   Thu, 28 Oct 2021 20:56:59 +0200
-Message-Id: <20211028185659.20329-8-kabel@kernel.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211028185659.20329-1-kabel@kernel.org>
-References: <20211028185659.20329-1-kabel@kernel.org>
+        s=k20201202; t=1635453802;
+        bh=mr/fiFuUHHMGsLI2l3zIL2nH5rEDnRCnUe6KCd1lMN8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=N9+9LNZ2U4ZKE+g2/Q8SVwL7l/2PP61G6KhkAj8pwTr1uOg0XdaVBCOGiY3ubrNak
+         Q9vh8W0e5R4h2lDckFnRbaPtxPQZKuKH1braOXEqAK2BPBUczcQhRqlFfTDphDRU3S
+         wOpRtIEhxD3EA74rjqn9CBNIM/wd1nv6FQLX92JTl8xwBw3heewscCLOg1GI8wwQ6m
+         VNrHSf3+VSmtMh4uXT/comXBYYCIZWKwQqsysydf1SdsV5ocMQ0kA0OT+9zVavbHGS
+         Utg3Wg6bJRYGOBfcN7LaSBlriljrN/HJucYOsSh4BYYd0PC9DgA06Tdz1dtLN2tIS9
+         eXARvtJmVJHWQ==
+Date:   Thu, 28 Oct 2021 15:43:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 12/14] PCI: aardvark: Set PCI Bridge Class Code to PCI
+ Bridge
+Message-ID: <20211028204320.GA292150@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211028184557.wbnfdyg3j6yyhhju@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali RohÃ¡r <pali@kernel.org>
+On Thu, Oct 28, 2021 at 08:45:57PM +0200, Pali Rohár wrote:
+> On Thursday 28 October 2021 19:30:54 Lorenzo Pieralisi wrote:
+> > On Tue, Oct 12, 2021 at 06:41:43PM +0200, Marek Behún wrote:
+> > > From: Pali Rohár <pali@kernel.org>
+> > > 
+> > > Aardvark controller has something like config space of a Root Port
+> > > available at offset 0x0 of internal registers - these registers are used
+> > > for implementation of the emulated bridge.
+> > > 
+> > > The default value of Class Code of this bridge corresponds to a RAID Mass
+> > > storage controller, though. (This is probably intended for when the
+> > > controller is used as Endpoint.)
+> > > 
+> > > Change the Class Code to correspond to a PCI Bridge.
+> > > 
+> > > Add comment explaining this change.
+> > > 
+> > > Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Reviewed-by: Marek Behún <kabel@kernel.org>
+> > > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 289cd45ed1ec..801657e7da93 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -513,6 +513,26 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > >  	reg = (PCI_VENDOR_ID_MARVELL << 16) | PCI_VENDOR_ID_MARVELL;
+> > >  	advk_writel(pcie, reg, VENDOR_ID_REG);
+> > >  
+> > > +	/*
+> > > +	 * Change Class Code of PCI Bridge device to PCI Bridge (0x600400),
+> > > +	 * because the default value is Mass storage controller (0x010400).
+> > > +	 *
+> > > +	 * Note that this Aardvark PCI Bridge does not have compliant Type 1
+> > > +	 * Configuration Space and it even cannot be accessed via Aardvark's
+> > > +	 * PCI config space access method. Something like config space is
+> > > +	 * available in internal Aardvark registers starting at offset 0x0
+> > > +	 * and is reported as Type 0. In range 0x10 - 0x34 it has totally
+> > > +	 * different registers.
+> > 
+> > Is the RP enumerated as a PCI device with type 0 header ?
+> 
+> Yes.
+> 
+> And pci-bridge-emul.c "converts" it to type 1 header. So lspci correctly
+> see it as type 1.
+> 
+> > > +	 *
+> > > +	 * Therefore driver uses emulation of PCI Bridge which emulates
+> > > +	 * access to configuration space via internal Aardvark registers or
+> > > +	 * emulated configuration buffer.
+> > > +	 */
+> > > +	reg = advk_readl(pcie, PCIE_CORE_DEV_REV_REG);
+> > > +	reg &= ~0xffffff00;
+> > > +	reg |= (PCI_CLASS_BRIDGE_PCI << 8) << 8;
+> > > +	advk_writel(pcie, reg, PCIE_CORE_DEV_REV_REG);
+> > 
+> > I remember Bjorn commenting on something similar in the past - he may
+> > have some comments on whether this change is the right thing to do.
 
-This register is exported at address offset 0x30.
+No comments from me :)
 
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-Signed-off-by: Pali RohÃ¡r <pali@kernel.org>
-Signed-off-by: Marek BehÃºn <kabel@kernel.org>
-Cc: stable@vger.kernel.org
----
- drivers/pci/controller/pci-aardvark.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index c3b725afa11f..c5300d49807a 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -32,6 +32,7 @@
- #define PCIE_CORE_DEV_ID_REG					0x0
- #define PCIE_CORE_CMD_STATUS_REG				0x4
- #define PCIE_CORE_DEV_REV_REG					0x8
-+#define PCIE_CORE_EXP_ROM_BAR_REG				0x30
- #define PCIE_CORE_PCIEXP_CAP					0xc0
- #define PCIE_CORE_ERR_CAPCTL_REG				0x118
- #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-@@ -773,6 +774,10 @@ advk_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
- 		*value = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 		return PCI_BRIDGE_EMUL_HANDLED;
- 
-+	case PCI_ROM_ADDRESS1:
-+		*value = advk_readl(pcie, PCIE_CORE_EXP_ROM_BAR_REG);
-+		return PCI_BRIDGE_EMUL_HANDLED;
-+
- 	case PCI_INTERRUPT_LINE: {
- 		/*
- 		 * From the whole 32bit register we support reading from HW only
-@@ -805,6 +810,10 @@ advk_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
- 		advk_writel(pcie, new, PCIE_CORE_CMD_STATUS_REG);
- 		break;
- 
-+	case PCI_ROM_ADDRESS1:
-+		advk_writel(pcie, new, PCIE_CORE_EXP_ROM_BAR_REG);
-+		break;
-+
- 	case PCI_INTERRUPT_LINE:
- 		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
- 			u32 val = advk_readl(pcie, PCIE_CORE_CTRL1_REG);
--- 
-2.32.0
-
+> Root Port should have PCI Bridge class code, but aardvark HW initialize
+> it to class code for Mass Storage (as explained above).
+>
+> pci-bridge-emul.c again transparently "converts" it to PCI Bridge class
+> code.
+> 
+> Similar issue has also mvebu hw, see email:
+> https://lore.kernel.org/linux-pci/20211003120944.3lmwxylnhlp2kfj7@pali/
+> 
+> And similar fixup was applied for kirkwood:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1dc831bf53fddcc6443f74a39e72db5bcea4f15d
+> 
+> Are there any issues with it?
+> 
+> > Lorenzo
+> > 
+> > >  	/* Disable Root Bridge I/O space, memory space and bus mastering */
+> > >  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+> > >  	reg &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
+> > > -- 
+> > > 2.32.0
+> > > 
