@@ -2,138 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A19343E57B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 17:51:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6606443E592
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 17:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbhJ1PyX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 11:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229565AbhJ1PyW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 11:54:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F380E60F56;
-        Thu, 28 Oct 2021 15:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635436315;
-        bh=RQCFu2bzuvPr4JUWn0qTIZR5mpfWaOO3X14IYifWvn8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sC7qClxFYhK47iMi9WkAbGDJ3RCz0GuemIOFh4wX4S4ZB3sP6LwPATPJaX78wPl8f
-         3wHLb4hB4v2p5U3UfF5pODsxqKt032wjEpElNl8cKof6lwcHseCXnHzVVbhUgGnIzy
-         QhmoXYIe68pCbqoLScNzKdfZke4QshK9FC3LGZx7qo6EZ/IFqU1L2prE2dci0uKtYF
-         UdrlkHZjGqeO9Y8tq8NewnkO5VQ2tTqg/UTYLM8FaPCRr250Xd0TqLT+f1b+JKAnO5
-         ysdRvF8UUguZic+5uKFbt/r+GbSR4hCY8w/lwC/hImqKrCXjC7/JG53r7vEXpdz22f
-         hQTJpBXk8ey+A==
-Date:   Thu, 28 Oct 2021 17:51:50 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 10/14] PCI: aardvark: Enable MSI-X support
-Message-ID: <20211028175150.7faa6481@thinkpad>
-In-Reply-To: <87r1c59nqf.wl-maz@kernel.org>
-References: <20211012164145.14126-1-kabel@kernel.org>
-        <20211012164145.14126-11-kabel@kernel.org>
-        <20211027141246.GA27543@lpieralisi>
-        <20211027142307.lrrix5yfvroxl747@pali>
-        <20211028110835.GA1846@lpieralisi>
-        <20211028111302.gfd73ifoyudttpee@pali>
-        <20211028113030.GA2026@lpieralisi>
-        <20211028113724.gm6zhqt7qcyxtgkq@pali>
-        <87r1c59nqf.wl-maz@kernel.org>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S229846AbhJ1P71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 11:59:27 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:38740 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229752AbhJ1P71 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 11:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=oQl2JI6aQTBrrFXaoqGF4k7zrLUU21NcwBXnU9TCn+s=; b=GPhS3s/yXsNArqU3OSjiy4Dy33
+        j0DiYWA0m6iFa2x0Gc1BljmIyZ6/GMe0yj0pt7ZI0coWEiYrZWyT4oJxoJf/m1aCkQwIxyRFh74/Z
+        y737/wEhH1xD7cBZyr34ezzYQt3rfFLvCIMajUydSj+ZIbazyUVxrzdTZLurRKVNzvMCp7Fe3TPI6
+        kq4HvgF6LQp1Mf+wRLpHp+acEPNQu24yxvQR/e657i8GC+uRNHzsIjWO63gXTLKwYFJPEsDUFdEp/
+        DqFmCywLfelHwQ6LqIiSYMbGMXXW2Bz8fsfm2WGfT+d+VmLQS3DiUw6xwnbJDUTG6l0tdVsO0D0Bk
+        kxewsUfQ==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1mg7lr-001Vy9-Bm; Thu, 28 Oct 2021 09:56:53 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dongdong Liu <liudongdong3@huawei.com>, hch@infradead.org,
+        kw@linux.com, leon@kernel.org, linux-pci@vger.kernel.org,
+        rajur@chelsio.com, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org
+References: <20211028013934.GA267985@bhelgaas>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7b2ba630-8dd2-5986-b50c-0f93487c9eed@deltatee.com>
+Date:   Thu, 28 Oct 2021 09:56:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20211028013934.GA267985@bhelgaas>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: netdev@vger.kernel.org, linux-media@vger.kernel.org, hverkuil-cisco@xs4all.nl, rajur@chelsio.com, linux-pci@vger.kernel.org, leon@kernel.org, kw@linux.com, hch@infradead.org, liudongdong3@huawei.com, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH V10 6/8] PCI/P2PDMA: Add a 10-Bit Tag check in P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Oct 2021 16:24:08 +0100
-Marc Zyngier <maz@kernel.org> wrote:
 
-> On Thu, 28 Oct 2021 12:37:24 +0100,
-> Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> >=20
-> > On Thursday 28 October 2021 12:30:30 Lorenzo Pieralisi wrote: =20
-> > > On Thu, Oct 28, 2021 at 01:13:02PM +0200, Pali Roh=C3=A1r wrote:
-> > >=20
-> > > [...]
-> > >  =20
-> > > > > > In commit message I originally tried to explain it that after a=
-pplying
-> > > > > > all previous patches which are fixing MSI and Multi-MSI support=
- (part of
-> > > > > > them is enforcement to use only MSI numbers 0..31), it makes dr=
-iver
-> > > > > > compatible with also MSI-X interrupts.
-> > > > > >=20
-> > > > > > If you want to rewrite commit message, let us know, there is no=
- problem. =20
-> > > > >=20
-> > > > > I think we should.
-> > > > >  =20
-> > > > > > > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > > > > > > > Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org> =20
-> > > > >=20
-> > > > > By the way, this tag should be removed. Marek signed it off, that
-> > > > > applies to other patches in this series as well. =20
-> > > >=20
-> > > > Ok! Is this the only issue with this patch series? Or something oth=
-er
-> > > > needs to be fixed? =20
-> > >=20
-> > > The series looks fine to me - only thing for patch[4-10] I'd like
-> > > to have evidence MarcZ is happy with the approach =20
-> >=20
-> > Marc, could you look at patches 4-10 if you are happy with them? Link:
-> > https://lore.kernel.org/linux-pci/20211012164145.14126-5-kabel@kernel.o=
-rg/ =20
->=20
-> Started with patch #4, and saw that you are still using
-> irq_find_mapping + generic_handle_irq which I objected to every time I
-> looked at this patch ([1], [2]).
->=20
-> My NAK still stands, and I haven't looked any further, because you
-> obviously don't really care about review comments.
->=20
-> 	M.
->=20
-> [1] https://lore.kernel.org/r/8735r0qfab.wl-maz@kernel.org
-> [2] https://lore.kernel.org/r/871r6kqf2d.wl-maz@kernel.org
->=20
 
-Marc, we have ~70 patches ready for the aardvark controller driver.
 
-It is patch 53 [1] that converts the old irq_find_mapping() +
-generic_handle_irq() API to the new API, so it isn't that Pali did
-not address your comments, it is that, due to convenience, he addressed
-them in a later patch.
+On 2021-10-27 7:39 p.m., Bjorn Helgaas wrote:
+> On Wed, Oct 27, 2021 at 05:41:07PM -0600, Logan Gunthorpe wrote:
+>> On 2021-10-27 5:11 p.m., Bjorn Helgaas wrote:
+>>>> @@ -532,6 +577,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>>>>  		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>>>>  	}
+>>>>  done:
+>>>> +	if (pci_10bit_tags_unsupported(client, provider, verbose))
+>>>> +		map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>>>
+>>> I need to be convinced that this check is in the right spot to catch
+>>> all potential P2PDMA situations.  The pci_p2pmem_find() and
+>>> pci_p2pdma_distance() interfaces eventually call
+>>> calc_map_type_and_dist().  But those interfaces don't actually produce
+>>> DMA bus addresses, and I'm not convinced that all P2PDMA users use
+>>> them.
+>>>
+>>> nvme *does* use them, but infiniband (rdma_rw_map_sg()) does not, and
+>>> it calls pci_p2pdma_map_sg().
+>>
+>> The rules of the current code is that calc_map_type_and_dist() must be
+>> called before pci_p2pdma_map_sg(). The calc function caches the mapping
+>> type in an xarray. If it was not called ahead of time,
+>> pci_p2pdma_map_type() will return PCI_P2PDMA_MAP_NOT_SUPPORTED, and the
+>> WARN_ON_ONCE will be hit in
+>> pci_p2pdma_map_sg_attrs().
+> 
+> Seems like it requires fairly deep analysis to prove all this.  Is
+> this something we don't want to put directly in the map path because
+> it's a hot path, or it just doesn't fit there in the model, or ...?
 
-The last time Pali sent a larger number of paches (in a previous
-version, which was 42 patches [1]), it was requested that we split the
-series into smaller sets, so that it is easier to merge.
+Yes, that's pretty much what my next patch set does. It just took a
+while to get there (adding the xarray, etc).
 
-Since then some more changes accumulated, resulting in the current ~70
-patches, which I have been sending in smaller batches.
+>> Both NVMe and RDMA (only used in the nvme fabrics code) do the correct
+>> thing here and we can be sure calc_map_type_and_dist() is called before
+>> any pages are mapped.
+>>
+>> The patch set I'm currently working on will ensure that
+>> calc_map_type_and_dist() is called before anyone maps a PCI P2PDMA page
+>> with dma_map_sg*().
+>>
+>>> amdgpu_dma_buf_attach() calls pci_p2pdma_distance_many() but I don't
+>>> know where it sets up P2PDMA transactions.
+>>
+>> The amdgpu driver hacked this in before proper support was done, but at
+>> least it's using pci_p2pdma_distance_many() presumably before trying any
+>> transfer. Though it's likely broken as it doesn't take into account the
+>> mapping type and thus I think it always assumes traffic goes through the
+>> host bridge (seeing it doesn't use pci_p2pdma_map_sg()).
+> 
+> What does it mean to go through the host bridge?  Obviously DMA to
+> system memory would go through the host bridge, but this seems
+> different.  Is this a "between PCI hierarchies" case like to a device
+> below a different root port?  I don't know what the tag rules are for
+> that.
 
-I could rebase the entire thing so that the patch changing the usage of
-the old irq_find_mapping() + generic_handle_irq() API is first. But
-that would require rebasing and testing all the patches one by one,
-since the patches in-between touch everything almost everything else.
+It means both devices are connected to the host bridge without a switch.
+So TLPs are routed through the route complex and thus would be affected
+by the IOMMU. I also don't know how the tag rules apply here. But the
+code in this patch will ensure that no two devices with different tag
+sizes will ever use p2pdma in any case.
 
-If it is really that problematic to review the changes while they use
-the old API, please let me know and I will rebase it. But if you could
-find it in yourself to review the patches with old API usage, it would
-really save a lot of time and the result will be the same, to your
-satisfaction.
-
-Marek
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/commit/?h=3D=
-pci-aardvark&id=3Dc77d04754fbe85ed37fd7517cee253022f8428fe
-
-[2]
-https://patchwork.kernel.org/project/linux-pci/cover/20210506153153.30454-1=
--pali@kernel.org/
+Logan
