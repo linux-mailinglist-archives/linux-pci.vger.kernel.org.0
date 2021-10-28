@@ -2,201 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F29F943DB66
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 08:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F4A43DB80
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 08:48:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbhJ1Gpp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 02:45:45 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:45939 "EHLO mx1.molgen.mpg.de"
+        id S229586AbhJ1GvH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 02:51:07 -0400
+Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:44165
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229694AbhJ1Gpo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 02:45:44 -0400
-Received: from [192.168.0.2] (ip5f5aef59.dynamic.kabel-deutschland.de [95.90.239.89])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1688E61E64846;
-        Thu, 28 Oct 2021 08:43:17 +0200 (CEST)
-Message-ID: <a9ab1f26-69f6-9f31-8ffb-14a7bfa21505@molgen.mpg.de>
-Date:   Thu, 28 Oct 2021 08:43:16 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v7 1/2] ice: reduce time to read Option ROM CIVD data
+        id S229762AbhJ1GvG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 02:51:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ms7Wr7ZLMaOUU5UEVinO2ffvnN7p4tmlv67XzoiL6VKqSHBzMs10DqJpOKTWDJLWC3NyRGhVrmZv2yKZwZ43WVy3EhoZcGU4ku/mm3dvqzSOcUEkt752JfbiRdbJ3kR8OgeBbFEsGDBhbH60JsNzM2rug4zvWdNQQ9xWq81hYfWNBKOWpcfV6BAvN2awICyhysZ4QK3Qs+KIYbIa5CVX3cRSjbzoVNpXlQe3tTdYqM8v7m4nK/ktPNgxZkPqMCqQHAXlFLB26SQEoN4L9QqILRQXkZwGJ6DjRrAqvNz1JWwNv6qz51n+jKbmZR0rUKuyUULtZVqhhByCuRFIkNKu1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kkHfXwTaC2DPtnJI9rqN0zDytAo6z+4qabsAJug266k=;
+ b=hRuygoqET9cE86lZfMOC/RKh2lBSZJfr4DcRtaUPqhCg94O8wY+C6MZDW6JYyRaOp+ZFVKFEvEgBMhaJyE5RLcWaJYWcP/rGg+40Ob8uKrBzqKT27Ncb0eNhdM2Ol7S5oxsHwqIw5O973JExxJjtAurgoGgecQ53d/cY7OmekrXG96Ng6/23nu0NauEw+Df30dFtWT1DslVCfimhtc0bModWv1lsWef72aZc/21EA+W4sQac1CC8A4khSnRoRx3YGuAuTUpOfTg5CBCeXey3giXFOHkQPyfQxnIsQHj6kUiNVYo7JWMY2UOgNhEY0iFxHUPfbTiPtEpjXMPj9TCQlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kkHfXwTaC2DPtnJI9rqN0zDytAo6z+4qabsAJug266k=;
+ b=TP0Cd6GwzAvyL4y5vCgUKbhQHGMWhgVlllsF+D2/jsQnnGDt9JwzY7l2EN9Ym6pstBEpdBdGhfar6nzgFqj5mZxBJN2b3/RFM7x1Vs54pV7y2S8EU4roHezeJmHYlMbf8b7E1TPgIt4MVVbUUyRlSPBrVBCSVFLoxPQWgWMqG8c=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by AS8PR04MB8594.eurprd04.prod.outlook.com (2603:10a6:20b:425::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Thu, 28 Oct
+ 2021 06:48:38 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::b059:46c6:685b:e0fc]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::b059:46c6:685b:e0fc%5]) with mapi id 15.20.4649.015; Thu, 28 Oct 2021
+ 06:48:38 +0000
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH v3 3/7] PCI: imx6: Fix the regulator dump when link never
+ came up
+Thread-Topic: [PATCH v3 3/7] PCI: imx6: Fix the regulator dump when link never
+ came up
+Thread-Index: AQHXxxe5hpSrQkcPqkWGr8lEYEKQh6vjlGkAgAAC9gCAAPQyAIAAc9KAgAABivCAAAPIgIAAANdAgAAJmYCAAYEAIA==
+Date:   Thu, 28 Oct 2021 06:48:37 +0000
+Message-ID: <AS8PR04MB867600CAD244395B2AF2E8A08C869@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1634886750-13861-1-git-send-email-hongxing.zhu@nxp.com>
+ <1634886750-13861-4-git-send-email-hongxing.zhu@nxp.com>
+ <20211025111312.GA31419@francesco-nb.int.toradex.com>
+ <YXaTxDJjhpcj5XBV@sirena.org.uk>
+ <AS8PR04MB8676A0F3DA3248C6A27801148C849@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <20211026085221.GA87230@francesco-nb.int.toradex.com>
+ <AS8PR04MB867692D946818A84575F71AA8C849@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <20211026091123.GB87230@francesco-nb.int.toradex.com>
+ <AS8PR04MB8676A2D17A859730230CFBAA8C849@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <20211026094845.GC87230@francesco-nb.int.toradex.com>
+In-Reply-To: <20211026094845.GC87230@francesco-nb.int.toradex.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Jacob Keller <jacob.e.keller@intel.com>
-References: <20211027232255.669167-1-jacob.e.keller@intel.com>
-Cc:     Anthony Nguyen <anthony.l.nguyen@intel.com>,
-        intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20211027232255.669167-1-jacob.e.keller@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 624b78f2-0814-41b8-ec49-08d999def87b
+x-ms-traffictypediagnostic: AS8PR04MB8594:
+x-microsoft-antispam-prvs: <AS8PR04MB85947DEC1A51E651D269CE4A8C869@AS8PR04MB8594.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BztBeBNIlk0E3oV6Y9ewreyXQPrBfkgkGecH+BlyZyj7bmySAcQWfGol4dZ2TtOtCL/W1Oe/fBANyGg0V5l4hvi+sEZeIcahB9jxFjMajdUW6+x3c5PtkOL2nUTpJ6y8dFvsiVj04wBTy9x+3W124qwcUT769MX6nEw+kr6UwQs7aI9XQSsC7PQ/w9TyCYzBZ1lNBmFNwS4XVjzjk3BtABsWfxls65lD7Kj36TqDegANe0wDhSajoYMizyIUxaDgCnmkdS6CPhlS437y+//9gej83zPWKSKda2K28xlIvJioYM6Wd0A8TsMBhzZ89L38Pt93Jkt2TkxpcICoAVYZDlCtR9pDwZCbrQfjYIynAvGE7rGPckkE8+LQR6Emkchm3C9kEpzXyexY3T2FjBFfN/GKGDIqaAnUvG02BNuGog2S0Sx5MtziLFwFfzTsDc92N/kWKckyjlawNdbUokqW2dMG9oH9t/OuSVhq0+1eV9XqtfugTWuqmH7kaYkPsDmwjiJlQBdK1xKh02llH4B0wRTYv+ddJDdYNMPQzKdioupG2/61xv3j1+PvInUzXPLr7VbTcKFo3xlKjvTPDWfkxoUk66ABuXB41zL3cNxxoOekhfIHawuv5Ao5K0MoYL8/VMtcrK+09xpW9SY9n8/ewPRNuVRVrJzjUL1OYGsAs5K0B3flkdUiJObtzG0biLFHhRO4ia8SD+rx1TDSBKdMkA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(54906003)(26005)(9686003)(66446008)(7696005)(186003)(66946007)(66556008)(6916009)(64756008)(83380400001)(66476007)(76116006)(6506007)(53546011)(55016002)(8676002)(4326008)(122000001)(52536014)(7416002)(316002)(5660300002)(86362001)(8936002)(38100700002)(33656002)(38070700005)(71200400001)(508600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?LPM6925RYEl/B66oo3sYI9PeJSvvgaLYr7kp37ulWa4VWcvureGcYza1OI+G?=
+ =?us-ascii?Q?vdcDIEryykknrfjAFRIFowZjWs0VR4JnZal3O3fK4YJskeuDCCWzMGRqORJQ?=
+ =?us-ascii?Q?Siv6LXwroK7BKy0BKCLnPRpAC0Lh+1hF8DeIVqdKRxa8C/DBK8LTIQPgS1pS?=
+ =?us-ascii?Q?i53Y60SXexWj+5bV1uQxfpZ9SPb5SRgWDtoCq1bigydclvi4duS+c39D0erW?=
+ =?us-ascii?Q?cNAgksdANsg6hpwldbZpBY5Xfvh7hOTq5HfJXVWABdVplOBYZPlLGzUdnzO0?=
+ =?us-ascii?Q?6kKXY7drT/j6o8Q9yZhHhkOKpWXyDe+v8OL+gqXq0n4jSYQDWeLfJiKjlf6r?=
+ =?us-ascii?Q?Oq5rFxGFU9agPqX0cEP00IAopmuy1j8LVzOiey4u0rQ0CL33t5quW3cbJb8w?=
+ =?us-ascii?Q?RWj4lllDrsDYtFmekPymxpDW9s+G0EkaNNHPSq3nDkqk37/xjSX5HE0cVRau?=
+ =?us-ascii?Q?LjQbaM2OqMsoF1VBDrcbeXyV3xP4W+Xx1MqYGZtB2JLYvLuOhrCvEjucfq+u?=
+ =?us-ascii?Q?TV/LQpKjgvAbvTgWzRbMCizClKeXiobDAhj/gXdeuMQB+G7ZziNjlu62kne8?=
+ =?us-ascii?Q?pj+bo5lVCdQolyVH2QBbeoIFEm6iR8+gG6/IFB0b1pKjuHgAjdmoTr1UYZ8e?=
+ =?us-ascii?Q?hEzD9HLv917YWY53A6i7DJkHW2Uz6WHwtFQ3QJAUGUDSXMqokswM0rEtt/4t?=
+ =?us-ascii?Q?tzVfo0bO8ELq+7gF6iSJDE62N08K6Z92MRsZdOh1vH/XxLkBvkKjGhohShX+?=
+ =?us-ascii?Q?C9dx+z7TcOnj2spx5Lm6IpyW9j2cOsjBHl47d3WYbDIdSvbhqOKPApS4YGM0?=
+ =?us-ascii?Q?4GfL1xvbpjf+f7GfUIhhHxrTiDXlOC3dB0byft/vaoZZbnqlnF8a5rAbvqxc?=
+ =?us-ascii?Q?05YbzsGvk9Ug5D0rD1Ex6bqMrkUV4Sg4zoT2MNQjDq+sWA0+d8E2SBGNGzgT?=
+ =?us-ascii?Q?CephzgTTowpS//NFKAG2CfgEJR9da8t6/wqk0GN9Qi0IgUi8xcEt4AzAhaes?=
+ =?us-ascii?Q?QgUGsgEDy6DVGA/lNlf5SQ0VxmyeJuglvWE/vBiIfz00ZdQRT8QExXYBZAhA?=
+ =?us-ascii?Q?/a58oLjwnGH01kWgzbJwRMH675Tk9WAqUEhUujUV0BYhCf2LZ4sTcJTOEjHS?=
+ =?us-ascii?Q?qEJBszsF8DlS6AmY+R+Y1HlrTk76BAJU+WgMSIiujzGw/trTo4a01tsiHHjW?=
+ =?us-ascii?Q?T7J0KJf+VMUmYs5+ag8RwD2GkEQ4M18NazvSHvqkBkWzUOFESsi4hTCpzZQe?=
+ =?us-ascii?Q?lWHG4TNZBh69Yc5F2d2YtAmceu0GwZwL2QEpnvmw9gcnQUawMzfMZkI17SNc?=
+ =?us-ascii?Q?R/w8iMYx5waykc7uCqOu8PXKuT/uG9s6G91Ixj/V9KQAAQDa7vo7zVICu5a+?=
+ =?us-ascii?Q?TY2/LH7ERZa4Xe6XUJN8uZE/a41iQMkuCthM/QbNYhKFgVmh9cw8bafO1lfB?=
+ =?us-ascii?Q?b/IE/93nVaMSpyRdJP15VGy+3RD9Bw8xsZm3qu9oixCioxfjOIZNgPxNUYGk?=
+ =?us-ascii?Q?5zBAIOnySBtqB82E9ovvVPHMQJNil+I5n2qY8wslAoA+YfgkLcF1GtsdMr1N?=
+ =?us-ascii?Q?i3oSbqMh6BwpTL2/pXZeTfRPDDemXoUietLDZddcs4d6RbwLimozPWBnL3o5?=
+ =?us-ascii?Q?gA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 624b78f2-0814-41b8-ec49-08d999def87b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2021 06:48:37.9151
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mvGD23FTAv76OVKgux7TamYYT32I2/QTyuDTxdqypdDapQkCRAq408vGPEZm8k+bHSVRJu5fGu8vRWGR0F4aCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8594
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Cc: +linux-pci for ideas how to work with Option ROMs]
+> -----Original Message-----
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Sent: Tuesday, October 26, 2021 5:49 PM
+> To: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Francesco Dolcini <francesco.dolcini@toradex.com>; Mark Brown
+> <broonie@kernel.org>; l.stach@pengutronix.de; bhelgaas@google.com;
+> lorenzo.pieralisi@arm.com; jingoohan1@gmail.com;
+> linux-pci@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> kernel@pengutronix.de
+> Subject: Re: [PATCH v3 3/7] PCI: imx6: Fix the regulator dump when link
+> never came up
+>=20
+> On Tue, Oct 26, 2021 at 09:18:39AM +0000, Richard Zhu wrote:
+> > > Isn't this something that depend on the actual board design? From
+> > > the driver point of view you should not silently enforce such design
+> > > requirement on the board.
+> > > Am I missing something here? Would be glad to you if you can clarify
+> in case.
+> > >
+> > [Richard Zhu] Yes, it is relied on the actual HW board design.
+> > This regulator is one optional, not mandatory required for all the boar=
+d
+> designs.
+> > So, there is one _enabled or not check before manipulate this regulator=
+.
+> I think I was not clear in my question.
+>=20
+> I'm asking what's is going to happen if the vpci-e supply is used in the
+> actual board design AND the same regulator is shared with another
+> device (to my understanding this should be just fine from the regulator A=
+PI
+> point of view, correct me if I'm wrong).
+[Richard Zhu] Yes, agree with you.=20
+It should be fine from the regulator API point of view.
+BR
+Richard
 
-Dear Jacob,
-
-
-On 28.10.21 01:22, Jacob Keller wrote:
-> During probe and device reset, the ice driver reads some data from the
-> NVM image as part of ice_init_nvm. Part of this data includes a section
-> of the Option ROM which contains version information.
-> 
-> The function ice_get_orom_civd_data is used to locate the '$CIV' data
-> section of the Option ROM.
-> 
-> Timing of ice_probe and ice_rebuild indicate that the
-> ice_get_orom_civd_data function takes about 10 seconds to finish
-> executing.
-> 
-> The function locates the section by scanning the Option ROM every 512
-> bytes. This requires a significant number of NVM read accesses, since
-> the Option ROM bank is 500KB. In the worst case it would take about 1000
-> reads. Worse, all PFs serialize this operation during reload because of
-> acquiring the NVM semaphore.
-> 
-> The CIVD section is located at the end of the Option ROM image data.
-> Unfortunately, the driver has no easy method to determine the offset
-> manually. Practical experiments have shown that the data could be at
-> a variety of locations, so simply reversing the scanning order is not
-> sufficient to reduce the overall read time.
-> 
-> Instead, copy the entire contents of the Option ROM into memory. This
-> allows reading the data using 4Kb pages instead of 512 bytes at a time.
-> This reduces the total number of firmware commands by a factor of 8. In
-> addition, reading the whole section together at once allows better
-> indication to firmware of when we're "done".
-> 
-> Re-write ice_get_orom_civd_data to allocate virtual memory to store the
-> Option ROM data. Copy the entire OptionROM contents at once using
-
-Option ROM
-
-> ice_read_flash_module. Finally, use this memory copy to scan for the
-> '$CIV' section.
-> 
-> This change significantly reduces the time to read the Option ROM CIVD
-> section from ~10 seconds down to ~1 second. This has a significant
-> impact on the total time to complete a driver rebuild or probe.
-
-Thank you for taking up the challenge and looking into this, and for 
-decreasing the time.
-
-OT: Out of curiosity, how does it work on UEFI systems without using 
-Compatibility System Mode (CSM) and just “EFI drivers”?
-
-> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-> ---
-> Changes since v6
-> * fix a memory leak
-> 
-> Changes since v5
-> * new patch
-> 
->   drivers/net/ethernet/intel/ice/ice_nvm.c | 48 ++++++++++++++++++------
->   1 file changed, 36 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_nvm.c b/drivers/net/ethernet/intel/ice/ice_nvm.c
-> index 941bfce97bf4..c5a39aa8ac94 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_nvm.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_nvm.c
-> @@ -619,7 +619,7 @@ static int
->   ice_get_orom_civd_data(struct ice_hw *hw, enum ice_bank_select bank,
->   		       struct ice_orom_civd_info *civd)
->   {
-> -	struct ice_orom_civd_info tmp;
-> +	u8 *orom_data;
-
-I know the function names use orom, but oprom is already used in other 
-subsystems.
-
->   	int status;
->   	u32 offset;
->   
-> @@ -627,36 +627,60 @@ ice_get_orom_civd_data(struct ice_hw *hw, enum ice_bank_select bank,
->   	 * The first 4 bytes must contain the ASCII characters "$CIV".
->   	 * A simple modulo 256 sum of all of the bytes of the structure must
->   	 * equal 0.
-> +	 *
-> +	 * The exact location is unknown and varies between images but is
-> +	 * usually somewhere in the middle of the bank. We need to scan the
-> +	 * Option ROM bank to locate it.
-> +	 *
-> +	 * It's significantly faster to read the entire Option ROM up front
-> +	 * using the maximum page size, than to read each possible location
-> +	 * with a separate firmware command.
->   	 */
-> +	orom_data = vzalloc(hw->flash.banks.orom_size);
-> +	if (!orom_data)
-> +		return -ENOMEM;
-> +
-> +	status = ice_read_flash_module(hw, bank, ICE_SR_1ST_OROM_BANK_PTR, 0,
-> +				       orom_data, hw->flash.banks.orom_size);
-> +	if (status) {
-> +		ice_debug(hw, ICE_DBG_NVM, "Unable to read Option ROM data\n");
-> +		return status;
-> +	}
-> +
-> +	/* Scan the memory buffer to locate the CIVD data section */
->   	for (offset = 0; (offset + 512) <= hw->flash.banks.orom_size; offset += 512) {
-> +		struct ice_orom_civd_info *tmp;
->   		u8 sum = 0, i;
->   
-> -		status = ice_read_flash_module(hw, bank, ICE_SR_1ST_OROM_BANK_PTR,
-> -					       offset, (u8 *)&tmp, sizeof(tmp));
-> -		if (status) {
-> -			ice_debug(hw, ICE_DBG_NVM, "Unable to read Option ROM CIVD data\n");
-> -			return status;
-> -		}
-> +		tmp = (struct ice_orom_civd_info *)&orom_data[offset];
->   
->   		/* Skip forward until we find a matching signature */
-> -		if (memcmp("$CIV", tmp.signature, sizeof(tmp.signature)) != 0)
-> +		if (memcmp("$CIV", tmp->signature, sizeof(tmp->signature)) != 0)
->   			continue;
->   
-> +		ice_debug(hw, ICE_DBG_NVM, "Found CIVD section at offset %u\n",
-> +			  offset);
-> +
->   		/* Verify that the simple checksum is zero */
-> -		for (i = 0; i < sizeof(tmp); i++)
-> +		for (i = 0; i < sizeof(*tmp); i++)
->   			/* cppcheck-suppress objectIndex */
-> -			sum += ((u8 *)&tmp)[i];
-> +			sum += ((u8 *)tmp)[i];
->   
->   		if (sum) {
->   			ice_debug(hw, ICE_DBG_NVM, "Found CIVD data with invalid checksum of %u\n",
->   				  sum);
-> -			return -EIO;
-> +			goto err_invalid_checksum;
->   		}
->   
-> -		*civd = tmp;
-> +		*civd = *tmp;
-> +		vfree(orom_data);
->   		return 0;
->   	}
->   
-> +	ice_debug(hw, ICE_DBG_NVM, "Unable to locate CIVD data within the Option ROM\n");
-> +
-> +err_invalid_checksum:
-> +	vfree(orom_data);
->   	return -EIO;
->   }
-
-Please excuse my ignorance. I would have though, that the system 
-firmware already put that Option ROM into memory. There is a function 
-`pci_map_biosrom()` declared in `arch/x86/include/asm/probe_roms.h` and 
-implemented in `arch/x86/kernel/probe_roms.c`, which might be used?
-
-
-Kind regards,
-
-Paul
+>=20
+> I'm not talking about board designed by NXP in which such use case might
+> not exist.
+>=20
+> Francesco
 
