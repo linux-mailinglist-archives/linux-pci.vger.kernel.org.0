@@ -2,138 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 944E943E84C
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 20:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9190143E855
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 20:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbhJ1S0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 14:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43670 "EHLO mail.kernel.org"
+        id S230473AbhJ1Sd2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 14:33:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:58164 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230505AbhJ1S0m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 14:26:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B6526610D2;
-        Thu, 28 Oct 2021 18:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635445454;
-        bh=lPDoziXSHyqP2WCwTu91lzKQZX9C3QlIxwdROw7juSA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q1ESfL7qIKkC5yOyaZLBggVqFqX4RVWSyF7kVV6jUGodhvPjuYNZ+EQBOm0EuC4lh
-         coOrzC3trIlmM9E7k7j3s6OxbKbGehYewBiHPgcVtpxqaCOKcJ9OU7e9MhrH6Ss/N3
-         ydqZucW2L6+yIX02M37gs5/RAx/VVCDbn9g/OBdXZ77OGZAsK7plMRm38K4GD89RE7
-         cjww5SnP1lbXTVURT/55tSoL1MxCwlztcM73XxEzT0c2BXM1zdvrvavLtRtt1SSJld
-         0nYkWI3GxKbNvufsu0TZVf6LmdwqasvjZdxDDUnyA+yTsmJlXDfDSYdb8LpoGxXb5c
-         J6PYnHRuPKOnw==
-Date:   Thu, 28 Oct 2021 20:24:09 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 10/14] PCI: aardvark: Enable MSI-X support
-Message-ID: <20211028202409.5b42f66e@thinkpad>
-In-Reply-To: <20211028174710.GA4484@lpieralisi>
-References: <20211027141246.GA27543@lpieralisi>
-        <20211027142307.lrrix5yfvroxl747@pali>
-        <20211028110835.GA1846@lpieralisi>
-        <20211028111302.gfd73ifoyudttpee@pali>
-        <20211028113030.GA2026@lpieralisi>
-        <20211028113724.gm6zhqt7qcyxtgkq@pali>
-        <87r1c59nqf.wl-maz@kernel.org>
-        <20211028175150.7faa6481@thinkpad>
-        <20211028182514.65a94c8e@thinkpad>
-        <87o8799j9c.wl-maz@kernel.org>
-        <20211028174710.GA4484@lpieralisi>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S229645AbhJ1Sd2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 14:33:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E6051063;
+        Thu, 28 Oct 2021 11:31:00 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDC3E3F5A1;
+        Thu, 28 Oct 2021 11:30:59 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 19:30:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, pali@kernel.org
+Subject: Re: [PATCH 12/14] PCI: aardvark: Set PCI Bridge Class Code to PCI
+ Bridge
+Message-ID: <20211028183054.GA4746@lpieralisi>
+References: <20211012164145.14126-1-kabel@kernel.org>
+ <20211012164145.14126-13-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211012164145.14126-13-kabel@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Oct 2021 18:47:18 +0100
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+On Tue, Oct 12, 2021 at 06:41:43PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> Aardvark controller has something like config space of a Root Port
+> available at offset 0x0 of internal registers - these registers are used
+> for implementation of the emulated bridge.
+> 
+> The default value of Class Code of this bridge corresponds to a RAID Mass
+> storage controller, though. (This is probably intended for when the
+> controller is used as Endpoint.)
+> 
+> Change the Class Code to correspond to a PCI Bridge.
+> 
+> Add comment explaining this change.
+> 
+> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <kabel@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 289cd45ed1ec..801657e7da93 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -513,6 +513,26 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  	reg = (PCI_VENDOR_ID_MARVELL << 16) | PCI_VENDOR_ID_MARVELL;
+>  	advk_writel(pcie, reg, VENDOR_ID_REG);
+>  
+> +	/*
+> +	 * Change Class Code of PCI Bridge device to PCI Bridge (0x600400),
+> +	 * because the default value is Mass storage controller (0x010400).
+> +	 *
+> +	 * Note that this Aardvark PCI Bridge does not have compliant Type 1
+> +	 * Configuration Space and it even cannot be accessed via Aardvark's
+> +	 * PCI config space access method. Something like config space is
+> +	 * available in internal Aardvark registers starting at offset 0x0
+> +	 * and is reported as Type 0. In range 0x10 - 0x34 it has totally
+> +	 * different registers.
 
-> On Thu, Oct 28, 2021 at 06:00:47PM +0100, Marc Zyngier wrote:
-> > On Thu, 28 Oct 2021 17:25:14 +0100,
-> > Marek Beh=C3=BAn <kabel@kernel.org> wrote: =20
-> > >=20
-> > > On Thu, 28 Oct 2021 17:51:50 +0200
-> > > Marek Beh=C3=BAn <kabel@kernel.org> wrote:
-> > >  =20
-> > > > Marc, we have ~70 patches ready for the aardvark controller driver.
-> > > >=20
-> > > > It is patch 53 [1] that converts the old irq_find_mapping() +
-> > > > generic_handle_irq() API to the new API, so it isn't that Pali did
-> > > > not address your comments, it is that, due to convenience, he addre=
-ssed
-> > > > them in a later patch.
-> > > >=20
-> > > > The last time Pali sent a larger number of paches (in a previous
-> > > > version, which was 42 patches [1]), it was requested that we split =
-the
-> > > > series into smaller sets, so that it is easier to merge.
-> > > >=20
-> > > > Since then some more changes accumulated, resulting in the current =
-~70
-> > > > patches, which I have been sending in smaller batches.
-> > > >=20
-> > > > I could rebase the entire thing so that the patch changing the usag=
-e of
-> > > > the old irq_find_mapping() + generic_handle_irq() API is first. But
-> > > > that would require rebasing and testing all the patches one by one,
-> > > > since the patches in-between touch everything almost everything els=
-e.
-> > > >=20
-> > > > If it is really that problematic to review the changes while they u=
-se
-> > > > the old API, please let me know and I will rebase it. But if you co=
-uld
-> > > > find it in yourself to review the patches with old API usage, it wo=
-uld
-> > > > really save a lot of time and the result will be the same, to your
-> > > > satisfaction. =20
-> > >=20
-> > > Lorenzo, Marc, Bjorn,
-> > >=20
-> > > I have one more question.
-> > >=20
-> > > Pali prepared the ~70 patches so that fixes come first, and
-> > > new features / changes to new API later.
-> > >=20
-> > > He did it in this way so that the patches could be then conventiently
-> > > backported to stable versions - were we to first change the API usage
-> > > to the new API, and then fix the ~20 IRQ related things, we would
-> > > afterwards have to backport the fixes by rewriting them one by one.
-> > >=20
-> > > Is this really how we should do this? Should we ignore stable while
-> > > developing for master, regardless of how much other work would need to
-> > > be spent by backporting to master, even if it could be much simpler by
-> > > applying the patches in master in another order? =20
-> >=20
-> > I already replied to that in August. Upstream is the primary
-> > development target. If you want to backport patches, do them and make
-> > the changes required so that they are correct for whatever kernel you
-> > target. Stable doesn't matter to upstream at all. =20
->=20
-> +1
->=20
-> Please don't write patch series with stable backports in mind, don't.
->=20
-> Let's focus on mailine with one series at a time, I understand it is
-> hard but that's the only way we can work and I can keep track of what
-> you are doing, if we keep splitting patch series I can't track reviews
-> and then we end up in this situation. I asked if you received Marc's
-> feedback exactly because I can't track the original discussion and if I
-> merged the series (the MSI bits) I would have ignored what Marc
-> requested you to do and that's not OK.
->=20
-> So, given the timing, I will try to merge patches [1-3] and [11-14]
-> if I can rebase the series cleanly; maybe I can include patch 9 if
-> it does not depend on previous patches.
+Is the RP enumerated as a PCI device with type 0 header ?
 
-Very well. Ignore patch 9, since it touches IRQ. In the next batch I
-shall send IRQ changes, with the first or second patch converting to
-this new API.
+> +	 *
+> +	 * Therefore driver uses emulation of PCI Bridge which emulates
+> +	 * access to configuration space via internal Aardvark registers or
+> +	 * emulated configuration buffer.
+> +	 */
+> +	reg = advk_readl(pcie, PCIE_CORE_DEV_REV_REG);
+> +	reg &= ~0xffffff00;
+> +	reg |= (PCI_CLASS_BRIDGE_PCI << 8) << 8;
+> +	advk_writel(pcie, reg, PCIE_CORE_DEV_REV_REG);
 
-Marek
+I remember Bjorn commenting on something similar in the past - he may
+have some comments on whether this change is the right thing to do.
+
+Lorenzo
+
+>  	/* Disable Root Bridge I/O space, memory space and bus mastering */
+>  	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+>  	reg &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
+> -- 
+> 2.32.0
+> 
