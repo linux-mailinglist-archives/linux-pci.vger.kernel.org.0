@@ -2,101 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A3343E46B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 16:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7434A43E49C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 17:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbhJ1PAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 11:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbhJ1PAq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 11:00:46 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D32C0613B9
-        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 07:58:19 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id n18so4627187plc.2
-        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 07:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QGXF5oWPYn5wMkU6IdsSHBlyLVAw8pj3F3Vqsyv9n4A=;
-        b=P6eCMloWeqINUEj9ranXxT68xKyKG+nZeXgfOAjzUbfehAu/rt22mvQK6Cv6/wEVhf
-         ILloehy+H3AmheBwCsJOWXj/ExWSGoUX7OnMiNGVroCNOp4k9Vgiy6/GMu5fFT6Zszgf
-         KXJW6oVWAEOgw+nZb3EgWed+o32RfN8X4ovTA7EnWrvpelJNMO8xQoTFTMttXOUzUZwb
-         0Xly/nYCzxtW3j12hxAVfUgxFKxGC5/vHAA21WJTYrU6D50yjoLIq2WotwRspD3zmaKZ
-         masg4S+YLS4wCtzhqaBIf6crO0VS8UF0feqHXJVclVA/LnZwLrGD4PHQtvtjpiCHo8A/
-         G3WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QGXF5oWPYn5wMkU6IdsSHBlyLVAw8pj3F3Vqsyv9n4A=;
-        b=aCX5h5d+PUD0VPbgC868OTvyRWk5aEOFc0MTpqCV1TGDkS3vApaTe+rX1VNqv+POkV
-         a/lS0FztVWHdgbfKQ0XoEWtSN/19M3I/fw2VxysTLNDegr9xx614y+4Z+AOD1GD30jKB
-         cZj8ALr3ajBZIgEt8FVg1FLvOU14lZzOWP8IGahkZu1UfyY5cdpk0Ru49WBmXaaD8WX5
-         pcSqWl8JdIAJSf06PLLTPl23tuH/vQAL+h+rxTUQ+7EzqrHSPkZ3pjZV3oLlLfxGrl3Z
-         xVaDjc7x5UNx2W28alc2KwsWd3VkdzhZIDNjIwwizV99vqk/BJQQZ67LcV38Lmdv+50s
-         YnSg==
-X-Gm-Message-State: AOAM530KUrnHZ48oe3uvCUnOR918zS4soo3/BRg1UQd9nDnKTdiAppHz
-        OBqrlPhJiPef7hoJPWZI+47SNQ==
-X-Google-Smtp-Source: ABdhPJzktVilKhrXQKOyuMENgwV5ET+AbhuNqDf8NyijYHCTVEjAfRDleaAvbK/MY9xZIowkHZVQMA==
-X-Received: by 2002:a17:90b:388a:: with SMTP id mu10mr5243207pjb.0.1635433098398;
-        Thu, 28 Oct 2021 07:58:18 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id m10sm8036396pjs.21.2021.10.28.07.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 07:58:17 -0700 (PDT)
-Date:   Thu, 28 Oct 2021 14:58:13 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     syzbot <syzbot+05017ad275a64a3246f8@syzkaller.appspotmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com,
-        bp@alien8.de, dave.hansen@linux.intel.com,
-        devel@driverdev.osuosl.org, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        info@cestasdeplastico.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        linux-rpi-kernel-owner@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com,
-        mchehab@kernel.org, mingo@redhat.com, nsaenzjulienne@suse.de,
-        pbonzini@redhat.com, robh@kernel.org,
-        sean.j.christopherson@intel.com, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, tcs_kernel@tencent.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Subject: Re: [syzbot] BUG: spinlock bad magic in synchronize_srcu
-Message-ID: <YXq6hTAOhOaWGsNA@google.com>
-References: <0000000000000f73a805afeb9be8@google.com>
- <000000000000792dda05cf604775@google.com>
+        id S231381AbhJ1PLJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 11:11:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41946 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230258AbhJ1PLG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 11:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635433719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KGUjOsKlPvctyYo7MwbILT0VMStj53cixSTDxOA1q+Y=;
+        b=iOmtnoTc8ItHJnpYftmtCAUHmXeotDQBLtLIsyKE+B2PbuWh2tdo4YPn6SqPkmOR4u7azy
+        dQZv//cX9Fe9NxL3z/oMLgFZUsqUqzohk16DuVydG0xSHU67tHMBos2rFIiwYPP9oE2SOB
+        /18zOQwsuBweiu063vgvHZ5cyP+pfto=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-569-n-pTxEjBOZScaxp0ncqPDQ-1; Thu, 28 Oct 2021 11:08:35 -0400
+X-MC-Unique: n-pTxEjBOZScaxp0ncqPDQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 621AE802682;
+        Thu, 28 Oct 2021 15:08:27 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58A465C1B4;
+        Thu, 28 Oct 2021 15:08:13 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+In-Reply-To: <20211027192345.GJ2744544@nvidia.com>
+Organization: Red Hat GmbH
+References: <87o87isovr.fsf@redhat.com>
+ <20211021154729.0e166e67.alex.williamson@redhat.com>
+ <20211025122938.GR2744544@nvidia.com>
+ <20211025082857.4baa4794.alex.williamson@redhat.com>
+ <20211025145646.GX2744544@nvidia.com>
+ <20211026084212.36b0142c.alex.williamson@redhat.com>
+ <20211026151851.GW2744544@nvidia.com>
+ <20211026135046.5190e103.alex.williamson@redhat.com>
+ <20211026234300.GA2744544@nvidia.com>
+ <20211027130520.33652a49.alex.williamson@redhat.com>
+ <20211027192345.GJ2744544@nvidia.com>
+User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
+Date:   Thu, 28 Oct 2021 17:08:11 +0200
+Message-ID: <87zgqtb31g.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000792dda05cf604775@google.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 27, 2021, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit eb7511bf9182292ef1df1082d23039e856d1ddfb
-> Author: Haimin Zhang <tcs_kernel@tencent.com>
-> Date:   Fri Sep 3 02:37:06 2021 +0000
-> 
->     KVM: x86: Handle SRCU initialization failure during page track init
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143e2b02b00000
-> start commit:   78e709522d2c Merge tag 'for_linus' of git://git.kernel.org..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2150ebd7e72fa695
-> dashboard link: https://syzkaller.appspot.com/bug?extid=05017ad275a64a3246f8
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b72895300000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c42853300000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
-> 
-> #syz fix: KVM: x86: Handle SRCU initialization failure during page track init
+On Wed, Oct 27 2021, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-#syz fix: KVM: x86: Handle SRCU initialization failure during page track init
+> On Wed, Oct 27, 2021 at 01:05:20PM -0600, Alex Williamson wrote:
+
+>> We're tossing around solutions that involve extensions, if not
+>> changes to the uAPI.  It's Wednesday of rc7.
+>
+> The P2P issue is seperate, and as I keep saying, unless you want to
+> block support for any HW that does not have freeze&queice userspace
+> must be aware of this ability and it is logical to design it as an
+> extension from where we are now.
+
+I think the very fact that we're still discussing whether something
+needs to be changed/documented or not already shows that this is nothing
+that should go in right now. Actually, I'd already consider it too late
+even if we agreed now; I would expect a change like this to get at least
+two weeks in linux-next before the merge window.
+
+>> > The "don't-break-userspace" is not an absolute prohibition, Linus has
+>> > been very clear this limitation is about direct, ideally demonstrable,
+>> > breakage to actually deployed software.
+>> 
+>> And if we introduce an open driver that unblocks QEMU support to become
+>> non-experimental, I think that's where we stand.
+>
+> Yes, if qemu becomes deployed, but our testing shows qemu support
+> needs a lot of work before it is deployable, so that doesn't seem to
+> be an immediate risk.
+
+Do you have any patches/problem reports you can share?
+
+If you already identified that there is work to be done in QEMU, I think
+that speaks even more for delaying this. What if we notice that uapi
+changes are needed while fixing QEMU?
+
