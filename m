@@ -2,101 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8902F43E73E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 19:24:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B58C143E783
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 19:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhJ1R0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 13:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        id S230501AbhJ1Rty (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 13:49:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:57792 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231167AbhJ1R0w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 13:26:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 47A8160F38;
-        Thu, 28 Oct 2021 17:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635441865;
-        bh=t7CLM0MPA8ePvHMFN4TyEeOzL9SArjf61qr1p9xC9PI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Gpg+ydi23TUfYLfiq3cUhwoLReFd75f/xfFHF46cGnG8uT24IVyS6jTEaZQJHslfy
-         ZVJzjPBUBCjB9Hmy58iK64B0RwbZuPLgfnb9buiSBCMBxCv6BCvoktfIIbJ+RI5XPo
-         b8vgw9FWJF/Q0xH/wI2rJs5nT+QHcTKMkN21619cTWcwH9cFl97/NAvF4NPEAlul3G
-         uAM9a0baCfNH8H6Sfnl897rQz791eWidIJ7HDEmLiXVM+BLgTkvY2VCqmGsERRA+z5
-         8PZjrtv8SCYp9y7Ws/3TjmpZl9b20oCg6uS4IihHjXm6iZsW6MFcQJKDDBtGngTaMA
-         nG5Pz7krXzigg==
-Date:   Thu, 28 Oct 2021 12:24:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V10 4/8] PCI/sysfs: Add a 10-Bit Tag sysfs file PCIe
- Endpoint devices
-Message-ID: <20211028172423.GA279833@bhelgaas>
+        id S229645AbhJ1Rtw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Oct 2021 13:49:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5DA71063;
+        Thu, 28 Oct 2021 10:47:24 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23FA93F5A1;
+        Thu, 28 Oct 2021 10:47:24 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 18:47:18 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 10/14] PCI: aardvark: Enable MSI-X support
+Message-ID: <20211028174710.GA4484@lpieralisi>
+References: <20211027141246.GA27543@lpieralisi>
+ <20211027142307.lrrix5yfvroxl747@pali>
+ <20211028110835.GA1846@lpieralisi>
+ <20211028111302.gfd73ifoyudttpee@pali>
+ <20211028113030.GA2026@lpieralisi>
+ <20211028113724.gm6zhqt7qcyxtgkq@pali>
+ <87r1c59nqf.wl-maz@kernel.org>
+ <20211028175150.7faa6481@thinkpad>
+ <20211028182514.65a94c8e@thinkpad>
+ <87o8799j9c.wl-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <29edb35a-4c46-8b5d-26e5-debf6b3a72bc@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87o8799j9c.wl-maz@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 03:44:49PM +0800, Dongdong Liu wrote:
-> On 2021/10/28 6:28, Bjorn Helgaas wrote:
-> > On Sat, Oct 09, 2021 at 06:49:34PM +0800, Dongdong Liu wrote:
-> > > PCIe spec 5.0 r1.0 section 2.2.6.2 says:
-> > > 
-> > >   If an Endpoint supports sending Requests to other Endpoints (as
-> > >   opposed to host memory), the Endpoint must not send 10-Bit Tag
-> > >   Requests to another given Endpoint unless an implementation-specific
-> > >   mechanism determines that the Endpoint supports 10-Bit Tag Completer
-> > >   capability.
-> > > 
-> > > Add a 10bit_tag sysfs file, write 0 to disable 10-Bit Tag Requester
-> > > when the driver does not bind the device. The typical use case is for
-> > > p2pdma when the peer device does not support 10-Bit Tag Completer.
-> > > Write 1 to enable 10-Bit Tag Requester when RC supports 10-Bit Tag
-> > > Completer capability. The typical use case is for host memory targeted
-> > > by DMA Requests. The 10bit_tag file content indicate current status of
-> > > 10-Bit Tag Requester Enable.
+On Thu, Oct 28, 2021 at 06:00:47PM +0100, Marc Zyngier wrote:
+> On Thu, 28 Oct 2021 17:25:14 +0100,
+> Marek Behún <kabel@kernel.org> wrote:
 > > 
-> > Don't we have a hole here?  We're adding knobs to control 10-Bit Tag
-> > usage, but don't we have basically the same issues with Extended
-> > (8-bit) Tags?
+> > On Thu, 28 Oct 2021 17:51:50 +0200
+> > Marek Behún <kabel@kernel.org> wrote:
+> > 
+> > > Marc, we have ~70 patches ready for the aardvark controller driver.
+> > > 
+> > > It is patch 53 [1] that converts the old irq_find_mapping() +
+> > > generic_handle_irq() API to the new API, so it isn't that Pali did
+> > > not address your comments, it is that, due to convenience, he addressed
+> > > them in a later patch.
+> > > 
+> > > The last time Pali sent a larger number of paches (in a previous
+> > > version, which was 42 patches [1]), it was requested that we split the
+> > > series into smaller sets, so that it is easier to merge.
+> > > 
+> > > Since then some more changes accumulated, resulting in the current ~70
+> > > patches, which I have been sending in smaller batches.
+> > > 
+> > > I could rebase the entire thing so that the patch changing the usage of
+> > > the old irq_find_mapping() + generic_handle_irq() API is first. But
+> > > that would require rebasing and testing all the patches one by one,
+> > > since the patches in-between touch everything almost everything else.
+> > > 
+> > > If it is really that problematic to review the changes while they use
+> > > the old API, please let me know and I will rebase it. But if you could
+> > > find it in yourself to review the patches with old API usage, it would
+> > > really save a lot of time and the result will be the same, to your
+> > > satisfaction.
+> > 
+> > Lorenzo, Marc, Bjorn,
+> > 
+> > I have one more question.
+> > 
+> > Pali prepared the ~70 patches so that fixes come first, and
+> > new features / changes to new API later.
+> > 
+> > He did it in this way so that the patches could be then conventiently
+> > backported to stable versions - were we to first change the API usage
+> > to the new API, and then fix the ~20 IRQ related things, we would
+> > afterwards have to backport the fixes by rewriting them one by one.
+> > 
+> > Is this really how we should do this? Should we ignore stable while
+> > developing for master, regardless of how much other work would need to
+> > be spent by backporting to master, even if it could be much simpler by
+> > applying the patches in master in another order?
 > 
-> All PCIe completers are required to support 8-bit tags
-> from the "[PATCH] PCI: enable extended tags support for PCIe endpoints"
-> (https://patchwork.kernel.org/project/linux-arm-msm/patch/1474769434-5756-1-git-send-email-okaya@codeaurora.org/).
-> 
-> I ask hardware colleagues, also says all PCIe devices should support
-> 8-bit tags completer default, so seems no need to do this for 8-bit tags.
+> I already replied to that in August. Upstream is the primary
+> development target. If you want to backport patches, do them and make
+> the changes required so that they are correct for whatever kernel you
+> target. Stable doesn't matter to upstream at all.
 
-Oh, right, I forgot that, thanks for the reminder!  Let's add a
-comment in pci_configure_extended_tags() to that effect so I'll
-remember next time.
++1
 
-I think the appropriate reference is PCIe r5.0, sec 2.2.6.2, which
-says "Receivers/Completers must handle 8-bit Tag values correctly
-regardless of the setting of their Extended Tag Field Enable bit (see
-Section 7.5.3.4)."
+Please don't write patch series with stable backports in mind, don't.
 
-The Tag field was 8 bits all the way from PCIe r1.0, but until r2.1 it
-said that by default, only the lower 5 bits are used.
+Let's focus on mailine with one series at a time, I understand it is
+hard but that's the only way we can work and I can keep track of what
+you are doing, if we keep splitting patch series I can't track reviews
+and then we end up in this situation. I asked if you received Marc's
+feedback exactly because I can't track the original discussion and if I
+merged the series (the MSI bits) I would have ignored what Marc
+requested you to do and that's not OK.
 
-The text about all Completers explicitly being required to support
-8-bit Tags wasn't added until PCIe r3.0, which might explain some
-confusion and the presence of the Extended Tag Field Enable bit.
+So, given the timing, I will try to merge patches [1-3] and [11-14]
+if I can rebase the series cleanly; maybe I can include patch 9 if
+it does not depend on previous patches.
 
-At the same time, can you fold pci_configure_10bit_tags() directly
-into pci_configure_extended_tags()?  It's pretty small and I think it
-will be easier if it's all in one place.
-
-> > I wonder if we should be adding a more general "tags" file that can
-> > manage both 8-bit and 10-bit tag usage.
-
-I'm still thinking that maybe a generic name (without "10") would be
-better, even though we don't need it to manage 8-bit tags.  It's
-conceivable that there could be even more tag bits in the future, and
-it would be nice if we didn't have to add yet another file.
-
-Bjorn
+Thanks,
+Lorenzo
