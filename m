@@ -2,108 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8FA43E9DC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Oct 2021 22:48:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E101943F23C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 00:02:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbhJ1Uu1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Oct 2021 16:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230451AbhJ1UuZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Oct 2021 16:50:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3588D60F21;
-        Thu, 28 Oct 2021 20:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635454078;
-        bh=QIIErr9k/GQ8cPnA4NVe5+CaffoR9OvTQo8rGLm1sGY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fyCHgBKRLWVUiE7jSBydUg2K5TvD7NRO2xtSrG9BOGKjyGkvnVFUPekPQ9kBvqcU9
-         uAd4vG+FZ9sZFYEt+di/4wC7U4RsxhdmFJ9FVX6hchKmjCf4ba6ked5MLI0S76Wtje
-         S4sAvfP2kCfIs/v5Y2Pt2gtLjvtYsLI2wY2xCtQ/mYNvRqSkaY7C08uFAc+TuF2G7X
-         OnSfuz6FoHMXF9giGvL3RZijUjIN7BfY9ofuzF55Ei+Yapbc1yO6/WxIRlmoR4ImwP
-         LHfIc5oHs6ck0Cn9k5Ai5cAthno++jwv8rElte0uKT6sGrDUqkRPg3P6cj0maPUraq
-         H/5JO/h9LwilA==
-Date:   Thu, 28 Oct 2021 15:47:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yanteng Si <siyanteng01@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        chenhuacai@kernel.org, sterlingteng@gmail.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] MIPS: cm/cpc: export some missing symbols to be
- able to use them from driver code
-Message-ID: <20211028204756.GA293663@bhelgaas>
+        id S231368AbhJ1WFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Oct 2021 18:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230264AbhJ1WFV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Oct 2021 18:05:21 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC1DC061745
+        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 15:02:53 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id x16-20020a9d7050000000b00553d5d169f7so8990343otj.6
+        for <linux-pci@vger.kernel.org>; Thu, 28 Oct 2021 15:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to:cc;
+        bh=DF04yPnmo0LbQaJ9E0egt2x9922ZUq9JvArAFYfNaB8=;
+        b=aOqiQVgvO6V6A1UHdvKEX+MhCFFaSsYAau84X4E8bu03upfQXNFqgYCmTV2C/47t/Q
+         ynVvehlb+SIU96GN+i5Q0UoLEPMt9fpdLUklWosIWRrA2hw6miK0/I7eVxa2YNjEB83b
+         zFdAlVqAF165Vr6L+PWGUp6Kgs3KTk51Szw7o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to:cc;
+        bh=DF04yPnmo0LbQaJ9E0egt2x9922ZUq9JvArAFYfNaB8=;
+        b=Nxxno+YoR4kHR0TstlvNTvWG2hV5PbNe2mMClkpkRoVHfVYLeO8CCCQtRxFyev+cNI
+         1v6JXG8x7zEiil/frFuXkmzHpSshs5UA0yZ8KWZ66z8Mv+SeksYemNT13W3Vd742Oh5e
+         BIR0au7rZPFH9xzAAM78OFEIdRuhse509dz9DULVdyGn3JClt002Hjj1A4rek30GyLm8
+         AeuwZyicROh6MCNpzctvr+4dlpn2jHh5W3/ow8ryWr7BdSPiBSAWMFG9cZeVbo3BVpOf
+         7O4PjdgZaglTpw08JFeoV80GWybK8xkxt+kVLKNvOGheIn2XkkvVcbZjDAmPQQP0Ln6c
+         RdTA==
+X-Gm-Message-State: AOAM530l6VB/Wv+1GGyo4elmxDWDy8NKQMGmhWifPrVN/03qq3dWVdQI
+        cHkpXrCaH9hy8dsEayea4b55Ez8PMwngop2Mj6zbaw==
+X-Google-Smtp-Source: ABdhPJytgzjZbpfcXHvH0e1ShYb/ZL5h3VAgUkdIdd6cBAjrzm1E9L9xIux/YTsyuf1mpTAyh6i5KiARwHWy8Q/k5HQ=
+X-Received: by 2002:a05:6830:1c2e:: with SMTP id f14mr5361151ote.159.1635458573332;
+ Thu, 28 Oct 2021 15:02:53 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 28 Oct 2021 15:02:52 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMhs-H8HoO7dsfiTFaTRie1-DB-DF5st-gFmS=AF2tfHP_gsVw@mail.gmail.com>
+In-Reply-To: <1633628923-25047-2-git-send-email-pmaliset@codeaurora.org>
+References: <1633628923-25047-1-git-send-email-pmaliset@codeaurora.org> <1633628923-25047-2-git-send-email-pmaliset@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.9.1
+Date:   Thu, 28 Oct 2021 15:02:52 -0700
+Message-ID: <CAE-0n51fLAYr9sZCZyKRHHuOLa=Qu=HvVDg6LiQR-QYwYGL2xQ@mail.gmail.com>
+Subject: Re: [PATCH v12 1/5] dt-bindings: pci: qcom: Document PCIe bindings
+ for SC7280
+To:     Prasad Malisetty <pmaliset@codeaurora.org>, agross@kernel.org,
+        bhelgaas@google.com, bjorn.andersson@linaro.org,
+        lorenzo.pieralisi@arm.com, robh+dt@kernel.org, svarbanov@mm-sol.com
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dianders@chromium.org, mka@chromium.org, vbadigan@codeaurora.org,
+        sallenki@codeaurora.org, manivannan.sadhasivam@linaro.org,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 11:59:17AM +0200, Sergio Paracuellos wrote:
-> On Thu, Oct 28, 2021 at 11:34 AM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> > On Thu, Oct 28, 2021 at 11:24 AM Thomas Bogendoerfer
-> > <tsbogend@alpha.franken.de> wrote:
-> > > On Thu, Oct 28, 2021 at 06:11:18AM +0200, Sergio Paracuellos wrote:
-> > > > On Thu, Oct 28, 2021 at 6:05 AM Yanteng Si <siyanteng01@gmail.com> wrote:
-> > > > >
-> > > > > Since commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
-> > > > > the MT7621 PCIe host controller driver is built as a module but modpost complains once these
-> > > > > drivers become modules.
-> > > > >
-> > > > > ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > >
-> > > > > Let's just export them.
-> > > > >
-> > > > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> > > > > ---
-> > > > >  arch/mips/kernel/mips-cm.c  | 5 +++++
-> > > > >  arch/mips/kernel/mips-cpc.c | 1 +
-> > > > >  2 files changed, 6 insertions(+)
-> > > > >
-> > > >
-> > > > Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > >
-> > > could we instead make the pcie-mt761 driver non modular ? Exporting
-> > > all MIPS specific stuff for just making an essential driver modular
-> > > doesn't IMHO make much sense.
-> >
-> > The driver is modular because I have been advised other times that new
-> > drivers should be able to be compiled as modules and we should avoid
-> > using 'bool' in Kconfig for new drivers. That's the only reason. I am
-> > also always including as 'y' the driver since for me not having pci in
-> > my boards has no sense... I am ok in changing Kconfig to be 'bool'
-> > instead of 'tristate', but I don't know what should be the correct
-> > thing to do in this case. Thoughts?
-> 
-> I guess we also want the driver to at least be compile tested in
-> 'allmodconfig' and other similars...
+Quoting Prasad Malisetty (2021-10-07 10:48:39)
+> Document the PCIe DT bindings for SC7280 SoC.The PCIe IP is similar
+> to the one used on SM8250. Add the compatible for SC7280.
+>
+> Signed-off-by: Prasad Malisetty <pmaliset@codeaurora.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 
-Sounds like the systems that actually use this driver require it to be
-built-in, and the only benefit of exporting these symbols is that we
-would get better compile test coverage.
-
-If that's the case, I agree that it's better to just make it
-non-modular.
-
-Bjorn
+I don't see this in linux-next still. Can it go through the pci tree?
