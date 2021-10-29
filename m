@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF814403B3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 22:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF8BF4403B5
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 22:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbhJ2UGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Oct 2021 16:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37116 "EHLO
+        id S231144AbhJ2UGB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Oct 2021 16:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230287AbhJ2UF4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Oct 2021 16:05:56 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42002C061570;
-        Fri, 29 Oct 2021 13:03:27 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id x1-20020a17090a530100b001a1efa4ebe6so7948161pjh.0;
-        Fri, 29 Oct 2021 13:03:27 -0700 (PDT)
+        with ESMTP id S230397AbhJ2UF7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Oct 2021 16:05:59 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3EB6C061714;
+        Fri, 29 Oct 2021 13:03:29 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id x7so5190782pfh.7;
+        Fri, 29 Oct 2021 13:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bTzdKFlLFxjEYXsTCiwTs/u3WhqgR0accwfx+BQVxCI=;
-        b=WXLrJc4CiRZzhTY/aUKgXzjL/YRIDCpia8+QRg5wgkZ+erdxhdGaP+zvm/9sIIZCAq
-         WJbfnkFPMqvqYNWJe+RvA6SR1CvAWIsgYt1/0zIppVDUqIRfXfcpL5LRQzyWX3eEwIqT
-         3jVjGidOjJ3cg8vLd2OZwvg8Dy2vZ2zTiDLcQsQ68yikhhp3zU2ZGxEkAYYesyXloqBH
-         CqooGtajNNxvdN+4urd9szc0hKrSQDOiExMtVc2as9pAaFKmh4OHsxwM5PsxZLxJLcrj
-         +3/WP/G4xvESLKeyx4e7o50gJVB1LvbSTLW9kxfA/kL9JEIVUd97M0Hh1+tA3VAGBrVh
-         xO4g==
+        bh=i/xlFeFGzhcgynIWoi7Dy7maGf++a2Lj0CJo9lD52eo=;
+        b=GepHwVrZxe/sGAtgAU8y/aOWlfk5bidJZKMNnGKBvVhd1O0yS5ZYRsSnZs5PEupDOD
+         XFh/8vpZICKn/+OD5sx6PcsEwM5EtZMdAmFgLVXQIfIIIhLe2ht3JKiXYzTcXov15tDs
+         04O+okmaQnyLH8PY/fX8La0HKBwZD62f2HF+uCsCUifL3BNyYDPOqsojH1eJB3xniGA7
+         SYpp7Jr/sq+NP1YoXCG7I+/fSy0jhpbjYOALDDOqlzO8TPFTOojDFoiI00a6WzyWLDyT
+         YKa6eyT6ypCyuDBG7ZzQ9JBZhs07SOMpMrw4L/XiweSpu1zZeSMCUsD98qsUZFPe/UiT
+         qZzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bTzdKFlLFxjEYXsTCiwTs/u3WhqgR0accwfx+BQVxCI=;
-        b=lHjIxh6+ZH25MV2DBkaU+x97vAgA/8Iyx1NAvnLL2HALmLIUSxsDdbeUQLAQX4xVnf
-         c31Deev5Z9yn0ryEzYoRnyUf8KOsrBIdpHOTnZxOpX8jHoGTsC2II/yFD4646KypnCtM
-         rILEs+M93209x4i7Z5wHYG9hWMYJQFFkvA11tGmPDteBxQiaEki6hntc1Q8IVzPbP+sm
-         7bFrlU84gPFdavg15TCPnusXb1iINV+U9IOYIoYneqlaYdA9GIFXs4qkFVTJ9gpIHwcd
-         YIAGKRX3HjDbQMfH9WBpp8ZrV2LcPcmtaOHq+Z5cdP9ul4G9crhdMAFlDCX4Z/8mzZor
-         dX3w==
-X-Gm-Message-State: AOAM533k/dIlHB0jwtRX1TbYQ/xyiM6XRI9EmeQg9QtJvJ1PuQnHnnjD
-        MQTtqSTwjEjCoNw+vgDTIIGJ61a2RQ1uJw==
-X-Google-Smtp-Source: ABdhPJxwNDSSmjNeJqV62003+UnO4NwEwDL1ymH1lO6taFm2VcGBtdhV0XI4gNiUZKyjtwz7IDhV0g==
-X-Received: by 2002:a17:902:6b83:b0:141:6368:3562 with SMTP id p3-20020a1709026b8300b0014163683562mr11401897plk.42.1635537806508;
-        Fri, 29 Oct 2021 13:03:26 -0700 (PDT)
+        bh=i/xlFeFGzhcgynIWoi7Dy7maGf++a2Lj0CJo9lD52eo=;
+        b=PCv1EU+dyYkzfsRrM3DMLUPbBAzhRI994X46OcPzWlqEb23rhwaHZvp3KbdgO/t/GW
+         qkT23tAvv6Lf0abYAb/uSUxrM8QhafAMmR4I4RCJC4wITIlit0IxQDeJz2XELlIgIBtL
+         wgeqhxMBBgILOxyAIxrReoEJY+0CrgMon4KDmwapaVfL6gvBLSdMKlpn2ssm3YoOumFB
+         /aO9UTpRs+M7arx8Y9nGsYZEQX2JamL1T8Fn8YkJ96yknngEALeFL8/fDNq6SxXCOkMr
+         ogVG1SNGw23P7ubuCj4cfuxLA/4TxPFnZSUUYylDuS4L0ONJ0DKrc7f6FCx9VIrfft/F
+         ao+Q==
+X-Gm-Message-State: AOAM532ODlkt7lOn3WiEmwEhi7Y1rFQTgaZzbegmxH8GLb9KXJmCrm+V
+        coBnu/3vs1vN1OAtT5i5GWCIOsrnSrSPlw==
+X-Google-Smtp-Source: ABdhPJwvZSqQE/QbehqXCsHdQjyZTJdGYntsE57MxjyPpWUTC+sJLUK5O246dAdal1NwP+lGT+k1Hw==
+X-Received: by 2002:a62:754a:0:b0:47c:36b0:652 with SMTP id q71-20020a62754a000000b0047c36b00652mr12805931pfc.1.1635537809046;
+        Fri, 29 Oct 2021 13:03:29 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id j16sm8775041pfj.16.2021.10.29.13.03.24
+        by smtp.gmail.com with ESMTPSA id j16sm8775041pfj.16.2021.10.29.13.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Oct 2021 13:03:26 -0700 (PDT)
+        Fri, 29 Oct 2021 13:03:28 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -56,15 +56,15 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 1/9] dt-bindings: PCI: correct brcmstb interrupts, interrupt-map.
-Date:   Fri, 29 Oct 2021 16:03:09 -0400
-Message-Id: <20211029200319.23475-2-jim2101024@gmail.com>
+Subject: [PATCH v6 2/9] dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
+Date:   Fri, 29 Oct 2021 16:03:10 -0400
+Message-Id: <20211029200319.23475-3-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211029200319.23475-1-jim2101024@gmail.com>
 References: <20211029200319.23475-1-jim2101024@gmail.com>
@@ -72,37 +72,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The "pcie" and "msi" interrupts were given the same interrupt when they are
-actually different.  Interrupt-map only had the INTA entry; the INTB, INTC,
-and INTD entries are added.
+Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+allows optional regulators to be attached and controlled by the PCIe RC
+driver.  That being said, this driver searches in the DT subnode (the EP
+node, eg pci-ep@0,0) for the regulator property.
+
+The use of a regulator property in the pcie EP subnode such as
+"vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+file at
+
+https://github.com/devicetree-org/dt-schema/pull/63
 
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../bindings/pci/brcm,stb-pcie.yaml           | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index b9589a0daa5c..508e5dce1282 100644
+index 508e5dce1282..d90d867deb5c 100644
 --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -142,11 +142,15 @@ examples:
-                     #address-cells = <3>;
-                     #size-cells = <2>;
-                     #interrupt-cells = <1>;
--                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                    interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-                                  <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-                     interrupt-names = "pcie", "msi";
-                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
--                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+@@ -62,6 +62,10 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  vpcie12v-supply: true
++  vpcie3v3-supply: true
++  vpcie3v3aux-supply: true
 +
-                     msi-parent = <&pcie0>;
-                     msi-controller;
-                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+   brcm,scb-sizes:
+     description: u64 giving the 64bit PCIe memory
+       viewport size of a memory controller.  There may be up to
+@@ -158,5 +162,28 @@ examples:
+                                  <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
+                     brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
++
++                    /* PCIe bridge */
++                    pci@0,0 {
++                            #address-cells = <3>;
++                            #size-cells = <2>;
++                            reg = <0x0 0x0 0x0 0x0 0x0>;
++                            compatible = "pciclass,0604";
++                            device_type = "pci";
++                            ranges;
++
++                            /* PCIe endpoint */
++                            pci-ep@0,0 {
++                                    assigned-addresses =
++                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
++                                    reg = <0x0 0x0 0x0 0x0 0x0>;
++                                    compatible = "pci14e4,1688";
++                                    vpcie3v3-supply = <&vreg7>;
++                                    #address-cells = <3>;
++                                    #size-cells = <2>;
++
++                                    ranges;
++                            };
++                    };
+             };
+     };
 -- 
 2.17.1
 
