@@ -2,64 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9250843F9D9
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 11:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E11C43FA03
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 11:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231579AbhJ2Jae (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Oct 2021 05:30:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:36314 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231462AbhJ2Jae (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 Oct 2021 05:30:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 872551FB;
-        Fri, 29 Oct 2021 02:28:05 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.46.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5183F5A1;
-        Fri, 29 Oct 2021 02:28:04 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, pali@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] PCI: aardvark controller fixes BATCH 2
-Date:   Fri, 29 Oct 2021 10:27:54 +0100
-Message-Id: <163549964017.15948.15238461459509746209.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20211028185659.20329-1-kabel@kernel.org>
-References: <20211028185659.20329-1-kabel@kernel.org>
+        id S231526AbhJ2JjW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Oct 2021 05:39:22 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:13990 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231476AbhJ2JjV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Oct 2021 05:39:21 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Hgchq5XGyzWj9v;
+        Fri, 29 Oct 2021 17:34:51 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Fri, 29 Oct 2021 17:36:49 +0800
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Fri, 29 Oct 2021 17:36:48 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <zhangshaokun@hisilicon.com>
+Subject: [PATCH v11 0/2] drivers/perf: hisi: Add support for PCIe PMU
+Date:   Fri, 29 Oct 2021 17:36:30 +0800
+Message-ID: <20211029093632.4350-1-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.2]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Oct 2021 20:56:52 +0200, Marek Behún wrote:
-> Lorenzo,
-> 
-> this is v2 of the second batch of aardvark changes.
-> 
-> As requested, I have removed patches 4-10, which will be rebased and
-> sent in the next batch.
-> 
-> [...]
+This patchset adds support for HiSilicon PCIe Performance Monitoring
+Unit(PMU). It is a PCIe Root Complex integrated End Point(RCiEP) device
+added on Hip09. Each PCIe Core has a PMU RCiEP to monitor multi root
+ports and all Endpoints downstream these root ports.
 
-Applied to pci/aardvark, thanks!
+HiSilicon PCIe PMU is supported to collect performance data of PCIe bus,
+such as: bandwidth, latency etc.
 
-[1/7] PCI: pci-bridge-emul: Fix emulation of W1C bits
-      https://git.kernel.org/lpieralisi/pci/c/7a41ae80bd
-[2/7] PCI: aardvark: Fix return value of MSI domain .alloc() method
-      https://git.kernel.org/lpieralisi/pci/c/e4313be159
-[3/7] PCI: aardvark: Read all 16-bits from PCIE_MSI_PAYLOAD_REG
-      https://git.kernel.org/lpieralisi/pci/c/95997723b6
-[4/7] PCI: aardvark: Fix support for bus mastering and PCI_COMMAND on emulated bridge
-      https://git.kernel.org/lpieralisi/pci/c/771153fc88
-[5/7] PCI: aardvark: Set PCI Bridge Class Code to PCI Bridge
-      https://git.kernel.org/lpieralisi/pci/c/84e1b4045d
-[6/7] PCI: aardvark: Fix support for PCI_BRIDGE_CTL_BUS_RESET on emulated bridge
-      https://git.kernel.org/lpieralisi/pci/c/bc4fac42e5
-[7/7] PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge
-      https://git.kernel.org/lpieralisi/pci/c/239edf686c
+Example usage of counting PCIe rx memory write latency::
 
-Thanks,
-Lorenzo
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_latency/
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_cnt/
+  $# perf stat -g -e hisi_pcie0_core0/rx_mwr_latency/ -e hisi_pcie0_core0/rx_mwr_cnt/
+
+average rx memory write latency can be calculated like this:
+  latency = rx_mwr_latency / rx_mwr_cnt.
+
+Common PMU events and metrics will be described in JSON file, and will be add
+in userspace perf tool latter.
+
+Changes since v10:
+- Drop the out of date comment according to Jonathan's review.
+- Link: https://lore.kernel.org/linux-arm-kernel/20210915074524.18040-1-liuqi115@huawei.com/
+
+Changes since v9:
+- Add check in hisi_pcie_pmu_validate_event_group to count counters accurently .
+- Link: https://lore.kernel.org/linux-arm-kernel/20210818051246.29545-1-liuqi115@huawei.com/
+
+Changes since v8:
+- Remove subevent parameter in attr->config.
+- Check the counter scheduling constraints when accepting an event group.
+- Link: https://lore.kernel.org/linux-arm-kernel/20210728080932.72515-1-liuqi115@huawei.com/
+
+Changes since v7:
+- Drop headerfile cpumask.h and cpuhotplug.h.
+- Rename events in perf list: bw->flux, lat->delay, as driver doesn't
+  process bandwidth and average latency data.
+- Link: https://lore.kernel.org/linux-arm-kernel/1624532384-43002-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v6:
+- Move the driver to drivers/perf/hisilicon.
+- Treat content in PMU counter and ext_counter as different PMU events, and
+  export them separately.
+- Address the comments from Will and Krzysztof.
+- Link: https://lore.kernel.org/linux-arm-kernel/1622467951-32114-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v5:
+- Fix some errors when build under ARCH=xtensa.
+- Link: https://lore.kernel.org/linux-arm-kernel/1621946795-14046-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v4:
+- Replace irq_set_affinity_hint() with irq_set_affinity().
+- Link: https://lore.kernel.org/linux-arm-kernel/1621417741-5229-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v3:
+- Fix some warnings when build under 32bits architecture.
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1618490885-44612-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v2:
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617959157-22956-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v1:
+- Drop the internal Reviewed-by tag.
+- Fix some build warnings when W=1.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617788943-52722-1-git-send-email-liuqi115@huawei.com/
+
+Qi Liu (2):
+  docs: perf: Add description for HiSilicon PCIe PMU driver
+  drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
+
+ .../admin-guide/perf/hisi-pcie-pmu.rst        | 106 ++
+ MAINTAINERS                                   |   2 +
+ drivers/perf/hisilicon/Kconfig                |   9 +
+ drivers/perf/hisilicon/Makefile               |   2 +
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 948 ++++++++++++++++++
+ include/linux/cpuhotplug.h                    |   1 +
+ 6 files changed, 1068 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+ create mode 100644 drivers/perf/hisilicon/hisi_pcie_pmu.c
+
+-- 
+2.33.0
+
