@@ -2,190 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B0D2440354
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 21:38:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9721F440374
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 21:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbhJ2Tkf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Oct 2021 15:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbhJ2Tke (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Oct 2021 15:40:34 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A981BC061570;
-        Fri, 29 Oct 2021 12:38:05 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id q13so20152349uaq.2;
-        Fri, 29 Oct 2021 12:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xZ37x2/Bz71vd8jU0DgTgYueXY7X+DJMBePTc2urAc8=;
-        b=FgPvaCRF7HkoH3KCZ/Ng47G6NOFJ8PqrcQpodMbfIIPbrbUqe++Pjl4QloSs2khltp
-         3FlqKWFKnGzfsnWnhwow1YgUoU8uDGc30KUdwNCdvtNfpOaOrNz33GZSLuf5N/5CZlUQ
-         n9lg15Ij/HqzGbGwoPLwHT/iIplZTT4J0yADcVtIJBmDBThR7dbb5Yg8DRrt7qQLdjDg
-         QOyc3TCNdYqLTapke7FfUR+ljx7HfvV03pNPihwoTdKSBBioLhgX/VbpGvW5QRTr5eap
-         yHHdMtBl+cP1UDEXijTMQeBy53fbllNTJ7sCHNqxxrHxJ98b55Uxvt+A1nDdvgeiQDRY
-         mMCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xZ37x2/Bz71vd8jU0DgTgYueXY7X+DJMBePTc2urAc8=;
-        b=MDdahd8hlEcO8RmjRtRB4/6Cs3gkeQWxV1oW98kjfhgMd3V67EqLtUYiDWvAjXp8RA
-         ros6fk9Ved01ZJfxECXMZr6OQdp5oTlgmccvCt6s3KJGuZMYTsF9PT+f3B1m0GK8ZRqi
-         u666cn6jWea8OnUnEsuq/pxUkYQigrbJ8fg2GVsIua+7EeL6DE/JO9YzuynxjvBBgea9
-         nLdDEMNMcG9kQhq4hhdJ2CeT2CGdRsRv0UAvys6S755tBK0bfK7VlY0Du4zeI49rV3cX
-         ymYArJZC4HrTqkzVUGJZnaq9stRa/7JgOKy1Dzcoub81FFIBB+zpM1Zt1WbA12/yBWUA
-         JvKA==
-X-Gm-Message-State: AOAM532Zewcp/Z/UP/le9VPtfdY/Sugbb84UMsJlt31RnH1jo4Le7rbt
-        wDFZlcEyhMet2MDqEyhTnDNsF8vdGXl3gq9cmNA=
-X-Google-Smtp-Source: ABdhPJy/uNrL2rKQOgT3ToIBtyQFQFihHX8vRMJBWEJZfSSIYjWZ332ua/apVGmkiSPw0uaN3jxe5GInN5mEf033b+g=
-X-Received: by 2002:a67:ec57:: with SMTP id z23mr14949438vso.55.1635536284792;
- Fri, 29 Oct 2021 12:38:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMhs-H_a0PqATB3kFO3dcFiq+reR+5z7FW27M=m2MnnYA48NYw@mail.gmail.com>
- <20211029184951.GA329702@bhelgaas>
-In-Reply-To: <20211029184951.GA329702@bhelgaas>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Fri, 29 Oct 2021 21:37:53 +0200
-Message-ID: <CAMhs-H8bjOkwfnYqdhWuwA8vt18naW3DABYN-EyW-gDB2cP7JA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] MIPS: cm/cpc: export some missing symbols to be
- able to use them from driver code
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yanteng Si <siyanteng01@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        id S230310AbhJ2TpZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Oct 2021 15:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230196AbhJ2TpY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Oct 2021 15:45:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4985160F58;
+        Fri, 29 Oct 2021 19:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635536575;
+        bh=MImQ+A6efjy2I8+a/pp6zKUXGNbj24+Vxt4Ky/zJaCU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cPv3B/R8fJFR2usW/rNFTEdShDiVjtH6wxf82liiI1dlOELL2zjsJpCBHSh5vMY8D
+         ZVRS5IKJ43hQzIOnQSMmUNFTf21HiYquO5xNJsg3SGQlV1Un8IWx571iNT16n3vaAV
+         Sss+XWBqrLCq9HYAUgr06Hax4UaqCaCZBQsiJB+5BwMKELhfaJ/CzzhLa+tlFSuIhk
+         VF7f5fevBYfbbORU2DgaAsjKSc2N3bcU9pDkw5D45oHPFk3N429KUomElW011RKPPv
+         YNkdeLS1GMhsPTebBpvmB9+GIQCvqqyCZ5gq2/0kIxiCpsfEbt6ErVJE/ybXC6gDL4
+         JJzG41zMYff+w==
+Date:   Fri, 29 Oct 2021 14:42:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Li Chen <lchen@ambarella.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, kw@linux.com,
+        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        chenhuacai@kernel.org, sterlingteng@gmail.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [EXT] Re: nvme may get timeout from dd when using different
+ non-prefetch mmio outbound/ranges
+Message-ID: <20211029194253.GA345237@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR19MB4024F88716768EC49BCA08CCA0879@CH2PR19MB4024.namprd19.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-On Fri, Oct 29, 2021 at 8:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Oct 29, 2021 at 07:28:47AM +0200, Sergio Paracuellos wrote:
-> > On Thu, Oct 28, 2021 at 10:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Oct 28, 2021 at 11:59:17AM +0200, Sergio Paracuellos wrote:
-> > > > On Thu, Oct 28, 2021 at 11:34 AM Sergio Paracuellos
-> > > > <sergio.paracuellos@gmail.com> wrote:
-> > > > > On Thu, Oct 28, 2021 at 11:24 AM Thomas Bogendoerfer
-> > > > > <tsbogend@alpha.franken.de> wrote:
-> > > > > > On Thu, Oct 28, 2021 at 06:11:18AM +0200, Sergio Paracuellos wrote:
-> > > > > > > On Thu, Oct 28, 2021 at 6:05 AM Yanteng Si <siyanteng01@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > Since commit 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
-> > > > > > > > the MT7621 PCIe host controller driver is built as a module but modpost complains once these
-> > > > > > > > drivers become modules.
-> > > > > > > >
-> > > > > > > > ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > > > > ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > > > > ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > > > > ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > > > > ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > > > > > > >
-> > > > > > > > Let's just export them.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> > > > > > > > ---
-> > > > > > > >  arch/mips/kernel/mips-cm.c  | 5 +++++
-> > > > > > > >  arch/mips/kernel/mips-cpc.c | 1 +
-> > > > > > > >  2 files changed, 6 insertions(+)
-> > > > > > > >
-> > > > > > >
-> > > > > > > Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > > > > >
-> > > > > > could we instead make the pcie-mt761 driver non modular ? Exporting
-> > > > > > all MIPS specific stuff for just making an essential driver modular
-> > > > > > doesn't IMHO make much sense.
+On Fri, Oct 29, 2021 at 10:52:37AM +0000, Li Chen wrote:
+> > -----Original Message-----
+> > From: Keith Busch [mailto:kbusch@kernel.org]
+> > Sent: Tuesday, October 26, 2021 12:16 PM
+> > To: Li Chen
+> > Cc: Bjorn Helgaas; linux-pci@vger.kernel.org; Lorenzo Pieralisi; Rob Herring;
+> > kw@linux.com; Bjorn Helgaas; linux-kernel@vger.kernel.org; Tom Joseph; Jens
+> > Axboe; Christoph Hellwig; Sagi Grimberg; linux-nvme@lists.infradead.org
+> > Subject: Re: [EXT] Re: nvme may get timeout from dd when using different non-
+> > prefetch mmio outbound/ranges
+> > 
+> > On Tue, Oct 26, 2021 at 03:40:54AM +0000, Li Chen wrote:
+> > > My nvme is " 05:00.0 Non-Volatile memory controller: Samsung Electronics Co
+> > Ltd NVMe SSD Controller 980". From its datasheet,
+> > https://urldefense.com/v3/__https://s3.ap-northeast-
+> > 2.amazonaws.com/global.semi.static/Samsung_NVMe_SSD_980_Data_Sheet_R
+> > ev.1.1.pdf__;!!PeEy7nZLVv0!3MU3LdTWuzON9JMUkq29zwJM4d7g7wKtkiZszTu-
+> > PVepWchI_uLHpQGgdR_LEZM$ , it says nothing about CMB/SQEs, so I'm not sure.
+> > Is there other ways/tools(like nvme-cli) to query?
+> > 
+> > The driver will export a sysfs property for it if it is supported:
+> > 
+> >   # cat /sys/class/nvme/nvme0/cmb
+> > 
+> > If the file doesn't exist, then /dev/nvme0 doesn't have the capability.
+> > 
+> > > > > I don't know how to interpret "ranges".  Can you supply the dmesg and
+> > > > > "lspci -vvs 0000:05:00.0" output both ways, e.g.,
 > > > > >
-> > > > > The driver is modular because I have been advised other times that new
-> > > > > drivers should be able to be compiled as modules and we should avoid
-> > > > > using 'bool' in Kconfig for new drivers. That's the only reason. I am
-> > > > > also always including as 'y' the driver since for me not having pci in
-> > > > > my boards has no sense... I am ok in changing Kconfig to be 'bool'
-> > > > > instead of 'tristate', but I don't know what should be the correct
-> > > > > thing to do in this case. Thoughts?
+> > > > >   pci_bus 0000:00: root bus resource [mem 0x7f800000-0xefffffff window]
+> > > > >   pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
+> > > > >   pci 0000:05:00.0: [vvvv:dddd] type 00 class 0x...
+> > > > >   pci 0000:05:00.0: reg 0x10: [mem 0x.....000-0x.....fff ...]
+> > > > >
+> > > > > > Question:
+> > > > > > 1.  Why dd can cause nvme timeout? Is there more debug ways?
 > > > >
-> > > > I guess we also want the driver to at least be compile tested in
-> > > > 'allmodconfig' and other similars...15692a80d949
+> > > > That means the nvme controller didn't provide a response to a posted
+> > > > command within the driver's latency tolerance.
 > > >
-> > > Sounds like the systems that actually use this driver require it to be
-> > > built-in, and the only benefit of exporting these symbols is that we
-> > > would get better compile test coverage.
-> > >
-> > > If that's the case, I agree that it's better to just make it
-> > > non-modular.
-> >
-> > I agree and that was my reasoning for sending a patch to also convert
-> > to bool the phy driver that this PCIe controller uses. When the pull
-> > request was sent from Vinod to Greg, Greg refused to take it because
-> > of that commit and the commit was reverted and a new pull request was
-> > sent including this revert. This is commit 15692a80d949 ("phy: Revert
-> > "phy: ralink: Kconfig: convert mt7621-pci-phy into 'bool'""). Because
-> > of this I also changed the PCIe controller Kconfig from bool to
-> > tristate when I sent v3 of the series which at the end were the ones
-> > that was finally taken. There are also other ralink related symbols
-> > that have been exported to allow to compile other drivers as a
-> > modules, like the watchdog. See the commit fef532ea0cd8 ("MIPS:
-> > ralink: export rt_sysc_membase for rt2880_wdt.c"). So, as I said, I
-> > agree and I am using the driver as if it were a bool and also ralink
-> > systems normally require all drivers built-in, but I think we have to
-> > take into account also the "historical facts" here. In any case,
-> > Bjorn, let me know if you want me to send whatever patch might be
-> > needed.
+> > > FYI, with the help of pci bridger's vendor, they find something
+> > > interesting:
+> > "From catc log, I saw some memory read pkts sent from SSD card,
+> > but its memory range is within the memory range of switch down
+> > port. So, switch down port will replay UR pkt. It seems not
+> > normal." and "Why SSD card send out some memory pkts which memory
+> > address is within switch down port's memory range. If so, switch
+> > will response UR pkts". I also don't understand how can this
+> > happen?
+> > 
+> > I think we can safely assume you're not attempting peer-to-peer,
+> > so that behavior as described shouldn't be happening. It sounds
+> > like the memory windows may be incorrect. The dmesg may help to
+> > show if something appears wrong.
+> 
+> Agree that here doesn't involve peer-to-peer DMA. After conforming
+> from switch vendor today, the two ur(unsupported request) is because
+> nvme is trying to dma read dram with bus address 80d5000 and
+> 80d5100. But the two bus addresses are located in switch's down port
+> range, so the switch down port report ur. 
+> 
+> In our soc, dma/bus/pci address and physical/AXI address are 1:1,
+> and DRAM space in physical memory address space is 000000.0000 -
+> 0fffff.ffff 64G, so bus address 80d5000 and 80d5100 to cpu address
+> are also 80d5000 and 80d5100, which both located inside dram space. 
+> 
+> Both our bootloader and romcode don't enum and configure pcie
+> devices and switches, so the switch cfg stage should be left to
+> kernel. 
+> 
+> Come back to the subject of this thread: " nvme may get timeout from
+> dd when using different non-prefetch mmio outbound/ranges". I found:
+> 
+> 1. For <0x02000000 0x00 0x08000000 0x20 0x08000000 0x00 0x04000000>;
+> (which will timeout nvme)
+> 
+> Switch(bridge of nvme)'s resource window: 
+> Memory behind bridge: Memory behind bridge: 08000000-080fffff [size=1M]
 >
-> I didn't see the conversation with Greg, so I don't know the whole
-> story.
+> 80d5000 and 80d5100 are both inside this range.
 
-Here it is: https://www.spinics.net/lists/kernel/msg3986821.html
+The PCI host bridge MMIO window is here:
 
+  pci_bus 0000:00: root bus resource [mem 0x2008000000-0x200bffffff] (bus address [0x08000000-0x0bffffff])
+  pci 0000:01:00.0: PCI bridge to [bus 02-05]
+  pci 0000:01:00.0:   bridge window [mem 0x2008000000-0x20080fffff]
+  pci 0000:02:06.0: PCI bridge to [bus 05]
+  pci 0000:02:06.0:   bridge window [mem 0x2008000000-0x20080fffff]
+  pci 0000:05:00.0: BAR 0: assigned [mem 0x2008000000-0x2008003fff 64bit]
+
+So bus address [0x08000000-0x0bffffff] is the area used for PCI BARs.
+If the NVMe device is generating DMA transactions to 0x080d5000, which
+is inside that range, those will be interpreted as peer-to-peer
+transactions.  But obviously that's not intended and there's no device
+at 0x080d5000 anyway.
+
+My guess is the nvme driver got 0x080d5000 from the DMA API, e.g.,
+dma_map_bvec() or dma_map_sg_attrs(), so maybe there's something wrong
+in how that's set up.  Is there an IOMMU?  There should be arch code
+that knows what RAM is available for DMA buffers, maybe based on the
+DT.  I'm not really familiar with how all that would be arranged, but
+the complete dmesg log and complete DT might have a clue.  Can you
+post those somewhere?
+
+> 2. For <0x02000000 0x00 0x00400000 0x20 0x00400000 0x00 0x08000000>; 
+> (which make nvme not timeout) 
+> 
+> Switch(bridge of nvme)'s resource window: 
+> Memory behind bridge: Memory behind bridge: 00400000-004fffff [size=1M]
+> 
+> 80d5000 and 80d5100 are not inside this range, so if nvme tries to
+> read 80d5000 and 80d5100 , ur won't happen.
 >
-> For pcie-mt7621.c, it looks like the only problem is
-> setup_cm_memory_region(), which does a little coherency-related stuff.
-> If we could move that to arch/mips, we could still make this tristate.
+> From /proc/iomen:
+> # cat /proc/iomem
+> 01200000-ffffffff : System RAM
+>   01280000-022affff : Kernel code
+>   022b0000-0295ffff : reserved
+>   02960000-040cffff : Kernel data
+>   05280000-0528ffff : reserved
+>   41cc0000-422c0fff : reserved
+>   422c1000-4232afff : reserved
+>   4232d000-667bbfff : reserved
+>   667bc000-667bcfff : reserved
+>   667bd000-667c0fff : reserved
+>   667c1000-ffffffff : reserved
+> 2000000000-2000000fff : cfg
+> 
+> No one uses 0000000-1200000, so " Memory behind bridge: Memory
+> behind bridge: 00400000-004fffff [size=1M]" will never have any
+> problem(because 0x1200000 > 0x004fffff). 
+> 
+> Above answers the question in Subject, one question left: what's the
+> right way to resolve this problem? Use ranges property to configure
+> switch memory window indirectly(just what I did)? Or something else?
+> 
+> I don't think changing range property is the right way: If my PCIe
+> topology becomes more complex and have more endpoints or switches,
+> maybe I have to reserve more MMIO through range property(please
+> correct me if I'm wrong), the end of switch's memory window may be
+> larger than 0x01200000. In case getting ur again,  I must reserve
+> more physical memory address for them(like change kernel start
+> address 0x01200000 to 0x02000000), which will make my visible dram
+> smaller(I have verified it with "free -m"), it is not acceptable.
 
-Yes, the only mips specific function used in the driver is
-'setup_cm_memory_region()'.
+Right, I don't think changing the PCI ranges property is the right
+answer.  I think it's just a coincidence that moving the host bridge
+MMIO aperture happens to move it out of the way of the DMA to
+0x080d5000.
 
->
-> One way might be to implement a pcibios_root_bridge_prepare() for mips
-> and put the setup_cm_memory_region() stuff in there.  It's not *ideal*
-> because that's a strong/weak function arrangement that doesn't allow
-> for multiple host bridges, but that's probably not an issue here.
->
-> If we can't do that, I think making it bool is probably the right
-> answer, but it would be worth a brief comment in the commit log to
-> explain the issue.
+As far as I can tell, the PCI core and the nvme driver are doing the
+right things here, and the problem is something behind the DMA API.
 
-Do you mean to implement 'pcibios_root_bridge_prepare()' for MIPS
-ralink? I guess this means to parse device tree and so on only to get
-memory range addresses to be added to the MIPS I/O coherence regions
-to make things work and then re-parse it again in the driver to do the
-proper PCI setup... We end up in an arch generic driver but at the end
-this controller is only present in ralink MIPS, so I am not sure that
-implementing 'pcibios_root_bridge_prepare()' is worthy here... I can
-explore and try to implement it if you think that it really makes
-sense... but, IMHO if this is the case, just making it bool looks like
-the correct thing to do.
+I think there should be something that removes the MMIO aperture bus
+addresses, i.e., 0x08000000-0x0bffffff in the timeout case, from the
+pool of memory available for DMA buffers.
 
-Best regards,
-     Sergio Paracuellos
->
-> Bjorn
+The MMIO aperture bus addresses in the non-timeout case,
+0x00400000-0x083fffff, are not included in the 0x01200000-0xffffffff
+System RAM area, which would explain why a DMA buffer would never
+overlap with it.
+
+Bjorn
