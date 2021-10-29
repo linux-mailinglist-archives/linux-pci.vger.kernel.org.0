@@ -2,160 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F84B43F816
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 09:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8D6243F898
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Oct 2021 10:10:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232244AbhJ2Hvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Oct 2021 03:51:49 -0400
-Received: from mail-dm3nam07on2063.outbound.protection.outlook.com ([40.107.95.63]:4256
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232348AbhJ2HvX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 Oct 2021 03:51:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kS9wziXzo5nD08B13KvmFVrSpgutstUzrI2jVdAkFqQK+y+KknrlM1QpbkGNzs8zwA6BrEGgjsfpsbuyC9RI1NZSGPdy31Z2j64EzaIWFvXhtJYMT8yOqCSlF9i8FnntoHgM9Awgz/4Vgg03GLdmFUqNHjHCLyBM4sOMYhiX7S8yZvMZMTpo2pqvX2TzMw7J/AnbSTNR36SwpxWJ66pKfi0py14ofWkznkSEc6jbVuitXLOsv6ARKp4cP8+S5Wj8tFPAYKxMpQkEYICZE8MMerWv8HL03q2hPM9BX/Zm0CSEC8ygufrlVUU3xrECBZ3CGxpxLXttrHLQMsqy83NNvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3YBp0orr3fgREoQihO4wMEf9UfgCaQ/ih2zPCpuM8X0=;
- b=cBU5LCZ7i+lRsa5gEtLV1Rbh7JM6/MAZmgwjoTK+S9lrojbuGcnWB42+4tD0ZlyhzOL4MviSpQC175D4oa8xP02dRBCDD5InY/2JPCkneh5009HwHGfdWl1XXEvxanN8/9orLHL3dR3NURQ3SM2ddgVLdA1tKun4ok2hn/VQGp2jW3+y1Cs0sxta0oi2DxJhqRTOTJEo0wr4akIBeIIQkbPd0rgjroW5yXil1ng4bCyT9jnWOcOkZ3H64tmLCAmrOMdbOKGFr5XVUgPhXt0eFjtD8F9NgEV6ElyMcFWlsY0rN/e7v927OryczuDU6DYTo/i/gXtEW46RuPfPmjdA/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3YBp0orr3fgREoQihO4wMEf9UfgCaQ/ih2zPCpuM8X0=;
- b=bDuUgeboaFwPx5k4KwD1DdTkBSKQt9AzVam+672001cu5TeEx8IGKsClMDHdeymqx/MDCqXLtVEe7C0GRKaWWqxTAJ8h7rClKOBLvPdjY4q4yKktkG/iy/i+mUKo7UKQHXHU1kmTaeeaCistOxA6gQLahXuZHVGM4mcoxGHSgSJs2zA/D8KrQiOEJMmb0HfGirCW5Mx8tkOGMIRWAsP1fFuHAr5aN4YY/t41U7okV+CLqFoKyhCAik6aFCZYPx/ToWIa7/ccZYNnMJPKco8KDzxaT3AKNm8RyUgIES1R9OOxI9RrIxmnry0125ArwKOPmJBVEJffNoacNS/HbA3heQ==
-Received: from CO2PR04CA0124.namprd04.prod.outlook.com (2603:10b6:104:7::26)
- by CY4PR1201MB0149.namprd12.prod.outlook.com (2603:10b6:910:1c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Fri, 29 Oct
- 2021 07:48:42 +0000
-Received: from CO1NAM11FT042.eop-nam11.prod.protection.outlook.com
- (2603:10b6:104:7:cafe::1e) by CO2PR04CA0124.outlook.office365.com
- (2603:10b6:104:7::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend
- Transport; Fri, 29 Oct 2021 07:48:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- CO1NAM11FT042.mail.protection.outlook.com (10.13.174.250) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4649.14 via Frontend Transport; Fri, 29 Oct 2021 07:48:41 +0000
-Received: from [172.27.0.156] (172.20.187.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 29 Oct
- 2021 07:48:34 +0000
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>
-CC:     <bhelgaas@google.com>, <saeedm@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
-        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-References: <20211025122938.GR2744544@nvidia.com>
- <20211025082857.4baa4794.alex.williamson@redhat.com>
- <20211025145646.GX2744544@nvidia.com>
- <20211026084212.36b0142c.alex.williamson@redhat.com>
- <20211026151851.GW2744544@nvidia.com>
- <20211026135046.5190e103.alex.williamson@redhat.com>
- <20211026234300.GA2744544@nvidia.com>
- <20211027130520.33652a49.alex.williamson@redhat.com>
- <20211027192345.GJ2744544@nvidia.com>
- <20211028093035.17ecbc5d.alex.williamson@redhat.com>
- <20211028234750.GP2744544@nvidia.com> <87wnlwb9o3.fsf@redhat.com>
-From:   Yishai Hadas <yishaih@nvidia.com>
-Message-ID: <76130eb7-6252-85a7-33d9-c7f00f5a3506@nvidia.com>
-Date:   Fri, 29 Oct 2021 10:48:30 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S232422AbhJ2IMl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Oct 2021 04:12:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24740 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232373AbhJ2IMk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Oct 2021 04:12:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635495010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xu96aStupZygtVSLHvKF+rN1vtm48eum6wSRQF0b9e4=;
+        b=KDTB7NtJvp7LvXn0CxD2NyvNyrZSfwLGv0d0+5+w1HAXk77rRWI2G4kWxCcUJz91qHvjkU
+        c13J9U+6uRXYNr5ONhkuln7FlQ8oKtBppS3FZedhtqtCtGdEnhcerMemB/EeOJIEGOBzht
+        tX5dtT576HPBu9QaUHiugGkeAbocM9A=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-gFKGUlWcP5Gcx1Fo6RuSKw-1; Fri, 29 Oct 2021 04:10:08 -0400
+X-MC-Unique: gFKGUlWcP5Gcx1Fo6RuSKw-1
+Received: by mail-ed1-f71.google.com with SMTP id z1-20020a05640235c100b003dcf0fbfbd8so8475057edc.6
+        for <linux-pci@vger.kernel.org>; Fri, 29 Oct 2021 01:10:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=Xu96aStupZygtVSLHvKF+rN1vtm48eum6wSRQF0b9e4=;
+        b=1rjHTCOHaueXNJqyeOgLrqBo/Q8aS3JG8Tes1oepsyzcKoeYyAjN9qdrwK+MAftDdx
+         2yCMaxixvUTzKmuLQY+2DkCNngiwdAsiLB5/N1TQ+YInY20iTTTMjcoldW2eSi5DXmYb
+         fqTYH4p76w8/Ioh+Mgl2jjC+L3dOREk+P/ACM/bTcposBGE+5wE/TquIFRUOdYcYpqvp
+         kxFLdonZ5dpmpLWRnLYUxnXZeW+pMQ7nntYe+k5e97uMS3VKjaBcGzHDUP2oMSqs5aNy
+         4/w4E7Nc0vUsp6CKWfM23qLc0IK4HZ2FwGyDQt+GWOeVXW8dVwm7QJH3S4kBDaxR0GRI
+         xm8w==
+X-Gm-Message-State: AOAM531x3QbCo1HfO6eLAihEY2WO71MRU5h6bLaD8t5BklGL6QYJCa32
+        eav9CxwpBX1MxVQ9m5bkThjJOJbHIkgAqAFx9Q6m4DsXBqW+SoCNjeAL6fBeu1TRSqJQu1NlNPa
+        ds+d0MvVKnEIt/vqaGHru
+X-Received: by 2002:a17:907:a089:: with SMTP id hu9mr12035230ejc.70.1635495007378;
+        Fri, 29 Oct 2021 01:10:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+2ZyHD1jzsaI7gKk3psM2BsN5hgt5uesc1AMIXYBo/23b9OFF/3dpCObBH8E8pCm21h7d1Q==
+X-Received: by 2002:a17:907:a089:: with SMTP id hu9mr12035214ejc.70.1635495007158;
+        Fri, 29 Oct 2021 01:10:07 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id ne2sm2519895ejc.44.2021.10.29.01.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Oct 2021 01:10:06 -0700 (PDT)
+Message-ID: <82035130-d810-9f0b-259e-61280de1d81f@redhat.com>
+Date:   Fri, 29 Oct 2021 10:10:05 +0200
 MIME-Version: 1.0
-In-Reply-To: <87wnlwb9o3.fsf@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
 Content-Language: en-US
-X-Originating-IP: [172.20.187.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 82a557b0-6705-4e82-5128-08d99ab086ff
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB0149:
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB0149B0332BA5B779CA0C5D19C3879@CY4PR1201MB0149.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: P1phuo8cSI3RkkX3ffdXrvL+3pHvmKWrpq1dyLcbXFOBDYxvqYZ9CkYvVME/wuTwi1gZUEnlUw4TysU9mX/HLw6WLChe2I6r4LeiZcX6LYns9x1wehk6WUps3K0dYElrmfMFS3PlzpfTZBHvGQY/hCJqm8NNw68HcpZpIliIDdSCpq68bhp0ekJ2jt2kgx7yq9s5iHFyWVjK0sbtVeddaDYsVl+ZXyCsP1mQ6jrB+qt32x6XVFtho06FXxGJpdLUAXXMaUlERoApdZ+KEc8Mv0EsJ3drd0uo0c+gbZM5AEYZI2tCWqAGtX6iIICRzXK2KiXp8N+lobq8oHUBH4a0Ps0cQfC49k1w2m/3xv7RXOLVqrI19jqlHpWnrT8Eppf0krIHSQJTkCnizr+yhn3qy2H2nJNUAH+0jbENtpE48c7QbVrvIPcCLBeiaS4OzZE9twsqkKhyQOwJTur/e9HB4R4RtF+GgD9CrdS0b81hB620s+E4Ja6wN3LInlF912ajo96GpcQIIXeK3nSbDEk1NP9XOj8UoJ5CAFseaRN1h2yi5r/OqTc0LULu6W8QwUSUgKS0aRVbRU4efC2Tn+T/l6r1SaftHlRruZiIrw1BfSB9PjepPDUXB8WbHEAI3kEE7xxRAbGhW+c7ALksWEBOy16bQoTQuOUtm3ZmgZFWhQ7VMOKEjBHSySEGQlBKVTXr1RQz14ec01rEiRGEh3hnelCDrViL7cadlYAUEokKtNw=
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(8936002)(53546011)(54906003)(47076005)(16576012)(110136005)(2906002)(8676002)(5660300002)(86362001)(31686004)(82310400003)(6666004)(316002)(4326008)(36860700001)(26005)(2616005)(508600001)(70206006)(36756003)(31696002)(16526019)(70586007)(336012)(426003)(83380400001)(356005)(7636003)(186003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 07:48:41.6718
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82a557b0-6705-4e82-5128-08d99ab086ff
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT042.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0149
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20211022012034.GA2703195@bhelgaas>
+ <75d1ef5a-13d9-9a67-0139-90b27b084c84@redhat.com>
+In-Reply-To: <75d1ef5a-13d9-9a67-0139-90b27b084c84@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/29/2021 9:57 AM, Cornelia Huck wrote:
-> On Thu, Oct 28 2021, Jason Gunthorpe <jgg@nvidia.com> wrote:
->
->> On Thu, Oct 28, 2021 at 09:30:35AM -0600, Alex Williamson wrote:
->>> On Wed, 27 Oct 2021 16:23:45 -0300
->>> Jason Gunthorpe <jgg@nvidia.com> wrote:
+Hi Bjorn,
+
+On 10/22/21 11:53, Hans de Goede wrote:
+> Hi Bjorn,
+> 
+> On 10/22/21 03:20, Bjorn Helgaas wrote:
+>> On Thu, Oct 21, 2021 at 07:15:57PM +0200, Hans de Goede wrote:
+>>> On 10/20/21 23:14, Bjorn Helgaas wrote:
+>>>> On Wed, Oct 20, 2021 at 12:23:26PM +0200, Hans de Goede wrote:
+>>>>> On 10/19/21 23:52, Bjorn Helgaas wrote:
+>>>>>> On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
+>>>>>>> Some BIOS-es contain a bug where they add addresses which map to system
+>>>>>>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+>>>>>>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+>>>>>>> space").
+>>>>>>>
+>>>>>>> To work around this bug Linux excludes E820 reserved addresses when
+>>>>>>> allocating addresses from the PCI host bridge window since 2010.
+>>>>>>> ...
+>>>>
+>>>>>> I haven't seen anybody else eager to merge this, so I guess I'll stick
+>>>>>> my neck out here.
+>>>>>>
+>>>>>> I applied this to my for-linus branch for v5.15.
+>>>>>
+>>>>> Thank you, and sorry about the build-errors which the lkp
+>>>>> kernel-test-robot found.
+>>>>>
+>>>>> I've just send out a patch which fixes these build-errors
+>>>>> (verified with both .config-s from the lkp reports).
+>>>>> Feel free to squash this into the original patch (or keep
+>>>>> them separate, whatever works for you).
+>>>>
+>>>> Thanks, I squashed the fix in.
+>>>>
+>>>> HOWEVER, I think it would be fairly risky to push this into v5.15.
+>>>> We would be relying on the assumption that current machines have all
+>>>> fixed the BIOS defect that 4dc2287c1805 addressed, and we have little
+>>>> evidence for that.
 >>>
->>>> On Wed, Oct 27, 2021 at 01:05:20PM -0600, Alex Williamson wrote:
+>>> It is a 10 year old BIOS defect, so hopefully anything from 2018
+>>> or later will not have it.
+>>
+>> We can hope.  AFAIK, Windows allocates space top-down, while Linux
+>> allocates bottom-up, so I think it's quite possible these defects
+>> would never be discovered or fixed.  In any event, I don't think we
+>> have much evidence either way.
+> 
+> Ack.
+> 
+>>>> I'm not sure there's significant benefit to having this in v5.15.
+>>>> Yes, the mainline v5.15 kernel would work on the affected machines,
+>>>> but I suspect most people with those machines are running distro
+>>>> kernels, not mainline kernels.
+>>>
+>>> Fedora and Arch do follow mainline pretty closely and a lot of
+>>> users are affected by this (see the large number of BugLinks in
+>>> the commit).
+>>>
+>>> I completely understand why you are reluctant to push this out, but
+>>> your argument about most distros not running mainline kernels also
+>>> applies to chances of people where this may cause a regression
+>>> running mainline kernels also being quite small.
+>>
+>> True.
+>>
+>>>> This issue has been around a long time, so it's not like a regression
+>>>> that we just introduced.  If we fixed these machines and regressed
+>>>> *other* machines, we'd be worse off than we are now.
+>>>
+>>> If we break one machine model and fix a whole bunch of other machines
+>>> then in my book that is a win. Ideally we would not break anything,
+>>> but we can only find out if we actually break anything if we ship
+>>> the change.
+>>
+>> I'm definitely not going to try the "fix many, break one" argument on
+>> Linus.  Of course we want to fix systems, but IMO it's far better to
+>> leave a system broken than it is to break one that used to work.
+> 
+> Right, what I meant to say with "a win" is a step in the right direction,
+> we definitely must address any regressions coming from this change as
+> soon as we learn about them.
+> 
+>>>> In the meantime, here's another possibility for working around this.
+>>>> What if we discarded remove_e820_regions() completely, but aligned the
+>>>> problem _CRS windows a little more?  The 4dc2287c1805 case was this:
 >>>>
->>>>>> As far as the actual issue, if you hadn't just discovered it now
->>>>>> nobody would have known we have this gap - much like how the very
->>>>>> similar reset issue was present in VFIO for so many years until you
->>>>>> plugged it.
->>>>> But the fact that we did discover it is hugely important.  We've
->>>>> identified that the potential use case is significantly limited and
->>>>> that userspace doesn't have a good mechanism to determine when to
->>>>> expose that limitation to the user.
->>>> Huh?
+>>>>   BIOS-e820: 00000000bfe4dc00 - 00000000c0000000 (reserved)
+>>>>   pci_root PNP0A03:00: host bridge window [mem 0xbff00000-0xdfffffff]
 >>>>
->>>> We've identified that, depending on device behavior, the kernel may
->>>> need to revoke MMIO access to protect itself from hostile userspace
->>>> triggering TLP Errors or something.
->>>>
->>>> Well behaved userspace must already stop touching the MMIO on the
->>>> device when !RUNNING - I see no compelling argument against that
->>>> position.
->>> Not touching MMIO is not specified in our uAPI protocol,
->> To be frank, not much is specified in the uAPI comment, certainly not
->> a detailed meaning of RUNNING.
-> Yes! And I think that means we need to improve that comment before the
-> first in-tree driver to use it is merged, just to make sure we all agree
-> on the protocol, and future drivers can rely on that understanding as
-> well.
->
+>>>> where the _CRS window was of size 0x20100000, i.e., 512M + 1M.  At
+>>>> least in this particular case, we could avoid the problem by throwing
+>>>> away that first 1M and aligning the window to a nice 3G boundary.
+>>>> Maybe it would be worth giving up a small fraction (less than 0.2% in
+>>>> this case) of questionable windows like this?
+>>>
+>>> The PCI BAR allocation code tries to fall back to the BIOS assigned
+>>> resource if the allocation fails. That BIOS assigned resource might
+>>> fall outside of the host bridge window after we round the address.
+>>>
+>>> My initial gut instinct here is that this has a bigger chance
+>>> of breaking things then my change.
+>>>
+>>> In the beginning of the thread you said that ideally we would
+>>> completely stop using the E820 reservations for PCI host bridge
+>>> windows. Because in hindsight messing with the windows on all
+>>> machines just to work around a clear BIOS bug in some was not a
+>>> good idea.
+>>>
+>>> This address-rounding/-aligning you now suggest, is again
+>>> messing with the windows on all machines just to work around
+>>> a clear BIOS bug in some. At least that is how I see this.
+>>
+>> That's true.  I assume Red Hat has a bunch of machines and hopefully
+>> an archive of dmesg logs from them.  Those logs should contain good
+>> E820 and _CRS information, so with a little scripting, maybe we could
+>> get some idea of what's out there.
+> 
+> We do have a (large-ish) test-lab, but that contains almost exclusively
+> servers, where as the original problem was on Dell Precision laptops.
+> 
+> Also I'm not sure if I can get aggregate data from the lab's machines.
+> I can reserve time on any model we have to debug specific problems,
+> but that is targeting one specific model. I'll ask around about this.
 
-This can done by a follow-up patch as part of the the RC cycles, once we 
-agree on the exact comment.
+So I had another idea to get us a whole bunch of dmesg outputs and that
+is to use the database collected by linux-hardware.org . The dmesg
+were already individually accessible by selecting a specific model machine,
+but I asked them if they could do a dump and I just got an email that a
+dmesg dump is now available here:
 
-Alternatively,
+https://github.com/linuxhw/Dmesg
 
-We can come with V6 on Sunday if we can agree on the comment here soon.
+Note be careful with the size of the repository - it will take ~3 gigabytes
+of network traffic and ~20 gigabytes of space on the drive to checkout it.
 
-In any case, we don't expect for now code changes in mlx5 as of that.
+So if you want dmesg outputs to grep through for e820 / host-bridge-window
+info, here you go.
 
-Frankly, I don't believe that this should block the series from being 
-merged.
+Regards,
 
-Yishai
+Hans
 
