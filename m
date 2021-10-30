@@ -2,141 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE714409CE
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Oct 2021 17:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61938440BAB
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Oct 2021 23:08:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbhJ3PHJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 Oct 2021 11:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
+        id S231278AbhJ3VKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 Oct 2021 17:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbhJ3PHH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Oct 2021 11:07:07 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46AE8C061570
-        for <linux-pci@vger.kernel.org>; Sat, 30 Oct 2021 08:04:37 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id a26so12054676pfr.11
-        for <linux-pci@vger.kernel.org>; Sat, 30 Oct 2021 08:04:37 -0700 (PDT)
+        with ESMTP id S230338AbhJ3VKy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Oct 2021 17:10:54 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83681C061570
+        for <linux-pci@vger.kernel.org>; Sat, 30 Oct 2021 14:08:23 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id v64so27334920ybi.5
+        for <linux-pci@vger.kernel.org>; Sat, 30 Oct 2021 14:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=jBlwCEyoSfjNLOn2KIgbDe9GTaKgXK40hawIKPZa6do=;
-        b=NUCq0Ut7JZbh/epzD4JurlnYy1w3GD3pncwh2D/05AxRowFruo4mngfG6XOm1ZkyVa
-         qx68qysdS1YkJIr59cmhX+JRd34SDDlwH+BrcJnldAvgKbsQj02wKsBqxRxn+VAlI2yG
-         6H0aOQDJb/hBkkpX2Onk+7qe+Vupu3wWZibDOvf+eCm/puhKIC09lX5zbYoGaiZLpZND
-         4OQLh08sFMZTy1CErl6nmDVIEoIXLTL0KO65phQ48dtgOGzqEMXyyfHPsXPrzZ/mJnQX
-         uHeBTr2pX9mOIQDvtbcW4OZA8ofX0wy+BI6GZ8mGXeG38AnuFLg8SimmL58Z00vsrE2M
-         v+6Q==
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=gZG3fvm3doj416A/ISAASQMG5x/Jprwmk94X/y0KsBI=;
+        b=WmAlqRjCMLMB7mru362D2OqKheXERaq7GoYIaKWwsFGVUBRWwprAozNrACUqqUwG0+
+         7Xla0UyP6rOKkP8f/8s6BT/JuJvmk0dXALz/ng4961emUXVg838AVuxU/BOJV40g/TQi
+         VkEZ1ZfS8KLzR7A/B2e2a+JDF7DQ9o67b1ycQPY1Lbce4a4SFFo9qPaUrwBbiTYCRcpW
+         BzbQ+XCo4q4DI+0Sg9QshFDalkYRNHb0KCPrbj38T/PA6RjgCwPwOlkvuLn8NXY9wMML
+         nK4qg4pF88mmlhuUVnCrPlK5TjtxgPxCXhHifahie0TnGB9UAG/JdJSrPXJfwL6eE54U
+         O1Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=jBlwCEyoSfjNLOn2KIgbDe9GTaKgXK40hawIKPZa6do=;
-        b=YuyxSvC6c/nwE71wz/anR+uL7nUzMCY+J47FUbDwq3RqhFZYqCP5r7envrWnyLAVcR
-         lPzC5+wl11jTzn8Y6KAwmAyjiCVoqnTrlFfmd+Q5ZivmDzHA9DgTKhSNsvDWJ1A7a2Lw
-         yzSnoc9w+azEg7zQird4N/j+8POgbfRqJvcocOw4WAQBw4aTh+j9/cSiSr05klh4Rt+o
-         dRiVp7EQpmpka3YYagpWHz7fMHa7J25f7+17oTqDclADWlM2SxyYMUQtem37tuYtPOw8
-         X24uw5y8VG20s1ni7h3WAYe/B1EZTBn6c2UqEszlgPGQt8FNwZ96lPn+Ohtw/P1mCGjU
-         vZ7w==
-X-Gm-Message-State: AOAM5330hL0zRPe4WnneGkn+pQ04X9EZy9FwGOCFCU4/3H3On2ITvSu+
-        joR4PRyja7yHdL110wYq+hxoWuvIuW65kwGXBuA=
-X-Google-Smtp-Source: ABdhPJxbH0MqpLpa7NKL+Ojvo6ZJdBAmkP5E9Gs5jMbmukL+Zk8irLnqUOrfW5dQs7BTA48d/5OSqzT+PUhbrrOD/9s=
-X-Received: by 2002:a63:aa41:: with SMTP id x1mr13067531pgo.283.1635606276570;
- Sat, 30 Oct 2021 08:04:36 -0700 (PDT)
+         :message-id:subject:to;
+        bh=gZG3fvm3doj416A/ISAASQMG5x/Jprwmk94X/y0KsBI=;
+        b=iI6889IGZB8nkZfr7HK/V8jSYCqvkZoicXTYeo8b8aTr6d9Z0+fFnNgvd9rH/Hsv9E
+         2rVfBTdnf3Vi3U5oQM+ueM2+rE2n9CTiSJPyHzvcbMGztmWoW3EWCUH8GOlVAukX+5+W
+         UUBX6PHb78KjY+LuWqv8Ie1yxqAMeBWD9t6bbbFfICGKBXPcpjjpUtwk79ayFi0I4QbE
+         Mw/cHdZqIH64v18QN00nDp7JPv6RBXmCZvmeD3fhsZ+GxYn0cA1eZnZuEPEXoA1AlqI7
+         54vB0a/WzDpa8EzsRCxw/6yTg4C4mOJc4LklmnG1LHeNjRr7Rgqwv2YmDijdnV+N7Fen
+         70IQ==
+X-Gm-Message-State: AOAM53044hMbS0EtxEI5Ihh/ZT/A6e4S0DAMmEtqxaqi1fcEDiCdFd9j
+        gxcHoIcT9MYsh/vomccLdhZL68k0kTZN6N9ZcSw=
+X-Google-Smtp-Source: ABdhPJxYShmSqf1bLOU4wh3P/3kk9yDr9u0csmypL9Qe16j/mS+rLTGPK/Enmb2vDpPXe7FtLNy433q6h9LCzI6bWxE=
+X-Received: by 2002:a25:300b:: with SMTP id w11mr21579739ybw.31.1635628102050;
+ Sat, 30 Oct 2021 14:08:22 -0700 (PDT)
 MIME-Version: 1.0
-Reply-To: josannowaak225@gmail.com
-Sender: infos.solicitors@gmail.com
-Received: by 2002:a05:6a10:6786:0:0:0:0 with HTTP; Sat, 30 Oct 2021 08:04:35
+Reply-To: mrselodieantonie778@yahoo.com
+Sender: mrsmarianmichel@gmail.com
+Received: by 2002:a05:6900:34a9:0:0:0:0 with HTTP; Sat, 30 Oct 2021 14:08:21
  -0700 (PDT)
-From:   Josan Nowak <josannowak225@gmail.com>
-Date:   Sat, 30 Oct 2021 17:04:35 +0200
-X-Google-Sender-Auth: EOpM6IOf_3ISpMpnW38RsVuSF2c
-Message-ID: <CALCgbAeWOKQgLt5y3d6kXmcEMqXhX5q4iFZ+UrsKSE71q3gkEg@mail.gmail.com>
-Subject: Darowizna od pani Nowak
+From:   Mrs Elodie Antoine <mrselodieatonie32@gmail.com>
+Date:   Sat, 30 Oct 2021 23:08:21 +0200
+X-Google-Sender-Auth: OeJAw-JBzCg_cDAJ1KeqXtbQdtM
+Message-ID: <CAOXYY_BbkKOM3WXcDnKrebWGjh+BNQrRpSQDp9JoOtZE=SagGA@mail.gmail.com>
+Subject: Calvary Greetings
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Drodzy Umi=C5=82owani.
-Pozdrowienia w imieniu naszego Pana Jezusa Chrystusa.
+CAN I TRUST YOU WITH  THIS (US$4.5 Million Dollars) FOR CHARITY WORKS,
 
-Nazywam si=C4=99 Pani Josan Nowak. Pochodz=C4=99 z Londynu i jestem obywate=
-lem
-Wielkiej Brytanii, ale mieszkam na Wybrze=C5=BCu Ko=C5=9Bci S=C5=82oniowej.=
- Obecnie
-mam 68 lat, ca=C5=82e moje ma=C5=82=C5=BCe=C5=84stwo prze=C5=BCy=C5=82am na=
- Wybrze=C5=BCu Ko=C5=9Bci
-S=C5=82oniowej, poniewa=C5=BC m=C3=B3j zmar=C5=82y m=C4=85=C5=BC Pan Mogab =
-Nowak mia=C5=82 wieloletni
-kontrakt z rz=C4=85dem Wybrze=C5=BCa Ko=C5=9Bci S=C5=82oniowej przed =C5=9B=
-mierci=C4=85 w 2019 roku.
-po kr=C3=B3tkiej chorobie, kt=C3=B3ra trwa=C5=82a tylko cztery dni, Byli=C5=
-=9Bmy
-ma=C5=82=C5=BCe=C5=84stwem przez trzydzie=C5=9Bci jeden lat bez dziecka.
+Calvary Greetings in the name of the LORD Almighty and Our LORD JESUS
+CHRIST the giver of every good thing. Good day,i know this letter will
+definitely come to you as a huge surprise, but I implore you to take
+the time to go through it carefully as the decision you make will go
+off a long way to determine my future and continued existence. I am
+Mrs Elodie Antoine
+aging widow of 59 years old suffering from long time illness. I have
+some funds I inherited from my late husband,
 
-Najdro=C5=BCszy, z ca=C5=82ym szacunkiem i cz=C5=82owiecze=C5=84stwem, kont=
-aktuj=C4=99 si=C4=99 z
-Tob=C4=85, aby poinformowa=C4=87 Ci=C4=99 o moim pragnieniu przekazania Ci =
-=C5=82=C4=85cznie $
-4,800,000,00 dolar=C3=B3w, kt=C3=B3re odziedziczy=C5=82am po moim zmar=C5=
-=82ym m=C4=99=C5=BCu przed
-jego =C5=9Bmierci=C4=85, poniewa=C5=BC obecnie cierpi=C4=99 na niebezpieczn=
-=C4=85 choroba
-nowotworowa, kt=C3=B3ra umie=C5=9Bci=C5=82a mnie w szpitalnym =C5=82=C3=B3=
-=C5=BCku od 4 tygodnia. a
-ostatnio m=C3=B3j lekarz powiedzia=C5=82 mi, =C5=BCe mog=C4=99 nie wytrzyma=
-=C4=87 przez
-nast=C4=99pne 2 miesi=C4=85ce z powodu uszkodze=C5=84, jakie gro=C5=BAny ra=
-k spowodowa=C5=82 w
-moich narz=C4=85dach.
+The sum of (US$4.5 Million Dollars) and I needed a very honest and God
+fearing  who can withdraw this money then use the funds for Charity
+works. I WISH TO GIVE THIS FUNDS TO YOU FOR CHARITY WORKS. I found
+your email address from the internet after honest prayers  to the LORD
+to bring me a helper and i decided to contact you if you may be
+willing and interested to handle these trust funds in good faith
+before anything happens to me.
+I accept this decision because I do not have any child who will
+inherit this money after I die. I want your urgent reply to me so that
+I will give you the deposit receipt which the  COMPANY issued to me as
+next of kin for immediate transfer of the money to your account in
+your country, to start the good work of God, I want you to use the
+15/percent of the total amount to help yourself in doing the project.
 
-Nie mam dziecka, kt=C3=B3re odziedziczy te pieni=C4=85dze po mojej =C5=9Bmi=
-erci,
-dlatego podejmuj=C4=99 decyzj=C4=99 o przekazaniu ci tego funduszu na cele
-charytatywne, poniewa=C5=BC nie chc=C4=99, aby ci=C4=99=C5=BCko zarobione p=
-ieni=C4=85dze mojego
-m=C4=99=C5=BCa zosta=C5=82y wykorzystane w bezbo=C5=BCny spos=C3=B3b.
 
-Wi=C4=99c je=C5=9Bli chcesz i jeste=C5=9B w stanie wykona=C4=87 to zadanie =
-dla dobra
-ludzko=C5=9Bci, prosz=C4=99 o przes=C5=82anie mi swoich informacji, abym m=
-=C3=B3g=C5=82
-przedstawi=C4=87 ci=C4=99 danemu bankowi jako moj=C4=85 wyznaczon=C4=85 oso=
-b=C4=99, aby
-otrzyma=C4=87 fundusz darowizny, a ja r=C3=B3wnie=C5=BC wykorzystam informa=
-cje, aby
-z=C5=82o=C5=BCy=C4=87 przysi=C4=99g=C4=99 pod przysi=C4=99g=C4=85, kt=C3=B3=
-ra oficjalnie i prawnie zatwierdzi
-Ci=C4=99 jako nowego beneficjenta tego funduszu, jak ju=C5=BC m=C3=B3wi=C5=
-=82em.
+I am desperately in keen need of assistance and I have summoned up
+courage to contact you for this task, you must not fail me and the
+millions of the poor people in our todays WORLD. This is no stolen
+money and there are no dangers involved,100% RISK FREE with full legal
+proof. Please if you would be able to use the funds for the Charity
+works kindly let me know immediately.I will appreciate your utmost
+confidentiality and trust in this matter to accomplish my heart
+desire, as I don't want anything that will jeopardize my last wish. I
+want you to take 15 percent of the total money for your personal use
+while 85% of the money will go to charity.I will appreciate your
+utmost confidentiality and trust in this matter to accomplish my heart
+desire, as I don't want anything that will jeopardize my last wish.
 
-Twoje pe=C5=82ne imi=C4=99 .....
-Adres ............
-Numer telefonu........
-Wiek ................
-Zaw=C3=B3d .........
-Kraj ...........
-Twoje zdj=C4=99cia .......
 
-Jak tylko otrzymam Twoj=C4=85 odpowied=C5=BA z podanymi tutaj informacjami,
-niezw=C5=82ocznie przedstawi=C4=99 Ci=C4=99 danemu bankowi, w kt=C3=B3rym j=
-est zdeponowany
-fundusz, i przedstawi=C4=99 Ci=C4=99 jako moj=C4=85 wyznaczon=C4=85 osob=C4=
-=99, kt=C3=B3ra otrzyma
-m=C3=B3j fundusz darowizny. Przeka=C5=BC=C4=99 Ci r=C3=B3wnie=C5=BC wszystk=
-ie istotne
-informacje, kt=C3=B3re upowa=C5=BCni=C4=85 do wydania i przekazania pieni=
-=C4=99dzy Tobie
-jako mojemu nale=C5=BCycie wyznaczonemu przedstawicielowi.
+Kindly reply
 
-Zapewni=C5=82em mnie, =C5=BCe post=C4=85pisz zgodnie z tym, co powiedzia=C5=
-=82em w tej
-wiadomo=C5=9Bci, maj=C4=85c nadziej=C4=99, =C5=BCe wkr=C3=B3tce otrzymasz o=
-dpowied=C5=BA.
+Thanks and God bless you,
 
-Twoja siostra w Chrystusie
-Z powa=C5=BCaniem
-Pani Josan Nowak
+Mrs Elodie Antoine
