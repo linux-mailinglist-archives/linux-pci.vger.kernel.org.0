@@ -2,79 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 189A6440EDB
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 15:35:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0B80440EEF
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 16:07:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbhJaOiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Oct 2021 10:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229754AbhJaOiL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 10:38:11 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A099C061746
-        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 07:35:39 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id h11so25271060ljk.1
-        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 07:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=2Y8NayuLnfX3GwLkDMn7ZTyD7RtMsOyjIifS8+INynY=;
-        b=kxETodqoiErXdbFXoy6RrvjhuJXqsn1vI9Z3nVDTCjgLk/lNDGV+m5ckrb7uHqlSKg
-         gGrR39y8qsLG3Ja+VCYzbzHQ6X5RMmYh9Op9HblXcT0AoNw16S/EptIgDEc3EBX4apTC
-         bYWc4HxRF/MIc4nv5tk+PJoc/jhS49LF0AWRYi3h9D+ShI+PQEJ/o20M3RRNvslQHTuN
-         nK+jTwRksKdjrEAAQXrdRSD/m7aSdrLYTFM9fT5R+Qp+8gdnCk2SB8e4+JIR45H+q8dR
-         cQMCR5bt6PvB7yvr0c3p24AyXE4WbVc6J+OmqmvnprcsgevJ6OVeBki2T22kwikJkqNz
-         iKWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=2Y8NayuLnfX3GwLkDMn7ZTyD7RtMsOyjIifS8+INynY=;
-        b=66kqXVMq+rRIPXv2mM1Rj3Z5AIQsWwP56qOYm52SYUbXtrM50cFsPMJ6GqdRM9dzI3
-         PyEFRW/87lhBsGEO6f6eVnkIxQXh9A6DR1fJJFN+89ZGy9vNHsan61ghiFQ8bYWu4rI3
-         1Wf5/OCg+IWzwQHoYaCEFBDxVKGN9tItC09U1XHuzoEEwUIq64oO+IYW6qhp3Bsfr7Zi
-         97KteW4vbQkBBRYW8hll0oD88M/sNyJWbeyzdJm5yfd3VcnFRCUnDVTaWONc30ISZ6nb
-         +XAQ/mQ/W1u9Zjx2ILnp1ua/tGsqCZ8JUbPbmC+UFLbkzxfbh+29f7VbrcqewDDDQUJ3
-         h3aw==
-X-Gm-Message-State: AOAM5310cGOKKCJolLzeayJkYxo302vYOFy6bPIwBYnO6pC3FdP/4GN9
-        5Amy5zoW3VezNqLJXqZkwzAFwDhtJvqnOfrJ2uk=
-X-Google-Smtp-Source: ABdhPJwyHuH5WpmxCg4WYrkVvVAbJxseWeaH3RqjZkiPkld3yzZ23XKADRY9OZs5Ph4YfB7M5EzbHAM8QJtcusN9DX0=
-X-Received: by 2002:a05:651c:1546:: with SMTP id y6mr25160108ljp.394.1635690937366;
- Sun, 31 Oct 2021 07:35:37 -0700 (PDT)
+        id S229754AbhJaPJq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Oct 2021 11:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229685AbhJaPJm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 31 Oct 2021 11:09:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F19A160234;
+        Sun, 31 Oct 2021 15:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635692830;
+        bh=ql/X/2+8Hkm6EWf0l7VhroUTIs/nYfkWm+Y9KW/UZ2w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YRIufha4qnlWgLSEdLDjx7PjLjb+K//idLz9AO2d3aVPFJ7139PZSj+kW512GQgQx
+         vMvpLGojPDeKQcz/cNSYYLQOUMrtDkiOg8djM7F7jBoK8merIwFaiqA2rF2xwKBJ7/
+         L/2hArUysYSGA2DVheQnD6NOEa23iInPiUGTeppEN72SPRyvL8ybhM7UmWWtwTzcnN
+         UNOzIfQmo3kd0C5gmZmj+de5Yvh2eGMJjxrh4xVqWEjTXE7DVNYYmwmEEdytMityMA
+         wDRRdJBILCviuZg/Q7mN33AhQi4KyMaibj392h0HGrUX/wgrUozSHYlS6LxFEFwhpa
+         yI2X/IYoitQcA==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH dt + pci 1/2] dt-bindings: Add 'slot-power-limit-milliwatt' PCIe port property
+Date:   Sun, 31 Oct 2021 16:07:05 +0100
+Message-Id: <20211031150706.27873-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Received: by 2002:a05:6520:1d5:b0:14c:fc99:2efc with HTTP; Sun, 31 Oct 2021
- 07:35:36 -0700 (PDT)
-Reply-To: mrsaishag45@gmail.com
-From:   Mrs Aisha Al-Qaddafi <mrsaishag4@gmail.com>
-Date:   Sun, 31 Oct 2021 07:35:36 -0700
-Message-ID: <CA+L6gk=jYFRzfjvEKpOEY1yJX4w=QR7i0jzk5TRN7Dmu2rYMOA@mail.gmail.com>
-Subject: Dear Friend,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
+From: Pali Rohár <pali@kernel.org>
 
-I came across your e-mail contact prior to a private search while in
-need of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
+This property specifies slot power limit in mW unit. It is a form-factor
+and board specific value and must be initialized by hardware.
 
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country, may be from there, we can build business relationship in
-the nearest future.
+Some PCIe controllers delegate this work to software to allow hardware
+flexibility and therefore this property basically specifies what should
+host bridge program into PCIe Slot Capabilities registers.
 
-I am willing to negotiate an investment/business profit sharing ratio
-with you based on the future investment earning profits.
+The property needs to be specified in mW unit instead of the special format
+defined by Slot Capabilities (which encodes scaling factor or different
+unit). Host drivers should convert the value from mW to needed format.
 
-If you are willing to handle this project on my behalf kindly reply
-urgently to enable me to provide you more information about the
-investment funds.
-Best Regards
-Mrs Aisha Al-Qaddafi
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index 6a8f2874a24d..7296d599c5ac 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -32,6 +32,12 @@ driver implementation may support the following properties:
+    root port to downstream device and host bridge drivers can do programming
+    which depends on CLKREQ signal existence. For example, programming root port
+    not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
++- slot-power-limit-miliwatt:
++   If present, this property specifies slot power limit in milliwatts. Host
++   drivers can parse this property and use it for programming Root Port or host
++   bridge, or for composing and sending PCIe Set_Slot_Power_Limit messages
++   through the Root Port or host bridge when transitioning PCIe link from a
++   non-DL_Up Status to a DL_Up Status.
+ 
+ PCI-PCI Bridge properties
+ -------------------------
+-- 
+2.32.0
+
