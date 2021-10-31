@@ -2,85 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D684410DC
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 21:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E87944114B
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 23:51:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbhJaU6D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Oct 2021 16:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229974AbhJaU6C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 31 Oct 2021 16:58:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0E4D360F4C;
-        Sun, 31 Oct 2021 20:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635713730;
-        bh=oeU9m32KyPvFqKwG3qk6If06NKojmbJC+GcvF27icTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R0OlfTtr4h9Ic9fubr4O7eXo+/0zyom8N0wI7bhtBx2ggB7AYxEGYepcPp6CgVSVr
-         ReYxvucliRZaAfo1Euib4ragEZvz98FrriA7B9XkatsOzrevcrEx8mWzT6hYNCfT3Q
-         18Al0FrsJhYTw3Jl/wXdPEPu49T7lnTgtBHMtvKx/00kEX6sD/l6dLHS2Ha1/rJQ5k
-         IohxXLEL758TI1ks5og3KpyLaBDGSyRjNRb7sSNiJovYPjmYnBiDtwPBITNDxPp4tg
-         1M9YpzUZhDYdysq18KIJQTIaV8fTPINGtZbLWmcM8ABlFOqOyjd/VEtSSj1B616SBq
-         7XzVXRDzPA+3w==
-Received: by pali.im (Postfix)
-        id 94322E5D; Sun, 31 Oct 2021 21:55:27 +0100 (CET)
-Date:   Sun, 31 Oct 2021 21:55:27 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v15 13/13] PCI: kirin: Allow removing the driver
-Message-ID: <20211031205527.ochhi72dfu4uidii@pali>
-References: <cover.1634812676.git.mchehab+huawei@kernel.org>
- <53b40494252444a9b830827922c4e3a301b8f863.1634812676.git.mchehab+huawei@kernel.org>
+        id S230487AbhJaWx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Oct 2021 18:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230316AbhJaWx4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 18:53:56 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9906C061714;
+        Sun, 31 Oct 2021 15:51:23 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id az37so431138uab.13;
+        Sun, 31 Oct 2021 15:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bPFwVr5kk0vqZjJlI+7yEVQ4/r8h3+RsMnwNH7XHCsM=;
+        b=Z4T+Z3vARLXA535mSg7xlLU+HWKaVfg594r5Dq5kpAbBdu8l/+Pt6nXuWIeLv1uEVs
+         4vm/bx/Lv1Y3phpO632wFvT8GhpLFS2GJBfUhCAgZ1F0dNKI4/kkTEvAVJg0Xbzw9zng
+         +ARDMyojIfbhYUSw/canZQEAPQwNKD1NiuaJYgzI5J8ZwUwlgZUZyk9dsTIo2Rak/TCb
+         IsxgyK7HMtf+6VbWsdlue60gaEFB092l77v/GX06jcleYwpCcZJGPne5CmfnqzA6KDfp
+         +Q0GzEUM7SZ3KPbR0WZ9xsnT4lrjF1G+fjUyTcSlBL/qe8A8k3IBQiGYcmesrHN13Eii
+         1k8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bPFwVr5kk0vqZjJlI+7yEVQ4/r8h3+RsMnwNH7XHCsM=;
+        b=vJAgl7kRx7iP5G9FbYLg2UhP8CBuP6Sc7EvysKlOkg2P4Ou8prH+ePhF1oR6DNRsRa
+         BO+RpCAlud3edSRkrDjsTY/pZwbNdR6cKeLGqEvqx2OWRjZtkLsR/gPbr5NNyA66Qhh7
+         eTAhNSh+SkUWQqDVp6kzWPYA+kEDGXJZZasL0H9rdE5hVU/D/DMzu6ATSl/g7fl4sb8Q
+         xHkkPrZxRvxCC1nGadP1GX+vQ9ww5L/ISSBWejX7GATYN+XEX6J3qhZlkzJ5ygMMq6bO
+         PynWhIqIs2Fd1B57YVWBAH7uGObJF/Bn7/lkJrntAMSY39TqptIFvssvDqqtzOQxmp8v
+         IANA==
+X-Gm-Message-State: AOAM533UEzgKpbtuIsmbCaAlC78zzXLlWHVWOwIbTnB8131lXUikKUZ7
+        oE8y8KiP9/WRDmoYRG3U7UdwK0clFcQIadlH715AnQ0=
+X-Google-Smtp-Source: ABdhPJxC+Ljs59vrx7a82ou1aFtq+enfXhEtw9OOVkKStyHZVDeYe9nq0nJEPBDjXZNVwKWw7HDKpXsm0VZ/ze93Ygk=
+X-Received: by 2002:a05:6102:941:: with SMTP id a1mr4005440vsi.0.1635720682818;
+ Sun, 31 Oct 2021 15:51:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53b40494252444a9b830827922c4e3a301b8f863.1634812676.git.mchehab+huawei@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+ <b023adf9-e21c-59ac-de49-57915c8cede8@oderland.se> <87fst6pjcu.wl-maz@kernel.org>
+ <ae50cd31-6b5d-3dc4-4ba7-d628a74dc722@oderland.se>
+In-Reply-To: <ae50cd31-6b5d-3dc4-4ba7-d628a74dc722@oderland.se>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Sun, 31 Oct 2021 22:51:11 +0000
+Message-ID: <CALjTZvaE-u0cGRdDD=m8iXCMZvM65v_8wBQq3-vPN0+_3SgU0g@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
+To:     Josef Johansson <josef@oderland.se>
+Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 21 October 2021 11:45:20 Mauro Carvalho Chehab wrote:
-> Now that everything is in place at the poweroff sequence,
-> this driver can use module_platform_driver(), which allows
-> it to be removed.
-> 
-> Acked-by: Xiaowei Song <songxiaowei@hisilicon.com>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
-> 
-> To mailbombing on a large number of people, only mailing lists were C/C on the cover.
-> See [PATCH v15 00/13] at: https://lore.kernel.org/all/cover.1634812676.git.mchehab+huawei@kernel.org/
-> 
->  drivers/pci/controller/dwc/pcie-kirin.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index fea4d717fff3..cdf568ea0f68 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -827,7 +827,7 @@ static struct platform_driver kirin_pcie_driver = {
->  		.suppress_bind_attrs	= true,
+Hi, Marc,
 
-Hello Mauro! I think that you should not set ".suppress_bind_attrs" to
-"true" if you want to bind and unbind driver at runtime.
+Linux 5.15 has just been tagged, and this fix isn't included (I
+personally don't mind, since I'm carrying it in my tree). Any specific
+reason for it?
 
->  	},
->  };
-> -builtin_platform_driver(kirin_pcie_driver);
-> +module_platform_driver(kirin_pcie_driver);
->  
->  MODULE_DEVICE_TABLE(of, kirin_pcie_match);
->  MODULE_DESCRIPTION("PCIe host controller driver for Kirin Phone SoCs");
-> -- 
-> 2.31.1
-> 
+Thanks,
+Rui
