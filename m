@@ -2,72 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F000440DCF
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 11:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1CB8440EB9
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 14:55:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbhJaKXW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Oct 2021 06:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        id S229792AbhJaN62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Oct 2021 09:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbhJaKXV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 06:23:21 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731E6C061570
-        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 03:20:50 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id k2-20020a17090ac50200b001a218b956aaso10472507pjt.2
-        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 03:20:50 -0700 (PDT)
+        with ESMTP id S229662AbhJaN62 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 09:58:28 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D34C2C061570;
+        Sun, 31 Oct 2021 06:55:56 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g184so14754197pgc.6;
+        Sun, 31 Oct 2021 06:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=0KvQkxFdmSckOXJpLXZtURzOqfI2/nRXk2vwKc98xhg=;
-        b=ktX8rxiPx8Dv9gCZoLWGVP8XiF5BxmfpPNBXLDKSTAgXoRh6/E/BIVRssC07voU1at
-         y3hS7k2FUhtp2QfDqy6EuNs59ObBQrLnbXO99nfzdLsWexmiB6va9L+OD/IErGM3+90A
-         6Jp8uyG1uTiJOzrot6xfxziUml0RxZdjayLyB36eo0YoW1KcMfKGzz3QyL2il97HZvWc
-         7VSPxlCIQ7AL3e9aYHX863dSTdUzNvcFufAB8N5GMFDjItKRAhNA3SFf7PTLRit/Ll3G
-         80SvCRu2nkGYq/ju1qni+ZcpmyXc+YKkAFT83eBF1tgZlLhJ5zhTDU7hIiVsrbQ3/LYX
-         I3pQ==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=eApvuA9AcCPcJdYCjnNeqJuvkYqT5k5b2Xfmt74TBmE=;
+        b=A4CapSWi1uQJCLeeBz/QHofmrAcWqPIiKmDvOANu2jrgWEsLrX1qd4tu9EkGWVEXZj
+         L+FYUsuATs5xFYikuc+EkzDPOZioY/BMizOJ593Vhd31dXYfigmWyEY52Anut75vEkn0
+         /g/hHEMrWd7AFj1U+EWm1DDosRQxqRyKw8N8dzzfLCbZaHh9o88RQlF6dJ/V7CM4d9L0
+         31N3/C9nzhCQNkndrmpB8LvAdKDGa7SwKykT0F+fkCM8HD1R8beH9MRGAgckyPbwMQhh
+         dWvVSZCrnRX5DIy0BKrcVdEPcDwDYGvlA9L8mj7sDBBodfV/6qJ7SjTsdAr45I9iKICl
+         5qWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=0KvQkxFdmSckOXJpLXZtURzOqfI2/nRXk2vwKc98xhg=;
-        b=JuXtXvCnmX0K+y4ndTEpolaKO58oIcDeUx++yebVqQ4tzrrN30cGWzaxaQOcN5SHPO
-         6w9kajAjNBD2XmpKgNRw78s8PEHQJrsCxzmU3TkxVKuKYpS5dZFSoR7G2R7PKbOi6T5N
-         SjBziJA3ZEdqRs7l8eUVgYvd3Yb6XcDyjbRr/wL+juDfX1venKA9iFp4Zfj6SkyxKTxZ
-         btBGNaqJ0y3clS+847D0fDeQ5yYB3tBmEqJ6zRAcKXbHykWJgAh8vvE3Qm5hGtCAahrJ
-         AhtSsYUpeFj2NDapLKh1mjSmxoVc+Vu6nxHW4nwOlCQ5P1xc0j7eDeYkFmFh0s1yGdyC
-         luow==
-X-Gm-Message-State: AOAM5306hfMyEatyBQnH6zPQ8u8j11QdK3vsa5t/gnTLSgCLKdZLuCcx
-        ZIT4vnId2m10/F5HPiofO6UDoSNEhTy0k5E8msU=
-X-Google-Smtp-Source: ABdhPJzlax8abLv/liyZvkHygpc0jgrII7YdMXuG1jCj1Lx2dA7DZ/0TKtrwdLg78+fX4vxvpmhKnTCeq2phYnNK3Lg=
-X-Received: by 2002:a17:90b:2248:: with SMTP id hk8mr22565868pjb.102.1635675649902;
- Sun, 31 Oct 2021 03:20:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eApvuA9AcCPcJdYCjnNeqJuvkYqT5k5b2Xfmt74TBmE=;
+        b=078KjjEmn2lGqCOteK2Eh1/APA+coSfHI8B4lgLle7s296RBOsTU1gJhEWmcnYEICM
+         6kFFqlAVIS0zfrWOEgz3EhAAfQ0b/7TPWOCAbtSRBloofCO68nL0blahEIsdOSlIxn6R
+         o1aDDhBkmK9O9YKr7Fv99+f+itmytfwH37PfdWgcRYtggxDmvwj5JU7l79qCrdCQI5nq
+         b46n7qKuoEC6Q5fQ5n0jJhzrCxiBBLLB7CG0RVdwSaeaW+OF82ox9hRG0mWvQbKhsWr0
+         sBKfRFKqkNHh7AMmnBF2p6LgC64iBHUoPhqhdq9vFnVczNgQWwSRRL9L5WCGSP36LWD1
+         +jYQ==
+X-Gm-Message-State: AOAM531EviUjWBAAjw/ziQhBgKg5Ndck4TQh+cWYUHxTqtV3Twyt6xD9
+        baQyi+156RG8uPmjqDB3n00=
+X-Google-Smtp-Source: ABdhPJzCi1LYcBPCxJstfmIBP6NwkGAu/tBs7+vsua6U15aTdfNxeW63gqeWxeq6K9u7BbPUyQYrnw==
+X-Received: by 2002:a63:788d:: with SMTP id t135mr17149832pgc.2.1635688556394;
+        Sun, 31 Oct 2021 06:55:56 -0700 (PDT)
+Received: from pc ([223.197.3.99])
+        by smtp.gmail.com with ESMTPSA id s30sm14284963pfg.17.2021.10.31.06.55.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 31 Oct 2021 06:55:56 -0700 (PDT)
+Date:   Sun, 31 Oct 2021 21:55:48 +0800
+From:   Zhaoyu Liu <zackary.liu.pro@gmail.com>
+To:     alyssa@rosenzweig.io, maz@kernel.org
+Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pci/controller/pcie-apple: remove the indentation beside
+ arguments of DECLARE_BITMAP
+Message-ID: <20211031135544.GA1616@pc>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:fd9a:0:0:0:0 with HTTP; Sun, 31 Oct 2021 03:20:49
- -0700 (PDT)
-Reply-To: enzocarranza99@gmail.com
-From:   ENZO CARRANZA <ahmeddiarra25@gmail.com>
-Date:   Sun, 31 Oct 2021 13:20:49 +0300
-Message-ID: <CAMpRB37h55g6zEL=OasGk8uC_pMGet2qFQmhdeHt=rjv9St2Dg@mail.gmail.com>
-Subject: Greetings to You
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From : Mr. Enzo Carranza
-Fax: +34 932 71 56 35
-Email: enzocarranza99@gmail.com
+When "make tags", it prompts a warning:
 
+    ctags: Warning: drivers/pci/controller/pcie-apple.c:150:
+    null expansion of name pattern "\1"
 
-Dear Friend,
-I had no choice but to approach you via this method because I have
-a BUSINESS PROPOSAL that will interest you and will be of mutual benefit to us.
+Ctags regular can not be matched due to indentation, so remove it.
+Same fix as in commit 5fdf876d30ce ("KVM: arm: Do not indent
+the arguments of DECLARE_BITMAP")
 
-Kindly get back to me so I can give you the full details.
-Thank you.
+Signed-off-by: Zhaoyu Liu <zackary.liu.pro@gmail.com>
+---
+ drivers/pci/controller/pcie-apple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kind regards
-Mr. Enzo Carranza
-Financial Management Consultant.
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index b665d29af77a..955134464d84 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -147,7 +147,7 @@ struct apple_pcie_port {
+ 	void __iomem		*base;
+ 	struct irq_domain	*domain;
+ 	struct list_head	entry;
+-	DECLARE_BITMAP(		sid_map, MAX_RID2SID);
++	DECLARE_BITMAP(sid_map, MAX_RID2SID);
+ 	int			sid_map_sz;
+ 	int			idx;
+ };
+-- 
+2.17.1
+
