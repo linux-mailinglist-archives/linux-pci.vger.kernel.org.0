@@ -2,57 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 746AE441021
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 19:16:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C45441008
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Oct 2021 19:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhJaSSj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Oct 2021 14:18:39 -0400
-Received: from mailgate.kemenperin.go.id ([202.47.80.142]:51760 "EHLO
-        mailgate.kemenperin.go.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbhJaSSh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 14:18:37 -0400
-X-Greylist: delayed 1946 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 Oct 2021 14:18:25 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id 5C56C828694;
-        Mon,  1 Nov 2021 00:39:29 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Tuljp_J1Cdlq; Mon,  1 Nov 2021 00:39:28 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id ADDE58286A9;
-        Mon,  1 Nov 2021 00:39:19 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mailgate.kemenperin.go.id ADDE58286A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kemenperin.go.id;
-        s=3298A942-BBC6-11E3-B333-483736368EC2; t=1635701959;
-        bh=+tje3x5yIAM91gcZZJ8xoRjx6IuR+B3ePoXPCKu2mgI=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=I9X5S/EXkVkRluX+ZSit7NFR+OW43BqhWaImhHOVukb3qOg4mxQL0FOzHiQQ0QWtu
-         KQa7Ki4CUyShQL6tKlHQ2sju9QbGIAAqzmfnY9543e4CcsCf3fTpzVOzH7DFyJ+n2N
-         pbIsYLFs1Y2zkQa1+kK/NYR2sChScl7lzgpXIyKs=
-X-Virus-Scanned: amavisd-new at kemenperin.go.id
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yX4BRpdxBRqw; Mon,  1 Nov 2021 00:39:19 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id (mailgate.kemenperin.go.id [10.1.0.89])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id 047EB8286A0;
-        Mon,  1 Nov 2021 00:39:10 +0700 (WIB)
-Date:   Mon, 1 Nov 2021 00:39:09 +0700 (WIB)
-From:   Manuel Franco <silitonga@kemenperin.go.id>
-Reply-To: Manuel Franco <manuelfrancospende1@gmail.com>
-Message-ID: <1813105855.326067.1635701949890.JavaMail.zimbra@kemenperin.go.id>
-Subject: 2,000,000.00 Euro
+        id S230184AbhJaSPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Oct 2021 14:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229853AbhJaSPJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 31 Oct 2021 14:15:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2373D6008E;
+        Sun, 31 Oct 2021 18:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635703957;
+        bh=IsOfQdCWxHyLcI8aggRv5sAbY7FQ+QHxt9mRMcL0Brc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PCZAPJDrSaz10jG0aujYC/fsoPOFOCHnKQvp72lvmyFMFzU9glX3V9xMB0vsdddI3
+         /Hkz01c9X3DOBlq63D9gm5OipZWCBpMWVdfAnTwE1UoLHW8ztHQXIqH52jrbgSGn1P
+         0+hiV7WRhl5KhgMpzRvQ6yFYHtsUMtLrctO7+7Vt/qsBgNTlSYTdy86P/NVnntzz9C
+         0B83iSJ24rAS/LsIsnRY8WuGjfTFb1LgG9dBBeTq1kem0SFWe0ZfPHpi5oMQwUzVRA
+         kJ4vthLVeYh66ZjPLReTkNccU5AzPfkOiQvtuUEgdsr/42WGFBrwHDFCO/lcFAALGT
+         B7nZFzTkof4Fw==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, pali@kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH 0/7] PCI: aardvark controller fixes BATCH 3
+Date:   Sun, 31 Oct 2021 19:12:26 +0100
+Message-Id: <20211031181233.9976-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.1.0.89]
-Thread-Index: Rc07z4zuj7w66chiYJCRC031ZEpyeA==
-Thread-Topic: 2,000,000.00 Euro
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Dear Lorenzo,
 
+since we have dropped some patches from the second batch, I thought that
+we could instead replace them with another 7 small changes, that we can
+hopefully get applied in this cycle.
+
+Description:
+- patch 1 just adds a small explanation to pci-bridge-emul, no functional
+  change
+- patches 2 and 3 add support for some more registers on emulated bridge
+- patch 4 is taken from the MSI patches we dropped from batch 2, but since
+  it only clears MSIs and adds a useful macro, and makes no changes that
+  depend on the API change request by Marc, I think we can add it now
+  (especially since patch 5 uses this new macro)
+- patches 5-7 make driver unbind work better
+
+Marek
+
+Pali Rohár (7):
+  PCI: pci-bridge-emul: Add description for class_revision field
+  PCI: pci-bridge-emul: Add definitions for missing capabilities
+    registers
+  PCI: aardvark: Add support for DEVCAP2, DEVCTL2, LNKCAP2 and LNKCTL2
+    registers on emulated bridge
+  PCI: aardvark: Clear all MSIs at setup
+  PCI: aardvark: Disable bus mastering and mask all interrupts when
+    unbinding driver
+  PCI: aardvark: Free config space for emulated root bridge when
+    unbinding driver to fix memory leak
+  PCI: aardvark: Reset PCIe card and disable PHY at driver unbind
+
+ drivers/pci/controller/pci-aardvark.c | 65 ++++++++++++++++++++++++---
+ drivers/pci/pci-bridge-emul.c         | 45 ++++++++++++++++++-
+ 2 files changed, 103 insertions(+), 7 deletions(-)
 
 -- 
-You have a donation of 2,000,000.00 Euro.Get back to me now so we can proceed.
+2.32.0
+
