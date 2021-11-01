@@ -2,87 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09793441B01
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 13:12:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE5B6441B15
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 13:23:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232179AbhKAMOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 08:14:52 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:36582 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231821AbhKAMOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 08:14:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0UuZrL7v_1635768735;
-Received: from 30.225.212.104(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0UuZrL7v_1635768735)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 01 Nov 2021 20:12:16 +0800
-Message-ID: <286ac625-e712-d7e9-2f5d-923f1572b5d1@linux.alibaba.com>
-Date:   Mon, 1 Nov 2021 20:12:15 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.2.1
-Subject: Re: [PATCH v4 0/4] PCI MCFG consolidation and APEI resource filtering
-To:     Will Deacon <will@kernel.org>
-Cc:     helgaas@kernel.org, catalin.marinas@arm.com,
-        lorenzo.pieralisi@arm.com, james.morse@arm.com, rafael@kernel.org,
-        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        id S232161AbhKAMZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 08:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232029AbhKAMZi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 08:25:38 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3554C061714;
+        Mon,  1 Nov 2021 05:23:05 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0cfa00ec4efdd1c18768d4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:fa00:ec4e:fdd1:c187:68d4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2464F1EC0372;
+        Mon,  1 Nov 2021 13:23:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1635769383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=aOWJ/xWRA0KQY6ubEa2Bhf55JdIZ4Fz4oQrfWNl+tj4=;
+        b=dcatoeFJAnA20lMUZJRKvn0cbBBsIc3RoG3IC3+Xf0OHOQuZ0xiJqcAMv/wgzNXvu4b9DA
+        K19aVqVWqNSU3qieYv5/SEzpB2oq6eaZrg8JWNQ92f9Z/pFUL9cb1UjUvrOW/BkqXEmi4c
+        KDhjMwUs1dmiyXsqRDD1tNM+8gVu9K0=
+Date:   Mon, 1 Nov 2021 13:22:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Xuesong Chen <xuesong.chen@linux.alibaba.com>
+Cc:     Will Deacon <will@kernel.org>, helgaas@kernel.org,
+        catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, rafael@kernel.org, tony.luck@intel.com,
+        mingo@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] PCI MCFG consolidation and APEI resource filtering
+Message-ID: <YX/cIhZDgUGI3FKd@zn.tnic>
 References: <YW5OTMz+x8zrsqkF@Dennis-MBP.local>
  <20211027081035.53370-1-xuesong.chen@linux.alibaba.com>
  <e387413f-dbe8-e0f1-257b-141362d74e3a@linux.alibaba.com>
  <20211101093618.GA27400@willie-the-truck>
-From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
-In-Reply-To: <20211101093618.GA27400@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <286ac625-e712-d7e9-2f5d-923f1572b5d1@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <286ac625-e712-d7e9-2f5d-923f1572b5d1@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Will,
+On Mon, Nov 01, 2021 at 08:12:15PM +0800, Xuesong Chen wrote:
+> I'm very sorry about the non-constructived response, and I'd like to
+> take this chance to withdraw them entirely... personally this is not a
+> good example in terms of the mood or the way of expression.
 
-Thanks for the feedback!
+Good idea. There are other maintainers who would ignore you indefinitely
+for uncalled for explosions like that. And then you would have achieved
+the opposite of what you were aiming for, with that rant.
 
-On 01/11/2021 17:36, Will Deacon wrote:
-> Hi,
-> 
-> On Mon, Nov 01, 2021 at 10:18:35AM +0800, Xuesong Chen wrote:
->> How about the status of this series, it's really bad, bad and still bad... to wait long
->> time for the final judgement, especially you take extremely serious to rework it round
->> by round, finaly you receive nothing. Everyone's work should be repected!
-> 
-> I've trimmed the rest of your response as it wasn't especially constructive.
-> Please can you try to keep things civil, even when you're frustrated? It's
-> not very pleasant being on the end of a rant.
+To Will's point, you can always read Documentation/process/ while
+waiting for your patches to get reviewed - there the whole process is
+explained and what the best ways and times are to send a patchset.
 
-I'm very sorry about the non-constructived response, and I'd like to take this chance to
-withdraw them entirely... personally this is not a good example in terms of the mood or
-the way of expression.
+HTH.
 
-> 
-> One likely explanation for you not getting a reply on your patches is that
-> I've discovered many of your emails have ended up in my spam, for some
-> reason. I'm using gmail for my inbox so, if Bjorn is doing that as well,
-> then there's a good chance he hasn't seen them either.
-> 
-> The other thing to keep in mind is that the 5.16 merge window opened today
-> and you posted the latest version of your patches on Wednesday. That doesn't
-> really leave enough time for the patches to be reviewed (noting that patch 3
-> is new in this version and the kernel build robot was still complaining on
-> Friday), queued and put into linux-next, so I would suspect that this series
-> is looking more like 5.17 material and therefore not a priority for
-> maintainers at the moment.
-> 
-> Your best is probably to post a v5, with the kbuild warnings addressed,
-> when -rc1 is released in a couple of weeks. I'm not sure how to fix the
-> spam issue though :(
+-- 
+Regards/Gruss,
+    Boris.
 
-I've noticed the kbuild warning by the robot, so I plan to fix it and post the v5 soon.
-
-Thanks,
-Xuesong
-
-> 
-> Will
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
