@@ -2,72 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5BB5441A70
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 12:06:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04E05441A98
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 12:21:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231271AbhKALJT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 07:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbhKALJT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 07:09:19 -0400
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2659C061714;
-        Mon,  1 Nov 2021 04:06:45 -0700 (PDT)
-Received: by mail-vk1-xa2a.google.com with SMTP id b125so6995677vkb.9;
-        Mon, 01 Nov 2021 04:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h9lEWYw0ODM1CY9TwJxkbfjlxmTuIfq2TV/XYiIwAR8=;
-        b=Nv9COaWmfclDyZUdfO1OBmVklZorlT1iH+h+/PZVG7fd5gTVOKVw5s5srOtRt0Weiv
-         74jKgU1aUxhdyiEB5JEwAgiF6m/1eRsPuC6/O0aOcXfJXAIs9haB6SuANbKwQpLxvNNq
-         QHfZvOUDgXjQUT6gZlyKd14CDXgNno5fHR5HOWp0ZGJGtQDGe2vEiYGoTBMqvCHcLknU
-         aYPe/zVpK5B8Tpp37l73jvrfXQ7pAB3Ku0jA1FEWuB982No/jbnElCQ4UKWHT1VgWAdt
-         +izFugwrLwSHN9ilJL7203mI7P1sc++D74OWkMm1k7sfdyEVhrxuNqTzwBUnMOJYeLxD
-         dWig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h9lEWYw0ODM1CY9TwJxkbfjlxmTuIfq2TV/XYiIwAR8=;
-        b=ElW/vtycf1aCmgWzWWVuBhpjK+iUG9RMgBpwqjVyfd+8A5hqjTZ4Am/vUNVlH9UhhY
-         fiL5uUeVJ2i9eUV4uRsUXvlwjkSIQZGHiem5twgYXewduEPvzyjC21uq6fhbbentR16r
-         M+PUWHbmaW3ARRtRPDtSpY7jtKdMZLw4+mF/HRRFBBFGD9b+sdggSm1opX9oIZaQnr/B
-         KoIynNI1CnkuqKDIDy/SnZ+jvuIJuZ2YxKUaIJkd5WTYh3932UdEPzjXhGRL1CCFPhzv
-         Uqn1ffARBi6Wd6r+Un1zqN0ouT+e/HARvcSPtirZzUHjmNihEECZ42AJLZJ1su+CU3uD
-         8MpA==
-X-Gm-Message-State: AOAM531pzTkj6yadTL/PgDvTTYnKJdaJvChnHzR98XcpwTXEH2urcsoq
-        l3Y99gNkU5H6v1P8Wsglj8DmcTQuUCH4tZYGpNDBn8s=
-X-Google-Smtp-Source: ABdhPJyLpTVg+jIUTmLU+va9EzLPaqYonLHJRHLennaysumGFFSIagF0ifwGiwH1hbg+66ViAzips7KWFMv07w9e7h0=
-X-Received: by 2002:a05:6122:98a:: with SMTP id g10mr26797675vkd.17.1635764805154;
- Mon, 01 Nov 2021 04:06:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1374495046.4164334.1635737050153@localhost>
-In-Reply-To: <1374495046.4164334.1635737050153@localhost>
-From:   Rui Salvaterra <rsalvaterra@gmail.com>
-Date:   Mon, 1 Nov 2021 11:06:34 +0000
-Message-ID: <CALjTZvaddYDMqHgsnxd29EZodbXTiq8i3nycPp4KmrPv+kMvJg@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
-To:     Josef Per Johansson <josef@oderland.se>
-Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
+        id S231437AbhKALYR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 07:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230520AbhKALYR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Nov 2021 07:24:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06F2260E90;
+        Mon,  1 Nov 2021 11:21:44 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mhVNm-002qsB-4a; Mon, 01 Nov 2021 11:21:42 +0000
+Date:   Mon, 01 Nov 2021 11:21:41 +0000
+Message-ID: <877dds9l4q.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     Josef Johansson <josef@oderland.se>, tglx@linutronix.de,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [REGRESSION][BISECTED] 5.15-rc1: Broken AHCI on NVIDIA ION (MCP79)
+In-Reply-To: <CALjTZvaE-u0cGRdDD=m8iXCMZvM65v_8wBQq3-vPN0+_3SgU0g@mail.gmail.com>
+References: <CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com>
+        <b023adf9-e21c-59ac-de49-57915c8cede8@oderland.se>
+        <87fst6pjcu.wl-maz@kernel.org>
+        <ae50cd31-6b5d-3dc4-4ba7-d628a74dc722@oderland.se>
+        <CALjTZvaE-u0cGRdDD=m8iXCMZvM65v_8wBQq3-vPN0+_3SgU0g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rsalvaterra@gmail.com, josef@oderland.se, tglx@linutronix.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Josef,
+On Sun, 31 Oct 2021 22:51:11 +0000,
+Rui Salvaterra <rsalvaterra@gmail.com> wrote:
+> 
+> Hi, Marc,
+> 
+> Linux 5.15 has just been tagged, and this fix isn't included (I
+> personally don't mind, since I'm carrying it in my tree). Any specific
+> reason for it?
 
-On Mon, 1 Nov 2021 at 03:24, Josef Per Johansson <josef@oderland.se> wrote:
->
-> To be clear, which patch are you carrying? The latest by thomas is https://lore.kernel.org/linux-pci/89d6c2f4-4d00-972f-e434-cb1839e78598@oderland.se/
+Just being preempted with slightly higher priority stuff. I'll try to
+post the patches formally this week. I'm still a bit surprised that
+nobody else has reported such issue though.
 
-Please keep the discussion public.
+	M.
 
-The patch I'm carrying is the one Marc authored, in order to fix the
-MCP79 regression I've bisected.
-
-Thanks,
-Rui
+-- 
+Without deviation from the norm, progress is not possible.
