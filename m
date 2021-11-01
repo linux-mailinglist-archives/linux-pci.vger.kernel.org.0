@@ -2,123 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B95124412C0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 05:35:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 226664413CF
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 07:43:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbhKAEhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 00:37:52 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:40638
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229530AbhKAEhv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 00:37:51 -0400
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B8F2D3F176
-        for <linux-pci@vger.kernel.org>; Mon,  1 Nov 2021 04:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1635741317;
-        bh=rPuCvocgoqcLO1V7CjbdCCqaDF3oAtmRQEnh4OXdZEc=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=t+FahR4nlUsL+EE0JV8v970hR/JQfqm+Fr7Y2F+fRTceagyY0aCa3HGRjA9H4yWYN
-         a0ZITU+67IvK54aPLom9X0MlgfmAvgfDtSXwcVkDODqRLJzTRYNksjDAxZgbvRsu13
-         KggzA+EzTh3uZ3pOj0ErKDuhCF+MYv1T5Bp+512Bvwud8Vgz0tCAFZ70DHFpUIQ3jk
-         KePCOXKniAZpGJDAzVgPtMjd+fzby6nvxgvMQlidn0lMYtu2PTIWDLtWVBIAblAVOr
-         V4ipOOj6oczmP/RTfm/dQISyBzht39vsIlQyBfHktajyuJUiNPHz30Yl/8f5AEW4e/
-         sl+05SvHPq4qQ==
-Received: by mail-pj1-f69.google.com with SMTP id r7-20020a17090a454700b001a1ca0191b8so8602618pjm.4
-        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 21:35:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPuCvocgoqcLO1V7CjbdCCqaDF3oAtmRQEnh4OXdZEc=;
-        b=bTgt2CAWgpPoKHnSlNEyD0bwVSE590tYdWJCAsQCVuB4spEiNFHSQVijZYmgW6JL1F
-         Nte8YEiwEYBIejXWnx7zO1GIzhjKCZmNDumlLAqzMxNwMRNr/szcfUOE+U5ANVy5bVyo
-         FAOibctks0Az0HWxKZw9A0UNar84k4OULKHjw26GHqvvWzvJLlWQFacla+uU+veEWFGL
-         CwF0M98f/l0ugHMkXCsjJNKLhkAG76y97jBlHCFzoLJ4voC/Qz0qEbHg0LRDFWXrLBZa
-         zniJVonPNzrDgr37sM/HAeQYrolw0sjbBdYratIaqED+9pQrRpBc7PQ0ti8wqzuYIJlG
-         ZfDg==
-X-Gm-Message-State: AOAM5319Ndo7CuuvI2/He4p5Sr6Gq4HeP+oZJu2em1CnBv1VapJCGvTk
-        DqqTHCg/PPcs1/m5Ky4PAy3R3CG4SGFVesRcLxjt37FgsRYgo6TINNTCMxPrk6BEfvzZqQ/HWqr
-        jH62vmf0ygg+vbbXQANCe/JsecM350hAUj/uiUIjmyvX4Lws9fKy2EQ==
-X-Received: by 2002:a17:902:6544:b0:13e:dd16:bd5b with SMTP id d4-20020a170902654400b0013edd16bd5bmr23143382pln.61.1635741316153;
-        Sun, 31 Oct 2021 21:35:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx9JrD8IKjg3BvZKYy6Ba3qzaLk7ffCbMCcbPJpZq/ef8pKfF+vT3H+Yii9wmk8NpViNKGV8hfmqZVHjSOuV8k=
-X-Received: by 2002:a17:902:6544:b0:13e:dd16:bd5b with SMTP id
- d4-20020a170902654400b0013edd16bd5bmr23143368pln.61.1635741315880; Sun, 31
- Oct 2021 21:35:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
- <20210914104301.48270518.alex.williamson@redhat.com> <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
- <20210915103235.097202d2.alex.williamson@redhat.com> <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
- <20211005171326.3f25a43a.alex.williamson@redhat.com> <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
- <20211012140516.6838248b.alex.williamson@redhat.com> <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
-In-Reply-To: <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
-From:   Matthew Ruffell <matthew.ruffell@canonical.com>
-Date:   Mon, 1 Nov 2021 17:35:04 +1300
-Message-ID: <CAKAwkKsoKELnR=--06sRZL3S6_rQVi5J_Kcv6iRQ6w2tY71WCQ@mail.gmail.com>
-Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
- through 2x GPUs that share same pci switch via vfio
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
-Content-Type: text/plain; charset="UTF-8"
+        id S229938AbhKAGq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 02:46:27 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45020 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229933AbhKAGq1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Nov 2021 02:46:27 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CEE1200591;
+        Mon,  1 Nov 2021 07:43:53 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 261082011F2;
+        Mon,  1 Nov 2021 07:43:53 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 76692183ACDC;
+        Mon,  1 Nov 2021 14:43:50 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
+        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH v4 0/6] PCI: imx6: refine codes and add compliance tests mode support 
+Date:   Mon,  1 Nov 2021 14:17:52 +0800
+Message-Id: <1635747478-25562-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alex,
+This series patches refine pci-imx6 driver and do the following changes.
+- Encapsulate the clock enable into one standalone function
+- Add the error propagation from host_init
+- Balance the usage of the regulator and clocks when link never came up
+- Add the compliance tests mode support
 
-Nathan has been running a workload on the 5.14 kernel + the test patch, and has
-ran into some interesting softlockups and hardlockups.
+Main changes from v3 to v4:
+- Regarding Mark's comments, delete the regulator_is_enabled() check.
+- Squash #3 and #6 of v3 patch into #5 patch of v4 set.
 
-The first, happened on a secondary server running a Windows VM, with 7 (of 10)
-1080TI GPUs passed through.
+Main changes from v2 to v3:
+- Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into
+  first two patches.
+- Add a Fixes tag into #3 patch.
+- Split the #4 of v2 to two patches, one is clock disable codes move,
+  the other one is the acutal clock unbalance fix.
+- Add a new host_exit() callback into dw_pcie_host_ops, then it could be
+  invoked to handle the unbalance issue in the error handling after
+  host_init() function when link is down.
+- Add a new host_exit() callback for i.MX PCIe driver to handle this case
+  in the error handling after host_init.
 
-Full dmesg:
-https://paste.ubuntu.com/p/Wx5hCBBXKb/
+Main changes from v1 to v2:
+Regarding Lucas' comments.
+  - Move the placement of the new imx6_pcie_clk_enable() to avoid the
+    forward declarition.
+  - Seperate the second patch of v1 patch-set to three patches.
+  - Use the module_param to replace the kernel command line.
+Regarding Bjorn's comments:
+  - Use the cover-letter for a multi-patch series.
+  - Correct the subject line, and refine the commit logs. For example,
+    remove the timestamp of the logs.
 
-There isn't any "irq x: nobody cared" messages, and the crashkernel gets stuck
-in the usual copying IR tables from dmar, which suggests an ongoing interrupt
-storm.
+drivers/pci/controller/dwc/pci-imx6.c             | 187 +++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------
+drivers/pci/controller/dwc/pcie-designware-host.c |   5 ++-
+drivers/pci/controller/dwc/pcie-designware.h      |   1 +
+3 files changed, 119 insertions(+), 74 deletions(-)
 
-Nathan disabled "kernel.hardlockup_panic = 1" sysctl, and managed to reproduce
-the issue again, suggesting that we get stuck in kernel space for too long
-without the ability for interrupts to be serviced.
-
-It starts with the NIC hitting a tx queue timeout, and then does a NMI to unwind
-the stack of each CPU, although the stacks don't appear to indicate where things
-are stuck. The server then remains softlocked, and keeps unwinding stacks every
-26 seconds or so, until it eventually hardlockups.
-
-Full dmesg:
-https://people.canonical.com/~mruffell/sf314568/1080TI_hardlockup.txt
-
-The next interesting thing to report is when Nathan started the same Windows VM
-on the primary host we have been debugging on, with the 8x 2080TI GPUs. Nathan
-experienced a stuck VM, with the host responding just fine. When Nathan reset
-the VM, he got 4x "irq xx: nobody cared" messages on IRQs 25, 27, 29 and 31,
-which at the time corresponded to the PEX 8747 upstream PCI switches.
-
-Interestingly, Nathan also observed 2x GPU Audio devices sharing the same IRQ
-line as the upstream PCI switch, although Nathan mentioned this only occured
-very briefly, and the GPU audio devices were re-assigned different IRQs shortly
-afterward.
-
-Full dmesg:
-https://paste.ubuntu.com/p/C2V4CY3yjZ/
-
-Output showing upstream ports belonging to those IRQs:
-https://paste.ubuntu.com/p/6fkSbyFNWT/
-
-Full lspci:
-https://paste.ubuntu.com/p/CTX5kbjpRP/
-
-Let us know if you would like any additional debug information. As always, we
-are happy to test patches out.
-
-Thanks,
-Matthew
+[PATCH v4 1/6] PCI: imx6: Encapsulate the clock enable into one
+[PATCH v4 2/6] PCI: imx6: Add the error propagation from host_init
+[PATCH v4 3/6] PCI: imx6: PCI: imx6: Move imx6_pcie_clk_disable()
+[PATCH v4 4/6] PCI: dwc: Add dw_pcie_host_ops.host_exit() callback
+[PATCH v4 5/6] PCI: imx6: Fix the regulator dump when link never came
+[PATCH v4 6/6] PCI: imx6: Add the compliance tests mode support
