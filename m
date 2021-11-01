@@ -2,98 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3448441218
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 03:18:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B95124412C0
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 05:35:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbhKACVL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Oct 2021 22:21:11 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51190 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230233AbhKACVK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Oct 2021 22:21:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0UuPi-hG_1635733115;
-Received: from 30.225.212.104(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0UuPi-hG_1635733115)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 01 Nov 2021 10:18:36 +0800
-Message-ID: <e387413f-dbe8-e0f1-257b-141362d74e3a@linux.alibaba.com>
-Date:   Mon, 1 Nov 2021 10:18:35 +0800
+        id S229872AbhKAEhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 00:37:52 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:40638
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229530AbhKAEhv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 00:37:51 -0400
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B8F2D3F176
+        for <linux-pci@vger.kernel.org>; Mon,  1 Nov 2021 04:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1635741317;
+        bh=rPuCvocgoqcLO1V7CjbdCCqaDF3oAtmRQEnh4OXdZEc=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=t+FahR4nlUsL+EE0JV8v970hR/JQfqm+Fr7Y2F+fRTceagyY0aCa3HGRjA9H4yWYN
+         a0ZITU+67IvK54aPLom9X0MlgfmAvgfDtSXwcVkDODqRLJzTRYNksjDAxZgbvRsu13
+         KggzA+EzTh3uZ3pOj0ErKDuhCF+MYv1T5Bp+512Bvwud8Vgz0tCAFZ70DHFpUIQ3jk
+         KePCOXKniAZpGJDAzVgPtMjd+fzby6nvxgvMQlidn0lMYtu2PTIWDLtWVBIAblAVOr
+         V4ipOOj6oczmP/RTfm/dQISyBzht39vsIlQyBfHktajyuJUiNPHz30Yl/8f5AEW4e/
+         sl+05SvHPq4qQ==
+Received: by mail-pj1-f69.google.com with SMTP id r7-20020a17090a454700b001a1ca0191b8so8602618pjm.4
+        for <linux-pci@vger.kernel.org>; Sun, 31 Oct 2021 21:35:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rPuCvocgoqcLO1V7CjbdCCqaDF3oAtmRQEnh4OXdZEc=;
+        b=bTgt2CAWgpPoKHnSlNEyD0bwVSE590tYdWJCAsQCVuB4spEiNFHSQVijZYmgW6JL1F
+         Nte8YEiwEYBIejXWnx7zO1GIzhjKCZmNDumlLAqzMxNwMRNr/szcfUOE+U5ANVy5bVyo
+         FAOibctks0Az0HWxKZw9A0UNar84k4OULKHjw26GHqvvWzvJLlWQFacla+uU+veEWFGL
+         CwF0M98f/l0ugHMkXCsjJNKLhkAG76y97jBlHCFzoLJ4voC/Qz0qEbHg0LRDFWXrLBZa
+         zniJVonPNzrDgr37sM/HAeQYrolw0sjbBdYratIaqED+9pQrRpBc7PQ0ti8wqzuYIJlG
+         ZfDg==
+X-Gm-Message-State: AOAM5319Ndo7CuuvI2/He4p5Sr6Gq4HeP+oZJu2em1CnBv1VapJCGvTk
+        DqqTHCg/PPcs1/m5Ky4PAy3R3CG4SGFVesRcLxjt37FgsRYgo6TINNTCMxPrk6BEfvzZqQ/HWqr
+        jH62vmf0ygg+vbbXQANCe/JsecM350hAUj/uiUIjmyvX4Lws9fKy2EQ==
+X-Received: by 2002:a17:902:6544:b0:13e:dd16:bd5b with SMTP id d4-20020a170902654400b0013edd16bd5bmr23143382pln.61.1635741316153;
+        Sun, 31 Oct 2021 21:35:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx9JrD8IKjg3BvZKYy6Ba3qzaLk7ffCbMCcbPJpZq/ef8pKfF+vT3H+Yii9wmk8NpViNKGV8hfmqZVHjSOuV8k=
+X-Received: by 2002:a17:902:6544:b0:13e:dd16:bd5b with SMTP id
+ d4-20020a170902654400b0013edd16bd5bmr23143368pln.61.1635741315880; Sun, 31
+ Oct 2021 21:35:15 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.2.1
-Subject: Re: [PATCH v4 0/4] PCI MCFG consolidation and APEI resource filtering
-To:     helgaas@kernel.org
-Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
-        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
-        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <YW5OTMz+x8zrsqkF@Dennis-MBP.local>
- <20211027081035.53370-1-xuesong.chen@linux.alibaba.com>
-From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
-In-Reply-To: <20211027081035.53370-1-xuesong.chen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
+ <20210914104301.48270518.alex.williamson@redhat.com> <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
+ <20210915103235.097202d2.alex.williamson@redhat.com> <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
+ <20211005171326.3f25a43a.alex.williamson@redhat.com> <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
+ <20211012140516.6838248b.alex.williamson@redhat.com> <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
+In-Reply-To: <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
+From:   Matthew Ruffell <matthew.ruffell@canonical.com>
+Date:   Mon, 1 Nov 2021 17:35:04 +1300
+Message-ID: <CAKAwkKsoKELnR=--06sRZL3S6_rQVi5J_Kcv6iRQ6w2tY71WCQ@mail.gmail.com>
+Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
+ through 2x GPUs that share same pci switch via vfio
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-How about the status of this series, it's really bad, bad and still bad... to wait long
-time for the final judgement, especially you take extremely serious to rework it round
-by round, finaly you receive nothing. Everyone's work should be repected!
+Hi Alex,
 
-Technically, I don't think it's very hard to say yes or no (what's your concerns) for
-the patch set. If you give your objections and convince me, then I will drop it, that's
-nothing. Hopefully our maintainers can take the responsibility that they should take,
-I totally understand that our maintainers are very busy and will face tens of thousands
-of mails. But, YOU ARE THE MAINTAINER! 
+Nathan has been running a workload on the 5.14 kernel + the test patch, and has
+ran into some interesting softlockups and hardlockups.
 
-Responsiblity!Responsiblity!! Still TMD f*cking FucResponsiblity!!!
+The first, happened on a secondary server running a Windows VM, with 7 (of 10)
+1080TI GPUs passed through.
 
-On 27/10/2021 16:10, Xuesong Chen wrote:
-> The issue of commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
-> level") on x86 is also happened on our own ARM64 platform. We sent a patch[1]
-> trying to fix this issue in an arch-specific way as x86 does at first, but
-> according to the suggestion from Lorenzo Pieralisi and Catalin Marinas, we can
-> consolidate the PCI MCFG part then fix it in a more common way, that's why this
-> patch series comes.
-> 
-> [1] https://marc.info/?l=linux-arm-kernel&m=163108478627166&w=2
-> 
-> ---
-> Change from v3 to v4:
->   - Add a new patch (patch #3) to address the quirk ECAM access issue. Because
->     the normal ECAM config space can be accessed in a lockless way, so we don't
->     need the mutual exclusion with the EINJ action. But those quirks maybe break
->     this rule and corrupt the configuration access, reserve its MCFG address
->     regions in this case to avoid that happens. 
->   
->   - Add another patch (patch #4) to log the PCI MCFG entry parse message per
->     the suggestion from Bjorn Helgaas. The output on ARM64 as:
->     ACPI: MCFG entry for domain 0000 [bus 00-0f] at [mem 0x50000000-0x50ffffff] (base 0x50000000)
->   
->   - Commit message updated with more details of patch #2
-> 
-> Change from v2 to v3:
->   - Address the comments of Lorenzo Pieralisi about the CONFIG_PCI
->     dependence issue in APEI module (patch #2)
-> 
-> Change from v1 to v2:
->   - Fix the "undefined reference to `pci_mmcfg_list'" build error in case
->     of PCI_CONFIG=n, reported by the kernel test robot
-> 
-> Xuesong Chen (4):
->   PCI: MCFG: Consolidate the separate PCI MCFG table entry list
->   ACPI: APEI: Filter the PCI MCFG address with an arch-agnostic method
->   ACPI: APEI: Reserve the MCFG address for quirk ECAM implementation
->   PCI: MCFG: Add the MCFG entry parse log message
-> 
->  arch/x86/include/asm/pci_x86.h | 17 +----------
->  arch/x86/pci/mmconfig-shared.c | 30 -------------------
->  drivers/acpi/apei/apei-base.c  | 68 ++++++++++++++++++++++++++++++++----------
->  drivers/acpi/pci_mcfg.c        | 46 +++++++++++++++-------------
->  drivers/pci/pci.c              |  2 ++
->  drivers/pci/quirks.c           |  2 ++
->  include/linux/pci.h            | 18 +++++++++++
->  7 files changed, 101 insertions(+), 82 deletions(-)
-> 
+Full dmesg:
+https://paste.ubuntu.com/p/Wx5hCBBXKb/
+
+There isn't any "irq x: nobody cared" messages, and the crashkernel gets stuck
+in the usual copying IR tables from dmar, which suggests an ongoing interrupt
+storm.
+
+Nathan disabled "kernel.hardlockup_panic = 1" sysctl, and managed to reproduce
+the issue again, suggesting that we get stuck in kernel space for too long
+without the ability for interrupts to be serviced.
+
+It starts with the NIC hitting a tx queue timeout, and then does a NMI to unwind
+the stack of each CPU, although the stacks don't appear to indicate where things
+are stuck. The server then remains softlocked, and keeps unwinding stacks every
+26 seconds or so, until it eventually hardlockups.
+
+Full dmesg:
+https://people.canonical.com/~mruffell/sf314568/1080TI_hardlockup.txt
+
+The next interesting thing to report is when Nathan started the same Windows VM
+on the primary host we have been debugging on, with the 8x 2080TI GPUs. Nathan
+experienced a stuck VM, with the host responding just fine. When Nathan reset
+the VM, he got 4x "irq xx: nobody cared" messages on IRQs 25, 27, 29 and 31,
+which at the time corresponded to the PEX 8747 upstream PCI switches.
+
+Interestingly, Nathan also observed 2x GPU Audio devices sharing the same IRQ
+line as the upstream PCI switch, although Nathan mentioned this only occured
+very briefly, and the GPU audio devices were re-assigned different IRQs shortly
+afterward.
+
+Full dmesg:
+https://paste.ubuntu.com/p/C2V4CY3yjZ/
+
+Output showing upstream ports belonging to those IRQs:
+https://paste.ubuntu.com/p/6fkSbyFNWT/
+
+Full lspci:
+https://paste.ubuntu.com/p/CTX5kbjpRP/
+
+Let us know if you would like any additional debug information. As always, we
+are happy to test patches out.
+
+Thanks,
+Matthew
