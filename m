@@ -2,178 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC48944220B
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 21:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5B6A4422B5
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 22:33:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbhKAU5T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 16:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229501AbhKAU5S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Nov 2021 16:57:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 787966052B;
-        Mon,  1 Nov 2021 20:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635800084;
-        bh=iJ+MBPjtmkOQFrq08Qfx6r4mlodxysE1veodnx84o+0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=deUHehsU4umCnCq0ONUcJfkuH8yLhAhFh2kGnNjSBvKQaf+Uf7E3WAijgi3akurJi
-         okqVkIqLbxQPWCjf83GklJb2urjaDq+CDmCLDJ7rxmkxhItEkvZzPd6FTZ74j2vO1R
-         oRTJJ57bNCMPUi1ghIh/6fnbeIkTSjMrfY8AYDU66phwfHCs4CeNYbWUYGPLzHVm2A
-         GXj2s4VpAR3HoszbTa2vKe5XTRsljc9vQ7G0QCSo55LU9umDO7XiRMrqYsUN6DUbr3
-         IKGSPKfJfinSRIKJIN+nZ9fI0Sg7GSw6NGyOTjCobrdIApPrvENaRmXe2tnDanmbNd
-         mjotnnw3XRQVA==
-Date:   Mon, 1 Nov 2021 15:54:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, kw@linux.com, logang@deltatee.com,
-        leon@kernel.org, linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V11 4/8] PCI/sysfs: Add a tags sysfs file for PCIe
- Endpoint devices
-Message-ID: <20211101205442.GA546492@bhelgaas>
+        id S231899AbhKAVfk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 17:35:40 -0400
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:45685 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231862AbhKAVfj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 17:35:39 -0400
+Received: by mail-oi1-f174.google.com with SMTP id u2so7755531oiu.12;
+        Mon, 01 Nov 2021 14:33:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rAZfMt0W72OQ5Uazy33FSpqP64Oe4jvKwHBVPsVewGM=;
+        b=c3vSq+ZjR5jLWdI0ZUZaY0TzrAQK09oT4Wpq89I6y1SyPdJq5L2pVA7bdEuHJBQ2bP
+         Bz0x6QMzDwgH4C4ZeRh1MTF95/j/Z2smkmckzjgQV0dxEx9/Xg4+SEK9BHtbDCn2FdMw
+         tp+IdPZw2PUXecBmxR1BRlQzqCICY9FtnTHk3++RJrmn9s/IlJkWtAzJ1D7ok5avGfYQ
+         mOJ6g3Cqg2Pbeip+k3gkDYLPsKTEw/w8pY8cLCPF34mBHLK9uUH1LgNLotL5fcSTZ3xQ
+         8igMD2beoOVEHAfMJOlJF5IfXovaGlQwUUqZhXQNd5uEjPOikyee5J570VRyYVFdPHUD
+         LUBw==
+X-Gm-Message-State: AOAM531mo66KDhtj0eDrI+o8/PA2htRqR/RVfDRqtSXdf7N1WUUolxxW
+        xW5QrOSILFHQ4lhEGYPYzqxhQLso7A==
+X-Google-Smtp-Source: ABdhPJyZvDljdInZp2AIvJVkRBF2bwvS15/1QohCgzr/lJbsxLdLWdVN5P2cIxaAQrhQBL8KIOYlRA==
+X-Received: by 2002:a05:6808:18a7:: with SMTP id bi39mr1413053oib.136.1635802385437;
+        Mon, 01 Nov 2021 14:33:05 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id c18sm2615222otr.32.2021.11.01.14.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Nov 2021 14:33:04 -0700 (PDT)
+Received: (nullmailer pid 1102648 invoked by uid 1000);
+        Mon, 01 Nov 2021 21:33:04 -0000
+Date:   Mon, 1 Nov 2021 16:33:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH] dt-bindings: pci: rcar-pci-ep: Document r8a7795
+Message-ID: <YYBdEFBKsxwaTNtg@robh.at.kernel.org>
+References: <e4acfe90021e45658e82ed042746707ace208a93.1635337518.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211030135348.61364-5-liudongdong3@huawei.com>
+In-Reply-To: <e4acfe90021e45658e82ed042746707ace208a93.1635337518.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 30, 2021 at 09:53:44PM +0800, Dongdong Liu wrote:
-> PCIe spec 5.0 r1.0 section 2.2.6.2 says:
+On Wed, 27 Oct 2021 14:26:36 +0200, Geert Uytterhoeven wrote:
+> From: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
 > 
->   If an Endpoint supports sending Requests to other Endpoints (as
->   opposed to host memory), the Endpoint must not send 10-Bit Tag
->   Requests to another given Endpoint unless an implementation-specific
->   mechanism determines that the Endpoint supports 10-Bit Tag Completer
->   capability.
+> Document the support for R-Car PCIe EP on R8A7795 SoC device.
 > 
-> Add a tags sysfs file, write 0 to disable 10-Bit Tag Requester
-> when the driver does not bind the device. The typical use case is for
-> p2pdma when the peer device does not support 10-Bit Tag Completer.
-> Write 10 to enable 10-Bit Tag Requester when RC supports 10-Bit Tag
-> Completer capability. The typical use case is for host memory targeted
-> by DMA Requests. The tags file content indicate current status of Tags
-> Enable.
+> Signed-off-by: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> PCIe r5.0, sec 2.2.6.2 says:
-> 
->   Receivers/Completers must handle 8-bit Tag values correctly regardless
->   of the setting of their Extended Tag Field Enable bit (see Section
->   7.5.3.4).
-> 
-> Add this comment in pci_configure_extended_tags(). As all PCIe completers
-> are required to support 8-bit tags, so we do not use tags sysfs file
-> to manage 8-bit tags.
 
-> +What:		/sys/bus/pci/devices/.../tags
-> +Date:		September 2021
-> +Contact:	Dongdong Liu <liudongdong3@huawei.com>
-> +Description:
-> +		The file will be visible when the device supports 10-Bit Tag
-> +		Requester. The file is readable, the value indicate current
-> +		status of Tags Enable(5-Bit, 8-Bit, 10-Bit).
-> +
-> +		The file is also writable, The values accepted are:
-> +		* > 0 - this number will be reported as tags bit to be
-> +			enabled. current only 10 is accepted
-> +		* < 0 - not valid
-> +		* = 0 - disable 10-Bit Tag, use Extended Tags(8-Bit or 5-Bit)
-> +
-> +		write 0 to disable 10-Bit Tag Requester when the driver does
-> +		not bind the device. The typical use case is for p2pdma when
-> +		the peer device does not support 10-Bit Tag Completer.
-> +
-> +		Write 10 to enable 10-Bit Tag Requester when RC supports 10-Bit
-> +		Tag Completer capability. The typical use case is for host
-> +		memory targeted by DMA Requests.
-
-1) I think I would rename this from "tags" to "tag_bits".  A file
-   named "tags" that contains 8 suggests that we can use 8 tags, but
-   in fact, we can use 256 tags.
-
-2) This controls tag size the requester will use.  The current knobs
-   in the hardware allow 5, 8, or 10 bits.
-
-   "0" to disable 10-bit tags without specifying whether we should use
-   5- or 8-bit tags doesn't seem right.  All completers are *supposed*
-   to support 8-bit, but we've tripped over a few that don't.
-
-   I don't think we currently have a run-time (or even a boot-time)
-   way to disable 8-bit tags; all we have is the quirk_no_ext_tags()
-   quirk.  But if we ever wanted to *add* that, maybe we would want:
-
-      5 - use 5-bit tags
-      8 - use 8-bit tags
-     10 - use 10-bit tags
-
-   Maybe we just say "0" is invalid, since there's no obvious way to
-   map this?
-
-> +static ssize_t tags_show(struct device *dev,
-> +			 struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> + ...
-
-> +	if (ctl & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN)
-> +		return sysfs_emit(buf, "%s\n", "10-Bit");
-> +
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &ctl);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	if (ctl & PCI_EXP_DEVCTL_EXT_TAG)
-> +		return sysfs_emit(buf, "%s\n", "8-Bit");
-> +
-> +	return sysfs_emit(buf, "%s\n", "5-Bit");
-
-Since I prefer the "tag_bits" name, my preference would be bare
-numbers here: "10", "8", "5".
-
-Both comments apply to the sriov files, too.
-
-> +static umode_t pcie_dev_tags_attrs_is_visible(struct kobject *kobj,
-> +					      struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (pdev->is_virtfn)
-> +		return 0;
-> +
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
-> +		return 0;
-> +
-> +	if (!(pdev->devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
-> +		return 0;
-
-Makes sense for now that the file is only visible if a requester
-supports 10-bit tags.  If we ever wanted to extend this to control 5-
-vs 8-bit tags, we could make it visible in more cases then.
-
-> +
-> +	return a->mode;
-> +}
-
-> @@ -2075,6 +2089,12 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->  		return 0;
->  	}
->  
-> +	/*
-> +	 * PCIe r5.0, sec 2.2.6.2 says "Receivers/Completers must handle 8-bit
-> +	 * Tag values correctly regardless of the setting of their Extended Tag
-> +	 * Field Enable bit (see Section 7.5.3.4)", so it is safe to enable
-> +	 * Extented Tags.
-
-s/Extented/Extended/
-
-> +	 */
->  	if (!(ctl & PCI_EXP_DEVCTL_EXT_TAG)) {
->  		pci_info(dev, "enabling Extended Tags\n");
->  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL,
-> -- 
-> 2.22.0
-> 
+Applied, thanks!
