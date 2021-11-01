@@ -2,143 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50E28441C87
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 15:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09DE8441CCF
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 15:45:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbhKAOY3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 10:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
+        id S231362AbhKAOrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 10:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbhKAOY3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 10:24:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2792C061714
-        for <linux-pci@vger.kernel.org>; Mon,  1 Nov 2021 07:21:55 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1mhYC2-0001s4-WA; Mon, 01 Nov 2021 15:21:47 +0100
-Message-ID: <4f1b60bab451b219c7139e2204eb5b9f462ee4e0.camel@pengutronix.de>
+        with ESMTP id S229826AbhKAOra (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 10:47:30 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7174DC061764
+        for <linux-pci@vger.kernel.org>; Mon,  1 Nov 2021 07:44:57 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id l8so850102ilv.3
+        for <linux-pci@vger.kernel.org>; Mon, 01 Nov 2021 07:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nTgNimfUoPCIrDoKeVyIYbRT+tZhs8KL4QGLyrkvSyA=;
+        b=HUIod4TGIvbg2CAZjR6JNNaCMdnX5/bkqP4kNIF0LVxCuVID9ki4COu7zCxwssTtTy
+         VBNfkoQMyU/3BGKPEVQK1LBad1U8IGk7KqBOqnvZVLjrPg4EZeSWl7JxKKpZtWE2Afc+
+         qqNC5zGw0uhf74khGk8+FYKmSpRv7gekc2Nxp5aXZL635PtmeYgpiMCWv+G/+XMu7wOG
+         e/WhZu466u1PGtEs9tLkd5z1eAakwRYLu4FGsJxTbVk5lcVPw45bBRLWO7L92r63oYu4
+         4rE0NFJ9llVksLpFqeEfJMf57pbkGFOnEardVRmFbMyJpv8d3/rVxMiulQqPsgN7fjfN
+         TVHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nTgNimfUoPCIrDoKeVyIYbRT+tZhs8KL4QGLyrkvSyA=;
+        b=y2hTWy+4TWUfHQ/WmJG//6FHsWSFsIp4269NNJIKg+34FJLwC4HeOWafG4i04p4Rhb
+         3/M8QTY64dqSzlIj0qDlI2zwESZcmBkE2JHA9RxkB4xDZXHE4aHJeNVuOs54+34uIFvw
+         YQMdqc0iIm3Ax4S9E9AgmmUx/eBj18bvlx8HUS04xE49Cy+IgkzTgEeBvF8ljWZOM2Rj
+         CiYEi6TwZ2Hd5fkMMSt6AhhzbkmGCeUljRZq2RO010ZQFWZn8WLrTeE/p1b6Rhln5NE/
+         61p9HHt6Q+Hd/O2cPl4JjANAC5jN21UR+Pua92JToEIzLUPafzauBlHn76z5y4HDmF4G
+         PU7g==
+X-Gm-Message-State: AOAM533UQvJca6NujBB7QabZdI5eS2FPtmtM9wuVmWH9FJespcFIzukS
+        0VEgs2QwpJ38YGKIiTl8RTEj9cVz6Fot/MKYsPWeFg==
+X-Google-Smtp-Source: ABdhPJxzLpaPTvNyx3YNoBE/B8Ej6xYGtp2QXo+2idhrHDksvJl08AvaMK3spnFwjy5jIbCdefktgsljwLFVyba7NvA=
+X-Received: by 2002:a05:6e02:1bcb:: with SMTP id x11mr16355301ilv.94.1635777896880;
+ Mon, 01 Nov 2021 07:44:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <YX/zlRqmxbLRnTqT@fedora> <4f1b60bab451b219c7139e2204eb5b9f462ee4e0.camel@pengutronix.de>
+In-Reply-To: <4f1b60bab451b219c7139e2204eb5b9f462ee4e0.camel@pengutronix.de>
+From:   =?UTF-8?B?TWHDrXJhIENhbmFs?= <maira.canal@usp.br>
+Date:   Mon, 1 Nov 2021 11:44:45 -0300
+Message-ID: <CAH7FV3nyyLndqTdJYN8HDxU4C7pW0-DLu6ZSOLof2=tEEHbHxQ@mail.gmail.com>
 Subject: Re: [PATCH v2 RESEND] PCI: imx6: Replace legacy gpio interface for
  gpiod interface
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     =?ISO-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>,
-        hongxing.zhu@nxp.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     hongxing.zhu@nxp.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 01 Nov 2021 15:21:44 +0100
-In-Reply-To: <YX/zlRqmxbLRnTqT@fedora>
-References: <YX/zlRqmxbLRnTqT@fedora>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Montag, dem 01.11.2021 um 11:03 -0300 schrieb Maíra Canal:
-> Considering the current transition of the GPIO subsystem, remove all
-> dependencies of the legacy GPIO interface (linux/gpio.h and linux
-> /of_gpio.h) and replace it with the descriptor-based GPIO approach.
-> 
-> Signed-off-by: Maíra Canal <maira.canal@usp.br>
-> ---
-> V1 -> V2: Rewrite commit log and subject line to match PCI subsystem standard
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 30 +++++++++------------------
->  1 file changed, 10 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 80fc98acf097..589cbd600d17 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -11,13 +11,12 @@
->  #include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> -#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/kernel.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
->  #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
->  #include <linux/module.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/of_device.h>
->  #include <linux/of_address.h>
->  #include <linux/pci.h>
-> @@ -63,7 +62,7 @@ struct imx6_pcie_drvdata {
->  
->  struct imx6_pcie {
->  	struct dw_pcie		*pci;
-> -	int			reset_gpio;
-> +	struct gpio_desc	*reset_gpio;
->  	bool			gpio_active_high;
->  	struct clk		*pcie_bus;
->  	struct clk		*pcie_phy;
-> @@ -526,11 +525,11 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	usleep_range(200, 500);
->  
->  	/* Some boards don't have PCIe reset GPIO. */
-> -	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +	if (imx6_pcie->reset_gpio) {
-> +		gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
->  					imx6_pcie->gpio_active_high);
->  		msleep(100);
-> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +		gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
->  					!imx6_pcie->gpio_active_high);
+?
+> >       /* Some boards don't have PCIe reset GPIO. */
+> > -     if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> > -             gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> > +     if (imx6_pcie->reset_gpio) {
+> > +             gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
+> >                                       imx6_pcie->gpio_active_high);
+> >               msleep(100);
+> > -             gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> > +             gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
+> >                                       !imx6_pcie->gpio_active_high);
+>
+> I don't think this is correct. gpiod_set_value sets the logical line
+> state, so if the GPIO is specified as active-low in the DT, the real
+> line state will be negated. The only reason why the reset-gpio-active-
+> high property even exists is that old DTs might specify the wrong GPIO
+> polarity in the reset-gpio DT description. I think you need to use to
+> gpiod_set_raw_value API here to get the expected real line state even
+> with a broken DT description.
+>
+> Regards,
+> Lucas
+>
 
-I don't think this is correct. gpiod_set_value sets the logical line
-state, so if the GPIO is specified as active-low in the DT, the real
-line state will be negated. The only reason why the reset-gpio-active-
-high property even exists is that old DTs might specify the wrong GPIO
-polarity in the reset-gpio DT description. I think you need to use to
-gpiod_set_raw_value API here to get the expected real line state even
-with a broken DT description.
+I'm a beginner in kernel development, so I'm sorry for the question.
+If I change gpiod_set_value_cansleep for gpiod_set_raw_value, wouldn't
+I change the behavior of the driver? I replaced
+gpio_set_value_cansleep for gpiod_set_value_cansleep because they have
+the same behavior and I didn't change the logic states. Thank you for
+the feedback!
 
 Regards,
-Lucas
-
->  	}
->  
-> @@ -1025,22 +1024,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(pci->dbi_base);
->  
->  	/* Fetch GPIOs */
-> -	imx6_pcie->reset_gpio = of_get_named_gpio(node, "reset-gpio", 0);
->  	imx6_pcie->gpio_active_high = of_property_read_bool(node,
->  						"reset-gpio-active-high");
-> -	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-> -		ret = devm_gpio_request_one(dev, imx6_pcie->reset_gpio,
-> -				imx6_pcie->gpio_active_high ?
-> -					GPIOF_OUT_INIT_HIGH :
-> -					GPIOF_OUT_INIT_LOW,
-> -				"PCIe reset");
-> -		if (ret) {
-> -			dev_err(dev, "unable to get reset gpio\n");
-> -			return ret;
-> -		}
-> -	} else if (imx6_pcie->reset_gpio == -EPROBE_DEFER) {
-> -		return imx6_pcie->reset_gpio;
-> -	}
-> +	imx6_pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> +			imx6_pcie->gpio_active_high ?  GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
-> +	if (IS_ERR(imx6_pcie->reset_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->reset_gpio),
-> +				"unable to get reset gpio\n");
->  
->  	/* Fetch clocks */
->  	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
-
-
+Ma=C3=ADra
