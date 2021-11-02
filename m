@@ -2,100 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A1E442375
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Nov 2021 23:33:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B98EF4424DD
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 01:48:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231855AbhKAWfv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 18:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230407AbhKAWfu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Nov 2021 18:35:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E128560E9C;
-        Mon,  1 Nov 2021 22:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635805996;
-        bh=QSOg14zJ7564Ds7UcOROZkmDP61KqIEGNfcLXTYnNLQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DCLP8hScJ+WV4gOKF9pHgDcWWXFzpv0cTrjMrwIymdEl4iDuyaJ17V0J6lAOvDSbp
-         ZUL0MPXxqmm0SQqMBWI5YlLCYxBeOmlNp76LL8YWNB2Oa7oAiFf2CQvttCh7B2Tlig
-         4Hp4SHTQoe7dyrkTnNufBt1klwAomJk1j5A6rROFjNB0LWVcFjVd0ygckPW2C3nb/k
-         yEBqnEi6Y8XotE5WKsX7ppBsYvZTkvbFnCDR9WxywOzJpy2n7S6sOHR3ZgRwEh2Yfc
-         EdgB2aZTeuLY99ZNVcMDPdLH2p/4OWO6U03bS3T8ptkR6+grjbbiaw4IpKrSHmzAVw
-         1+8D9HrhethBA==
-Date:   Mon, 1 Nov 2021 17:33:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, logang@deltatee.com, leon@kernel.org,
-        linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V11 7/8] PCI: Enable 10-Bit Tag support for PCIe Endpoint
- device
-Message-ID: <20211101223314.GA557567@bhelgaas>
+        id S231356AbhKBArz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Nov 2021 20:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231214AbhKBAry (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Nov 2021 20:47:54 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6858C061766
+        for <linux-pci@vger.kernel.org>; Mon,  1 Nov 2021 17:45:18 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id i14so23590126ioa.13
+        for <linux-pci@vger.kernel.org>; Mon, 01 Nov 2021 17:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=usp.br; s=usp-google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CdQjx0HGt5etDdjQfXz4rMpreR3TwFiKL0chx+EioEw=;
+        b=F9PkwVOBx0rYvi51997OwY6dfgJ3I+V/W1M9p2GzsmoMx768QZjmjUGrI1P92KHDvm
+         +4ZSUPUbmedpRRouesQI96TEuwr/ROwn6kljAUZ1AuSz7ctQ15WZTI5DKuNlkXeGgYZh
+         kKN8lzNg+WF3Tb4MeaBmO6u3xiD6gGZyl+4P/dZrDkQCEalQZ28hZHLZweq1Xleys/T+
+         XhIVj2oCIpgOLdCvzx2+z4JxrzAybEqEku4DUSYeMYJlHRUSkvFX68lqdyDt4wAp05Jx
+         THTxnMCg6BuzAk29SFZLbHiJHnawNWgx5KTqsd3eYR1qtggN8tVUzkuO2HoLoE8KI6V2
+         yDCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CdQjx0HGt5etDdjQfXz4rMpreR3TwFiKL0chx+EioEw=;
+        b=TnwmCdTnwdvPNd7YFD17/Jue5NjdOYDoLDzQ7/vU4qYvLaANgQnDtAcq6wE9fOYRIY
+         u9VTAbUAOd5gM3xVL2Uo2zsOqLvTV1ArlLMPliLEszOzXCeM1iDCXeIWqB2B9OJmNEFB
+         odNfOHG0qWTi+5VQe77fRtvS1ScdVIYuQ25+1FNZifSAcNw08Xye4s7WY8avD6qlQLHs
+         okY65BClenpP8H6Vki17GvfXmvIVhbxbtOPckB700N86eEWVbi8RhJEJ5qoiaIymOUgn
+         WOAw30j8I6XHKI52lHR0DsoOhts9eL96MkNXch2uGMDriLTf3jO3aMCaxXQKOa89kRP5
+         iL1w==
+X-Gm-Message-State: AOAM532LWIFXgtZoZj+uCs8DJ53QK/1Bs3230B0bN+cFVSkDtdOSDa69
+        L64WGXP8+BOFoQdfsNHYQ3m4lDA5PWcbzVINeO/4QQ==
+X-Google-Smtp-Source: ABdhPJx35C1DFToM8I+/8vn3pb+0BVcZmhi7R/yAadTa2d4BnYEiWtS0uvxY91mtpifdmpuP5XpEWRNIkCKpi9IMpjw=
+X-Received: by 2002:a05:6638:134f:: with SMTP id u15mr24353893jad.7.1635813918186;
+ Mon, 01 Nov 2021 17:45:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211101220239.GA554641@bhelgaas>
+References: <YX/zlRqmxbLRnTqT@fedora> <4f1b60bab451b219c7139e2204eb5b9f462ee4e0.camel@pengutronix.de>
+ <CAH7FV3nyyLndqTdJYN8HDxU4C7pW0-DLu6ZSOLof2=tEEHbHxQ@mail.gmail.com> <557e68ad15634ddb65c98ebf80cd7ef962ac2608.camel@pengutronix.de>
+In-Reply-To: <557e68ad15634ddb65c98ebf80cd7ef962ac2608.camel@pengutronix.de>
+From:   =?UTF-8?B?TWHDrXJhIENhbmFs?= <maira.canal@usp.br>
+Date:   Mon, 1 Nov 2021 21:45:07 -0300
+Message-ID: <CAH7FV3nfkihmc9UTvmGC7kL=tO40CL4350smc4FKiLVdsesxkA@mail.gmail.com>
+Subject: Re: [PATCH v2 RESEND] PCI: imx6: Replace legacy gpio interface for
+ gpiod interface
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     hongxing.zhu@nxp.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 01, 2021 at 05:02:41PM -0500, Bjorn Helgaas wrote:
-> On Sat, Oct 30, 2021 at 09:53:47PM +0800, Dongdong Liu wrote:
-> > 10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
-> > field size from 8 bits to 10 bits.
-> > 
-> > PCIe spec 5.0 r1.0 section 2.2.6.2 "Considerations for Implementing
-> > 10-Bit Tag Capabilities" Implementation Note:
-> > 
-> >   For platforms where the RC supports 10-Bit Tag Completer capability,
-> >   it is highly recommended for platform firmware or operating software
-> >   that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-> >   bit automatically in Endpoints with 10-Bit Tag Requester capability.
-> >   This enables the important class of 10-Bit Tag capable adapters that
-> >   send Memory Read Requests only to host memory.
-> > 
-> > It's safe to enable 10-bit tags for all devices below a Root Port that
-> > supports them. Switches that lack 10-Bit Tag Completer capability are
-> > still able to forward NPRs and Completions carrying 10-Bit Tags correctly,
-> > since the two new Tag bits are in TLP Header bits that were formerly
-> > Reserved.
-> 
-> Side note: the reason we want to do this to increase performance by
-> allowing more outstanding requests.  Do you have any benchmarking that
-> we can mention here to show that this is actually a benefit?  I don't
-> doubt that it is, but I assume you've measured it and it would be nice
-> to advertise it.
+Em seg., 1 de nov. de 2021 =C3=A0s 11:58, Lucas Stach
+<l.stach@pengutronix.de> escreveu:
+>
+> Am Montag, dem 01.11.2021 um 11:44 -0300 schrieb Ma=C3=ADra Canal:
+> > ?
+> > > >       /* Some boards don't have PCIe reset GPIO. */
+> > > > -     if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> > > > -             gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> > > > +     if (imx6_pcie->reset_gpio) {
+> > > > +             gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
+> > > >                                       imx6_pcie->gpio_active_high);
+> > > >               msleep(100);
+> > > > -             gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> > > > +             gpiod_set_value_cansleep(imx6_pcie->reset_gpio,
+> > > >                                       !imx6_pcie->gpio_active_high)=
+;
+> > >
+> > > I don't think this is correct. gpiod_set_value sets the logical line
+> > > state, so if the GPIO is specified as active-low in the DT, the real
+> > > line state will be negated. The only reason why the reset-gpio-active=
+-
+> > > high property even exists is that old DTs might specify the wrong GPI=
+O
+> > > polarity in the reset-gpio DT description. I think you need to use to
+> > > gpiod_set_raw_value API here to get the expected real line state even
+> > > with a broken DT description.
+> > >
+> > > Regards,
+> > > Lucas
+> > >
+> >
+> > I'm a beginner in kernel development, so I'm sorry for the question.
+> > If I change gpiod_set_value_cansleep for gpiod_set_raw_value, wouldn't
+> > I change the behavior of the driver? I replaced
+> > gpio_set_value_cansleep for gpiod_set_value_cansleep because they have
+> > the same behavior and I didn't change the logic states. Thank you for
+> > the feedback!
+>
+> Yes, you need to use the _cansleep variant of the API to keep the
+> context information. The point I was trying to make was that you
+> probably (please double check, that's just an assumption on my side)
+> need to use the _raw variant of the gpiod API to keep the current
+> behavior of the driver, as we are setting the physical line state
+> purely depending on the reset-gpio-active-high property presence, not
+> the logical line state, which would take into account the polarity
+> specified in the DT gpio descriptor.
+>
+> I guess the right API call here would be
+> gpiod_set_raw_value_cansleep().
 
-Hmmm.  I did a quick Google search looking for "nvme pcie 10-bit tags"
-hoping to find some performance info, but what I *actually* found was
-several reports of 10-bit tags causing breakage:
+I got it now. Thank you for your attention! I will send the v3 with
+the correction.
 
-  https://www.reddit.com/r/MSI_Gaming/comments/exjvzg/x570_apro_7c37vh72beta_version_has_anyone_tryed_it/
-  https://rog.asus.com/forum/showthread.php?115064-Beware-of-agesa-1-0-0-4B-bios-not-good!/page2
-  https://forum-en.msi.com/index.php?threads/sound-blaster-z-has-weird-behaviour-after-updating-bios-x570-gaming-edge-wifi.325223/page-2
-  https://gearspace.com/board/electronic-music-instruments-and-electronic-music-production/1317189-h8000fw-firewire-facts-2020-must-read.html
-  https://www.soundonsound.com/forum/viewtopic.php?t=69651&start=12
-  https://forum.rme-audio.de/viewtopic.php?id=30307
-
-This is a big problem for me.
-
-Some of these might be a broken BIOS that turns on 10-bit tags when
-the completer doesn't support them.  I didn't try to debug them to
-that level.  But the last thing I want is to enable 10-bit by default
-and cause boot issues or sound card issues or whatever.
-
-I'm pretty sure this is a show-stopper for wedging this into v5.16 at
-this late date.  It's conceivable we could still do it if everything
-defaulted to "off" and we had a knob whereby users could turn it on
-via boot param or sysfs.
-
-In any case, we (by which I'm afraid I mean "you" :)) need to
-investigate the problem reports, figure out whether we will see
-similar problems, and fix them before merging if we can.
-
-Thanks to Krzysztof for pointing out the potential for issues like
-this.
-
-Bjorn
+>
+> Regards,
+> Lucas
+>
