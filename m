@@ -2,257 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EA5443200
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 16:48:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCC3F44321C
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 16:54:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234424AbhKBPvK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 11:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234309AbhKBPvK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Nov 2021 11:51:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8FC9F60EDF;
-        Tue,  2 Nov 2021 15:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635868113;
-        bh=BHm+QTa4p5+sFBXS+kVc0X588xMrOSvDZH+YSNCv6v4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iRy+tNKqnvjdg56I8GVD8WM/MoVIYqZmf3V1GJken0L0oCB2MYmJsh0f9Nqjo7Rub
-         3M8xNd2+X8dNHgcQA58Q+3aEE2jy/OQAiC97BBp0UqUqeU7aM9KkivXc9dafkFdKf6
-         7QyUzpX2E0WYGAvCU0/v2GSTDm/hZVVNiJBhWZ1GN9QgdwAHtIm9u/rdSyzaJ2WxwN
-         5D9XfpNgxl8NkAx94nJ9iPRiKNtrvZxgE34OT0gbfUfGI8AfEhPxTAATJT2BWtaobd
-         GBPHndCgdS1GgdxLtAyd1y/9WfkpElTdm++QYO6EkwjY4LqNIwxROaPtmJQlzgJAFW
-         EfjZm1Q4kR0Pg==
-Received: by pali.im (Postfix)
-        id 4BEE0A41; Tue,  2 Nov 2021 16:48:31 +0100 (CET)
-Date:   Tue, 2 Nov 2021 16:48:31 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Marvell: Update PCIe fixup
-Message-ID: <20211102154831.xtrlgrmrizl5eidl@pali>
-References: <20211101150405.14618-1-pali@kernel.org>
- <20211102084241.GA6134@alpha.franken.de>
- <20211102090246.unmbruykfdjabfga@pali>
- <20211102094700.GA7376@alpha.franken.de>
- <20211102100034.rhcb3k2jvr6alm6y@pali>
- <alpine.DEB.2.21.2111021210180.57165@angie.orcam.me.uk>
- <20211102125843.sqsusis4krnmhorq@pali>
- <alpine.DEB.2.21.2111021312160.57165@angie.orcam.me.uk>
- <20211102144929.c5wt5pbl42ocrxly@pali>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        id S234678AbhKBP47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 11:56:59 -0400
+Received: from mail-mw2nam12on2088.outbound.protection.outlook.com ([40.107.244.88]:41440
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234673AbhKBP47 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Nov 2021 11:56:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TP8/R10QaAPPLnMl8i3TmC6QPe6ubthG9QU2w1yXCwtJosX8u7MFL1hhD/7vbxeo5w50D1JVKJsVUwumJfvCEf0aedLFJwF8saYAVJxOx2vrflfmDeGufuRUY2ejF0gc+GpHh7H+HisbeeVSVhBMhBNPrEvCSbPYmm1//2GqvOp3EFC0AfUvIzeGipMdqz7uGWoP8zl9AGUERDf4kiuhJLrDXfxjsgDpbgxb8f9rACRwMGuj9DXmstuve/bRYVJT7XZOoJM1PpSU5VUn8cXfqT4RMVBmWiji4i73B9ycYYSl9s5OEjUR/e+ja+eJdQ68nUWEzX9UN+U1YinPXD5PAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6bq2QYmvwuPYUkW9nzNm/0U6nrqUEF42Htl6S1Da4Ak=;
+ b=KNL9usYm64Hu+luRGxy5NCLuEyCLrITVmE5/fdqol5eOQkMS9eZxibcjt7CqnUFdow4NsrYXXgJdKYHl+z86hUWRurdaGdeS5tjdSLi6z419d6ThVt0guESxa1VLqJIKL9id4AZHAEE7yh9CRZwfD7epppBGiYD7q5abpdEIf4GaX7U02V2VdE7THYaXvKcEDI/n/U8HF4MXfkToEOJBmk59QamqCSxX06kEtudZBDG9yVBbmbQBWR1oJjrfuHJnbMxHT76pO1hLcRgpNP0UhQhHZSoE90GdiHylrNA2YMXsF4KgpXpd/lkNXiz3v66TyAZL0A9uzAyd7tjnB6nmPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6bq2QYmvwuPYUkW9nzNm/0U6nrqUEF42Htl6S1Da4Ak=;
+ b=CIsVra0G9NoBDy+gZZ1Sw30eEaYP+bVzT2U8EixhV33tRXnVS2drWyLAVp8Tr+SB+WhqJHJosCXMgi5J9/BvHg/tfKLEycVAKeAqz9pqr9Yaj/ZYpaDmmSpP1reFr9TMDcB/jDqnCq9vGIVMR+MiK3kykb9IPg6BB0KPtm4dpBiykso2bOzMQ2GQS+BDpia1uQhg+BHlltJyGpmX1uwiXrvKTyq7rd1LPdS28/jXqesh59ul+YOAgbG2ALn6dGTgw9RM3DGVW191vYYA8hw+ScYEYnr8Adgo8WlUshMV8Xbq/ScQbMgTjmdoE9952+7tfDa6/QXeopq9zfDETZnRdQ==
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5061.namprd12.prod.outlook.com (2603:10b6:208:310::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Tue, 2 Nov
+ 2021 15:54:21 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4649.020; Tue, 2 Nov 2021
+ 15:54:21 +0000
+Date:   Tue, 2 Nov 2021 12:54:20 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211102155420.GK2744544@nvidia.com>
+References: <20211026151851.GW2744544@nvidia.com>
+ <20211026135046.5190e103.alex.williamson@redhat.com>
+ <20211026234300.GA2744544@nvidia.com>
+ <20211027130520.33652a49.alex.williamson@redhat.com>
+ <20211027192345.GJ2744544@nvidia.com>
+ <20211028093035.17ecbc5d.alex.williamson@redhat.com>
+ <20211028234750.GP2744544@nvidia.com>
+ <20211029160621.46ca7b54.alex.williamson@redhat.com>
+ <20211101172506.GC2744544@nvidia.com>
+ <20211102085651.28e0203c.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211102144929.c5wt5pbl42ocrxly@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211102085651.28e0203c.alex.williamson@redhat.com>
+X-ClientProxiedBy: BLAPR03CA0048.namprd03.prod.outlook.com
+ (2603:10b6:208:32d::23) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.162.113.129) by BLAPR03CA0048.namprd03.prod.outlook.com (2603:10b6:208:32d::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15 via Frontend Transport; Tue, 2 Nov 2021 15:54:21 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mhw7A-005A2P-FG; Tue, 02 Nov 2021 12:54:20 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3b5f8967-7a9c-4bda-c2b3-08d99e190915
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5061:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB50618C7C9ABDF20853B74C9BC28B9@BL1PR12MB5061.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mW4o1ZWjU4SsejLdk3oIGGvS7j5/xVSiVBMbLWn9WFBnf0CpWGBClERwZTPdPqvG7U0opb6HYeMFmQBM7LJNk8JpZjXkrSBxV6Zk9QF5fX/NDR5xEUkt8Hocldx29ZU23i5ZZO2Zi5tHaSNF5OI6LpJctVSfVxXLXSNG9vNcLYWfiiB7LVOSltDjAeHnT17Fy7hDb9HA9rwfRJOLGPJ2jVolXP/VpTFavwgAalbatsA0gybJZ2kUjJqrS1nuYXndypexKKyWaCgOEZ6lkd0/KjvpBde4bNQL3iA2/A6F3pg0lJgxIBj+KAsmQbGIvkQKbtq//S9n/pc9MuSxhQIn6kFWKrlT1LbEcmyce4yjm5B0jf7ZGL7D30vM7SPL98b6d4WudKbJUgr6H4r168mouPQQh3Q0oxQGi4CdkBptttPrvQk1ZyH1Cxvx4uXWmUVIOVGTuoAO+4+7DyA8hiILocUYMm7hKVIhesP9Sh7o3dCHCak84cbNaHWmpz7rC8NQ1FgYNZpTXmc7ilx7kPR/fPzzZHXNETyru6nEqKcoyMC5L2cnT+eH3VtFae47bFJaMPFOmJdEvHYdFBJke4k7sjSlclZc6np7QJtSG2aMT10WiTt0vZFLdNWHGkRwICxMWob7r7S4GxsJXfEUNgh2nQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(8676002)(508600001)(36756003)(4326008)(1076003)(9746002)(9786002)(26005)(38100700002)(186003)(66556008)(66476007)(66946007)(83380400001)(33656002)(86362001)(2906002)(2616005)(8936002)(6916009)(316002)(426003)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0a1jLPIzXxmM+f1nuZU8i86X6aPbF3HLGAbo1AoK+zfCV1BaoYQW3p032rfd?=
+ =?us-ascii?Q?D/T51GXpVqhzV9C6A1qStEhFGHUAKhAXmM1eIB2AFU/RGCThPgKy0IG3n984?=
+ =?us-ascii?Q?ifgs0XPvmJ09IC9tRyJYYfNnebnIJ8MjC2614ik94U2i4QvU4VDnziLzhLkA?=
+ =?us-ascii?Q?o6JJDD/wFCCIrJtipQ4Xtyv6h/94iSukJ4kXMtMXVjHicCBYDShwAbvEn2d9?=
+ =?us-ascii?Q?oEmIVSVzcYFat+k6U1BHgywyFARtj5Bki+/tyKNU7JMb1JTu0/2UoGECCvh6?=
+ =?us-ascii?Q?my3i9iZwH68VwWVwce90ibVo+ZqvpwQ2RgAhUvmYe4UnvjtDVPRotn3tN3tF?=
+ =?us-ascii?Q?cmP2ojtEfRg/kQdrKde5lwxLdlwPIHgjR6PuC3iQPJjLnpGdhcRiG/7z79e2?=
+ =?us-ascii?Q?nZowOArDorc1RIJMutvgp3EnLUy/cOUoAKKC1mtnRk1X+Ym8KtUvfoMgJQNO?=
+ =?us-ascii?Q?JtLZHtIhXrfnlAFJTMFOssbcz6XLwknbdhdpu9gUAtXKqzQkCnJWSwSDmBOI?=
+ =?us-ascii?Q?l/QT0Ebg6dH13+78/RQMTyR4jR9a4CeXLwK0El4zrXxTyVLujt5zXiygm8vR?=
+ =?us-ascii?Q?tyhCNMaz/vIHFz/7PnVlRcsnRmZ5f664Xk4ExIp/9VdYTa5Hwj3oDSkY91RJ?=
+ =?us-ascii?Q?hXw5HJOLUd5lODxbnc6MOi0u7ToR2U8YnWlFMGqEwAXCmGvFMADCAj4EcHNA?=
+ =?us-ascii?Q?RGfdeHdxc1AdfVQDI0rW2Mo3AN+UYXmDgZziqcTtjDSEjoNB8kL+yWiJNaEa?=
+ =?us-ascii?Q?6W84KVy68TC0vZPBWm6mU9PTqOR3KGtwu2XKbT2vx0EjOQ8exHooWKvO7kF0?=
+ =?us-ascii?Q?A0Fksio2iA9vhNwDB7cui50vtFmhbLQuyZrDT3cp+tKh6b44Iq9/8uHTEZZe?=
+ =?us-ascii?Q?+n3zttsco9t0ZCvkkcnUEl/f/U1m03wRbpzknR9v0lT4SZzQcd+yaj3Np20F?=
+ =?us-ascii?Q?lV5f/l4KPmg1zbtdRm67YVGwIsg7VwDvDmgUGP6fdgqXB7vsdbFNBYWM4Oms?=
+ =?us-ascii?Q?PZoEsGMC0eGa0LQoGNs/zAhBl2OYTwxVGtYDu8Q7/Ork3qfOLKbi3NiREl+k?=
+ =?us-ascii?Q?9ysvgaD/kuIibEPz+nHnolncBgEXKiLwCYKdR6RhLKv+nwyu2tCvac4wqZFt?=
+ =?us-ascii?Q?rEXcHNFa94AG7fg3kHF80J7dUnlRUQa5mC0W+qlcpa688aOKEQhJpt1LBjc9?=
+ =?us-ascii?Q?Atn0M3xxEOb3O8n4VxMK0cdMOzShtvFz995YIPaUEgKGyG+C7Z9+Z0XykDzY?=
+ =?us-ascii?Q?cYX2Bh2RpdXhxKX7DhJYHLJ7Xno0zNM4h223zGTzBBMmddG4Cq8t8rNV38ro?=
+ =?us-ascii?Q?WFUPIOzLIWA9PdFAkZsjYo+6fXj2H3Kd3jHN7yQSpwa2tH/JEXywsGIWcVc0?=
+ =?us-ascii?Q?7vfuOELgsHNhPi2ACaBR6m2Pi11jPtN/lnxYGsU7WhpQ/zVPAvRHX4D/Obut?=
+ =?us-ascii?Q?TP5vL3oQ220V0Muz/9PoVQP3VgczcI5saI9YdepwbEpLVVTFIIIB1v50dy1+?=
+ =?us-ascii?Q?/xoKCFR30jmsAEVHiXZYH/1oX5ZvFFKUrj+HO0i4TjTb+nWLWFuB8QU0E3P5?=
+ =?us-ascii?Q?HGrsPDdgU52n/YH1IvM=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b5f8967-7a9c-4bda-c2b3-08d99e190915
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2021 15:54:21.5897
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DPrIQAduIydczq9Xkp+PVnmeQq6S3kvsPnmrPdO3qZbQJIo5ECfSTkp8cwlURr8B
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5061
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 02 November 2021 15:49:29 Pali Rohár wrote:
-> On Tuesday 02 November 2021 14:01:41 Maciej W. Rozycki wrote:
-> > On Tue, 2 Nov 2021, Pali Rohár wrote:
-> > 
-> > > >  None of the Galileo system controllers I came across had the class code 
-> > > > set incorrectly.
-> > > 
-> > > In kernel there is quirk only for one device with id:
-> > > PCI_VENDOR_ID_MARVELL (0x11ab) PCI_DEVICE_ID_MARVELL_GT64111 (0x4146)
-> > > 
-> > > So for some reasons quirk is needed... Anyway, patch for this quirk just
-> > > adds comment as there is no explanation for it. It does not modify quirk
-> > > code.
-> > > 
-> > > So it is possible that Marvell (or rather Galileo at that time) included
-> > > some config space fixup in some products and 0x4146 did not have it.
-> > > Just guessing... We can really only guess what could happen at that time
-> > > 20 years ago...
-> > 
-> >  Ah, there you go! -- sadly I don't seem to have a copy of the datasheet 
-> > for the GT-64111, but the GT-64115 has it[1]:
-> > 
-> > Table 158: PCI Class Code and Revision ID, Offset: 0x008
-> >  Bits  Field name Function                                     Initial Value
-> >  7:0   RevID      Indicates the GT-64115 PCI Revision          0x01
-> >                   number.
-> >  15:8  Reserved   Read only.                                   0x0
-> >  23:16 SubClass   Indicates the GT-64115 Subclass - Mem-       0x80
-> >                   ory controller.
-> >  31:24 BaseClass  Indicates the GT-64115 Base Class -          0x05
-> >                   memory controller.
-> > 
-> > and then:
-> > 
-> > "Device and Vendor ID (0x000), Class Code and Revision ID (0x008), and 
-> > Header Type (0x00e) fields are read only from the PCI bus.  These fields 
-> > can be modified and read via the CPU bus."
-> > 
-> > Likewise with the GT-64120[2]:
-> > 
-> > Table 208: PCI_0 Class Code and Revision ID, Offset: 0x008 from PCI_0 or CPU; 0x088 from
-> >            PCI_1
-> >  Bits  Field name Function                                      Initial Value
-> >  7:0   RevID      Indicates the GT-64120 PCI_0 revision number. 0x02
-> >  15:8  Reserved   Read Only 0.                                  0x0
-> >  23:16 SubClass   Indicates the GT-64120 Subclass               Depends on value
-> >                   0x00 - Host Bridge Device.                    sampled at reset
-> >                   0x80 - Memory Device.                         on BankSel[0]. See
-> >                                                                 Table 44 on page
-> >                                                                 11-1.
-> >  31:24 BaseClass  Indicates the GT-64120 Base Class             Depends on value
-> >                   0x06 - Bridge Device.                         sampled at reset
-> >                   0x05 - Memory Device.                         on BankSel[0]. See
-> >                                                                 Table 44 on page
-> >                                                                 11-1.
-> > 
-> > Table 209: PCI_1 Class Code and Revision ID, Offset: 0x088 from PCI_0 or CPU; 0x008 from
-> >            PCI_1
-> >  Bits  Field name Function                                      Initial Value
-> >  31:0  Various    Same as for PCI_0 Class Code and Revision ID.
-> > 
-> > and then also:
-> > 
-> > "Device and Vendor ID (0x000), Class Code and Revision ID (0x008), and 
-> > Header Type (0x00e) fields are read only from the PCI bus.  These fields 
-> > can be modified and read via the CPU bus."
-> > 
-> > -- so this is system-specific and an intended chip feature rather than an 
-> > erratum (or rather it is a system erratum if the reset strap or the boot 
-> > firmware has got it wrong).
-> > 
-> >  The memory device class code is IIUC meant to be typically chosen when 
-> > the Galileo/Marvell device is used without the CPU interface, i.e. as a 
-> > PCI memory controller device only[3].
+On Tue, Nov 02, 2021 at 08:56:51AM -0600, Alex Williamson wrote:
 
-I have found on internet some copy of GT64111 datasheet ("GT-64111
-System Controller for RC4640, RM523X and VR4300 CPUs", Galileo
-Technology, Product Preview Revision 1.1, FEB 4, 1999) and in section
-"17.15 PCI Configuration Registers" there is subsection "Class Code and
-Revision ID, Offset: 0x008" with content:
-
-Bits  Field name Function                                           Initial Value
-7:0   RevID      Indicates the GT-64111 Revision number.            0x10
-                 GT-64111-P-0 = 0x10
-15:8  Reserved                                                      0x0
-23:16 SubClass   Indicates the GT-64111 Subclass (0x80 - other mem- 0x80
-                 ory controller)
-31:24 BaseClass  Indicates the GT-64111 Base Class (0x5 - memory    0x05
-                 controller).
-
-And in section "6.5.3 PCI Autoconfiguration at RESET" is following
-interesting information:
-
-Eight PCI registers can be automatically loaded after Rst*.
-Autoconfiguration mode is enabled by asserting the DMAReq[3]* LOW on
-Rst*. Any PCI transactions targeted for the GT-64111 will be retried
-while the loading of the PCI configuration registers is in process.
-
-It is highly recommended that all PC applications utilize the PCI
-Autoconfiguration at RESET feature. The autoload feature can be easily
-implemented with a very low cost EPLD. Galileo provides sample EPLD
-equations upon request. (You can always pull the EPLD off your final
-product if you find there are no issues during testing.)
-
-NOTE: The GT-64111’s default Class Code is 0x0580 (Memory Controller)
-which is a change from the GT-64011.
-
-The GT-64011 used the Class Code 0x0600 which denotes Host Bridge. Some
-PCs refuse to configure host bridges if they are found plugged into a
-PCI slot (ask the BIOS vendors why...). The “Memory Controller” Class
-Code does not cause a problem for these non-compliant BIOSes, so we used
-this as the default in the GT-64111. The Class Code can be reporgrammed
-in both devices via autoload or CPU register writes.
-
-The PCI register values are loaded from the ROM controlled by BootCS*
-are shown in Table 21, below.
-
-TABLE 21. PCI Registers Loaded at RESET
-Register                        Offset Boot Device Address
-Device and Vendor ID            0x000  0x1fffffe0
-Class Code and Revision ID      0x008  0x1fffffe4
-Subsystem Device and Vendor ID  0x02c  0x1fffffe8
-Interrupt Pin and Line          0x03c  0x1fffffec
-RAS[1:0]* Bank Size             0xc08  0x1ffffff0
-RAS[3:2]* Bank Size             0xc0c  0x1ffffff4
-CS[2:0]* Bank Size              0xc10  0x1ffffff8
-CS[3]* & Boot CS* Bank Size     0xc14  0x1ffffffc
-
-===
-
-So the conclusion is that there is also some RESET configuration via
-BootCS (I have no idea what it is or was). And default value (when RESET
-configuration is not used) is always "Memory controller" due to
-existence of "broken PC BIOSes" (probably x86).
-
-Hence the quirk for GT64111 in kernel is always needed. And Thomas
-already confirmed in his pci hexdump that PCI Class code is set to
-Memory Controller.
-
-I hope that now this mystery of this GT64111 quirk is solved :-) I will
-update patch with correct comment, why quirk is needed.
-
-So due to the fact that 20 years ago there were broken x86 BIOSes which
-did not like PCI devices with PCI Class code of Host Bridge, Marvell
-changed default PCI Class code to Memory Controller and let it in this
-state also for future PCIe-based ARM and AR64 SoCs for next 20 years.
-Which generally leaded to broken PCIe support in mvebu SoCs. I have no
-more comments about it... :-(
-
-> > > > The lack of a quirk with a platform does not mean it cannot have a certain 
-> > > > PCI/e device.
-> > > 
-> > > This is 11ab:4620 device an there is no PCIe capability in its config
-> > > space (you can inspect it via 'lspci -F dump.txt -nn -vv' but there is
-> > > nothing interesting).
-> > 
-> >  Of course, just as Thomas told you about the GT-64111 too.  But you were 
-> > right in that the memory controller feature seems shared across all the 
-> > chip line, whether PCI or PCIe.
-> > 
-> > References:
-> > 
-> > [1] "GT-64115 System Controller for RC4640, RM523X, and VR4300 CPUs", 
-> >     Galileo Technology, Datasheet Revision 1.11, APR 04, 2000, Section 
-> >     18.16 "PCI Configuration", p. 161
-> > 
-> > [2] "GT-64120 System Controller For RC4650/4700/5000 and RM526X/527X/7000 
-> >     CPUs", Galileo Technology, Datasheet Revision 1.4, SEP 14, 1999, 
-> >     Section 17.16 "PCI Configuration", p. 17-59
-> > 
-> > [3] same, Chapter 14. "Using the GT-64120 Without the CPU Interface", p. 
-> >     14-1
-> > 
-> >   Maciej
+> > Still, this is something that needs clear definition, I would expect
+> > the SET_IRQS to happen after resuming clears but before running sets
+> > to give maximum HW flexibility and symmetry with saving.
 > 
-> Hello Maciej! Thank you very much for the explanation!
+> There's no requirement that the device enters a null state (!_RESUMING
+> | !_SAVING | !_RUNNING), the uAPI even species the flows as _RESUMING
+> transitioning to _RUNNING.  
+
+If the device saves the MSI-X state inside it's migration data (as
+apparently would be convenient for other OSs) then when RESUMING
+clears and the migration data is de-serialized the device will
+overwrite the MSI-X data.
+
+Since Linux as an OS wants to control the MSI-X it needs to load it
+after RESUMING, but before RUNNING.
+
+> There's no point at which we can do SET_IRQS other than in the
+> _RESUMING state.  Generally SET_IRQS ioctls are coordinated with the
+> guest driver based on actions to the device, we can't be mucking
+> with IRQs while the device is presumed running and already
+> generating interrupt conditions.
+
+We need to do it in state 000
+
+ie resume should go 
+
+  000 -> 100 -> 000 -> 001
+
+With SET_IRQS and any other fixing done during the 2nd 000, after the
+migration data has been loaded into the device.
+
+> > And we should really define clearly what a device is supposed to do
+> > with the interrupt vectors during migration. Obviously there are races
+> > here.
 > 
-> Now it makes sense and looks like that for GT-64111 it is "system
-> erratum" that strapping pins are incorrectly set which leads to wrong
-> PCI class code.
+> The device should not be generating interrupts while !_RUNNING, pending
+> interrupts should be held until the device is _RUNNING.  To me this
+> means the sequence must be that INTx/MSI/MSI-X are restored while in
+> the !_RUNNING state.
+
+Yes
+
+> > > In any case, it requires that the device cannot be absolutely static
+> > > while !_RUNNING.  Does (_RESUMING) have different rules than
+> > > (_SAVING)?  
+> > 
+> > I'd prever to avoid all device touches during both resuming and
+> > saving, and do them during !RUNNING
 > 
-> I will update comment for GT-64111 quirk in v2.
-> 
-> I'm surprised that Marvell copied this 20 years old MIPS Galileo PCI
-> logic into followup ARM SoC PCIe IPs (and later also into recent ARM64
-> A3720 SoC PCIe IP), removed configuration of PCI class code via
-> strapping pins and let default PCI class code value to Memory device,
-> even also when PCIe controller is running in Root Complex mode. And so
-> correction can be done only from "CPU bus".
-> 
-> Just Marvell forgot to include chapter about usage without CPU interface
-> in new ARM and ARM64 SoCs and origin/usage of that Memory Controller
-> Device was lost in history, even Marvell people was not able to figure
-> out what was wrong with PCIe IP in their ARM SoCs...
-> https://lore.kernel.org/linux-pci/20211003120944.3lmwxylnhlp2kfj7@pali/
-> 
-> Maciej, if I had known that you have this kind of information I would
-> have written you year ago :-)
+> There's no such state required by the uAPI.
+
+The uAPI comment does not define when to do the SET_IRQS, it seems
+this has been missed.
+
+We really should fix it, unless you feel strongly that the
+experimental API in qemu shouldn't be changed.
+
+Jason
