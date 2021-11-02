@@ -2,297 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D35264436CE
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 20:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BF044371F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 21:16:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231405AbhKBT4F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 15:56:05 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:37386 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231825AbhKBTzz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 15:55:55 -0400
-Received: by mail-ot1-f53.google.com with SMTP id v40-20020a056830092800b0055591caa9c6so433451ott.4;
-        Tue, 02 Nov 2021 12:53:20 -0700 (PDT)
+        id S230293AbhKBUSr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 16:18:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28338 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230060AbhKBUSr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 16:18:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635884171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xrr7Nswb1zSUeN/enXyBsdfTuUeQZHbFjkSfA/cUnkk=;
+        b=U//ID9oYTOTmiodekAxGBMaOW1W0lldKyB83+NB8bKdGD9PrhBEUki5AmLBS4QZX+0pFa4
+        dsXER8WdekM34HPytBGMotuGWxMbwYhCqqHKzwpStN8yvrZCYhBMLvtTHfRfgWoe5KPkuy
+        oPlk8OmGXC2oGnxXXE7IlZTY4+vXSZw=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-555-XbHFdnioMoG3eiBrKC_Qew-1; Tue, 02 Nov 2021 16:15:50 -0400
+X-MC-Unique: XbHFdnioMoG3eiBrKC_Qew-1
+Received: by mail-oo1-f70.google.com with SMTP id i1-20020a4a9001000000b002a9c41e0eabso126086oog.3
+        for <linux-pci@vger.kernel.org>; Tue, 02 Nov 2021 13:15:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=4ysC2TK49duZLeBEw05462rtywvOR8eexLWqsfLcCUY=;
-        b=YQ3LU+t+yFQWumKjLRbaF/k+MBO8JSVraMRFPQAXxZlJ7DJG05jYyP17KzfvQwE+7B
-         ld9GmvTSwHJXKejFdmnhvgLM9qWlHKtIMkaOh2TE5tlKksmLr7u0M2dxb/xWovWP+FNt
-         o5oLpFzY05LzdA2xnCAShHhmB0xOhGzA4CMveKrRN0ameho7X1dIyunc3drwM2qd9VNV
-         3xrvlLTq9f2U+OLFY26++5XWjbjI9dcvNilg5DnSmic89jllZ2IALBkWKpuDbyW6Zo6x
-         JesudcKEbP0Yb8m1iXK+7OWKrYPTg958RYQEmmW4gXKqJ9csEBm//PHVuWso2Zrfb6x3
-         7TVg==
-X-Gm-Message-State: AOAM5314UER1Pb0Row2kaIyssuAcGpAYb+ywylBg6XYmPHnWmYiLmyfo
-        klBKslvq5R3UzQ0VSS6BrVDUoebjs4QeHhgeZZqk4dyW52U=
-X-Google-Smtp-Source: ABdhPJxL66qxLyN//dF1ujCG/e6s/ArvveoGNJAM+n1p7RgtuxComWbDfWGuMfVaHiq93Wh22COzia2CYq+/zPASgSY=
-X-Received: by 2002:a9d:a64:: with SMTP id 91mr21571353otg.198.1635882800188;
- Tue, 02 Nov 2021 12:53:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Xrr7Nswb1zSUeN/enXyBsdfTuUeQZHbFjkSfA/cUnkk=;
+        b=Z1zetJP3rH5p6AnkZyD9OiLqPsBIF7ecIbZ6Df9AXs+P6GNuT1aBiYOcg/aYnfQQAG
+         9zXaP8faz9J5ucQ4Ga6lE5c1A5gQwrJWRiagzbmjM3DmsWM3450nl6JWuRWCGnHOT0d+
+         /EKkSS9tcIX79A9Rzv1g99Hj5aPKDhFTumMtb6v0EXyffrRdgMj2AZ7VUAGJWEr8nGKd
+         HoDUgIpGNzwcmgwQQqLKA/TD4TR/W3+uNXdQRyuYGH4GOoHe6I/mW70Z969wguVESIOz
+         LcyNrKkqtrGE2yi9JPKP1UDHCEWsgTiG/00/RqjGAv48RM6jonIfhXdpqa+ZffJ+zgxC
+         Ddmg==
+X-Gm-Message-State: AOAM533vR8vff9JsZMDQdAZOIRZULqwP8LOGMkONs2InCQU2QGWBnRVG
+        iFJsypVPxBibXMNnV1T9a5mpTZLwjSidXnLDx6WCqe7wb5C8qhfgIwR/kG5+T8bYd8doEsLU65H
+        R9rYUHK5aoJ430NWzXvnF
+X-Received: by 2002:aca:502:: with SMTP id 2mr6911484oif.121.1635884150177;
+        Tue, 02 Nov 2021 13:15:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxB1YIom/qnGCnU3mQ5wd7qinnolUIYz9BC2zuiV9Oo21uixIulObHuoTWjbBeBw4sEtvoYGg==
+X-Received: by 2002:aca:502:: with SMTP id 2mr6911462oif.121.1635884149950;
+        Tue, 02 Nov 2021 13:15:49 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id m16sm1632822oiw.13.2021.11.02.13.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Nov 2021 13:15:49 -0700 (PDT)
+Date:   Tue, 2 Nov 2021 14:15:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
+In-Reply-To: <20211102163610.GG2744544@nvidia.com>
+References: <20211026234300.GA2744544@nvidia.com>
+        <20211027130520.33652a49.alex.williamson@redhat.com>
+        <20211027192345.GJ2744544@nvidia.com>
+        <20211028093035.17ecbc5d.alex.williamson@redhat.com>
+        <20211028234750.GP2744544@nvidia.com>
+        <20211029160621.46ca7b54.alex.williamson@redhat.com>
+        <20211101172506.GC2744544@nvidia.com>
+        <20211102085651.28e0203c.alex.williamson@redhat.com>
+        <20211102155420.GK2744544@nvidia.com>
+        <20211102102236.711dc6b5.alex.williamson@redhat.com>
+        <20211102163610.GG2744544@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 2 Nov 2021 20:53:09 +0100
-Message-ID: <CAJZ5v0iSL3vwvmRL_BvS1J4_NHCNoLO5bG4YFcjVK-oXH_uTAg@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v5.16-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+On Tue, 2 Nov 2021 13:36:10 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Please pull from the tag
+> On Tue, Nov 02, 2021 at 10:22:36AM -0600, Alex Williamson wrote:
+> 
+> > > > There's no point at which we can do SET_IRQS other than in the
+> > > > _RESUMING state.  Generally SET_IRQS ioctls are coordinated with the
+> > > > guest driver based on actions to the device, we can't be mucking
+> > > > with IRQs while the device is presumed running and already
+> > > > generating interrupt conditions.    
+> > > 
+> > > We need to do it in state 000
+> > > 
+> > > ie resume should go 
+> > > 
+> > >   000 -> 100 -> 000 -> 001
+> > > 
+> > > With SET_IRQS and any other fixing done during the 2nd 000, after the
+> > > migration data has been loaded into the device.  
+> > 
+> > Again, this is not how QEMU works today.  
+> 
+> I know, I think it is a poor choice to carve out certain changes to
+> the device that must be preserved across loading the migration state.
+> 
+> > > The uAPI comment does not define when to do the SET_IRQS, it seems
+> > > this has been missed.
+> > > 
+> > > We really should fix it, unless you feel strongly that the
+> > > experimental API in qemu shouldn't be changed.  
+> > 
+> > I think the QEMU implementation fills in some details of how the uAPI
+> > is expected to work.  
+> 
+> Well, we already know QEMU has problems, like the P2P thing. Is this a
+> bug, or a preferred limitation as designed?
+> 
+> > MSI/X is expected to be restored while _RESUMING based on the
+> > config space of the device, there is no intermediate step between
+> > _RESUMING and _RUNNING.  Introducing such a requirement precludes
+> > the option of a post-copy implementation of (_RESUMING | _RUNNING).  
+> 
+> Not precluded, a new state bit would be required to implement some
+> future post-copy.
+> 
+> 0000 -> 1100 -> 1000 -> 1001 -> 0001
+> 
+> Instead of overloading the meaning of RUNNING.
+> 
+> I think this is cleaner anyhow.
+> 
+> (though I don't know how we'd structure the save side to get two
+> bitstreams)
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.16-rc1
+The way this is supposed to work is that the device migration stream
+contains the device internal state.  QEMU is then responsible for
+restoring the external state of the device, including the DMA mappings,
+interrupts, and config space.  It's not possible for the migration
+driver to reestablish these things.  So there is a necessary division
+of device state between QEMU and the migration driver.
 
-with top-most commit bf56b90797c4a03c94b702c50e62296edea9fad9
+If we don't think the uAPI includes the necessary states, doesn't
+sufficiently define the states, and we're not following the existing
+QEMU implementation as the guide for the intentions of the uAPI spec,
+then what exactly is the proposed mlx5 migration driver implementing
+and why would we even considering including it at this point?  Thanks,
 
- Merge branches 'pm-em' and 'powercap'
+Alex
 
-on top of commit 3906fe9bb7f1a2c8667ae54e967dc8690824f4ea
-
- Linux 5.15-rc7
-
-to receive power management updates for 5.16-rc1.
-
-These make the power management of PCI devices with ACPI companions
-more straightforwad, add support for inefficient operating performance
-points to the Energy model and make cpufreq handle them as appropriate,
-rearrange the handling of cpuidle during system PM transitions,
-update a few cpufreq drivers and intel_idle, fix assorded issues and
-clean up code in multiple places.
-
-Specifics:
-
- - Add support for inefficient operating performance points to the
-   Energy Model and modify cpufreq to use them properly (Vincent
-   Donnefort).
-
- - Rearrange the DTPM framework code to simplify it and make it easier
-   to follow (Daniel Lezcano).
-
- - Fix power intialization in DTPM (Daniel Lezcano).
-
- - Add CPU load consideration when estimating the instaneous power
-   consumption in DTPM (Daniel Lezcano).
-
- - Fix cpu->pstate.turbo_freq initialization in intel_pstate (Zhang
-   Rui).
-
- - Make intel_pstate process HWP Guaranteed change notifications from
-   the processor (Srinivas Pandruvada).
-
- - Fix typo in cpufreq.h (Rafael Wysocki).
-
- - Fix tegra driver to handle BPMP errors properly (Mikko Perttunen).
-
- - Fix the parameter usage of the newly added perf-domain API (Hector
-   Yuan).
-
- - Minor cleanups to cppc, vexpress and s3c244x drivers (Han Wang,
-   Guenter Roeck, and Arnd Bergmann).
-
- - Fix kobject memory leaks in cpuidle error paths (Anel Orazgaliyeva).
-
- - Make intel_idle enable interrupts before entering C1 on some Xeon
-   processor models (Artem Bityutskiy).
-
- - Clean up hib_wait_io() (Falla Coulibaly).
-
- - Fix sparse warnings in hibernation-related code (Anders Roxell).
-
- - Use vzalloc() and kzalloc() instead of their open-coded
-   equivalents in hibernation-related code (Cai Huoqing).
-
- - Prevent user space from crashing the kernel by attempting to
-   restore the system state from a swap partition in use (Ye Bin).
-
- - Do not let "syscore" devices runtime-suspend during system PM
-   transitions (Rafael Wysocki).
-
- - Do not pause cpuidle in the suspend-to-idle path (Rafael Wysocki).
-
- - Pause cpuidle later and resume it earlier during system PM
-   transitions (Rafael Wysocki).
-
- - Make system suspend code use valid_state() consistently (Rafael
-   Wysocki).
-
- - Add support for enabling wakeup IRQs after invoking the
-   ->runtime_suspend() callback and make two drivers use it (Chunfeng
-   Yun).
-
- - Make the association of ACPI device objects with PCI devices more
-   straightforward and simplify the code doing that for all devices
-   in general (Rafael Wysocki).
-
- - Eliminate struct pci_platform_pm_ops and handle the both of its
-   users (PCI and Intel MID) directly in the PCI bus code (Rafael
-   Wysocki).
-
- - Simplify and clarify ACPI PCI device PM helpers (Rafael Wysocki).
-
- - Fix ordering of operations in pci_back_from_sleep() (Rafael
-   Wysocki).
-
- - Make exynos-ppmu use hyphens in DT properties (Krzysztof
-   Kozlowski).
-
- - Simplify parsing event-type from DT in exynos-ppmu (Krzysztof
-   Kozlowski).
-
- - Strengthen check for freq_table in devfreq (Samuel Holland).
-
-Some of the changes listed above are also present in the ACPI updates
-pull request sent earlier due to dependencies between the ACPI "glue"
-code and the PCI device PM changes.
-
-Thanks!
-
-
----------------
-
-Anders Roxell (1):
-      PM: hibernate: fix sparse warnings
-
-Anel Orazgaliyeva (1):
-      cpuidle: Fix kobject memory leaks in error paths
-
-Arnd Bergmann (1):
-      cpufreq: s3c244x: add fallthrough comments for switch
-
-Artem Bityutskiy (1):
-      intel_idle: enable interrupts before C1 on Xeons
-
-Cai Huoqing (1):
-      PM: hibernate: swap: Use vzalloc() and kzalloc()
-
-Chunfeng Yun (3):
-      PM / wakeirq: support enabling wake-up irq after runtime_suspend called
-      usb: xhci-mtk: enable wake-up interrupt after runtime_suspend called
-      usb: mtu3: enable wake-up interrupt after runtime_suspend called
-
-Daniel Lezcano (5):
-      powercap/drivers/dtpm: Encapsulate even more the code
-      powercap/drivers/dtpm: Simplify the dtpm table
-      powercap/drivers/dtpm: Use container_of instead of a private data field
-      powercap/drivers/dtpm: Scale the power with the load
-      powercap/drivers/dtpm: Fix power limit initialization
-
-Falla Coulibaly (1):
-      PM: hibernate: Remove blk_status_to_errno in hib_wait_io
-
-Florian Fainelli (1):
-      PM: sleep: Do not assume that "mem" is always present
-
-Guenter Roeck (1):
-      cpufreq: vexpress: Drop unused variable
-
-Han Wang (1):
-      cpufreq: remove useless INIT_LIST_HEAD()
-
-Hector.Yuan (1):
-      cpufreq: Fix parameter in parse_perf_domain()
-
-Krzysztof Kozlowski (2):
-      devfreq: exynos-ppmu: use node names with hyphens
-      devfreq: exynos-ppmu: simplify parsing event-type from DT
-
-Mikko Perttunen (1):
-      cpufreq: tegra186/tegra194: Handle errors in BPMP response
-
-Rafael J. Wysocki (17):
-      PCI: ACPI: Drop acpi_pci_bus
-      ACPI: glue: Drop cleanup callback from struct acpi_bus_type
-      ACPI: glue: Look for ACPI bus type only if ACPI companion is not known
-      PCI: PM: Do not use pci_platform_pm_ops for Intel MID PM
-      PCI: ACPI: PM: Do not use pci_platform_pm_ops for ACPI
-      PCI: PM: Drop struct pci_platform_pm_ops
-      PCI: PM: Simplify acpi_pci_power_manageable()
-      PCI: PM: Rearrange pci_target_state()
-      PCI: PM: Make pci_choose_state() call pci_target_state()
-      PCI: PM: Do not call platform_pci_power_manageable() unnecessarily
-      Revert "PM: sleep: Do not assume that "mem" is always present"
-      PCI: PM: Fix ordering of operations in pci_back_from_sleep()
-      cpufreq: Fix typo in cpufreq.h
-      PM: sleep: Do not let "syscore" devices runtime-suspend during
-system transitions
-      PM: suspend: Do not pause cpuidle in the suspend-to-idle path
-      PM: sleep: Pause cpuidle later and resume it earlier during
-system transitions
-      PM: suspend: Use valid_state() consistently
-
-Samuel Holland (1):
-      PM / devfreq: Strengthen check for freq_table
-
-Srinivas Pandruvada (1):
-      cpufreq: intel_pstate: Process HWP Guaranteed change notification
-
-Vincent Donnefort (10):
-      PM: EM: Fix inefficient states detection
-      PM: EM: Mark inefficient states
-      PM: EM: Extend em_perf_domain with a flag field
-      PM: EM: Allow skipping inefficient states
-      cpufreq: Make policy min/max hard requirements
-      cpufreq: Add an interface to mark inefficient frequencies
-      cpufreq: Introducing CPUFREQ_RELATION_E
-      cpufreq: Use CPUFREQ_RELATION_E in DVFS governors
-      PM: EM: Mark inefficiencies in CPUFreq
-      cpufreq: mediatek-hw: Fix cpufreq_table_find_index_dl() call
-
-Ye Bin (1):
-      PM: hibernate: Get block device exclusively in swsusp_check()
-
-Zhang Rui (1):
-      cpufreq: intel_pstate: Fix cpu->pstate.turbo_freq initialization
-
----------------
-
- drivers/acpi/glue.c                    |  34 +++--
- drivers/base/power/main.c              |  14 +-
- drivers/base/power/power.h             |   7 +-
- drivers/base/power/runtime.c           |   6 +-
- drivers/base/power/wakeirq.c           | 101 ++++++++++++---
- drivers/cpufreq/acpi-cpufreq.c         |   3 +-
- drivers/cpufreq/amd_freq_sensitivity.c |   3 +-
- drivers/cpufreq/cppc_cpufreq.c         |   2 -
- drivers/cpufreq/cpufreq.c              |  19 ++-
- drivers/cpufreq/cpufreq_conservative.c |   6 +-
- drivers/cpufreq/cpufreq_ondemand.c     |  16 ++-
- drivers/cpufreq/intel_pstate.c         | 120 ++++++++++++++++-
- drivers/cpufreq/mediatek-cpufreq-hw.c  |   2 +-
- drivers/cpufreq/powernv-cpufreq.c      |   4 +-
- drivers/cpufreq/s3c2440-cpufreq.c      |   2 +
- drivers/cpufreq/s5pv210-cpufreq.c      |   2 +-
- drivers/cpufreq/tegra186-cpufreq.c     |   4 +
- drivers/cpufreq/tegra194-cpufreq.c     |   8 +-
- drivers/cpuidle/sysfs.c                |   5 +-
- drivers/devfreq/devfreq.c              |   2 +-
- drivers/devfreq/event/exynos-ppmu.c    |  12 +-
- drivers/idle/intel_idle.c              |  13 +-
- drivers/pci/pci-acpi.c                 |  74 +++--------
- drivers/pci/pci-mid.c                  |  37 ++----
- drivers/pci/pci.c                      | 154 ++++++++++------------
- drivers/pci/pci.h                      |  96 ++++++++------
- drivers/powercap/dtpm.c                |  78 ++++++-----
- drivers/powercap/dtpm_cpu.c            | 228 ++++++++++++++++++---------------
- drivers/usb/host/xhci-mtk.c            |   2 +-
- drivers/usb/mtu3/mtu3_plat.c           |   2 +-
- include/acpi/acpi_bus.h                |   1 -
- include/linux/cpufreq.h                | 169 +++++++++++++++++++-----
- include/linux/cpuhotplug.h             |   2 +-
- include/linux/dtpm.h                   |  26 ++--
- include/linux/energy_model.h           |  68 ++++++++--
- include/linux/pci-acpi.h               |   8 ++
- include/linux/pm_wakeirq.h             |   9 +-
- kernel/power/energy_model.c            |  86 ++++++++++---
- kernel/power/hibernate.c               |  12 +-
- kernel/power/power.h                   |  14 ++
- kernel/power/suspend.c                 |  18 +--
- kernel/power/swap.c                    |  21 ++-
- 42 files changed, 946 insertions(+), 544 deletions(-)
