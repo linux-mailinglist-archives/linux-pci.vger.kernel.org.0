@@ -2,220 +2,483 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CE9F442623
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 04:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93A2E4426A9
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 06:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232712AbhKBDrm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Nov 2021 23:47:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50412 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232122AbhKBDrl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Nov 2021 23:47:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10155"; a="317376799"
-X-IronPort-AV: E=Sophos;i="5.87,201,1631602800"; 
-   d="scan'208";a="317376799"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2021 20:45:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,201,1631602800"; 
-   d="scan'208";a="727921437"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Nov 2021 20:45:07 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Mon, 1 Nov 2021 20:45:06 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12 via Frontend Transport; Mon, 1 Nov 2021 20:45:06 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.47) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.12; Mon, 1 Nov 2021 20:45:06 -0700
+        id S229720AbhKBFVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 01:21:31 -0400
+Received: from mx0b-00622301.pphosted.com ([205.220.175.205]:48986 "EHLO
+        mx0b-00622301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229486AbhKBFVb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 01:21:31 -0400
+Received: from pps.filterd (m0241925.ppops.net [127.0.0.1])
+        by mx0a-00622301.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1A24uNwF021399;
+        Tue, 2 Nov 2021 05:18:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ambarella.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=com20210415pp;
+ bh=ciHq54YJ//X/cXA1nW8MdtF81DCx5kSHyXT0Ylk5GCM=;
+ b=dlZCuaZ+tRvWPapiS0jSfpZNIxoYEyvuVO+Vr+6qQYaeksqsuKmG4YinnZtcayfLwmyY
+ hat3Smw8v5F2fRYxJpFxmY1HHfA9mb+r5Fy3L5FakeZIEk+xnyKvwU+hCLN5w+0sEa9I
+ BZ+33C+qe1lNxbhxt3vcDm8eqLu31R/uplYMLcm/KbOJGYzRoOhZUNz6vmxnqsi/lCPd
+ yJhp7SQlgnzNg6eQD9u6Ol8Do1Qr2EXsJ4kn+Fho93y7emDbKLhyS5Q8GaoBRwmWfaDB
+ 7+0SXlQeYtgz+mDG7fynLjapa9IP+ZF4o9wnASkTo45vSlNYkaG3tP1JxDcL4xTbSUgH WQ== 
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108])
+        by mx0a-00622301.pphosted.com (PPS) with ESMTPS id 3c28c88hn9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Nov 2021 05:18:24 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R20FDPs6LbNFWH+bptMxSlnYcZwRxgQoVEUIGkv2YkR69TwQf7/B7UPC5fA+Pbz9j4CqePHS1i4otvcc0OzFv99H9WNBtBBKTOjGlT0rnEeC7tEmxtxQGEyRvSDjxsqpC347Dq/CAS4b5RUjhLfj8kiC/tx5f02vE31F/1nDmcXz2SMIMWqkfbu9Klw/tW4TWVjHcaK/2J38xGrSl5yVhv9wFaSsi1tW1ZMj3m5vkw5qhFGR/Hmwem1u9sPIX8lsJwPUS4TmSTXkHGtA0eti0U/OD6BDDos+TyHEjfBJidxTuOyKAIAi4qUzd/XuOmUAvgwvW2F3VCH3KlpwCzIS8w==
+ b=eVQEwCbK1OQO3JhGgGdJs+wkFGrPq3ITn1HrUfesmJr/BW4SL/im1LQKVeW3XAFy4udVg2pwjUj2wUVLLzWuTdEdK6gamZV9tkQkgGPD7PdEATVjYL2VzW4rXwtB50Tj4BnMN4LX4Zcnkc0eHRGpExOQqqSz7GyLAHHMUdUzp7nMIutGMiRFzqFVB6bHoZPt5EdzmSBr7fby8soP8d0q/zzm0fIb+C1/iYjR+jZxKKUzlUDtOWi/i/NJfmCncd3+Y6JAg6FZ06TClZfYn26qxkUgeXhIMuqZmpjobHhSWGoGFl0KZvaCuSAPOmTE37Sv2wz8kZPSjUwWAipg2lkw5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wg5vSMit00Cu9fGhr8IM9UfZEPqz4XC4zjTz5hwwCUY=;
- b=SrPMobm3Xp06yp3EvvkpS5vRgLN0CWdt5QeRNJDdu1tzDiei78pZtYfYUtelekFgbpkrzedfLQJ0R26/tW0QfSXQujN7aGQaw3T1+kesZJOut2MqNL3IAJ3kRqhI3qfxXx18qesxA1UbE+TkfynKeWuFioVYUD+FjRlSOLxA9ihFHr8eR6lZgiJG7IjUjxdvo4aigrhw07aA4RRZQvIFZyGUbAkiHQ/DlN6+ubEx+DR2InpxkN4CChRYTj7tjKu0eMdyssWxc02FplGDGUQ0y/bJsV44y2NXd66VHelUuu2YaEtUWovC6SJEfUR/St0cVwfhGwiMizq0uAa1MPkqmQ==
+ bh=8XvA5HTTnDvl0OkP+mCnK07XkJDSbPNzHNR7JaDbknA=;
+ b=Ui5g2wGJzqBEKj6MoBv3G1ajvei1euxRye3Yfvz/ylo1uwlz/XU11i17i/LRl8UQ8chGOt69lxQsP8TWukW/3MyPxQN/xYEhaccCX+QVIlhXlLi4VfTj+a0qOad4qpEMShA7GQHk5M+oKDiTaMWDpzukWH1G1XFrREcDLnIIz/jpF0Rz+e39VGLh86O60KoV7mg/eu/QgoxtGJDT5XfSfniirnz1Dzj7uTuBzZRiRIMrx2WFyWi05Q9dF4c5vtsQymsYpseefET3huWnGvJPLjyjlJosE/Vs/fA44A1Z4O6Xfy8FeaSQGqy82CtsEp+6IUkf70U8gfo8O1AQz6xwJA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
+ smtp.mailfrom=ambarella.com; dmarc=pass action=none
+ header.from=ambarella.com; dkim=pass header.d=ambarella.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=ambarella.onmicrosoft.com; s=selector1-ambarella-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wg5vSMit00Cu9fGhr8IM9UfZEPqz4XC4zjTz5hwwCUY=;
- b=yvJD23KARyxxN94atgkFjSpUfXfD1UCGOu1SWUabK4aBpAAkGRNTrT497NbaWoOlnKXsV1WyXe5bhP/UfR8QeCeTARJl4siSbrWKq+jcbJ8pwrHS7p7x6OFwy9Rn7gnL9imDb3rUr9ZyOQ92YI+a9Wotd1w+UOjdbiPkobmboUw=
-Received: from DM8PR11MB5702.namprd11.prod.outlook.com (2603:10b6:8:21::10) by
- DM6PR11MB3548.namprd11.prod.outlook.com (2603:10b6:5:143::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4649.17; Tue, 2 Nov 2021 03:45:00 +0000
-Received: from DM8PR11MB5702.namprd11.prod.outlook.com
- ([fe80::fd7c:d68:3904:f2b3]) by DM8PR11MB5702.namprd11.prod.outlook.com
- ([fe80::fd7c:d68:3904:f2b3%9]) with mapi id 15.20.4649.019; Tue, 2 Nov 2021
- 03:45:00 +0000
-From:   "Bao, Joseph" <joseph.bao@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+ bh=8XvA5HTTnDvl0OkP+mCnK07XkJDSbPNzHNR7JaDbknA=;
+ b=jGWVWgvKpKdF+bjKrLfvXL0JHs8dZCjQ9NNm096SWK3UiHJs19fFgoZdFqrWgeDcjXM3y5e1geaaRWdpKFxFz+puzs9RXbu58kTrAmMV88j3aIDg5LIsK4sLXucFkymjMq4Dc/keA7nnH8gFAltSOy9ph1bZ1pXrd+V2fCmYFk4=
+Received: from CH2PR19MB4024.namprd19.prod.outlook.com (2603:10b6:610:92::22)
+ by CH2PR19MB4087.namprd19.prod.outlook.com (2603:10b6:610:a0::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Tue, 2 Nov
+ 2021 05:18:14 +0000
+Received: from CH2PR19MB4024.namprd19.prod.outlook.com
+ ([fe80::8143:f3e0:9fd3:a8e7]) by CH2PR19MB4024.namprd19.prod.outlook.com
+ ([fe80::8143:f3e0:9fd3:a8e7%5]) with mapi id 15.20.4649.019; Tue, 2 Nov 2021
+ 05:18:14 +0000
+From:   Li Chen <lchen@ambarella.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Keith Busch <kbusch@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: HW power fault defect cause system hang on kernel 5.4.y
-Thread-Topic: HW power fault defect cause system hang on kernel 5.4.y
-Thread-Index: AdfPm0b60GGT2vlORua28HBxsdiYnQ==
-Date:   Tue, 2 Nov 2021 03:45:00 +0000
-Message-ID: <DM8PR11MB5702255A6A92F735D90A4446868B9@DM8PR11MB5702.namprd11.prod.outlook.com>
-Accept-Language: zh-CN, en-US
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: RE: [EXT] Re: nvme may get timeout from dd when using different
+ non-prefetch mmio outbound/ranges
+Thread-Topic: [EXT] Re: nvme may get timeout from dd when using different
+ non-prefetch mmio outbound/ranges
+Thread-Index: AdfHKUVD4pdAQATdSnyIoo960S9VyQCjl4+AAAEy0AAAFvQC8AAB+KwAAJu5nUAAG4h1gACqLnSw
+Date:   Tue, 2 Nov 2021 05:18:14 +0000
+Message-ID: <CH2PR19MB402445CF3AEF3529E9041211A08B9@CH2PR19MB4024.namprd19.prod.outlook.com>
+References: <CH2PR19MB4024F88716768EC49BCA08CCA0879@CH2PR19MB4024.namprd19.prod.outlook.com>
+ <20211029194253.GA345237@bhelgaas>
+In-Reply-To: <20211029194253.GA345237@bhelgaas>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=intel.com;
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=ambarella.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9b17a209-b130-4f2e-903a-08d99db32562
-x-ms-traffictypediagnostic: DM6PR11MB3548:
-x-microsoft-antispam-prvs: <DM6PR11MB3548CB8370DFEC9C04C399EA868B9@DM6PR11MB3548.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: 03d94325-4891-4e6f-c556-08d99dc02c04
+x-ms-traffictypediagnostic: CH2PR19MB4087:
+x-microsoft-antispam-prvs: <CH2PR19MB40876DB6E024DF7C76D00616A08B9@CH2PR19MB4087.namprd19.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:651;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kfBndFL3XrWTf5ytt0enJqjdvoVIbD687NiERVQb5ekVQS80s4UwoFL7IoYUKlshiOweaQTQ/+h/ANfdR1wglhchMic0nrFi6j680tSlu1LgouwFv3Y6lvmXw2AoBYsmU0apInXmlW+Wh7DMUaBuj91+KnBxK5Ys8//dqJnd1AE2NvUrEJCW6ALE+aYTbQQvvfEqCnW+3RSqorAkOvZAcPsKyUrQjxM8xXDB6/I9hPKnJ9NthPAy4EJ7+K1Pt8Gx19LimmxMWvWmBZC6pcBAGy//FcMQELKM5wK0yLhZaA5ZdYTmkvXnboxhk/lS6kD555yi7FEQh0VVQecUeJW/IsepcVmSXQEMnK4lIno8snpcIbcDdX4oflBwwt9KREo4PKCJcuwMMMj7JBVO1tKxdrk58kmta0gJ9EoHucjvqR5+cE3Kq6hFuyFdQhg2IR7XOBS1qNvn8HpUdECvtDuAbszV0xa4HVMC1FHMBk9kzqD34O529tWq+V6OCBoGmhslf4mPJyXjEWzZjkJIwTOnOt1StVTDQEn2mD5KSf/ebRusvYKc1n2oMSBX6m93IoE6ytDoQbjtp0a1l1DjG27o/2eTqyyDxWcY1OsdI0T2+I5qANTQQ4mTjd9FYcD7firvmEnnVdIdkqoyMsPed4Rmp7T3akk8aNc35W73JgKvZ7nRTOFGLCIMFJ9eRby3NNbAh/I4EEckA/7zLaatUporJCXygJWlScyUAx3vNnaoJzpU7VnC8BXzqDb/tg72MFUxsysyUCAgaRGzHYbsvlS4IZg34d8K1wra3H6z506Nc74r62uqLJqmqu3zPdzTRzzvkYqTavn1394a99HX6REV4g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5702.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(8936002)(66476007)(76116006)(38100700002)(110136005)(66946007)(82960400001)(33656002)(122000001)(186003)(5660300002)(7696005)(2906002)(6506007)(55016002)(66556008)(83380400001)(64756008)(316002)(52536014)(38070700005)(66446008)(966005)(26005)(71200400001)(8676002)(86362001)(508600001)(9686003);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: m8P1tnSzjmcGP/JTWgxaPmUqx353sH8x/pc0YJJjJ3/LR/fDLlYu6oKyH01e4q5gwaL67foJsAXsE3dOZP4fQ2DFNmlTVupBwNECe034iA1nNvt3AUREpI+OgdkP0JcdC6RsQGnjNERPFp1g6ZDUWJDqPmoR6GKzBEoOxkw+Bqi6tt7OuthsQf7aHKQ6IjVKliaZj1IDEQjC1I2vPwnmHRkiAMT42Ne6lt4eiU0oRR94wsxyaWJDmxdwZJPUgdhaokLETBHQxf0W10j6REfOAv1+y4sSgPCZ+0HD2+JmwXTD5NYQ+xQ3ZRn71gM8a6n0SuV/FwbvlQ6yAxuCqPJFgya+DZbn0+hg0Cu6LHSi0whXjHXRamthNvt20b6gDRPS3EdmoJiT3MmFh8xSs0o8O047avMFSL6r22PfgDIb7l2eWhaRcb7LNhIQNWgDoRBa5El9WKtuuh5bYekxoRmMhe0qimjVCvSla/vnKoR7oEDUGu+zP2A4g4cYhTMAfEGwQeV03Z2F7jE1r1wMmHlPw+AMAU0YTo6QVJL2aysrAL0WKqdtE/CODeXeB/Ks7Wah6/ymKM1Rro38WA5iYssrgy7LiIV4Q9uj1/Yk568MRpI5a/BXauRQhIMiVEn070CWQyd9ISsglfMOptdpVv3Grqq+bStCNV4WqPwbxo2V3dTRXG+FbEETrYY6BcN4u1S7/O/6vqNCrXd92DlZJmrT0MkQZepS2JiJmAJOqBK/a4r7pBEg1ERSKgJ9eDOyutSZeY6ZWiVDCRIPZGLjJG6mRw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR19MB4024.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(55016002)(7696005)(53546011)(66476007)(86362001)(6916009)(6506007)(64756008)(88996005)(66446008)(66556008)(30864003)(508600001)(7416002)(8676002)(316002)(33656002)(966005)(83380400001)(122000001)(52536014)(4326008)(186003)(38100700002)(9686003)(8936002)(5660300002)(2906002)(54906003)(71200400001)(66946007)(26005)(21314003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/VCg1Nu6OxGcFrAvv1CtcOyLtdndg/PgxmlnUA5VUE+HOWZKUo8CojMnn38d?=
- =?us-ascii?Q?QMfpwIP3HZ7b9ERSO9/x5EfhCDdVttLsuEg14pqEXJVdNONVRZ+4+j25xbY7?=
- =?us-ascii?Q?jNOHTxaNtuw88NUgfr7FhjPTXjSM/FPBbAe87tiQgpO/V5ykqknKeZ6E9IFM?=
- =?us-ascii?Q?cJghXEA5buzcb+x08CjO+r/H9AKTjVuowBWJ+/h6XULut0uHOK/63WWDM9hA?=
- =?us-ascii?Q?cFgelDb/OqekOpLJ3PG6qIdMzm0C8lfqTqFsqySY8R3dMKaSL0okF+yhZUnb?=
- =?us-ascii?Q?DmwyVflIZf+554BG8HmTW1trJKGx8do0Pcm9358uRbC8V8VdKsqERaUmdqAE?=
- =?us-ascii?Q?BRaHhuqj+3qnl0mgVG33bAZtfq6z4o3hfrPJLSlMOlvhRsFIub3Udwyb/+X8?=
- =?us-ascii?Q?bV9vhYGAxTU/iDNxc+PrVsDVX+MqV+H/4X7Y+H6prM14mFIf82F5pyhhRlsz?=
- =?us-ascii?Q?CsZ9ox9EocW7//3xIyzLjv8E7MNJisl3DW5ZUnyVzVqGEc5YQH9IuPDQa/Dr?=
- =?us-ascii?Q?H/D0Hb66sKAPdjYbJZIi0gSDRL0+ewToAJoucPt7Qa1W1aCcDAjNWTxW1mT0?=
- =?us-ascii?Q?st3bc1KgsRPrcxv6RyhvdPLEV/4QQLBSvtfgHO0k1BHm/efvV2j0laD9lgkB?=
- =?us-ascii?Q?jHAQtBoXjKl/YbY3vuUoFgnTHRAQq+QHgle7UTsCsc39COIqZMtSJozPS/cr?=
- =?us-ascii?Q?w/OSoExIyiOvK+ywNvqor3Qp1lCTkR6FxQRAqlCkS4ZXjQapGYaTZD+4EvjR?=
- =?us-ascii?Q?G724+BZzOQqNRPgZ01IHNZAbo5hKvYkh+n31+2u/XhdMnzcyYsULgbRIPnV2?=
- =?us-ascii?Q?oEtVCuco6eZ84gIplKjrqMWs/CWtmkF8EX+iNb5i/2ZUqzXf7GdufESvYGf3?=
- =?us-ascii?Q?G1U2jgkoQh6WLtuBmc38KoF/LFTZHPJJqSr6rSpsNNqIaE4GAOZya6n7nItq?=
- =?us-ascii?Q?NQckc4oEv1oSTU0t8vvbCh7a1JER2VbfeoHp5U20+wXbWnZ0PZQifNA6voHd?=
- =?us-ascii?Q?Ncr/e9jhfCfmNU+wxMkUe3ZFqMa3wqFRBcFNtmIjnPLREqT+zeKDjemJkw77?=
- =?us-ascii?Q?oz3YgrXC+Y1M45MmngQgGiziMkV+MTJWONp2EhQ4UHtuxgilibm3XP3RdlBa?=
- =?us-ascii?Q?7ek1Ly+KeXGCtklhvHyQOFHLOPc4qOVPwXXWp5GX6NGK20dThkE9+dNMjsFh?=
- =?us-ascii?Q?M6DvGPPcuABfF3RDUP08vD9p6cR900SWH6IaFvApzn+1qGU1yIUnbIhthSJl?=
- =?us-ascii?Q?diOeANTpT9Ih8f4GtsUh6N9gOWaAyIWjd/4wWGv+OAlMRmNuXSqNvX7i/KkY?=
- =?us-ascii?Q?MTzIU1CmDjdCUEnN8wOVmK8PS94ZqCIshnogiBLSBX7AEYReNx+A+Q1Yx9Oc?=
- =?us-ascii?Q?JfZvVwu2/HfuMBP7t5OaU0FkpHklkohGo6852kdLOOekkY+iEcnn8HLs2p+8?=
- =?us-ascii?Q?Y5bNvzGYxfTCbr5k922If784S2Miqo8hfW4duWTdyFdVWhI9hl7BX2mhPXLG?=
- =?us-ascii?Q?HmgQZed0trShcbWRaE2NsemFa/oP0gxOUgbz3in7pI+6XPJhmrHHONTgZLty?=
- =?us-ascii?Q?4BJob88sImf9fvSm6xdI8aPSLFa6LeyohwwNDfXtRJ3U95nTtbrimuh8cVZ7?=
- =?us-ascii?Q?W7n8bjGquafiFp3rVsfJkrI=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HJuGVKmkk97ru+tb/7RXCjXIvKw7ci4i8WvnM7CryrylkMdpFR1XSZ899afS?=
+ =?us-ascii?Q?npEi5IqaIjCfXIbH+GeWTa1LOyfCJmKRVOgbO3kb25c9MI3XoVgUClLdXNhi?=
+ =?us-ascii?Q?EJepWXOL7W8V9CvEZROfes6y1GKZpzcgGTteXkgMCbCdiK0IBYh5QJaiK2T6?=
+ =?us-ascii?Q?tQJOxKKc/sopJhd4U/JyTMHdEygdzxB0Fk8Eo2jWAUSPEcC0kxj9VR/Z+RpC?=
+ =?us-ascii?Q?085PJX/0eWdQhBevOlilNCGc7fsmgIYY4DoCeGeq+52DqLjZUPEPATahWV0L?=
+ =?us-ascii?Q?BBkaKgqi754kg8n+3MEhKs6QwiEIrdf/M/vpTLMWboyJoEHFFy4ymuTogDhd?=
+ =?us-ascii?Q?ptwbDAXEau0+RHDZYIcUhi3+Ji6/9WfoSry6xdldMo40DSCXiJbukz2hebrL?=
+ =?us-ascii?Q?Q3jAsbEr/llAG+85Hb2dCL4QcydFLXmZY3mKLAGhToW2lt0ZkSkV7W4q0LYi?=
+ =?us-ascii?Q?w5pYcYY0RnRMtvPZ3QCkP42v6Q7pP19WU0I9osmn4BNEmkrfKbYn5u3Gx30v?=
+ =?us-ascii?Q?yGxkN6NksEMLWm6LMNcjNwnO/PlZlR75GD5hHeDDG6zK0FOtie/IqKT0ytps?=
+ =?us-ascii?Q?zyZfbVJQsU5JbMKS6Spk9Ssq50ietGLHcFHaAdMCWLTtURvHmgkwKl73yJz5?=
+ =?us-ascii?Q?ScxlDvGt+F7j45RLeiSr4+TqiQqAq6pL2EzYJks7bK+C9QZAzO5XEIL4jc4L?=
+ =?us-ascii?Q?oLpfJUJWz3x9LizL+pSOo76h7VTsnreHXhBDOT3w3kfGdtZAvVZJvUc+ei3d?=
+ =?us-ascii?Q?AMnFCdVNO7YJAnotLfnqQqaydKwknZSxoZtDIPgPnYNRJN3Ilz22ccK2OaPj?=
+ =?us-ascii?Q?2PiOoEI3lSgGVJKHgQOIWFch7Ufy4HeabxpL2q84boUZjEhK7JxxDKOYg1AU?=
+ =?us-ascii?Q?U8m46FIWccBS0l+ZUpINDw6FGcPGfgFzg24K635ynvYleFjmQvYBmKdh6A57?=
+ =?us-ascii?Q?5Tl5VFCOZXbaEQto3zeCjnTLB4RcU2jLNlmB+C33lQJh9qP7QIa1EbCXj0C2?=
+ =?us-ascii?Q?1HeWnC0jL2tzew3Ig2KsD1KYbn2odxqIPLqooY5IOv6xgd6CXoPKb7gggSLO?=
+ =?us-ascii?Q?EpiZ1yA6rgKlJh3u7DXSFtu39lN0DQdzh0HfC0kHFjt5fK0/l5Uqjxx2dklR?=
+ =?us-ascii?Q?Ugo6eNOs+T9gbBRvud+0SBKLW5ufNw3DbDJUq0bzHaA/qaV/EfvcQmCSHeRb?=
+ =?us-ascii?Q?4gQYrjyhZV35SyHCPCcOEfr8+qylwn1OWS8RxUXluGHautqESkns0U4j2mVt?=
+ =?us-ascii?Q?hRn7rDfpxCjB9YaiZzl78byEazId2eu7Go+HlPCJJr3bVHgAr5Me/vZi96Kj?=
+ =?us-ascii?Q?aXEFZzDbIKXfDqT00RG7gq+5NbvzhbUhh9xcKpAeJtLrvQWlFFc0+PT4rl/L?=
+ =?us-ascii?Q?ty/wZ5prfkXhRPGPnLcXERhssyB+tCYwq0lIaAVIOxl29dGfQyF6LMBaZgs5?=
+ =?us-ascii?Q?XuQEuBWI85O33qWiOC+x1XKsqqlRV6PqLEtsRUz0T0kZ3sUuGkYok0TjhoqL?=
+ =?us-ascii?Q?aE0odR4eqr8fu5u2ay/Cp4VX3PC+im9JBjVVX3ZjdIztOlI5y4pMp2jDr37M?=
+ =?us-ascii?Q?hvT+zomYZZrkfqUynrpGlMpdimn/Mp9moWXVBMV5yiQTpv25t2y0Vxo/7AnX?=
+ =?us-ascii?Q?GmJNTUmF5Ax7Mszsd63RrfA=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: ambarella.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5702.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b17a209-b130-4f2e-903a-08d99db32562
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2021 03:45:00.0523
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR19MB4024.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03d94325-4891-4e6f-c556-08d99dc02c04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2021 05:18:14.5804
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-id: 3ccd3c8d-5f7c-4eb4-ae6f-32d8c106402c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /3KxYcdGdMrtuuI8D5YRCaq0aOIbt1OKby0WHdC5YV/ev67r3p8bl3SigMgyhEpv1/To25RYKCV9t7hI19OPiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3548
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-userprincipalname: N8I97VaPVtl/29auTGtAHEoVDjRnVzeSRvENX704PJyWMD7oBKljuhvmGf42NU14f6uNtznraOHgum2ojjE87g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB4087
+X-Proofpoint-GUID: 4dsmBpy9hCG_DhwPwgfMgIGxu9KFP5e-
+X-Proofpoint-ORIG-GUID: 4dsmBpy9hCG_DhwPwgfMgIGxu9KFP5e-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-02_01,2021-11-01_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 spamscore=0 bulkscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111020030
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, dear kernel developer,
+Hi, Bjorn
 
-Recently we encounter system hang (dead spinlock) when move to kernel linux=
--5.4.y.=20
+> -----Original Message-----
+> From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> Sent: Saturday, October 30, 2021 3:43 AM
+> To: Li Chen
+> Cc: Keith Busch; linux-pci@vger.kernel.org; Lorenzo Pieralisi; Rob Herrin=
+g;
+> kw@linux.com; Bjorn Helgaas; linux-kernel@vger.kernel.org; Tom Joseph; Je=
+ns
+> Axboe; Christoph Hellwig; Sagi Grimberg; linux-nvme@lists.infradead.org
+> Subject: Re: [EXT] Re: nvme may get timeout from dd when using different =
+non-
+> prefetch mmio outbound/ranges
+>=20
+> On Fri, Oct 29, 2021 at 10:52:37AM +0000, Li Chen wrote:
+> > > -----Original Message-----
+> > > From: Keith Busch [mailto:kbusch@kernel.org]
+> > > Sent: Tuesday, October 26, 2021 12:16 PM
+> > > To: Li Chen
+> > > Cc: Bjorn Helgaas; linux-pci@vger.kernel.org; Lorenzo Pieralisi; Rob =
+Herring;
+> > > kw@linux.com; Bjorn Helgaas; linux-kernel@vger.kernel.org; Tom Joseph;
+> Jens
+> > > Axboe; Christoph Hellwig; Sagi Grimberg; linux-nvme@lists.infradead.o=
+rg
+> > > Subject: Re: [EXT] Re: nvme may get timeout from dd when using differ=
+ent
+> non-
+> > > prefetch mmio outbound/ranges
+> > >
+> > > On Tue, Oct 26, 2021 at 03:40:54AM +0000, Li Chen wrote:
+> > > > My nvme is " 05:00.0 Non-Volatile memory controller: Samsung Electr=
+onics
+> Co
+> > > Ltd NVMe SSD Controller 980". From its datasheet,
+> > > https://urldefense.com/v3/__https://s3.ap-northeast-
+> > >
+> 2.amazonaws.com/global.semi.static/Samsung_NVMe_SSD_980_Data_Sheet_R
+> > >
+> ev.1.1.pdf__;!!PeEy7nZLVv0!3MU3LdTWuzON9JMUkq29zwJM4d7g7wKtkiZszTu-
+> > > PVepWchI_uLHpQGgdR_LEZM$ , it says nothing about CMB/SQEs, so I'm not
+> sure.
+> > > Is there other ways/tools(like nvme-cli) to query?
+> > >
+> > > The driver will export a sysfs property for it if it is supported:
+> > >
+> > >   # cat /sys/class/nvme/nvme0/cmb
+> > >
+> > > If the file doesn't exist, then /dev/nvme0 doesn't have the capabilit=
+y.
+> > >
+> > > > > > I don't know how to interpret "ranges".  Can you supply the dme=
+sg and
+> > > > > > "lspci -vvs 0000:05:00.0" output both ways, e.g.,
+> > > > > >
+> > > > > >   pci_bus 0000:00: root bus resource [mem 0x7f800000-0xefffffff
+> window]
+> > > > > >   pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff
+> window]
+> > > > > >   pci 0000:05:00.0: [vvvv:dddd] type 00 class 0x...
+> > > > > >   pci 0000:05:00.0: reg 0x10: [mem 0x.....000-0x.....fff ...]
+> > > > > >
+> > > > > > > Question:
+> > > > > > > 1.  Why dd can cause nvme timeout? Is there more debug ways?
+> > > > >
+> > > > > That means the nvme controller didn't provide a response to a pos=
+ted
+> > > > > command within the driver's latency tolerance.
+> > > >
+> > > > FYI, with the help of pci bridger's vendor, they find something
+> > > > interesting:
+> > > "From catc log, I saw some memory read pkts sent from SSD card,
+> > > but its memory range is within the memory range of switch down
+> > > port. So, switch down port will replay UR pkt. It seems not
+> > > normal." and "Why SSD card send out some memory pkts which memory
+> > > address is within switch down port's memory range. If so, switch
+> > > will response UR pkts". I also don't understand how can this
+> > > happen?
+> > >
+> > > I think we can safely assume you're not attempting peer-to-peer,
+> > > so that behavior as described shouldn't be happening. It sounds
+> > > like the memory windows may be incorrect. The dmesg may help to
+> > > show if something appears wrong.
+> >
+> > Agree that here doesn't involve peer-to-peer DMA. After conforming
+> > from switch vendor today, the two ur(unsupported request) is because
+> > nvme is trying to dma read dram with bus address 80d5000 and
+> > 80d5100. But the two bus addresses are located in switch's down port
+> > range, so the switch down port report ur.
+> >
+> > In our soc, dma/bus/pci address and physical/AXI address are 1:1,
+> > and DRAM space in physical memory address space is 000000.0000 -
+> > 0fffff.ffff 64G, so bus address 80d5000 and 80d5100 to cpu address
+> > are also 80d5000 and 80d5100, which both located inside dram space.
+> >
+> > Both our bootloader and romcode don't enum and configure pcie
+> > devices and switches, so the switch cfg stage should be left to
+> > kernel.
+> >
+> > Come back to the subject of this thread: " nvme may get timeout from
+> > dd when using different non-prefetch mmio outbound/ranges". I found:
+> >
+> > 1. For <0x02000000 0x00 0x08000000 0x20 0x08000000 0x00 0x04000000>;
+> > (which will timeout nvme)
+> >
+> > Switch(bridge of nvme)'s resource window:
+> > Memory behind bridge: Memory behind bridge: 08000000-080fffff [size=3D1=
+M]
+> >
+> > 80d5000 and 80d5100 are both inside this range.
+>=20
+> The PCI host bridge MMIO window is here:
+>=20
+>   pci_bus 0000:00: root bus resource [mem 0x2008000000-0x200bffffff] (bus
+> address [0x08000000-0x0bffffff])
+>   pci 0000:01:00.0: PCI bridge to [bus 02-05]
+>   pci 0000:01:00.0:   bridge window [mem 0x2008000000-0x20080fffff]
+>   pci 0000:02:06.0: PCI bridge to [bus 05]
+>   pci 0000:02:06.0:   bridge window [mem 0x2008000000-0x20080fffff]
+>   pci 0000:05:00.0: BAR 0: assigned [mem 0x2008000000-0x2008003fff 64bit]
+>=20
+> So bus address [0x08000000-0x0bffffff] is the area used for PCI BARs.
+> If the NVMe device is generating DMA transactions to 0x080d5000, which
+> is inside that range, those will be interpreted as peer-to-peer
+> transactions.  But obviously that's not intended and there's no device
+> at 0x080d5000 anyway.
+>=20
+> My guess is the nvme driver got 0x080d5000 from the DMA API, e.g.,
+> dma_map_bvec() or dma_map_sg_attrs(), so maybe there's something wrong
+> in how that's set up.  Is there an IOMMU?  There should be arch code
+> that knows what RAM is available for DMA buffers, maybe based on the
+> DT.  I'm not really familiar with how all that would be arranged, but
+> the complete dmesg log and complete DT might have a clue.  Can you
+> post those somewhere?
 
-Finally, we use bisect to locate the suspicious commit https://git.kernel.o=
-rg/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=3Dlinux-5.4.y&id=3D4=
-667358dab9cc07da044d5bc087065545b1000df.
+After some printk, I found nvme_pci_setup_prps get some dma addresses insid=
+e switch's memory window from sg, but I don't where the sg is from(see comm=
+ents in following source codes):
 
-Our system has some HW defect, which will wrongly set PCI_EXP_SLTSTA_PFD hi=
-gh, and this commit will lead to infinite loop jumping to read_status (no c=
-hance to clear status PCI_EXP_SLTSTA_PFD bit since ctrl is not updated), I =
-know this is our HW defect, but this commit makes kernel trapped in this is=
-r function and leads to kernel hang (then the user could not get useful inf=
-ormation to show what's wrong), which I think is not expected behavior, so =
-I would like to report to you for discussion.
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_=
-hpc.c
-index 356786a3b7f4b..88b996764ff95 100644
---- a/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree=
-/drivers/pci/hotplug/pciehp_hpc.c?h=3Dlinux-5.4.y&id=3Dca767cf0152d18fc299c=
-de85b18d1f46ac21e1ba
-+++ b/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree=
-/drivers/pci/hotplug/pciehp_hpc.c?h=3Dlinux-5.4.y&id=3D4667358dab9cc07da044=
-d5bc087065545b1000df
-@@ -529,7 +529,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	struct controller *ctrl =3D (struct controller *)dev_id;
- 	struct pci_dev *pdev =3D ctrl_dev(ctrl);
- 	struct device *parent =3D pdev->dev.parent;
--	u16 status, events;
-+	u16 status, events =3D 0;
-=20
- 	/*
- 	 * Interrupts only occur in D3hot or shallower and only if enabled
-@@ -554,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		}
- 	}
-=20
-+read_status:
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
- 	if (status =3D=3D (u16) ~0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-@@ -566,24 +567,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	 * Slot Status contains plain status bits as well as event
- 	 * notification bits; right now we only want the event bits.
- 	 */
--	events =3D status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
--			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
--			   PCI_EXP_SLTSTA_DLLSC);
-+	status &=3D PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-+		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-+		  PCI_EXP_SLTSTA_DLLSC;
-=20
- 	/*
- 	 * If we've already reported a power fault, don't report it again
- 	 * until we've done something to handle it.
- 	 */
- 	if (ctrl->power_fault_detected)
--		events &=3D ~PCI_EXP_SLTSTA_PFD;
-+		status &=3D ~PCI_EXP_SLTSTA_PFD;
-=20
-+	events |=3D status;
- 	if (!events) {
- 		if (parent)
- 			pm_runtime_put(parent);
- 		return IRQ_NONE;
- 	}
-=20
--	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-+	if (status) {
-+		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-+
-+		/*
-+		 * In MSI mode, all event bits must be zero before the port
-+		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
-+		 * So re-read the Slot Status register in case a bit was set
-+		 * between read and write.
-+		 */
-+		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
-+			goto read_status;
-+	}
-+
- 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
- 	if (parent)
- 		pm_runtime_put(parent);
+static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
+		struct request *req, struct nvme_rw_command *cmnd)
+{
+	struct nvme_iod *iod =3D blk_mq_rq_to_pdu(req);
+	struct dma_pool *pool;
+	int length =3D blk_rq_payload_bytes(req);
+	struct scatterlist *sg =3D iod->sg;
+	int dma_len =3D sg_dma_len(sg);
+	u64 dma_addr =3D sg_dma_address(sg);
+                ......
+	for (;;) {
+		if (i =3D=3D NVME_CTRL_PAGE_SIZE >> 3) {
+			__le64 *old_prp_list =3D prp_list;
+			prp_list =3D dma_pool_alloc(pool, GFP_ATOMIC, &prp_dma);
+			printk("lchen %s %d dma pool %llx", __func__, __LINE__, prp_dma);
+			if (!prp_list)
+				goto free_prps;
+			list[iod->npages++] =3D prp_list;
+			prp_list[0] =3D old_prp_list[i - 1];
+			old_prp_list[i - 1] =3D cpu_to_le64(prp_dma);
+			i =3D 1;
+		}
+		prp_list[i++] =3D cpu_to_le64(dma_addr);
+		dma_len -=3D NVME_CTRL_PAGE_SIZE;
+		dma_addr +=3D NVME_CTRL_PAGE_SIZE;
+		length -=3D NVME_CTRL_PAGE_SIZE;
+		if (length <=3D 0)
+			break;
+		if (dma_len > 0)
+			continue;
+		if (unlikely(dma_len < 0))
+			goto bad_sgl;
+		sg =3D sg_next(sg);
+		dma_addr =3D sg_dma_address(sg);
+		dma_len =3D sg_dma_len(sg);
 
 
-Regards
-Joseph
+		// XXX: Here get the following output, the region is inside bridge's wind=
+ow 08000000-080fffff [size=3D1M]
+		/*
 
+# dmesg | grep " 80" | grep -v "  80"
+[    0.000476] Console: colour dummy device 80x25
+[   79.331766] lchen dma nvme_pci_setup_prps 708 addr 80ba000, end addr 80b=
+c000
+[   79.815469] lchen dma nvme_pci_setup_prps 708 addr 8088000, end addr 809=
+0000
+[  111.562129] lchen dma nvme_pci_setup_prps 708 addr 8088000, end addr 809=
+0000
+[  111.873690] lchen dma nvme_pci_setup_prps 708 addr 80ba000, end addr 80b=
+c000
+			 * * */
+		printk("lchen dma %s %d addr %llx, end addr %llx", __func__, __LINE__, dm=
+a_addr, dma_addr + dma_len);
+	}
+done:
+	cmnd->dptr.prp1 =3D cpu_to_le64(sg_dma_address(iod->sg));
+	cmnd->dptr.prp2 =3D cpu_to_le64(iod->first_dma);
+	return BLK_STS_OK;
+free_prps:
+	nvme_free_prps(dev, req);
+	return BLK_STS_RESOURCE;
+bad_sgl:
+	WARN(DO_ONCE(nvme_print_sgl, iod->sg, iod->nents),
+			"Invalid SGL for payload:%d nents:%d\n",
+			blk_rq_payload_bytes(req), iod->nents);
+	return BLK_STS_IOERR;
+}
+
+Backtrace of this function:
+# entries-in-buffer/entries-written: 1574/1574   #P:2
+#
+#                                _-----=3D> irqs-off
+#                               / _----=3D> need-resched
+#                              | / _---=3D> hardirq/softirq
+#                              || / _--=3D> preempt-depth
+#                              ||| /     delay
+#           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION
+#              | |         |   ||||      |         |
+    kworker/u4:0-7       [000] ...1    40.095494: nvme_queue_rq <-blk_mq_di=
+spatch_rq_list
+    kworker/u4:0-7       [000] ...1    40.095503: <stack trace>
+ =3D> nvme_queue_rq
+ =3D> blk_mq_dispatch_rq_list
+ =3D> __blk_mq_do_dispatch_sched
+ =3D> __blk_mq_sched_dispatch_requests
+ =3D> blk_mq_sched_dispatch_requests
+ =3D> __blk_mq_run_hw_queue
+ =3D> __blk_mq_delay_run_hw_queue
+ =3D> blk_mq_run_hw_queue
+ =3D> blk_mq_sched_insert_requests
+ =3D> blk_mq_flush_plug_list
+ =3D> blk_flush_plug_list
+ =3D> blk_mq_submit_bio
+ =3D> __submit_bio_noacct_mq
+ =3D> submit_bio_noacct
+ =3D> submit_bio
+ =3D> submit_bh_wbc.constprop.0
+ =3D> __block_write_full_page
+ =3D> block_write_full_page
+ =3D> blkdev_writepage
+ =3D> __writepage
+ =3D> write_cache_pages
+ =3D> generic_writepages
+ =3D> blkdev_writepages
+ =3D> do_writepages
+ =3D> __writeback_single_inode
+ =3D> writeback_sb_inodes
+ =3D> __writeback_inodes_wb
+ =3D> wb_writeback
+ =3D> wb_do_writeback
+ =3D> wb_workfn
+ =3D> process_one_work
+ =3D> worker_thread
+ =3D> kthread
+ =3D> ret_from_fork
+
+
+We don't have IOMMU and just have 1:1 mapping dma outbound.=20
+
+
+Here is the whole dmesg output(without my debug log): https://paste.debian.=
+net/1217721/
+Here is our dtsi: https://paste.debian.net/1217723/
+>=20
+> > 2. For <0x02000000 0x00 0x00400000 0x20 0x00400000 0x00 0x08000000>;
+> > (which make nvme not timeout)
+> >
+> > Switch(bridge of nvme)'s resource window:
+> > Memory behind bridge: Memory behind bridge: 00400000-004fffff [size=3D1=
+M]
+> >
+> > 80d5000 and 80d5100 are not inside this range, so if nvme tries to
+> > read 80d5000 and 80d5100 , ur won't happen.
+> >
+> > From /proc/iomen:
+> > # cat /proc/iomem
+> > 01200000-ffffffff : System RAM
+> >   01280000-022affff : Kernel code
+> >   022b0000-0295ffff : reserved
+> >   02960000-040cffff : Kernel data
+> >   05280000-0528ffff : reserved
+> >   41cc0000-422c0fff : reserved
+> >   422c1000-4232afff : reserved
+> >   4232d000-667bbfff : reserved
+> >   667bc000-667bcfff : reserved
+> >   667bd000-667c0fff : reserved
+> >   667c1000-ffffffff : reserved
+> > 2000000000-2000000fff : cfg
+> >
+> > No one uses 0000000-1200000, so " Memory behind bridge: Memory
+> > behind bridge: 00400000-004fffff [size=3D1M]" will never have any
+> > problem(because 0x1200000 > 0x004fffff).
+> >
+> > Above answers the question in Subject, one question left: what's the
+> > right way to resolve this problem? Use ranges property to configure
+> > switch memory window indirectly(just what I did)? Or something else?
+> >
+> > I don't think changing range property is the right way: If my PCIe
+> > topology becomes more complex and have more endpoints or switches,
+> > maybe I have to reserve more MMIO through range property(please
+> > correct me if I'm wrong), the end of switch's memory window may be
+> > larger than 0x01200000. In case getting ur again,  I must reserve
+> > more physical memory address for them(like change kernel start
+> > address 0x01200000 to 0x02000000), which will make my visible dram
+> > smaller(I have verified it with "free -m"), it is not acceptable.
+>=20
+> Right, I don't think changing the PCI ranges property is the right
+> answer.  I think it's just a coincidence that moving the host bridge
+> MMIO aperture happens to move it out of the way of the DMA to
+> 0x080d5000.
+>=20
+> As far as I can tell, the PCI core and the nvme driver are doing the
+> right things here, and the problem is something behind the DMA API.
+>=20
+> I think there should be something that removes the MMIO aperture bus
+> addresses, i.e., 0x08000000-0x0bffffff in the timeout case, from the
+> pool of memory available for DMA buffers.
+>=20
+> The MMIO aperture bus addresses in the non-timeout case,
+> 0x00400000-0x083fffff, are not included in the 0x01200000-0xffffffff
+> System RAM area, which would explain why a DMA buffer would never
+> overlap with it.
+>=20
+> Bjorn
+
+Regards,
+Li
+
+**********************************************************************
+This email and attachments contain Ambarella Proprietary and/or Confidentia=
+l Information and is intended solely for the use of the individual(s) to wh=
+om it is addressed. Any unauthorized review, use, disclosure, distribute, c=
+opy, or print is prohibited. If you are not an intended recipient, please c=
+ontact the sender by reply email and destroy all copies of the original mes=
+sage. Thank you.
