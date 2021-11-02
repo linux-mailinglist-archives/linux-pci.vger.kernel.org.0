@@ -2,119 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24C81443156
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 16:13:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC715443165
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 16:18:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbhKBPQM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 11:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230175AbhKBPQL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Nov 2021 11:16:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D3C960F24;
-        Tue,  2 Nov 2021 15:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635866016;
-        bh=BB+R/uffB4V5gOFeD0uput1lLasOetsv77SLC1aQ4KU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oea2cXP0x/vG+90qMT5cqaYMw/jruITLkn/ngexh6Bs/p3B8J+sDonHOvvogcpz7i
-         9QA+pK2OlRC7ZNhuP9WIQ/PxRXEaXdpDIchYSuMPp7R60WaH1I1g+roBXKuK5yhuK1
-         EipGwOvnxrpo7zyXUAR7h1yy9D4k5BkW+Qd5hwQZJJNWH1ImMacnjz9olkfBSell59
-         XS9ZPfXUAd3f7zrGmgo7JgRzIdgqWcXJ/VxTZX+3+y947c5s1nDkd/UvjnJXfIONun
-         LEYH/lxywQvkU5O7xUQo3eFm1uab5WRQ0O77L/fGAWdkrfMmk/u7f+F+nJoY5WdVB6
-         G2o5u/O/N0x5A==
-Received: by pali.im (Postfix)
-        id 4B64CA41; Tue,  2 Nov 2021 16:13:34 +0100 (CET)
-Date:   Tue, 2 Nov 2021 16:13:34 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Marvell: Update PCIe fixup
-Message-ID: <20211102151334.2pispbz6zfewworr@pali>
-References: <20211101150405.14618-1-pali@kernel.org>
- <20211102084241.GA6134@alpha.franken.de>
- <20211102090246.unmbruykfdjabfga@pali>
- <20211102094700.GA7376@alpha.franken.de>
- <20211102100034.rhcb3k2jvr6alm6y@pali>
- <20211102150201.GA11675@alpha.franken.de>
+        id S234220AbhKBPUx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 11:20:53 -0400
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:44601 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232269AbhKBPUr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 11:20:47 -0400
+Received: by mail-oo1-f53.google.com with SMTP id w23-20020a4a9d17000000b002bb72fd39f3so5940756ooj.11;
+        Tue, 02 Nov 2021 08:18:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2EIwvka6HY0tt1mWfUfg0OA139r7CHLfgZe4bS2xaN8=;
+        b=Gv24YAWs7aLoDGqLU+wNSi765fZtzJVnY9bHzEB6qL1s0p84ZB6Wz43O2YCzQ9UE8g
+         2QigRhI1Wbz1jLLMr4yzku8nDOJFqfgJP6Ym6eTnWZRzDrkTddIpnlLFiCU6U5GKLIi5
+         aQWqJ/PzP6wZl8bm5iDkN0ZLgOGSBuAPRjJtEx+gZjbE7IwnVY0ghCHiHNjEfxlmVnl4
+         yVjojSFEDzRcHSRg0R28xq8ueqjcks3v9d3JKbB/GC/FJBU+dyXhWeJ+dOUAbpCKF55P
+         1+XS2TVhhTpNOb++FLC/dtLCv8EC4ilAEQHHCSSR17lBTmekFf5S0kRBfKX0GZnONAsq
+         vv4A==
+X-Gm-Message-State: AOAM530u/iaRgRD/btQkA4lvl/Sk3wniVG7U+jafU0nkgc136eJW/2O5
+        iJJ0QwklzWnfHJZchucr7Q==
+X-Google-Smtp-Source: ABdhPJz0/37WePS8h7rPOcKD03943wRIiB/hsuVsiy+jnaSiOa93DnFJu1gnimNb3NyeLukbT6gIbA==
+X-Received: by 2002:a4a:c304:: with SMTP id c4mr24984263ooq.34.1635866292338;
+        Tue, 02 Nov 2021 08:18:12 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id t141sm331675oie.25.2021.11.02.08.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Nov 2021 08:18:11 -0700 (PDT)
+Received: (nullmailer pid 2901202 invoked by uid 1000);
+        Tue, 02 Nov 2021 15:18:09 -0000
+Date:   Tue, 2 Nov 2021 10:18:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/9] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+Message-ID: <YYFWsenSLJ4yzgp3@robh.at.kernel.org>
+References: <20211029200319.23475-1-jim2101024@gmail.com>
+ <20211029200319.23475-3-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211102150201.GA11675@alpha.franken.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211029200319.23475-3-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 02 November 2021 16:02:01 Thomas Bogendoerfer wrote:
-> On Tue, Nov 02, 2021 at 11:00:34AM +0100, Pali Rohár wrote:
-> > > > But I do not have this hardware to verify it.
-> > > 
-> > > I still have a few Cobalt systems here.
-> > 
-> > Perfect! It would help if you could provide 'lspci -nn -vv' output from
-> > that system. In case you have very old version of lspci on that system
-> > you could try to run it with '-xxxx' (or '-xxx') which prints hexdump
-> > and I can parse it with local lspci.
+On Fri, Oct 29, 2021 at 04:03:10PM -0400, Jim Quinlan wrote:
+> Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+> allows optional regulators to be attached and controlled by the PCIe RC
+> driver.  That being said, this driver searches in the DT subnode (the EP
+> node, eg pci-ep@0,0) for the regulator property.
 > 
-> not sure, if you still needed:
+> The use of a regulator property in the pcie EP subnode such as
+> "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+> file at
 > 
-> root@raq2:~# lspci -nn -vv
-> 00:00.0 Host bridge [0600]: Marvell Technology Group Ltd. Device [11ab:4146] (rev 11)
-> 	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-> 	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ >SERR- <PERR+ INTx-
-> 	Latency: 64, Cache Line Size: 32 bytes
-> 	Interrupt: pin A routed to IRQ 0
-> 	Region 1: Memory at 08000000 (32-bit, non-prefetchable) [size=128M]
-> 	Region 2: Memory at 1c000000 (32-bit, non-prefetchable) [size=32M]
-> 	Region 3: Memory at 1f000000 (32-bit, non-prefetchable) [size=16M]
-> 	Region 4: Memory at 14000000 (32-bit, non-prefetchable) [size=4K]
-> 	Region 5: I/O ports at 4000000 [disabled] [size=4K]
+> https://github.com/devicetree-org/dt-schema/pull/63
 > 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> root@raq2:~# lspci -xxxx
-> 00:00.0 Host bridge: Marvell Technology Group Ltd. Device 4146 (rev 11)
-> 00: ab 11 46 41 06 00 80 a2 11 00 80 05 08 40 00 00
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 508e5dce1282..d90d867deb5c 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -62,6 +62,10 @@ properties:
+>  
+>    aspm-no-l0s: true
+>  
+> +  vpcie12v-supply: true
+> +  vpcie3v3-supply: true
+> +  vpcie3v3aux-supply: true
+> +
 
-                                 ^^ ^^ ^^
-                           Here is class code
+You've put these in the host bridge node and in *any* bridge node for 
+pci-bus.yaml, but that's not where you have them in the example.
 
-So it confirms that PCI Class code is 0580 which is Memory Controller.
-And not Host Bridge as it should be.
+The question is where is the right place. Normally, I'd say that's in 
+the node consuming or connected to the resource. That would be as you 
+have the example. However, as we're talking about standard slots (or at 
+least standard slot rails), we likely don't have node for the device in 
+the slot and can't add one since it is likely unknown what the device 
+is. In other cases, we'd define a connector or slot node, but there's 
+not really a way to do that given the PCI bus topology is already 
+defined. So I think the right place is the bridge node on the upstream 
+side of the slot/connector. So the 'pci@0,0' node in your case.
 
-If I put this hexdump into dump.txt and run 'lspci -F dump.txt -nn' then I see:
-00:00.0 Memory controller [0580]: Marvell Technology Group Ltd. Device [11ab:4146] (rev 11)
+Rob
 
-In your output above is "Host bridge" which means that quirk was applied:
-00:00.0 Host bridge [0600]: Marvell Technology Group Ltd. Device [11ab:4146] (rev 11)
-
-(I guess in 'lspci -nn -vv -b' should be Memory controller as lspci with
-'-b' should not see that quirk change)
-
-> 10: 00 00 00 00 00 00 00 08 00 00 00 1c 00 00 00 1f
-> 20: 00 00 00 14 01 00 00 14 00 00 00 00 00 00 00 00
-> 30: 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00
-> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 
-> Thomas.
-> 
+>    brcm,scb-sizes:
+>      description: u64 giving the 64bit PCIe memory
+>        viewport size of a memory controller.  There may be up to
+> @@ -158,5 +162,28 @@ examples:
+>                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+>                      brcm,enable-ssc;
+>                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+> +
+> +                    /* PCIe bridge */
+> +                    pci@0,0 {
+> +                            #address-cells = <3>;
+> +                            #size-cells = <2>;
+> +                            reg = <0x0 0x0 0x0 0x0 0x0>;
+> +                            compatible = "pciclass,0604";
+> +                            device_type = "pci";
+> +                            ranges;
+> +
+> +                            /* PCIe endpoint */
+> +                            pci-ep@0,0 {
+> +                                    assigned-addresses =
+> +                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+> +                                    reg = <0x0 0x0 0x0 0x0 0x0>;
+> +                                    compatible = "pci14e4,1688";
+> +                                    vpcie3v3-supply = <&vreg7>;
+> +                                    #address-cells = <3>;
+> +                                    #size-cells = <2>;
+> +
+> +                                    ranges;
+> +                            };
+> +                    };
+>              };
+>      };
 > -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> 2.17.1
+> 
+> 
