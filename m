@@ -2,216 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9504B4430FE
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 15:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1ABD443130
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 16:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234420AbhKBPAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 11:00:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50696 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234901AbhKBO7a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 10:59:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635865015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rXNQNfiHB/PeLRGP+7hDt0wdDNq5SSU2T+fjB5p1Png=;
-        b=FvpT7EMOtsB2wiPdILPFevnGy4q+TbqosSBoR/SvD3V8i04vm3SbNuyps0bpsb4ppJi1vr
-        n37NkNtBW+yo1qxsojxouSKBon8OWuXuKTYmYnulMVNEsPZ+VItBlqIr+IJ4jxMDZqvbmB
-        +cBTKWl+DQRyiNoK/fl+vQTIevuecjA=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-531-cvJq3jTiM6OwaRnzF7mrhg-1; Tue, 02 Nov 2021 10:56:54 -0400
-X-MC-Unique: cvJq3jTiM6OwaRnzF7mrhg-1
-Received: by mail-oo1-f69.google.com with SMTP id j11-20020a4ad6cb000000b002b8e10ec93dso9671848oot.8
-        for <linux-pci@vger.kernel.org>; Tue, 02 Nov 2021 07:56:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rXNQNfiHB/PeLRGP+7hDt0wdDNq5SSU2T+fjB5p1Png=;
-        b=aTDOccdfmAIL5DexyT/wR8yzW4e0WqM+U8MpOEwr7LG/jXMq1z1KJ6tUR2skCBvsP/
-         XHZ+iQ6MoPccGIMvT6WjU6NsnIybApGKND6gsGv8dJemgLTk/CQ0kscgd9Ln9pDT4m64
-         pbo/NdUAoBudxrSvn/Ar/T7WZMAiGrzv0C/sUn5psEQJV/0erdx6jH2HVWCd+2vS7Kak
-         F/mDFy6lhxDu+BDrIjNc9wvioyTceO+vsUZLBSZ4o/7gKi+KoIJus+AbQviP35G4OM40
-         Q9YCmUAKOm/aqEV9JBtdqn4VpcJnR7O+vtkKynQYISeRU3FtvHmLEcSY1Mw/aZOkTcRa
-         +Mrw==
-X-Gm-Message-State: AOAM532bATJjbluXNPCzS9/+gZmRgfuoSsgTJZ0/g/HONIuHfX4pGkOj
-        xq1hQ0mEB4TzbeLhADnGh6KdAZGuwxCbmtT3QzM8nGUxNTlI6pbKvMFSKcNWYdhpFo1jpGVooXy
-        MJp7TqVa7df7wdq2Acbuf
-X-Received: by 2002:a9d:2909:: with SMTP id d9mr16105619otb.187.1635865013961;
-        Tue, 02 Nov 2021 07:56:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJytw8wBjugPRoTH1oiXe4YvuMOLPdBjoz6aqSXNqQjkKkVHyT46/WIQqNFRBpB6ufxkPoDYvQ==
-X-Received: by 2002:a9d:2909:: with SMTP id d9mr16105590otb.187.1635865013678;
-        Tue, 02 Nov 2021 07:56:53 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id d24sm2423495otq.5.2021.11.02.07.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 07:56:53 -0700 (PDT)
-Date:   Tue, 2 Nov 2021 08:56:51 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211102085651.28e0203c.alex.williamson@redhat.com>
-In-Reply-To: <20211101172506.GC2744544@nvidia.com>
-References: <20211025145646.GX2744544@nvidia.com>
-        <20211026084212.36b0142c.alex.williamson@redhat.com>
-        <20211026151851.GW2744544@nvidia.com>
-        <20211026135046.5190e103.alex.williamson@redhat.com>
-        <20211026234300.GA2744544@nvidia.com>
-        <20211027130520.33652a49.alex.williamson@redhat.com>
-        <20211027192345.GJ2744544@nvidia.com>
-        <20211028093035.17ecbc5d.alex.williamson@redhat.com>
-        <20211028234750.GP2744544@nvidia.com>
-        <20211029160621.46ca7b54.alex.williamson@redhat.com>
-        <20211101172506.GC2744544@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S232758AbhKBPFX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 11:05:23 -0400
+Received: from elvis.franken.de ([193.175.24.41]:56339 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232743AbhKBPFW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Nov 2021 11:05:22 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1mhvJC-0005rk-00; Tue, 02 Nov 2021 16:02:42 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 2DAE0C291E; Tue,  2 Nov 2021 16:02:01 +0100 (CET)
+Date:   Tue, 2 Nov 2021 16:02:01 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Marvell: Update PCIe fixup
+Message-ID: <20211102150201.GA11675@alpha.franken.de>
+References: <20211101150405.14618-1-pali@kernel.org>
+ <20211102084241.GA6134@alpha.franken.de>
+ <20211102090246.unmbruykfdjabfga@pali>
+ <20211102094700.GA7376@alpha.franken.de>
+ <20211102100034.rhcb3k2jvr6alm6y@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211102100034.rhcb3k2jvr6alm6y@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 1 Nov 2021 14:25:06 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Fri, Oct 29, 2021 at 04:06:21PM -0600, Alex Williamson wrote:
-> 
-> > > Right now we are focused on the non-P2P cases, which I think is a
-> > > reasonable starting limitation.  
+On Tue, Nov 02, 2021 at 11:00:34AM +0100, Pali Rohár wrote:
+> > > But I do not have this hardware to verify it.
 > > 
-> > It's a reasonable starting point iff we know that we need to support
-> > devices that cannot themselves support a quiescent state.  Otherwise it
-> > would make sense to go back to work on the uAPI because I suspect the
-> > implications to userspace are not going to be as simple as "oops, can't
-> > migrate, there are two devices."  As you say, there's a universe of
-> > devices that run together that don't care about p2p and QEMU will be
-> > pressured to support migration of those configurations.  
+> > I still have a few Cobalt systems here.
 > 
-> I agree with this, but I also think what I saw in the proposed hns
-> driver suggests it's HW cannot do quiescent, if so this is the first
-> counter-example to the notion it is a universal ability?
-> 
-> hns people: Can you put your device in a state where it is operating,
-> able to accept and respond to MMIO, and yet guarentees it generates no
-> DMA transactions?
-> 
-> > want migration.  If we ever want both migration and p2p, QEMU would
-> > need to reject any device that can't comply.  
-> 
-> Yes, it looks like a complicated task on the qemu side to get this
-> resolved
-> 
-> > > It is not a big deal to defer things to rc1, though merging a
-> > > leaf-driver that has been on-list over a month is certainly not
-> > > rushing either.  
-> > 
-> > If "on-list over a month" is meant to imply that it's well vetted, it
-> > does not.  That's a pretty quick time frame given the uAPI viability
-> > discussions that it's generated.  
-> 
-> I only said rushed :)
+> Perfect! It would help if you could provide 'lspci -nn -vv' output from
+> that system. In case you have very old version of lspci on that system
+> you could try to run it with '-xxxx' (or '-xxx') which prints hexdump
+> and I can parse it with local lspci.
 
-To push forward regardless of unresolved questions is rushing
-regardless of how long it's been on-list.
+not sure, if you still needed:
 
-> > I'm tending to agree that there's value in moving forward, but there's
-> > a lot we're defining here that's not in the uAPI, so I'd like to see
-> > those things become formalized.  
-> 
-> Ok, lets come up with a documentation patch then to define !RUNNING as
-> I outlined and start to come up with the allowed list of actions..
-> 
-> I think I would like to have a proper rst file for documenting the
-> uapi as well.
-> 
-> > I think this version is defining that it's the user's responsibility to
-> > prevent external DMA to devices while in the !_RUNNING state.  This
-> > resolves the condition that we have no means to coordinate quiescing
-> > multiple devices.  We shouldn't necessarily prescribe a single device
-> > solution in the uAPI if the same can be equally achieved through
-> > configuration of DMA mapping.  
-> 
-> I'm not sure what this means?
+root@raq2:~# lspci -nn -vv
+00:00.0 Host bridge [0600]: Marvell Technology Group Ltd. Device [11ab:4146] (rev 11)
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ >SERR- <PERR+ INTx-
+	Latency: 64, Cache Line Size: 32 bytes
+	Interrupt: pin A routed to IRQ 0
+	Region 1: Memory at 08000000 (32-bit, non-prefetchable) [size=128M]
+	Region 2: Memory at 1c000000 (32-bit, non-prefetchable) [size=32M]
+	Region 3: Memory at 1f000000 (32-bit, non-prefetchable) [size=16M]
+	Region 4: Memory at 14000000 (32-bit, non-prefetchable) [size=4K]
+	Region 5: I/O ports at 4000000 [disabled] [size=4K]
 
-I'm just trying to avoid the uAPI calling out a single-device
-restriction if there are other ways that userspace can quiesce external
-DMA outside of the uAPI, such as by limiting p2p DMA mappings at the
-IOMMU, ie. define the userspace requirements but don't dictate a
-specific solution.
 
-> > I was almost on board with blocking MMIO, especially as p2p is just DMA
-> > mapping of MMIO, but what about MSI-X?  During _RESUME we must access
-> > the MSI-X vector table via the SET_IRQS ioctl to configure interrupts.
-> > Is this exempt because the access occurs in the host?    
-> 
-> s/in the host/in the kernel/ SET_IRQS is a kernel ioctl that uses the
-> core MSIX code to do the mmio, so it would not be impacted by MMIO
-> zap.
+root@raq2:~# lspci -xxxx
+00:00.0 Host bridge: Marvell Technology Group Ltd. Device 4146 (rev 11)
+00: ab 11 46 41 06 00 80 a2 11 00 80 05 08 40 00 00
+10: 00 00 00 00 00 00 00 08 00 00 00 1c 00 00 00 1f
+20: 00 00 00 14 01 00 00 14 00 00 00 00 00 00 00 00
+30: 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00
+40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
-AIUI, "zap" is just the proposed userspace manifestation that the
-device cannot accept MMIO writes while !_RUNNING, but these writes must
-occur in that state.
+Thomas.
 
-> Looks like you've already marked these points with the
-> vfio_pci_memory_lock_and_enable(), so a zap for migration would have
-> to be a little different than a zap for reset.
-> 
-> Still, this is something that needs clear definition, I would expect
-> the SET_IRQS to happen after resuming clears but before running sets
-> to give maximum HW flexibility and symmetry with saving.
-
-There's no requirement that the device enters a null state (!_RESUMING
-| !_SAVING | !_RUNNING), the uAPI even species the flows as _RESUMING
-transitioning to _RUNNING.  There's no point at which we can do
-SET_IRQS other than in the _RESUMING state.  Generally SET_IRQS
-ioctls are coordinated with the guest driver based on actions to the
-device, we can't be mucking with IRQs while the device is presumed
-running and already generating interrupt conditions.
-
-> And we should really define clearly what a device is supposed to do
-> with the interrupt vectors during migration. Obviously there are races
-> here.
-
-The device should not be generating interrupts while !_RUNNING, pending
-interrupts should be held until the device is _RUNNING.  To me this
-means the sequence must be that INTx/MSI/MSI-X are restored while in
-the !_RUNNING state.
-
-> > In any case, it requires that the device cannot be absolutely static
-> > while !_RUNNING.  Does (_RESUMING) have different rules than
-> > (_SAVING)?  
-> 
-> I'd prever to avoid all device touches during both resuming and
-> saving, and do them during !RUNNING
-
-There's no such state required by the uAPI.
-
-> > So I'm still unclear how the uAPI needs to be updated relative to
-> > region access.  We need that list of what the user is allowed to
-> > access, which seems like minimally config space and MSI-X table space,
-> > but are these implicitly known for vfio-pci devices or do we need
-> > region flags or capabilities to describe?  We can't generally know the
-> > disposition of device specific regions relative to this access.  Thanks,  
-> 
-> I'd prefer to be general and have the spec forbid
-> everything. Specifying things like VFIO_DEVICE_SET_IRQS1 covers all the
-> bus types.
-
-AFAICT, SET_IRQS while _RESUMING is a requirement, as is some degree of
-access to config space.  It seems you're proposing a new required null
-state which is contradictory to the existing uAPI.  Thanks,
-
-Alex
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
