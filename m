@@ -2,195 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AE5E442EBE
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 14:03:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C7B442EDF
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 14:11:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbhKBNGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 09:06:11 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14701 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbhKBNGL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 09:06:11 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Hk95L58zBzZcVs;
-        Tue,  2 Nov 2021 21:01:26 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.15; Tue, 2 Nov 2021 21:03:30 +0800
-Subject: Re: [PATCH V11 4/8] PCI/sysfs: Add a tags sysfs file for PCIe
- Endpoint devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20211101205442.GA546492@bhelgaas>
-CC:     <hch@infradead.org>, <kw@linux.com>, <logang@deltatee.com>,
-        <leon@kernel.org>, <linux-pci@vger.kernel.org>,
-        <rajur@chelsio.com>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <40e675a1-6931-8daa-d98d-7b9c64785012@huawei.com>
-Date:   Tue, 2 Nov 2021 21:03:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S231265AbhKBNNl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 2 Nov 2021 09:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230282AbhKBNNj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 09:13:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E12C061714
+        for <linux-pci@vger.kernel.org>; Tue,  2 Nov 2021 06:11:05 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mhtYt-0004rh-Fm; Tue, 02 Nov 2021 14:10:47 +0100
+Received: from pza by lupine with local (Exim 4.94.2)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mhtYp-004CFx-W3; Tue, 02 Nov 2021 14:10:44 +0100
+Message-ID: <276db30d95bf84cb31f9d9a6c029593fb0ccec21.camel@pengutronix.de>
+Subject: Re: [PATCH 2/5] reset: tegra-bpmp: Handle errors in BPMP response
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>, rafael@kernel.org,
+        viresh.kumar@linaro.org, thierry.reding@gmail.com,
+        krzysztof.kozlowski@canonical.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amitk@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Tue, 02 Nov 2021 14:10:43 +0100
+In-Reply-To: <397003f8-bf3c-68a4-828c-1254710f714b@nvidia.com>
+References: <20210915085517.1669675-1-mperttunen@nvidia.com>
+         <20210915085517.1669675-2-mperttunen@nvidia.com>
+         <397003f8-bf3c-68a4-828c-1254710f714b@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.38.3-1 
 MIME-Version: 1.0
-In-Reply-To: <20211101205442.GA546492@bhelgaas>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn
+Hi Jon,
 
-Many thanks for you review.
-On 2021/11/2 4:54, Bjorn Helgaas wrote:
-> On Sat, Oct 30, 2021 at 09:53:44PM +0800, Dongdong Liu wrote:
->> PCIe spec 5.0 r1.0 section 2.2.6.2 says:
->>
->>   If an Endpoint supports sending Requests to other Endpoints (as
->>   opposed to host memory), the Endpoint must not send 10-Bit Tag
->>   Requests to another given Endpoint unless an implementation-specific
->>   mechanism determines that the Endpoint supports 10-Bit Tag Completer
->>   capability.
->>
->> Add a tags sysfs file, write 0 to disable 10-Bit Tag Requester
->> when the driver does not bind the device. The typical use case is for
->> p2pdma when the peer device does not support 10-Bit Tag Completer.
->> Write 10 to enable 10-Bit Tag Requester when RC supports 10-Bit Tag
->> Completer capability. The typical use case is for host memory targeted
->> by DMA Requests. The tags file content indicate current status of Tags
->> Enable.
->>
->> PCIe r5.0, sec 2.2.6.2 says:
->>
->>   Receivers/Completers must handle 8-bit Tag values correctly regardless
->>   of the setting of their Extended Tag Field Enable bit (see Section
->>   7.5.3.4).
->>
->> Add this comment in pci_configure_extended_tags(). As all PCIe completers
->> are required to support 8-bit tags, so we do not use tags sysfs file
->> to manage 8-bit tags.
->
->> +What:		/sys/bus/pci/devices/.../tags
->> +Date:		September 2021
->> +Contact:	Dongdong Liu <liudongdong3@huawei.com>
->> +Description:
->> +		The file will be visible when the device supports 10-Bit Tag
->> +		Requester. The file is readable, the value indicate current
->> +		status of Tags Enable(5-Bit, 8-Bit, 10-Bit).
->> +
->> +		The file is also writable, The values accepted are:
->> +		* > 0 - this number will be reported as tags bit to be
->> +			enabled. current only 10 is accepted
->> +		* < 0 - not valid
->> +		* = 0 - disable 10-Bit Tag, use Extended Tags(8-Bit or 5-Bit)
->> +
->> +		write 0 to disable 10-Bit Tag Requester when the driver does
->> +		not bind the device. The typical use case is for p2pdma when
->> +		the peer device does not support 10-Bit Tag Completer.
->> +
->> +		Write 10 to enable 10-Bit Tag Requester when RC supports 10-Bit
->> +		Tag Completer capability. The typical use case is for host
->> +		memory targeted by DMA Requests.
->
-> 1) I think I would rename this from "tags" to "tag_bits".  A file
->    named "tags" that contains 8 suggests that we can use 8 tags, but
->    in fact, we can use 256 tags.
-Looks good, Will do.
->
-> 2) This controls tag size the requester will use.  The current knobs
->    in the hardware allow 5, 8, or 10 bits.
->
->    "0" to disable 10-bit tags without specifying whether we should use
->    5- or 8-bit tags doesn't seem right.  All completers are *supposed*
->    to support 8-bit, but we've tripped over a few that don't.
->
->    I don't think we currently have a run-time (or even a boot-time)
->    way to disable 8-bit tags; all we have is the quirk_no_ext_tags()
->    quirk.  But if we ever wanted to *add* that, maybe we would want:
->
->       5 - use 5-bit tags
->       8 - use 8-bit tags
->      10 - use 10-bit tags
-will do.
->    Maybe we just say "0" is invalid, since there's no obvious way to
->    map this?
-OK, will do.
->
->> +static ssize_t tags_show(struct device *dev,
->> +			 struct device_attribute *attr,
->> +			 char *buf)
->> +{
->> + ...
->
->> +	if (ctl & PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN)
->> +		return sysfs_emit(buf, "%s\n", "10-Bit");
->> +
->> +	ret = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &ctl);
->> +	if (ret)
->> +		return -EINVAL;
->> +
->> +	if (ctl & PCI_EXP_DEVCTL_EXT_TAG)
->> +		return sysfs_emit(buf, "%s\n", "8-Bit");
->> +
->> +	return sysfs_emit(buf, "%s\n", "5-Bit");
->
-> Since I prefer the "tag_bits" name, my preference would be bare
-> numbers here: "10", "8", "5".
-Will do.
->
-> Both comments apply to the sriov files, too.
-Will do.
->
->> +static umode_t pcie_dev_tags_attrs_is_visible(struct kobject *kobj,
->> +					      struct attribute *a, int n)
->> +{
->> +	struct device *dev = kobj_to_dev(kobj);
->> +	struct pci_dev *pdev = to_pci_dev(dev);
->> +
->> +	if (pdev->is_virtfn)
->> +		return 0;
->> +
->> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
->> +		return 0;
->> +
->> +	if (!(pdev->devcap2 & PCI_EXP_DEVCAP2_10BIT_TAG_REQ))
->> +		return 0;
->
-> Makes sense for now that the file is only visible if a requester
-> supports 10-bit tags.  If we ever wanted to extend this to control 5-
-> vs 8-bit tags, we could make it visible in more cases then.
-Will do.
->
->> +
->> +	return a->mode;
->> +}
->
->> @@ -2075,6 +2089,12 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
->>  		return 0;
->>  	}
->>
->> +	/*
->> +	 * PCIe r5.0, sec 2.2.6.2 says "Receivers/Completers must handle 8-bit
->> +	 * Tag values correctly regardless of the setting of their Extended Tag
->> +	 * Field Enable bit (see Section 7.5.3.4)", so it is safe to enable
->> +	 * Extented Tags.
->
-> s/Extented/Extended/
-Will fix.
+On Thu, 2021-10-28 at 12:54 +0100, Jon Hunter wrote:
+> Hi Philipp,
+> 
+> On 15/09/2021 09:55, Mikko Perttunen wrote:
+> > The return value from tegra_bpmp_transfer indicates the success or
+> > failure of the IPC transaction with BPMP. If the transaction
+> > succeeded, we also need to check the actual command's result code.
+> > Add code to do this.
+> > 
+> > Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> > ---
+> >   drivers/reset/tegra/reset-bpmp.c | 9 ++++++++-
+> >   1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/reset/tegra/reset-bpmp.c b/drivers/reset/tegra/reset-bpmp.c
+> > index 24d3395964cc..4c5bba52b105 100644
+> > --- a/drivers/reset/tegra/reset-bpmp.c
+> > +++ b/drivers/reset/tegra/reset-bpmp.c
+> > @@ -20,6 +20,7 @@ static int tegra_bpmp_reset_common(struct reset_controller_dev *rstc,
+> >   	struct tegra_bpmp *bpmp = to_tegra_bpmp(rstc);
+> >   	struct mrq_reset_request request;
+> >   	struct tegra_bpmp_message msg;
+> > +	int err;
+> >   
+> > 
+> >   	memset(&request, 0, sizeof(request));
+> >   	request.cmd = command;
+> > @@ -30,7 +31,13 @@ static int tegra_bpmp_reset_common(struct reset_controller_dev *rstc,
+> >   	msg.tx.data = &request;
+> >   	msg.tx.size = sizeof(request);
+> >   
+> > 
+> > -	return tegra_bpmp_transfer(bpmp, &msg);
+> > +	err = tegra_bpmp_transfer(bpmp, &msg);
+> > +	if (err)
+> > +		return err;
+> > +	if (msg.rx.ret)
+> > +		return -EINVAL;
+> > +
+> > +	return 0;
+> >   }
+> >   
+> > 
+> >   static int tegra_bpmp_reset_module(struct reset_controller_dev *rstc,
+> 
+> I see that you have pulled this into the mainline for v5.15. 
+> Unfortunately, this is causing a regression for the Tegra HDA 
+> controller. We need to fix the Tegra HDA driver but this is too late now 
+> for v5.15 and so we need to revert this change for v5.15. Sorry about 
+> this, but I did not expect this to be pulled in so late.
 
-Thanks,
-Dongdong
->
->> +	 */
->>  	if (!(ctl & PCI_EXP_DEVCTL_EXT_TAG)) {
->>  		pci_info(dev, "enabling Extended Tags\n");
->>  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL,
->> --
->> 2.22.0
->>
-> .
->
+I'm sorry, I picked this up as a fix and went on vacation. Now that
+v5.15 has already been released, could you send a revert for stable?
+
+regards
+Philipp
