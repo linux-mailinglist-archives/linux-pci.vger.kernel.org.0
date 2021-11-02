@@ -2,185 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE19443469
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 18:13:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F9E4434C0
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 18:44:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232034AbhKBRPw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 13:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
+        id S234676AbhKBRq4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 13:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230382AbhKBRPw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Nov 2021 13:15:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ACFD561051;
-        Tue,  2 Nov 2021 17:13:16 +0000 (UTC)
+        id S234734AbhKBRq4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Nov 2021 13:46:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BA5F761050;
+        Tue,  2 Nov 2021 17:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635873197;
-        bh=G1om8c0vcFzwgqgDeCK6eQYDL8ECQ2Fb4KIp+WlFoDM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1lOwW8/97VvuJii5R7+ucTEe7y0m0FA2LMnjF/3qzpbtU2cXiSfu0UDdvLzV4Lly
-         z9xUXM+uU7XcJb6qKlG97ZM2Wf7axTSMYhm4O4LftgMELqiNu5sYOlfVhOdhupxfXp
-         XmwzrozrQ/8/ULq8ir3TaggKp8c4UGqDcvgHHgVsch/HvknhH4I2lbogJynq4XUWEd
-         Vmz5NW6ZT2Jow5ZQ9F+rP6qEzNQv1k5DCMpFgEA+jJdwIgBiFleNEeMxvDXZEPCcER
-         qH4IOn6asXr+3HAh3v6PS8wzbXurECYsCNp5QAQ5Pp1gQwGXZex9g9MUC+xQX23QqC
-         3HM+aiiUpvyyQ==
-Received: by pali.im (Postfix)
-        id 42803A41; Tue,  2 Nov 2021 18:13:14 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] ARM: Marvell: Update PCIe fixup
-Date:   Tue,  2 Nov 2021 18:12:58 +0100
-Message-Id: <20211102171259.9590-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211101150405.14618-1-pali@kernel.org>
-References: <20211101150405.14618-1-pali@kernel.org>
+        s=k20201202; t=1635875061;
+        bh=iahJFRZcx1MxL+M2Ajyus8wDKsnumh0QcA3DdNHQiCI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Vvh2zW9D1d2AV+xkYpTnJ9L4N5nmpPTswlC/i1On5byzt10F8fzkqYN0NxBTrZN+j
+         EK34IU6acfGRKyziVzs/qgIgdiAYf7Wo5PN+bmve/h480BHGum/BiCrN2xAMYkGb9p
+         mUksj0v1L6DBHs4f2oFGlxEeq0wh69PDlllBkflbjyeCwB7Kk9Sx15fTNlKXDCYT2e
+         tWUR0Pgtn+CNCdN8UHW/cxBAS90IrKYOSkCXki6UIBDp4Q/YY/N+dbrlKqcSPEmIkw
+         +QFHyW/dGz7VfTDCbm92jbcMgp4E5vsGXX7WTsgKSUVKISCUFRBXQRCUB/L6foINOC
+         wo2Xq2hDG8Vng==
+Date:   Tue, 2 Nov 2021 17:44:15 +0000
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v15 04/13] PCI: kirin: Add support for bridge slot DT
+ schema
+Message-ID: <20211102174415.58cd3d4f@sal.lan>
+In-Reply-To: <20211102160612.GA612467@bhelgaas>
+References: <bb391a0e0f0863b66e645048315fab1a4f63f277.1634812676.git.mchehab+huawei@kernel.org>
+        <20211102160612.GA612467@bhelgaas>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-- The code relies on rc_pci_fixup being called, which only happens
-  when CONFIG_PCI_QUIRKS is enabled, so add that to Kconfig. Omitting
-  this causes a booting failure with a non-obvious cause.
-- Update rc_pci_fixup to set the class properly, copying the
-  more modern style from other places
-- Correct the rc_pci_fixup comment
+Hi Bjorn,
 
-This patch just re-applies commit 1dc831bf53fd ("ARM: Kirkwood: Update
-PCI-E fixup") for all other Marvell ARM platforms which have same buggy
-PCIe controller and do not use pci-mvebu.c controller driver yet.
+Em Tue, 2 Nov 2021 11:06:12 -0500
+Bjorn Helgaas <helgaas@kernel.org> escreveu:
 
-Long-term goal for these Marvell ARM platforms should be conversion to
-pci-mvebu.c controller driver and removal of these fixups in arch code.
+> > +
+> > +	/* Per-slot clkreq */
+> > +	int		n_gpio_clkreq;
+> > +	int		gpio_id_clkreq[MAX_PCI_SLOTS];
+> > +	const char	*clkreq_names[MAX_PCI_SLOTS];  
+> 
+> I think there's been previous discussion about this, but I didn't
+> follow it, so I'm just double-checking that this is what we want here.
+> 
+> IIUC, this (MAX_PCI_SLOTS, "hisilicon,clken-gpios") applies to an
+> external PEX 8606 bridge, which seems a little strange to be
+> hard-coded into the kirin driver this way.
+> 
+> I see that "hisilicon,clken-gpios" is optional, but what if some
+> platform connects all 6 lanes?  What if there's a different bridge
+> altogether?
+> 
+> I'll assume this is actually the way we want thing unless I hear
+> otherwise.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>
-Cc: stable@vger.kernel.org
+Yes, there was past discussions about that with Rob, with regards
+to how the DT would represent it, which got reflected at the code.
+At the end, it was decided to just add a single property inside PCIe:
 
----
-Changes in v2:
-* Move MIPS change into separate patch
-* Add information that this patch is for platforms which do not use pci-mvebu.c
----
- arch/arm/Kconfig              |  1 +
- arch/arm/mach-dove/pcie.c     | 11 ++++++++---
- arch/arm/mach-mv78xx0/pcie.c  | 11 ++++++++---
- arch/arm/mach-orion5x/Kconfig |  1 +
- arch/arm/mach-orion5x/pci.c   | 12 +++++++++---
- 5 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index fc196421b2ce..9f157e973555 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -400,6 +400,7 @@ config ARCH_DOVE
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select GPIOLIB
- 	select HAVE_PCI
-+	select PCI_QUIRKS if PCI
- 	select MVEBU_MBUS
- 	select PINCTRL
- 	select PINCTRL_DOVE
-diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-index ee91ac6b5ebf..ecf057a0f5ba 100644
---- a/arch/arm/mach-dove/pcie.c
-+++ b/arch/arm/mach-dove/pcie.c
-@@ -135,14 +135,19 @@ static struct pci_ops pcie_ops = {
- 	.write = pcie_wr_conf,
- };
- 
-+/*
-+ * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-+ * is operating as a root complex this needs to be switched to
-+ * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-+ * the device. Decoding setup is handled by the orion code.
-+ */
- static void rc_pci_fixup(struct pci_dev *dev)
- {
--	/*
--	 * Prevent enumeration of root complex.
--	 */
- 	if (dev->bus->parent == NULL && dev->devfn == 0) {
- 		int i;
- 
-+		dev->class &= 0xff;
-+		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
- 		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
- 			dev->resource[i].start = 0;
- 			dev->resource[i].end   = 0;
-diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
-index 636d84b40466..9362b5fc116f 100644
---- a/arch/arm/mach-mv78xx0/pcie.c
-+++ b/arch/arm/mach-mv78xx0/pcie.c
-@@ -177,14 +177,19 @@ static struct pci_ops pcie_ops = {
- 	.write = pcie_wr_conf,
- };
- 
-+/*
-+ * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-+ * is operating as a root complex this needs to be switched to
-+ * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-+ * the device. Decoding setup is handled by the orion code.
-+ */
- static void rc_pci_fixup(struct pci_dev *dev)
- {
--	/*
--	 * Prevent enumeration of root complex.
--	 */
- 	if (dev->bus->parent == NULL && dev->devfn == 0) {
- 		int i;
- 
-+		dev->class &= 0xff;
-+		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
- 		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
- 			dev->resource[i].start = 0;
- 			dev->resource[i].end   = 0;
-diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion5x/Kconfig
-index e94a61901ffd..7189a5b1ec46 100644
---- a/arch/arm/mach-orion5x/Kconfig
-+++ b/arch/arm/mach-orion5x/Kconfig
-@@ -6,6 +6,7 @@ menuconfig ARCH_ORION5X
- 	select GPIOLIB
- 	select MVEBU_MBUS
- 	select FORCE_PCI
-+	select PCI_QUIRKS
- 	select PHYLIB if NETDEVICES
- 	select PLAT_ORION_LEGACY
- 	help
-diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
-index 76951bfbacf5..5145fe89702e 100644
---- a/arch/arm/mach-orion5x/pci.c
-+++ b/arch/arm/mach-orion5x/pci.c
-@@ -509,14 +509,20 @@ static int __init pci_setup(struct pci_sys_data *sys)
- /*****************************************************************************
-  * General PCIe + PCI
-  ****************************************************************************/
-+
-+/*
-+ * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-+ * is operating as a root complex this needs to be switched to
-+ * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-+ * the device. Decoding setup is handled by the orion code.
-+ */
- static void rc_pci_fixup(struct pci_dev *dev)
- {
--	/*
--	 * Prevent enumeration of root complex.
--	 */
- 	if (dev->bus->parent == NULL && dev->devfn == 0) {
- 		int i;
- 
-+		dev->class &= 0xff;
-+		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
- 		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
- 			dev->resource[i].start = 0;
- 			dev->resource[i].end   = 0;
--- 
-2.20.1
+		pcie@f4000000 {
+                        compatible = "hisilicon,kirin970-pcie";
+...
+                        hisilicon,clken-gpios = <&gpio27 3 0>, <&gpio17 0 0>,
+                                                <&gpio20 6 0>;
 
+I don't think this is a problem, as, if some day another bridge would
+need a larger number of slots, it is just a matter of changing the
+number at the MAX_PCI_SLOTS, as this controls only the size of the array
+(and the check for array overflow when parsing the properties).
+
+Regards,
+Mauro
