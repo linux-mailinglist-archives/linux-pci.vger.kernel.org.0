@@ -2,117 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFF164434F0
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 18:56:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DCD7443667
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 20:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234307AbhKBR6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 13:58:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58135 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230392AbhKBR6q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Nov 2021 13:58:46 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10156"; a="218242772"
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="218242772"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 10:55:48 -0700
-X-IronPort-AV: E=Sophos;i="5.87,203,1631602800"; 
-   d="scan'208";a="728442396"
-Received: from jpneilso-mobl.amr.corp.intel.com (HELO [10.212.75.165]) ([10.212.75.165])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2021 10:55:47 -0700
-Message-ID: <183b4c25-e2f0-6df8-151f-14034c6fb43a@linux.intel.com>
-Date:   Tue, 2 Nov 2021 10:55:41 -0700
+        id S229764AbhKBTVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 15:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229616AbhKBTVW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 15:21:22 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D2FC061714
+        for <linux-pci@vger.kernel.org>; Tue,  2 Nov 2021 12:18:40 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id u11so675544lfs.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Nov 2021 12:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=NuCIUxFiP2QHVxNJDqA0v08LwI7RuUwjRKz94R8Xfa8=;
+        b=Ur+CBYykgqZPx0WPwl7OpZz4lXzwz+9TMOAd/IRkidoHrlDwMP9XHz4jSvKckteBGA
+         Ca357qpC+EqUuw4ebdoUJEUagCeBuMGW8Pc/MXVCx9oHwnudzDZQK8H8kTU/Pf5dhLib
+         GBkBQgkrKFtkbORg//NuRqj1xQnX6S7ZMMoEmLQdiiNRGNGAGSE7tZJH/gvrZg2RP/GE
+         b56TmlJDqrDI4TJEjGKuv6UZvBEMth2R5Te2ph7njPFx0kjD3gvY4rW8LvUU1lPiorop
+         YGJLWI8d9pZlDWNeBg4vKL3huafJiKi4SP4Mck6Wyptbdh+sKa0qBV4NcXjoybI4sXO2
+         kWXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=NuCIUxFiP2QHVxNJDqA0v08LwI7RuUwjRKz94R8Xfa8=;
+        b=hPfhQ68EoyWx+P9nSSzadkcpPQ+Jv6L0lq0V2np4YIJP7jXZleeRC1rsU/X3qi0JEI
+         n+8PQsD+ikp2ChST2BctbEov5qtcn9yXOMC9uyk6Ncq/U9v40WSP93fStmGDqaFb/Zuk
+         9GRAlqUjhSYaHAZSNLSKLhaNKDKel2kXbt86CY5k/ksu0csRbhr/bhzVr+ul+DkRLkub
+         CIbqLhVit3rF+MqqY7EJ/Pw3+rpDTykrSFljobBg7Fu3gvXUrsxrnyMWniybb0XzCp5W
+         RyvpaeiF5RZ0Q8K9h3fVxJiGG0f6x4IpjIjvlVcTqa4q1w1Rk+dfN9iYiu6tjhSkr8gm
+         r9iw==
+X-Gm-Message-State: AOAM532qlzMEtmcREUCq0lMqHcnNyweENTPiyKB27EQi6YAghRwa+o1E
+        wG9KXbF+Oa7UBFxjoSKyKnxM7Rnk8mFuL5AvscI=
+X-Google-Smtp-Source: ABdhPJw/YlI09ngarxWu0fJ8IPIFcZXtnZoimNWPSqq6X8p9Lfv6hD6IGC9tzOKLuJBSf3LBMH4m2bXzCuh6Y2upA94=
+X-Received: by 2002:a05:6512:3699:: with SMTP id d25mr37651212lfs.380.1635880718997;
+ Tue, 02 Nov 2021 12:18:38 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v4] PCI: vmd: Clean up domain before enumeration
-Content-Language: en-US
-To:     linux-pci@vger.kernel.org, jonathan.derrick@linux.dev
-References: <20211025182934.185703-1-nirmal.patel@linux.intel.com>
-Cc:     lorenzo.pieralisi@arm.com, helgaas@kernel.org
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20211025182934.185703-1-nirmal.patel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6520:185:b0:14d:3a81:d91c with HTTP; Tue, 2 Nov 2021
+ 12:18:38 -0700 (PDT)
+Reply-To: zych69521@gmail.com
+From:   Zych Mateusz <taachermoosa@gmail.com>
+Date:   Tue, 2 Nov 2021 12:18:38 -0700
+Message-ID: <CALznZeiJqXsfPGznBKh-qM9uGK4b3EkcDSa+0zYwykGiQ1FZvQ@mail.gmail.com>
+Subject: Re: COVID-19 PANDEMIC RELIEF PROGRAM
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/25/2021 11:29 AM, Nirmal Patel wrote:
-> During VT-d pass-through, the VMD driver occasionally fails to
-> enumerate underlying NVMe devices when repetitive reboots are
-> performed in the guest OS. The issue can be resolved by resetting
-> VMD root ports for proper enumeration and triggering secondary bus
-> reset which will also propagate reset through downstream bridges.
->
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
-> ---
-> v3->v4: Using pci_reset_bus function for secondary bus reset instead of
->         manually triggering secondary bus reset, addressing review
->         comments of v3.
-> v2->v3: Combining two functions into one, Remove redundant definations
->         and Formatting fixes
->
->  drivers/pci/controller/vmd.c | 37 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a5987e52700e..79f8b86ee45b 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -498,6 +498,40 @@ static inline void vmd_acpi_begin(void) { }
->  static inline void vmd_acpi_end(void) { }
->  #endif /* CONFIG_ACPI */
->  
-> +static void vmd_domain_reset(struct vmd_dev *vmd)
-> +{
-> +	u16 bus, max_buses = resource_size(&vmd->resources[0]);
-> +	u8 dev, functions, fn, hdr_type;
-> +	char __iomem *base;
-> +
-> +	for (bus = 0; bus < max_buses; bus++) {
-> +		for (dev = 0; dev < 32; dev++) {
-> +			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
-> +						PCI_DEVFN(dev, 0), 0);
-> +
-> +			hdr_type = readb(base + PCI_HEADER_TYPE) &
-> +					 PCI_HEADER_TYPE_MASK;
-> +
-> +			functions = !!(hdr_type & 0x80) ? 8 : 1;
-> +			for (fn = 0; fn < functions; fn++) {
-> +				base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
-> +						PCI_DEVFN(dev, fn), 0);
-> +
-> +				hdr_type = readb(base + PCI_HEADER_TYPE) &
-> +						PCI_HEADER_TYPE_MASK;
-> +
-> +				if (hdr_type != PCI_HEADER_TYPE_BRIDGE ||
-> +				    (readw(base + PCI_CLASS_DEVICE) !=
-> +				     PCI_CLASS_BRIDGE_PCI))
-> +					continue;
-> +
-> +				memset_io(base + PCI_IO_BASE, 0,
-> +					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  static void vmd_attach_resources(struct vmd_dev *vmd)
->  {
->  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
-> @@ -801,6 +835,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	vmd_acpi_begin();
->  
->  	pci_scan_child_bus(vmd->bus);
-> +	vmd_domain_reset(vmd);
-> +	list_for_each_entry(child, &vmd->bus->children, node)
-> +		pci_reset_bus(child->self);
->  	pci_assign_unassigned_bus_resources(vmd->bus);
->  
->  	/*
+Congratulations!!!
 
-Hi Lorenzo,
-Please let me know if you are okay with these changes. Thanks.
+This is inform you officially that you one of the beneficiary of
+FEDERAL COVID-19 PANDEMIC RELIEF PROGRAM established by the
+Coronavirus Aids, Relief and Economic Security (CARES) Acts, thus you
+are eligible to receive Aid worth $5,500,000.00. (Five Million Five
+Hundred Thousand United States Dollars) only from (CARES) Acts.
 
+Note that CARES Acts. is set up to help individuals, private
+Organization as part of our support and humanitarian services for the
+Economy recovering from COVID-19.
+
+Endeavor to contact the Fund Disbursement Officer Mrs Kadir Ayshe via
+her email kdayshe@gmail.com, immediately for the disbursement of your
+AID MONEY and provide her with your contact information as stated
+below:
+
+(1) This is your Remittance Code (CARES20JH1021)
+(2) Your Full Name:
+(3) Contact Address:
+(4) Your Date of Birth:
+
+Mrs Kadir Ayshe,
+CARES AID FUND DISBURSEMENT OFFICER
+Email Address: kdayshe@gmail.com
+
+Mr. Zych Mateusz, Program Director
+FEDERAL COVID-19 PANDEMIC RELIEF PROGRAM
+Coronavirus Aids, Relief and Economic Security (CARES) Acts.
