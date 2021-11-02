@@ -2,145 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB3E0443881
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 23:34:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B61F443884
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Nov 2021 23:36:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbhKBWgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Nov 2021 18:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229835AbhKBWgi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Nov 2021 18:36:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1C69561053;
-        Tue,  2 Nov 2021 22:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635892443;
-        bh=xdhIBZKPp6GOknBcvDS3bNXUcF7QFXzPUbqIM4rpfMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HaWtAZisLGv+tlpNXhDA1RgThrW/BaKiZzztkr+PCC7vjblqaCu+PL7HBHC4FT8pG
-         up6ahRHmLot5hKXorarKcBKuFKog1VKLj3szc+RQUlP4BJaOHEpyVfFb4IVdF0sHQp
-         rnZ+PDzM2CoR/DVTb6oaB8NZTJDgrYPhhYaIsGtVVPlzcExFvTjeEg/PbE54HtVe6a
-         7BF5avIilsBnypcNY/q7Z3UEdPBq7CHpe5sx8f0SPbuXs5vGPbMFE6WM8gawaKv4fP
-         Zf4g1OIAlUSh1M46/26+3TomQpXcqvvH8fUXgzvJHk1aE12sSW2qltfjJtFfGLZEcS
-         4gpgaSJUmMkuA==
-Date:   Tue, 2 Nov 2021 17:34:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Bao, Joseph" <joseph.bao@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: HW power fault defect cause system hang on kernel 5.4.y
-Message-ID: <20211102223401.GA651784@bhelgaas>
+        id S229747AbhKBWi5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Nov 2021 18:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229685AbhKBWi4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Nov 2021 18:38:56 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22AFBC061714
+        for <linux-pci@vger.kernel.org>; Tue,  2 Nov 2021 15:36:21 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id d24so811510wra.0
+        for <linux-pci@vger.kernel.org>; Tue, 02 Nov 2021 15:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mlauy3vNd9KbBeQ/P3IhRFrTYk9NsjbV35NI/DoCFQQ=;
+        b=LhJzMSC03GD6kwFoHkcv0WlZV8/LiMo3e6aUlmAyFmOZ03I0K/GJ7F40Hc1b+LDbys
+         tYwF6MfkMGi4kGmcYAQrVZ0wm6bqC4JEDNJsKiWBlgYmK/SLRCAp/vSUag2Lgc2mUTbK
+         FwoLgRPulKd9iQCBHERoM+IfA8GraokFzdvOU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mlauy3vNd9KbBeQ/P3IhRFrTYk9NsjbV35NI/DoCFQQ=;
+        b=6XLr/5EaQDaDQTpLfb9Ui6NcI/aonkyoAhm6sStwsxy3v4pqeFj335iLfFaoml4Dbz
+         u3QVytwrbGl98vTPihxi1Ip5XPF1Ojf5Vm18JOx5cMRNtPcl1pG+5cQRZdNVfoWZSSzc
+         FS7bIs4kZughS+gtrwFs7uiQmwI08CAkGyGqT1J9gQ8eD4YakCO8LuGPctFVoVaTERsK
+         6Wrj26mI4La+ECBumn7MbLg3G7IeMlj4mchNB8t6V3EaA9YrVE5wLGWXwuo8bNXCHZxC
+         e8DcZsBU7exuqCI05OMr0DQ/vITyoZgC+RstsX4W+lImsZdeMyTwYuPVAeKsSw/Qk5e9
+         V11A==
+X-Gm-Message-State: AOAM532WxhgrlqssH8oOx9HNQrD6GLICQ/KKDtukcVdOWSsnPH22QiaR
+        ROLkhYy8Lmz1j+2R+DktPD2BEn2OTHteikcU2/Yw88pxC3vA/w==
+X-Google-Smtp-Source: ABdhPJySLhbC5WzDuB67uzrOZ9QpcyPxMj+1yYafVt6ksGWZ/DZ7G9DR4tON+WdfbjWdcBceE+hKBMwT/h9K3GGxKII=
+X-Received: by 2002:a5d:59ab:: with SMTP id p11mr5870456wrr.340.1635892579719;
+ Tue, 02 Nov 2021 15:36:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5702255A6A92F735D90A4446868B9@DM8PR11MB5702.namprd11.prod.outlook.com>
+References: <20211029200319.23475-1-jim2101024@gmail.com> <20211029200319.23475-8-jim2101024@gmail.com>
+ <YYFgmxMCnKtTlaqL@robh.at.kernel.org>
+In-Reply-To: <YYFgmxMCnKtTlaqL@robh.at.kernel.org>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Tue, 2 Nov 2021 18:36:08 -0400
+Message-ID: <CA+-6iNwdLt96U26eW-GDJFD3XB9unKX-ucF3gZ754ux78yMRCw@mail.gmail.com>
+Subject: Re: [PATCH v6 7/9] PCI: brcmstb: Add control of subdevice voltage regulators
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Stuart, author of 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt race"),
-Lukas, pciehp expert]
+On Tue, Nov 2, 2021 at 12:00 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Oct 29, 2021 at 04:03:15PM -0400, Jim Quinlan wrote:
+> > This Broadcom STB PCIe RC driver has one port and connects directly to one
+> > device, be it a switch or an endpoint.  We want to be able to turn on/off
+> > any regulators for that device.  Control of regulators is needed because of
+> > the chicken-and-egg situation: although the regulator is "owned" by the
+> > device and would be best handled by its driver, the device cannot be
+> > discovered and probed unless its regulator is already turned on.
+>
+> I think this can be done in a much more simple way that avoids the
+> prior patches using the pci_ops.add_bus() (and remove_bus()) hook.
+> add_bus is called before the core scans a child bus. In the handler, you
+> just need to get the bridge device, then the bridge DT node, and then
+> get the regulators and enable.
+Hi Rob,
+In reply to my bindings commit you wanted to put the "xxx-supply"
+property(s) under the
+bridge node rather than under the pci-ep node.   This not only makes
+sense but also removes
+the burden of prematurely creating the struct device *ptr as the
+bridge device has
+already been created.
 
-On Tue, Nov 02, 2021 at 03:45:00AM +0000, Bao, Joseph wrote:
-> Hi, dear kernel developer,
-> 
-> Recently we encounter system hang (dead spinlock) when move to
-> kernel linux-5.4.y. 
-> 
-> Finally, we use bisect to locate the suspicious commit
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=4667358dab9cc07da044d5bc087065545b1000df.
+However, there is still an issue:  if  the pcie-link is not
+successful, we want the bus enumeration
+to stop and not read the vendor/dev id of the EP.  Our controller has
+the disadvantage of causing
+an abort when accessing config space when the link is not established.  Other
+controllers kindly return 0xffffffff as the data.
 
-4667358dab9c backported upstream commit 8edf5332c393 ("PCI: pciehp:
-Fix MSI interrupt race") to v5.4.69 just over a year ago.
+Doing something like this gets around the issue:
 
-> Our system has some HW defect, which will wrongly set
-> PCI_EXP_SLTSTA_PFD high, and this commit will lead to infinite loop
-> jumping to read_status (no chance to clear status PCI_EXP_SLTSTA_PFD
-> bit since ctrl is not updated), I know this is our HW defect, but
-> this commit makes kernel trapped in this isr function and leads to
-> kernel hang (then the user could not get useful information to show
-> what's wrong), which I think is not expected behavior, so I would
-> like to report to you for discussion.
+static struct pci_bus *pci_alloc_child_bus(...)
+{
+        /* ... */
+add_dev:
+        /* ... */
+        if (child->ops->add_bus) {
+                ret = child->ops->add_bus(child);
++               if (ret == -ENOLINK)
++                       return NULL;
+                if (WARN_ON(ret < 0))
+                        dev_err(&child->dev, "failed to add bus: %d\n", ret);
+        }
 
-I guess this happens because the first time we handle PFD,
-pciehp_ist() sets "ctrl->power_fault_detected = 1", and when
-power_fault_detected is set, pciehp_isr() won't clear PFD from
-PCI_EXP_SLTSTA?
+Is this acceptable?  Other suggestions?
 
-It looks like the only place we clear power_fault_detected is in
-pciehp_power_on_slot(), and I don't think we call that unless we have
-a presence detect or link status change.
 
-It would definitely be nice if we could arrange so this hardware
-defect didn't cause a kernel hang.
+>
+> Given we're talking about standard properties in a standard (bridge)
+> node, I think the implementation for .add_bus should be common
+> (drivers/pci/of.c). It doesn't scale to be doing this in every host
+> bridge driver.
+Are you saying that the bridge DT node  should have a property such as
+"get-and-turn-on-subdev-regulators;" which would invoke what I'm now
+calling brcm_pcie_add_bus()?   The problem with this is that our host
+bridge needs to be the agent freeing the regulators.  IIRC correctly, when
+the regulators were freed by the EP device -- or now the bridge in this case
+-- we got panics when doing unbinds.  I will go back and get the details
+on this, but I'm wondering if our controller has arcane but necessary
+requirements
+outside of what a general mechanism could provide.
 
-I think the diff below is the backport of 8edf5332c393 ("PCI: pciehp:
-Fix MSI interrupt race").
+Thanks,
+Jim
 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 356786a3b7f4b..88b996764ff95 100644
-> --- a/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pci/hotplug/pciehp_hpc.c?h=linux-5.4.y&id=ca767cf0152d18fc299cde85b18d1f46ac21e1ba
-> +++ b/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pci/hotplug/pciehp_hpc.c?h=linux-5.4.y&id=4667358dab9cc07da044d5bc087065545b1000df
-> @@ -529,7 +529,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	struct controller *ctrl = (struct controller *)dev_id;
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	struct device *parent = pdev->dev.parent;
-> -	u16 status, events;
-> +	u16 status, events = 0;
->  
->  	/*
->  	 * Interrupts only occur in D3hot or shallower and only if enabled
-> @@ -554,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  		}
->  	}
->  
-> +read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
->  	if (status == (u16) ~0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-> @@ -566,24 +567,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	 * Slot Status contains plain status bits as well as event
->  	 * notification bits; right now we only want the event bits.
->  	 */
-> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-> -			   PCI_EXP_SLTSTA_DLLSC);
-> +	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-> +		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-> +		  PCI_EXP_SLTSTA_DLLSC;
->  
->  	/*
->  	 * If we've already reported a power fault, don't report it again
->  	 * until we've done something to handle it.
->  	 */
->  	if (ctrl->power_fault_detected)
-> -		events &= ~PCI_EXP_SLTSTA_PFD;
-> +		status &= ~PCI_EXP_SLTSTA_PFD;
->  
-> +	events |= status;
->  	if (!events) {
->  		if (parent)
->  			pm_runtime_put(parent);
->  		return IRQ_NONE;
->  	}
->  
-> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +	if (status) {
-> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +
-> +		/*
-> +		 * In MSI mode, all event bits must be zero before the port
-> +		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
-> +		 * So re-read the Slot Status register in case a bit was set
-> +		 * between read and write.
-> +		 */
-> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
-> +			goto read_status;
-> +	}
-> +
->  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
->  	if (parent)
->  		pm_runtime_put(parent);
+>
+> Rob
