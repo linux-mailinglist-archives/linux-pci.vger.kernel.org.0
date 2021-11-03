@@ -2,107 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E2BC44439B
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 15:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 647304443D9
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 15:49:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231559AbhKCOdi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 10:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231572AbhKCOdi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Nov 2021 10:33:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 31E4A61050;
-        Wed,  3 Nov 2021 14:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635949861;
-        bh=N5Mg6vArlWNEiIMvZeF4xSwCRRgbnJ1JR10vTfGkNm0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NWZC7exJ3FFlKoQiJ0mpdkryWf6aR/jLrNXkgToN7yyhMmPWDVTYIyH+3zQwxNrUI
-         XxkFWIs1hvS6ciYKWeVYq570sHZFZT0uOwkZWO2fhlxb5oizs8BykhvQ6IKHJ9Le/t
-         LHc7o/OLryb1S9LRR2Sa/8d53J5elP1M0hzjbFYDz1oFnvJmKFEPXk3FEMyw3vpnsF
-         NdN1nwgxk4FhiOS0wuOYEje8t5GTUWkS4bNuqSJSthXftYNJuXFbhZKsKJCRwfCgfM
-         YjuhygGyk3We7uyzYHeRZsRWwNF5soLNqeLLVkg2qcpn7cNZFoZdEUgPiQAFIyl4OQ
-         ucYeeQPB2pSPw==
-Date:   Wed, 3 Nov 2021 09:30:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wan Jiabing <wanjiabing@vivo.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiabing.wan@qq.com
-Subject: Re: [PATCH] PCI: kirin: Fix of_node_put() issue in pcie-kirin
-Message-ID: <20211103143059.GA683503@bhelgaas>
+        id S230479AbhKCOvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 10:51:49 -0400
+Received: from angie.orcam.me.uk ([78.133.224.34]:36726 "EHLO
+        angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231298AbhKCOvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 10:51:47 -0400
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 1824992009D; Wed,  3 Nov 2021 15:49:07 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 1526892009B;
+        Wed,  3 Nov 2021 14:49:07 +0000 (GMT)
+Date:   Wed, 3 Nov 2021 14:49:07 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Marvell: Update PCIe fixup
+In-Reply-To: <20211102144929.c5wt5pbl42ocrxly@pali>
+Message-ID: <alpine.DEB.2.21.2111031430500.57165@angie.orcam.me.uk>
+References: <20211101150405.14618-1-pali@kernel.org> <20211102084241.GA6134@alpha.franken.de> <20211102090246.unmbruykfdjabfga@pali> <20211102094700.GA7376@alpha.franken.de> <20211102100034.rhcb3k2jvr6alm6y@pali> <alpine.DEB.2.21.2111021210180.57165@angie.orcam.me.uk>
+ <20211102125843.sqsusis4krnmhorq@pali> <alpine.DEB.2.21.2111021312160.57165@angie.orcam.me.uk> <20211102144929.c5wt5pbl42ocrxly@pali>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211103062518.25695-1-wanjiabing@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Mauro, author of code being changed,
-Rob for "of_pci_get_devfn()" naming question]
+On Tue, 2 Nov 2021, Pali Rohár wrote:
 
-On Wed, Nov 03, 2021 at 02:25:18AM -0400, Wan Jiabing wrote:
-> Fix following coccicheck warning:
-> ./drivers/pci/controller/dwc/pcie-kirin.c:414:2-34: WARNING: Function
-> for_each_available_child_of_node should have of_node_put() before return.
-> 
-> Early exits from for_each_available_child_of_node should decrement the
-> node reference counter. Replace return by goto here.
-> 
-> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 06017e826832..23a2c076ce53 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -422,7 +422,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->num_slots++;
->  			if (pcie->num_slots > MAX_PCI_SLOTS) {
->  				dev_err(dev, "Too many PCI slots!\n");
-> -				return -EINVAL;
-> +				ret = -EINVAL;
-> +				goto put_node;
->  			}
->  
->  			ret = of_pci_get_devfn(child);
+> Hello Maciej! Thank you very much for the explanation!
 
-This is a change to the code added here:
-  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=31bd24f0cfe0
+ You are welcome!
 
-This fix looks right to me; all the other early exits from the inner
-loop drop the "child" reference.
+> I'm surprised that Marvell copied this 20 years old MIPS Galileo PCI
+> logic into followup ARM SoC PCIe IPs (and later also into recent ARM64
+> A3720 SoC PCIe IP), removed configuration of PCI class code via
+> strapping pins and let default PCI class code value to Memory device,
+> even also when PCIe controller is running in Root Complex mode. And so
+> correction can be done only from "CPU bus".
 
-But this is a nested loop and the *outer* loop also increments
-refcounts, and I don't see that outer loop reference on "parent" being
-dropped at all:
+ Still the bootstrap firmware (say U-boot, as I can see it mentioned in 
+your reference) can write the correct value to the class code register.  
+Or can it?
 
-    for_each_available_child_of_node(node, parent) { 
-      for_each_available_child_of_node(parent, child) {
-	...
-	if (error)
-	  goto put_node;
-      }
-    }
+ I guess you can try it and report your findings back.  You can poke at 
+PCI/e registers directly from U-boot (`pci write.w', etc.) as with any 
+reasonable firmware monitor, no need to write code; I guess you probably 
+know that already.
 
-  put_node:
-    of_node_put(child);
+ I have no such hardware and I have no incentive to chase documentation 
+for it even if public copies are available for the affected devices.  
+Also you say it's IP rather than actual discrete chips as it used to be 
+with the Galileo system controllers, so it could be up to the customer to 
+get the IP wired/configured correctly.
 
-The "of_pci_get_devfn()" immediately after is unrelated, but possibly
-a confusing name.  "Get" often suggests a reference count being
-increased, but that's not the case with of_pci_get_devfn().
+> Maciej, if I had known that you have this kind of information I would
+> have written you year ago :-)
 
-I want to fix this before sending a pull request to Linus, and I can
-easily squash it into a local branch, but I need an ack from Mauro
-that this patch is correct and also a fix or explanation for the outer
-loop reference situation.
+ Well, I have all kinds of information.
 
-Bjorn
+  Maciej
