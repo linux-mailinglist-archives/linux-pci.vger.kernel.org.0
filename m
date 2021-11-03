@@ -2,68 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA502444897
+	by mail.lfdr.de (Postfix) with ESMTP id AFE0B444898
 	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 19:50:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbhKCSwe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 14:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33864 "EHLO
+        id S231311AbhKCSwf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 14:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231305AbhKCSwa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 14:52:30 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FF5C06120B;
-        Wed,  3 Nov 2021 11:49:54 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso2120127pjb.2;
-        Wed, 03 Nov 2021 11:49:54 -0700 (PDT)
+        with ESMTP id S231381AbhKCSwc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 14:52:32 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DEAC061714;
+        Wed,  3 Nov 2021 11:49:55 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id t11so3064503plq.11;
+        Wed, 03 Nov 2021 11:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+KIUczUS/ZsYc2yKqmHED/7x17icKPInYDTolIdaty0=;
-        b=VRwLrL82bnQDTaHfLIz36gShEC2CRz5Ssow3SBz2QkVVpRIUdqnJPNY9dr635rzky5
-         EI9H0iZ4vQpItvYSglTFAXJdafJdyAxGP8lMnqzwtgF8XF2lEWXA0unrjHV1BxF7Lokj
-         zSn55qlG7xzZarOzCzpIPEGnb0Uffg/uH7Txm/909GRFSsj2fhjlTHkh/uY4YMufGM0y
-         TdR1YwNjvGZmqne1FnPNOub3PPpZpaLcYqBgouh2g7U5eseNiK5HheQWMxuvDbulc+t7
-         6XIQyOQsgQRDNsTQvnOSwy85BcWiL0Gjtb3zB65Zzhf2kROaQ8Z/XprheMBHaPp1Ib7S
-         vlcA==
+        bh=kVoHPfQnodZ3/LWe6f7ZKVgKp7X363UiJlEFSvrGKys=;
+        b=gCEi8Sy5N/Mk9eVvupjNy+ymn4U1vqg+Aj7EWLvoP69wUHBSwDzLRbIUC8MZTYi2st
+         BU1+tpQHQU7vgWAcz6drBp/rD4mUTdLB+qWWi8IOdBGzytGmEbvRxONyR4E36OeJ9Cpm
+         +CXAjCvpfRuirwkSTB42gvUCrEwCSdYloBce5squFWnQ0pxapJ8obllZ5ZfGdt+KmyxC
+         Cu0P5h2iMi1ho5elmlrxk/HD/DJZl95hyOcnG8LypJ9pi7LNQ4NxNSCIJTQktFlYp2DT
+         jtWEaB4kD3oQUCu0XKJ7o5doa+QGDMgpPz1V7FBPeAFTOxRBzhZWRLgYA8wXpLZsdmTS
+         5ZQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+KIUczUS/ZsYc2yKqmHED/7x17icKPInYDTolIdaty0=;
-        b=rQGrnBDgyHLipFgbehzFtv/a4sMEeMbqKkk4VR2E77MBbMJZAp69DIkuylx3rHTd1I
-         hj+OYXrqZnDh32WA6vx0B0HM2LHtYDELuKEeDgOhBBdTVsYI2Ky6qHvKqjsF9PVOE/Vi
-         BYK5onWd31E+3A3R99qo8/15Z+0cjh+lbbWbcgpthbnrx0VZQS6h1h66xqsYWat5Hrg9
-         ZFNa01nRvV2wzL2rtZPJFc6vzItuoEDW6wMxmYlOvFs0oRQcXbPrvm/V3KCGbtEXrXUY
-         rEKt0plBeaETu9ym+Vz37Xm/IaijIR/CFs4bcYlaBwWMuU4PUoHnC4D1Lri7/cGYe0Lt
-         6D5g==
-X-Gm-Message-State: AOAM533Z6+8t1CEvWy4OA4Yty9J0fXqvdmzYXlIsKzImlQ8zZsSxaZfo
-        7lR/Mei1WzTuwvxB1Zge2b5kc0Fz6RP21A==
-X-Google-Smtp-Source: ABdhPJz7p4koVRRiR5HdILl24gGZV0hYsk1W8hGHmXKRWDnY3dPh8DQfSUExvFTUANzPFJ75UZXuzQ==
-X-Received: by 2002:a17:902:bc8a:b0:141:eb43:81a1 with SMTP id bb10-20020a170902bc8a00b00141eb4381a1mr20280237plb.52.1635965393405;
-        Wed, 03 Nov 2021 11:49:53 -0700 (PDT)
+        bh=kVoHPfQnodZ3/LWe6f7ZKVgKp7X363UiJlEFSvrGKys=;
+        b=OGykd+kAcxkkmFQqehOwKrnwxNeBauJOVVUkoETjakeVYekaz8a+9MD5Xu7gx7c+/m
+         CF38IVpJ0DlUBpK7n6+3ZuPCPN89O32ZVbkW91ThovCL2vZtjcfONzweXYNZf5gQMN/k
+         5LI9/+K9lTSfH3m85AafIq0h9vwbHtlkStRrh3UDow/b4P4Bi5ynMnY4cXrX0Sb0azpJ
+         U70sTe2nZSlvrqhG0VZiZbBbuMjswu8V+JMzQixG55zpTNcQ/OeWPa2/gQ3EM1gYyrEj
+         QnFAE69n42hTNLeUkVIgpkQgzIF4P6SxQjuAw1Tj5EPnu7OoDAjO2MpwduR6Ekq4Hx/x
+         yKYg==
+X-Gm-Message-State: AOAM532mI0MTOHRgcwyZxBqHSpR3XilhJ2GdbgE/vtQoFse0yc4K9auu
+        EaItFXkoGuTq+R7qnxe/zhusMnefkqwuUA==
+X-Google-Smtp-Source: ABdhPJzshArmo/48IhJdPKAnbwwXSdLIecSzkTpe89usHqdHIxb4sn9w2GLV2y0gtzbssrMCx68EwA==
+X-Received: by 2002:a17:903:18d:b0:142:8ab:d11f with SMTP id z13-20020a170903018d00b0014208abd11fmr12951026plg.47.1635965395238;
+        Wed, 03 Nov 2021 11:49:55 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id j6sm2379065pgq.0.2021.11.03.11.49.51
+        by smtp.gmail.com with ESMTPSA id j6sm2379065pgq.0.2021.11.03.11.49.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 11:49:52 -0700 (PDT)
+        Wed, 03 Nov 2021 11:49:54 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 3/7] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-Date:   Wed,  3 Nov 2021 14:49:33 -0400
-Message-Id: <20211103184939.45263-4-jim2101024@gmail.com>
+Subject: [PATCH v7 4/7] PCI: pci_alloc_child_bus() return NULL if ->add_bus() returns -ENOLINK
+Date:   Wed,  3 Nov 2021 14:49:34 -0400
+Message-Id: <20211103184939.45263-5-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211103184939.45263-1-jim2101024@gmail.com>
 References: <20211103184939.45263-1-jim2101024@gmail.com>
@@ -71,72 +64,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We need to split a function in two so that the driver can take advantage of
-the recently added function pci_subdev_prepare() which is a member
-of struct pci_host_bridge.
+Currently, if the call to the pci_ops add_bus() method returns an error, a
+WARNING and dev_err() occurs.  We keep this behavior for all errors except
+-ENOLINK; for -ENOLINK we want to skip the WARNING and immediately return
+NULL.  The argument for this case is that one does not want to continue
+enumerating if pcie-link has not been established.  The real reason is that
+without doing this the pcie-brcmstb.c driver panics when the dev/id is
+read, as this controller panics on such accesses rather than returning
+0xffffffff.
+
+It appears that there are only a few uses of the pci_ops add_bus() method
+in the kernel and none of them currently return -ENOLINK so it should be
+safe to do this.
 
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 30 +++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/pci/probe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index cc30215f5a43..ba4d6daf312c 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -863,17 +863,10 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index d9fc02a71baa..fdc3f42634b7 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1122,6 +1122,9 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
  
- static int brcm_pcie_setup(struct brcm_pcie *pcie)
- {
--	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	u64 rc_bar2_offset, rc_bar2_size;
- 	void __iomem *base = pcie->base;
--	struct device *dev = pcie->dev;
--	struct resource_entry *entry;
--	bool ssc_good = false;
--	struct resource *res;
--	int num_out_wins = 0;
--	u16 nlw, cls, lnksta;
--	int i, ret, memc;
--	u32 tmp, burst, aspm_support;
-+	int ret, memc;
-+	u32 tmp, burst;
- 
- 	/* Reset the bridge */
- 	pcie->bridge_sw_init_set(pcie, 1);
-@@ -956,6 +949,21 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 
- 	if (pcie->gen)
- 		brcm_pcie_set_gen(pcie, pcie->gen);
-+	return 0;
-+}
-+
-+static int brcm_pcie_linkup(struct brcm_pcie *pcie)
-+{
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-+	struct device *dev = pcie->dev;
-+	void __iomem *base = pcie->base;
-+	struct resource_entry *entry;
-+	struct resource *res;
-+	int num_out_wins = 0;
-+	u16 nlw, cls, lnksta;
-+	bool ssc_good = false;
-+	u32 aspm_support, tmp;
-+	int ret, i;
- 
- 	/* Unassert the fundamental reset */
- 	pcie->perst_set(pcie, 0);
-@@ -1186,6 +1194,10 @@ static int brcm_pcie_resume(struct device *dev)
- 	if (ret)
- 		goto err_reset;
- 
-+	ret = brcm_pcie_linkup(pcie);
-+	if (ret)
-+		goto err_reset;
-+
- 	if (pcie->msi)
- 		brcm_msi_set_regs(pcie->msi);
- 
+ 	if (child->ops->add_bus) {
+ 		ret = child->ops->add_bus(child);
++		/* Don't return the child if w/o pcie link-up */
++		if (ret == -ENOLINK)
++			return NULL;
+ 		if (WARN_ON(ret < 0))
+ 			dev_err(&child->dev, "failed to add bus: %d\n", ret);
+ 	}
 -- 
 2.17.1
 
