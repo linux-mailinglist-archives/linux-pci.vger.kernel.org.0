@@ -2,79 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0544448A4
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 19:51:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5536444923
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 20:45:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230011AbhKCSx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 14:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
+        id S229918AbhKCTsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 15:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229703AbhKCSx4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Nov 2021 14:53:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C7C260E78;
-        Wed,  3 Nov 2021 18:51:19 +0000 (UTC)
+        id S229697AbhKCTsR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Nov 2021 15:48:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 470E960FC2;
+        Wed,  3 Nov 2021 19:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635965479;
-        bh=5Wyfo41wfc8+7QQjlCGba5N4K/YeBUWJKaztSd/LcQ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sTAO2WVbSUG7wvdbqUAfq9RwZjyml8/g7aBok7IYFqxDjwFGYuCwbf0JjoUln/0/M
-         3KHKKkrm0YaNNM3qYT1cc4495oyUKpjGCwbOFINBKpl0tdTr8lRN0kkHDUUc08ZzHb
-         Z4bX+Qpy3eDedgxmfvhfIT1ryjoddF1ce6/EDJqZhv54yASiO68lXMYDsPG0aHFah9
-         mkaHk1bWC3sYlVwOHeBYUyftEVl+DyE2ckmfb2tqSOcZsa9RuRcINiu8G0iPEik/OC
-         LO60yM64Pgd4WP+xBzXyrac73W7QVvOErBBfDhc5z4wADMtDGmzur9KHa8bgmoItZM
-         LncyQuyykGlUA==
-Date:   Wed, 3 Nov 2021 13:51:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Li Chen <lchen@ambarella.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
+        s=k20201202; t=1635968741;
+        bh=oQwHcJhV75tudfQz9JXIXP43sTr35k5qkbqxxjX+yiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UEPxrZxNGUovzKG1LrS+HDz5/l5tZHMXk4siPp76mEGXc3nj0QBLS60Y5Sy1DCFmt
+         AZ9NEd4tU+cTquvmOTbNQsjQaavLv6VxzkRuIdSyAJHbw7ELVRjL69+wsnm6aUrxvv
+         eTKtqR2IF6HaomD2FIgbJdHcibP/JYH0nXf5gOO/lQ4tWZ/jh1JJDgvVxgPbz4ZKmL
+         w1pLghMJ4H7mnb0CP1AzgbnuJNVtj3u52doug3GMD567ewPpxWvzLmwDm2/WN5fl2J
+         pK5+EBJWMAAat+L0K2ODFqhndIozbScA55wM7QRZ3IH5P18DwmYRWd6siMdrqevrS1
+         Vnb+8AOdMIXvQ==
+Date:   Wed, 3 Nov 2021 19:45:35 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: cadence: Add missing return in
- cdns_plat_pcie_probe()
-Message-ID: <20211103185117.GA707490@bhelgaas>
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 5/7] PCI: brcmstb: Add control of subdevice voltage
+ regulators
+Message-ID: <YYLm3z0MAgBK24z5@sirena.org.uk>
+References: <20211103184939.45263-1-jim2101024@gmail.com>
+ <20211103184939.45263-6-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4Bn4OUkL+bJRmBog"
 Content-Disposition: inline
-In-Reply-To: <DM6PR19MB40271B93057D949310F0B0EDA0BF9@DM6PR19MB4027.namprd19.prod.outlook.com>
+In-Reply-To: <20211103184939.45263-6-jim2101024@gmail.com>
+X-Cookie: Thank God I'm an atheist.
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 02:50:19AM +0000, Li Chen wrote:
-> When cdns_plat_pcie_probe() succeeds, return success instead of
-> falling into the error handling code.
-> 
-> Signed-off-by: Xuliang Zhang <xlzhanga@ambarella.com>
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Li Chen <lchen@ambarella.com>
 
-This would ordinarily go via Lorenzo's tree, but I picked it up so it
-would make v5.16.
+--4Bn4OUkL+bJRmBog
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-plat.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-> index 5fee0f89ab59..a224afadbcc0 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-> @@ -127,6 +127,8 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
->  			goto err_init;
->  	}
->  
-> +	return 0;
+On Wed, Nov 03, 2021 at 02:49:35PM -0400, Jim Quinlan wrote:
+
+> +	for_each_property_of_node(dn, pp) {
+> +		for (i = 0; i < ns; i++) {
+> +			char prop_name[64]; /* 64 is max size of property name */
 > +
->   err_init:
->   err_get_sync:
->  	pm_runtime_put_sync(dev);
-> -- 
-> 2.33.0
-> 
-> **********************************************************************
-> This email and attachments contain Ambarella Proprietary and/or Confidential Information and is intended solely for the use of the individual(s) to whom it is addressed. Any unauthorized review, use, disclosure, distribute, copy, or print is prohibited. If you are not an intended recipient, please contact the sender by reply email and destroy all copies of the original message. Thank you.
+> +			snprintf(prop_name, 64, "%s-supply", supplies[i]);
+> +			if (strcmp(prop_name, pp->name) == 0)
+> +				break;
+> +		}
+> +		if (i >= ns || pcie->num_supplies >= ARRAY_SIZE(supplies))
+> +			continue;
+> +
+> +		pcie->supplies[pcie->num_supplies++].supply = supplies[i];
+> +	}
+
+Why are we doing this?  If the DT omits the supplies the framework will
+provide dummy supplies so there is no need to open code handling for
+supplies not being present at all in client drivers.  Just
+unconditionally ask for all the supplies.
+
+--4Bn4OUkL+bJRmBog
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGC5toACgkQJNaLcl1U
+h9AbFAf+IFo802ZTgImd/SOw0tU2P5NR02kU1F9YzvxpTqde6/5HYQJYWeMUGJDa
+egO5QI0PCRh68Eq3wY4QCunv4kMkJW9zF3fD6xkCUD024RTFQyb2OPuCz34SSnVP
+9IJ2e8fB8h7v0eSyg22SKBgzkzh6bPh8nK5KdlvNyeOoG3t+x8O1CKmvs74C8hpV
+tRadkEXmR46hD6JP+KiJj4oMnREO0pA0qdhwk1E2tNlA74+teWapp0tU9nW7vXb8
+805+lD1BTiuq3hYLrxWuio/CFznhUqStn8gibTWTeiwSdcE/s1JP8uRmpE0Gv3X0
+6bsCS1K7SyqqIte2HSRbv0Qj8p8eIg==
+=MzLw
+-----END PGP SIGNATURE-----
+
+--4Bn4OUkL+bJRmBog--
