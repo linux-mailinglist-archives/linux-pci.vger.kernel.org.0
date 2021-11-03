@@ -2,93 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DF30444A83
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 22:53:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A76DC444B99
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 00:26:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbhKCV4Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 17:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
+        id S229603AbhKCX2q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 19:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230302AbhKCV4V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 17:56:21 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE21C06127A
-        for <linux-pci@vger.kernel.org>; Wed,  3 Nov 2021 14:53:44 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id d5so5691382wrc.1
-        for <linux-pci@vger.kernel.org>; Wed, 03 Nov 2021 14:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D7FSrtNrX5nOFnwygS5xpyL/5wYBkJfbm++yYupLlqo=;
-        b=BOnSOl6YXnuSil9Gt1blmrWYKaP4cFrvlgfMaylmUIXlRY1YXa4xesmT9UQguUTb/6
-         qKzdmnPAMJktxgWyrIpHWagD6SAb8VIRF6UKohjYn+HjjDgNPy30KAOMIkTMeOaMLsSA
-         G1T2j7JWpytiQMstMlQ/Og41MeZRXcoV5nXaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D7FSrtNrX5nOFnwygS5xpyL/5wYBkJfbm++yYupLlqo=;
-        b=F+6GFtgZ8Cn7MUYaj6FsKzcmOyLFhiBPvL93310Jq8J0MbKWrnygXFtnkq4cb3vFZ/
-         DM8vHeBk0+/WQk2FDCcipThOKndUSU4+mLo5qWhtFhk6yKSeUNV+AaDIk7D5d90KNmK5
-         SPuskI01OqrkWQiRxI0f+SK9AfX+G4+4HQwVyvANpD4LnBgWUdo7OtPoS+lbWxoiNXX5
-         MCQX/kFX2J0J5pCbpDmIJrMrcqPaRQS4+grF6bl7EI89QBqp/A2n+l4FeZbM//tlJoLY
-         M8SHnK/9WvR2cXIYSGLqsAt9ExheaCq5ODhoCFpNUlfr6+RUvTBoxU+1HChqx85l9131
-         cNCA==
-X-Gm-Message-State: AOAM5336t3Gbl3cSGrWktupAPOUzEXgYLNl3Wr2DTQoDwxUIb0ZGbIgw
-        ZUi4fuVn1oeT/v9EiReeZAkrv7jyZSxYWB0oMDZCns4veJM=
-X-Google-Smtp-Source: ABdhPJy0sTuL7PHeTb2+ERKpgRvzQcvSzbrxX79HbSBGj+++Szj2w7dWetm+oKLaSe4IhQdSf37ppgqKLgegphecNFQ=
-X-Received: by 2002:adf:ba87:: with SMTP id p7mr59062923wrg.282.1635976423448;
- Wed, 03 Nov 2021 14:53:43 -0700 (PDT)
+        with ESMTP id S229587AbhKCX2q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 19:28:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F4CC061714
+        for <linux-pci@vger.kernel.org>; Wed,  3 Nov 2021 16:26:08 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1635981965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UfTyFoXajtV0v9y/BzmoswZaGOzbbSsMzbV3xAEe7f8=;
+        b=FG232QjcqbTedwDbie2TZlaxunqVOoH7LkuCfHq9pkVIrcjDea/Jq7f4TE4HKlJKokS5Qd
+        mk3z0Zjoj8VI5X34ZomjX1G4/fEJ5mQEwdRTwnQCLLUF5TzjqkDxdWKDQg4/Pp04ati32T
+        LReCTHFGzrgNprU+Ps61kW5PcsjY9O9kqlKUTuYJvSbES8zwklYl+no3/15X5qd/rkPEYO
+        YU6Z/zGM+AqFTwoVix4R9s9BYpVcZ3bENnaOOfJsMUKxIDFFPjspwNlwWt8EtwxzjQBwG+
+        eKdK/dUMdlpAhhqS52T770CdDjTuPGeSoreno/76+rV2A27PHJbpxAurtevwAA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1635981965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UfTyFoXajtV0v9y/BzmoswZaGOzbbSsMzbV3xAEe7f8=;
+        b=Wi+PWP2tcmH6wdHfleglyGLWoarqN06h513enO1PuRi77n2p1ZX35nkizmwepUsrxjlzHy
+        +B+iC4GV3dxfcuBg==
+To:     Josef Johansson <josef@oderland.se>
+Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jgross@suse.com,
+        linux-pci@vger.kernel.org, maz@kernel.org,
+        xen-devel@lists.xenproject.org, Jason Andryuk <jandryuk@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH] PCI/MSI: Move non-mask check back into low level accessors
+In-Reply-To: <5b3d4653-0cdf-e098-0a4a-3c5c3ae3977b@oderland.se>
+References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
+ <20211025012503.33172-1-jandryuk@gmail.com> <87fssmg8k4.ffs@tglx>
+ <87cznqg5k8.ffs@tglx> <d1cc20aa-5c5c-6c7b-2e5d-bc31362ad891@oderland.se>
+ <89d6c2f4-4d00-972f-e434-cb1839e78598@oderland.se>
+ <5b3d4653-0cdf-e098-0a4a-3c5c3ae3977b@oderland.se>
+Date:   Thu, 04 Nov 2021 00:26:05 +0100
+Message-ID: <87k0ho6ctu.ffs@tglx>
 MIME-Version: 1.0
-References: <20211103184939.45263-1-jim2101024@gmail.com> <20211103184939.45263-6-jim2101024@gmail.com>
- <YYLm3z0MAgBK24z5@sirena.org.uk> <CA+-6iNzkg4R8Kt=Q=sgdB++HHStRSHRUOUTvAfjZr31-FUrzNA@mail.gmail.com>
- <CA+-6iNziZv0UycoaoFhscmp39Z2Y2bHrWUpFW4f9MBK-uM24qA@mail.gmail.com> <YYMEkjlbFdeIjror@sirena.org.uk>
-In-Reply-To: <YYMEkjlbFdeIjror@sirena.org.uk>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Wed, 3 Nov 2021 17:53:32 -0400
-Message-ID: <CA+-6iNwshLwTaHuh+BezmqjGi7wRnFUqa2HvKestecOy06qj8g@mail.gmail.com>
-Subject: Re: [PATCH v7 5/7] PCI: brcmstb: Add control of subdevice voltage regulators
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 3, 2021 at 5:52 PM Mark Brown <broonie@kernel.org> wrote:
+Josef!
+
+On Wed, Oct 27 2021 at 17:29, Josef Johansson wrote:
+> On 10/27/21 14:01, Josef Johansson wrote:
+>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+>> index 6a5ecee6e567..28d509452958 100644
+>> --- a/kernel/irq/msi.c
+>> +++ b/kernel/irq/msi.c
+>> @@ -529,10 +529,10 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
+>>  
+>>  	/*
+>>  	 * Checking the first MSI descriptor is sufficient. MSIX supports
+>> -	 * masking and MSI does so when the maskbit is set.
+>> +	 * masking and MSI does so when the can_mask is set.
+>>  	 */
+>>  	desc = first_msi_entry(dev);
+>> -	return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+>> +	return desc->msi_attrib.is_msix || desc->msi_attrib.can_mask;
+>>  }
+>>  
+>>  int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>>
+> Hi Thomas,
 >
-> On Wed, Nov 03, 2021 at 04:34:34PM -0400, Jim Quinlan wrote:
-> > On Wed, Nov 3, 2021 at 4:25 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+> With the above added the kernel boots fine and I can even suspend it twice.
+> Which is with my laptop, a good sign.
 >
-> > > I did it to squelch the "supply xxxxx not found, using dummy
-> > > regulator" output.  I'll change it.
->
-> > Now I remember: if I know there are no vpciexxx-supplly props in the
-> > DT, I can skip executing all of the buik regulator calls entirely, as
-> > well as walking the PCI bus as in brcm_regulators_off().
->
-> > Do you consider this a valid reason?
->
-> No, the whole point in the core code providing dummy supplies is that it
-> removes the complexity introduced by client drivers trying to guess if
-> there's supplies available or not.  If they do that then we end up with
-> a bunch of code duplication and issues if there's any changes or
-> extensions to the generic bindings.
-Ok, will change it.
-Thanks, Jim
+> You can add Tested-By: josef@oderland.se.
+
+Thank you for fixing my quick hack in vacation mode. I'll send out a v2
+in a minute.
+
+Thanks,
+
+        tglx
+ 
