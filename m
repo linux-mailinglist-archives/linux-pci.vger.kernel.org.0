@@ -2,97 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5536444923
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 20:45:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 452DE444980
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 21:26:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhKCTsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 15:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229697AbhKCTsR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Nov 2021 15:48:17 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 470E960FC2;
-        Wed,  3 Nov 2021 19:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635968741;
-        bh=oQwHcJhV75tudfQz9JXIXP43sTr35k5qkbqxxjX+yiA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UEPxrZxNGUovzKG1LrS+HDz5/l5tZHMXk4siPp76mEGXc3nj0QBLS60Y5Sy1DCFmt
-         AZ9NEd4tU+cTquvmOTbNQsjQaavLv6VxzkRuIdSyAJHbw7ELVRjL69+wsnm6aUrxvv
-         eTKtqR2IF6HaomD2FIgbJdHcibP/JYH0nXf5gOO/lQ4tWZ/jh1JJDgvVxgPbz4ZKmL
-         w1pLghMJ4H7mnb0CP1AzgbnuJNVtj3u52doug3GMD567ewPpxWvzLmwDm2/WN5fl2J
-         pK5+EBJWMAAat+L0K2ODFqhndIozbScA55wM7QRZ3IH5P18DwmYRWd6siMdrqevrS1
-         Vnb+8AOdMIXvQ==
-Date:   Wed, 3 Nov 2021 19:45:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
+        id S230176AbhKCU2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 16:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229697AbhKCU2l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 16:28:41 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D84C061714
+        for <linux-pci@vger.kernel.org>; Wed,  3 Nov 2021 13:26:04 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id d5so5409915wrc.1
+        for <linux-pci@vger.kernel.org>; Wed, 03 Nov 2021 13:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WdZ06WrNTWvO8pTfOQR/yXY5eszuPIqL50d8LNSENc4=;
+        b=PfKl8iu1Omfr9P216DEugB9EtfwJhvRDwemVWlAaNhWyvt1Zt6BVbQL4EslGLihiiq
+         y2qytpLBKB1emFFL8ajlaRiFgE8x77IT1XgoNRhwW/FrluL9UBg7ZAqawYsx1XhA89P7
+         JcCqBVHYUsMZknMr8t2A9ZLLHIVyk9Dh2GAtA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WdZ06WrNTWvO8pTfOQR/yXY5eszuPIqL50d8LNSENc4=;
+        b=lL9Y/ENeP0/vBZ61jjx3bm9jJEtoQwf1xB86oAtlHKyaPpf7ZESukIMMto2mXSiubX
+         97JNZMSAIFmNerfscZ/r4LvsLazNoi74GM1TaRluAunDFBHizusTl/fK9FHaRm7hlfXr
+         ERPWVQc2kHhUUYhOU0OwCKsZpovETgWJBRReehhy39vhAV0B1dJ3sR7m50tm8QwcgNdJ
+         eoCj4iZB/qddrTWeCa81xCvKFbIMFVKu3dkfkjoS/CIvQ3l0MjL/DWLhytdLkjQi4yjH
+         vYz3lzferLyX02t/WHX4dC7w0WjMxiBZy/PJOzG3Lxmcjr8xlrcOZUaVKL4FSfaWe1Dz
+         k8BQ==
+X-Gm-Message-State: AOAM533xrSaYmiPXOFHMCZG2wzgvbFZfNvhrI2+jHACXeoA+1gk72cPp
+        t/xykOb5nRvzyf4wTpRFzv8Ln0sf+YrTgCmorcVhHg==
+X-Google-Smtp-Source: ABdhPJz2xY1JmknziADTseDioWd5Ar+tPVGVN4X9kwFu9fL9OUxf2sdzgQDXX/Y/SaqOJ6lWuOl3quMYpB9MVubseUM=
+X-Received: by 2002:a5d:59ab:: with SMTP id p11mr14064647wrr.340.1635971162712;
+ Wed, 03 Nov 2021 13:26:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211103184939.45263-1-jim2101024@gmail.com> <20211103184939.45263-6-jim2101024@gmail.com>
+ <YYLm3z0MAgBK24z5@sirena.org.uk>
+In-Reply-To: <YYLm3z0MAgBK24z5@sirena.org.uk>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 3 Nov 2021 16:25:51 -0400
+Message-ID: <CA+-6iNzkg4R8Kt=Q=sgdB++HHStRSHRUOUTvAfjZr31-FUrzNA@mail.gmail.com>
+Subject: Re: [PATCH v7 5/7] PCI: brcmstb: Add control of subdevice voltage regulators
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
         Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 5/7] PCI: brcmstb: Add control of subdevice voltage
- regulators
-Message-ID: <YYLm3z0MAgBK24z5@sirena.org.uk>
-References: <20211103184939.45263-1-jim2101024@gmail.com>
- <20211103184939.45263-6-jim2101024@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Bn4OUkL+bJRmBog"
-Content-Disposition: inline
-In-Reply-To: <20211103184939.45263-6-jim2101024@gmail.com>
-X-Cookie: Thank God I'm an atheist.
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Nov 3, 2021 at 3:45 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Nov 03, 2021 at 02:49:35PM -0400, Jim Quinlan wrote:
+>
+> > +     for_each_property_of_node(dn, pp) {
+> > +             for (i = 0; i < ns; i++) {
+> > +                     char prop_name[64]; /* 64 is max size of property name */
+> > +
+> > +                     snprintf(prop_name, 64, "%s-supply", supplies[i]);
+> > +                     if (strcmp(prop_name, pp->name) == 0)
+> > +                             break;
+> > +             }
+> > +             if (i >= ns || pcie->num_supplies >= ARRAY_SIZE(supplies))
+> > +                     continue;
+> > +
+> > +             pcie->supplies[pcie->num_supplies++].supply = supplies[i];
+> > +     }
+>
+> Why are we doing this?  If the DT omits the supplies the framework will
+> provide dummy supplies so there is no need to open code handling for
+> supplies not being present at all in client drivers.  Just
+> unconditionally ask for all the supplies.
 
---4Bn4OUkL+bJRmBog
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Nov 03, 2021 at 02:49:35PM -0400, Jim Quinlan wrote:
-
-> +	for_each_property_of_node(dn, pp) {
-> +		for (i = 0; i < ns; i++) {
-> +			char prop_name[64]; /* 64 is max size of property name */
-> +
-> +			snprintf(prop_name, 64, "%s-supply", supplies[i]);
-> +			if (strcmp(prop_name, pp->name) == 0)
-> +				break;
-> +		}
-> +		if (i >= ns || pcie->num_supplies >= ARRAY_SIZE(supplies))
-> +			continue;
-> +
-> +		pcie->supplies[pcie->num_supplies++].supply = supplies[i];
-> +	}
-
-Why are we doing this?  If the DT omits the supplies the framework will
-provide dummy supplies so there is no need to open code handling for
-supplies not being present at all in client drivers.  Just
-unconditionally ask for all the supplies.
-
---4Bn4OUkL+bJRmBog
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGC5toACgkQJNaLcl1U
-h9AbFAf+IFo802ZTgImd/SOw0tU2P5NR02kU1F9YzvxpTqde6/5HYQJYWeMUGJDa
-egO5QI0PCRh68Eq3wY4QCunv4kMkJW9zF3fD6xkCUD024RTFQyb2OPuCz34SSnVP
-9IJ2e8fB8h7v0eSyg22SKBgzkzh6bPh8nK5KdlvNyeOoG3t+x8O1CKmvs74C8hpV
-tRadkEXmR46hD6JP+KiJj4oMnREO0pA0qdhwk1E2tNlA74+teWapp0tU9nW7vXb8
-805+lD1BTiuq3hYLrxWuio/CFznhUqStn8gibTWTeiwSdcE/s1JP8uRmpE0Gv3X0
-6bsCS1K7SyqqIte2HSRbv0Qj8p8eIg==
-=MzLw
------END PGP SIGNATURE-----
-
---4Bn4OUkL+bJRmBog--
+I did it to squelch the "supply xxxxx not found, using dummy
+regulator" output.  I'll change it.
+Regards, Jim
