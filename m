@@ -2,111 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A1EF44489F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 19:50:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F0544448A4
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 19:51:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbhKCSwp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 14:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231555AbhKCSwj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 14:52:39 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EC6C061208;
-        Wed,  3 Nov 2021 11:50:02 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id g184so3156891pgc.6;
-        Wed, 03 Nov 2021 11:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qT6D8z9EWM5nbqoODMsf6pYhfTqAM6D4oAkvj8nPzI4=;
-        b=kT4+I28b80Hx+pwNuGDFDshF/1eR9612Hjb09D99u7P60J+2XEhPtO0SwamVqVk8qy
-         mAiTjhfhFBsH2uf7SaucFkvYpHbA+Z3bMa51gajLIy7b27EZIU8av3Ymya58ye9Zfxg4
-         jSl2eACif4DN1bi/QVqpIGb3IbxRJ8cclPEk67g3RcpLHW0LOsjJyrfuCZUOvi9gRYAj
-         lPcijjwKa/fl2PbmCJ7kdzOIAwouBXNVt6H7C6TgKD56oeXIpUrfsrzfpdcBCbOOZHz3
-         GnnFxfNEIr+BsIL6moW7Q0YKDAG2wjhdDknObRBgjnG//MTG9TKG4xRkxGq3gnSAi3vT
-         Kmuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qT6D8z9EWM5nbqoODMsf6pYhfTqAM6D4oAkvj8nPzI4=;
-        b=SEfFaE44fxtaZrpExKDyZQc3vVoJYkc95b5dzyudHBzGbF7KfT0P/seOxcZWquewNk
-         CqUhFpLMmfPCDIb41P4EbmUsmwxnG5SNbtfR6f1Vq0h5wrThGiSy1IrNUTE5fT+dBy0M
-         KVRc8lGDMttfAfxozfX700htTgwzgEMxxmNars5uiZ8qs+fGSRvcsBhNXhAUpb1gvdJw
-         c4nqBqI/N1GaqfWvrbMNkPXm2tQ7i5R51gWsyoLKf7Auv8AsMQToOsMi9ugYvfGztvNF
-         uJrsMTscON0NGeAYae7LtnjRI0XB4lVMHroRJH/1x9uKkl2I7yiiYqkvzzc6k/QLU4hr
-         bXNw==
-X-Gm-Message-State: AOAM531fD+WtWbjQgjTtxXi119Fw0FcH35YEAuCXU/XJc2lMd/wdKlrI
-        1IHEx9QVpyUj7SJ00Sw4/4S+os3M2I+kYg==
-X-Google-Smtp-Source: ABdhPJy+7EOGlv8SCRA+dshz00FJ/GQ3infaDey2A4rnwN3sb7znxUN4xm8S3OhuxlKNlU27ryNIew==
-X-Received: by 2002:a05:6a00:21c2:b0:44c:fa0b:f72 with SMTP id t2-20020a056a0021c200b0044cfa0b0f72mr46346157pfj.13.1635965402040;
-        Wed, 03 Nov 2021 11:50:02 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id j6sm2379065pgq.0.2021.11.03.11.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 11:50:01 -0700 (PDT)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-        james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        id S230011AbhKCSx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 14:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229703AbhKCSx4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Nov 2021 14:53:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C7C260E78;
+        Wed,  3 Nov 2021 18:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635965479;
+        bh=5Wyfo41wfc8+7QQjlCGba5N4K/YeBUWJKaztSd/LcQ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sTAO2WVbSUG7wvdbqUAfq9RwZjyml8/g7aBok7IYFqxDjwFGYuCwbf0JjoUln/0/M
+         3KHKKkrm0YaNNM3qYT1cc4495oyUKpjGCwbOFINBKpl0tdTr8lRN0kkHDUUc08ZzHb
+         Z4bX+Qpy3eDedgxmfvhfIT1ryjoddF1ce6/EDJqZhv54yASiO68lXMYDsPG0aHFah9
+         mkaHk1bWC3sYlVwOHeBYUyftEVl+DyE2ckmfb2tqSOcZsa9RuRcINiu8G0iPEik/OC
+         LO60yM64Pgd4WP+xBzXyrac73W7QVvOErBBfDhc5z4wADMtDGmzur9KHa8bgmoItZM
+         LncyQuyykGlUA==
+Date:   Wed, 3 Nov 2021 13:51:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Li Chen <lchen@ambarella.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 7/7] PCI: brcmstb: Change brcm_phy_stop() to return void
-Date:   Wed,  3 Nov 2021 14:49:37 -0400
-Message-Id: <20211103184939.45263-8-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211103184939.45263-1-jim2101024@gmail.com>
-References: <20211103184939.45263-1-jim2101024@gmail.com>
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: cadence: Add missing return in
+ cdns_plat_pcie_probe()
+Message-ID: <20211103185117.GA707490@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR19MB40271B93057D949310F0B0EDA0BF9@DM6PR19MB4027.namprd19.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We do not use the result of this function so make it void.
+On Thu, Oct 21, 2021 at 02:50:19AM +0000, Li Chen wrote:
+> When cdns_plat_pcie_probe() succeeds, return success instead of
+> falling into the error handling code.
+> 
+> Signed-off-by: Xuliang Zhang <xlzhanga@ambarella.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Li Chen <lchen@ambarella.com>
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This would ordinarily go via Lorenzo's tree, but I picked it up so it
+would make v5.16.
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 9aadb0eccfff..5eabbd72e5b8 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1200,9 +1200,10 @@ static inline int brcm_phy_start(struct brcm_pcie *pcie)
- 	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
- }
- 
--static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-+static inline void brcm_phy_stop(struct brcm_pcie *pcie)
- {
--	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-+	if (pcie->rescal)
-+		brcm_phy_cntl(pcie, 0);
- }
- 
- static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-@@ -1273,10 +1274,9 @@ static int brcm_pcie_get_regulators(struct brcm_pcie *pcie, struct device *dev)
- static int brcm_pcie_suspend(struct device *dev)
- {
- 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
--	int ret;
- 
- 	brcm_pcie_turn_off(pcie);
--	ret = brcm_phy_stop(pcie);
-+	brcm_phy_stop(pcie);
- 	reset_control_rearm(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
- 
--- 
-2.17.1
-
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-plat.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> index 5fee0f89ab59..a224afadbcc0 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> @@ -127,6 +127,8 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+>  			goto err_init;
+>  	}
+>  
+> +	return 0;
+> +
+>   err_init:
+>   err_get_sync:
+>  	pm_runtime_put_sync(dev);
+> -- 
+> 2.33.0
+> 
+> **********************************************************************
+> This email and attachments contain Ambarella Proprietary and/or Confidential Information and is intended solely for the use of the individual(s) to whom it is addressed. Any unauthorized review, use, disclosure, distribute, copy, or print is prohibited. If you are not an intended recipient, please contact the sender by reply email and destroy all copies of the original message. Thank you.
