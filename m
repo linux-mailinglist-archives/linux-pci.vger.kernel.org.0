@@ -2,44 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A6C444578
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 17:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E93A4447DD
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Nov 2021 19:04:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232723AbhKCQM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Nov 2021 12:12:59 -0400
-Received: from mail-dm6nam10on2046.outbound.protection.outlook.com ([40.107.93.46]:58177
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232101AbhKCQM6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Nov 2021 12:12:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hdJ31c4bJ/toVCEhGPaYN0EysWP39+YzsgqJq9AZmWsl2Xhzcbr+ijhkA9sPOtBMMutVQeVJql5Xvz4s/n6EUnLvhN6AVObvyVaHU44QLEJL8xZy7JegJLIbW8CR/CwQHu8LK1hQ423eP2vxJ1LwNxA1xcR33iktoKxbdr0My+qHb9Vw0SG6SMuAdqMEw8Vig7xg4DrKoqnz5+A5+MJQ3dTDIrV37u4AiplE690EhDY+VnODW6Pxa450SQqa/XF/Iofxg1kLs1zOrjmXbfJ01MzWp94F9Wiqd7cgPo+USyUlrEjBgavWoIKqtvAYFduo8Mq8Is82B9P5taHm4bSGSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RjSRzzFjsRolrZ6FQgQpoZRwHp0flUA/rWniyDxljBQ=;
- b=nsyW3iz+4rrPybyDMb7xFaWbi6gsDD2TDHy7t0gHYVDsk+DcRcgTQAY5fJLg/W0qobq1e2C4CwgLVSnRKbQxcB1plgrfaKOhWofJNSDnB2K74wjfmH5qg8nHUCUbEdulIAKY0RnzE44z3nHvt4+yyYPfWgZRTtFCoTYRnTAuFri1BhFOpbzBxz1HptneMy613qo185lujtDisBqOyFq3nWd8XTCIhd25edbEahtpTtVKOgmZ/TIVJcDp1JF+ubyL3kywnX0PTByWVRu7M+hymzqkp/xLcjqM79n9fon4xqHzB3EK20tPLMtY7RXMIVsfU5UzRs8Mez5nbnkBHxnTaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RjSRzzFjsRolrZ6FQgQpoZRwHp0flUA/rWniyDxljBQ=;
- b=WSn/gy2MPl1WL1FFVd9/I228HnXQ4C0cNYQ/pvG+MA6shTq3bxbShT8vZrxu21AIgHFTLJ71ud1a0a0CjxIz2+iYAM37UHt8Uody9DzCYfCy+6sWktV3exgjuHuI9uiz5U3ThSgYCcFxTNQBvkKM2upmaHF2aOO/8fi9aJW27jo2QlWOyMvXbOEh+HwhB4jkDGQQcLPCXhyimspivoVa8e+t6t+ZgMEYFck295xoYd6SSJEaDFRwZrjmitgL+buh1fUXa2XtvsGyvlN0iy2Y+C4SKcOHrsgBOC2u0L/RaYwP+w8zg4qj5j9oKLcNqpuoMWgiWzRfLKHOB7kqfy4xgA==
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB5520.namprd12.prod.outlook.com (2603:10b6:5:208::9) by
- DM4PR12MB5390.namprd12.prod.outlook.com (2603:10b6:5:39a::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4649.15; Wed, 3 Nov 2021 16:10:20 +0000
-Received: from DM6PR12MB5520.namprd12.prod.outlook.com
- ([fe80::8817:6826:b654:6944]) by DM6PR12MB5520.namprd12.prod.outlook.com
- ([fe80::8817:6826:b654:6944%6]) with mapi id 15.20.4649.020; Wed, 3 Nov 2021
- 16:10:20 +0000
-Date:   Wed, 3 Nov 2021 13:10:19 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
+        id S230450AbhKCSGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Nov 2021 14:06:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45069 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230326AbhKCSGw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Nov 2021 14:06:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635962655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ErzL4VuHaD4f7PaUIMhaeJLVvgQwTuoWvGf4q52DOQU=;
+        b=KOVe5iEywj3ZoNVQD5PJUXWbT4eUapvP3tQCOIPNexTPIwVYgBFyekIqrvdg3y+yHDvsYv
+        5ZHVBmKXuQ33DsIGhNuefbPBw+FFNyxyQn2P0zC/+lILq108PjWA6DKL5PEdTD+yMF0H2k
+        22V677mvzVM2r3SjQpAHHABlBvFPfEA=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-XOQCLJpxNq-Sgp4iwCgaRQ-1; Wed, 03 Nov 2021 14:04:14 -0400
+X-MC-Unique: XOQCLJpxNq-Sgp4iwCgaRQ-1
+Received: by mail-oi1-f200.google.com with SMTP id k124-20020acaba82000000b002a7401b177cso1938606oif.8
+        for <linux-pci@vger.kernel.org>; Wed, 03 Nov 2021 11:04:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=ErzL4VuHaD4f7PaUIMhaeJLVvgQwTuoWvGf4q52DOQU=;
+        b=PMHfxbiGTdBl0qCd6qsZL0BMsZ4GJFhDL1aQ+EbxNlYiHgkfK9ehgPkhLtU59PY/RF
+         QoeZdp19djXU9QnnRZP+8zhBHp25/vhn8Rk6ugt7hnJ1XANQUsnynEMfocimATGwkfQ+
+         ++3szU4j+o00TC8gPbZUly/1DIv/1nAStENjxV4wD2xLXekaWifqeGX6kUxLFmTtov3M
+         FQBhtvgERTyZpj0qyTKOo8VFdiW7I8uxp2Kz9DTUBFp1nnHEjvZSS5TuhzKHbyHL5sUm
+         tXrwPjsd76dUMH1e81BXERiZdoed7sj6XAyS81/2Om2b/KztdaviHVnwlDJ/ZPROh18U
+         202g==
+X-Gm-Message-State: AOAM531k/hj8GIkhtLkHH4DnNbqsoVbE6JwZVTYgpVOClphGcqnHSlXc
+        Q62+mXFGHXEOmxl1kHwn0ct6B8EFXYmMZCDMaxYsyskT2r83Z3qzMAL06YkK3ENO6zPQqReI4Tw
+        iL7xGTkGvLoy30tl//fdK
+X-Received: by 2002:aca:3a06:: with SMTP id h6mr11821856oia.22.1635962653818;
+        Wed, 03 Nov 2021 11:04:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxMH2unmxL14Rka6aUDt8tPHbTQoAknsmdn15KQ74qkvHHD3LOwNuVSnf44YSHKyYZBOE8nTw==
+X-Received: by 2002:aca:3a06:: with SMTP id h6mr11821823oia.22.1635962653506;
+        Wed, 03 Nov 2021 11:04:13 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id t12sm806805oiw.39.2021.11.03.11.04.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Nov 2021 11:04:13 -0700 (PDT)
+Date:   Wed, 3 Nov 2021 12:04:11 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
@@ -49,139 +62,142 @@ Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
         "Dr. David Alan Gilbert" <dgilbert@redhat.com>
 Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
  for mlx5 devices
-Message-ID: <20211103161019.GR2744544@nvidia.com>
+Message-ID: <20211103120411.3a470501.alex.williamson@redhat.com>
+In-Reply-To: <20211103161019.GR2744544@nvidia.com>
 References: <20211028234750.GP2744544@nvidia.com>
- <20211029160621.46ca7b54.alex.williamson@redhat.com>
- <20211101172506.GC2744544@nvidia.com>
- <20211102085651.28e0203c.alex.williamson@redhat.com>
- <20211102155420.GK2744544@nvidia.com>
- <20211102102236.711dc6b5.alex.williamson@redhat.com>
- <20211102163610.GG2744544@nvidia.com>
- <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
- <20211103120955.GK2744544@nvidia.com>
- <20211103094409.3ea180ab.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211103094409.3ea180ab.alex.williamson@redhat.com>
-X-ClientProxiedBy: BL1PR13CA0084.namprd13.prod.outlook.com
- (2603:10b6:208:2b8::29) To DM6PR12MB5520.namprd12.prod.outlook.com
- (2603:10b6:5:208::9)
+        <20211029160621.46ca7b54.alex.williamson@redhat.com>
+        <20211101172506.GC2744544@nvidia.com>
+        <20211102085651.28e0203c.alex.williamson@redhat.com>
+        <20211102155420.GK2744544@nvidia.com>
+        <20211102102236.711dc6b5.alex.williamson@redhat.com>
+        <20211102163610.GG2744544@nvidia.com>
+        <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
+        <20211103120955.GK2744544@nvidia.com>
+        <20211103094409.3ea180ab.alex.williamson@redhat.com>
+        <20211103161019.GR2744544@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL1PR13CA0084.namprd13.prod.outlook.com (2603:10b6:208:2b8::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.5 via Frontend Transport; Wed, 3 Nov 2021 16:10:20 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1miIqB-005gSG-61; Wed, 03 Nov 2021 13:10:19 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 78cc9c0a-9b3a-4b89-87e6-08d99ee46efc
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5390:
-X-Microsoft-Antispam-PRVS: <DM4PR12MB53909C5B572EACA25AF94CF0C28C9@DM4PR12MB5390.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wiZjJwRO4mOGfpjoeU7EV0I93CHnKIUVvsMonuT/OzT0o2HOyEoR100zG9SDpeNh73Kr/ntujhUUKPlHeWbe99WQEh54PqMrxt10bxzfPGi8oZqiqx6AiGzR8/WYeMLpss3Bqk2WEBSlhAwR0ns8/S6Oq7iwCJaAf8oMOdpJCuWyCQR0ests42k5ld9aGwsVOOiMYXyMKdf62puQILIA5H+siGOb4mKkm/3oT8ILvLD+X0aBDGEN2QJmIoPq9z4Rjhw6daHzfTeDhKzRh+aOyiDXi5RxuAN2kSKzIzahuHS4MX+T1JNPpGlvd++tFxFTBM7bNSVGCG8IhUsMIj4GZYRxtSuMxyQt3iAkeEeQWgQQFmOv/FTNZYPl2k5gL/eqk5mqK3StzHa2eVqb39SoguYTw2WeHPLreU4Hl0YLnZtRA0x4kXaHExTe9KEaGW9xP3h0Dkf+oDykWc6Cq70cOgl0CPrGVKVXKUKyCDdlUFqk8KypMow9DrUub03a/NNMm3Bb+LRVLfhCYbXKKx4iR+z9E7kbiZciwn3wuDi8FldckAgI7PLs+SEjAEGm5azALb7d0wHUoIWizEeP+q9F6XrzzDbK5cK7ro2Udpf3k9nDEh5yBGmVUJhTTz4Ob3qUDU3enN9cfJ1QsCQYlfhJsw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB5520.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(426003)(508600001)(9746002)(1076003)(9786002)(66476007)(33656002)(86362001)(66556008)(8936002)(4326008)(66946007)(6916009)(26005)(54906003)(5660300002)(316002)(36756003)(186003)(2616005)(8676002)(2906002)(38100700002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pduU4yFYHuNjFXlw7kiN1zCjK0AsaHFNMBYZ7CPjw1t77GUanfsaTef58LtO?=
- =?us-ascii?Q?/NrRGQ1+a8dGEw57nlTL9xtztujn2e3N/jb0QueGVPuGGfKYO27XWOCS/kN0?=
- =?us-ascii?Q?6kdaQHS5FUriYsTuZXv2r5yjAA7UKkYQajeqcBsF1P8gIylDQlJmyigXnviK?=
- =?us-ascii?Q?tNs1EodrqXHA/+KUtMh1o40p2ojccDRBsJwz6K7u9ZO+Da5kxA00EI8MOKy9?=
- =?us-ascii?Q?eazsJMPlcBXXsjmA21/VE901TAZVf473MgPtB8O6c1vcA0dJs3bevf/HK7dr?=
- =?us-ascii?Q?JhsIMdTAkumA4r2q0as5uUDj/4LMki1M5okb5XlcMCi19UsNOcf+DjbERoDW?=
- =?us-ascii?Q?BZRXDHuBjDsFJJ3SXLNHRznbgNfzspQb72WuwWy3oewlxkbeVRX4a9qN8aQj?=
- =?us-ascii?Q?0Z7WyBC8wZq6YzpgKhL5LHiJR/Zl2pwta3jh3c1BddTTKLJlvzyfHtSZSQUy?=
- =?us-ascii?Q?QmmwW0W3rXvxaofZiCNEIDMKRExUzDdTZeou01KnklsQl6+lOdIhiA1qx9mU?=
- =?us-ascii?Q?Yg2pl5F//5A0/MrDXDURPPItXBnqgy63JpWXQfKlAokSxFac08+rvOwNk91P?=
- =?us-ascii?Q?EF+39lI7YZW7JqH5VT9PBLLzaKgTkq5qUscwSmQJoaeWz8G9CJWcFMsOL49o?=
- =?us-ascii?Q?DDQ1nQiCXgi5eUf3A0jpaLLGL8S9pja/mGJP87WUu+Lojp1VejE982HVVVoF?=
- =?us-ascii?Q?wdErtH+LJoOzD65gkPm7kL6NcKRYCh17rLkD2b9PeML70T0YAvRGylRC0/ag?=
- =?us-ascii?Q?BETQBw3laMlMJNEbWEhH/6ssNWI9eucHiOIDwtViwVDJsO/d2o837abxUyuo?=
- =?us-ascii?Q?M/+JUcOT+33EXDB3u7IOtybRyQ53TStmLNxjAG5BkYKl+5BebYGfwXUZqbN/?=
- =?us-ascii?Q?GlSvmYxZ0HM8WLOzYuaVIiUlhxg/4HmeOgWyd/FGHotuGoSY2O8TY/3857Pq?=
- =?us-ascii?Q?yNssoRHtj9qTCbMWARdi9JZzfy+iyeqJ1ORiuyEnZp50oHLZtPerXkIKiIaE?=
- =?us-ascii?Q?AJuk2Z+2QAuymhEw3sTB5UL9+D6GRiHed5fbFlOynKKaqMmKYoaYzwrDV5O9?=
- =?us-ascii?Q?RhOllnOiOf71i4XzRno3TrWAkWY8nwMpQ5Ptu6EgzJLlBrsqSTQ4AvmC5tUw?=
- =?us-ascii?Q?JGQO45qdxy3RGmgM5mcv33/P8jDFXonMsjsREzzF/7oWu8pdtttvAaaLKzCb?=
- =?us-ascii?Q?fkQn8qC3lChScnd47QA1P90do3fQQZ1QsoCcZkb2EsBxFA3KH/Oi4Gzu8XMr?=
- =?us-ascii?Q?5GAoHtsdoXaWPoVYL3LPMxkkvl7pLOU0RZULxfxcpkcMf4kZJnQsNzRTIQ5H?=
- =?us-ascii?Q?Qh4ZBcuTyaSI2Qme5KdOkPZ03a+G6fQf1jC9SJkG4QQUPnuUjOqqHX2+9pXE?=
- =?us-ascii?Q?AtlJqsxdZDIDbD6HmGHkELFmYES3yBiq1F5BAJr1m9Oc0VcdyPG5E1PYZ6uF?=
- =?us-ascii?Q?mrGGpMAnSQwPocV4vIY/pFbuaErEyr+u6PogX0zv18JwinFyeQWa4AldH2Uu?=
- =?us-ascii?Q?Q/gQSqKEmucLlfbGytwAed2C8vmu6abwEtWQn/oSHGZ8IV8lc4ZNI4ZGM7gG?=
- =?us-ascii?Q?sxYq7Up/sNIiAeWNBx8=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78cc9c0a-9b3a-4b89-87e6-08d99ee46efc
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB5520.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2021 16:10:20.4736
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k4B/hlEeNXpoYjVToltE/rj2hhcxX9np+Ael78rrbLD2JWtzlaTh+rO2iaFSkxm5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5390
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 03, 2021 at 09:44:09AM -0600, Alex Williamson wrote:
+On Wed, 3 Nov 2021 13:10:19 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> In one email I read that QEMU clearly should not be performing SET_IRQS
-> while the device is _RESUMING (which it does) and we need to require an
-> interim state before the device becomes _RUNNING to poke at the device
-> (which QEMU doesn't do and the uAPI doesn't require), and the next I
-> read that we should proceed with some useful quanta of work despite
-> that we clearly don't intend to retain much of the protocol of the
-> current uAPI long term...
+> On Wed, Nov 03, 2021 at 09:44:09AM -0600, Alex Williamson wrote:
+> 
+> > In one email I read that QEMU clearly should not be performing SET_IRQS
+> > while the device is _RESUMING (which it does) and we need to require an
+> > interim state before the device becomes _RUNNING to poke at the device
+> > (which QEMU doesn't do and the uAPI doesn't require), and the next I
+> > read that we should proceed with some useful quanta of work despite
+> > that we clearly don't intend to retain much of the protocol of the
+> > current uAPI long term...  
+> 
+> mlx5 implements the protocol as is today, in a way that is compatible
+> with today's qemu. Qemu has various problems like the P2P issue we
+> talked about, but it is something working.
+> 
+> If you want to do a full re-review of the protocol and make changes,
+> then fine, let's do that, but everything should be on the table, and
+> changing qemu shouldn't be a blocker.
 
-mlx5 implements the protocol as is today, in a way that is compatible
-with today's qemu. Qemu has various problems like the P2P issue we
-talked about, but it is something working.
+I don't think changing QEMU is a blocker, but QEMU should be seen as
+the closest thing we currently have to a reference user implementation
+against the uAPI and therefore may define de facto behaviors that are
+not sufficiently clear in the uAPI.  So if we see issues with the QEMU
+implementation, that's a reflection on gaps and disagreements in the
+uAPI itself.  If we think we need new device states and protocols to
+handle the issues being raised, we need plans to incrementally add
+those to the uAPI, otherwise we should halt and reevaluate the existing
+uAPI for a full overhaul.
 
-If you want to do a full re-review of the protocol and make changes,
-then fine, let's do that, but everything should be on the table, and
-changing qemu shouldn't be a blocker.
+We agreed that it's easier to add a feature than a restriction in a
+uAPI, so how do we resolve that some future device may require a new
+state in order to apply the SET_IRQS configuration?  Existing userspace
+would fail with such a device.
 
-In one email you are are saying we need to document and decide things
-as a pre-condition to move the driver forward, and then in the next
-email you say whatever qemu does is the specification, and can't
-change it.
+> In one email you are are saying we need to document and decide things
+> as a pre-condition to move the driver forward, and then in the next
+> email you say whatever qemu does is the specification, and can't
+> change it.
 
-Part of this messy discussion is my fault as I've been a little
-unclear in mixing my "community view" of how the protocol should be
-designed to maximize future HW support and then switching to topics
-that have direct relevance to mlx5 itself.
+I don't think I ever said we can't change it.  I'm being presented with
+new information, new requirements, new protocols that existing QEMU
+code does not follow.  We can change QEMU, but as I noted before we're
+getting dangerously close to having a formal, non-experimental user
+while we're poking holes in the uAPI and we need to consider how the
+uAPI extends to fill those holes and remains backwards compatible to
+the current implementation.
 
-I want to see devices like hns be supportable and, from experience,
-I'm very skeptical about placing HW design restrictions into a
-uAPI. So I don't like those things.
+> Part of this messy discussion is my fault as I've been a little
+> unclear in mixing my "community view" of how the protocol should be
+> designed to maximize future HW support and then switching to topics
+> that have direct relevance to mlx5 itself.
 
-However, mlx5's HW is robust and more functional than hns, and doesn't
-care which way things are decided.
+Better sooner than later to evaluate the limitations and compatibility
+issues against what we think is reasonable hardware behavior with
+respect to migration states and transitions.
 
-> Too much is in flux and we're only getting breadcrumbs of the
-> changes to come.
+> I want to see devices like hns be supportable and, from experience,
+> I'm very skeptical about placing HW design restrictions into a
+> uAPI. So I don't like those things.
+> 
+> However, mlx5's HW is robust and more functional than hns, and doesn't
+> care which way things are decided.
 
-We have no intention to go in and change the uapi after merging beyond
-solving the P2P issue.
+Regardless, the issues are already out on the table.  We want migration
+for mlx5, but we also want it to be as reasonably close to what we
+think can support any device designed for this use case.  You seem to
+have far more visibility into that than I do.
 
-Since we now have confirmation that hns cannot do P2P I see no issue
-to keep the current design as the non-p2p baseline that hns will
-implement and the P2P upgrade should be designed separately.
+> > Too much is in flux and we're only getting breadcrumbs of the
+> > changes to come.  
+> 
+> We have no intention to go in and change the uapi after merging beyond
+> solving the P2P issue.
 
-> It's becoming more evident that we're likely to sufficiently modify
-> the uAPI to the point where I'd probably suggest a new "v2" subtype
-> for the region.
+Then I'm confused where we're at with the notion that we shouldn't be
+calling SET_IRQS while in the _RESUMING state.
 
-I don't think this is evident. It is really your/community choice what
-to do in VFIO.
+> Since we now have confirmation that hns cannot do P2P I see no issue
+> to keep the current design as the non-p2p baseline that hns will
+> implement and the P2P upgrade should be designed separately.
+> 
+> > It's becoming more evident that we're likely to sufficiently modify
+> > the uAPI to the point where I'd probably suggest a new "v2" subtype
+> > for the region.  
+> 
+> I don't think this is evident. It is really your/community choice what
+> to do in VFIO.
+> 
+> If vfio sticks with the uAPI "as is" then it places additional
+> requirements on future HW designs.
+> 
+> If you want to relax these requirements before stabilizing the uAPI,
+> then we need to make those changes now.
+> 
+> It is your decision. I don't know of any upcoming HW designs that have
+> a problem with any of the choices.
 
-If vfio sticks with the uAPI "as is" then it places additional
-requirements on future HW designs.
+If we're going to move forward with the existing uAPI, then we're going
+to need to start factoring compatibility into our discussions of
+missing states and protocols.  For example, requiring that the device
+is "quiesced" when the _RUNNING bit is cleared and "frozen" when
+pending_bytes is read has certain compatibility advantages versus
+defining a new state bit.  Likewise, it might be fair to define that
+userspace should not touch device MMIO during _RESUMING until after the
+last bit of the device migration stream has been written, and then it's
+free to touch MMIO before transitioning directly to the _RUNNING state.
 
-If you want to relax these requirements before stabilizing the uAPI,
-then we need to make those changes now.
+IOW, we at least need to entertain methods to achieve the
+clarifications were trying for within the existing uAPI rather than
+toss out new device states and protocols at every turn for the sake of
+API purity.  The rate at which we're proposing new states and required
+transitions without a plan for the uAPI is not where I want to be for
+adding the driver that could lock us in to a supported uAPI.  Thanks,
 
-It is your decision. I don't know of any upcoming HW designs that have
-a problem with any of the choices.
+Alex
 
-Thanks,
-Jason
