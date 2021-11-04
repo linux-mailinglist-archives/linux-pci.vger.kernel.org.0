@@ -2,62 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE2B34451E7
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 12:00:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD90C445211
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 12:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231254AbhKDLD3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Nov 2021 07:03:29 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:40686 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230148AbhKDLD3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 07:03:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Uv1XgE-_1636023647;
-Received: from localhost.localdomain(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Uv1XgE-_1636023647)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 04 Nov 2021 19:00:48 +0800
-From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
-To:     helgaas@kernel.org
-Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
-        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
-        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
-        bhelgaas@google.com, ying.huang@intel.com,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xuesong.chen@linux.alibaba.com
-Subject: [PATCH v5 4/4] PCI: MCFG: Add the MCFG entry parse log message
-Date:   Thu,  4 Nov 2021 19:00:40 +0800
-Message-Id: <20211104110040.47815-1-xuesong.chen@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20211104105715.47396-1-xuesong.chen@linux.alibaba.com>
-References: <20211104105715.47396-1-xuesong.chen@linux.alibaba.com>
+        id S230365AbhKDLSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Nov 2021 07:18:32 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:45012 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229809AbhKDLSb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 07:18:31 -0400
+Received: by mail-wm1-f42.google.com with SMTP id c71-20020a1c9a4a000000b0032cdcc8cbafso3971737wme.3;
+        Thu, 04 Nov 2021 04:15:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NOpeRyhSrWLhm7pnKwCXx+SDhg6aZqCSyZIAd5+foKg=;
+        b=zIS2nlOPUIEz1/3FqwD9bHVYwpw3/sse5kwhM5KE/DkFfLk+nfjU86Eh3z/Rq+JzUH
+         56QBDCVwfd81Rmx7auLli7mQd6MXh+lJ8d5AuSzXjT0Blr9pZLVOqAzUebC9iER5tWDB
+         GwXUcEhBEJYVWCbc8IX0w08Zss1okBh8mybcjVbgnU7PB+NV6KQ4dX1wFixzM7G+Ni65
+         G6M01EnFjwPUf2ylx+Fnp7mSdMsH8u+qlTHvBjLsLnJuigF1pqGvj9vh41d9xQUGFq2N
+         qBuBlndBOtacILhuaAUVru4k7dF3rr5NAszC78f+Xv83bKkec4qIxfYU408xrne15bGi
+         nXPw==
+X-Gm-Message-State: AOAM532H9eaqSgkcWCzOfquzECICAEopjkUZa91yC8d7UawgMa9IToSe
+        Gb4hZ24HsGIrzD1ehXGJiRA=
+X-Google-Smtp-Source: ABdhPJwgYd/ahbGiqQu+IScVKbnJX4RZpTB9iy0joJeSCVXm8EZnzzJbn9tN2CgD43T0svvbgkHjKg==
+X-Received: by 2002:a7b:c102:: with SMTP id w2mr21194423wmi.151.1636024552847;
+        Thu, 04 Nov 2021 04:15:52 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id u16sm7897996wmc.21.2021.11.04.04.15.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Nov 2021 04:15:51 -0700 (PDT)
+Date:   Thu, 4 Nov 2021 12:15:50 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Wan Jiabing <wanjiabing@vivo.com>
+Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiabing.wan@qq.com
+Subject: Re: [PATCH] PCI: vmd: Remove duplicated include in vmd.c
+Message-ID: <YYPA5rFIqYBCek+u@rocinante>
+References: <20211104063720.29375-1-wanjiabing@vivo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211104063720.29375-1-wanjiabing@vivo.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To make it to be consistent with x86's MMCONFIG and ease the
-disection of PCI MCFG entry parse process.
+Hi,
 
-Signed-off-by: Xuesong Chen <xuesong.chen@linux.alibaba.com>
----
- drivers/acpi/pci_mcfg.c | 3 +++
- 1 file changed, 3 insertions(+)
+[...]
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/irq.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/device.h>
+>  #include <linux/msi.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-acpi.h>
 
-diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-index b5ab866..99c9bf5 100644
---- a/drivers/acpi/pci_mcfg.c
-+++ b/drivers/acpi/pci_mcfg.c
-@@ -290,6 +290,9 @@ static __init int pci_mcfg_parse(struct acpi_table_header *header)
- 		e->res.end = e->address + PCI_MMCFG_BUS_OFFSET(e->end_bus + 1) - 1;
- 		e->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
- 		list_add(&e->list, &pci_mmcfg_list);
-+		pr_info("MCFG entry for domain %04x [bus %02x-%02x] at %pR "
-+			"(base %#lx)\n", e->segment, e->start_bus,
-+			e->end_bus, &e->res, (unsigned long)e->address);
- 	}
- 
- #ifdef CONFIG_PCI_QUIRKS
--- 
-2.9.5
+Wan, thank you for reporting this!
 
+Bjorn, the patch I sent earlier:
+
+  https://lore.kernel.org/all/20211013003145.1107148-1-kw@linux.com/
+
+Accidentally left the include at the top that was intended to me moved to
+be before the linux/msi.h to reflect previous order of the asm/device.h and
+asm/msi.h had.
+
+I must have forgotten to remove the one from the top later.  Sincere
+apologies!
+
+I can send an update, or we can squeeze these two patches together.  Sorry for
+adding you more work to do.
+
+	Krzysztof
