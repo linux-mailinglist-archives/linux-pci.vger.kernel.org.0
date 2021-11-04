@@ -2,140 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0062D4453FA
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 14:36:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B99BF44545B
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 14:57:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231171AbhKDNjC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Nov 2021 09:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230409AbhKDNjB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 09:39:01 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE537C06127A
-        for <linux-pci@vger.kernel.org>; Thu,  4 Nov 2021 06:36:23 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id d13so8666207wrf.11
-        for <linux-pci@vger.kernel.org>; Thu, 04 Nov 2021 06:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Tx/2C+t7VpEwCOvH7sOHu7Q1i56sP9nBdHDwvw2KuU0=;
-        b=AIefXI8QkD1pMYpz+9ixV4beAj5Gz/aQCd5UevbTonBjIOFj9XObVB0/Fn1QZALyAL
-         J687q6oIQvrxGBP0GNLfVUGjl0DRtLP1GG4CY/DcVhpCJzmE1F4ofBTYKM1yXd08Dn4o
-         0yTmgnXMvINIOwYudNLxRQNrFGWdpZXIWm0pU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Tx/2C+t7VpEwCOvH7sOHu7Q1i56sP9nBdHDwvw2KuU0=;
-        b=YA6hAdRFkjsMDNWeozsEV1MJCBtHCjHxdjHXNDUrDdp/NcQ/zpYAIZ5m8pfqDzOFsj
-         R+PQlZTSJzloAuMXbp7gADuG/ELrBg/HJQyZAVbYIWJqGlMdUQjp4nEVfhOsJSGjvef3
-         +wZoUj9PjpAgnmgU7vfUdUIsJ3uyN7D3wxHkVFCBH2LfW3rHl/+6QVNDOAPKjzlEhCmC
-         T/3wmTeoYO9S0vU3Tsn/j91FHlaXCiWtygW9KPz4AerA0PsTAyJBGqME0QOgQgI82wZ9
-         fN4yc0Dy4MfB/2xFqvBgfJkMeb3ziDtytLNQlwnr/Ehhu8sUUCbzbtsHVOp1KCTBorJq
-         uCnw==
-X-Gm-Message-State: AOAM530DrAXeEaEZ8or+C5LNuCTGxf68Vwol7KvgAxdxfbnHzqK+phhp
-        sKt/lUMxGxqQr71dBnFcvXv902ClpJnoa1QHzW6pzA==
-X-Google-Smtp-Source: ABdhPJy5jblvNQtdFBm739j5npNWs4ldml60zPSTdTQr1KxFWIm0AWtKwv4+Ouij135un3jAYZUsXVb4N+KWaYwJGeo=
-X-Received: by 2002:adf:f990:: with SMTP id f16mr57641954wrr.128.1636032982277;
- Thu, 04 Nov 2021 06:36:22 -0700 (PDT)
+        id S229869AbhKDN7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Nov 2021 09:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229505AbhKDN7m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Nov 2021 09:59:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C8E060EBD;
+        Thu,  4 Nov 2021 13:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636034224;
+        bh=LmRim0t3JU43qMKfrhS3HrTRGgWYpquyItL1o78EZ7Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I5QDAAVg/RBM1psXeBWNaVB41292EQwLnaZJjzwdUp4K4EU02+2rSfZUyFH0CCnqb
+         0rAG77sB/pLXdYZCtFZAX8KfqdCJLVVXJfkfpZ3Ojooqv8fxADGldBFpT3QAmwdFHN
+         I2sddnAts5Zw1x0Lc8iyDFgpgYZqH6mKc4IIdJn2cU8+pk3ZqJWrCSivX3bQr1j6DI
+         dZr3/sckDrhExp1S/daJPneBZFLhPHlqNTge162qnVkP51KOrh5F9YujznYKYs7KWo
+         rtVWexHgELkd1sTEIELiimOA09V4iTfWicofrAvMIW4G9ZdxTwrVnw15DywC6ivKjv
+         s8fvCxLDC/73g==
+Received: by mail-ed1-f53.google.com with SMTP id c8so5029356ede.13;
+        Thu, 04 Nov 2021 06:57:03 -0700 (PDT)
+X-Gm-Message-State: AOAM530cEYniUZwGNBCugt4j/GYrNpvr0qHVXehcDFx8JSCOvpu0l376
+        8WmtILZ9jGquM+U5Cwyr7uRiP+163NdDVvJ/Tg==
+X-Google-Smtp-Source: ABdhPJzP7zlHbNM1xPserEcnAkr13cJAvN5KhcVsaVPWeHPZmkLf/dh80gNoW9un31YR1oC6H9rgbdD7sjM8VvVlYxs=
+X-Received: by 2002:aa7:dc13:: with SMTP id b19mr54689320edu.145.1636034220156;
+ Thu, 04 Nov 2021 06:57:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211103184939.45263-1-jim2101024@gmail.com> <20211103184939.45263-5-jim2101024@gmail.com>
- <20211103233026.trzas3cwrb26mqb3@pali>
-In-Reply-To: <20211103233026.trzas3cwrb26mqb3@pali>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 4 Nov 2021 09:36:11 -0400
-Message-ID: <CA+-6iNxdx=Yf3msfp1g_2-4sQVjJDWcB3bbHhjC=LMxiXs+Uvw@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] PCI: pci_alloc_child_bus() return NULL if
- ->add_bus() returns -ENOLINK
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
+References: <20211103062518.25695-1-wanjiabing@vivo.com> <20211103143059.GA683503@bhelgaas>
+In-Reply-To: <20211103143059.GA683503@bhelgaas>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 4 Nov 2021 08:56:48 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK4zg7+CPj_6_wRYDtgU-dqouXmrQhR7C_YyFeOe0Meww@mail.gmail.com>
+Message-ID: <CAL_JsqK4zg7+CPj_6_wRYDtgU-dqouXmrQhR7C_YyFeOe0Meww@mail.gmail.com>
+Subject: Re: [PATCH] PCI: kirin: Fix of_node_put() issue in pcie-kirin
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Wan Jiabing <wanjiabing@vivo.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        open list <linux-kernel@vger.kernel.org>
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        jiabing.wan@qq.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 3, 2021 at 7:30 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+On Wed, Nov 3, 2021 at 9:31 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Wednesday 03 November 2021 14:49:34 Jim Quinlan wrote:
-> > Currently, if the call to the pci_ops add_bus() method returns an error=
-, a
-> > WARNING and dev_err() occurs.  We keep this behavior for all errors exc=
-ept
-> > -ENOLINK; for -ENOLINK we want to skip the WARNING and immediately retu=
-rn
-> > NULL.  The argument for this case is that one does not want to continue
-> > enumerating if pcie-link has not been established.  The real reason is =
-that
-> > without doing this the pcie-brcmstb.c driver panics when the dev/id is
-> > read, as this controller panics on such accesses rather than returning
-> > 0xffffffff.
+> [+to Mauro, author of code being changed,
+> Rob for "of_pci_get_devfn()" naming question]
 >
-> I think that this is something which should be fixed in the driver, not
-> in the pci core code. Check in driver code that you can touch HW and if
-> not return fabricated value 0xffffffff.
-Yes --  I don't have control of the config-space data but I do have control
-of the address, and I can hijack the address so that it points to an access=
-ible
-register that holds 0xffffffff.
-
->
-> > It appears that there are only a few uses of the pci_ops add_bus() meth=
-od
-> > in the kernel and none of them currently return -ENOLINK so it should b=
-e
-> > safe to do this.
+> On Wed, Nov 03, 2021 at 02:25:18AM -0400, Wan Jiabing wrote:
+> > Fix following coccicheck warning:
+> > ./drivers/pci/controller/dwc/pcie-kirin.c:414:2-34: WARNING: Function
+> > for_each_available_child_of_node should have of_node_put() before return.
 > >
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > Early exits from for_each_available_child_of_node should decrement the
+> > node reference counter. Replace return by goto here.
+> >
+> > Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
 > > ---
-> >  drivers/pci/probe.c | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  drivers/pci/controller/dwc/pcie-kirin.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index d9fc02a71baa..fdc3f42634b7 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1122,6 +1122,9 @@ static struct pci_bus *pci_alloc_child_bus(struct=
- pci_bus *parent,
+> > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> > index 06017e826832..23a2c076ce53 100644
+> > --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> > @@ -422,7 +422,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+> >                       pcie->num_slots++;
+> >                       if (pcie->num_slots > MAX_PCI_SLOTS) {
+> >                               dev_err(dev, "Too many PCI slots!\n");
+> > -                             return -EINVAL;
+> > +                             ret = -EINVAL;
+> > +                             goto put_node;
+> >                       }
 > >
-> >       if (child->ops->add_bus) {
-> >               ret =3D child->ops->add_bus(child);
-> > +             /* Don't return the child if w/o pcie link-up */
-> > +             if (ret =3D=3D -ENOLINK)
+> >                       ret = of_pci_get_devfn(child);
 >
-> In my opinion ENOLINK is not the correct errno code for signaling
-> "no link-up" error. IIRC ENOLINK was defined for file/inode links. For
-> network connections there is ENETDOWN errno code which is more similar
-> to "no link-up" than inode link.
+> This is a change to the code added here:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=31bd24f0cfe0
 >
-> Anyway, I still do not think if it is a good idea to have this check in
-> core pci code.
-This commit is no longer needed per your suggestion of having the host-brid=
-ge
-driver force a return of 0xffffffff.
+> This fix looks right to me; all the other early exits from the inner
+> loop drop the "child" reference.
+>
+> But this is a nested loop and the *outer* loop also increments
+> refcounts, and I don't see that outer loop reference on "parent" being
+> dropped at all:
+>
+>     for_each_available_child_of_node(node, parent) {
+>       for_each_available_child_of_node(parent, child) {
+>         ...
+>         if (error)
+>           goto put_node;
+>       }
+>     }
+>
+>   put_node:
+>     of_node_put(child);
 
-Thanks,
-Jim
+Indeed. There should be a put on the parent.
 
->
-> (This is just my opinion... wait for Bjorn with maintainer's hat what
-> will say that is the best way to handle above issue)
->
-> > +                     return NULL;
-> >               if (WARN_ON(ret < 0))
-> >                       dev_err(&child->dev, "failed to add bus: %d\n", r=
-et);
-> >       }
-> > --
-> > 2.17.1
-> >
+This whole function is less than ideal as it assumes the board has 2
+levels of PCI nodes. This might be another (like brcmstb thread) place
+to use .add_bus(). But that's a problem for another day.
+
+> The "of_pci_get_devfn()" immediately after is unrelated, but possibly
+> a confusing name.  "Get" often suggests a reference count being
+> increased, but that's not the case with of_pci_get_devfn().
+
+I guess you have to know that only nodes are refcounted and property
+functions never are.
+
+There's also of_pci_get_max_link_speed() and of_get_pci_domain_nr().
+
+Rob
