@@ -2,81 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F51E445218
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 12:19:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD14D44525A
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 12:41:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231283AbhKDLWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Nov 2021 07:22:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52375 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230365AbhKDLWQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 07:22:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636024778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CGsR36Tf8Zco3ONitbn6lIwM0U71XOPWuuitVNowbAQ=;
-        b=BVEWfm/FfxCExXv6GTpJUWsDUYqcW5tX0j3T9aAGGdVokoYkuhdpWkSEsMVWxBEh8Bzsjo
-        OS2xWeQ7Ix/018mXeD6C62bdANTL1jtPiUa2fickIi4RBGV1jhfbwax9apfetVHHDHkCbp
-        fY4adSaxb3wzdbMJnHM7xtmsKkIxZ5Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-a8X7VlfGNP-YhpQlYX9_-g-1; Thu, 04 Nov 2021 07:19:34 -0400
-X-MC-Unique: a8X7VlfGNP-YhpQlYX9_-g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D102800053;
-        Thu,  4 Nov 2021 11:19:33 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 62E1D6F951;
-        Thu,  4 Nov 2021 11:19:13 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-In-Reply-To: <20211103120411.3a470501.alex.williamson@redhat.com>
-Organization: Red Hat GmbH
-References: <20211028234750.GP2744544@nvidia.com>
- <20211029160621.46ca7b54.alex.williamson@redhat.com>
- <20211101172506.GC2744544@nvidia.com>
- <20211102085651.28e0203c.alex.williamson@redhat.com>
- <20211102155420.GK2744544@nvidia.com>
- <20211102102236.711dc6b5.alex.williamson@redhat.com>
- <20211102163610.GG2744544@nvidia.com>
- <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
- <20211103120955.GK2744544@nvidia.com>
- <20211103094409.3ea180ab.alex.williamson@redhat.com>
- <20211103161019.GR2744544@nvidia.com>
- <20211103120411.3a470501.alex.williamson@redhat.com>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Thu, 04 Nov 2021 12:19:12 +0100
-Message-ID: <877ddob233.fsf@redhat.com>
+        id S231171AbhKDLnu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Nov 2021 07:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229843AbhKDLnt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Nov 2021 07:43:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AE6BB611EF;
+        Thu,  4 Nov 2021 11:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636026071;
+        bh=w4EJu5XJxSHpNU33OdK4OD1pgxNRI63+7YIulSPgqTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nY3bp1C1iEUAgTkKHfaCeYAYC4rUcxlNvEa8hB1iU+Rxcst30p9ZVvmd5uaUXsO7t
+         r/zSPFt7kZc5dvxsWd/RFVUdbUScmWNZCM3tXx5mPQ2BB6Txfn6ab49ftUhCyVceZY
+         RBGUUdpd9K/tA2ci3FAFr5Bky7hm8hBdNKodHH7vKXghnjUtF5LIbzl6a4P3qF0/Gn
+         4weR3k6xlCVPinWW0h66aYkPPGQpxGW8yscR/SJ5+LTFADWq2ykMRNXn/rqkLvI+Rh
+         Fe2zMRlrHs9SOrORLyxVxuG52pFj5GPgfNOC2mR9w0SvXIu/dh6lBWEy7MlQEHmimj
+         zeTuwUOZUITIQ==
+Received: by pali.im (Postfix)
+        id 19858990; Thu,  4 Nov 2021 12:41:09 +0100 (CET)
+Date:   Thu, 4 Nov 2021 12:41:08 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     qizhong cheng <qizhong.cheng@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczyi=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Chuanjia Liu <chuanjia.liu@mediatek.com>,
+        Jiey Yang <ot_jiey.yang@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek: Delay 100ms to wait power and clock to
+ become stable
+Message-ID: <20211104114108.mvhm5nhbc7hn2yld@pali>
+References: <20211104062144.31453-1-qizhong.cheng@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211104062144.31453-1-qizhong.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thursday 04 November 2021 14:21:44 qizhong cheng wrote:
+> Described in PCIe CEM specification setctions 2.2 (PERST# Signal) and
+> 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+> be delayed 100ms (TPVPERL) for the power and clock to become stable.
+> 
+> Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
 
-So, I doubt that I'm the only person trying to follow this discussion
-who has lost the overview about issues and possible solutions here. I
-think it would be a good idea to summarize what has been brought up so
-far outside of this thread.
+Acked-by: Pali Rohár <pali@kernel.org>
 
-To that effect, I've created an etherpad at
-https://etherpad.opendev.org/p/VFIOMigrationDiscussions and started
-filling it with some points. It would be great if others could fill in
-the blanks so that everyone has a chance to see what is on the table so
-far, so that we can hopefully discuss this on-list and come up with
-something that works.
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 2f3f974977a3..b32acbac8084 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -702,6 +702,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  	 */
+>  	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+>  
+> +	/*
+> +	 * Described in PCIe CEM specification setctions 2.2 (PERST# Signal)
+> +	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
+> +	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+> +	 * for the power and clock to become stable.
+> +	 */
+> +	msleep(100);
+> +
 
+I guess that this change is fixing detection of some PCIe cards, right?
+
+This ad-hoc driver change is really required as kernel pci code does not
+contain this delay functionality.
+
+Note that this delay is required in every native pci controller driver
+(not only mediatek), otherwise some PCIe cards may not be detected.
+
+For future direction, some more general solution for these issues is
+needed. I proposed something in following email:
+https://lore.kernel.org/linux-pci/20211022183808.jdeo7vntnagqkg7g@pali/
+If you have a time, I would like to hear some feedback...
+
+>  	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+>  	val = readl(port->base + PCIE_RST_CTRL);
+>  	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+> -- 
+> 2.25.1
+> 
