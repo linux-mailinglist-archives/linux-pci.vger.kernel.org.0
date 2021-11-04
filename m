@@ -2,137 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5C97444EF9
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 07:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 595454450CB
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Nov 2021 10:00:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230087AbhKDGkW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Nov 2021 02:40:22 -0400
-Received: from mail-eopbgr1300102.outbound.protection.outlook.com ([40.107.130.102]:11424
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229994AbhKDGkW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Nov 2021 02:40:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jIKjs0uKBfSWDZTDcn67Cn/4Gey5wl/xsO3bSz1HTkP0yg/caVct9G/yRacHDLGfECYQ4QqKORTAIjmojYMAryGp00/UbTpIeqLBVDGEweJ6TQvtSj1ojbjV37q+0sh/yxlO9uBHV8iJ43snomZ1Y17uahm9o2aBJjgE6cPHqrVPZ9XzcwN7Ib1lQJfHyuJRbWkbzWeU+JA/vSsIKzhQDEe9xBoVIj/Mfsob+Cu3zJKJidRXAt6l9AqZ5wUcgF5U6lAs/UOX23G+IxVCsJ+BgkefgFlU6j9njsCzMvTtRB4rwNbgZ5WDYYpccxoFBe49G8KG7+Rgbncm9BIqi8jubg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O/CFL31lIFop2H3gVWi1eA+UYAE4pthQNA/cje7KZ/M=;
- b=HSqYiAFWdl1WxMdT29ssn1e8PEtqi8JdOmXtHuOTBkcnRnd2iGRz4gUmSh9L9a2E8hNqP+t+6sMAcIBLZA11M3v6QMMk5nOH2KC/UJFtlfRvwimoAkM0nBh14TxkWcb5fDj7WjEHAbVztjpfpsfbREuOQcekM+zSY/m+WSfKRRmihSwbmfCchprpI7pFSicepIE5wO9Bw4rKPiaW3lQShrXLPX2mXUTGc5yrzx4a13D2s4SCYagMXRH+Qelus06TU9HS+1StHZdEvgJJwXjCz23IUFulVvDwcrEL/eQYtqNdHCqsC22qAQEDdPoMCUNMBuWMq8VymD62KPHi089b0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
- s=selector2-vivo0-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O/CFL31lIFop2H3gVWi1eA+UYAE4pthQNA/cje7KZ/M=;
- b=AHWNbX9Ugkj1F3f22M7EgkoBvWa77d/YUfPHxKJwVAwouFMA15IqeSCoaSclguctBJb4PybTztk6LhDzLyxbPUTw8vH1n9r5RcrN2N/ORRpAnDObY2mnflPzGCfNN/w3e1PRW8x/vsYmoWZRjkcG5MZKH9yNo6QnjKmxSl6/RzQ=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=vivo.com;
-Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
- SG2PR06MB3450.apcprd06.prod.outlook.com (2603:1096:4:a2::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4649.15; Thu, 4 Nov 2021 06:37:38 +0000
-Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
- ([fe80::fc12:4e1b:cc77:6c0]) by SG2PR06MB3367.apcprd06.prod.outlook.com
- ([fe80::fc12:4e1b:cc77:6c0%6]) with mapi id 15.20.4669.011; Thu, 4 Nov 2021
- 06:37:38 +0000
-From:   Wan Jiabing <wanjiabing@vivo.com>
-To:     Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jiabing.wan@qq.com, Wan Jiabing <wanjiabing@vivo.com>
-Subject: [PATCH] PCI: vmd: Remove duplicated include in vmd.c
-Date:   Thu,  4 Nov 2021 02:37:19 -0400
-Message-Id: <20211104063720.29375-1-wanjiabing@vivo.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0097.apcprd06.prod.outlook.com
- (2603:1096:3:14::23) To SG2PR06MB3367.apcprd06.prod.outlook.com
- (2603:1096:4:78::19)
+        id S230494AbhKDJDE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Nov 2021 05:03:04 -0400
+Received: from office.oderland.com ([91.201.60.5]:38808 "EHLO
+        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231135AbhKDJDE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 05:03:04 -0400
+Received: from [193.180.18.161] (port=59860 helo=[10.137.0.14])
+        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <josef@oderland.se>)
+        id 1miYbf-00DxwI-0N; Thu, 04 Nov 2021 10:00:23 +0100
+Message-ID: <4ae69258-524c-8349-1dbd-147e96f90138@oderland.se>
+Date:   Thu, 4 Nov 2021 10:00:18 +0100
 MIME-Version: 1.0
-Received: from localhost.localdomain (203.90.234.87) by SG2PR06CA0097.apcprd06.prod.outlook.com (2603:1096:3:14::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.10 via Frontend Transport; Thu, 4 Nov 2021 06:37:36 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a6fcdd9b-8dbc-45a4-a0d0-08d99f5d9767
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3450:
-X-Microsoft-Antispam-PRVS: <SG2PR06MB3450A0C9AF185A0F58E75EECAB8D9@SG2PR06MB3450.apcprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i1vQFdAN3sho4p2LjCxTQhOXARQcNwjpnFRL19lPT2d6BqjJHorwOeTDXwrXIvei7m4kUztFm3XSY4EBXreD+01eQTtB6ubDoGBuZaiLEHHsAj+PrV1KPyZP7R5oKEg0SMYGg0KkWRCcwVbp68UctsHrtdpwhKWZHmenZdO77vz5kxUH4Eg55P7NtYhn85T61B+9PlYrvc12MtbUTS65RSxWyGSE5ZF2/h/qvSyrFK2eWXYdEm/hfrdiAnkFYs8tcZe+rYhv2KWP52yhdi1UrJwqujW417muWDm+oQJWCuXZ1VJTD3uWmNUApqHOhKT/Mk4PBWmX03djQaoO0oWu4dfexAgyekkOTeqZ51WTX2G6HIv2xPojcyNQAUYk5cg6lXDTZ/kFW4fcDoqFjtcccW6z7GHdsADIpYdO5rZeGK2lzeypc4jmJQVkfxArwHWvlnO7NSUlQG8XRCdrq8WBrFVtpjmtxxUeblQUolqRyh5H1khpPbDQX6wNlsCNsTUbXR0Zwr7UiKQV7Z3L9u8wm1slaQoCKSF7bKPLSfAX/+9ueQNUsR48gsPYWdrZWlx2QjcDce4/eJ2vEpkB0iB0efmvx6FfskrBZjgFrFVW9qtgUS9jRSvE17wd8DIlODT7Hj6brYL3rhPtEVXEyhFN1RpaJ8uiLoar0H7ai1+XfP93i8CayklNhBq5ZRA4wNrThFjfF6IrD6OUX9cE8JGa0w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6666004)(110136005)(52116002)(316002)(2616005)(83380400001)(66476007)(66556008)(4326008)(4744005)(107886003)(186003)(8676002)(38100700002)(38350700002)(8936002)(508600001)(26005)(86362001)(2906002)(6486002)(6506007)(66946007)(6512007)(956004)(1076003)(36756003)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?s7ICiWK3zVAqLahLzolgfSKQ8dC12BNAENTHZtyycQL89/OTO5fxABhit9QZ?=
- =?us-ascii?Q?aj48o606URT6fNxP9xhAcdmB7aQIaGIkVdPAeahDIl56M1paLH++b2PHwB9z?=
- =?us-ascii?Q?Panrdduw/7Dew2E8Tmi5pzXDpsMrgQDuGKpliXl6SVBL5b2s8QbJr5DrBJnF?=
- =?us-ascii?Q?E+ad2hfrJw5Wz8To0XbrVrwHhI6rPEfQD6V0pp7MqnbMpWuW0VqlVXmw7F/G?=
- =?us-ascii?Q?F/4LJ+ejQSWjmSOksu3zezqB9iOXsReJP31zNGhgacEMkMtRhJ9Uvx0+qCyj?=
- =?us-ascii?Q?5JYLXVOWSz2ZB2WmQdLOmPJJBi825f5SHwjAGdCkPA930Crq9jyodNRjDpGB?=
- =?us-ascii?Q?onhlTU8PY9Sy+9CS/mC0JqTBJcAKOmK3yFi9C/q5U0IYwOaaUjsz0GzLKv4U?=
- =?us-ascii?Q?1BiGVbvoIj106sXt51aJATd5mSlYFivh/QGUV9qNrR37I3+12mCcG0dGIxbE?=
- =?us-ascii?Q?gnI3Te4Sdra4R2V6GeiHWcn2AuAAe3gAe4hs4OKBT/55dvqI4pk36q/dbn4l?=
- =?us-ascii?Q?VFM4vjXGZWPeDv/rP3ECSzUW+GSgGGNFhARazoza5ZAksUNT1jwO1hdcV8k8?=
- =?us-ascii?Q?uDXhlwZo7rgM1dvEfew/Bq2/9d1jKXrdfKD+LS3IT955xNmKWBupYhZ4/okR?=
- =?us-ascii?Q?Vguh000E5wFD7i0HLZzv/kIlAg4XBv+GPpTxdcKEUpDeIzlLcF5LjaBPDwIK?=
- =?us-ascii?Q?0nanBBtmcG0K7UNtV9Iu84aMczcl5C5Y4h6UbmXA60/wHgqmZ0bRfpxhxXzP?=
- =?us-ascii?Q?lsok/acawzRhEtJBjn4wnaFuyB5ScCqkGYIti3c0YhgpgjPJoLj8QHOasSWK?=
- =?us-ascii?Q?umIu8bQeGMW/QWf869/DfzhRVYLq7Gnyn+4nQXhJbxN1bUEl0pH8Y1p4YVj0?=
- =?us-ascii?Q?TVAzGXHXC2yaWzY6Y/N0G3q/tkSacbNRmnOLUL1agac/JdP8lIkcLOVpEOLL?=
- =?us-ascii?Q?WmBlJ0s8+t2T+bmBSXDim1nXQ8maFuyd7zs2s90D+u1g2sJRJaqBDJTRGO6j?=
- =?us-ascii?Q?F9AD2a9+i5h42AFpn/iElDah7ouR9DowBzO0pTBCTC3GHMHn96OgwSmo9+yp?=
- =?us-ascii?Q?29InOgdUQRnC9ksD8DmXvLR1OPRiM/jSal75RfkH2rIAmU69/Qrzj1ptifbc?=
- =?us-ascii?Q?fzq29JPcvGrkslYvR39Gh1SdLzXRw07iNdyGdHmjwDmZ+i6b6jCHZteAT9zg?=
- =?us-ascii?Q?e1QrtgXK2WKEHKfH/vOx7cSC68U5DGkjmBpznZAohq1TINenJTJRLSXKXORB?=
- =?us-ascii?Q?B7r44yThnbAPJBZnvU7r3Oy9n510n8bXFdXhamxv++p8VSAXM82SvxLV+aPz?=
- =?us-ascii?Q?poMwVixTqptDZyIT4tF/rpugBFiggq9q/GDB4EcuMidXO5+i8JlUNGkgneMX?=
- =?us-ascii?Q?0XfUsTsME54nDTehy/gQeJiJMo/IPDYLncMLrsu/eztN5r9kXLsOkjycQV+u?=
- =?us-ascii?Q?8gleUGzGq+H7eERc0FnJ6WkerJtMJ+dSh6J9os3DdjV+bdvN4RcLqL2nPrIw?=
- =?us-ascii?Q?J9EaXcZhfDGlXkc//hgFsE7bc+9NXJj/yHudbdDDL9EcV5pIHdMT0uDuaK6t?=
- =?us-ascii?Q?bpGX2+E5JPfW0flXaRu0MMiYu9EWkFO7TKi60GjXe2hK7DvjFEusflsuoSyv?=
- =?us-ascii?Q?UhUaMc3gk9G5Dd25j5/bYB0=3D?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6fcdd9b-8dbc-45a4-a0d0-08d99f5d9767
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2021 06:37:37.7667
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lbFbZezE4lAxO/Az07r6NPJBZG64w4yxuabol23DhvhRUG5vRB9mrzF4UMWNavj5cxyMYeIA1zKC+MWAH6fGdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB3450
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
+ Thunderbird/93.0
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jgross@suse.com,
+        linux-pci@vger.kernel.org, maz@kernel.org,
+        xen-devel@lists.xenproject.org, Jason Andryuk <jandryuk@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
+ <20211025012503.33172-1-jandryuk@gmail.com> <87fssmg8k4.ffs@tglx>
+ <87cznqg5k8.ffs@tglx> <d1cc20aa-5c5c-6c7b-2e5d-bc31362ad891@oderland.se>
+ <89d6c2f4-4d00-972f-e434-cb1839e78598@oderland.se>
+ <5b3d4653-0cdf-e098-0a4a-3c5c3ae3977b@oderland.se> <87ee7w6bxi.ffs@tglx>
+From:   Josef Johansson <josef@oderland.se>
+Subject: Re: [PATCH] PCI/MSI: Move non-mask check back into low level
+ accessors
+In-Reply-To: <87ee7w6bxi.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - office.oderland.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oderland.se
+X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
+X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix following checkincludes.pl warning:
-./drivers/pci/controller/vmd.c: linux/device.h is included more than once.
-
-The include is in line 7. Remove the duplicated here.
-
-Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
----
- drivers/pci/controller/vmd.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index b48d9998e324..a45e8e59d3d4 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -10,7 +10,6 @@
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/device.h>
- #include <linux/msi.h>
- #include <linux/pci.h>
- #include <linux/pci-acpi.h>
--- 
-2.20.1
+On 11/4/21 00:45, Thomas Gleixner wrote:
+> On Wed, Oct 27 2021 at 17:29, Josef Johansson wrote:
+>
+> CC+: EFIFB and scheduler folks
+>
+>> On 10/27/21 14:01, Josef Johansson wrote:
+>> When I suspend I get errors from Xen, including stacktraces below
+>> if anyone has any clue, if this might be related. I get one each time I
+>> suspend
+>> and the third time amdgpu gives up.
+>>
+>> rtc_cmos 00:01: registered as rtc0
+>> rtc_cmos 00:01: setting system clock to 2021-10-27T15:04:35 UTC (1635347075)
+>> rtc_cmos 00:01: no alarms, y3k, 114 bytes nvram
+>> device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+>> device-mapper: uevent: version 1.0.3
+>> device-mapper: ioctl: 4.45.0-ioctl (2021-03-22) initialised: dm-devel@redhat.com
+>> efifb: probing for efifb
+>> efifb: cannot reserve video memory at 0x60000000
+>> ------------[ cut here ]------------
+>> ioremap on RAM at 0x0000000060000000 - 0x00000000607e8fff
+>> WARNING: CPU: 7 PID: 1 at arch/x86/mm/ioremap.c:210 __ioremap_caller+0x332/0x350
+> That's this warning:
+>
+> 	/*
+> 	 * Don't allow anybody to remap normal RAM that we're using..
+> 	 */
+> 	if (io_desc.flags & IORES_MAP_SYSTEM_RAM) {
+> 		WARN_ONCE(1, "ioremap on RAM at %pa - %pa\n",
+> 			  &phys_addr, &last_addr);
+> 		return NULL;
+> 	}
+>
+>
+>> Modules linked in:
+>> CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.15.0-0.rc7.0.fc32.qubes.x86_64 #1
+>> Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
+>> RIP: e030:__ioremap_caller+0x332/0x350
+>> Code: e8 c3 ca ff ff 49 09 c6 e9 32 fe ff ff 48 8d 54 24 28 48 8d 74 24 18 48 c7 c7 35 f2 5d 82 c6 05 e8 7b a9 01 01 e8 48 39 be 00 <0f> 0b 45 31 e4 e9 ac fe ff ff e8 ff f5 c3 00 66 66 2e 0f 1f 84 00
+>> RSP: e02b:ffffc9004007bb00 EFLAGS: 00010286
+>> RAX: 0000000000000000 RBX: 00000000007e9000 RCX: ffffffff82915ca8
+>> RDX: c0000000ffffdfff RSI: 0000000000000000 RDI: ffffffff82865ca0
+>> RBP: 0000000060000000 R08: 0000000000000000 R09: ffffc9004007b948
+>> R10: ffffc9004007b940 R11: ffffffff82945ce8 R12: 0000000000000001
+>> R13: 00000000007e9000 R14: 00000000007e9000 R15: ffffffff81c8f772
+>> FS:  0000000000000000(0000) GS:ffff8881407c0000(0000) knlGS:0000000000000000
+>> CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000000000000000 CR3: 0000000002810000 CR4: 0000000000050660
+>> Call Trace:
+>>  efifb_probe.cold+0x2e6/0x688
+> Why is this probing EFIFB at resume? Josef is that hibernate or suspend
+> to RAM?
+This is actually on boot, might be a totally ignore able warning though.
+Would be nice to actually get rid of!
+>
+>>  platform_probe+0x3f/0x90
+>>  call_driver_probe+0x24/0xc0
+>>  really_probe+0x1e7/0x310
+>>  __driver_probe_device+0xfe/0x180
+>>  driver_probe_device+0x1e/0x90
+>>  __device_attach_driver+0x72/0xe0
+>>  ? driver_allows_async_probing+0x50/0x50
+>>  ? driver_allows_async_probing+0x50/0x50
+>>  bus_for_each_drv+0x8f/0xd0
+>>  __device_attach+0xe9/0x1f0
+>>  bus_probe_device+0x8e/0xa0
+>>  device_add+0x3fb/0x630
+>>  platform_device_add+0x102/0x230
+>>  sysfb_init+0xea/0x141
+>>  ? firmware_map_add_early+0xb8/0xb8
+>>  do_one_initcall+0x57/0x200
+>>  do_initcalls+0x109/0x166
+>>  kernel_init_freeable+0x23c/0x2bd
+>>  ? rest_init+0xc0/0xc0
+>>  kernel_init+0x16/0x120
+>>  ret_from_fork+0x22/0x30
+>> ---[ end trace b068d3cd1b7f5f49 ]---
+>> efifb: abort, cannot remap video memory 0x7e9000 @ 0x60000000
+>> efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
+>> --
+>> printk: Suspending console(s) (use no_console_suspend to debug)
+>> [drm] free PSP TMR buffer
+>> PM: suspend devices took 0.428 seconds
+>> ACPI: EC: interrupt blocked
+>> ACPI: PM: Preparing to enter system sleep state S3
+>> ACPI: EC: event blocked
+>> ACPI: EC: EC stopped
+>> ACPI: PM: Saving platform NVS memory
+>> Disabling non-boot CPUs ...
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 1 PID: 0 at arch/x86/mm/tlb.c:522  switch_mm_irqs_off+0x3c5/0x400
+> 	if (WARN_ON_ONCE(__read_cr3() != build_cr3(real_prev->pgd, prev_asid))) {
+>
+>> Modules linked in: snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer nf_tables nfnetlink vfat fat intel_rapl_msr think_lmi firmware_attributes_class wmi_bmof intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 sp5100_tco k10temp videobuf2_common i2c_piix4 iwlwifi videodev mc cfg80211 thinkpad_acpi ipmi_devintf ucsi_acpi platform_profile typec_ucsi ledtrig_audio ipmi_msghandler r8169 rfkill typec snd wmi soundcore video i2c_scmi fuse xenfs ip_tables dm_thin_pool dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel gpu_sched i2c_algo_bit drm_ttm_helper ghash_clmulni_intel ttm serio_raw drm_kms_helper cec sdhci_pci cqhci sdhci xhci_pci drm xhci_pci_renesas nvme xhci_hcd ehci_pci mmc_core ehci_hcd nvme_core xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
+>> CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W        --------- ---  5.15.0-0.rc7.0.fc32.qubes.x86_64 #1
+>> Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
+>> RIP: e030:switch_mm_irqs_off+0x3c5/0x400
+>> Code: f0 41 80 65 01 fb ba 01 00 00 00 49 8d b5 60 23 00 00 4c 89 ef 49 c7 85 68 23 00 00 60 1d 08 81 e8 a0 f3 08 00 e9 15 fd ff ff <0f> 0b e8 34 fa ff ff e9 ad fc ff ff 0f 0b e9 31 fe ff ff 0f 0b e9
+>> RSP: e02b:ffffc900400f3eb0 EFLAGS: 00010006
+>> RAX: 00000001336c6000 RBX: ffff888140660000 RCX: 0000000000000040
+>> RDX: ffff8881003027c0 RSI: 0000000000000000 RDI: ffff8881b36c6000
+>> RBP: ffffffff829d91c0 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000008 R11: 0000000000000000 R12: ffff888104e88440
+>> R13: ffff8881003027c0 R14: 0000000000000000 R15: 0000000000000001
+>> FS:  0000000000000000(0000) GS:ffff888140640000(0000) knlGS:0000000000000000
+>> CS:  10000e030 DS: 002b ES: 002b CR0: 0000000080050033
+>> CR2: 000060b7d78bf198 CR3: 0000000002810000 CR4: 0000000000050660
+>> Call Trace:
+>>  switch_mm+0x1c/0x30
+>>  idle_task_exit+0x55/0x60
+>>  play_dead_common+0xa/0x20
+>>  xen_pv_play_dead+0xa/0x60
+> So this is when bringing the non boot CPUs down and the switch_mm() code
+> discovers inconsistency between CR3 and the expected value.
+>
+> Would probably be interesting to print the actual values, but XEN folks
+> might have an idea.
+My guess here after digging through the code is that XEN is just (as the
+comment above this warn
+says), just doing a load_cr3(swapper_pg_dir) without going through
+switch_mm first.
+I could add a BUG_ON somewhere, or maybe printk, but I'm very unsure to
+where I should put them.
+Assistance here would be great.
+>
+>>  do_idle+0xd1/0xe0
+>>  cpu_startup_entry+0x19/0x20
+>>  asm_cpu_bringup_and_idle+0x5/0x1000
+>> ---[ end trace b068d3cd1b7f5f4b ]---
+>> smpboot: CPU 1 is now offline
+>> smpboot: CPU 2 is now offline
+>> smpboot: CPU 3 is now offline
+>> smpboot: CPU 4 is now offline
+>> smpboot: CPU 5 is now offline
+>> smpboot: CPU 6 is now offline
+>> smpboot: CPU 7 is now offline
+>> ACPI: PM: Low-level resume complete
+>> ACPI: EC: EC started
+>> ACPI: PM: Restoring platform NVS memory
+>> xen_acpi_processor: Uploading Xen processor PM info
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU1
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU3
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU5
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU7
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU9
+>> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU11
+>> --
+>> CPU2 is up
+>> installing Xen timer for CPU 3
+>> cpu 3 spinlock event irq 79
+>> [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
+>> ACPI: \_SB_.PLTF.C003: Found 3 idle states
+>> ACPI: FW issue: working around C-state latencies out of order
+>> CPU3 is up
+>> ------------[ cut here ]------------
+>> cfs_rq->avg.load_avg || cfs_rq->avg.util_avg || cfs_rq->avg.runnable_avg
+>> installing Xen timer for CPU 4
+>> WARNING: CPU: 3 PID: 455 at kernel/sched/fair.c:3339  __update_blocked_fair+0x49b/0x4b0
+> 	/*
+> 	 * _avg must be null when _sum are null because _avg = _sum / divider
+> 	 * Make sure that rounding and/or propagation of PELT values never
+> 	 * break this.
+> 	 */
+> 	SCHED_WARN_ON(cfs_rq->avg.load_avg ||
+> 		      cfs_rq->avg.util_avg ||
+> 		      cfs_rq->avg.runnable_avg);
+>
+> PeterZ, does that ring any bell?
+I also assume that the first BUG triggers this one.
+>
+>> Modules linked in: snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer nf_tables nfnetlink vfat fat intel_rapl_msr think_lmi firmware_attributes_class wmi_bmof intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 sp5100_tco k10temp videobuf2_common i2c_piix4 iwlwifi videodev mc cfg80211 thinkpad_acpi ipmi_devintf ucsi_acpi platform_profile typec_ucsi ledtrig_audio ipmi_msghandler r8169 rfkill typec snd wmi soundcore video i2c_scmi fuse xenfs ip_tables dm_thin_pool dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel gpu_sched i2c_algo_bit drm_ttm_helper ghash_clmulni_intel ttm serio_raw drm_kms_helper cec sdhci_pci cqhci sdhci xhci_pci drm xhci_pci_renesas nvme xhci_hcd ehci_pci mmc_core ehci_hcd nvme_core xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
+>> CPU: 3 PID: 455 Comm: kworker/3:2 Tainted: G        W        --------- ---  5.15.0-0.rc7.0.fc32.qubes.x86_64 #1
+>> Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
+>> Workqueue:  0x0 (events)
+>> RIP: e030:__update_blocked_fair+0x49b/0x4b0
+>> Code: 6b fd ff ff 49 8b 96 48 01 00 00 48 89 90 50 09 00 00 e9 ff fc ff ff 48 c7 c7 10 7a 5e 82 c6 05 f3 35 9e 01 01 e8 1f f3 b2 00 <0f> 0b 41 8b 86 38 01 00 00 e9 c6 fc ff ff 0f 1f 80 00 00 00 00 0f
+>> RSP: e02b:ffffc900410d7ce0 EFLAGS: 00010082
+>> RAX: 0000000000000000 RBX: 0000000000000018 RCX: ffff8881406d8a08
+>> RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI: ffff8881406d8a00
+>> RBP: ffff8881406e9800 R08: 0000000000000048 R09: ffffc900410d7c78
+>> R10: 0000000000000049 R11: 000000002d2d2d2d R12: ffff8881406e9f80
+>> R13: ffff8881406e9e40 R14: ffff8881406e96c0 R15: 0000000000000000
+>> FS:  0000000000000000(0000) GS:ffff8881406c0000(0000) knlGS:0000000000000000
+>> CS:  10000e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000782e51820000 CR3: 0000000002810000 CR4: 0000000000050660
+>> Call Trace:
+>>  update_blocked_averages+0xa8/0x180
+>>  newidle_balance+0x175/0x380
+>>  pick_next_task_fair+0x39/0x3e0
+>>  pick_next_task+0x4c/0xbd0
+>>  ? dequeue_task_fair+0xba/0x390
+>>  __schedule+0x13a/0x570
+>>  schedule+0x44/0xa0
+>>  worker_thread+0xc0/0x320
+>>  ? process_one_work+0x390/0x390
+>>  kthread+0x10f/0x130
+>>  ? set_kthread_struct+0x40/0x40
+>>  ret_from_fork+0x22/0x30
+>> ---[ end trace b068d3cd1b7f5f4c ]---
+>> cpu 4 spinlock event irq 85
+>> [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
+>> ACPI: \_SB_.PLTF.C004: Found 3 idle states
+>> ACPI: FW issue: working around C-state latencies out of order
+>> CPU4 is up
+>> installing Xen timer for CPU 5
+>> cpu 5 spinlock event irq 91
+>> [Firmware Bug]: ACPI MWAIT C-state 0x0 not supported by HW (0x0)
+>> ACPI: \_SB_.PLTF.C005: Found 3 idle states
+>> ACPI: FW issue: working around C-state latencies out of order
+>> CPU5 is up
 
