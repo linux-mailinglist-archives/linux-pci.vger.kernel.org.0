@@ -2,186 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FB21446AD1
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 23:11:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 818CA446B5A
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 00:51:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233965AbhKEWOf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Nov 2021 18:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233956AbhKEWOe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Nov 2021 18:14:34 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5B3C06120A
-        for <linux-pci@vger.kernel.org>; Fri,  5 Nov 2021 15:11:54 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id o10-20020a17090a3d4a00b001a6555878a8so4301987pjf.1
-        for <linux-pci@vger.kernel.org>; Fri, 05 Nov 2021 15:11:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=aRWHdkO4dgpMyzRiXJIktqcg8FedigSvLDnV+7jJnn4=;
-        b=Nsce8GFJmQXR6UHyWFvn08hSzEM7iGBG5ByWUwahEd+E5Oi5y5F5s5kXfuHSA3O8jH
-         0g5rwgrhkqsbTuBAi4kvic7gFjNdoyFwoUSX8NEPZug00B5rwPZd4+X7iOkq2V2UNQCg
-         4rqo5zho64yPY0krZNwheBUWot15iJ+bFG7h7eXJT9vcCF4cqaJPv0sLz4uV4zywUa65
-         hJJubI8n/+Mp1bb8fun+E7+Q8ZtJ3oj/5S/LLu87HovDhA3dnSnFuml2XJUQYnS/WCAX
-         wdSAo7BO/xFKbTMNu3iGHg1PZXJCss3+1AStP69KCnVFVKOBZDFqHgHpzOsOp/1t0hjM
-         cQkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=aRWHdkO4dgpMyzRiXJIktqcg8FedigSvLDnV+7jJnn4=;
-        b=sVVqkFsggbUcEOPiTZaCAV5Mldj3rS9ab3L1xewEXWvNcUnJ/fRANuk27qsOg3M4sc
-         pp9Uad8XK0Fc9xgfUo7hPjDoV1F8XShXD1kYtGwdqURGriSpKrbNUNt/rwOMWPVQOCK5
-         J74hmFdnn/PleQOwCTjVrDOHR4nJXE1pnb4jbz7X3DaZ9rRwJoo1L8EP0NZnZPe+gJ6H
-         8IR07XFYug2M+DliUbYvN2QmkLkMNJkeYgJfj0eyfGfFnBop5COwAqXxQUFT0Hpob9VM
-         p+eM2JtneeRuxVXzEZfi0AJ/RukodneAhULRRxGBd62K9XaGqd2ZRioNBSLTgslKjfg3
-         aqJQ==
-X-Gm-Message-State: AOAM533Yt4W0rYcifJud8Sf20YHnR2+HoMITyA0k1W/V7xU7vHqYyslb
-        mK6IgNqVcfd4wa38+gPBGnM5EQ==
-X-Google-Smtp-Source: ABdhPJyVKs/T2QwL39fgWmZUlOvRz4SLMTN3hO5qCDkrTrsDVvK6eCTxiKcLCJLtAK4yipcbA0ThcQ==
-X-Received: by 2002:a17:90a:134f:: with SMTP id y15mr33461963pjf.158.1636150313440;
-        Fri, 05 Nov 2021 15:11:53 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id p15sm4391051pjh.1.2021.11.05.15.11.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Nov 2021 15:11:52 -0700 (PDT)
-Date:   Fri, 5 Nov 2021 22:11:48 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        id S232918AbhKEXxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Nov 2021 19:53:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39417 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232810AbhKEXxi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Nov 2021 19:53:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10159"; a="295446280"
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="295446280"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 16:50:58 -0700
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="502172640"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 16:50:58 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 03/16] x86/tdx: Exclude Shared bit from physical_mask
-Message-ID: <YYWsJFP31vpCAVFg@google.com>
-References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20211009003711.1390019-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 0/5] CXL: Read CDAT and DSMAS data from the device.
+Date:   Fri,  5 Nov 2021 16:50:51 -0700
+Message-Id: <20211105235056.3711389-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211009003711.1390019-4-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 08, 2021, Kuppuswamy Sathyanarayanan wrote:
-> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> 
-> Just like MKTME, TDX reassigns bits of the physical address for
-> metadata.  MKTME used several bits for an encryption KeyID. TDX
-> uses a single bit in guests to communicate whether a physical page
-> should be protected by TDX as private memory (bit set to 0) or
-> unprotected and shared with the VMM (bit set to 1).
-> 
-> Add a helper, tdx_shared_mask() to generate the mask.  The processor
-> enumerates its physical address width to include the shared bit, which
-> means it gets included in __PHYSICAL_MASK by default.
+From: Ira Weiny <ira.weiny@intel.com>
 
-This is incorrect.  The shared bit _may_ be a legal PA bit, but AIUI it's not a
-hard requirement.
+This work was built on Jonathan's V4 series here[1].  The big change is a
+conversion to an Auxiliary bus infrastructure which allows the DOE code to be
+in a separate driver object which is attached to any DOE devices created by any
+device.
 
-> Remove the shared mask from 'physical_mask' since any bits in
-> tdx_shared_mask() are not used for physical addresses in page table
-> entries.
+The series creates a new DOE auxiliary bus driver.  The CXL devices are
+modified to create DOE auxiliary devices to be driven by the new DOE driver.
 
-...
+After the devices are created and the driver attaches, CDAT data is read from
+the device and DSMAS information parsed from that CDAT blob for use later.
 
-> @@ -94,6 +100,9 @@ static void tdx_get_info(void)
->  
->  	td_info.gpa_width = out.rcx & GENMASK(5, 0);
->  	td_info.attributes = out.rdx;
-> +
-> +	/* Exclude Shared bit from the __PHYSICAL_MASK */
-> +	physical_mask &= ~tdx_shared_mask();
+This work was tested using qemu with additional patches.[2, 3]
 
-This is insufficient, though it's not really the fault of this patch, the specs
-themselves botch this whole thing.
+[1] https://lore.kernel.org/linux-cxl/20210524133938.2815206-1-Jonathan.Cameron@huawei.com
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/qemu-devel/1619454964-10190-1-git-send-email-cbrowy@avery-design.com/
 
-The TDX Module spec explicitly states that GPAs above GPAW are considered reserved.
+Ira Weiny (1):
+  cxl/cdat: Parse out DSMAS data from CDAT table
 
-    10.11.1. GPAW-Relate EPT Violations
-    GPA bits higher than the SHARED bit are considered reserved and must be 0.
-    Address translation with any of the reserved bits set to 1 cause a #PF with
-    PFEC (Page Fault Error Code) RSVD bit set.
+Jonathan Cameron (4):
+  PCI: Add vendor ID for the PCI SIG
+  PCI/DOE: Add Data Object Exchange Aux Driver
+  cxl/pci: Add DOE Auxiliary Devices
+  cxl/mem: Add CDAT table reading from DOE
 
-But this is contradicted by the architectural extensions spec, which states that
-a GPA that satisfies MAXPA >= GPA > GPAW "can" cause an EPT violation, not #PF.
-Note, this section also appears to have a bug, as it states that GPA bit 47 is
-both the SHARED bit and reserved.  I assume that blurb is intended to clarify
-that bit 47 _would_ be reserved if it weren't the SHARED bit, but because it's
-the shared bit it's ok to access.
+ drivers/cxl/Kconfig           |   1 +
+ drivers/cxl/cdat.h            |  81 ++++
+ drivers/cxl/core/memdev.c     | 157 ++++++++
+ drivers/cxl/cxl.h             |  20 +
+ drivers/cxl/cxlmem.h          |  48 +++
+ drivers/cxl/pci.c             | 212 ++++++++++
+ drivers/pci/Kconfig           |  10 +
+ drivers/pci/Makefile          |   3 +
+ drivers/pci/doe.c             | 701 ++++++++++++++++++++++++++++++++++
+ include/linux/pci-doe.h       |  63 +++
+ include/linux/pci_ids.h       |   1 +
+ include/uapi/linux/pci_regs.h |  29 +-
+ 12 files changed, 1325 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/cxl/cdat.h
+ create mode 100644 drivers/pci/doe.c
+ create mode 100644 include/linux/pci-doe.h
 
-    1.4.2
-    Guest Physical Address Translation
-    If the CPU's maximum physical-address width (MAXPA) is 52 and the guest physical
-    address width is configured to be 48, accesses with GPA bits 51:48 not all being
-    0 can cause an EPT-violation, where such EPT-violations are not mutated to #VE,
-    even if the “EPT-violations #VE” execution control is 1.
+-- 
+2.28.0.rc0.12.gb6a658bd00c9
 
-    If the CPU's physical-address width (MAXPA) is less than 48 and the SHARED bit
-    is configured to be in bit position 47, GPA bit 47 would be reserved, and GPA
-       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                    
-    bits 46:MAXPA would be reserved. On such CPUs, setting bits 51:48 or bits
-    46:MAXPA in any paging structure can cause a reserved bit page fault on access.
-
-The Module spec also calls out that the effective GPA is not to be confused with
-MAXPA, which combined with the above blurb about MAXPA < GPAW, suggests that MAXPA
-is enumerated separately by design so that the guest doesn't incorrectly think
-46:MAXPA are usable.  But that is problematic for the case where MAXPA > GPAW.
-
-    The effective GPA width (in bits) for this TD (do not confuse with MAXPA).
-    SHARED bit is at GPA bit GPAW-1.
-
-I can't find the exact reference, but the TDX module always passes through host's
-MAXPHYADDR.  As it pertains to this patch, just doing
-
-	physical_mask &= ~tdx_shared_mask()
-
-means that a guest running with GPAW=0 and MAXPHYADDR>48 will have a discontiguous
-physical_mask, and could access "reserved" memory.  If the VMM defines legal memory
-with bits [MAXPHYADDR:48]!=0, explosions may ensue.  That's arguably a VMM bug, but
-given that the VMM is untrusted I think the guest should be paranoid when handling
-the SHARED bit.  I also don't know that the kernel will play nice with a discontiguous
-mask.
-
-Specs aside, unless Intel makes a hardware change to treat GPAW as guest.MAXPHYADDR,
-or the TDX Module emulates on EPT violations to inject #PF(RSVD) when appropriate,
-this mess isn't going to be truly fixed from the guest perspective.
-
-So, IMO all bits >= GPAW should be cleared, and the kernel should warn and/or
-refuse to boot if the host has defined legal memory in that range.
-
-FWIW, from a VMM perspective, I'm pretty sure the only sane approach is to force
-GPAW=1, a.k.a. SHARED bit == 51, if host.MAXPHYADDR>=49.  But on the guest side,
-I think we should be paranoid.
