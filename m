@@ -2,88 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 630F1446801
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 18:39:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5447446857
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 19:22:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233118AbhKERmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Nov 2021 13:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58270 "EHLO mail.kernel.org"
+        id S230310AbhKESYt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Nov 2021 14:24:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12188 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232041AbhKERmb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Nov 2021 13:42:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1EA0360F5A;
-        Fri,  5 Nov 2021 17:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636133991;
-        bh=XrZbDCF6z0xo/uXRiBkJPgik1oScJ4FKVTH+l+tPXLI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bg+IHkl6iuE2prqaM6ZoanveKoblpySeInH3DGASZ0ZSmsPae4/4XhL1LivF9QXza
-         2DBfsjbTTGr6wFM1/zXj7huhOt731bRE8z7/62hVW8LEVKTkfKrRxtbi5lNF/q5Mcr
-         le0rXNLJgd7s2CBfKm/OOi1ogNaEYeAYkBlZjN5s7VZ/kFz1X9MHY3anFGTqkuVqFX
-         Xk7IIr91QRqL4+mJ/hal9vpCIbx8ba3mjjMLkMXr7kETV2ouuhkknH806ZUc1CydMH
-         ZIF9zEDIpNVkQ3ed16V9Cs77VDu5mr1IfGorw055cO5oZWIcJyomNA81LF3A9C/DB7
-         eJ/6nxqRzrIFQ==
-Date:   Fri, 5 Nov 2021 12:39:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dongdong Liu <liudongdong3@huawei.com>
-Cc:     hch@infradead.org, logang@deltatee.com, leon@kernel.org,
-        linux-pci@vger.kernel.org, rajur@chelsio.com,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V11 7/8] PCI: Enable 10-Bit Tag support for PCIe Endpoint
- device
-Message-ID: <20211105173949.GA932723@bhelgaas>
+        id S229504AbhKESYt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Nov 2021 14:24:49 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10159"; a="212007825"
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="212007825"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 11:22:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="450671276"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 05 Nov 2021 11:22:06 -0700
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mj3qn-00084M-Qm; Fri, 05 Nov 2021 18:22:05 +0000
+Date:   Sat, 06 Nov 2021 02:21:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
+ 5ec0a6fcb60ea430f8ee7e0bec22db9b22f856d3
+Message-ID: <61857642.3uLjvHfias5sPA//%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <894a1e8f-cc08-2710-9f56-9dda14e2e617@huawei.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 05, 2021 at 04:24:24PM +0800, Dongdong Liu wrote:
-> On 2021/11/4 0:02, Bjorn Helgaas wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
+branch HEAD: 5ec0a6fcb60ea430f8ee7e0bec22db9b22f856d3  PCI: Do not enable AtomicOps on VFs
 
-> > But it does remind me that if the RC doesn't support 10-bit tags, but
-> > we use sysfs to enable 10-bit tags for a reqester that intends to use
-> > P2PDMA to a peer that *does* support them, I don't think there's
-> > any check in the DMA API that prevents the driver from setting up DMA
-> > to the RC in addition to the peer.
->
-> Current we use sysfs to enable/disable 10-bit tags for a requester also
-> depend on the RP support 10-bit tag completer, so it will be ok.
+elapsed time: 1311m
 
-Ah, OK.  So we can never *enable* 10-bit tags unless the Root Port
-supports them.
+configs tested: 125
+configs skipped: 3
 
-I misunderstood the purpose of this file.  When the Root Port doesn't
-support 10-bit tags, we won't enable them during enumeration.  I
-though the point was that if we want to do P2PDMA to a peer that
-*does* support them, we could use this file to enable them.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-But my understanding was wrong -- the real purpose of the file is to
-*disable* 10-bit tags for the case when a P2PDMA peer doesn't support
-them.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+i386                 randconfig-c001-20211105
+arm                         at91_dt_defconfig
+m68k                          atari_defconfig
+m68k                            mac_defconfig
+arm                       aspeed_g4_defconfig
+arm                       imx_v4_v5_defconfig
+nios2                         3c120_defconfig
+arm                             mxs_defconfig
+arm                            mps2_defconfig
+openrisc                         alldefconfig
+powerpc                     mpc83xx_defconfig
+arm                         orion5x_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arc                                 defconfig
+powerpc                     powernv_defconfig
+arm                        keystone_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                      walnut_defconfig
+sh                           se7712_defconfig
+powerpc                     asp8347_defconfig
+powerpc                   lite5200b_defconfig
+mips                     loongson1c_defconfig
+powerpc                      acadia_defconfig
+arm                           tegra_defconfig
+arm                           sunxi_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                     pq2fads_defconfig
+sh                               alldefconfig
+sh                             sh03_defconfig
+mips                      bmips_stb_defconfig
+riscv                             allnoconfig
+powerpc                     redwood_defconfig
+powerpc                     pseries_defconfig
+sh                        sh7785lcr_defconfig
+sh                        sh7757lcr_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                            qcom_defconfig
+sh                          r7785rp_defconfig
+arm                        cerfcube_defconfig
+mips                      maltasmvp_defconfig
+powerpc                  mpc885_ads_defconfig
+m68k                        mvme16x_defconfig
+openrisc                 simple_smp_defconfig
+mips                        vocore2_defconfig
+arm                  randconfig-c002-20211105
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a012-20211105
+x86_64               randconfig-a016-20211105
+x86_64               randconfig-a015-20211105
+x86_64               randconfig-a013-20211105
+x86_64               randconfig-a011-20211105
+x86_64               randconfig-a014-20211105
+i386                 randconfig-a016-20211105
+i386                 randconfig-a014-20211105
+i386                 randconfig-a015-20211105
+i386                 randconfig-a013-20211105
+i386                 randconfig-a011-20211105
+i386                 randconfig-a012-20211105
+arc                  randconfig-r043-20211105
+riscv                randconfig-r042-20211105
+s390                 randconfig-r044-20211105
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                           allyesconfig
 
-It does support enabling 10-bit tags as well, but that's only because
-we need a way to get back to the default "enabled during enumeration"
-state without having to reboot.
+clang tested configs:
+i386                 randconfig-a005-20211105
+i386                 randconfig-a001-20211105
+i386                 randconfig-a003-20211105
+i386                 randconfig-a004-20211105
+i386                 randconfig-a006-20211105
+i386                 randconfig-a002-20211105
+x86_64               randconfig-a004-20211105
+x86_64               randconfig-a006-20211105
+x86_64               randconfig-a001-20211105
+x86_64               randconfig-a002-20211105
+x86_64               randconfig-a003-20211105
+x86_64               randconfig-a005-20211105
+hexagon              randconfig-r041-20211105
+hexagon              randconfig-r045-20211105
 
-We might be able to highlight this a little more in the commit log.
-
-> > 10-bit tag support appeared in the spec four years ago (PCIe r4.0, in
-> > September, 2017).  Surely there is production hardware that supports
-> > this and could demonstrate a benefit from this.
->
-> I found the below introduction about "Number of tags needed to achieve
-> maximum throughput for PCIe 4.0 and PCIe 5.0 links"
-> https://www.synopsys.com/designware-ip/technical-bulletin/accelerating-32gtps-pcie5-designs.html
-> 
-> It seems pretty clear.
-
-Yes, that's a start.  But we don't really need a white paper to tell
-us that more outstanding transactions is better.  That's obvious.  But
-this adds risk, and if we can't demonstrate a tangible, measurable
-benefit, there's no point in doing it.
-
-Bjorn
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
