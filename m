@@ -2,166 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC60D446997
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 21:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0EFB4469C0
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 21:29:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233521AbhKEUYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Nov 2021 16:24:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:55567 "EHLO mga14.intel.com"
+        id S233662AbhKEUbz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Nov 2021 16:31:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233511AbhKEUYx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Nov 2021 16:24:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10159"; a="232229393"
-X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
-   d="scan'208";a="232229393"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 13:22:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
-   d="scan'208";a="450701394"
-Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 05 Nov 2021 13:22:11 -0700
-Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mj5j0-0008D6-OP; Fri, 05 Nov 2021 20:22:10 +0000
-Date:   Sat, 06 Nov 2021 04:21:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/apple] BUILD SUCCESS
- 468c8d52c33271d21aac070ebef9283f302094cc
-Message-ID: <61859251.fjnio46JmnSg6p8h%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233647AbhKEUby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Nov 2021 16:31:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 90E27611C0;
+        Fri,  5 Nov 2021 20:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636144154;
+        bh=v24JrlUtPh/fIqVwA0XqHebX4ahl48yzolKYIo3a7w8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hmXXB12pRp8nJ8CDaRLHr+/l6u5E6lgh5EvW7od/phJ5rkBkrPkX3d7+CCUFL05he
+         csk4snElIBQC5dy4bqzW1ymJZIyChAuONcdSBWlY8RdszkeExGT8Abn6zrUjil+NcW
+         2hv+f7aMiy4JUZ0JaINtAdYEOKbT9JwYg+JYt8jLO/5NWWA/bW5hWxyfuSMmiBGWVA
+         s0GY8gfg7WReDUu4RXDDurkyL0UQTKSPiD+PgXl1oK4Fa90tI7mg4uuuAjn96N24v/
+         YO0Y4YG9uvDYEHVP1MW4KOSPqrkvmaWjBuExPy/cikv+dST2viif+9qNIOqSvFHrJA
+         nCyGnvXBkNYlA==
+Date:   Fri, 5 Nov 2021 15:29:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Fan Fei <ffclaire1224@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Distinguish mediatek drivers
+Message-ID: <20211105202913.GA944432@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/apple
-branch HEAD: 468c8d52c33271d21aac070ebef9283f302094cc  PCI: apple: Configure RID to SID mapper on device addition
+We have two MediaTek drivers: pcie-mediatek.c, which claims:
 
-elapsed time: 1356m
+  .compatible = "mediatek,mt2701-pcie"
+  .compatible = "mediatek,mt7623-pcie"
+  .compatible = "mediatek,mt2712-pcie"
+  .compatible = "mediatek,mt7622-pcie"
+  .compatible = "mediatek,mt7629-pcie"
 
-configs tested: 108
-configs skipped: 3
+and pcie-mediatek-gen3.c, which claims:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  .compatible = "mediatek,mt8192-pcie"
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allmodconfig
-arm                              allyesconfig
-i386                 randconfig-c001-20211105
-arm                         at91_dt_defconfig
-m68k                          atari_defconfig
-m68k                            mac_defconfig
-arm                       aspeed_g4_defconfig
-arm                       imx_v4_v5_defconfig
-nios2                         3c120_defconfig
-arm                             mxs_defconfig
-arm                            mps2_defconfig
-openrisc                         alldefconfig
-powerpc                     mpc83xx_defconfig
-arm                         orion5x_defconfig
-powerpc                 mpc836x_rdk_defconfig
-arc                                 defconfig
-powerpc                     powernv_defconfig
-arm                        keystone_defconfig
-arm                        oxnas_v6_defconfig
-powerpc                      walnut_defconfig
-sh                           se7712_defconfig
-powerpc                     asp8347_defconfig
-powerpc                   lite5200b_defconfig
-mips                     loongson1c_defconfig
-powerpc                      acadia_defconfig
-arm                           tegra_defconfig
-arm                           sunxi_defconfig
-powerpc                 mpc836x_mds_defconfig
-powerpc                     pq2fads_defconfig
-sh                               alldefconfig
-sh                             sh03_defconfig
-mips                      bmips_stb_defconfig
-riscv                             allnoconfig
-arm                    vt8500_v6_v7_defconfig
-arm                            qcom_defconfig
-sh                          r7785rp_defconfig
-arm                        cerfcube_defconfig
-mips                      maltasmvp_defconfig
-arm                  randconfig-c002-20211105
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                                defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-s390                             allmodconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a012-20211105
-x86_64               randconfig-a016-20211105
-x86_64               randconfig-a015-20211105
-x86_64               randconfig-a013-20211105
-x86_64               randconfig-a011-20211105
-x86_64               randconfig-a014-20211105
-i386                 randconfig-a016-20211105
-i386                 randconfig-a014-20211105
-i386                 randconfig-a015-20211105
-i386                 randconfig-a013-20211105
-i386                 randconfig-a011-20211105
-i386                 randconfig-a012-20211105
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                           allyesconfig
+The Kconfig text does not distinguish them.  Can somebody update these
+entries so they do?  It's nice if we can mention model numbers or
+product names that a user would recognize.
 
-clang tested configs:
-i386                 randconfig-a005-20211105
-i386                 randconfig-a001-20211105
-i386                 randconfig-a003-20211105
-i386                 randconfig-a004-20211105
-i386                 randconfig-a006-20211105
-i386                 randconfig-a002-20211105
-hexagon              randconfig-r041-20211105
-hexagon              randconfig-r045-20211105
+  config PCIE_MEDIATEK
+        tristate "MediaTek PCIe controller"
+        depends on ARCH_MEDIATEK || COMPILE_TEST
+        depends on OF
+        depends on PCI_MSI_IRQ_DOMAIN
+        help
+          Say Y here if you want to enable PCIe controller support on
+          MediaTek SoCs.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  config PCIE_MEDIATEK_GEN3
+        tristate "MediaTek Gen3 PCIe controller"
+        depends on ARCH_MEDIATEK || COMPILE_TEST
+        depends on PCI_MSI_IRQ_DOMAIN
+        help
+          Adds support for PCIe Gen3 MAC controller for MediaTek SoCs.
+          This PCIe controller is compatible with Gen3, Gen2 and Gen1 speed,
+          and support up to 256 MSI interrupt numbers for
+          multi-function devices.
+
+          Say Y here if you want to enable Gen3 PCIe controller support on
+          MediaTek SoCs.
+
+Both drivers are also named "mtk-pcie" and use the same internal
+"mtk_" prefix on structs and functions.  Not a *huge* problem, but not
+really ideal either.
+
+Bjorn
