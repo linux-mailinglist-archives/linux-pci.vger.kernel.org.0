@@ -2,89 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBC14468BC
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 19:59:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1FB4468C5
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 20:04:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231682AbhKETCc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Nov 2021 15:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        id S233176AbhKETGv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Nov 2021 15:06:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58874 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230318AbhKETCc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Nov 2021 15:02:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 45763604AC;
-        Fri,  5 Nov 2021 18:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636138792;
-        bh=1NO8uQVnvgttsvTHkhigZrBgaijDJw1yYma8oHwx2PM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=t7+aYOcSWjBzHqiFD4sjFu00H4+pqtXUJli3LpUs/mxwhGm2x4oPf8ypHbgIWR4AO
-         um60uauslNvnpqSVK0IgYmi2NlSCPCRliUyodIYEveoIICS17D8gB/LpAr3YZntfem
-         AQAuMpJCRTIjvH4/Z1U2Zjc0MVaktl/wUTL6O4VhjPiOtP166V9vKrZPmWj0zjV1Sm
-         KdWwtJ6Ax0lmxoXUshqIgsomzgTxv53jm2jHdfYXMnnZwHG0qNmXiWiIgL2N0/Gj0s
-         Bis+PKRLs88hG3jvL1AzKXNS0bXd/AzHfcTRPii3GtoSBJCyOHzMI4f3ciHmmq4AWL
-         vsdhLfqitfJjw==
-Date:   Fri, 5 Nov 2021 13:59:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wan Jiabing <wanjiabing@vivo.com>
-Cc:     Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiabing.wan@qq.com,
-        mchehab+huawei@kernel.org
-Subject: Re: [PATCH v2] PCI: kirin: Fix of_node_put() issue in pcie-kirin
-Message-ID: <20211105185950.GA938070@bhelgaas>
+        id S230318AbhKETGu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Nov 2021 15:06:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10159"; a="231808494"
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="231808494"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 12:04:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,212,1631602800"; 
+   d="scan'208";a="490426813"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 05 Nov 2021 12:04:09 -0700
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mj4VU-00087b-EU; Fri, 05 Nov 2021 19:04:08 +0000
+Date:   Sat, 06 Nov 2021 03:03:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/host/kirin] BUILD SUCCESS
+ e4c72797fd1609c630ead5bd86d5df16bb0ed5e9
+Message-ID: <61857ff3.G0dshehPMXLDBb8I%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211105020711.32572-1-wanjiabing@vivo.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 10:07:11PM -0400, Wan Jiabing wrote:
-> Fix following coccicheck warning:
-> ./drivers/pci/controller/dwc/pcie-kirin.c:414:2-34: WARNING: Function
-> for_each_available_child_of_node should have of_node_put() before return.
-> 
-> Early exits from for_each_available_child_of_node should decrement the
-> node reference counter. Replace return by goto here and add a missing
-> of_node_put for parent.
-> 
-> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/kirin
+branch HEAD: e4c72797fd1609c630ead5bd86d5df16bb0ed5e9  PCI: kirin: Allow removing the driver
 
-I had already squashed this into:
+elapsed time: 1351m
 
-  https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=b22dbbb24571
+configs tested: 122
+configs skipped: 3
 
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 06017e826832..b72a12bac49d 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -422,7 +422,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->num_slots++;
->  			if (pcie->num_slots > MAX_PCI_SLOTS) {
->  				dev_err(dev, "Too many PCI slots!\n");
-> -				return -EINVAL;
-> +				ret = -EINVAL;
-> +				goto put_node;
->  			}
->  
->  			ret = of_pci_get_devfn(child);
-> @@ -446,6 +447,7 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  	return 0;
->  
->  put_node:
-> +	of_node_put(parent);
->  	of_node_put(child);
->  	return ret;
->  }
-> -- 
-> 2.20.1
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+i386                 randconfig-c001-20211105
+arm                         at91_dt_defconfig
+m68k                          atari_defconfig
+m68k                            mac_defconfig
+arm                       aspeed_g4_defconfig
+arm                       imx_v4_v5_defconfig
+nios2                         3c120_defconfig
+arm                             mxs_defconfig
+arm                            mps2_defconfig
+openrisc                         alldefconfig
+powerpc                     mpc83xx_defconfig
+arm                         orion5x_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arc                                 defconfig
+powerpc                     powernv_defconfig
+arm                        keystone_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                      walnut_defconfig
+sh                           se7712_defconfig
+powerpc                     asp8347_defconfig
+powerpc                   lite5200b_defconfig
+mips                     loongson1c_defconfig
+powerpc                      acadia_defconfig
+arm                           tegra_defconfig
+arm                           sunxi_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                     pq2fads_defconfig
+sh                               alldefconfig
+sh                             sh03_defconfig
+mips                      bmips_stb_defconfig
+riscv                             allnoconfig
+powerpc                     redwood_defconfig
+powerpc                     pseries_defconfig
+sh                        sh7785lcr_defconfig
+sh                        sh7757lcr_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                            qcom_defconfig
+sh                          r7785rp_defconfig
+arm                        cerfcube_defconfig
+mips                      maltasmvp_defconfig
+powerpc                  mpc885_ads_defconfig
+m68k                        mvme16x_defconfig
+openrisc                 simple_smp_defconfig
+mips                        vocore2_defconfig
+arm                  randconfig-c002-20211105
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+nios2                               defconfig
+nds32                             allnoconfig
+arc                              allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a012-20211105
+x86_64               randconfig-a016-20211105
+x86_64               randconfig-a015-20211105
+x86_64               randconfig-a013-20211105
+x86_64               randconfig-a011-20211105
+x86_64               randconfig-a014-20211105
+i386                 randconfig-a016-20211105
+i386                 randconfig-a014-20211105
+i386                 randconfig-a015-20211105
+i386                 randconfig-a013-20211105
+i386                 randconfig-a011-20211105
+i386                 randconfig-a012-20211105
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                           allyesconfig
+
+clang tested configs:
+i386                 randconfig-a005-20211105
+i386                 randconfig-a001-20211105
+i386                 randconfig-a003-20211105
+i386                 randconfig-a004-20211105
+i386                 randconfig-a006-20211105
+i386                 randconfig-a002-20211105
+x86_64               randconfig-a004-20211105
+x86_64               randconfig-a006-20211105
+x86_64               randconfig-a001-20211105
+x86_64               randconfig-a002-20211105
+x86_64               randconfig-a003-20211105
+x86_64               randconfig-a005-20211105
+hexagon              randconfig-r041-20211105
+hexagon              randconfig-r045-20211105
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
