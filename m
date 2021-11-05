@@ -2,66 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFC2445D63
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 02:38:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 564B1445D76
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Nov 2021 02:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231532AbhKEBl1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Nov 2021 21:41:27 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:35564 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230345AbhKEBl1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 21:41:27 -0400
-Received: by mail-wm1-f43.google.com with SMTP id 77-20020a1c0450000000b0033123de3425so8553868wme.0;
-        Thu, 04 Nov 2021 18:38:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AdvEedg53EmklS1heCqwrwrop81P8Z504Yc+L9o1ZtQ=;
-        b=NpfsMTTwg8ZlDo7VKukiA3lS0bS/9nMVi8sEvyNuIH6Q8ydBiAqXtkPhpy0wqX+eDJ
-         i/uyqrTqjlUuStu/Rdw0PgaDtSYMbgwH9e8fLc++tqjbXo49sEwh4OyAdikjvqEMqbU5
-         8qt+AsZ92R0NwgQUCKhmj42uclaeIsSKkDif0v9zPZvYPS0VOUCsQSQswTBJKURWZ7MW
-         VV7Tm1oGHT0G2M888RKrgpppYU016noq0EN7T8FkQModr+BcexRUFeYv1e6ILLiPiR9s
-         GmBP5tkCMexmvHoOg5QI8oIyXdqSpqowBoMmkkxCnO/l3pUew4DNsevSp58VB1i4SIPR
-         sDRQ==
-X-Gm-Message-State: AOAM531QbEkEKhhj7ZzQWUqGFAXVsD+wuZ98uBUTilWNr5hfs8EmITGJ
-        CWOfOVl+eD26eqR7oEO+gbM=
-X-Google-Smtp-Source: ABdhPJyo3pJfWTiXZPiSWPp8sQKsFDzomtRBr5SzVFS+PZMUU/Hvv9h3ZDi3IbnXXSOGdoLSsIJYeA==
-X-Received: by 2002:a05:600c:350c:: with SMTP id h12mr24377035wmq.123.1636076327425;
-        Thu, 04 Nov 2021 18:38:47 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id l16sm6726686wmq.46.2021.11.04.18.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Nov 2021 18:38:47 -0700 (PDT)
-Date:   Fri, 5 Nov 2021 02:38:45 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     cgel.zte@gmail.com
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ran jianping <ran.jianping@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] PCI:vmd: remove duplicate include in vmd.c
-Message-ID: <YYSLJaisv7wMC1LZ@rocinante>
-References: <20211105013321.74364-1-ran.jianping@zte.com.cn>
+        id S231635AbhKEBsv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Nov 2021 21:48:51 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:38825 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231186AbhKEBsv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Nov 2021 21:48:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=xuesong.chen@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Uv4y7ad_1636076769;
+Received: from 30.225.212.33(mailfrom:xuesong.chen@linux.alibaba.com fp:SMTPD_---0Uv4y7ad_1636076769)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 05 Nov 2021 09:46:09 +0800
+Message-ID: <e1a6fa17-106d-6b0b-8974-5a96bb33086e@linux.alibaba.com>
+Date:   Fri, 5 Nov 2021 09:46:09 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211105013321.74364-1-ran.jianping@zte.com.cn>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.2.1
+Subject: Re: [PATCH v5 0/4] PCI MCFG consolidation and APEI resource filtering
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     catalin.marinas@arm.com, lorenzo.pieralisi@arm.com,
+        james.morse@arm.com, will@kernel.org, rafael@kernel.org,
+        tony.luck@intel.com, bp@alien8.de, mingo@kernel.org,
+        bhelgaas@google.com, ying.huang@intel.com,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20211104150053.GA774800@bhelgaas>
+From:   Xuesong Chen <xuesong.chen@linux.alibaba.com>
+In-Reply-To: <20211104150053.GA774800@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-> 'linux/device.h' included in 'drivers/pci/controller/vmd.c'
->  is duplicated.It is also included on the 13 line.
-[...]
+On 04/11/2021 23:00, Bjorn Helgaas wrote:
+> On Thu, Nov 04, 2021 at 06:57:15PM +0800, Xuesong Chen wrote:
+>> The issue of commit d91525eb8ee6 ("ACPI, EINJ: Enhance error injection tolerance
+>> level") on x86 is also happened on our own ARM64 platform. We sent a patch[1]
+>> trying to fix this issue in an arch-specific way as x86 does at first, but
+>> according to the suggestion from Lorenzo Pieralisi and Catalin Marinas, we can
+>> consolidate the PCI MCFG part then fix it in a more common way, that's why this
+>> patch series comes.
+>>
+>> [1] https://marc.info/?l=linux-arm-kernel&m=163108478627166&w=2
+> 
+> Thanks.  I see this and will look at it after getting the v5.16
+> changes merged.
 
-This has already been take care off in a patch sent earlier, as per:
+Ah, Bjorn, I also notice this series is in your patchwork now, hmmm, I don't know why
+the previous iterations are not there either, seems something doesn't work as expected
+in my side. Probably my fault for the unpeaceful interlude :-)
 
-  https://lore.kernel.org/linux-pci/20211104063720.29375-1-wanjiabing@vivo.com/
+Thanks,
+Xuesong
 
-Albeit, thank you for taking the time to send the patch over!
-
-	Krzysztof
+> 
+>> ---
+>> Change from v4 to v5:
+>>   - Fix the warning: no previous prototype for 'remove_quirk_mcfg_res' warning
+>>     reported by the kernel test robot.
+>>
+>> Change from v3 to v4:
+>>   - Add a new patch (patch #3) to address the quirk ECAM access issue. Because
+>>     the normal ECAM config space can be accessed in a lockless way, so we don't
+>>     need the mutual exclusion with the EINJ action. But those quirks maybe break
+>>     this rule and corrupt the configuration access, reserve its MCFG address
+>>     regions in this case to avoid that happens.
+>>
+>>   - Add another patch (patch #4) to log the PCI MCFG entry parse message per
+>>     the suggestion from Bjorn Helgaas. The output on ARM64 as:
+>>     ACPI: MCFG entry for domain 0000 [bus 00-0f] at [mem 0x50000000-0x50ffffff] (base 0x50000000)
+>>
+>>   - Commit message updated with more details of patch #2
+>>
+>> Change from v2 to v3:
+>>   - Address the comments of Lorenzo Pieralisi about the CONFIG_PCI
+>>     dependence issue in APEI module (patch #2)
+>>
+>> Change from v1 to v2:
+>>   - Fix the "undefined reference to `pci_mmcfg_list'" build error in case
+>>     of PCI_CONFIG=n, reported by the kernel test robot
+>>
+>> Xuesong Chen (4):
+>>   PCI: MCFG: Consolidate the separate PCI MCFG table entry list
+>>   ACPI: APEI: Filter the PCI MCFG address with an arch-agnostic method
+>>   ACPI: APEI: Reserve the MCFG address for quirk ECAM implementation
+>>   PCI: MCFG: Add the MCFG entry parse log message
+>>
+>>  arch/x86/include/asm/pci_x86.h | 17 +----------
+>>  arch/x86/pci/mmconfig-shared.c | 30 -------------------
+>>  drivers/acpi/apei/apei-base.c  | 68 ++++++++++++++++++++++++++++++++----------
+>>  drivers/acpi/pci_mcfg.c        | 46 +++++++++++++++-------------
+>>  drivers/pci/pci.c              |  2 ++
+>>  drivers/pci/quirks.c           |  2 ++
+>>  include/linux/pci.h            | 18 +++++++++++
+>>  7 files changed, 101 insertions(+), 82 deletions(-)
+>>
+>> -- 
+>> 2.9.5
+>>
