@@ -2,103 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC868446F91
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:55:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DD61446F92
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:55:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbhKFR5u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 13:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49250 "EHLO
+        id S233578AbhKFR5v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Nov 2021 13:57:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbhKFR5t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:57:49 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADD0C061570;
+        with ESMTP id S232950AbhKFR5u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:57:50 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5F5C061570;
         Sat,  6 Nov 2021 10:55:08 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id x15so13497934edv.1;
+Received: by mail-ed1-x535.google.com with SMTP id o8so44667318edc.3;
         Sat, 06 Nov 2021 10:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJvNgOJ3Eg+Xa13E8re6uSKuREz5n9LVPX9Yf0TXKoE=;
-        b=TugnJHzpQMy/tjjR9izTt7PdOQpLHNM6CBltMFeFUvowQNU/jXBX0dy+k0kPNi76Ff
-         Whx7f8YvAjY3KCA4WWMf54KXTFm8upelGd11wkMApLC5CArRixxdTnlxaVtOY1/kD9nu
-         iWXH/Vyqltg6KJdOvs/DOazQVpam3NKjeezUCTCnTW4SpD7XXvGGgS78Un/4t39LYXK0
-         +Ua09GIkIpepxvSE1nMH3sgBloYPUr1ADo7iIxd8KbHZAtngUa1qNnz76O+w0Rdd9Aqj
-         rVdk9VE7Yje0v/QbtzmCKEbluTBZIRAI6E2vIBGAn/a0rzeCkcfcY8/cNVw2zxKqU3CI
-         sdJQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=M/ckoETcz+yDddWrcBDGrX7LHLDThJbVjbuAhn7hXgw=;
+        b=SFtPHmKQmzg2xNySjUeW7uj9FY8djQRU2IHJpRV7StO1e9KqYwy82fMh0vANf8XyHC
+         Smply+kcEW/e8/5pUKaXdPJ1C1E6iEsaPNN2K6MIrC06zZVSJ1DMj/ZumieiyAeiOZ8G
+         dDQP/Pif9btC8RxWLFFe6JMdx/JgrJTPe83BBoq5FrC9w0Z2xe63FN/ZeeA8pO2VKTVY
+         PEebt7T0WoWUKQuiOdZbAuGsBviXkBFrkRLxiNa7xdqsxnAYezadpohEL9hmRUs16Zkk
+         AyhanJ41xMEr1y3c0CexvuKpvKnetnp+GJnOupIoDtNTa42Vb/Na5e89POfM0GD+8gaG
+         +dNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJvNgOJ3Eg+Xa13E8re6uSKuREz5n9LVPX9Yf0TXKoE=;
-        b=1XOm5KQSfoOCNipeCOPUgra+nXfQIlg2cDBY3iog2YuqlTg6XIYAGWdQtpo+P6ozpv
-         JgqhJJKgu15vx6Kr8km111mwcWLbbhu61NYnw4vFAHgh0rXnKNgtwvVj/wKLxwQwN+v/
-         efP4NxTBoZLAUju2ge6SGj4MvIqIgOK4T06ZJcBTVJHbbe8v4jrk/sgzbthuWg1Skilp
-         ZdKyouIV4mUG21JZx1vF7EcCwL6ZP7nVnIbWDHw+/P/auSBQ4UCDT6xOP5HCL4d1J3hP
-         PDJk8fi0JO/YzB0d53Dx82ZcKfAwvIAIKzb4pQp6T/hSmZkDimEIW47tzD7MNDfXZFKT
-         T7hw==
-X-Gm-Message-State: AOAM531LFz5sijLoLnAaoj3wefdxXGpcUF5pc945ZqbzRLNe9LSP/F7R
-        oFqrG+Kh4urciwGBLgCPT4U=
-X-Google-Smtp-Source: ABdhPJzhUcVzTXV2gnDEqC59/xY7vvtR4v652gEJhblGsdHL4q5QUUFF19s8p5ovGj/G0UypKE6I3Q==
-X-Received: by 2002:a17:906:730b:: with SMTP id di11mr9046323ejc.97.1636221306746;
-        Sat, 06 Nov 2021 10:55:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=M/ckoETcz+yDddWrcBDGrX7LHLDThJbVjbuAhn7hXgw=;
+        b=f2+ftb6KeK2t3wgEhd6L+foFZXGTdLf+V501GhkeXB2q78hcUIyYV1u04DCbqb5nT6
+         XhtoyVqfhNLdMVB2YGaQiPhY52Gzgci0qxJtKxXc3W5+Dnda7dQ2n9ATljNaNUdB1+gJ
+         rCXx3orsneCLxN14jwDtegWRVyVVDLfRG8p5kYmIeDceijzFm9yM6ZtuvF6rgBLYymHr
+         ev6ZSOnPtsd6tKekyuAVO53DX1q4pbJKALrpETs6uXeGIgxFWn16zU4OI2I4COFKtgsc
+         95yhahR5wCDZIjhm42V3Amfy69Anojr2c5SpghpJM1d6tRMYPGpoPIfVivXB3kvOuj0n
+         dxvg==
+X-Gm-Message-State: AOAM532M8Ixc+wxqVsxwgTL7qokicOPNYCld/aFqkufa707pGjmL88F6
+        WHVN+IVr1VFodJ+VCHnW06M=
+X-Google-Smtp-Source: ABdhPJy64kPU3OqrrSSQGHxhbjsgy2XMgPPRzMctH5uVasLD2sxUJIHcPnbnq+KRzoYE9o48nf3vTA==
+X-Received: by 2002:a05:6402:3488:: with SMTP id v8mr63961116edc.170.1636221307512;
+        Sat, 06 Nov 2021 10:55:07 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:ab88:109:9f0:f6a6:7fbe:807a:e1cc])
         by smtp.googlemail.com with ESMTPSA id 25sm6542848edw.19.2021.11.06.10.55.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 10:55:06 -0700 (PDT)
+        Sat, 06 Nov 2021 10:55:07 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 0/5] Remove unncessary linked list from aspm.c
-Date:   Sat,  6 Nov 2021 18:54:58 +0100
-Message-Id: <20211106175503.27178-1-refactormyself@gmail.com>
+Subject: [RFC PATCH v3 1/5] PCI: Handle NULL value inside pci_upstream_bridge()
+Date:   Sat,  6 Nov 2021 18:54:59 +0100
+Message-Id: <20211106175503.27178-2-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20211106175503.27178-1-refactormyself@gmail.com>
+References: <20211106175503.27178-1-refactormyself@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-An extra linked list is created inside aspm.c to keep track of devices
-on which the link state was enabled. However, it is possible to access
-them via existing device lists.
+Return NULL if a NULL pointer is passed into pci_upstream_bridge().
 
-This series remove the extra linked list and other related members of
-the struct pcie_link_state: `root`, `parent` and `downstream`. All
-these are now either calculated or obtained directly when needed.
+Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+---
+ include/linux/pci.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-VERSION CHANGES:
- -v3:
-	- Remane pci_get_parent() to pcie_upstream_link() and improve
-	  the logic based previous review.
-	- Improve the algorithm to iterate through the devices
-
- - v2:
-»       - Avoid using BUG_ON()
-»       - Create helper function pci_get_parent()
-»       - Fix a bug from the previous version
-
-MERGE NOTICE:
-These series are based on
-»       'commit e4e737bb5c17 ("Linux 5.15-rc2")'
-
-Bolarinwa O. Saheed (4):
-  PCI/ASPM: Remove struct pcie_link_state.parent
-  PCI/ASPM: Remove struct pcie_link_state.root
-  PCI/ASPM: Remove struct pcie_link_state.downstream
-  PCI/ASPM: Remove unncessary linked list from aspm.c
-
-Saheed O. Bolarinwa (1):
-  PCI: Handle NULL value inside pci_upstream_bridge()
-
- drivers/pci/pcie/aspm.c | 152 ++++++++++++++++++++++++----------------
- include/linux/pci.h     |   3 +
- 2 files changed, 94 insertions(+), 61 deletions(-)
-
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index cd8aa6fce204..b087e0b9814e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -695,6 +695,9 @@ static inline bool pci_is_bridge(struct pci_dev *dev)
+ 
+ static inline struct pci_dev *pci_upstream_bridge(struct pci_dev *dev)
+ {
++	if (!dev)
++		return NULL;
++
+ 	dev = pci_physfn(dev);
+ 	if (pci_is_root_bus(dev->bus))
+ 		return NULL;
 -- 
 2.20.1
 
