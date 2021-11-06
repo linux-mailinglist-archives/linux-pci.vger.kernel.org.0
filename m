@@ -2,208 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E880446F99
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:55:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49F0F446F9D
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:55:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234773AbhKFR54 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 13:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
+        id S231553AbhKFR6d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Nov 2021 13:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234736AbhKFR5y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:57:54 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F811C061570;
-        Sat,  6 Nov 2021 10:55:12 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id m14so44030357edd.0;
-        Sat, 06 Nov 2021 10:55:12 -0700 (PDT)
+        with ESMTP id S230007AbhKFR6c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:58:32 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A96C061570;
+        Sat,  6 Nov 2021 10:55:51 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id r4so43906495edi.5;
+        Sat, 06 Nov 2021 10:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zNMcoDy+urPCjbL8WvhZ7GWXlrRboR3b2AarG7TVayM=;
-        b=PDonr5eSpV0B1wWMCsPholmfVIfaH8T2XamfJx/zwpdV6Nl6rferfudFs/Adt/nZic
-         lnJPdyZ0VML73yL1dYvOvH1bV5Lx1vZEZAcewsU/RSObmCLc59T9e65NTWqL09MebmnQ
-         fkK8CdRql5lZoFZ6UWdX91Tz3NQKNRMjbQdPTjeyUC4yqtDmqt3u7Ns3byskgNqzLHqO
-         pN8jogywzHh9O9ojuoWlpBnU/JGpCINf8lKXNzOql2pHC/pq55UbEuzjnZSwn6qBy0qd
-         PqYgzljUrtVXD5g6KwLNtFAA902VFPO3jCPuhIYAuCpPKhZE3jH08XZbfdThSN1fqj/j
-         XDtA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zgc5pP1VxU3Q5Xe2Bd5MwgwRWQTa9N08JUnp9m7NMII=;
+        b=kcpQGRkJedLF8i6bCPMo+ZGUotORkW9NoYeOYOWxyKcRwwWj4eB/ucVvAxuyeCwMNs
+         nizGsEKF6RBLOHdDdvosrvSY88F0iCpP/7foH1Q+/YBI4+RPtlt+y/t0mzYiKvgUsWBQ
+         m0gIJWjrN7a4J+Ry3+nuWMx+MdUKisesbTNzh9WeImO6MqpVshjsyfpy5bvhmgkdZ8gb
+         CzZyOYyzqhu9SeIM96ysPg/PkMvFJdAxW3r/0rq1r0BnbDEUpA7Y1BaMniQINoix5UKs
+         S5svPfi+df2YtW67xU6gKgijhtRBH71toYLrB6z2+ke5qMRbNx2cmgjx7qFBzXt9Ko3H
+         kR7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zNMcoDy+urPCjbL8WvhZ7GWXlrRboR3b2AarG7TVayM=;
-        b=pV5KGNZh3iuV4f9WPm2a6FUWon4aH6NbUZp+FuAcjpTldv5aELEjmUDC2XyYoGkFev
-         nE5hzSChBK8A6EARTxKwI0eejchykNsYl+LMoGC3UfS7ktIc8bUMkrg6kobghYKjsKWS
-         9Oz8LHFpQaPlloF3IFuDGOo4cQR8iZdN45dEdEZR3NKJq3GstenSWrOsUNMKPMbHwO4W
-         m3XX298mf9lKNlOSE6Cijk/3dE2K9TK8nCdoPClKn4MYLYz4EpA0e+DXGEGaGy9p1YfA
-         NVwgsFqlUO5rayn3mQTiJpi8i1GSDrCBHIeYr8L6F5KxzfSnLzMnD83/Z1TeaNzVPkxU
-         VVKQ==
-X-Gm-Message-State: AOAM530F9NL8axF2NNQdVIuCRXoZzeSsNPYXEIQIZwfcWc7Z4rlmwdHr
-        qUj2ACRVd9c43Ig9frwCDNNohEhCpAI=
-X-Google-Smtp-Source: ABdhPJy+nNjrpZL5EWmz+2ExevSX0dZ2XgfhvixJqGi4/BbaMn1lgJnLhZX5uyRLXncZQcZ5ZWt/AQ==
-X-Received: by 2002:a17:906:6149:: with SMTP id p9mr79339640ejl.362.1636221311076;
-        Sat, 06 Nov 2021 10:55:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zgc5pP1VxU3Q5Xe2Bd5MwgwRWQTa9N08JUnp9m7NMII=;
+        b=ySKyLitXkA0qCKSDLcivWMpck9oxP67fZH92tnHcIF9EwIFxAUHnDmSp7M/HjMZZkT
+         9Uik+jstngzkSywnoN57j+9YbqZz851muoLcDmxn/lcPABJMKfR3RLOt6TN1hljurkQd
+         af057ezVSY4VU72xedLTvbqR2rlLcCzwXmiOuWESs/4IWD4qOo96iYeR1VIF27JAh6gS
+         4VRZOz4R2oE8Cp67gueQmj6LY9ZktR1ERcfEAgKYuBxKi/NXR+A50QPSaltBE4mq65ZO
+         b2qQsiYRQR7zcwf3OOZrfufxoPxSQ9RWtcGpTi5ZLITS9hPS7OSTb8x1uVpHpjXVxjXW
+         QKIA==
+X-Gm-Message-State: AOAM533CAjD4TPReFfGpasgnzSzsMhsP2kcZbjOYwwSXaqiSeggL6U++
+        gsguPnHF7elIq4DVNcd15kY=
+X-Google-Smtp-Source: ABdhPJzPbl75zdGWSbvzGRgVtT4k/BD0ax/olw3Vf/AJhOvl6Q77Suu/peUI/QqEYwTRerwSNbPo3Q==
+X-Received: by 2002:a50:d50c:: with SMTP id u12mr90209644edi.118.1636221349878;
+        Sat, 06 Nov 2021 10:55:49 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:ab88:109:9f0:f6a6:7fbe:807a:e1cc])
-        by smtp.googlemail.com with ESMTPSA id 25sm6542848edw.19.2021.11.06.10.55.10
+        by smtp.googlemail.com with ESMTPSA id j3sm5742310ejo.2.2021.11.06.10.55.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 10:55:10 -0700 (PDT)
+        Sat, 06 Nov 2021 10:55:49 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
-Cc:     "Bolarinwa O. Saheed" <refactormyself@gmail.com>,
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 5/5] PCI/ASPM: Remove unncessary linked list from aspm.c
-Date:   Sat,  6 Nov 2021 18:55:03 +0100
-Message-Id: <20211106175503.27178-6-refactormyself@gmail.com>
+Subject: [RFC PATCH v2 0/3] Remove struct pcie_link_state.clkpm_*
+Date:   Sat,  6 Nov 2021 18:55:43 +0100
+Message-Id: <20211106175546.27785-1-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211106175503.27178-1-refactormyself@gmail.com>
-References: <20211106175503.27178-1-refactormyself@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Bolarinwa O. Saheed" <refactormyself@gmail.com>
+These series removes the Clock PM members of the
+struct pcie_link_state. Another member is introduced to mark
+devices that the kernel has disbled.
 
-aspm.c defines a linked list - `link_list` and stores each of
-its node in struct pcie_link_state.sibling. This linked list
-tracks devices for which the struct pcie_link_state object
-was successfully created. It is used to loop through the list
-for instance to set ASPM policy or update changes. However, it
-is possible to access these devices via existing lists defined
-inside pci.h
+VERSION CHANGES:
+ - v2:
+	- clkpm_default and clkpm_disable are now left out.
+	- improve pcie_is_clkpm_capable() based on review.
+	- replace pcie_get_clkpm_state() with pcie_clkpm_enabled().
 
-- removes link_list and struct pcie_link_state.sibling
-- accesses child devices via struct pci_dev.bust_list
-- create pcie_config_bus_devices() which walk across the device
-  heirarchies linked to the bus
-- accesses all PCI buses via pci_root_buses on struct pci_bus.node
+MERGE NOTICE:
+These series are based on
+»       'commit e4e737bb5c17 ("Linux 5.15-rc2")'
 
-Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
----
- drivers/pci/pcie/aspm.c | 53 +++++++++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+Saheed O. Bolarinwa (3):
+  PCI/ASPM: Merge pcie_set_clkpm_nocheck() into pcie_set_clkpm()
+  PCI/ASPM: Remove struct pcie_link_state.clkpm_capable
+  PCI/ASPM: Remove struct pcie_link_state.clkpm_enabled
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 12623556f750..65da034dc290 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -48,7 +48,6 @@ struct aspm_latency {
- 
- struct pcie_link_state {
- 	struct pci_dev *pdev;		/* Upstream component of the Link */
--	struct list_head sibling;	/* node in link_list */
- 
- 	/* ASPM state */
- 	u32 aspm_support:7;		/* Supported ASPM state */
-@@ -76,7 +75,6 @@ struct pcie_link_state {
- static int aspm_disabled, aspm_force;
- static bool aspm_support_enabled = true;
- static DEFINE_MUTEX(aspm_lock);
--static LIST_HEAD(link_list);
- 
- #define POLICY_DEFAULT 0	/* BIOS default setting */
- #define POLICY_PERFORMANCE 1	/* high performance */
-@@ -880,10 +878,7 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
- 	if (!link)
- 		return NULL;
- 
--	INIT_LIST_HEAD(&link->sibling);
- 	link->pdev = pdev;
--
--	list_add(&link->sibling, &link_list);
- 	pdev->link_state = link;
- 	return link;
- }
-@@ -970,24 +965,22 @@ static void pcie_update_aspm_capable(struct pcie_link_state *root)
- {
- 	struct pcie_link_state *link;
- 	struct pci_dev *dev, *root_dev;
-+	struct pci_bus *rootbus = root->pdev->bus;
- 
- 	/* Ensure it is the root device */
- 	root_dev = pcie_get_root(root->pdev);
- 	root = root_dev ? root_dev->link_state : root;
- 
--	list_for_each_entry(link, &link_list, sibling) {
--		dev = pcie_get_root(link->pdev);
--		if (dev->link_state != root)
-+	list_for_each_entry(dev, &rootbus->devices, bus_list) {
-+		if (!dev->link_state)
- 			continue;
- 
--		link->aspm_capable = link->aspm_support;
-+		dev->link_state->aspm_capable = link->aspm_support;
- 	}
--	list_for_each_entry(link, &link_list, sibling) {
-+
-+	list_for_each_entry(dev, &rootbus->devices, bus_list) {
- 		struct pci_dev *child;
--		struct pci_bus *linkbus = link->pdev->subordinate;
--		dev = pcie_get_root(link->pdev);
--		if (dev->link_state != root)
--			continue;
-+		struct pci_bus *linkbus = dev->subordinate;
- 
- 		list_for_each_entry(child, &linkbus->devices, bus_list) {
- 			if ((pci_pcie_type(child) != PCI_EXP_TYPE_ENDPOINT) &&
-@@ -1022,7 +1015,6 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 
- 	/* All functions are removed, so just disable ASPM for the link */
- 	pcie_config_aspm_link(link, 0);
--	list_del(&link->sibling);
- 	/* Clock PM is for endpoint device */
- 	free_link_state(link);
- 
-@@ -1157,11 +1149,33 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
- }
- EXPORT_SYMBOL(pci_disable_link_state);
- 
-+static void pcie_config_bus_devices(struct pci_bus *bus)
-+{
-+	struct pci_dev *pdev;
-+	struct pcie_link_state *link;
-+
-+	list_for_each_entry(pdev, &bus->devices, bus_list) {
-+		if (!pci_is_pcie(pdev))
-+			break;
-+
-+		link = pdev->link_state;
-+		if (!link)
-+			continue;
-+
-+		pcie_config_aspm_link(link, policy_to_aspm_state(link));
-+		pcie_set_clkpm(link, policy_to_clkpm_state(link));
-+
-+		/* if this is a bridge, cross it */
-+		if (pdev->subordinate && pdev->subordinate != bus)
-+			pcie_config_bus_devices(pdev->subordinate);
-+	}
-+}
-+
- static int pcie_aspm_set_policy(const char *val,
- 				const struct kernel_param *kp)
- {
- 	int i;
--	struct pcie_link_state *link;
-+	struct pci_bus *bus;
- 
- 	if (aspm_disabled)
- 		return -EPERM;
-@@ -1174,10 +1188,9 @@ static int pcie_aspm_set_policy(const char *val,
- 	down_read(&pci_bus_sem);
- 	mutex_lock(&aspm_lock);
- 	aspm_policy = i;
--	list_for_each_entry(link, &link_list, sibling) {
--		pcie_config_aspm_link(link, policy_to_aspm_state(link));
--		pcie_set_clkpm(link, policy_to_clkpm_state(link));
--	}
-+	list_for_each_entry(bus, &pci_root_buses, node)
-+		pcie_config_bus_devices(bus);
-+
- 	mutex_unlock(&aspm_lock);
- 	up_read(&pci_bus_sem);
- 	return 0;
+ drivers/pci/pcie/aspm.c | 82 +++++++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 40 deletions(-)
+
 -- 
 2.20.1
 
