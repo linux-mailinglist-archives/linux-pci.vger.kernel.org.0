@@ -2,151 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 776C14470B3
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 22:36:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 626534470B6
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 22:43:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230219AbhKFViu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 17:38:50 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:38652 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229828AbhKFViu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 17:38:50 -0400
-Received: by mail-wm1-f47.google.com with SMTP id a20-20020a1c7f14000000b003231d13ee3cso12172314wmd.3;
-        Sat, 06 Nov 2021 14:36:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CcAJ6ICBKG1IvSjW8O6i+0U5cZl9dElL/6ILKR0KME8=;
-        b=tbyK4IOFPe3Ak61dInJibY+7xzJukY6i3GR4Vpkw9agAAc9L+xjxH+oin850z1/DrJ
-         Z6bwU6U9n/XVJg5wNkyByaT/XlypWDs+rdUgocyEc9+nf/zUqRlcOA3bgdISHpulnssJ
-         V3pkBjI+BPJ37HauLvK/R5N4gAZ+hIh2K5DDbWSPUfqaD3Ui+7nmUemEFNHe8Nk+qe/1
-         LNPx0qY0Wd01c0LlgN+1g+zcfAcOdPQnRN0COBoHAScGvRdh55uJ73u/h6O0i37fLhKz
-         A88vcGSPqnEiDKGWN+9wmRN/e2kyQ+JiHN6GzY4QNiIegVdqlIJXdIYBphe05UU1ppB2
-         Dq2w==
-X-Gm-Message-State: AOAM531sR1I5x5cjjtZofGd10aABaCQcJBoedY95r9pWtVEZKyCf6v15
-        kxNYPZXAbvxI0i6d8xcGd15THxULMF66Ig==
-X-Google-Smtp-Source: ABdhPJxey59H98wTFypO3pooZjHcg9vXtQRDPUqBzPW2ZVcqIN3NYhCFb/IRgmi/HYhKJAJm/beZ2Q==
-X-Received: by 2002:a1c:d1:: with SMTP id 200mr41088911wma.86.1636234567164;
-        Sat, 06 Nov 2021 14:36:07 -0700 (PDT)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id o8sm11797221wrm.67.2021.11.06.14.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 14:36:06 -0700 (PDT)
-Date:   Sat, 6 Nov 2021 22:36:05 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     toan@os.amperecomputing.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: xgene-msi: Use bitmap_zalloc() when applicable
-Message-ID: <YYb1RXjnXSV8xF/0@rocinante>
-References: <32f3bc1fbfbd6ee0815e565012904758ca9eff7e.1635019243.git.christophe.jaillet@wanadoo.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32f3bc1fbfbd6ee0815e565012904758ca9eff7e.1635019243.git.christophe.jaillet@wanadoo.fr>
+        id S231213AbhKFVp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Nov 2021 17:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231144AbhKFVp7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 6 Nov 2021 17:45:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 75C066108D;
+        Sat,  6 Nov 2021 21:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636234997;
+        bh=xfxS5A+SRREsEjx/qyiwD4oINsRywkoLs4GhmoejLJQ=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=TW4AAnz3OApNGI9dRBVE4euNf1EwIcbw9mdMqol2HWjHD07L/8cE665EjzBb4vHoA
+         Sfwoa75YNTk4cGbxh14o5loA7Rbah9foyQr6Yn4NbUrlzA2FjII1+8b1eRLQGLz/8O
+         g1OBv7NW6Xb5JrhjY1hPZOAWrHuzFhrqd/+PA/WIAUx1DCKx0tsnGTO7HdX7iO3EQP
+         aCbZ7Ty/XVX5Poc2HEZ8hyDHlaDOb7ORkOYW2YAFf1ALCHOP4AbPIJehIuoPlgueKW
+         Xkj15rmhnvq94qqzzUKOmbsbPcn/pCiXmXRFSaCaM1AJoDuQPC2V64E0yzHdskmEXF
+         BvmfYDLWFzBLQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 624E8609E7;
+        Sat,  6 Nov 2021 21:43:17 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI changes for v5.16
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20211105170017.GA929912@bhelgaas>
+References: <20211105170017.GA929912@bhelgaas>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20211105170017.GA929912@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.16-changes
+X-PR-Tracked-Commit-Id: dda4b381f05d447a0ae31e2e44aeb35d313a311f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
+Message-Id: <163623499733.3982.17655028721184386436.pr-tracker-bot@kernel.org>
+Date:   Sat, 06 Nov 2021 21:43:17 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christophe!
+The pull request you sent on Fri, 5 Nov 2021 12:00:17 -0500:
 
-> 'xgene_msi->bitmap' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
-> improve the semantic and avoid some open-coded arithmetic in allocator
-> arguments.
-> 
-> Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
-> consistency.
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.16-changes
 
-I believe, after having a brief look, that we might have a few other
-candidates that we could also update:
-
-  drivers/pci/controller/dwc/pcie-designware-ep.c
-  717:	ep->ib_window_map = devm_kcalloc(dev,
-  724:	ep->ob_window_map = devm_kcalloc(dev,
-  
-  drivers/pci/controller/pcie-iproc-msi.c
-  592:	msi->bitmap = devm_kcalloc(pcie->dev, BITS_TO_LONGS(msi->nr_msi_vecs),
-  
-  drivers/pci/controller/pcie-xilinx-nwl.c
-  470:	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-  567:	msi->bitmap = kzalloc(size, GFP_KERNEL);
-  637:	msi->bitmap = NULL;
-  
-  drivers/pci/controller/pcie-iproc-msi.c
-  262:	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
-  290:	bitmap_release_region(msi->bitmap, hwirq,
-  
-  drivers/pci/controller/pcie-xilinx-nwl.c
-  470:	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-  494:	bitmap_release_region(msi->bitmap, data->hwirq,
-  
-  drivers/pci/controller/pcie-brcmstb.c
-  537:	hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
-  546:	bitmap_release_region(&msi->used, hwirq, 0);
-  
-  drivers/pci/controller/pcie-xilinx.c
-  240:	hwirq = bitmap_find_free_region(port->msi_map, XILINX_NUM_MSI_IRQS, order_base_2(nr_irqs));
-  263:	bitmap_release_region(port->msi_map, d->hwirq, order_base_2(nr_irqs));
-
-Some of the above could also potentially benefit from being converted to
-use the DECLARE_BITMAP() macro to create the bitmap that is then being
-embedded into some struct used to capture details and state, rather than
-store a pointer to later allocate memory dynamically.  Some controller
-drivers already do this, so we could convert rest where appropriate.
-
-What do you think?
-
-We also have this nudge from Coverity that we could fix, as per:
-
-  532 static int brcm_msi_alloc(struct brcm_msi *msi)
-  533 {
-  534         int hwirq;
-  535
-  536         mutex_lock(&msi->lock);
-      1. address_of: Taking address with &msi->used yields a singleton pointer.
-      CID 1468487 (#1 of 1): Out-of-bounds access (ARRAY_VS_SINGLETON)2. callee_ptr_arith: Passing &msi->used to function bitmap_find_free_region which uses it as an array. This might corrupt or misinterpret adjacent memory locations. [show details]
-  537         hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
-  538         mutex_unlock(&msi->lock);
-  539
-  540         return hwirq;
-  541 }
-  
-  543 static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
-  544 {
-  545         mutex_lock(&msi->lock);
-      1. address_of: Taking address with &msi->used yields a singleton pointer.
-      CID 1468424 (#1 of 1): Out-of-bounds access (ARRAY_VS_SINGLETON)2. callee_ptr_arith: Passing &msi->used to function bitmap_release_region which uses it as an array. This might corrupt or misinterpret adjacent memory locations. [show details]
-  546         bitmap_release_region(&msi->used, hwirq, 0);
-  547         mutex_unlock(&msi->lock);
-  548 }
-
-We could look at addressing this too at the same time.
-
-[...]
-> -	int size = BITS_TO_LONGS(NR_MSI_VEC) * sizeof(long);
-> -
-> -	xgene_msi->bitmap = kzalloc(size, GFP_KERNEL);
-> +	xgene_msi->bitmap = bitmap_zalloc(NR_MSI_VEC, GFP_KERNEL);
->  	if (!xgene_msi->bitmap)
->  		return -ENOMEM;
->  
-> @@ -360,7 +358,7 @@ static int xgene_msi_remove(struct platform_device *pdev)
->  
->  	kfree(msi->msi_groups);
->  
-> -	kfree(msi->bitmap);
-> +	bitmap_free(msi->bitmap);
->  	msi->bitmap = NULL;
->  
->  	xgene_free_domains(msi);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
 
 Thank you!
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-	Krzysztof
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
