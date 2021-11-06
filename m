@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7720C446F83
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:54:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B70F446F85
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:54:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234711AbhKFR4l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 13:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        id S234741AbhKFR4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Nov 2021 13:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233233AbhKFR4k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:56:40 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A307C061570;
-        Sat,  6 Nov 2021 10:53:59 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id j21so44583739edt.11;
-        Sat, 06 Nov 2021 10:53:59 -0700 (PDT)
+        with ESMTP id S234716AbhKFR4l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:56:41 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42011C061570;
+        Sat,  6 Nov 2021 10:54:00 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id v11so42170428edc.9;
+        Sat, 06 Nov 2021 10:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6D5HkkzZ/+jWBfSY9gLjOQ9sfmUeP65T8bu+SScNXxY=;
-        b=mqT8opC1vtsJeLwFdLCmo9jx/z0UjbZ4IiGMX906qH/reDbnTKfShqHe9qwUnb1qJ9
-         rr8JaLowSYpJ94OAwZRgJ47gbTHlRw1oFB5h38s/7bYID61Oj/bya8WzlNcqi0VPDDeQ
-         M+S3kQeZ+n1dXprEY0luKrX3Eu33pSiAx0VH0LAfxdUq1TnZ/5roBtzHnigP/0AqJt4T
-         FzPnWIdPddx+Lm83s0vsOt0/AATsAe65w2cGMWSHyWWCFz9Pk+LpqxDVcJHfuy4aAAsJ
-         t40S43yqP3L3gvaHkxhzuLsbLRL6FG3E+mpSMtFQAt1Aa/MM8A5nsSm4HplX6a8BlSKq
-         6K1w==
+        bh=+AmIfT2U8zaxI4/8+Onr8HNn9TQ7SRU0ccQVrxGOsI0=;
+        b=Jm5JzxB22xE3gjz5poX7ZGPbpgZi7v8ejFMyV/QTrYo97vKYACgfGzbE7sxIz3Y+/j
+         E23VqlIziB8y18C7gWEI1T5ydmUdyDKv4bD6ZgZeD3diDRzJ4Bno2Gacq+tB4zg5zMte
+         CwidWkBH/BDemsS8CG7s8CMzRuIqIfwIE5tT7jHp5CRwTHJ9DfDyS+1eYe8sWJMWWWVW
+         R7YWIm5SPmvmsYmP6bT5VX7Ln+Apw/0iGRTdJJn7lZndO/l2FRjgiptMyQVOcW10Zblv
+         YY7mm9n+E++8mQSfbqZ43J7BIGj6TqgzR2sBjrh6bOaC2ru8OhMYia5FxtHudAwVarud
+         HyNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6D5HkkzZ/+jWBfSY9gLjOQ9sfmUeP65T8bu+SScNXxY=;
-        b=cNJZDuMSn6VMEYvjqpizwpFO1LVNZWqAU80giO2yUKal2sUk6AX2SNOXyPyRyWDgFF
-         UaNu96N27BfYnONHr36EFcJ/cWkFyfHLrixf8mTUkGZkQocPAXGMfF5ffbac0HdJFQcP
-         AqixuvR/8Liltok8tjPyUXUy6ssWqe7wFd9JeK0XOHehNdgbBhus0rtj8Q0rWyrREFab
-         DagCClbM9Id1S4KcHfX1wur6pL+eCpWNrI1oVzXJpCbXV8dZviGJV1Xc+ex2+Pwq9wBL
-         Xo8oR2tXeDrZ9lgL6a+uK9cC2Mf7Fzo6cd+lB1oODgzHaBahLCov2/pxPWOv39bp2FKg
-         NVLw==
-X-Gm-Message-State: AOAM5330xQ55Q3ZxU8aAqsRWbUDL9xjPN/li/R7CJPApGau2f6JZaV+M
-        zfkyLcqsV+NlBFPhZUKcRwg+sRmDhCY=
-X-Google-Smtp-Source: ABdhPJxHay+IlnQngLVeJ5UftGjI+KZHVvns+uFn7U9nM1+xd765EY05nyQ4ZL8koht9Lsl2fDS1lw==
-X-Received: by 2002:a17:906:309b:: with SMTP id 27mr18284487ejv.129.1636221237719;
-        Sat, 06 Nov 2021 10:53:57 -0700 (PDT)
+        bh=+AmIfT2U8zaxI4/8+Onr8HNn9TQ7SRU0ccQVrxGOsI0=;
+        b=VrDdanqX9Amj7zGFnes0iWR1n539DgBRY1tCNyya4lC3j4MeA+5uzlNlDRuMVNH+Ay
+         ENP4cqq40MQlxhNA8jIwelonCMpzrgimZa0wCWvUK+qm82VX9yhc3IYW6YbcHjYXhgrU
+         sd5JkXRnYUpum/Nxd4p6166oTU0cfI0zCGYAcDUs8z59bb15Y2QUbuWjkMOTrCWovlqJ
+         73fXoSHjNeI5jnT30FIcDmd0VyKDhkiPWokapbLuPGT+mdJQQ35Xxi1v74B74GVDMNSd
+         c+4mo7ChszdYpHWS3Esevio8UJi4Tp7SoCNSbxIYsQx2tbZkizEoS2GuTI0wZfQrVuGf
+         Dm/A==
+X-Gm-Message-State: AOAM533YC+0pYd8TFSZdw1CQzSrD9C/Dg56Cf0ZQ4yCtMh5UXtXLOxZ7
+        HhnbfHv6sLUJFF9rdh1eXHQ=
+X-Google-Smtp-Source: ABdhPJy5sQI8KXzuOpcgUb6bH+YKrtAotFx+6RaJnOsvXvEG98nTOBSymzzgvSs/P6Hn69poPxiEDg==
+X-Received: by 2002:a50:da42:: with SMTP id a2mr86768450edk.361.1636221238641;
+        Sat, 06 Nov 2021 10:53:58 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:ab88:109:9f0:f6a6:7fbe:807a:e1cc])
         by smtp.googlemail.com with ESMTPSA id m12sm5753494ejj.63.2021.11.06.10.53.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 10:53:57 -0700 (PDT)
+        Sat, 06 Nov 2021 10:53:58 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 1/6] PCI/ASPM: Extract out L1SS_CAP calculations
-Date:   Sat,  6 Nov 2021 18:53:48 +0100
-Message-Id: <20211106175353.26248-2-refactormyself@gmail.com>
+Subject: [RFC PATCH v1 2/6] PCI/ASPM: Extract the calculation of link->aspm_support
+Date:   Sat,  6 Nov 2021 18:53:49 +0100
+Message-Id: <20211106175353.26248-3-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211106175353.26248-1-refactormyself@gmail.com>
 References: <20211106175353.26248-1-refactormyself@gmail.com>
@@ -63,79 +63,121 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Inside pcie_aspm_cap_init() the L1SS_CAP of both ends of the link is
-calculated. The values are used to calculate link->aspm_support and
-link->aspm_enabled. Isolating this calcution with simplify
-pcie_aspm_cap_init().
+struct pcie_link_state->aspm_support hold the initial capable
+state of the link. This value is calculated inside
+pcie_aspm_init_cap(). Isolating this calculation will simplify
+pcie_aspm_init_cap().
 
-Extract the calculations of L1SS_CAP on both ends into
-aspm_calc_both_l1ss_caps().
+Extract the calculation of link->aspm_support into
+aspm_calc_init_linkcap().
 
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/pci/pcie/aspm.c | 42 ++++++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+ drivers/pci/pcie/aspm.c | 60 ++++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 013a47f587ce..057c6768fb7b 100644
+index 057c6768fb7b..23441a32f604 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -540,6 +540,30 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- 	}
+@@ -564,6 +564,33 @@ static void aspm_calc_both_l1ss_caps(struct pcie_link_state *link,
+ 		*dwn_l1ss_cap &= ~PCI_L1SS_CAP_ASPM_L1_2;
  }
  
-+static void aspm_calc_both_l1ss_caps(struct pcie_link_state *link,
-+				    u32 *up_l1ss_cap, u32 *dwn_l1ss_cap)
++static u32 aspm_calc_init_linkcap(u32 up_lnkcap, u32 dwn_lnkcap,
++				  u32 up_l1ss_cap, u32 dwn_l1ss_cap)
 +{
-+	struct pci_dev *child = link->downstream, *parent = link->pdev;
-+
-+	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
-+			      up_l1ss_cap);
-+	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
-+			      dwn_l1ss_cap);
-+
-+	if (!(*up_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
-+		*up_l1ss_cap = 0;
-+	if (!(*dwn_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
-+		*dwn_l1ss_cap = 0;
++	u32 link_cap = 0;
 +
 +	/*
-+	 * If we don't have LTR for the entire path from the Root Complex
-+	 * to this device, we can't use ASPM L1.2 because it relies on the
-+	 * LTR_L1.2_THRESHOLD.  See PCIe r4.0, secs 5.5.4, 6.18.
++	 * Note that we must not enable L0s in either direction on a
++	 * given link unless components on both sides of the link each
++	 * support L0s.
 +	 */
-+	if (!child->ltr_path)
-+		*dwn_l1ss_cap &= ~PCI_L1SS_CAP_ASPM_L1_2;
++	if (up_lnkcap & dwn_lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
++		link_cap |= ASPM_STATE_L0S;
++
++	if (up_lnkcap & dwn_lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
++		link_cap |= ASPM_STATE_L1;
++	if (up_l1ss_cap & dwn_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_1)
++		link_cap |= ASPM_STATE_L1_1;
++	if (up_l1ss_cap & dwn_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_2)
++		link_cap |= ASPM_STATE_L1_2;
++	if (up_l1ss_cap & dwn_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_1)
++		link_cap |= ASPM_STATE_L1_1_PCIPM;
++	if (up_l1ss_cap & dwn_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_2)
++		link_cap |= ASPM_STATE_L1_2_PCIPM;
++
++	return link_cap;
 +}
 +
  static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
  {
  	struct pci_dev *child = link->downstream, *parent = link->pdev;
-@@ -606,23 +630,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	link->latency_dw.l1 = calc_l1_latency(child_lnkcap);
+@@ -603,16 +630,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &parent_lnkctl);
+ 	pcie_capability_read_word(child, PCI_EXP_LNKCTL, &child_lnkctl);
  
- 	/* Setup L1 substate */
--	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
--			      &parent_l1ss_cap);
--	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
--			      &child_l1ss_cap);
--
--	if (!(parent_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
--		parent_l1ss_cap = 0;
--	if (!(child_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
--		child_l1ss_cap = 0;
--
 -	/*
--	 * If we don't have LTR for the entire path from the Root Complex
--	 * to this device, we can't use ASPM L1.2 because it relies on the
--	 * LTR_L1.2_THRESHOLD.  See PCIe r4.0, secs 5.5.4, 6.18.
+-	 * Setup L0s state
+-	 *
+-	 * Note that we must not enable L0s in either direction on a
+-	 * given link unless components on both sides of the link each
+-	 * support L0s.
 -	 */
--	if (!child->ltr_path)
--		child_l1ss_cap &= ~PCI_L1SS_CAP_ASPM_L1_2;
-+	aspm_calc_both_l1ss_caps(link, &parent_l1ss_cap, &child_l1ss_cap);
+-	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
+-		link->aspm_support |= ASPM_STATE_L0S;
+-
++	/* Setup L0s state */
+ 	if (child_lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+ 		link->aspm_enabled |= ASPM_STATE_L0S_UP;
+ 	if (parent_lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+@@ -621,9 +639,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	link->latency_dw.l0s = calc_l0s_latency(child_lnkcap);
  
- 	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_1)
- 		link->aspm_support |= ASPM_STATE_L1_1;
+ 	/* Setup L1 state */
+-	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
+-		link->aspm_support |= ASPM_STATE_L1;
+-
+ 	if (parent_lnkctl & child_lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
+ 		link->aspm_enabled |= ASPM_STATE_L1;
+ 	link->latency_up.l1 = calc_l1_latency(parent_lnkcap);
+@@ -632,15 +647,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	/* Setup L1 substate */
+ 	aspm_calc_both_l1ss_caps(link, &parent_l1ss_cap, &child_l1ss_cap);
+ 
+-	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_1)
+-		link->aspm_support |= ASPM_STATE_L1_1;
+-	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_ASPM_L1_2)
+-		link->aspm_support |= ASPM_STATE_L1_2;
+-	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_1)
+-		link->aspm_support |= ASPM_STATE_L1_1_PCIPM;
+-	if (parent_l1ss_cap & child_l1ss_cap & PCI_L1SS_CAP_PCIPM_L1_2)
+-		link->aspm_support |= ASPM_STATE_L1_2_PCIPM;
+-
+ 	if (parent_l1ss_cap)
+ 		pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+ 				      &parent_l1ss_ctl1);
+@@ -657,12 +663,16 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	if (parent_l1ss_ctl1 & child_l1ss_ctl1 & PCI_L1SS_CTL1_PCIPM_L1_2)
+ 		link->aspm_enabled |= ASPM_STATE_L1_2_PCIPM;
+ 
+-	if (link->aspm_support & ASPM_STATE_L1SS)
+-		aspm_calc_l1ss_info(link, parent_l1ss_cap, child_l1ss_cap);
+-
+ 	/* Save default state */
+ 	link->aspm_default = link->aspm_enabled;
+ 
++	link->aspm_support = aspm_calc_init_linkcap(parent_lnkcap,
++						    child_lnkcap,
++						    parent_l1ss_cap,
++						    child_l1ss_cap);
++	if (link->aspm_support & ASPM_STATE_L1SS)
++		aspm_calc_l1ss_info(link, parent_l1ss_cap, child_l1ss_cap);
++
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+ 
 -- 
 2.20.1
 
