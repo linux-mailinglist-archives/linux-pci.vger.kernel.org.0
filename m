@@ -2,169 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD0EA446FA2
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:56:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54717446FA5
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Nov 2021 18:56:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234720AbhKFR6h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 13:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49470 "EHLO
+        id S230463AbhKFR7H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Nov 2021 13:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234150AbhKFR6f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:58:35 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28D8C061570;
-        Sat,  6 Nov 2021 10:55:53 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id w1so45034460edd.10;
-        Sat, 06 Nov 2021 10:55:53 -0700 (PDT)
+        with ESMTP id S232989AbhKFR7H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 13:59:07 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867BAC061570;
+        Sat,  6 Nov 2021 10:56:25 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id ee33so44988457edb.8;
+        Sat, 06 Nov 2021 10:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X3tmpUFdzGmDZ4WUOB/oWLSIyqVvdPUkHVycX9v/1S4=;
-        b=ePDCO4SURPuf12mUqAZnXPG+s5RIrdRkWYYIhMGzf2AKmjPt++Rwf+eONXFTaqE7Ap
-         XPq2ZBvwSHzquYUrwFGV+NGfi9Y3SN3wqPm4IHreVRU6whxAfIuVcHZoPpcJZ+HL6RvU
-         7Nn19DdicBpjbiBXgEFPaxQiqst/Hc4al3Gxees3duvqViw1+n6sGdEve17YGLNJSYLt
-         r98uu19QQntGvVuaex68lUhdiYF5HDppZhKcz5kjJ+xMFRqqRHQXeB7S3uXyL0mRC7QW
-         VCiCykoSnTTtlactA3Up4CUdyEdyompOUFKOg7sppA53iy0OL5dgRxhdONEOlwaS+1wD
-         2zeA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xVNgp650gA6Ms7xDttu+x/dbokUGCCpvHvXoQbmsXx4=;
+        b=PRVM79vsK7ZtX6av9dL7ybwaaaS5qpuLQXNlP0HEKB7cFYCSQvIjhuOKIEfBJp2oLW
+         lrPNlKhHg0jxE+QfckdTIyCHWjM6ZL1HySVG+XBaEoUU8FtCDEgkmW368hLxML1IPolv
+         0ZfSWPI2B94hYDyBOTLZlPbgrJXYyBisOf7+cB4wqozDegQaP7qPxuuz6tuOt0oDGYq7
+         0DVP8oTPegOtkTWwAO2pzs+kclapjMyU5fu98mo/F89CO0TTSN9kSPA4RXMF9KxWY2EY
+         EmxMFOXJcal5sqrlNl/gTglKZRSZLs5T+/odOs4y2GCWadTUe/kKWYWc10USZS3ZuKiQ
+         bUsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X3tmpUFdzGmDZ4WUOB/oWLSIyqVvdPUkHVycX9v/1S4=;
-        b=a/Io8UQiYs+cIoeDedwSG33Wy+HZXl/LDVjYo4cSgcdWXyYP6AKWv1lyzcwCiB7uZS
-         Wc3jdDLhte3wgchdq4VBFY2J1v0b3CmazLrQ99lYNsXNWisqodlhD+mQPwpj1dYZYHl7
-         SeaZPJ7T61nqINU5thLK4w0rP+Obde+eEhcba/Od06MLwlxLnOYkFqgkL6SaO9q14yAI
-         vzP15iad2zrsUible5YMUgWhIAbA9goev1HvtZKZhJlpePim0uEVU+jA/Ec3yfOW2AEU
-         mMp9PLo3TWnxKrJNhSBkAmgyoM/DfTbGiO6DZ0SASr14t6KcE5xxElZapBnSjqSL+CSf
-         dUlQ==
-X-Gm-Message-State: AOAM530TJPfvpodie+D6G0Czusd74s5UaubrCDHt7HF1g9Jx2bj+ZiZI
-        lIBz+/QshPc6nnx8c+rcKRY=
-X-Google-Smtp-Source: ABdhPJyIPH25JvkWo5A1A6qxxj/pUIvTUH/wUWSVevJtRgABfK+CW/BIPFs5alv7FE0jMalnDWFyyA==
-X-Received: by 2002:a17:907:629b:: with SMTP id nd27mr81379072ejc.24.1636221352613;
-        Sat, 06 Nov 2021 10:55:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xVNgp650gA6Ms7xDttu+x/dbokUGCCpvHvXoQbmsXx4=;
+        b=jxZG78Hu15sPm8eAznR17S3NKHhIZbOwfqv9b8j1uwf3Z873xqTWU/95jYvzme1hI0
+         e7JFTOa4Huj+YAnt43DGT86qTDFg3+i/NKMkdgNsNBVDj3JiRQvAqhIF34wZ6teQ0Mbz
+         1Kc/mce6Cn8TQPDtlG2WUYoAevjYlhFLJNIMNWUXsjK+ZmRyJmZ6pRvCg6BqNKmBtFXK
+         sUz3DqTGQMXkXaNNS2qDMvWllqsnpqRKhZ5jEms6LWo6gwLlsBzcPmQZsT8tZd4dpRGl
+         LY0oxGC/6qTIr9rZnQqOfo2Zr77Rldse7hr1CEOIkQDLy0b/RXKNBMJp7wknSFW2CPyB
+         GPgg==
+X-Gm-Message-State: AOAM531+b76gjESPhl0RvbdhzdbcezLozmXMbb1Pz2MuhgyZ5EelkX53
+        5/BLIjolzpfxYeKrI8eeKUw+9fHRU7o=
+X-Google-Smtp-Source: ABdhPJxE/sm4JUdbzwPUXvy9UHLpaFnDcnsOPmN4KlsbmwKriI/7Vpdg2cA2+R/n0gS9+XenRh+3uQ==
+X-Received: by 2002:a17:906:1815:: with SMTP id v21mr83206085eje.218.1636221384195;
+        Sat, 06 Nov 2021 10:56:24 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:ab88:109:9f0:f6a6:7fbe:807a:e1cc])
-        by smtp.googlemail.com with ESMTPSA id j3sm5742310ejo.2.2021.11.06.10.55.51
+        by smtp.googlemail.com with ESMTPSA id z2sm5802224ejb.41.2021.11.06.10.56.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Nov 2021 10:55:52 -0700 (PDT)
+        Sat, 06 Nov 2021 10:56:23 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
 To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 3/3] PCI/ASPM: Remove struct pcie_link_state.clkpm_enabled
-Date:   Sat,  6 Nov 2021 18:55:46 +0100
-Message-Id: <20211106175546.27785-4-refactormyself@gmail.com>
+Subject: [RFC PATCH v1 0/2] Keep insane devices disabled
+Date:   Sat,  6 Nov 2021 18:56:19 +0100
+Message-Id: <20211106175621.28250-1-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211106175546.27785-1-refactormyself@gmail.com>
-References: <20211106175546.27785-1-refactormyself@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The clkpm_enabled member of the struct pcie_link_state stores the
-current Clock PM state for the device. However, when the state changes
-it is persisted and thus can be retieved directly.
+The patches fix issues that allow enabling both CLKPM and ASPM on
+devices that failed pcie_aspm_sanity_check().
 
-   - move calculations into pcie_clkpm_enabled()
-   - removes clkpm_enabled from the struct pcie_link_state
-   - removes all instance where clkpm_enable is set
-   - replaces references to clkpm_enabled with a call to
-     pcie_get_clkpm_state()
 
-Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
----
- drivers/pci/pcie/aspm.c | 43 +++++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 25 deletions(-)
+MERGE NOTICE:
+These series are based on
+»       'commit e4e737bb5c17 ("Linux 5.15-rc2")'
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index c1f8f10b7a4c..9425d1e38c51 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -61,7 +61,6 @@ struct pcie_link_state {
- 	u32 aspm_disable:7;		/* Disabled ASPM state */
- 
- 	/* Clock PM state */
--	u32 clkpm_enabled:1;		/* Current Clock PM state */
- 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
- 	u32 clkpm_disable:1;		/* Clock PM disabled */
- 
-@@ -104,6 +103,21 @@ static const char *policy_str[] = {
- 
- #define LINK_RETRAIN_TIMEOUT HZ
- 
-+static int pcie_clkpm_enabled(struct pci_dev *pdev)
-+{
-+	struct pci_dev *child;
-+	struct pci_bus *linkbus = pdev->subordinate;
-+	u16 ctl;
-+
-+	/* CLKREQ_EN is only applicable for Upstream Ports */
-+	list_for_each_entry(child, &linkbus->devices, bus_list) {
-+		pcie_capability_read_word(child, PCI_EXP_LNKCTL, &ctl);
-+		if (!(ctl & PCI_EXP_LNKCTL_CLKREQ_EN))
-+			return 0;
-+	}
-+	return 1;
-+}
-+
- static int pcie_clkpm_capable(struct pci_dev *pdev)
- {
- 	u32 cap;
-@@ -165,7 +179,7 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- 	if (!pcie_clkpm_capable(link->pdev) || link->clkpm_disable)
- 		enable = 0;
- 	/* Need nothing if the specified equals to current state */
--	if (link->clkpm_enabled == enable)
-+	if (pcie_clkpm_enabled(link->pdev) == enable)
- 		return;
- 
- 	val = enable ? PCI_EXP_LNKCTL_CLKREQ_EN : 0;
-@@ -173,31 +187,11 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- 		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
- 						   PCI_EXP_LNKCTL_CLKREQ_EN,
- 						   val);
--
--	link->clkpm_enabled = !!enable;
- }
- 
- static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- {
--	int enabled = 1;
--	u32 reg32;
--	u16 reg16;
--	struct pci_dev *child;
--	struct pci_bus *linkbus = link->pdev->subordinate;
--
--	/* All functions should have the same cap and state, take the worst */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
--		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
--			enabled = 0;
--			break;
--		}
--		pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
--		if (!(reg16 & PCI_EXP_LNKCTL_CLKREQ_EN))
--			enabled = 0;
--	}
--	link->clkpm_enabled = enabled;
--	link->clkpm_default = enabled;
-+	link->clkpm_default = pcie_clkpm_enabled(link->pdev);
- 	link->clkpm_disable = blacklist ? 1 : 0;
- }
- 
-@@ -1272,9 +1266,8 @@ static ssize_t clkpm_show(struct device *dev,
- 			  struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
- 
--	return sysfs_emit(buf, "%d\n", link->clkpm_enabled);
-+	return sysfs_emit(buf, "%d\n", pcie_clkpm_enabled(pdev));
- }
- 
- static ssize_t clkpm_store(struct device *dev,
+Saheed O. Bolarinwa (2):
+  PCI/ASPM: Never enable ASPM for insane devices
+  PCI/ASPM: Never enable CLKPM for insane devices
+
+ drivers/pci/pcie/aspm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 -- 
 2.20.1
 
