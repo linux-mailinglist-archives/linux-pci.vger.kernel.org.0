@@ -2,83 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A61447357
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 15:41:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 236104473CB
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 17:29:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbhKGOnr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Nov 2021 09:43:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35214 "EHLO
+        id S235777AbhKGQcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Nov 2021 11:32:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbhKGOnq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 09:43:46 -0500
-Received: from bedivere.hansenpartnership.com (unknown [IPv6:2607:fcd0:100:8a00::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B63C061570;
-        Sun,  7 Nov 2021 06:41:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1636296047;
-        bh=GLwJRm0SyCJdBFI1kf9KhZvQdd89cg3gLgrxFC+Qp7s=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=K9s/EzIMwWN6NMlTLphqEw1AACL2pK+z7aShJ8CsrSvAofK8EPh+sDe7qNdeu/gn6
-         7yaYMHSFTsL/F57EAKYIQAs/MWQMs9Y4HsOsiqOhgLc7H2N9neqOJnaqL/7NYLStYU
-         70hXC7i4D9Xd2oTWohABAdtCjdtwFQCPvGKYZcDE=
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8D93012807C9;
-        Sun,  7 Nov 2021 09:40:47 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WJe4HCRbb8uE; Sun,  7 Nov 2021 09:40:47 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=hansenpartnership.com; s=20151216; t=1636296047;
-        bh=GLwJRm0SyCJdBFI1kf9KhZvQdd89cg3gLgrxFC+Qp7s=;
-        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-        b=K9s/EzIMwWN6NMlTLphqEw1AACL2pK+z7aShJ8CsrSvAofK8EPh+sDe7qNdeu/gn6
-         7yaYMHSFTsL/F57EAKYIQAs/MWQMs9Y4HsOsiqOhgLc7H2N9neqOJnaqL/7NYLStYU
-         70hXC7i4D9Xd2oTWohABAdtCjdtwFQCPvGKYZcDE=
-Received: from jarvis.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4300:c551::527])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2B8EA128078F;
-        Sun,  7 Nov 2021 09:40:46 -0500 (EST)
-Message-ID: <7097cb64691e3059962343dd4f10a7a50b54f704.camel@HansenPartnership.com>
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        stuart hayes <stuart.w.hayes@gmail.com>
-Cc:     "Tkaczyk, Mariusz" <mariusz.tkaczyk@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "lukas@wunner.de" <lukas@wunner.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Sun, 07 Nov 2021 09:40:40 -0500
-In-Reply-To: <CAPcyv4j_HH+T+Bnhqk_iV-JpemB6D=mXjk14cGMJMitkxrbjJQ@mail.gmail.com>
-References: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
-         <5d1eb958c13553d70e4bee7a7b342febcf1c02ee.camel@intel.com>
-         <4bb26dc0-9b82-21d6-0257-d50ec206a130@gmail.com>
-         <CAPcyv4iig5rxCNb7GyGV9akhZKLF+OeGhewSbOeAzzA6pKreRA@mail.gmail.com>
-         <19dcfbea-efcd-b385-4031-23fae5c1c78b@linux.intel.com>
-         <4cb4d599-a146-2219-6c6a-c713f022bd7c@gmail.com>
-         <CAPcyv4j_HH+T+Bnhqk_iV-JpemB6D=mXjk14cGMJMitkxrbjJQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 
+        with ESMTP id S234850AbhKGQci (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 11:32:38 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2345EC061570;
+        Sun,  7 Nov 2021 08:29:55 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id b15so33452507edd.7;
+        Sun, 07 Nov 2021 08:29:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VdQHN8nbaGWGXbiZ7KQ1sI8LP21i7umOPWJHxTLsAdE=;
+        b=FqQ7YkHncoqGlJlvBE+aU2k++3K0YfcgGTeAiXIh1DFzWpm0b5ftj6LVZ6F8EdL88c
+         X6SZvOl6rW/HBJZSGydIOjFnWhoxmq+BHHIE8HIQFBAYn3wTo2Frk/Mdpt8wQ/sem7FB
+         BKItyj6DaqvwYLslxBQnVjx7SKDLrvx0A6xvqK/ekhD+E5arDpvvU5iVh+08f0JyvtXk
+         t36j7rGJ3SLytGGqakXpCbtZY94s+1xlUOT1XLaoL0hjSqZwepXXZMTew0XizRhR42Rg
+         vD36aagYq0RfZjv0j5ccSG3pw5/Ze8T+vDf6SSqOSU3R2qPnkcs/E8kuyjNs9R06KSwV
+         Wj+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VdQHN8nbaGWGXbiZ7KQ1sI8LP21i7umOPWJHxTLsAdE=;
+        b=52kCd38jBRSmkHlipZsX6jJ/BysOzVuLgeGLNEeoaxEHYWG3AFs7iDZPHAP8QW6kRV
+         iL6+gGXCc87aaQFZaqe7/HlkzKUUoqEGkq2TIZE5wxt5ZFCrrcB8L3Wqblw3BPXtW6li
+         cFbLMSNB5Varen1v2q2ipEu4LXUq+pyMEtqml0SpQOsaKY0q2pluxpNV3Fosg7gguNWi
+         Tp7YMGUZxTkcB7LCN+QWVNjrgPSRN9GcVZecUsNg4236XHRKLq/5nyNfpxQ93yghQsxI
+         rVvAvQhcJgTwnaEkKQalpculMFHCGmzYW/AuBmLDUbUkUbKZQbH2iSmO8TWENVZe8+pS
+         Zw5Q==
+X-Gm-Message-State: AOAM533C4svT4JVwoqvCaAty6kJTtUL2NSVzhXgddbP0ZkpGjmTegSMm
+        sHVPnQu0fDpEbIIL4QgsumM=
+X-Google-Smtp-Source: ABdhPJw8K3ON7+/hoX6qk/Za4IPaUHbJhwhY3ni0IcO1UgOtYFPXy2iP4eGGTD38T3JeIaF4huiDLQ==
+X-Received: by 2002:a05:6402:2920:: with SMTP id ee32mr74431789edb.136.1636302593735;
+        Sun, 07 Nov 2021 08:29:53 -0800 (PST)
+Received: from localhost.localdomain ([2a02:ab88:109:9f0:f6a6:7fbe:807a:e1cc])
+        by smtp.googlemail.com with ESMTPSA id hq37sm7195270ejc.116.2021.11.07.08.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Nov 2021 08:29:52 -0800 (PST)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 0/5] Remove unncessary linked list from aspm.c
+Date:   Sun,  7 Nov 2021 17:29:36 +0100
+Message-Id: <20211107162941.1196-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2021-11-05 at 19:52 -0700, Dan Williams wrote:
-> [ add James and Martin in case they see anything here that collides
-> with the SES driver ]
+An extra linked list is created inside aspm.c to keep track of devices
+on which the link state was enabled. However, it is possible to access
+them via existing device lists.
 
-It's a bit difficult to tell among all the quoting.  However, I will
-say that if you want to play with drivers/misc/enclosure.c you need at
-least to cc the maintainer and preferably linux-scsi because they're
-currently the only consumer ... and the enterprise does a lot with ses.
+This series remove the extra linked list and other related members of
+the struct pcie_link_state: `root`, `parent` and `downstream`. All
+these are now either calculated or obtained directly when needed.
 
-James
+VERSION CHANGES:
+ -v4:
+	- Fix uninitialised variable.
 
+ -v3:
+»       - Rename pci_get_parent() to pcie_upstream_link() and improve
+»         the logic based previous review.
+»       - Improve the algorithm to iterate through the devices
+
+ - v2:
+»       - Avoid using BUG_ON()
+»       - Create helper function pci_get_parent()
+»       - Fix a bug from the previous version
+
+Bolarinwa O. Saheed (4):
+  PCI/ASPM: Remove struct pcie_link_state.parent
+  PCI/ASPM: Remove struct pcie_link_state.root
+  PCI/ASPM: Remove struct pcie_link_state.downstream
+  PCI/ASPM: Remove unncessary linked list from aspm.c
+
+Saheed O. Bolarinwa (1):
+  PCI: Handle NULL value inside pci_upstream_bridge()
+
+ drivers/pci/pcie/aspm.c | 153 ++++++++++++++++++++++++----------------
+ include/linux/pci.h     |   3 +
+ 2 files changed, 95 insertions(+), 61 deletions(-)
+
+-- 
+2.20.1
 
