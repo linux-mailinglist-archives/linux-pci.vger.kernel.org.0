@@ -2,161 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC7FD4471FE
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 08:21:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D250544722E
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 09:33:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbhKGHUs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Nov 2021 02:20:48 -0500
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:54007 "EHLO
+        id S235232AbhKGIf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Nov 2021 03:35:56 -0500
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:63607 "EHLO
         smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234859AbhKGHUr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 02:20:47 -0500
-Received: from [192.168.1.18] ([86.243.171.122])
+        with ESMTP id S235229AbhKGIf4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 03:35:56 -0500
+Received: from pop-os.home ([86.243.171.122])
         by smtp.orange.fr with ESMTPA
-        id jcRHmifHtUujjjcRHmXkjy; Sun, 07 Nov 2021 08:18:04 +0100
-X-ME-Helo: [192.168.1.18]
+        id jdbymh7FXsoWhjdbym9Yyc; Sun, 07 Nov 2021 09:33:12 +0100
+X-ME-Helo: pop-os.home
 X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Sun, 07 Nov 2021 08:18:04 +0100
+X-ME-Date: Sun, 07 Nov 2021 09:33:12 +0100
 X-ME-IP: 86.243.171.122
-Subject: Re: [PATCH] PCI: xgene-msi: Use bitmap_zalloc() when applicable
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-Cc:     toan@os.amperecomputing.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <32f3bc1fbfbd6ee0815e565012904758ca9eff7e.1635019243.git.christophe.jaillet@wanadoo.fr>
- <YYb1RXjnXSV8xF/0@rocinante>
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <bd57f9db-e1a5-c2a6-3523-b3c0ad086759@wanadoo.fr>
-Date:   Sun, 7 Nov 2021 08:18:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+To:     nsaenz@kernel.org, jim2101024@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] PCI: brcmstb: Declare a bitmap as a bitmap, not as a plain 'unsigned long'
+Date:   Sun,  7 Nov 2021 09:32:58 +0100
+Message-Id: <e6d9da2112aab2939d1507b90962d07bfd735b4c.1636273671.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <YYb1RXjnXSV8xF/0@rocinante>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le 06/11/2021 à 22:36, Krzysztof Wilczyński a écrit :
-> Hi Christophe!
-> 
->> 'xgene_msi->bitmap' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
->> improve the semantic and avoid some open-coded arithmetic in allocator
->> arguments.
->>
->> Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
->> consistency.
-> 
-> I believe, after having a brief look, that we might have a few other
-> candidates that we could also update:
-> 
->    drivers/pci/controller/dwc/pcie-designware-ep.c
->    717:	ep->ib_window_map = devm_kcalloc(dev,
->    724:	ep->ob_window_map = devm_kcalloc(dev,
->    
->    drivers/pci/controller/pcie-iproc-msi.c
->    592:	msi->bitmap = devm_kcalloc(pcie->dev, BITS_TO_LONGS(msi->nr_msi_vecs),
->    
->    drivers/pci/controller/pcie-xilinx-nwl.c
->    470:	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
->    567:	msi->bitmap = kzalloc(size, GFP_KERNEL);
->    637:	msi->bitmap = NULL;
->    
->    drivers/pci/controller/pcie-iproc-msi.c
->    262:	hwirq = bitmap_find_free_region(msi->bitmap, msi->nr_msi_vecs,
->    290:	bitmap_release_region(msi->bitmap, hwirq,
->    
->    drivers/pci/controller/pcie-xilinx-nwl.c
->    470:	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
->    494:	bitmap_release_region(msi->bitmap, data->hwirq,
->    
->    drivers/pci/controller/pcie-brcmstb.c
->    537:	hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
->    546:	bitmap_release_region(&msi->used, hwirq, 0);
->    
->    drivers/pci/controller/pcie-xilinx.c
->    240:	hwirq = bitmap_find_free_region(port->msi_map, XILINX_NUM_MSI_IRQS, order_base_2(nr_irqs));
->    263:	bitmap_release_region(port->msi_map, d->hwirq, order_base_2(nr_irqs));
-> 
-> Some of the above could also potentially benefit from being converted to
-> use the DECLARE_BITMAP() macro to create the bitmap that is then being
-> embedded into some struct used to capture details and state, rather than
-> store a pointer to later allocate memory dynamically.  Some controller
-> drivers already do this, so we could convert rest where appropriate.
-> 
-> What do you think?
+The 'used' field of 'struct brcm_msi' is used as a bitmap. So it should
+be declared as so (i.e. unsigned long *).
 
-Hi,
+This fixes an harmless Coverity warning about array vs singleton usage.
 
-my first goal was to simplify code that was not already spotted by a 
-cocci script proposed by Joe Perches (see [1]).
+This bitmap can be BRCM_INT_PCI_MSI_LEGACY_NR or BRCM_INT_PCI_MSI_NR long.
+So, while at it, document it, should it help someone in the future.
 
-I'll give a closer look at the opportunities spotted by Joe if they have 
-not already been fixed in the meantime.
+Addresses-Coverity: "Out-of-bounds access (ARRAY_VS_SINGLETON)"
+Suggested-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+The BUILD_BUG_ON is surely a bit to much of paranoia :)
 
+I'm also not really pleased about the layout of the DECLARE_BITMAP. This
+looks odd, but I couldn't find something nicer :(
+---
+ drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Concerning the use of DECLARE_BITMAP instead of alloc/free memory, it 
-can be more tricky to spot it. Will try to give a look at it.
-
-
-[1]: 
-https://lore.kernel.org/kernel-janitors/994b268f-ea33-bf82-96ab-c20057ba4930@wanadoo.fr/
-
-> 
-> We also have this nudge from Coverity that we could fix, as per:
-> 
->    532 static int brcm_msi_alloc(struct brcm_msi *msi)
->    533 {
->    534         int hwirq;
->    535
->    536         mutex_lock(&msi->lock);
->        1. address_of: Taking address with &msi->used yields a singleton pointer.
->        CID 1468487 (#1 of 1): Out-of-bounds access (ARRAY_VS_SINGLETON)2. callee_ptr_arith: Passing &msi->used to function bitmap_find_free_region which uses it as an array. This might corrupt or misinterpret adjacent memory locations. [show details]
->    537         hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
->    538         mutex_unlock(&msi->lock);
->    539
->    540         return hwirq;
->    541 }
->    
->    543 static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
->    544 {
->    545         mutex_lock(&msi->lock);
->        1. address_of: Taking address with &msi->used yields a singleton pointer.
->        CID 1468424 (#1 of 1): Out-of-bounds access (ARRAY_VS_SINGLETON)2. callee_ptr_arith: Passing &msi->used to function bitmap_release_region which uses it as an array. This might corrupt or misinterpret adjacent memory locations. [show details]
->    546         bitmap_release_region(&msi->used, hwirq, 0);
->    547         mutex_unlock(&msi->lock);
->    548 }
-> 
-> We could look at addressing this too at the same time.
-
-I'll give it a look.
-
-> 
-> [...]
->> -	int size = BITS_TO_LONGS(NR_MSI_VEC) * sizeof(long);
->> -
->> -	xgene_msi->bitmap = kzalloc(size, GFP_KERNEL);
->> +	xgene_msi->bitmap = bitmap_zalloc(NR_MSI_VEC, GFP_KERNEL);
->>   	if (!xgene_msi->bitmap)
->>   		return -ENOMEM;
->>   
->> @@ -360,7 +358,7 @@ static int xgene_msi_remove(struct platform_device *pdev)
->>   
->>   	kfree(msi->msi_groups);
->>   
->> -	kfree(msi->bitmap);
->> +	bitmap_free(msi->bitmap);
->>   	msi->bitmap = NULL;
->>   
->>   	xgene_free_domains(msi);
-> 
-> Thank you!
-> 
-> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> 
-> 	Krzysztof
-> 
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 1fc7bd49a7ad..15d394ac7478 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -266,8 +266,9 @@ struct brcm_msi {
+ 	struct mutex		lock; /* guards the alloc/free operations */
+ 	u64			target_addr;
+ 	int			irq;
+-	/* used indicates which MSI interrupts have been alloc'd */
+-	unsigned long		used;
++	/* Used indicates which MSI interrupts have been alloc'd. 'nr' bellow is
++	   the real size of the bitmap. It depends on the chip. */
++	DECLARE_BITMAP		(used, BRCM_INT_PCI_MSI_NR);
+ 	bool			legacy;
+ 	/* Some chips have MSIs in bits [31..24] of a shared register. */
+ 	int			legacy_shift;
+@@ -534,7 +535,7 @@ static int brcm_msi_alloc(struct brcm_msi *msi)
+ 	int hwirq;
+ 
+ 	mutex_lock(&msi->lock);
+-	hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
++	hwirq = bitmap_find_free_region(msi->used, msi->nr, 0);
+ 	mutex_unlock(&msi->lock);
+ 
+ 	return hwirq;
+@@ -543,7 +544,7 @@ static int brcm_msi_alloc(struct brcm_msi *msi)
+ static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
+ {
+ 	mutex_lock(&msi->lock);
+-	bitmap_release_region(&msi->used, hwirq, 0);
++	bitmap_release_region(msi->used, hwirq, 0);
+ 	mutex_unlock(&msi->lock);
+ }
+ 
+@@ -661,6 +662,12 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
+ 	msi->irq = irq;
+ 	msi->legacy = pcie->hw_rev < BRCM_PCIE_HW_REV_33;
+ 
++	/*
++	 * Sanity check to make sure that the 'used' bitmap in struct brcm_msi
++	 * is large enough.
++	 */
++	BUILD_BUG_ON(BRCM_INT_PCI_MSI_LEGACY_NR > BRCM_INT_PCI_MSI_NR);
++
+ 	if (msi->legacy) {
+ 		msi->intr_base = msi->base + PCIE_INTR2_CPU_BASE;
+ 		msi->nr = BRCM_INT_PCI_MSI_LEGACY_NR;
+-- 
+2.30.2
 
