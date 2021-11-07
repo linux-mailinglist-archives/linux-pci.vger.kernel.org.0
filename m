@@ -2,80 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5979A447129
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 02:37:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8561E4471F3
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Nov 2021 07:53:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbhKGBj5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Nov 2021 21:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbhKGBj4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Nov 2021 21:39:56 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1234::107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F2AC061570;
-        Sat,  6 Nov 2021 18:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=jQLZBi+wX3/W9cTFeeh0GrI0DtRr7qittIM2lkSiYRE=; b=e4J5OgY4qYdfOXmWO0jO+y/QDP
-        Jj9VmrSJzhT+P1fq2sdTGWRxa0kTqlnOKd2dymgU3efKxtepTUZWXB4vdFSFFd2hT+hhkOR24J615
-        GjMtnHO5fpzCecZRRFBdo4Aj65Pgbq2bPt06pQkXy5UZMZGJ3GrrrxBe/vWp0+R1+xuUL9DvM7/W7
-        x8jOGnTNyMGYIviwBCN4Abd3yO8pbUieHxDBUZZKG7RKfuMMRVQq0iLw0FtSZHXowJBdGOwtJ787R
-        vTR8qi/tgQ4uNUNz3zmb7lqstPOTyhN9qY9JrYsR2Khy/kiqQjKGJtFquVUcp/By28VD3FIaWnkoU
-        ReStzMLw==;
-Received: from [2601:1c0:6280:3f0::aa0b] (helo=merlin.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mjX7O-008bAC-Cz; Sun, 07 Nov 2021 01:37:11 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kernel test robot <lkp@intel.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] PCI: rcar-host: adjust dependencies for ARM builds
-Date:   Sat,  6 Nov 2021 18:37:03 -0700
-Message-Id: <20211107013703.19995-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.31.1
+        id S234821AbhKGGza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Nov 2021 01:55:30 -0500
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:53144 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234812AbhKGGz3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 01:55:29 -0500
+Received: from [192.168.1.18] ([86.243.171.122])
+        by smtp.orange.fr with ESMTPA
+        id jc2mmiWjzUujjjc2nmXikG; Sun, 07 Nov 2021 07:52:46 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 07 Nov 2021 07:52:46 +0100
+X-ME-IP: 86.243.171.122
+Subject: Re: [PATCH] PCI: endpoint: Use 'bitmap_zalloc()' when applicable
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <01eba3c86137eb348f8cce69f500222bd7c72c57.1635058203.git.christophe.jaillet@wanadoo.fr>
+ <YYb7NwlYcmsdw8AR@rocinante>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <8123c76f-3887-09ad-17ec-a160f63b9f86@wanadoo.fr>
+Date:   Sun, 7 Nov 2021 07:52:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
+In-Reply-To: <YYb7NwlYcmsdw8AR@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On ARCH=arm COMPILE_TEST builds, pcie-rcar-host.c uses __clk_is_enable(),
-so for ARM builds, it should also depend on COMMON_CLK.
+Le 06/11/2021 à 23:01, Krzysztof Wilczyński a écrit :
+> Hi Christophe,
+> 
+>> 'mem->bitmap' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
+>> improve the semantic and avoid some open-coded arithmetic in allocator
+>> arguments.
+>>
+>> Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
+>> consistency.
+> 
+> Thank you!
+> 
+>> Finally, while at it, axe the useless 'bitmap' variable and use
+>> 'mem->bitmap' directly.
+> 
+> Personally, I would keep the bitmap variable - this might be what Bjorn
+> would also prefer, as I believe he prefers not to store what is a "failed"
+> state of sorts in a target variable directly, if memory serves me right.
 
-Fixes this build error:
-arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
-pcie-rcar-host.c:(.text+0xdfc): undefined reference to `__clk_is_enabled'
+Hi,
 
-Fixes: a18f4b6ea50b ("PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/202111070525.sBSwmOYY-lkp@intel.com
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
-Fixes: tag might need some help...
+mostly a mater of taste.
+On another similar patch I got the answer in [1] :).
 
- drivers/pci/controller/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+'mem' is kzalloc'ed, so in case of failure, here we are just replacing 
+NULL by NULL.
 
---- linux-next-20211106.orig/drivers/pci/controller/Kconfig
-+++ linux-next-20211106/drivers/pci/controller/Kconfig
-@@ -66,6 +66,7 @@ config PCI_RCAR_GEN2
- config PCIE_RCAR_HOST
- 	bool "Renesas R-Car PCIe host controller"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on !ARM || (ARM && COMMON_CLK)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
- 	  Say Y here if you want PCIe controller support on R-Car SoCs in host
+Let me know the preferred style here and if I should send a V2.
+
+CJ
+
+[1]; https://lore.kernel.org/kernel-janitors/20211028164437.GA4045120@p14s/
+
+> 
+> [...]
+>> @@ -49,10 +49,8 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+>>   			   unsigned int num_windows)
+>>   {
+>>   	struct pci_epc_mem *mem = NULL;
+>> -	unsigned long *bitmap = NULL;
+>>   	unsigned int page_shift;
+>>   	size_t page_size;
+>> -	int bitmap_size;
+>>   	int pages;
+>>   	int ret;
+>>   	int i;
+>> @@ -72,7 +70,6 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+>>   			page_size = PAGE_SIZE;
+>>   		page_shift = ilog2(page_size);
+>>   		pages = windows[i].size >> page_shift;
+>> -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>>   
+>>   		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+>>   		if (!mem) {
+>> @@ -81,8 +78,8 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+>>   			goto err_mem;
+>>   		}
+>>   
+>> -		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+>> -		if (!bitmap) {
+>> +		mem->bitmap = bitmap_zalloc(pages, GFP_KERNEL);
+>> +		if (!mem->bitmap) {
+>>   			ret = -ENOMEM;
+>>   			kfree(mem);
+>>   			i--;
+>> @@ -92,7 +89,6 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+>>   		mem->window.phys_base = windows[i].phys_base;
+>>   		mem->window.size = windows[i].size;
+>>   		mem->window.page_size = page_size;
+>> -		mem->bitmap = bitmap;
+>>   		mem->pages = pages;
+>>   		mutex_init(&mem->lock);
+>>   		epc->windows[i] = mem;
+>> @@ -106,7 +102,7 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+>>   err_mem:
+>>   	for (; i >= 0; i--) {
+>>   		mem = epc->windows[i];
+>> -		kfree(mem->bitmap);
+>> +		bitmap_free(mem->bitmap);
+>>   		kfree(mem);
+>>   	}
+>>   	kfree(epc->windows);
+>> @@ -145,7 +141,7 @@ void pci_epc_mem_exit(struct pci_epc *epc)
+>>   
+>>   	for (i = 0; i < epc->num_windows; i++) {
+>>   		mem = epc->windows[i];
+>> -		kfree(mem->bitmap);
+>> +		bitmap_free(mem->bitmap);
+>>   		kfree(mem);
+>>   	}
+>>   	kfree(epc->windows);
+> 
+> Thank you!
+> 
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+> 	Krzysztof
+> 
+
