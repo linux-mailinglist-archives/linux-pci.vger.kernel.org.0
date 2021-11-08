@@ -2,187 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAFC5448033
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 14:22:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3499F44820B
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 15:45:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239890AbhKHNYn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 08:24:43 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4070 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239905AbhKHNYk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 08:24:40 -0500
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hns8j2jJ6z685Z9;
-        Mon,  8 Nov 2021 21:17:09 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Mon, 8 Nov 2021 14:21:53 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 8 Nov
- 2021 13:21:52 +0000
-Date:   Mon, 8 Nov 2021 13:21:51 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
+        id S240584AbhKHOrw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 09:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240568AbhKHOrv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 09:47:51 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05AF5C061764
+        for <linux-pci@vger.kernel.org>; Mon,  8 Nov 2021 06:45:07 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id bu18so36872299lfb.0
+        for <linux-pci@vger.kernel.org>; Mon, 08 Nov 2021 06:45:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=o8ACBTFUs1u+Tu+HSqZ/Bgtc3Mxdv1DOZfd1HtE9MhI=;
+        b=SSMxAUf89rUnNVbNGy3A336IliPjR+Nql1b6FMZQ3CAZAPpyiWnTasF0SnwZXgmc1y
+         BqbNPEbtGA99ppTCaKfBe89qdo0lA/IduTOv4VSHUD8jdmS5ur5ig5kmaE0Nx/uaMvqp
+         kNWhbwFpv4ozrVRf/1IWb7YdNwcBO1HQE2ii7ChI+tlnP86Yj7MxEN0Fe5tkdJJn++qm
+         KdixhE51YAtCPJF1p9jcDxFgtq8vSQ/vRTWOBeN0v8lEd0O0BxHPje9OJMxpE+5B5fOo
+         huY0AOns10N09ELwQXu4jbcwD1g0DXpMv87v/nUS1HrouSwNHFQNDOybGK9W8+qNEivA
+         avsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=o8ACBTFUs1u+Tu+HSqZ/Bgtc3Mxdv1DOZfd1HtE9MhI=;
+        b=rFR21s3gyyGEGVbnCO681ATfz9trxzBU6amkithozY2FFAYIscwyQQxO0nibIggTOa
+         vmrFeQn7D7mC5rfV4/CU+0rMK1DJp2Bv7Xf18FlVJiasrELmkZvRwjVFlUitLwZbk7BR
+         8bQpHlvu6CF2sj+pzLIvqUP6N+hHksJ1s7b+laR6qAgH1qtVmzA4TZk1FUZipMMPWbzo
+         MRbHehfaydHeEnoJH5VYdSAIM0CDnP3olN23oPHvabmVcu8KohlZiTI0sQS9ANzLmgHB
+         B0j50YXTUsgg1q4XeEb237xPhUbSTVIFe6U6Z20s+dNkTiXcPMXQgfYzCTPDh2N4KBKd
+         wNYA==
+X-Gm-Message-State: AOAM5316SWl8alTZo0zmJfozFZhZ01eTkeV6dYd0s6PEnV52LYo1l4xI
+        VEC+67BRkHb+Mu2GSoYzZ3NlYA==
+X-Google-Smtp-Source: ABdhPJzyLniPUCEsE0z/ygrYUi5HbWdGlisrZNzen5mCC1grWOhH8f4dxQ7pTSdWId8QL2qzkXju6w==
+X-Received: by 2002:a19:c706:: with SMTP id x6mr18874044lff.113.1636382705340;
+        Mon, 08 Nov 2021 06:45:05 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id o23sm1572844ljg.70.2021.11.08.06.45.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Nov 2021 06:45:04 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E8C4C1034BA; Mon,  8 Nov 2021 17:45:05 +0300 (+03)
+Date:   Mon, 8 Nov 2021 17:45:05 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20211108132151.0000319c@Huawei.com>
-In-Reply-To: <20211105235056.3711389-5-ira.weiny@intel.com>
-References: <20211105235056.3711389-1-ira.weiny@intel.com>
-        <20211105235056.3711389-5-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        Richard Henderson <rth@twiddle.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        James E J Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter H Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v5 03/16] x86/tdx: Exclude Shared bit from physical_mask
+Message-ID: <20211108144505.fz3p4fw4q2efj32r@box.shutemov.name>
+References: <20211009003711.1390019-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20211009003711.1390019-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <YYWsJFP31vpCAVFg@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YYWsJFP31vpCAVFg@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 5 Nov 2021 16:50:55 -0700
-<ira.weiny@intel.com> wrote:
-
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, Nov 05, 2021 at 10:11:48PM +0000, Sean Christopherson wrote:
+> On Fri, Oct 08, 2021, Kuppuswamy Sathyanarayanan wrote:
+> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > 
+> > Just like MKTME, TDX reassigns bits of the physical address for
+> > metadata.  MKTME used several bits for an encryption KeyID. TDX
+> > uses a single bit in guests to communicate whether a physical page
+> > should be protected by TDX as private memory (bit set to 0) or
+> > unprotected and shared with the VMM (bit set to 1).
+> > 
+> > Add a helper, tdx_shared_mask() to generate the mask.  The processor
+> > enumerates its physical address width to include the shared bit, which
+> > means it gets included in __PHYSICAL_MASK by default.
 > 
-> Read CDAT raw table data from the cxl_mem state object.  Currently this
-> is only supported by a PCI CXL object through a DOE mailbox which supports
-> CDAT.  But any cxl_mem type object can provide this data later if need
-> be.  For example for testing.
+> This is incorrect.  The shared bit _may_ be a legal PA bit, but AIUI it's not a
+> hard requirement.
+
+Good point, will fix.
+
+> > Remove the shared mask from 'physical_mask' since any bits in
+> > tdx_shared_mask() are not used for physical addresses in page table
+> > entries.
 > 
-> Cache this data for later parsing.  Provide a sysfs binary attribute to
-> allow dumping of the CDAT.
+> ...
 > 
-> Binary dumping is modeled on /sys/firmware/ACPI/tables/
+> > @@ -94,6 +100,9 @@ static void tdx_get_info(void)
+> >  
+> >  	td_info.gpa_width = out.rcx & GENMASK(5, 0);
+> >  	td_info.attributes = out.rdx;
+> > +
+> > +	/* Exclude Shared bit from the __PHYSICAL_MASK */
+> > +	physical_mask &= ~tdx_shared_mask();
 > 
-> The ability to dump this table will be very useful for emulation of real
-> devices once they become available as QEMU CXL type 3 device emulation will
-> be able to load this file in.
+> This is insufficient, though it's not really the fault of this patch, the specs
+> themselves botch this whole thing.
 > 
-> This does not support table updates at runtime. It will always provide
-> whatever was there when first cached. Handling of table updates can be
-> implemented later.
+> The TDX Module spec explicitly states that GPAs above GPAW are considered reserved.
 > 
-> Once there are more users, this code can move out to driver/cxl/cdat.c
-> or similar.
+>     10.11.1. GPAW-Relate EPT Violations
+>     GPA bits higher than the SHARED bit are considered reserved and must be 0.
+>     Address translation with any of the reserved bits set to 1 cause a #PF with
+>     PFEC (Page Fault Error Code) RSVD bit set.
 > 
-> Finally create a complete list of DOE defines within cdat.h for anyone
-> wishing to decode the CDAT table.
+> But this is contradicted by the architectural extensions spec, which states that
+> a GPA that satisfies MAXPA >= GPA > GPAW "can" cause an EPT violation, not #PF.
+> Note, this section also appears to have a bug, as it states that GPA bit 47 is
+> both the SHARED bit and reserved.  I assume that blurb is intended to clarify
+> that bit 47 _would_ be reserved if it weren't the SHARED bit, but because it's
+> the shared bit it's ok to access.
 > 
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Hi Ira,
-
-A few other comments inline, some of which are really updates of
-earlier comments now I see how it is fitting together.
-
-Jonathan
-
+>     1.4.2
+>     Guest Physical Address Translation
+>     If the CPU's maximum physical-address width (MAXPA) is 52 and the guest physical
+>     address width is configured to be 48, accesses with GPA bits 51:48 not all being
+>     0 can cause an EPT-violation, where such EPT-violations are not mutated to #VE,
+>     even if the “EPT-violations #VE” execution control is 1.
 > 
-> ---
-> Changes from V4:
-> 	Split this into it's own patch
-> 	Rearchitect this such that the memdev driver calls into the DOE
-> 	driver via the cxl_mem state object.  This allows CDAT data to
-> 	come from any type of cxl_mem object not just PCI DOE.
+>     If the CPU's physical-address width (MAXPA) is less than 48 and the SHARED bit
+>     is configured to be in bit position 47, GPA bit 47 would be reserved, and GPA
+>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                    
+>     bits 46:MAXPA would be reserved. On such CPUs, setting bits 51:48 or bits
+>     46:MAXPA in any paging structure can cause a reserved bit page fault on access.
+> 
+> The Module spec also calls out that the effective GPA is not to be confused with
+> MAXPA, which combined with the above blurb about MAXPA < GPAW, suggests that MAXPA
+> is enumerated separately by design so that the guest doesn't incorrectly think
+> 46:MAXPA are usable.  But that is problematic for the case where MAXPA > GPAW.
+> 
+>     The effective GPA width (in bits) for this TD (do not confuse with MAXPA).
+>     SHARED bit is at GPA bit GPAW-1.
+> 
+> I can't find the exact reference, but the TDX module always passes through host's
+> MAXPHYADDR.  As it pertains to this patch, just doing
+> 
+> 	physical_mask &= ~tdx_shared_mask()
+> 
+> means that a guest running with GPAW=0 and MAXPHYADDR>48 will have a discontiguous
+> physical_mask, and could access "reserved" memory.  If the VMM defines legal memory
+> with bits [MAXPHYADDR:48]!=0, explosions may ensue.  That's arguably a VMM bug, but
+> given that the VMM is untrusted I think the guest should be paranoid when handling
+> the SHARED bit.  I also don't know that the kernel will play nice with a discontiguous
+> mask.
 
-Ah.  Is this to allow mocking? Or is there another architected source
-of this information that I've missed?
+I expect it to be buggy.
 
-> 	Rebase on new struct cxl_dev_state
-> ---
+> Specs aside, unless Intel makes a hardware change to treat GPAW as guest.MAXPHYADDR,
+> or the TDX Module emulates on EPT violations to inject #PF(RSVD) when appropriate,
+> this mess isn't going to be truly fixed from the guest perspective.
+> 
+> So, IMO all bits >= GPAW should be cleared, and the kernel should warn and/or
+> refuse to boot if the host has defined legal memory in that range.
 
-...
+Right. But only >= GPAW-1 as shared bit is the MSB within GPAW:
 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index df524b74f1d2..086532a42480 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -11,6 +11,7 @@
->  #include "cxlmem.h"
->  #include "pci.h"
->  #include "cxl.h"
-> +#include "cdat.h"
->  
->  /**
->   * DOC: cxl pci
-> @@ -575,17 +576,106 @@ static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
->  		if (rc)
->  			return rc;
->  
-> -		if (device_attach(&adev->dev) != 1)
-> +		if (device_attach(&adev->dev) != 1) {
->  			dev_err(&adev->dev,
->  				"Failed to attach a driver to DOE device %d\n",
->  				adev->id);
-> +			goto next;
-> +		}
-> +
-> +		if (pci_doe_supports_prot(new_dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
-> +			cxlds->cdat_doe = new_dev;
+	physical_mask &= GENMASK_ULL(td_info.gpa_width - 2, 0);
 
-Ah. If we did try to make this block generic, we'd then need a look
-up function to call after the generic part.  I guess it is getting more
-complex so maybe not having it generic is the right choice for now.
+'2' here smells bad, but well...
 
-Also, this explains why you passed cxlds in.  So ignore that comment on
-the previous.
+Given that physical_mask is now contiguous we can truncate anything from
+e820 that cannot be addressed with adjusted __PHYSICAL_MASK:
 
->  
-> +next:
->  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
->  	}
->  
->  	return 0;
->  }
->  
-> +#define CDAT_DOE_REQ(entry_handle)					\
-> +	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
-> +		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
-> +	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_TABLE_TYPE,			\
-> +		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
-> +	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
-> +
-> +static int cxl_cdat_get_length(struct cxl_dev_state *cxlds, size_t *length)
-> +{
-> +	struct pci_doe_dev *doe_dev = cxlds->cdat_doe;
-> +	u32 cdat_request_pl = CDAT_DOE_REQ(0);
-> +	u32 cdat_response_pl[32];
-> +	struct pci_doe_exchange ex = {
-> +		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,
-> +		.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS,
-> +		.request_pl = &cdat_request_pl,
-> +		.request_pl_sz = sizeof(cdat_request_pl),
-> +		.response_pl = cdat_response_pl,
-> +		.response_pl_sz = sizeof(cdat_response_pl),
-> +	};
-> +
-> +	ssize_t rc;
-> +
-> +	rc = pci_doe_exchange_sync(doe_dev, &ex);
-> +	if (rc < 0)
-> +		return rc;
-> +	if (rc < 1)
-> +		return -EIO;
-> +
-> +	*length = cdat_response_pl[1];
-> +	dev_dbg(cxlds->dev, "CDAT length %zu\n", *length);
+iff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index bc0657f0deed..16d57a8769e8 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -833,6 +833,9 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
+ 	unsigned long last_pfn = 0;
+ 	unsigned long max_arch_pfn = MAX_ARCH_PFN;
 
-Probably not useful any more... 
++	if (max_arch_pfn > PHYS_PFN(__PHYSICAL_MASK + 1))
++		max_arch_pfn = PHYS_PFN(__PHYSICAL_MASK + 1);
++
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		struct e820_entry *entry = &e820_table->entries[i];
+ 		unsigned long start_pfn;
 
-> +	return 0;
-> +}
-> +
+Does it look reasonable?
 
+> FWIW, from a VMM perspective, I'm pretty sure the only sane approach is to force
+> GPAW=1, a.k.a. SHARED bit == 51, if host.MAXPHYADDR>=49.  But on the guest side,
+> I think we should be paranoid.
+
+-- 
+ Kirill A. Shutemov
