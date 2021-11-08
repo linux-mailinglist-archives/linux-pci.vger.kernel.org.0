@@ -2,61 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA053447B0D
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 08:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A72447C42
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 09:50:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237904AbhKHHak (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 02:30:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237821AbhKHHaT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 02:30:19 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1B9C06120B
-        for <linux-pci@vger.kernel.org>; Sun,  7 Nov 2021 23:27:33 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id x15so27361654edv.1
-        for <linux-pci@vger.kernel.org>; Sun, 07 Nov 2021 23:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
-        b=lohGAXI96njXpZ5r6vgYlUkp2V68iRMzDV25uaLpmT1WmpX2h0YNNnPekuKOrJR7Hh
-         rCcmOUgGjsAkeHEvvQCkM6ux+TyqL0CqGbf0IPfL8V+eIKLF7r3X9QWFup/xVl2xV9qZ
-         NGc0LQ7JpvXhk+YTEHFaFd2QnuENE8mCWi0drmIQkANv1zf9DM6Bfjx/yF/A/b9RtJFU
-         CT2DuJeqJ7evq+rJKQgmUSCIg2GjkqvLZlnb0ekZ1/3u7apFf2k73Uqo2u8YZ8hKmOIw
-         ZGA3M8LZJFGSmW3P+nQyYMCLCtL13s+WCsnPOmCuuFd5xieMsN0vbLhindKIE3OfrP6U
-         BcYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
-        b=MYwqIU/OnmUpgV+PlFyGX7PZJNN3O2Goc/gdBRLrlApNBo3qr4u6O/23qpUayiL9Va
-         EJ+GpYr39Y0KEl05/T1U0fGL4eKQWSqYXWmprIBp7JyM9p8oF5G4BZ2jalidpBb8sPag
-         iIC/k/it/DbU2YJZ4vYrVS96dveS8nCelxblfW564u5ch4bggo8mIakbv/nSHJ462Fgv
-         C13aHLSSH4A2QBoTCEPK6xjMx09FYo1jd+QIlIQeA6+AltZX7xBzZ+ukzWDE8rZfbrGP
-         rycL5YZ7NoZdkEyCSq2oDqhj6tRQ08JwOZW++IEEkjjrUYkXBwstQzPFIbADd0mPEIFn
-         eIEg==
-X-Gm-Message-State: AOAM530BhGcsgPByjXthrPN1Vr1d9RFJD9uAWiTyw454HfWodBmcAJH7
-        SgdIJ6FFfcbvcv0UG0iLfgSM+WucHpFjDqvWAGVbkW5uI0E=
-X-Google-Smtp-Source: ABdhPJwiROS9SRRNMvDLES4YHo6uT5d60ZUwIiFmBNAm9OxEfLgMU9cee9PqVQWim0XNVifN/Rk5vWcyMQ7rvBndYNE=
-X-Received: by 2002:a05:6402:557:: with SMTP id i23mr66769092edx.176.1636356441798;
- Sun, 07 Nov 2021 23:27:21 -0800 (PST)
+        id S238177AbhKHIxi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 8 Nov 2021 03:53:38 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58488 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238169AbhKHIxh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 03:53:37 -0500
+Received: from [77.244.183.192] (port=62110 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1mk0Me-009nAD-9b; Mon, 08 Nov 2021 09:50:52 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: RFC: Extend probing of native PCIe controllers
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20211022183808.jdeo7vntnagqkg7g@pali>
+Message-ID: <2744c8e0-5b69-ba1a-f750-6b5f8ad07998@lucaceresoli.net>
+Date:   Mon, 8 Nov 2021 09:50:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Received: by 2002:a50:2501:0:0:0:0:0 with HTTP; Sun, 7 Nov 2021 23:27:21 -0800 (PST)
-Reply-To: mariaschaefler@gmx.com
-From:   Maria Schaefler <ziskoraa@gmail.com>
-Date:   Mon, 8 Nov 2021 07:27:21 +0000
-Message-ID: <CAJh0FjiFL7uihMBL6ckYO8FJ6tnzM+tBivU2c60yDbG14LZLeA@mail.gmail.com>
-Subject: MY HEART CHOOSE YOU.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211022183808.jdeo7vntnagqkg7g@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Given my current state of health, I have decided to donate what I
-inherited from my late husband to you to help the poor and needy. I am
-Mrs Maria Schaefler,a 57years old dying woman. I was diagnosed for
-cancer about 2 years ago and I have few months to live according to
-medical experts. Email me for my directives
+Hi Pali,
+
+On 22/10/21 20:38, Pali Rohár wrote:
+> Hello!
+> 
+> In this email I'm describing how I see that probing of native PCIe
+> controller drivers is implemented, how it should be implemented and how
+> to extend / simplify core code for controller drivers.
+> 
+> 
+> Native PCIe controller drivers needs to fill struct pci_host_bridge and
+> then call pci_host_probe(). Function pci_host_probe() starts probing and
+> enumerating buses and register PCIe devices to system.
+> 
+> But initialization of PCIe controller and cards on buses (other end of
+> PCIe link) is more complicated and basically every native PCIe
+> controller driver needs to do initialization PCIe link prior calling
+> pci_host_probe(). Steps which controller drivers are doing are de-facto
+> standard steps defined in PCIe base or CEM specification.
+> 
+> The most problematic step is to reset endpoint card and wait until
+> endpoint card start. Reset of endpoint card is done by standard PERST#
+> signal (defined in PCIe CEM spec) and in most cases board export control
+> of this signal to OS via GPIO (few board and drivers have this signal
+> connected to PCIe controller and then PCIe controller has some specific
+> registers to control this signal). Reset via PERST# signal is defined in
+> PCIe CEM and base specs as "PCIe Warm Reset".
+> 
+> As discussed in the following email thread, this PCIe Warm Reset should
+> not depend on PCIe controller as it resets card on the other end of PCIe
+> controller. But currently every native PCIe controller driver does PCIe
+> Warm Reset by its own for randomly chosen time period. There is open
+> question how long should be endpoint card in Warm Reset state:
+> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> 
+> Initialization of PCIe endpoint card is described in PCIe CEM spec in
+> Figure 2-10: Power Up. Other informations are in PCIe base spec in 6.6.1
+> Conventional Reset section.
+> 
+> If I understand specifications correctly then OS initialization steps
+> should be following (please correct me if I'm wrong!):
+> 
+> 1) Put PERST# to low which enter endpoint card into reset state
+> 2) Enable AUX power (3.3V) and wait until is stable
+> 3) Enable main power (12V/3.3V) and wait until is stable
+> 4) Enable refclock and wait until is stable
+> 5) Enable LTSSM on PCIe controller to start link training
+> 6) Put PERST# to high which exit endpoint card from reset state
+> 7) Wait until link training completes
+> 8) Wait another 100ms prior accessing config space of endpoint card
+> 
+> Minimal time period between "after step 3)" and "before step 6)" is T_PVPERL = 100ms
+> Minimal time period between "after step 4)" and "before step 6)" is T_PERSTCLK = 100us
+> 
+> After step 6) is end of Fundamental Reset and PCIe controller needs to
+> be in LTSSM Detect state within 20ms. So enabling it prior putting
+> PERST# to high should achieve it.
+> 
+> Competition of link training is indicated by standard DLLLA bit in Root
+> Port config space. Support for DLLLA bit is optional and is indicated by
+> DLLLARC bit in Root Port config space. Lot of PCIe controllers do not
+> support this standard DLLLA bit, but have their own specific register
+> for it.
+> 
+> Similarly is defined power down of PCIe card in PCIe CEM spec in Figure
+> 2-13: Power Down. If I understand it correctly steps are:
+> 
+> 1) Put endpoint card into D3hot state, so PCIe link goes inactive
+> 2) Put PERST# to low, so endpoint card enters reset state
+> 3) Disable main power (12V/3.3V)
+> 4) Disable refclock
+> 
+> In case of surprise power down, PERST# needs to go low in 500ns.
+> 
+> In PCIe base spec in section 5.2 Link State Power Management is
+> described that preparation for removing the main power source can be
+> done also by sending PCIe PME_Turn_Off Message by Root Complex. IIRC
+> there is no standard way how to send PCIe PME_Turn_Off message.
+> 
+> 
+> 
+> 
+> I see that basically every PCIe controller driver is doing its own
+> implementation of PCIe Warm Reset and waiting until PCIe link is ready
+> prior calling pci_host_probe().
+> 
+> Based on all above details I would like to propose following extending
+> of struct pci_host_bridge and pci_host_probe() function to de-duplicate
+> native PCIe controller driver code:
+> 
+> 1) extend struct pci_host_bridge to provide callbacks for:
+>    * enable / disable main power source
+>    * enable / disable refclock
+>    * enable / disable LTSSM link training (if PCIe link should go into Detect / Polling state)
+>    * enable / disable PERST# signal
+>    * returning boolean if endpoint card is present (physically in PCIe/mPCIe/m.2/... slot)
+>    * returning boolean if link training completed
+>    * sending PCIe PME_Turn_Off message
+> 
+> 2) implement asynchronous initialization of PCIe link and enumeration of
+>    PCIe bus behind the PCIe Root Port from pci_host_probe() based on new
+>    callbacks added in 1)
+>    --> so native PCIe controller drivers do not have to do it manually
+>    --> during this initialization can be done also PCIe Hot Reset
+> 
+> 3) implement PCIe Hot Reset as reset method via PERST# signal and put it
+>    into pci_reset_fn_methods[] array
+> 
+> 4) implement PCIe Cold Reset as reset method via power down / up and put
+>    it into pci_reset_fn_methods[] array
+> 
+> 5) as enabling / disabling power supply and toggling PERST# signal is
+>    implemented via GPIO, add some generic implementation for callback
+>    functions which will use named gpios (e.g. from DT)
+> 
+> This could simplify implementations of native PCIe controller drivers by
+> calling initialization steps in correct order with correct timeouts and
+> drivers do not have to do copy+paste same common code or reimplement it
+> with own constants and macros for timeouts, etc...
+> 
+> Also it should enable access to PCIe Root Port as this device is part of
+> Root Complex and should be available also when link is down or link
+> training was not completed. Currently some PCIe controllers are not
+> registered into system when link is down (e.g. card is disconnected or
+> card has some issue). Which also prevents access to PCIe Root Port
+> device. And in some cases it could speed up boot process as pci
+> controller driver does not have to actively wait for link and let kernel
+> do initialization of other devices.
+> 
+> What do you think about this idea?
+
+I'm afraid I know very little about PCI so I cannot give much valuable
+feedback.
+
+For what I can understand yours seems like a good analysis and the plan
+seems correct: move control from drivers into the core as far as the
+actions to take are standard and leave drivers the duty to implement
+only hardware-specific pieces via function pointers.
+
+We have discussed in detail the PERST# behavior in [0], and I have a
+comment about that.
+
+First, from that discussion it was clear that some drivers drive PERST#
+with an inverted polarity when calling gpiod_set_value() or
+devm_gpiod_get_optional(), which is "fixed" by an inverted polarity
+setting in their device tree.
+
+Second, you say "in most cases board export control of this signal to OS
+via GPIO".
+
+For these two reasons you might consider, in addition to the
+pci_reset_fn_methods[] function to implement PERST#, to add a struct
+gpio_desc * to be filled by the driver and used by the core. If set, it
+would allow the core to assert/deassert PERST# without driver
+intervention. The idea in pseudocode is:
+
+  [in drivers/pci/probe.c]
+
+  if (bridge->perst_gpio) {
+      gpiod_set_value(reset, 1); // assert
+      usleep(...);
+      gpiod_set_value(reset, 0); // deassert
+      usleep(...);
+  } else if (bridge->pci_reset_fn_methods[PERST]) {
+      bridge->pci_reset_fn_methods[PERST]();
+  }
+
+It would make drivers slightly simpler and less error prone.
+
+[0]
+https://lore.kernel.org/linux-arm-kernel/e9ab9c22-f73b-fe72-820a-4f2825c3dabc@lucaceresoli.net/T/#mc4fc8c10ebeeff8c6d3593b0072afbcf7de9f2ae
+
+My 2c,
+-- 
+Luca
+
