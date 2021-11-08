@@ -2,91 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0934E449AA7
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 18:18:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8990F449C15
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 19:58:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237686AbhKHRVH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 12:21:07 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:39602 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbhKHRVH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 12:21:07 -0500
-Received: by mail-wr1-f51.google.com with SMTP id d27so28179497wrb.6;
-        Mon, 08 Nov 2021 09:18:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k+xBEZ60gaFRX6TewmJXrlZ7gEV8kWXNlWQ1p+Qwerc=;
-        b=G1dKyzOdmL8P2Rf6fdpwzDjSPbNpz7qh1TdbRCdNPfthhy6f4DjfEilPvvY/YIIKbv
-         8qIiAf1Bke7JHbl2wRbcYpnl9C+rNZ7riFXGmnFt6rP8WWaaGEXPFh1DDaYwHQXfsI6a
-         QF25MMzbAQhty6bEUikiUTPyMDz9UpGw7LBg/XTgGVaeGORa3yLQQxHV0bEOO8kvZ2xU
-         0DbZEX6tnT5KYjgLSDSp6OMjOzSqHN3JDC7ASZhHLhkvDbO8jdkaCIKbL+A3w35jou7j
-         BLbUqnPN/3mE+ZdNc0eX6YY74gbhYTjxIABgtamsiWuHWSxJPZe0mTwlacAf101bZHSE
-         LSIg==
-X-Gm-Message-State: AOAM532BczY7GnaZxAzEjbzABhr2iEMHeuaKGCSkEG1akIGbHc7nH/Pl
-        bfEm17ytA6igWwUQMQYRJh8=
-X-Google-Smtp-Source: ABdhPJyhia6d85wm25bZ2YttwtRNLe8TYhS/6mtXkEsdSSvLaOR+qPwM+MSHCuDa9WsPVoLocUfggQ==
-X-Received: by 2002:a5d:45cc:: with SMTP id b12mr912657wrs.164.1636391901696;
-        Mon, 08 Nov 2021 09:18:21 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f18sm17208547wre.7.2021.11.08.09.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 09:18:21 -0800 (PST)
-Date:   Mon, 8 Nov 2021 18:18:19 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        iommu@lists.linux-foundation.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: How to reduce PCI initialization from 5 s (1.5 s adding them to
- IOMMU groups)
-Message-ID: <YYlb2w1UVaiVYigW@rocinante>
-References: <de6706b2-4ea5-ce68-6b72-02090b98630f@molgen.mpg.de>
+        id S236492AbhKHTBN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 14:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236467AbhKHTBJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Nov 2021 14:01:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A38961152;
+        Mon,  8 Nov 2021 18:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636397904;
+        bh=KTojuwQ+u0LsjQAtF2ct0kbvBsFwwPUwlxlX0N1dF4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HMEnexM91tUxmTTWU9mOYe7LOf9kHOcb6xVQVZxqKcG6YkobwaNlsbJAYkd6QBpc+
+         CAskT3K9aXmCgZXWGDRLvI85cMuNFBv89xzeEEt+9D3wjEwuxVP+6lGsMOxNAwNurj
+         Etegis5PM1qa7HCCuY1VxgcJ7Z8fRJX6LFJX7Z/ihaVBD3Jw9FQYbdaOCAsfSS4wq9
+         6NvbVAC/Jmub2l4SOokA+mtUIUGFAD8QXM6f3QvnIWS6uFT6bfLXjCGpyZY6fdwIcS
+         2cX7E15IRuRsXL/HPV6VfHzoTdCgE6TkgnLnkp4bjLLjrzj7FcWkc4sYfnAlR8tPhh
+         X/ypGPWsddldQ==
+Date:   Mon, 8 Nov 2021 12:58:23 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-i2c@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Crashes in 5.15-git in i2c code
+Message-ID: <20211108185823.GA1101310@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <de6706b2-4ea5-ce68-6b72-02090b98630f@molgen.mpg.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP145phj7jEy6tkdFMdW-rzPprMTUckaaSrtrVysE-u+S+=Lcg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Paul,
+[+cc Uwe, Rafael, linux-pm, linux-pci, linux-kernel, beginning of
+thread: https://lore.kernel.org/linux-i2c/CAP145pgdrdiMAT7=-iB1DMgA7t_bMqTcJL4N0=6u8kNY3EU0dw@mail.gmail.com/T/#t]
 
-> On a PowerEdge T440/021KCD, BIOS 2.11.2 04/22/2021, Linux 5.10.70 takes
-> almost five seconds to initialize PCI. According to the timestamps, 1.5 s
-> are from assigning the PCI devices to the 142 IOMMU groups.
-[...]
-> Is there anything that could be done to reduce the time?
+On Mon, Nov 08, 2021 at 05:34:14PM +0100, Robert Święcki wrote:
+> > I'm daily-driving the linux from Linus' git (recompiling every day or
+> > two), and yesterday it stopped booting. Below is the dmesg from
+> > pstore.
+> > ...
+> 
+> This introduced the bug: 0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
+> https://github.com/torvalds/linux/commit/0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
 
-I am curious - why is this a problem?  Are you power-cycling your servers
-so often to the point where the cumulative time spent in enumerating PCI
-devices and adding them later to IOMMU groups is a problem? 
+Thank you very much for the debugging and this report!  This report is
+for i2c, but the problem will affect many drivers.
 
-I am simply wondering why you decided to signal out the PCI enumeration as
-slow in particular, especially given that a large server hardware tends to
-have (most of the time, as per my experience) rather long initialisation
-time either from being powered off or after being power cycled.  I can take
-a while before the actual operating system itself will start.
+> > <1>[    1.431369][  T447] BUG: kernel NULL pointer dereference,
+> > address: 0000000000000540
+> > <1>[    1.431371][  T447] #PF: supervisor read access in kernel mode
+> > <1>[    1.431375][  T447] #PF: error_code(0x0000) - not-present page
+> > <6>[    1.431378][  T447] PGD 0 P4D 0
+> > <4>[    1.431384][  T447] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> > <4>[    1.431388][  T447] CPU: 12 PID: 447 Comm: systemd-udevd
+> > Tainted: G            E     5.15.0+ #91
+> > <4>[    1.431391][  T447] Hardware name: ASUS System Product Name/ROG
+> > CROSSHAIR VIII FORMULA, BIOS 3801 07/30/2021
+> > <4>[    1.431392][  T447] RIP: 0010:i2c_dw_pci_resume+0x8/0x40
+> > [i2c_designware_pci]
+> > <4>[    1.431399][  T447] Code: 00 00 00 00 66 66 2e 0f 1f 84 00 00 00
+> > 00 00 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 84 00 00 00 00 00 53 48
+> > 8b 5f 78 48 89 df <ff> 93 40 05 00 00 c6 83 c0 05 00 00 00 5b c3 66 66
+> > 2e 0f 1f 84 00
+> > <4>[    1.431401][  T447] RSP: 0018:ffffb3e740a13ba8 EFLAGS: 00010286
+> > <4>[    1.431403][  T447] RAX: 0000000000000000 RBX: 0000000000000000
+> > RCX: 0000000000000000
 
-We talked about this briefly with Bjorn, and there might be an option to
-perhaps add some caching, as we suspect that the culprit here is doing PCI
-configuration space read for each device, which can be slow on some
-platforms.
+  $ ./scripts/decodecode < oops
+    22:       53                      push   %rbx
+    23:       48 8b 5f 78             mov    0x78(%rdi),%rbx
+    27:       48 89 df                mov    %rbx,%rdi
+    2a:*      ff 93 40 05 00 00       callq  *0x540(%rbx)             <-- trapping instruction
+    30:       c6 83 c0 05 00 00 00    movb   $0x0,0x5c0(%rbx)
+    37:       5b                      pop    %rbx
+    38:       c3                      retq
 
-However, we would need to profile this to get some quantitative data to see
-whether doing anything would even be worthwhile.  It would definitely help
-us understand better where the bottlenecks really are and of what magnitude.
+  static int i2c_dw_pci_resume(struct device *dev)
+  {
+    struct dw_i2c_dev *i_dev = dev_get_drvdata(dev);
+    int ret;
 
-I personally don't have access to such a large hardware like the one you
-have access to, thus I was wondering whether you would have some time, and
-be willing, to profile this for us on the hardware you have.
+    ret = i_dev->init(i_dev);
+    i_dev->suspended = false;
 
-Let me know what do you think?
+    return ret;
 
-	Krzysztof
+So I think we're trying to call i_dev->init(), which is a NULL
+pointer.
+
+> > <4>[    1.431422][  T447]  pci_pm_runtime_resume+0xaa/0x100
+> > <4>[    1.431434][  T447]  __rpm_callback+0x3c/0x100
+> > <4>[    1.431442][  T447]  rpm_callback+0x54/0x80
+> > <4>[    1.431445][  T447]  rpm_resume+0x410/0x700
+> > <4>[    1.431455][  T447]  __pm_runtime_resume+0x45/0x80
+> > <4>[    1.431457][  T447]  pci_device_probe+0xa2/0x140
+> > <4>[    1.431459][  T447]  really_probe+0x1e4/0x400
+> > <4>[    1.431464][  T447]  __driver_probe_device+0xf9/0x180
+> > <4>[    1.431466][  T447]  driver_probe_device+0x19/0xc0
+
+I think the problem here is that:
+
+  - really_probe() sets dev->driver
+
+  - local_pci_probe() calls pm_runtime_get_sync(), which leads to:
+
+  - pci_pm_runtime_resume(), which previously skipped the driver's
+    .runtime_resume() method when "pci_dev->driver" as NULL
+
+  - after 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of
+    pci_dev->driver") [1], it checks "dev->driver" instead of
+    "pci_dev->driver"
+
+  - dev->driver is non-NULL (set by really_probe() above), but at this
+    point pci_dev->driver used to be NULL because local_pci_probe()
+    didn't set it until after after calling pm_runtime_get_sync() (see
+    b5f9c644eb1b ("PCI: Remove struct pci_dev->driver") [2])
+
+  - because dev->driver is non-NULL, we call i2c_dw_pci_resume()
+    before i2c_dw_pci_probe(), so the driver init hasn't been done
+
+Here's the call tree:
+
+    really_probe
+      dev->driver = drv;                       # <--
+      call_driver_probe
+        dev->bus->probe
+          pci_device_probe
+            __pci_device_probe
+              pci_call_probe
+                local_pci_probe
+                  pm_runtime_get_sync
+                    ...
+                    pci_pm_runtime_resume
+  -                   if (!pci_dev->driver)    # 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of pci_dev->driver")
+  +                   if (!to_pci_driver(dev->driver))
+                        return 0
+                      pm->runtime_resume
+                        i2c_dw_pci_resume
+                          i_dev->init()        # <-- NULL ptr deref
+  -                 pci_dev->driver = pci_drv  # b5f9c644eb1b ("PCI: Remove struct pci_dev->driver")
+                  pci_drv->probe
+                    i2c_dw_pci_probe
+
+Note that we used to call pm_runtime_get_sync() (and the driver's
+runtime_resume() method) in the window where dev->driver had been set
+but pci_dev->driver had not.  Since we got rid of pci_dev->driver
+altogether, that window no longer exists, so we call the driver's
+runtime_resume() when it isn't prepared for it.
+
+[1] https://git.kernel.org/linus/2a4d9408c9e8
+[2] https://git.kernel.org/linus/b5f9c644eb1b
