@@ -2,122 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18ECA44975C
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 16:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6CC64498C6
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 16:54:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232217AbhKHPFZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 10:05:25 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4072 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbhKHPFY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 10:05:24 -0500
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HnvNx6RFNz67H9S;
-        Mon,  8 Nov 2021 22:57:53 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Mon, 8 Nov 2021 16:02:37 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 8 Nov
- 2021 15:02:37 +0000
-Date:   Mon, 8 Nov 2021 15:02:36 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20211108150236.00003a6c@Huawei.com>
-In-Reply-To: <20211105235056.3711389-5-ira.weiny@intel.com>
-References: <20211105235056.3711389-1-ira.weiny@intel.com>
-        <20211105235056.3711389-5-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S241102AbhKHPzc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 10:55:32 -0500
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:39510 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239221AbhKHPzb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 10:55:31 -0500
+Received: by mail-lj1-f181.google.com with SMTP id t11so30380520ljh.6
+        for <linux-pci@vger.kernel.org>; Mon, 08 Nov 2021 07:52:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E0F5Onblgfh+hTQ7up79bIDtJeB0teDKjpuol7uq/EA=;
+        b=4JN38JQ3YBg/To+PpKBMlnWgL66p21DnE93gbaOBbWkBykT3pyilRlT3Jq6GCeQz7j
+         pBm2UzFCHoWNcmZ2amIY/aZjwa2/8cNOMAwbaFDstE9Ukve6vykuNE+MVQm6yAY5+OmW
+         NYJJ9eFNn0CZgrn8pMZaX7w/d7WjZvIs1iZj9py/wT1KOB/NPTZR5sq3echhBY0LQp3o
+         p+Trw4d8mtEgK0whhWVdusN7PuFyG7QPPX54+H1LKgC8mObiTaGKxJc8Srfd9e9OPCtU
+         Ph4VdyRG6w5BbpMYUdYaLZskH4WMenB5RuviySQPrclQVdKxXqJJ3cxpEyFYXGiAp8i3
+         rgmA==
+X-Gm-Message-State: AOAM532qoWpTEFh7D1RMtmRI2M+OQdDlYcXTuhXfyzdBnnKJsny+ZvAs
+        ymM/tUxO/YyXaV1enPhJZli5Z6zX4CntEgpq
+X-Google-Smtp-Source: ABdhPJxaKGQ6wmr7NL1saDbAGoy4zj7BN4FjL2UXNdC0ccOd+U/mL7ZTVymd8wV/GKj57dtUPdkUCg==
+X-Received: by 2002:a2e:9dc8:: with SMTP id x8mr12607ljj.502.1636386765659;
+        Mon, 08 Nov 2021 07:52:45 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id m8sm205531lfq.27.2021.11.08.07.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Nov 2021 07:52:45 -0800 (PST)
+Date:   Mon, 8 Nov 2021 16:52:44 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Fan Fei <ffclaire1224@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: Distinguish mediatek drivers
+Message-ID: <YYlHzMGAdO1eOQLn@rocinante>
+References: <20211105202913.GA944432@bhelgaas>
+ <98d237693bc618cba62e93495b7b3379c18ac6b5.camel@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <98d237693bc618cba62e93495b7b3379c18ac6b5.camel@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 5 Nov 2021 16:50:55 -0700
-<ira.weiny@intel.com> wrote:
+Hello,
 
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Read CDAT raw table data from the cxl_mem state object.  Currently this
-> is only supported by a PCI CXL object through a DOE mailbox which supports
-> CDAT.  But any cxl_mem type object can provide this data later if need
-> be.  For example for testing.
-> 
-> Cache this data for later parsing.  Provide a sysfs binary attribute to
-> allow dumping of the CDAT.
-> 
-> Binary dumping is modeled on /sys/firmware/ACPI/tables/
-> 
-> The ability to dump this table will be very useful for emulation of real
-> devices once they become available as QEMU CXL type 3 device emulation will
-> be able to load this file in.
-> 
-> This does not support table updates at runtime. It will always provide
-> whatever was there when first cached. Handling of table updates can be
-> implemented later.
-> 
-> Once there are more users, this code can move out to driver/cxl/cdat.c
-> or similar.
-> 
-> Finally create a complete list of DOE defines within cdat.h for anyone
-> wishing to decode the CDAT table.
-> 
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[...]
+> > Both drivers are also named "mtk-pcie" and use the same internal
+> > "mtk_" prefix on structs and functions.  Not a *huge* problem, but
+> > not really ideal either.
+[...]
+> Thanks for the reminder, I will send patches to update these entries.
 
-A few more things came to mind whilst reading the rest of the series. In particular
-lifetime management for the doe structures.
+Perhaps a silly question, but would it be possible to combine both drivers
+into a single one that handless devices across all generations?
 
->   * DOC: cxl pci
-> @@ -575,17 +576,106 @@ static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
->  		if (rc)
->  			return rc;
->  
-> -		if (device_attach(&adev->dev) != 1)
-> +		if (device_attach(&adev->dev) != 1) {
->  			dev_err(&adev->dev,
->  				"Failed to attach a driver to DOE device %d\n",
->  				adev->id);
-> +			goto next;
-> +		}
-> +
-> +		if (pci_doe_supports_prot(new_dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
-> +			cxlds->cdat_doe = new_dev;
-
-I'm probably missing something, but what prevents new_dev from going away after
-this assignment?  Perhaps a force unbind or driver removal.  Should we get a
-reference?
-
-Also it's possible we'll have multiple CDAT supporting DOEs so
-I'd suggest checking if cxlds->cdata_doe is already set before setting it.
-
-We could break out of the loop early, but I want to bolt the CMA doe detection
-in there so I'd rather we didn't.  This is all subject to whether we attempt
-to generalize this support and move it over to the PCI side of things.
-
->  
-> +next:
->  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
->  	}
->  
->  	return 0;
->  }
->  
+	Krzysztof
