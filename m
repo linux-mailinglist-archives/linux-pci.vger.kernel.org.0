@@ -2,84 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94D6E4478CE
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 04:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FB4A447A83
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 07:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236689AbhKHDTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Nov 2021 22:19:53 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55234 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229757AbhKHDTx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 22:19:53 -0500
-X-UUID: 4f2a8221be0a4be7bab5bd0f0dc5c3c7-20211108
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=84PdMly+vcryJAJZDzAQe575ojQCAqKQN4WPuKV+zz4=;
-        b=hvrfFZUbuyEu11x6aAPwv77vj01uqPEr+55P5ReHIpgTsLztYH4/6wYZxCP0sxH64E5psZ2KZPyHuhxMwmTuEW/KqcjyW57OmN3OLBEXAKQ0mNP+hsX4YV/mZE+v/c9PKv12XcewWVNLjqn5CBXnirnh+LvxKmwXIg6DLX1qbKI=;
-X-UUID: 4f2a8221be0a4be7bab5bd0f0dc5c3c7-20211108
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1310208741; Mon, 08 Nov 2021 11:17:06 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.792.15; Mon, 8 Nov 2021 11:17:05 +0800
-Received: from mhfsdcap04 (10.17.3.154) by mtkmbs10n1.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.2.792.15 via Frontend
- Transport; Mon, 8 Nov 2021 11:17:05 +0800
-Message-ID: <98d237693bc618cba62e93495b7b3379c18ac6b5.camel@mediatek.com>
-Subject: Re: Distinguish mediatek drivers
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "Fan Fei" <ffclaire1224@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>, <linux-pci@vger.kernel.org>
-Date:   Mon, 8 Nov 2021 11:17:05 +0800
-In-Reply-To: <20211105202913.GA944432@bhelgaas>
-References: <20211105202913.GA944432@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        id S229683AbhKHGkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 01:40:20 -0500
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:64329 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236305AbhKHGkR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 01:40:17 -0500
+Received: from [192.168.1.18] ([86.243.171.122])
+        by smtp.orange.fr with ESMTPA
+        id jyHZmF8HponYgjyHZmBySq; Mon, 08 Nov 2021 07:37:32 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Mon, 08 Nov 2021 07:37:32 +0100
+X-ME-IP: 86.243.171.122
+Subject: Re: [PATCH] PCI: xilinx-nwl: Simplify code and fix a memory leak
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <5483f10a44b06aad55728576d489adfa16c3be91.1636279388.git.christophe.jaillet@wanadoo.fr>
+ <YYhv9vZCw5r+PKzj@rocinante>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <4d0576fb-0232-b165-bdef-e8a4310c6d29@wanadoo.fr>
+Date:   Mon, 8 Nov 2021 07:37:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <YYhv9vZCw5r+PKzj@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4sDQoNClRoYW5rcyBmb3IgdGhlIHJlbWluZGVyLCBJIHdpbGwgc2VuZCBwYXRjaGVz
-IHRvIHVwZGF0ZSB0aGVzZSBlbnRyaWVzLg0KDQpUaGFua3MuDQoNCk9uIEZyaSwgMjAyMS0xMS0w
-NSBhdCAxNToyOSAtMDUwMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4gV2UgaGF2ZSB0d28gTWVk
-aWFUZWsgZHJpdmVyczogcGNpZS1tZWRpYXRlay5jLCB3aGljaCBjbGFpbXM6DQo+IA0KPiAgIC5j
-b21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1wY2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10NzYyMy1wY2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi1w
-Y2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NzYyMi1wY2llIg0KPiAgIC5jb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10NzYyOS1wY2llIg0KPiANCj4gYW5kIHBjaWUtbWVkaWF0ZWst
-Z2VuMy5jLCB3aGljaCBjbGFpbXM6DQo+IA0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-ODE5Mi1wY2llIg0KPiANCj4gVGhlIEtjb25maWcgdGV4dCBkb2VzIG5vdCBkaXN0aW5ndWlzaCB0
-aGVtLiAgQ2FuIHNvbWVib2R5IHVwZGF0ZQ0KPiB0aGVzZQ0KPiBlbnRyaWVzIHNvIHRoZXkgZG8/
-ICBJdCdzIG5pY2UgaWYgd2UgY2FuIG1lbnRpb24gbW9kZWwgbnVtYmVycyBvcg0KPiBwcm9kdWN0
-IG5hbWVzIHRoYXQgYSB1c2VyIHdvdWxkIHJlY29nbml6ZS4NCj4gDQo+ICAgY29uZmlnIFBDSUVf
-TUVESUFURUsNCj4gICAgICAgICB0cmlzdGF0ZSAiTWVkaWFUZWsgUENJZSBjb250cm9sbGVyIg0K
-PiAgICAgICAgIGRlcGVuZHMgb24gQVJDSF9NRURJQVRFSyB8fCBDT01QSUxFX1RFU1QNCj4gICAg
-ICAgICBkZXBlbmRzIG9uIE9GDQo+ICAgICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01B
-SU4NCj4gICAgICAgICBoZWxwDQo+ICAgICAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IHRv
-IGVuYWJsZSBQQ0llIGNvbnRyb2xsZXIgc3VwcG9ydCBvbg0KPiAgICAgICAgICAgTWVkaWFUZWsg
-U29Dcy4NCj4gDQo+ICAgY29uZmlnIFBDSUVfTUVESUFURUtfR0VOMw0KPiAgICAgICAgIHRyaXN0
-YXRlICJNZWRpYVRlayBHZW4zIFBDSWUgY29udHJvbGxlciINCj4gICAgICAgICBkZXBlbmRzIG9u
-IEFSQ0hfTUVESUFURUsgfHwgQ09NUElMRV9URVNUDQo+ICAgICAgICAgZGVwZW5kcyBvbiBQQ0lf
-TVNJX0lSUV9ET01BSU4NCj4gICAgICAgICBoZWxwDQo+ICAgICAgICAgICBBZGRzIHN1cHBvcnQg
-Zm9yIFBDSWUgR2VuMyBNQUMgY29udHJvbGxlciBmb3IgTWVkaWFUZWsNCj4gU29Dcy4NCj4gICAg
-ICAgICAgIFRoaXMgUENJZSBjb250cm9sbGVyIGlzIGNvbXBhdGlibGUgd2l0aCBHZW4zLCBHZW4y
-IGFuZCBHZW4xDQo+IHNwZWVkLA0KPiAgICAgICAgICAgYW5kIHN1cHBvcnQgdXAgdG8gMjU2IE1T
-SSBpbnRlcnJ1cHQgbnVtYmVycyBmb3INCj4gICAgICAgICAgIG11bHRpLWZ1bmN0aW9uIGRldmlj
-ZXMuDQo+IA0KPiAgICAgICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBlbmFibGUgR2Vu
-MyBQQ0llIGNvbnRyb2xsZXINCj4gc3VwcG9ydCBvbg0KPiAgICAgICAgICAgTWVkaWFUZWsgU29D
-cy4NCj4gDQo+IEJvdGggZHJpdmVycyBhcmUgYWxzbyBuYW1lZCAibXRrLXBjaWUiIGFuZCB1c2Ug
-dGhlIHNhbWUgaW50ZXJuYWwNCj4gIm10a18iIHByZWZpeCBvbiBzdHJ1Y3RzIGFuZCBmdW5jdGlv
-bnMuICBOb3QgYSAqaHVnZSogcHJvYmxlbSwgYnV0DQo+IG5vdA0KPiByZWFsbHkgaWRlYWwgZWl0
-aGVyLg0KPiANCj4gQmpvcm4NCg==
+Le 08/11/2021 à 01:31, Krzysztof Wilczyński a écrit :
+> Hi Christophe,
+> 
+>> Allocate space for 'bitmap' in 'struct nwl_msi' at build time instead of
+>> dynamically allocating the memory at runtime.
+>>
+>> This simplifies code (especially error handling paths) and avoid some
+>> open-coded arithmetic in allocator arguments
+>>
+>> This also fixes a potential memory leak. The bitmap was never freed. It is
+>> now part of a managed resource.
+> 
+> Just to confirm - you mean potentially leaking when the driver would be
+> unloaded?  Not the error handling path, correct?
+
+Correct, the leak would happen on driver unload only.
+
+CJ
+
+> 
+>> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> @@ -146,7 +146,7 @@
+>>   
+>>   struct nwl_msi {			/* MSI information */
+>>   	struct irq_domain *msi_domain;
+>> -	unsigned long *bitmap;
+>> +	DECLARE_BITMAP(bitmap, INT_PCI_MSI_NR);
+>>   	struct irq_domain *dev_domain;
+>>   	struct mutex lock;		/* protect bitmap variable */
+>>   	int irq_msi0;
+>> @@ -335,12 +335,10 @@ static void nwl_pcie_leg_handler(struct irq_desc *desc)
+>>   
+>>   static void nwl_pcie_handle_msi_irq(struct nwl_pcie *pcie, u32 status_reg)
+>>   {
+>> -	struct nwl_msi *msi;
+>> +	struct nwl_msi *msi = &pcie->msi;
+>>   	unsigned long status;
+>>   	u32 bit;
+>>   
+>> -	msi = &pcie->msi;
+>> -
+>>   	while ((status = nwl_bridge_readl(pcie, status_reg)) != 0) {
+>>   		for_each_set_bit(bit, &status, 32) {
+>>   			nwl_bridge_writel(pcie, 1 << bit, status_reg);
+>> @@ -560,30 +558,21 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
+>>   	struct nwl_msi *msi = &pcie->msi;
+>>   	unsigned long base;
+>>   	int ret;
+>> -	int size = BITS_TO_LONGS(INT_PCI_MSI_NR) * sizeof(long);
+>>   
+>>   	mutex_init(&msi->lock);
+>>   
+>> -	msi->bitmap = kzalloc(size, GFP_KERNEL);
+>> -	if (!msi->bitmap)
+>> -		return -ENOMEM;
+>> -
+>>   	/* Get msi_1 IRQ number */
+>>   	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
+>> -	if (msi->irq_msi1 < 0) {
+>> -		ret = -EINVAL;
+>> -		goto err;
+>> -	}
+>> +	if (msi->irq_msi1 < 0)
+>> +		return -EINVAL;
+>>   
+>>   	irq_set_chained_handler_and_data(msi->irq_msi1,
+>>   					 nwl_pcie_msi_handler_high, pcie);
+>>   
+>>   	/* Get msi_0 IRQ number */
+>>   	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
+>> -	if (msi->irq_msi0 < 0) {
+>> -		ret = -EINVAL;
+>> -		goto err;
+>> -	}
+>> +	if (msi->irq_msi0 < 0)
+>> +		return -EINVAL;
+>>   
+>>   	irq_set_chained_handler_and_data(msi->irq_msi0,
+>>   					 nwl_pcie_msi_handler_low, pcie);
+>> @@ -592,8 +581,7 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
+>>   	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
+>>   	if (!ret) {
+>>   		dev_err(dev, "MSI not present\n");
+>> -		ret = -EIO;
+>> -		goto err;
+>> +		return -EIO;
+>>   	}
+>>   
+>>   	/* Enable MSII */
+>> @@ -632,10 +620,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
+>>   	nwl_bridge_writel(pcie, MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
+>>   
+>>   	return 0;
+>> -err:
+>> -	kfree(msi->bitmap);
+>> -	msi->bitmap = NULL;
+>> -	return ret;
+> 
+> Thank you!
+> 
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+> 	Krzysztof
+> 
 
