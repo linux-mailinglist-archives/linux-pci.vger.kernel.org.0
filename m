@@ -2,131 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4595C449E7D
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 22:51:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75EC7449EA5
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 23:25:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240672AbhKHVy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 16:54:26 -0500
-Received: from mail-mw2nam10on2074.outbound.protection.outlook.com ([40.107.94.74]:10721
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240666AbhKHVyZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Nov 2021 16:54:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GQtdFKr7X2tnTVmU7A/rn9rEEuIyvH4k4MVPv4sff7QpVx2BywxfcebVXJ9wnepTYFcTd51khd1U/hx9gwU7LbnpeCU3Et/JvZRjyCdIwB69DGk1twCGMiyvst5bG2k/7JcYCsDNxJZ9Od4IkCXNh7Yfl7eD3gezbFsYe53ZZKPVsPtTOHGLnBQOmX2LYXlo7W7+lNCDHSSE9kMObpT7P+AxxFn9OZQhHVUNzQUze7tPTB9aI1uNM8QV/mI1OxqSw1UXc0TJa9n6aKcpVDUl/7tk+DjA637x1SkZ+NEtlqIwyMhF/LT6XZ6CkVau1xp6fqmtJBOasL7e9F5BgFVaiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=drXItMepaRaYBHAO1OM1uUvZnxZYdjavDo571gBs5xI=;
- b=Qm/0YUFjh6IWp9fTVcfCdY84qEGYVmiliAv9iH3gr2Ussy8vUfoW7cL4ae+EhXj5FAmOd+NjAEWmWmD6fXLE4l2rQYoiQso/RZaPYY92lkpcD1U16es3Nj34Q5bp3ff7geyHBwEbL+F3ojNsjpn4aS0QPtlVhNE0OuxhXTrHsnpgsjJFRMRj/ZKH4BmFQt9gRTCUaJrOlxKUHGfPYyJ1TwSx6Spj/Qhaenk/Irnbt5Ydt2TZUqzmnBe/9G5FRsbk56uwLlsnMCQ0OySJOulnGESX0vq5ipXVuMCpiO7ilr7mC9InMcbXOIVGerpOS5nZnLu5roCl+79lyg2Q+uMGXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=drXItMepaRaYBHAO1OM1uUvZnxZYdjavDo571gBs5xI=;
- b=n/iXeaTmrRIjsNWE+iJcq/8+aKV1+jQFtz1ONR0W9Wnl5txEqdhwbjoFHkjjgxuFzkJrwQhiR0Cs4fSLivqs72vlMdMT/hp15o1tn5MKDNM4edTaa1LqVl0Byfm8pcvSBx2mJhmtAnPaA0aN73xAv4Es6oRPmPhXZuWgOQHTs4Q=
-Received: from MW2PR2101CA0020.namprd21.prod.outlook.com (2603:10b6:302:1::33)
- by DM6PR12MB2986.namprd12.prod.outlook.com (2603:10b6:5:39::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.16; Mon, 8 Nov
- 2021 21:51:37 +0000
-Received: from CO1NAM11FT011.eop-nam11.prod.protection.outlook.com
- (2603:10b6:302:1:cafe::4c) by MW2PR2101CA0020.outlook.office365.com
- (2603:10b6:302:1::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.3 via Frontend
- Transport; Mon, 8 Nov 2021 21:51:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT011.mail.protection.outlook.com (10.13.175.186) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4669.10 via Frontend Transport; Mon, 8 Nov 2021 21:51:36 +0000
-Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7; Mon, 8 Nov 2021
- 15:51:34 -0600
-Subject: [PATCH 3/3] hwmon: (k10temp) Add support for AMD Family 19h Models
- 10h-1Fh and A0h-AFh
-From:   Babu Moger <babu.moger@amd.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <clemens@ladisch.de>, <jdelvare@suse.com>, <linux@roeck-us.net>,
-        <bhelgaas@google.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <babu.moger@amd.com>
-Date:   Mon, 8 Nov 2021 15:51:34 -0600
-Message-ID: <163640829419.955062.12539219969781039915.stgit@bmoger-ubuntu>
-In-Reply-To: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
-References: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
-User-Agent: StGit/1.1.dev103+g5369f4c
+        id S239633AbhKHW2T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 17:28:19 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59009 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229627AbhKHW2T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Nov 2021 17:28:19 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="318534617"
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="318534617"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 14:25:17 -0800
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="451645786"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 14:25:17 -0800
+Date:   Mon, 8 Nov 2021 14:25:16 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
+Message-ID: <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+ <20211105235056.3711389-5-ira.weiny@intel.com>
+ <20211108150236.00003a6c@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c8514862-7293-4391-94fa-08d9a301f00a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2986:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2986B0B56454973EE11452AA95919@DM6PR12MB2986.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2089;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bTgKkYZ1uRh0m1fnXlj4YpECwC0WLSm7TgwdxKazvDWCoOLsr/Bf8bsyBIGifaFeTDn26lTo/WE7E7MyRP6KVTSRR930MWL1AmMdJtrR+N/wzCpQG6B+B0xPFvQIiPEgA+YWbR0CL89doO8JxmAajU6V+WjJ4S7fY4cD4LtcidMhKXTDtliLBuPrRte6ibPfP1gH/JiiW5au/2Q8tOAcZegpcbd474f3mZXAWOTyiz7jFZLIRqQXqfXlcl4ETiGF9RXKIzFSsidwqAer/q0jBnuDCgQ3vQRKrtjui+3trdPwM8Y1hWxGZVR6vX3FAFrorWTgtYRy604byyp3Sn2Xv9dl7019r1JSYpNn/Y3B4wlV/UEWHBcaC1Pg6R3cW9mJhXtcQNi0wZO0Wp1OUB7+JvMgHavsliCldvQmpbfydXgAwGEoK6MDUf1duNPhnt0YdIOisMOwpUE36pzqRIHWqdhTaZhDaOmg6tLEfJ2xoPutRh/K96sKROZn+Lh2pVkX7u/yFDCbzGER+q4l3rP7/5awYmUqTpyspXdKgIvHg3/jJqrfvgyczjp1MChJ/Gd5VJNqKGFGyKasklBNcge/dSHE28lSG0a68lhHjuYfJiSwOZ1EGlmmASnqvbn7SCi6+mpXhH7KTGuMRf8qbZgF/59wUQ0GdG0GNuN81fbQGLwMlXOAIarqEkERi29zVF3whKuvv4fUvp4tdG5YKEfdpblRX6dbI5IS35kY/5lgS9ssE2Cr3gKxu9VjIENgFVKvNaHTE9piRuo+npc0pTn0ag==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(7916004)(4636009)(46966006)(36840700001)(103116003)(5660300002)(16576012)(110136005)(16526019)(2906002)(8676002)(8936002)(4326008)(921005)(44832011)(316002)(26005)(7416002)(54906003)(508600001)(47076005)(82310400003)(186003)(426003)(81166007)(33716001)(70206006)(86362001)(356005)(9686003)(70586007)(336012)(36860700001)(71626007)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2021 21:51:36.5396
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8514862-7293-4391-94fa-08d9a301f00a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT011.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2986
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211108150236.00003a6c@Huawei.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add thermal info support for AMD Family 19h Models 10h-1Fh and A0h-AFh.=0A=
-Thermal info is supported via a new PCI device ID at offset 0x300h.=0A=
-=0A=
-Signed-off-by: Babu Moger <babu.moger@amd.com>=0A=
----=0A=
- drivers/hwmon/k10temp.c |    3 +++=0A=
- 1 file changed, 3 insertions(+)=0A=
-=0A=
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c=0A=
-index 662bad7ed0a2..880990fa4795 100644=0A=
---- a/drivers/hwmon/k10temp.c=0A=
-+++ b/drivers/hwmon/k10temp.c=0A=
-@@ -433,7 +433,9 @@ static int k10temp_probe(struct pci_dev *pdev, const st=
-ruct pci_device_id *id)=0A=
- 			data->ccd_offset =3D 0x154;=0A=
- 			k10temp_get_ccd_support(pdev, data, 8);=0A=
- 			break;=0A=
-+		case 0x10 ... 0x1f:=0A=
- 		case 0x40 ... 0x4f:	/* Yellow Carp */=0A=
-+		case 0xa0 ... 0xaf:=0A=
- 			data->ccd_offset =3D 0x300;=0A=
- 			k10temp_get_ccd_support(pdev, data, 8);=0A=
- 			break;=0A=
-@@ -477,6 +479,7 @@ static const struct pci_device_id k10temp_id_table[] =
-=3D {=0A=
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },=0A=
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },=0A=
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },=0A=
-+	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },=0A=
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },=0A=
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },=0A=
- 	{ PCI_VDEVICE(HYGON, PCI_DEVICE_ID_AMD_17H_DF_F3) },=0A=
-=0A=
+On Mon, Nov 08, 2021 at 03:02:36PM +0000, Jonathan Cameron wrote:
+> On Fri, 5 Nov 2021 16:50:55 -0700
+> <ira.weiny@intel.com> wrote:
+> 
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
 
+[snip]
+
+> 
+> A few more things came to mind whilst reading the rest of the series. In particular
+> lifetime management for the doe structures.
+
+Thanks for the review I'm just working through all the comments and so I'm
+somewhat working backwards.
+
+> 
+> >   * DOC: cxl pci
+> > @@ -575,17 +576,106 @@ static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> >  		if (rc)
+> >  			return rc;
+> >  
+> > -		if (device_attach(&adev->dev) != 1)
+> > +		if (device_attach(&adev->dev) != 1) {
+> >  			dev_err(&adev->dev,
+> >  				"Failed to attach a driver to DOE device %d\n",
+> >  				adev->id);
+> > +			goto next;
+> > +		}
+> > +
+> > +		if (pci_doe_supports_prot(new_dev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> > +			cxlds->cdat_doe = new_dev;
+> 
+> I'm probably missing something, but what prevents new_dev from going away after
+> this assignment?
+> Perhaps a force unbind or driver removal.  Should we get a
+> reference?
+
+I had a get_device() here at one point but took it out...  Because I was
+thinking that new_dev's lifetime was equal to cxlds because cxlds 'owned' the
+DOE devices.  However this is totally not true.  And there is a race between
+the device going away and cxlds going away which could be a problem.
+
+> 
+> Also it's possible we'll have multiple CDAT supporting DOEs so
+> I'd suggest checking if cxlds->cdata_doe is already set before setting it.
+
+Sure.
+
+> 
+> We could break out of the loop early, but I want to bolt the CMA doe detection
+> in there so I'd rather we didn't.  This is all subject to whether we attempt
+> to generalize this support and move it over to the PCI side of things.
+
+I'm not 100% sure about moving it to the PCI side but it does make some sense
+because really the auxiliary devices are only bounded by the PCI device being
+available.  None of the CXL stuff needs to exist for the DOE driver to talk to
+the device but the pdev does need to be there...  :-/
+
+This is all part of what drove the cxl_mem rename because that structure was
+really confusing me.  Dan got me straightened out but I did not revisit this
+series after that.  Now off the top of my head I'm not sure that cxlds needs to
+be involved in the auxiliary device creation.  OTOH I was making it a central
+place for in kernel users to know where/how to get information from DOE
+mailboxes.  Hence caching which of these devices had CDAT capability.[1]
+
+Since you seem to have arrived at this conclusion before me where in the PCI
+code do you think is appropriate for this?
+
+Ira
+
+[1] I'm not really sure what is going to happen if multiple DOE boxes have CDAT
+capability.  This seems like a recipe for confusion.
+
+> 
+> >  
+> > +next:
+> >  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
+> >  	}
+> >  
+> >  	return 0;
+> >  }
+> >  
