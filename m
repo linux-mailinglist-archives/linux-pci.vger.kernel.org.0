@@ -2,147 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB4A447A83
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 07:37:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA053447B0D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 08:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhKHGkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 01:40:20 -0500
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:64329 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236305AbhKHGkR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 01:40:17 -0500
-Received: from [192.168.1.18] ([86.243.171.122])
-        by smtp.orange.fr with ESMTPA
-        id jyHZmF8HponYgjyHZmBySq; Mon, 08 Nov 2021 07:37:32 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Mon, 08 Nov 2021 07:37:32 +0100
-X-ME-IP: 86.243.171.122
-Subject: Re: [PATCH] PCI: xilinx-nwl: Simplify code and fix a memory leak
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <5483f10a44b06aad55728576d489adfa16c3be91.1636279388.git.christophe.jaillet@wanadoo.fr>
- <YYhv9vZCw5r+PKzj@rocinante>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <4d0576fb-0232-b165-bdef-e8a4310c6d29@wanadoo.fr>
-Date:   Mon, 8 Nov 2021 07:37:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S237904AbhKHHak (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 02:30:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237821AbhKHHaT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 02:30:19 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1B9C06120B
+        for <linux-pci@vger.kernel.org>; Sun,  7 Nov 2021 23:27:33 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id x15so27361654edv.1
+        for <linux-pci@vger.kernel.org>; Sun, 07 Nov 2021 23:27:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=lohGAXI96njXpZ5r6vgYlUkp2V68iRMzDV25uaLpmT1WmpX2h0YNNnPekuKOrJR7Hh
+         rCcmOUgGjsAkeHEvvQCkM6ux+TyqL0CqGbf0IPfL8V+eIKLF7r3X9QWFup/xVl2xV9qZ
+         NGc0LQ7JpvXhk+YTEHFaFd2QnuENE8mCWi0drmIQkANv1zf9DM6Bfjx/yF/A/b9RtJFU
+         CT2DuJeqJ7evq+rJKQgmUSCIg2GjkqvLZlnb0ekZ1/3u7apFf2k73Uqo2u8YZ8hKmOIw
+         ZGA3M8LZJFGSmW3P+nQyYMCLCtL13s+WCsnPOmCuuFd5xieMsN0vbLhindKIE3OfrP6U
+         BcYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=MYwqIU/OnmUpgV+PlFyGX7PZJNN3O2Goc/gdBRLrlApNBo3qr4u6O/23qpUayiL9Va
+         EJ+GpYr39Y0KEl05/T1U0fGL4eKQWSqYXWmprIBp7JyM9p8oF5G4BZ2jalidpBb8sPag
+         iIC/k/it/DbU2YJZ4vYrVS96dveS8nCelxblfW564u5ch4bggo8mIakbv/nSHJ462Fgv
+         C13aHLSSH4A2QBoTCEPK6xjMx09FYo1jd+QIlIQeA6+AltZX7xBzZ+ukzWDE8rZfbrGP
+         rycL5YZ7NoZdkEyCSq2oDqhj6tRQ08JwOZW++IEEkjjrUYkXBwstQzPFIbADd0mPEIFn
+         eIEg==
+X-Gm-Message-State: AOAM530BhGcsgPByjXthrPN1Vr1d9RFJD9uAWiTyw454HfWodBmcAJH7
+        SgdIJ6FFfcbvcv0UG0iLfgSM+WucHpFjDqvWAGVbkW5uI0E=
+X-Google-Smtp-Source: ABdhPJwiROS9SRRNMvDLES4YHo6uT5d60ZUwIiFmBNAm9OxEfLgMU9cee9PqVQWim0XNVifN/Rk5vWcyMQ7rvBndYNE=
+X-Received: by 2002:a05:6402:557:: with SMTP id i23mr66769092edx.176.1636356441798;
+ Sun, 07 Nov 2021 23:27:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YYhv9vZCw5r+PKzj@rocinante>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a50:2501:0:0:0:0:0 with HTTP; Sun, 7 Nov 2021 23:27:21 -0800 (PST)
+Reply-To: mariaschaefler@gmx.com
+From:   Maria Schaefler <ziskoraa@gmail.com>
+Date:   Mon, 8 Nov 2021 07:27:21 +0000
+Message-ID: <CAJh0FjiFL7uihMBL6ckYO8FJ6tnzM+tBivU2c60yDbG14LZLeA@mail.gmail.com>
+Subject: MY HEART CHOOSE YOU.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le 08/11/2021 à 01:31, Krzysztof Wilczyński a écrit :
-> Hi Christophe,
-> 
->> Allocate space for 'bitmap' in 'struct nwl_msi' at build time instead of
->> dynamically allocating the memory at runtime.
->>
->> This simplifies code (especially error handling paths) and avoid some
->> open-coded arithmetic in allocator arguments
->>
->> This also fixes a potential memory leak. The bitmap was never freed. It is
->> now part of a managed resource.
-> 
-> Just to confirm - you mean potentially leaking when the driver would be
-> unloaded?  Not the error handling path, correct?
-
-Correct, the leak would happen on driver unload only.
-
-CJ
-
-> 
->> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
->> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
->> @@ -146,7 +146,7 @@
->>   
->>   struct nwl_msi {			/* MSI information */
->>   	struct irq_domain *msi_domain;
->> -	unsigned long *bitmap;
->> +	DECLARE_BITMAP(bitmap, INT_PCI_MSI_NR);
->>   	struct irq_domain *dev_domain;
->>   	struct mutex lock;		/* protect bitmap variable */
->>   	int irq_msi0;
->> @@ -335,12 +335,10 @@ static void nwl_pcie_leg_handler(struct irq_desc *desc)
->>   
->>   static void nwl_pcie_handle_msi_irq(struct nwl_pcie *pcie, u32 status_reg)
->>   {
->> -	struct nwl_msi *msi;
->> +	struct nwl_msi *msi = &pcie->msi;
->>   	unsigned long status;
->>   	u32 bit;
->>   
->> -	msi = &pcie->msi;
->> -
->>   	while ((status = nwl_bridge_readl(pcie, status_reg)) != 0) {
->>   		for_each_set_bit(bit, &status, 32) {
->>   			nwl_bridge_writel(pcie, 1 << bit, status_reg);
->> @@ -560,30 +558,21 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
->>   	struct nwl_msi *msi = &pcie->msi;
->>   	unsigned long base;
->>   	int ret;
->> -	int size = BITS_TO_LONGS(INT_PCI_MSI_NR) * sizeof(long);
->>   
->>   	mutex_init(&msi->lock);
->>   
->> -	msi->bitmap = kzalloc(size, GFP_KERNEL);
->> -	if (!msi->bitmap)
->> -		return -ENOMEM;
->> -
->>   	/* Get msi_1 IRQ number */
->>   	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
->> -	if (msi->irq_msi1 < 0) {
->> -		ret = -EINVAL;
->> -		goto err;
->> -	}
->> +	if (msi->irq_msi1 < 0)
->> +		return -EINVAL;
->>   
->>   	irq_set_chained_handler_and_data(msi->irq_msi1,
->>   					 nwl_pcie_msi_handler_high, pcie);
->>   
->>   	/* Get msi_0 IRQ number */
->>   	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
->> -	if (msi->irq_msi0 < 0) {
->> -		ret = -EINVAL;
->> -		goto err;
->> -	}
->> +	if (msi->irq_msi0 < 0)
->> +		return -EINVAL;
->>   
->>   	irq_set_chained_handler_and_data(msi->irq_msi0,
->>   					 nwl_pcie_msi_handler_low, pcie);
->> @@ -592,8 +581,7 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
->>   	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
->>   	if (!ret) {
->>   		dev_err(dev, "MSI not present\n");
->> -		ret = -EIO;
->> -		goto err;
->> +		return -EIO;
->>   	}
->>   
->>   	/* Enable MSII */
->> @@ -632,10 +620,6 @@ static int nwl_pcie_enable_msi(struct nwl_pcie *pcie)
->>   	nwl_bridge_writel(pcie, MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
->>   
->>   	return 0;
->> -err:
->> -	kfree(msi->bitmap);
->> -	msi->bitmap = NULL;
->> -	return ret;
-> 
-> Thank you!
-> 
-> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> 
-> 	Krzysztof
-> 
-
+Given my current state of health, I have decided to donate what I
+inherited from my late husband to you to help the poor and needy. I am
+Mrs Maria Schaefler,a 57years old dying woman. I was diagnosed for
+cancer about 2 years ago and I have few months to live according to
+medical experts. Email me for my directives
