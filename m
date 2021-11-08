@@ -2,99 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35DD6447857
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 02:34:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D6E4478CE
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 04:17:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235912AbhKHBhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Nov 2021 20:37:11 -0500
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:33583 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235013AbhKHBhK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 20:37:10 -0500
-Received: by mail-pf1-f169.google.com with SMTP id c126so6045648pfb.0;
-        Sun, 07 Nov 2021 17:34:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mWr9Mi5YMHTa3T07Gk34FemQhAzXo7wj/0HuBoS0oBY=;
-        b=Pt8Z4Lf10GJMEjgBmaRbSNZKR8/o8qH8TsW0Ah4iPRuFj77QPewiDIlMspj7Rk8Rh/
-         INHjTpDsNin1fj7L6iQbV9/3oOD03LCzbhJN3FXbGUxolGMPOeWpYWHrZn4UZhG+eWH5
-         P+NP4X7lqiqmigAcj+nBOfbBUqse7aqBg9Esvxbj2YEKade+FpIyQEzz5LDse3AUVtRs
-         S++jkvcVOP6G7h9eOOcR41YH+0E/0IsJR42PmfmrOL9hoUV9v/5Js9O4+ZVK0XQPvhQ8
-         wik9c7Qp4ZYnIja/N1p4QPR1I2mkAx43yqa9KKJr2EidGFiy0UIOkWjUe0aaPeHPE3NL
-         LYFw==
-X-Gm-Message-State: AOAM533OokXp+eXoH6d19XTR4DxjSNFkcCOqB4Emm6R0iLTC2olNbc8p
-        OPU9K4ZRaY0y2URRBjkP6z8=
-X-Google-Smtp-Source: ABdhPJyvrldzJctNqWP3qBig1k4nT4bAAzfVHptACo0tnM9HY/IvC+DM5RmBWCI0a12eDwKJDoZ1KQ==
-X-Received: by 2002:a62:7f4a:0:b0:44d:292f:cc24 with SMTP id a71-20020a627f4a000000b0044d292fcc24mr77899278pfd.58.1636335266915;
-        Sun, 07 Nov 2021 17:34:26 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id k20sm14217369pfc.83.2021.11.07.17.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Nov 2021 17:34:26 -0800 (PST)
-Date:   Mon, 8 Nov 2021 02:34:13 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     nsaenz@kernel.org, jim2101024@gmail.com, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: brcmstb: Declare a bitmap as a bitmap, not as a
- plain 'unsigned long'
-Message-ID: <YYh+ldT5wU2s0sWY@rocinante>
-References: <e6d9da2112aab2939d1507b90962d07bfd735b4c.1636273671.git.christophe.jaillet@wanadoo.fr>
+        id S236689AbhKHDTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Nov 2021 22:19:53 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55234 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229757AbhKHDTx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Nov 2021 22:19:53 -0500
+X-UUID: 4f2a8221be0a4be7bab5bd0f0dc5c3c7-20211108
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=84PdMly+vcryJAJZDzAQe575ojQCAqKQN4WPuKV+zz4=;
+        b=hvrfFZUbuyEu11x6aAPwv77vj01uqPEr+55P5ReHIpgTsLztYH4/6wYZxCP0sxH64E5psZ2KZPyHuhxMwmTuEW/KqcjyW57OmN3OLBEXAKQ0mNP+hsX4YV/mZE+v/c9PKv12XcewWVNLjqn5CBXnirnh+LvxKmwXIg6DLX1qbKI=;
+X-UUID: 4f2a8221be0a4be7bab5bd0f0dc5c3c7-20211108
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1310208741; Mon, 08 Nov 2021 11:17:06 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Mon, 8 Nov 2021 11:17:05 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkmbs10n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.15 via Frontend
+ Transport; Mon, 8 Nov 2021 11:17:05 +0800
+Message-ID: <98d237693bc618cba62e93495b7b3379c18ac6b5.camel@mediatek.com>
+Subject: Re: Distinguish mediatek drivers
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "Fan Fei" <ffclaire1224@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>, <linux-pci@vger.kernel.org>
+Date:   Mon, 8 Nov 2021 11:17:05 +0800
+In-Reply-To: <20211105202913.GA944432@bhelgaas>
+References: <20211105202913.GA944432@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e6d9da2112aab2939d1507b90962d07bfd735b4c.1636273671.git.christophe.jaillet@wanadoo.fr>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christophe!
+SGkgQmpvcm4sDQoNClRoYW5rcyBmb3IgdGhlIHJlbWluZGVyLCBJIHdpbGwgc2VuZCBwYXRjaGVz
+IHRvIHVwZGF0ZSB0aGVzZSBlbnRyaWVzLg0KDQpUaGFua3MuDQoNCk9uIEZyaSwgMjAyMS0xMS0w
+NSBhdCAxNToyOSAtMDUwMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4gV2UgaGF2ZSB0d28gTWVk
+aWFUZWsgZHJpdmVyczogcGNpZS1tZWRpYXRlay5jLCB3aGljaCBjbGFpbXM6DQo+IA0KPiAgIC5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1wY2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1l
+ZGlhdGVrLG10NzYyMy1wY2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi1w
+Y2llIg0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NzYyMi1wY2llIg0KPiAgIC5jb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10NzYyOS1wY2llIg0KPiANCj4gYW5kIHBjaWUtbWVkaWF0ZWst
+Z2VuMy5jLCB3aGljaCBjbGFpbXM6DQo+IA0KPiAgIC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
+ODE5Mi1wY2llIg0KPiANCj4gVGhlIEtjb25maWcgdGV4dCBkb2VzIG5vdCBkaXN0aW5ndWlzaCB0
+aGVtLiAgQ2FuIHNvbWVib2R5IHVwZGF0ZQ0KPiB0aGVzZQ0KPiBlbnRyaWVzIHNvIHRoZXkgZG8/
+ICBJdCdzIG5pY2UgaWYgd2UgY2FuIG1lbnRpb24gbW9kZWwgbnVtYmVycyBvcg0KPiBwcm9kdWN0
+IG5hbWVzIHRoYXQgYSB1c2VyIHdvdWxkIHJlY29nbml6ZS4NCj4gDQo+ICAgY29uZmlnIFBDSUVf
+TUVESUFURUsNCj4gICAgICAgICB0cmlzdGF0ZSAiTWVkaWFUZWsgUENJZSBjb250cm9sbGVyIg0K
+PiAgICAgICAgIGRlcGVuZHMgb24gQVJDSF9NRURJQVRFSyB8fCBDT01QSUxFX1RFU1QNCj4gICAg
+ICAgICBkZXBlbmRzIG9uIE9GDQo+ICAgICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01B
+SU4NCj4gICAgICAgICBoZWxwDQo+ICAgICAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IHRv
+IGVuYWJsZSBQQ0llIGNvbnRyb2xsZXIgc3VwcG9ydCBvbg0KPiAgICAgICAgICAgTWVkaWFUZWsg
+U29Dcy4NCj4gDQo+ICAgY29uZmlnIFBDSUVfTUVESUFURUtfR0VOMw0KPiAgICAgICAgIHRyaXN0
+YXRlICJNZWRpYVRlayBHZW4zIFBDSWUgY29udHJvbGxlciINCj4gICAgICAgICBkZXBlbmRzIG9u
+IEFSQ0hfTUVESUFURUsgfHwgQ09NUElMRV9URVNUDQo+ICAgICAgICAgZGVwZW5kcyBvbiBQQ0lf
+TVNJX0lSUV9ET01BSU4NCj4gICAgICAgICBoZWxwDQo+ICAgICAgICAgICBBZGRzIHN1cHBvcnQg
+Zm9yIFBDSWUgR2VuMyBNQUMgY29udHJvbGxlciBmb3IgTWVkaWFUZWsNCj4gU29Dcy4NCj4gICAg
+ICAgICAgIFRoaXMgUENJZSBjb250cm9sbGVyIGlzIGNvbXBhdGlibGUgd2l0aCBHZW4zLCBHZW4y
+IGFuZCBHZW4xDQo+IHNwZWVkLA0KPiAgICAgICAgICAgYW5kIHN1cHBvcnQgdXAgdG8gMjU2IE1T
+SSBpbnRlcnJ1cHQgbnVtYmVycyBmb3INCj4gICAgICAgICAgIG11bHRpLWZ1bmN0aW9uIGRldmlj
+ZXMuDQo+IA0KPiAgICAgICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBlbmFibGUgR2Vu
+MyBQQ0llIGNvbnRyb2xsZXINCj4gc3VwcG9ydCBvbg0KPiAgICAgICAgICAgTWVkaWFUZWsgU29D
+cy4NCj4gDQo+IEJvdGggZHJpdmVycyBhcmUgYWxzbyBuYW1lZCAibXRrLXBjaWUiIGFuZCB1c2Ug
+dGhlIHNhbWUgaW50ZXJuYWwNCj4gIm10a18iIHByZWZpeCBvbiBzdHJ1Y3RzIGFuZCBmdW5jdGlv
+bnMuICBOb3QgYSAqaHVnZSogcHJvYmxlbSwgYnV0DQo+IG5vdA0KPiByZWFsbHkgaWRlYWwgZWl0
+aGVyLg0KPiANCj4gQmpvcm4NCg==
 
-[...]
-> This bitmap can be BRCM_INT_PCI_MSI_LEGACY_NR or BRCM_INT_PCI_MSI_NR long.
-
-Ahh.  OK.  Given this an option would be to: do nothing (keep current
-status quo); allocate memory dynamically passing the "msi->nr" after it
-has been set accordingly; use BRCM_INT_PCI_MSI_NR and waste a little bit
-of space.
-
-Perhaps moving to using the DECLARE_BITMAP() would be fine in this case
-too, at least to match style of other drivers more closely.
-
-Jim, Florian and Lorenzo - is this something that would be OK with you,
-or you would rather keep things as they were?
-
-> Addresses-Coverity: "Out-of-bounds access (ARRAY_VS_SINGLETON)"
-
-This tag would have to be written as:
-
-  Addresses-Coverity: ("Out-of-bounds access (ARRAY_VS_SINGLETON)")
-
-[...]
-> +	DECLARE_BITMAP		(used, BRCM_INT_PCI_MSI_NR);
-
-Probably not the most elegant solution, but I would keep it as:
-
-  DECLARE_BITMAP(used, BRCM_INT_PCI_MSI_NR);
-
-Otherwise aligning either before or after the open bracket will cause
-either an error or a warning issued by checkpatch.pl accordingly about
-the style.  Other users of this (a vast majoirty) macro don't do any
-specific alignment at large
-
-[...]
-> +	/*
-> +	 * Sanity check to make sure that the 'used' bitmap in struct brcm_msi
-> +	 * is large enough.
-> +	 */
-> +	BUILD_BUG_ON(BRCM_INT_PCI_MSI_LEGACY_NR > BRCM_INT_PCI_MSI_NR);
-
-A healthy paranoia, I see. :-)
-
-	Krzysztof
