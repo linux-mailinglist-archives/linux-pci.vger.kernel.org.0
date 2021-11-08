@@ -2,97 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D46449C64
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 20:25:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0207C449CB0
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 20:51:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237310AbhKHT1g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 14:27:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237274AbhKHT1d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 14:27:33 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DEB4C061570;
-        Mon,  8 Nov 2021 11:24:49 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id gb13-20020a17090b060d00b001a674e2c4a8so683639pjb.4;
-        Mon, 08 Nov 2021 11:24:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KjOZTPQcvz2Ej/nInPoBz2bFdjF7rfN41XOQujZZQow=;
-        b=WrcP6KsVG7dWdD8AbJgaaMq7W7XxkJordouYWRSGf/N/xqSQmTLrDkW5EGL5PrmTd9
-         U+srJG0LSfUdyJC4FXzyGulhGCIFi/ZBdXR3qciqMM9FRQ14lv19yM5jHmi/608IZHRi
-         +NXZrwTeuAJ9lYCpRzxtioM981fqGcse3SdTHySeZMeuKBqpbXLI/xduG1cSDry0L3oD
-         6Hn91shlEZAvg7UKegLeMXZNCuJ2FvnOxiuHJGzlVL/te9bxRyx9bSWl8RHdALEmzqaV
-         Rh/qS2BwiXTipChUafUWO+hasas58NhRjpevwc9B3zgm4lK4gW/Qm+mxnBvGIEWP9K8H
-         HqLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KjOZTPQcvz2Ej/nInPoBz2bFdjF7rfN41XOQujZZQow=;
-        b=US4RUTmLThbturBEj6uQ3Mdthy0BZqbRawvQXaW4M0mOI7e+V1u7/28Pg5ldLFQDev
-         i5G9dxFUyVivkGjlZcIwZvbZIxX2BJEE70f/lPC/ZodHJFApvCoSTn3tR4RqxGp6gRVe
-         ucVyPYDUMIiiPCysoffWyfL5w/RAU5GolZpAWl2CmNGuiOrIAdouzhKjTg0FXFuGCxzD
-         5p/Qm5HMAtyNrAqOpMFsK2QhrvLvpH3/4YVLGwxwUSfu6OGA3tP10MgYq21cJFyattS0
-         zP81i9dFYf2fiJqfNFQDXDG3ldfjIVPIr9Pxup1FDfx1Vsdxs2L0fYZ/ROCh402+hN5G
-         GePQ==
-X-Gm-Message-State: AOAM530PmI1qXo4/R4S66ZL8Emwmcdfgz9HvlnZ/RPhFmpFvb1/vYNNV
-        ZyJJcW00tJ5YBsGWGhk/5gS9NqXgKio=
-X-Google-Smtp-Source: ABdhPJxGdPTj9Zr1FUCcTAgsUXoWb+YSFFAhwky7pkUZhWZEer5lpKzPnigO9zFKkM2MdC7vDdeppA==
-X-Received: by 2002:a17:902:b7c8:b0:141:9ddb:33e7 with SMTP id v8-20020a170902b7c800b001419ddb33e7mr1391113plz.60.1636399488246;
-        Mon, 08 Nov 2021 11:24:48 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m3sm17573242pfk.190.2021.11.08.11.24.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 11:24:47 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-mips@vger.kernel.org (open list:MIPS),
-        linux-kernel@vger.kernel.org (open list),
-        Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH 2/2] PCI: brcmstb: Allow building for BMIPS_GENERIC
-Date:   Mon,  8 Nov 2021 11:24:32 -0800
-Message-Id: <20211108192432.1589507-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211108192432.1589507-1-f.fainelli@gmail.com>
-References: <20211108192432.1589507-1-f.fainelli@gmail.com>
+        id S237914AbhKHTyc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 14:54:32 -0500
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:58827 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237645AbhKHTyb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 14:54:31 -0500
+Received: from [192.168.1.18] ([86.243.171.122])
+        by smtp.orange.fr with ESMTPA
+        id kAgBmHCd3OvR0kAgBmrd8n; Mon, 08 Nov 2021 20:51:45 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Mon, 08 Nov 2021 20:51:45 +0100
+X-ME-IP: 86.243.171.122
+Subject: Re: [PATCH] PCI: brcmstb: Declare a bitmap as a bitmap, not as a
+ plain 'unsigned long'
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     nsaenz@kernel.org, jim2101024@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, bhelgaas@google.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <e6d9da2112aab2939d1507b90962d07bfd735b4c.1636273671.git.christophe.jaillet@wanadoo.fr>
+ <YYh+ldT5wU2s0sWY@rocinante> <4d556ac3-b936-b99c-5a50-9add8607047d@gmail.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <4997ef3c-5867-7ce0-73a2-f4381cf0879b@wanadoo.fr>
+Date:   Mon, 8 Nov 2021 20:51:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
+In-Reply-To: <4d556ac3-b936-b99c-5a50-9add8607047d@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-BMIPS_GENERIC denotes support for the MIPS-based Broadcom STB platforms
-which this driver can support.
+Le 08/11/2021 à 17:28, Florian Fainelli a écrit :
+> 
+> 
+> On 11/7/2021 5:34 PM, Krzysztof Wilczyński wrote:
+>> Hi Christophe!
+>>
+>> [...]
+>>> This bitmap can be BRCM_INT_PCI_MSI_LEGACY_NR or BRCM_INT_PCI_MSI_NR 
+>>> long.
+>>
+>> Ahh.  OK.  Given this an option would be to: do nothing (keep current
+>> status quo); allocate memory dynamically passing the "msi->nr" after it
+>> has been set accordingly; use BRCM_INT_PCI_MSI_NR and waste a little bit
+>> of space.
+>>
+>> Perhaps moving to using the DECLARE_BITMAP() would be fine in this case
+>> too, at least to match style of other drivers more closely.
+>>
+>> Jim, Florian and Lorenzo - is this something that would be OK with you,
+>> or you would rather keep things as they were?
+> 
+> I would be tempted to leave the code as-is, but if we do we are probably 
+> bound to seeing patches like Christophe's in the future to address the 
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Even if I don't find this report in the Coverity database, it should 
+from around April 2018.
+So, if you have not already received several patches for that, I doubt 
+that you will receive many in the future.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index e917bb3652bb..93b141110537 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -270,7 +270,8 @@ config VMD
- 
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
--	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || \
-+		   BMIPS_GENERIC || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	default ARCH_BRCMSTB
--- 
-2.25.1
+
+My own feeling is that using a long (and not a long *) as a bitmap, and 
+accessing it with &long may look spurious to a reader.
+That said, it works.
+
+So, I let you decide if the patch is of any use. Should I need to tweak 
+or resend it, let me know.
+
+
+CJ
+
+> problem, unless we place a coverity specific comment in the source tree, 
+> which is probably frowned upon.
+> 
+> The addition of the BUILD_BUG_ON() is a good addition though.
 
