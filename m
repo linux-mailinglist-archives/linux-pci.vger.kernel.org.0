@@ -2,185 +2,304 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EC0C447F82
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 13:35:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7ED844800F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 14:09:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239554AbhKHMik (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 07:38:40 -0500
-Received: from mail-bn8nam11on2058.outbound.protection.outlook.com ([40.107.236.58]:52513
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239535AbhKHMik (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Nov 2021 07:38:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R2hat7adjmUgFRXcans/dQkAoywojttNzNPvzrrYwLeNWNhN+v8aISdYxYqOG2j0MkMGuzIaTudXGRkvWalvzliuM0ymJRiYkZU2Dx9Vw0/1/1NyVy59fxFzBr426mbRLFh0h/P1g4IaeS2pumQN5/hQunYua2LxEOuREzGnym3Tg9urwQGVICZmOGY2XQFV4qt6Qlk9WOZThYnlthUiW48klUhgKD7RtNHi6+NB1IeLomwUiN+72TOEpcv6zgNf2yOqHudpaNaHMDNdG+kSFAy5j0SPPF/HnTg5y9fkhEXKRADhKgzt2mZfIq+XZ1L1dPa2/LBqbwcBiU/cXWNvPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tL/cT/YBUDIETlv23hfYzXDT0Eljhq9tHUTBTI0EjNc=;
- b=k1WeBTErHeWLSmzLWrnn5RcCRP8njo2CejX0C7N4Ep3jZZ9UUZssq7c3gK4u0wl7J5atz+mEbX7rF0sIo3wymIbwpy4hnc+uzgEXsByAugmiJTdUvzXoe0xpFijG7OSqytpDpRKhS0fBzs8pk4kzX5yvkhyWEcbiYkPL1YrTXtaiXiw0Rwr9l9iKHO6IbqeREn06aFN0DcvT51+2mFzUpPAxsSHiyPkMWIlrEXY6w+RlouIfZ16bIUrSKYJWnIS8UywR0fGIGQRTtxlvKNBRQ+xdfadIe5bb05WGfr0VwCSJrbJfwN/DZOV7rjME2X1e7e4gqDtcF2VcWpeXt/NGBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tL/cT/YBUDIETlv23hfYzXDT0Eljhq9tHUTBTI0EjNc=;
- b=WEb6KCtJCB6a5zYEsR2JWriVuWeAJKKHks+eg/6O6vfY4NgW2MuVPCq+usb4c8P5iWH+6mQTfCexJy/w8/KJ4EQieaFBFXrKT12MbYADTbNFcnzbcMpraGTX3x3i4L4h8j31bvWXluMr5p+0EV3y+QSYj0mZrGI9rD3HQ5GDUi/ArdLsuAcLXyXZgYFYjZrNKv8w+oqVBQf2vJobYBmIBHqDJSoxQhX8Cbq9xQ4L9/1NV7RCDL0HhixG/pEPmS3gjLN2Dba59wNhwjS5BWein+8SWPHzjlngtiwF7FMsh9rjD4tbJlcdeNLQCn3gq8GZUe44KKgVkW4tblAbiJqVtw==
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5095.namprd12.prod.outlook.com (2603:10b6:208:31b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.13; Mon, 8 Nov
- 2021 12:35:48 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4669.016; Mon, 8 Nov 2021
- 12:35:48 +0000
-Date:   Mon, 8 Nov 2021 08:35:47 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "leonro@nvidia.com" <leonro@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "maorg@nvidia.com" <maorg@nvidia.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211108123547.GS2744544@nvidia.com>
-References: <20211020185919.GH2744544@nvidia.com>
- <20211020150709.7cff2066.alex.williamson@redhat.com>
- <87o87isovr.fsf@redhat.com>
- <20211021154729.0e166e67.alex.williamson@redhat.com>
- <20211025122938.GR2744544@nvidia.com>
- <20211025082857.4baa4794.alex.williamson@redhat.com>
- <20211025145646.GX2744544@nvidia.com>
- <20211026084212.36b0142c.alex.williamson@redhat.com>
- <20211026151851.GW2744544@nvidia.com>
- <BN9PR11MB5433ACFD8418D888F9E1BCAE8C919@BN9PR11MB5433.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5433ACFD8418D888F9E1BCAE8C919@BN9PR11MB5433.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL1PR13CA0110.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::25) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+        id S236570AbhKHNMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 08:12:07 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4069 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238803AbhKHNMG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 08:12:06 -0500
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hnrvd0MCLz67ykV;
+        Mon,  8 Nov 2021 21:05:49 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Mon, 8 Nov 2021 14:09:20 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 8 Nov
+ 2021 13:09:19 +0000
+Date:   Mon, 8 Nov 2021 13:09:18 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
+Message-ID: <20211108130918.00004d76@Huawei.com>
+In-Reply-To: <20211105235056.3711389-4-ira.weiny@intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+        <20211105235056.3711389-4-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL1PR13CA0110.namprd13.prod.outlook.com (2603:10b6:208:2b9::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.5 via Frontend Transport; Mon, 8 Nov 2021 12:35:47 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mk3sJ-0078nD-7n; Mon, 08 Nov 2021 08:35:47 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 27a2a26b-1fc8-40da-5437-08d9a2b44aa6
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5095:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB509568CD1A5AD274AC01878EC2919@BL1PR12MB5095.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uNYwy57NGIA0WRvcCA95v4ggiEXa6WOKUNCLnAvg/c4dfe2cPfoFKhro3HWtA2Zpbumr+bTTNdWeMt36R9Yw8P3EqGJgBucCzm9YgaPW3oTNAj8xKvof04lEOHOpKPS3YAkEf57PN/iClew3VxRuBcQvxRxFrDRlG1343A8VeDzVi1B3iAVYmxyKRdwwOjqApdlocK3flWEJEMSac+b8bSJa0rcWGRHrbwXIHX4m6mTFRAHjGSnmufKkdLpY6ZszoBF7wCCc8blKPxJAge0LE0KTzi9/0xlT18chet1ZplMU8lF6Z/izGbWcbpggqrk4yBwOCIWGZYgtttrnZknlv03M9NfQKjPxNf56eZqrIc/JGcX6vaolgsdchmK8aFkHazl4yNnuE0UviyMwA1py0fEnzyWI2ykbfqD9SjVbfpT2edhOiGiQAERkAhcRUm/yuCaGPL30aHq4vFTGSg2sIYEfwBjrpk9we0vsAGqGtq61Oterpc7Mjf0tG6JeozjWX8GDBM+clpkOvuLto0+Em7CGiEc+Swm3xzS0xsOFZwfY0Ol67EphhaacsXFn5JfpwEo0x117kWDOfAokxYVRelC1LlIENFyNFBbSfDLWTDlgLbRx8P0axO0eJbTh1/39cfhI0/Mj1q+2VHbo+wLbWw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(8676002)(26005)(1076003)(38100700002)(316002)(66556008)(66946007)(54906003)(2616005)(66476007)(186003)(33656002)(83380400001)(5660300002)(426003)(2906002)(9746002)(86362001)(36756003)(6916009)(4326008)(508600001)(9786002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Anl7F15BE03CViO14+OhK34KNOmG5+S+vPWxpifgsg4tfsk6h9UShvLtloAt?=
- =?us-ascii?Q?T1qkS+2/R5Fj5ko8ctOUf4EPNaVqpnKcg0wyRdnq4PSJcLMJoN+FyDYpPo6B?=
- =?us-ascii?Q?No0gMHt7iHqpsfzBVQx+FxDkZ68Cm4ifyPKfWn/F6Ul8qcor0gSVc97jXjZ0?=
- =?us-ascii?Q?7du5NLwqdajmd2l65RU8dcXVteEF3UTYwr/EzpKRU5rA7ZDy+WrYk/9bLh0L?=
- =?us-ascii?Q?q8JnaYsqXVl/XG3Z57CnznnOhrySaCgrOjRbisC8q0S+1xJmAtLZHkkRU8DW?=
- =?us-ascii?Q?vsrsWcTh6MThf3IGIdV+lAKMaK9euOsF4oq2foxI+Qyy9RE5+37P8ZR2ju+R?=
- =?us-ascii?Q?qFjynvpkgksXtezcuGP2fDTthCvfiyHLLGi0jxqiqsi5W/WGFExYDptGCS9N?=
- =?us-ascii?Q?Z93mAyvS3LkxGoupBVry4rHNkjp+SunsC6Y8340zk/i8iq95jlu2Wnwxs18e?=
- =?us-ascii?Q?OG3Lhme5A7iyklZt/Pr7oKpUGd5oDFjNuKGPf0ciQ+zOyRXXoKAbwPY/5CW7?=
- =?us-ascii?Q?Q6ldvlEWUTaAuZp4O2Dvmr2/mTgAEVurVRyMSBMmHXlORwWW8SV6Ki67nf/Y?=
- =?us-ascii?Q?AWHMWfBI+WlOvf5HGZZosEGtk3/j0L0NGzqAKePEw8vLQWjKLGDUYFzcpyMG?=
- =?us-ascii?Q?tVU8/YWTpqxIiHduSm246Q5SvweRm2st5iLi557+hW1UtWqP4Kn6mPWhxdOD?=
- =?us-ascii?Q?foCsYcOOC299U98os7iwMne15nIw4MFNhRAI9lUJt5tjuJzTcs6pnwdHDh9M?=
- =?us-ascii?Q?nViWjC34xjguZifPjH2R/++4ts0BC/eK0f0PM42uywmDa8pcz87lemar0Mtx?=
- =?us-ascii?Q?GDOeQJdDTnjmqmhV6QqjdSfjNJB0VL2mLxmU/joCHb4mtCRkhvCNMA23T8eA?=
- =?us-ascii?Q?bUOy2S0juX0Y+u/W3QTF/VMUAk458iKfIWnVBIWDJlaOKlKXYI7EA1257tUm?=
- =?us-ascii?Q?GxNDtXNqXU2hQpzAQhjFVXyRLK0IKQFdiyDqgMYHh8yhfzl3KxN9NPHuWwjH?=
- =?us-ascii?Q?UY+wqxc8t0TFNvu6HXls1P/qGO1S75T8WWfZodY1w9TtCBjR6af97KbbmHJH?=
- =?us-ascii?Q?9l4kjIJD1aiK+kNz495xkKzFEk3vgapANGfIb5NfODA4/f2nhk/RD6vH35rc?=
- =?us-ascii?Q?ksSTzYAxCBJKNk6ljrDNsx0EI7x2O1Z5y1PO5YdZcLHTS6qiepQq3LwYqCJN?=
- =?us-ascii?Q?GkInxCFym9fhm9mx+UFrYnbniupwslfAyptP6RzPRipVJR+q7Y5wmi8yz/Q1?=
- =?us-ascii?Q?MWnrwbsFYMLzXF2D3AkX6plB1CBNnhdFeTo/pZO8EseeTcEadfEvcfcfnmUx?=
- =?us-ascii?Q?42Z8kWbsl+sOvWkJNaw2v96JGmP05lKBAnZlKmo03LLrYZZww9fAQQIYLFMx?=
- =?us-ascii?Q?JONjFYAk3SyjERGso5qud8uDEBH4JL0u9QZs4RvIL7cxYQQQnPsWERTfqHKI?=
- =?us-ascii?Q?buseMw3nSaZU+25yfvyWXNZZlS9E5sBAlITljLozd+WQWMw/oftBe92bNLct?=
- =?us-ascii?Q?22j0B/ZXlJn9ipT8AEkSYa7Gyu8XtanXm1bVfNtDd4Ck+9b1GxoplfY/GWTO?=
- =?us-ascii?Q?bvD/ZoUbZGLFYUYOtnE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27a2a26b-1fc8-40da-5437-08d9a2b44aa6
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2021 12:35:48.1844
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9XdIW2dy/h6DS4/S6jlA8RONN3cKJcJsP2Cv9GdyjbUOG6YIRkcoLH0kEBrUVlZn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5095
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 08:53:20AM +0000, Tian, Kevin wrote:
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Tuesday, October 26, 2021 11:19 PM
-> > 
-> > On Tue, Oct 26, 2021 at 08:42:12AM -0600, Alex Williamson wrote:
-> > 
-> > > > This is also why I don't like it being so transparent as it is
-> > > > something userspace needs to care about - especially if the HW cannot
-> > > > support such a thing, if we intend to allow that.
-> > >
-> > > Userspace does need to care, but userspace's concern over this should
-> > > not be able to compromise the platform and therefore making VF
-> > > assignment more susceptible to fatal error conditions to comply with a
-> > > migration uAPI is troublesome for me.
-> > 
-> > It is an interesting scenario.
-> > 
-> > I think it points that we are not implementing this fully properly.
-> > 
-> > The !RUNNING state should be like your reset efforts.
-> > 
-> > All access to the MMIO memories from userspace should be revoked
-> > during !RUNNING
+On Fri, 5 Nov 2021 16:50:54 -0700
+<ira.weiny@intel.com> wrote:
+
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> This assumes that vCPUs must be stopped before !RUNNING is entered 
-> in virtualization case. and it is true today.
+> CXL devices have DOE mailboxes.  Create auxiliary devices which can be
+> driven by the generic DOE auxiliary driver.
+
+I'd like Bjorn's input on the balance here between what is done
+in cxl/pci.c and what should be in the PCI core code somewhere.
+
+The tricky bit preventing this being done entirely as part of 
+PCI device instantiation is the interrupts.
+
 > 
-> But it may not hold when talking about guest SVA and I/O page fault [1].
-> The problem is that the pending requests may trigger I/O page faults
-> on guest page tables. W/o running vCPUs to handle those faults, the
-> quiesce command cannot complete draining the pending requests
-> if the device doesn't support preempt-on-fault (at least it's the case for
-> some Intel and Huawei devices, possibly true for most initial SVA
-> implementations). 
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-It cannot be ordered any other way.
+Mostly new code, so not sure I should really be listed on this
+one but I don't mind either way.
 
-vCPUs must be stopped first, then the PCI devices must be stopped
-after, otherwise the vCPU can touch a stopped a device while handling
-a fault which is unreasonable.
+A few comments inline but overall this ended up nice and clean.
 
-However, migrating a pending IOMMU fault does seem unreasonable as well.
+> 
+> ---
+> Changes from V4:
+> 	Make this an Auxiliary Driver rather than library functions
+> 	Split this out into it's own patch
+> 	Base on the new cxl_dev_state structure
+> 
+> Changes from Ben
+> 	s/CXL_DOE_DEV_NAME/DOE_DEV_NAME/
+> ---
+>  drivers/cxl/Kconfig |   1 +
+>  drivers/cxl/cxl.h   |  13 +++++
+>  drivers/cxl/pci.c   | 120 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 134 insertions(+)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67c91378f2dd..9d53720bea07 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -16,6 +16,7 @@ if CXL_BUS
+>  config CXL_MEM
+>  	tristate "CXL.mem: Memory Devices"
+>  	default CXL_BUS
+> +	select PCI_DOE_DRIVER
+>  	help
+>  	  The CXL.mem protocol allows a device to act as a provider of
+>  	  "System RAM" and/or "Persistent Memory" that is fully coherent
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 5e2e93451928..f1241a7f2b7b 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -75,6 +75,19 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
+>  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+>  
+> +/*
+> + * Address space properties derived from:
+> + * CXL 2.0 8.2.5.12.7 CXL HDM Decoder 0 Control Register
+> + */
+> +#define CXL_ADDRSPACE_RAM   BIT(0)
+> +#define CXL_ADDRSPACE_PMEM  BIT(1)
+> +#define CXL_ADDRSPACE_TYPE2 BIT(2)
+> +#define CXL_ADDRSPACE_TYPE3 BIT(3)
+> +#define CXL_ADDRSPACE_MASK  GENMASK(3, 0)
 
-The NDA state can potentially solve this:
+Stray.
 
-  RUNNING | VCPU RUNNING - Normal
-  NDMA | RUNNING | VCPU RUNNING - Halt and flush DMA, and thus all faults
-  NDMA | RUNNING - Halt all MMIO access
-  0 - Halted everything
+> +
+> +#define CXL_DOE_PROTOCOL_COMPLIANCE 0
+> +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
+> +
+>  #define CXL_COMPONENT_REGS() \
+>  	void __iomem *hdm_decoder
+>  
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 8dc91fd3396a..df524b74f1d2 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+>  #include "pci.h"
+> @@ -471,6 +472,120 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	return rc;
+>  }
+>  
+> +static void cxl_mem_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
+> +
+> +static void cxl_destroy_doe_device(void *ad)
+> +{
+> +	struct auxiliary_device *adev = ad;
+Local variable doesn't add anything, just pass it directly
+into the functions as a void *.
 
-Though this may be more disruptive to the vCPUs as they could spin on
-DMA/interrupts that will not come.
+> +
+> +	auxiliary_device_delete(adev);
+> +	auxiliary_device_uninit(adev);
 
-Jason
+Both needed?  These are just wrappers around
+put_device() and device_del()
+
+Normally after device_add() suceeded we only ever call device_del()
+as per the docs for device_add()
+https://elixir.bootlin.com/linux/latest/source/drivers/base/core.c#L3277
+
+> +}
+> +
+> +static DEFINE_IDA(cxl_doe_adev_ida);
+> +static void __doe_dev_release(struct auxiliary_device *adev)
+> +{
+> +	struct pci_doe_dev *doe_dev = container_of(adev, struct pci_doe_dev,
+> +						   adev);
+> +
+> +	ida_free(&cxl_doe_adev_ida, adev->id);
+> +	kfree(doe_dev);
+> +}
+> +
+> +static void cxl_doe_dev_release(struct device *dev)
+> +{
+> +	struct auxiliary_device *adev = container_of(dev,
+> +						struct auxiliary_device,
+> +						dev);
+> +	__doe_dev_release(adev);
+> +}
+> +
+> +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+
+Pass in the struct device, or maybe even the struct pci_dev as
+nothing in here is using the cxl_dev_state.
+
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	int irqs, rc;
+> +	u16 pos = 0;
+> +
+> +	/*
+> +	 * An implementation of a cxl type3 device may support an unknown
+> +	 * number of interrupts. Assume that number is not that large and
+> +	 * request them all.
+> +	 */
+> +	irqs = pci_msix_vec_count(pdev);
+> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
+> +	if (rc != irqs) {
+> +		/* No interrupt available - carry on */
+> +		dev_dbg(dev, "No interrupts available for DOE\n");
+> +	} else {
+> +		/*
+> +		 * Enabling bus mastering could be done within the DOE
+> +		 * initialization, but as it potentially has other impacts
+> +		 * keep it within the driver.
+> +		 */
+> +		pci_set_master(pdev);
+> +		rc = devm_add_action_or_reset(dev,
+> +					      cxl_mem_free_irq_vectors,
+> +					      pdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+
+Above here is driver specific...
+Everything from here is is generic so perhaps move it to the PCI core?
+Alternatively wait until we have users that aren't CXL.
+
+> +	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
+> +
+> +	while (pos > 0) {
+> +		struct auxiliary_device *adev;
+> +		struct pci_doe_dev *new_dev;
+> +		int id;
+> +
+> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> +		if (!new_dev)
+> +			return -ENOMEM;
+> +
+> +		new_dev->pdev = pdev;
+> +		new_dev->cap_offset = pos;
+> +
+> +		/* Set up struct auxiliary_device */
+> +		adev = &new_dev->adev;
+> +		id = ida_alloc(&cxl_doe_adev_ida, GFP_KERNEL);
+> +		if (id < 0) {
+> +			kfree(new_dev);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		adev->id = id;
+> +		adev->name = DOE_DEV_NAME;
+> +		adev->dev.release = cxl_doe_dev_release;
+> +		adev->dev.parent = dev;
+> +
+> +		if (auxiliary_device_init(adev)) {
+> +			__doe_dev_release(adev);
+> +			return -EIO;
+> +		}
+> +
+> +		if (auxiliary_device_add(adev)) {
+> +			auxiliary_device_uninit(adev);
+> +			return -EIO;
+> +		}
+> +
+> +		rc = devm_add_action_or_reset(dev, cxl_destroy_doe_device, adev);
+> +		if (rc)
+> +			return rc;
+> +
+> +		if (device_attach(&adev->dev) != 1)
+> +			dev_err(&adev->dev,
+> +				"Failed to attach a driver to DOE device %d\n",
+> +				adev->id);
+
+I wondered about this and how it would happen.
+Given soft dependency only between the drivers it's possible but error or info?
+I'd go with dev_info().  It is an error I'd bail out and used deferred probing
+to try again when it will succeed.
+
+> +
+> +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct cxl_register_map map;
+> @@ -517,6 +632,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_setup_doe_devices(cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+>  	cxlmd = devm_cxl_add_memdev(cxlds);
+>  	if (IS_ERR(cxlmd))
+>  		return PTR_ERR(cxlmd);
+> @@ -546,3 +665,4 @@ static struct pci_driver cxl_pci_driver = {
+>  MODULE_LICENSE("GPL v2");
+>  module_pci_driver(cxl_pci_driver);
+>  MODULE_IMPORT_NS(CXL);
+> +MODULE_SOFTDEP("pre: pci_doe");
+
