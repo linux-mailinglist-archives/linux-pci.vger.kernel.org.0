@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7209449E74
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 22:51:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67300449E77
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Nov 2021 22:51:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240164AbhKHVyH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 16:54:07 -0500
-Received: from mail-dm6nam10on2061.outbound.protection.outlook.com ([40.107.93.61]:10080
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S240624AbhKHVyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 16:54:12 -0500
+Received: from mail-bn8nam11on2088.outbound.protection.outlook.com ([40.107.236.88]:48513
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239662AbhKHVyH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Nov 2021 16:54:07 -0500
+        id S240622AbhKHVyL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Nov 2021 16:54:11 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kC7tKejtnxNFNE8rwrUZmsnV8q7UB44XsLwaucZJCO52AUB6s3+GEpNh+A9Z0W0g0iYHYmKk9g2UtWcCI4R0cYP9pOZBTSk/FhVglNRLtRsklS6zutmlCp+TNpmp2sy+5EehlrqqeV4oePF84BWyYHDvxRz9GhnN05muSpy4gIrmWRZB7r8U5MjyxW4qW6uG5y1GTUpzY1G+X6DGFffYvAi8kV9/qE/HD1v6c1RM6JyrFhV4i23Ws+YDrPNps/YGeR52UjG0fszhSNz/EcwR1nc9ZvyKrOZzGSEZ3SMWf+C3dvY0X/p0geMBk+T0miiMThyNy/uRkgunyZtW4kpoPA==
+ b=FkihcrRvay73wTYdSzC1f2hBT8kgMl61DcVLaDm5gf4cquWdDq142rCJBLWYFBzzIwTuzOIzSjvaUIxqHKWseRMte1o/JqEjoxz6SFXFUKzgYX4JUvXsCITete+8dfHgbA/S6m+0oUtTyXOaZ+VSB5Km68KdGwFIkXvGwqIsijhEDUv/edz+4QvD2PCP0i1bGkQC57eR5QXLZWfCzliClXulOq4EG6xUKaq/k0SAFI88jBIZH8h5DlSFkyRD8sYiLkHEE1JPiQ1y3VMful+gWCNVT7jv8x1ac+6CxeHwXPzCggXsIJAtsk9NfUUU/UeB6dToQrCHWF1JRBUfOjlJxQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y8yPLsLeQc6vqtVvjFngC7e0CGzeox5NdNHgCY255/s=;
- b=HoMvBssVGq9XMJzdeOKdwWEz/ZPCQaE2h7qxbFL3Z07AjQ7CBEVBBXiJDGEWRmDiZ6ljus5vVscnVW65xvh5CQuEcfve0n7m4dzJc7DVPSqHN1rBhR55aJAbGtkaSvnfi9Msn1xFGUyWEuosaq0RGWVXl0jY4AE5kLxKU3oIUi8efcJNOmgir230Wt4AsHVG+J1eOMvQLEmL9PyyLfPC+Iyrr6u3Hc09YGQfVOjntuh3b+Jx8ph46GzvRGDDvALIwi+9/LOunpkfuEwMjPrqEqF6JDaf3SR76bVPEjRc6xdATqVhqpsw9lcV5QcXaZCXOdjbOkzBwlWnAyHmMI/5sw==
+ bh=gCFxtZHioBgTxS7xbEdfHMhcDf400HVw7Pips6zhBt4=;
+ b=TR4dtSh6v16T0nzQ68o3wlDzFGa9JlAyT0JVa+ip6V0Tji0g8AgiGSeX8SXMfCaz2YitD+opAjIAhe/JLM0DELr0I8HEdvY1cQgoMA8A0lKGaPlP5VJapf2uBEbNFnRwP38B3bjcu0krNv5+iyN42iKcQ8q+1Nw0ehFYjnZ0MmifdAtWXqa5EEvjoZq+dQUHCPHwzls5X7Y/ZLARrbpNDjmbvfNCSpFyXCQ5VYZe1ZcpZ75cmVC8erAYgTKwz3C/l8Sswqj7cD4vJFrZW27W0IFXiPxEdSk/SaMqPz0kbp3/185SB7XfEuU2B0BQ2yuDDr5wnl7sbBFmS2DrOKI4iA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y8yPLsLeQc6vqtVvjFngC7e0CGzeox5NdNHgCY255/s=;
- b=gGvM+KUmqitSi1wzhDyqd27JBcG/L111xwvY+M1XlnfS1NQBKEhmNPXKDGTKlcyhvFhvTgbKKd+yoigYGfERHBKktfZ9s1Qj/aHOYZChOlyoslY4uMPTvxSMKhCxId0rhplKghx1N3+4IEmgVHDp+b+QXRjfg18sftzNXW3zuQc=
-Received: from MW4PR04CA0270.namprd04.prod.outlook.com (2603:10b6:303:88::35)
- by MN2PR12MB3454.namprd12.prod.outlook.com (2603:10b6:208:c8::16) with
+ bh=gCFxtZHioBgTxS7xbEdfHMhcDf400HVw7Pips6zhBt4=;
+ b=mZLo5tQS+q7VF9jif0HCgQDD2pF0v0iINbrZv4Lp1u5licGharwlqFTGUlqWTX1M/JFCM3WCRKR4z5eGJeimysDQ9wV5HPsE5Vz7LjBMuw7IrX+yG5hSzlRY6F5hSEtktbyWcLI37zACFxDlF/UgIE8F9enPmZYh9MD8d9OaiuM=
+Received: from CO2PR04CA0096.namprd04.prod.outlook.com (2603:10b6:104:6::22)
+ by BL1PR12MB5318.namprd12.prod.outlook.com (2603:10b6:208:31d::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14; Mon, 8 Nov
- 2021 21:51:19 +0000
-Received: from CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:88:cafe::8f) by MW4PR04CA0270.outlook.office365.com
- (2603:10b6:303:88::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.16 via Frontend
- Transport; Mon, 8 Nov 2021 21:51:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.10; Mon, 8 Nov
+ 2021 21:51:24 +0000
+Received: from CO1NAM11FT009.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:104:6:cafe::d9) by CO2PR04CA0096.outlook.office365.com
+ (2603:10b6:104:6::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.11 via Frontend
+ Transport; Mon, 8 Nov 2021 21:51:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=pass action=none header.from=amd.com;
@@ -44,15 +44,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT034.mail.protection.outlook.com (10.13.174.248) with Microsoft SMTP
+ CO1NAM11FT009.mail.protection.outlook.com (10.13.175.61) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4669.10 via Frontend Transport; Mon, 8 Nov 2021 21:51:18 +0000
+ 15.20.4669.10 via Frontend Transport; Mon, 8 Nov 2021 21:51:23 +0000
 Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7; Mon, 8 Nov 2021
- 15:51:15 -0600
-Subject: [PATCH 0/3] k10temp/amd_nb: Add support for AMD Family 19h Models
- 10h-1Fh and A0h-AFh
+ 15:51:21 -0600
+Subject: [PATCH 1/3] x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and
+ (A0h-AFh) PCI IDs
 From:   Babu Moger <babu.moger@amd.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
@@ -60,8 +60,10 @@ To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <bhelgaas@google.com>
 CC:     <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <babu.moger@amd.com>
-Date:   Mon, 8 Nov 2021 15:51:14 -0600
-Message-ID: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
+Date:   Mon, 8 Nov 2021 15:51:21 -0600
+Message-ID: <163640828133.955062.18349019796157170473.stgit@bmoger-ubuntu>
+In-Reply-To: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
+References: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
 User-Agent: StGit/1.1.dev103+g5369f4c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -71,47 +73,98 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: adacdc63-5e37-4f86-8894-08d9a301e57e
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3454:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB34541C9032F4D0A530ABCEAF95919@MN2PR12MB3454.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-MS-Office365-Filtering-Correlation-Id: 4e88f544-b9de-4406-6b91-08d9a301e85a
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5318:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB53183865344D4511142AA04595919@BL1PR12MB5318.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:935;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JsEfybIj5g8f9V88+cr52MtXRJ74WRbZ6jFMYF3VA1Ql/ONLOkb/5SPnzPYu+R7Svuj13U4dPG+znrlc39k8C58OJWPJfysZKnQr7Bww0HaAz8QniuPljxICJ9xhSVu/d/IUDf6z490d+fA9TKrAIodO/+VLkcloqXG2IS7xX4lzEtTDT5W6FXPS2YK4uT1D5twJaoYm+soMpXh/c4TMdzARETcOIj4fKLC+rHY9uY2ILhxGbqH76BC5Aslngkjg8bKxFN9yr7wJDygZqOxa54GbPE6I8jPi24+1/0qLISsb5ycSTRjCB8qYRO3xBnjFmvfTG/+WnhSCP6Px4cFt3bMfjhHCW5ekQDsLzTPbq0zNuvGN6rQK261asKyNJqG0TzyyT8MOelmFNJaD2fwLaKB3zP5/sG5Vqmm7m3sKpTFv+NxbliFFvXEZ7Nzn6EyXfSu2589AhZDKQKbFyytT4wd4cb1LoyjHYGNvcEn/KIsoJ5EDglFuVw747+VOMV4bPXD29HU+VKMfWMuVkUNymabY5SHpG5Bz2nhgbm5t+XYazy/JfFz38OUJx2VDxBsdQt5fBQyNbJP10O5TogGJokLBhIE1GbDi88jgY9OGTh+rrp7ch85X4X7dBYqGA4TL1VRk00VgpT9YEIBlrJrxFMSbZ9Qii9wnnMGVchM7Rua/7hltpcBE4cd7FWtIOtyGYZJZ4rMNENHTCC+n33MYC+i34sBOuFSMiuH7Kr+hZ+G1+JYqw6RWqflSpgUevOBdmBoksqgdnBMJXyfWKqBBKg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(7916004)(36840700001)(46966006)(316002)(70586007)(426003)(2906002)(81166007)(508600001)(83380400001)(7416002)(70206006)(5660300002)(356005)(86362001)(103116003)(9686003)(82310400003)(36860700001)(54906003)(4744005)(336012)(16526019)(44832011)(8936002)(110136005)(8676002)(4326008)(26005)(921005)(186003)(16576012)(47076005)(33716001)(71626007)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: JjNX8/usQS2CXwXzER5AtI6lawepzQOuTcr0jqlVBFCmN0lyCi/uaZxc+2+YeI3MjFMnH/SOW42pFG7iQHgc4gM8CewlG/hrnuRBn4Ar2CXTPx+NKpuRfTiqu1T0vinv2n779e5vwSKNMJZPTX11PBbOsrz797wJlLwPqD0a9aQrSf3olvRV5P2FfCzmgQVVteEqNR9NMnE7miL8fF5QhbkmvoZMnvLIOl8heNqbnaMT4oxeQFG4WyR7AAXm1X1dJzWy7zej6L3fW288zXExa3QR67tJ5BnGdWeZElsd425brhcWU6Xa+g6joAPAcnrwJ0RC1NpGB3FazSM+fb89ctd7c0bNaZwFJjUXOKi3mtm8ZHNhY40tcXLkgEi03HYHi8NUfD7IJsvFOBrqyjOQubvfY3APlQvU6I0GHAhdWqZdMReLSl4rul5pMJzDK8bZgXyHbJIjASGNXLbNymInzpY4iD6u0tr9KVYp1e9Qo9g1NQWi7gg/OVl0fNmzeWIkQfNsnK1loBhdsip75Py8+RtBODsJHxC0d0U8YGioZjT2H7WJMuscuqQTxBTSnf8Dqz8c+zlnRuzTIVFv5aikGCXiXHc3atije4Vq1c+9z79bVaKJAp8ClS3XvQ+99oMm1QTQznGI/AWJl38L70oZIs5hExaIWxgUHnXPT4ibB4lijqjXyxPULIF661KjzCvPyl2j6ObQSfTPPgUeMbsc3sycry8M4G5SbRaHNPe/4fFWr5j3vjDfL7r61Vizvwowm08GFYArVstQX+p3Pkqptw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(7916004)(46966006)(36840700001)(70206006)(70586007)(82310400003)(8936002)(16526019)(36860700001)(336012)(26005)(47076005)(103116003)(2906002)(8676002)(921005)(4326008)(356005)(508600001)(110136005)(9686003)(81166007)(316002)(7416002)(426003)(54906003)(16576012)(44832011)(86362001)(5660300002)(33716001)(186003)(71626007)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2021 21:51:18.8446
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2021 21:51:23.6591
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: adacdc63-5e37-4f86-8894-08d9a301e57e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e88f544-b9de-4406-6b91-08d9a301e85a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT034.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT009.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3454
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5318
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series updates k10temp and amd_nb drivers to support AMD Family 19h=0A=
-Models 10h-1Fh and A0h-AF CPUs.=0A=
+From: Yazen Ghannam <yazen.ghannam@amd.com>=0A=
+=0A=
+Add the new PCI Device IDs to support new generation of AMD 19h family of=
+=0A=
+processors.=0A=
+=0A=
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>=0A=
+Signed-off-by: Babu Moger <babu.moger@amd.com>=0A=
 ---=0A=
+ arch/x86/kernel/amd_nb.c |    5 +++++=0A=
+ include/linux/pci_ids.h  |    1 +=0A=
+ 2 files changed, 6 insertions(+)=0A=
 =0A=
-Babu Moger (2):=0A=
-      hwmon: (k10temp) Remove unused definitions=0A=
-      hwmon: (k10temp) Add support for AMD Family 19h Models 10h-1Fh and A0=
-h-AFh=0A=
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c=0A=
+index c92c9c774c0e..f3e885f3dd0f 100644=0A=
+--- a/arch/x86/kernel/amd_nb.c=0A=
++++ b/arch/x86/kernel/amd_nb.c=0A=
+@@ -19,12 +19,14 @@=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630=0A=
++#define PCI_DEVICE_ID_AMD_19H_M10H_ROOT	0x14a4=0A=
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444=0A=
+ #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654=0A=
++#define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1=0A=
+ #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5=0A=
+ #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F4 0x167d=0A=
+ #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e=0A=
+@@ -39,6 +41,7 @@ static const struct pci_device_id amd_root_ids[] =3D {=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },=0A=
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },=0A=
+ 	{}=0A=
+ };=0A=
+@@ -61,6 +64,7 @@ static const struct pci_device_id amd_nb_misc_ids[] =3D {=
 =0A=
-Yazen Ghannam (1):=0A=
-      x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and (A0h-AFh) PCI IDs=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },=0A=
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },=0A=
+ 	{}=0A=
+@@ -78,6 +82,7 @@ static const struct pci_device_id amd_nb_link_ids[] =3D {=
 =0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },=0A=
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F4) },=0A=
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },=0A=
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h=0A=
+index 011f2f1ea5bb..b5248f27910e 100644=0A=
+--- a/include/linux/pci_ids.h=0A=
++++ b/include/linux/pci_ids.h=0A=
+@@ -555,6 +555,7 @@=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b=0A=
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443=0A=
+ #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653=0A=
++#define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0=0A=
+ #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c=0A=
+ #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d=0A=
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703=0A=
 =0A=
-=0A=
- arch/x86/kernel/amd_nb.c |  5 +++++=0A=
- drivers/hwmon/k10temp.c  | 23 +++--------------------=0A=
- include/linux/pci_ids.h  |  1 +=0A=
- 3 files changed, 9 insertions(+), 20 deletions(-)=0A=
-=0A=
---=0A=
 
