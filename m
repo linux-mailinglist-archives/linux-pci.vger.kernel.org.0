@@ -2,280 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3957844B431
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 21:43:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CEE844B51F
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 23:07:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244624AbhKIUqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 15:46:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244597AbhKIUqf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 15:46:35 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D55C061764
-        for <linux-pci@vger.kernel.org>; Tue,  9 Nov 2021 12:43:49 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mkXy2-0002hN-Eq; Tue, 09 Nov 2021 21:43:42 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mkXy0-0000hG-RY; Tue, 09 Nov 2021 21:43:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mkXy0-0002VV-QP; Tue, 09 Nov 2021 21:43:40 +0100
-Date:   Tue, 9 Nov 2021 21:43:40 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
+        id S244741AbhKIWKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 17:10:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235632AbhKIWKF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Nov 2021 17:10:05 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D3CE460524;
+        Tue,  9 Nov 2021 22:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636495639;
+        bh=+qSgvYpQTfGO4XzzrvtjFVSaT33ud9DXLSG7u/nEfKs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fq2dTkrvLVbcHQygx3bgnOZwesHj+kuGNINPDowb8PKPAyzzmrBcWAyRx2ZFunkUg
+         0if6hh7IFlxwkpFpQ/F/W+qj0jQbhbDctVE1h9yVj1rWbWu1hnNEGYTQ53Kp8XOVv/
+         81mCqvd37Kktfx/b7Lvje2zcE/wAvz6kTxcGoFLsmIi2ZH6r9AWIRJtDASK6VwZnrk
+         Dr1GkmXmlbDggxypf9yCBwIcCsohexJTK1Dz6cZ1AUEAFzl4AlU7f/HMbZyl4WhmHi
+         WYvVagrMdUsemxqWIHAIOK3Czdsk8kuiprhR8JKmEdQFU1YFH3Fg7k0IkY+3bySgMP
+         Mz2Yt9vWcEBRA==
+Date:   Tue, 9 Nov 2021 16:07:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
-Message-ID: <20211109204340.aowatog3jn5hqrag@pengutronix.de>
-References: <CAJZ5v0impb8uscbp8LUTBMExfMoGz=cPrTWhSGh0GF_SANNKPQ@mail.gmail.com>
- <20211109200518.GA1176309@bhelgaas>
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Message-ID: <20211109220717.GA1187103@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y2ftutqsucx4ohds"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211109200518.GA1176309@bhelgaas>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+In-Reply-To: <c85a917e-143d-1218-61fa-e4f4810c4950@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sat, Nov 06, 2021 at 11:15:07AM +0100, Hans de Goede wrote:
+> On 10/20/21 23:14, Bjorn Helgaas wrote:
+> > On Wed, Oct 20, 2021 at 12:23:26PM +0200, Hans de Goede wrote:
+> >> On 10/19/21 23:52, Bjorn Helgaas wrote:
+> >>> On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
+> >>>> Some BIOS-es contain a bug where they add addresses which map to system
+> >>>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> >>>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> >>>> space").
+> >>>>
+> >>>> To work around this bug Linux excludes E820 reserved addresses when
+> >>>> allocating addresses from the PCI host bridge window since 2010.
+> >>>> ...
+> > 
+> >>> I haven't seen anybody else eager to merge this, so I guess I'll stick
+> >>> my neck out here.
+> >>>
+> >>> I applied this to my for-linus branch for v5.15.
+> >>
+> >> Thank you, and sorry about the build-errors which the lkp
+> >> kernel-test-robot found.
+> >>
+> >> I've just send out a patch which fixes these build-errors
+> >> (verified with both .config-s from the lkp reports).
+> >> Feel free to squash this into the original patch (or keep
+> >> them separate, whatever works for you).
+> > 
+> > Thanks, I squashed the fix in.
+> > 
+> > HOWEVER, I think it would be fairly risky to push this into v5.15.
+> > We would be relying on the assumption that current machines have all
+> > fixed the BIOS defect that 4dc2287c1805 addressed, and we have little
+> > evidence for that.
+> >
+> > I'm not sure there's significant benefit to having this in v5.15.
+> > Yes, the mainline v5.15 kernel would work on the affected machines,
+> > but I suspect most people with those machines are running distro
+> > kernels, not mainline kernels.
+> 
+> I understand that you were reluctant to add this to 5.15 so close
+> near the end of the 5.15 cycle, but can we please get this into
+> 5.16 now ?
+> 
+> I know you ultimately want to see if there is a better fix,
+> but this is hitting a *lot* of users right now and if we come up
+> with a better fix we can always use that to replace this one
+> later.
 
---y2ftutqsucx4ohds
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't know whether there's a "better" fix, but I do know that if we
+merge what we have right now, nobody will be looking for a better
+one.
 
-On Tue, Nov 09, 2021 at 02:05:18PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 09, 2021 at 07:58:47PM +0100, Rafael J. Wysocki wrote:
-> > On Tue, Nov 9, 2021 at 7:52 PM Rafael J. Wysocki <rafael@kernel.org> wr=
-ote:
-> > > On Tue, Nov 9, 2021 at 7:12 PM Bjorn Helgaas <helgaas@kernel.org> wro=
-te:
-> > > > On Tue, Nov 09, 2021 at 06:18:18PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Tue, Nov 9, 2021 at 7:59 AM Uwe Kleine-K=C3=B6nig
-> > > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > > On Mon, Nov 08, 2021 at 08:56:19PM -0600, Bjorn Helgaas wrote:
-> > > > > > > [+cc Greg: new device_is_bound() use]
-> > > > > >
-> > > > > > ack, that's what I would have suggested now, too.
-> > > > > >
-> > > > > > > On Mon, Nov 08, 2021 at 10:22:26PM +0100, Uwe Kleine-K=C3=B6n=
-ig wrote:
-> > > > > > > > pci_pm_runtime_resume() exits early when the device to resu=
-me isn't
-> > > > > > > > bound yet:
-> > > > > > > >
-> > > > > > > >     if (!to_pci_driver(dev->driver))
-> > > > > > > >             return 0;
-> > > > > > > >
-> > > > > > > > This however isn't true when the device currently probes and
-> > > > > > > > local_pci_probe() calls pm_runtime_get_sync() because then =
-the driver
-> > > > > > > > core already setup dev->driver. As a result the driver's re=
-sume callback
-> > > > > > > > is called before the driver's probe function is called and =
-so more often
-> > > > > > > > than not required driver data isn't setup yet.
-> > > > > > > >
-> > > > > > > > So replace the check for the device being unbound by a chec=
-k that only
-> > > > > > > > becomes true after .probe() succeeded.
-> > > > > > >
-> > > > > > > I like the fact that this patch is short and simple.
-> > > > > > >
-> > > > > > > But there are 30+ users of to_pci_driver().  This patch asser=
-ts that
-> > > > > > > *one* of them, pci_pm_runtime_resume(), is special and needs =
-to test
-> > > > > > > device_is_bound() instead of using to_pci_driver().
-> > > > > >
-> > > > > > Maybe for the other locations using device_is_bound(&pdev->dev)=
- instead
-> > > > > > of to_pci_driver(pdev) !=3D NULL would be nice, too?
-> > > > > >
-> > > > > > I have another doubt: device_is_bound() should (according to its
-> > > > > > kernel-doc) be called with the device lock held. For the call s=
-tack that
-> > > > > > is (maybe) fixed here, the lock is held (by __device_attach). We
-> > > > > > probably should check if the lock is also held for the other ca=
-lls of
-> > > > > > pci_pm_runtime_resume().
-> > > > > >
-> > > > > > Hmm, the device lock is a mutex, the pm functions might be call=
-ed in
-> > > > > > atomic context, right?
-> > > > > >
-> > > > > > > It's special because the current PM implementation calls it v=
-ia
-> > > > > > > pm_runtime_get_sync() before the driver's .probe() method.  T=
-hat
-> > > > > > > connection is a little bit obscure and fragile.  What if the =
-PM
-> > > > > > > implementation changes?
-> > > > > >
-> > > > > > Maybe a saver bet would be to not use pm_runtime_get_sync() in
-> > > > > > local_pci_probe()?
-> > > > >
-> > > > > Yes, in principle it might be replaced with pm_runtime_get_noresu=
-me().
-> > > > >
-> > > > > In theory, that may be problematic if a device is put into a low-=
-power
-> > > > > state on remove and then the driver is bound again to it.
-> > > > >
-> > > > > > I wonder if the same problem exists on remove, i.e. pci_device_=
-remove()
-> > > > > > calls pm_runtime_put_sync() after the driver's .remove() callba=
-ck was
-> > > > > > called.
-> > > > >
-> > > > > If it is called after ->remove() and before clearing the device's
-> > > > > driver pointer, then yes.
-> > > >
-> > > > Yes, that is the case:
-> > > >
-> > > >   pci_device_remove
-> > > >     if (drv->remove) {
-> > > >       pm_runtime_get_sync
-> > > >       drv->remove()                # <-- driver ->remove() method
-> > > >       pm_runtime_put_noidle
-> > > >     }
-> > > >     ...
-> > > >     pm_runtime_put_sync            # <-- after ->remove()
-> > > >
-> > > > So pm_runtime_put_sync() is called after drv->remove(), and it may
-> > > > call drv->pm->runtime_idle().  I think the driver may not expect th=
-is.
-> > > >
-> > > > > If this is turned into pm_runtime_put_noidle(), all should work.
-> > > >
-> > > > pci_device_remove() already calls pm_runtime_put_noidle() immediate=
-ly
-> > > > after calling the driver ->remove() method.
-> > > >
-> > > > Are you saying we should do this, which means pci_device_remove()
-> > > > would call pm_runtime_put_noidle() twice?
-> > >
-> > > Well, they are both needed to keep the PM-runtime reference counting =
-in balance.
-> > >
-> > > This still has an issue, though, because user space would be able to
-> > > trigger a runtime suspend via sysfs after we've dropped the last
-> > > reference to the device in pci_device_remove().
-> > >
-> > > So instead, we can drop the pm_runtime_get_sync() and
-> > > pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
-> > > respectively, and add pm_runtine_get_noresume() to pci_pm_init(),
-> > > which will prevent PM-runtime from touching the device until it has a
-> > > driver that supports PM-runtime.
-> > >
-> > > We'll lose the theoretical ability to put unbound devices into D3 this
-> > > way, but we learned some time ago that this isn't safe in all cases
-> > > anyway.
-> >=20
-> > IOW, something like this (untested and most likely white-space-damaged).
->=20
-> Thanks!  I applied this manually to for-linus in hopes of making the
-> the next linux-next build.
->=20
-> Please send any testing reports and corrections to the patch and
-> commit log!
->=20
-> commit dd414877b58b ("PCI/PM: Prevent runtime PM until claimed by a drive=
-r that supports it")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Tue Nov 9 13:36:09 2021 -0600
->=20
->     PCI/PM: Prevent runtime PM until claimed by a driver that supports it
->    =20
->     Previously we had a path that could call a driver's ->runtime_resume()
->     method before calling the driver's ->probe() method, which is a probl=
-em
->     because ->runtime_resume() often relies on initialization done in
->     ->probe():
->    =20
->       local_pci_probe
->         pm_runtime_get_sync
->           ...
->             pci_pm_runtime_resume
->               if (!pci_dev->driver)
->                 return 0;                          <-- early exit
->               dev->driver->pm->runtime_resume();   <-- driver ->runtime_r=
-esume()
->         pci_dev->driver =3D pci_drv;
->         pci_drv->probe()                           <-- driver ->probe()
->    =20
->     Prior to 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of
->     pci_dev->driver"), we took the early exit, which avoided the problem.=
-  But
->     2a4d9408c9e8 removed pci_dev->driver (since it's redundant with
->     device->driver), so we no longer take the early exit, which leads to =
-havoc
->     in ->runtime_resume().
->    =20
->     Similarly, we could call the driver's ->runtime_idle() method after i=
-ts
->     ->remove() method.
->    =20
->     Avoid the problem by dropping the pm_runtime_get_sync() and
->     pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
->     respectively.
->    =20
->     Add pm_runtime_get_noresume(), which uses no driver PM callbacks, to =
-the
->     pci_pm_init() enumeration path.  This will prevent PM-runtime from to=
-uching
->     the device until it has a driver that supports PM-runtime.
->    =20
->     Link: https://lore.kernel.org/r/CAJZ5v0impb8uscbp8LUTBMExfMoGz=3DcPrT=
-WhSGh0GF_SANNKPQ@mail.gmail.com
->     Fixes: 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of pci_dev->dr=
-iver")
->     Reported-by: Robert =C5=9Awi=C4=99cki <robert@swiecki.net>
->     Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+We're in the middle of the merge window, so the v5.16 development
+cycle is over.  The v5.17 cycle is just starting, so we have time to
+hit that.  Obviously a fix can be backported to older kernels as
+needed.
 
-I like this, this feels better than my initial suggestion using
-device_is_bound().
+> So can we please just go with this fix now, so that we can
+> fix the issues a lot of users are seeing caused by the current
+> *wrong* behavior of taking the e820 reservations into account ?
 
-Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+I think the fix on the table is "ignore E820 for BIOS date >= 2018"
+plus the obvious parameters to force it both ways.
 
-Thanks
-Uwe
+The thing I don't like is that this isn't connected at all to the
+actual BIOS defect.  We have no indication that current BIOSes have
+fixed the defect, and we have no assurance that future ones will not
+have the defect.  It would be better if we had some algorithmic way of
+figuring out what to do.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thank you very much for chasing down the dmesg log archive
+(https://github.com/linuxhw/Dmesg; see
+https://lore.kernel.org/r/82035130-d810-9f0b-259e-61280de1d81f@redhat.com).
+Unfortunately I haven't had time to look through it myself, and I
+haven't heard of anybody else doing it either.
 
---y2ftutqsucx4ohds
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGK3XkACgkQwfwUeK3K
-7AkEMwf/dR6xL6eOWDFAQ8JmjwwRgmPEgGmE5vnPBHye6wRQcfxcwE4SpXyVqgTI
-g664Hbe2SrP8rrwU0NklrEhwlX0zQ7IpZhUMbl1KkbkDKZx11+3tfFBGW21bDyFl
-lPwT/bK0l6nMzGhFriAbIfmxUPhHedoK0YhYDZz8WNL5vFvRUWvExi6zvCGy0FXE
-6dFjJHYga4eLTGkj22+sDiRXRbx0NdpiVGRzDD37sv18AAoMmZe9EM21yKHnhjUC
-xxaGqSDYRVpPVJ2ZkbIEqWo/08EfwJL19SGOO1A6fdmlxE+YnpmzzRYKeZVTaxxp
-yfvp6hKkjAQ7m8bOOrRScRbuNPdr2Q==
-=WTw5
------END PGP SIGNATURE-----
-
---y2ftutqsucx4ohds--
+Bjorn
