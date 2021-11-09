@@ -2,94 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780BD44B014
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 16:10:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6459244B02C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 16:16:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234880AbhKIPNX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 10:13:23 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:28071 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbhKIPNW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 10:13:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636470615;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=qo23Dfgejx+fYTtjOXsLmDvjS1BIif2nHt5BFMBXLXU=;
-    b=czoIGDT9EWkuNsFYjeB0wx/bZDy8B26ZiWnI/zY0xc6PP85zs0G30CetBaYYCSpVKf
-    MwdVFoZ5fw3QCzi7y/kxPrxwztJXV22clvfSpTpG/phavp5vAS3tRtlTWK4TWv/N9TaE
-    dgHKvQ1xOXXy6DGS9vVEWsgG/bQ9mk4pu78H4fJrFZyduIVjWOg3XdVKc+tuyFfjTMqV
-    hVVnna6KnFAsf4iJHSIflqP5wftkaMqVS+/kRwE7XDE11wp95Fu4vXwyY6SjlA3THPP3
-    kknmnyK3c1EHDVfNPA1TcWUqBBexd8P6Fw5lKT9PPbf8mkYVd4su+jYSL9StAZqkznTQ
-    KDAQ==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgCcvDwpSXvD4psVrwPNFokQjBO3A=="
-X-RZG-CLASS-ID: mo00
-Received: from [IPV6:2a02:8109:89c0:ebfc:ad8c:b313:ee31:b71d]
-    by smtp.strato.de (RZmta 47.34.1 AUTH)
-    with ESMTPSA id w0066dxA9FAEqB3
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Tue, 9 Nov 2021 16:10:14 +0100 (CET)
-Message-ID: <ee3884db-da17-39e3-4010-bcc8f878e2f6@xenosoft.de>
-Date:   Tue, 9 Nov 2021 16:10:14 +0100
+        id S237643AbhKIPSy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 10:18:54 -0500
+Received: from mga11.intel.com ([192.55.52.93]:21109 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236189AbhKIPSx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Nov 2021 10:18:53 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10162"; a="229923435"
+X-IronPort-AV: E=Sophos;i="5.87,220,1631602800"; 
+   d="scan'208";a="229923435"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 07:16:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,220,1631602800"; 
+   d="scan'208";a="545346270"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Nov 2021 07:16:06 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2B8CF18E; Tue,  9 Nov 2021 17:16:07 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] PCI: probe: Use pci_find_vsec_capability() when looking for TBT devices
+Date:   Tue,  9 Nov 2021 17:16:04 +0200
+Message-Id: <20211109151604.17086-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.0
-Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
- pci-v5.16 updates
-Content-Language: de-DE
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-To:     "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc:     Darren Stevens <darren@stevens-zone.net>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        mad skateman <madskateman@gmail.com>,
-        Matthew Leaman <matthew@a-eon.biz>,
-        Christian Zigotzky <info@xenosoft.de>
-References: <3eedbe78-1fbd-4763-a7f3-ac5665e76a4a@xenosoft.de>
- <15731ad7-83ff-c7ef-e4a1-8b11814572c2@xenosoft.de>
- <17e37b22-5839-0e3a-0dbf-9c676adb0dec@xenosoft.de>
- <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
-In-Reply-To: <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
- > Hello,
- >
- > The Nemo board [1] doesn't recognize any ATA disks with the pci-v5.16 
-updates [2].
- >
- > Error messages:
- >
- > ata4.00: gc timeout cmd 0xec
- > ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
- > ata1.00: gc timeout cmd 0xec
- > ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
- > ata3.00: gc timeout cmd 0xec
- > ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
- >
- > I was able to revert the new pci-v5.16 updates [2]. After a new 
-compiling, the kernel recognize all ATA disks correctly.
- >
- > Could you please check the pci-v5.16 updates [2]?
- >
- > Please find attached the kernel config.
- >
- > Thanks,
- > Christian
- >
- > [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
- > [2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4 
+Currently the set_pcie_thunderbolt() opens code pci_find_vsec_capability().
+Refactor the former to use the latter. No functional change intended.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/probe.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-+ Olof Johansson
-+ linux-pci@vger.kernel.org
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 087d3658f75c..db5a0762da03 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1579,20 +1579,11 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
+ 
+ static void set_pcie_thunderbolt(struct pci_dev *dev)
+ {
+-	int vsec = 0;
+-	u32 header;
++	u16 vsec;
+ 
+-	while ((vsec = pci_find_next_ext_capability(dev, vsec,
+-						    PCI_EXT_CAP_ID_VNDR))) {
+-		pci_read_config_dword(dev, vsec + PCI_VNDR_HEADER, &header);
+-
+-		/* Is the device part of a Thunderbolt controller? */
+-		if (dev->vendor == PCI_VENDOR_ID_INTEL &&
+-		    PCI_VNDR_HEADER_ID(header) == PCI_VSEC_ID_INTEL_TBT) {
+-			dev->is_thunderbolt = 1;
+-			return;
+-		}
+-	}
++	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_TBT);
++	if (vsec)
++		dev->is_thunderbolt = 1;
+ }
+ 
+ static void set_pcie_untrusted(struct pci_dev *dev)
+-- 
+2.33.0
+
