@@ -2,70 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D6A44AA88
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 10:24:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1963044AC50
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 12:10:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244834AbhKIJ1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 04:27:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244806AbhKIJ1U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 04:27:20 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24486C061764;
-        Tue,  9 Nov 2021 01:24:35 -0800 (PST)
-Received: from zn.tnic (p2e584790.dip0.t-ipconnect.de [46.88.71.144])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D881EC04E4;
-        Tue,  9 Nov 2021 10:24:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1636449873;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yFqY4ZC+tk+ojUjF553QTrJ3iEB11I0CRzAPXH7XI5c=;
-        b=FjQi8y73HoFQWdP5cPsdQNqkvbI7a/EC2n42PgVfs/eH3X1qfGtz8qLblmgwY+u3s1w9Ek
-        GgNKHuXDoBFtjv9kDQEpwgKdzXWIqGV+FTqOiomyk19i1lFKM+WgMvclYJWRiZ4QoB/7Wk
-        298crZiYiCPJrd1yGYJ7hihIJ4kXQok=
-Date:   Tue, 9 Nov 2021 10:22:20 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, clemens@ladisch.de,
-        jdelvare@suse.com, linux@roeck-us.net, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/3] x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and
- (A0h-AFh) PCI IDs
-Message-ID: <YYo9zEGr7wSKT8Gk@zn.tnic>
-References: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
- <163640828133.955062.18349019796157170473.stgit@bmoger-ubuntu>
+        id S245585AbhKILMq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 06:12:46 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4075 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229998AbhKILMp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 06:12:45 -0500
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HpQ9y70xXz67ttp;
+        Tue,  9 Nov 2021 19:05:10 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Tue, 9 Nov 2021 12:09:57 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.15; Tue, 9 Nov
+ 2021 11:09:56 +0000
+Date:   Tue, 9 Nov 2021 11:09:55 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
+Message-ID: <20211109110955.00000f4b@Huawei.com>
+In-Reply-To: <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+        <20211105235056.3711389-5-ira.weiny@intel.com>
+        <20211108150236.00003a6c@Huawei.com>
+        <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <163640828133.955062.18349019796157170473.stgit@bmoger-ubuntu>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 03:51:21PM -0600, Babu Moger wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
+...
+
+> > We could break out of the loop early, but I want to bolt the CMA doe detection
+> > in there so I'd rather we didn't.  This is all subject to whether we attempt
+> > to generalize this support and move it over to the PCI side of things.  
 > 
-> Add the new PCI Device IDs to support new generation of AMD 19h family of
-> processors.
+> I'm not 100% sure about moving it to the PCI side but it does make some sense
+> because really the auxiliary devices are only bounded by the PCI device being
+> available.  None of the CXL stuff needs to exist for the DOE driver to talk to
+> the device but the pdev does need to be there...  :-/
+
+This will become more relevant with CMA etc on top of this series as that
+is not CXL specific, so definitely shouldn't live in here.
+
 > 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
->  arch/x86/kernel/amd_nb.c |    5 +++++
->  include/linux/pci_ids.h  |    1 +
->  2 files changed, 6 insertions(+)
+> This is all part of what drove the cxl_mem rename because that structure was
+> really confusing me.  Dan got me straightened out but I did not revisit this
+> series after that.  Now off the top of my head I'm not sure that cxlds needs to
+> be involved in the auxiliary device creation.  OTOH I was making it a central
+> place for in kernel users to know where/how to get information from DOE
+> mailboxes.  Hence caching which of these devices had CDAT capability.[1]
+Caching a particular instance makes sense (with a reference taken).
 
-Acked-by: Borislav Petkov <bp@suse.de>
+I'd expect something similar to the divide between
+pci_alloc_irq_vectors() which enumerates them in the pci core, and
+actually getting for a particular instance with request_irq()
 
--- 
-Regards/Gruss,
-    Boris.
+So maybe
+pci_alloc_doe_instances() which adds the auxiliary devices to the bus.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+and
+
+pci_doe_get(vendor_id, protcol_id);
+with the _get() implemented using auxilliary_find_device() with
+appropriate match function.
+
+
+> 
+> Since you seem to have arrived at this conclusion before me where in the PCI
+> code do you think is appropriate for this?
+
+I'm not sure to be honest.  Given the dependency on MSI/MSIX it may be that the best
+we can do is to provide some utility functions for the auxiliary device
+creation and then every driver for devices with a DOE would need to call
+them manually.  As this isn't dependent on the DOE driver, it would need
+to be tied to the PCI core rather than that, possibly stubbed if
+PCI_DOE isn't built.
+
+> 
+> Ira
+> 
+> [1] I'm not really sure what is going to happen if multiple DOE boxes have CDAT
+> capability.  This seems like a recipe for confusion.
+
+They will all report the same thing so just use the first one.
+I can't really think why someone would do this deliberately but I can conceive of
+people deciding to support multiple because they have a sneaky firmware running
+somewhere and they want to avoid mediating between that and the OS. Mind you
+that needs something to indicate to the OS which one it is which is still
+an open problem.
+
+Jonathan
+
+> 
+> >   
+> > >  
+> > > +next:
+> > >  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
+> > >  	}
+> > >  
+> > >  	return 0;
+> > >  }
+> > >    
+
