@@ -2,355 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D0C44B53D
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 23:15:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31AC344B895
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 23:42:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245333AbhKIWSl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 17:18:41 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:44608 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245296AbhKIWSh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 17:18:37 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1109)
-        id 5183E20C34F1; Tue,  9 Nov 2021 14:15:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5183E20C34F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1636496150;
-        bh=gF7GwtlPERQNZblEvvlMft/E9GyNZU9lcXFEJ8voOCE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHFUGa0ZqrVTXMyoQaIArfc2M9rtubKkBQX/yH07xa6ifTlLvZOWsWZ9zI+puGO7n
-         6km+Gu1LXzGkIFbpAYzP9/O7qECYGcirqFbmLfh1oZuhYefh3PdYd6WFvmu80WXUZI
-         qusPo8lLm6e6vF6byO8Xk4ZnvM/9NP/jSZ/2t9+8=
-From:   Sunil Muthuswamy <sunilmut@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, maz@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, arnd@arndb.de, sunilmut@microsoft.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v4 2/2] arm64: PCI: hv: Add support for Hyper-V vPCI
-Date:   Tue,  9 Nov 2021 14:14:20 -0800
-Message-Id: <1636496060-29424-3-git-send-email-sunilmut@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1636496060-29424-1-git-send-email-sunilmut@linux.microsoft.com>
-References: <1636496060-29424-1-git-send-email-sunilmut@linux.microsoft.com>
+        id S240852AbhKIWo6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 17:44:58 -0500
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:43007 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241013AbhKIWm4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 17:42:56 -0500
+Received: by mail-lf1-f41.google.com with SMTP id bi35so1094926lfb.9
+        for <linux-pci@vger.kernel.org>; Tue, 09 Nov 2021 14:40:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SMmGA0UyBNtIe/bJUCzHKc6EzFLQmLHSh4vfSbEgnwQ=;
+        b=3FxeowCrWqBlw5z/PmbChAsRb/SCsyV9hvynOQZ5FHn8A08VmFisl8+RFGDMuM87Jz
+         vlNi60MdCF4b21a6GH1OFZJriA/9O3+b5vW0iK06HE78XJJdBG/umSNdnyqcAfSEpYvV
+         Sr6fcDmhKvIo8N34z7g9scOYq/VrhUY9tcC7kq8xumNQItaeTU2YkBaanBFKOIjRqdq5
+         SGhYlZd4h8pb58ZQqtm9m/lZaFeIQL00j8BrPSAMUlPQjxUxcRAwZM5tmdkpaOu/n50z
+         fgWKo9lgP9W0GUkaLvXhJFOEq2LIvVwwuE6vSVbA+CPSBE+ixEKbkNzujhZ7FnQltUeK
+         gISw==
+X-Gm-Message-State: AOAM530/iH9vj4mwqvveV52J+Pxd9GCNE9N07UYJNGuedhZ7FBB2hgJD
+        Vs1hXfx9rM43mACC5bsxSJQ=
+X-Google-Smtp-Source: ABdhPJzDIcYqlgDjAYqusMtGJFzjceKGfVSfm2TrgguYU5jEZWNc5otiC1IjW9b0lP88LvtU1AsfZw==
+X-Received: by 2002:a05:6512:3f8b:: with SMTP id x11mr10206874lfa.486.1636497609131;
+        Tue, 09 Nov 2021 14:40:09 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id b4sm2264065lft.206.2021.11.09.14.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Nov 2021 14:40:08 -0800 (PST)
+Date:   Tue, 9 Nov 2021 23:40:07 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Olof Johansson <olof@lixom.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        mad skateman <madskateman@gmail.com>,
+        Matthew Leaman <matthew@a-eon.biz>,
+        Christian Zigotzky <info@xenosoft.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
+ pci-v5.16 updates
+Message-ID: <YYr4x1xWfptXRmqt@rocinante>
+References: <ee3884db-da17-39e3-4010-bcc8f878e2f6@xenosoft.de>
+ <20211109165848.GA1155989@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211109165848.GA1155989@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sunil Muthuswamy <sunilmut@microsoft.com>
+[+CC Adding Jens and Damien to get their opinion about the problem at hand]
 
-Add support for Hyper-V vPCI for arm64 by implementing the arch specific
-interfaces. Introduce an IRQ domain and chip specific to Hyper-v vPCI that
-is based on SPIs. The IRQ domain parents itself to the arch GIC IRQ domain
-for basic vector management.
+Hello Jens and Damien,
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
-In v2, v3 & v4:
- Changes are described in the cover letter.
+Sorry to bother both of you, but we are having a problem that most
+definitely requires someone with an extensive expertise in storage,
+as per the quoted message from Christian below:
 
- arch/arm64/include/asm/hyperv-tlfs.h |   9 ++
- drivers/pci/Kconfig                  |   2 +-
- drivers/pci/controller/Kconfig       |   2 +-
- drivers/pci/controller/pci-hyperv.c  | 207 ++++++++++++++++++++++++++-
- 4 files changed, 217 insertions(+), 3 deletions(-)
+> > > The Nemo board [1] doesn't recognize any ATA disks with the pci-v5.16
+> > > updates [2].
+> > >
+> > > Error messages:
+> > >
+> > > ata4.00: gc timeout cmd 0xec
+> > > ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+> > > ata1.00: gc timeout cmd 0xec
+> > > ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+> > > ata3.00: gc timeout cmd 0xec
+> > > ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
 
-diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
-index 4d964a7f02ee..bc6c7ac934a1 100644
---- a/arch/arm64/include/asm/hyperv-tlfs.h
-+++ b/arch/arm64/include/asm/hyperv-tlfs.h
-@@ -64,6 +64,15 @@
- #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
- #define HV_REGISTER_STIMER0_COUNT	0x000B0001
- 
-+union hv_msi_entry {
-+	u64 as_uint64[2];
-+	struct {
-+		u64 address;
-+		u32 data;
-+		u32 reserved;
-+	} __packed;
-+};
-+
- #include <asm-generic/hyperv-tlfs.h>
- 
- #endif
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 0c473d75e625..cc2471488b61 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -184,7 +184,7 @@ config PCI_LABEL
- 
- config PCI_HYPERV
- 	tristate "Hyper-V PCI Frontend"
--	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
-+	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
- 	select PCI_HYPERV_INTERFACE
- 	help
- 	  The PCI device frontend driver allows the kernel to import arbitrary
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 326f7d13024f..b24edba0b870 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -280,7 +280,7 @@ config PCIE_BRCMSTB
- 
- config PCI_HYPERV_INTERFACE
- 	tristate "Hyper-V PCI Interface"
--	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
- 	help
- 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
- 	  have a common interface with the Hyper-V PCI frontend driver.
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 03e07a4f0e3f..8ab57582b3a5 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -47,6 +47,8 @@
- #include <linux/msi.h>
- #include <linux/hyperv.h>
- #include <linux/refcount.h>
-+#include <linux/irqdomain.h>
-+#include <linux/acpi.h>
- #include <asm/mshyperv.h>
- 
- /*
-@@ -614,7 +616,205 @@ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
- {
- 	return pci_msi_prepare(domain, dev, nvec, info);
- }
--#endif // CONFIG_X86
-+#elif defined(CONFIG_ARM64)
-+/*
-+ * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
-+ * of room at the start to allow for SPIs to be specified through ACPI and
-+ * starting with a power of two to satisfy power of 2 multi-MSI requirement.
-+ */
-+#define HV_PCI_MSI_SPI_START	64
-+#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
-+#define DELIVERY_MODE		0
-+#define FLOW_HANDLER		NULL
-+#define FLOW_NAME		NULL
-+#define hv_msi_prepare		NULL
-+
-+struct hv_pci_chip_data {
-+	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
-+	struct mutex	map_lock;
-+};
-+
-+/* Hyper-V vPCI MSI GIC IRQ domain */
-+static struct irq_domain *hv_msi_gic_irq_domain;
-+
-+/* Hyper-V PCI MSI IRQ chip */
-+static struct irq_chip hv_arm64_msi_irq_chip = {
-+	.name = "MSI",
-+	.irq_set_affinity = irq_chip_set_affinity_parent,
-+	.irq_eoi = irq_chip_eoi_parent,
-+	.irq_mask = irq_chip_mask_parent,
-+	.irq_unmask = irq_chip_unmask_parent
-+};
-+
-+static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
-+{
-+	return irqd->parent_data->hwirq;
-+}
-+
-+static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
-+				       struct msi_desc *msi_desc)
-+{
-+	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
-+			      msi_desc->msg.address_lo;
-+	msi_entry->data = msi_desc->msg.data;
-+}
-+
-+static void hv_pci_vec_irq_domain_free(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct hv_pci_chip_data *chip_data = domain->host_data;
-+	struct irq_data *irqd = irq_domain_get_irq_data(domain, virq);
-+	int first = irqd->hwirq - HV_PCI_MSI_SPI_START;
-+
-+	mutex_lock(&chip_data->map_lock);
-+	bitmap_release_region(chip_data->spi_map,
-+			      first,
-+			      get_count_order(nr_irqs));
-+	mutex_unlock(&chip_data->map_lock);
-+	irq_domain_reset_irq_data(irqd);
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+}
-+
-+static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
-+				       unsigned int nr_irqs,
-+				       irq_hw_number_t *hwirq)
-+{
-+	struct hv_pci_chip_data *chip_data = domain->host_data;
-+	unsigned int index;
-+
-+	/* Find and allocate region from the SPI bitmap */
-+	mutex_lock(&chip_data->map_lock);
-+	index = bitmap_find_free_region(chip_data->spi_map,
-+					HV_PCI_MSI_SPI_NR,
-+					get_count_order(nr_irqs));
-+	mutex_unlock(&chip_data->map_lock);
-+	if (index < 0)
-+		return -ENOSPC;
-+
-+	*hwirq = index + HV_PCI_MSI_SPI_START;
-+
-+	return 0;
-+}
-+
-+static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
-+					   unsigned int virq,
-+					   irq_hw_number_t hwirq)
-+{
-+	struct irq_fwspec fwspec;
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 2;
-+	fwspec.param[0] = hwirq;
-+	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+}
-+
-+static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs,
-+				       void *args)
-+{
-+	irq_hw_number_t hwirq;
-+	unsigned int i;
-+	int ret;
-+
-+	ret = hv_pci_vec_alloc_device_irq(domain, nr_irqs, &hwirq);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i,
-+						      hwirq + i);
-+		if (ret)
-+			goto free_irq;
-+
-+		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
-+						    hwirq + i,
-+						    &hv_arm64_msi_irq_chip,
-+						    domain->host_data);
-+		if (ret)
-+			goto free_irq;
-+
-+		pr_debug("pID:%d vID:%u\n", (int)(hwirq + i), virq + i);
-+	}
-+
-+	return 0;
-+
-+free_irq:
-+	hv_pci_vec_irq_domain_free(domain, virq, nr_irqs);
-+
-+	return ret;
-+}
-+
-+static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
-+					  struct irq_data *irqd, bool reserve)
-+{
-+	static int cpu;
-+
-+	/*
-+	 * Pick a cpu using round-robin as the irq affinity that can be
-+	 * temporarily used for composing MSI from the hypervisor. GIC
-+	 * will eventually set the right affinity for the irq and the
-+	 * 'unmask' will retarget the interrupt to that cpu.
-+	 */
-+	if (cpu >= cpumask_last(cpu_online_mask))
-+		cpu = 0;
-+	cpu = cpumask_next(cpu, cpu_online_mask);
-+	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops hv_pci_domain_ops = {
-+	.alloc	= hv_pci_vec_irq_domain_alloc,
-+	.free	= hv_pci_vec_irq_domain_free,
-+	.activate = hv_pci_vec_irq_domain_activate,
-+};
-+
-+static int hv_pci_irqchip_init(void)
-+{
-+	static struct hv_pci_chip_data *chip_data;
-+	struct fwnode_handle *fn = NULL;
-+	int ret = -ENOMEM;
-+
-+	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-+	if (!chip_data)
-+		return ret;
-+
-+	mutex_init(&chip_data->map_lock);
-+	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
-+	if (!fn)
-+		goto free_chip;
-+
-+	/*
-+	 * IRQ domain once enabled, should not be removed since there is no
-+	 * way to ensure that all the corresponding devices are also gone and
-+	 * no interrupts will be generated.
-+	 */
-+	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-+							  fn, &hv_pci_domain_ops,
-+							  chip_data);
-+
-+	if (!hv_msi_gic_irq_domain) {
-+		pr_err("Failed to create Hyper-V ARMV vPCI MSI IRQ domain\n");
-+		goto free_chip;
-+	}
-+
-+	return 0;
-+
-+free_chip:
-+	kfree(chip_data);
-+	if (fn)
-+		irq_domain_free_fwnode(fn);
-+
-+	return ret;
-+}
-+
-+static struct irq_domain *hv_pci_get_root_domain(void)
-+{
-+	return hv_msi_gic_irq_domain;
-+}
-+#endif //CONFIG_ARM64
- 
- /**
-  * hv_pci_generic_compl() - Invoked for a completion packet
-@@ -1227,6 +1427,8 @@ static void hv_msi_free(struct irq_domain *domain, struct msi_domain_info *info,
- static void hv_irq_mask(struct irq_data *data)
- {
- 	pci_msi_mask_irq(data);
-+	if (data->parent_data->chip->irq_mask)
-+		irq_chip_mask_parent(data);
- }
- 
- /**
-@@ -1343,6 +1545,8 @@ static void hv_irq_unmask(struct irq_data *data)
- 		dev_err(&hbus->hdev->device,
- 			"%s() failed: %#llx", __func__, res);
- 
-+	if (data->parent_data->chip->irq_unmask)
-+		irq_chip_unmask_parent(data);
- 	pci_msi_unmask_irq(data);
- }
- 
-@@ -1619,6 +1823,7 @@ static struct irq_chip hv_msi_irq_chip = {
- 	.irq_compose_msi_msg	= hv_compose_msi_msg,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- 	.irq_ack		= irq_chip_ack_parent,
-+	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= hv_irq_mask,
- 	.irq_unmask		= hv_irq_unmask,
- };
--- 
-2.25.1
+The error message is also not very detailed and we aren't really sure what
+the issue coming from the PCI sub-system might be causing or leading to
+this.
+
+> > >
+> > > I was able to revert the new pci-v5.16 updates [2]. After a new compiling,
+> > > the kernel recognize all ATA disks correctly.
+> > >
+> > > Could you please check the pci-v5.16 updates [2]?
+> > >
+> > > Please find attached the kernel config.
+> > >
+> > > Thanks,
+> > > Christian
+> > >
+> > > [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
+> > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
+> 
+> Sorry for the breakage, and thank you very much for the report.  Can
+> you please collect the complete dmesg logs before and after the
+> pci-v5.16 changes and the "sudo lspci -vv" output from before the
+> changes?
+> 
+> You can attach them at https://bugzilla.kernel.org if you don't have
+> a better place to put them.
+> 
+> You could attach the kernel config there, too, since it didn't make it
+> to the mailing list (vger may discard them -- see
+> http://vger.kernel.org/majordomo-info.html).
+
+Bjorn and I looked at which commits that went with a recent Pull Request
+from us might be causing this, but we are a little bit at loss, and were
+hoping that you could give us a hand in troubleshooting this.
+
+Thank you in advance!
+
+	Krzysztof
 
 
