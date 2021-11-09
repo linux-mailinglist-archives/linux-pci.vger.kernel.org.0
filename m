@@ -2,216 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E44344B8DA
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 23:43:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DD144B90C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 23:53:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345505AbhKIWqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 17:46:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36130 "EHLO mail.kernel.org"
+        id S243463AbhKIW4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 17:56:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346349AbhKIWo0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Nov 2021 17:44:26 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A25460524;
-        Tue,  9 Nov 2021 22:41:39 +0000 (UTC)
+        id S243421AbhKIW4W (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Nov 2021 17:56:22 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 58E6061056;
+        Tue,  9 Nov 2021 22:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636497699;
-        bh=I0yRfiXqyiY8BG0oXh8KsQBY6XKpEWU2hAzw+H47c0Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NMii0QoEPkyyj6LMo9mnxNQ+GTd8gu1rrmsvTapekl65OjRT7bVokf8n+yOPCnTQ9
-         Npd3jg8/mvFDqJWSxH4geifStopzP9754P0NAwT0qjCW1N/XVgnCNtgqNQGh9QTuhk
-         a4FEduZXKHr6UGl7l8GDKdrIU+PXrfSHL8ztMQ0L9FiCSbejdaIZooc2dAsX2ApIBG
-         WwEpGOvype2O8zin3YMVmev88E9c4v0kjLZ03gS9l+U4tJCEMYehGSDEzcq8wdUKt5
-         m6n/bTMVyurkzGS5NPbmDFZTY17viGCt1cK1eeybylENrQZLJmQ/t7xBp+Mtw3MYqD
-         WxKgCt5r3NcyA==
-Date:   Tue, 9 Nov 2021 16:41:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yanteng Si <siyanteng01@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        chenhuacai@kernel.org, sterlingteng@gmail.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/3] MIPS: cm/cpc: export some missing symbols to be
- able to use them from driver code
-Message-ID: <20211109224138.GA1180875@bhelgaas>
+        s=k20201202; t=1636498415;
+        bh=DUkrKohhmKxVrVwwxs6kR7+6zXwnkD0Xigqf6NXU+mw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F2CfTxYjVAuW5umhgVsey/yMOq6xldUesRxoyBAdZRIREM4WLDkaTNfkC8d76McLR
+         93keuDP2okYE3b9OGoj5LZlKVdyp912s2nNqfDynK8OAoyJAMhBlNKfsar0pLZcyD5
+         +wTPcmraaNr+56NqLMCjobV7kp2FXVJGkSZxr8ZT4AMEphdB6nXwIXPvEbTTL9JBDH
+         EDJByOZx2X85sJYj6xGn9Zfxf2rmnMgG/wzbi/ELUlXAM4df8docvW5EVDlwXy7FS2
+         39OeS5vuxJNVM4t6jrJTfPx5K21cb4UGO+AjXIqTWOwWW7wTOhJyyLEugLuJGofWZq
+         oF6sVZSUc2j9Q==
+Received: by pali.im (Postfix)
+        id E24E3795; Tue,  9 Nov 2021 23:53:32 +0100 (CET)
+Date:   Tue, 9 Nov 2021 23:53:32 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ARM: Marvell: Update PCIe fixup
+Message-ID: <20211109225332.kqyfm4h4kwcnhhhl@pali>
+References: <20211101150405.14618-1-pali@kernel.org>
+ <20211102171259.9590-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMhs-H8ShoaYiFOOzJaGC68nZz=V365RXN_Kjuj=fPFENGJiiw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211102171259.9590-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Arnd]
+On Tuesday 02 November 2021 18:12:58 Pali Rohár wrote:
+> - The code relies on rc_pci_fixup being called, which only happens
+>   when CONFIG_PCI_QUIRKS is enabled, so add that to Kconfig. Omitting
+>   this causes a booting failure with a non-obvious cause.
+> - Update rc_pci_fixup to set the class properly, copying the
+>   more modern style from other places
+> - Correct the rc_pci_fixup comment
+> 
+> This patch just re-applies commit 1dc831bf53fd ("ARM: Kirkwood: Update
+> PCI-E fixup") for all other Marvell ARM platforms which have same buggy
+> PCIe controller and do not use pci-mvebu.c controller driver yet.
+> 
+> Long-term goal for these Marvell ARM platforms should be conversion to
+> pci-mvebu.c controller driver and removal of these fixups in arch code.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: stable@vger.kernel.org
 
-On Sun, Nov 07, 2021 at 08:00:56AM +0100, Sergio Paracuellos wrote:
-> On Sat, Oct 30, 2021 at 7:38 AM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> > On Sat, Oct 30, 2021 at 7:21 AM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > > On Fri, Oct 29, 2021 at 10:27 PM Sergio Paracuellos
-> > > <sergio.paracuellos@gmail.com> wrote:
-> > > > On Fri, Oct 29, 2021 at 9:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Fri, Oct 29, 2021 at 09:37:53PM +0200, Sergio Paracuellos wrote:
-> > > > > > On Fri, Oct 29, 2021 at 8:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hello! Patch 2/2 was already applied into mips-next. Could you review
+also this patch 1/2?
 
-> > > > > > > One way might be to implement a
-> > > > > > > pcibios_root_bridge_prepare() for mips and put the
-> > > > > > > setup_cm_memory_region() stuff in there.  It's not
-> > > > > > > *ideal* because that's a strong/weak function
-> > > > > > > arrangement that doesn't allow for multiple host
-> > > > > > > bridges, but that's probably not an issue here.
-> > > > > > >
-> > > > > > > If we can't do that, I think making it bool is probably
-> > > > > > > the right answer, but it would be worth a brief comment
-> > > > > > > in the commit log to explain the issue.
-> > > > > >
-> > > > > > Do you mean to implement 'pcibios_root_bridge_prepare()'
-> > > > > > for MIPS ralink? I guess this means to parse device tree
-> > > > > > and so on only to get memory range addresses to be added
-> > > > > > to the MIPS I/O coherence regions to make things work and
-> > > > > > then re-parse it again in the driver to do the proper PCI
-> > > > > > setup... We end up in an arch generic driver but at the
-> > > > > > end this controller is only present in ralink MIPS, so I
-> > > > > > am not sure that implementing
-> > > > > > 'pcibios_root_bridge_prepare()' is worthy here... I can
-> > > > > > explore and try to implement it if you think that it
-> > > > > > really makes sense... but, IMHO if this is the case, just
-> > > > > > making it bool looks like the correct thing to do.
-> > > > >
-> > > > > It should be trivial to put the contents of
-> > > > > setup_cm_memory_region() into a ralink function called
-> > > > > pcibios_root_bridge_prepare().
-> > > > >
-> > > > > pcibios_root_bridge_prepare() is called with the same
-> > > > > "struct pci_host_bridge *" argument as
-> > > > > setup_cm_memory_region(), and it's called slightly later, so
-> > > > > the window resources are already set up, so no DT parsing is
-> > > > > required.  It looks like a simple move and rename to me.
-> > > >
-> > > > I see. Thanks Bjorn. I will try the approach during the
-> > > > weekend and report if it works.
-> > >
-> > > I have tested the change from 'setup_cm_memory_region()' code
-> > > into 'pcibios_root_bridge_prepare()' just by moving and renaming
-> > > it from the PCIe controller code. The function is properly being
-> > > called.  However, it looks like at that point, windows are not
-> > > setup yet (no windows present at all in bridge->windows) so the
-> > > system is not able to get the IORESOURCE_MEM resource to set up
-> > > the IO coherency unit and the PCI failed to start:
-> > >
-> > > [   16.785359] mt7621-pci 1e140000.pcie: host bridge /pcie@1e140000 ranges:
-> > > [   16.798719] mt7621-pci 1e140000.pcie:   No bus range found for
-> > > /pcie@1e140000, using [bus 00-ff]
-> > > [   16.816248] mt7621-pci 1e140000.pcie:      MEM
-> > > 0x0060000000..0x006fffffff -> 0x0060000000
-> > > [   16.861310] mt7621-pci 1e140000.pcie:       IO
-> > > 0x001e160000..0x001e16ffff -> 0x0000000000
-> > > [   17.179230] mt7621-pci 1e140000.pcie: PCIE0 enabled
-> > > [   17.188954] mt7621-pci 1e140000.pcie: PCIE1 enabled
-> > > [   17.198678] mt7621-pci 1e140000.pcie: PCIE2 enabled
-> > > [   17.208415] Cannot get memory resource
-> > > [   17.215884] mt7621-pci 1e140000.pcie: Scanning root bridge failed
-> > > [   17.228454] mt7621-pci: probe of 1e140000.pcie failed with error -22
-> > >
-> > > FWIW, when the function is called, I have also tried to set up
-> > > hardcoded addresses. Doing that the IO coherency unit was
-> > > properly set up and PCI properly worked (expected). So, using
-> > > this 'pcibios_root_bridge_prepare()' funcion looks like a
-> > > possible way to go but we need the addresses properly being
-> > > passed into the function.  I've also tried to list
-> > > 'bridge->dma_ranges' and get resources from there instead of
-> > > using the not already setup 'bridge->windows'. There is nothing
-> > > inside that list also. 'bridge->bus->resources' is also empty...
-> > > Am I missing something? I was expecting the bridge passed around
-> > > to be the same that was in PCIe controller code, and it seems it
-> > > is (I printed the bridge pointer itself in driver code before
-> > > calling 'mt7621_pcie_register_host()' and in
-> > > 'pcibios_root_bridge_prepare()' at the begging of the function
-> > > and the pointer is the same) but windows and other stuff are not
-> > > already present there...
-> >
-> > Looking into [0] it looks like resources are temporarily removed
-> > from the list just before call 'pcibios_root_bridge_prepare()'.
-> > Hence the behaviour I am seeing when trying to get them...
-> >
-> > [0]:
-> > https://elixir.bootlin.com/linux/latest/source/drivers/pci/probe.c#L915
 > 
-> Can you explain to me, why are resources temporarily removed from
-> the 'bridge->windows' list?
+> ---
+> Changes in v2:
+> * Move MIPS change into separate patch
+> * Add information that this patch is for platforms which do not use pci-mvebu.c
+> ---
+>  arch/arm/Kconfig              |  1 +
+>  arch/arm/mach-dove/pcie.c     | 11 ++++++++---
+>  arch/arm/mach-mv78xx0/pcie.c  | 11 ++++++++---
+>  arch/arm/mach-orion5x/Kconfig |  1 +
+>  arch/arm/mach-orion5x/pci.c   | 12 +++++++++---
+>  5 files changed, 27 insertions(+), 9 deletions(-)
 > 
-> Would moving that list split to be done after
-> 'pcibios_root_bridge_prepare()' is called a possibility?
-
-I don't know why the windows are managed that way.  That was added by
-37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface").   I
-cc'd Arnd just in case he remembers, but that was a long time ago.
-
-I don't see any use of bridge->windows in any of the
-pcibios_root_bridge_prepare() functions.  It doesn't *look* like it
-should be used until the coalesce/add code near the end.
-
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4289030b0fff..2132df91ad8b 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -891,8 +891,6 @@ static int pci_register_host_bridge(struct
-> pci_host_bridge *bridge)
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index fc196421b2ce..9f157e973555 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -400,6 +400,7 @@ config ARCH_DOVE
+>  	select GENERIC_IRQ_MULTI_HANDLER
+>  	select GPIOLIB
+>  	select HAVE_PCI
+> +	select PCI_QUIRKS if PCI
+>  	select MVEBU_MBUS
+>  	select PINCTRL
+>  	select PINCTRL_DOVE
+> diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> index ee91ac6b5ebf..ecf057a0f5ba 100644
+> --- a/arch/arm/mach-dove/pcie.c
+> +++ b/arch/arm/mach-dove/pcie.c
+> @@ -135,14 +135,19 @@ static struct pci_ops pcie_ops = {
+>  	.write = pcie_wr_conf,
+>  };
+>  
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
+> index 636d84b40466..9362b5fc116f 100644
+> --- a/arch/arm/mach-mv78xx0/pcie.c
+> +++ b/arch/arm/mach-mv78xx0/pcie.c
+> @@ -177,14 +177,19 @@ static struct pci_ops pcie_ops = {
+>  	.write = pcie_wr_conf,
+>  };
+>  
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion5x/Kconfig
+> index e94a61901ffd..7189a5b1ec46 100644
+> --- a/arch/arm/mach-orion5x/Kconfig
+> +++ b/arch/arm/mach-orion5x/Kconfig
+> @@ -6,6 +6,7 @@ menuconfig ARCH_ORION5X
+>  	select GPIOLIB
+>  	select MVEBU_MBUS
+>  	select FORCE_PCI
+> +	select PCI_QUIRKS
+>  	select PHYLIB if NETDEVICES
+>  	select PLAT_ORION_LEGACY
+>  	help
+> diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
+> index 76951bfbacf5..5145fe89702e 100644
+> --- a/arch/arm/mach-orion5x/pci.c
+> +++ b/arch/arm/mach-orion5x/pci.c
+> @@ -509,14 +509,20 @@ static int __init pci_setup(struct pci_sys_data *sys)
+>  /*****************************************************************************
+>   * General PCIe + PCI
+>   ****************************************************************************/
+> +
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> -- 
+> 2.20.1
 > 
->         bridge->bus = bus;
-> 
-> -       /* Temporarily move resources off the list */
-> -       list_splice_init(&bridge->windows, &resources);
->         bus->sysdata = bridge->sysdata;
->         bus->msi = bridge->msi;
->         bus->ops = bridge->ops;
-> @@ -916,6 +914,8 @@ static int pci_register_host_bridge(struct
-> pci_host_bridge *bridge)
->         if (err)
->                 goto free;
-> 
-> +       /* Temporarily move resources off the list */
-> +       list_splice_init(&bridge->windows, &resources);
->         err = device_add(&bridge->dev);
->         if (err) {
->                 put_device(&bridge->dev);
-> 
-> Obviously doing this works and windows are passed into mips ralink
-> specific 'pcibios_root_bridge_prepare()' and the PCIe subsystem is
-> properly working.
-> 
-> The advantages I see to this approach are that doing in this way lets us to:
-> - Remove specific mips code from the driver controller.
-> - Allow the driver to be compile tested for any architecture.
-> 
-> And the changes would be the following patches:
-> 1) Small 'drivers/pci/probe.c' change.
-> 2) Move mips specific code into 'arch/mips/ralink/mt76721.c' (since
-> other mips ralink stuff haven't got IO coherency units) to be inside
-> 'pcibios_root_bridge_prepare()'.
-> 3) Add MODULE_LICENSE macro to the PCIe controller driver to avoid
-> complaints when the driver is compiled as a module .
-> 4) Update PCIe controller driver's Kconfig to avoid MIPS COMPILE_TEST
-> conditional and completely enable it for COMPILE_TEST.
-> 
-> When you have time, please, let me know your thoughts about this.
-> 
-> Thanks in advance for your time.
-> 
-> Best regards,
->     Sergio Paracuellos
