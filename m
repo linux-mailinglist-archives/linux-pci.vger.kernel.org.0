@@ -2,87 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D2C449F3F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 01:00:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04436449F50
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 01:10:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241073AbhKIADF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Nov 2021 19:03:05 -0500
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:45756 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhKIADD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 19:03:03 -0500
-Received: by mail-lj1-f181.google.com with SMTP id s24so32704687lji.12;
-        Mon, 08 Nov 2021 16:00:18 -0800 (PST)
+        id S241105AbhKIANg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Nov 2021 19:13:36 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:42930 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229618AbhKIANf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Nov 2021 19:13:35 -0500
+Received: by mail-wr1-f54.google.com with SMTP id c4so29881146wrd.9;
+        Mon, 08 Nov 2021 16:10:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lzVxjpwAxTNe2TEKzKAiwEFiBi7nYAra651uyu9v/IM=;
-        b=OgVPZfzN3nIxfqW/1pQ7RiJCx1+6kUOQhGhGX4+BHGWc4QCnkRhoBGWtxVNoEDu+LF
-         9gJrcLxRlVpsSWHPrx9i6D80tgyQND13RNokVIdCKysAhh1jLMyOy+T/E9WKvuTmzxYq
-         U7Ti++kMG4Gt3jA/PejUyQPXfnmjHuGEhr14oOJo6Fz/Uun4rkUAREZicW+sKgR8h4yq
-         s0005D7TsUl1hNuBSxBqBuQpO8zEPhNsHSJY25cI3SVzvmd5kqlzyMl+kVsryYZAMgI9
-         tgN0x1V9C0507ypNm+qKGFMeOsknbKqbBlse+i6EUvdhUdeF5J1vTyyNjTxzQJf4k15u
-         mNuQ==
-X-Gm-Message-State: AOAM533DxBNIIGY1AwsVQaQ0MTHvYeBPqXxTjVGP21jxN8lUjiPCES/d
-        Re05xgAW4Ro7RYGgi7x6ZHw=
-X-Google-Smtp-Source: ABdhPJxQQHCrcfDajOrmynVLJgPGK9pjXl945B8H0LTmsJmrVThefr1xqxjmdWHO6dlKaupZJbdVeQ==
-X-Received: by 2002:a05:651c:1595:: with SMTP id h21mr3027880ljq.77.1636416017400;
-        Mon, 08 Nov 2021 16:00:17 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZVPz7RE8j2SkZNiVARcZPJsD5NeLqgS5xDhGT2VjvE8=;
+        b=Et97hYx7KsK2cSgvcsoHqrVsGke8XEFv7c9k9xJm9thTnxtxwNekgB3u5MKaAwdwH/
+         HWWqoLZGCQ1Xoluo2qF6uYnFDwQKY0yzwtZtkFYfM5IXJ5I9juaQtp8detkqHNv5qcoT
+         P8nF/dKxoCTUXWWpdzMHMA7Biiz/vkso0yDe9uMKZfXh21LEpnBnHM9Y4Z+iqtSyEQe9
+         j/pw1FCZcTL6/9bSdfA+iG4zY1M5v8LNtuKVFnOFO/owaapoIW6uPn3lj1i2hLjs+pDB
+         vR8SGVwv/7uSYPHVJjXhuAUFDAxtk8hNpVUHcl+tmxw3DoMr4BeXC18srzo9XyW18Np5
+         T2qA==
+X-Gm-Message-State: AOAM530fDoDeHk0SGtyF1efVjKjr5vMg9G3XFmvf/xBLDmEFnOtKyLAC
+        4cWmYCHyWx6Z4GiRfrlmhKk=
+X-Google-Smtp-Source: ABdhPJyDtVTOsf2hgIXK1UcXDkH1yPcg6ieLQb6in8srUrjNQwgbnF1zEqOZyb7+uzNv/sCyjjKqBQ==
+X-Received: by 2002:a5d:6d07:: with SMTP id e7mr3776175wrq.311.1636416649789;
+        Mon, 08 Nov 2021 16:10:49 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id t5sm312522lfd.80.2021.11.08.16.00.16
+        by smtp.gmail.com with ESMTPSA id n4sm20961016wri.41.2021.11.08.16.10.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 16:00:16 -0800 (PST)
-Date:   Tue, 9 Nov 2021 01:00:15 +0100
+        Mon, 08 Nov 2021 16:10:49 -0800 (PST)
+Date:   Tue, 9 Nov 2021 01:10:47 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-i2c@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
-Message-ID: <YYm6D0YMGEXGFsZL@rocinante>
-References: <CAP145phj7jEy6tkdFMdW-rzPprMTUckaaSrtrVysE-u+S+=Lcg@mail.gmail.com>
- <20211108185823.GA1101310@bhelgaas>
- <20211108212226.253mwl4wp7xjckqz@pengutronix.de>
- <CAP145phFHh+pMTXbdwwQK6bgxLBcF2JgQKwz2L+2vJRs2dMiVg@mail.gmail.com>
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        clemens@ladisch.de, jdelvare@suse.com, linux@roeck-us.net,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and
+ (A0h-AFh) PCI IDs
+Message-ID: <YYm8h1wDTAm7Rkf5@rocinante>
+References: <163640820320.955062.9967043475152157959.stgit@bmoger-ubuntu>
+ <163640828133.955062.18349019796157170473.stgit@bmoger-ubuntu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP145phFHh+pMTXbdwwQK6bgxLBcF2JgQKwz2L+2vJRs2dMiVg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <163640828133.955062.18349019796157170473.stgit@bmoger-ubuntu>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello!
 
-[...]
-> > I didn't test this patch, @Robert, maybe you can do this?
-> >
-> > Best regards
-> > Uwe
-> >
-> >  drivers/pci/pci-driver.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 1d98c974381c..202533654012 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -1299,7 +1299,7 @@ static int pci_pm_runtime_resume(struct device *dev)
-> >          */
-> >         pci_restore_standard_config(pci_dev);
-> >
-> > -       if (!to_pci_driver(dev->driver))
-> > +       if (!device_is_bound(dev))
-> >                 return 0;
-> >
-> >         pci_fixup_device(pci_fixup_resume_early, pci_dev);
-> 
-> Yes, that fixes it. Thanks for the patch.
+> Add the new PCI Device IDs to support new generation of AMD 19h family of
+> processors.
 
-Thank you Uwe for the patch and Robert for testing!
+This commit message matches the spirit of past additions very well, as per:
+
+  commit b3f79ae45904 ("x86/amd_nb: Add Family 19h PCI IDs")
+
+Admittedly, it would be nice to know what platform and/or generations of
+AMD family of CPUs this is for.  Unless this is somewhat confidential and
+in which case it would be fair enough.
+
+For the following PCI related changes:
+
+[...]
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -555,6 +555,7 @@
+>  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b
+>  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+>  #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
+> +#define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
+>  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
+>  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+
+Acked-by: Krzysztof Wilczyński <kw@linux.com>
 
 	Krzysztof
