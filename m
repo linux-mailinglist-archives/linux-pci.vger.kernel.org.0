@@ -2,126 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1963044AC50
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 12:10:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88D8344ADB0
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 13:42:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245585AbhKILMq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Nov 2021 06:12:46 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4075 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbhKILMp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 06:12:45 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HpQ9y70xXz67ttp;
-        Tue,  9 Nov 2021 19:05:10 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Tue, 9 Nov 2021 12:09:57 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.15; Tue, 9 Nov
- 2021 11:09:56 +0000
-Date:   Tue, 9 Nov 2021 11:09:55 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20211109110955.00000f4b@Huawei.com>
-In-Reply-To: <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
-References: <20211105235056.3711389-1-ira.weiny@intel.com>
-        <20211105235056.3711389-5-ira.weiny@intel.com>
-        <20211108150236.00003a6c@Huawei.com>
-        <20211108222516.GE3538886@iweiny-DESK2.sc.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; i686-w64-mingw32)
+        id S244397AbhKIMp1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 07:45:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244270AbhKIMp0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 07:45:26 -0500
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AD0C061766
+        for <linux-pci@vger.kernel.org>; Tue,  9 Nov 2021 04:42:40 -0800 (PST)
+Received: by mail-ot1-x335.google.com with SMTP id v40-20020a056830092800b0055591caa9c6so30662416ott.4
+        for <linux-pci@vger.kernel.org>; Tue, 09 Nov 2021 04:42:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=swiecki.net; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ZxWs05PNgFFWkmMMVZIbCQopsY+aPrc9xqkCzhdaV0=;
+        b=aDBWIiucwrR4twJxh1j09QBuXMtg+nFBsnO8yfr9inGfJNrTSt1egY7oqGSmhTfuwC
+         vcaz3Sx1kbHlilCeGj3PMg6oXqs9z06/rThvqWJFf51LG1gitCUprW69S/+skNQV7nql
+         CvQSW0VaO6vlINcuTpU/d89xxxnnJ05lBil0U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ZxWs05PNgFFWkmMMVZIbCQopsY+aPrc9xqkCzhdaV0=;
+        b=PINTkdbXHL9o6UeED9DqmPgrjgtbQxAJSLwQq8+jWIUtd+1vVQe5UUb9+/pxZ2MEDa
+         F8VpW6cl+bKD4udko9UH44GERKQLa8qQuBnCO7zLvbMK3q3I1fj0TI54O05qiNx9aVlm
+         hCpolNw/YRfaGmG01wG3qwKcaxfuxGcUT+mYWIOi6kECSj7mcTtDjVJyqjlX/zq+8isj
+         Ql8NIcDogCDB/dHs8jHELJaUCEIJQovWXd6sgK+W9Ez61rzl++CNA2brLjTU4Eu3odpX
+         zPIRaaaZkCbdJP3SRCl2K3NwItTBozSaZ3gt9KHDL+bAtuvZ0PFVt+T4ZmUhrWu5BmSX
+         YJ6Q==
+X-Gm-Message-State: AOAM533BQc17uSQCKkGl14k0xdsGUGGNjLqSOEy37uOyxlLacILwtPcb
+        lUfPOKpK0++7EaQYxp3wlizTcHntGjFi9NoYZqXwKA==
+X-Google-Smtp-Source: ABdhPJy38nhRcMBXJpyq2S4dQ2zU3L9V/AZ8XtKJjs2aut3JvHhtudp4KIav7A/3isAEGLGD8gW0FtdtOdnqCmJmD80=
+X-Received: by 2002:a05:6830:90f:: with SMTP id v15mr5661303ott.62.1636461760200;
+ Tue, 09 Nov 2021 04:42:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20211108212226.253mwl4wp7xjckqz@pengutronix.de>
+ <20211109025619.GA1131403@bhelgaas> <20211109065927.26v6xn7d5yyuxw4h@pengutronix.de>
+In-Reply-To: <20211109065927.26v6xn7d5yyuxw4h@pengutronix.de>
+From:   =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>
+Date:   Tue, 9 Nov 2021 13:42:29 +0100
+Message-ID: <CAP145pjO9zdGgutHP=of0H+L1=nSz097zf73i7ZYm2-NWuwHhQ@mail.gmail.com>
+Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-...
+Also, this might be unrelated, but the following happened around this
+patch (ie https://github.com/torvalds/linux/commit/0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4)
 
-> > We could break out of the loop early, but I want to bolt the CMA doe detection
-> > in there so I'd rather we didn't.  This is all subject to whether we attempt
-> > to generalize this support and move it over to the PCI side of things.  
-> 
-> I'm not 100% sure about moving it to the PCI side but it does make some sense
-> because really the auxiliary devices are only bounded by the PCI device being
-> available.  None of the CXL stuff needs to exist for the DOE driver to talk to
-> the device but the pdev does need to be there...  :-/
+I sometimes run Win11 under qemu/kvm/vfio (gfx card), and it stopped
+booting (even with the latest patch for pci). Another Linux distro
+boots fine under the same qemu/kvm/vfio, but Win11 stops at the boot
+screen.
 
-This will become more relevant with CMA etc on top of this series as that
-is not CXL specific, so definitely shouldn't live in here.
+It worked well with 5.15.0 and a few PRs later - with the git tip it's
+not booting - and it works well with 5.15.0-rc7
 
-> 
-> This is all part of what drove the cxl_mem rename because that structure was
-> really confusing me.  Dan got me straightened out but I did not revisit this
-> series after that.  Now off the top of my head I'm not sure that cxlds needs to
-> be involved in the auxiliary device creation.  OTOH I was making it a central
-> place for in kernel users to know where/how to get information from DOE
-> mailboxes.  Hence caching which of these devices had CDAT capability.[1]
-Caching a particular instance makes sense (with a reference taken).
-
-I'd expect something similar to the divide between
-pci_alloc_irq_vectors() which enumerates them in the pci core, and
-actually getting for a particular instance with request_irq()
-
-So maybe
-pci_alloc_doe_instances() which adds the auxiliary devices to the bus.
-
-and
-
-pci_doe_get(vendor_id, protcol_id);
-with the _get() implemented using auxilliary_find_device() with
-appropriate match function.
-
-
-> 
-> Since you seem to have arrived at this conclusion before me where in the PCI
-> code do you think is appropriate for this?
-
-I'm not sure to be honest.  Given the dependency on MSI/MSIX it may be that the best
-we can do is to provide some utility functions for the auxiliary device
-creation and then every driver for devices with a DOE would need to call
-them manually.  As this isn't dependent on the DOE driver, it would need
-to be tied to the PCI core rather than that, possibly stubbed if
-PCI_DOE isn't built.
-
-> 
-> Ira
-> 
-> [1] I'm not really sure what is going to happen if multiple DOE boxes have CDAT
-> capability.  This seems like a recipe for confusion.
-
-They will all report the same thing so just use the first one.
-I can't really think why someone would do this deliberately but I can conceive of
-people deciding to support multiple because they have a sneaky firmware running
-somewhere and they want to avoid mediating between that and the OS. Mind you
-that needs something to indicate to the OS which one it is which is still
-an open problem.
-
-Jonathan
-
-> 
-> >   
-> > >  
-> > > +next:
-> > >  		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> > >  	}
-> > >  
-> > >  	return 0;
-> > >  }
-> > >    
-
+Maybe related to pci/vfio changes, maybe not, just leaving it here for
+track record. I'll try to debug it a bit.
