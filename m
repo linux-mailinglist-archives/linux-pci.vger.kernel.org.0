@@ -2,216 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 662CA44B2F5
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 19:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0B844B30E
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Nov 2021 20:11:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242868AbhKITBp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 9 Nov 2021 14:01:45 -0500
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:42873 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241264AbhKITBp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Nov 2021 14:01:45 -0500
-Received: by mail-oi1-f180.google.com with SMTP id n66so414199oia.9;
-        Tue, 09 Nov 2021 10:58:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=frb7kS8HmXREiQdmx+yFRxmThz8AvACPqHesIv7E4Aw=;
-        b=HL9Gd3EmJ9yRdJXJyRPu8b3nFycRTi089ZvELx+Xz/kBC5U3LmS6wMnwjpTojl1uww
-         uDGACGA5xfeA1H69iWZA2lPrgOevho2vn3tkJz0g2POY1cJ7qfs3EPvD/KWDyy4nB7fc
-         K+G75syvsTmY3kjoFMGfD/L3l6NwDOWyjIv6DfbqX5c9X5rhHVabul3qkinaA3PNnuxm
-         SVxbkwcnhRVvSAhXJPAme5B8y78AtZhFe63Uz/As7RqJujS9M8HbmZZZPfptHjRLEQL6
-         mv2DmQ5QTRGrJ+eXedaHm1yBdWMjRnY4K0w2nKTsOc/rolNTEnBDSoMxNQm31jpIePZN
-         vM7w==
-X-Gm-Message-State: AOAM533/vEeJ4LpHPz1uyXc1JkO1euRespRerQmuqTNBkWQ80KVmO9MM
-        0sKieIk8vzC+wUN/WJJSvGLI4DzoOjA10J2CScA=
-X-Google-Smtp-Source: ABdhPJx0yeUlgvW7kMf3D7/x3OAW0ra7EScODfw2UX1sWCUwQ9cYC8Dzkwe/tzfmDaNxW1pGZ+S11DpETWLE0kTIeiE=
-X-Received: by 2002:a05:6808:e90:: with SMTP id k16mr7765017oil.166.1636484338712;
- Tue, 09 Nov 2021 10:58:58 -0800 (PST)
+        id S243020AbhKITOU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Nov 2021 14:14:20 -0500
+Received: from mail-cusazon11020016.outbound.protection.outlook.com ([52.101.61.16]:55004
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S242971AbhKITOT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Nov 2021 14:14:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ie5DP2e0DrG7Lxl+E/OdrmxvjdHrXqgQTT03AOkeCOQa7ydCQkUvALFnHydahZ2To8F7HHMtuYQtI+ltgLOWaHjR/010lzov/4JIae2O+ugLC/1aXxB6MNFN5TB5k4KFdYljIoXWHqJkG2OedFYm0w+eNehPLM3J6EbuXE67Tv4AUNQLNiY4RRKx3gJ6Dmkb9yCPpFzO+I7dS9UCUz5cWmu3mhDkUftO32jrUmbWfDVxPxgFnr4uznCuOF6yMJFrCaQY4p7CajTAFX5VCb9ez4PkXTbv61Sc48GDbS+xCOiKb8sJDDAJFDg2+S2a5/ldcXiOn/8YChbYFBW8+nZZIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R3Bcb1ZlpyFnveclqZT0KmlcYzd8G5+hIO96JlpeFL8=;
+ b=GvEca2GO2VcnFP//14TligCxn8oLlYl5YGUD36hGdT9lLsbAO3Omi1yDBz6F8NVbPxPYCRiFvqyxY+I23G0gsTjOcGfUsgTAb6eK7vmvXinxDVaofUVZ5xSLT6p+W+pDM0Lxwegxo0QmwBIO9o2HYaj/VhXvgxXR9Z9FOisZpsNUEV9fyINfOjGROuOw8gjF8g6/NW2uY4Jel3vduZ0V3nLhny5UsTe6wZsmJC0YAOzsJ0I4Ff1L/IPCX4Wim7mvs53H9WMm4doKOB1jo3vS1MvMmRZ81BybZt4KZsSTCiG5VwTMLqKa5ANdSaPijvNEa9zRVJrE9yqenfBozvkhww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R3Bcb1ZlpyFnveclqZT0KmlcYzd8G5+hIO96JlpeFL8=;
+ b=ZGe0VZ8QDz1ca1r58FQ4/zFSjhtME7rbnr9DdpeqXdatU/XGnBmYIhE8QAVmftTjPhCYj50AhnifgaDDfQ2pHGqCKoHn6IHmuVrbDd6ViRK2qWFx9bOG+MhlPFOO5Zc50QX5lyE0ef/XOlXk4Luqg/uMz0GUrGFBB00JFPCv4a4=
+Received: from BN8PR21MB1140.namprd21.prod.outlook.com (2603:10b6:408:72::11)
+ by BN8PR21MB1172.namprd21.prod.outlook.com (2603:10b6:408:74::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.4; Tue, 9 Nov
+ 2021 19:11:29 +0000
+Received: from BN8PR21MB1140.namprd21.prod.outlook.com
+ ([fe80::48fb:8577:ba03:23a5]) by BN8PR21MB1140.namprd21.prod.outlook.com
+ ([fe80::48fb:8577:ba03:23a5%9]) with mapi id 15.20.4713.005; Tue, 9 Nov 2021
+ 19:11:28 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v3 1/2] PCI: hv: Make the code arch neutral
+ by adding arch specific interfaces
+Thread-Topic: [EXTERNAL] Re: [PATCH v3 1/2] PCI: hv: Make the code arch
+ neutral by adding arch specific interfaces
+Thread-Index: AQHXwRPKo1wIQ2n9aUePdw/5KVA2savcRmmAgB9xZ6A=
+Date:   Tue, 9 Nov 2021 19:11:28 +0000
+Message-ID: <BN8PR21MB1140B95A5D59F9119CE35421C0929@BN8PR21MB1140.namprd21.prod.outlook.com>
+References: <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+ <20211020185709.GA2630556@bhelgaas>
+In-Reply-To: <20211020185709.GA2630556@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9b86821a-a139-4a08-b329-d10c08952c7e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-11-09T19:07:05Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d948588b-781e-43cd-3c97-08d9a3b4bbcb
+x-ms-traffictypediagnostic: BN8PR21MB1172:
+x-microsoft-antispam-prvs: <BN8PR21MB11726527A5FB531CECED7DCAC0929@BN8PR21MB1172.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: urcjQn0nnAGBHsziW9PRXfRqUpFPAI8zp4WreE1ItoOQkbnpzEkaapiCGawqH2FUngUSvhi0FJwJIFr1a/+NiPhjbcPb5QYx+H4flQW+fCVdRjpnK1G55mbUjhCXIfBe7MXFY5FOKre9h4UZZ7PNdxu4hOjFO+yW5viIzBHWwHklyfjbYm4acGRSa+uRUij4SYi8MQHgWwpJ6RiWTyk3hcZfoN1BKLUBCwQiaHYg37DqO1hwwWLJe4l1tGuhTLREiYoy93IjIdxBTUD4PbE6nH+ZRYttiTOJPHDG/Luny4Y0u1hW8WssvmjOE63OMrHkth2zv8DqnJqenBvThyauGzj1uaCv692AbgZ3W/f4ByVznQXqpsWOWI7R41dTOG7RYudbftXxV4JmYbKZRRHkkJK4Y1/8Y7csISgPFQqDqvyaYXhM49254ILVVLGChCKSh8104WpbLp77k08Q/1Zwr/aRbRF2a5GB36ABnK4StCdt34XHiveVIaMuzu8NLlz1JccM61M4o5lbR01Pr5P33l5FibOqGQP1+DGcf+XCmoJJCh5pr81avniknZ8tRhQy8Gen2M0R0MDd9FLZ+0bd60M34oTwjkpJPurX/YBGq6vdEbCTaN6WJUhPg9uZnmYgPnNmdddGpQthYVuH1AbtdCRLgk9WF1zo4UOkF0F1mQB8p1Eo0suP4WZnqKIxcxR0MQkhjWJLlzTh0a72N4pMcQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1140.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(186003)(8990500004)(82950400001)(10290500003)(66946007)(7416002)(508600001)(76116006)(38070700005)(66556008)(66476007)(54906003)(316002)(110136005)(7696005)(8676002)(6506007)(66446008)(4326008)(71200400001)(53546011)(64756008)(33656002)(4744005)(52536014)(2906002)(122000001)(38100700002)(86362001)(82960400001)(9686003)(8936002)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?TiDYrGsYObH9Shq+/OrSKYQstj+au6VXQYpDhRiGiuxpRQx6n/OiJgG+45AZ?=
+ =?us-ascii?Q?YUFYGeWgz0EIR8THm+p9ANAkBQiNHcwulNTsYjUBw9vXM61bJ8Rpt+dJXO82?=
+ =?us-ascii?Q?DI7vPvR7nihTVxu9+lBrVM9/fhMs64oVItGFYGjt6c4T5gYtjjcaQ8X17ELp?=
+ =?us-ascii?Q?6EokNUjiN3E30G6xiO1kbmjirQ6TyBNpDEqChPLjyIVss3HNcxsAGPSRtcT1?=
+ =?us-ascii?Q?jSw4uw3il02E/qBPZCGZeJmKaADGMKtoWyTXwJ5o9JlBzRyYnBtDmdS96p1m?=
+ =?us-ascii?Q?qfJNt0MjSWhYjaiNi/Z7o1E5YPVYDsSjgN5ngJWzinBtNiTkvS6hYoX+oUab?=
+ =?us-ascii?Q?veUDITvOdNYgH2nbB+68kgFNJLuGTIhm/3n/1dRhLEJHQwljC0HcKIRLJzTq?=
+ =?us-ascii?Q?RIqwHP/Hf1TLMQHW0CUXm/CiDfTcDYg55h4npQJ/HIMwH8+5O3/MeAP8IbhK?=
+ =?us-ascii?Q?SXd+QKbODL6t6pizW6mYASVfO4NSEJr0RCeN2huvnvI8MY22/IIwy56DwWmV?=
+ =?us-ascii?Q?ap+0EHFd5t7F8FVMrH6tvEpp6BbSo8wzLWphhaaMy27dOctzNYrX4QXUTMHw?=
+ =?us-ascii?Q?q1AYHBzvfGt+iHUH8hHdVBZHw43GaMM6sMtl0NZQkNs6n0JLBGUF7HZozuKK?=
+ =?us-ascii?Q?7oGlWEatvk++B/gR5v81IFT46Hsgurj+A2NthCwyDQEo8gJmp24ETRh/SXlE?=
+ =?us-ascii?Q?FsXMo3HntPIklpW3mJe1NtCl0E4t28BO4SVzgt4dT+nf3uDcoVnG4MH8l77Y?=
+ =?us-ascii?Q?0YE+d5UDnzqnHFRreE0klXAanWAprVkwBuB8PwZWfVVY49jXZR4godgMPOFa?=
+ =?us-ascii?Q?squhK4wrKo20UMdEmx33K7vQsVe+5C+fcnrFRdetS7usB1W2HWLgNSnEgGsy?=
+ =?us-ascii?Q?umKs0+a2a0JC3wrXpOx9ZixB3hIA0MtuebYv7rB3R65WJndVBwiLaYH5DjPh?=
+ =?us-ascii?Q?O+y5H/J0/FDxGDbVNiDjVdz2bR62kH4nySZ+VLVW+uoRLRYBpNFJIl5cr1l4?=
+ =?us-ascii?Q?eIeUNtrRwYi7q2OZg/+qvkkRnju5VrsEwQ2S9WPksMOz09rf+GL1iQivnOQl?=
+ =?us-ascii?Q?K87Dhm+KbJvJppfbYX/J3/Ps8ZkCVQmDjcAHrhb8OK2rYCi9jVvSN4f0ZnsP?=
+ =?us-ascii?Q?qK7buRjPktIOWDeVHcp+iriKVeKBNBgJkkmsJtYbBMbZE+mbtcIRoObOScqT?=
+ =?us-ascii?Q?z4PUoPfq+/Voi4oytG30S4amR3eGzKk/X2+0ZzTlo3uROVNGgOrXo4dgtBNZ?=
+ =?us-ascii?Q?VlUm6M81fQF/WtkM0sR2ofi1RbJIC8MDm9q0NKw9DWm72Uu19XlUKSNqsLTf?=
+ =?us-ascii?Q?9R2uaDQcfS6d8r9gIACh043A4FXo3AbendNdtI9E1AvxTUcM/ikRjcP17SJe?=
+ =?us-ascii?Q?HpBJlUQGJ7VMvqnF9b0DJiqEa4q8WTm/vGu5Gz2I6Q7zC+He9ZFuUKMBM0dm?=
+ =?us-ascii?Q?ZG81GulTM4k+nghsv7CfwjE32Yi+Xo3nPiELH0PWMwZetYaQXymhCusoygcG?=
+ =?us-ascii?Q?elWhKiWgTBYZEaicSHfz3GzqnL4rJtcqRiZJMtlM/SbfncLfrfhK5enpJIOg?=
+ =?us-ascii?Q?YiLSQ7V+Csy481/KoqmyqgBpYGDJzhZwNH7uuNifRhggkO/gLVYxD8DD87WR?=
+ =?us-ascii?Q?F8ve8lD5Ubi3Oye8FdOChQtRHm7t63Rdpsksjb+ADgliLwa20hDorrcjlsuD?=
+ =?us-ascii?Q?cUHRzd2yXaf+4UVbf5V4Avc1NiDR/FPpBuof0wKdvJn7NIBeDXTiEIb7TnjE?=
+ =?us-ascii?Q?Un83/k4tsg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAJZ5v0hEKO-RFBzkBU+orcM68shODd-qjiuxaYGxhvh2b=NDXA@mail.gmail.com>
- <20211109181224.GA1162053@bhelgaas> <CAJZ5v0izp7462vpmJ+=AarPPLSBLmFea-GvZErobX5Q4Du-oeA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0izp7462vpmJ+=AarPPLSBLmFea-GvZErobX5Q4Du-oeA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Nov 2021 19:58:47 +0100
-Message-ID: <CAJZ5v0impb8uscbp8LUTBMExfMoGz=cPrTWhSGh0GF_SANNKPQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1140.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d948588b-781e-43cd-3c97-08d9a3b4bbcb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2021 19:11:28.8176
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KiFEnWIJbW8ZPMW48mEqGy9rJlmJr9W8oqOybDjouC2aLjFdaACZzj+8hi7NkzWO/8y4fej9PNIXnOEjWuwOZjntrUE7lQeinjAVXzXxslk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1172
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 9, 2021 at 7:52 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Nov 9, 2021 at 7:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Nov 09, 2021 at 06:18:18PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Nov 9, 2021 at 7:59 AM Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Mon, Nov 08, 2021 at 08:56:19PM -0600, Bjorn Helgaas wrote:
-> > > > > [+cc Greg: new device_is_bound() use]
-> > > >
-> > > > ack, that's what I would have suggested now, too.
-> > > >
-> > > > > On Mon, Nov 08, 2021 at 10:22:26PM +0100, Uwe Kleine-König wrote:
-> > > > > > pci_pm_runtime_resume() exits early when the device to resume isn't
-> > > > > > bound yet:
-> > > > > >
-> > > > > >     if (!to_pci_driver(dev->driver))
-> > > > > >             return 0;
-> > > > > >
-> > > > > > This however isn't true when the device currently probes and
-> > > > > > local_pci_probe() calls pm_runtime_get_sync() because then the driver
-> > > > > > core already setup dev->driver. As a result the driver's resume callback
-> > > > > > is called before the driver's probe function is called and so more often
-> > > > > > than not required driver data isn't setup yet.
-> > > > > >
-> > > > > > So replace the check for the device being unbound by a check that only
-> > > > > > becomes true after .probe() succeeded.
-> > > > >
-> > > > > I like the fact that this patch is short and simple.
-> > > > >
-> > > > > But there are 30+ users of to_pci_driver().  This patch asserts that
-> > > > > *one* of them, pci_pm_runtime_resume(), is special and needs to test
-> > > > > device_is_bound() instead of using to_pci_driver().
-> > > >
-> > > > Maybe for the other locations using device_is_bound(&pdev->dev) instead
-> > > > of to_pci_driver(pdev) != NULL would be nice, too?
-> > > >
-> > > > I have another doubt: device_is_bound() should (according to its
-> > > > kernel-doc) be called with the device lock held. For the call stack that
-> > > > is (maybe) fixed here, the lock is held (by __device_attach). We
-> > > > probably should check if the lock is also held for the other calls of
-> > > > pci_pm_runtime_resume().
-> > > >
-> > > > Hmm, the device lock is a mutex, the pm functions might be called in
-> > > > atomic context, right?
-> > > >
-> > > > > It's special because the current PM implementation calls it via
-> > > > > pm_runtime_get_sync() before the driver's .probe() method.  That
-> > > > > connection is a little bit obscure and fragile.  What if the PM
-> > > > > implementation changes?
-> > > >
-> > > > Maybe a saver bet would be to not use pm_runtime_get_sync() in
-> > > > local_pci_probe()?
-> > >
-> > > Yes, in principle it might be replaced with pm_runtime_get_noresume().
-> > >
-> > > In theory, that may be problematic if a device is put into a low-power
-> > > state on remove and then the driver is bound again to it.
-> > >
-> > > > I wonder if the same problem exists on remove, i.e. pci_device_remove()
-> > > > calls pm_runtime_put_sync() after the driver's .remove() callback was
-> > > > called.
-> > >
-> > > If it is called after ->remove() and before clearing the device's
-> > > driver pointer, then yes.
-> >
-> > Yes, that is the case:
-> >
-> >   pci_device_remove
-> >     if (drv->remove) {
-> >       pm_runtime_get_sync
-> >       drv->remove()                # <-- driver ->remove() method
-> >       pm_runtime_put_noidle
-> >     }
-> >     ...
-> >     pm_runtime_put_sync            # <-- after ->remove()
-> >
-> > So pm_runtime_put_sync() is called after drv->remove(), and it may
-> > call drv->pm->runtime_idle().  I think the driver may not expect this.
-> >
-> > > If this is turned into pm_runtime_put_noidle(), all should work.
-> >
-> > pci_device_remove() already calls pm_runtime_put_noidle() immediately
-> > after calling the driver ->remove() method.
-> >
-> > Are you saying we should do this, which means pci_device_remove()
-> > would call pm_runtime_put_noidle() twice?
->
-> Well, they are both needed to keep the PM-runtime reference counting in balance.
->
-> This still has an issue, though, because user space would be able to
-> trigger a runtime suspend via sysfs after we've dropped the last
-> reference to the device in pci_device_remove().
->
-> So instead, we can drop the pm_runtime_get_sync() and
-> pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
-> respectively, and add pm_runtine_get_noresume() to pci_pm_init(),
-> which will prevent PM-runtime from touching the device until it has a
-> driver that supports PM-runtime.
->
-> We'll lose the theoretical ability to put unbound devices into D3 this
-> way, but we learned some time ago that this isn't safe in all cases
-> anyway.
+On Wednesday, October 20, 2021 11:57 AM,
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-IOW, something like this (untested and most likely white-space-damaged).
+> On Thu, Oct 14, 2021 at 08:53:13AM -0700, Sunil Muthuswamy wrote:
+> > From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> >
+> > Encapsulate arch dependencies in Hyper-V vPCI through a set of interfac=
+es,
+> > listed below. Adding these arch specific interfaces will allow for an
+> > implementation for other arch, such as ARM64.
+> >
+> > Implement the interfaces for X64, which is essentially just moving over=
+ the
+> > current implementation.
+>=20
+> I think you mean x86, not X64, right?
 
----
- drivers/pci/pci-driver.c |   13 -------------
- drivers/pci/pci.c        |    7 +++++++
- 2 files changed, 7 insertions(+), 13 deletions(-)
+Yes. This will get addressed in v4.
 
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -309,16 +309,6 @@ static long local_pci_probe(void *_ddi)
-     struct device *dev = &pci_dev->dev;
-     int rc;
-
--    /*
--     * Unbound PCI devices are always put in D0, regardless of
--     * runtime PM status.  During probe, the device is set to
--     * active and the usage count is incremented.  If the driver
--     * supports runtime PM, it should call pm_runtime_put_noidle(),
--     * or any other runtime PM helper function decrementing the usage
--     * count, in its probe routine and pm_runtime_get_noresume() in
--     * its remove routine.
--     */
--    pm_runtime_get_sync(dev);
-     pci_dev->driver = pci_drv;
-     rc = pci_drv->probe(pci_dev, ddi->id);
-     if (!rc)
-@@ -470,9 +460,6 @@ static void pci_device_remove(struct dev
-         pci_iov_remove(pci_dev);
-     }
-
--    /* Undo the runtime PM settings in local_pci_probe() */
--    pm_runtime_put_sync(dev);
--
-     /*
-      * If the device is still on, set the power state as "unknown",
-      * since it might change by the next time we load the driver.
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -3048,7 +3048,14 @@ void pci_pm_init(struct pci_dev *dev)
-     u16 pmc;
-
-     pm_runtime_forbid(&dev->dev);
-+    /*
-+     * Unbound PCI devices are always put in D0.  If the driver supports
-+     * runtime PM, it should call pm_runtime_put_noidle(), or any other
-+     * runtime PM helper function decrementing the usage count, in its
-+     * probe routine and pm_runtime_get_noresume() in its remove routine.
-+     */
-     pm_runtime_set_active(&dev->dev);
-+    pm_runtime_get_noresume(&dev->dev);
-     pm_runtime_enable(&dev->dev);
-     device_enable_async_suspend(&dev->dev);
-     dev->wakeup_prepared = false;
+- Sunil
