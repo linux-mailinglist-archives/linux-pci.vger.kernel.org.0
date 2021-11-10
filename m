@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEFC944CC62
+	by mail.lfdr.de (Postfix) with ESMTP id 5FDD344CC61
 	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 23:17:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233757AbhKJWUb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 17:20:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
+        id S233750AbhKJWUa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 17:20:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233562AbhKJWUZ (ORCPT
+        with ESMTP id S233558AbhKJWUZ (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 17:20:25 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D884C0797B9;
-        Wed, 10 Nov 2021 14:15:08 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id u17so4141789plg.9;
-        Wed, 10 Nov 2021 14:15:08 -0800 (PST)
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B961CC061766;
+        Wed, 10 Nov 2021 14:15:10 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id y1so4128249plk.10;
+        Wed, 10 Nov 2021 14:15:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fkZ8oSbM149H4kVEdywu4YO/VDBT9raRSHF6PBOWSzY=;
-        b=MX8Wb8jHc8CNttwYxXJDGsm6mgUi5AQdnGJACRhVrpkcDwkMc4QDp6ZbdanwMk2qfG
-         lU6Z/wWeA474bpBesh1JR3Qktd70hhrhregM08IErKc/xSvqBYuYUJiPW37SSp9iGfFM
-         29pBHFgg5Y4/jxVAxD/hM6Ut0h117R7Z35JLcxyNK7e3ko/NTw5nz5qmhYbHEDq5P64F
-         BxyS23qDAc3khi/qcs2HSlXLSvzczixbJzl3ywhw1XmYnlhhANFkWQEyJbvG00e7kCRq
-         3dUb84z/ECZE6j4g50rCQEj2oyUgyFtnyt5yuCLTgqew7GlYtNwD4j2s8zHfFR4eEWvW
-         +qdg==
+        bh=XxDFU6zngH2MiSJPUrDOxFHmK942PXrD/2AGczC8Ul8=;
+        b=U8PlSZUXO2Nb4DgwDzXO5TM4bgwclJ59oz8A1dNV72ro2GUKVOZamS+TfYHezB0BRI
+         lLsDAlIR1FnilVZhJS+/iTxU0OukeihbJETdBWX6hUCaQu1V8mc40VolvrSyA48W+rUo
+         6+hT2xHS6T2TCsDVd3r8kyKFTGkWR/V6vxnrjdrI7nPhCgzhP/5e5CpfomOmm4goBIik
+         u6VOhjkM2+vgnNLYqef/XjL0cVjCvPwzMB3Kjrg0LXbblonBBFCTHorkf8BNKLQ7P2ub
+         Z8/D68ZyWdzwtoEciXUiOudqGCZFQTUluBVdHv/60GjdOppChbBDvJWYVxakr100NC20
+         Tv7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fkZ8oSbM149H4kVEdywu4YO/VDBT9raRSHF6PBOWSzY=;
-        b=EyBwyW0TzfkjuSyB5UnJ7e+B+bbWtevNxp4ZztifeIC5Qgeu8b0E4YsK3WFhVjhdO/
-         OhDC7dMOqFLdkVzftj256wY7bjtcvqCo860jkq9JlmTen06k6g7cgxI67RnrDzp1s2qY
-         9IYCfGK0G58jlTFrcupm5F1n8qtT4+3hc96cWz9q4IN5F8R91Ge/z4T90D7zjz97rjUp
-         7rOh5SnvJi/fzp3czZAPEi71BGrCKZI99fMdB9SeSZ3R4OXIqwT7pZAEw5p4Qw9LFAEo
-         l0zDOO3TE4i06zrtuM7xlHU05FfSs7VwYQQBBFU34JNAQ6ERrGrYf8ojgEsoMhL/R7eG
-         SQxQ==
-X-Gm-Message-State: AOAM530oGgM6S8nTjfmblPHqWUZMFfA61WkYJn/2b0aIr+HcjMwdAlA8
-        zZG+AHrvrS24PoMpo9VJPqXHpm4kxC1B6w==
-X-Google-Smtp-Source: ABdhPJy9hiMvnGtT6AbFDLiDYRtbR/3Df4gjY8OhUycTTE12MmhzG80OFpZCq+MU8r59kRpaStmwMw==
-X-Received: by 2002:a17:903:32c2:b0:141:eed4:ec1c with SMTP id i2-20020a17090332c200b00141eed4ec1cmr2604938plr.33.1636582507575;
-        Wed, 10 Nov 2021 14:15:07 -0800 (PST)
+        bh=XxDFU6zngH2MiSJPUrDOxFHmK942PXrD/2AGczC8Ul8=;
+        b=vxBsrPXtFbpUQI73SKpRIHqEn3auNQho8QT4k2bba0SuIbq4YAZgiJ0k9pll+69UbX
+         rn+YEU8mwQQWFZu1ZbqbuUfCAk4R7Ns3iPCcRXqe0LtGaUE7xU94Z6zvP0oMLy/2PxoP
+         BNwyb4d4hQMbo8HDOrjIofaRNMRQSFC1ODcxLm/ly5yrSSgd3r1uKnFdelIBLsGmmeux
+         PChsGLP+HGde2mVYjUCVVbRgqw5wiK8acXe/OuPNCsF71gNXd8RO83S7zpK27ttzywh6
+         kz5zjyv3JXochtc7I/NDWPIVEGtxcVqEpPuf0dCLax9ZElYUSEdQlg9hZPFy1ARD1Kap
+         Pe8Q==
+X-Gm-Message-State: AOAM53116kpHdjK8g3fF31wpSevLSFVdkiGSzdl8sBNRQDGzRrAfvHaW
+        SPG37JDYTysUM8CL/VRbwBDdpbw4Jb5hLQ==
+X-Google-Smtp-Source: ABdhPJz69xPfkDk7VZal+/vPVQLGzVtHQBOzwHeh1QSi55XAjMhcdOd99CHjXEDMq8GdsaYaog0big==
+X-Received: by 2002:a17:902:7001:b0:141:67d3:adc6 with SMTP id y1-20020a170902700100b0014167d3adc6mr2207600plk.65.1636582510038;
+        Wed, 10 Nov 2021 14:15:10 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id q11sm611774pfk.192.2021.11.10.14.15.05
+        by smtp.gmail.com with ESMTPSA id q11sm611774pfk.192.2021.11.10.14.15.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 14:15:07 -0800 (PST)
+        Wed, 10 Nov 2021 14:15:09 -0800 (PST)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -55,15 +55,15 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 2/8] dt-bindings: PCI: Correct brcmstb interrupts, interrupt-map.
-Date:   Wed, 10 Nov 2021 17:14:42 -0500
-Message-Id: <20211110221456.11977-3-jim2101024@gmail.com>
+Subject: [PATCH v8 3/8] dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
+Date:   Wed, 10 Nov 2021 17:14:43 -0500
+Message-Id: <20211110221456.11977-4-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211110221456.11977-1-jim2101024@gmail.com>
 References: <20211110221456.11977-1-jim2101024@gmail.com>
@@ -71,39 +71,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The "pcie" and "msi" interrupts were given the same interrupt when they are
-actually different.  Interrupt-map only had the INTA entry; the INTB, INTC,
-and INTD entries are added.
+Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+allows optional regulators to be attached and controlled by the PCIe RC
+driver.  That being said, this driver searches in the DT subnode (the EP
+node, eg pci-ep@0,0) for the regulator property.
+
+The use of a regulator property in the pcie EP subnode such as
+"vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+file at
+
+https://github.com/devicetree-org/dt-schema/pull/63
 
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index b9589a0daa5c..508e5dce1282 100644
+index 508e5dce1282..ef2427320b7d 100644
 --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -142,11 +142,15 @@ examples:
-                     #address-cells = <3>;
-                     #size-cells = <2>;
-                     #interrupt-cells = <1>;
--                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                    interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-                                  <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-                     interrupt-names = "pcie", "msi";
-                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
--                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+@@ -158,5 +158,28 @@ examples:
+                                  <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
+                     brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
 +
-                     msi-parent = <&pcie0>;
-                     msi-controller;
-                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
++                    /* PCIe bridge */
++                    pci@0,0 {
++                            #address-cells = <3>;
++                            #size-cells = <2>;
++                            reg = <0x0 0x0 0x0 0x0 0x0>;
++                            compatible = "pciclass,0604";
++                            device_type = "pci";
++                            vpcie3v3-supply = <&vreg7>;
++                            ranges;
++
++                            /* PCIe endpoint */
++                            pci-ep@0,0 {
++                                    assigned-addresses =
++                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
++                                    reg = <0x0 0x0 0x0 0x0 0x0>;
++                                    compatible = "pci14e4,1688";
++                                    #address-cells = <3>;
++                                    #size-cells = <2>;
++
++                                    ranges;
++                            };
++                    };
+             };
+     };
 -- 
 2.17.1
 
