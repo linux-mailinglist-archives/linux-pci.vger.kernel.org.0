@@ -2,200 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47FB844CC63
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 23:17:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B9EE44CD1A
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 23:48:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233769AbhKJWUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 17:20:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233640AbhKJWU0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 17:20:26 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD22C0432C2;
-        Wed, 10 Nov 2021 14:15:27 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso3056870pjb.2;
-        Wed, 10 Nov 2021 14:15:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fphIdUDXSUqQoN+550Js8LMURtYvUNV04vrXLaftqCA=;
-        b=ln4adG2D4DDbq+rFf48o0HcEK0FDmocia0H8rr3LEwkHDfo2H/+WjFR9ays+LbzTcu
-         fFzPxWA3n+Cvq0bS3Q+eX3qtnO19Qoext6nY+slmvdD4XGOM8VHcfdne05O2u6TMzpRy
-         Sp93MFXN9qp3dNlJKnsLsXLy06pbdUog0MIAPlgt2wb7H/s/hQxXZkOg4PmCrgiYNrsI
-         sYb2cz2VzuaOVHCdKVfq/UWQHCU4mylRjZP/sd/JYUyA8JRtzHPv3ax1XpqOr69Smsmc
-         a+jw/hWmXgTt6AKyeKrm5SJk/6ogV0vJm7c6yWOd0JZQgholaOnlOaP2gVVf1hrCJ/rf
-         0X3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fphIdUDXSUqQoN+550Js8LMURtYvUNV04vrXLaftqCA=;
-        b=pQARcVpWtQXOK+7442nzgNqMl9T7/6rH2omSRAefOmzreKWWGTRLMdiXxAGYGXv9xJ
-         iDEjGf25c+LehQbpf/uRGD+ubmEXCjKnBer76aAl/NlqugpEV9Nub9f8r4elmDax3HgR
-         k7dWUQSbJve26XWaNg8mfTrHWKT+6W7k5Mm2tqFeDjmUwk2dmAvCMQC7i0xAS6CzSeFF
-         AxxzWaF98KMuzGC8Lv6XFlc0yxapNmyR9+Sa3uViQMnDBSDKTeAa8R0E0KSO4j0ywIPV
-         C5nyr0SEgefQMUcYIMZ0MHIoXUZRvjE7rLyuEm7dxKKhtN+daMBacM91bSYCTrGpKDqS
-         J5nQ==
-X-Gm-Message-State: AOAM531ZomHQTlsUxFnaWQ9zvFhjbI1Uq82/3y867kipRu9GV5ghXPYl
-        Hb0lq9wosMMwF+U8cCCr2UNRGXu23CYR3w==
-X-Google-Smtp-Source: ABdhPJyQQlP061pJeeiR5E45HKt/hY21coyGMCUv9LXIeukPDxZPkugMJD4lzg5n7VjYO33voos8CQ==
-X-Received: by 2002:a17:90a:4701:: with SMTP id h1mr2725940pjg.184.1636582526604;
-        Wed, 10 Nov 2021 14:15:26 -0800 (PST)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id q11sm611774pfk.192.2021.11.10.14.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 14:15:26 -0800 (PST)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-        james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 8/8] PCI: brcmstb: Add control of subdevice voltage regulators
-Date:   Wed, 10 Nov 2021 17:14:48 -0500
-Message-Id: <20211110221456.11977-9-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211110221456.11977-1-jim2101024@gmail.com>
-References: <20211110221456.11977-1-jim2101024@gmail.com>
+        id S233695AbhKJWvR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 17:51:17 -0500
+Received: from mail-cusazon11020024.outbound.protection.outlook.com ([52.101.61.24]:20283
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233569AbhKJWvQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Nov 2021 17:51:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WAXeoBKRIeVX3uVF4cWyq4fMFmp+xL5I6ngEXmSUgBJhi1QbmNgDlgFZHClB9pymL2c4sMz+EkoSH1gNjPk/gsv8pxeE9h3VO9fAt1XtpyFczApUh2eYsG6CUHIAy4iPxBnasoYs7W+FRHdb5z1uqiSVGHt9+TS9/6CcJT+S9vf9K8IOjcbxnTEXHJxFDI/bM4o8lwf+GfGM6fZNMdjzHbjeotPUeMW72QOBB/jQbG/+KVhRrIrnE7SxZlgggMNQHkl5Sr8d+tD3Ixbo5iHR92u1vepNLu+OThkWt8i8YuPaCMij62O8YBD91daRQz3A7bsrw8dQZb9Tx3e3UZfMjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3JdLUl7J48CDYNkvR5SrfXw7aWSZE3ofeqpCtisizsc=;
+ b=TKblW/m+uLmfMVK7kiZkda9BRREr1/k7YxVBM7N4c0DF5FprC66o8+rHmhZrryWmzB6uHk5363wFJ0BenKO02b9fZcD6gw2V01wB70Io495oAuR7RER8UtjxBncrP/1KzKQVI8w+wWyb/SD6L30f71VuWOCgH6vltXFeEwK2J9+DeHnT226AMkZ18k1PS4xWyOpAKApkhYDWu9kFzFS2WS79Z1RFNDHkyTkLkBk2KtK+QpZPTpYYDmM9YXb6VqkObC3LQBgCuK+ElJngYdx/TcYFaLMoADwcNuV7JNdBjOZK5k2jk1rNe40uLKrEiuy2x1NccYG0WX/7/OO//nv2nA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3JdLUl7J48CDYNkvR5SrfXw7aWSZE3ofeqpCtisizsc=;
+ b=j3QOGLorzWxs/rN4KYduK6dz3wOfmCpRedeiV+zkXf8Yh1CMulTxr8+L33hIixibn01uAmXrEF9rQPDemX+ZLu+KmLXhBQU5G8pP7wAGZ1ode1lo8HzCIAnF6uqGyTx2T39cCq4NCpzhyILtskl+hH8yWNnBcW0rgRkYvmlU1fQ=
+Received: from BN8PR21MB1140.namprd21.prod.outlook.com (20.179.72.139) by
+ BN7PR21MB1666.namprd21.prod.outlook.com (52.135.243.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4713.3; Wed, 10 Nov 2021 22:48:24 +0000
+Received: from BN8PR21MB1140.namprd21.prod.outlook.com
+ ([fe80::48fb:8577:ba03:23a5]) by BN8PR21MB1140.namprd21.prod.outlook.com
+ ([fe80::48fb:8577:ba03:23a5%9]) with mapi id 15.20.4713.005; Wed, 10 Nov 2021
+ 22:48:24 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v4 2/2] arm64: PCI: hv: Add support for
+ Hyper-V vPCI
+Thread-Topic: [EXTERNAL] Re: [PATCH v4 2/2] arm64: PCI: hv: Add support for
+ Hyper-V vPCI
+Thread-Index: AQHX1bderE/dJFbGykyqoP6WpgV6hqv8wAoAgAABlYCAAEjSEIAAU4WQ
+Date:   Wed, 10 Nov 2021 22:48:24 +0000
+Message-ID: <BN8PR21MB1140C4416E0B338A8FDBA18BC0939@BN8PR21MB1140.namprd21.prod.outlook.com>
+References: <1636496060-29424-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1636496060-29424-3-git-send-email-sunilmut@linux.microsoft.com>
+        <87v91087vj.wl-maz@kernel.org> <87tugk87m4.wl-maz@kernel.org>
+ <BN8PR21MB1140769D6EC879C646E7DB92C0939@BN8PR21MB1140.namprd21.prod.outlook.com>
+In-Reply-To: <BN8PR21MB1140769D6EC879C646E7DB92C0939@BN8PR21MB1140.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=54c4b1b7-16a5-4b88-8df4-065c7b9b4d8f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-11-10T17:46:49Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 54c539aa-5bdb-4ff8-ecf5-08d9a49c33f6
+x-ms-traffictypediagnostic: BN7PR21MB1666:
+x-microsoft-antispam-prvs: <BN7PR21MB1666B5F85B686389BCF5617DC0939@BN7PR21MB1666.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R/3UmAUQ+ha9yYo30/33GerQpr0/ei6+Lqz4/810EhVv3L9Fy+r7i8EJxFSypPtZ9+pigpUCM2F0WY1YsxCBIS5oTKyHerQwCRS0t8fnL5fxgJBXExyp/em4wCYVvno3O6vM7I2YiV1AD+E8MMH3tfu8cuVvQgMw7GzzGegvVvNLJppbiONcUbot8ynL0miheBTC/lpm+CSyAb7lK2qard3vwtVVDAAM5LZk0AEU/rwtCGJ7hsmHvwTi6CrYCYdD693OdPVa2XE5bo1MG+0fHlOUaQ6VNFglgHcrgu9ST/ENv20OiyoP3LkdJA/cedKcYhB5AfdRw0/hdUtDt30QPu9FgvIvlCpaXRhc8WkqU6f5oq7Q236sAPd4S8Hc91hIWb4SUn+gIf/ZI7Dij+3HNH21ZyK8evsRZmGRYD+ZzWniwAyI/ytHxZLvR5tMlZg5rQ/eC2PQU9xdBjwlg3badF2+/iX9sqcVQ9ehPgWKa+9EXlzpQJQG79Fgnv56xQIir5b5HU9Zns7us/F5NIgm3+VDYcPOH6JUZkpAKbYoBOxVub+pCSak/XUc1nDRhZJytcRX1udTtN2Pvo8EC5bmVZYTlBNVtIjdIkjhTJ7TYGsKYmvv14G0PVin2AHIVkJb69KQVNMlhqH8HNKUPdAUswZUFv2iwSgGcooLnFitAtbRD6VpieBj0ieMPyjwSKBWHpBEfTF+El7l5GaxDUHmeA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1140.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(8936002)(66446008)(8676002)(64756008)(4326008)(8990500004)(186003)(38070700005)(122000001)(38100700002)(86362001)(83380400001)(2940100002)(110136005)(66556008)(7696005)(10290500003)(76116006)(7416002)(5660300002)(316002)(33656002)(82950400001)(82960400001)(54906003)(66476007)(508600001)(71200400001)(9686003)(6506007)(66946007)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OYdZ7C/69NWeeQWQayPnzAPa/5xFTzVSpt+4FklOg7+R2qHcJIFsNDEKey2u?=
+ =?us-ascii?Q?h7Kg5BVNQxnWMGJ7tVXaZ4La231WVAZkDLA37F6vIr0s54QYlZtn7JBG/0Qf?=
+ =?us-ascii?Q?Xl/mz5trNs6a8VgNx+1ZNzihMNjEMddWalocf+E3jkIQ7G2YyYRH9w3r08uH?=
+ =?us-ascii?Q?G/O6v7kiBUVl+nkvNaofcX2uiZTXhpu5s38sdEAE5KeFFa8D2QNXwVO57QGW?=
+ =?us-ascii?Q?ahEDP4jz0D5hCqrOHS22mmf/VsTXZf/6NmfUMHGslwxZmrIq5eEUqb2ZR/Fu?=
+ =?us-ascii?Q?Wthz5SpyzsVJWNsRz6DqhS2cEa7ap/t7phG5axIHGmjhTkkOKBeD0CeDVeYy?=
+ =?us-ascii?Q?Au1jvTjXhDW/OXUgmKEU0k28fNTVFiPliDIXspph8Gm5GMQmiJDU0h2rBYwA?=
+ =?us-ascii?Q?g/PRl4XWRpAQOWLw0hAyqpPqxnkCZnlvf+jMEQ9tXScHg6wFF5D6aHLRKb9Y?=
+ =?us-ascii?Q?HKfNBYvCNSlPCsDeUQwXEuYMybMNujEpgIcupSc9sLyLzHu2jnc3uxG3B2su?=
+ =?us-ascii?Q?2QaeWcHhBth/Dylp1Z1cH5rA0S1e1EXiqnEQDIh/gcaBTThZ1XLRUsNN+JIO?=
+ =?us-ascii?Q?o6+m+CaKxbMMDyrM/iYFvgXkh+ENNd2NJsAud8HzjoH1moHUhvRPoIRJHJ7P?=
+ =?us-ascii?Q?465ZzV/GTXHsZKe5M8hkNFc/THIjeAWvE0ysRKRX2DNEfjgHDCsavIMXCOBv?=
+ =?us-ascii?Q?fDeD1qTi6TbuP6eYU77j66YkzsRN6PoD1+kDTwyCmJng6ntYlDowHtnp6k1H?=
+ =?us-ascii?Q?Z99hOVxbEgwTSxGFH3ydfloaOORslILgRq5/IOJhlByJZzVv+xr1CUlJd+6b?=
+ =?us-ascii?Q?FV9Rz9OQ0DKOTGIAkW/eWpNUb6Rk/V++OwdG9JVuckKKlOlh3LGby+0zwdSS?=
+ =?us-ascii?Q?UwGKmo+Gy/pbtDOv38/3H8bgldluWzhpgYT6W8tjJyL/7oP4bKltw2VBpxaw?=
+ =?us-ascii?Q?HJViFXjyY/387dl5qXvScUrJUJB6wgXLRL176LYXP821wasf9xJOuB3LsIiW?=
+ =?us-ascii?Q?7ZU8m+qHV16UWXcpHoFjGN81DxJQmGHfcWo/LKz/OWcfnCao4s2Xpp8TiabK?=
+ =?us-ascii?Q?81WWIDHBLXkM3gswWVKfQQsa2gz2RA5MnxIRkmO0Xga0SQjMosOy0WBWGOiR?=
+ =?us-ascii?Q?LbQzs82dLZ5gKxwsDoiMhYoMEDg/l84Fv+zJ0asj1ScjJhtOKRcDkteTpKCv?=
+ =?us-ascii?Q?OYSIOpBx/XQJPWecZAzHs/kS89/Qa4v7YWhgMkkHKiqFTUDt6sq9h3Ju3fxG?=
+ =?us-ascii?Q?1dlkiNp1qgQwMth1LS70xnJ2+gN8js5DC2x8d8t6wJdbJAyX33lIBkFKrVPs?=
+ =?us-ascii?Q?cN7Y/gD3qTN6FxrLQZkXVXMHq5nVZ+mJMSRUtyvy1yXj9+NiVPPWUE1q+uTA?=
+ =?us-ascii?Q?/o1gWiURdGgAEOiRLweXGkIel07EGQ8mC4A0/B7YD+PFsvbAuhZhpewPVBX0?=
+ =?us-ascii?Q?qgSJJP//jrUEMv2sZ5GhAPaa+k4+eht9MVgvnVWuj+Xx8tJ814ecW6+fxl1u?=
+ =?us-ascii?Q?9SLrua6ivzW5Fm/yEBHtUaaAQManmllvOWwaXFWsQXExqhzZH9J6TuATHyk/?=
+ =?us-ascii?Q?vJJAYMy9Mf5vMxZjr68cueI+xd1736Q454rOIozL/4w+r6PinKsWxUf964PE?=
+ =?us-ascii?Q?gAHeZztgfDRrGzNx3TXbJVYItmivaDXVx+AzKGes0PA9ARF6e/mHafrksUmB?=
+ =?us-ascii?Q?GpzlvZ+HmnE9EgC9EcXxYJNxA1lInRyo6d44S7OVBaMdMf3bf799pp71j/sX?=
+ =?us-ascii?Q?bioji6qlmA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1140.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54c539aa-5bdb-4ff8-ecf5-08d9a49c33f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Nov 2021 22:48:24.2320
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZzOz+8a97RLD09nIgnUMbqrgT69Bh9Yb8S6+4V5u1pzd61Ka6jgrlvlj7Mcl1m0mehGy1g3haHbvqdezn2h/NDAFvTFmbVX+/Gz0EflZ5X8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR21MB1666
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This Broadcom STB PCIe RC driver has one port and connects directly to one
-device, be it a switch or an endpoint.  We want to be able to leverage
-the recently added mechansim that allocates and turns on/off subdevice
-regulators.
+> > > On Tue, 09 Nov 2021 22:14:20 +0000,
+> > > Sunil Muthuswamy <sunilmut@linux.microsoft.com> wrote:
+> > > >
+> > > > From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> > > >
+> > > > Add support for Hyper-V vPCI for arm64 by implementing the arch spe=
+cific
+> > > > interfaces. Introduce an IRQ domain and chip specific to Hyper-v vP=
+CI that
+> > > > is based on SPIs. The IRQ domain parents itself to the arch GIC IRQ=
+ domain
+> > > > for basic vector management.
+> > > >
+> > > > Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> > > > ---
+> > > > In v2, v3 & v4:
+> > > >  Changes are described in the cover letter.
+> > > >
+> > > >  arch/arm64/include/asm/hyperv-tlfs.h |   9 ++
+> > > >  drivers/pci/Kconfig                  |   2 +-
+> > > >  drivers/pci/controller/Kconfig       |   2 +-
+> > > >  drivers/pci/controller/pci-hyperv.c  | 207 +++++++++++++++++++++++=
++++-
+> > > >  4 files changed, 217 insertions(+), 3 deletions(-)
+> > >
+> > > [...]
+> > >
+> > > > +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domai=
+n,
+> > > > +					  struct irq_data *irqd, bool reserve)
+> > > > +{
+> > > > +	static int cpu;
+> > > > +
+> > > > +	/*
+> > > > +	 * Pick a cpu using round-robin as the irq affinity that can be
+> > > > +	 * temporarily used for composing MSI from the hypervisor. GIC
+> > > > +	 * will eventually set the right affinity for the irq and the
+> > > > +	 * 'unmask' will retarget the interrupt to that cpu.
+> > > > +	 */
+> > > > +	if (cpu >=3D cpumask_last(cpu_online_mask))
+> > > > +		cpu =3D 0;
+> > > > +	cpu =3D cpumask_next(cpu, cpu_online_mask);
+> > > > +	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
+> > >
+> > > The mind boggles.
+> > >
+> > > Let's imagine a single machine. cpu_online_mask only has bit 0 set,
+> >
+> > single *CPU* machine
+> >
+> > > and nr_cpumask_bits is 1. This is the first run, and cpu is 1:
+> >
+> > cpu is *obviously* 0:
+> >
+> > >
+> > > 	cpu =3D cpumask_next(cpu, cpu_online_mask);
+> > >
+> > > cpu is now set to 1. Which is not a valid CPU number, but a valid
+> > > return value indicating that there is no next CPU as it is equal to
+> > > nr_cpumask_bits. cpumask_of(cpu) will then diligently return crap,
+> > > which you carefully store into the irq descriptor. The IRQ subsystem
+> > > thanks you.
+> > >
+> > > The same reasoning applies to any number of CPUs, and you obviously
+> > > never checked what any of this does :-(. As to what the behaviour is
+> > > when multiple CPUs run this function in parallel, let's not even
+> > > bother (locking is overrated).
+> > >
+> > > Logic and concurrency issues aside, why do you even bother setting
+> > > some round-robin affinity if all you need is to set *something* so
+> > > that a hypervisor message can be composed? Why not use the first
+> > > online CPU? At least it will be correct.
+> >
+> > Everything else holds.
+> >
+> > 	M.
+>=20
+> Good call on not being able to pick cpu 0 and that being a problem for
+> single cpu system. The cpu initialization should have been '-1' to be abl=
+e
+> to successfully pick cpu 0.
+>=20
+> I don't see concurrency an issue because this was a best-case effort to
+> randomize the interrupt distribution across cpu's. So, even if two irq's
+> ended up with the same cpu, that will still work.
+>=20
+> I also had thoughts of just using the first online cpu since this is just
+> temporary. So, I will go with that as that will also simplify things. Tha=
+nks
+> for your feedback.
+>=20
+> - Sunil
 
-All that needs to be done is to put the regulator DT nodes in the bridge
-below host and to set the pci_ops methods add_bus and remove_bus.
+But, yes, for the concurrency, I do see a possibility of a race condition
+with the last cpu check and 'cpumask_next' call where it could lead
+to a failure. v5 moves this to the first online cpu and that should
+fix this issue.
 
-Note that the pci_subdev_regulators_add_bus() method is wrapped for two
-reasons:
-
-   1. To acheive linkup after the voltage regulators are turned on.
-
-   2. If, in the case of an unsuccessful linkup, to redirect
-      any PCIe accesses to subdevices, e.g. the scan for
-      DEV/ID.  This redirection is needed because the Broadcom
-      PCIe HW wil issue a CPU abort if such an access is made when
-      there is no linkup.
-
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 56 ++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 1a841c240abb..692df3dda77a 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -191,6 +191,7 @@ static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie,
- static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
-+static int brcm_pcie_add_bus(struct pci_bus *bus);
- 
- enum {
- 	RGR1_SW_INIT_1,
-@@ -295,6 +296,7 @@ struct brcm_pcie {
- 	u32			hw_rev;
- 	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
- 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-+	bool			refusal_mode;
- };
- 
- /*
-@@ -711,6 +713,18 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
- 	/* Accesses to the RC go right to the RC registers if slot==0 */
- 	if (pci_is_root_bus(bus))
- 		return PCI_SLOT(devfn) ? NULL : base + where;
-+	if (pcie->refusal_mode) {
-+		/*
-+		 * At this point we do not have link.  There will be a CPU
-+		 * abort -- a quirk with this controller --if Linux tries
-+		 * to read any config-space registers besides those
-+		 * targeting the host bridge.  To prevent this we hijack
-+		 * the address to point to a safe access that will return
-+		 * 0xffffffff.
-+		 */
-+		writel(0xffffffff, base + PCIE_MISC_RC_BAR2_CONFIG_HI);
-+		return base + PCIE_MISC_RC_BAR2_CONFIG_HI + (where & 0x3);
-+	}
- 
- 	/* For devices, write to the config space index register */
- 	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
-@@ -722,6 +736,8 @@ static struct pci_ops brcm_pcie_ops = {
- 	.map_bus = brcm_pcie_map_conf,
- 	.read = pci_generic_config_read,
- 	.write = pci_generic_config_write,
-+	.add_bus = brcm_pcie_add_bus,
-+	.remove_bus = pci_subdev_regulators_remove_bus,
- };
- 
- static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
-@@ -1242,6 +1258,34 @@ static const struct of_device_id brcm_pcie_match[] = {
- 	{},
- };
- 
-+static int brcm_pcie_add_bus(struct pci_bus *bus)
-+{
-+	struct pci_host_bridge *hb;
-+	struct brcm_pcie *pcie;
-+	int ret;
-+
-+	if (!pcie_is_port_dev(bus->self))
-+		return 0;
-+
-+	hb = pci_find_host_bridge(bus);
-+	pcie = (struct brcm_pcie *) hb->sysdata;
-+
-+	ret = pci_subdev_regulators_add_bus(bus);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If we have failed linkup there is no point to return an error as
-+	 * currently it will cause a WARNING() from pci_alloc_child_bus().
-+	 * We return 0 and turn on the "refusal_mode" so that any further
-+	 * accesses to the pci_dev just get 0xffffffff
-+	 */
-+	if (brcm_pcie_linkup(pcie) != 0)
-+		pcie->refusal_mode = true;
-+
-+	return 0;
-+}
-+
- static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
-@@ -1333,7 +1377,17 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pcie);
- 
--	return pci_host_probe(bridge);
-+	ret = pci_host_probe(bridge);
-+	if (!ret && !brcm_pcie_link_up(pcie))
-+		ret = -ENODEV;
-+
-+	if (ret) {
-+		brcm_pcie_remove(pdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+
- fail:
- 	__brcm_pcie_remove(pcie);
- 	return ret;
--- 
-2.17.1
-
+- Sunil
