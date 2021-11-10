@@ -2,170 +2,327 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC90044C2CD
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 15:14:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82B2344C4BB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 16:56:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbhKJOR3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 09:17:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231607AbhKJOR3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Nov 2021 09:17:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 536C8610CF;
-        Wed, 10 Nov 2021 14:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636553681;
-        bh=ULssGWa9GKLPoBBHvT9SZdMTkwJdbGAWdXOkGpY4kkc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=knfAa4ESl4Ws/Ll++SyVhZfck9pYKkVkJUlFPDpi0DzFMPBbj7hxEsIwpXxsjXj55
-         kgpxs1ATu1nRh4EYPI4v0MFtJRAp6Kj1sjvAXXj6tipQifxyBxJKri56MsnzIc8SWE
-         P0fnTWXqgTO0JCVqLlxyEZejU5tNF1mIsQm4+4sGW8Ab0h5M0IKUlWBaz2EljopmxK
-         ha9rBeOeteZt1DC8wDEhHoFaMitgM0c7BirhK3NiKY2ttbXcuCTHQiIfAFvXqX1tbg
-         0RQTcZ5iVZK2bUAYuAbCUghnVmk9zjuqTYVSfeVQGh2Tbaq9lSXCZCCglKxsKPOcdG
-         hY0rrWvi5u6pg==
-Date:   Wed, 10 Nov 2021 08:14:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
-Message-ID: <20211110141439.GA1240945@bhelgaas>
+        id S232419AbhKJP7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 10:59:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231795AbhKJP7n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 10:59:43 -0500
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC3AC061764;
+        Wed, 10 Nov 2021 07:56:55 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id t19so6096872oij.1;
+        Wed, 10 Nov 2021 07:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=AuJxsO7KTO/hpmKYv4YTvzchts2QUUvDZsXG6/D9BhE=;
+        b=H03nDMDtviKlPIX4YSrumSYVD/e65kt/m+Td06j2CRGEPRrieLdNRTnfZa4XNFYd3i
+         tZCqLyMULpNwSb4KuKAasSKtomAN5pAZ2yw5qPl6G0QkTu025QpaKGbYrM7HwrfYsk00
+         TVlJv799cCvkcL7hpiED2CGzSvQn7u3t9l1CWKQvv7+HB6Lbs3H0rBgupMLbmfYzZfJk
+         LiJWm0UYeKmNov8XzQCwWMap4iTbbX32uClM5AoAODQ+KoUk4k9nqufvvrDUyl3At+A6
+         M2q/2YOxAPbzb3JKsHhh/xlSsKpNxyaZU59Jde8LHzUcZEsq9UC9pWOlzy4hw2zeLYWd
+         jUfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AuJxsO7KTO/hpmKYv4YTvzchts2QUUvDZsXG6/D9BhE=;
+        b=NRw0rmAjDc/BTQtGjwb4jTqX9YDVGnjlSrLMiO6T9mT7KOZ/TY1jgt4ym4rDYbcNHm
+         2UL604d7/WwjCsMznwf6tSpUwBHKeTNihCaflrD8Gcp1uLGLhIc3hSxPi481zjO9Y466
+         Hk5WHbmtiwQubeLnwDqxYuyw78PFhyU+mchVURPSfz+cLPzUD2nA8S6MxLAjEsep2nEh
+         IXSBBwBnx+tjTPYlF1KLMz+HwV8NWoruwcNsSagAcYri8862DT6JmAIZ7InCVBOjX5cO
+         3LRSmChZ/a/13xp4KE3pkn4cV95RYi6U/hVgbLbCMNHmqK+1NQK5SKWHqChmrRgRctvA
+         eQDg==
+X-Gm-Message-State: AOAM531kAdOEnCQ8Eh9zE29L0sT04Ly5rMfXK7UmwECoVzMuwaM2usy4
+        e8vb/QvnnBHBnT8sox9R4Kv/y9gRO3M=
+X-Google-Smtp-Source: ABdhPJxSf3Fd5gca9QiirazhCJemRYqVi7EKrdbcgNfD+rCn6YxARCojOkX2qzMsQJe8e12lCYGZIQ==
+X-Received: by 2002:a05:6808:b0d:: with SMTP id s13mr124140oij.53.1636559814500;
+        Wed, 10 Nov 2021 07:56:54 -0800 (PST)
+Received: from ?IPV6:2603:8081:2802:9dfb:e414:9d10:17d8:2a45? (2603-8081-2802-9dfb-e414-9d10-17d8-2a45.res6.spectrum.com. [2603:8081:2802:9dfb:e414:9d10:17d8:2a45])
+        by smtp.gmail.com with ESMTPSA id y28sm29748oix.57.2021.11.10.07.56.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Nov 2021 07:56:53 -0800 (PST)
+Message-ID: <1cb9c906-826b-5eb9-af45-41a2e0987428@gmail.com>
+Date:   Wed, 10 Nov 2021 09:56:52 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211109200518.GA1176309@bhelgaas>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: HW power fault defect cause system hang on kernel 5.4.y
+Content-Language: en-US
+To:     "Bao, Joseph" <joseph.bao@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+References: <DM8PR11MB5702255A6A92F735D90A4446868B9@DM8PR11MB5702.namprd11.prod.outlook.com>
+ <20211102223401.GA651784@bhelgaas>
+ <DM8PR11MB570219FE94A7983E0F61A3BA86929@DM8PR11MB5702.namprd11.prod.outlook.com>
+ <912e5d6c-b6d2-d4b7-d3f3-8c6624a14eb6@gmail.com>
+ <DM8PR11MB570293D37A0027753CEE3F8386939@DM8PR11MB5702.namprd11.prod.outlook.com>
+From:   stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <DM8PR11MB570293D37A0027753CEE3F8386939@DM8PR11MB5702.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 09, 2021 at 02:05:18PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 09, 2021 at 07:58:47PM +0100, Rafael J. Wysocki wrote:
-> > On Tue, Nov 9, 2021 at 7:52 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > ...
 
-> > > So instead, we can drop the pm_runtime_get_sync() and
-> > > pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
-> > > respectively, and add pm_runtine_get_noresume() to pci_pm_init(),
-> > > which will prevent PM-runtime from touching the device until it has a
-> > > driver that supports PM-runtime.
-> > >
-> > > We'll lose the theoretical ability to put unbound devices into D3 this
-> > > way, but we learned some time ago that this isn't safe in all cases
-> > > anyway.
-> > 
-> > IOW, something like this (untested and most likely white-space-damaged).
-> 
-> Thanks!  I applied this manually to for-linus in hopes of making the
-> the next linux-next build.
-> 
-> Please send any testing reports and corrections to the patch and
-> commit log!
 
-Robert, I hate to ask even more of you, but if you have a chance, it
-would be very helpful if you could test the patch below.  I'm pretty
-sure it should fix the problem you saw, and I hope to ask Linus to
-merge it today.
+On 11/10/2021 3:20 AM, Bao, Joseph wrote:
+> Hi Stuart,
+> The patch you attached does not work for me, the logic should be ok but I have not figured out why. But a loop counter actually helps mitigate this issue. Thank you very much!
+> 
 
-> commit dd414877b58b ("PCI/PM: Prevent runtime PM until claimed by a driver that supports it")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Tue Nov 9 13:36:09 2021 -0600
+I think I see the error in the logic... the patch I suggested yesterday would see bits that got cleared as changed and cause it to loop forever, when all we want to check for is if any new bits get set in each loop.  Maybe try this patch?  The only difference is the line "changed = status ^ (events & status);", which hopefully will only compare those status bits that are currently set against those same bits from the previous loop.
+
+
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 3024d7e85e6a..bf8fe868a293 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -594,7 +594,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+  	struct controller *ctrl = (struct controller *)dev_id;
+  	struct pci_dev *pdev = ctrl_dev(ctrl);
+  	struct device *parent = pdev->dev.parent;
+-	u16 status, events = 0;
++	u16 changed, status, events = 0;
+  
+  	/*
+  	 * Interrupts only occur in D3hot or shallower and only if enabled
+@@ -643,6 +643,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+  	if (ctrl->power_fault_detected)
+  		status &= ~PCI_EXP_SLTSTA_PFD;
+  
++	changed = status ^ (events & status);
+  	events |= status;
+  	if (!events) {
+  		if (parent)
+@@ -659,7 +660,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+  		 * So re-read the Slot Status register in case a bit was set
+  		 * between read and write.
+  		 */
+-		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
++		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode && changed)
+  			goto read_status;
+  	}
+  
+
+
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 88b996764ff9..3d2c336ff740 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -529,7 +529,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>          struct controller *ctrl = (struct controller *)dev_id;
+>          struct pci_dev *pdev = ctrl_dev(ctrl);
+>          struct device *parent = pdev->dev.parent;
+> -       u16 status, events = 0;
+> +       u16 status, events, read_retry_count = 0;
+> +       u8 READ_RETRY_MAX = 6;
 > 
->     PCI/PM: Prevent runtime PM until claimed by a driver that supports it
->     
->     Previously we had a path that could call a driver's ->runtime_resume()
->     method before calling the driver's ->probe() method, which is a problem
->     because ->runtime_resume() often relies on initialization done in
->     ->probe():
->     
->       local_pci_probe
->         pm_runtime_get_sync
->           ...
->             pci_pm_runtime_resume
->               if (!pci_dev->driver)
->                 return 0;                          <-- early exit
->               dev->driver->pm->runtime_resume();   <-- driver ->runtime_resume()
->         pci_dev->driver = pci_drv;
->         pci_drv->probe()                           <-- driver ->probe()
->     
->     Prior to 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of
->     pci_dev->driver"), we took the early exit, which avoided the problem.  But
->     2a4d9408c9e8 removed pci_dev->driver (since it's redundant with
->     device->driver), so we no longer take the early exit, which leads to havoc
->     in ->runtime_resume().
->     
->     Similarly, we could call the driver's ->runtime_idle() method after its
->     ->remove() method.
->     
->     Avoid the problem by dropping the pm_runtime_get_sync() and
->     pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
->     respectively.
->     
->     Add pm_runtime_get_noresume(), which uses no driver PM callbacks, to the
->     pci_pm_init() enumeration path.  This will prevent PM-runtime from touching
->     the device until it has a driver that supports PM-runtime.
->     
->     Link: https://lore.kernel.org/r/CAJZ5v0impb8uscbp8LUTBMExfMoGz=cPrTWhSGh0GF_SANNKPQ@mail.gmail.com
->     Fixes: 2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of pci_dev->driver")
->     Reported-by: Robert Święcki <robert@swiecki.net>
->     Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>          /*
+>           * Interrupts only occur in D3hot or shallower and only if enabled
+> @@ -585,7 +586,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>                  return IRQ_NONE;
+>          }
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 1d98c974381c..41cdf510214f 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -309,16 +309,6 @@ static long local_pci_probe(void *_ddi)
->  	struct device *dev = &pci_dev->dev;
->  	int rc;
->  
-> -	/*
-> -	 * Unbound PCI devices are always put in D0, regardless of
-> -	 * runtime PM status.  During probe, the device is set to
-> -	 * active and the usage count is incremented.  If the driver
-> -	 * supports runtime PM, it should call pm_runtime_put_noidle(),
-> -	 * or any other runtime PM helper function decrementing the usage
-> -	 * count, in its probe routine and pm_runtime_get_noresume() in
-> -	 * its remove routine.
-> -	 */
-> -	pm_runtime_get_sync(dev);
->  	rc = pci_drv->probe(pci_dev, ddi->id);
->  	if (!rc)
->  		return rc;
-> @@ -464,9 +454,6 @@ static void pci_device_remove(struct device *dev)
->  	pcibios_free_irq(pci_dev);
->  	pci_iov_remove(pci_dev);
->  
-> -	/* Undo the runtime PM settings in local_pci_probe() */
-> -	pm_runtime_put_sync(dev);
-> -
->  	/*
->  	 * If the device is still on, set the power state as "unknown",
->  	 * since it might change by the next time we load the driver.
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b88db815ee01..e9c38b994c73 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3097,7 +3097,15 @@ void pci_pm_init(struct pci_dev *dev)
->  	u16 pmc;
->  
->  	pm_runtime_forbid(&dev->dev);
-> +
-> +	/*
-> +	 * Unbound PCI devices are always put in D0.  If the driver supports
-> +	 * runtime PM, it should call pm_runtime_put_noidle(), or any other
-> +	 * runtime PM helper function decrementing the usage count, in its
-> +	 * probe routine and pm_runtime_get_noresume() in its remove routine.
-> +	 */
->  	pm_runtime_set_active(&dev->dev);
-> +	pm_runtime_get_noresume(&dev->dev);
->  	pm_runtime_enable(&dev->dev);
->  	device_enable_async_suspend(&dev->dev);
->  	dev->wakeup_prepared = false;
+> -       if (status) {
+> +       if (status && (read_retry_count < READ_RETRY_MAX)) {
+>                  pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> 
+>                  /*
+> @@ -594,8 +595,10 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>                   * So re-read the Slot Status register in case a bit was set
+>                   * between read and write.
+>                   */
+> -               if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
+> +               if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
+> +                       read_retry_count++;
+>                          goto read_status;
+> +               }
+>          }
+> Regards.
+> Joseph
+> 
+> Regards.
+> Joseph
+> 
+> -----Original Message-----
+> From: stuart hayes <stuart.w.hayes@gmail.com>
+> Sent: Tuesday, November 9, 2021 11:37 PM
+> To: Bao, Joseph <joseph.bao@intel.com>; Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Lukas Wunner <lukas@wunner.de>
+> Subject: Re: HW power fault defect cause system hang on kernel 5.4.y
+> 
+> 
+> 
+> On 11/9/2021 1:59 AM, Bao, Joseph wrote:
+>> Hi Lukas/Stuart,
+>> Want to follow up with you whether the system hang is expected when HW has a defect keeping PCI_EXP_SLTSTA_PFD always HIGH.
+>>
+>>
+>> Regards
+>> Joseph
+>>
+> 
+> It does appear that the code will hang when pciehp_isr sees PFD high and power_fault_detected isn't yet set, if PFD doesn't clear when a 1 is written to it.  It will continue to loop trying to clear it, and power_fault_detected won't get set until after it gets through this loop.
+> 
+> It wouldn't be hard to modify that code to only attempt to clear each bit once.  I wouldn't expect the same event bit to get set twice within this loop, so this might fix it (I did not test).  Alternately, a loop counter could be added to prevent it from looping more than some arbitrary number
+> (6?) of times in case of stuck bits.
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 3024d7e85e6a..3e502b4e8ef7 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -594,7 +594,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>    	struct controller *ctrl = (struct controller *)dev_id;
+>    	struct pci_dev *pdev = ctrl_dev(ctrl);
+>    	struct device *parent = pdev->dev.parent;
+> -	u16 status, events = 0;
+> +	u16 changed, status, events = 0;
+>    
+>    	/*
+>    	 * Interrupts only occur in D3hot or shallower and only if enabled @@ -643,6 +643,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>    	if (ctrl->power_fault_detected)
+>    		status &= ~PCI_EXP_SLTSTA_PFD;
+>    
+> +	changed = status ^ events;
+>    	events |= status;
+>    	if (!events) {
+>    		if (parent)
+> @@ -659,7 +660,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>    		 * So re-read the Slot Status register in case a bit was set
+>    		 * between read and write.
+>    		 */
+> -		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
+> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode && changed)
+>    			goto read_status;
+>    	}
+>    
+> 
+> 
+>> -----Original Message-----
+>> From: Bjorn Helgaas <helgaas@kernel.org>> Sent: Wednesday, November 3,
+>> 2021 6:34 AM
+>> To: Bao, Joseph <joseph.bao@intel.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; Stuart Hayes <stuart.w.hayes@gmail.com>;
+>> Lukas Wunner <lukas@wunner.de>
+>> Subject: Re: HW power fault defect cause system hang on kernel 5.4.y
+>>
+>> [+cc Stuart, author of 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt
+>> race"), Lukas, pciehp expert]
+>>
+>> On Tue, Nov 02, 2021 at 03:45:00AM +0000, Bao, Joseph wrote:
+>>> Hi, dear kernel developer,
+>>>
+>>> Recently we encounter system hang (dead spinlock) when move to kernel
+>>> linux-5.4.y.
+>>>
+>>> Finally, we use bisect to locate the suspicious commit
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=4667358dab9cc07da044d5bc087065545b1000df.
+>>
+>> 4667358dab9c backported upstream commit 8edf5332c393 ("PCI: pciehp:
+>> Fix MSI interrupt race") to v5.4.69 just over a year ago.
+>>
+>>> Our system has some HW defect, which will wrongly set
+>>> PCI_EXP_SLTSTA_PFD high, and this commit will lead to infinite loop
+>>> jumping to read_status (no chance to clear status PCI_EXP_SLTSTA_PFD
+>>> bit since ctrl is not updated), I know this is our HW defect, but
+>>> this commit makes kernel trapped in this isr function and leads to
+>>> kernel hang (then the user could not get useful information to show
+>>> what's wrong), which I think is not expected behavior, so I would
+>>> like to report to you for discussion.
+>>
+>> I guess this happens because the first time we handle PFD,
+>> pciehp_ist() sets "ctrl->power_fault_detected = 1", and when power_fault_detected is set, pciehp_isr() won't clear PFD from PCI_EXP_SLTSTA?
+>>
+>> It looks like the only place we clear power_fault_detected is in pciehp_power_on_slot(), and I don't think we call that unless we have a presence detect or link status change.
+>>
+>> It would definitely be nice if we could arrange so this hardware defect didn't cause a kernel hang.
+>>
+>> I think the diff below is the backport of 8edf5332c393 ("PCI: pciehp:
+>> Fix MSI interrupt race").
+>>
+>>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c
+>>> b/drivers/pci/hotplug/pciehp_hpc.c
+>>> index 356786a3b7f4b..88b996764ff95 100644
+>>> ---
+>>> a/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tr
+>>> e
+>>> e/drivers/pci/hotplug/pciehp_hpc.c?h=linux-5.4.y&id=ca767cf0152d18fc2
+>>> 9
+>>> 9cde85b18d1f46ac21e1ba
+>>> +++ b/https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.gi
+>>> +++ t
+>>> +++ /tree/drivers/pci/hotplug/pciehp_hpc.c?h=linux-5.4.y&id=4667358da
+>>> +++ b
+>>> +++ 9cc07da044d5bc087065545b1000df
+>>> @@ -529,7 +529,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>>>    	struct controller *ctrl = (struct controller *)dev_id;
+>>>    	struct pci_dev *pdev = ctrl_dev(ctrl);
+>>>    	struct device *parent = pdev->dev.parent;
+>>> -	u16 status, events;
+>>> +	u16 status, events = 0;
+>>>    
+>>>    	/*
+>>>    	 * Interrupts only occur in D3hot or shallower and only if enabled
+>>> @@ -554,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>>>    		}
+>>>    	}
+>>>    
+>>> +read_status:
+>>>    	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+>>>    	if (status == (u16) ~0) {
+>>>    		ctrl_info(ctrl, "%s: no response from device\n", __func__); @@
+>>> -566,24 +567,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>>>    	 * Slot Status contains plain status bits as well as event
+>>>    	 * notification bits; right now we only want the event bits.
+>>>    	 */
+>>> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+>>> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+>>> -			   PCI_EXP_SLTSTA_DLLSC);
+>>> +	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+>>> +		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+>>> +		  PCI_EXP_SLTSTA_DLLSC;
+>>>    
+>>>    	/*
+>>>    	 * If we've already reported a power fault, don't report it again
+>>>    	 * until we've done something to handle it.
+>>>    	 */
+>>>    	if (ctrl->power_fault_detected)
+>>> -		events &= ~PCI_EXP_SLTSTA_PFD;
+>>> +		status &= ~PCI_EXP_SLTSTA_PFD;
+>>>    
+>>> +	events |= status;
+>>>    	if (!events) {
+>>>    		if (parent)
+>>>    			pm_runtime_put(parent);
+>>>    		return IRQ_NONE;
+>>>    	}
+>>>    
+>>> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+>>> +	if (status) {
+>>> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+>>> +
+>>> +		/*
+>>> +		 * In MSI mode, all event bits must be zero before the port
+>>> +		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
+>>> +		 * So re-read the Slot Status register in case a bit was set
+>>> +		 * between read and write.
+>>> +		 */
+>>> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
+>>> +			goto read_status;
+>>> +	}
+>>> +
+>>>    	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+>>>    	if (parent)
+>>>    		pm_runtime_put(parent);
