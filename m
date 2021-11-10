@@ -2,64 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDDE544CC66
+	by mail.lfdr.de (Postfix) with ESMTP id 7C49A44CC65
 	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 23:18:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233840AbhKJWUk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 17:20:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
+        id S233820AbhKJWUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 17:20:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233537AbhKJWUZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 17:20:25 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6DC4C0797BE;
-        Wed, 10 Nov 2021 14:15:22 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id q17so4127687plr.11;
-        Wed, 10 Nov 2021 14:15:22 -0800 (PST)
+        with ESMTP id S233039AbhKJWU0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 17:20:26 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C132C0797BF;
+        Wed, 10 Nov 2021 14:15:25 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id q126so3426749pgq.13;
+        Wed, 10 Nov 2021 14:15:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0gmJaKhK11nXMnfZy6D3iJ9fmoD5F9ICuC/zbPbZo8Q=;
-        b=CyFcKDsRCa5KYV8P7aoQ8YPt6+N0dvzf0k5pBp/yR+OkQiQKbu6PUP3igdHtA/1Vwg
-         rq/qiFYLcKcxRkjvVZsclFy8P1eaBIeIc5WD5mOFlMSTJ6KvKludpemuZsKwflpXIYRw
-         7zzgxJMXZuzUrhG0PdpiLoswDKQSYon4lyL1I9btrskMt8Tw32G2x+QfaePgb1PXeXrP
-         gzk2MUqJ34v4ImuJAOJwj9kw2Ehv/v2cifrHCFsUP7Yv87JHopfGX/wQuijEuRGiKG7K
-         W6hANVTrrAdyQn7jz192fbPeQP4RBdOUtreuSt3ivBVkTCVUUmKTxBj8RmMxImZ0yh+d
-         mdgg==
+        bh=PvW84sSM/ElHSJsh3mR8zIRk7WcSP30fNyjpi271Ac0=;
+        b=o1ywP0id3ECtESf0REWtug+UcPlSNjlFpDDWFPhKmC76P7GNw1EEPeuGSPLSVgQW83
+         Y19SYpmAeiDtFqfDFqHhGhe0Xrptn7Z5qtkBsLxB9I5w1kNz3zCdZG0P6NZ0WqP3VEAz
+         FKT6NwHi/PDsa5FJ8DYNO+MlgtWAdG5XBRDvCr6u405AJpmHJdGK5HEjpmLnjHmy4hn8
+         r+rea+cKrHsH5yWF9gPQuxn8A9I1ya29KdGSWIvf4ky2/txyMyKzJhyeW62+1AEOEly8
+         DFbpSKcxvw7P6Yw2fu4tHgws/ur9NCFqHpQfaNfWhJsV8swsY1EsQkanRx8GV62RVGIV
+         NAOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0gmJaKhK11nXMnfZy6D3iJ9fmoD5F9ICuC/zbPbZo8Q=;
-        b=SoPFVNgeJvtPd89zXu+q4pIH4cf0M3j7GXSeRnl7qyBoL38hLgTT0FnlzXWaI/68F2
-         ivGL9CwDoooDRaFJH5K4fSBNs1Q4qAbp9nQGWfYK4v8YUX821OawjzF8BiKotf2lOTgv
-         1BZPwwN98RDNEkR6Zox1ZL/wiEwXWdbgsrOnXGdln+7MaaI59fIoUe6g6WT9bXHyeGxQ
-         namHFmNJObfCngf/DE5qh3XP6cdC+LzpJd6np/ELOehefFUWRH5o7tFgusjTSKDjeJou
-         Gy7h6M+8YzY4hAi9PqxA3lhXrq5qnRInU4rvdsdK5d5hKujPKe3wGnIhEzBGcfjv+JzF
-         4ROg==
-X-Gm-Message-State: AOAM5331sIKfl7829vA7vPs3w7cbWhb+RWOsBCoWLsrrC+8oXmx4MRzN
-        zUnxzlTNNpvsu3qjwHWvBXwBXHG9y8RM3w==
-X-Google-Smtp-Source: ABdhPJzk+FzS5BpdWjqyeNXvbZIVEND/jsGBCPxnTd+iUyvwATjClj2jClYHrqmlG5iHfJsVtwcurg==
-X-Received: by 2002:a17:902:c145:b0:142:50c3:c2a with SMTP id 5-20020a170902c14500b0014250c30c2amr2786039plj.32.1636582522083;
-        Wed, 10 Nov 2021 14:15:22 -0800 (PST)
+        bh=PvW84sSM/ElHSJsh3mR8zIRk7WcSP30fNyjpi271Ac0=;
+        b=ZKZRotaNTFBqrUFqFEwAlI5Wwv3/5KbDFQVlhJqDmkalnAGLXJRQqiUKRMSnYCS6i9
+         JgXf6gBsMDGDvJpr+rivTlKor6uYedeG1n7CrBPrSuGi4feDrn2Bu34Fb+2PJUTcP19n
+         c9s+GFoqm/AbwfjiFFLXpgcyqfN7idOM99RP6msdZxFq/saIN6r/GS/jABssp1+ySfJ2
+         saWf+//fe2YpdFP9EiTwyZ1v2zpVVF6ZOvRyUQpg+oRYCC1AitLhgDiEakTtGkKTzsrk
+         9jgR94So8s6zp/KUT4ueXjgWdcWu08YwiU4uojt3pI9Qm2gilbdLVHZ7qWGsL2WaWjVl
+         mHEw==
+X-Gm-Message-State: AOAM530w9jsghFwptLmhPnY1IlSHSpLn1VNanwZJLWnRSBp7FCiXot+I
+        wabDh62BS1Y0Iqr/MIBAOnXDTRq1A5PQ5w==
+X-Google-Smtp-Source: ABdhPJzIGi5KipSekueMBs3NqNVbMJL1cyf++SsRu8rJ6bD9cBYgCuQ1ksTGud46Cw7E7X6WmepKJg==
+X-Received: by 2002:aa7:8059:0:b0:47e:5de6:5bc7 with SMTP id y25-20020aa78059000000b0047e5de65bc7mr2285307pfm.78.1636582524337;
+        Wed, 10 Nov 2021 14:15:24 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id q11sm611774pfk.192.2021.11.10.14.15.20
+        by smtp.gmail.com with ESMTPSA id q11sm611774pfk.192.2021.11.10.14.15.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Nov 2021 14:15:21 -0800 (PST)
+        Wed, 10 Nov 2021 14:15:23 -0800 (PST)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     Sean V Kelley <sean.v.kelley@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 6/8] PCI/portdrv: Do not turn off subdev regulators if EP can wake up
-Date:   Wed, 10 Nov 2021 17:14:46 -0500
-Message-Id: <20211110221456.11977-7-jim2101024@gmail.com>
+Subject: [PATCH v8 7/8] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+Date:   Wed, 10 Nov 2021 17:14:47 -0500
+Message-Id: <20211110221456.11977-8-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211110221456.11977-1-jim2101024@gmail.com>
 References: <20211110221456.11977-1-jim2101024@gmail.com>
@@ -67,93 +70,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If any downstream device may wake up during S2/S3 suspend, we do not want
-to turn off its power when suspending.
+We need to take some code in brcm_pcie_setup() and put it in a new function
+brcm_pcie_linkup().  In future commits the brcm_pcie_linkup() function will
+be called indirectly by pci_host_probe() as opposed to the host driver
+invoking it directly.
+
+Some code that was executed after the PCIe linkup is now placed so that it
+executes prior to linkup, since this code has to run prior to the
+invocation of pci_host_probe().
 
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/pci/pci.h              |  1 +
- drivers/pci/pcie/portdrv_pci.c | 43 +++++++++++++++++++++++++++++-----
- 2 files changed, 38 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 65 ++++++++++++++++-----------
+ 1 file changed, 39 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f6cf75b91cc..27abb977d0ec 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -746,6 +746,7 @@ extern const struct attribute_group aspm_ctrl_attr_group;
- extern const struct attribute_group pci_dev_reset_method_attr_group;
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index ff7d0d291531..1a841c240abb 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -863,16 +863,9 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
  
- struct subdev_regulators {
-+	bool ep_wakeup_capable;
- 	unsigned int num_supplies;
- 	struct regulator_bulk_data supplies[];
- };
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 9330cfbebdc1..717e816d0fc8 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -111,24 +111,55 @@ bool pcie_is_port_dev(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pcie_is_port_dev);
+ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ {
+-	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+ 	u64 rc_bar2_offset, rc_bar2_size;
+ 	void __iomem *base = pcie->base;
+-	struct device *dev = pcie->dev;
+-	struct resource_entry *entry;
+-	bool ssc_good = false;
+-	struct resource *res;
+-	int num_out_wins = 0;
+-	u16 nlw, cls, lnksta;
+-	int i, ret, memc;
++	int ret, memc;
+ 	u32 tmp, burst, aspm_support;
  
-+static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
-+{
-+	bool *ret = data;
+ 	/* Reset the bridge */
+@@ -957,6 +950,40 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	if (pcie->gen)
+ 		brcm_pcie_set_gen(pcie, pcie->gen);
+ 
++	/* Don't advertise L0s capability if 'aspm-no-l0s' */
++	aspm_support = PCIE_LINK_STATE_L1;
++	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
++		aspm_support |= PCIE_LINK_STATE_L0S;
++	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++	u32p_replace_bits(&tmp, aspm_support,
++		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
++	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
 +
-+	if (device_may_wakeup(&dev->dev)) {
-+		*ret = true;
-+		dev_dbg(&dev->dev, "disable cancelled for wake-up device\n");
-+	}
-+	return (int) *ret;
++	/*
++	 * For config space accesses on the RC, show the right class for
++	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
++	 */
++	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
++	u32p_replace_bits(&tmp, 0x060400,
++			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
++	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
++
++	return 0;
 +}
 +
- static int subdev_regulator_resume(struct pci_dev *dev)
- {
- 	struct subdev_regulators *sr = dev->dev.driver_data;
- 
--	if (sr)
--		return regulator_bulk_enable(sr->num_supplies, sr->supplies);
-+	if (!sr)
-+		return 0;
- 
--	return 0;
-+	if (sr->ep_wakeup_capable) {
-+		/*
-+		 * We are resuming from a suspend.  In the previous suspend
-+		 * we did not disable the power supplies, so there is no
-+		 * need to enable them (and falsely increase their usage
-+		 * count).
-+		 */
-+		sr->ep_wakeup_capable = false;
-+		return 0;
-+	}
++static int brcm_pcie_linkup(struct brcm_pcie *pcie)
++{
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++	struct device *dev = pcie->dev;
++	void __iomem *base = pcie->base;
++	struct resource_entry *entry;
++	struct resource *res;
++	int num_out_wins = 0;
++	u16 nlw, cls, lnksta;
++	bool ssc_good = false;
++	u32 tmp;
++	int ret, i;
 +
-+	return regulator_bulk_enable(sr->num_supplies, sr->supplies);
- }
+ 	/* Unassert the fundamental reset */
+ 	pcie->perst_set(pcie, 0);
  
- static int subdev_regulator_suspend(struct pci_dev *dev, pm_message_t state)
- {
- 	struct subdev_regulators *sr = dev->dev.driver_data;
+@@ -994,24 +1021,6 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 		num_out_wins++;
+ 	}
  
--	if (sr)
--		return regulator_bulk_disable(sr->num_supplies, sr->supplies);
-+	if (!sr)
-+		return 0;
-+	/*
-+	 * If at least one device on this bus is enabled as a
-+	 * wake-up source, do not turn off regulators.
-+	 */
-+	sr->ep_wakeup_capable = false;
-+	pci_walk_bus(dev->bus, pci_dev_may_wakeup,
-+		     &sr->ep_wakeup_capable);
-+	if (sr->ep_wakeup_capable)
-+		return 0;
+-	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+-	aspm_support = PCIE_LINK_STATE_L1;
+-	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+-		aspm_support |= PCIE_LINK_STATE_L0S;
+-	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+-	u32p_replace_bits(&tmp, aspm_support,
+-		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+-	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+-
+-	/*
+-	 * For config space accesses on the RC, show the right class for
+-	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+-	 */
+-	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+-	u32p_replace_bits(&tmp, 0x060400,
+-			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
+-	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+-
+ 	if (pcie->ssc) {
+ 		ret = brcm_pcie_set_ssc(pcie);
+ 		if (ret == 0)
+@@ -1186,6 +1195,10 @@ static int brcm_pcie_resume(struct device *dev)
+ 	if (ret)
+ 		goto err_reset;
  
--	return 0;
-+	return regulator_bulk_disable(sr->num_supplies, sr->supplies);
- }
++	ret = brcm_pcie_linkup(pcie);
++	if (ret)
++		goto err_reset;
++
+ 	if (pcie->msi)
+ 		brcm_msi_set_regs(pcie->msi);
  
- /*
 -- 
 2.17.1
 
