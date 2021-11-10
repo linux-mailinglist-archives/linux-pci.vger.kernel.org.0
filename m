@@ -2,126 +2,258 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 135F544CAA6
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 21:31:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28FE344CB2C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Nov 2021 22:19:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbhKJUdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 15:33:51 -0500
-Received: from office.oderland.com ([91.201.60.5]:38264 "EHLO
-        office.oderland.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbhKJUdu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Nov 2021 15:33:50 -0500
-Received: from [155.4.220.82] (port=44276 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1mkuFI-0024jk-5i; Wed, 10 Nov 2021 21:31:00 +0100
-Message-ID: <19176a3c-e554-0ff4-2e0b-5813d353d15e@oderland.se>
-Date:   Wed, 10 Nov 2021 21:30:57 +0100
+        id S233317AbhKJVWB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 16:22:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233220AbhKJVWA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Nov 2021 16:22:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 68B9F61207;
+        Wed, 10 Nov 2021 21:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636579146;
+        bh=WB6DKL3BV7ruHqNZT75+yRFoBFP70EwqOvtkcEWUbbo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Q/pTul/4w9rZ4nPEuMI/J6fVDTK3fBNVYgPxdii13r1DIyl1TMHeNs3hjmg0Xv0DQ
+         Mr/J6mt8GHSZdIsPd9Zn7X5AndZGIyZ9UaluPZEHyZeDjcu3LYloLWJOrK0Oj31peQ
+         SFDkCVoYYs006MSUJTGp6XU8awiuoajQDC1iVQ2YwPhwncFCTEJCRGyW9jC8GuXoUC
+         +nwiJq8fAvsSyuhXQ+uyr1wWr/brfHiJ4JKnbsSGidMKVyFGfyTZKU1gI/Zx+hbkkB
+         TWjIgtzHa6vwgDXRfx9SeBn291XSAJzivc/y9FQzGmmxE6S7qSXZdGTsLiJnx1f/Fj
+         TVrmA6L8pORCQ==
+Date:   Wed, 10 Nov 2021 15:19:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
+Message-ID: <20211110211905.GA1261732@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:93.0) Gecko/20100101
- Thunderbird/93.0
-Subject: Re: [PATCH] PCI/MSI: Move non-mask check back into low level
- accessors
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     boris.ostrovsky@oracle.com, helgaas@kernel.org, jgross@suse.com,
-        linux-pci@vger.kernel.org, maz@kernel.org,
-        xen-devel@lists.xenproject.org, Jason Andryuk <jandryuk@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-References: <90277228-cf14-0cfa-c95e-d42e7d533353@oderland.se>
- <20211025012503.33172-1-jandryuk@gmail.com> <87fssmg8k4.ffs@tglx>
- <87cznqg5k8.ffs@tglx> <d1cc20aa-5c5c-6c7b-2e5d-bc31362ad891@oderland.se>
- <89d6c2f4-4d00-972f-e434-cb1839e78598@oderland.se>
- <5b3d4653-0cdf-e098-0a4a-3c5c3ae3977b@oderland.se> <87ee7w6bxi.ffs@tglx>
-From:   Josef Johansson <josef@oderland.se>
-In-Reply-To: <87ee7w6bxi.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP145piSADe8BbArxah3zdJE8nLyjpv1LPxpdCpe-+Y05zQuWw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/4/21 00:45, Thomas Gleixner wrote:
-> On Wed, Oct 27 2021 at 17:29, Josef Johansson wrote:
->
-> CC+: EFIFB and scheduler folks
->
->> On 10/27/21 14:01, Josef Johansson wrote:
->>
->> printk: Suspending console(s) (use no_console_suspend to debug)
->> [drm] free PSP TMR buffer
->> PM: suspend devices took 0.428 seconds
->> ACPI: EC: interrupt blocked
->> ACPI: PM: Preparing to enter system sleep state S3
->> ACPI: EC: event blocked
->> ACPI: EC: EC stopped
->> ACPI: PM: Saving platform NVS memory
->> Disabling non-boot CPUs ...
->> ------------[ cut here ]------------
->> WARNING: CPU: 1 PID: 0 at arch/x86/mm/tlb.c:522  switch_mm_irqs_off+0x3c5/0x400
-> 	if (WARN_ON_ONCE(__read_cr3() != build_cr3(real_prev->pgd, prev_asid))) {
->
->> Modules linked in: snd_seq_dummy snd_hrtimer snd_seq snd_seq_device snd_timer nf_tables nfnetlink vfat fat intel_rapl_msr think_lmi firmware_attributes_class wmi_bmof intel_rapl_common pcspkr uvcvideo videobuf2_vmalloc videobuf2_memops joydev videobuf2_v4l2 sp5100_tco k10temp videobuf2_common i2c_piix4 iwlwifi videodev mc cfg80211 thinkpad_acpi ipmi_devintf ucsi_acpi platform_profile typec_ucsi ledtrig_audio ipmi_msghandler r8169 rfkill typec snd wmi soundcore video i2c_scmi fuse xenfs ip_tables dm_thin_pool dm_persistent_data dm_bio_prison dm_crypt trusted asn1_encoder hid_multitouch amdgpu crct10dif_pclmul crc32_pclmul crc32c_intel gpu_sched i2c_algo_bit drm_ttm_helper ghash_clmulni_intel ttm serio_raw drm_kms_helper cec sdhci_pci cqhci sdhci xhci_pci drm xhci_pci_renesas nvme xhci_hcd ehci_pci mmc_core ehci_hcd nvme_core xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
->> CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W        --------- ---  5.15.0-0.rc7.0.fc32.qubes.x86_64 #1
->> Hardware name: LENOVO 20Y1S02400/20Y1S02400, BIOS R1BET65W(1.34 ) 06/17/2021
->> RIP: e030:switch_mm_irqs_off+0x3c5/0x400
->> Code: f0 41 80 65 01 fb ba 01 00 00 00 49 8d b5 60 23 00 00 4c 89 ef 49 c7 85 68 23 00 00 60 1d 08 81 e8 a0 f3 08 00 e9 15 fd ff ff <0f> 0b e8 34 fa ff ff e9 ad fc ff ff 0f 0b e9 31 fe ff ff 0f 0b e9
->> RSP: e02b:ffffc900400f3eb0 EFLAGS: 00010006
->> RAX: 00000001336c6000 RBX: ffff888140660000 RCX: 0000000000000040
->> RDX: ffff8881003027c0 RSI: 0000000000000000 RDI: ffff8881b36c6000
->> RBP: ffffffff829d91c0 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000000000008 R11: 0000000000000000 R12: ffff888104e88440
->> R13: ffff8881003027c0 R14: 0000000000000000 R15: 0000000000000001
->> FS:  0000000000000000(0000) GS:ffff888140640000(0000) knlGS:0000000000000000
->> CS:  10000e030 DS: 002b ES: 002b CR0: 0000000080050033
->> CR2: 000060b7d78bf198 CR3: 0000000002810000 CR4: 0000000000050660
->> Call Trace:
->>  switch_mm+0x1c/0x30
->>  idle_task_exit+0x55/0x60
->>  play_dead_common+0xa/0x20
->>  xen_pv_play_dead+0xa/0x60
-> So this is when bringing the non boot CPUs down and the switch_mm() code
-> discovers inconsistency between CR3 and the expected value.
->
-> Would probably be interesting to print the actual values, but XEN folks
-> might have an idea.
-I can install some print-statements showing some more info here.
-I guess I will be getting memory addresses, we already know that CR3 is
-0000000002810000
+On Wed, Nov 10, 2021 at 05:33:11PM +0100, Robert Święcki wrote:
+> śr., 10 lis 2021 o 15:14 Bjorn Helgaas <helgaas@kernel.org> napisał(a):
+> > On Tue, Nov 09, 2021 at 02:05:18PM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Nov 09, 2021 at 07:58:47PM +0100, Rafael J. Wysocki wrote:
+> > > > On Tue, Nov 9, 2021 at 7:52 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > ...
+> >
+> > > > > So instead, we can drop the pm_runtime_get_sync() and
+> > > > > pm_runtime_put_sync() from local_pci_probe() and pci_device_remove(),
+> > > > > respectively, and add pm_runtine_get_noresume() to pci_pm_init(),
+> > > > > which will prevent PM-runtime from touching the device until it has a
+> > > > > driver that supports PM-runtime.
+> > > > >
+> > > > > We'll lose the theoretical ability to put unbound devices into D3 this
+> > > > > way, but we learned some time ago that this isn't safe in all cases
+> > > > > anyway.
+> > > >
+> > > > IOW, something like this (untested and most likely white-space-damaged).
+> > >
+> > > Thanks!  I applied this manually to for-linus in hopes of making the
+> > > the next linux-next build.
+> > >
+> > > Please send any testing reports and corrections to the patch and
+> > > commit log!
+> >
+> > Robert, I hate to ask even more of you, but if you have a chance, it
+> > would be very helpful if you could test the patch below.  I'm pretty
+> > sure it should fix the problem you saw, and I hope to ask Linus to
+> > merge it today.
+> 
+> I think the most recent patch creates some timeouts and other problems
+> in pci-related code? Things I haven't seen before. But, granted, my
+> kernel testing approach is not with focus on details, so maybe I did
+> sth wrong.
 
-If you have any hints on how to do an effective print statement for this
-please do say so :)
-I'll try though and see what I find out.
->>  do_idle+0xd1/0xe0
->>  cpu_startup_entry+0x19/0x20
->>  asm_cpu_bringup_and_idle+0x5/0x1000
->> ---[ end trace b068d3cd1b7f5f4b ]---
->> smpboot: CPU 1 is now offline
->> smpboot: CPU 2 is now offline
->> smpboot: CPU 3 is now offline
->> smpboot: CPU 4 is now offline
->> smpboot: CPU 5 is now offline
->> smpboot: CPU 6 is now offline
->> smpboot: CPU 7 is now offline
->> ACPI: PM: Low-level resume complete
->> ACPI: EC: EC started
->> ACPI: PM: Restoring platform NVS memory
->> xen_acpi_processor: Uploading Xen processor PM info
->> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU1
->> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU3
->> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU5
->> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU7
->> xen_acpi_processor: (_PXX): Hypervisor error (-19) for ACPI CPU9
->>
+Thank you very much for testing this.  The patch changed the way we
+use runtime PM, and the dmesg snippets below look like they could be
+related to runtime PM issues.
 
+I think the conclusion is that we need to revert these commits:
+
+  b5f9c644eb1b ("PCI: Remove struct pci_dev->driver")
+  2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of pci_dev->driver")
+
+from Linus' tree.  I queued up those reverts on
+https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=for-linus
+
+That branch also includes an unrelated revert of 041284181226
+("of/irq: Allow matching of an interrupt-map local to an interrupt
+controller") that shouldn't affect you unless you're on an Apple M1
+machine.
+
+> code is now at: cb690f5238d71f543f4ce874aa59237cf53a877c
+> https://github.com/torvalds/linux/commit/cb690f5238d71f543f4ce874aa59237cf53a877c
+> 
+> lis 10 17:26:41 jd kernel: Linux version 5.15.0+ (jagger@jd) (gcc
+> (Debian 11.2.0-10) 11.2.0, GNU ld (GNU Binutils for Debian)
+> 2.37.50.20211102) #105 SMP PREEMPT Wed Nov 10 17:23:49 CET 2021
+> lis 10 17:26:41 jd kernel: Command line: BOOT_IMAGE=/vmlinuz-5.15.0+
+> root=UUID=8759fa14-93a4-4dc1-87e6-aa6f5cdbb2ff ro nosplash
+> mitigations=off no_file_caps apparmor=0 selinux=0 audit=0
+> amdgpu.ppfeaturemask=0xffffffff hugepagesz=1G default_hugepagesz=1G
+> hugepages=8 amd_iommu=on iommu=pt
+> vfio-pci.ids=10de:1f02,10de:10f9,10de:1ada,10de:1adb
+> drm.edid_firmware=DP-1:edid/sam-g9.edid isolcpus=1,2,5,6,17,18,21,22
+> ..
+> lis 10 17:26:41 jd kernel: usb usb5: runtime PM trying to activate
+> child device usb5 but parent (0000:0c:00.2) is not active
+> ..
+> lis 10 17:26:41 jd kernel: i2c-designware-pci 0000:0c:00.3: timeout in
+> disabling adapter
+> lis 10 17:26:41 jd kernel: i2c-designware-pci 0000:0c:00.3: timeout in
+> disabling adapter
+> ..
+> lis 10 17:26:41 jd kernel: usb 1-5.3: config 1 has an invalid
+> interface number: 2 but max is 1
+> lis 10 17:26:41 jd kernel: usb 1-5.3: config 1 has no interface number 1
+> ..
+> lis 10 17:26:41 jd kernel: i2c-designware-pci 0000:0c:00.3: timeout in
+> disabling adapter
+> ..
+> lis 10 17:26:41 jd kernel: i2c-designware-pci 0000:0c:00.3: timeout in
+> disabling adapter
+> lis 10 17:26:41 jd kernel: i2c-designware-pci 0000:0c:00.3: i2c
+> timeout error -110
+> lis 10 17:26:41 jd kernel: ucsi_ccg 3-0008: i2c_transfer failed -110
+> lis 10 17:26:41 jd kernel: ucsi_ccg 3-0008: ucsi_ccg_init failed - -110
+> lis 10 17:26:41 jd kernel: ucsi_ccg: probe of 3-0008 failed with error -110
+> lis 10 17:26:42 jd kernel: snd_hda_intel 0000:0c:00.1:
+> azx_get_response timeout, switching to polling mode: last
+> cmd=0x000f0000
+> lis 10 17:26:42 jd kernel: hdaudio hdaudioC0D0: runtime PM trying to
+> activate child device hdaudioC0D0 but parent (0000:0c:00.1) is not a>
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi hdaudioC0D0: HDMI:
+> failed to get afg sub nodes
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi: probe of hdaudioC0D0
+> failed with error -22
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi hdaudioC0D0: HDMI:
+> failed to get afg sub nodes
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi: probe of hdaudioC0D0
+> failed with error -22
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi hdaudioC0D0: HDMI:
+> failed to get afg sub nodes
+> lis 10 17:26:42 jd kernel: snd_hda_codec_hdmi: probe of hdaudioC0D0
+> failed with error -22
+> ...
+> lis 10 17:26:42 jd kernel: snd_hda_codec_generic: probe of hdaudioC0D0
+> failed with error -5
+> lis 10 17:26:42 jd kernel: snd_hda_intel 0000:0c:00.1: Cannot probe
+> codecs, giving up
+> lis 10 17:26:42 jd kernel: ------------[ cut here ]------------
+> lis 10 17:26:42 jd kernel: WARNING: CPU: 0 PID: 206 at
+> sound/hda/hdac_bus.c:73 snd_hdac_bus_exit+0x3b/0x80 [snd_hda_core]
+> lis 10 17:26:42 jd kernel: Modules linked in: snd_hda_codec_hdmi(E)
+> nls_iso8859_2(E) snd_hda_codec_realtek(E) nls_cp852(E) snd_hda_codec_>
+> lis 10 17:26:42 jd kernel:  i2c_designware_pci(E) drm(E) i2c_piix4(E)
+> i2c_designware_core(E) xhci_pci(E) backlight(E) ice(E) xhci_pci_ren>
+> lis 10 17:26:42 jd kernel: CPU: 0 PID: 206 Comm: kworker/0:2 Tainted:
+> G            E     5.15.0+ #105
+> lis 10 17:26:42 jd kernel: Hardware name: ASUS System Product Name/ROG
+> CROSSHAIR VIII FORMULA, BIOS 3901 09/07/2021
+> lis 10 17:26:42 jd kernel: Workqueue: events azx_probe_work [snd_hda_intel]
+> lis 10 17:26:42 jd kernel: RIP: 0010:snd_hdac_bus_exit+0x3b/0x80 [snd_hda_core]
+> lis 10 17:26:42 jd kernel: Code: 75 19 48 8b 57 58 48 8d 47 58 48 39
+> c2 75 1b 48 81 c7 f8 02 00 00 e9 94 61 10 d8 0f 0b 48 8b 57 58 48 8d>
+> lis 10 17:26:42 jd kernel: RSP: 0018:ffffa3e1008d3e40 EFLAGS: 00010283
+> lis 10 17:26:42 jd kernel: RAX: ffff9728c5f38080 RBX: ffff9728c5f38028
+> RCX: 000000008020001f
+> lis 10 17:26:42 jd kernel: RDX: ffff9728c1f40b00 RSI: ffffffff9a30ddc9
+> RDI: ffff9728c5f38028
+> lis 10 17:26:42 jd kernel: RBP: ffff9728c5f384d0 R08: 0000000000000000
+> R09: ffff9728c14a4e00
+> lis 10 17:26:42 jd kernel: R10: 0000000000000000 R11: 0000000000000005
+> R12: 00000000ffffffed
+> lis 10 17:26:42 jd kernel: R13: 0000000000000000 R14: 0000000000000000
+> R15: ffff972fcea26405
+> lis 10 17:26:42 jd kernel: FS:  0000000000000000(0000)
+> GS:ffff972fcea00000(0000) knlGS:0000000000000000
+> lis 10 17:26:42 jd kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> lis 10 17:26:42 jd kernel: CR2: 00007fa43a298cb0 CR3: 000000010e58e000
+> CR4: 0000000000750ef0
+> lis 10 17:26:42 jd kernel: PKRU: 55555554
+> lis 10 17:26:42 jd kernel: Call Trace:
+> lis 10 17:26:42 jd kernel:  <TASK>
+> lis 10 17:26:42 jd kernel:  azx_free+0xe5/0x1c0 [snd_hda_intel]
+> lis 10 17:26:42 jd kernel:  azx_probe_continue+0x1a8/0x300 [snd_hda_intel]
+> lis 10 17:26:42 jd kernel:  process_one_work+0x1eb/0x380
+> lis 10 17:26:42 jd kernel:  worker_thread+0x48/0x400
+> lis 10 17:26:42 jd kernel:  ? rescuer_thread+0x3c0/0x3c0
+> lis 10 17:26:42 jd kernel:  kthread+0x151/0x180
+> lis 10 17:26:42 jd kernel:  ? set_kthread_struct+0x40/0x40
+> lis 10 17:26:42 jd kernel:  ret_from_fork+0x1f/0x30
+> lis 10 17:26:42 jd kernel:  </TASK>
+> lis 10 17:26:42 jd kernel: ---[ end trace f522829b4b020462 ]---
+> lis 10 17:26:42 jd kernel: i2c-designware-pci 0000:0c:00.3: timeout in
+> disabling adapter
+> 
+> > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > > index 1d98c974381c..41cdf510214f 100644
+> > > --- a/drivers/pci/pci-driver.c
+> > > +++ b/drivers/pci/pci-driver.c
+> > > @@ -309,16 +309,6 @@ static long local_pci_probe(void *_ddi)
+> > >       struct device *dev = &pci_dev->dev;
+> > >       int rc;
+> > >
+> > > -     /*
+> > > -      * Unbound PCI devices are always put in D0, regardless of
+> > > -      * runtime PM status.  During probe, the device is set to
+> > > -      * active and the usage count is incremented.  If the driver
+> > > -      * supports runtime PM, it should call pm_runtime_put_noidle(),
+> > > -      * or any other runtime PM helper function decrementing the usage
+> > > -      * count, in its probe routine and pm_runtime_get_noresume() in
+> > > -      * its remove routine.
+> > > -      */
+> > > -     pm_runtime_get_sync(dev);
+> > >       rc = pci_drv->probe(pci_dev, ddi->id);
+> > >       if (!rc)
+> > >               return rc;
+> > > @@ -464,9 +454,6 @@ static void pci_device_remove(struct device *dev)
+> > >       pcibios_free_irq(pci_dev);
+> > >       pci_iov_remove(pci_dev);
+> > >
+> > > -     /* Undo the runtime PM settings in local_pci_probe() */
+> > > -     pm_runtime_put_sync(dev);
+> > > -
+> > >       /*
+> > >        * If the device is still on, set the power state as "unknown",
+> > >        * since it might change by the next time we load the driver.
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index b88db815ee01..e9c38b994c73 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -3097,7 +3097,15 @@ void pci_pm_init(struct pci_dev *dev)
+> > >       u16 pmc;
+> > >
+> > >       pm_runtime_forbid(&dev->dev);
+> > > +
+> > > +     /*
+> > > +      * Unbound PCI devices are always put in D0.  If the driver supports
+> > > +      * runtime PM, it should call pm_runtime_put_noidle(), or any other
+> > > +      * runtime PM helper function decrementing the usage count, in its
+> > > +      * probe routine and pm_runtime_get_noresume() in its remove routine.
+> > > +      */
+> > >       pm_runtime_set_active(&dev->dev);
+> > > +     pm_runtime_get_noresume(&dev->dev);
+> > >       pm_runtime_enable(&dev->dev);
+> > >       device_enable_async_suspend(&dev->dev);
+> > >       dev->wakeup_prepared = false;
+> 
+> -- 
+> Robert Święcki
