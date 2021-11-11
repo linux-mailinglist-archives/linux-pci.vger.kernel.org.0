@@ -2,80 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE64A44DC52
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 20:50:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EBF44DD02
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 22:21:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbhKKTxc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 14:53:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229710AbhKKTxb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Nov 2021 14:53:31 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E901561241;
-        Thu, 11 Nov 2021 19:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636660242;
-        bh=fPyBt7AKMRfKpDiq/z/CYanNpyOJhV3N4JWIwUTEOtU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FSC/65Qpk9LM54xgnpSiH2tes2MD0Boz+0/wy4qR3dWfBx/f5E4u9SwBh6abb/BYU
-         2HmUwVUYDazXXU8JPiPLDEid2d7B3DAG/yDLj28GZRO+N0br5tSJ+XTgmVy5b3hIo5
-         JKAqy57y73H19MRZ5YlnDpMK4FSRUCZyiLnPzfpIqx5rCljXyGpJPFfWQuEMq1hdi6
-         NKk/qgebKpmYTajZOecJFjHwrXqrQnJhbuOPrMEA9On9oQzM6OIxYc+osRtujqUpjb
-         RlKXn5YD/ipT+sjbLTEwHT8uR1DG5IrBXnkZ7sfzBxE5xt5O1K284bLf9lfRJjsnKE
-         jpRfhfKez1N1Q==
-Date:   Thu, 11 Nov 2021 13:50:40 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [GIT PULL] PCI fixes for v5.16
-Message-ID: <20211111195040.GA1345641@bhelgaas>
+        id S232666AbhKKVYl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 16:24:41 -0500
+Received: from mail-qt1-f175.google.com ([209.85.160.175]:42614 "EHLO
+        mail-qt1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231825AbhKKVYl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 16:24:41 -0500
+Received: by mail-qt1-f175.google.com with SMTP id z9so6585946qtj.9;
+        Thu, 11 Nov 2021 13:21:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7OVuYP4CbXEmwPEVAkgcrDSEMJ/gdFGf/ByFsNppFyk=;
+        b=E3sLybzPLnry9mj00ZD65Bw/+k6EK4q1wpleuf3EImdrWKRJPmT5eLManwbZB8YlSz
+         6B5l5jkZs3ib+jNUU+6FrlIu1EN3ig5YvS5pnt19Ds6RLU8OpB4q5GCGNsVgmhHlAUUL
+         Ifr0YJ8UbcHpK49OPuxX9M0qGVAxJNiJjrw/PrBI6EezW1tCt3c/argD9OJYPeVohYZo
+         Q1LIohcjzp8zs+hYqtURqRvuYa4++Cb1ou8TYpWBI8Bo8rquPwoZfKA8AW0TXQlcN/5w
+         isSqajsKpU8hN6dVDLI5Z1eG4tTDAEzSrM5pwCVfGkyy06COcagDJbPyx9jDaB9y8c2O
+         z/Pg==
+X-Gm-Message-State: AOAM5324YCvczoIioap0ybv9ZGEPt2kjRxbOZNfyYFjrh/tQ6+LNdClx
+        Z+vLTuL3Y/CqNvWCZZk/zmTXUQhV1vc=
+X-Google-Smtp-Source: ABdhPJx3crV6tsa1vAXB48vnfLJQgF63qvocrWYQsLez8qSnRMRlvm4FVvCVyKRCMNaA5Sep1rQGWg==
+X-Received: by 2002:ac8:7f0c:: with SMTP id f12mr11266385qtk.362.1636665710278;
+        Thu, 11 Nov 2021 13:21:50 -0800 (PST)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
+        by smtp.gmail.com with ESMTPSA id b9sm2207340qtb.56.2021.11.11.13.21.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Nov 2021 13:21:49 -0800 (PST)
+Received: by mail-qk1-f180.google.com with SMTP id de30so7204213qkb.0;
+        Thu, 11 Nov 2021 13:21:49 -0800 (PST)
+X-Received: by 2002:a37:9d53:: with SMTP id g80mr767634qke.12.1636665708899;
+ Thu, 11 Nov 2021 13:21:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 11 Nov 2021 15:21:37 -0600
+X-Gmail-Original-Message-ID: <CADRPPNRL8m+YawUJJe0MNLhRQ4NJROv4DVzP+rWTGeS6fCbDnQ@mail.gmail.com>
+Message-ID: <CADRPPNRL8m+YawUJJe0MNLhRQ4NJROv4DVzP+rWTGeS6fCbDnQ@mail.gmail.com>
+Subject: Re: [PATCHv5 0/6] PCI: layerscape: Add power management support
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>, gustavo.pimentel@synopsys.com,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following changes since commit dda4b381f05d447a0ae31e2e44aeb35d313a311f:
+On Wed, Apr 7, 2021 at 9:13 AM Zhiqiang Hou <Zhiqiang.Hou@nxp.com> wrote:
+>
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>
+> This patch series is to add PCIe power management support for NXP
+> Layerscape platforms.
+>
+> Hou Zhiqiang (6):
+>   PCI: layerscape: Change to use the DWC common link-up check function
+>   dt-bindings: pci: layerscape-pci: Add a optional property big-endian
+>   arm64: dts: layerscape: Add big-endian property for PCIe nodes
+>   dt-bindings: pci: layerscape-pci: Update the description of SCFG
+>     property
+>   arm64: dts: ls1043a: Add SCFG phandle for PCIe nodes
+>   PCI: layerscape: Add power management support
+>
+>  .../bindings/pci/layerscape-pci.txt           |   6 +-
+>  .../arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   1 +
+>  .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   6 +
+>  .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   3 +
+>  drivers/pci/controller/dwc/pci-layerscape.c   | 450 ++++++++++++++----
+>  drivers/pci/controller/dwc/pcie-designware.h  |   1 +
+>  6 files changed, 370 insertions(+), 97 deletions(-)
 
-  Merge branch 'remotes/lorenzo/pci/xgene' (2021-11-05 11:28:53 -0500)
+Hi Bjorn,
 
-are available in the Git repository at:
+I don't see any feedback on this version.  Is there any chance that
+the binding/driver changes can be picked up?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.16-fixes-1
-
-for you to fetch changes up to e0217c5ba10d7bf640f038b2feae58e630f2f958:
-
-  Revert "PCI: Use to_pci_driver() instead of pci_dev->driver" (2021-11-11 13:36:22 -0600)
-
-N.B.: My for-linus branch, which contains these, also includes a revert of
-041284181226 ("of/irq: Allow matching of an interrupt-map local to an
-interrupt controller").  That revert is *not* included here and we hope we
-don't need it, but that issue is not resolved yet.
-
-----------------------------------------------------------------
-PCI fixes:
-
-  - Revert conversion to struct device.driver instead of struct
-    pci_dev.driver.  The device.driver is set earlier, and using it
-    caused the PCI core to call driver PM entry points before .probe()
-    and after .remove(), when the driver isn't prepared.  This caused
-    NULL pointer dereferences in i2c_designware_pci and probably other
-    driver issues (Bjorn Helgaas)
-
-----------------------------------------------------------------
-Bjorn Helgaas (2):
-      Revert "PCI: Remove struct pci_dev->driver"
-      Revert "PCI: Use to_pci_driver() instead of pci_dev->driver"
-
- drivers/pci/iov.c        | 24 +++++++++---------------
- drivers/pci/pci-driver.c | 37 ++++++++++++++++++++-----------------
- drivers/pci/pci.c        | 17 ++++++++---------
- drivers/pci/pcie/err.c   |  8 ++++----
- include/linux/pci.h      |  1 +
- 5 files changed, 42 insertions(+), 45 deletions(-)
+Regards,
+Leo
