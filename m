@@ -2,119 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B0344D632
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 12:54:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D17F44D63D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 12:58:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232815AbhKKL5f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 06:57:35 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:29647 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233245AbhKKL5d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 06:57:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636631681;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=H66Rz4/hkCpg9docinRjSUMoGbcVBQdLFU0PgKDGanw=;
-    b=Wbr82gBp9eVAo8wiZJlwiJ+KslcursRLh+wK+kGgXnZxO98xNhY1pnAh52D5Kjo2fz
-    8AFwwRcSU5xyCn0cHmmQm4knFrA22xGPkeJCiHY8Gq/WhKQqX94HtaXAFgwrKdaWtIQz
-    eQmZlAot6ksqFOax4zExLqhF03MFfHUbhHrWdQvH4GYT37JkYPpTRNjNnQ9disIvdbAt
-    KDPS3bIokVt/MSlJOTY2VyRm8R+yinT6h5Il7BC2LiAciuhsheku5jPhLk/kVKiZxKWR
-    TKqyZXZP7e7wTtxqQJfX3IjZw5cd2T3hM7MXgEgc3AcCuSBfhocvY6Rv7a2msF/GP7f4
-    5SOA==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhQJ/j+Igj1vHVSyIIKKx+xMp8bog=="
-X-RZG-CLASS-ID: mo00
-Received: from [IPV6:2a02:8109:89c0:ebfc:315a:1371:b0b5:d7a5]
-    by smtp.strato.de (RZmta 47.34.5 AUTH)
-    with ESMTPSA id N03801xABBsdIcO
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Thu, 11 Nov 2021 12:54:39 +0100 (CET)
-Message-ID: <656fc68c-0bfb-0e5c-a014-32ea4b5b27c4@xenosoft.de>
-Date:   Thu, 11 Nov 2021 12:54:39 +0100
+        id S233162AbhKKMBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 07:01:19 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4084 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233128AbhKKMBS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 07:01:18 -0500
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hqg8v5zS5z67f6D;
+        Thu, 11 Nov 2021 19:53:35 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Thu, 11 Nov 2021 12:58:27 +0100
+Received: from localhost (10.52.121.179) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Thu, 11 Nov
+ 2021 11:58:27 +0000
+Date:   Thu, 11 Nov 2021 11:58:25 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 5/5] cxl/cdat: Parse out DSMAS data from CDAT table
+Message-ID: <20211111115825.00004db5@Huawei.com>
+In-Reply-To: <20211111035824.GM3538886@iweiny-DESK2.sc.intel.com>
+References: <20211105235056.3711389-1-ira.weiny@intel.com>
+        <20211105235056.3711389-6-ira.weiny@intel.com>
+        <20211108145239.000010a5@Huawei.com>
+        <20211111035824.GM3538886@iweiny-DESK2.sc.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.0
-Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
- pci-v5.16 updates
-Content-Language: de-DE
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
-        Matthew Leaman <matthew@a-eon.biz>,
-        Darren Stevens <darren@stevens-zone.net>,
-        mad skateman <madskateman@gmail.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
-        damien.lemoal@opensource.wdc.com, kw@linux.com,
-        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
-        Olof Johansson <olof@lixom.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
- <20211110184106.GA1251058@bhelgaas> <87sfw3969l.wl-maz@kernel.org>
- <8cc64c3b-b0c0-fb41-9836-2e5e6a4459d1@xenosoft.de>
- <87r1bn88rt.wl-maz@kernel.org>
- <f40294c6-a088-af53-eeea-4dfbd255c5c9@xenosoft.de>
- <87pmr7803l.wl-maz@kernel.org>
- <c93c7f72-6e46-797b-bee3-c9ae3b444f60@xenosoft.de>
- <87o86r7x63.wl-maz@kernel.org>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-In-Reply-To: <87o86r7x63.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.179]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11 November 2021 at 12:24 pm, Marc Zyngier wrote:
-> On Thu, 11 Nov 2021 10:44:30 +0000,
-> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->> On 11 November 2021 at 11:20 am, Marc Zyngier wrote:
->>> On Thu, 11 Nov 2021 07:47:08 +0000,
->>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>>> On 11 November 2021 at 08:13 am, Marc Zyngier wrote:
->>>>> On Thu, 11 Nov 2021 05:24:52 +0000,
->>>>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>>>>> Hello Marc,
->>>>>>
->>>>>> Here you are:
->>>>>> https://forum.hyperion-entertainment.com/viewtopic.php?p=54406#p54406
->>>>> This is not what I asked. I need the actual source file, or at the
->>>>> very least the compiled object (the /sys/firmware/fdt file, for
->>>>> example). Not an interpretation that I can't feed to the kernel.
->>>>>
->>>>> Without this, I can't debug your problem.
->>>>>
->>>>>> We are very happy to have the patch for reverting the bad commit
->>>>>> because we want to test the new PASEMI i2c driver with support for the
->>>>>> Apple M1 [1] on our Nemo boards.
->>>>> You can revert the patch on your own. At this stage, we're not blindly
->>>>> reverting things in the tree, but instead trying to understand what
->>>>> is happening on your particular system.
->>>>>
->>>>> Thanks,
->>>>>
->>>>> 	M.
->>>>>
->>>> I added a download link for the fdt file to the post [1]. Please read
->>>> also Darren's comments in this post.
->>> Am I right in understanding that the upstream kernel does not support
->>> the machine out of the box, and that you actually have to apply out of
->>> tree patches to make it work?
->> No, you aren't right. The upstream kernel supports the Nemo board out
->> of the box. [1]
-> That's not the way I interpret Darren's comments, but you surely know
-> better than I do.
->
-> I'll try to come up with something for you to test shortly.
->
-> 	M.
->
-Great! Thanks a lot for your help!
+On Wed, 10 Nov 2021 19:58:24 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-- Christian
+> On Mon, Nov 08, 2021 at 02:52:39PM +0000, Jonathan Cameron wrote:
+> > On Fri, 5 Nov 2021 16:50:56 -0700
+> > <ira.weiny@intel.com> wrote:
+> >   
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Parse and cache the DSMAS data from the CDAT table.  Store this data in
+> > > Unmarshaled data structures for use later.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > 
+> > A few minor comments inline.  In particular I think we need to conclude if
+> > failure to parse is an error or not.  Right now it's reported as an error
+> > but then we carry on anyway.  
+> 
+> I report it as an error because if the device supports CDAT I made the
+> assumption that it was required for something up the stack.  However, I did not
+> want to make that decision at this point because all this code does is cache
+> the raw data.
+> 
+> So it may not be a fatal error depending on what the data is used for.  But IMO
+> it is still and error.
+> 
+
+dev_warn() perhaps is a good middle ground?   Something wrong, but not fatal
+here...
+
+
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > ---
+> > > Changes from V4
+> > > 	New patch
+> > > ---
+> > >  drivers/cxl/core/memdev.c | 111 ++++++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/cxlmem.h      |  23 ++++++++
+> > >  2 files changed, 134 insertions(+)
+> > > 
+> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > > index c35de9e8298e..e5a2d30a3491 100644
+> > > --- a/drivers/cxl/core/memdev.c
+> > > +++ b/drivers/cxl/core/memdev.c
+> > > @@ -6,6 +6,7 @@  
+> > 
+> > ...
+> >   
+> > > +
+> > > +static int parse_dsmas(struct cxl_memdev *cxlmd)
+> > > +{
+> > > +	struct cxl_dsmas *dsmas_ary = NULL;
+> > > +	u32 *data = cxlmd->cdat_table;
+> > > +	int bytes_left = cxlmd->cdat_length;
+> > > +	int nr_dsmas = 0;
+> > > +	size_t dsmas_byte_size;
+> > > +	int rc = 0;
+> > > +
+> > > +	if (!data || !cdat_hdr_valid(cxlmd))  
+> > 
+> > If that's invalid, right answer might be to run it again as we probably
+> > just raced with an update...  Perhaps try it a couple of times before
+> > failing hard?  
+> 
+> I find it odd that the mailbox would return invalid data even during an update?
+
+The read can take multiple exchanges.  It's not invalid as such, we just saw
+parts of different valid states.  The checksum is there to protect against
+such a race.  Lots of other ways it could have been designed, but that was the
+choice made.
+
+> 
+> That said perhaps validating the header should be done as part of reading the
+> CDAT.
+> 
+> Thoughts?  Should I push this back to the previous patch?
+
+Agreed, it would make more sense to do it at the read.
+
+> 
+> >   
+> > > +		return -ENXIO;
+> > > +
+> > > +	/* Skip header */
+> > > +	data += CDAT_HEADER_LENGTH_DW;
+> > > +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
+> > > +
+> > > +	while (bytes_left > 0) {
+> > > +		u32 *cur_rec = data;
+> > > +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
+> > > +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
+> > > +
+> > > +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
+> > > +			struct cxl_dsmas *new_ary;
+> > > +			u8 flags;
+> > > +
+> > > +			new_ary = krealloc(dsmas_ary,
+> > > +					   sizeof(*dsmas_ary) * (nr_dsmas+1),  
+> > 
+> > Spaces around the +  
+> 
+> Sure.
+> 
+> > You could do this with devm_krealloc() and then just assign it at the end
+> > rather than allocate a new one and copy.  
+> 
+> I failed to see that call when I wrote this...  yes thanks!
+
+It's new.
+
+> 
+> > 
+> >   
+> > > +					   GFP_KERNEL);
+> > > +			if (!new_ary) {
+> > > +				dev_err(&cxlmd->dev,
+> > > +					"Failed to allocate memory for DSMAS data\n");
+> > > +				rc = -ENOMEM;
+> > > +				goto free_dsmas;
+> > > +			}
+> > > +			dsmas_ary = new_ary;
+> > > +
+> > > +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
+> > > +
+> > > +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
+> > > +			dsmas_ary[nr_dsmas].dpa_length = CDAT_DSMAS_DPA_LEN(cur_rec);
+> > > +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
+> > > +
+> > > +			dev_dbg(&cxlmd->dev, "DSMAS %d: %llx:%llx %s\n",
+> > > +				nr_dsmas,
+> > > +				dsmas_ary[nr_dsmas].dpa_base,
+> > > +				dsmas_ary[nr_dsmas].dpa_base +
+> > > +					dsmas_ary[nr_dsmas].dpa_length,
+> > > +				(dsmas_ary[nr_dsmas].non_volatile ?
+> > > +					"Persistent" : "Volatile")
+> > > +				);
+> > > +
+> > > +			nr_dsmas++;
+> > > +		}
+> > > +
+> > > +		data += (length/sizeof(u32));  
+> > 
+> > spaces around /  
+> 
+> Yep.
+> 
+> >   
+> 
+> > > +		bytes_left -= length;
+> > > +	}
+> > > +
+> > > +	if (nr_dsmas == 0) {
+> > > +		rc = -ENXIO;
+> > > +		goto free_dsmas;
+> > > +	}
+> > > +
+> > > +	dev_dbg(&cxlmd->dev, "Found %d DSMAS entries\n", nr_dsmas);
+> > > +
+> > > +	dsmas_byte_size = sizeof(*dsmas_ary) * nr_dsmas;
+> > > +	cxlmd->dsmas_ary = devm_kzalloc(&cxlmd->dev, dsmas_byte_size, GFP_KERNEL);  
+> > 
+> > As above, you could have done a devm_krealloc() and then just assigned here.
+> > Side effect of that being direct returns should be fine.  
+> 
+> Yep devm_krealloc is much cleaner.
+> 
+> > However, that relies
+> > treating an error from this function as an error that will result in failures below.
+> > 
+> >   
+> > > +	if (!cxlmd->dsmas_ary) {
+> > > +		rc = -ENOMEM;
+> > > +		goto free_dsmas;
+> > > +	}
+> > > +
+> > > +	memcpy(cxlmd->dsmas_ary, dsmas_ary, dsmas_byte_size);
+> > > +	cxlmd->nr_dsmas = nr_dsmas;
+> > > +
+> > > +free_dsmas:
+> > > +	kfree(dsmas_ary);
+> > > +	return rc;
+> > > +}
+> > > +
+> > >  struct cxl_memdev *
+> > >  devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> > >  {
+> > > @@ -339,6 +446,10 @@ devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+> > >  		cxl_mem_cdat_read_table(cxlds, cxlmd->cdat_table, cxlmd->cdat_length);
+> > >  	}
+> > >  
+> > > +	rc = parse_dsmas(cxlmd);
+> > > +	if (rc)
+> > > +		dev_err(dev, "No DSMAS data found: %d\n", rc);  
+> > 
+> > dev_info() maybe as it's not being treated as an error?  
+> 
+> This is an error.  But not a fatal error.
+> 
+> > 
+> > However I think it should be treated as an error.  It's a device failure if
+> > we can't parse this (and table protocol is available)  
+> 
+> Shouldn't we let the consumer of this data determine if this is a fatal error and
+> bail out at that point?
+
+As above, dev_warn() seems more appropriate in that case to me.
+
+Jonathan
+> 
+> Ira
+> 
+> > 
+> > If it turns out we need to quirk some devices, then fair enough.
+> > 
+> > 
+> >   
+> > > +
+> > >  	/*
+> > >  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+> > >  	 * needed as this is ordered with cdev_add() publishing the device.  
+> >   
+
