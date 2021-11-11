@@ -2,357 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD4D44CEC7
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 02:31:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3A744CFEF
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 03:17:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232721AbhKKBeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Nov 2021 20:34:13 -0500
-Received: from mga09.intel.com ([134.134.136.24]:18617 "EHLO mga09.intel.com"
+        id S233459AbhKKCT6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Nov 2021 21:19:58 -0500
+Received: from mga04.intel.com ([192.55.52.120]:13943 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232005AbhKKBeL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Nov 2021 20:34:11 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="232672498"
+        id S233745AbhKKCT5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Nov 2021 21:19:57 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10164"; a="231553366"
 X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
-   d="scan'208";a="232672498"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 17:31:23 -0800
+   d="scan'208";a="231553366"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 18:17:02 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,225,1631602800"; 
-   d="scan'208";a="492354953"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 17:31:23 -0800
-Date:   Wed, 10 Nov 2021 17:31:23 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
-Message-ID: <20211111013122.GL3538886@iweiny-DESK2.sc.intel.com>
-References: <20211105235056.3711389-1-ira.weiny@intel.com>
- <20211105235056.3711389-4-ira.weiny@intel.com>
- <20211108130918.00004d76@Huawei.com>
+   d="scan'208";a="602442167"
+Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
+  by orsmga004.jf.intel.com with ESMTP; 10 Nov 2021 18:17:02 -0800
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Wed, 10 Nov 2021 18:17:01 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Wed, 10 Nov 2021 18:17:01 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12 via Frontend Transport; Wed, 10 Nov 2021 18:17:01 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.49) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.12; Wed, 10 Nov 2021 18:16:58 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a0u3opf0tpEYpFzi1+pKz5uyNqZNqL4dy0r5xjq8CJ8bbqZXBYRXFmemfq0pSgdpGE5RPRaPWTQWlEHvI2mndxoz5nPaJFt/xnyq2TLQzYCZpAmV6FdkuAeJyJn10iFls7LyYrGQfAFzBKHbeV00BLPp4v/hvRdgcOOm4mkVrJjh1L8skr8Yz7BAqAtARfTshzYo6HgGQ4mtbWQ9bbhjnm6xgFQdcjhlCo3fd3n+fnfVb8rod7Lm2100jtRXk+2enVm7zMZO1OjyS26rKZUyW10gZ4mP+7Qt0I2awW9I4xSmmBZD6/B8c2jfAEqusjCBF6LwRn5sm3xPxNM9awpmEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xUbC9S47jybMLfNwi/f1oYM42o5iDCru89aK7cUXYSA=;
+ b=dP8tv2F4CYycfnshS+TNYCGJlewPzgInPRk6svhOoaUjb1jCiwGZlmWTrR69GynUQlia5CVuRpTQOR5ax6rsla3rLHALZkwdgrgdCExOM+iiO/Gvc9gApaMOVI3QG3VMGdvob4Eibn08oXSBgl4RMZYJJTuoIhQ3tqaY6i2RhW/cOWk5ozJlbXF1+rGgvqs+huawFb9fIk1qKi6bwUUUm8jspkqd9PKUVOo1NNR3WeipGSJ/BYgd8zp+1VTUrP3Ihe7Azas05ZAGZIRV06f5cIE+znG0QZ8QRWPMrlrQjcONvLeVfC1FJKh/DI/aQpIibOjUfue8t0SGafmnRs8AQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xUbC9S47jybMLfNwi/f1oYM42o5iDCru89aK7cUXYSA=;
+ b=RpLbkYCxmUf/OQDN/Ea13g1kvibz+/aPnFMc7Gln6HME5joEhcLMKTerDfTYCev//JNoM9WicZ4RoxcPIAsHugoBvDmGf5Arxhbl83aijosKPuK+541/NqJd5TA0hCI0COtG2DzWgMsYZaKuSPnWe65MHy1miuLzQ9sNIgbofXU=
+Received: from DM8PR11MB5702.namprd11.prod.outlook.com (2603:10b6:8:21::10) by
+ DM4PR11MB5309.namprd11.prod.outlook.com (2603:10b6:5:390::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4690.15; Thu, 11 Nov 2021 02:16:57 +0000
+Received: from DM8PR11MB5702.namprd11.prod.outlook.com
+ ([fe80::b924:10fa:2545:d849]) by DM8PR11MB5702.namprd11.prod.outlook.com
+ ([fe80::b924:10fa:2545:d849%4]) with mapi id 15.20.4669.016; Thu, 11 Nov 2021
+ 02:16:57 +0000
+From:   "Bao, Joseph" <joseph.bao@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: RE: HW power fault defect cause system hang on kernel 5.4.y
+Thread-Topic: HW power fault defect cause system hang on kernel 5.4.y
+Thread-Index: AdfPm0b60GGT2vlORua28HBxsdiYnQAnnSiAAUFzF9AAD8bKgABIu/sQ
+Date:   Thu, 11 Nov 2021 02:16:57 +0000
+Message-ID: <DM8PR11MB57020F3491E508A334469E2186949@DM8PR11MB5702.namprd11.prod.outlook.com>
+References: <DM8PR11MB570219FE94A7983E0F61A3BA86929@DM8PR11MB5702.namprd11.prod.outlook.com>
+ <20211109152951.GA1146992@bhelgaas>
+In-Reply-To: <20211109152951.GA1146992@bhelgaas>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8db1cfdf-6c17-4760-c87c-08d9a4b95694
+x-ms-traffictypediagnostic: DM4PR11MB5309:
+x-microsoft-antispam-prvs: <DM4PR11MB5309A28C272B8D45DC9A3B9486949@DM4PR11MB5309.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ysxZ/Y6nsbnlHzQBEM8u/oVW+dpD/jlPdIENPRMB4Qybonv2WqCm2qalpx0EjSb299ZZvb4B97dKV89763ve/FPiBqkPCkReisKaVikEhD1j3Uj5DV+Wzg6UuPmjk3G3/7WChykLuha1cetxYVoiSmIgs6XtEkd/i3vZsYNewGWwEQNvbiGl1dJEuqsmqNEOeq2HtQGIo0jhAF4k2U2y+dJiBdy6uilGpZ5LtP2m31rQhYFIbUgxaxhOEaUX4egTbd0qTwSRlCQvHF8opTdANdBLqXruJz0fDz9sqJVEez3LNez7gM4Gg06Evjga9saI82RP4TTl3sohbUjfmYPFv1dZjoyUUAMrfPbntm5Qkcc5BdRK+WlIMHc8Df3cZf1jj8VMoQ8R14GK7tE8mkHE6cQqIw55BPQvWUg6VyDoWL5avwnUwQ9ga+HPWN03JrTH3VQa8mSA4eMe+04FR5y0Ew/ZeU9bzgOdVmjTMOZb/1FQOdDDtUyw8u4U87AJr8BaUthMA1Z3ZNAJ9pQwLrBkMygmhUbpZ6clXENGtH15tl3l0q2An0j1SidoDVciC72SQSMHyrGmasXiLFrQ0z+rNqy5A25ix1Q4JxqinTK4t9YbMiJ1xACnCX1u6+4EUjECeSMOIYPMaeYs5V3v7MMaTbuqppOThUCsdbyrN8d3s9CMDV8EKlaWtdhVmGXvSNRbuyiy8mx+zm/7J+ev/Rm7S04IWXjoFD5nFNyeC5AF42el1T67jd9BYawN8tG1e9osd/ZV9U0DpOIvopBlyHOMqKp8MrDMPQ3UOoQNG8BEseQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5702.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(5660300002)(66946007)(8676002)(52536014)(122000001)(6916009)(966005)(33656002)(54906003)(508600001)(64756008)(66446008)(66476007)(71200400001)(66556008)(55016002)(26005)(9686003)(186003)(8936002)(316002)(38100700002)(86362001)(83380400001)(38070700005)(7696005)(76116006)(6506007)(82960400001)(53546011)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qWhYD5uD741ffgMP3KtWNQDwPVzpRyA7EVP7Wllp4H5b1CoMGpSm0l7e6psO?=
+ =?us-ascii?Q?W5ZZYbmxHZLk94JnMQ8MmCMzqtBau6hyzHUqWwJ6Qt0l18q1on0xZKH0raQY?=
+ =?us-ascii?Q?nzYItDv0MK+GWntTorRc6eWLYAepgG/HkliWDV2Yg5WT7iLdj8quuQ3Y6tmv?=
+ =?us-ascii?Q?K/3UrrwYzROq1oSrwCaYdrUwKswrWWStFdjR9u0IkyZjE9JTdLVcddCu7rm0?=
+ =?us-ascii?Q?CIRybuBkyzwCHUZgpzZQCH4TQM1XxL7cQxpE7MjlJkV4AT4dvH2cWQZ1Ct+1?=
+ =?us-ascii?Q?xDWh7uvU9q4YpUt9BSR9w5V+f3wzFxiQVblwk53ezOO5b7/+lseW6ojKXW9q?=
+ =?us-ascii?Q?AoNGUFwO5qzEN40raIsm+gLe2rrReYuKys/Tu7xqZDNLxUDQM+ND5olqdTRw?=
+ =?us-ascii?Q?DprF5l4cBEn4q0y0CabHsNeJmjwA2F7n4D6mGd2Mm2FxtS6Kx8YynZ24g5ud?=
+ =?us-ascii?Q?4bwrE1aVVdOqS17ZUZ9+q3fnI25u5y9WCwB9VJtrgJBlCYLLDMk6fKLs0et4?=
+ =?us-ascii?Q?LDkjSN2IU4itIbbcfw1kzYQfj+ZQOdZAJlLv7UODBT1EtsacRk8Gu9FetiA6?=
+ =?us-ascii?Q?Xg1OHn1lSCLNVQ57B5PhuYfBPJ3PFmBRlx69DkGoJLdDm6yXfOSMk5GS3qup?=
+ =?us-ascii?Q?JfXOjBmwb5QHJHI+K32+3o/lX8bSFPsCJIuIOfvR6llIYZ5/vTkF6QkwB14u?=
+ =?us-ascii?Q?KTHOOTJC8TbFO4aMzv10oOtDLOl7s6sNHuyk0WKfiqbWq8Inv4hKofQEjf0Z?=
+ =?us-ascii?Q?zKaomj50ubeH/4wG4oBgMBqVZFsr0jpyJOPZ7AOHO5LDgkNZmIrnnDP024gr?=
+ =?us-ascii?Q?wgUVF2+qcD1TF4c7wjbOhONnjmog8oNtRI470Cmmu6i2TQikws0PPR4rYNot?=
+ =?us-ascii?Q?6Obc7yhTT+elErrR/KquqVwqz/i+ei6s+GLhLLnPZmV5/MbbVwVYM56IU9wF?=
+ =?us-ascii?Q?zokal7I0dkBTXJeb0/akA1D2yrJHiwV/lQjDU8RJlLJoHGODw5D/4lTjfAWB?=
+ =?us-ascii?Q?Bfh9AuAHbGZ90eYg0c9dMIUskTKFWd4sbkOHqZ3wV8LE0d48PkZ8ucd5D67D?=
+ =?us-ascii?Q?ycdsNcCtjgt62sLrifQb5ZcFI1/EzoLact2OmXryy/lIOpGXsU+tzqZN9Am8?=
+ =?us-ascii?Q?VKSq5wnC50F/E8DnAmsvzoCBN9EEdsPblsO/VMlSXwa/VhzA4Ii1YB3YQFe1?=
+ =?us-ascii?Q?49DyjdnfQ62JdwCCdvwFJPDBhgnV2OnEyUIEvoauH7xROYND4LU9JpCrde4d?=
+ =?us-ascii?Q?ngE4DbVBfn4sKyiHCUEueqo/DNH1qgpPsV1VggoTyCa/pmEOEjpxLv9pYfOx?=
+ =?us-ascii?Q?qV65dwgx3kgKAh0idiIZw/TitP3RaiqVIN02N3BQ6/iX/cTqpQKH9e6KwOe7?=
+ =?us-ascii?Q?V/7VQPuPhKWrJ2nNnpsX+rmppEEXokTR9Im0My5TzXLB95Ku75Nlnvgt0NOX?=
+ =?us-ascii?Q?3gjXrzpd9HLMp+XOsnI2VFwk34ih6hnKv5gqyaRrTFcPRcdcWPGkz9J+j4A3?=
+ =?us-ascii?Q?LBVuUykrwr9jyzGpdrXJGX4+3Hnj4Ja3/neeMGT9L14RZwh8X3LjBWZ7U4A/?=
+ =?us-ascii?Q?03wxOcKrit/1pYC4+iP0Y6VON4ohOUHSno7fffrW5QHQAoe26b+Rk9LvRjFM?=
+ =?us-ascii?Q?kA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211108130918.00004d76@Huawei.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5702.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8db1cfdf-6c17-4760-c87c-08d9a4b95694
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2021 02:16:57.6827
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Px9jkoTG/IP/KumTnkXU/scltMv4p22WIe5W8P7SKBnFcQm8rTLUU1N+4Chh9Dmp3LQTK+zwo4ef3trRtxBN9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5309
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 01:09:18PM +0000, Jonathan Cameron wrote:
-> On Fri, 5 Nov 2021 16:50:54 -0700
-> <ira.weiny@intel.com> wrote:
-> 
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > CXL devices have DOE mailboxes.  Create auxiliary devices which can be
-> > driven by the generic DOE auxiliary driver.
-> 
-> I'd like Bjorn's input on the balance here between what is done
-> in cxl/pci.c and what should be in the PCI core code somewhere.
-> 
-> The tricky bit preventing this being done entirely as part of 
-> PCI device instantiation is the interrupts.
-> 
-> > 
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Mostly new code, so not sure I should really be listed on this
-> one but I don't mind either way.
-> 
-> A few comments inline but overall this ended up nice and clean.
-> 
-> > 
-> > ---
-> > Changes from V4:
-> > 	Make this an Auxiliary Driver rather than library functions
-> > 	Split this out into it's own patch
-> > 	Base on the new cxl_dev_state structure
-> > 
-> > Changes from Ben
-> > 	s/CXL_DOE_DEV_NAME/DOE_DEV_NAME/
-> > ---
-> >  drivers/cxl/Kconfig |   1 +
-> >  drivers/cxl/cxl.h   |  13 +++++
-> >  drivers/cxl/pci.c   | 120 ++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 134 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index 67c91378f2dd..9d53720bea07 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -16,6 +16,7 @@ if CXL_BUS
-> >  config CXL_MEM
-> >  	tristate "CXL.mem: Memory Devices"
-> >  	default CXL_BUS
-> > +	select PCI_DOE_DRIVER
-> >  	help
-> >  	  The CXL.mem protocol allows a device to act as a provider of
-> >  	  "System RAM" and/or "Persistent Memory" that is fully coherent
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 5e2e93451928..f1241a7f2b7b 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -75,6 +75,19 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
-> >  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
-> >  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
-> >  
-> > +/*
-> > + * Address space properties derived from:
-> > + * CXL 2.0 8.2.5.12.7 CXL HDM Decoder 0 Control Register
-> > + */
-> > +#define CXL_ADDRSPACE_RAM   BIT(0)
-> > +#define CXL_ADDRSPACE_PMEM  BIT(1)
-> > +#define CXL_ADDRSPACE_TYPE2 BIT(2)
-> > +#define CXL_ADDRSPACE_TYPE3 BIT(3)
-> > +#define CXL_ADDRSPACE_MASK  GENMASK(3, 0)
-> 
-> Stray.
+Hi Bjorn,
 
-Not sure what you mean here???
+Thanks for the encouragement! Stuart already helps patch the hang issue, do=
+ I still go an open a report at https://bugzilla.kernel.org?=20
 
-There were a number of defines which were unused but I left them in.
+Regards
+Joseph
 
-This came right out of your patch 3.
+-----Original Message-----
+From: Bjorn Helgaas <helgaas@kernel.org>=20
+Sent: Tuesday, November 9, 2021 11:30 PM
+To: Bao, Joseph <joseph.bao@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org; linux-k=
+ernel@vger.kernel.org; Stuart Hayes <stuart.w.hayes@gmail.com>; Lukas Wunne=
+r <lukas@wunner.de>
+Subject: Re: HW power fault defect cause system hang on kernel 5.4.y
 
-https://lore.kernel.org/linux-cxl/20210524133938.2815206-4-Jonathan.Cameron@huawei.com/
+On Tue, Nov 09, 2021 at 07:59:59AM +0000, Bao, Joseph wrote:
+> Hi Lukas/Stuart,
+> Want to follow up with you whether the system hang is expected when HW=20
+> has a defect keeping PCI_EXP_SLTSTA_PFD always HIGH.
 
-I can remove these defines if you want?
+A system hang in response to a hardware defect like this is never the expec=
+ted situation.  Worst case we should be able to work around it with a quirk=
+.  Far better would be a generic fix that could recognize and deal with the=
+ situation even without a quirk.
 
-> 
-> > +
-> > +#define CXL_DOE_PROTOCOL_COMPLIANCE 0
-> > +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
-> > +
-> >  #define CXL_COMPONENT_REGS() \
-> >  	void __iomem *hdm_decoder
-> >  
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 8dc91fd3396a..df524b74f1d2 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -6,6 +6,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/list.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> >  #include <linux/io.h>
-> >  #include "cxlmem.h"
-> >  #include "pci.h"
-> > @@ -471,6 +472,120 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> >  	return rc;
-> >  }
-> >  
-> > +static void cxl_mem_free_irq_vectors(void *data)
-> > +{
-> > +	pci_free_irq_vectors(data);
-> > +}
-> > +
-> > +static void cxl_destroy_doe_device(void *ad)
-> > +{
-> > +	struct auxiliary_device *adev = ad;
-> Local variable doesn't add anything, just pass it directly
-> into the functions as a void *.
+But I don't know the fix yet.  I'm just responding to encourage you to keep=
+ pestering us and not give up :)  In the meantime, it might be worth openin=
+g a report at https://bugzilla.kernel.org with a description of how you tri=
+gger the problem, and attaching the complete dmesg log and "sudo lspci -vv"=
+ output.
 
-Yea...  Thanks...  :-D
-
-> 
-> > +
-> > +	auxiliary_device_delete(adev);
-> > +	auxiliary_device_uninit(adev);
-> 
-> Both needed?  These are just wrappers around
-> put_device() and device_del()
-
-These are both needed per the Auxiliary Device doc.  :-/
-
-> 
-> Normally after device_add() suceeded we only ever call device_del()
-> as per the docs for device_add()
-> https://elixir.bootlin.com/linux/latest/source/drivers/base/core.c#L3277
-
-I think you are miss reading that comment.  Here auxiliary_device_add() has
-succeeded.  Therefore both device_del() and put_device() must be called.  In
-the case of auxiliary_device_add() failing we only call
-auxiliary_device_uninit() [put_device()].
-
-So I think this is correct.
-
-The other places I spot checked called device_del() _and_ put_device().
-
-> 
-> > +}
-> > +
-> > +static DEFINE_IDA(cxl_doe_adev_ida);
-> > +static void __doe_dev_release(struct auxiliary_device *adev)
-> > +{
-> > +	struct pci_doe_dev *doe_dev = container_of(adev, struct pci_doe_dev,
-> > +						   adev);
-> > +
-> > +	ida_free(&cxl_doe_adev_ida, adev->id);
-> > +	kfree(doe_dev);
-> > +}
-> > +
-> > +static void cxl_doe_dev_release(struct device *dev)
-> > +{
-> > +	struct auxiliary_device *adev = container_of(dev,
-> > +						struct auxiliary_device,
-> > +						dev);
-> > +	__doe_dev_release(adev);
-> > +}
-> > +
-> > +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
-> 
-> Pass in the struct device, or maybe even the struct pci_dev as
-> nothing in here is using the cxl_dev_state.
-
-Ah yea can I leave this per the next patch?  Or I can change it then change it
-to cxlds in the next patch.  But I would rather leave it.
-
-> 
-> > +{
-> > +	struct device *dev = cxlds->dev;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int irqs, rc;
-> > +	u16 pos = 0;
-> > +
-> > +	/*
-> > +	 * An implementation of a cxl type3 device may support an unknown
-> > +	 * number of interrupts. Assume that number is not that large and
-> > +	 * request them all.
-> > +	 */
-> > +	irqs = pci_msix_vec_count(pdev);
-> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
-> > +	if (rc != irqs) {
-> > +		/* No interrupt available - carry on */
-> > +		dev_dbg(dev, "No interrupts available for DOE\n");
-> > +	} else {
-> > +		/*
-> > +		 * Enabling bus mastering could be done within the DOE
-> > +		 * initialization, but as it potentially has other impacts
-> > +		 * keep it within the driver.
-> > +		 */
-> > +		pci_set_master(pdev);
-> > +		rc = devm_add_action_or_reset(dev,
-> > +					      cxl_mem_free_irq_vectors,
-> > +					      pdev);
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +
-> 
-> Above here is driver specific...
-> Everything from here is is generic so perhaps move it to the PCI core?
-> Alternatively wait until we have users that aren't CXL.
-
-I'm still looking for where in the PCI core this would be appropriate to
-place...
-
-> 
-> > +	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> > +
-> > +	while (pos > 0) {
-> > +		struct auxiliary_device *adev;
-> > +		struct pci_doe_dev *new_dev;
-> > +		int id;
-> > +
-> > +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
-> > +		if (!new_dev)
-> > +			return -ENOMEM;
-> > +
-> > +		new_dev->pdev = pdev;
-> > +		new_dev->cap_offset = pos;
-> > +
-> > +		/* Set up struct auxiliary_device */
-> > +		adev = &new_dev->adev;
-> > +		id = ida_alloc(&cxl_doe_adev_ida, GFP_KERNEL);
-> > +		if (id < 0) {
-> > +			kfree(new_dev);
-> > +			return -ENOMEM;
-> > +		}
-> > +
-> > +		adev->id = id;
-> > +		adev->name = DOE_DEV_NAME;
-> > +		adev->dev.release = cxl_doe_dev_release;
-> > +		adev->dev.parent = dev;
-> > +
-> > +		if (auxiliary_device_init(adev)) {
-> > +			__doe_dev_release(adev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		if (auxiliary_device_add(adev)) {
-> > +			auxiliary_device_uninit(adev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		rc = devm_add_action_or_reset(dev, cxl_destroy_doe_device, adev);
-> > +		if (rc)
-> > +			return rc;
-> > +
-> > +		if (device_attach(&adev->dev) != 1)
-> > +			dev_err(&adev->dev,
-> > +				"Failed to attach a driver to DOE device %d\n",
-> > +				adev->id);
-> 
-> I wondered about this and how it would happen.
-> Given soft dependency only between the drivers it's possible but error or info?
-> I'd go with dev_info().  It is an error I'd bail out and used deferred probing
-> to try again when it will succeed.
-
-I made this dev_err() on purpose.  And I don't know about the deferred probing.
-Maybe deferred probing on the CDAT read but even that I think is going to be a
-pain.
-
-The sequence I can think of is:
-
-cxl_pci loaded
-	[finds all devices]
-	[soft loads pci_doe]
-	[device_attach works]
-Admin unloads pci_doe
-	[hot-plug new device]
-	[device_attach fails]
-	[cdat will fail until driver is loaded]
-
-I spoke with Dan about this and while this is unfortunate it is what the user
-asked for.  So I prefer dev_err() above to make sure that there is an
-indication of why this device is potentially not going to work.
-
-Thanks for the review,
-Ira
-
-> 
-> > +
-> > +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  {
-> >  	struct cxl_register_map map;
-> > @@ -517,6 +632,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	rc = cxl_setup_doe_devices(cxlds);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> >  	if (IS_ERR(cxlmd))
-> >  		return PTR_ERR(cxlmd);
-> > @@ -546,3 +665,4 @@ static struct pci_driver cxl_pci_driver = {
-> >  MODULE_LICENSE("GPL v2");
-> >  module_pci_driver(cxl_pci_driver);
-> >  MODULE_IMPORT_NS(CXL);
-> > +MODULE_SOFTDEP("pre: pci_doe");
-> 
+Bjorn
