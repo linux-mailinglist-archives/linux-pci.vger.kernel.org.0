@@ -2,43 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41D4144DDF6
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 23:50:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F03744DDF9
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 23:53:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231825AbhKKWxX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 17:53:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
+        id S234150AbhKKW4N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 17:56:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230348AbhKKWxX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Nov 2021 17:53:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7AD2F6124C;
-        Thu, 11 Nov 2021 22:50:32 +0000 (UTC)
+        id S230348AbhKKW4N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Nov 2021 17:56:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5EEE16124D;
+        Thu, 11 Nov 2021 22:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636671032;
-        bh=rUZ/Su4Jl9SXavYFg86d3hFyhvDkfAvKNMakYbH1QTw=;
+        s=k20201202; t=1636671203;
+        bh=xB78a6Ir3081AjdWRSJRJ27+LjgB8Tv/XSf7soHAcGM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NdYdmViqHHtW3NRI2Qj/Jh9/nQ+EJoliqOEzceXvrjEjZ6Vpnr1awkroIRoUkGLKV
-         IGbwEKHlbJbVKo+azupgmKT0u/LGZafN2rlBussfRMS+I8iY5+K3yG1ZOD9V6dp+lW
-         tTOwan1JPh+uf0Dq+dLEP6FHzjteU1vMeelVzf8362AT3c//gXvvuskMlEadGhtGVF
-         6vuuLZKVwYWab83p+lEvDifruuXGsJevcNmJg6Os+AVRMmtTGZqIzfTF2r2cN5S3P5
-         bLtlMTtMccdShXU710JdhrkjA/CuCta14YhS4YU/u48XNEQoEUSJ+H2+qSDa2ooEJG
-         WDjRjw1CIyxWw==
-Received: by mail-ed1-f50.google.com with SMTP id w1so30128916edd.10;
-        Thu, 11 Nov 2021 14:50:32 -0800 (PST)
-X-Gm-Message-State: AOAM530cfeRc5xFX8fPVW9yV/yx0HVraQ0dwA+x8icGzne5WlDRnXMwP
-        3QerJiVbrLiVbTs+RJvtaY5subtHHIdl92iULg==
-X-Google-Smtp-Source: ABdhPJze04ZeyAA1HXsFKVxztXrqGOkqREekona/1epONO6xOls/I2pCo6lWPiyQ9oY6CqZ0UlZkZHl7hkXZeKP8caE=
-X-Received: by 2002:aa7:c444:: with SMTP id n4mr14872255edr.6.1636671030995;
- Thu, 11 Nov 2021 14:50:30 -0800 (PST)
+        b=ViEK7Zgzgk6oTySgTWDRnDrXXmVp3PpxRCzRqg28L9efL70DVSplKk2LnKEnryUer
+         wFAC+qRNTw0p9xE0Z87bMUgRGIngd3G87wwMX1CM9VFPPygsa51I6R41NooGIASePh
+         5BYK5yELuxc0piVfeH6wdcQ/cGEfcfh6KI8gtsWmQaTUXtgplQtWpUMUwXhGaihBPX
+         uz60gmM77cqTu4XJyZTxZ1TwITNHC6bjy5P8CabVpWAlFoQ0D/1Hdw4w3xWVRTMfUW
+         7i+zi2B2eHYK66nCd5OVpmNq2fr2fuLowpnYO7NgRRJg3CWmkdr7RhFKw9WxkMvGB4
+         KO9eVGcvhyHZw==
+Received: by mail-ed1-f51.google.com with SMTP id o8so29976488edc.3;
+        Thu, 11 Nov 2021 14:53:23 -0800 (PST)
+X-Gm-Message-State: AOAM530C61UCQa6GVPfsJ8owhU23DxGEgmK4eaMsULdJ2LIn8i5HTRyO
+        JSGGQcW7UEyvuyT1ffXPd7/0tD+smPTNRlcnqg==
+X-Google-Smtp-Source: ABdhPJymtn9ZDw5BxCaYSsqzEe7wEgn9pGy56vGZnTPH85avyFmkCu8G3taqBzhmPoMsgJ7xqYZPqZOdcUd3+dgt3Z4=
+X-Received: by 2002:a50:d492:: with SMTP id s18mr15136451edi.145.1636671201896;
+ Thu, 11 Nov 2021 14:53:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110221456.11977-6-jim2101024@gmail.com> <20211111221250.GA1353701@bhelgaas>
-In-Reply-To: <20211111221250.GA1353701@bhelgaas>
+References: <20211110221456.11977-1-jim2101024@gmail.com> <20211110221456.11977-5-jim2101024@gmail.com>
+ <aa040d6e-66b0-5159-2eba-870db74b0e31@gmail.com>
+In-Reply-To: <aa040d6e-66b0-5159-2eba-870db74b0e31@gmail.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 11 Nov 2021 16:50:19 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+VnHC_af=d9o=BX=dtMJ84ipjDsq6R7gBkvZZJ6ARTLw@mail.gmail.com>
-Message-ID: <CAL_Jsq+VnHC_af=d9o=BX=dtMJ84ipjDsq6R7gBkvZZJ6ARTLw@mail.gmail.com>
-Subject: Re: [PATCH v8 5/8] PCI/portdrv: add mechanism to turn on subdev regulators
-To:     Bjorn Helgaas <helgaas@kernel.org>
+Date:   Thu, 11 Nov 2021 16:53:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJpxWcBfgfze8Zwx3WWnazQK1W5H=JTmMyVgzyj4VVvyQ@mail.gmail.com>
+Message-ID: <CAL_JsqJpxWcBfgfze8Zwx3WWnazQK1W5H=JTmMyVgzyj4VVvyQ@mail.gmail.com>
+Subject: Re: [PATCH v8 4/8] PCI/portdrv: Create pcie_is_port_dev() func from
+ existing code
+To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Jim Quinlan <jim2101024@gmail.com>,
         PCI <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -57,69 +59,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 4:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Nov 11, 2021 at 3:51 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> Capitalize "Add" in subject.
->
-> On Wed, Nov 10, 2021 at 05:14:45PM -0500, Jim Quinlan wrote:
-> > Adds a mechanism inside the root port device to identify standard PCIe
-> > regulators in the DT, allocate them, and turn them on before the rest of
-> > the bus is scanned during pci_host_probe().  A root complex driver can
-> > leverage this mechanism by setting the pci_ops methods add_bus and
-> > remove_bus to pci_subdev_regulators_{add,remove}_bus.
->
-> s/Adds a/Add a/
->
-> > The allocated structure that contains the regulators is stored in
-> > dev.driver_data.
+> On 11/10/21 2:14 PM, Jim Quinlan wrote:
+> > The function will be needed elsewhere in a few commits.
 > >
-> > The unabridged reason for doing this is as follows.  We would like the
-> > Broadcom STB PCIe root complex driver (and others) to be able to turn
-> > off/on regulators[1] that provide power to endpoint[2] devices.  Typically,
-> > the drivers of these endpoint devices are stock Linux drivers that are not
-> > aware that these regulator(s) exist and must be turned on for the driver to
-> > be probed.  The simple solution of course is to turn these regulators on at
-> > boot and keep them on.  However, this solution does not satisfy at least
-> > three of our usage modes:
+> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > ---
+> >  drivers/pci/pci.h              |  2 ++
+> >  drivers/pci/pcie/portdrv_pci.c | 23 ++++++++++++++++++-----
+> >  2 files changed, 20 insertions(+), 5 deletions(-)
 > >
-> > 1. For example, one customer uses multiple PCIe controllers, but wants the
-> > ability to, by script invoking and unbind, turn any or all of them by and
-> > their subdevices off to save power, e.g. when in battery mode.
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 1cce56c2aea0..c2bd1995d3a9 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -744,4 +744,6 @@ extern const struct attribute_group aspm_ctrl_attr_group;
 > >
-> > 2. Another example is when a watchdog script discovers that an endpoint
-> > device is in an unresponsive state and would like to unbind, power toggle,
-> > and re-bind just the PCIe endpoint and controller.
+> >  extern const struct attribute_group pci_dev_reset_method_attr_group;
 > >
-> > 3. Of course we also want power turned off during suspend mode.  However,
-> > some endpoint devices may be able to "wake" during suspend and we need to
-> > recognise this case and veto the nominal act of turning off its regulator.
-> > Such is the case with Wake-on-LAN and Wake-on-WLAN support where PCIe
-> > end-point device needs to be kept powered on in order to receive network
-> > packets and wake-up the system.
-> >
-> > In all of these cases it is advantageous for the PCIe controller to govern
-> > the turning off/on the regulators needed by the endpoint device.  The first
-> > two cases can be done by simply unbinding and binding the PCIe controller,
-> > if the controller has control of these regulators.
-> >
-> > [1] These regulators typically govern the actual power supply to the
-> >     endpoint chip.  Sometimes they may be a the official PCIe socket
-> >     power -- such as 3.3v or aux-3.3v.  Sometimes they are truly
-> >     the regulator(s) that supply power to the EP chip.
+> > +bool pcie_is_port_dev(struct pci_dev *dev);
 >
-> s/may be a the/may be the/
->
-> > [2] The 99% configuration of our boards is a single endpoint device
-> >     attached to the PCIe controller.  I use the term endpoint but it could
-> >     possible mean a switch as well.
->
-> s/possible/possibly/
->
-> This adds generic code, so it needs some connection to the generic DT
-> binding for these things, e.g., a commit in this series that adds it
-> (I see commits that touch brcm,stb-pcie.yaml, but not a generic
-> place).
+> Looks like you need an inline stub here when CONFIG_PCIEPORTBUS is
+> disabled to avoid the linking failure reported by the kbuild robot:
 
-That's pending here: https://github.com/devicetree-org/dt-schema/pull/63
+Probably always an inline function. It has nothing to do with the
+driver, so portdrv_pci.c is not the right place.
 
 Rob
