@@ -2,95 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7309344DB26
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 18:32:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C8044DB2F
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 18:39:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234370AbhKKRfa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 12:35:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234166AbhKKRf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 12:35:29 -0500
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F3EC0613F5
-        for <linux-pci@vger.kernel.org>; Thu, 11 Nov 2021 09:32:40 -0800 (PST)
-Received: by mail-oi1-x22f.google.com with SMTP id bf8so12857134oib.6
-        for <linux-pci@vger.kernel.org>; Thu, 11 Nov 2021 09:32:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=swiecki.net; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gvvpWtzRmL17H6APsk6foj0/Vw/9Xnyncdy1bzuH63E=;
-        b=ArHl0YD2sgGiqJA1jV5y67ZYH9Uy0uYV8uVc+pPadvjgkveVO/zIXqjmpqtXWcbQpC
-         H+scsvp9xhog2WQdWi/JwDT6cD1oAkcN1/RhtSg4heLhtbohjs+QCyKbeD68JBctX8at
-         Xi/Txfoh5rRwuVNEfj+lZzks7mUMDg7fV5+zI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gvvpWtzRmL17H6APsk6foj0/Vw/9Xnyncdy1bzuH63E=;
-        b=p+lULUOcxUXfOi58e8B/ePQcUoGp7sscCp8A/qTMr7ZQqQPoLHQWn36ooxW5YNlSRh
-         +FJRrpZXlKsn+wpoZXZ9rCba613x8wV7wqeyzkjTtV5Deaczv3dysjdEiVR60BMqmsf2
-         xjklkKi6yqGgjbRnmj6cfhWdGtw8vufAg1+koZP6C+0RtRv0FnJkDxiZbbv8zmDejnUx
-         9/xbXUPq4jxkv7W2J+6cYi23NfLaOi+9zIB8758E1n6jA5hV5WaXZb3NjlLnP889CiY/
-         ziiNp7MpVZ8+tZ6ndws4XpsFMUFJJm/Hr1a6eNfHUcpLcvSxCPkmBGIV++WFUScjIr54
-         Crcw==
-X-Gm-Message-State: AOAM530MivNy9dZwNYwX3sa2AXivQb2HH44tPAud1iGcsf7ujuvT40wN
-        tt15xmlJZedC5svdBADDqdq4tVvK6nGmgF6244Dy3A==
-X-Google-Smtp-Source: ABdhPJwbwnS0fHxon9yEvzcN7GX7OpMG1W6/SL6pJLUI39uxNyfgiOX+nJQSNOeHQfM/3hzqnezJ43G7n8q8i1NJ7nY=
-X-Received: by 2002:aca:d989:: with SMTP id q131mr7308053oig.167.1636651959329;
- Thu, 11 Nov 2021 09:32:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20211110211905.GA1261732@bhelgaas> <20211111170127.GA1336355@bhelgaas>
-In-Reply-To: <20211111170127.GA1336355@bhelgaas>
-From:   =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>
-Date:   Thu, 11 Nov 2021 18:32:28 +0100
-Message-ID: <CAP145piKqyVepa7wnuqwntycdq6tU3ZeoUV10+nweqaXNyvs=Q@mail.gmail.com>
-Subject: Re: [PATCH] pci: Don't call resume callback for nearly bound devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S229872AbhKKRl7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 12:41:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229710AbhKKRl7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Nov 2021 12:41:59 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0976F610CB;
+        Thu, 11 Nov 2021 17:39:10 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mlE2U-004sFt-Sj; Thu, 11 Nov 2021 17:39:06 +0000
+Date:   Thu, 11 Nov 2021 17:39:06 +0000
+Message-ID: <87mtma8udh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc:     "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
+        Matthew Leaman <matthew@a-eon.biz>,
+        Darren Stevens <darren@stevens-zone.net>,
+        mad skateman <madskateman@gmail.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
+        damien.lemoal@opensource.wdc.com, kw@linux.com,
+        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
+        Olof Johansson <olof@lixom.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the pci-v5.16 updates
+In-Reply-To: <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
+References: <3eedbe78-1fbd-4763-a7f3-ac5665e76a4a@xenosoft.de>
+        <15731ad7-83ff-c7ef-e4a1-8b11814572c2@xenosoft.de>
+        <17e37b22-5839-0e3a-0dbf-9c676adb0dec@xenosoft.de>
+        <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
+        <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: chzigotzky@xenosoft.de, bhelgaas@google.com, alyssa@rosenzweig.io, lorenzo.pieralisi@arm.com, robh@kernel.org, matthew@a-eon.biz, darren@stevens-zone.net, madskateman@gmail.com, rtd2@xtra.co.nz, info@xenosoft.de, axboe@kernel.dk, damien.lemoal@opensource.wdc.com, kw@linux.com, arnd@arndb.de, robert@swiecki.net, olof@lixom.net, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-> > Thank you very much for testing this.  The patch changed the way we
-> > use runtime PM, and the dmesg snippets below look like they could be
-> > related to runtime PM issues.
+On Wed, 10 Nov 2021 18:07:24 +0000,
+Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+> 
+> On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
+> > Hello,
 > >
-> > I think the conclusion is that we need to revert these commits:
+> > The Nemo board [1] doesn't recognize any ATA disks with the
+> pci-v5.16 updates [2].
 > >
-> >   b5f9c644eb1b ("PCI: Remove struct pci_dev->driver")
-> >   2a4d9408c9e8 ("PCI: Use to_pci_driver() instead of pci_dev->driver")
+> > Error messages:
 > >
-> > from Linus' tree.  I queued up those reverts on
-> > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=
-=3Dfor-linus
->
-> These reverts appeared in the Nov 11 linux-next tree.  Any chance you
-> could verify that they solve the i2c_dw_pci_resume() issue?  If it's
-> easier, you can apply them from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=3D=
-for-linus
-> instead.
+> > ata4.00: gc timeout cmd 0xec
+> > ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+> > ata1.00: gc timeout cmd 0xec
+> > ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+> > ata3.00: gc timeout cmd 0xec
+> > ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+> >
+> > I was able to revert the new pci-v5.16 updates [2]. After a new
+> compiling, the kernel recognize all ATA disks correctly.
+> >
+> > Could you please check the pci-v5.16 updates [2]?
+> >
+> > Please find attached the kernel config.
+> >
+> > Thanks,
+> > Christian
+> >
+> > [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
+> > [2]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
+> 
+> Hi All,
+> 
+> Many thanks for your nice responses.
+> 
+> I bisected today [1]. 0412841812265734c306ba5ef8088bcb64d5d3bd
+> (of/irq: Allow matching of an interrupt-map local to an interrupt
+> controller) [2] is the first bad commit.
 
-Looks good with the most recent 3 commits from for-linus applied on
-the top of the current linus' tree.
+Can you please give the following hack a go and post the result
+(including the full dmesg)?
 
-No problematic dmesg entries, my Win11/vfio/kvm/qemu boots fine.
+Thanks,
 
+	M.
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 32be5a03951f..8cf0cc9b7caf 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -156,14 +156,15 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 
+ 	/* Now start the actual "proper" walk of the interrupt tree */
+ 	while (ipar != NULL) {
++		bool intc = of_property_read_bool(ipar, "interrupt-controller");
++
+ 		/*
+ 		 * Now check if cursor is an interrupt-controller and
+ 		 * if it is then we are done, unless there is an
+ 		 * interrupt-map which takes precedence.
+ 		 */
+ 		imap = of_get_property(ipar, "interrupt-map", &imaplen);
+-		if (imap == NULL &&
+-		    of_property_read_bool(ipar, "interrupt-controller")) {
++		if (imap == NULL && intc) {
+ 			pr_debug(" -> got it !\n");
+ 			return 0;
+ 		}
+@@ -244,8 +245,14 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 
+ 			pr_debug(" -> imaplen=%d\n", imaplen);
+ 		}
+-		if (!match)
++		if (!match) {
++			if (intc) {
++				pr_info("%pOF interrupt-map failed, using interrupt-controller\n", ipar);
++				return 0;
++			}
++
+ 			goto fail;
++		}
+ 
+ 		/*
+ 		 * Successfully parsed an interrrupt-map translation; copy new
 
-
---=20
-Robert =C5=9Awi=C4=99cki
+-- 
+Without deviation from the norm, progress is not possible.
