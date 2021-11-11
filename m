@@ -2,179 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 845FD44D2B0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 08:50:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABDB644D3B2
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Nov 2021 10:03:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbhKKHw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 02:52:58 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:13490 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbhKKHw5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 02:52:57 -0500
-X-Greylist: delayed 49360 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Nov 2021 02:52:57 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636616830;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=dCmpd2O/lGDrnDqSWWki/3bwgrWmS+xqwxY6BMuXy6s=;
-    b=sr5PccJoWnb4Rw2L9QcLOJKHdMfBGKrx2uRQ4xWCx5ymmA9SzDZlt/LjTKnwjTWXf+
-    mj1tso+ghtaMBeCGHLjECJihzfLBk56O4CAH7AiZ3235IP5BbDnWQs091RN0rtekKfHg
-    q/5ZEc22ClJJVD05ks4vcKEcUzENnAvBxHriR/OPgeHVrfnqwRDJ5jifrlqWVZUlRwtN
-    DeiP/WoOuXepqYRvgxuXlk/IqnI0TrwKRU+gdyB4oHoJL0gtgth9SKm6CZ+Zk/8Irljs
-    ThSD9HlXQYeN+F+wTYF2uHI+TfHJoNNR1mEhIbnah2ILbYk9xdZGbN5lzK31RngbzWLt
-    bfZQ==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhWI9Q+uux5TZjyZDAcEWxCgiq/uQ=="
-X-RZG-CLASS-ID: mo00
-Received: from cc-build-machine.a-eon.tld
-    by smtp.strato.de (RZmta 47.34.5 AUTH)
-    with ESMTPSA id N03801xAB7l8H1o
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Thu, 11 Nov 2021 08:47:08 +0100 (CET)
-Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
- pci-v5.16 updates
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
-        Matthew Leaman <matthew@a-eon.biz>,
-        Darren Stevens <darren@stevens-zone.net>,
-        mad skateman <madskateman@gmail.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
-        damien.lemoal@opensource.wdc.com, kw@linux.com,
-        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
-        Olof Johansson <olof@lixom.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
- <20211110184106.GA1251058@bhelgaas> <87sfw3969l.wl-maz@kernel.org>
- <8cc64c3b-b0c0-fb41-9836-2e5e6a4459d1@xenosoft.de>
- <87r1bn88rt.wl-maz@kernel.org>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Message-ID: <f40294c6-a088-af53-eeea-4dfbd255c5c9@xenosoft.de>
-Date:   Thu, 11 Nov 2021 08:47:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S232489AbhKKJFx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 04:05:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47685 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232366AbhKKJFw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 04:05:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636621383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HDJlKWmITGGiSJRAEgTyI1lTFGvuDXl7ywXp7NhlzRE=;
+        b=LJCu5iS/RbnNj5LCnro7rkJt0paVSu5lYZW7FNA51ZZAt2/hKw4c1l4j5Z/ezwEWki7LbW
+        eGKGGZl218xFzaJEJSknH2g/5Vt1GHiKy2JseuPvacbyf42T7l9WTLAkOpZA++uK34LMde
+        WiJBbQOoMDwHHtY9QEEbwaeKN1TFwIc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-MfuEAeLuO3u2l5bcJsuzqA-1; Thu, 11 Nov 2021 04:03:00 -0500
+X-MC-Unique: MfuEAeLuO3u2l5bcJsuzqA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74A901927800;
+        Thu, 11 Nov 2021 09:02:59 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.39.193.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23DA05D6D7;
+        Thu, 11 Nov 2021 09:02:46 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 67A061800925; Thu, 11 Nov 2021 10:02:44 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     mst@redhat.com, Gerd Hoffmann <kraxel@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pciehp: fast unplug for virtual machines
+Date:   Thu, 11 Nov 2021 10:02:24 +0100
+Message-Id: <20211111090225.946381-1-kraxel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87r1bn88rt.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11 November 2021 at 08:13 am, Marc Zyngier wrote:
-> On Thu, 11 Nov 2021 05:24:52 +0000,
-> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->> On 10 November 2021 at 08:09 pm, Marc Zyngier wrote:
->>> HI all,
->>>
->>> On Wed, 10 Nov 2021 18:41:06 +0000,
->>> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>> On Wed, Nov 10, 2021 at 07:07:24PM +0100, Christian Zigotzky wrote:
->>>>> On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
->>>>>> Hello,
->>>>>>
->>>>>> The Nemo board [1] doesn't recognize any ATA disks with the pci-v5.16
->>>>> updates [2].
->>>>>> Error messages:
->>>>>>
->>>>>> ata4.00: gc timeout cmd 0xec
->>>>>> ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>>> ata1.00: gc timeout cmd 0xec
->>>>>> ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>>> ata3.00: gc timeout cmd 0xec
->>>>>> ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>>>
->>>>>> I was able to revert the new pci-v5.16 updates [2]. After a new
->>>>> compiling, the kernel recognize all ATA disks correctly.
->>>>>> Could you please check the pci-v5.16 updates [2]?
->>>>>>
->>>>>> Please find attached the kernel config.
->>>>>>
->>>>>> Thanks,
->>>>>> Christian
->>>>>>
->>>>>> [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
->>>>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
->>>>> Hi All,
->>>>>
->>>>> Many thanks for your nice responses.
->>>>>
->>>>> I bisected today [1]. 0412841812265734c306ba5ef8088bcb64d5d3bd (of/irq:
->>>>> Allow matching of an interrupt-map local to an interrupt controller) [2] is
->>>>> the first bad commit.
->>>>>
->>>>> I was able to revert the first bad commit [1]. After a new compiling, the
->>>>> kernel detects all ATA disks without any problems.
->>>>>
->>>>> I created a patch for an easy reverting the bad commit [1]. With this patch
->>>>> we can do further our kernel tests.
->>>>>
->>>>> Could you please check the first bad commit [2]?
->>>>>
->>>>> Thanks,
->>>>> Christian
->>>>>
->>>>> [1] https://forum.hyperion-entertainment.com/viewtopic.php?p=54398#p54398
->>>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0412841812265734c306ba5ef8088bcb64d5d3bd
->>>>>
->>>>> [+ Marc Zyngier, Alyssa Rosenzweig, Lorenzo Pieralisi, and Rob Herring
->>>>> because of the first bad commit]
->>>> Thank you very much for the bisection and for also testing the revert!
->>>>
->>>> It's easy enough to revert 041284181226 ("of/irq: Allow matching of an
->>>> interrupt-map local to an interrupt controller"), and it seems like
->>>> that's what we need to do.  I have it tentatively queued up.
->>>>
->>>> That commit was part of the new support for the Apple M1 PCIe
->>>> interface, and I don't know what effect a revert will have on that
->>>> support.  Marc, Alyssa?
->>> It is going to badly break the M1 support, as we won't be able to take
->>> interrupts to detect that the PCIe link is up.
->>>
->>> Before we apply a full blown revert and decide that this isn't
->>> workable (and revert the whole M1 PCIe series, because they are
->>> otherwise somewhat pointless), I'd like to understand *what* breaks
->>> exactly.
->>>
->>> Christian, could you point me to the full DT that this machine uses?
->>> This would help understanding what goes wrong, and cook something for
->>> you to test.
->>>
->>> Thanks,
->>>
->>> 	M.
->>>
->> Hello Marc,
->>
->> Here you are:
->> https://forum.hyperion-entertainment.com/viewtopic.php?p=54406#p54406
-> This is not what I asked. I need the actual source file, or at the
-> very least the compiled object (the /sys/firmware/fdt file, for
-> example). Not an interpretation that I can't feed to the kernel.
->
-> Without this, I can't debug your problem.
->
->> We are very happy to have the patch for reverting the bad commit
->> because we want to test the new PASEMI i2c driver with support for the
->> Apple M1 [1] on our Nemo boards.
-> You can revert the patch on your own. At this stage, we're not blindly
-> reverting things in the tree, but instead trying to understand what
-> is happening on your particular system.
->
-> Thanks,
->
-> 	M.
->
-I added a download link for the fdt file to the post [1]. Please read 
-also Darren's comments in this post.
+The PCIe specification asks the OS to wait five seconds after the
+attention button has been pressed before actually un-plugging the
+device.  This gives the operator the chance to cancel the operation
+by pressing the attention button again within those five seconds.
 
-Thanks
+For physical hardware this makes sense.  Picking the wrong button
+by accident can easily happen and it can be corrected that way.
 
-[1] https://forum.hyperion-entertainment.com/viewtopic.php?p=54406#p54406
+For virtual hardware the benefits are questionable.  Typically
+users find the five second delay annoying.
+
+This patch adds the fast_virtual_unplug module parameter to the
+pciehp driver.  When enabled (which is the default) the linux
+kernel will simply skip the delay for virtual pcie ports, which
+reduces the total time for the unplug operation from 6-7 seconds
+to 1-2 seconds.
+
+Virtual pcie ports are identified by PCI ID.  For now the qemu
+pcie root ports are detected, other hardware can be added easily.
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/pci/hotplug/pciehp.h      |  3 +++
+ drivers/pci/hotplug/pciehp_core.c |  5 +++++
+ drivers/pci/hotplug/pciehp_ctrl.c | 11 ++++++++++-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 69fd401691be..131ffec2e947 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -79,6 +79,7 @@ extern int pciehp_poll_time;
+  * @request_result: result of last user request submitted to the IRQ thread
+  * @requester: wait queue to wake up on completion of user request,
+  *	used for synchronous slot enable/disable request via sysfs
++ * @is_virtual: virtual machine pcie port.
+  *
+  * PCIe hotplug has a 1:1 relationship between controller and slot, hence
+  * unlike other drivers, the two aren't represented by separate structures.
+@@ -109,6 +110,8 @@ struct controller {
+ 	unsigned int ist_running;
+ 	int request_result;
+ 	wait_queue_head_t requester;
++
++	bool is_virtual;
+ };
+ 
+ /**
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ad3393930ecb..28867ec33f5b 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -227,6 +227,11 @@ static int pciehp_probe(struct pcie_device *dev)
+ 		goto err_out_shutdown_notification;
+ 	}
+ 
++	if (dev->port->vendor == PCI_VENDOR_ID_REDHAT &&
++	    dev->port->device == 0x000c)
++		/* qemu pcie root port */
++		ctrl->is_virtual = true;
++
+ 	pciehp_check_presence(ctrl);
+ 
+ 	return 0;
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 529c34808440..119bb11f87d6 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -15,12 +15,17 @@
+ 
+ #define dev_fmt(fmt) "pciehp: " fmt
+ 
++#include <linux/moduleparam.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pci.h>
+ #include "pciehp.h"
+ 
++static bool fast_virtual_unplug = true;
++module_param(fast_virtual_unplug, bool, 0644);
++MODULE_PARM_DESC(fast_virtual_unplug, "Fast unplug (don't wait 5 seconds) for virtual machines.");
++
+ /* The following routines constitute the bulk of the
+    hotplug controller logic
+  */
+@@ -176,7 +181,11 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 		/* blink power indicator and turn off attention */
+ 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
+ 				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+-		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
++		if (ctrl->is_virtual && fast_virtual_unplug) {
++			schedule_delayed_work(&ctrl->button_work, 1);
++		} else {
++			schedule_delayed_work(&ctrl->button_work, 5 * HZ);
++		}
+ 		break;
+ 	case BLINKINGOFF_STATE:
+ 	case BLINKINGON_STATE:
+-- 
+2.33.1
+
