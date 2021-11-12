@@ -2,223 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BDA744E54D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 12:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9084A44E592
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 12:29:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233883AbhKLLDR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 06:03:17 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:18902 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233619AbhKLLDQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 06:03:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636714823;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=pIgmmX2bC3EX44bW2c5iZqPR05KitHfzE33dDVBbknM=;
-    b=rPJXglKCY4Um/cMy4SmA/CGb4+8TvRsts3nEHlV2ipxfVhEfWB4JMbAMlH/GIQUKue
-    9NwnWszF3wV7T4WCAelxD38moiYjFAkB78eJxmFJVu4X+UVSjTdKNGOpRxPQV779hEFR
-    c2fNTvPZZ5ZahRjFW1BMThJR3KzaQx3ztLmVOIwIiVPUfCVZwbGlg10Hp3MPTGPZEUkd
-    J7LXyWYrq6nQwigyFID80Uc1m78VDjE2t41zlVE6zUCdYtBPLp+f5/Y715xM5rclLy8S
-    +zEuuL1dDWV5s1wdVmMgpAiP5Ru9o7A+4+BOHTnhwC1/3F56kHkcSzhHHPEzDYSrP5tc
-    QjQA==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgGI+hs5tAvjn+88DfkT7ELd1ArCg=="
-X-RZG-CLASS-ID: mo00
-Received: from [IPV6:2a02:8109:89c0:ebfc:e52a:1ea0:c574:c7ab]
-    by smtp.strato.de (RZmta 47.34.5 AUTH)
-    with ESMTPSA id N03801xACB0MSqc
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Fri, 12 Nov 2021 12:00:22 +0100 (CET)
-Message-ID: <c9cac845-c196-9ea4-0df5-91acd1fb84f5@xenosoft.de>
-Date:   Fri, 12 Nov 2021 12:00:21 +0100
+        id S234702AbhKLLcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 06:32:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52941 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233883AbhKLLcC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 06:32:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1636716551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mWpX6S1S7t7oMXi+9chHuub2JTG8NEGR+ZhAheYJliY=;
+        b=KhfO1AVyAg9JIuyi2HNAxKhiMHVpvmK0csz24h/C3fNQMd4enNR5D5fx8i9qjj8VIEa5ag
+        KHlTAwBHh+XBzwhG9l/XulIX87fhXyTV0nEc1QsrTvT/j+PdRj4rt7to4X6SUG5Xh0hT4S
+        Q51m53qeL5Z4ap/qDWiYuUESbtFx7QM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-JOLS9nosPfmUETqqJzFshQ-1; Fri, 12 Nov 2021 06:29:08 -0500
+X-MC-Unique: JOLS9nosPfmUETqqJzFshQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A8431006AA0;
+        Fri, 12 Nov 2021 11:29:07 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.39.193.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A64E560C05;
+        Fri, 12 Nov 2021 11:29:00 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id EFF7D18003BE; Fri, 12 Nov 2021 12:28:58 +0100 (CET)
+Date:   Fri, 12 Nov 2021 12:28:58 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, mst@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] pciehp: fast unplug for virtual machines
+Message-ID: <20211112112858.33bcm6jrvqb7z7uo@sirius.home.kraxel.org>
+References: <20211111090225.946381-1-kraxel@redhat.com>
+ <20211111215019.GA1332430@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.0
-Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
- pci-v5.16 updates
-Content-Language: de-DE
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
-        Matthew Leaman <matthew@a-eon.biz>,
-        Darren Stevens <darren@stevens-zone.net>,
-        mad skateman <madskateman@gmail.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>,
-        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
-        damien.lemoal@opensource.wdc.com, kw@linux.com,
-        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
-        Olof Johansson <olof@lixom.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <3eedbe78-1fbd-4763-a7f3-ac5665e76a4a@xenosoft.de>
- <15731ad7-83ff-c7ef-e4a1-8b11814572c2@xenosoft.de>
- <17e37b22-5839-0e3a-0dbf-9c676adb0dec@xenosoft.de>
- <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
- <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
- <87mtma8udh.wl-maz@kernel.org>
- <c95c9b58-347e-d159-3a82-bf5f9dbf91ac@xenosoft.de>
- <1e2dc4c6-f286-f16b-4546-5cf2b1ca3123@xenosoft.de>
-In-Reply-To: <1e2dc4c6-f286-f16b-4546-5cf2b1ca3123@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211111215019.GA1332430@bhelgaas>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12 November 2021 at 11:11 am, Christian Zigotzky wrote:
-> On 12 November 2021 at 10:40 am, Christian Zigotzky wrote:
->> On 11 November 2021 at 06:39 pm, Marc Zyngier wrote:
->>> On Wed, 10 Nov 2021 18:07:24 +0000,
->>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
->>>> On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
->>>>> Hello,
->>>>>
->>>>> The Nemo board [1] doesn't recognize any ATA disks with the
->>>> pci-v5.16 updates [2].
->>>>> Error messages:
->>>>>
->>>>> ata4.00: gc timeout cmd 0xec
->>>>> ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>> ata1.00: gc timeout cmd 0xec
->>>>> ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>> ata3.00: gc timeout cmd 0xec
->>>>> ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
->>>>>
->>>>> I was able to revert the new pci-v5.16 updates [2]. After a new
->>>> compiling, the kernel recognize all ATA disks correctly.
->>>>> Could you please check the pci-v5.16 updates [2]?
->>>>>
->>>>> Please find attached the kernel config.
->>>>>
->>>>> Thanks,
->>>>> Christian
->>>>>
->>>>> [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
->>>>> [2]
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4 
->>>>
->>>>
->>>> Hi All,
->>>>
->>>> Many thanks for your nice responses.
->>>>
->>>> I bisected today [1]. 0412841812265734c306ba5ef8088bcb64d5d3bd
->>>> (of/irq: Allow matching of an interrupt-map local to an interrupt
->>>> controller) [2] is the first bad commit.
->>> Can you please give the following hack a go and post the result
->>> (including the full dmesg)?
->>>
->>> Thanks,
->>>
->>>     M.
->>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->>> index 32be5a03951f..8cf0cc9b7caf 100644
->>> --- a/drivers/of/irq.c
->>> +++ b/drivers/of/irq.c
->>> @@ -156,14 +156,15 @@ int of_irq_parse_raw(const __be32 *addr, 
->>> struct of_phandle_args *out_irq)
->>>         /* Now start the actual "proper" walk of the interrupt tree */
->>>       while (ipar != NULL) {
->>> +        bool intc = of_property_read_bool(ipar, 
->>> "interrupt-controller");
->>> +
->>>           /*
->>>            * Now check if cursor is an interrupt-controller and
->>>            * if it is then we are done, unless there is an
->>>            * interrupt-map which takes precedence.
->>>            */
->>>           imap = of_get_property(ipar, "interrupt-map", &imaplen);
->>> -        if (imap == NULL &&
->>> -            of_property_read_bool(ipar, "interrupt-controller")) {
->>> +        if (imap == NULL && intc) {
->>>               pr_debug(" -> got it !\n");
->>>               return 0;
->>>           }
->>> @@ -244,8 +245,14 @@ int of_irq_parse_raw(const __be32 *addr, struct 
->>> of_phandle_args *out_irq)
->>>                 pr_debug(" -> imaplen=%d\n", imaplen);
->>>           }
->>> -        if (!match)
->>> +        if (!match) {
->>> +            if (intc) {
->>> +                pr_info("%pOF interrupt-map failed, using 
->>> interrupt-controller\n", ipar);
->>> +                return 0;
->>> +            }
->>> +
->>>               goto fail;
->>> +        }
->>>             /*
->>>            * Successfully parsed an interrrupt-map translation; copy 
->>> new
->>>
->> The detecting of the ATA disks works with this patch! Well done! 
->> Thanks a lot!
->>
-> Sorry, I have read the patch more carefully and I have seen that it is 
-> an analyse patch. It's not a fix. I was too quick with my joy.
->
-> - Christian
-OK, perhaps a fix after all.
+  Hi,
 
-if (imap == NULL && intc) // If the return value isn't NULL then there 
-isn't an interrupt-map. That means, this part was successfully (&&) and 
-"intc" will evaluated (Testing of interrupt-controller). OK, perhaps it 
-is a fix after all.
+> "Virtual" doesn't seem like quite the right descriptor here.  That's
+> one use case, but I think the parameter should describe the actual
+> *effect*, not the use case, e.g., something related to the delay after
+> the attention button.
 
-Output:
+Well, it's enabled only for virtual pcie ports because I could hardly
+enable it by default otherwise.
 
-[    0.072659] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072682] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072701] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072720] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072741] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072762] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072784] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072805] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072824] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072843] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072861] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.072929] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073167] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073191] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073211] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073232] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073252] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073272] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073292] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073319] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073339] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073371] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073392] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073412] OF: /pxp@0,e0000000 interrupt-map failed, using 
-interrupt-controller
-[    0.073426] PCI: Probing PCI hardware done
+There is another delay in remove_board(), mst suggests removing that
+too, and that surely would be something we can't do on physical
+hardware ...
+
+So I'd prefer to keep the name.
+
+> If it's practical, I think it would be nicer to have a sysfs attribute
+> instead of a kernel boot parameter.  Then we wouldn't have to reboot
+> to change this, and it could be generalized to allow arbitrary delays,
+> i.e., no delay, 5 seconds, or whatever the admin decides.
+
+It's a module parameter so will show up in
+/sys/module/pciehp/parameters/ and it is writable by root.
+
+[ will address the other things mentioned in v2 ].
+
+take care,
+  Gerd
+
