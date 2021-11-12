@@ -2,105 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB08C44DEC9
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 01:00:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A12344DF35
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 01:37:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234443AbhKLADn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Nov 2021 19:03:43 -0500
-Received: from mail-pj1-f41.google.com ([209.85.216.41]:33387 "EHLO
-        mail-pj1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234146AbhKLADm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 19:03:42 -0500
-Received: by mail-pj1-f41.google.com with SMTP id w33-20020a17090a6ba400b001a722a06212so5012519pjj.0;
-        Thu, 11 Nov 2021 16:00:53 -0800 (PST)
+        id S234513AbhKLAj7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Nov 2021 19:39:59 -0500
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:39779 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233817AbhKLAj7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Nov 2021 19:39:59 -0500
+Received: by mail-ed1-f46.google.com with SMTP id r12so30832613edt.6;
+        Thu, 11 Nov 2021 16:37:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XGHZ26K2ZnTdtM9Vpe3wWAEf07Z04ZfkU4P5oNhWnoo=;
-        b=jyq7etcftIf8kruXN+h36v3bnLYdnBrAm21geAcwt9/3udAN8loL8Xkb8Zj1CNOS3V
-         mw+vP9AzpCvPyGv12VyZxuXeBWTlQCeKPIuI671x3FTTshZpSnz3mWS6fAsO3iqFLWBw
-         OljWDvb+aRBJPh7S3Y+31QtSd8kfCKdZfX8fc8tM7juuOAxUrigPUaVTLWPLNDby89la
-         GOzt3zWFckuQpNnw71AXqJR40cJNUxcWhmZ3aQtCbnhyhnfszv20aIHxDMnO9mZJe21f
-         8biwfwtrhcBjEazG6asjtocIFKpfrT4FJnGrDgt+mhqcb6bNIfad0UdPWdM3gn8Jor+c
-         cuug==
-X-Gm-Message-State: AOAM532moL9aeNe6NIa97sme8IR1/Pvqbr0haMPyHq1Sgt+jkXOSNRK4
-        g94M+oBkGrJnhimfB8ETevc=
-X-Google-Smtp-Source: ABdhPJzcd9mdPRgXPHgt4Ji2bt4ozpzXtBL50vxOCskZCd67vSddBhyBW9fvPEpZflJXmLhznAK+gg==
-X-Received: by 2002:a17:903:4053:b0:143:6d84:984c with SMTP id n19-20020a170903405300b001436d84984cmr3449505pla.37.1636675252787;
-        Thu, 11 Nov 2021 16:00:52 -0800 (PST)
+        bh=R1tUfUsW9yxfyVmNsT2W35onz8Yo0bOTMnqcIJ1wUhc=;
+        b=upgF0pyrzwrtnYQhtNoozMC5Pjm1NmKLw6E/irGmVtifAzM/vTD7I5XdS4qhMU57o3
+         j+Aoeti8yydKQwbJVTkorjr4C9Omt1wFSPL9ztBrxw73YPGGEXJwBmDhkRbc//XM7Kjo
+         gs/hZpHwCpQXtMEryTkzZ1QJxtF6AvM3r6ZlWX/RFyfnA5qRw3+ySr1dxm0rh5wUdh4R
+         oplB7bsBX6I13f87VjT5l+Kt+QSzCzcrwx91e0rF8UrTz0s0ythOcZIkW3heFwk4yBYV
+         Vok4Rmn259yh4OZeVkNdKYKUBruEUViwOSI74rG8j95zwME7f6CigVRRQ5KquipYUUi5
+         xJWQ==
+X-Gm-Message-State: AOAM530jXCwJwstOB/X053nzdrjznijzpF8YFnKUOKpWJ/Lm4QypdAI1
+        zgScrmsIQEkXJXzwH1A1z6c=
+X-Google-Smtp-Source: ABdhPJwPnxK6FC4BIfe/lkhIF828ja5edt407OTCenhE6XVpenIhvw+b0OdNEv6X6UuF4fuzGcyDiw==
+X-Received: by 2002:a50:f08b:: with SMTP id v11mr15560307edl.96.1636677427655;
+        Thu, 11 Nov 2021 16:37:07 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id z30sm4042467pfg.30.2021.11.11.16.00.48
+        by smtp.gmail.com with ESMTPSA id h6sm794056edz.40.2021.11.11.16.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 16:00:52 -0800 (PST)
-Date:   Fri, 12 Nov 2021 01:00:43 +0100
+        Thu, 11 Nov 2021 16:37:07 -0800 (PST)
+Date:   Fri, 12 Nov 2021 01:37:05 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     linux-pci@vger.kernel.org, mst@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pciehp: fast unplug for virtual machines
-Message-ID: <YY2uqx4LC2J5F/w9@rocinante>
-References: <20211111090225.946381-1-kraxel@redhat.com>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lorenzo.pieralisi@arm.com, robh+dt@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        gustavo.pimentel@synopsys.com, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com
+Subject: Re: [PATCHv5 6/6] PCI: layerscape: Add power management support
+Message-ID: <YY23MeAa0U/r4lbO@rocinante>
+References: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
+ <20210407030948.3845-7-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211111090225.946381-1-kraxel@redhat.com>
+In-Reply-To: <20210407030948.3845-7-Zhiqiang.Hou@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Gerd,
+Hi,
 
-> The PCIe specification asks the OS to wait five seconds after the
-> attention button has been pressed before actually un-plugging the
-> device.  This gives the operator the chance to cancel the operation
-> by pressing the attention button again within those five seconds.
-> 
-> For physical hardware this makes sense.  Picking the wrong button
-> by accident can easily happen and it can be corrected that way.
-> 
-> For virtual hardware the benefits are questionable.  Typically
-> users find the five second delay annoying.
-> 
-> This patch adds the fast_virtual_unplug module parameter to the
-> pciehp driver.  When enabled (which is the default) the linux
-> kernel will simply skip the delay for virtual pcie ports, which
-> reduces the total time for the unplug operation from 6-7 seconds
-> to 1-2 seconds.
-> 
-> Virtual pcie ports are identified by PCI ID.  For now the qemu
-> pcie root ports are detected, other hardware can be added easily.
+[...]
+> +/* PF Message Command Register */
+> +#define LS_PCIE_PF_MCR		0x2c
+> +#define PF_MCR_PTOMR		BIT(0)
+> +#define PF_MCR_EXL2S		BIT(1)
+> +
+> +/* LS1021A PEXn PM Write Control Register */
+> +#define SCFG_PEXPMWRCR(idx)	(0x5c + (idx) * 0x64)
+> +#define PMXMTTURNOFF		BIT(31)
+> +#define SCFG_PEXSFTRSTCR	0x190
+> +#define PEXSR(idx)		BIT(idx)
+> +
+> +/* LS1043A PEX PME control register */
+> +#define SCFG_PEXPMECR		0x144
+> +#define PEXPME(idx)		BIT(31 - (idx) * 4)
+> +
+> +/* LS1043A PEX LUT debug register */
+> +#define LS_PCIE_LDBG	0x7fc
+> +#define LDBG_SR		BIT(30)
+> +#define LDBG_WE		BIT(31)
 
-Bjorn asked to correct the PCIe references, whereas I would ask you to
-change "linux" to "Linux", "qemu" to "QEMU", and generally capitalise
-things where and as needed throughout.
+A small nitpick: a consistent capitalisation of "control" and "debug", and
+"register" in the comments above.
 
->   * @request_result: result of last user request submitted to the IRQ thread
->   * @requester: wait queue to wake up on completion of user request,
->   *	used for synchronous slot enable/disable request via sysfs
-> + * @is_virtual: virtual machine pcie port.
+[...]
+> +static void ls_pcie_lut_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +{
+> +	if (pcie->big_endian)
+> +		return iowrite32be(val, pcie->lut_base + off);
+> +
+> +	return iowrite32(val, pcie->lut_base + off);
+> +
+> +}
 
-It would be "PCIe" here too for consistency.
+Surplus newline above after the return statement.
 
-> +	if (dev->port->vendor == PCI_VENDOR_ID_REDHAT &&
-> +	    dev->port->device == 0x000c)
-> +		/* qemu pcie root port */
-> +		ctrl->is_virtual = true;
+[...]
+> +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +{
+> +	if (pcie->big_endian)
+> +		return iowrite32be(val, pcie->pf_base + off);
+> +
+> +	return iowrite32(val, pcie->pf_base + off);
+> +
+> +}
 
-I would personally move the comment above the if-statement as it looks
-a little awkward added like that.  You could also add a little bit more
-detail why this is set for QEMU and what it's needed, etc.  Also, if you
-don't mind, let's change it to "QEMU" in the comment for consistency.
+Surplus newline above after the return statement.
 
-> -		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
-> +		if (ctrl->is_virtual && fast_virtual_unplug) {
-> +			schedule_delayed_work(&ctrl->button_work, 1);
-> +		} else {
-> +			schedule_delayed_work(&ctrl->button_work, 5 * HZ);
-> +		}
+[...]
+> +static void ls_pcie_send_turnoff_msg(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_PTOMR;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_PTOMR), 100, 10000);
+> +	if (ret)
+> +		dev_info(pcie->pci->dev, "poll turn off message timeout\n");
+> +}
 
-The brackets are fine but technically not needed above as per the kernel
-coding style.
+Would this dev_info() be more of a warning or an error?  A timeout is
+potentially a problem, correct?
+
+[...]
+> +static void ls1021a_pcie_send_turnoff_msg(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	if (!pcie->scfg) {
+> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> +		return;
+> +	}
+> +
+> +	/* Send Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val |= PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +
+> +	mdelay(10);
+
+We often, customary, document why a particular mdelay() is needed.  You
+also did this in other part of the code, so perhaps adding a note here (and
+everywhere else) would be nice for keeping the consistency.
+
+[...]
+> +static void ls_pcie_exit_from_l2(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_EXL2S;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_EXL2S), 100, 10000);
+> +	if (ret)
+> +		dev_info(pcie->pci->dev, "poll exit L2 state timeout\n");
+> +}
+
+Similarly to the question above: is this timeout something more severe and
+would warrant a warning or an error here instead?
+
+[...]
+> +static void ls1021a_pcie_exit_from_l2(struct ls_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val |= PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val &= ~PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +
+> +	mdelay(1);
+
+Aside of documenting this mdelay() here, if possible, would 1 be enough?
+Everywhere else you seem to use 10 consistently.
+
+> +
+> +	ls_pcie_retrain_link(pcie);
+> +}
+> +static void ls1043a_pcie_exit_from_l2(struct ls_pcie *pcie)
+
+Missing newline above to separate code blocks.
+
+> +{
+> +	u32 val;
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_WE;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_SR;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_SR;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_WE;
+> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	mdelay(1);
+
+See comment above.
+
+[...]
+> +static int ls1021a_pcie_pm_init(struct ls_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->pci->dev;
+> +	u32 index[2];
+> +	int ret;
+> +
+> +	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						     "fsl,pcie-scfg");
+> +	if (IS_ERR(pcie->scfg)) {
+> +		ret = PTR_ERR(pcie->scfg);
+> +		dev_err(dev, "No syscfg phandle specified\n");
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg",
+> +					 index, 2);
+> +	if (ret) {
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	pcie->index = index[1];
+> +
+> +	return 0;
+> +}
+
+Just an idea: what about using goto for error handling?
+
+(...)
+	if (IS_ERR(pcie->scfg)) {
+		ret = PTR_ERR(pcie->scfg);
+		dev_err(dev, "No syscfg phandle specified\n");
+		goto error;
+	}
+
+	ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg",
+					 index, 2);
+	if (ret)
+		goto error;
+
+	pcie->index = index[1];
+
+	return 0;
+
+error:
+	pcie->scfg = NULL;
+	return ret;
+}
+
+Not necessarily better or worse compared with your version, so it would be
+more of a matter of personal preference here.
+
+> +static int ls_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (!ls_pcie_pm_check(pcie))
+> +		return 0;
+> +
+> +	pcie->drvdata->pm_ops->send_turn_off_message(pcie);
+> +
+> +	/* 10ms timeout to check L2 ready */
+> +	ret = readl_poll_timeout(pci->dbi_base + PCIE_PORT_DEBUG0,
+> +				 val, LS_PCIE_IS_L2(val), 100, 10000);
+> +	if (ret) {
+> +		dev_err(dev, "PCIe link enter L2 timeout! ltssm = 0x%x\n", val);
+> +		return ret;
+> +	}
+
+The error message above could be improve to be more like an error stating
+that something failed and such, as currently it looks like a debug message,
+unless it was intended as such.
+
+[...]
+> +static int ls_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +	struct dw_pcie *pci = pcie->pci;
+> +	int ret;
+> +
+> +	if (!ls_pcie_pm_check(pcie))
+> +		return 0;
+> +
+> +	ls_pcie_set_dstate(pcie, 0x0);
+> +
+> +	pcie->drvdata->pm_ops->exit_from_l2(pcie);
+> +
+> +	dw_pcie_setup_rc(&pci->pp);
+> +
+> +	/* delay 10 ms to access EP */
+> +	mdelay(10);
+> +
+> +	ret = ls_pcie_host_init(&pci->pp);
+> +	if (ret) {
+> +		dev_err(dev, "ls_pcie_host_init failed! ret = 0x%x\n", ret);
+> +		return ret;
+> +	}
+
+A small nitpick: error messages that are directed at end users should have
+a little more context than just the function name.
 
 	Krzysztof
