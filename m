@@ -2,99 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AD1544E460
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 11:09:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B197A44E466
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 11:11:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234926AbhKLKM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 05:12:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49770 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234911AbhKLKMZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 05:12:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636711774;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GpT2YYqG29Jg+Uxsx2CrH+IJrT+DNnW+q/s5xR+/nO8=;
-        b=chVFhlOEM41HG0kWG6eKDS1G72jpwZJGtAftfbZNpxxeOmEjE0H84QQ4X1POkl6SfrCGth
-        P78XMJRGbmDbZ0HRojHfKOMgx+VbAsZQDp9SSOCbh03igWTQuepyuPl7bsvuE/U5jVXQjS
-        +2AKDDz6Byud0DTUP0EheioJPkl2Zrs=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-lTdKiSrnMwOl9o3P6CynYw-1; Fri, 12 Nov 2021 05:09:33 -0500
-X-MC-Unique: lTdKiSrnMwOl9o3P6CynYw-1
-Received: by mail-ed1-f71.google.com with SMTP id w12-20020a056402268c00b003e2ab5a3370so7870449edd.0
-        for <linux-pci@vger.kernel.org>; Fri, 12 Nov 2021 02:09:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GpT2YYqG29Jg+Uxsx2CrH+IJrT+DNnW+q/s5xR+/nO8=;
-        b=0Z+LwNc9hRSEG41pEb3uPWElal02b1CfDFgilHRKO0yghWteu13t6AfbK/2f8eKSoh
-         F53JRIf48MiU0Zm5RO+WJp7V3BGZ60bNWzAw0x5EXDzv8d40Wf8ZLUrCBc44gpNfjVzG
-         EGch+EAyQotQ9V//BLQdtI7LCfx/uzZ6KcbpOb0qHlWXUbCeShNwgDR2W16y2DWE/tfW
-         AAhKKcF4IDPOrA7KS+2+a1IobaKrHoeWwtOvoF1vZmC+wnpiqvp/AyhZwK1RJfRBw29Q
-         TNCb1e77xTGt1nLMI+eyOoF1lnB59dF2qPoMSTI1x0y8h+AsKMUI/nWKEiRbyQBQ5wsl
-         +SUQ==
-X-Gm-Message-State: AOAM531orspbQMCL0Ylyg31gEiqmJmU5KwFgu1pcUu7ajwpf0WY+qWi4
-        dKFZoWpf2FZjmuxLP//cjf7x8llbgGVBvDzR9F+dgsptIBP0Mo4PkeHWYbRxPtmmptcczX+D49Q
-        zzMuwjHaXQ0F6FixqMicU
-X-Received: by 2002:a17:907:869e:: with SMTP id qa30mr17383099ejc.356.1636711772008;
-        Fri, 12 Nov 2021 02:09:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwIZCg8KaRPHh5tzSrNXTPjAyfDOZFhQ7POM6eHpQhHd+dmXCDKysUay1ewM1e6Mb40QOB2uQ==
-X-Received: by 2002:a17:907:869e:: with SMTP id qa30mr17383074ejc.356.1636711771835;
-        Fri, 12 Nov 2021 02:09:31 -0800 (PST)
-Received: from redhat.com ([2a03:c5c0:207e:ac28:448d:9310:293c:3a8b])
-        by smtp.gmail.com with ESMTPSA id ho30sm2409248ejc.30.2021.11.12.02.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 02:09:31 -0800 (PST)
-Date:   Fri, 12 Nov 2021 05:09:27 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pciehp: fast unplug for virtual machines
-Message-ID: <20211112050508-mutt-send-email-mst@kernel.org>
-References: <20211111090225.946381-1-kraxel@redhat.com>
- <20211111115931-mutt-send-email-mst@kernel.org>
- <20211112095629.uoxfuhsvhicsdxgd@sirius.home.kraxel.org>
+        id S234761AbhKLKOL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 05:14:11 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:9000 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234675AbhKLKOL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 05:14:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636711877;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=c/w//Jy8upsvLKCKiTQkDPpyd0llZ8311WfptTuwJY4=;
+    b=bjf85880GPFKvnJAJDo8AIU/JkCyA9x7gXHv87mHC4DDlQm10GGa2Np7/jQ9BReIg5
+    oaE8Rhe7qF+85NBkpGy6pshgW081nKcUtk1dLNWoDj/oquVYEd8pVtwpnAMZ7EDJd2nf
+    aNDFmsbILTFg/OqRHAX5KlgHN87f6nNDnu0r3PkgBd8pAC9RkNPWi8Fv67wn+topo6Kq
+    Ml0x8InkBlUzhiEXYnBCWNwHMFWdK/jvO3S9Q/MmkgnnVxdHsTNhWht7N0y44zTwPOjz
+    CtxvXW/0cKO8Y05G3X+C2BfSpeulvBQn9zLbsLvGlgfriYG0pfWcslvjU0VV5r/eOP4/
+    JUQg==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgGI+hs5tAvjn+88DfkT7ELd1ArCg=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPV6:2a02:8109:89c0:ebfc:e52a:1ea0:c574:c7ab]
+    by smtp.strato.de (RZmta 47.34.5 AUTH)
+    with ESMTPSA id N03801xACABFSXR
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Fri, 12 Nov 2021 11:11:15 +0100 (CET)
+Message-ID: <1e2dc4c6-f286-f16b-4546-5cf2b1ca3123@xenosoft.de>
+Date:   Fri, 12 Nov 2021 11:11:15 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211112095629.uoxfuhsvhicsdxgd@sirius.home.kraxel.org>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.0
+Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
+ pci-v5.16 updates
+Content-Language: de-DE
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
+        Matthew Leaman <matthew@a-eon.biz>,
+        Darren Stevens <darren@stevens-zone.net>,
+        mad skateman <madskateman@gmail.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
+        damien.lemoal@opensource.wdc.com, kw@linux.com,
+        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
+        Olof Johansson <olof@lixom.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <3eedbe78-1fbd-4763-a7f3-ac5665e76a4a@xenosoft.de>
+ <15731ad7-83ff-c7ef-e4a1-8b11814572c2@xenosoft.de>
+ <17e37b22-5839-0e3a-0dbf-9c676adb0dec@xenosoft.de>
+ <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
+ <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
+ <87mtma8udh.wl-maz@kernel.org>
+ <c95c9b58-347e-d159-3a82-bf5f9dbf91ac@xenosoft.de>
+In-Reply-To: <c95c9b58-347e-d159-3a82-bf5f9dbf91ac@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 12, 2021 at 10:56:29AM +0100, Gerd Hoffmann wrote:
->   Hi,
-> 
-> > > This patch adds the fast_virtual_unplug module parameter to the
-> > > pciehp driver.  When enabled (which is the default) the linux
-> > > kernel will simply skip the delay for virtual pcie ports, which
-> > > reduces the total time for the unplug operation from 6-7 seconds
-> > > to 1-2 seconds.
-> > 
-> > BTW how come it's still taking seconds, not milliseconds?
-> 
-> I've tackled the 5 seconds only, biggest chunk and easy target because
-> the only reason to have that is to allow operators press the attention
-> button again to cancel, so the risk to break something here is rather
-> low.
-> 
-> There are some more wait times elsewhere, to give the hardware the
-> time needed when powering up/down slots, which sum up to roughly one
-> second, and the time the driver needs to shutdown the device goes on
-> top of that (typically not much).
-> 
-> take care,
->   Gerd
+On 12 November 2021 at 10:40 am, Christian Zigotzky wrote:
+> On 11 November 2021 at 06:39 pm, Marc Zyngier wrote:
+>> On Wed, 10 Nov 2021 18:07:24 +0000,
+>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+>>> On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
+>>>> Hello,
+>>>>
+>>>> The Nemo board [1] doesn't recognize any ATA disks with the
+>>> pci-v5.16 updates [2].
+>>>> Error messages:
+>>>>
+>>>> ata4.00: gc timeout cmd 0xec
+>>>> ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>> ata1.00: gc timeout cmd 0xec
+>>>> ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>> ata3.00: gc timeout cmd 0xec
+>>>> ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>>
+>>>> I was able to revert the new pci-v5.16 updates [2]. After a new
+>>> compiling, the kernel recognize all ATA disks correctly.
+>>>> Could you please check the pci-v5.16 updates [2]?
+>>>>
+>>>> Please find attached the kernel config.
+>>>>
+>>>> Thanks,
+>>>> Christian
+>>>>
+>>>> [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
+>>>> [2]
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4 
+>>>
+>>>
+>>> Hi All,
+>>>
+>>> Many thanks for your nice responses.
+>>>
+>>> I bisected today [1]. 0412841812265734c306ba5ef8088bcb64d5d3bd
+>>> (of/irq: Allow matching of an interrupt-map local to an interrupt
+>>> controller) [2] is the first bad commit.
+>> Can you please give the following hack a go and post the result
+>> (including the full dmesg)?
+>>
+>> Thanks,
+>>
+>>     M.
+>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>> index 32be5a03951f..8cf0cc9b7caf 100644
+>> --- a/drivers/of/irq.c
+>> +++ b/drivers/of/irq.c
+>> @@ -156,14 +156,15 @@ int of_irq_parse_raw(const __be32 *addr, struct 
+>> of_phandle_args *out_irq)
+>>         /* Now start the actual "proper" walk of the interrupt tree */
+>>       while (ipar != NULL) {
+>> +        bool intc = of_property_read_bool(ipar, 
+>> "interrupt-controller");
+>> +
+>>           /*
+>>            * Now check if cursor is an interrupt-controller and
+>>            * if it is then we are done, unless there is an
+>>            * interrupt-map which takes precedence.
+>>            */
+>>           imap = of_get_property(ipar, "interrupt-map", &imaplen);
+>> -        if (imap == NULL &&
+>> -            of_property_read_bool(ipar, "interrupt-controller")) {
+>> +        if (imap == NULL && intc) {
+>>               pr_debug(" -> got it !\n");
+>>               return 0;
+>>           }
+>> @@ -244,8 +245,14 @@ int of_irq_parse_raw(const __be32 *addr, struct 
+>> of_phandle_args *out_irq)
+>>                 pr_debug(" -> imaplen=%d\n", imaplen);
+>>           }
+>> -        if (!match)
+>> +        if (!match) {
+>> +            if (intc) {
+>> +                pr_info("%pOF interrupt-map failed, using 
+>> interrupt-controller\n", ipar);
+>> +                return 0;
+>> +            }
+>> +
+>>               goto fail;
+>> +        }
+>>             /*
+>>            * Successfully parsed an interrrupt-map translation; copy new
+>>
+> The detecting of the ATA disks works with this patch! Well done! 
+> Thanks a lot!
+>
+Sorry, I have read the patch more carefully and I have seen that it is 
+an analyse patch. It's not a fix. I was too quick with my joy.
 
-Probably also unnecessary for a virtual bridge. We'll need to fix these
-up if we want native hotplug to be useful for workloads like kata -
-these expect hotplug time in the milliseconds.
-
--- 
-MST
-
+- Christian
