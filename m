@@ -2,143 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5300D44EC7C
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 19:14:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBA1644EC92
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 19:25:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235342AbhKLSRc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 13:17:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        id S235347AbhKLS2O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 13:28:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbhKLSRc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 13:17:32 -0500
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4452CC061766;
-        Fri, 12 Nov 2021 10:14:41 -0800 (PST)
-Received: by mail-oi1-x22c.google.com with SMTP id s139so19308678oie.13;
-        Fri, 12 Nov 2021 10:14:41 -0800 (PST)
+        with ESMTP id S229892AbhKLS2O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 13:28:14 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC4EC061766;
+        Fri, 12 Nov 2021 10:25:22 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id bk14so19449137oib.7;
+        Fri, 12 Nov 2021 10:25:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k6vBm0W1nCavg671b89cqG0/+cyc/856RwfodNvKark=;
-        b=EFsVedSxze2GLqkpELn8gzq1wlGyO5X3+YZOL9gki6dxSFJ8QnLKzQXqHoBIfO4Dez
-         Cjj4sLtnP4ikXkHeXeTP05BB3wJq84rXRP/XTiSw+ALB/a7SOrbQGvhM3zjKl7jBpS+K
-         b1+63Z1vGywdP8E2QQ+hhzqPidVjZrtq35sXTC7Ti1ZbslcOPUcrGnnqKs47uzmPtefl
-         77Lrgg+fq/ZW5wd72QtLBD0kNdU42hHnHBzZFf1BqXaMWkSG8OpTE+HHPMG69tGttNax
-         N35hGF6lPEbOVvv4o91+jkyndeYGD0sgHbFNmGHQpEdeTPpHzApIZGSd5M/fT9W9pN7a
-         Mdag==
+         :cc;
+        bh=sa0jBA3wpvakD7viFQ8ToAySOGD0WqRf4octMEbtih0=;
+        b=kjSyXDtPvbAlccyL7gHYWEEa6qBv/xCU7kJ4Vv0o73t3sx8ohpKywpXvTiDcvx5Ouw
+         Rd1O3C5asrJ2KJT+98X41ucEGMX9o1+PxoBIpwrikCIooZNkQwo5SMCuN5ao2zywCM7N
+         KGoV+KD21T2A1GH0a4BxgvDDtPkpmjhpMs1oBURvtRMTy0ssMSFrbQYr3pvYFlwbUoK+
+         3dZ0C7C9YqmTaxwUDP+mCIkLEa2/SV4XvGT0RSsxqxofCSAmuhoU3U7/KsEQdTpuRHOF
+         Fx672TWwXdqprhXnVps7RLUPQd4KBVA6UBVc/B8N3U6MOJ7teH7wxz5RhV9J6LcFW6HX
+         FVqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k6vBm0W1nCavg671b89cqG0/+cyc/856RwfodNvKark=;
-        b=AnpUy0I4pO2OfRhxdrDi4inx/KCR8DaYFVXDIJj8eU2PV2xvRV2iGjGUlIWCoPEEGc
-         SNiEnSPuSVCWRUd6zxOleRvOFXxrPC2jjKMEPCQIpnEyt2UROmb9dOGAgTkf/uOyS1d0
-         iavb4telL0RDI32a+NrNV5DjSvZiArXqVUz0dZQUKuvvfh2wqskpIF6SN8HtmIqAq7Ni
-         ErZcEvNHSkCogfbH9Kqxepei0wCC1EsGHYpnRyOHt+tFtficiTiiJVqAEFV3/a4//0IJ
-         hvoI62Rs4ol8pQHgEF2pN+qTsSFBb6EZR7uIwJ6WT3fbvt0nss9ZavR7ne2XLV+U6ome
-         J8ZQ==
-X-Gm-Message-State: AOAM5308DfzCmu5Oot7xK+3a/qxCfLATM5ehbV6NtPtzXBbEhPMnQyro
-        NVON+xyT9wVFuahleaT6fbygnODMNZtBjfmuLqA7i/FZzF7jcg==
-X-Google-Smtp-Source: ABdhPJzyIERufOnKcfzbsPKtHYY5Hl5iMmrWKTmNMJ8ZnVuPuma6j1kMcLbX33TCunwGhhBFqS8jFHBQiJvnK5xfQAs=
-X-Received: by 2002:aca:d608:: with SMTP id n8mr14975866oig.89.1636740880654;
- Fri, 12 Nov 2021 10:14:40 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=sa0jBA3wpvakD7viFQ8ToAySOGD0WqRf4octMEbtih0=;
+        b=zLS54n9hGbo2BBgJ4Cww3QHK0yl7frND8+rlAeRK1Bk+UVqVpgknLO+34qJtlUrH0D
+         3+0Bi3z3+5UPXe6rNCQSwyF5Fxhh5RdxbbnTP2C/4QkBPj5942PyYa9nAILs/n4K0vg4
+         An3sJolFkWmrlpECLyS9xPXs3UP5K+LLXUqETHUvlBmvYAxZsL/1IzQ4pzwvGCKICFiL
+         RGcZvz/PiqV8+QCxAZPRGymnWmUTjR2bOviBv5sB/YkWeqXZN8+h0WN4z13Z5GybRaRe
+         zFpwANTzNvgoQvnHWQpiFNn1gBwJWoaVyMyoOktdixH2lX6SVudgGmVlSCchX6vboQ52
+         /DAw==
+X-Gm-Message-State: AOAM532ixGZdrD93Je4H5wbZC6cTu1cukDcWRQy90D66mvoUW+PuzWSx
+        CcDLfTmLY6GIIj/JA2C3YP3nJ2eQKcXqlzLwYSs=
+X-Google-Smtp-Source: ABdhPJx+m1O3ZfKBTW5vP7GJjq+TTjrXGPwdtitmdl2plac2LYfIgefS40oau5QEX2T48Fa4J+BgWorNYStSrHLKTaU=
+X-Received: by 2002:a54:4707:: with SMTP id k7mr27139073oik.163.1636741522427;
+ Fri, 12 Nov 2021 10:25:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110221456.11977-1-jim2101024@gmail.com> <20211110221456.11977-5-jim2101024@gmail.com>
- <YY2sVNEcVmQinbj8@rocinante>
-In-Reply-To: <YY2sVNEcVmQinbj8@rocinante>
+References: <20211110221456.11977-4-jim2101024@gmail.com> <20211111221714.GA1354700@bhelgaas>
+In-Reply-To: <20211111221714.GA1354700@bhelgaas>
 From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Fri, 12 Nov 2021 13:14:28 -0500
-Message-ID: <CANCKTBuor2xa9zCr1zrVPnFrfWe83qL8kR-pihRYn06rRw4xKw@mail.gmail.com>
-Subject: Re: [PATCH v8 4/8] PCI/portdrv: Create pcie_is_port_dev() func from
- existing code
-To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Date:   Fri, 12 Nov 2021 13:25:11 -0500
+Message-ID: <CANCKTBun0MCiH5QWBMQqP+pxAN=+dX=ziB1ga39kdr5CmK=Gfw@mail.gmail.com>
+Subject: Re: [PATCH v8 3/8] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 6:50 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> wr=
-ote:
+On Thu, Nov 11, 2021 at 5:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Hi Jim,
+> On Wed, Nov 10, 2021 at 05:14:43PM -0500, Jim Quinlan wrote:
+> > Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
+> > allows optional regulators to be attached and controlled by the PCIe RC
+> > driver.  That being said, this driver searches in the DT subnode (the EP
+> > node, eg pci-ep@0,0) for the regulator property.
+> >
+> > The use of a regulator property in the pcie EP subnode such as
+> > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+> > file at
+> >
+> > https://github.com/devicetree-org/dt-schema/pull/63
 >
-> [...]
-> > +bool pcie_is_port_dev(struct pci_dev *dev)
-> > +{
-> > +     int type;
-> > +
-> > +     if (!dev)
-> > +             return false;
-> > +
-> > +     type =3D pci_pcie_type(dev);
-> > +
-> > +     return pci_is_pcie(dev) &&
-> > +             ((type =3D=3D PCI_EXP_TYPE_ROOT_PORT) ||
-> > +              (type =3D=3D PCI_EXP_TYPE_UPSTREAM) ||
-> > +              (type =3D=3D PCI_EXP_TYPE_DOWNSTREAM) ||
-> > +              (type =3D=3D PCI_EXP_TYPE_RC_EC));
-> > +}
-> > +EXPORT_SYMBOL_GPL(pcie_is_port_dev);
+> Can you use a lore URL here?  github.com is sort of outside the Linux
+> ecosystem and this link is more likely to remain useful if it's to
+> something in kernel.org.
+Hi Bjorn,
+I'm afraid I don't know how or if  this github repo transfers
+information to Linux.  RobH, what should I be doing here?
 >
-> It would be really nice to document what the above function does (not tha=
-t
-> some of the logic has been extracted from other function).  You know, for
-> the future generations of kernel hackers.
-
-Hi Krzysztof and others,
-
-I gave this a second look and realized that the portdrv's
-pci_device_id list for the probe is doing filtering that is not
-included in the function.  So perhaps the code must be the following
-in order to live up to its name:
-
-static inline bool pci_is_port_dev(struct pci_dev *dev)
-{
-    int type, class;
-
-    if (!dev || !pci_is_pcie(dev))
-        return false;
-
-    class =3D dev->class;
-
-    /* This must be kept in sync with port_pci_ids[] of protdev_pci.c */
-    if (!(class =3D=3D ((PCI_CLASS_BRIDGE_PCI << 8) | 0x00) ||
-          class =3D=3D ((PCI_CLASS_BRIDGE_PCI << 8) | 0x01) ||
-          class =3D=3D ((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00)))
-        return false;
-
-    type =3D pci_pcie_type(dev);
-
-    return ((type =3D=3D PCI_EXP_TYPE_ROOT_PORT) ||
-        (type =3D=3D PCI_EXP_TYPE_UPSTREAM) ||
-        (type =3D=3D PCI_EXP_TYPE_DOWNSTREAM) ||
-        (type =3D=3D PCI_EXP_TYPE_RC_EC));
-}
-
-Kind of large for an inline, plus the code must be kept in sync with
-the device list.   Suggestions?
-
-As for a description, my understanding is that the code identifies a
-pci_dev that is directly under a host bridge device.  I'm not really
-sure about the PCI_CLASS_SYSTEM_RCEC though.
-
-Regards,
+> The subject says what this patch does, but the commit log doesn't.
+> It's OK to repeat the subject in the commit log if that's what makes
+> the most sense.
+Got it.
+Thanks,
 Jim Quinlan
 Broadcom STB
-
->
->         Krzysztof
