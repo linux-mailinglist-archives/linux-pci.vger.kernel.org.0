@@ -2,112 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C655444EED2
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 22:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B59E44EF3C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 23:24:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231401AbhKLVts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 16:49:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37970 "EHLO mail.kernel.org"
+        id S233706AbhKLW10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 17:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230388AbhKLVtr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Nov 2021 16:49:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D24D61073;
-        Fri, 12 Nov 2021 21:46:56 +0000 (UTC)
+        id S229634AbhKLW10 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Nov 2021 17:27:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4CE4060698;
+        Fri, 12 Nov 2021 22:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636753616;
-        bh=MWc2jsxYe1597deB9/lwgCuOii0kKitFDvDvQtQbw84=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h1nUnBWqcNX9zFj8jIcKElqsmNLYZjSnxzWJv1o0BjeEi9IWlLyVv6SKagMskjMMP
-         8D4V8a5eeA/hERUz/hqQNhrWxFQrCvGAGAPHzywbam9TPIXl5dPOjtMsik+yO3abVI
-         f1MYXb3V3D/K3ytcb3IEd+yyVounGnpJZTl1TbKXb0x3NvQOVp6eOkvnzPkQxLjvnS
-         rwfYXiuJDzTE6lbUZWrhZFdb92MSYU4olpyKqOI3+AcPXf1arU8/xsisWsL1lvt69J
-         v7Wza+oqqePP7Jk9mCe0iXRBMTuZtVTEjk1fmJYS7tr1vdNlOM/ETrZhdCFzuarAVl
-         vovvZQSn17lNA==
-Received: by mail-ed1-f43.google.com with SMTP id x15so43123808edv.1;
-        Fri, 12 Nov 2021 13:46:56 -0800 (PST)
-X-Gm-Message-State: AOAM533snG5FawFe2bPfdanxLI8uO1UamGPm78nfQh4ziJ6mAX2mGppn
-        TABZKEKE5D7jF5aBO8J1snK3i6D1Ob7w2Qagpg==
-X-Google-Smtp-Source: ABdhPJz2sj87J9vsUh6n5hpj2yVJsnrONJYB2w5h4ZSZ55MSqVKR22BptNf8vVI7snv/2CopLAoeMaTCrMtL3IfAGRI=
-X-Received: by 2002:aa7:d997:: with SMTP id u23mr17964290eds.164.1636753614437;
- Fri, 12 Nov 2021 13:46:54 -0800 (PST)
+        s=k20201202; t=1636755874;
+        bh=GhiB9LBULf1zzu4IPDLyIVCpbPIJfv9XB+BrQ+LQCro=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sa5Q56eWquI//iC2dXBi/O89s44QfCwOJwpFisqc1imOTdAjAC5dnpfoBayUndLFd
+         zBc0/W+1PCHDS4spGbo/qMg80J8fwNs2NuBUv+2IMLvxHn/y1Gv6GxOXGLU3TSZbEz
+         XNYFGtlmldenYo8N8siMq7TxpMuUKm0vyKliaRz+DUx4zi7E/OW+0K3WGnGlluSzkZ
+         UiahWzUN2aCgI5u37n2aSG2bBhhQpHgwzPgQljDAAvd6cKyJZLVrr9dd204M+dIunV
+         3Jzz63yJ7KUol3f1T3SyOEdJAeZwe6/wkXQd7Grr7Fmt0Yzl5v8spTqhoS4JgpACHF
+         Y/o1qOydalcPg==
+Date:   Fri, 12 Nov 2021 16:24:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     nicolarevelant44@gmail.com
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        sound-open-firmware@alsa-project.org, linux-pci@vger.kernel.org
+Subject: Re: [Bug 214995] New: Sof audio didn't recognize Intel Smart Sound
+ (SST) speakers, microphone and headphone jack
+Message-ID: <20211112222432.GA1423380@bhelgaas>
 MIME-Version: 1.0
-References: <CANCKTBun0MCiH5QWBMQqP+pxAN=+dX=ziB1ga39kdr5CmK=Gfw@mail.gmail.com>
- <20211112202051.GA1414166@bhelgaas>
-In-Reply-To: <20211112202051.GA1414166@bhelgaas>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 12 Nov 2021 15:46:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLhpmrmw=z=3JCVgBTJr531eqMhACht_j16Czv6Q+CQLA@mail.gmail.com>
-Message-ID: <CAL_JsqLhpmrmw=z=3JCVgBTJr531eqMhACht_j16Czv6Q+CQLA@mail.gmail.com>
-Subject: Re: [PATCH v8 3/8] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-214995-41252@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 12, 2021 at 2:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Nov 12, 2021 at 01:25:11PM -0500, Jim Quinlan wrote:
-> > On Thu, Nov 11, 2021 at 5:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Wed, Nov 10, 2021 at 05:14:43PM -0500, Jim Quinlan wrote:
-> > > > Similar to the regulator bindings found in "rockchip-pcie-host.txt", this
-> > > > allows optional regulators to be attached and controlled by the PCIe RC
-> > > > driver.  That being said, this driver searches in the DT subnode (the EP
-> > > > node, eg pci-ep@0,0) for the regulator property.
-> > > >
-> > > > The use of a regulator property in the pcie EP subnode such as
-> > > > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> > > > file at
-> > > >
-> > > > https://github.com/devicetree-org/dt-schema/pull/63
-> > >
-> > > Can you use a lore URL here?  github.com is sort of outside the Linux
-> > > ecosystem and this link is more likely to remain useful if it's to
-> > > something in kernel.org.
-> > Hi Bjorn,
-> > I'm afraid I don't know how or if  this github repo transfers
-> > information to Linux.  RobH, what should I be doing here?
->
-> Does this change get posted to any mailing lists where people can
-> review it?
+On Fri, Nov 12, 2021 at 09:11:45AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=214995
+> 
+>             Bug ID: 214995
+>            Summary: Sof audio didn't recognize Intel Smart Sound (SST)
+>                     speakers, microphone and headphone jack
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 5.11.0-40-generic
+>           Hardware: Intel
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: high
+>           Priority: P1
+>          Component: PCI
+>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>           Reporter: nicolarevelant44@gmail.com
+>         Regression: No
+> 
+> Created attachment 299549
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=299549&action=edit
+> The output of dmesg and lspci -v
+> 
+> I have a Huawei Matebook D15 notebook with Intel Smart Sound Technology as
+> sound card. SST includes speakers, microphone and headphone jack so none of the
+> 3 work. Bluetooth and USB headphones work. I have already tried to change
+> "options snd_intel_dspcfg dsp_driver" and reload alsa (alsa reload) for each
+> value but nothing (only small changes in dmesg).
+> The first lines of dmesg_dump.txt are errors because of the 'alsa reload'
+> command. The log is verbose because I add some options from this web page:
+> https://thesofproject.github.io/latest/getting_started/intel_debug/suggestions.html
+> 
+> My sound card is listed in PCI so the last lines of dmesg_dump.txt are the
+> output of the 'lspci -v' command
+> 
+> aplay -l shows only 3 HDMI outputs with sof-hda-dsp
 
-devicetree-spec is where I direct folks to. It's not in lore, but we
-could add it I guess. But I take PRs too. There's so few other
-contributions I'm looking to make it as painless as possible for
-contributors. I'd be happy for more reviewers other than me, but I
-don't think where changes are posted is the problem there. :( Someone
-should review all the crap Python code I write too.
+Hi Nicola,
 
-Generally the flow is I redirect things submitted to the kernel to
-dtschema instead. So that review happens first at least.
+Thanks very much for the report and sorry for the problem.
 
-> Or would people have to watch the github devicetree-org
-> repo if they wanted to do that?  I was assuming this pci-bus.yaml
-> change was something that would eventually end up in the Linux kernel
-> source tree, but dt-scheme doesn't seem to be based on Linus' tree, so
-> I don't know if there's a connection.
+It's possible there's a power management issue, e.g., reads to the
+00:1f.3 device are timing out because the device is in D3cold, but I
+can't tell from the part of the dmesg log you attached.  In that case,
+reads will generally return ~0 (0xffffffff), but it looks like some
+reads *do* return valid data, e.g.,
 
-It's more the other way around. The 'rule' is common bindings go in
-dtschema and device specific bindings in the kernel tree. Reality is
-some common bindings are in the kernel tree primarily because I want
-everything in dtschema dual licensed and relicensing is a pain. That's
-why we have pci.txt and pci-bus.yaml still.
+  sof-audio-pci 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if info 0x040100
+  sof-audio-pci 0000:00:1f.3: found ML capability at 0xc00
 
-Rob
+I don't see an obvious PCI core connection here, so I cc'd the SOF
+maintainers in case they have any insight.
+
+  - It looks like you're running v5.11.0.  Can you reproduce the same
+    problem on a current kernel, e.g., v5.15?  It's possible the
+    problem has been fixed since v5.11.
+
+  - Did this ever work?  In other words, is this a regression?  If so,
+    what's the newest kernel you know of that *did* work?  In the
+    worst case, we could bisect to identify a change that broke it.
+
+  - It might be useful if you could attach the complete dmesg log and
+    output of "sudo lspci -vv" to the bugzilla.
+
+Bjorn
