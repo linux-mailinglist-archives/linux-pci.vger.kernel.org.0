@@ -2,23 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8F444EF59
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 23:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B028344EF66
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 23:35:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236035AbhKLWiC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 17:38:02 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:57290 "EHLO inva020.nxp.com"
+        id S236055AbhKLWiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 17:38:11 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:57338 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235979AbhKLWh4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Nov 2021 17:37:56 -0500
+        id S235990AbhKLWh5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Nov 2021 17:37:57 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 575EE1A2086;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 80E751A2080;
         Fri, 12 Nov 2021 23:35:04 +0100 (CET)
 Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E9AD91A207F;
-        Fri, 12 Nov 2021 23:35:03 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4361E1A2077;
+        Fri, 12 Nov 2021 23:35:04 +0100 (CET)
 Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.142])
-        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id 5B4E940BCF;
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id B178840BF1;
         Fri, 12 Nov 2021 15:35:03 -0700 (MST)
 From:   Li Yang <leoyang.li@nxp.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -26,10 +26,10 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         Shawn Guo <shawnguo@kernel.org>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Biwen Li <biwen.li@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Subject: [PATCH 05/11] arm64: dts: ls1028a: add flextimer based pwm nodes
-Date:   Fri, 12 Nov 2021 16:34:51 -0600
-Message-Id: <20211112223457.10599-6-leoyang.li@nxp.com>
+        Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH 06/11] arm64: dts: ls1028a-rdb: reorder nodes to be alphabetic
+Date:   Fri, 12 Nov 2021 16:34:52 -0600
+Message-Id: <20211112223457.10599-7-leoyang.li@nxp.com>
 X-Mailer: git-send-email 2.25.1.377.g2d2118b
 In-Reply-To: <20211112223457.10599-1-leoyang.li@nxp.com>
 References: <20211112223457.10599-1-leoyang.li@nxp.com>
@@ -40,129 +40,124 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+Keep these overrides node in alphabetic order in order to prevent
+unnoticed duplicated nodes.
 
-Add pwm nodes using flextimer controller.
-
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
 Signed-off-by: Li Yang <leoyang.li@nxp.com>
 ---
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 95 +++++++++++++++++++
- 1 file changed, 95 insertions(+)
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 92 +++++++++----------
+ 1 file changed, 46 insertions(+), 46 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 51d165440ce9..bdd36a2dcb98 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -66,6 +66,13 @@ CPU_PW20: cpu-pw20 {
- 		};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index 49ec2821d15f..81d0f3ac27ec 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -102,6 +102,52 @@ can-transceiver {
  	};
+ };
  
-+	rtc_clk: rtc-clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "rtc_clk";
++&duart0 {
++	status = "okay";
++};
++
++&duart1 {
++	status = "okay";
++};
++
++&enetc_mdio_pf3 {
++	/* VSC8514 QSGMII quad PHY */
++	qsgmii_phy0: ethernet-phy@10 {
++		reg = <0x10>;
 +	};
 +
- 	sysclk: sysclk {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -1148,6 +1155,94 @@ ierb@1f0800000 {
- 			reg = <0x01 0xf0800000 0x0 0x10000>;
- 		};
++	qsgmii_phy1: ethernet-phy@11 {
++		reg = <0x11>;
++	};
++
++	qsgmii_phy2: ethernet-phy@12 {
++		reg = <0x12>;
++	};
++
++	qsgmii_phy3: ethernet-phy@13 {
++		reg = <0x13>;
++	};
++};
++
++&enetc_port0 {
++	phy-handle = <&sgmii_phy0>;
++	phy-connection-type = "sgmii";
++	managed = "in-band-status";
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		sgmii_phy0: ethernet-phy@2 {
++			reg = <0x2>;
++		};
++	};
++};
++
++&enetc_port2 {
++	status = "okay";
++};
++
+ &esdhc {
+ 	sd-uhs-sdr104;
+ 	sd-uhs-sdr50;
+@@ -192,52 +238,6 @@ rtc@51 {
+ 	};
+ };
  
-+		pwm0: pwm@2800000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@2810000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2810000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@2820000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2820000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@2830000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2830000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@2840000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2840000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@2850000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2850000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@2860000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2860000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
-+		pwm7: pwm@2870000 {
-+			compatible = "fsl,vf610-ftm-pwm";
-+			#pwm-cells = <3>;
-+			reg = <0x0 0x2870000 0x0 0x10000>;
-+			clock-names = "ftm_sys", "ftm_ext",
-+				      "ftm_fix", "ftm_cnt_clk_en";
-+			clocks = <&clockgen 4 1>, <&clockgen 4 1>,
-+				 <&rtc_clk>, <&clockgen 4 1>;
-+			status = "disabled";
-+		};
-+
- 		rcpm: power-controller@1e34040 {
- 			compatible = "fsl,ls1028a-rcpm", "fsl,qoriq-rcpm-2.1+";
- 			reg = <0x0 0x1e34040 0x0 0x1c>;
+-&duart0 {
+-	status = "okay";
+-};
+-
+-&duart1 {
+-	status = "okay";
+-};
+-
+-&enetc_mdio_pf3 {
+-	/* VSC8514 QSGMII quad PHY */
+-	qsgmii_phy0: ethernet-phy@10 {
+-		reg = <0x10>;
+-	};
+-
+-	qsgmii_phy1: ethernet-phy@11 {
+-		reg = <0x11>;
+-	};
+-
+-	qsgmii_phy2: ethernet-phy@12 {
+-		reg = <0x12>;
+-	};
+-
+-	qsgmii_phy3: ethernet-phy@13 {
+-		reg = <0x13>;
+-	};
+-};
+-
+-&enetc_port0 {
+-	phy-handle = <&sgmii_phy0>;
+-	phy-connection-type = "sgmii";
+-	managed = "in-band-status";
+-	status = "okay";
+-
+-	mdio {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		sgmii_phy0: ethernet-phy@2 {
+-			reg = <0x2>;
+-		};
+-	};
+-};
+-
+-&enetc_port2 {
+-	status = "okay";
+-};
+-
+ &mscc_felix {
+ 	status = "okay";
+ };
 -- 
 2.25.1
 
