@@ -2,99 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01CAE44EBF3
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 18:25:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5300D44EC7C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 19:14:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbhKLR1z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 12:27:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235458AbhKLR1y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Nov 2021 12:27:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E51F560FE3;
-        Fri, 12 Nov 2021 17:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636737902;
-        bh=SoXgrHClC00+SbuZ7huPC/6CYTPZ/iRLlOyzpg2cyIg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nnh7Jaq9sGLzhdBpmd9emvUxgXc2d/crA9SGXwx5KmukEGlmtnGW+8quYpaYRv4sg
-         vcnYOFdM+UTaLHcV0dMX1ZLs9atfIaGeNYEbtuKKsmDVcMi4kTSW3yEStiBWlLnXjS
-         W87z/PpsfapyOUcE5HXF2h0BqRi7+HmLNVp08cKTYF3YmlJ65acUc1507XQeWjXFTu
-         04u0k3+ZaHvFaFLfkdb/TL/i65+1ixqaDM5YBT3VPnm0JaMaioK7fbcxRCY6ptkUpA
-         3oBwVppZOOnda4VPEu37HrN7/WcaRrh1/cDQV9V+6atnbd3Nm6fZbMAIpZ5G0kjXfx
-         xWggYY83qm3Dw==
-Date:   Fri, 12 Nov 2021 18:24:58 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH dt + pci 1/2] dt-bindings: Add
- 'slot-power-limit-milliwatt' PCIe port property
-Message-ID: <20211112182458.51745d4d@thinkpad>
-In-Reply-To: <20211112171249.46xmj5zo3svm4qn2@pali>
-References: <20211031150706.27873-1-kabel@kernel.org>
-        <YY6HYM4T+A+tm85P@robh.at.kernel.org>
-        <20211112153208.s4nuckz7js4fipce@pali>
-        <CAL_JsqJ+FYFFcDEm-_Ow=9TERhhEMVKm3OCHyDdGo02onK7dmg@mail.gmail.com>
-        <20211112171249.46xmj5zo3svm4qn2@pali>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S235342AbhKLSRc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 13:17:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229975AbhKLSRc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 13:17:32 -0500
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4452CC061766;
+        Fri, 12 Nov 2021 10:14:41 -0800 (PST)
+Received: by mail-oi1-x22c.google.com with SMTP id s139so19308678oie.13;
+        Fri, 12 Nov 2021 10:14:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k6vBm0W1nCavg671b89cqG0/+cyc/856RwfodNvKark=;
+        b=EFsVedSxze2GLqkpELn8gzq1wlGyO5X3+YZOL9gki6dxSFJ8QnLKzQXqHoBIfO4Dez
+         Cjj4sLtnP4ikXkHeXeTP05BB3wJq84rXRP/XTiSw+ALB/a7SOrbQGvhM3zjKl7jBpS+K
+         b1+63Z1vGywdP8E2QQ+hhzqPidVjZrtq35sXTC7Ti1ZbslcOPUcrGnnqKs47uzmPtefl
+         77Lrgg+fq/ZW5wd72QtLBD0kNdU42hHnHBzZFf1BqXaMWkSG8OpTE+HHPMG69tGttNax
+         N35hGF6lPEbOVvv4o91+jkyndeYGD0sgHbFNmGHQpEdeTPpHzApIZGSd5M/fT9W9pN7a
+         Mdag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k6vBm0W1nCavg671b89cqG0/+cyc/856RwfodNvKark=;
+        b=AnpUy0I4pO2OfRhxdrDi4inx/KCR8DaYFVXDIJj8eU2PV2xvRV2iGjGUlIWCoPEEGc
+         SNiEnSPuSVCWRUd6zxOleRvOFXxrPC2jjKMEPCQIpnEyt2UROmb9dOGAgTkf/uOyS1d0
+         iavb4telL0RDI32a+NrNV5DjSvZiArXqVUz0dZQUKuvvfh2wqskpIF6SN8HtmIqAq7Ni
+         ErZcEvNHSkCogfbH9Kqxepei0wCC1EsGHYpnRyOHt+tFtficiTiiJVqAEFV3/a4//0IJ
+         hvoI62Rs4ol8pQHgEF2pN+qTsSFBb6EZR7uIwJ6WT3fbvt0nss9ZavR7ne2XLV+U6ome
+         J8ZQ==
+X-Gm-Message-State: AOAM5308DfzCmu5Oot7xK+3a/qxCfLATM5ehbV6NtPtzXBbEhPMnQyro
+        NVON+xyT9wVFuahleaT6fbygnODMNZtBjfmuLqA7i/FZzF7jcg==
+X-Google-Smtp-Source: ABdhPJzyIERufOnKcfzbsPKtHYY5Hl5iMmrWKTmNMJ8ZnVuPuma6j1kMcLbX33TCunwGhhBFqS8jFHBQiJvnK5xfQAs=
+X-Received: by 2002:aca:d608:: with SMTP id n8mr14975866oig.89.1636740880654;
+ Fri, 12 Nov 2021 10:14:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20211110221456.11977-1-jim2101024@gmail.com> <20211110221456.11977-5-jim2101024@gmail.com>
+ <YY2sVNEcVmQinbj8@rocinante>
+In-Reply-To: <YY2sVNEcVmQinbj8@rocinante>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Fri, 12 Nov 2021 13:14:28 -0500
+Message-ID: <CANCKTBuor2xa9zCr1zrVPnFrfWe83qL8kR-pihRYn06rRw4xKw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/8] PCI/portdrv: Create pcie_is_port_dev() func from
+ existing code
+To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 12 Nov 2021 18:12:49 +0100
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
+On Thu, Nov 11, 2021 at 6:50 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> wr=
+ote:
+>
+> Hi Jim,
+>
+> [...]
+> > +bool pcie_is_port_dev(struct pci_dev *dev)
+> > +{
+> > +     int type;
+> > +
+> > +     if (!dev)
+> > +             return false;
+> > +
+> > +     type =3D pci_pcie_type(dev);
+> > +
+> > +     return pci_is_pcie(dev) &&
+> > +             ((type =3D=3D PCI_EXP_TYPE_ROOT_PORT) ||
+> > +              (type =3D=3D PCI_EXP_TYPE_UPSTREAM) ||
+> > +              (type =3D=3D PCI_EXP_TYPE_DOWNSTREAM) ||
+> > +              (type =3D=3D PCI_EXP_TYPE_RC_EC));
+> > +}
+> > +EXPORT_SYMBOL_GPL(pcie_is_port_dev);
+>
+> It would be really nice to document what the above function does (not tha=
+t
+> some of the logic has been extracted from other function).  You know, for
+> the future generations of kernel hackers.
 
-> On Friday 12 November 2021 10:30:01 Rob Herring wrote:
-> > On Fri, Nov 12, 2021 at 9:32 AM Pali Roh=C3=A1r <pali@kernel.org> wrote=
-: =20
-> > >
-> > > On Friday 12 November 2021 09:25:20 Rob Herring wrote: =20
-> > > > On Sun, Oct 31, 2021 at 04:07:05PM +0100, Marek Beh=C3=BAn wrote: =
-=20
-> > > > > +   If present, this property specifies slot power limit in milli=
-watts. Host
-> > > > > +   drivers can parse this property and use it for programming Ro=
-ot Port or host
-> > > > > +   bridge, or for composing and sending PCIe Set_Slot_Power_Limi=
-t messages
-> > > > > +   through the Root Port or host bridge when transitioning PCIe =
-link from a
-> > > > > +   non-DL_Up Status to a DL_Up Status. =20
-> > > >
-> > > > If your slots are behind a switch, then doesn't this apply to any b=
-ridge
-> > > > port? =20
-> > >
-> > > The main issue here is that pci.txt (and also scheme on github) is
-> > > mixing host bridge and root ports into one node. This new property
-> > > should be defined at the same place where is supports-clkreq or
-> > > reset-gpios, as it belongs to them. =20
-> >=20
-> > Unfortunately that ship has already sailed. So we can split things up,
-> > but we still have to allow for the existing cases. I'm happy to take
-> > changes splitting up pci-bus.yaml to 2 or 3 schemas (host bridge,
-> > root-port, and PCI(e)-PCI(e) bridge?). =20
->=20
-> Well, no problem. I just need to know how you want to handle backward
-> compatibility definitions in YAML. Because it is possible via versioning
-> (like in JSONSchema-like structures in OpenAPI versioning) or via
-> deprecated attributes or via defining two schemas (one strict and one
-> loose)... There are lot of options and I saw all these options in
-> different projects which use YAML or JSON.
->=20
-> I did not know about github repository, I always looked at schemas and
-> definitions only in linux kernel tree and external files which were
-> mentioned in kernel tree.
->=20
-> Something I wrote in my RFC email, but I wrote this email patch...
-> https://lore.kernel.org/linux-pci/20211023144252.z7ou2l2tvm6cvtf7@pali/
+Hi Krzysztof and others,
 
-New kernel should always work with old device-tree. But does also new
-device-tree need to work with old kernels?
+I gave this a second look and realized that the portdrv's
+pci_device_id list for the probe is doing filtering that is not
+included in the function.  So perhaps the code must be the following
+in order to live up to its name:
 
-Marek
+static inline bool pci_is_port_dev(struct pci_dev *dev)
+{
+    int type, class;
+
+    if (!dev || !pci_is_pcie(dev))
+        return false;
+
+    class =3D dev->class;
+
+    /* This must be kept in sync with port_pci_ids[] of protdev_pci.c */
+    if (!(class =3D=3D ((PCI_CLASS_BRIDGE_PCI << 8) | 0x00) ||
+          class =3D=3D ((PCI_CLASS_BRIDGE_PCI << 8) | 0x01) ||
+          class =3D=3D ((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00)))
+        return false;
+
+    type =3D pci_pcie_type(dev);
+
+    return ((type =3D=3D PCI_EXP_TYPE_ROOT_PORT) ||
+        (type =3D=3D PCI_EXP_TYPE_UPSTREAM) ||
+        (type =3D=3D PCI_EXP_TYPE_DOWNSTREAM) ||
+        (type =3D=3D PCI_EXP_TYPE_RC_EC));
+}
+
+Kind of large for an inline, plus the code must be kept in sync with
+the device list.   Suggestions?
+
+As for a description, my understanding is that the code identifies a
+pci_dev that is directly under a host bridge device.  I'm not really
+sure about the PCI_CLASS_SYSTEM_RCEC though.
+
+Regards,
+Jim Quinlan
+Broadcom STB
+
+>
+>         Krzysztof
