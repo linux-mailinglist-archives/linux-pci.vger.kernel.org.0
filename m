@@ -2,128 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F41A44E7F9
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 14:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0822144E851
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Nov 2021 15:15:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232299AbhKLN5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Nov 2021 08:57:02 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:42164 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231553AbhKLN5B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 08:57:01 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0UwCALcf_1636725247;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0UwCALcf_1636725247)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Nov 2021 21:54:08 +0800
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        xueshuai@linux.alibaba.com, zhangliguang@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com
-Subject: [RFC PATCH] ACPI: Move sdei_init and ghes_init ahead
-Date:   Fri, 12 Nov 2021 21:54:05 +0800
-Message-Id: <20211112135405.19318-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        id S234942AbhKLOSO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Nov 2021 09:18:14 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:11891 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234199AbhKLOSO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Nov 2021 09:18:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1636726520;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=bbeSZdJ7oNvfy+c2Ht92U/rHy+iyYkKun0+wmsZHsiA=;
+    b=RJUKiGF0vEJda834NM39DMCpGAv6s9OBXad81e+PEiU8Oo8M+cpE1ZJ+PHeOYH5VnG
+    0la+7VQP1KAbM1+mjZ0aLfQXBwWVfXu2Lv61MxY6ysAvWleIy7YCu7GirV6ChDgmJ8N+
+    1rZjONSkI+VRHw9aN/QA+m2McvMnCLR/i7xzjRaWL2spMPPyTTZQCqJSyN2/q/mRNIZM
+    PUJgHzM7y/zNVAFxCeY1iTy7A55wodrPS3ziOj7+bwJvIaqY8BwVlThwIBPomuju7G/l
+    Lfuallvc/X01d5yAj9RQYcIm0Pe8aQA8/cIBhps9+mFbmW9rUl4LSuJBFTruZDfCVCVV
+    4b6g==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPhWL7n8tmuiQcLNMDVOHy3jXR+anA=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPV6:2a02:8109:89c0:ebfc:5949:d784:5886:5d22]
+    by smtp.strato.de (RZmta 47.34.5 AUTH)
+    with ESMTPSA id N03801xACEFITmk
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Fri, 12 Nov 2021 15:15:18 +0100 (CET)
+Message-ID: <a02c370d-1356-daac-25c4-02d222c91364@xenosoft.de>
+Date:   Fri, 12 Nov 2021 15:15:18 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.0
+Subject: Re: [PASEMI] Nemo board doesn't recognize any ATA disks with the
+ pci-v5.16 updates
+Content-Language: de-DE
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "bhelgaas@google.com >> Bjorn Helgaas" <bhelgaas@google.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        lorenzo.pieralisi@arm.com, Rob Herring <robh@kernel.org>,
+        Matthew Leaman <matthew@a-eon.biz>,
+        Darren Stevens <darren@stevens-zone.net>,
+        mad skateman <madskateman@gmail.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        Christian Zigotzky <info@xenosoft.de>, axboe@kernel.dk,
+        damien.lemoal@opensource.wdc.com, kw@linux.com,
+        Arnd Bergmann <arnd@arndb.de>, robert@swiecki.net,
+        Olof Johansson <olof@lixom.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <3eedbe78-1fbd-4763-a7f3-ac5665e76a4a@xenosoft.de>
+ <15731ad7-83ff-c7ef-e4a1-8b11814572c2@xenosoft.de>
+ <17e37b22-5839-0e3a-0dbf-9c676adb0dec@xenosoft.de>
+ <3b210c92-4be6-ce49-7512-bb194475eeab@xenosoft.de>
+ <78308692-02e6-9544-4035-3171a8e1e6d4@xenosoft.de>
+ <87mtma8udh.wl-maz@kernel.org>
+ <c95c9b58-347e-d159-3a82-bf5f9dbf91ac@xenosoft.de>
+ <87lf1t8pab.wl-maz@kernel.org>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+In-Reply-To: <87lf1t8pab.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On an ACPI system, ACPI is initialised very early from a
-subsys_initcall(), while SDEI is not ready until a subsys_initcall().
-More seriously, the kernel is able to handle and report errors until the
-GHES is initialised by device_initcall().
+On 12 November 2021 at 02:41 pm, Marc Zyngier wrote:
+> On Fri, 12 Nov 2021 09:40:30 +0000,
+> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+>> On 11 November 2021 at 06:39 pm, Marc Zyngier wrote:
+>>> On Wed, 10 Nov 2021 18:07:24 +0000,
+>>> Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+>>>> On 09 November 2021 at 03:45 pm, Christian Zigotzky wrote:
+>>>>> Hello,
+>>>>>
+>>>>> The Nemo board [1] doesn't recognize any ATA disks with the
+>>>> pci-v5.16 updates [2].
+>>>>> Error messages:
+>>>>>
+>>>>> ata4.00: gc timeout cmd 0xec
+>>>>> ata4.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>>> ata1.00: gc timeout cmd 0xec
+>>>>> ata1.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>>> ata3.00: gc timeout cmd 0xec
+>>>>> ata3.00: failed to IDENTIFY (I/O error, error_mask=0x4)
+>>>>>
+>>>>> I was able to revert the new pci-v5.16 updates [2]. After a new
+>>>> compiling, the kernel recognize all ATA disks correctly.
+>>>>> Could you please check the pci-v5.16 updates [2]?
+>>>>>
+>>>>> Please find attached the kernel config.
+>>>>>
+>>>>> Thanks,
+>>>>> Christian
+>>>>>
+>>>>> [1] https://en.wikipedia.org/wiki/AmigaOne_X1000
+>>>>> [2]
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0c5c62ddf88c34bc83b66e4ac9beb2bb0e1887d4
+>>>>
+>>>> Hi All,
+>>>>
+>>>> Many thanks for your nice responses.
+>>>>
+>>>> I bisected today [1]. 0412841812265734c306ba5ef8088bcb64d5d3bd
+>>>> (of/irq: Allow matching of an interrupt-map local to an interrupt
+>>>> controller) [2] is the first bad commit.
+>>> Can you please give the following hack a go and post the result
+>>> (including the full dmesg)?
+>>>
+>>> Thanks,
+>>>
+>>> 	M.
+>>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>>> index 32be5a03951f..8cf0cc9b7caf 100644
+>>> --- a/drivers/of/irq.c
+>>> +++ b/drivers/of/irq.c
+>>> @@ -156,14 +156,15 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+>>>      	/* Now start the actual "proper" walk of the interrupt tree */
+>>>    	while (ipar != NULL) {
+>>> +		bool intc = of_property_read_bool(ipar, "interrupt-controller");
+>>> +
+>>>    		/*
+>>>    		 * Now check if cursor is an interrupt-controller and
+>>>    		 * if it is then we are done, unless there is an
+>>>    		 * interrupt-map which takes precedence.
+>>>    		 */
+>>>    		imap = of_get_property(ipar, "interrupt-map", &imaplen);
+>>> -		if (imap == NULL &&
+>>> -		    of_property_read_bool(ipar, "interrupt-controller")) {
+>>> +		if (imap == NULL && intc) {
+>>>    			pr_debug(" -> got it !\n");
+>>>    			return 0;
+>>>    		}
+>>> @@ -244,8 +245,14 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+>>>      			pr_debug(" -> imaplen=%d\n", imaplen);
+>>>    		}
+>>> -		if (!match)
+>>> +		if (!match) {
+>>> +			if (intc) {
+>>> +				pr_info("%pOF interrupt-map failed, using interrupt-controller\n", ipar);
+>>> +				return 0;
+>>> +			}
+>>> +
+>>>    			goto fail;
+>>> +		}
+>>>      		/*
+>>>    		 * Successfully parsed an interrrupt-map translation; copy new
+>>>
+>> The detecting of the ATA disks works with this patch! Well done!
+>> Thanks a lot!
+> Thanks for testing it. I'll turn that into a proper patch.
+>
+> 	M.
+>
+Could you please explain your patch? I am not a developer. I work for 
+the A-EON Linux FLS.
 
-Consequently, when an error occurs during the kernel booting, the
-phyiscal sdei dispatcher in firmware fails to dispatch error events. All
-errors that occurred before GHES initialization are missed and there is
-no chance to report and find them again.
-
-In this patch, move sdei_init and ghes_init as far ahead as possible,
-right after acpi_hest_init().
-
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- drivers/acpi/apei/ghes.c    | 3 +--
- drivers/acpi/pci_root.c     | 2 ++
- drivers/firmware/arm_sdei.c | 9 +--------
- include/acpi/apei.h         | 2 ++
- 4 files changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index c60961d31213..bf0177f44dfd 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -1452,7 +1452,7 @@ static struct platform_driver ghes_platform_driver = {
- 	.remove		= ghes_remove,
- };
- 
--static int __init ghes_init(void)
-+int __init ghes_init(void)
- {
- 	int rc;
- 
-@@ -1494,4 +1494,3 @@ static int __init ghes_init(void)
- err:
- 	return rc;
- }
--device_initcall(ghes_init);
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 81cc18f39cc8..d9bbb6b8340e 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -977,6 +977,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- void __init acpi_pci_root_init(void)
- {
- 	acpi_hest_init();
-+	sdei_init();
-+	ghes_init();
- 	if (acpi_pci_disabled)
- 		return;
- 
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index 198151ca471d..604063d6f542 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -1089,7 +1089,7 @@ static bool __init sdei_present_acpi(void)
- 	return true;
- }
- 
--static int __init sdei_init(void)
-+int __init sdei_init(void)
- {
- 	struct platform_device *pdev;
- 	int ret;
-@@ -1110,13 +1110,6 @@ static int __init sdei_init(void)
- 	return ret;
- }
- 
--/*
-- * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-- * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-- * by device_initcall(). We want to be called in the middle.
-- */
--subsys_initcall_sync(sdei_init);
--
- int sdei_event_handler(struct pt_regs *regs,
- 		       struct sdei_registered_event *arg)
- {
-diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-index 680f80960c3d..5e6187ca5621 100644
---- a/include/acpi/apei.h
-+++ b/include/acpi/apei.h
-@@ -33,6 +33,8 @@ extern bool ghes_disable;
- 
- #ifdef CONFIG_ACPI_APEI
- void __init acpi_hest_init(void);
-+int __init sdei_init(void);
-+int __init ghes_init(void);
- #else
- static inline void acpi_hest_init(void) { return; }
- #endif
--- 
-2.20.1.9.gb50a0d7
-
+- Christian
