@@ -2,85 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E9244F66C
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Nov 2021 05:52:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C061E44F70A
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Nov 2021 07:22:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231895AbhKNE1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 Nov 2021 23:27:15 -0500
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:36802 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230441AbhKNE1O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 Nov 2021 23:27:14 -0500
-Received: by mail-ed1-f52.google.com with SMTP id o8so55351901edc.3;
-        Sat, 13 Nov 2021 20:24:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7rlmuPdMhnVMN0EKqqXPhzO5LaYq5KpGdQ9/F9AAtXk=;
-        b=rWIIQI0vG/Y+cmgaabdAov5JxhBqJGPQhIbzpqzvRznRiyqTm0em7vQA2NMSRapWNw
-         /8ssbLWxuSYahWJfAz8b8NsTbus3DMjOvo21PNnsLnLPJfxXldt3sapdymTgHT8LZfVa
-         CqFWqNdO46tMcGqmL0m/w5JNlRl57LvN78WMiAwvGHlu0LIfo6BrvRRYjmqyqhpJ9/mS
-         qebW2T9oU9whhCfEq1rGlX3rJzZRv90PU6euDAzSHhUuX0cR6wsgwM1CHG2wZreKgdbl
-         EDj6BoYD0VKAqtagN7vsseUPpnRamBuxAKocHzBpjrbpt5Iy0T9AtIwCP0htUCbPcifI
-         FKog==
-X-Gm-Message-State: AOAM530GbFCO/VOE3ENuqUljgVLyrfnW/OxAP31SSjhqV2P0mnFllFbF
-        Xkue6aozZuqMb1e7Bji8GYU=
-X-Google-Smtp-Source: ABdhPJxHbWT7hGwsTqiFFmicf/NGrbVWQCk+BHGG5FWyoaakDMeNU0yM7d/Ws4csvPpIcXr7q1UsVQ==
-X-Received: by 2002:a17:906:4c95:: with SMTP id q21mr36043847eju.485.1636863860300;
-        Sat, 13 Nov 2021 20:24:20 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id g21sm5495555edb.89.2021.11.13.20.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Nov 2021 20:24:19 -0800 (PST)
-Date:   Sun, 14 Nov 2021 05:24:18 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI/P2PDMA: Save a few cycles in 'pci_alloc_p2pmem()'
-Message-ID: <YZCPcusrcCIJvYdn@rocinante>
-References: <ab80164f4d5b32f9e6240aa4863c3a147ff9c89f.1635974126.git.christophe.jaillet@wanadoo.fr>
+        id S231656AbhKNGZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Nov 2021 01:25:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230193AbhKNGZ3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Nov 2021 01:25:29 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44168C061570
+        for <linux-pci@vger.kernel.org>; Sat, 13 Nov 2021 22:22:36 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 96C04100EF4D1;
+        Sun, 14 Nov 2021 07:22:31 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 55E2BF5A09; Sun, 14 Nov 2021 07:22:31 +0100 (CET)
+Date:   Sun, 14 Nov 2021 07:22:31 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kw@linux.com
+Subject: Re: [PATCH v1 1/1] PCI: probe: Use pci_find_vsec_capability() when
+ looking for TBT devices
+Message-ID: <20211114062231.GA10937@wunner.de>
+References: <20211109151604.17086-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab80164f4d5b32f9e6240aa4863c3a147ff9c89f.1635974126.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20211109151604.17086-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christophe,
+On Tue, Nov 09, 2021 at 05:16:04PM +0200, Andy Shevchenko wrote:
+> -	while ((vsec = pci_find_next_ext_capability(dev, vsec,
+> -						    PCI_EXT_CAP_ID_VNDR))) {
+> -		pci_read_config_dword(dev, vsec + PCI_VNDR_HEADER, &header);
+> -
+> -		/* Is the device part of a Thunderbolt controller? */
 
-Thank you for another nice patch!
+Could you preserve that code comment please so that an uninitiated
+reader knows what the is_thunderbolt flag is about?
 
-> Use 'percpu_ref_tryget_live_rcu()' instead of 'percpu_ref_tryget_live()' to
-> save a few cycles when it is known that the rcu lock is already
-> taken/released.
+Thanks!
 
-If possible, we should explain why are we using this new API, especially
-since percpu_ref_tryget_live_rcu() is a relatively new addition [1], so
-it's obvious that its users already manage the RCU lock accordingly, and
-that there is no need to hold the RCU read lock again (which can in turn
-lead to performance improvement), which is what the percpu_ref_tryget_live()
-does internally.
+Lukas
 
-What do you think?
-
-1. 3b13c168186c ("percpu_ref: percpu_ref_tryget_live() version holding RCU")
-
->  	if (!ret)
->  		goto out;
->  
-> -	if (unlikely(!percpu_ref_tryget_live(ref))) {
-> +	if (unlikely(!percpu_ref_tryget_live_rcu(ref))) {
->  		gen_pool_free(p2pdma->pool, (unsigned long) ret, size);
->  		ret = NULL;
->  		goto out;
-
-Thank you!
-
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-	Krzysztof
+> -		if (dev->vendor == PCI_VENDOR_ID_INTEL &&
+> -		    PCI_VNDR_HEADER_ID(header) == PCI_VSEC_ID_INTEL_TBT) {
+> -			dev->is_thunderbolt = 1;
+> -			return;
+> -		}
+> -	}
+> +	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_TBT);
+> +	if (vsec)
+> +		dev->is_thunderbolt = 1;
