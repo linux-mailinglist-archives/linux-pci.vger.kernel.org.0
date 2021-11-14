@@ -2,137 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E28A644F7E4
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Nov 2021 13:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE5D144F917
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Nov 2021 17:40:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233868AbhKNMgu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Nov 2021 07:36:50 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:56248 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230267AbhKNMgn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Nov 2021 07:36:43 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0UwT3AKi_1636893226;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0UwT3AKi_1636893226)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 14 Nov 2021 20:33:47 +0800
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        xueshuai@linux.alibaba.com, zhangliguang@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com
-Subject: [RFC PATCH v2] ACPI: Move sdei_init and ghes_init ahead
-Date:   Sun, 14 Nov 2021 20:33:38 +0800
-Message-Id: <20211114123338.92428-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+        id S231888AbhKNQm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Nov 2021 11:42:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229725AbhKNQm4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Nov 2021 11:42:56 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24002C061746
+        for <linux-pci@vger.kernel.org>; Sun, 14 Nov 2021 08:39:59 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 44AB4100D940E;
+        Sun, 14 Nov 2021 17:39:58 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 160972B0CF5; Sun, 14 Nov 2021 17:39:58 +0100 (CET)
+Date:   Sun, 14 Nov 2021 17:39:58 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     linux-pci@vger.kernel.org, mst@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pciehp: fast unplug for virtual machines
+Message-ID: <20211114163958.GA7211@wunner.de>
+References: <20211111090225.946381-1-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211111090225.946381-1-kraxel@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On an ACPI system, ACPI is initialised very early from a
-subsys_initcall(), while SDEI is not ready until a subsys_initcall().
-More seriously, the kernel is able to handle and report errors until the
-GHES is initialised by device_initcall().
+On Thu, Nov 11, 2021 at 10:02:24AM +0100, Gerd Hoffmann wrote:
+> The PCIe specification asks the OS to wait five seconds after the
 
-Consequently, when an error occurs during the kernel booting, the
-phyiscal sdei dispatcher in firmware fails to dispatch error events. All
-errors that occurred before GHES initialization are missed and there is
-no chance to report and find them again.
+The spec reference Bjorn asked for is: PCIe r5.0, sec. 6.7.1.5
 
-In this patch, move sdei_init and ghes_init as far ahead as possible,
-right after acpi_hest_init().
+> attention button has been pressed before actually un-plugging the
+> device.  This gives the operator the chance to cancel the operation
+> by pressing the attention button again within those five seconds.
+> 
+> For physical hardware this makes sense.  Picking the wrong button
+> by accident can easily happen and it can be corrected that way.
+> 
+> For virtual hardware the benefits are questionable.  Typically
+> users find the five second delay annoying.
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Why does virtual hardware implement the Attention Button if it's
+perceived as annoying?  Just amend qemu so that it doesn't advertise
+presence of an Attention Button to get rid of the delay.  (Clear the
+Attention Button Present bit in the Slot Capabilities register.)
 
----
-Changelog v1 -> v2:
-Fix compile error without CONFIG_ACPI_APEI enabled
-Reported-by: kernel test robot<lkp@intel.com>
----
- drivers/acpi/apei/ghes.c    | 3 +--
- drivers/acpi/pci_root.c     | 2 ++
- drivers/firmware/arm_sdei.c | 9 +--------
- include/acpi/apei.h         | 4 ++++
- 4 files changed, 8 insertions(+), 10 deletions(-)
+An Attention Button doesn't make any sense for virtual hardware
+except to test or debug support for it in the kernel.  Just make
+presence of the Attention Button optional and be done with it.
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 0c8330ed1ffd..4200369503b8 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -1457,7 +1457,7 @@ static struct platform_driver ghes_platform_driver = {
- 	.remove		= ghes_remove,
- };
- 
--static int __init ghes_init(void)
-+int __init ghes_init(void)
- {
- 	int rc;
- 
-@@ -1499,4 +1499,3 @@ static int __init ghes_init(void)
- err:
- 	return rc;
- }
--device_initcall(ghes_init);
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index ab2f7dfb0c44..658b6e536b60 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -946,6 +946,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- void __init acpi_pci_root_init(void)
- {
- 	acpi_hest_init();
-+	sdei_init();
-+	ghes_init();
- 	if (acpi_pci_disabled)
- 		return;
- 
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index a7e762c352f9..606520be326e 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -1059,7 +1059,7 @@ static bool __init sdei_present_acpi(void)
- 	return true;
- }
- 
--static int __init sdei_init(void)
-+int __init sdei_init(void)
- {
- 	struct platform_device *pdev;
- 	int ret;
-@@ -1080,13 +1080,6 @@ static int __init sdei_init(void)
- 	return ret;
- }
- 
--/*
-- * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-- * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-- * by device_initcall(). We want to be called in the middle.
-- */
--subsys_initcall_sync(sdei_init);
--
- int sdei_event_handler(struct pt_regs *regs,
- 		       struct sdei_registered_event *arg)
- {
-diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-index ece0a8af2bae..12909c96ef89 100644
---- a/include/acpi/apei.h
-+++ b/include/acpi/apei.h
-@@ -33,8 +33,12 @@ extern bool ghes_disable;
- 
- #ifdef CONFIG_ACPI_APEI
- void __init acpi_hest_init(void);
-+int __init sdei_init(void);
-+int __init ghes_init(void);
- #else
- static inline void acpi_hest_init(void) { return; }
-+static inline void sdei_init(void) { return; }
-+static inline void ghes_init(void) { return; }
- #endif
- 
- int erst_write(const struct cper_record_header *record);
--- 
-2.20.1.12.g72788fdb
+You'll still be able to bring down the slot in software via the
+"remove" attribute in sysfs.
 
+Same for the 1 second delay in remove_board().  That's mandated by
+PCIe r5.0, sec. 6.7.1.8, but it's only observed if a Power Controller
+is present.  So just clear the Power Controller Present bit in the
+Slot Capabilities register and the delay is gone.
+
+
+> @@ -109,6 +110,8 @@ struct controller {
+>  	unsigned int ist_running;
+>  	int request_result;
+>  	wait_queue_head_t requester;
+> +
+> +	bool is_virtual;
+>  };
+
+This is a quirk for a specific device, so please move it further up to the
+/* capabilities and quirks */ section of struct controller.
+
+
+> @@ -227,6 +227,11 @@ static int pciehp_probe(struct pcie_device *dev)
+>  		goto err_out_shutdown_notification;
+>  	}
+>  
+> +	if (dev->port->vendor == PCI_VENDOR_ID_REDHAT &&
+> +	    dev->port->device == 0x000c)
+> +		/* qemu pcie root port */
+> +		ctrl->is_virtual = true;
+> +
+
+Move this to pcie_init() in pciehp_hpc.c below the existing quirks for
+hotplug_user_indicators and is_thunderbolt.
+
+
+> +static bool fast_virtual_unplug = true;
+> +module_param(fast_virtual_unplug, bool, 0644);
+
+An integer parameter to configure a custom delay would be nicer IMO.
+Of course, anything else than 5 sec deviates from the spec.
+
+Thanks,
+
+Lukas
