@@ -2,93 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5335D4503E2
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 12:57:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCAAF45041E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 13:10:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230254AbhKOMA3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 07:00:29 -0500
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:38891 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbhKOMAY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 07:00:24 -0500
-Received: by mail-ed1-f42.google.com with SMTP id m20so24857336edc.5;
-        Mon, 15 Nov 2021 03:57:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iZwd8zOKfHOZHtZg1NiyaugaGLTtwcsli/vHUABjgyw=;
-        b=dl20a6pf9ubQUeyNWfyNb6BQCZdr75fb2PvgJJ9jg2yGvZauub9Zi9hkjA42w5YBqB
-         ukMhJ0tIRNIFyMpr2j+qGEE+qxufKdCsctb+tCGB7IPNUa1WYOkFU9OcU7Yt9gd4jklt
-         1stS8BcCeaKjky4Vz/1DAT03T60/MOAJWBk64S9Wtb8bmsxghm+/AG8Jw6g6y6P4sN0O
-         X6UU2aFHiq3mBB8sSeJIVb94Fv5xOkZvFhBID19tlFJw9nXAvao5Kk5JowAIIy2enmpy
-         bhLAc/V1tIvCx1VSlvfn9phhcG/N//AI2tL+xtvPV2flEOLXCrOWxeuAxqnzRzDkxGNJ
-         GN7A==
-X-Gm-Message-State: AOAM531S+TJCPWs6VxSnk/wdaLmAUdwoarqPAjLZncgi5YN5jOIbZKev
-        k9fzejdpaCkuKLeVonrewm8=
-X-Google-Smtp-Source: ABdhPJwW6w4WpnROjobFjseOxEMIFpGxpb+OUZBqnh8kfqVJtqdI09J1Lvv5euWDTqz0D+G9VGmPuQ==
-X-Received: by 2002:a17:906:b055:: with SMTP id bj21mr47736793ejb.292.1636977448502;
-        Mon, 15 Nov 2021 03:57:28 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id ne33sm6491674ejc.6.2021.11.15.03.57.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 03:57:27 -0800 (PST)
-Date:   Mon, 15 Nov 2021 12:57:26 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
- internal use only
-Message-ID: <YZJLJgYsKQY+5TyI@rocinante>
-References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+        id S230411AbhKOMNA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 07:13:00 -0500
+Received: from mga09.intel.com ([134.134.136.24]:14027 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229613AbhKOMM4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 07:12:56 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="233266306"
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="233266306"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 04:10:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="644818570"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2021 04:09:58 -0800
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v4 0/3] device property: Remove device_add_properties()
+Date:   Mon, 15 Nov 2021 15:09:58 +0300
+Message-Id: <20211115121001.77041-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy,
+Hi,
 
-> Use BIT() as __GENMASK() is for internal use only. The rationale
-> of switching to BIT() is to provide better generated code. The
-> GENMASK() against non-constant numbers may produce an ugly assembler
-> code. On contrary the BIT() is simply converted to corresponding shift
-> operation.
-> 
-> Note, it's the only user of __GENMASK() in the kernel outside of its own realm.
-> 
-> Fixes: 3baec684a531 ("PCI: brcmstb: Accommodate MSI for older chips")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: switched to BIT() and elaborated why, hence not included tag
->  drivers/pci/controller/pcie-brcmstb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 1fc7bd49a7ad..0c49fc65792c 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -619,7 +619,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
->  
->  static void brcm_msi_set_regs(struct brcm_msi *msi)
->  {
-> -	u32 val = __GENMASK(31, msi->legacy_shift);
-> +	u32 val = ~(BIT(msi->legacy_shift) - 1);
+One more version. Hopefully the commit messages are now OK. No other
+changes since v3:
 
-Thank you!  I also personally prefer using BIT() macro here.
+https://lore.kernel.org/lkml/20211006112643.77684-1-heikki.krogerus@linux.intel.com/
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-	Krzysztof
+v3 cover letter:
+
+In this third version of this series, the second patch is now split in
+two. The device_remove_properties() call is first removed from
+device_del() in its own patch, and the
+device_add/remove_properties() API is removed separately in the last
+patch. I hope the commit messages are clear enough this time.
+
+
+v2 cover letter:
+
+This is the second version where I only modified the commit message of
+the first patch according to comments from Bjorn.
+
+
+Original cover letter:
+
+There is one user left for the API, so converting that to use software
+node API instead, and removing the function.
+
+
+thanks,
+
+Heikki Krogerus (3):
+  PCI: Convert to device_create_managed_software_node()
+  driver core: Don't call device_remove_properties() from device_del()
+  device property: Remove device_add_properties() API
+
+ drivers/base/core.c      |  1 -
+ drivers/base/property.c  | 48 ----------------------------------------
+ drivers/pci/quirks.c     |  2 +-
+ include/linux/property.h |  4 ----
+ 4 files changed, 1 insertion(+), 54 deletions(-)
+
+-- 
+2.33.0
+
