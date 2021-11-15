@@ -2,61 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC7BF450292
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 11:34:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98287450353
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 12:22:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237116AbhKOKhB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 05:37:01 -0500
-Received: from mga02.intel.com ([134.134.136.20]:23036 "EHLO mga02.intel.com"
+        id S231168AbhKOLZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 06:25:12 -0500
+Received: from mga14.intel.com ([192.55.52.115]:37308 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237118AbhKOKgy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 05:36:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="220627158"
+        id S231545AbhKOLXP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 06:23:15 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="233667709"
 X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="220627158"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 02:33:58 -0800
+   d="scan'208";a="233667709"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 03:20:04 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="592055183"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 02:33:56 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mmZJ6-0071pa-1Q;
-        Mon, 15 Nov 2021 12:33:48 +0200
-Date:   Mon, 15 Nov 2021 12:33:47 +0200
+   d="scan'208";a="503787458"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2021 03:20:01 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 019B122B; Mon, 15 Nov 2021 13:20:03 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kw@linux.com
-Subject: Re: [PATCH v1 1/1] PCI: probe: Use pci_find_vsec_capability() when
- looking for TBT devices
-Message-ID: <YZI3iyo6qM8MnT5f@smile.fi.intel.com>
-References: <20211109151604.17086-1-andriy.shevchenko@linux.intel.com>
- <20211114062231.GA10937@wunner.de>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for internal use only
+Date:   Mon, 15 Nov 2021 13:20:00 +0200
+Message-Id: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211114062231.GA10937@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 14, 2021 at 07:22:31AM +0100, Lukas Wunner wrote:
-> On Tue, Nov 09, 2021 at 05:16:04PM +0200, Andy Shevchenko wrote:
+Use BIT() as __GENMASK() is for internal use only. The rationale
+of switching to BIT() is to provide better generated code. The
+GENMASK() against non-constant numbers may produce an ugly assembler
+code. On contrary the BIT() is simply converted to corresponding shift
+operation.
 
-...
+Note, it's the only user of __GENMASK() in the kernel outside of its own realm.
 
-> > -		/* Is the device part of a Thunderbolt controller? */
-> 
-> Could you preserve that code comment please so that an uninitiated
-> reader knows what the is_thunderbolt flag is about?
+Fixes: 3baec684a531 ("PCI: brcmstb: Accommodate MSI for older chips")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: switched to BIT() and elaborated why, hence not included tag
+ drivers/pci/controller/pcie-brcmstb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure!
-
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 1fc7bd49a7ad..0c49fc65792c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -619,7 +619,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
+ 
+ static void brcm_msi_set_regs(struct brcm_msi *msi)
+ {
+-	u32 val = __GENMASK(31, msi->legacy_shift);
++	u32 val = ~(BIT(msi->legacy_shift) - 1);
+ 
+ 	writel(val, msi->intr_base + MSI_INT_MASK_CLR);
+ 	writel(val, msi->intr_base + MSI_INT_CLR);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.33.0
 
