@@ -2,209 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D2C4450972
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 17:18:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E252F45099A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 17:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236545AbhKOQU7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 11:20:59 -0500
-Received: from mail-bn8nam12on2060.outbound.protection.outlook.com ([40.107.237.60]:36704
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236656AbhKOQU4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 11:20:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H4TL/fEqblqcPME6MbeQ6IrLmIhRk9pN1xGaFH2VZYxs4LDr+j4jUTSfJHFCs51XZ10ggbgXjkq6HFqdXH9nXBIdGawFUzlOzxh/T4H0iI1kFqCmChKy2tT6NNtRW0yRl9Zbce2wez+QsDHAXQkOL3Jhg63U7fhE4nMrJWwUeFDIE5qdwCXc0NM1203b+jRVB0uu9L4bv7ikqpTyrdoKyi7VYVwXVNZgR75+LaVNQSi4c9G7utPk2b0Qw33bYfFFX4ChJjN6DaQiiYzOQBWcU55K/qpK4wVJUynWdUQQ6cg4PGu0SH6+0tNAGebaB5uqFZTXQ0y9BXVKbiLWQ3cZ4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7u6I72VA86inSpslU8RfEuvmcDMb3jjxoffhhv+53eg=;
- b=FyzbRGpdrNkZYera4eP5H5VZrIVxTNNo3yM5cuJxkObyfoxv6BCRsNJvLiKJalzGslth4/tSTmE7xNg4iaxiyz0moqyFpLjgezUTZYJJggtZ0yI6IJiBBVyLc5DV4p4iqxfMUkmgIXOs0BPlJ1gx7nB/bTFrOeIJiFo7F4vEkMPXOuqjY2DLBLu+iwDaQ0b5arzs0OXytIUvHRmWbG4mkWzyyxueZO0fQWAe137SAJejL9pH9lQrOAm60dyOch+o+tggZytai9XqkDbeGpnhb0xPJTXwhCRJPZDPqxZK11XUM5iMrl20exZd0xdZDSvxWldDuRXeJWWkVDp02sZ8rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7u6I72VA86inSpslU8RfEuvmcDMb3jjxoffhhv+53eg=;
- b=QgHpZL5gIhvD5bVrG1GnquJX+ISErQa8ScVjiU6MZliAHcD8hDCVso7nyXACPr5JizE0YIe5M+LgEP/a7RwIrB2GFjkZcosOKPG29TjJ8D/VsY50h7s4V1pScnouILvYBxTd/X4CBautjW8EfhIU9sww8fZi0zFfFwmgzRXRPC1cqjcbTUG8rwVXe3fiKLxpVtY+/ndh4H8dXm6RbJTZhTUoSku8CX/H52/edf16b4IfDpJaREGUHsHmJ58bDYIXLzIX1N6/20SaM6tbpt1Fl0Y4H65pSTitbG7q10cddhtTXhB2J+SBwa045qpEuB8CjrgyntdHxia19GBd9Oz4vw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5159.namprd12.prod.outlook.com (2603:10b6:208:318::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.16; Mon, 15 Nov
- 2021 16:17:58 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4690.027; Mon, 15 Nov 2021
- 16:17:58 +0000
-Date:   Mon, 15 Nov 2021 12:17:56 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20211115161756.GP2105516@nvidia.com>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-4-baolu.lu@linux.intel.com>
- <YZJe1jquP+osF+Wn@infradead.org>
- <20211115133107.GB2379906@nvidia.com>
- <495c65e4-bd97-5f29-d39b-43671acfec78@arm.com>
+        id S231845AbhKOQae (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 11:30:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231639AbhKOQad (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 11:30:33 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 36E5960235;
+        Mon, 15 Nov 2021 16:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636993656;
+        bh=4JbhaJa+WKgNpMtMZdbDTrTF43/5Tpkk286u8m+D2q8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DiziJVtUjHRR5a2WuY01BjtVns2jwsr+GsL2MyTH00JvwAMa2/A/181Jxnj/ccGC9
+         3h71mVzPIfFbKi9dFWK1mF4nEbD67jENiphimWiwftNmwTGTQBwc68KhQRDl3tcHdT
+         hJ9ceH21hBj6XbgPcxcvKXqqhkz0THLwsCf4UiTRrv4vHj2sP1s2HAP+V34um2DSjC
+         nMeO0s0qOOsSrf7GsLCCvfe0HKyy99+Lw8jqP1N6vL7QJ2vwvhrJvwar3FUkbMGbbO
+         XHm2yWdmxjmxpnBlsSWqmSejYZ7lYffxoRlfu2a4bS5hpslqhehXw82nMSkhDfNy9N
+         zQP0VQWA3MBLg==
+Date:   Mon, 15 Nov 2021 10:27:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
+        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
+        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com
+Subject: Re: [RFC PATCH v3] ACPI: Move sdei_init and ghes_init ahead
+Message-ID: <20211115162734.GA1566887@bhelgaas>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <495c65e4-bd97-5f29-d39b-43671acfec78@arm.com>
-X-ClientProxiedBy: YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::21) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
-MIME-Version: 1.0
-Received: from mlx.ziepe.ca (206.223.160.26) by YTOPR0101CA0008.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26 via Frontend Transport; Mon, 15 Nov 2021 16:17:58 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mmeg8-00A1pv-NG; Mon, 15 Nov 2021 12:17:56 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2a49121b-c1fa-4fcc-728f-08d9a8537ce9
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5159:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5159AF0A43A63737A4943A49C2989@BL1PR12MB5159.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J++W6ry/Kpg7sRNsUsLfNXxHYePW2FpHm+oF0ajZdOlZitUtUWIESrFj/vZx0dzxdNafyHgsPLobo8RKjR1o7iT2A8Dl7AgL5BUUACl7/e+Oyy/NMA0Lbbl+VXig83n+9h5f3ZQwXFZ7hd8HgLikMxbVr0MXzVN7x8UEQdUyArxxjnhnTRnPQmyM5Jn1U/VtEGPLho6b8T1h18E+x1NvLiOPQH+kqCpGuZYPEkllHAXFccq9sARh7KHTu93fgamC/pxGf1/Xni29lkHN3oE+H46y0DOipoDvIvkhpyz9PVObDRHuQhQNGMLnphKfuxs/6YVU49IUwCNMtJAjU4ExlZCpG/48z0rI49cT745p2iPu2EAWppBfLiQ8YmpiOl2emoK+IzhZ8rLKJ3VjB3So5X4J7w6AYOTzsX8+iPEUGGe8fyTTDEkOicvcHYGKEAxsQmad+Si9+XZSgmcKWmdrhaDXwna+GNYNtGx+9gtA3ewKsb8PFn55pJKxROaQUo21j7RyjQHHat8XhlMp6VKsFPDgIQ64W6gQXy1xtBxlnboxV1/jhp+BfWlSvjFiojE1jJuR+u1nKhWheJLIqy4bDMGBh1f95TvchUmUJaXgpYKAbn1ijtrehHkb8Sm9btpog8MD6QrmGbpcoeiDHBZ/eg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(316002)(2616005)(54906003)(5660300002)(508600001)(38100700002)(2906002)(86362001)(1076003)(186003)(426003)(8936002)(6916009)(83380400001)(4326008)(26005)(9746002)(66556008)(66476007)(9786002)(8676002)(7416002)(66946007)(33656002)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mmmgaWLdcAw7nT1ACPaWrZq2Wb/x+zbIk3U0Ai79HgdVf6DM5gqVSEXTyHNn?=
- =?us-ascii?Q?t6Efqtr3avr+MyqYv5ivHncpjG6+6Wgu5WW3C+8xhKt4fvF2sGJPAq8+dATy?=
- =?us-ascii?Q?Ur9I8OqPLPDiDM3YXKwWGFayioVXNnX0bPY5g0P8tKZr2mVFajws86cINP9Y?=
- =?us-ascii?Q?tAU2bDQOqqgvk0yD7HYnqncmrlCg64+eTNoWIQAPfzaZKQuC0zzEDaJf1xjm?=
- =?us-ascii?Q?YsBgdc8aetMSOGybXbCfrsw+4MKukK3Sc402qSc+nIsFGH371P3/Fx/aYep6?=
- =?us-ascii?Q?Pto7KRqlh5bvQLyph80aXmAXzAR3t/pbNwz4hgPca7Z9NV6DC/rXHlgssE93?=
- =?us-ascii?Q?uFRhXumk0UKRkrZF92lk8jHRzuY/jagQtielRdWu4zhxmnMQOtB8nHqQZgZm?=
- =?us-ascii?Q?wwjgHAG0fT+aTjDCHgSe/yCmLXoPMAWhX4cj7Y80s0MaBiOYx8eU0Cxrjvcc?=
- =?us-ascii?Q?Z9/gDIja9e9b1iAvLlbQrHmxd5VzDKGXahML5Xz0sJmxoxivgMXHXiFARU2A?=
- =?us-ascii?Q?/Mz1vkMeRLwDMRxhCMEvHkllIpMazd61Xd1lE7bIRDgAnrsW9mPZCqvI6KXI?=
- =?us-ascii?Q?0X4JYFHB7xT1x73DyaITzAGDWIxF0D/IcTn50ibYhcRqDBGCJys9OwdLnBZl?=
- =?us-ascii?Q?2I9xS+kvbNYPRcRDTo8PrRCND5t0y3bH6PwDb3Nt1anSUJ4hYHICRVXbt/x9?=
- =?us-ascii?Q?ng/WdPYea2FmFQxhiYojY0JeDPQVcxaAbwwcZt1nZB14hXYdl2fdH0W+WngO?=
- =?us-ascii?Q?1s6F+iJWPTySGr6v5PAa9hWB3jPHmK8okx3kNfup689I07wjIqrFv2wVrwCW?=
- =?us-ascii?Q?zSfyA49EECGPuFpv+LC1LmPEjfNOFZ0Jg3uhO0eHApDBiYJnW88c3YPRPi2/?=
- =?us-ascii?Q?Q/vkR+sM9o1yg6182wSce1JL9NHTSUvaRN526oTQtO7l/aJ+bEyWjN52vCHe?=
- =?us-ascii?Q?qODQkQtI1G6YXkSD8LNmYEGsRB0M1KWVSZ8Esd0mfIrRn9ChIY/5bhOnszW8?=
- =?us-ascii?Q?4WIwkH6LSPXnTjA2cRRa27YLr+qwHIKS4YsOa51u0o2GYjQylNvztuaEopor?=
- =?us-ascii?Q?3JVT41Kjicvdrr5Dr3NgMdAdK3uAls7c9ONvhYr8+SkD575IqvpjMntGJzHR?=
- =?us-ascii?Q?x2UWzMVihZzUvA+yjfPUmRy+NJnjJFKLfofT4zTEh4geZ9OmUxdvvGIa55Lf?=
- =?us-ascii?Q?NeBUlKRvhp1xeG3tzfzGHACOzPEtCTy8PKAVrCljJYZaaHbNYQyfbuDbpZTN?=
- =?us-ascii?Q?LFw5APgioDPtMquIUZUpM/+BbNPaqkI2pczOg4YX14cevskD0Q8TxCyd2Uyx?=
- =?us-ascii?Q?hvRqyQGf++rFtvP1oMeMfThjhVJGCcF1zUR41AX2sA6F44ALuXLhdP3Hn4+9?=
- =?us-ascii?Q?G/OFXFwO5pH2GTBVwRg/l5jofRDKHsjfnARTcJ4YdF21brwHUFkkgCVlEejP?=
- =?us-ascii?Q?F1fMNHG8ak7hd4O3/AiJYVAoWSbO+wnwoFYKZoGctHXqrQLZSzpFE/OCMbvk?=
- =?us-ascii?Q?0ZivRPF/WIR1kLy9krKgAL0YCNo7TdXKRT8q3VlSx1a++YbuxsEcsKmSuStO?=
- =?us-ascii?Q?SbGyF5ZcLY78uAnLVGc=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a49121b-c1fa-4fcc-728f-08d9a8537ce9
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2021 16:17:58.3730
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6ps1ntis6aLGPuhdcX5bYEG+WZqFK0408ZiHnjxeRsSj5rL/pYTuqdhttgwx5flD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5159
+In-Reply-To: <20211115064415.29933-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 03:14:49PM +0000, Robin Murphy wrote:
+The subject says *what* the patch does, but doesn't give any clue
+about *why* we want this.
 
-> > If userspace has control of device A and can cause A to issue DMA to
-> > arbitary DMA addresses then there are certain PCI topologies where A
-> > can now issue peer to peer DMA and manipulate the MMMIO registers in
-> > device B.
-> > 
-> > A kernel driver on device B is thus subjected to concurrent
-> > manipulation of the device registers from userspace.
-> > 
-> > So, a 'safe' kernel driver is one that can tolerate this, and an
-> > 'unsafe' driver is one where userspace can break kernel integrity.
+On Mon, Nov 15, 2021 at 02:44:15PM +0800, Shuai Xue wrote:
+> On an ACPI system, ACPI is initialised very early from a
+> subsys_initcall(), while SDEI is not ready until a subsys_initcall().
+
+This sentence sounds like it's setting up a contrast between ACPI init
+and SDEI init, but apparently both are subsys_initcall(), so this
+doesn't actually say what the difference is.
+
+> More seriously, the kernel is able to handle and report errors until the
+> GHES is initialised by device_initcall().
+
+Did you mean "unable"?  Or do you really mean the kernel can handle
+errors until GHES is initialized, but can't handle errors *after* GHES
+is initialized?
+
+> Consequently, when an error occurs during the kernel booting, the
+> phyiscal sdei dispatcher in firmware fails to dispatch error events. All
+> errors that occurred before GHES initialization are missed and there is
+> no chance to report and find them again.
+
+s/phyiscal/physical/
+s/sdei/SDEI/
+
+This doesn't explain how something in the kernel can prevent the
+dispatcher in firmware from doing something.  Maybe the firmware emits
+an event and the kernel isn't listening?
+
+What is SDEI?  Please provide a citation to whatever spec is relevant.
+
+> In this patch, move sdei_init and ghes_init as far ahead as possible,
+> right after acpi_hest_init().
+
+Please be explicit about what the dependencies are here.  Is there
+something in sdei_init() that depends on acpi_hest_init()?  If so,
+what is it specifically?
+
+Similarly, does ghes_init() depend on something in sdei_init()?
+
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> ---
+> Changelog v2 -> v3:
+> Fix compile error in X86
+> Reported-by: kernel test robot<lkp@intel.com>
+> ---
+>  drivers/acpi/apei/ghes.c    | 3 +--
+>  drivers/acpi/pci_root.c     | 8 +++++++-
+>  drivers/firmware/arm_sdei.c | 9 +--------
+>  include/acpi/apei.h         | 2 ++
+>  include/linux/arm_sdei.h    | 2 ++
+>  5 files changed, 13 insertions(+), 11 deletions(-)
 > 
-> You mean in the case where the kernel driver is trying to use device B in a
-> purely PIO mode, such that userspace might potentially be able to interfere
-> with data being transferred in and out of the kernel?
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 0c8330ed1ffd..4200369503b8 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -1457,7 +1457,7 @@ static struct platform_driver ghes_platform_driver = {
+>  	.remove		= ghes_remove,
+>  };
+>  
+> -static int __init ghes_init(void)
+> +int __init ghes_init(void)
+>  {
+>  	int rc;
+>  
+> @@ -1499,4 +1499,3 @@ static int __init ghes_init(void)
+>  err:
+>  	return rc;
+>  }
+> -device_initcall(ghes_init);
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index ab2f7dfb0c44..7658ae509377 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -23,7 +23,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/platform_data/x86/apple.h>
+>  #include <acpi/apei.h>	/* for acpi_hest_init() */
+> -
+> +#include <linux/arm_sdei.h> /* for sdei_init() */
+>  #include "internal.h"
+>  
+>  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
+> @@ -946,6 +946,12 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  void __init acpi_pci_root_init(void)
+>  {
+>  	acpi_hest_init();
+> +	#ifdef CONFIG_ARM_SDE_INTERFACE
+> +	sdei_init();
+> +	#endif 
+> +	#ifdef CONFIG_ACPI_APEI_GHES
+> +	ghes_init();
+> +	#endif 
 
-s/PIO/MMIO, but yes basically. And not just data trasnfer but
-userspace can interfere with the device state as well.
+I love to replace initcalls with explicit calls.  You provided stubs
+below, so why the #ifdefs here?
 
-> Perhaps it's not so clear to put that under a notion of "DMA
-> ownership", since device B's DMA is irrelevant and it's really much
-> more equivalent to /dev/mem access or mmaping BARs to userspace
-> while a driver is bound.
+>  	if (acpi_pci_disabled)
+>  		return;
+>  
+> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+> index a7e762c352f9..606520be326e 100644
+> --- a/drivers/firmware/arm_sdei.c
+> +++ b/drivers/firmware/arm_sdei.c
+> @@ -1059,7 +1059,7 @@ static bool __init sdei_present_acpi(void)
+>  	return true;
+>  }
+>  
+> -static int __init sdei_init(void)
+> +int __init sdei_init(void)
+>  {
+>  	struct platform_device *pdev;
+>  	int ret;
+> @@ -1080,13 +1080,6 @@ static int __init sdei_init(void)
+>  	return ret;
+>  }
+>  
+> -/*
+> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
+> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
+> - * by device_initcall(). We want to be called in the middle.
+> - */
+> -subsys_initcall_sync(sdei_init);
 
-It is DMA ownership because device A's DMA is what is relevant
-here. device A's DMA compromises device B. So device A asserts it has
-USER ownership for DMA.
+Ugh.  It's really good to get rid of this sort of implicit ordering.
 
-Any device in a group with USER ownership is incompatible with a
-kernel driver.
+>  int sdei_event_handler(struct pt_regs *regs,
+>  		       struct sdei_registered_event *arg)
+>  {
+> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+> index ece0a8af2bae..155a0fe417c6 100644
+> --- a/include/acpi/apei.h
+> +++ b/include/acpi/apei.h
+> @@ -27,8 +27,10 @@ extern int hest_disable;
+>  extern int erst_disable;
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  extern bool ghes_disable;
+> +int __init ghes_init(void);
+>  #else
+>  #define ghes_disable 1
+> +static inline int ghes_init(void) { return 0; }
 
-> > The second issue is DMA - because there is only one iommu_domain
-> > underlying many devices if we give that iommu_domain to userspace it
-> > means the kernel DMA API on other devices no longer works.
+I think the only reason ghes_init() returns int is because that's what
+initcall_t requires.  If ghes_init() is no longer an initcall and
+nobody looks at its return value, it should return void instead.
+
+Same with sdei_init().
+
+>  #endif
+>  
+>  #ifdef CONFIG_ACPI_APEI
+> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+> index 0a241c5c911d..983b7404bff9 100644
+> --- a/include/linux/arm_sdei.h
+> +++ b/include/linux/arm_sdei.h
+> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
+>  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
+>  int sdei_mask_local_cpu(void);
+>  int sdei_unmask_local_cpu(void);
+> +int __init sdei_init(void);
+>  #else
+>  static inline int sdei_mask_local_cpu(void) { return 0; }
+>  static inline int sdei_unmask_local_cpu(void) { return 0; }
+> +static inline int sdei_init(void) { return 0; }
+>  #endif /* CONFIG_ARM_SDE_INTERFACE */
+>  
+>  
+> -- 
+> 2.20.1.12.g72788fdb
 > 
-> Actually, the DMA API itself via iommu-dma will "work" just fine in the
-> sense that it will still successfully perform all its operations in the
-> unattached default domain, it's just that if the driver then programs the
-> device to access the returned DMA address, the device is likely to get a
-> nasty surprise.
-
-A DMA API that returns an dma_ddr_t that does not result in data
-transfer to the specified buffers is not working, in my book - it
-breaks the API contract.
-
-> > So no kernel driver doing DMA can work at all, under any PCI topology,
-> > if userspace owns the IO page table.
-> 
-> This isn't really about userspace at all - it's true of any case where a
-> kernel driver wants to attach a grouped device to its own unmanaged
-> domain.
-
-This is true for the dma api issue in isolation.
-
-I think if we have a user someday it would make sense to add another
-API DMA_OWNER_DRIVER_DOMAIN that captures how the dma API doesn't work
-but DMA MMIO attacks are not possible.
-
-> The fact that the VFIO kernel driver uses its unmanaged domains to map user
-> pages upon user requests is merely a VFIO detail, and VFIO happens to be the
-> only common case where unmanaged domains and non-singleton groups intersect.
-> I'd say that, logically, if you want to put policy on mutual driver/usage
-> compatibility anywhere it should be in iommu_attach_group().
-
-It would make sense for iommu_attach_group() to require that the
-DMA_OWNERSHIP is USER or DRIVER_DOMAIN.
-
-That has a nice symmetry with iommu_attach_device() already requiring
-that the group has a single device. For a driver to use these APIs it
-must ensure security, one way or another.
-
-That is a good idea, but requires understanding what tegra is
-doing. Maybe tegra is that DMA_OWNER_DRIVER_DOMAIN user?
-
-I wouldn't want to see iommu_attach_group() change the DMA_OWNERSHIP,
-I think ownership is cleaner as a dedicated API. Adding a file * and
-probably the enum to iommu_attach_group() feels weird.
-
-We need the dedicated API for the dma_configure op, and keeping
-ownership split from the current domain makes more sense with the
-design in the iommfd RFC.
-
-Thanks,
-Jason
