@@ -2,84 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5065845061D
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 14:56:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92BB145062B
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 14:59:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231613AbhKON7M convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 15 Nov 2021 08:59:12 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:52651 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbhKON7M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 08:59:12 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M4JiJ-1mmta92BST-000I5W; Mon, 15 Nov 2021 14:56:12 +0100
-Received: by mail-wr1-f51.google.com with SMTP id u1so30887459wru.13;
-        Mon, 15 Nov 2021 05:56:12 -0800 (PST)
-X-Gm-Message-State: AOAM5319m8vghGPTjZGBTb6s6MI+Eh6K4M3/BjL28kuf3UgbdHBGRyt5
-        QNDNGKcHTDB94iVtF5+ZSWQACARgEhOFtwxitmQ=
-X-Google-Smtp-Source: ABdhPJwZu1Y0NQaJduThy0FATNKQ7q57R8j31tpZxHMuJRrVI5TgHIDpuqzbH7XhZV1NVo7L4AeuZOFUGvZ90zQokAs=
-X-Received: by 2002:adf:d1c2:: with SMTP id b2mr47933601wrd.369.1636984572170;
- Mon, 15 Nov 2021 05:56:12 -0800 (PST)
+        id S231947AbhKOOCQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 09:02:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:55666 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231937AbhKOOCN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 09:02:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DBEA6D;
+        Mon, 15 Nov 2021 05:59:18 -0800 (PST)
+Received: from [10.57.82.45] (unknown [10.57.82.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60B483F766;
+        Mon, 15 Nov 2021 05:59:16 -0800 (PST)
+Message-ID: <94d3f4e5-a698-134c-8264-55d31d3eafa6@arm.com>
+Date:   Mon, 15 Nov 2021 13:59:11 +0000
 MIME-Version: 1.0
-References: <20211115070809.15529-1-sergio.paracuellos@gmail.com>
- <20211115070809.15529-5-sergio.paracuellos@gmail.com> <YZJWM33dXqW1BsuV@rocinante>
- <CAK8P3a0A9xAcwDLFbUk--X2+7gFpOL7HJw-9Sk8KZxfoidcxuw@mail.gmail.com> <CAMhs-H9ox3qeAKCN7ug1BxJArmvjDBSqgubOvr_tK1hasPNs3A@mail.gmail.com>
-In-Reply-To: <CAMhs-H9ox3qeAKCN7ug1BxJArmvjDBSqgubOvr_tK1hasPNs3A@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 15 Nov 2021 14:55:56 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2-C1zo81hHcua6d7+XE8Gm=s6h0JTR9Q71DbDU9f2WwA@mail.gmail.com>
-Message-ID: <CAK8P3a2-C1zo81hHcua6d7+XE8Gm=s6h0JTR9Q71DbDU9f2WwA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        John Crispin <john@phrozen.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
+ internal use only
+Content-Language: en-GB
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:wb8B/5taonV8CMaacygLepBOELSZjLqzcgYsoB/1BAukZjP9EjL
- 2drXOxYrtTbMH7gwoKdRgcAxzYs2DsKzLj7fey1I+TVc5d0cTG5H2agR5lpgFUwyYOCwp82
- tjYfqpe74j/zRyPODutwGJZdGfMIhRu9Qm9KM0HMAoTWfepDyx5QFnR/rPJYXi/QgxqYlR9
- gPp8wHwY3nI0JietAreHA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2aQuj2BncJE=:WQ9r1Cjeg/6FpsXaSyXKMs
- hN2i4azc5OwbArKFJ95gGrAUGSna6BpZIjxETqTz94FhnDkxLsZtq7Tq5VVRf6s783UqsO0cn
- FgIc/GFBk6UTB1NVoRqEUF6NNIdWr9h0QqyRl/ceAxCv/fi3JUCzrc6uFrTQ51NgFIESlOe1F
- +rrVYewgP39ASKviGP7bEg/5AiMQkZ10nxDOIQQBFxrfi6bJSzqeqJm8+aCJio1ujKapNci3I
- t8SLDJpWYHT8KSrrZlkWUiqnDwpgYT15uFrBonYb71uglgwcPdt1ZieYMtxU/TGdWeX36/+oI
- zLB4yxOYLCs7z6Hs/BQaCitpRYBzI7bIUOG+i+fdSPCV2cufHSFnv0b+DBLBPcbDbANJ+h2Fm
- T5AUJ+SNlGtm8gC0OFsX5L5BcTj92gfXvRLX+ovVTamvsaFhKts5FSjVmzf3Frnv6iUfY57OA
- QOTSYg4zJgquHM1xE/LCEaiL6aGyyScdiUTMoFcLU+hFsm5Ryyjh2K8KSATwuxCXxKtrakAjQ
- GA1GSTQ1MfYk2hUMGZuPDw0cpZAsE9itp9gV8ei8Qe8m7M8BieaB21sa7jTU0Ct6MgXhgxPyC
- i3WSly7eLOmW+kt36gjTm11ULf9DuciwlYohVIZ8xlLfSOCAzS/XuEz1FzNph8DWyR9TeRVUn
- TpAPbHH9pNGXy5XuPo6azY2GxvkQp+9TAF+LVJZohGXDufmVckFJK4PP7+3kzOlVc+a5lWUgJ
- j/TiWjmjzKyEGUrJu82+C9fm5FeWyxRbzJ/c+0a3wxpj4H3rzbe3p5Ls8qIFsJ1vF5ezzgkz9
- IGDHJLRUPEAGcpZAzg4Svo3PftsVwrzZ2C8lMEtugh8GQnQGZE=
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 2:51 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
-> On Mon, Nov 15, 2021 at 2:00 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Mon, Nov 15, 2021 at 1:44 PM Krzysztof Wilczyński <kw@linux.com> wrote:
-> > This is often use for PCI drivers, but after Rob reworked this code a while
-> > back, it should actually be possible to reliably remove and reload PCI
-> > host bridge drivers, and it would be good to eventually lift the restriction
-> > here as well.
->
-> I see. Thanks for letting me know. I will search for a way to
-> accomplish this but that will be a different patch series.
+On 2021-11-15 11:20, Andy Shevchenko wrote:
+> Use BIT() as __GENMASK() is for internal use only. The rationale
+> of switching to BIT() is to provide better generated code. The
+> GENMASK() against non-constant numbers may produce an ugly assembler
+> code. On contrary the BIT() is simply converted to corresponding shift
+> operation.
 
-Right, that is what I meant. I don't think it will be difficult, but
-there is no point
-intermixing it with your current work.
+FWIW, If you care about code quality and want the compiler to do the 
+obvious thing, why not specify it as the obvious thing:
 
-       Arnd
+	u32 val = ~0 << msi->legacy_shift;
+
+
+Personally I don't think that abusing BIT() in the context of setting 
+multiple bits is any better than abusing __GENMASK()...
+
+Robin.
+
+> Note, it's the only user of __GENMASK() in the kernel outside of its own realm.
+> 
+> Fixes: 3baec684a531 ("PCI: brcmstb: Accommodate MSI for older chips")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: switched to BIT() and elaborated why, hence not included tag
+>   drivers/pci/controller/pcie-brcmstb.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 1fc7bd49a7ad..0c49fc65792c 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -619,7 +619,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
+>   
+>   static void brcm_msi_set_regs(struct brcm_msi *msi)
+>   {
+> -	u32 val = __GENMASK(31, msi->legacy_shift);
+> +	u32 val = ~(BIT(msi->legacy_shift) - 1);
+>   
+>   	writel(val, msi->intr_base + MSI_INT_MASK_CLR);
+>   	writel(val, msi->intr_base + MSI_INT_CLR);
+> 
