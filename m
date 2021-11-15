@@ -2,69 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8AAE45020E
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 11:10:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E31D2450290
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 11:33:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230494AbhKOKNe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 05:13:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30580 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237562AbhKOKMy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 05:12:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636970998;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=spkFhHBfLWoUmEEFu9X0mCN465cERkwIsbNUF4+/SDk=;
-        b=Zl35ubSOYy2oUl+oN1Onye8ToY43iqztZkttjeV49E4Tjwx7kHHraA3AxVxCx96wHseB2Z
-        Ens6+m/e05z17XgI/wIjHZanKs3osgC29RUEK7YVU442BMGz9BGYOO5bgmOZRoZzoizHm1
-        KQfHIkivtlmlCAtGx+OYpk3ccg0/w7I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-595-4P8OZEEMO_C9S0E69bbHIQ-1; Mon, 15 Nov 2021 05:09:57 -0500
-X-MC-Unique: 4P8OZEEMO_C9S0E69bbHIQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59E1B87D545;
-        Mon, 15 Nov 2021 10:09:56 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.39.193.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1653517C58;
-        Mon, 15 Nov 2021 10:09:45 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 5BF2918000A9; Mon, 15 Nov 2021 11:09:43 +0100 (CET)
-Date:   Mon, 15 Nov 2021 11:09:43 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, mst@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pciehp: fast unplug for virtual machines
-Message-ID: <20211115100943.ezvirlrxc2qzms3i@sirius.home.kraxel.org>
-References: <20211111090225.946381-1-kraxel@redhat.com>
- <20211114163958.GA7211@wunner.de>
+        id S230432AbhKOKga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 05:36:30 -0500
+Received: from mga05.intel.com ([192.55.52.43]:35783 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230419AbhKOKg3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 05:36:29 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="319627643"
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="319627643"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 02:33:34 -0800
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="585185435"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 02:33:33 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mmZIi-0071pM-Tq;
+        Mon, 15 Nov 2021 12:33:24 +0200
+Date:   Mon, 15 Nov 2021 12:33:24 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] PCI: probe: Use pci_find_vsec_capability() when
+ looking for TBT devices
+Message-ID: <YZI3dJ59DxE0GWWv@smile.fi.intel.com>
+References: <20211109151604.17086-1-andriy.shevchenko@linux.intel.com>
+ <YZCDHxOwogxPpuWy@rocinante>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211114163958.GA7211@wunner.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YZCDHxOwogxPpuWy@rocinante>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  Hi,
+On Sun, Nov 14, 2021 at 04:31:43AM +0100, Krzysztof Wilczyński wrote:
+> Hi Andy,
+> 
+> Nice find!  There might one more driver that leverages the vendor-specific
+> capabilities that seems to be also open coding pci_find_vsec_capability(),
+> as per:
+> ...
+> Do you think that it would be worthwhile to also update this other driver
+> to use pci_find_vsec_capability() at the same time?  I might be nice to rid
+> of the other open coded implementation too.
 
-> Same for the 1 second delay in remove_board().  That's mandated by
-> PCIe r5.0, sec. 6.7.1.8, but it's only observed if a Power Controller
-> is present.  So just clear the Power Controller Present bit in the
-> Slot Capabilities register and the delay is gone.
+You mean https://lore.kernel.org/linux-fpga/20211109154127.18455-1-andriy.shevchenko@linux.intel.com/T/#u?
 
-Well, the power control bit is a useful data channel.  qemu can use that
-to figure whenever the guest uses the device (power is on) or not (power
-is off).  And in case power is off anyway we can simply remove the
-device without the attention button dance.
+It seems a bit hard to explain HW people how the Linux kernel development
+process is working. (Yes, shame on me that I haven't compiled that one)
 
-take care,
-  Gerd
+...
+
+> > Currently the set_pcie_thunderbolt() opens code pci_find_vsec_capability().
+> 
+> I would write it as "open codes" in the above.
+
+Hmm... Is anybody among us a native speaker (me — no)? :-)
+But if you think it's better like this I'll definitely change.
+(I admit I'm lost in a morphological analysis of the above two
+ words)
+
+...
+
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
