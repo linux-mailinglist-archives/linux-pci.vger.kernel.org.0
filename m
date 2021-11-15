@@ -2,99 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 918164515F6
+	by mail.lfdr.de (Postfix) with ESMTP id EB6AE4515F7
 	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 22:02:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239516AbhKOVDK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 16:03:10 -0500
-Received: from server220-5.web-hosting.com ([198.54.116.164]:38885 "EHLO
-        server220-5.web-hosting.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1350081AbhKOUVh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 15:21:37 -0500
-X-Greylist: delayed 1597 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Nov 2021 15:21:37 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=westernsemico.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N106bhCLQ+s4+KP2V+oVs4rM8QER8S2Y5+PhxVBoSa8=; b=Fugvd3gQAXlbSMsnvVUJ6b3yrx
-        lOZVB92B/N4GlzfSFnE3c2lsOKqHh5pq8HMT1kCdlq01eGwf1tZ3YA0SZ1YJby+b8r2V0OH07H9Jt
-        nwXj92f3jRCOJI/hjGPgdcuq5EnvAiKZfHzTEtST7jgejQ1LttPYwH+2TZvin8mH2Cp5diDgFlwpN
-        b2vlMMPPGew7FN8qZz1igavtx6GMzvkI/4Q/oce/DLwbjxez9RJhULwuPco48Q4dHLrRqXPBz2HKh
-        bzR3/ZREE9HL2F9jXw7e0YbU2IXu1YusqJPe7E42OYu9iJ5d+W++7x+mdow/WpZNkgTwLX2jJwpLf
-        QhNSNqJA==;
-Received: from static-198-54-131-168.cust.tzulo.com ([198.54.131.168]:46724 helo=snowden)
-        by server220.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <adam@westernsemico.com>)
-        id 1mmi18-00Gn0K-Qw; Mon, 15 Nov 2021 14:51:55 -0500
-Date:   Mon, 15 Nov 2021 11:50:04 -0800
-From:   Adam Joseph <adam@westernsemico.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Peter Geis <pgwipeout@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [Question] rk3399 vfio-pci/sr-iov support
-Message-ID: <20211115115004.7d043c5b@snowden>
-In-Reply-To: <b597b9a6-870a-8fbd-6490-59734c04367f@arm.com>
-References: <CAMdYzYoPXWbv4zXet6c9JQEMbqcJi6ZEOui_n82NVmrqNLy_pw@mail.gmail.com>
-        <b597b9a6-870a-8fbd-6490-59734c04367f@arm.com>
+        id S1348491AbhKOVDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 16:03:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243939AbhKOUmA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 15:42:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 56E5561181;
+        Mon, 15 Nov 2021 20:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637008730;
+        bh=+MdU1gdoi9Y0H+fD2fxvZbAYwxpeArFFiStYzxrBRt8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Gc+ZpZCFlW9HOVziyYRuqE4eJwj0OMkNSDUIqef+RVb1ECfkLtMSTcD2hNYCXuvnk
+         01nJBSp6ieXbE4H/KH74qenlOc4EUkKt7lCluxfg/NSMJelJF3kIPnvpQ+6l7wQgGd
+         wYrErNLWfhpJ9Yno3p6LFaiDJgY/JqWOCxPmpI933Zw2CoTyHwaV6eiszNKWe2JSIV
+         d0bp7kjEDweS1qBkCDYlW9crnG0uwVBa03wwswB5oVK90g+l90V0IVO5AqARkqRBBv
+         r8f/4Y16sbjO2c7BMB4zxxGU6/XAZnDKrD0YBa2XbyeoyRsecAczXwJOj/RL19I+KR
+         0Zk8I0UQ/lvBA==
+Date:   Mon, 15 Nov 2021 14:38:48 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
+ interfaces
+Message-ID: <20211115203848.GA1586192@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-OutGoing-Spam-Status: No, score=-1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server220.web-hosting.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - westernsemico.com
-X-Get-Message-Sender-Via: server220.web-hosting.com: authenticated_id: westwhdn/from_h
-X-Authenticated-Sender: server220.web-hosting.com: adam@westernsemico.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211115020552.2378167-2-baolu.lu@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 9 Dec 2019 14:07:02 +0000
-Robin Murphy <robin.murphy@arm.com> wrote:
-> On 09/12/2019 1:28 pm, Peter Geis wrote:
-> > I'm back with more pcie fun on the rk3399.
-> > I'm trying to get pcie passthrough working for a vm on the rk3399,
-> > and have encountered some roadblocks.
+On Mon, Nov 15, 2021 at 10:05:42AM +0800, Lu Baolu wrote:
+> From the perspective of who is initiating the device to do DMA, device
+> DMA could be divided into the following types:
 > 
-> That much I can help with somewhat: the major impediment is that
-> RK3399 doesn't have an IOMMU in front of PCIe.
+>         DMA_OWNER_KERNEL: kernel device driver intiates the DMA
+>         DMA_OWNER_USER: userspace device driver intiates the DMA
 
-For the more limited case of defending against attacks from
-hostile/buggy firmware on PCIe devices: is it possible to use the
-RK3399 PCIe "inbound address translation" support instead of an IOMMU?
+s/intiates/initiates/ (twice)
 
-The RK3399 TRM, v1.3 "Part 2", section 17.5.5.2.1 explains how to
-configure address translation (including a base/bounds check) for
-inbound-to-SoC memory writes, but details are quite sparse.
+As your first sentence suggests, the driver doesn't actually
+*initiate* the DMA in either case.  One of the drivers programs the
+device, and the *device* initiates the DMA.
 
-Linux appears to not use this functionality; from
-drivers/pci/controller/pcie-rockchip-host.c we can see that it
-disables the base/bounds (sets them to the entire 32-bit space, which
-is all RAM on RK3399 since it supports only 4GB) and passes all 32
-bits of incoming memory writes:
+> DMA_OWNER_KERNEL and DMA_OWNER_USER are exclusive for all devices in
+> same iommu group as an iommu group is the smallest granularity of device
+> isolation and protection that the IOMMU subsystem can guarantee.
 
-static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
-                                     int region_no, u8 num_pass_bits,
-	                             u32 lower_addr, u32 upper_addr)
-...
+I think this basically says DMA_OWNER_KERNEL and DMA_OWNER_USER are
+attributes of the iommu_group (not an individual device), and it
+applies to all devices in the iommu_group.  Below, you allude to the
+fact that the interfaces are per-device.  It's not clear to me why you
+made a per-device interface instead of a per-group interface.
 
-static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
-{
-...
-	err = rockchip_pcie_prog_ib_atu(rockchip, 2, 32 - 1, 0x0, 0);
+> This
+> extends the iommu core to enforce this exclusion when devices are
+> assigned to userspace.
+> 
+> Basically two new interfaces are provided:
+> 
+>         int iommu_device_set_dma_owner(struct device *dev,
+>                 enum iommu_dma_owner mode, struct file *user_file);
+>         void iommu_device_release_dma_owner(struct device *dev,
+>                 enum iommu_dma_owner mode);
+> 
+> Although above interfaces are per-device, DMA owner is tracked per group
+> under the hood. An iommu group cannot have both DMA_OWNER_KERNEL
+> and DMA_OWNER_USER set at the same time. Violation of this assumption
+> fails iommu_device_set_dma_owner().
+> 
+> Kernel driver which does DMA have DMA_OWNER_KENREL automatically
+> set/released in the driver binding process (see next patch).
 
-Is this a dead end?  If not I might pursue it, if I can get the
-necessary documentation.  I couldn't find any mention of ATS in the
-RK3399 manual; if the PCIe RC allows that then all bets are off anyways.
+s/DMA_OWNER_KENREL/DMA_OWNER_KERNEL/
 
-  - a
+> Kernel driver which doesn't do DMA should not set the owner type (via a
+> new suppress flag in next patch). Device bound to such driver is considered
+> same as a driver-less device which is compatible to all owner types.
+> 
+> Userspace driver framework (e.g. vfio) should set DMA_OWNER_USER for
+> a device before the userspace is allowed to access it, plus a fd pointer to
+> mark the user identity so a single group cannot be operated by multiple
+> users simultaneously. Vice versa, the owner type should be released after
+> the user access permission is withdrawn.
