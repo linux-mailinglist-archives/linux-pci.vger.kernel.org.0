@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 009B34520D7
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 01:54:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB04A452091
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 01:52:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358482AbhKPA4t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 19:56:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        id S1350229AbhKPAzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 19:55:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245615AbhKOTUv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 14:20:51 -0500
+        with ESMTP id S1343652AbhKOTVd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 14:21:33 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BECC077949;
-        Mon, 15 Nov 2021 10:15:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1D2C07DE6F;
+        Mon, 15 Nov 2021 10:19:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/j1kGg3Y3gXXMCKBT/FlrMPEzAkt4b0LfzEg1w0LaRY=; b=MiHTez0Qf+wX+jRQ5B/3EkMeSB
-        TvxNL1Ov34NgD3bwoIg17g3//hLJW1J9conA8mIU+92DauDmRpeOBfGqiA+NBBYGONoovgPDaaoeT
-        E9hbRqrey5lkoxXaOlQSqb3RveB7VNobb8j6oZMXpGtHVa1EjZvb84ijRMjafDoYjn/qi06lzFIA4
-        t08ygSB4+Hxt81yRGLr3p5uBd+TEtPKsvy2hqjw+oLQ+qHd5zgxTZAGfK6xvoDdQihW4H2ydtA27R
-        ylOo0xgaDgmTlW9rxr1QiFESRAn1mAZ7WrFwnQuCKV/52trgg6FZ6tiCPD0OlfG2au6V0ORG4Dkg6
-        C8px0TLw==;
+        bh=zVrBoirh2EF9+XPhCgtoyIlYq2wX2tx0m7p7r3K4JDE=; b=c0jPYjEJ2+8cqRIOPjmMalFRsM
+        wIuGdLyprIZWo22GRu4eRakSjo+en3lVr5mXfg6fN3FoeQAO9uG73Nb7nfxGxONrnUAR+UwqISNpn
+        oIGSMHGZKvoxd9uy7f4SLVMVKetQqzPSfg8jTxKb7zyRHVnOS/smfK4Hxe09WYAndcx5BqAXJMuP3
+        +7iO0yXz9x/J7Hi5O4CGiXlGExg8uJ37Lc3dbw4LUbR/qiISVUuSWAqWIELHG+RSGpQfkRcY5HvJf
+        sZkm4QHh4nad9xygINeOfTg3M9efb3+RI1XRq/Dwnqo7XPQxin/AvQry0RbC2Wv25PLusqyXo4a1g
+        F1X0B+lw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mmgVX-00Ge06-LZ; Mon, 15 Nov 2021 18:15:07 +0000
-Date:   Mon, 15 Nov 2021 10:15:07 -0800
+        id 1mmgZL-00GeVC-IN; Mon, 15 Nov 2021 18:19:03 +0000
+Date:   Mon, 15 Nov 2021 10:19:03 -0800
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
         Christoph Hellwig <hch@infradead.org>,
         Kevin Tian <kevin.tian@intel.com>,
         Chaitanya Kulkarni <kch@nvidia.com>,
@@ -42,56 +42,44 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         Jacob jun Pan <jacob.jun.pan@intel.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: Re: [PATCH 02/11] driver core: Set DMA ownership during driver
- bind/unbind
-Message-ID: <YZKjq3sXb9+UTDSz@infradead.org>
+Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
+ auto-claiming
+Message-ID: <YZKkl/1GN+KgjYs6@infradead.org>
 References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-3-baolu.lu@linux.intel.com>
- <YZJeRomcJjDqDv9q@infradead.org>
- <20211115132442.GA2379906@nvidia.com>
- <8499f0ab-9701-2ca2-ac7a-842c36c54f8a@arm.com>
- <20211115155613.GA2388278@nvidia.com>
+ <20211115020552.2378167-4-baolu.lu@linux.intel.com>
+ <YZJe1jquP+osF+Wn@infradead.org>
+ <20211115133107.GB2379906@nvidia.com>
+ <495c65e4-bd97-5f29-d39b-43671acfec78@arm.com>
+ <20211115161756.GP2105516@nvidia.com>
+ <e9db18d3-dea3-187a-d58a-31a913d95211@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211115155613.GA2388278@nvidia.com>
+In-Reply-To: <e9db18d3-dea3-187a-d58a-31a913d95211@arm.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 11:56:13AM -0400, Jason Gunthorpe wrote:
-> drivers/base/platform.c:        .dma_configure  = platform_dma_configure,
-> drivers/bus/fsl-mc/fsl-mc-bus.c:        .dma_configure  = fsl_mc_dma_configure,
-> drivers/pci/pci-driver.c:       .dma_configure  = pci_dma_configure,
-> drivers/gpu/host1x/bus.c:       .dma_configure = host1x_dma_configure,
+On Mon, Nov 15, 2021 at 05:54:42PM +0000, Robin Murphy wrote:
+> > s/PIO/MMIO, but yes basically. And not just data trasnfer but
+> > userspace can interfere with the device state as well.
 > 
-> Other than host1x they all work with VFIO.
-> 
-> Also, there is no bus->dma_unconfigure() which would be needed to
-> restore the device as well.
-> 
-> So, would you rather see duplicated code into the 4 drivers, and a new
-> bus op to 'unconfigure dma'
+> Sure, but unexpected changes in device state could happen for any number of
+> reasons - uncorrected ECC error, surprise removal, etc. - so if that can
+> affect "kernel integrity" I'm considering it an independent problem.
 
-The tend to mostly call into common helpers eventually.
+Well, most DMA is triggered by the host requesting it through MMIO.
+So having access to the BAR can turn many devices into somewhat
+arbitrary DMA engines.
 
-> 
-> Or, a 'dev_configure_dma()' function that is roughly:
-> 
->         if (dev->bus->dma_configure) {
->                 ret = dev->bus->dma_configure(dev);
->                 if (ret)
->                         return ret;
->                 if (!drv->suppress_auto_claim_dma_owner) {
->                        ret = iommu_device_set_dma_owner(dev, DMA_OWNER_KERNEL,
->                                                         NULL);
->                        if (ret)
->                                ret;
->                 }
->          }
-> 
-> And a pair'd undo.
+> I can see the argument from that angle, but you can equally look at it
+> another way and say that a device with kernel ownership is incompatible with
+> a kernel driver, if userspace can call write() on "/sys/devices/B/resource0"
+> such that device A's kernel driver DMAs all over it. Maybe that particular
+> example lands firmly under "just don't do that", but I'd like to figure out
+> where exactly we should draw the line between "DMA" and "ability to mess
+> with a device".
 
-But that seems like an even better idea to me.  Even better with an
-early return and avoiding the pointless indentation.
+Userspace writing to the resourceN files with a bound driver is a mive
+receipe for trouble.  Do we really allow this currently?
