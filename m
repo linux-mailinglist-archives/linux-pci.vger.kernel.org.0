@@ -2,229 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDBBA4509FC
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 17:46:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED5D450D8C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 18:56:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbhKOQtd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 11:49:33 -0500
-Received: from mout.gmx.net ([212.227.17.21]:59235 "EHLO mout.gmx.net"
+        id S237781AbhKOR73 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 12:59:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:58970 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231845AbhKOQtX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 11:49:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1636994693;
-        bh=7X7opVIFUZ9gt0W6u/76B1ZJuHVq3lm9XgLe9rJcqwk=;
-        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=ZNp1vsR/IplK0McopUH6C9jjdWtYM8pRYTQT99IpfdIkJP6hIuJ3Bav6Jp/Fsql+W
-         pLeR4/Z2W5PlvaQlcoPw4WL++4hpx8bykreafnukKnhlmV8BRQXi+yt9oC9xkdHG47
-         Egny6rJ6PkZPUuAGgL1D6QlCFuBICxSP/3OxGkDo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.172.2]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MulmF-1mUiZj3MMl-00rlU4; Mon, 15
- Nov 2021 17:44:52 +0100
-Message-ID: <fcdead1c-2e26-b8ca-9914-4b3718d8f6d4@gmx.de>
-Date:   Mon, 15 Nov 2021 17:44:46 +0100
+        id S239240AbhKOR5w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 12:57:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C2E61FB;
+        Mon, 15 Nov 2021 09:54:51 -0800 (PST)
+Received: from [10.57.82.45] (unknown [10.57.82.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F36763F70D;
+        Mon, 15 Nov 2021 09:54:48 -0800 (PST)
+Message-ID: <e9db18d3-dea3-187a-d58a-31a913d95211@arm.com>
+Date:   Mon, 15 Nov 2021 17:54:42 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: Build regressions/improvements in v5.16-rc1
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Nick Terrell <terrelln@fb.com>, Rob Clark <robdclark@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Stan Skowronek <stan@corellium.com>,
-        Hector Martin <marcan@marcan.st>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-ntfs-dev@lists.sourceforge.net,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-References: <20211115155105.3797527-1-geert@linux-m68k.org>
- <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
-From:   Helge Deller <deller@gmx.de>
-In-Reply-To: <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5BKtXEDuts0Z1GbTQQwbacSZ6Qy1U07fZEMQSQLpuPBBQDGFGvS
- jgmRgNw/0/YxGtzSDq/AyZLFtskYKCywXQ3lO2wtd3EGePe4Ixvqqh7DUZZeoRxCsQMl6GA
- by16J3GCpzXn/Msq8wegCjeZkFLZeq3tCjI3WXTxmaGR5bFXZPJKjDTbupJilCqt5Bs35DE
- Rw+BaHR8OgV3ewoQytQig==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:b77E2Nv2HWU=:1iEuQwORGxqm+Wxgophchs
- kJUQQ6hBkiYPbKA0OD9YByp1bHssWrVkeWRGKN5pykYEH3l7dN0ijgUMSWJcN0GfQUbeMrT1b
- YaGdtm1k4/pCbjVfG0S149Z9y49SItZL4ZWtdlVE+CRAqawiC7KOmFHtqeN0Y3JmBhRIOjqfA
- uwpF6echOB0lej0vS99fwoOz3DbzQCS0D+iIZnjK/55BLHi1EdS59b+xe3FYn1MbOzW1sOTXh
- U2NPD4g+VaVZuUlI+pmHPQ4wNk3aQQ/0v2vADxHoqHF8G6ISUZLs6qLqK4AmJFA1E1A4aLtz/
- 7huNRwSazAtuaLdZpRe6Qeys5FuaWNHQLsONPwXczWfhlS5ZxxU4znt96t19rKNnOB44icruu
- FpfCnxAIbKLuFgiiE4TBO4D3tcK6iDuh4gsXT/0L9E/QB26kjEtSHA3QP7ACtzqYu1Bdzxu0+
- neK0u+MJdKV7sSNcTbjG+E0D8+rAJZz5NjcCzEg57aRJ+O5YgbDkAoaLXcR3+ihlZml9NHl8I
- nyqs3iFoo+U5FZS6xEAjtRTd3kjOJpcutf95kWK5s5mTRo34ItK4k/Ad0JVdO0Qk94Gly7dd3
- EPRvkD3IvjVdIAoJ1rGqrCJLxNWP9OskTwtxtnvl4HqpjswTECMXMjjUHePuirpU/wbanGDjZ
- gLkqWwbit6L+/MF8j/WgH0uEf54Q4Ym1PEHqdoCmTAevhGPZZD49/diYSKX8c4baXWRjKyRYu
- jCjMhrQJFRiCXP70cHBPZPB5ov1LUhDv5uzdeyGBDdFbsha0M6M8zmtIj9jngXvAp7jjclHY2
- Q4keWlRsrozLDEB86NArf/fA+BNKh5UekNeLQ1k9csmoAntQei+GfSJl/SL76lPfgp0jAHfUg
- TvygG2oE3WZk43TGud0mvrvuC5RIjSTvIVbkSX5eI/GUxeqOuV5DaO80y8DDA1+oswXNTMVJ9
- VPSs3miXxGYDwZ+8z0E8DZ8Q1eG6CZDbs4b5ClRtuiPMJX76ARaXEeTlPpAffiH/ptsUKt03s
- zF15t5hKeMRpsZJ9fldqE2/ud15ANfqT6CXGMZfxXhHhIa0Hc9jQPkvTp1cVZRTJtChK318IW
- JWFtnZlRQXGilk=
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
+ auto-claiming
+Content-Language: en-GB
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>
+References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+ <20211115020552.2378167-4-baolu.lu@linux.intel.com>
+ <YZJe1jquP+osF+Wn@infradead.org> <20211115133107.GB2379906@nvidia.com>
+ <495c65e4-bd97-5f29-d39b-43671acfec78@arm.com>
+ <20211115161756.GP2105516@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20211115161756.GP2105516@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/15/21 17:12, Geert Uytterhoeven wrote:
-> On Mon, Nov 15, 2021 at 4:54 PM Geert Uytterhoeven <geert@linux-m68k.org=
-> wrote:
->> Below is the list of build error/warning regressions/improvements in
->> v5.16-rc1[1] compared to v5.15[2].
+On 2021-11-15 16:17, Jason Gunthorpe wrote:
+> On Mon, Nov 15, 2021 at 03:14:49PM +0000, Robin Murphy wrote:
+> 
+>>> If userspace has control of device A and can cause A to issue DMA to
+>>> arbitary DMA addresses then there are certain PCI topologies where A
+>>> can now issue peer to peer DMA and manipulate the MMMIO registers in
+>>> device B.
+>>>
+>>> A kernel driver on device B is thus subjected to concurrent
+>>> manipulation of the device registers from userspace.
+>>>
+>>> So, a 'safe' kernel driver is one that can tolerate this, and an
+>>> 'unsafe' driver is one where userspace can break kernel integrity.
 >>
->> Summarized:
->>   - build errors: +20/-13
->>   - build warnings: +3/-28
+>> You mean in the case where the kernel driver is trying to use device B in a
+>> purely PIO mode, such that userspace might potentially be able to interfere
+>> with data being transferred in and out of the kernel?
+> 
+> s/PIO/MMIO, but yes basically. And not just data trasnfer but
+> userspace can interfere with the device state as well.
+
+Sure, but unexpected changes in device state could happen for any number 
+of reasons - uncorrected ECC error, surprise removal, etc. - so if that 
+can affect "kernel integrity" I'm considering it an independent problem.
+
+>> Perhaps it's not so clear to put that under a notion of "DMA
+>> ownership", since device B's DMA is irrelevant and it's really much
+>> more equivalent to /dev/mem access or mmaping BARs to userspace
+>> while a driver is bound.
+> 
+> It is DMA ownership because device A's DMA is what is relevant
+> here. device A's DMA compromises device B. So device A asserts it has
+> USER ownership for DMA.
+> 
+> Any device in a group with USER ownership is incompatible with a
+> kernel driver.
+
+I can see the argument from that angle, but you can equally look at it 
+another way and say that a device with kernel ownership is incompatible 
+with a kernel driver, if userspace can call write() on 
+"/sys/devices/B/resource0" such that device A's kernel driver DMAs all 
+over it. Maybe that particular example lands firmly under "just don't do 
+that", but I'd like to figure out where exactly we should draw the line 
+between "DMA" and "ability to mess with a device".
+
+>>> The second issue is DMA - because there is only one iommu_domain
+>>> underlying many devices if we give that iommu_domain to userspace it
+>>> means the kernel DMA API on other devices no longer works.
 >>
->> Happy fixing! ;-)
+>> Actually, the DMA API itself via iommu-dma will "work" just fine in the
+>> sense that it will still successfully perform all its operations in the
+>> unattached default domain, it's just that if the driver then programs the
+>> device to access the returned DMA address, the device is likely to get a
+>> nasty surprise.
+> 
+> A DMA API that returns an dma_ddr_t that does not result in data
+> transfer to the specified buffers is not working, in my book - it
+> breaks the API contract.
+> 
+>>> So no kernel driver doing DMA can work at all, under any PCI topology,
+>>> if userspace owns the IO page table.
 >>
->> Thanks to the linux-next team for providing the build service.
->>
->> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/fa55b7dcdc43c=
-1aa1ba12bca9d2dd4318c2a0dbf/ (all 90 configs)
->> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/8bb7eca972ad5=
-31c9b149c0a51ab43a417385813/ (all 90 configs)
->>
->>
->> *** ERRORS ***
->>
->> 20 error regressions:
->>   + /kisskb/src/arch/parisc/include/asm/jump_label.h: error: expected '=
-:' before '__stringify':  =3D> 33:4, 18:4
->>   + /kisskb/src/arch/parisc/include/asm/jump_label.h: error: label 'l_y=
-es' defined but not used [-Werror=3Dunused-label]:  =3D> 38:1, 23:1
->
->     due to static_branch_likely() in crypto/api.c
->
-> parisc-allmodconfig
+>> This isn't really about userspace at all - it's true of any case where a
+>> kernel driver wants to attach a grouped device to its own unmanaged
+>> domain.
+> 
+> This is true for the dma api issue in isolation.
 
-fixed now in the parisc for-next git tree.
+No, it's definitely a general IOMMU-API-level thing; you could just as 
+well have two drivers both trying to attach to their own unmanaged 
+domains without DMA API involvement. What I think it boils down to is 
+that if multiple devices in a group are bound (or want to bind) to 
+different drivers, we want to enforce some kind of consensus between 
+those drivers over IOMMU API usage.
 
+> I think if we have a user someday it would make sense to add another
+> API DMA_OWNER_DRIVER_DOMAIN that captures how the dma API doesn't work
+> but DMA MMIO attacks are not possible.
+> 
+>> The fact that the VFIO kernel driver uses its unmanaged domains to map user
+>> pages upon user requests is merely a VFIO detail, and VFIO happens to be the
+>> only common case where unmanaged domains and non-singleton groups intersect.
+>> I'd say that, logically, if you want to put policy on mutual driver/usage
+>> compatibility anywhere it should be in iommu_attach_group().
+> 
+> It would make sense for iommu_attach_group() to require that the
+> DMA_OWNERSHIP is USER or DRIVER_DOMAIN.
+> 
+> That has a nice symmetry with iommu_attach_device() already requiring
+> that the group has a single device. For a driver to use these APIs it
+> must ensure security, one way or another.
 
->>   + /kisskb/src/drivers/gpu/drm/msm/msm_drv.h: error: "COND" redefined =
-[-Werror]:  =3D> 531
->>   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame =
-size of 3252 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=
-=3D]:  =3D> 47:1
->>   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame =
-size of 3360 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=
-=3D]:  =3D> 499:1
->>   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame =
-size of 5344 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=
-=3D]:  =3D> 334:1
->>   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame =
-size of 5380 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=
-=3D]:  =3D> 354:1
->>   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of=
- 1824 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=3D]:  =
-=3D> 372:1
->>   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of=
- 2224 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=3D]:  =
-=3D> 204:1
->>   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of=
- 3800 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-than=3D]:  =
-=3D> 476:1
->
-> parisc-allmodconfig
+iommu_attach_device() is supposed to be deprecated and eventually going 
+away; I wouldn't look at it too much.
 
-parisc needs much bigger frame sizes, so I'm not astonished here.
-During the v5.15 cycl I increased it to 1536 (from 1280), so I'm simply te=
-mpted to
-increase it this time to 4096, unless someone has a better idea....
+> That is a good idea, but requires understanding what tegra is
+> doing. Maybe tegra is that DMA_OWNER_DRIVER_DOMAIN user?
+> 
+> I wouldn't want to see iommu_attach_group() change the DMA_OWNERSHIP,
+> I think ownership is cleaner as a dedicated API. Adding a file * and
+> probably the enum to iommu_attach_group() feels weird.
 
->>   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2240 bytes is =
-larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]:  =3D> 1311:1
->>   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2304 bytes is =
-larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]:  =3D> 1311:1
->>   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2320 bytes is =
-larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]:  =3D> 1311:1
->
-> powerpc-allmodconfig
->
->>   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compi=
-letime_assert_366' declared with attribute error: FIELD_PREP: value too la=
-rge for the field:  =3D> 335:38
->
->     in drivers/pinctrl/pinctrl-apple-gpio.c
->
-> arm64-allmodconfig (gcc8)
->
->>   + /kisskb/src/include/linux/fortify-string.h: error: call to '__read_=
-overflow' declared with attribute error: detected read beyond size of obje=
-ct (1st parameter):  =3D> 263:25, 277:17
->
->     in lib/test_kasan.c
->
-> s390-all{mod,yes}config
-> arm64-allmodconfig (gcc11)
->
->>   + error: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.=
-ko] undefined!:  =3D> N/A
->>   + error: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-m=
-t7621.ko] undefined!:  =3D> N/A
->>   + error: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie=
--mt7621.ko] undefined!:  =3D> N/A
->>   + error: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621=
-.ko] undefined!:  =3D> N/A
->>   + error: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621=
-.ko] undefined!:  =3D> N/A
->
-> mips-allmodconfig
->
->> 3 warning regressions:
->>   + <stdin>: warning: #warning syscall futex_waitv not implemented [-Wc=
-pp]:  =3D> 1559:2
->
-> powerpc, m68k, mips, s390, parisc (and probably more)
+Indeed I wasn't imagining it changing any ownership, just preventing a 
+group from being attached to a non-default domain if it contains devices 
+bound to different incompatible drivers. Basically just taking the 
+existing check that VFIO tries to enforce and formalising it into the 
+core API. It's not too far off what we already have around changing the 
+default domain type, so there seems to be room for it to all fit 
+together quite nicely.
 
-Will someone update all of them at once?
+There would still need to be separate enforcement elsewhere to prevent 
+new drivers binding *after* a group *has* been attached to an unmanaged 
+domain, but again it can still be in those simplest terms. Tying it in 
+to userspace and FDs just muddies the water far more than necessary.
 
+Robin.
 
-
-
-Helge
-
-
->>   + arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invali=
-d for MCTP:  =3D> 322
->>   + arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid=
- for MCTP:  =3D> 295
->
-> Yeah, that happens when symbols are changed from tristate to bool...
-> Will be fixed in 5.17-rc1, with the next defconfig refresh.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m=
-68k.org
->
-> In personal conversations with technical people, I call myself a hacker.=
- But
-> when I'm talking to journalists I just say "programmer" or something lik=
-e that.
->                                 -- Linus Torvalds
->
-
+> We need the dedicated API for the dma_configure op, and keeping
+> ownership split from the current domain makes more sense with the
+> design in the iommfd RFC.
+> 
+> Thanks,
+> Jason
+> 
