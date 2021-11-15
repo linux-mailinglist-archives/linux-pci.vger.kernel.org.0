@@ -2,251 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A5C44FD01
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 03:13:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E6BF44FD82
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 04:35:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236427AbhKOCQ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Nov 2021 21:16:27 -0500
-Received: from mga12.intel.com ([192.55.52.136]:64444 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236431AbhKOCOT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 14 Nov 2021 21:14:19 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="213398885"
-X-IronPort-AV: E=Sophos;i="5.87,235,1631602800"; 
-   d="scan'208";a="213398885"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2021 18:11:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,235,1631602800"; 
-   d="scan'208";a="505714747"
-Received: from allen-box.sh.intel.com ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2021 18:11:19 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Cc:     Will Deacon <will@kernel.org>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 11/11] iommu: Remove iommu group changes notifier
-Date:   Mon, 15 Nov 2021 10:05:52 +0800
-Message-Id: <20211115020552.2378167-12-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+        id S236827AbhKODid (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Nov 2021 22:38:33 -0500
+Received: from angie.orcam.me.uk ([78.133.224.34]:37536 "EHLO
+        angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236778AbhKODiU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Nov 2021 22:38:20 -0500
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 9098D92009D; Mon, 15 Nov 2021 04:35:23 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 8A59092009C;
+        Mon, 15 Nov 2021 03:35:23 +0000 (GMT)
+Date:   Mon, 15 Nov 2021 03:35:23 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+cc:     u-boot@lists.denx.de, linux-pci@vger.kernel.org,
+        Stefan Roese <sr@denx.de>, Simon Glass <sjg@chromium.org>,
+        Phil Sutter <phil@nwl.cc>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Tom Rini <trini@konsulko.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>
+Subject: Re: [PATCH] pci: Work around PCIe link training failures
+In-Reply-To: <20211114192853.dj7mcc7sxtwaj3of@pali>
+Message-ID: <alpine.DEB.2.21.2111142118280.19625@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2111140303040.19625@angie.orcam.me.uk> <20211114154152.kmabs4k3gdrzlzke@pali> <alpine.DEB.2.21.2111141655120.19625@angie.orcam.me.uk> <20211114192853.dj7mcc7sxtwaj3of@pali>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The iommu group changes notifer is not referenced in the tree. Remove it
-to avoid dead code.
+Hi Pali,
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/linux/iommu.h | 23 -------------
- drivers/iommu/iommu.c | 75 -------------------------------------------
- 2 files changed, 98 deletions(-)
+> >  Well, this code checks for non-zero lnkcap2 first and ignores it if it's 
+> > zero, so I believe it does the right thing.  Have I missed anything?
+> 
+> I'm reading spec again and I'm not sure now. It has following section:
+> 
+>   For software to determine the supported Link speeds for components
+>   where the Link Capabilities 2 register is either not implemented, or
+>   the value of its Supported Link Speeds Vector is 0000000b, software
+>   can read bits 3:0 of the Link Capabilities register (now defined to be
+>   the Max Link Speed field), and interpret the value as follows:
+>     0001b 2.5 GT/s Link speed supported
+>     0010b 5.0 GT/s and 2.5 GT/s Link speeds supported
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 3d2dfd220d3c..d8946f22edd5 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -414,13 +414,6 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
- 	};
- }
- 
--#define IOMMU_GROUP_NOTIFY_ADD_DEVICE		1 /* Device added */
--#define IOMMU_GROUP_NOTIFY_DEL_DEVICE		2 /* Pre Device removed */
--#define IOMMU_GROUP_NOTIFY_BIND_DRIVER		3 /* Pre Driver bind */
--#define IOMMU_GROUP_NOTIFY_BOUND_DRIVER		4 /* Post Driver bind */
--#define IOMMU_GROUP_NOTIFY_UNBIND_DRIVER	5 /* Pre Driver unbind */
--#define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
--
- extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
- extern int bus_iommu_probe(struct bus_type *bus);
- extern bool iommu_present(struct bus_type *bus);
-@@ -493,10 +486,6 @@ extern int iommu_group_for_each_dev(struct iommu_group *group, void *data,
- extern struct iommu_group *iommu_group_get(struct device *dev);
- extern struct iommu_group *iommu_group_ref_get(struct iommu_group *group);
- extern void iommu_group_put(struct iommu_group *group);
--extern int iommu_group_register_notifier(struct iommu_group *group,
--					 struct notifier_block *nb);
--extern int iommu_group_unregister_notifier(struct iommu_group *group,
--					   struct notifier_block *nb);
- extern int iommu_register_device_fault_handler(struct device *dev,
- 					iommu_dev_fault_handler_t handler,
- 					void *data);
-@@ -897,18 +886,6 @@ static inline void iommu_group_put(struct iommu_group *group)
- {
- }
- 
--static inline int iommu_group_register_notifier(struct iommu_group *group,
--						struct notifier_block *nb)
--{
--	return -ENODEV;
--}
--
--static inline int iommu_group_unregister_notifier(struct iommu_group *group,
--						  struct notifier_block *nb)
--{
--	return 0;
--}
--
- static inline
- int iommu_register_device_fault_handler(struct device *dev,
- 					iommu_dev_fault_handler_t handler,
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3dcd3fc4290a..064d0679906a 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -18,7 +18,6 @@
- #include <linux/errno.h>
- #include <linux/iommu.h>
- #include <linux/idr.h>
--#include <linux/notifier.h>
- #include <linux/err.h>
- #include <linux/pci.h>
- #include <linux/bitops.h>
-@@ -41,7 +40,6 @@ struct iommu_group {
- 	struct kobject *devices_kobj;
- 	struct list_head devices;
- 	struct mutex mutex;
--	struct blocking_notifier_head notifier;
- 	void *iommu_data;
- 	void (*iommu_data_release)(void *iommu_data);
- 	char *name;
-@@ -628,7 +626,6 @@ struct iommu_group *iommu_group_alloc(void)
- 	mutex_init(&group->mutex);
- 	INIT_LIST_HEAD(&group->devices);
- 	INIT_LIST_HEAD(&group->entry);
--	BLOCKING_INIT_NOTIFIER_HEAD(&group->notifier);
- 	group->dma_owner = DMA_OWNER_NONE;
- 
- 	ret = ida_simple_get(&iommu_group_ida, 0, 0, GFP_KERNEL);
-@@ -904,10 +901,6 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
- 	if (ret)
- 		goto err_put_group;
- 
--	/* Notify any listeners about change to group. */
--	blocking_notifier_call_chain(&group->notifier,
--				     IOMMU_GROUP_NOTIFY_ADD_DEVICE, dev);
--
- 	trace_add_device_to_group(group->id, dev);
- 
- 	dev_info(dev, "Adding to iommu group %d\n", group->id);
-@@ -949,10 +942,6 @@ void iommu_group_remove_device(struct device *dev)
- 
- 	dev_info(dev, "Removing from iommu group %d\n", group->id);
- 
--	/* Pre-notify listeners that a device is being removed. */
--	blocking_notifier_call_chain(&group->notifier,
--				     IOMMU_GROUP_NOTIFY_DEL_DEVICE, dev);
--
- 	mutex_lock(&group->mutex);
- 	list_for_each_entry(tmp_device, &group->devices, list) {
- 		if (tmp_device->dev == dev) {
-@@ -1075,36 +1064,6 @@ void iommu_group_put(struct iommu_group *group)
- }
- EXPORT_SYMBOL_GPL(iommu_group_put);
- 
--/**
-- * iommu_group_register_notifier - Register a notifier for group changes
-- * @group: the group to watch
-- * @nb: notifier block to signal
-- *
-- * This function allows iommu group users to track changes in a group.
-- * See include/linux/iommu.h for actions sent via this notifier.  Caller
-- * should hold a reference to the group throughout notifier registration.
-- */
--int iommu_group_register_notifier(struct iommu_group *group,
--				  struct notifier_block *nb)
--{
--	return blocking_notifier_chain_register(&group->notifier, nb);
--}
--EXPORT_SYMBOL_GPL(iommu_group_register_notifier);
--
--/**
-- * iommu_group_unregister_notifier - Unregister a notifier
-- * @group: the group to watch
-- * @nb: notifier block to signal
-- *
-- * Unregister a previously registered group notifier block.
-- */
--int iommu_group_unregister_notifier(struct iommu_group *group,
--				    struct notifier_block *nb)
--{
--	return blocking_notifier_chain_unregister(&group->notifier, nb);
--}
--EXPORT_SYMBOL_GPL(iommu_group_unregister_notifier);
--
- /**
-  * iommu_register_device_fault_handler() - Register a device fault handler
-  * @dev: the device
-@@ -1653,14 +1612,8 @@ static int remove_iommu_group(struct device *dev, void *data)
- static int iommu_bus_notifier(struct notifier_block *nb,
- 			      unsigned long action, void *data)
- {
--	unsigned long group_action = 0;
- 	struct device *dev = data;
--	struct iommu_group *group;
- 
--	/*
--	 * ADD/DEL call into iommu driver ops if provided, which may
--	 * result in ADD/DEL notifiers to group->notifier
--	 */
- 	if (action == BUS_NOTIFY_ADD_DEVICE) {
- 		int ret;
- 
-@@ -1671,34 +1624,6 @@ static int iommu_bus_notifier(struct notifier_block *nb,
- 		return NOTIFY_OK;
- 	}
- 
--	/*
--	 * Remaining BUS_NOTIFYs get filtered and republished to the
--	 * group, if anyone is listening
--	 */
--	group = iommu_group_get(dev);
--	if (!group)
--		return 0;
--
--	switch (action) {
--	case BUS_NOTIFY_BIND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_BIND_DRIVER;
--		break;
--	case BUS_NOTIFY_BOUND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_BOUND_DRIVER;
--		break;
--	case BUS_NOTIFY_UNBIND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_UNBIND_DRIVER;
--		break;
--	case BUS_NOTIFY_UNBOUND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER;
--		break;
--	}
--
--	if (group_action)
--		blocking_notifier_call_chain(&group->notifier,
--					     group_action, dev);
--
--	iommu_group_put(group);
- 	return 0;
- }
- 
--- 
-2.25.1
+ This is consistent with speeds defined with PCIe rev. 2.0, which is the 
+last revision not to define the Link Capabilities 2 register.
 
+> I'm not sure how it should be interpreted, but my assumption is that
+> empty lnkcap2 implicates that only 5GT/s or 2.5GT/s speeds are supported
+> and therefore trying higher should not be done...
+
+ I can see no ambiguity here.
+
+ The Link Capabilities register always defines the maximum speed supported 
+and given that there is no speed masking defined for PCIe rev. 2.0 and 
+below all speeds up to the maximum must be always supported with hardware 
+compliant to these specification revisions.
+
+ As from PCIe rev. 3.0 the Link Capabilities 2 register provides support 
+for speed masking and therefore not all speeds below the maximum given by 
+the Link Capabilities register must be supported with hardware compliant 
+to this and higher specification revisions.
+
+> Also in spec is following note:
+> 
+>   It is strongly encouraged that software primarily utilize the
+>   Supported Link Speeds Vector instead of the Max Link Speed field.
+> 
+> So based on this note, iteration should be done via lnkcap2 bits instead
+> of lnkcap speed.
+
+ I believe my code does iterate over lnkcap2 bits already, because speed 
+encodings that correspond to those lnkcap2 bits that are zero are skipped.
+
+> >  It could be done in Linux in addition to U-Boot, although I think doing 
+> > that in the firmware is more important, especially as there could be a 
+> > boot device downstream such a switch.  And depending on the platform Linux 
+> > does not always reassign buses, so a user intervention (i.e. an explicitly 
+> > added kernel parameter) would have to be required.
+> 
+> It is important to have it in both components (U-Boot and Linux). For
+> example native PCIe controller drivers in linux kernel as a first thing
+> do complete reset of controller together with connected devices. So
+> whatever do U-Boot is completely lost. And important is that Linux
+> kernel drivers should not depend on some bootloader configuration. And
+> note that your patch implements this workaround in CONFIG_PCI_PNP code,
+> so if board disable this option, workaround is not applied.
+
+ Well, everything is not Linux.  The lone Unmatched board can run at least 
+FreeBSD or Haiku right now, and it is only one of the numerous machines 
+supported by U-Boot.  A piece of code in Linux will not help other OSes.
+
+ Also as I noted not all Linux platforms discard the firmware settings 
+with PCI/e devices, let alone bring them to their power-on defaults; this 
+certainly does not happen with the Unmatched or I couldn't have benefitted 
+with this change of mine proposed or earlier hacks with poking at the 
+relevant registers from the U-Boot command line.  So in my scenario this 
+fix surely qualifies as good enough.  Interestingly Linux does notice the 
+clamp imposed by my change with the offending link:
+
+pci 0000:05:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x1 link at 0000:02:03.0 (capable of 8.000 Gb/s with 5.0 GT/s PCIe x2 link)
+
+(the x1 vs x2 limitation is imposed by wiring one lane only in the Delock 
+device in the first place; then I wired it to a single-lane M.2 connector 
+of the Unmatched).
+
+ That said I'm not opposed to porting this code to Linux, I have certainly 
+contributed infinitely more code to Linux than I did to U-Boot.  It is 
+just that my resources are limited, so I need to cautiously allocate them.  
+I have other priorities, the Unmatched box is in my remote lab and I am 
+only going to have physical access to it this week only.  The next 
+opportunity may be next year at the earliest.  And I dare not reflashing 
+U-Boot remotely so as not to lose access with a broken build because I 
+need the machine for other purposes like GCC verification.
+
+ So I'd rather focus on getting the change right for U-Boot now, while I 
+am here.  If we agree on the way to move forward with this code, then I 
+can look into porting this stuff to Linux, as I can surely add another 
+kernel image to boot the system from remotely in a safe manner.
+
+> >  And these are generic PCIe switches, they could be anywhere and with the 
+> > weird combinations of hardware interfaces available now (e.g. PCI-PCIe 
+> > bridge adapters or M.2 to regular PCIe slot adapters) virtually any 
+> > combination is possible.
+> > 
+> >  E.g. I have a 1997-vintage dual Pentium MMX box (82439HX host bridge; 
+> > [8086:1250]) with PCIe devices, although it does require a lot of Linux 
+> > interventions to cope with its firmware limitations.  NB I plan to add 
+> > some NVMe storage to that box, and I believe the ASM2824 has been used in 
+> > some M.2 carrier boards meant for NVMe devices.
+> 
+> Hm... now thinking about your patch... and if it is general, applied to
+> all devices, should it also be applied to any type of downstream port?
+> 
+> Meaning also for root ports, or PCIe port of PCI/X to PCIe bridge (I
+> guess that such old platforms with only PCI host bridge without PCIe
+> could be affected too if you connect PCIe card via PCI/X to PCIe bridge
+> and then this bridge to host PCI slot).
+
+ I guess so.  I considered root ports, but somehow it did not occur to me 
+that they can be wired directly to slots (any sane manufacturer would get 
+their onboard devices sorted), which of course they can.  I forgot about 
+the PCI/PCI-X to PCI Express bridges though.  Thanks for the suggestion.
+
+ As this is a trivial change to make I'll post an update, but I will wait 
+till the end of the day or so so as to let people who do this stuff as a 
+part of their dayjob have a chance to give feedback.
+
+> >  As I noted ASMedia declined to comment, so it's hard to say if the cause 
+> > has been nailed correctly and which devices if any, beyond [1b21:2824], 
+> > are affected.
+> 
+> Yea, we do not know... And because we know that there is lot of broken
+> HW which works with current version, we need to be very careful when
+> introducing some workaround which is called on every hardware.
+> 
+> For example something similar like in your patch was implemented in
+> Marvell SerDes U-Boot driver, which controls physical layer (so on place
+> where nobody would expect touching higher layer code). Just this code
+> did not touched retrain link bit... And so it could not have worked and
+> was recently removed in patch series:
+> https://lore.kernel.org/u-boot/20210924205922.25432-1-marek.behun@nic.cz/
+
+ Sure, which is why this change tries hard to be conservative and checks 
+multiple conditions to make sure a link is in trouble before it pokes at 
+it.  If you suspect that these checks may be insufficient, then I'm open 
+to further suggestions.
+
+ NB I forgot to mention in the change description and I can add it in v2 
+that the rate of the speed oscillation/link training with the ASM2824 is 
+34-35 times per second.  So it's quite a lengthy process.
+
+> I'm not saying that I'm opposing this patch. Just I would like see how
+> is this issue will be fixed in kernel as kernel general workaround would
+> affect lot of more devices. And so solution accepted by kernel project
+> should be perfectly fine also for smaller project like U-Boot.
+
+ Well, as far as I'm concerned I'd propose a functional equivalent that 
+has been merely mechanically adapted to Linux internal interfaces (though 
+busy-looping for extended periods with interrupts disabled, which is what 
+is needed here, may be problematic in Linux or indeed any OS, unlike with 
+the firmware; maybe PCI enumeration is early enough for that not to matter 
+in reality though).
+
+ Again, thanks for your input.
+
+  Maciej
