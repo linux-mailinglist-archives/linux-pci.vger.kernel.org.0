@@ -2,78 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CCED451718
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 23:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BDC1451784
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 23:30:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349651AbhKOWFI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 17:05:08 -0500
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:40865 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347660AbhKOWCo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 17:02:44 -0500
-Received: by mail-pf1-f180.google.com with SMTP id z6so16228202pfe.7;
-        Mon, 15 Nov 2021 13:59:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UFAP1oAnn6MbmB29dQFqbnJScGDdm0DPgaEWvP1J3gI=;
-        b=s4/3y5GvzP6CWc9qRKnPcg/EidAPU4FrmzhCNxVXq0uCTS7nKk0aHySrrJ4FdW1tkr
-         0wTX5oMniVlxvHGkOUGcI1+gi0c2K18/A8RIabrpSVvtNF+e5SW9fL8Y/rnmHgU2cY7o
-         FTL1vwdNz815M15p2LeucfBoduHcBCoJljU4treGsDMta6dP+w6wXWrsmbv0IZYwn/mv
-         3yCHr1ZFFAhZdaXNvqUZYWhj3KDaK+/VHdf+942VzZI+LqS2gNB0PI033w5aVZFJFHwH
-         10ML1JaExHndJ3SppK0tTRTC7lbb/Vw8oRh44I1qHjfszpaIL+Ox2XelIu1EP7vJ1yGF
-         mp7w==
-X-Gm-Message-State: AOAM531Dy4GZ6QE5BW3aYS2MhWe0LHf4oXhZkBZcmFoOQbBHvie7/jn5
-        wqD3wo2UilRVlQllLHG9xgbqAohiivJqGRsM
-X-Google-Smtp-Source: ABdhPJyrq/k7SU2twBKgDghx/9so0FeU56V5XYnp9oXw45iCn7Cn5LgJKV1NXVlWubHAkaSh/pXgAQ==
-X-Received: by 2002:a65:670d:: with SMTP id u13mr1440890pgf.251.1637013587668;
-        Mon, 15 Nov 2021 13:59:47 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id na13sm288559pjb.11.2021.11.15.13.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 13:59:47 -0800 (PST)
-Date:   Mon, 15 Nov 2021 22:59:34 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     marek.vasut@gmail.com
-Cc:     linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S1348512AbhKOWc4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 17:32:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1344287AbhKOWUs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 17:20:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 96FA561AD2;
+        Mon, 15 Nov 2021 22:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637014668;
+        bh=O3XWXpuP4JyzBpAnL/WOSpf8m8SFaojzS7K+2Ae5RZo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=km/LghMuevoo8pewpHoaepFIkXTw+JY5kSemLdsSd/WNU9oyMsKve+s0YIjjAglss
+         vlgxo1iJb2GAMkAHvbCJLidq1dpdAO+IxmV5v16pVbdM+athvPzsLQ+0/ReU28wnmO
+         QOqbuQCv97q1aYNECVRhKlNgu5oiGDh2AqzF3ppuiBdttPDU1SUcYlUeWwWFmEMvig
+         n1mVNEKc8pFKkj3BMEio9QX9SAhekriQvtPvR0cm0JIVyw3DITrSCi4e9WX0enpF2f
+         V4MXczkaxJqtk7t5xtn1PSIGdiviCqz36wVPPktfv1ENLaelF7f3R3DS49EmeVlK4f
+         XuO+mHaVSfJPw==
+Date:   Mon, 15 Nov 2021 16:17:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v4] PCI: rcar: Check if device is runtime suspended
- instead of __clk_is_enabled()
-Message-ID: <YZLYRjZxTclKX9mJ@rocinante>
-References: <20211115204641.12941-1-marek.vasut@gmail.com>
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
+ auto-claiming
+Message-ID: <20211115221747.GA1587608@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211115204641.12941-1-marek.vasut@gmail.com>
+In-Reply-To: <20211115020552.2378167-4-baolu.lu@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+CC Adding Sasha for visibility]
+On Mon, Nov 15, 2021 at 10:05:44AM +0800, Lu Baolu wrote:
+> pci_stub allows the admin to block driver binding on a device and make
+> it permanently shared with userspace. Since pci_stub does not do DMA,
+> it is safe. However the admin must understand that using pci_stub allows
+> userspace to attack whatever device it was bound to.
 
-Hi Marek,
+This commit log doesn't say what the patch does.  I think it tells us
+something about what pci-stub *already* does ("allows admin to block
+driver binding") and something about why that is safe ("does not do
+DMA").
 
-Thank you for taking care about this.  I am adding Sasha since this is
-something we should most likely port to stable and long-term kernels,
-especially since this isn't a new driver.
+But it doesn't say what this patch changes.  Based on the subject
+line, I expected something like:
 
-[...]
-> - * Static copy of bus clock pointer, so we can check whether the clock
-> - * is enabled or not.
-> + * Static copy of pcie device pointer, so we can check whether the
-> + * device is runtime suspended or not.
+  As of ("<commit subject>"), <some function>() marks the iommu_group
+  as containing only devices with kernel drivers that manage DMA.
 
-A small nitpick: it would be "PCIe" in the above comment.  However,
-probably not worth sending another version just for this.
+  Avoid this default behavior for pci-stub because it does not program
+  any DMA itself.  This allows <some desirable behavior>.
 
-	Krzysztof
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/pci/pci-stub.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
+> index e408099fea52..6324c68602b4 100644
+> --- a/drivers/pci/pci-stub.c
+> +++ b/drivers/pci/pci-stub.c
+> @@ -36,6 +36,9 @@ static struct pci_driver stub_driver = {
+>  	.name		= "pci-stub",
+>  	.id_table	= NULL,	/* only dynamic id's */
+>  	.probe		= pci_stub_probe,
+> +	.driver		= {
+> +		.suppress_auto_claim_dma_owner = true,
+> +	},
+>  };
+>  
+>  static int __init pci_stub_init(void)
+> -- 
+> 2.25.1
+> 
