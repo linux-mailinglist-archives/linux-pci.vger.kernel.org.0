@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCAAF45041E
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 13:10:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF3AC450420
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 13:10:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbhKOMNA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 07:13:00 -0500
+        id S230438AbhKOMNC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 07:13:02 -0500
 Received: from mga09.intel.com ([134.134.136.24]:14027 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229613AbhKOMM4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 07:12:56 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="233266306"
+        id S230436AbhKOMNA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 07:13:00 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="233266319"
 X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="233266306"
+   d="scan'208";a="233266319"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 04:10:01 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 04:10:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="644818570"
+   d="scan'208";a="644818589"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2021 04:09:58 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2021 04:10:01 -0800
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -28,58 +28,64 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Zhangfei Gao <zhangfei.gao@linaro.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v4 0/3] device property: Remove device_add_properties()
-Date:   Mon, 15 Nov 2021 15:09:58 +0300
-Message-Id: <20211115121001.77041-1-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 1/3] PCI: Convert to device_create_managed_software_node()
+Date:   Mon, 15 Nov 2021 15:09:59 +0300
+Message-Id: <20211115121001.77041-2-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20211115121001.77041-1-heikki.krogerus@linux.intel.com>
+References: <20211115121001.77041-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+In quirk_huawei_pcie_sva(), device_add_properties() is used to
+inject additional device properties, but there is no
+device_remove_properties() call anywhere to remove those
+properties. The assumption is most likely that the device is
+never removed, and the properties therefore do not also never
+need to be removed.
 
-One more version. Hopefully the commit messages are now OK. No other
-changes since v3:
+Even though it is unlikely that the device is ever removed in
+this case, it is safer to make sure that the properties are
+also removed if the device ever does get unregistered.
 
-https://lore.kernel.org/lkml/20211006112643.77684-1-heikki.krogerus@linux.intel.com/
+To achieve this, instead of adding a separate quirk for the
+case of device removal where device_remove_properties() is
+called, using device_create_managed_software_node() instead of
+device_add_properties(). Both functions create a software node
+(a type of fwnode) that holds the device properties, which is
+then assigned to the device very much the same way.
 
+The difference between the two functions is, that
+device_create_managed_software_node() guarantees that the
+software node (together with the properties) is removed when
+the device is removed. The function device_add_property() does
+not guarantee that, so the properties added with it should
+always be removed with device_remove_properties().
 
-v3 cover letter:
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/pci/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In this third version of this series, the second patch is now split in
-two. The device_remove_properties() call is first removed from
-device_del() in its own patch, and the
-device_add/remove_properties() API is removed separately in the last
-patch. I hope the commit messages are clear enough this time.
-
-
-v2 cover letter:
-
-This is the second version where I only modified the commit message of
-the first patch according to comments from Bjorn.
-
-
-Original cover letter:
-
-There is one user left for the API, so converting that to use software
-node API instead, and removing the function.
-
-
-thanks,
-
-Heikki Krogerus (3):
-  PCI: Convert to device_create_managed_software_node()
-  driver core: Don't call device_remove_properties() from device_del()
-  device property: Remove device_add_properties() API
-
- drivers/base/core.c      |  1 -
- drivers/base/property.c  | 48 ----------------------------------------
- drivers/pci/quirks.c     |  2 +-
- include/linux/property.h |  4 ----
- 4 files changed, 1 insertion(+), 54 deletions(-)
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 003950c738d26..b4cb658cce2b1 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1850,7 +1850,7 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+ 	 * can set it directly.
+ 	 */
+ 	if (!pdev->dev.of_node &&
+-	    device_add_properties(&pdev->dev, properties))
++	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+ 		pci_warn(pdev, "could not add stall property");
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
 -- 
 2.33.0
 
