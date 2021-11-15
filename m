@@ -2,129 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C34D04515F8
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 22:02:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 993384515FA
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 22:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349374AbhKOVD6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 16:03:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352644AbhKOUr4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 15:47:56 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 675F763240;
-        Mon, 15 Nov 2021 20:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637009100;
-        bh=MQTFTpLy1DUXgbPj+fyTCEmPUUNZRsXNkWnZU16fcpY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rZx5UIHF5logW4gHVcEgXUyevjPivURMroo650Fdw/AUpY0n/l1Bb6ap+gevHX6+6
-         mIeO9tE3QD8U15KkS4T2WWO3OPw4gxlMXQVAYBmI8C/P1EbaIDCpB/lMoA4SjcJess
-         0lWBWcPb7L01ARzsX2ppPjRYDP56tva1CTFp22W/xurRlmmEhHGivUasoQL0R4Ga0Z
-         QiHfxHMf48coxqbWa1v41OMddgit7Bg/dqPToSW5VROvX8yPhuLLgcaPn9OeCjSWIm
-         vuFDCcdPPrdy4iofvybgGIDko9rhUscWHj7Ku3ondcbE2sixuL4oB1odVITHqnnGt9
-         uIfVjtbAjNbVQ==
-Date:   Mon, 15 Nov 2021 14:44:59 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S1352403AbhKOVFE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 16:05:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353306AbhKOUzg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 15:55:36 -0500
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE12C079791;
+        Mon, 15 Nov 2021 12:46:51 -0800 (PST)
+Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz [89.176.112.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id CF311831E9;
+        Mon, 15 Nov 2021 21:46:47 +0100 (CET)
+From:   marek.vasut@gmail.com
+To:     linux-pci@vger.kernel.org
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] PCI: portdrv: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20211115204459.GA1585166@bhelgaas>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v4] PCI: rcar: Check if device is runtime suspended instead of __clk_is_enabled()
+Date:   Mon, 15 Nov 2021 21:46:41 +0100
+Message-Id: <20211115204641.12941-1-marek.vasut@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211115020552.2378167-5-baolu.lu@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 10:05:45AM +0800, Lu Baolu wrote:
-> IOMMU grouping on PCI necessitates that if we lack isolation on a bridge
-> then all of the downstream devices will be part of the same IOMMU group
-> as the bridge.
+From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-I think this means something like: "If a PCIe Switch Downstream Port
-lacks <a specific set of ACS capabilities>, all downstream devices
-will be part of the same IOMMU group as the switch," right?
+Replace __clk_is_enabled() with pm_runtime_suspended(),
+as __clk_is_enabled() was checking the wrong bus clock
+and caused the following build error too:
+  arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
+  pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_enabled'
 
-If so, can you fill in the details to make it specific and concrete?
+Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: Drop the __clk_is_enabled(), like it was done already in V1 of
+    a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
+V3: Use pm_runtime_suspended() instead of __clk_is_enabled()
+V4: Rework the commit message
+---
+ drivers/pci/controller/pcie-rcar-host.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> As long as the bridge kernel driver doesn't map and
-> access any PCI mmio bar, it's safe to bind it to the device in a USER-
-> owned group. Hence, safe to suppress the kernel DMA ownership auto-
-> claiming.
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index e12c2d8be05a..138592e22600 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -50,10 +50,10 @@ struct rcar_msi {
+  */
+ static void __iomem *pcie_base;
+ /*
+- * Static copy of bus clock pointer, so we can check whether the clock
+- * is enabled or not.
++ * Static copy of pcie device pointer, so we can check whether the
++ * device is runtime suspended or not.
+  */
+-static struct clk *pcie_bus_clk;
++static struct device *pcie_dev;
+ #endif
+ 
+ /* Structure representing the PCIe interface */
+@@ -792,7 +792,7 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
+ #ifdef CONFIG_ARM
+ 	/* Cache static copy for L1 link state fixup hook on aarch32 */
+ 	pcie_base = pcie->base;
+-	pcie_bus_clk = host->bus_clk;
++	pcie_dev = pcie->dev;
+ #endif
+ 
+ 	return 0;
+@@ -1062,7 +1062,7 @@ static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+ 
+ 	spin_lock_irqsave(&pmsr_lock, flags);
+ 
+-	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
++	if (!pcie_base || pm_runtime_suspended(pcie_dev)) {
+ 		ret = 1;
+ 		goto unlock_exit;
+ 	}
+-- 
+2.33.0
 
-s/mmio/MMIO/ (also below)
-s/bar/BAR/ (also below)
-
-I don't understand what "kernel DMA ownership auto-claiming" means.
-Presumably that's explained in previous patches and a code comment
-near "suppress_auto_claim_dma_owner".
-
-> The commit 5f096b14d421b ("vfio: Whitelist PCI bridges") permitted a
-> class of kernel drivers. 
-
-Permitted them to do what?
-
-> This is not always safe. For example, the SHPC
-> system design requires that it must be integrated into a PCI-to-PCI
-> bridge or a host bridge.
-
-If this SHPC example is important, it would be nice to have a citation
-to the spec section that requires this.
-
-> The shpchp_core driver relies on the PCI mmio
-> bar access for the controller functionality. Binding it to the device
-> belonging to a USER-owned group will allow the user to change the
-> controller via p2p transactions which is unknown to the hot-plug driver
-> and could lead to some unpredictable consequences.
-> 
-> Now that we have driver self-declaration of safety we should rely on that.
-
-Can you spell out what drivers are self-declaring?  Are they declaring
-that they don't program their devices to do DMA?
-
-> This change may cause regression on some platforms, since all bridges were
-> exempted before, but now they have to be manually audited before doing so.
-> This is actually the desired outcome anyway.
-
-Please spell out what regression this may cause and how users would
-recognize it.  Also, please give a hint about why that is desirable.
-
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Suggested-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/pci/pcie/portdrv_pci.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 35eca6277a96..1285862a9aa8 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -203,6 +203,8 @@ static struct pci_driver pcie_portdriver = {
->  	.err_handler	= &pcie_portdrv_err_handler,
->  
->  	.driver.pm	= PCIE_PORTDRV_PM_OPS,
-> +
-> +	.driver.suppress_auto_claim_dma_owner = true,
->  };
->  
->  static int __init dmi_pcie_pme_disable_msi(const struct dmi_system_id *d)
-> -- 
-> 2.25.1
-> 
