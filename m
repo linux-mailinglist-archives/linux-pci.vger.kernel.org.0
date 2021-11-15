@@ -2,179 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 425D24505B4
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 14:40:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C652C45060E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 14:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231449AbhKONme (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 08:42:34 -0500
-Received: from mail-mw2nam08on2049.outbound.protection.outlook.com ([40.107.101.49]:56935
-        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231816AbhKONlN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 08:41:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TNvjD6z8Ev3MLHAvGvh1SN6tvJEa4FOP+VV3GkDxRx9KV2s9LK89MD51tbBGWeyBe2zB+s1STpn+QDYfhwL7QQZ6WW+aHbTcgpvR8JetMdIgnOoRdqxMilHrEFe/fJ8MN2omJ3ZDOOyYclih/r/ySLlTuOBOiyEpkwJcbPjx6LYn9bYodhuW+VZSo7oJjDHK7eows7/AlatnY4qKV4muMX+dOAS5FqDpGcKpysbWstL1Pc1yRl/2dfFMxQIX6VdHv7+yL5+yvOmMPuSRbdyE5cO3BKg/gkI2O+76kebIu8i101ZmBldJkS2mb74t5paNKp1IG2vY93QVXUEh80x6bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ej0YBITiTz6MlpEdgBhnrqTxOocCUOAONS8G0UL/onw=;
- b=Jy84QSsRgbZktpEflEaSL0JxU3urb1jONKJjzdeXHZUdY+4wmhPpQnmOUa0ni4ZLMjllxglIPs/kEgGizyoEI2oqIfktA4eDPhjxwndMmoom9sFqKuFze2b+TFt/FbaL33w2ri6ymCx+itxgXGA+IOxciv/x+yacjDllS9VZknXZpYtv0KKydq1Y0ECVtvqO88cIUi9OKoGkCnAsnZewJbZgO6Dmf9oX49BlsE20Q6UkaAv7LHKFPzF2ZzaoTtJ92f40u/SZm1rGr7cYZCaZv7SEjr5Dq8D5EP3bs4V7LxhKCboxR9Sc1f/AioS9dJo1Es8F6O+5WgCfmLwNpbD7wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ej0YBITiTz6MlpEdgBhnrqTxOocCUOAONS8G0UL/onw=;
- b=ksV76H+aZ2JaQDdTorYE73iESgiLFWwOP9zRCs1l72exSwuY0V6zxKv/uPUTvgKOhxF0OjRasrH9H1rhw5S82xxjqkxflIbJ4k5ZmYeofc+HZfa0Q1wbgiG+9CAuyg/bVgRKYA3jQTBkJiIRJPZJAi0dDNbiNhyIN1LDn2J2+RcQLf++JtdCIib7VifEhHzHt/uByGAMX/aRUwq+tFjkpT66w3GU3bh1h6DHLH7AEZWF1Fxcav5j4kOJMVW0/zknhk5R447d6L3et5Z2GDz57zxf3OitEShCp/1DDKJgiF33l3MSR1cGsH27h/pz7z2IiAb8SCapZNlisMmSwIThMg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5238.namprd12.prod.outlook.com (2603:10b6:208:31e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.16; Mon, 15 Nov
- 2021 13:38:16 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4690.027; Mon, 15 Nov 2021
- 13:38:16 +0000
-Date:   Mon, 15 Nov 2021 09:38:15 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/11] driver core: Set DMA ownership during driver
- bind/unbind
-Message-ID: <20211115133815.GN2105516@nvidia.com>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-3-baolu.lu@linux.intel.com>
- <YZIFPv7BpsTibxE/@kroah.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YZIFPv7BpsTibxE/@kroah.com>
-X-ClientProxiedBy: CH0PR03CA0361.namprd03.prod.outlook.com
- (2603:10b6:610:119::27) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+        id S231876AbhKONzv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 08:55:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233455AbhKONyK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 08:54:10 -0500
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CC5C061714;
+        Mon, 15 Nov 2021 05:51:13 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id ay21so34935553uab.12;
+        Mon, 15 Nov 2021 05:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=loPmgc2JMoHVojFdkbldbqXPohmWT0UKpG4ip4T4tJI=;
+        b=c9UxmLrzkZhPxioy7U3V/hsKC9NQhlhRuXW40QOG2hzIUbgQeIv+yCP3xTDX3mCIFQ
+         Os2PKp7aoSDS14pKoj4NgXvqrPGCXvAFs18MYCouoJ8h+otD3Tv0pKhLE3BBOoJFe7yA
+         olkFSbWAt/toDtxJYaWiq3B8p6D6fpaBGz3cVvEjjtS26uws0oNpSQ3kk0zW7xiiL9Tg
+         WDeZrbvqivBdIEKR4rX967ZqA4ARWgk/hCwJuEJNcFEOSKq00xEtsawzCrgUO9o+QlMW
+         5FchxlTrw1TrBdNjm6a5ia7qpDMMlXma8r+La9KJO2+rucP+VJYwUGXDTRSMHfbCVSjA
+         22sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=loPmgc2JMoHVojFdkbldbqXPohmWT0UKpG4ip4T4tJI=;
+        b=lF3pRjk3s/hludVVQ0F450Tb9nFd9Ww9S/KEi8zgzANd+7lAtHbZpaa4LLSovkwO8k
+         VjQm3IVDlFTrAS/ehlRxCgNXpA75U82q+t5+l4CwxlUAG83jzdjURxIzFobhWmAQG0A9
+         VOrLJXaXCm31KFpYLNgqDdJal2f/hbI+mM5u0z7J8bu6JkwnHAtDMdzPrG5J44kNU3uL
+         ovLGG1LCf3drsTB+XGXignQj8VF2B2gqXkihh+ytVdM9E5V+S3kAJv3ZfXMkyy4SvTGM
+         UXeq0lnj9fI3Ts4TbSLlDxp2Ekjyp8zAVQwULwUTIsbrSpcJw+vZIn2jWCfuoQ2WgqPw
+         LCiQ==
+X-Gm-Message-State: AOAM533kWnnT97ls5BdfHy3I01xwGQ4oKdAKnJNvXWRuwg+a2sctyhB3
+        YIg8Yd2MC4sOz5e1zAK7bx1zM8aqb5wqaTSXb84=
+X-Google-Smtp-Source: ABdhPJyCATHHyo59GKA0HsPp6phUyFf4/lxnO0HrklF7lne08WdD+sXyUNde/1Vf72hOstYGkBSMVydHf/PwN/94n84=
+X-Received: by 2002:ab0:2a8b:: with SMTP id h11mr59890212uar.98.1636984272431;
+ Mon, 15 Nov 2021 05:51:12 -0800 (PST)
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (206.223.160.26) by CH0PR03CA0361.namprd03.prod.outlook.com (2603:10b6:610:119::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26 via Frontend Transport; Mon, 15 Nov 2021 13:38:16 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mmcBb-009zP2-16; Mon, 15 Nov 2021 09:38:15 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 48dab027-fdce-4cab-219d-08d9a83d2dc9
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5238:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB52382CC182A5F244563A8194C2989@BL1PR12MB5238.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZpX6uR58ISmpLRy5LuZRXkVSfn/0yhHVOZZmzIvstEOcO4uVmvd/odtSpkJMVIznR423qRBBcCiI/8fGjt1sfZmf8k7TDO48HeptezDlKSrhOmgFN0vZ1cEejJtSQYytHglGpC0/BMXTf2CZHc4wQar8nMTW4P5+8aubY1pDd1ics05nZP29tv8aj8Wyay1JPKcTEWScb0DraiV78tbdL4NQVf2H60ocatNqWJisy9hiOOSPqHWO7FG3Idkw9IedeeKcPDzm0yZ6z+XEXZB+UIftl/RG+Y17cDarxLFLy/Uac2OqB9+h1f2fuIUewwXmO7ygZ07+fGyOvZB5t2NKF+eHwviUqSaY06TGhsVK5zsKKptgkg+CMq8htpONEvlBoLQQ/qnDNuOqzXWL4/ia5dziF6daGTSGu/TZIqvbTNYP9HfJV41Fb4/0hOq0YoYFK+xAQ8coPfXArm4iN7c+Ywpi4YroU2DCrXbyM178rEa/mT0HOXDVqfjTTVgk2K5bXXT/X5pQjRS/kk7jS97UrWMVpI7DSTD4homJkoicY/PlXb6NB8neVxAfosNaAH00/YWYxqgz64RvBbC1UR15J2vOPVNrRyDGvWYKhMQGHpM9leVAx321+SUCImCXf9s7XdlpganPOAHc28qbtdN0dA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(9746002)(1076003)(186003)(9786002)(8676002)(66946007)(8936002)(6916009)(36756003)(54906003)(83380400001)(508600001)(66476007)(426003)(66556008)(4326008)(7416002)(38100700002)(2906002)(316002)(86362001)(26005)(2616005)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QY9mj9+RSPzNeUWOqREWgrunhuMfe0aQKa/2E96LRClO9RT0kGgZRSkTwOvM?=
- =?us-ascii?Q?p+qWyI0y83TSaV7SJKhqf57cxFDh68OIaXsF74V6yZ0W5j4OK5SEDq8c5mPX?=
- =?us-ascii?Q?O0r9xro1UcCnyfQs5fp9J8dXuyrf+9HM5U0lUDo37gf6LCE3vG/Ocv0u+rZP?=
- =?us-ascii?Q?MzJbPW1iQSDWYEKk1OTm0IMawYJA8QhsurVHojH3d4Mdc6PwkkG9AE5sP0LQ?=
- =?us-ascii?Q?WyBJiNjNAGvZ0JYTWShpuD3JAONIx6HXBWu25Xny+8MGE7vYqUqU+hdFqzzk?=
- =?us-ascii?Q?AAmP/rqnS2pR9r+J4HMbVaQ30t6snqX68g7wM/V/MBpWpr+D4AKxzkOVSF9C?=
- =?us-ascii?Q?XRse8pv0dHLtYw4HTPKncWVSE75lKt2QIh/PSKYSGNf97oNX2nraZHbBNro8?=
- =?us-ascii?Q?DLlqvZ4POsmV/7uyrEchXZSc1VDJbtj2Z+eciwfMhsv1XCLmHCxRZ7s7DRdr?=
- =?us-ascii?Q?9I207kMMghwr0I6l4TJgvAMKGNBDDbE0hB3lBzpAb9KBvDl13wpOn6hgm8DV?=
- =?us-ascii?Q?NTUeUSIsNPcMQvk50bTXqElEtnXnJFJ3ewzxVbeREy9Xtf3OJ/HXIbz+FXpC?=
- =?us-ascii?Q?kM2nTx9ORmh/F+LFbQll5zRqx7x/tnSbD7RIwS3kIJRpWXU0bxHHMAgWedM1?=
- =?us-ascii?Q?MvCu73EJL0jrtkA8Yu3Nvv/4tFLoVOB83JBLB5cQC+xs8rXJtSVp5oX4b771?=
- =?us-ascii?Q?92TBPtWtvfB5f1fW9AkPm0C2dOncgIyOkxQshAQanf4GRMzq1I7IhlZU1Lmf?=
- =?us-ascii?Q?m1Qw7GIaR8yiBIm8IfCSlGsJn4KswI/C19j0bmDGc8T/Nwyf1eHvh/zDJJkV?=
- =?us-ascii?Q?51+ZAIZ9CP0uaGrYmC8MBCRvoLeibPsfHkSWhlIiEj+fnVkpvUc95NywhnD3?=
- =?us-ascii?Q?oM9hfcfN6bVPsEi0OtScFVArqa/xfJCiiBRYlUPBLShZyhOmi0VZxnT/E5rB?=
- =?us-ascii?Q?R3K2Bg9Ug8sdIsDdxo8oGLe//s8zFTLnQp+HeA79vxOKYXkDoXaCFsLPcYqH?=
- =?us-ascii?Q?9I1J3OcVbzh7cfTmxsdSs9yyo6KdJeq6Ex3+GUbw+aw6qj9W10EQOEMewRKQ?=
- =?us-ascii?Q?nnDgagXFqGO1woEnNKBBFOoqvGZVQxqqv2humSs+/nheSTJtMAN61SKKCUbC?=
- =?us-ascii?Q?VM+OadKhk4yeZjNFf9lrsShxnkGyDd/DGK37PxWF2Nn3q0wrLziOcUCmwUEs?=
- =?us-ascii?Q?e8qpQGfZ79itCPiFwPZQYOMwZExfwWFNBHmXOd9dNvqvugrFfhaxLm0JPDjL?=
- =?us-ascii?Q?IxzmSZYaDO0zHXUp+LPuNcVCAyDHuBP06TRTm5b4Zv9Omqt0zJUV6AVXbYXg?=
- =?us-ascii?Q?Z5EVJpxITscnsKpbRhZfk3gAzufeFN8gwldXYhU1GwEp0Plk0fkfjt+LH0YK?=
- =?us-ascii?Q?gOhWcLNkud/flQywhFcivQVcRzddDKYMQtuDvAntSAYDt1ivJCL/YAsIBEU+?=
- =?us-ascii?Q?v23dCzzDDA5HCi6tPgTBdtjvXW5yecueeeMfDC0PjMYVmHR7aslygEnGw/4r?=
- =?us-ascii?Q?gJp8HqvCivabqxOEXYEApU/mXdIL8e02Ir1Uph6U0Zkwg4GzCCSvMg6k9wkf?=
- =?us-ascii?Q?9RWlZiWwPefBtTt16g0=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48dab027-fdce-4cab-219d-08d9a83d2dc9
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2021 13:38:16.5886
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GsRe3FSFfll5c1c1eSvw/8H05+osdo5bFabGwjjdOGUnQYMZqM43Gs2Hkhe5XBGK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5238
+References: <20211115070809.15529-1-sergio.paracuellos@gmail.com>
+ <20211115070809.15529-5-sergio.paracuellos@gmail.com> <YZJWM33dXqW1BsuV@rocinante>
+ <CAK8P3a0A9xAcwDLFbUk--X2+7gFpOL7HJw-9Sk8KZxfoidcxuw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0A9xAcwDLFbUk--X2+7gFpOL7HJw-9Sk8KZxfoidcxuw@mail.gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 15 Nov 2021 14:51:00 +0100
+Message-ID: <CAMhs-H9ox3qeAKCN7ug1BxJArmvjDBSqgubOvr_tK1hasPNs3A@mail.gmail.com>
+Subject: Re: [PATCH 4/5] PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        John Crispin <john@phrozen.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 07:59:10AM +0100, Greg Kroah-Hartman wrote:
-> > @@ -566,6 +567,12 @@ static int really_probe(struct device *dev, struct device_driver *drv)
-> >  		goto done;
-> >  	}
-> >  
-> > +	if (!drv->suppress_auto_claim_dma_owner) {
-> > +		ret = iommu_device_set_dma_owner(dev, DMA_OWNER_KERNEL, NULL);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> 
-> This feels wrong to be doing it in the driver core, why doesn't the bus
-> that cares about this handle it instead?
+Hi Arnd,
 
-As Christoph said, it is not related to the bus. To elaborate any
-bus_type that has iommu_ops != NULL needs this check, and it must be
-done on an individual struct device as the result is sensitive to the
-iommu_group member of each struct device.
+On Mon, Nov 15, 2021 at 2:00 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Nov 15, 2021 at 1:44 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> =
+wrote:
+> > > MT7620 PCIe host controller driver can be built as a module but there=
+ is no
+> > > 'MODULE_LICENSE()' specified in code, causing a build error due to mi=
+ssing
+> > > license information.
+> > >
+> > > ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pc=
+ie-mt7621.o
+> > >
+> > > Fix this by adding 'MODULE_LICENSE()' to the driver.
+> > >
+> > > Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host cont=
+roller driver")
+> > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-mt7621.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/contr=
+oller/pcie-mt7621.c
+> > > index 9cf541f5de9c..a120a61ede07 100644
+> > > --- a/drivers/pci/controller/pcie-mt7621.c
+> > > +++ b/drivers/pci/controller/pcie-mt7621.c
+> > > @@ -561,3 +561,5 @@ static struct platform_driver mt7621_pci_driver =
+=3D {
+> > >       },
+> > >  };
+> > >  builtin_platform_driver(mt7621_pci_driver);
+> > > +
+> > > +MODULE_LICENSE("GPL v2");
+> >
+> > A question here about the builtin_platform_driver() use in this driver,
+> > especially since it's set as tristate in Kconfig, thus I am not sure if
+> > using builtin_platform_driver() over module_platform_driver() is correc=
+t?
+> >
+> > Unless this is more because you need to reply on device_initcall() for =
+the
+> > driver to properly initialise?
+>
+> builtin_platform_driver() does the right thing for loadable modules that
+> have no module-unload and are not intended to be removable.
 
-> You just caused all drivers in the kernel today to set and release this
-> ownership, as none set this flag.  Shouldn't it be the other way around?
+Yes, this is the current state of this controller driver and the
+reason for 'builtin_platform_driver()' being used.
 
-No - the whole point is to cause every driver to do this test.
+>
+> This is often use for PCI drivers, but after Rob reworked this code a whi=
+le
+> back, it should actually be possible to reliably remove and reload PCI
+> host bridge drivers, and it would be good to eventually lift the restrict=
+ion
+> here as well.
 
-iommu_device_set_dma_owner() can fail for any device, if it does then
-a kernel driver must not be probed. Probing a kernel driver when
-iommu_device_set_dma_owner() fails will break kernel integrity due to
-HW limitations.
+I see. Thanks for letting me know. I will search for a way to
+accomplish this but that will be a different patch series.
 
-The drv->suppress_auto_claim_dma_owner disables this restriction
-because three drivers will deal with DMA ownership on their own.
+Best regards,
+    Sergio Paracuellos
 
-> You only have problems with 1 driver out of thousands, this feels wrong
-> to abuse the driver core this way for just that one.
-
-I think you have it backwards. Few drivers out of thousands can take
-an action that impacts the security of a thousand other drivers.
-
-The key thing is that device A can have a driver with
-suppress_auto_claim_dma_owner=1 and call
-iommu_device_set_dma_owner(DMA_OWNER_USER) which will then cause
-another device B to be unsable in the kernel.
-
-Device B, with a normal driver, must be prevented from having a kernel
-driver because of what the special driver on device A did.
-
-This behavior is a IOMMU HW limitation that cannot be avoided. The
-restrictions have always been in the kernel, they were just enforced
-with a BUG_ON at probe via a bus_notifier instead of a clean failure.
-
-So, I don't know how to block probing of the thousands of drivers
-without adding a test during probing, do you have an different idea?
-
-Jason
+>
+>         Arnd
