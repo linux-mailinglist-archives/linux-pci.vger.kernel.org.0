@@ -2,113 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 993384515FA
+	by mail.lfdr.de (Postfix) with ESMTP id 1E30D4515F9
 	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 22:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352403AbhKOVFE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 16:05:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353306AbhKOUzg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 15:55:36 -0500
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE12C079791;
-        Mon, 15 Nov 2021 12:46:51 -0800 (PST)
-Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz [89.176.112.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id CF311831E9;
-        Mon, 15 Nov 2021 21:46:47 +0100 (CET)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S1351261AbhKOVE0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 16:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1352978AbhKOUvT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Nov 2021 15:51:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 29D5C63240;
+        Mon, 15 Nov 2021 20:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637009303;
+        bh=Ab04UsOLuYDaWgm25keP0dnQCwf2wKgMMT8FZu0wdU4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p+hZZ1wwOqkazM54o6HvrGw9tCG0HCBtef7yJtD1WKlY1aVo0bn1uDBS3uH2zcTum
+         F1hwf/F/+qWGyMrgMbPGJi3/MaQbqVkcJiSJTP7Sso6dp1MeM62oJ6EbZ0dqqUw8RC
+         XDutK2ZgWNduVzYoxkXW4dPZOz4gnxdL+xd0lKnEVHgxdeeSml/+l35jc0SDOg+tOe
+         XjdyGPwy4QyA/zVawD0Ox/ObYmU2s2nOfF+1SSCB8gE/nxeeyG6SjuroobyovNR3PQ
+         /jaXEC8b1Lzdog7PhMV6IudqpvicpbPfktdvROHIVrrIIgzgZ/vQ+E8qQd9+N/mJoL
+         fEZElHCplMLLw==
+Date:   Mon, 15 Nov 2021 14:48:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v4] PCI: rcar: Check if device is runtime suspended instead of __clk_is_enabled()
-Date:   Mon, 15 Nov 2021 21:46:41 +0100
-Message-Id: <20211115204641.12941-1-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
+ auto-claiming
+Message-ID: <20211115204821.GA1587269@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211115020552.2378167-4-baolu.lu@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Mon, Nov 15, 2021 at 10:05:44AM +0800, Lu Baolu wrote:
+> pci_stub allows the admin to block driver binding on a device and make
+> it permanently shared with userspace. Since pci_stub does not do DMA,
+> it is safe. 
 
-Replace __clk_is_enabled() with pm_runtime_suspended(),
-as __clk_is_enabled() was checking the wrong bus clock
-and caused the following build error too:
-  arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
-  pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_enabled'
+Can you elaborate on what "permanently shared with userspace" means
+here?  I assume it's only permanent as long as pci-stub is bound to
+the device?
 
-Fixes: a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: Drop the __clk_is_enabled(), like it was done already in V1 of
-    a115b1bd3af0 ("PCI: rcar: Add L1 link state fix into data abort hook")
-V3: Use pm_runtime_suspended() instead of __clk_is_enabled()
-V4: Rework the commit message
----
- drivers/pci/controller/pcie-rcar-host.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Also, a few words about what "it is safe" means here would be helpful.
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index e12c2d8be05a..138592e22600 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -50,10 +50,10 @@ struct rcar_msi {
-  */
- static void __iomem *pcie_base;
- /*
-- * Static copy of bus clock pointer, so we can check whether the clock
-- * is enabled or not.
-+ * Static copy of pcie device pointer, so we can check whether the
-+ * device is runtime suspended or not.
-  */
--static struct clk *pcie_bus_clk;
-+static struct device *pcie_dev;
- #endif
- 
- /* Structure representing the PCIe interface */
-@@ -792,7 +792,7 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- #ifdef CONFIG_ARM
- 	/* Cache static copy for L1 link state fixup hook on aarch32 */
- 	pcie_base = pcie->base;
--	pcie_bus_clk = host->bus_clk;
-+	pcie_dev = pcie->dev;
- #endif
- 
- 	return 0;
-@@ -1062,7 +1062,7 @@ static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
- 
- 	spin_lock_irqsave(&pmsr_lock, flags);
- 
--	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk)) {
-+	if (!pcie_base || pm_runtime_suspended(pcie_dev)) {
- 		ret = 1;
- 		goto unlock_exit;
- 	}
--- 
-2.33.0
+> However the admin must understand that using pci_stub allows
+> userspace to attack whatever device it was bound to.
 
+The admin isn't going to read this sentence.  Should there be a doc
+update related to this?  What sort of attack does this refer to?
+
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/pci/pci-stub.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
+> index e408099fea52..6324c68602b4 100644
+> --- a/drivers/pci/pci-stub.c
+> +++ b/drivers/pci/pci-stub.c
+> @@ -36,6 +36,9 @@ static struct pci_driver stub_driver = {
+>  	.name		= "pci-stub",
+>  	.id_table	= NULL,	/* only dynamic id's */
+>  	.probe		= pci_stub_probe,
+> +	.driver		= {
+> +		.suppress_auto_claim_dma_owner = true,
+> +	},
+>  };
+>  
+>  static int __init pci_stub_init(void)
+> -- 
+> 2.25.1
+> 
