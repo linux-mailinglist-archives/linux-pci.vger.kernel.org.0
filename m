@@ -2,95 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BDC1451784
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Nov 2021 23:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 009B34520D7
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 01:54:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348512AbhKOWc4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 17:32:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344287AbhKOWUs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Nov 2021 17:20:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 96FA561AD2;
-        Mon, 15 Nov 2021 22:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637014668;
-        bh=O3XWXpuP4JyzBpAnL/WOSpf8m8SFaojzS7K+2Ae5RZo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=km/LghMuevoo8pewpHoaepFIkXTw+JY5kSemLdsSd/WNU9oyMsKve+s0YIjjAglss
-         vlgxo1iJb2GAMkAHvbCJLidq1dpdAO+IxmV5v16pVbdM+athvPzsLQ+0/ReU28wnmO
-         QOqbuQCv97q1aYNECVRhKlNgu5oiGDh2AqzF3ppuiBdttPDU1SUcYlUeWwWFmEMvig
-         n1mVNEKc8pFKkj3BMEio9QX9SAhekriQvtPvR0cm0JIVyw3DITrSCi4e9WX0enpF2f
-         V4MXczkaxJqtk7t5xtn1PSIGdiviCqz36wVPPktfv1ENLaelF7f3R3DS49EmeVlK4f
-         XuO+mHaVSfJPw==
-Date:   Mon, 15 Nov 2021 16:17:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        id S1358482AbhKPA4t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 19:56:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245615AbhKOTUv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 14:20:51 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BECC077949;
+        Mon, 15 Nov 2021 10:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/j1kGg3Y3gXXMCKBT/FlrMPEzAkt4b0LfzEg1w0LaRY=; b=MiHTez0Qf+wX+jRQ5B/3EkMeSB
+        TvxNL1Ov34NgD3bwoIg17g3//hLJW1J9conA8mIU+92DauDmRpeOBfGqiA+NBBYGONoovgPDaaoeT
+        E9hbRqrey5lkoxXaOlQSqb3RveB7VNobb8j6oZMXpGtHVa1EjZvb84ijRMjafDoYjn/qi06lzFIA4
+        t08ygSB4+Hxt81yRGLr3p5uBd+TEtPKsvy2hqjw+oLQ+qHd5zgxTZAGfK6xvoDdQihW4H2ydtA27R
+        ylOo0xgaDgmTlW9rxr1QiFESRAn1mAZ7WrFwnQuCKV/52trgg6FZ6tiCPD0OlfG2au6V0ORG4Dkg6
+        C8px0TLw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mmgVX-00Ge06-LZ; Mon, 15 Nov 2021 18:15:07 +0000
+Date:   Mon, 15 Nov 2021 10:15:07 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
         Chaitanya Kulkarni <kch@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/11] PCI: pci_stub: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20211115221747.GA1587608@bhelgaas>
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>
+Subject: Re: [PATCH 02/11] driver core: Set DMA ownership during driver
+ bind/unbind
+Message-ID: <YZKjq3sXb9+UTDSz@infradead.org>
+References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+ <20211115020552.2378167-3-baolu.lu@linux.intel.com>
+ <YZJeRomcJjDqDv9q@infradead.org>
+ <20211115132442.GA2379906@nvidia.com>
+ <8499f0ab-9701-2ca2-ac7a-842c36c54f8a@arm.com>
+ <20211115155613.GA2388278@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211115020552.2378167-4-baolu.lu@linux.intel.com>
+In-Reply-To: <20211115155613.GA2388278@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 10:05:44AM +0800, Lu Baolu wrote:
-> pci_stub allows the admin to block driver binding on a device and make
-> it permanently shared with userspace. Since pci_stub does not do DMA,
-> it is safe. However the admin must understand that using pci_stub allows
-> userspace to attack whatever device it was bound to.
-
-This commit log doesn't say what the patch does.  I think it tells us
-something about what pci-stub *already* does ("allows admin to block
-driver binding") and something about why that is safe ("does not do
-DMA").
-
-But it doesn't say what this patch changes.  Based on the subject
-line, I expected something like:
-
-  As of ("<commit subject>"), <some function>() marks the iommu_group
-  as containing only devices with kernel drivers that manage DMA.
-
-  Avoid this default behavior for pci-stub because it does not program
-  any DMA itself.  This allows <some desirable behavior>.
-
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/pci/pci-stub.c | 3 +++
->  1 file changed, 3 insertions(+)
+On Mon, Nov 15, 2021 at 11:56:13AM -0400, Jason Gunthorpe wrote:
+> drivers/base/platform.c:        .dma_configure  = platform_dma_configure,
+> drivers/bus/fsl-mc/fsl-mc-bus.c:        .dma_configure  = fsl_mc_dma_configure,
+> drivers/pci/pci-driver.c:       .dma_configure  = pci_dma_configure,
+> drivers/gpu/host1x/bus.c:       .dma_configure = host1x_dma_configure,
 > 
-> diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
-> index e408099fea52..6324c68602b4 100644
-> --- a/drivers/pci/pci-stub.c
-> +++ b/drivers/pci/pci-stub.c
-> @@ -36,6 +36,9 @@ static struct pci_driver stub_driver = {
->  	.name		= "pci-stub",
->  	.id_table	= NULL,	/* only dynamic id's */
->  	.probe		= pci_stub_probe,
-> +	.driver		= {
-> +		.suppress_auto_claim_dma_owner = true,
-> +	},
->  };
->  
->  static int __init pci_stub_init(void)
-> -- 
-> 2.25.1
+> Other than host1x they all work with VFIO.
 > 
+> Also, there is no bus->dma_unconfigure() which would be needed to
+> restore the device as well.
+> 
+> So, would you rather see duplicated code into the 4 drivers, and a new
+> bus op to 'unconfigure dma'
+
+The tend to mostly call into common helpers eventually.
+
+> 
+> Or, a 'dev_configure_dma()' function that is roughly:
+> 
+>         if (dev->bus->dma_configure) {
+>                 ret = dev->bus->dma_configure(dev);
+>                 if (ret)
+>                         return ret;
+>                 if (!drv->suppress_auto_claim_dma_owner) {
+>                        ret = iommu_device_set_dma_owner(dev, DMA_OWNER_KERNEL,
+>                                                         NULL);
+>                        if (ret)
+>                                ret;
+>                 }
+>          }
+> 
+> And a pair'd undo.
+
+But that seems like an even better idea to me.  Even better with an
+early return and avoiding the pointless indentation.
