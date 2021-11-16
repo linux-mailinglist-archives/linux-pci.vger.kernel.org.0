@@ -2,197 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8586B453B31
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 21:48:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F88B453B42
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 21:53:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230218AbhKPUve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 15:51:34 -0500
-Received: from mail-bn7nam10on2045.outbound.protection.outlook.com ([40.107.92.45]:37664
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229527AbhKPUvd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Nov 2021 15:51:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R8l1AHEHaY4aVI16dAQI75juD9XudwRzP+Zq708JVc1BGUWZ5d6dYUidfeHePxw07tuzispmqtkvF/w7vllDUFuGZQUjy+708KlxnP3NkGZ3oGzrjVxKvZV4vwMnl52+9xe2udnigcA7smI7vHfeioTxmref9bTbAv7pfAJa4IUpz530n32e112m/hg/dBOVCYok4QPjS31DzEexSGP0EuIXif4oxoTXRbju8/7vg3c3I+aauVE207McJd/+yald2UeuWQNRBPoRGql+u++uA8WcBebCpl/VPgAzgSbTOOb99EvXnOcKYlWY3ebCxIypeQgfDaY+JeacWnimBR38Ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=txWjKYCTVc7iVTNkGHghOHNGQpil12vVO1xLbMyH4ow=;
- b=nqYJH8kO2dJM+1VMtp7oXaGVrR8u41mkxCNGAimzFS7ThPyy9SczabFNlC/uzftTEH91yKmRsBHULoSzTlfV9WCmH0uqZQ0t/SAQBHMG2AEBCUIh13KpfO9QfcU5zpkM0Qmw8XG/hEg+gfkTY7xLdR6A83pDc3b8vnqpbYn7k8cOLnXmkXOvPbJk2QPFzNKjg9rb2hLaXOHIFuOMRvnYXSZr+sJPzc723x9YuGCONqdaInxmWdaPgNprxON5xHYsS9aP4zjjd8fuYnJRswKTzjRFk18bXsPn8JHNkwDjS/UeB9v79SDpJzIPPkp5lZBhKh53D2Qe/T3eFx55JBOyvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=txWjKYCTVc7iVTNkGHghOHNGQpil12vVO1xLbMyH4ow=;
- b=PkU/8lkF5LDE8YjBkR+c2jH7EA4zMZ/mPsubgFDSL/x04/zBL9o6oEoUScOAhDwsgHnHnEOtb16E9+6r2gkSc9kO4QrbBxEWMIz6bVeTilHAEKbj/KbrWTNfBNh9poesxblO/ylWFbVbm7qtQ9LsLktO/CyDqQMOqAJajrbo3OiBh+z8US5pWyzE5szUsWMNXs0aWczrlyUMQL7xGb7EQtc+64hGSv8n1o5Rb+kRfqgVzTavAS0jbidGlfRRbhq1hhqZYdDnLsQ7VztPOwpTgHDyQoUYiqyi8Z20FE8V5KuLcSBFHJ2RdnQGkphF+ebInXw1mw6qmNmYS5v/sgctKg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5127.namprd12.prod.outlook.com (2603:10b6:208:31b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Tue, 16 Nov
- 2021 20:48:34 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4690.027; Tue, 16 Nov 2021
- 20:48:34 +0000
-Date:   Tue, 16 Nov 2021 16:48:33 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S230330AbhKPU4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 15:56:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229899AbhKPU4h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Nov 2021 15:56:37 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B8DEA61BBD;
+        Tue, 16 Nov 2021 20:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637096020;
+        bh=8m3nAaFXoasIWEhGGU64ODWUIRt/37qCwbTyq8fCwFQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=phYaw4ezt6Dwqx+TmAg58FvPVWI4+69XJ7mBA/TPYMAEFpsTH2eal0Aba60uiGlev
+         wtUkqQBhPqaUHzhfURKKGPRkfgTfJxKUUCMKQXFCo3bS4RSoTNluEm6gkO6MKzW6SY
+         kglzKD+gCe+zB2yrmsiSxusR4bkBCBHYx5+FMdYqKBw0/DuDQM6vRxDj5zS2744isj
+         gJQ0e9V2tnJezCST9HMPUYIECYU/qXaCGVks85czTZph89hNjs1Bps17NU73JgDqYX
+         EQpYtA1E0VY6+NFq5j/77Wtvu7Ng426V1k/IhqZjb4L6qDm0KxKL2mTxAWa9JiC7Ri
+         BxQ5aRj2ywEyg==
+Received: by pali.im (Postfix)
+        id 3C0E388C; Tue, 16 Nov 2021 21:53:37 +0100 (CET)
+Date:   Tue, 16 Nov 2021 21:53:37 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        rafael@kernel.org, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] PCI: portdrv: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20211116204833.GG2105516@nvidia.com>
-References: <4f95bea7-3c1c-4f12-aed5-a3fcdcd3fee3@linux.intel.com>
- <20211116202201.GA1676368@bhelgaas>
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 5/8] PCI/portdrv: add mechanism to turn on subdev
+ regulators
+Message-ID: <20211116205337.ui5sjrsmkef4a53k@pali>
+References: <20211110221456.11977-1-jim2101024@gmail.com>
+ <20211110221456.11977-6-jim2101024@gmail.com>
+ <CAL_Jsq+6g-EhyVCeWTMkjOZmBwsOOVZo2jXpzAkjOXcZaxb2eA@mail.gmail.com>
+ <CA+-6iNxfrOQtH1JDEjAdSZQkENoaw1tUDTfVc5+G7P6BAbSc6g@mail.gmail.com>
+ <CAL_JsqJno4ROQD38buz8Z-tU5aaQL5b_d1R0-D+c9UwnMKYNOw@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211116202201.GA1676368@bhelgaas>
-X-ClientProxiedBy: BL1PR13CA0268.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::33) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
-MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL1PR13CA0268.namprd13.prod.outlook.com (2603:10b6:208:2ba::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.18 via Frontend Transport; Tue, 16 Nov 2021 20:48:34 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mn5NZ-00BDol-Er; Tue, 16 Nov 2021 16:48:33 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 41d51caf-1263-4824-31b6-08d9a94274e6
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5127:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5127A2DAD56D63381BDEEF51C2999@BL1PR12MB5127.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 32wI808t9Tvt8CPp5Aub3OUUM5r1/mrmY1d9Uf814pasUwf414AoltTGheNxFc7AttHy5WTY893Jz7JxX8YntAmwUcGpN4giuoeprYdSB5p6a2gX9ZYYHEV1COfRd2gcguHVufsXmjCTLDblavy7VEM5HebBiEMZLhEyOxawgBSI0WxoLjYOY09whb6Otrva4cDGSEFLO3bps5p/CIh7/s0GdXICmJewqDWLLWvtt1JIRKlyYxW0/eLyjagDjIcYrApy9Wedb8FcZzAiOBJyKzhgQr/4l5hQlwaFgrnkJ/IKugMBwS7Eglx/PjyMI8g4WKWyQg18UL8Ase/vc7Jx4kvaPJmGOAaf92C8yLO/E0gAh0xASAY1SSM6HMiKc88vnAVw1W5vKHn9L1C4ia9R8lHD9xF5C6iVZmcn3lAG5l14r+1ohy+sQSWFAzNnONvAwasxJaAL57flARRbHqfH6xXggJPfE4SiiA+iyNnM6ifLqiIjf2xXefPhrKusMRCJRfGCAgH1KnxH7PBix0yUYP4ME/h4Rp0yA5ZHRh+R7mHvi5bnhtjMWAuQjIS6NspSXV5aoMn7uCnRV3pjbaQl8lbSVPGViAc1xmTHRLIjE6vodQhi8fGnNGT0oYfBncjd83T+yi1vHXWrE9QNAd5aSA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(8676002)(66946007)(5660300002)(1076003)(6916009)(86362001)(8936002)(186003)(26005)(53546011)(66556008)(66476007)(38100700002)(83380400001)(33656002)(508600001)(7416002)(54906003)(9786002)(9746002)(2906002)(316002)(426003)(36756003)(2616005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?15JsD4JKbApvTI0F/PzrOVhhmUeyw5W2/Lr2Q+XT5zGZ/G8Xob5a4pcyJjd5?=
- =?us-ascii?Q?Mv5h6/wo9Kq/G6MNzUmRmDQiS/LkZe2gu8QSFK++J5G3PD8+v+iAADTKH3NI?=
- =?us-ascii?Q?4P+42xfLK3FcNRJHt+kT9Q0rjvUEV3s5OXC2s/xG6FY/SBBweHj5M4CTOP91?=
- =?us-ascii?Q?krUvxGjQmK0tlGxwr9KGzboRtzLt08Ssq1yuZ14w0wRCJmQeM9eAW1L/8IPh?=
- =?us-ascii?Q?yGVIQsRuC5XJ3BfZqjU9b/ohsFE5K0z+EJesB2xn1VJFHuJRMDJ2Fl3swU9y?=
- =?us-ascii?Q?drZASO3m5MX3oc3G2L2dxvsYNXl/G2aB+kBKbCULPWtYzd3EJad4VYGjsOtw?=
- =?us-ascii?Q?Drbaft9Zqm0RsWegqV0hQ8k0s4FonL3EpDaq76njWVR8FdZcQO7GTOu1gjac?=
- =?us-ascii?Q?Lgu2sWHTR8kdKLg7l38Zr7wvgG7Crm96oDyCGXeW7bndimr3nvuyl22Uc3L5?=
- =?us-ascii?Q?KJSuobQu5utdC6hryI6ONXYEeHuNd4Kxi0yOoKAMdpye27qZBYyeSj+W55fc?=
- =?us-ascii?Q?VnqrRNnSh9KtnurvqDtdrDMqRB7veZHguIEFGJhKGrP4dxrthurxtfV4GoFs?=
- =?us-ascii?Q?4uH7cp/Tppl95g1AKQaQWP3WP8s3n3ioPoSOlvszBoZtsKQy1pxzw3uD9S1E?=
- =?us-ascii?Q?Va2XCYmEQXMB6SbCFGJS7hpMuK7lohJEyAJ+4uOrTrKkMRWW4bnwd/2+LczL?=
- =?us-ascii?Q?1rGh5ZdiRao7nnarnJNSF26kJC9P6xLptY0fWoLVdPSO/U4qd1jJ0Iu+X/l2?=
- =?us-ascii?Q?KVopPinzxGau1gNJIS53kDWyYEvXQcXJ4pw3y2IcBAd2gOIXv8CtDNzns9X5?=
- =?us-ascii?Q?s2zZHx8Ql/6xwii13WdriAs9k3b3mZ3FqJVUDSTGSvKMKrm1WZ4gjBv9d6zd?=
- =?us-ascii?Q?G6mYxo1NY+gouKxtMoqPeaza6713wD9ciG2HoULYQ7V4oAzjXgziN+qnQ4dM?=
- =?us-ascii?Q?tluHuOjVze65C+dWzjmHUHloKwXVz4pap1GYuYpirz994u+hut2KznLHB6QX?=
- =?us-ascii?Q?Nm1Dv/lxrWttKJyk32ulycUq5PZ8Pcoh8mMY3bgwKQduuSieiWkN4GuJrcXP?=
- =?us-ascii?Q?OeggjbgMasygu2EaOSIZqft6mLhrb1VfFQWwe8SdtXT4egkwmQpPxaVOuS1n?=
- =?us-ascii?Q?r/kOtRISnUxkqYPuXiZbKkArrGx3v5AJDbVnw5wf4UBVuI2v6X0iyEJi1424?=
- =?us-ascii?Q?bF/a309d1TOJOm19tCGd54V77aF9MWYEvjZx0OXZxrRI9yLmIa9oxRlfMsIm?=
- =?us-ascii?Q?mUlZ5AxLF/rPPZF0jD1EOS0+mYqBGuh3bFhlELA9GsTp8AmWcbJC08FOuKrG?=
- =?us-ascii?Q?eDqfnOADjiT8/NdKWf7wZ1q+oJCXNvXHlkb36KFwqIultl5HS3fmC1WP/W0R?=
- =?us-ascii?Q?14sc+iQy1cOwmUEUxr63uXi82+gpqK3iAJFUgK4XurUtYfF/mpZZh7ljP3ah?=
- =?us-ascii?Q?yXnBeZfUWDkOmBIE/t42xyjZV1HpEFhQ2aoeSN0MOMF8u4ioTNWpCt7hD0HT?=
- =?us-ascii?Q?HedJWGaDcADS7+a4x2m8I4Cwe3ewZ1td2fCDHI7huP752a/XH+Krk6xaJdOG?=
- =?us-ascii?Q?QTRoPbKPE0FxZeYXR+M=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41d51caf-1263-4824-31b6-08d9a94274e6
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 20:48:34.5855
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H1FwJhB6pq4ubbvEuuZhQLxq17VsnOOC6zAloJdA0VxEbe1xmdcMye5J0h2jnwjn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5127
+In-Reply-To: <CAL_JsqJno4ROQD38buz8Z-tU5aaQL5b_d1R0-D+c9UwnMKYNOw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 02:22:01PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 16, 2021 at 03:24:29PM +0800, Lu Baolu wrote:
-> > On 2021/11/16 4:44, Bjorn Helgaas wrote:
-> > > On Mon, Nov 15, 2021 at 10:05:45AM +0800, Lu Baolu wrote:
-> > > > IOMMU grouping on PCI necessitates that if we lack isolation on a bridge
-> > > > then all of the downstream devices will be part of the same IOMMU group
-> > > > as the bridge.
-> > > 
-> > > I think this means something like: "If a PCIe Switch Downstream Port
-> > > lacks <a specific set of ACS capabilities>, all downstream devices
-> > > will be part of the same IOMMU group as the switch," right?
-> > 
-> > For this patch, yes.
-> > 
-> > > If so, can you fill in the details to make it specific and concrete?
-> > 
-> > The existing vfio implementation allows a kernel driver to bind with a
-> > PCI bridge while its downstream devices are assigned to the user space
-> > though there lacks ACS-like isolation in bridge.
-> > 
-> > drivers/vfio/vfio.c:
-> >  540 static bool vfio_dev_driver_allowed(struct device *dev,
-> >  541                                     struct device_driver *drv)
-> >  542 {
-> >  543         if (dev_is_pci(dev)) {
-> >  544                 struct pci_dev *pdev = to_pci_dev(dev);
-> >  545
-> >  546                 if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
-> >  547                         return true;
-> >  548         }
-> > 
-> > We are moving the group viability check to IOMMU core, and trying to
-> > make it compatible with the current vfio policy. We saw three types of
-> > bridges:
-> > 
-> > #1) PCIe/PCI-to-PCI bridges
-> >     These bridges are configured in the PCI framework, there's no
-> >     dedicated driver for such devices.
-> > 
-> > #2) Generic PCIe switch downstream port
-> >     The port driver doesn't map and access any MMIO in the PCI BAR.
-> >     The iommu group is viable to user even this driver is bound.
-> > 
-> > #3) Hot Plug Controller
-> >     The controller driver maps and access the device MMIO. The iommu
-> >     group is not viable to user with this driver bound to its device.
+On Tuesday 16 November 2021 11:41:22 Rob Herring wrote:
+> +Pali
 > 
-> I *guess* the question here is whether the bridge can or will do DMA?
-> I think that's orthogonal to the question of whether it implements
-> BARs, so I'm not sure why the MMIO BARs are part of this discussion.
-> I assume it's theoretically possible for a driver to use registers in
-> config space to program a device to do DMA, even if the device has no
-> BARs.
+> On Mon, Nov 15, 2021 at 2:44 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+> >
+> > On Thu, Nov 11, 2021 at 5:57 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Wed, Nov 10, 2021 at 4:15 PM Jim Quinlan <jim2101024@gmail.com> wrote:
+> > > >
+> > > > Adds a mechanism inside the root port device to identify standard PCIe
+> > > > regulators in the DT, allocate them, and turn them on before the rest of
+> > > > the bus is scanned during pci_host_probe().  A root complex driver can
+> > > > leverage this mechanism by setting the pci_ops methods add_bus and
+> > > > remove_bus to pci_subdev_regulators_{add,remove}_bus.
+> > > >
+> > > > The allocated structure that contains the regulators is stored in
+> > > > dev.driver_data.
+> > > >
+> > > > The unabridged reason for doing this is as follows.  We would like the
+> > > > Broadcom STB PCIe root complex driver (and others) to be able to turn
+> > > > off/on regulators[1] that provide power to endpoint[2] devices.  Typically,
+> > > > the drivers of these endpoint devices are stock Linux drivers that are not
+> > > > aware that these regulator(s) exist and must be turned on for the driver to
+> > > > be probed.  The simple solution of course is to turn these regulators on at
+> > > > boot and keep them on.  However, this solution does not satisfy at least
+> > > > three of our usage modes:
+> > > >
+> > > > 1. For example, one customer uses multiple PCIe controllers, but wants the
+> > > > ability to, by script invoking and unbind, turn any or all of them by and
+> > > > their subdevices off to save power, e.g. when in battery mode.
+> > > >
+> > > > 2. Another example is when a watchdog script discovers that an endpoint
+> > > > device is in an unresponsive state and would like to unbind, power toggle,
+> > > > and re-bind just the PCIe endpoint and controller.
+> > > >
+> > > > 3. Of course we also want power turned off during suspend mode.  However,
+> > > > some endpoint devices may be able to "wake" during suspend and we need to
+> > > > recognise this case and veto the nominal act of turning off its regulator.
+> > > > Such is the case with Wake-on-LAN and Wake-on-WLAN support where PCIe
+> > > > end-point device needs to be kept powered on in order to receive network
+> > > > packets and wake-up the system.
+> > > >
+> > > > In all of these cases it is advantageous for the PCIe controller to govern
+> > > > the turning off/on the regulators needed by the endpoint device.  The first
+> > > > two cases can be done by simply unbinding and binding the PCIe controller,
+> > > > if the controller has control of these regulators.
+> > > >
+> > > > [1] These regulators typically govern the actual power supply to the
+> > > >     endpoint chip.  Sometimes they may be a the official PCIe socket
+> > > >     power -- such as 3.3v or aux-3.3v.  Sometimes they are truly
+> > > >     the regulator(s) that supply power to the EP chip.
+> > > >
+> > > > [2] The 99% configuration of our boards is a single endpoint device
+> > > >     attached to the PCIe controller.  I use the term endpoint but it could
+> > > >     possible mean a switch as well.
+> > > >
+> > > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > > > ---
+> > > >  drivers/pci/bus.c              | 72 ++++++++++++++++++++++++++++++++++
+> > > >  drivers/pci/pci.h              |  8 ++++
+> > > >  drivers/pci/pcie/portdrv_pci.c | 32 +++++++++++++++
+> > > >  3 files changed, 112 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > > > index 3cef835b375f..c39fdf36b0ad 100644
+> > > > --- a/drivers/pci/bus.c
+> > > > +++ b/drivers/pci/bus.c
+> > > > @@ -419,3 +419,75 @@ void pci_bus_put(struct pci_bus *bus)
+> > > >         if (bus)
+> > > >                 put_device(&bus->dev);
+> > > >  }
+> > > > +
+> > > > +static void *alloc_subdev_regulators(struct device *dev)
+> > > > +{
+> > > > +       static const char * const supplies[] = {
+> > > > +               "vpcie3v3",
+> > > > +               "vpcie3v3aux",
+> > > > +               "vpcie12v",
+> > > > +       };
+> > > > +       const size_t size = sizeof(struct subdev_regulators)
+> > > > +               + sizeof(struct regulator_bulk_data) * ARRAY_SIZE(supplies);
+> > > > +       struct subdev_regulators *sr;
+> > > > +       int i;
+> > > > +
+> > > > +       sr = devm_kzalloc(dev, size, GFP_KERNEL);
+> > > > +
+> > > > +       if (sr) {
+> > > > +               sr->num_supplies = ARRAY_SIZE(supplies);
+> > > > +               for (i = 0; i < ARRAY_SIZE(supplies); i++)
+> > > > +                       sr->supplies[i].supply = supplies[i];
+> > > > +       }
+> > > > +
+> > > > +       return sr;
+> > > > +}
+> > > > +
+> > > > +
+> > > > +int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+> > > > +{
+> > > > +       struct device *dev = &bus->dev;
+> > > > +       struct subdev_regulators *sr;
+> > > > +       int ret;
+> > > > +
+> > > > +       if (!pcie_is_port_dev(bus->self))
+> > > > +               return 0;
+> > > > +
+> > > > +       if (WARN_ON(bus->dev.driver_data))
+> > > > +               dev_err(dev, "multiple clients using dev.driver_data\n");
+> > > > +
+> > > > +       sr = alloc_subdev_regulators(&bus->dev);
+> > > > +       if (!sr)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       bus->dev.driver_data = sr;
+> > > > +       ret = regulator_bulk_get(dev, sr->num_supplies, sr->supplies);
+> > > > +       if (ret)
+> > > > +               return ret;
+> > > > +
+> > > > +       ret = regulator_bulk_enable(sr->num_supplies, sr->supplies);
+> > > > +       if (ret) {
+> > > > +               dev_err(dev, "failed to enable regulators for downstream device\n");
+> > > > +               return ret;
+> > > > +       }
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(pci_subdev_regulators_add_bus);
+> > >
+> > > Can't these just go in the portdrv probe and remove functions now?
+> > >
+> > > Rob
+> >
+> > Not really.  The idea is that  only when a host controller driver does this
+> >
+> > static struct pci_ops my_pcie_ops = {
+> >     .add_bus = pci_subdev_regulators_add_bus , /* see  note below */
+> >     .remove_bus = pci_subdev_regulators_remove_bus,
+> >     ...
+> > }
+> >
+> > does it explicitly want this feature.  Without doing this, every PCI
+> > port in the world will execute a devm_kzalloc() and
+> > devm_regulator_bulk_get() to (likely) grab nothing, and then there
+> > will be three superfluous lines in the boot log:
+> 
+> You can opt-in based on there being a DT node.
+> 
+> > pci_bus 0001:01: 0001:01 supply vpcie12v not found, using dummy regulator
+> > pci_bus 0001:01: 0001:01 supply vpcie3v3 not found, using dummy regulator
+> > pci_bus 0001:01: 0001:01 supply vpcie3v3aux not found, using dummy regulator
+> 
+> This would be annoying, but not really a reason for how to design this.
+> 
+> > Secondly, our  HW needs to know when the  alloc/get/enable of
+> > regulators is done so that the PCIe link can then be attempted.   This
+> > is pretty much the cornerstone of this patchset.   To do this the brcm
+> > RC driver's call to pci_subdev_regulators_add_bus() is wrapped by
+> > brcm_pcie_add_bus() so that we can do this:
+> >
+> > static struct pci_ops my_pcie_ops = {
+> >     .add_bus = brcm_pcie_add_bus ,   /* calls pci_subdev_regulators_add_bus() */
+> >     .remove_bus = pci_subdev_regulators_remove_bus,
+> 
+> Do add_bus/remove_bus get called during resume/suspend? If not, how do
+> you handle the link during resume?
+> 
+> Maybe there needs to be explicit hooks for link handling. Pali has
+> been looking into this some.
+> 
+> Rob
 
-There are two questions Lu is trying to get at:
+Yes, I was looking at it... main power (12V/3.3V) and AUX power (3.3V)
+needs to be supplied at the "correct" time during establishing link
+procedure. I wrote it in my RFC email:
+https://lore.kernel.org/linux-pci/20211022183808.jdeo7vntnagqkg7g@pali/
 
- 1) Does the bridge driver use DMA? Calling pci_set_master() or
-    a dma_map_* API is a sure indicate the driver is doing DMA
+I'm not sure if regulator API is the most suitable for this task in PCI
+core code as there are planty ways how it can be controllers. My idea
+presented in that email was that driver provides power callback and core
+pci code would use it.
 
-    Kernel DMA doesn't work if the PCI device is attached to
-    non-default iommu domain.
+Because power needs to be enabled at the "correct" time during link up,
+I think that add/remove bus callbacks are unsuitable for this task. This
+would just cause adding another msleep() calls on different places to
+make correct timing of link up...
 
- 2) If the bridge driver uses MMIO, is it tolerant to hostile
-    userspace also touching the same MMIO registers via P2P DMA
-    attacks?
-
-    Conservatively if the driver maps a MMIO region at all
-    we can say it fails this test.
-
-Unless someone want to do the audit work, identifying MMIO usage alone
-is sufficient to disqualify a driver.
-
-Jason
+I think it is needed to implement generic function for establishing link
+in pci core code with all required steps.
