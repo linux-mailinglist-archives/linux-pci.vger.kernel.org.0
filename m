@@ -2,361 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F87453A06
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 20:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 939EA453A1D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 20:25:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239931AbhKPTVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 14:21:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239903AbhKPTVF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Nov 2021 14:21:05 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EBB3F63223;
-        Tue, 16 Nov 2021 19:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637090288;
-        bh=MzswqOuO59AuIEIyicsuwY0a0qJpbQ5Sc2+LIyhsAjI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=coCxu5ceWMZCl8Z5eUwGE40dC0t+AKDO+myP66q7CCtaL/wlm1CA9C2hHt6I3U3DW
-         0UBcSIgzAHhow2xSyzhozIEC5jbxLtZjv0dD+7l/Rdy/WxtNFSvFIBPb0ZpyCxgYyo
-         525jiW4T3yxg2NvfOt4ss6LXvgB6wJrxMu3k715s/6Rw1HjBAe9HXb4JlrbC8taUEG
-         KdvMmzq3vOkRa2sBT5O4Xdp1Y5uUWxHZHEhzI7pgUx1Vus60d5T4PzTMRcZVpv+t8W
-         0HddNhkRzzxyFspdHy/CPtMkphVYxarJR+rdjT8l/WFXeW2kMYpvQs0cNgqJ4B5PaE
-         v557CwhV+pw+w==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, thomas.petazzoni@bootlin.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 06/65] PCI: aardvark: Fix link training
-Date:   Tue, 16 Nov 2021 14:16:51 -0500
-Message-Id: <20211116191754.2419097-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211116191754.2419097-1-sashal@kernel.org>
-References: <20211116191754.2419097-1-sashal@kernel.org>
+        id S239789AbhKPT2H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 14:28:07 -0500
+Received: from mail-bn1nam07on2054.outbound.protection.outlook.com ([40.107.212.54]:13383
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229663AbhKPT2G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Nov 2021 14:28:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cw2rFcD76YZmFzjEKcpKVWNdTSBe3h5CnHe+pApRViou3Ggd/PWoLx0LEI6gQVl2Pxy0k38j84pw9Cc27HpmjJnpHzXgOxhjDSxgFmptqYLvFQBNwN48KDlx7uly9TLBeidXY6zXutAzptetclEXORCbUgmpJUbrhE/p9szoAQGtjZsJER3SpU61875LZInJp/4qJzPL9z3jK+FKI53JjVOsypmH6y8odXASaGXxC+HRH/bZ98tAotKLwqZWRXrqD3eFdmODkMPJNEMmwrkOqb8Lpg9KIk9qPFt4Np68XN29g4RobnsDg3D4wHcqYq60ut+F8G2/Bf5BkHG6GAryow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JcYIsBopb7Nrl3M4T9gj59ScRZb1+9TAYMDXXKld4cM=;
+ b=Ljx2USncGAtXlOqSxut5CbhBtf+SzFKlj6rd6TWAjsSozBQB7Nx6fPppbV6kGFCWxx3Y3qBFgCpbWCyy8kAp3cAnrcg+huFhn4ldhtpsb6+xPJbVZNYVAhulfqMe99K6UQ27uk7lDsdPifcUAZ6+yA3BsRR06545qL0PkaJqJXhYCl/QoraUC0qCsfRzUtCT/spsCsLQGCE8HZOVRG1Lb8OHJPNoBa3YGCLB+dnxcOaAagzB2MaJwdAcaUfxBsot2BG8VL9z8mc+x1I7Ic3QY5KNq5WKXqEhEAuYZ3eoIC3Pw7E/LfKn2pbZU2kEfLDPHArm6NVfazwvKQQUxQQb7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JcYIsBopb7Nrl3M4T9gj59ScRZb1+9TAYMDXXKld4cM=;
+ b=Pe+5TFQUl6i/2lFAQzMs3GpeCxb2wBBMc3c40z7PDalaOZUIzay47+jbHDnd8LJ/c/WFt0jdsoBI4uPs9Gj3gbdZetFvNxLWeVbNiiwS318MIYeNgg/0WFP1AunDfwU/iq+WlCKMt8yKqLdq9GDn2ljoVJMXSDpyN3lvEDkYKaG43VTC1Ef6rtuZwHZOjoBkcO57TpyxMLXItIDNZejLIpCYBdcB+h2FG2n7J33LdrzPRWxTMTrt9LslIBSJ2z+1y6fm9X8tPSUj3M9qolw97GCZXnM6KxknxOYlnW5yj4AfQCKB7m5qRDIBCgzUkrk3FlfKKLtKa9dAXr26Ir0oiQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5208.namprd12.prod.outlook.com (2603:10b6:208:311::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.27; Tue, 16 Nov
+ 2021 19:25:07 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4690.027; Tue, 16 Nov 2021
+ 19:25:07 +0000
+Date:   Tue, 16 Nov 2021 15:25:05 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+Message-ID: <20211116192505.GB2105516@nvidia.com>
+References: <20211102163610.GG2744544@nvidia.com>
+ <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
+ <20211103120955.GK2744544@nvidia.com>
+ <20211103094409.3ea180ab.alex.williamson@redhat.com>
+ <20211103161019.GR2744544@nvidia.com>
+ <20211103120411.3a470501.alex.williamson@redhat.com>
+ <20211105132404.GB2744544@nvidia.com>
+ <20211105093145.386d0e89.alex.williamson@redhat.com>
+ <20211115232921.GV2105516@nvidia.com>
+ <20211116105736.0388a183.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211116105736.0388a183.alex.williamson@redhat.com>
+X-ClientProxiedBy: YTOPR0101CA0030.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::43) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from mlx.ziepe.ca (206.223.160.26) by YTOPR0101CA0030.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26 via Frontend Transport; Tue, 16 Nov 2021 19:25:07 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mn44n-00BBc8-7J; Tue, 16 Nov 2021 15:25:05 -0400
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44c38903-adf9-4be6-036d-08d9a936cc47
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5208:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB52081A96C75EEEF55E7ACB7BC2999@BL1PR12MB5208.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FeKkiuf4Un00qSqhA59o/eq5j7pcNFLaRBJx/uqeCDerB6C0SrJgKjBcg93C66iRXvJ1KBI8gxQMF2UHq3Hh3eaSiyohVw6oymkj6nLgR3hMkeD8nLe0z2pRegoSZ9Br9eCDRO75QKO3xFUXG0LgTw7w2gxrGP2WH18yGemPPFGMgsloQMZiKtqZyYul9Vcnd0C48QjKFj6qeoOhw9kcmF7npUUSFobplEOnhK0OxITF2bS0uUfGSlGNdxfoeeWX1r+YfTQuUk+mev2F0YFBxTNzd0fIGhtqt1oFxdsHeWIxSzGg6pTv1LExEqaGdYkJF2A2puDRlLbEYZvf50JzY46nnGfI2OodyICy5rko6PBYDTS/VGOwhBI1u3H16HNvgBNVEoF/FOgeN7FaprCBi+U0d5HBU8rQKJJ46tWIp8YkSd4pH/MqJKshbYOMMSSzHO8Mb+dlPuneyqgfdFNGlSWjVx/WJoXSJoB5kWxTZttUy4Cgtp60bzu/3UI0H87DesNkuNGcjKoZWuFARgTcNfgfjmpXvWQyKszqhOAwASIv6DDjgr4qAV4MNBcificFOYelHzyO0XvxC6qno9/DiiQ5tP7Lb5liLJ3xQIJEqbLHhNWhX3NQXmvp42mO5DbOnNwHZL1NjIotGtkpsuCjmQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(38100700002)(426003)(2616005)(316002)(9786002)(186003)(66556008)(66946007)(8936002)(86362001)(26005)(2906002)(36756003)(54906003)(6916009)(66476007)(9746002)(8676002)(1076003)(4326008)(508600001)(83380400001)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UzTrAXt3mvBKqbfELn17LQibFTYZbJ/EBfp40R8g9nDcKV5a/JXWlW7DkLnM?=
+ =?us-ascii?Q?svUaDgnbSF/0QT8ujrz/LKcpotBcYQAhNfr1jZXVEpg8K55eU69FYSfrAY+1?=
+ =?us-ascii?Q?IlEim6XQYRkLVG7vQavzOzWGIJheV4ey/o44pvq9fp4u/P1WjBJxuT6mbUdO?=
+ =?us-ascii?Q?OTa3VazCNmZWPiw74kBA7oASo0qIJOkPEfcP5XRL0FCoI0+NTZuFGLIcM5ph?=
+ =?us-ascii?Q?MNZFzD++/2Ra/gBJPC2r9Y/ldz9HUYOTAyuibSqKZNw49dH0dEZh0ItJDYpl?=
+ =?us-ascii?Q?7qs5wVBeXi9TdEUmaCt5kcOR9iQq+GJEpQYQ/jlWZq1xRBeLP7pZmg0a17Js?=
+ =?us-ascii?Q?FVK3aVJg6Fb+u6tjv/IJhg3q8zL68Ubmk/d3+fS/x0U17jcZTGcrhZ5j8IBq?=
+ =?us-ascii?Q?5Fpu7enhz6asKJSBOsyPIcRh79ymsefL08wwZBL2tlXiXaRu+jSPtNx902bC?=
+ =?us-ascii?Q?MCpwUTePM1bpsKr6mN5pAz3vCljsJcK7PDVt//NcgDNxAYuJ6Sj7orNZClze?=
+ =?us-ascii?Q?0AQP1f5zrC1ZEFAxTezL2ab6XafJmr6ct3c76w17tw8Jonb2OD8EvA1IpX6b?=
+ =?us-ascii?Q?mMz9rba7XYb2GuLBhOKXfRaV3U9gb4BMqzSvcwnBWMUIxwbtpvyezsES6oxZ?=
+ =?us-ascii?Q?P/ePTWMJFUi7wlTJWeCOLqXPP8eALOAoFyPFQvqm9RBLv0Mx/1OGHO2GefEC?=
+ =?us-ascii?Q?9XRbUxf7Q6SK7zq9WprQh+DcKmp4TmV4uXNu454G4W1/SE4mV/H2ri+cxT+P?=
+ =?us-ascii?Q?YQOVvNCWqF3v1I6EPFMx/6sWXXta3KkfS45tyKgEWXjF8sYPvhysLxK0BYBb?=
+ =?us-ascii?Q?48vHhfKdENuWlTMHXn5WgkeP+Km7korEZ0Sckey0fk48DF1xPRlnXy3EOMcR?=
+ =?us-ascii?Q?Sk89CuutOIvdXesFr9ne69NE4ez5T29/ye6mImSJ1KILYf9qk8x2PmEPO6fw?=
+ =?us-ascii?Q?ayT7gqiwOIShM2gRWsnE/4pIDRxcLzlVPBYWjE0z4dO+CdeRpTnbtWi+29L1?=
+ =?us-ascii?Q?0tmISQqg62SHmY9Nmy5m1MhmcEO6ZSkUifmBjRa6UnQdYXcYh8ltQu9i3Z+G?=
+ =?us-ascii?Q?OrB4wN6izf1CtVDI/w8lfnL17btjijdcqnAw9EUzYIpQWcNxEGbpApWHTeye?=
+ =?us-ascii?Q?IKca5MvLglODBl761GoTTAEqD1Dyit0xUaetYt+ONntYo2wpXVCJQjXtOxE2?=
+ =?us-ascii?Q?zPGDA9KMnPFs8WOnotWor/SXZjyfKbGUQrTj+zwJUfJS0LC3z/SyQizt4P6n?=
+ =?us-ascii?Q?+qtxKHnrKSFzaocdxM30cuuQbH/tCaA4DdlAUJ/+KRDYtUXsqfNv32iCoqJG?=
+ =?us-ascii?Q?dR0PU2U3lL/FowHINq6Zn8fvdkE38GM5DKBebsESMQ2LGpUR8OcfL8rZ25Si?=
+ =?us-ascii?Q?H7agdFjX4jXPEj1Iov5TbwdCbIZ4xm14KA5szHByE72AI+8JxOvU55cU/jCt?=
+ =?us-ascii?Q?ivFewT8VoUcjIoGRtlP0cJ1lqG/1r+l1Af4dJxYfWfZVZgEW64gfQXW+JMXt?=
+ =?us-ascii?Q?PDoCLcpyihdjY3+iPkbVJrWzojPB2bKEuK/R9TQBMK1DymnLfKSGw7BLc0EH?=
+ =?us-ascii?Q?V5L8nNmEZlBeyytO5sg=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44c38903-adf9-4be6-036d-08d9a936cc47
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 19:25:07.1822
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ghEfWaj3Bk9Cww3t2enNJP80eAqdaLTA4/phLLz7uXzxq3HSj3g0zQUBfO1dJkhu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5208
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+On Tue, Nov 16, 2021 at 10:57:36AM -0700, Alex Williamson wrote:
 
-[ Upstream commit f76b36d40beee0a13aa8f6aa011df0d7cbbb8a7f ]
+> > I think userspace should decide if it wants to use mlx5 built in or
+> > the system IOMMU to do dirty tracking.
+> 
+> What information does userspace use to inform such a decision?
 
-Fix multiple link training issues in aardvark driver. The main reason of
-these issues was misunderstanding of what certain registers do, since their
-names and comments were misleading: before commit 96be36dbffac ("PCI:
-aardvark: Replace custom macros by standard linux/pci_regs.h macros"), the
-pci-aardvark.c driver used custom macros for accessing standard PCIe Root
-Bridge registers, and misleading comments did not help to understand what
-the code was really doing.
+Kernel can't know which approach performs better. Operators should
+benchmark and make a choice for their deployment HW. Maybe device
+tracking severely impacts device performance or vice versa.
 
-After doing more tests and experiments I've come to the conclusion that the
-SPEED_GEN register in aardvark sets the PCIe revision / generation
-compliance and forces maximal link speed. Both GEN3 and GEN2 values set the
-read-only PCI_EXP_FLAGS_VERS bits (PCIe capabilities version of Root
-Bridge) to value 2, while GEN1 value sets PCI_EXP_FLAGS_VERS to 1, which
-matches with PCI Express specifications revisions 3, 2 and 1 respectively.
-Changing SPEED_GEN also sets the read-only bits PCI_EXP_LNKCAP_SLS and
-PCI_EXP_LNKCAP2_SLS to corresponding speed.
+Kernel doesn't easily know what userspace has done, maybe one device
+supports migration driver dirty tracking and one device does not.
 
-(Note that PCI Express rev 1 specification does not define PCI_EXP_LNKCAP2
- and PCI_EXP_LNKCTL2 registers and when SPEED_GEN is set to GEN1 (which
- also sets PCI_EXP_FLAGS_VERS set to 1), lspci cannot access
- PCI_EXP_LNKCAP2 and PCI_EXP_LNKCTL2 registers.)
+Is user space going to use a system IOMMU for both devices? 
 
-Changing PCIe link speed can be done via PCI_EXP_LNKCTL2_TLS bits of
-PCI_EXP_LNKCTL2 register. Armada 3700 Functional Specifications says that
-the default value of PCI_EXP_LNKCTL2_TLS is based on SPEED_GEN value, but
-tests showed that the default value is always 8.0 GT/s, independently of
-speed set by SPEED_GEN. So after setting SPEED_GEN, we must also set value
-in PCI_EXP_LNKCTL2 register via PCI_EXP_LNKCTL2_TLS bits.
+Is it going to put the simple device in NDMA early and continue to
+dirty track to shutdown the other devices?
 
-Triggering PCI_EXP_LNKCTL_RL bit immediately after setting LINK_TRAINING_EN
-bit actually doesn't do anything. Tests have shown that a delay is needed
-after enabling LINK_TRAINING_EN bit. As triggering PCI_EXP_LNKCTL_RL
-currently does nothing, remove it.
+> Ultimately userspace just wants the finest granularity of tracking,
+> shouldn't that guide our decisions which to provide?
 
-Commit 43fc679ced18 ("PCI: aardvark: Improve link training") introduced
-code which sets SPEED_GEN register based on negotiated link speed from
-PCI_EXP_LNKSTA_CLS bits of PCI_EXP_LNKSTA register. This code was added to
-fix detection of Compex WLE900VX (Atheros QCA9880) WiFi GEN1 PCIe cards, as
-otherwise these cards were "invisible" on PCIe bus (probably because they
-crashed). But apparently more people reported the same issues with these
-cards also with other PCIe controllers [1] and I was able to reproduce this
-issue also with other "noname" WiFi cards based on Atheros QCA9890 chip
-(with the same PCI vendor/device ids as Atheros QCA9880). So this is not an
-issue in aardvark but rather an issue in Atheros QCA98xx chips. Also, this
-issue only exists if the kernel is compiled with PCIe ASPM support, and a
-generic workaround for this is to change PCIe Bridge to 2.5 GT/s link speed
-via PCI_EXP_LNKCTL2_TLS_2_5GT bits in PCI_EXP_LNKCTL2 register [2], before
-triggering PCI_EXP_LNKCTL_RL bit. This workaround also works when SPEED_GEN
-is set to value GEN2 (5 GT/s). So remove this hack completely in the
-aardvark driver and always set SPEED_GEN to value from 'max-link-speed' DT
-property. Fix for Atheros QCA98xx chips is handled separately by patch [2].
+At least for mlx5 there is going to some trade off curve of device
+performance, dirty tracking page size, and working set.
 
-These two things (code for triggering PCI_EXP_LNKCTL_RL bit and changing
-SPEED_GEN value) also explain why commit 6964494582f5 ("PCI: aardvark:
-Train link immediately after enabling training") somehow fixed detection of
-those problematic Compex cards with Atheros chips: if triggering link
-retraining (via PCI_EXP_LNKCTL_RL bit) was done immediately after enabling
-link training (via LINK_TRAINING_EN), it did nothing. If there was a
-specific delay, aardvark HW already initialized PCIe link and therefore
-triggering link retraining caused the above issue. Compex cards triggered
-link down event and disappeared from the PCIe bus.
+Even lower is better is not necessarily true. After overheads on a
+400GB RDMA NIC there is not such a big difference between doing a 4k
+and 16k scatter transfer. The CPU work to process all the extra bitmap
+data may not be a net win compared to block transfer times.
 
-Commit f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready before
-training link") added 100ms sleep before calling 'Start link training'
-command and explained that it is a requirement of PCI Express
-specification. But the code after this 100ms sleep was not doing 'Start
-link training', rather it triggered PCI_EXP_LNKCTL_RL bit via PCIe Root
-Bridge to put link into Recovery state.
+Conversly someone doing 1G TCP transfers probably cares a lot to
+minimize block size.
 
-The required delay after fundamental reset is already done in function
-advk_pcie_wait_for_link() which also checks whether PCIe link is up.
-So after removing the code which triggers PCI_EXP_LNKCTL_RL bit on PCIe
-Root Bridge, there is no need to wait 100ms again. Remove the extra
-msleep() call and update comment about the delay required by the PCI
-Express specification.
+Overall, I think there is far too much up in the air and unmeasured to
+firmly commit the kernel to a fixed policy.
 
-According to Marvell Armada 3700 Functional Specifications, Link training
-should be enabled via aardvark register LINK_TRAINING_EN after selecting
-PCIe generation and x1 lane. There is no need to disable it prior resetting
-card via PERST# signal. This disabling code was introduced in commit
-5169a9851daa ("PCI: aardvark: Issue PERST via GPIO") as a workaround for
-some Atheros cards. It turns out that this also is Atheros specific issue
-and affects any PCIe controller, not only aardvark. Moreover this Atheros
-issue was triggered by juggling with PCI_EXP_LNKCTL_RL, LINK_TRAINING_EN
-and SPEED_GEN bits interleaved with sleeps. Now, after removing triggering
-PCI_EXP_LNKCTL_RL, there is no need to explicitly disable LINK_TRAINING_EN
-bit. So remove this code too. The problematic Compex cards described in
-previous git commits are correctly detected in advk_pcie_train_link()
-function even after applying all these changes.
+So, I would like to see userspace control most of the policy aspects,
+including the dirty track provider.
 
-Note that with this patch, and also prior this patch, some NVMe disks which
-support PCIe GEN3 with 8 GT/s speed are negotiated only at the lowest link
-speed 2.5 GT/s, independently of SPEED_GEN value. After manually triggering
-PCI_EXP_LNKCTL_RL bit (e.g. from userspace via setpci), these NVMe disks
-change link speed to 5 GT/s when SPEED_GEN was configured to GEN2. This
-issue first needs to be properly investigated. I will send a fix in the
-future.
+> I believe the intended progression of dirty tracking is that by default
+> all mapped ranges are dirty.  If the device supports page pinning, then
+> we reduce the set of dirty pages to those pages which are pinned.  A
+> device that doesn't otherwise need page pinning, such as a fully IOMMU
 
-On the other hand, some other GEN2 PCIe cards with 5 GT/s speed are
-autonomously by HW autonegotiated at full 5 GT/s speed without need of any
-software interaction.
+How does userspace know if dirty tracking works or not? All I see
+VFIO_IOMMU_DIRTY_PAGES_FLAG_START unconditionally allocs some bitmaps.
 
-Armada 3700 Functional Specifications describes the following steps for
-link training: set SPEED_GEN to GEN2, enable LINK_TRAINING_EN, poll until
-link training is complete, trigger PCI_EXP_LNKCTL_RL, poll until signal
-rate is 5 GT/s, poll until link training is complete, enable ASPM L0s.
+I'm surprised it doesn't check that only NO_IOMMU's devices are
+attached to the container and refuse to dirty track otherwise - since
+it doesn't work..
 
-The requirement for triggering PCI_EXP_LNKCTL_RL can be explained by the
-need to achieve 5 GT/s speed (as changing link speed is done by throw to
-recovery state entered by PCI_EXP_LNKCTL_RL) or maybe as a part of enabling
-ASPM L0s (but in this case ASPM L0s should have been enabled prior
-PCI_EXP_LNKCTL_RL).
+> backed device, would use gratuitous page pinning triggered by the
+> _SAVING state activation on the device.  It sounds like mlx5 could use
+> this existing support today.
 
-It is unknown why the original pci-aardvark.c driver was triggering
-PCI_EXP_LNKCTL_RL bit before waiting for the link to be up. This does not
-align with neither PCIe base specifications nor with Armada 3700 Functional
-Specification. (Note that in older versions of aardvark, this bit was
-called incorrectly PCIE_CORE_LINK_TRAINING, so this may be the reason.)
+How does mlx5 know if it should turn on its dirty page tracking on
+SAVING or if the system IOMMU covers it? Or for some reason userspace
+doesn't want dirty tracking but is doing pre-copy?
 
-It is also unknown why Armada 3700 Functional Specification says that it is
-needed to trigger PCI_EXP_LNKCTL_RL for GEN2 mode, as according to PCIe
-base specification 5 GT/s speed negotiation is supposed to be entirely
-autonomous, even if initial speed is 2.5 GT/s.
+When we mix dirty track with pre-copy, the progression seems to be:
 
-[1] - https://lore.kernel.org/linux-pci/87h7l8axqp.fsf@toke.dk/
-[2] - https://lore.kernel.org/linux-pci/20210326124326.21163-1-pali@kernel.org/
+  DITRY TRACKING | RUNNING
+     Copy every page to the remote
+  DT | SAVING | RUNNING
+     Copy pre-copy migration data to the remote
+  SAVING | NDMA | RUNNING
+     Read and clear dirty track device bitmap
+  DT | SAVING | RUNNING
+     Copy new dirtied data
+     (maybe loop back to NDMA a few times?)
+  SAVING | NDMA | RUNNING
+     P2P grace state
+  0
+    Read the dirty track and copy data
+    Read and send the migration state
 
-Link: https://lore.kernel.org/r/20211005180952.6812-12-kabel@kernel.org
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Marek Behún <kabel@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 117 ++++++++------------------
- 1 file changed, 34 insertions(+), 83 deletions(-)
+Can we do something so complex using only SAVING?
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 596ebcfcc82dc..c4ce8a6c4168a 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -257,11 +257,6 @@ static inline u32 advk_readl(struct advk_pcie *pcie, u64 reg)
- 	return readl(pcie->base + reg);
- }
- 
--static inline u16 advk_read16(struct advk_pcie *pcie, u64 reg)
--{
--	return advk_readl(pcie, (reg & ~0x3)) >> ((reg & 0x3) * 8);
--}
--
- static int advk_pcie_link_up(struct advk_pcie *pcie)
- {
- 	u32 val, ltssm_state;
-@@ -299,23 +294,9 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
- 
- static void advk_pcie_issue_perst(struct advk_pcie *pcie)
- {
--	u32 reg;
--
- 	if (!pcie->reset_gpio)
- 		return;
- 
--	/*
--	 * As required by PCI Express spec (PCI Express Base Specification, REV.
--	 * 4.0 PCI Express, February 19 2014, 6.6.1 Conventional Reset) a delay
--	 * for at least 100ms after de-asserting PERST# signal is needed before
--	 * link training is enabled. So ensure that link training is disabled
--	 * prior de-asserting PERST# signal to fulfill that PCI Express spec
--	 * requirement.
--	 */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg &= ~LINK_TRAINING_EN;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
- 	/* 10ms delay is needed for some cards */
- 	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
- 	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-@@ -323,53 +304,46 @@ static void advk_pcie_issue_perst(struct advk_pcie *pcie)
- 	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
- }
- 
--static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
-+static void advk_pcie_train_link(struct advk_pcie *pcie)
- {
--	int ret, neg_gen;
-+	struct device *dev = &pcie->pdev->dev;
- 	u32 reg;
-+	int ret;
- 
--	/* Setup link speed */
-+	/*
-+	 * Setup PCIe rev / gen compliance based on device tree property
-+	 * 'max-link-speed' which also forces maximal link speed.
-+	 */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
- 	reg &= ~PCIE_GEN_SEL_MSK;
--	if (gen == 3)
-+	if (pcie->link_gen == 3)
- 		reg |= SPEED_GEN_3;
--	else if (gen == 2)
-+	else if (pcie->link_gen == 2)
- 		reg |= SPEED_GEN_2;
- 	else
- 		reg |= SPEED_GEN_1;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
- 
- 	/*
--	 * Enable link training. This is not needed in every call to this
--	 * function, just once suffices, but it does not break anything either.
-+	 * Set maximal link speed value also into PCIe Link Control 2 register.
-+	 * Armada 3700 Functional Specification says that default value is based
-+	 * on SPEED_GEN but tests showed that default value is always 8.0 GT/s.
- 	 */
-+	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL2);
-+	reg &= ~PCI_EXP_LNKCTL2_TLS;
-+	if (pcie->link_gen == 3)
-+		reg |= PCI_EXP_LNKCTL2_TLS_8_0GT;
-+	else if (pcie->link_gen == 2)
-+		reg |= PCI_EXP_LNKCTL2_TLS_5_0GT;
-+	else
-+		reg |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-+	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL2);
-+
-+	/* Enable link training after selecting PCIe generation */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
- 	reg |= LINK_TRAINING_EN;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
- 
--	/*
--	 * Start link training immediately after enabling it.
--	 * This solves problems for some buggy cards.
--	 */
--	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
--	reg |= PCI_EXP_LNKCTL_RL;
--	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
--
--	ret = advk_pcie_wait_for_link(pcie);
--	if (ret)
--		return ret;
--
--	reg = advk_read16(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA);
--	neg_gen = reg & PCI_EXP_LNKSTA_CLS;
--
--	return neg_gen;
--}
--
--static void advk_pcie_train_link(struct advk_pcie *pcie)
--{
--	struct device *dev = &pcie->pdev->dev;
--	int neg_gen = -1, gen;
--
- 	/*
- 	 * Reset PCIe card via PERST# signal. Some cards are not detected
- 	 * during link training when they are in some non-initial state.
-@@ -380,41 +354,18 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
- 	 * PERST# signal could have been asserted by pinctrl subsystem before
- 	 * probe() callback has been called or issued explicitly by reset gpio
- 	 * function advk_pcie_issue_perst(), making the endpoint going into
--	 * fundamental reset. As required by PCI Express spec a delay for at
--	 * least 100ms after such a reset before link training is needed.
--	 */
--	msleep(PCI_PM_D3COLD_WAIT);
--
--	/*
--	 * Try link training at link gen specified by device tree property
--	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
--	 */
--	for (gen = pcie->link_gen; gen > 0; --gen) {
--		neg_gen = advk_pcie_train_at_gen(pcie, gen);
--		if (neg_gen > 0)
--			break;
--	}
--
--	if (neg_gen < 0)
--		goto err;
--
--	/*
--	 * After successful training if negotiated gen is lower than requested,
--	 * train again on negotiated gen. This solves some stability issues for
--	 * some buggy gen1 cards.
-+	 * fundamental reset. As required by PCI Express spec (PCI Express
-+	 * Base Specification, REV. 4.0 PCI Express, February 19 2014, 6.6.1
-+	 * Conventional Reset) a delay for at least 100ms after such a reset
-+	 * before sending a Configuration Request to the device is needed.
-+	 * So wait until PCIe link is up. Function advk_pcie_wait_for_link()
-+	 * waits for link at least 900ms.
- 	 */
--	if (neg_gen < gen) {
--		gen = neg_gen;
--		neg_gen = advk_pcie_train_at_gen(pcie, gen);
--	}
--
--	if (neg_gen == gen) {
--		dev_info(dev, "link up at gen %i\n", gen);
--		return;
--	}
--
--err:
--	dev_err(dev, "link never came up\n");
-+	ret = advk_pcie_wait_for_link(pcie);
-+	if (ret < 0)
-+		dev_err(dev, "link never came up\n");
-+	else
-+		dev_info(dev, "link up\n");
- }
- 
- /*
--- 
-2.33.0
+.. and along the lines of the above how do we mix in NDMA to the iommu
+container, and how does it work if only some devices support NDMA?
 
+> We had also discussed variants to page pinning that might be more
+> useful as device dirty page support improves.  For example calls to
+> mark pages dirty once rather than the perpetual dirtying of pinned
+> pages, calls to pin pages for read vs write, etc.  We didn't dive much
+> into system IOMMU dirtying, but presumably we'd have a fault handler
+> triggered if a page is written by the device and go from there.
+
+Would be interesting to know for sure what current IOMMU HW has
+done. I'm supposing the easiest implementation is to write a dirty bit
+to the IO PTE the same as the CPU writes a dirty bit the normal PTE.
+
+> > In light of all this I'm wondering if device dirty tracking should
+> > exist as new ioctls on the device FD and reserve the type1 code to
+> > only work the IOMMU dirty tracking.
+> 
+> Our existing model is working towards the IOMMU, ie. container,
+> interface aggregating dirty page context.  
+
+This creates inefficiencies in the kernel, we copy from the mlx5
+formed data structure to new memory in the iommu through a very
+ineffficent API and then again we do an ioctl to copy it once more and
+throw all the extra work away. It does not seem good for something
+where we want performance.
+
+> For example when page pinning is used, it's only when all devices
+> within the container are using page pinning that we can report the
+> pinned subset as dirty.  Otherwise userspace needs to poll each
+> device, which I suppose enables your idea that userspace decides
+> which source to use, but why?
+
+Efficiency, and user selectable policy.
+
+Userspace can just allocate an all zeros bitmap and feed it to each of
+the providers in the kernel using a 'or in your dirty' semantic.
+
+No redundant kernel data marshaling, userspace gets to decide which
+tracking provider to use, and it is simple to implement in the kernel.
+
+Userspace has to do this anyhow if it has configurations with multiple
+containers. For instance because it was forced to split the containers
+due to one device not supporting NDMA.
+
+> Does the IOMMU dirty page tracking exclude devices if the user
+> queries the device separately?  
+
+What makes sense to me is multiple tracking providers. Each can be
+turned on and off.
+
+If the container tracking provider says it supports tracking then it
+means it can track DMA from every device it is connected to (unlike
+today?). eg by using IOMMU HW that naturally does this, or by only
+having only NO_IOMMU devices.
+
+If the migration driver says it supports tracking, then it only tracks
+DMA from that device.
+
+> How would it know?  What's the advantage?  It seems like this
+> creates too many support paths that all need to converge on the same
+> answer.  Consolidating DMA dirty page tracking to the DMA mapping
+> interface for all devices within a DMA context makes more sense to
+> me.
+
+What I see is a lot of questions and limitations with this
+approach. If we stick to funneling everything through the iommu then
+answering the questions seem to create a large amount of kernel
+work. Enough to ask if it is worthwhile..
+
+.. and then we have to ask how does this all work in IOMMUFD where it
+is not so reasonable to tightly couple the migration driver and the
+IOAS and I get more questions :)
+
+Jason
