@@ -2,115 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D398A4530FA
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 12:39:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B13B4532A9
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 14:13:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235433AbhKPLlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 06:41:15 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14751 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235441AbhKPLkV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 06:40:21 -0500
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HtkW73C6CzZd79;
-        Tue, 16 Nov 2021 19:34:59 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.20; Tue, 16 Nov 2021 19:37:21 +0800
-Received: from [10.67.102.169] (10.67.102.169) by
- dggema772-chm.china.huawei.com (10.1.198.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Tue, 16 Nov 2021 19:37:20 +0800
-CC:     <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <liuqi115@huawei.com>
-Subject: Re: [PATCH v2 2/6] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     Robin Murphy <robin.murphy@arm.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <jonathan.cameron@huawei.com>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20211116090625.53702-1-yangyicong@hisilicon.com>
- <20211116090625.53702-3-yangyicong@hisilicon.com>
- <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
-Date:   Tue, 16 Nov 2021 19:37:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S233651AbhKPNPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 08:15:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:33739 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232753AbhKPNPv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 08:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637068373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RwSPKdrqQ1q6lDNw8QjTC1fhe5/0qZqa2W6TP7Z0Hsc=;
+        b=QL7mTvuKAvkWkqU6vQ3+TIfwB+Fll+wZXOsYjyIJ61MTpfaKOb8gJe+CFyur4oqEktHvmd
+        Obt1XxWJEGEm/98YopIrkygD4nr23e9ClkKrT8hEExy6uFKxl48TmnLenDxmURHkM4OkZg
+        SFpnTGLRhz7rbarCyE/bG6NnbkcJYP0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-211-YP6pxUzSOlmNnetxMQ2IjA-1; Tue, 16 Nov 2021 08:12:50 -0500
+X-MC-Unique: YP6pxUzSOlmNnetxMQ2IjA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7D74802E64;
+        Tue, 16 Nov 2021 13:12:49 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EECF1F42A;
+        Tue, 16 Nov 2021 13:12:48 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pci@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] PCI: Make the pci_dev_present() stub a static inline
+Date:   Tue, 16 Nov 2021 14:12:47 +0100
+Message-Id: <20211116131247.508424-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/11/16 18:56, Robin Murphy wrote:
-> On 2021-11-16 09:06, Yicong Yang via iommu wrote:
-> [...]
->> +/*
->> + * Get RMR address if provided by the firmware.
->> + * Return 0 if the IOMMU doesn't present or the policy of the
->> + * IOMMU domain is passthrough or we get a usable RMR region.
->> + * Otherwise a negative value is returned.
->> + */
->> +static int hisi_ptt_get_rmr(struct hisi_ptt *hisi_ptt)
->> +{
->> +    struct pci_dev *pdev = hisi_ptt->pdev;
->> +    struct iommu_domain *iommu_domain;
->> +    struct iommu_resv_region *region;
->> +    LIST_HEAD(list);
->> +
->> +    /*
->> +     * Use direct DMA if IOMMU does not present or the policy of the
->> +     * IOMMU domain is passthrough.
->> +     */
->> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
->> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
->> +        return 0;
->> +
->> +    iommu_get_resv_regions(&pdev->dev, &list);
->> +    list_for_each_entry(region, &list, list)
->> +        if (region->type == IOMMU_RESV_DIRECT &&
->> +            region->length >= HISI_PTT_TRACE_BUFFER_SIZE) {
->> +            hisi_ptt->trace_ctrl.has_rmr = true;
->> +            hisi_ptt->trace_ctrl.rmr_addr = region->start;
->> +            hisi_ptt->trace_ctrl.rmr_length = region->length;
->> +            break;
->> +        }
->> +
->> +    iommu_put_resv_regions(&pdev->dev, &list);
->> +    return hisi_ptt->trace_ctrl.has_rmr ? 0 : -ENOMEM;
->> +}
-> 
-> No.
-> 
-> The whole point of RMRs is for devices that are already configured to access the given address range in a manner beyond the kernel's control. If you can do this, it proves that you should not have an RMR in the first place.
-> 
-> The notion of a kernel driver explicitly configuring its device to DMA into any random RMR that looks big enough is so egregiously wrong that I'm almost lost for words...
-> 
+Change the pci_dev_present() stub which is used when CONFIG_PCI is not set
+from a #define to a static inline stub.
 
-our bios will reserve such a region and reported it through iort. the device will write to the region and in the driver we need to access the region
-to get the traced data. the region is reserved exclusively and will not be accessed by kernel or other devices.
+Thix should fix clang -Werror builds failing due to errors like this:
 
-is it ok to let bios configure the address to the device and from CPU side we just read it?
+drivers/platform/x86/thinkpad_acpi.c:4475:35:
+ error: unused variable 'fwbug_cards_ids' [-Werror,-Wunused-const-variable]
 
-Thanks,
-Yicong
+Where fwbug_cards_ids is an array if pci_device_id-s passed to
+pci_dev_present() during a quirk check.
 
+Fixing this in include/linux/pci.h should ensure that the same issue is
+also fixed in any other drivers hitting the same -Werror issue.
+
+Cc: platform-driver-x86@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Note the commit message says "should fix" because I could not actually
+be bothered to verify this. The whole notion of combining:
+1. clang
+2. -Werror
+3. -Wunused-const-variable
+Is frankly a bit crazy, causing way too much noise and has already
+cost me too much time IMHO.
+---
+ include/linux/pci.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 18a75c8e615c..7d825637d7ca 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1775,7 +1775,10 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
+ 					    struct pci_dev *from)
+ { return NULL; }
+ 
+-#define pci_dev_present(ids)	(0)
++
++static inline int pci_dev_present(const struct pci_device_id *ids)
++{ return 0; }
++
+ #define no_pci_devices()	(1)
+ #define pci_dev_put(dev)	do { } while (0)
+ 
+-- 
+2.31.1
 
