@@ -2,228 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 230FF453902
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 18:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9254453955
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 19:20:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239254AbhKPSAo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 13:00:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60254 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239256AbhKPSAi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 13:00:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637085460;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+eUARFHOxU4OIAktpFmhvthpI+NaXepjdzqs96Y0XYk=;
-        b=hxlIMvXwLgV9TQSy0ehJGAt9w0Hb3CPrpJUQYECI52VcoE/+0xuK7APPjnKiG8nfUWcuOj
-        gIK5Pes/+OBW2fCXhkfgV7qTX0KVZmo2wuEhjyRHn/oa8qQ5Ha8Sp+qwoUBFfEtE2+i3ek
-        FqoaV0kV9uGe953I/pzp9lc0Av3k/Y4=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-Qf1WBxU9PIyKMbkbn8V-Fg-1; Tue, 16 Nov 2021 12:57:39 -0500
-X-MC-Unique: Qf1WBxU9PIyKMbkbn8V-Fg-1
-Received: by mail-oi1-f199.google.com with SMTP id s8-20020aca5e08000000b002b3dd17652cso89930oib.3
-        for <linux-pci@vger.kernel.org>; Tue, 16 Nov 2021 09:57:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+eUARFHOxU4OIAktpFmhvthpI+NaXepjdzqs96Y0XYk=;
-        b=2RmLp2f6iIGP4ISi3Fng9ccvvBaN+GtlFaLJB/uuiAhX0HtqfsYPtTPVOueE13jNk8
-         uv26DbBoyg9KYY4DcFjVbjI9+MR7DKZL9V83oYAVajqCLp0qxikxZyyByAJOKdVLifFA
-         l2drONqA6jtm9XqoBfQpaa90NRLimJnbrlPLego+wZJ9gs4Pl40bvbg3mxwBoX0p1w/P
-         io8e+sUf0q+ZuRG0UfaX+dhonbqN6mh/MRezsEBgCv+pjfiLa0xVXizpdrq1dbfdo7O4
-         Md4+2G8HWWK6VuSGGPjZYi76bZ/Pwn2+hhVtcFWNFYonaNiUt78nVsmzRluY43fyQMwk
-         JieQ==
-X-Gm-Message-State: AOAM530fx7eNWoeEjrjluqNeSSOu9LIsqbfPtI7c/O1p3UuemR4HKKnT
-        W35WbiIfh+L55jA9W6Amjyz0uuMa7dd99O6RiYH83xIxORpUuprxncDcJ+gZCKt2X+hmEEF1h16
-        p/d2J/a4K+Ogu0DHNhbYX
-X-Received: by 2002:a9d:6752:: with SMTP id w18mr7372588otm.13.1637085458584;
-        Tue, 16 Nov 2021 09:57:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwJwyUET5Y+vjLdMGjqz8zpyWs20WzNkFAzkhwdjelo4QOL6kP0p3e8T5PhM7dsBwMrTJ/pQw==
-X-Received: by 2002:a9d:6752:: with SMTP id w18mr7372551otm.13.1637085458244;
-        Tue, 16 Nov 2021 09:57:38 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id f25sm3179417oog.44.2021.11.16.09.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 09:57:37 -0800 (PST)
-Date:   Tue, 16 Nov 2021 10:57:36 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211116105736.0388a183.alex.williamson@redhat.com>
-In-Reply-To: <20211115232921.GV2105516@nvidia.com>
-References: <20211102155420.GK2744544@nvidia.com>
-        <20211102102236.711dc6b5.alex.williamson@redhat.com>
-        <20211102163610.GG2744544@nvidia.com>
-        <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
-        <20211103120955.GK2744544@nvidia.com>
-        <20211103094409.3ea180ab.alex.williamson@redhat.com>
-        <20211103161019.GR2744544@nvidia.com>
-        <20211103120411.3a470501.alex.williamson@redhat.com>
-        <20211105132404.GB2744544@nvidia.com>
-        <20211105093145.386d0e89.alex.williamson@redhat.com>
-        <20211115232921.GV2105516@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S238924AbhKPSXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 13:23:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236659AbhKPSXd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Nov 2021 13:23:33 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 994CC63231;
+        Tue, 16 Nov 2021 18:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637086836;
+        bh=zQ23lBUVqtQtYQ5TID6YCdJ8tlFXhml1gZkaxzR+gvc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o04ZzvwRCLZoSDgGGOfWQNXo0akTSCu8K4C4Y9NVIxqlZi2uFEhvIA/T9J2M1HAYt
+         FRuj7wosu6Obiv4Yas7GmhZWZ4FjJPPewu9lGx6a9vk+9uug4YbbHEA/590ne0PozT
+         SXh2P+3ML2h7SY1pMs1x0aU90Cvq6kd/qeaWqWIQoZIzy+6Fx4Q2Gn0ppbaQr52ETa
+         wTS8Fn69qGaqNUQzNnR83DXkM4bzasQ/9dm/TMjGQVpGJKhEo7tQtfMDlE7ik75jsD
+         s/GIYzWw+xAjg5sGDwazcVHrU8M9B26qIHA9w+/Y+AeflPIY3T9BZnPXx5nyn+lALx
+         RKepEQirfDMwg==
+Received: by mail-ed1-f50.google.com with SMTP id z5so31943437edd.3;
+        Tue, 16 Nov 2021 10:20:36 -0800 (PST)
+X-Gm-Message-State: AOAM530NNBuAUcVQhniKv8PJhisLCV9kJ7k1JbFsftTR0TFknAMLFdRx
+        ja8PsiDua2YHKdyLpXTxcthRJRetjdSrnnhUHQ==
+X-Google-Smtp-Source: ABdhPJwwDyer0PToNILufn0VRX0SlTOAApNbRDmf1a5oEpMFwAza7UOpzYSwetb2VCFA/vZX/ZYDpHNDiDRUK/48Y5Y=
+X-Received: by 2002:a17:906:bccc:: with SMTP id lw12mr12270768ejb.128.1637086834835;
+ Tue, 16 Nov 2021 10:20:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+ <94d3f4e5-a698-134c-8264-55d31d3eafa6@arm.com> <CAHp75VeJ8ZiD=qQVfeahUjGZduFRJJ5683hn8f4810JYEzsCyw@mail.gmail.com>
+ <YZJxG7JFAfIqr1/f@smile.fi.intel.com>
+In-Reply-To: <YZJxG7JFAfIqr1/f@smile.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 16 Nov 2021 12:20:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJndi-gmenSpPtMVfsb3SrA=w+YBsSh3GigfgXC3rYDeQ@mail.gmail.com>
+Message-ID: <CAL_JsqJndi-gmenSpPtMVfsb3SrA=w+YBsSh3GigfgXC3rYDeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
+ internal use only
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 15 Nov 2021 19:29:21 -0400
-Jason Gunthorpe <jgg@nvidia.com> wrote:
++Marc Z
 
-> On Fri, Nov 05, 2021 at 09:31:45AM -0600, Alex Williamson wrote:
-> > On Fri, 5 Nov 2021 10:24:04 -0300
-> > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >   
-> > > On Wed, Nov 03, 2021 at 12:04:11PM -0600, Alex Williamson wrote:
-> > >   
-> > > > We agreed that it's easier to add a feature than a restriction in a
-> > > > uAPI, so how do we resolve that some future device may require a new
-> > > > state in order to apply the SET_IRQS configuration?    
-> > > 
-> > > I would say don't support those devices. If there is even a hint that
-> > > they could maybe exist then we should fix it now. Once the uapi is set
-> > > and documented we should expect device makers to consider it when
-> > > building their devices.
-> > > 
-> > > As for SET_IRQs, I have been looking at making documentation and I
-> > > don't like the way the documentation has to be wrriten because of
-> > > this.
-> > > 
-> > > What I see as an understandable, clear, documentation is:
-> > > 
-> > >  - SAVING set - no device touches allowed beyond migration operations
-> > >    and reset via XX  
-> > 
-> > I'd suggest defining reset via ioctl only.
-> >   
-> > >    Must be set with !RUNNING  
-> > 
-> > Not sure what this means.  Pre-copy requires SAVING and RUNNING
-> > together, is this only suggesting that to get the final device state we
-> > need to do so in a !RUNNING state?  
-> 
-> Sorry, I did not think about pre-copy here, mlx5 doesn't do it so I'm
-> not as familiar
-> 
-> > >  - RESUMING set - same as SAVING  
-> > 
-> > I take it then that we're defining a new protocol if we can't do
-> > SET_IRQS here.  
-> 
-> We've been working on some documentation and one of the challenges
-> turns out that all the PCI device state owned by other subsystems (eg
-> the PCI core, the interrupt code, power management, etc) must be kept
-> in sync. No matter what RESUMING cannot just async change device state
-> that the kernel assumes it is controlling.
-> 
-> So, in practice, this necessarily requires forbidding the device from
-> touching the MSI table, and other stuff, during RESUMING.
-> 
-> Further, since we can't just halt all the other kernel subsystems
-> during SAVING/RESUMING the device must be able to accept touches in
-> those areas, for completely unrelated reasons, (eg a MSI addr/data
-> being changed) safely.
-> 
-> Seems like no need to change SET_IRQs.
-> 
-> 
-> > >  - NDMA set - full device touches
-> > >    Device may not issue DMA or interrupts (??)
-> > >    Device may not dirty pages  
-> > 
-> > Is this achievable?  We can't bound the time where incoming DMA is
-> > possible, devices don't have infinite buffers.  
-> 
-> It is a necessary evil for migration. 
-> 
-> The device cannot know how long it will be suspended for and must
-> cope. With networking discarded packets can be resent, but the reality
-> is that real deployments need a QOS that the device will not be paused
-> for too long otherwise the peers may declare the node dead.
-> 
-> > > Not entirely, to support P2P going from RESUMING directly to RUNNING
-> > > is not possible. There must be an in between state that all devices
-> > > reach before they go to RUNNING. It seems P2P cannot be bolted into
-> > > the existing qmeu flow with a kernel only change?  
-> > 
-> > Perhaps, yes.  
-> 
-> We have also been looking at dirty tracking and we are wondering how
-> that should work. (Dirty tracking will be another followup)
-> 
-> If we look at mlx5, it will have built in dirty tracking, and when
-> used with a newer IOMMUs there is also system dirty tracking
-> available.
-> 
-> I think userspace should decide if it wants to use mlx5 built in or
-> the system IOMMU to do dirty tracking.
+On Mon, Nov 15, 2021 at 8:39 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Nov 15, 2021 at 04:14:21PM +0200, Andy Shevchenko wrote:
+> > On Mon, Nov 15, 2021 at 4:01 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > On 2021-11-15 11:20, Andy Shevchenko wrote:
+> > > > Use BIT() as __GENMASK() is for internal use only. The rationale
+> > > > of switching to BIT() is to provide better generated code. The
+> > > > GENMASK() against non-constant numbers may produce an ugly assembler
+> > > > code. On contrary the BIT() is simply converted to corresponding shift
+> > > > operation.
+> > >
+> > > FWIW, If you care about code quality and want the compiler to do the
+> > > obvious thing, why not specify it as the obvious thing:
+> > >
+> > >         u32 val = ~0 << msi->legacy_shift;
+> >
+> > Obvious and buggy (from the C standard point of view)? :-)
+>
+> Forgot to mention that BIT() is also makes it easy to avoid such mistake.
+>
+> > > Personally I don't think that abusing BIT() in the context of setting
+> > > multiple bits is any better than abusing __GENMASK()...
+> >
+> > No, BIT() is not abused here, but __GENMASK().
+> >
+> > After all it's up to you, folks, consider that as a bug report.
 
-What information does userspace use to inform such a decision?
-Ultimately userspace just wants the finest granularity of tracking,
-shouldn't that guide our decisions which to provide?
+Couldn't we get rid of legacy_shift entirely if the legacy case sets
+up 'hwirq' as 24-31 rather than 0-7? Though the data for the MSI msg
+uses the hwirq.
 
-> Presumably the system IOMMU is turned on via
-> VFIO_IOMMU_DIRTY_PAGES_FLAG_START, but what controls if the mlx5
-> mechanism should be used or not?
-> 
-> mlx5 also has no way to return the dirty log. If the system IOMMU is
-> not used then VFIO_IOMMU_DIRTY_PAGES_FLAG_START should not be done,
-> however that is what controls all the logic under the two GET_BITMAP
-> APIs. (even if fixed I don't really like the idea of the IOMMU
-> extracting this data from the migration driver in the context of
-> iommufd)
-> 
-> Further how does mlx5 even report that it has dirty tracking?
-> 
-> Was there some plan here we are missing?
-
-I believe the intended progression of dirty tracking is that by default
-all mapped ranges are dirty.  If the device supports page pinning, then
-we reduce the set of dirty pages to those pages which are pinned.  A
-device that doesn't otherwise need page pinning, such as a fully IOMMU
-backed device, would use gratuitous page pinning triggered by the
-_SAVING state activation on the device.  It sounds like mlx5 could use
-this existing support today.
-
-We had also discussed variants to page pinning that might be more
-useful as device dirty page support improves.  For example calls to
-mark pages dirty once rather than the perpetual dirtying of pinned
-pages, calls to pin pages for read vs write, etc.  We didn't dive much
-into system IOMMU dirtying, but presumably we'd have a fault handler
-triggered if a page is written by the device and go from there.
-
-> In light of all this I'm wondering if device dirty tracking should
-> exist as new ioctls on the device FD and reserve the type1 code to
-> only work the IOMMU dirty tracking.
-
-Our existing model is working towards the IOMMU, ie. container,
-interface aggregating dirty page context.  For example when page
-pinning is used, it's only when all devices within the container are
-using page pinning that we can report the pinned subset as dirty.
-Otherwise userspace needs to poll each device, which I suppose enables
-your idea that userspace decides which source to use, but why?  Does
-the IOMMU dirty page tracking exclude devices if the user queries the
-device separately?  How would it know?  What's the advantage?  It seems
-like this creates too many support paths that all need to converge on
-the same answer.  Consolidating DMA dirty page tracking to the DMA
-mapping interface for all devices within a DMA context makes more sense
-to me.  Thanks,
-
-Alex
-
+Rob
