@@ -2,82 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 918F445381E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 17:54:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F84453833
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 18:01:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236716AbhKPQ4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 11:56:17 -0500
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:44906 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236615AbhKPQ4P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 11:56:15 -0500
-Received: by mail-pl1-f176.google.com with SMTP id q17so17907856plr.11
-        for <linux-pci@vger.kernel.org>; Tue, 16 Nov 2021 08:53:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S5jeIDmEr/lxcjxypH08zgI6IjZqvC5MOF3oAqkEHqo=;
-        b=0ZuS+aq0rKG1BbAowHZmJGK0xa1zQkXIvnxoAq4ywu4AeXh/OnB8gc25F3RNxiYyPL
-         dorYPqm4pxd1HDIVVpXk3y8x2c4yx38BqM7X6TAssw66PsDPudS+jbpGtru28lEJBruX
-         HLaqoQXnbv7t4GS6SkPXcU6MEl5Tkhpr8yHNLfpb68idfJbhGT7XgLH6u/3cu7GgCXd6
-         /ahOgngcOjWg5cjkD7lxG6sVzh66j9X67qrhUflZiccdan4X5Rnw2D1PTFY0cTy0qHAE
-         1AxD/pLUL9j2rD0RSC9PqCwPPvTI/whtp3FPeD1FsNEMrnj/n/qdR1kKEw+ATfSEpNlQ
-         xWoQ==
-X-Gm-Message-State: AOAM530+RO7R5KKG9hz8wXGdJ9eJPS7Dq5oQkReo+DtCDZikoZg+W58u
-        lZQvM1BXYI4ayIUGv6A+lEo=
-X-Google-Smtp-Source: ABdhPJy2TBr2RPQjNuY5izr4c/t9GDXtd/4GPHjfV9ukE7//MFhxpupKAn1hNGTkFh/SO3a+9jXwqA==
-X-Received: by 2002:a17:902:b718:b0:143:72b7:409e with SMTP id d24-20020a170902b71800b0014372b7409emr46499203pls.28.1637081598151;
-        Tue, 16 Nov 2021 08:53:18 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id ot18sm3286005pjb.14.2021.11.16.08.53.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 08:53:17 -0800 (PST)
-Date:   Tue, 16 Nov 2021 17:53:06 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, nicolarevelant44@gmail.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        sound-open-firmware@alsa-project.org, linux-pci@vger.kernel.org
-Subject: Re: [Bug 214995] New: Sof audio didn't recognize Intel Smart Sound
- (SST) speakers, microphone and headphone jack
-Message-ID: <YZPh8rnetEltL/v5@rocinante>
-References: <20211112222432.GA1423380@bhelgaas>
- <4cf00ae5-f3d7-ecb5-7dae-f8629becc0d2@linux.intel.com>
+        id S236958AbhKPRD4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 12:03:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26428 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229509AbhKPRD4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 12:03:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637082058;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Gf8mldySlliat3YgGc9PO17qf3daXpBQySoi5xxCq0=;
+        b=VzfFX0xhRHzwzEwD+I4cE3SqKWKzLa3BY5R1IfHCAlLLGyE5byf3+VEalFA3M/T8vPKsoH
+        nvWWRA9IrUIhVAqq4wdXz8HKTIlI1YhgMpBx/KPQHvj4L4vKgcTDz4S3Ot79olUYtx8xfr
+        0uDeh4O+jQL9XGWGMb2/gujYfDnB8U0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-L5ty1teGOjSKV0JufnXwJg-1; Tue, 16 Nov 2021 12:00:53 -0500
+X-MC-Unique: L5ty1teGOjSKV0JufnXwJg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25C2580414B;
+        Tue, 16 Nov 2021 17:00:51 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA37760C0F;
+        Tue, 16 Nov 2021 16:59:51 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
+ for mlx5 devices
+In-Reply-To: <878ry2a6hw.fsf@redhat.com>
+Organization: Red Hat GmbH
+References: <20211028234750.GP2744544@nvidia.com>
+ <20211029160621.46ca7b54.alex.williamson@redhat.com>
+ <20211101172506.GC2744544@nvidia.com>
+ <20211102085651.28e0203c.alex.williamson@redhat.com>
+ <20211102155420.GK2744544@nvidia.com>
+ <20211102102236.711dc6b5.alex.williamson@redhat.com>
+ <20211102163610.GG2744544@nvidia.com>
+ <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
+ <20211103120955.GK2744544@nvidia.com>
+ <20211103094409.3ea180ab.alex.williamson@redhat.com>
+ <20211103161019.GR2744544@nvidia.com>
+ <20211103120411.3a470501.alex.williamson@redhat.com>
+ <877ddob233.fsf@redhat.com> <878ry2a6hw.fsf@redhat.com>
+User-Agent: Notmuch/0.33.1 (https://notmuchmail.org)
+Date:   Tue, 16 Nov 2021 17:59:49 +0100
+Message-ID: <87sfvwkpdm.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4cf00ae5-f3d7-ecb5-7dae-f8629becc0d2@linux.intel.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Fri, Nov 05 2021, Cornelia Huck <cohuck@redhat.com> wrote:
 
-[...]
-> That seems like a known issue already tracked at
-> https://github.com/thesofproject/linux/issues/3248
-> 
-> There's a set of devices based on the ES8316/36 I2S audio codec which
-> needs dedicated quirks. In the existing reports the Huawei Matebook D15
-> is listed as using that codec.
-> 
-> The latest experimental code we have is here:
-> https://github.com/thesofproject/linux/pull/3107/commits
-> 
-> If confirmed, can we track this on GitHub so that all results for this
-> sort of devices are collected in one place? Thanks!
+> On Thu, Nov 04 2021, Cornelia Huck <cohuck@redhat.com> wrote:
+>
+>> So, I doubt that I'm the only person trying to follow this discussion
+>> who has lost the overview about issues and possible solutions here. I
+>> think it would be a good idea to summarize what has been brought up so
+>> far outside of this thread.
+>>
+>> To that effect, I've created an etherpad at
+>> https://etherpad.opendev.org/p/VFIOMigrationDiscussions and started
+>> filling it with some points. It would be great if others could fill in
+>> the blanks so that everyone has a chance to see what is on the table so
+>> far, so that we can hopefully discuss this on-list and come up with
+>> something that works.
+>
+> ...just to clarify, my idea was that we could have a writeup of the
+> various issues and proposed solutions on the etherpad, and then post the
+> contents on-list next week as a starting point for a discussion that is
+> not hidden deeply inside the discussion on a patch set.
+>
+> So, please continue adding points :)
 
-Collecting details is definitely a good idea, however if possible, we
-should open a new issue (if there isn't one about this already) using
-Kernel's Bugzilla, and track it there.
+Last call for anything you want to add to the etherpad; I'll post the
+contents tomorrow.
 
-A lot more users looks there (including kernel maintainers and driver
-developers) for bug reports and such.
+[Yes, I wanted to post it last week, but got sidetracked.]
 
-This is just a suggestion, though.
-
-	Krzysztof
