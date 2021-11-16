@@ -2,334 +2,297 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2A7D453B7C
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 22:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7C7D453BA0
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 22:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231389AbhKPVNe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 16:13:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33411 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231344AbhKPVNe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 16:13:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637097036;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=96lDap4247SDXpoDuNta31WDWX7qKzwpD/6F6PzBxSE=;
-        b=SQP65c3sn/PKHho2tlJ6wrDubkNXfKWXF8mhqp11Z664o1VCgMleq5R4vcsRxF+CXLHwHA
-        anH7JNNRzRDW8HGjYC2V8FMbfIGjlrj04vNQdmFWojoruGTa+nfxtSYnNXhSl/SibBoPvM
-        k6x3xW2j+TQ4rZlkgWxnF55bBxUG5QQ=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-583-vhSa77CsN-eQF72caFlAfw-1; Tue, 16 Nov 2021 16:10:35 -0500
-X-MC-Unique: vhSa77CsN-eQF72caFlAfw-1
-Received: by mail-ot1-f72.google.com with SMTP id g32-20020a9d12a3000000b0056f8e5396a1so218156otg.7
-        for <linux-pci@vger.kernel.org>; Tue, 16 Nov 2021 13:10:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=96lDap4247SDXpoDuNta31WDWX7qKzwpD/6F6PzBxSE=;
-        b=EZn6Vp0r4aJUheEN36OWO+SFjR+ZyruABB23Jk1kGnGLTgp9dA06O5lH+cut6vSWh1
-         +W0MqpCz6IerHZqlw8EuXyQMzfBzHd8XNFxl6W3jikHdieeJoAClIvdNdiSWnaxJ98Ee
-         hmrNjZ3BxpbiTFYcMj2ff2a4L/X5zYMmuWlhXPeT1D5N9Nx0dr9cRqwvb2GJLks4381K
-         ZWJHSq/MRpa8ZOYUBI/vatUmUJjtkFSmZohX8FehSw6w8ShEDHnhwXrUE4nCh7X5UrXq
-         C9VS3Dc8GgcNGWI3K5OyQt/4lSgQLNQae2xNY/KcYTn0eimMIlpjTywzBXe9blpOQNg+
-         uHlA==
-X-Gm-Message-State: AOAM532EDrSCHYJQjZdBS45vPA/X3UxV6PewkFQUXCiimR7dHDs3apfZ
-        WsPYZfy21V73+SdDlALg2FfnaSL7GisHm9QpfD0G0zberJkjfqMe4X9tM0dgW+eh/O7mxo+kOku
-        llcU68l1hMgdzlU5hRIFy
-X-Received: by 2002:a05:6808:168a:: with SMTP id bb10mr57009449oib.99.1637097034212;
-        Tue, 16 Nov 2021 13:10:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwH46xZjwsMx3sGxBYnqkDaoXgV1sp/vrc9SExLuNj/nZrz9s+ZcoiikJh8Hvu0OZhws8rkXg==
-X-Received: by 2002:a05:6808:168a:: with SMTP id bb10mr57009400oib.99.1637097033810;
-        Tue, 16 Nov 2021 13:10:33 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id 3sm4143579oif.12.2021.11.16.13.10.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 13:10:33 -0800 (PST)
-Date:   Tue, 16 Nov 2021 14:10:31 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH V2 mlx5-next 12/14] vfio/mlx5: Implement vfio_pci driver
- for mlx5 devices
-Message-ID: <20211116141031.443e8936.alex.williamson@redhat.com>
-In-Reply-To: <20211116192505.GB2105516@nvidia.com>
-References: <20211102163610.GG2744544@nvidia.com>
-        <20211102141547.6f1b0bb3.alex.williamson@redhat.com>
-        <20211103120955.GK2744544@nvidia.com>
-        <20211103094409.3ea180ab.alex.williamson@redhat.com>
-        <20211103161019.GR2744544@nvidia.com>
-        <20211103120411.3a470501.alex.williamson@redhat.com>
-        <20211105132404.GB2744544@nvidia.com>
-        <20211105093145.386d0e89.alex.williamson@redhat.com>
-        <20211115232921.GV2105516@nvidia.com>
-        <20211116105736.0388a183.alex.williamson@redhat.com>
-        <20211116192505.GB2105516@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230398AbhKPVaq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 16:30:46 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43892 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230171AbhKPVao (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 16:30:44 -0500
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AGIBms6010366;
+        Tue, 16 Nov 2021 13:27:46 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=9TJ9/av1Sgwy9zzylNHmd9yXdgeNfcu7XOPfJLwpvBU=;
+ b=f9q3+2ZQ9XlUB3/9N/Jhm1bBGX65c9XeLu6948/rHh6cTfvenMxtre8An71vwD7LMkOe
+ C9FA825h0jck6xFvUBJulnBKVhV/6VIvR511HP0re7xaxjafYYmkFV1cZcgir/dntl2d
+ wxVxekiYmLeUkKFqGqX5gUPF8n0PQ4rzIjk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3cccpe42xe-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 16 Nov 2021 13:27:46 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.14; Tue, 16 Nov 2021 13:27:44 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nV9cnQsywkl/ttVkyaRMZ9Ly5j8/LgyGPtuZTTh/mf6UdXqH25FG2j8EZfJYuj95S0A9NanCcZhh+2DtkI0yAdL/ph1wl5QBbpnNGOibkXIg6ssn/ui4QEWAEDiIgP+il3SCkN4zsrgIv0TfpK0BPePK+432usV+ZckHYIdcRuoUrX5iL1ENqz9/HxpyZglSZGqqsbv5KRPo8DB08i14PTn507jAN47bTuhAJZ8XG/xJ3P6Tkb765A6jYvasdhGGy7lRaLoNhmMvc1n2qDTNny8REzdGLA+4YD6Gc/Ae3CqjKLFXYUSi7DgLG2ZA9lzls7yL9F5hg8t4m7Cr4BBNxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=whqaTExxjIQerMSt552CDfkqtaU9xePgzpp0mIZPdWQ=;
+ b=AaPQ7d4uB1jCR7XSt5FAtBC+L5DWL7baS2hOWf/y9A3Fk/YzCh0p6xHgG4R3+wgYP3m5wiaQ501bjFJSyez6z3c1vOOVluGqWGAusputBJMWD1nPVE4wyiRI5h7wjbVxxDuzmex48PHT++AKx+YyZs0K14uNZN8YmW8NrE9QQLoPJmLPeSNLIIAfw2HcW3O2GMppPFJiq+wqi4T7nGnONRib+QexRWVnUEkcMOh3+N9Euie4VvjGQ7ccsPcjmmUhcQefY3ZnWjtqkYOv01U1t9YE/OpMYdvRSr2HWuxSs5DDt5L3ZNI8kZ3jJuW0PhXq2gvdMWHGAGvzbtDPJ3ZhZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
+ by BY5PR15MB3619.namprd15.prod.outlook.com (2603:10b6:a03:1f9::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.20; Tue, 16 Nov
+ 2021 21:27:43 +0000
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::8d7d:240:3369:11b4]) by BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::8d7d:240:3369:11b4%6]) with mapi id 15.20.4690.027; Tue, 16 Nov 2021
+ 21:27:43 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Helge Deller <deller@gmx.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Sergio Paracuellos" <sergio.paracuellos@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Joey Gouly <joey.gouly@arm.com>,
+        "Stan Skowronek" <stan@corellium.com>,
+        Hector Martin <marcan@marcan.st>,
+        "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
+        =?utf-8?B?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@collabora.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: Build regressions/improvements in v5.16-rc1
+Thread-Topic: Build regressions/improvements in v5.16-rc1
+Thread-Index: AQHX2jynD2CHATmgwEukyh+iAPvEB6wEy7gAgAHcBwCAAAVbAA==
+Date:   Tue, 16 Nov 2021 21:27:43 +0000
+Message-ID: <241006B3-699F-44FD-AF85-0133971BCD85@fb.com>
+References: <20211115155105.3797527-1-geert@linux-m68k.org>
+ <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
+ <fcdead1c-2e26-b8ca-9914-4b3718d8f6d4@gmx.de>
+ <587BB1D2-A46B-4E93-A3EA-91325288CD6A@fb.com>
+In-Reply-To: <587BB1D2-A46B-4E93-A3EA-91325288CD6A@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 20d65738-7b52-47b2-016e-08d9a947ecf3
+x-ms-traffictypediagnostic: BY5PR15MB3619:
+x-microsoft-antispam-prvs: <BY5PR15MB36193A72BBFDAC812773F9ADAB999@BY5PR15MB3619.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XLGHwfRYT/a4ixZPkjRXp2Qks7kcA3qfNK4kH9pdaY5aSVEvxUu80vz0gfl8AZOX6gdaXU/xxw0DwEfyzYj7zzs1YZ4g4jwOzhAtfp3AAiYd43QyIgMhOtV1Ig4g02Op7giNzpnxOBKLQtrMKxIQXJTv/IHVfaBci+qojhKp3FkRBQrgdXT+LTgj0wKNf8ALjqXgYbYuTg5NxfaOiVCioHnUxhTKGkegGJWLLbk3Gd4QJUlEYR1sU4Zorn+3EeUSL3lGzbo0/gymWeTwIj30kOh5vfKyS8JK1lnV3NQ46Z/27i4crhaQpYa+K4SFghRgFzeGWHXGp/f/UKKYCyaDKSiQIo5Qez0b6A4l2fPo6UOwjfXlvyXyqY90Zz8Y8vc2D+2BrQzB5nKaFB6IcjIFfaFSPI8JW6AV5Jh9+CYj/yfvvMG9TGRA80YQ9W//k9e2s7kXK5kPXWnoNhWpf5ljMaNagvb26ZWeoDi5uqvqUM7RKyLVUHRQX76oa1bXupxjcCAZ8cqLB3anLy8LvzkTqDbUc+l+VTcyquG17z7YDPjZ4Nw4Q7/Mbt5P/zzpllVS9YIMVzVEZi84OLPBSvNLa8+oWiszWb/Da8YluZKAT1c/M4e4gr9Rm/zmu3iP0L3n17zL8ZykOJ5e/Up3pY3sh12xTbI0wkyDbNUM60DuOTbYhuwhm0Vn/4tAGMqF6GXf8a3hXlqCicZ6qAwhV2iGuYSujzkj2KS+m3DxdCJjm2mJES1Yh/Al4NJyWvWcv4ZGGeA2MUUjD2RHyeKtW2lbSaJuM6DF4paAOj8J85NAYaAqlqnErso5AlVjqMvg15FThj+fr+xs6ByCuR+UD6628w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6512007)(6506007)(36756003)(38100700002)(4326008)(66446008)(122000001)(54906003)(33656002)(53546011)(91956017)(186003)(38070700005)(66476007)(316002)(66946007)(7416002)(76116006)(6916009)(66556008)(6486002)(5660300002)(8676002)(966005)(2906002)(83380400001)(86362001)(2616005)(71200400001)(8936002)(508600001)(64756008)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Ukx1VUpDVHFJeDh2VDhVYUtFSDh3Q2VXUTBRc0ZHazBieWdOMGJlaW8zNnBw?=
+ =?utf-8?B?Yld1UXBTMFEwaWJYMHNGeERmejA1aFlCWWxWOFB0MTVEZkF1YkhKWHgvcXRl?=
+ =?utf-8?B?bWgxZFBuZVJubTh1OGNxSnMrbktsazhySnRKbkZYMEtjMWVteHBveWxNUVd4?=
+ =?utf-8?B?K09IN21NMzQrQ1pXSWsxa0RFblFMeXBFMHlzcDB4RFZGTStQY0NQYkRTN1lN?=
+ =?utf-8?B?MFlwZ3RMSzU4dlRSYVRhNUpEbjRIalR4MGxVZDNIQkEyeGUxVDlYSTBucnBW?=
+ =?utf-8?B?elN1S2tib0d1ZENWSnRiTngzV2dIUTUvQUswK3VTVmt3OHMrK1VyZk1kOWxr?=
+ =?utf-8?B?cGltN2pSL1Rlc3hLQUU0QzQ1Ryt1QjRpbTQxZk9jWnJsMTRkN3BrRE5ab2hZ?=
+ =?utf-8?B?NUtzb3dSaEExQmRFRVdvaVFDejlRMHRkNW9uUzRWUnhlNi9zZUdDbS9hc1l0?=
+ =?utf-8?B?RUxtUGZlbk5ZVWN6TEJPRStJQnJLK1NvM1E1T3B1bjAvbXQ2a0VWalRjaDVy?=
+ =?utf-8?B?STY1a0RjOWpGZFhRZVlEQ3VXMWFmRmRiNHN2SVF3eW13Y0p0aTE4Y0JMSWpD?=
+ =?utf-8?B?Y3BaaFlTL1NqT2FON2VkUitBcFk4U1R6enoxOTRpc1V0dDhJZmVHT2hKK253?=
+ =?utf-8?B?UmY2dkdCK2RrUWpnWFB2RTJRQncyYXF2WFh1T00xUGhGa1pKd2pmTXhhTWY1?=
+ =?utf-8?B?dGpCNmtETFVUcnQ2TjhXSE04eWpmbDJYV2tobGJzdEdnSkM0REZQRVN0YVpt?=
+ =?utf-8?B?Y2NpeWpkWXArTHhwM1RUNmZ5dFMybVQzTVl0eXo0VVQ1UTF5bnRxdEs3cnN1?=
+ =?utf-8?B?QXdTdExWTmZxM0IxbmdHNFhXbVlwVDN1eDluNzQ0TVU0RWlGc1ZZU3lyQmlC?=
+ =?utf-8?B?eWVIWmtnbmN4dEJRbnQ0R1ZQL1V2UnZmN0w0Zlc1VGhZRGZpSFB6M1BGRUVE?=
+ =?utf-8?B?STRCTGtndGVTQk5TKzlUQlFxVW94cCtaZWR3NFdZRWpNYkhaK2lJWDYwaFlv?=
+ =?utf-8?B?bzN3bU8xTEk0YnRWaG51U01kZjROMXV0QWVXbjV6aW9MZGFMS056cDRXeTBJ?=
+ =?utf-8?B?MjNsKzM3OWR5bWFIR29WQXh1RlZMakp4VnpEbGdSR0oyMklqMkd5RmJhbjBv?=
+ =?utf-8?B?UjRKRTAzWThwcW5TZVFhN0pHSHU1eTZkcHpmV1k5YnUwOWRxb1E3Wk5FNmkw?=
+ =?utf-8?B?V3MvdUdVS0JHd0JIa3JldEVSZUR1enozNWdiOUtRL0dqSVlVbE1MWUZHTW5s?=
+ =?utf-8?B?R3hTYnVZdlg2UkRYTDBEWGhZMC9EMFkvT0RKVWJMRkFGNDZpOGJVMG9LOUZX?=
+ =?utf-8?B?RGIrTnh6eTF4c0svbFRYNHpoTVRBa1VWNlFHeVVQaXRWeXh1RTMyQmZuUmI5?=
+ =?utf-8?B?ek1aY0tTazRmSGJZemhiUU5LSklrTXVIclZyNHBOSG5JekYrbGdPeGxXeVBq?=
+ =?utf-8?B?QzBXb3l6dm5UYUcwUStQa1lTcTdVQ0dDaTF1NTlUUlhJZnVFMnpZRzRMSW9L?=
+ =?utf-8?B?Y2ltY0JPVnRkclNqUkdnWENzL2luQ2txSnJXNmhSQjNqQ21aT1RKZjBTL012?=
+ =?utf-8?B?aWtSRVlsT2JMNnVRTTh3bi9BRW0wclBtSFFaOXBvUHIzLzUyVGdoKzZuK25G?=
+ =?utf-8?B?RS91d3ZIdFZLVmdoSm4zczNtSW9tb2VNRitCQ3NVaWc0QTgrVG1ONVFMeDJ2?=
+ =?utf-8?B?RVlDWXhBSGl0bjBTVzc3c2N6MlA4MmpFYVAwNjI0Zy9TdG5HNHVXeWVZa29p?=
+ =?utf-8?B?Vmh4dVEwUzEvOUdEbk1hbHE2d09PMTBiVllFWm52RXlwN2luMzVIaTBZS3N6?=
+ =?utf-8?B?NkhleEQrT0ZCZzNwRzRYSUh0a3pVTW9xMytwa3hteVhySktTbkJUZzhHWnAy?=
+ =?utf-8?B?L05mMjNWRWg2eE9uZWVvOHBKYisrVVo1eGRBNlcrelh4VWVHQU80alE3Z0Fv?=
+ =?utf-8?B?NHMvUWV6eC84QWdXY0RhZHJHWXFhcjJISG1DeStWWi8rb2NKMDJuSFZsc3Ro?=
+ =?utf-8?B?aFlRNWczRWpyMHJlWFNTb2YxMDE4OGtWZGlZeHEvR2ZUczV3S0NROEdDUWw1?=
+ =?utf-8?B?R0liV0l6LzUvSnIxTkJobmhUUktNb1AyakpoQnRTWVpOT0RudW5URjFwR0xV?=
+ =?utf-8?B?ZnA1amF4eWE4c0I1Y2YyV3dnMU9KR1dQK0hSZWRCMjBocEg4bm9KdFJVeFh2?=
+ =?utf-8?B?WVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EF3DB8C37A97F14C9D18B0F145826D8B@namprd15.prod.outlook.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20d65738-7b52-47b2-016e-08d9a947ecf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2021 21:27:43.0517
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Ce3Au4XMCqIlNTH9RRXP2dbeDSw9Y8os8g2R5IQym3LD7PH13tPxaET1+2SdeLC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3619
+X-OriginatorOrg: fb.com
+X-Proofpoint-ORIG-GUID: CCB9nHuYND-SKaICTPCsCzLtjRAEABDZ
+X-Proofpoint-GUID: CCB9nHuYND-SKaICTPCsCzLtjRAEABDZ
+Content-Transfer-Encoding: base64
+X-Proofpoint-UnRewURL: 2 URL's were un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-16_06,2021-11-16_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 suspectscore=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111160097
+X-FB-Internal: deliver
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 16 Nov 2021 15:25:05 -0400
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Tue, Nov 16, 2021 at 10:57:36AM -0700, Alex Williamson wrote:
-> 
-> > > I think userspace should decide if it wants to use mlx5 built in or
-> > > the system IOMMU to do dirty tracking.  
-> > 
-> > What information does userspace use to inform such a decision?  
-> 
-> Kernel can't know which approach performs better. Operators should
-> benchmark and make a choice for their deployment HW. Maybe device
-> tracking severely impacts device performance or vice versa.
-
-I'm all for keeping policy decisions out of the kernel, but it's pretty
-absurd to expect a userspace operator to benchmark various combination
-and wire various knobs through the user interface for this.  It seems
-to me that the kernel, ie. the vfio variant driver, *can* know the best
-default.  We can design in interfaces so that the driver may, for
-example, know whether to pin pages or defer to the system IOMMU dirty
-tracking.  The driver provider can provide quirks for IOMMU
-implementations that perform poorly versus device provided
-alternatives.  The driver can know if a device iotlb cache provides the
-better result.  The driver can provide module options or devlink tweaks
-to change the behavior.  This seems like something userspace doesn't
-want to care about in the common path.
-
-> Kernel doesn't easily know what userspace has done, maybe one device
-> supports migration driver dirty tracking and one device does not.
-
-And that's exactly why the current type1 implementation exposes the
-least common denominator to userspace, ie. pinned pages only if all
-devices in the container have enabled this degree of granularity.
-
-> Is user space going to use a system IOMMU for both devices? 
-
-If the system IOMMU supports it and none of the drivers have opt'd to
-report via other means, yes.
-
-> Is it going to put the simple device in NDMA early and continue to
-> dirty track to shutdown the other devices?
-
-Yes, the current model could account for this, the device entering NDMA
-mode effectively becomes enlightened because it knows that it is no
-longer dirtying pages.  It'd be the same as a driver turning on page
-pinning with _SAVING, we'd just need a way to do that without actually
-pinning a page.
-
-> > Ultimately userspace just wants the finest granularity of tracking,
-> > shouldn't that guide our decisions which to provide?  
-> 
-> At least for mlx5 there is going to some trade off curve of device
-> performance, dirty tracking page size, and working set.
-> 
-> Even lower is better is not necessarily true. After overheads on a
-> 400GB RDMA NIC there is not such a big difference between doing a 4k
-> and 16k scatter transfer. The CPU work to process all the extra bitmap
-> data may not be a net win compared to block transfer times.
-> 
-> Conversly someone doing 1G TCP transfers probably cares a lot to
-> minimize block size.
-> 
-> Overall, I think there is far too much up in the air and unmeasured to
-> firmly commit the kernel to a fixed policy.
-> 
-> So, I would like to see userspace control most of the policy aspects,
-> including the dirty track provider.
-
-This sounds like device specific migration parameter tuning via a
-devlink interface to me, tbh.  How would you propose a generic
-vfio/iommufd interface to tune this sort of thing?
-
-> > I believe the intended progression of dirty tracking is that by default
-> > all mapped ranges are dirty.  If the device supports page pinning, then
-> > we reduce the set of dirty pages to those pages which are pinned.  A
-> > device that doesn't otherwise need page pinning, such as a fully IOMMU  
-> 
-> How does userspace know if dirty tracking works or not? All I see
-> VFIO_IOMMU_DIRTY_PAGES_FLAG_START unconditionally allocs some bitmaps.
-
-IIRC, it's always supported by type1.  In the worst case we always
-report all mapped pages as dirty.
-
-> I'm surprised it doesn't check that only NO_IOMMU's devices are
-> attached to the container and refuse to dirty track otherwise - since
-> it doesn't work..
-
-No-IOMMU doesn't use type1, the ioctl returns errno.
-
-> > backed device, would use gratuitous page pinning triggered by the
-> > _SAVING state activation on the device.  It sounds like mlx5 could use
-> > this existing support today.  
-> 
-> How does mlx5 know if it should turn on its dirty page tracking on
-> SAVING or if the system IOMMU covers it? Or for some reason userspace
-> doesn't want dirty tracking but is doing pre-copy?
-
-Likely there'd be some sort of IOMMU property the driver could check,
-type1 would need to figure out the same.  The type1/iommufd interfaces
-to the driver could evolve so that the driver can know if DMA dirty
-tracking is enabled by the user.
-
-> When we mix dirty track with pre-copy, the progression seems to be:
-> 
->   DITRY TRACKING | RUNNING
->      Copy every page to the remote
->   DT | SAVING | RUNNING
->      Copy pre-copy migration data to the remote
->   SAVING | NDMA | RUNNING
->      Read and clear dirty track device bitmap
->   DT | SAVING | RUNNING
->      Copy new dirtied data
->      (maybe loop back to NDMA a few times?)
->   SAVING | NDMA | RUNNING
->      P2P grace state
->   0
->     Read the dirty track and copy data
->     Read and send the migration state
-> 
-> Can we do something so complex using only SAVING?
-
-I'm not demanding that triggering device dirty tracking on saving is
-how this must be done, I'm only stating that's an idea that was
-discussed.  If we need more complicated triggers between the IOMMU and
-device, let's define those, but I don't see that doing so negates the
-benefits of aggregated dirty bitmaps in the IOMMU context.
-
-> .. and along the lines of the above how do we mix in NDMA to the iommu
-> container, and how does it work if only some devices support NDMA?
-
-As above, turning on NDMA effectively enlightens the device, we'd need
-a counter interface to de-enlighten, the IOMMU dirty context
-dynamically works at the least common denominator at the time.
-
-> > We had also discussed variants to page pinning that might be more
-> > useful as device dirty page support improves.  For example calls to
-> > mark pages dirty once rather than the perpetual dirtying of pinned
-> > pages, calls to pin pages for read vs write, etc.  We didn't dive much
-> > into system IOMMU dirtying, but presumably we'd have a fault handler
-> > triggered if a page is written by the device and go from there.  
-> 
-> Would be interesting to know for sure what current IOMMU HW has
-> done. I'm supposing the easiest implementation is to write a dirty bit
-> to the IO PTE the same as the CPU writes a dirty bit the normal PTE.
-> 
-> > > In light of all this I'm wondering if device dirty tracking should
-> > > exist as new ioctls on the device FD and reserve the type1 code to
-> > > only work the IOMMU dirty tracking.  
-> > 
-> > Our existing model is working towards the IOMMU, ie. container,
-> > interface aggregating dirty page context.    
-> 
-> This creates inefficiencies in the kernel, we copy from the mlx5
-> formed data structure to new memory in the iommu through a very
-> ineffficent API and then again we do an ioctl to copy it once more and
-> throw all the extra work away. It does not seem good for something
-> where we want performance.
-
-So maybe the dirty bitmaps for the IOMMU context need to be exposed to
-and directly modifiable by the drivers using atomic bitmap ops.  Maybe
-those same bitmaps can be mmap'd to userspace.  These bitmaps are not
-insignificant, do we want every driver managing their own copies?
-
-> > For example when page pinning is used, it's only when all devices
-> > within the container are using page pinning that we can report the
-> > pinned subset as dirty.  Otherwise userspace needs to poll each
-> > device, which I suppose enables your idea that userspace decides
-> > which source to use, but why?  
-> 
-> Efficiency, and user selectable policy.
-> 
-> Userspace can just allocate an all zeros bitmap and feed it to each of
-> the providers in the kernel using a 'or in your dirty' semantic.
-> 
-> No redundant kernel data marshaling, userspace gets to decide which
-> tracking provider to use, and it is simple to implement in the kernel.
-> 
-> Userspace has to do this anyhow if it has configurations with multiple
-> containers. For instance because it was forced to split the containers
-> due to one device not supporting NDMA.
-
-Huh?  When did that become a requirement?  I feel like there are a lot
-of excuses listed here, but nothing that really demands a per device
-interface, or at least a per device interface that we have any hope of
-specifying.  Shared infrastructure in the IOMMU allows both kernel-side
-and userspace-side consolidation of these bitmaps.  It's pretty clear
-that our current interfaces are rudimentary, but we've got to start
-somewhere.
- 
-> > Does the IOMMU dirty page tracking exclude devices if the user
-> > queries the device separately?    
-> 
-> What makes sense to me is multiple tracking providers. Each can be
-> turned on and off.
-> 
-> If the container tracking provider says it supports tracking then it
-> means it can track DMA from every device it is connected to (unlike
-> today?). eg by using IOMMU HW that naturally does this, or by only
-> having only NO_IOMMU devices.
-
-Let's kick No-IOMMU out of this conversation, it doesn't claim to have
-any of these features, it never will.  Type1 can always provide dirty
-tracking with the default being to mark all mapped pages perpetually
-dirty.  It doesn't make much sense for userspace to get a concise dirty
-bitmap from one device and a full dirty bitmap from another.  We've
-optimized that userspace gets the least common denominator for the
-entire IOMMU context.
-
-> If the migration driver says it supports tracking, then it only tracks
-> DMA from that device.
-
-I don't see what this buys us.  Userspace is only going to do a
-migration if all devices support the per device migration region.  At
-that point we need the best representation of the dirty bitmap we can
-provide per IOMMU context.  It makes sense to me to aggregate per
-device dirtying into that one context.
-
-> > How would it know?  What's the advantage?  It seems like this
-> > creates too many support paths that all need to converge on the same
-> > answer.  Consolidating DMA dirty page tracking to the DMA mapping
-> > interface for all devices within a DMA context makes more sense to
-> > me.  
-> 
-> What I see is a lot of questions and limitations with this
-> approach. If we stick to funneling everything through the iommu then
-> answering the questions seem to create a large amount of kernel
-> work. Enough to ask if it is worthwhile..
-
-If we need a common userspace IOMMU subsystem like IOMMUfd that can
-handle driver page pinning, IOMMU faults, and dirty tracking, why does
-it suddenly become an unbearable burden to allow other means besides
-page pinning for a driver to relay DMA page writes?  OTOH, aggregating
-these features in the IOMMU reduces both overhead of per device bitmaps
-and user operations to create their own consolidated view.
-
-> .. and then we have to ask how does this all work in IOMMUFD where it
-> is not so reasonable to tightly couple the migration driver and the
-> IOAS and I get more questions :)
-
-To me, the per device option seems pretty ad-hoc, cumbersome and
-complicated for userspace, and invents problems with the aggregated
-bitmap that either don't really exist (imo) or where interfaces could be
-refined.  Maybe start with what uAPI visible knobs really make sense
-and provide a benefit for per-device dirty bitmap tuning and how a
-device agnostic userspace like QEMU is going to make intelligent
-decisions about those knobs.  Otherwise I see the knobs as out-of-band
-and most of the other arguments tending towards NIH.  Thanks,
-
-Alex
-
+DQoNCj4gT24gTm92IDE2LCAyMDIxLCBhdCAxOjA4IFBNLCBOaWNrIFRlcnJlbGwgPHRlcnJlbGxu
+QGZiLmNvbT4gd3JvdGU6DQo+IA0KPiANCj4gDQo+PiBPbiBOb3YgMTUsIDIwMjEsIGF0IDg6NDQg
+QU0sIEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT4gd3JvdGU6DQo+PiANCj4+IE9uIDExLzE1
+LzIxIDE3OjEyLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+Pj4gT24gTW9uLCBOb3YgMTUs
+IDIwMjEgYXQgNDo1NCBQTSBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3Jn
+PiB3cm90ZToNCj4+Pj4gQmVsb3cgaXMgdGhlIGxpc3Qgb2YgYnVpbGQgZXJyb3Ivd2FybmluZyBy
+ZWdyZXNzaW9ucy9pbXByb3ZlbWVudHMgaW4NCj4+Pj4gdjUuMTYtcmMxWzFdIGNvbXBhcmVkIHRv
+IHY1LjE1WzJdLg0KPj4+PiANCj4+Pj4gU3VtbWFyaXplZDoNCj4+Pj4gLSBidWlsZCBlcnJvcnM6
+ICsyMC8tMTMNCj4+Pj4gLSBidWlsZCB3YXJuaW5nczogKzMvLTI4DQo+Pj4+IA0KPj4+PiBIYXBw
+eSBmaXhpbmchIDstKQ0KPj4+PiANCj4+Pj4gVGhhbmtzIHRvIHRoZSBsaW51eC1uZXh0IHRlYW0g
+Zm9yIHByb3ZpZGluZyB0aGUgYnVpbGQgc2VydmljZS4NCj4+Pj4gDQo+Pj4+IFsxXSBodHRwOi8v
+a2lzc2tiLmVsbGVybWFuLmlkLmF1L2tpc3NrYi9icmFuY2gvbGludXMvaGVhZC9mYTU1YjdkY2Rj
+NDNjMWFhMWJhMTJiY2E5ZDJkZDQzMThjMmEwZGJmLyAgKGFsbCA5MCBjb25maWdzKQ0KPj4+PiBb
+Ml0gaHR0cDovL2tpc3NrYi5lbGxlcm1hbi5pZC5hdS9raXNza2IvYnJhbmNoL2xpbnVzL2hlYWQv
+OGJiN2VjYTk3MmFkNTMxYzliMTQ5YzBhNTFhYjQzYTQxNzM4NTgxMy8gIChhbGwgOTAgY29uZmln
+cykNCj4+Pj4gDQo+Pj4+IA0KPj4+PiAqKiogRVJST1JTICoqKg0KPj4+PiANCj4+Pj4gMjAgZXJy
+b3IgcmVncmVzc2lvbnM6DQo+Pj4+ICsgL2tpc3NrYi9zcmMvYXJjaC9wYXJpc2MvaW5jbHVkZS9h
+c20vanVtcF9sYWJlbC5oOiBlcnJvcjogZXhwZWN0ZWQgJzonIGJlZm9yZSAnX19zdHJpbmdpZnkn
+OiAgPT4gMzM6NCwgMTg6NA0KPj4+PiArIC9raXNza2Ivc3JjL2FyY2gvcGFyaXNjL2luY2x1ZGUv
+YXNtL2p1bXBfbGFiZWwuaDogZXJyb3I6IGxhYmVsICdsX3llcycgZGVmaW5lZCBidXQgbm90IHVz
+ZWQgWy1XZXJyb3I9dW51c2VkLWxhYmVsXTogID0+IDM4OjEsIDIzOjENCj4+PiANCj4+PiAgIGR1
+ZSB0byBzdGF0aWNfYnJhbmNoX2xpa2VseSgpIGluIGNyeXB0by9hcGkuYw0KPj4+IA0KPj4+IHBh
+cmlzYy1hbGxtb2Rjb25maWcNCj4+IA0KPj4gZml4ZWQgbm93IGluIHRoZSBwYXJpc2MgZm9yLW5l
+eHQgZ2l0IHRyZWUuDQo+PiANCj4+IA0KPj4+PiArIC9raXNza2Ivc3JjL2RyaXZlcnMvZ3B1L2Ry
+bS9tc20vbXNtX2Rydi5oOiBlcnJvcjogIkNPTkQiIHJlZGVmaW5lZCBbLVdlcnJvcl06ICA9PiA1
+MzENCj4+Pj4gKyAva2lzc2tiL3NyYy9saWIvenN0ZC9jb21wcmVzcy96c3RkX2RvdWJsZV9mYXN0
+LmM6IGVycm9yOiB0aGUgZnJhbWUgc2l6ZSBvZiAzMjUyIGJ5dGVzIGlzIGxhcmdlciB0aGFuIDE1
+MzYgYnl0ZXMgWy1XZXJyb3I9ZnJhbWUtbGFyZ2VyLXRoYW49XTogID0+IDQ3OjENCj4+Pj4gKyAv
+a2lzc2tiL3NyYy9saWIvenN0ZC9jb21wcmVzcy96c3RkX2RvdWJsZV9mYXN0LmM6IGVycm9yOiB0
+aGUgZnJhbWUgc2l6ZSBvZiAzMzYwIGJ5dGVzIGlzIGxhcmdlciB0aGFuIDE1MzYgYnl0ZXMgWy1X
+ZXJyb3I9ZnJhbWUtbGFyZ2VyLXRoYW49XTogID0+IDQ5OToxDQo+Pj4+ICsgL2tpc3NrYi9zcmMv
+bGliL3pzdGQvY29tcHJlc3MvenN0ZF9kb3VibGVfZmFzdC5jOiBlcnJvcjogdGhlIGZyYW1lIHNp
+emUgb2YgNTM0NCBieXRlcyBpcyBsYXJnZXIgdGhhbiAxNTM2IGJ5dGVzIFstV2Vycm9yPWZyYW1l
+LWxhcmdlci10aGFuPV06ICA9PiAzMzQ6MQ0KPj4+PiArIC9raXNza2Ivc3JjL2xpYi96c3RkL2Nv
+bXByZXNzL3pzdGRfZG91YmxlX2Zhc3QuYzogZXJyb3I6IHRoZSBmcmFtZSBzaXplIG9mIDUzODAg
+Ynl0ZXMgaXMgbGFyZ2VyIHRoYW4gMTUzNiBieXRlcyBbLVdlcnJvcj1mcmFtZS1sYXJnZXItdGhh
+bj1dOiAgPT4gMzU0OjENCj4+Pj4gKyAva2lzc2tiL3NyYy9saWIvenN0ZC9jb21wcmVzcy96c3Rk
+X2Zhc3QuYzogZXJyb3I6IHRoZSBmcmFtZSBzaXplIG9mIDE4MjQgYnl0ZXMgaXMgbGFyZ2VyIHRo
+YW4gMTUzNiBieXRlcyBbLVdlcnJvcj1mcmFtZS1sYXJnZXItdGhhbj1dOiAgPT4gMzcyOjENCj4+
+Pj4gKyAva2lzc2tiL3NyYy9saWIvenN0ZC9jb21wcmVzcy96c3RkX2Zhc3QuYzogZXJyb3I6IHRo
+ZSBmcmFtZSBzaXplIG9mIDIyMjQgYnl0ZXMgaXMgbGFyZ2VyIHRoYW4gMTUzNiBieXRlcyBbLVdl
+cnJvcj1mcmFtZS1sYXJnZXItdGhhbj1dOiAgPT4gMjA0OjENCj4+Pj4gKyAva2lzc2tiL3NyYy9s
+aWIvenN0ZC9jb21wcmVzcy96c3RkX2Zhc3QuYzogZXJyb3I6IHRoZSBmcmFtZSBzaXplIG9mIDM4
+MDAgYnl0ZXMgaXMgbGFyZ2VyIHRoYW4gMTUzNiBieXRlcyBbLVdlcnJvcj1mcmFtZS1sYXJnZXIt
+dGhhbj1dOiAgPT4gNDc2OjENCj4+PiANCj4+PiBwYXJpc2MtYWxsbW9kY29uZmlnDQo+PiANCj4+
+IHBhcmlzYyBuZWVkcyBtdWNoIGJpZ2dlciBmcmFtZSBzaXplcywgc28gSSdtIG5vdCBhc3Rvbmlz
+aGVkIGhlcmUuDQo+PiBEdXJpbmcgdGhlIHY1LjE1IGN5Y2wgSSBpbmNyZWFzZWQgaXQgdG8gMTUz
+NiAoZnJvbSAxMjgwKSwgc28gSSdtIHNpbXBseSB0ZW1wdGVkIHRvDQo+PiBpbmNyZWFzZSBpdCB0
+aGlzIHRpbWUgdG8gNDA5NiwgdW5sZXNzIHNvbWVvbmUgaGFzIGEgYmV0dGVyIGlkZWEuLi4uDQo+
+IA0KPiBJIGFtIHdvcmtpbmcgb24gYSBwYXRjaCBzZXQgdG8gcmVkdWNlIHRoZSBmcmFtZSBhbGxv
+Y2F0aW9ucyBzb21lLCBidXQgaXQgZG9lc27igJl0DQo+IGdldCBldmVyeSBmdW5jdGlvbiBiZWxv
+dyAxNTM2IG9uIHBhcmlzYyB3aXRoIFVCU0FOLiBCdXQsIGluIGFkZGl0aW9uIHRvIHBhcmlzYw0K
+PiBuZWVkaW5nIGJpZ2dlciBmcmFtZSBzaXplcywgaXQgc2VlbXMgdGhlIGdjYy04LWhwcGEtbGlu
+dXgtZ251IGNvbXBpbGVyIGlzIGRvaW5nIGENCj4gaG9ycmVuZG91c2x5IGJhZCBqb2IsIGVzcGVj
+aWFsbHkgd2l0aCAtZnNhbml0aXplPXNoaWZ0IGVuYWJsZWQuDQo+IA0KPiBBcyBhbiBleGFtcGxl
+LCBvbmUgb2YgdGhlIGZ1bmN0aW9ucyB3YXJuZWQgWlNURF9maWxsRG91YmxlSGFzaFRhYmxlKCkg
+WzBdIHRha2VzDQo+IDMyNTIgYnl0ZXMgb2Ygc3RhY2sgd2l0aCAtZnNhbml0aXplPXNoaWZ0IGVu
+YWJsZWQgKGFzIHNob3duIGluIHRoZSBmaXJzdCB3YXJuaW5nIG9uIGxpbmUNCj4gNDcgYWJvdmUp
+LiBJdCBpcyBhIHRyaXZpYWwgZnVuY3Rpb24sIGFuZCB0aGVyZSBpcyBubyByZWFzb24gaXQgc2hv
+dWxkIHRha2UgYW55IG1vcmUgdGhhbg0KPiBhIGZldyBieXRlcyBvZiBzdGFjayBhbGxvY2F0aW9u
+LiBPbiB4ODYtNjQgaXQgdGFrZXMgNDggYnl0ZXMgd2l0aCAtZnNhbml0aXplPXNoaWZ0LiBPbg0K
+PiBnY2MtMTAtaHBwYS1saW51eC1nbnUgdGhpcyBmdW5jdGlvbiBvbmx5IHRha2VzIDM4MCBieXRl
+cyBvZiBzdGFjayBzcGFjZSB3aXRoDQo+IC1mc2FuaXRpemU9c2hpZnQuIFNvIGl0IHNlZW1zIGxp
+a2Ugd2hhdGV2ZXIgaXNzdWUgaXMgcHJlc2VudCBpbiBnY2MtOCB0aGV5IGZpeGVkIGluIGdjYy0x
+MC4NCj4gDQo+IE9uIGdjYy0xMC1ocHBhLWxpbnV4LWdudSwgYWZ0ZXIgbXkgcGF0Y2ggc2V0LCBJ
+IGRvbuKAmXQgc2VlIGFueSAtV2ZyYW1lLWxhcmdlci10aGFuPTE1MzYNCj4gZXJyb3JzLiBTbywg
+eW91IGNvdWxkIGVpdGhlciBpbmNyZWFzZSBpdCB0byA0MDk2IGJ5dGVzLCBvciBzd2l0Y2ggdG8g
+Z2NjLTEwIGZvciB0aGUgcGFyaXNjDQo+IHRlc3QuDQo+IA0KPiBJ4oCZbGwgcmVwbHkgaW4gbW9y
+ZSBkZXRhaWwgbGF0ZXIgdG9kYXkgd2hlbiBJIHB1dCB1cCBteSBwYXRjaCBzZXQgdG8gcmVkdWNl
+IHRoZSBzdGFjayB1c2FnZS4NCg0KWnN0ZCBoYXMgYmVlbiBjb21waWxlZCB3aXRoIC1PMyBzaW5j
+ZSBiZWZvcmUgdGhpcyB1cGRhdGUsIGFuZCBJ4oCZdmUgbGVmdCBpdCBpbi4gSG93ZXZlciwgaWYN
+CkkgcmVtb3ZlIC1PMyAod2hpY2ggcmV2ZXJ0cyB0byB0aGUgZGVmYXVsdCBvZiAtTzIpLCB0aGUg
+c3RhY2sgc3BhY2UgcmVkdWN0aW9ucyBkaXNhcHBlYXINCm9uIHBhcmlzYy4gU28gaXQgc2VlbXMg
+bGlrZSBnY2MtaHBwYS1saW51eC1nbnUgZG9lc27igJl0IGhhbmRsZSAtTzMgd2VsbC4NCg0KSeKA
+mXZlIGRvbmUgc29tZSBwcmVsaW1pbmFyeSBwZXJmb3JtYW5jZSBtZWFzdXJlbWVudHMsIGFuZCAt
+TzMgZG9lc27igJl0IHNlZW0gdG8gYmUNCm5lY2Vzc2FyeSBnb29kIHBlcmZvcm1hbmNlIGFueW1v
+cmUuIFNvIEkgc2hvdWxkIGJlIGFibGUgdG8gcmVtb3ZlIGl0LiBJ4oCZbGwgbWVhc3VyZSBhDQpi
+aXQgbW9yZSBjYXJlZnVsbHksIHRoZW4gcHV0IGEgcGF0Y2ggdXAuDQoNCj4gQmVzdCwNCj4gTmlj
+ayBUZXJyZWxsDQo+IA0KPiBbMF0gaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Js
+b2IvOGFiNzc0NTg3OTAzNzcxODIxYjU5NDcxY2M3MjNiYmE2ZDg5Mzk0Mi9saWIvenN0ZC9jb21w
+cmVzcy96c3RkX2RvdWJsZV9mYXN0LmMjTDE1LUw0Nw0KPiANCj4+Pj4gKyAva2lzc2tiL3NyYy9m
+cy9udGZzL2FvcHMuYzogZXJyb3I6IHRoZSBmcmFtZSBzaXplIG9mIDIyNDAgYnl0ZXMgaXMgbGFy
+Z2VyIHRoYW4gMjA0OCBieXRlcyBbLVdlcnJvcj1mcmFtZS1sYXJnZXItdGhhbj1dOiAgPT4gMTMx
+MToxDQo+Pj4+ICsgL2tpc3NrYi9zcmMvZnMvbnRmcy9hb3BzLmM6IGVycm9yOiB0aGUgZnJhbWUg
+c2l6ZSBvZiAyMzA0IGJ5dGVzIGlzIGxhcmdlciB0aGFuIDIwNDggYnl0ZXMgWy1XZXJyb3I9ZnJh
+bWUtbGFyZ2VyLXRoYW49XTogID0+IDEzMTE6MQ0KPj4+PiArIC9raXNza2Ivc3JjL2ZzL250ZnMv
+YW9wcy5jOiBlcnJvcjogdGhlIGZyYW1lIHNpemUgb2YgMjMyMCBieXRlcyBpcyBsYXJnZXIgdGhh
+biAyMDQ4IGJ5dGVzIFstV2Vycm9yPWZyYW1lLWxhcmdlci10aGFuPV06ICA9PiAxMzExOjENCj4+
+PiANCj4+PiBwb3dlcnBjLWFsbG1vZGNvbmZpZw0KPj4+IA0KPj4+PiArIC9raXNza2Ivc3JjL2lu
+Y2x1ZGUvbGludXgvY29tcGlsZXJfdHlwZXMuaDogZXJyb3I6IGNhbGwgdG8gJ19fY29tcGlsZXRp
+bWVfYXNzZXJ0XzM2NicgZGVjbGFyZWQgd2l0aCBhdHRyaWJ1dGUgZXJyb3I6IEZJRUxEX1BSRVA6
+IHZhbHVlIHRvbyBsYXJnZSBmb3IgdGhlIGZpZWxkOiAgPT4gMzM1OjM4DQo+Pj4gDQo+Pj4gICBp
+biBkcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hcHBsZS1ncGlvLmMNCj4+PiANCj4+PiBhcm02NC1h
+bGxtb2Rjb25maWcgKGdjYzgpDQo+Pj4gDQo+Pj4+ICsgL2tpc3NrYi9zcmMvaW5jbHVkZS9saW51
+eC9mb3J0aWZ5LXN0cmluZy5oOiBlcnJvcjogY2FsbCB0byAnX19yZWFkX292ZXJmbG93JyBkZWNs
+YXJlZCB3aXRoIGF0dHJpYnV0ZSBlcnJvcjogZGV0ZWN0ZWQgcmVhZCBiZXlvbmQgc2l6ZSBvZiBv
+YmplY3QgKDFzdCBwYXJhbWV0ZXIpOiAgPT4gMjYzOjI1LCAyNzc6MTcNCj4+PiANCj4+PiAgIGlu
+IGxpYi90ZXN0X2thc2FuLmMNCj4+PiANCj4+PiBzMzkwLWFsbHttb2QseWVzfWNvbmZpZw0KPj4+
+IGFybTY0LWFsbG1vZGNvbmZpZyAoZ2NjMTEpDQo+Pj4gDQo+Pj4+ICsgZXJyb3I6IG1vZHBvc3Q6
+ICJtaXBzX2NtX2lzNjQiIFtkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbXQ3NjIxLmtvXSB1
+bmRlZmluZWQhOiAgPT4gTi9BDQo+Pj4+ICsgZXJyb3I6IG1vZHBvc3Q6ICJtaXBzX2NtX2xvY2tf
+b3RoZXIiIFtkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbXQ3NjIxLmtvXSB1bmRlZmluZWQh
+OiAgPT4gTi9BDQo+Pj4+ICsgZXJyb3I6IG1vZHBvc3Q6ICJtaXBzX2NtX3VubG9ja19vdGhlciIg
+W2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tdDc2MjEua29dIHVuZGVmaW5lZCE6ICA9PiBO
+L0ENCj4+Pj4gKyBlcnJvcjogbW9kcG9zdDogIm1pcHNfY3BjX2Jhc2UiIFtkcml2ZXJzL3BjaS9j
+b250cm9sbGVyL3BjaWUtbXQ3NjIxLmtvXSB1bmRlZmluZWQhOiAgPT4gTi9BDQo+Pj4+ICsgZXJy
+b3I6IG1vZHBvc3Q6ICJtaXBzX2djcl9iYXNlIiBbZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ll
+LW10NzYyMS5rb10gdW5kZWZpbmVkITogID0+IE4vQQ0KPj4+IA0KPj4+IG1pcHMtYWxsbW9kY29u
+ZmlnDQo+Pj4gDQo+Pj4+IDMgd2FybmluZyByZWdyZXNzaW9uczoNCj4+Pj4gKyA8c3RkaW4+OiB3
+YXJuaW5nOiAjd2FybmluZyBzeXNjYWxsIGZ1dGV4X3dhaXR2IG5vdCBpbXBsZW1lbnRlZCBbLVdj
+cHBdOiAgPT4gMTU1OToyDQo+Pj4gDQo+Pj4gcG93ZXJwYywgbTY4aywgbWlwcywgczM5MCwgcGFy
+aXNjIChhbmQgcHJvYmFibHkgbW9yZSkNCj4+IA0KPj4gV2lsbCBzb21lb25lIHVwZGF0ZSBhbGwg
+b2YgdGhlbSBhdCBvbmNlPw0KPj4gDQo+PiANCj4+IA0KPj4gDQo+PiBIZWxnZQ0KPj4gDQo+PiAN
+Cj4+Pj4gKyBhcmNoL202OGsvY29uZmlncy9tdWx0aV9kZWZjb25maWc6IHdhcm5pbmc6IHN5bWJv
+bCB2YWx1ZSAnbScgaW52YWxpZCBmb3IgTUNUUDogID0+IDMyMg0KPj4+PiArIGFyY2gvbTY4ay9j
+b25maWdzL3N1bjNfZGVmY29uZmlnOiB3YXJuaW5nOiBzeW1ib2wgdmFsdWUgJ20nIGludmFsaWQg
+Zm9yIE1DVFA6ICA9PiAyOTUNCj4+PiANCj4+PiBZZWFoLCB0aGF0IGhhcHBlbnMgd2hlbiBzeW1i
+b2xzIGFyZSBjaGFuZ2VkIGZyb20gdHJpc3RhdGUgdG8gYm9vbC4uLg0KPj4+IFdpbGwgYmUgZml4
+ZWQgaW4gNS4xNy1yYzEsIHdpdGggdGhlIG5leHQgZGVmY29uZmlnIHJlZnJlc2guDQo+Pj4gDQo+
+Pj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+Pj4gDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgIEdl
+ZXJ0DQo+Pj4gDQo+Pj4gLS0NCj4+PiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
+IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+Pj4gDQo+Pj4g
+SW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBt
+eXNlbGYgYSBoYWNrZXIuIEJ1dA0KPj4+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMg
+SSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQo=
