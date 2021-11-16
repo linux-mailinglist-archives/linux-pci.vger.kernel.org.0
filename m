@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28AC44539D6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 20:06:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F87453A06
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 20:18:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239829AbhKPTIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 14:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
+        id S239931AbhKPTVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 14:21:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239806AbhKPTHy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Nov 2021 14:07:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9609263222;
-        Tue, 16 Nov 2021 19:04:56 +0000 (UTC)
+        id S239903AbhKPTVF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 16 Nov 2021 14:21:05 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EBB3F63223;
+        Tue, 16 Nov 2021 19:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637089497;
+        s=k20201202; t=1637090288;
         bh=MzswqOuO59AuIEIyicsuwY0a0qJpbQ5Sc2+LIyhsAjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HwHNhikpyZEDvqjLHpgrDZZoF8blFQ732xTCUIviiVKeCRG3aVtKH4KowyPYZkzW/
-         GvZR8TRAWUOYiL9pxJr85iRyj86lNCnV1IaL/ivPRP4frw7q+3Y48nGhUelzaICNBn
-         DxZTY4HV/5yjbHg+qsBFNG1sDnk21g80+HD3JkQJrOFC7U53NBRliKp2SGmlzgQmmV
-         fR35bodVDpg/gUfDM/Vk3K4a+3l0hzcVNi+h2Ybmg42qGxN7YOgiz1B0F7MZO/nFv/
-         g8rBF05PZdUES96kAagqifzUrZsSFAxmfGESp0vwT/Cjz8/cqqryMNTpavSou3gWA2
-         I07GrBIo+H0xg==
+        b=coCxu5ceWMZCl8Z5eUwGE40dC0t+AKDO+myP66q7CCtaL/wlm1CA9C2hHt6I3U3DW
+         0UBcSIgzAHhow2xSyzhozIEC5jbxLtZjv0dD+7l/Rdy/WxtNFSvFIBPb0ZpyCxgYyo
+         525jiW4T3yxg2NvfOt4ss6LXvgB6wJrxMu3k715s/6Rw1HjBAe9HXb4JlrbC8taUEG
+         KdvMmzq3vOkRa2sBT5O4Xdp1Y5uUWxHZHEhzI7pgUx1Vus60d5T4PzTMRcZVpv+t8W
+         0HddNhkRzzxyFspdHy/CPtMkphVYxarJR+rdjT8l/WFXeW2kMYpvQs0cNgqJ4B5PaE
+         v557CwhV+pw+w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -32,11 +32,11 @@ Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Subject: [PATCH AUTOSEL 5.15 06/65] PCI: aardvark: Fix link training
-Date:   Tue, 16 Nov 2021 14:03:26 -0500
-Message-Id: <20211116190443.2418144-6-sashal@kernel.org>
+Date:   Tue, 16 Nov 2021 14:16:51 -0500
+Message-Id: <20211116191754.2419097-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211116190443.2418144-1-sashal@kernel.org>
-References: <20211116190443.2418144-1-sashal@kernel.org>
+In-Reply-To: <20211116191754.2419097-1-sashal@kernel.org>
+References: <20211116191754.2419097-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
