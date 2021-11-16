@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 160CA4528C6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 04:51:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0E814528D0
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 04:54:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235493AbhKPDyp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Nov 2021 22:54:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35444 "EHLO
+        id S235878AbhKPD5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Nov 2021 22:57:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235504AbhKPDyn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 22:54:43 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C7CC1A2990
-        for <linux-pci@vger.kernel.org>; Mon, 15 Nov 2021 16:31:10 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id q12so4327609pgh.5
-        for <linux-pci@vger.kernel.org>; Mon, 15 Nov 2021 16:31:10 -0800 (PST)
+        with ESMTP id S235925AbhKPD5F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Nov 2021 22:57:05 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58AD3C1E82A4
+        for <linux-pci@vger.kernel.org>; Mon, 15 Nov 2021 16:35:15 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id gt5so14277334pjb.1
+        for <linux-pci@vger.kernel.org>; Mon, 15 Nov 2021 16:35:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=zUAbk3pYDxq1bSuJItD74NAh/MbYUz0fiMi2jjsqIPc=;
-        b=jkN0+anUkVZEafZbns3mnQH3BOzdPE6stTt8SrDHZFGkz5SQGDyxTuScjmOkAtjtG9
-         AT2XFauNYqbJ3Hv+WUTHMAUTNsTes+od+8KqsU/GEVyVgjrYYw/xt4G0TAF8HM1LcPVm
-         2WJe85H3kQUjZSV8Rb5yVnjCooZk+xWNu9wek=
+        bh=6YrJDwz5lHylUrRKBiCCXn7XIadwbTCaDNmr8F8Qv+s=;
+        b=kRgsOovbagRO/7210nSyOKEBlmhfA5hNYfPQV4k7lydus9N2uNl5Vt0UygZC7jGLy1
+         CcSKdAOPN7CAjIaxG2Nk7LhNoTdTNyUIV57l7UZ/U0TQtm7n+dBKTmv+GCqWpklKxw86
+         72xq1Tvc+lxHwltemgeZ72MdiUZIJVqjFa0RI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=zUAbk3pYDxq1bSuJItD74NAh/MbYUz0fiMi2jjsqIPc=;
-        b=UvfjphONlJbi98EhzxOrFg/mNbVZhocazjRWd1bEwxzt3BUnGC19bT33FTtb8KgUdy
-         UI1qTqhu84mTy8Ok7iWuvvNxl150dBGYLihEVBi8I6CVFF+RsykBY4M7w0xJkWUUAPCS
-         PPosFXd2wmna4GmfRRtrXB6AoK5jc/K4oMUu2YSY2PkE9FfVQk+NBHtkHsIFFKBJelBa
-         kcEW3ibe5gPp3IT3CgcJGT9c+63KC4jC7folo/UPE2QPuC2Kgc9xVHWN+/GTtQwB/pq9
-         j9gBQkqHNeboD34/DoSTyPt+3V03JOaOdJ39p2ttpI/HAsBOpL3wQ0eDG/qzM4E4zKAk
-         Yh6Q==
-X-Gm-Message-State: AOAM532Nph3W0P8/4G567ll4fM5Wo34F06u3Tb+/N3k3lGtCFWmFZO6i
-        er9zY86iBZQkZE8KvsKClFxLtA==
-X-Google-Smtp-Source: ABdhPJxDrEb7NedduOiss/lXzBJfLpYZT+5k0kObH71YXHTZztaI+VVMmjTV988TJQv8GS02GfUMPA==
-X-Received: by 2002:a05:6a00:1945:b0:44c:a955:35ea with SMTP id s5-20020a056a00194500b0044ca95535eamr36094903pfk.85.1637022670112;
-        Mon, 15 Nov 2021 16:31:10 -0800 (PST)
+        bh=6YrJDwz5lHylUrRKBiCCXn7XIadwbTCaDNmr8F8Qv+s=;
+        b=coRRQLxKoDcXKIsoD9oJoSexEK13wAP3jCHxwA2MSjIdN8WX5Ksvzq5+GHzfKAgRBU
+         EkiTbhZtR2DTg0EeTHMTjixna2imdpy3pg/G0pjYtmbHACOFo47SqgKkpGCvEc1bhXxE
+         A+A9Ciq68IVbnz6xemexwLPRMiBEIwgrLm082VBGD1cTaxJ2sxaOfzLcflAZtbQCjGGU
+         jlAHWTFXF1k/xH94pUtXAawOUE2KHTvX0N0rF3lYQKkUnK9d7brpIEBBN9vlu9AjzwCq
+         b7aG17+jY/0LI3SHwVOKPlxViSpUaU3AEbovMVgv1yx0Mvv4s58KXaRXjYQJ3UX6sYj3
+         JS2g==
+X-Gm-Message-State: AOAM532CCRJp/IHpu8rlQ9Lxbt8lnWZ5tusPr4PlyakvMbs/YfRKHxd4
+        2H1aL668CjpnwbUiT0kGEax3oA==
+X-Google-Smtp-Source: ABdhPJy9iYaBB3Pj/LejC8q7/hsST+5gxO7ABIHhxz3+lYk9ZK6BkrL6e9tXPNM1m5lGV6jB9/FWOw==
+X-Received: by 2002:a17:90a:c398:: with SMTP id h24mr3495024pjt.73.1637022914921;
+        Mon, 15 Nov 2021 16:35:14 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h21sm12755848pgk.74.2021.11.15.16.31.09
+        by smtp.gmail.com with ESMTPSA id s21sm16292860pfk.3.2021.11.15.16.35.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 16:31:09 -0800 (PST)
-Date:   Mon, 15 Nov 2021 16:31:09 -0800
+        Mon, 15 Nov 2021 16:35:14 -0800 (PST)
+Date:   Mon, 15 Nov 2021 16:35:14 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Marco Elver <elver@google.com>
 Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -75,7 +75,7 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         kasan-dev <kasan-dev@googlegroups.com>
 Subject: Re: Build regressions/improvements in v5.16-rc1
-Message-ID: <202111151624.91EDCFF7@keescook>
+Message-ID: <202111151633.DE719CE@keescook>
 References: <20211115155105.3797527-1-geert@linux-m68k.org>
  <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
  <YZKOce4XhAU49+Yn@elver.google.com>
@@ -100,17 +100,19 @@ On Mon, Nov 15, 2021 at 05:44:33PM +0100, Marco Elver wrote:
 > Kees, wasn't that what [1] was meant to fix?
 > [1] https://lkml.kernel.org/r/20211006181544.1670992-1-keescook@chromium.org
 
-[1] fixed the ones I found when scanning for __write_overflow(). [2]
-fixed some others, so it's possible there are yet more to fix?
+Ah, I found it:
 
-Taking a look at Linus's tree, though, the "263" and "277" lines don't
-line up correctly. I'll go see if I can reproduce this. Is this with
-W=1?
+http://kisskb.ellerman.id.au/kisskb/buildresult/14660585/log/
 
--Kees
+it's actually:
 
-[2] https://www.ozlabs.org/~akpm/mmotm/broken-out/kasan-test-consolidate-workarounds-for-unwanted-__alloc_size-protection.patch
+    inlined from 'kasan_memcmp' at /kisskb/src/lib/test_kasan.c:897:2:
 
+and
+
+    inlined from 'kasan_memchr' at /kisskb/src/lib/test_kasan.c:872:2:
+
+I can send a patch doing the same as what [1] does for these cases too.
 
 -- 
 Kees Cook
