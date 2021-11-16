@@ -2,158 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89751452E3E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 10:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C44A452EEC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Nov 2021 11:21:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233335AbhKPJpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Nov 2021 04:45:14 -0500
-Received: from mga03.intel.com ([134.134.136.65]:11756 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233149AbhKPJpN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Nov 2021 04:45:13 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10169"; a="233599062"
-X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
-   d="scan'208";a="233599062"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 01:42:14 -0800
-X-IronPort-AV: E=Sophos;i="5.87,238,1631602800"; 
-   d="scan'208";a="506359272"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.220]) ([10.254.210.220])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2021 01:42:07 -0800
-Message-ID: <14bed5c1-a385-7e99-bda9-1041341fe68d@linux.intel.com>
-Date:   Tue, 16 Nov 2021 17:42:04 +0800
+        id S234090AbhKPKYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Nov 2021 05:24:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234035AbhKPKY1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Nov 2021 05:24:27 -0500
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F04AC061766;
+        Tue, 16 Nov 2021 02:21:30 -0800 (PST)
+Received: by mail-ua1-x929.google.com with SMTP id ay21so41211137uab.12;
+        Tue, 16 Nov 2021 02:21:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hUo41dA8J9XxTRrnTRH8PmjQf1ZA/nli+HzNQ39/Nrw=;
+        b=mfvlRT+G+C0joXUKIQIV1pisFDOl6ozAExFYU0X57hIxjfPz26ZfvvaaIfzp2JZUZi
+         jGYt3BI5NEuAk4ounMGlvrod4Q0UzR+XHlib+6/71AistsL+bQAXagjjcSHW/iWsbuRa
+         QhxSeMQJQH1NmH1U5FUEgG5aWEcS4kH78oLzdGMOKdPPdHJr5YaUwOEJ2Z6mj6HxT1NC
+         3XowRYcPBDAGvAYMM4txOqoBTPM36NXmfU9J+wPGhpeZtM6jZV9EtNmw27h0MyWH9gUw
+         lYcieDrZRmLPiP+hjrP9eNQ4aRi5wOw0OivT+w6/oCmW+S0ZbbGIc/mWux6BudJNdOso
+         de0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hUo41dA8J9XxTRrnTRH8PmjQf1ZA/nli+HzNQ39/Nrw=;
+        b=YqQ3S4lWyL6HQtK4LsEIQAlawaHvsibsf51O2VczYkBFFMK9umdEt153wrj8SbheLB
+         w4u7UjHb3ULFguknbsJanjXEqz1RoOAmwTEwy7BA7UcZTpbWtpOW9o1znrx4RGcvLqpN
+         ml7Q7i5DtUsZjXNcBSCpF58xLznDDx/chyuctFD+LDeG0N0ExJn08TLMxwlFSyhab4JU
+         iy7QmyLAw2wNFoEtjdrX2Ll0KZBcuDyYGftBIHCDrG/tJjjg08GzyiHn79u1luVyCkJf
+         ES/Pi9meYphXmzLJK7+P444DrSYdxVVvPNAvL8/8tUhj3NvpYlCRT832zze1YkvVR38/
+         VqXA==
+X-Gm-Message-State: AOAM532a1OWqxiQYgUG9HmpvpHsMihFjW598kunTXmWm4zG22p6DwjM5
+        E2gGqBzpHOZfd2PH008kiu5F+NL0R4Glhi444Q==
+X-Google-Smtp-Source: ABdhPJw0BIDe3UgX4EYtJQwZmqUk7ZARIQehiSa5nAZZi5z6pOodwsCQENmcw5LDkYTf4QVmDrKhzsb4P+ypLdBhAz4=
+X-Received: by 2002:ab0:2498:: with SMTP id i24mr9317458uan.18.1637058089320;
+ Tue, 16 Nov 2021 02:21:29 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Cc:     baolu.lu@linux.intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, linux-pci@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Will Deacon <will@kernel.org>
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-7-baolu.lu@linux.intel.com>
- <YZJgMzYzuxjJpWIC@infradead.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 06/11] iommu: Expose group variants of dma ownership
- interfaces
-In-Reply-To: <YZJgMzYzuxjJpWIC@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20211104180130.3825416-1-maz@kernel.org> <87ilx64ued.ffs@tglx>
+In-Reply-To: <87ilx64ued.ffs@tglx>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Tue, 16 Nov 2021 10:21:18 +0000
+Message-ID: <CALjTZvag6ex6bhAgJ_rJOfai8GgZQfWesdV=FiMrwEaXhVVVeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] PCI: MSI: Deal with devices lying about their masking capability
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        kernel-team@android.com, stable@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Christoph,
+Hi, Thomas,
 
-On 2021/11/15 21:27, Christoph Hellwig wrote:
-> On Mon, Nov 15, 2021 at 10:05:47AM +0800, Lu Baolu wrote:
->> The vfio needs to set DMA_OWNER_USER for the entire group when attaching
-> 
-> The vfio subsystem?  driver?
+On Fri, 5 Nov 2021 at 13:14, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Thu, Nov 04 2021 at 18:01, Marc Zyngier wrote:
+> > Rui reported[1] that his Nvidia ION system stopped working with 5.15,
+> > with the AHCI device failing to get any MSI. A rapid investigation
+> > revealed that although the device doesn't advertise MSI masking, it
+> > actually needs it. Quality hardware indeed.
+> >
+> > Anyway, the couple of patches below are an attempt at dealing with the
+> > issue in a more or less generic way.
+> >
+> > [1] https://lore.kernel.org/r/CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com
+> >
+> > Marc Zyngier (2):
+> >   PCI: MSI: Deal with devices lying about their MSI mask capability
+> >   PCI: Add MSI masking quirk for Nvidia ION AHCI
+> >
+> >  drivers/pci/msi.c    | 3 +++
+> >  drivers/pci/quirks.c | 6 ++++++
+> >  include/linux/pci.h  | 2 ++
+> >  3 files changed, 11 insertions(+)
+>
+> Groan.
+>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-"vfio subsystem"
+Just a reminder, to make sure this doesn't fall through the cracks.
+It's already in 5.16, but needs to be backported to 5.15. I'm not
+seeing it in Greg's 5.15 stable queue yet.
 
-> 
->> it to a vfio container. So expose group variants of setting/releasing dma
->> ownership for this purpose.
->>
->> This also exposes the helper iommu_group_dma_owner_unclaimed() for vfio
->> report to userspace if the group is viable to user assignment, for
-> 
-> .. for vfio to report .. ?
-
-Yes.
-
-> 
->>   void iommu_device_release_dma_owner(struct device *dev, enum iommu_dma_owner owner);
->> +int iommu_group_set_dma_owner(struct iommu_group *group, enum iommu_dma_owner owner,
->> +			      struct file *user_file);
->> +void iommu_group_release_dma_owner(struct iommu_group *group, enum iommu_dma_owner owner);
-> 
-> Pleae avoid all these overly long lines.
-
-Sure. Thanks!
-
-> 
->> +static inline int iommu_group_set_dma_owner(struct iommu_group *group,
->> +					    enum iommu_dma_owner owner,
->> +					    struct file *user_file)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +static inline void iommu_group_release_dma_owner(struct iommu_group *group,
->> +						 enum iommu_dma_owner owner)
->> +{
->> +}
->> +
->> +static inline bool iommu_group_dma_owner_unclaimed(struct iommu_group *group)
->> +{
->> +	return false;
->> +}
-> 
-> Why do we need these stubs?  All potential callers should already
-> require CONFIG_IOMMU_API?  Same for the helpers added in patch 1, btw.
-
-You are right. This helper is only for vfio which requires IOMMU_API. I
-will remove this.
-
-The helpers in patch 1 seem not the same. The driver core (or bus
-dma_configure() callback as suggested) will also call them.
-
-> 
->> +	mutex_lock(&group->mutex);
->> +	ret = __iommu_group_set_dma_owner(group, owner, user_file);
->> +	mutex_unlock(&group->mutex);
-> 
->> +	mutex_lock(&group->mutex);
->> +	__iommu_group_release_dma_owner(group, owner);
->> +	mutex_unlock(&group->mutex);
-> 
-> Unless I'm missing something (just skipping over the patches),
-> the existing callers also take the lock just around these calls,
-> so we don't really need the __-prefixed lowlevel helpers.
-> 
-
-Move mutex_lock/unlock will make the helper implementation easier. :-)
-It seems to be common code style in iommu core. For example,
-__iommu_attach_group(), __iommu_group_for_each_dev(), etc.
-
->> +	mutex_lock(&group->mutex);
->> +	owner = group->dma_owner;
->> +	mutex_unlock(&group->mutex);
-> 
-> No need for a lock to read a single scalar.
-
-Adding the lock will make kcasn happy. Jason G also told me that
-
-[citing from his review comment]
-"
-It is always incorrect to read concurrent data without an annotation
-of some kind.
-
-For instance it can cause mis-execution of logic where the compiler is
-unaware that a value it loads is allowed to change - ie no 
-READ_ONCE/WRITE_ONCE semantic.
-"
-
-> 
->> +
->> +	return owner == DMA_OWNER_NONE;
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_group_dma_owner_unclaimed);
-
-Best regards,
-baolu
+Thanks,
+Rui
