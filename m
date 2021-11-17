@@ -2,110 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D845845508E
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:32:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21B6A4550A6
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:41:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241377AbhKQWfM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 17:35:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241302AbhKQWfI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 17:35:08 -0500
-X-Greylist: delayed 593 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 17 Nov 2021 14:32:08 PST
-Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5fcc:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B09C061764
-        for <linux-pci@vger.kernel.org>; Wed, 17 Nov 2021 14:32:07 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by mailout1.hostsharing.net (Postfix) with ESMTPS id 1BAFF101920DB;
-        Wed, 17 Nov 2021 23:22:13 +0100 (CET)
-Received: from localhost (unknown [89.246.108.87])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id E6BF963330BA;
-        Wed, 17 Nov 2021 23:22:12 +0100 (CET)
-X-Mailbox-Line: From 66eaeef31d4997ceea357ad93259f290ededecfd Mon Sep 17 00:00:00 2001
-Message-Id: <66eaeef31d4997ceea357ad93259f290ededecfd.1637187226.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Wed, 17 Nov 2021 23:22:09 +0100
-Subject: [PATCH] PCI: pciehp: Fix infinite loop in IRQ handler upon power
- fault
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joseph Bao <joseph.bao@intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>, kw@linux.com,
-        linux-pci@vger.kernel.org
+        id S241381AbhKQWoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 17:44:12 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:36835 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241317AbhKQWoK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 17:44:10 -0500
+Received: by mail-wr1-f46.google.com with SMTP id s13so7619000wrb.3;
+        Wed, 17 Nov 2021 14:41:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pP5j1KPa+oLLZIqN3V90YggZzRPPFSASRy8/v4Hg2Xk=;
+        b=sBLEWH6kNkhwMIKF2333N44PWVlXw4p7dAMmednUGtLExYCScP/h2OsklBJOrzyJ5j
+         MBMHS9+k/c0W65uIp6qcQ3TmomY1ffA8pjJV+DJ3EVaaG6kW3Q/oVvxsTrQl37Pc+0ow
+         GXbL+64rR3taibNykG0pli3RKMncb+y+bmdMbNuq1D8gf/Fzf7/kFgwoIqC65DI5nllx
+         XPRAUYIguWR+UiG6Pgw7n9kGVMJYs0FZcb5PACR+a0K4grRq4HAsuYx0N/7/15e6RUND
+         fHzWAT7uLKXI5Fe629Hs3a3+GKX4pRgkz73ucphBMsndUr/ATTtav6MNDwoEgVMnKZq1
+         X8hA==
+X-Gm-Message-State: AOAM533WaHzYQk84Dj4q1NkpC6Rul/Geq7fHyIcMSSyH77ESVcH9hOt4
+        9XTXhhxE/oyxUNoickPEuzu9i6rjyGkKHflt
+X-Google-Smtp-Source: ABdhPJyT1T5Gg4V+cRYvQzUeFM1R+tPtJ1AW2UXpEHl/E/2ZzjyEm77ozQOIfFlLWtbqZ0Qs6reXiA==
+X-Received: by 2002:a5d:6d0b:: with SMTP id e11mr24961989wrq.16.1637188870422;
+        Wed, 17 Nov 2021 14:41:10 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id q4sm1151957wrs.56.2021.11.17.14.41.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Nov 2021 14:41:09 -0800 (PST)
+Date:   Wed, 17 Nov 2021 23:41:08 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Qi Liu <liuqi115@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxarm@huawei.com, zhangshaokun@hisilicon.com
+Subject: Re: [PATCH v11 2/2] drivers/perf: hisi: Add driver for HiSilicon
+ PCIe PMU
+Message-ID: <CAC52Y8Zc5oRRBDiZq+zQNGw2CbURN2SRsfW9ek_gw96qDHB1zw@mail.gmail.com>
+References: <20211029093632.4350-1-liuqi115@huawei.com>
+ <20211029093632.4350-3-liuqi115@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211029093632.4350-3-liuqi115@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Power Fault Detected bit in the Slot Status register differs from
-all other hotplug events in that it is sticky:  It can only be cleared
-after turning off slot power.  Per PCIe r5.0, sec. 6.7.1.8:
+Hi Qi,
 
-  If a power controller detects a main power fault on the hot-plug slot,
-  it must automatically set its internal main power fault latch [...].
-  The main power fault latch is cleared when software turns off power to
-  the hot-plug slot.
+Thank you for working on this!  Looks really good!
 
-The stickiness used to cause interrupt storms and infinite loops which
-were fixed in 2009 by commits 5651c48cfafe ("PCI pciehp: fix power fault
-interrupt storm problem") and 99f0169c17f3 ("PCI: pciehp: enable
-software notification on empty slots").
+Below a few tiny nitpicks that you are more than welcome to ignore, of
+course, as these would have little weight on the final product, so to
+speak.
 
-Unfortunately in 2020 the infinite loop issue was inadvertently
-reintroduced by commit 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt
-race"):  The hardirq handler pciehp_isr() clears the PFD bit until
-pciehp's power_fault_detected flag is set.  That happens in the IRQ
-thread pciehp_ist(), which never learns of the event because the hardirq
-handler is stuck in an infinite loop.  Fix by setting the
-power_fault_detected flag already in the hardirq handler.
+> +struct hisi_pcie_pmu {
+> +     struct perf_event *hw_events[HISI_PCIE_MAX_COUNTERS];
+> +     struct hlist_node node;
+> +     struct pci_dev *pdev;
+> +     struct pmu pmu;
+> +     void __iomem *base;
+> +     int irq;
+> +     u32 identifier;
+> +     /* Minimum and maximum bdf of root ports monitored by PMU */
+> +     u16 bdf_min;
+> +     u16 bdf_max;
+> +     int on_cpu;
+> +};
 
-Fixes: 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt race")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=214989
-Link: https://lore.kernel.org/linux-pci/DM8PR11MB5702255A6A92F735D90A4446868B9@DM8PR11MB5702.namprd11.prod.outlook.com
-Reported-by: Joseph Bao <joseph.bao@intel.com>
-Tested-by: Joseph Bao <joseph.bao@intel.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.19+
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Would the above "bdf" be the PCI addressing schema?  If so, then we could
+capitalise the acronym to keep it consistent with how it's often referred
+to in the PCI world.
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 83a0fa119cae..9535c61cbff3 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -642,6 +642,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	 */
- 	if (ctrl->power_fault_detected)
- 		status &= ~PCI_EXP_SLTSTA_PFD;
-+	else if (status & PCI_EXP_SLTSTA_PFD)
-+		ctrl->power_fault_detected = true;
- 
- 	events |= status;
- 	if (!events) {
-@@ -651,7 +653,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	}
- 
- 	if (status) {
--		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-+		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
- 
- 		/*
- 		 * In MSI mode, all event bits must be zero before the port
-@@ -725,8 +727,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	}
- 
- 	/* Check Power Fault Detected */
--	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
--		ctrl->power_fault_detected = 1;
-+	if (events & PCI_EXP_SLTSTA_PFD) {
- 		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
- 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
- 				      PCI_EXP_SLTCTL_ATTN_IND_ON);
--- 
-2.33.0
+[...]
+> +static int __init hisi_pcie_module_init(void)
+> +{
+> +     int ret;
+> +
+> +     ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
+> +                                   "AP_PERF_ARM_HISI_PCIE_PMU_ONLINE",
+> +                                   hisi_pcie_pmu_online_cpu,
+> +                                   hisi_pcie_pmu_offline_cpu);
+> +     if (ret) {
+> +             pr_err("Failed to setup PCIe PMU hotplug, ret = %d.\n", ret);
+> +             return ret;
+> +     }
 
+The above error message could be made to be a little more aligned in terms
+of format with the other messages, thus it would be as follows:
+
+  pr_err("Failed to setup PCIe PMU hotplug: %d.\n", ret);
+
+Interestingly, there would be then no need to add the final dot (period) at
+the end here, and that would be true everywhere else.
+
+Again, thank you so much for working on this, it's very much appreciated!
+
+Acked-by: Krzysztof Wilczyński <kw@linux.com>
+
+        Krzysztof
