@@ -2,184 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C40C9454FBF
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 22:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58764455031
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:15:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240972AbhKQV5e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 16:57:34 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:58770 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240859AbhKQV5Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 16:57:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=tg4MegziDOSUr28d0QYX7YlGwKcxOm361uD6F0v6Nwc=; b=Pb03cCUZARE127q4WVQ0eWvolp
-        Mb1diotmJvqpeDeBK8Nzlb75G1AR4AD6o7+xcf8NlVFo0jWRBZKQZkwe1gCSszhKpi/1O1OhwbgYK
-        3ckD0YQ/amhEZITCdX7U5pN8qEyXkXJK86WnazusJs2E9tZHFN6lAJRmCFPJB4mJo/axNYMIAJnYT
-        XG6WVzpkeomCYr0DkreuBgTRZn5mjna/lx9MQP/UhKznpV/ZTDtPuX5oXoDZWif6Ga9ZylOR5RxwG
-        cG0sbb8nVRTh9h/CVz7CxWFITPcV8QEmMsfO/UY/U6GoVRU4UNqFUMYB+Vhw1lVpP1RT4efZSt718
-        xk864lBQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1mnSsn-000Zo7-24; Wed, 17 Nov 2021 14:54:21 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1mnSsm-00010Q-22; Wed, 17 Nov 2021 14:54:20 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 17 Nov 2021 14:54:10 -0700
-Message-Id: <20211117215410.3695-24-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211117215410.3695-1-logang@deltatee.com>
-References: <20211117215410.3695-1-logang@deltatee.com>
+        id S241063AbhKQWSh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 17:18:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241020AbhKQWSg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 17:18:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B69961B39;
+        Wed, 17 Nov 2021 22:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637187337;
+        bh=pz9u+Rr/Rm1PkxcOKHWRWOjVj9iL6xXGwQ0FX4HJdQ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CBfSI8+kPxXtYUTMTdk+21jYnWy1mdDwK55lHA9qzgwVL1lMWfjf2z4TiFxErxdJg
+         hTMDiBIv6fc/1orjg78O9BXAu7MsFRabAr9uE7OXLR7y5rD8mQyp2odvTxNH8WdRY2
+         xhc2kqsXkpiaxKJD1t6hP5NGNPYU0dRnURNp1g4aO7c8b5WyuTTFW3AB2+o7DnVUG4
+         o/JBRl8JNrFqNQka1JkqT46Mot93fNMG2KTPjomF1FXg/37xN3HHP7LRn8m1nZnqdC
+         SYwGguiMupYnmjzVOlc6xwPu/1553wk3yFBol0oRnXA7Vo+WDAznNTQM1AFuwGa7pX
+         HUJm0t6u0EAwA==
+Date:   Wed, 17 Nov 2021 16:15:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 3/5] cxl/pci: Add DOE Auxiliary Devices
+Message-ID: <20211117221536.GA1778765@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.6
-Subject: [PATCH v4 23/23] nvme-pci: allow mmaping the CMB in userspace
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211117122335.00000b35@Huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allow userspace to obtain CMB memory by mmaping the controller's
-char device. The mmap call allocates and returns a hunk of CMB memory,
-(the offset is ignored) so userspace does not have control over the
-address within the CMB.
+[+cc Christoph, Thomas for INTx/MSI/bus mastering question below]
 
-A VMA allocated in this way will only be usable by drivers that set
-FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-checked the first time the pages are mapped for DMA.
+On Wed, Nov 17, 2021 at 12:23:35PM +0000, Jonathan Cameron wrote:
+> On Tue, 16 Nov 2021 17:48:29 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Nov 05, 2021 at 04:50:54PM -0700, ira.weiny@intel.com wrote:
+> > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > 
+> > > CXL devices have DOE mailboxes.  Create auxiliary devices which can be
+> > > driven by the generic DOE auxiliary driver.  
 
-Currently this is only supported by O_DIRECT to an PCI NVMe device
-or through the NVMe passthrough IOCTL.
+> > Based on the ECN, it sounds like any PCI device can have DOE
+> > capabilities, so I suspect the support for it should be in
+> > drivers/pci/, not drivers/cxl/.  I don't really see anything
+> > CXL-specific below.
+> 
+> Agreed though how it all gets tied together isn't totally clear
+> to me yet. The messy bit is interrupts given I don't think we have
+> a model for enabling those anywhere other than in individual PCI drivers.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 15 +++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- drivers/nvme/host/pci.c  | 18 ++++++++++++++++++
- 3 files changed, 35 insertions(+)
+Ah.  Yeah, that is a little messy.  The only real precedent where the
+PCI core and a driver might need to coordinate on interrupts is the
+portdrv.  So far we've pretended that bridges do not have
+device-specific functionality that might require interrupts.  I don't
+think that's actually true, but we haven't integrated drivers for the
+tuning, performance monitoring, and similar features that bridges may
+have.  Yet.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 344414351314..39ad592cacdc 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3111,6 +3111,10 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- 	}
- 
- 	file->private_data = ctrl;
-+
-+	if (ctrl->ops->mmap_file_open)
-+		ctrl->ops->mmap_file_open(ctrl, file);
-+
- 	return 0;
- }
- 
-@@ -3124,12 +3128,23 @@ static int nvme_dev_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct nvme_ctrl *ctrl = file->private_data;
-+
-+	if (!ctrl->ops->mmap_cmb)
-+		return -ENODEV;
-+
-+	return ctrl->ops->mmap_cmb(ctrl, vma);
-+}
-+
- static const struct file_operations nvme_dev_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= nvme_dev_open,
- 	.release	= nvme_dev_release,
- 	.unlocked_ioctl	= nvme_dev_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
-+	.mmap		= nvme_dev_mmap,
- };
- 
- static ssize_t nvme_sysfs_reset(struct device *dev,
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index a9f60b12a32b..5fdc1a2027e9 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -494,6 +494,8 @@ struct nvme_ctrl_ops {
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
- 	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
-+	void (*mmap_file_open)(struct nvme_ctrl *ctrl, struct file *file);
-+	int (*mmap_cmb)(struct nvme_ctrl *ctrl, struct vm_area_struct *vma);
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 3f2bd1efe076..05d6e7284000 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2896,6 +2896,22 @@ static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
- 	return dma_pci_p2pdma_supported(dev->dev);
- }
- 
-+static void nvme_pci_mmap_file_open(struct nvme_ctrl *ctrl,
-+				    struct file *file)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	pci_p2pdma_mmap_file_open(pdev, file);
-+}
-+
-+static int nvme_pci_mmap_cmb(struct nvme_ctrl *ctrl,
-+			     struct vm_area_struct *vma)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_mmap_p2pmem(pdev, vma);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
-@@ -2907,6 +2923,8 @@ static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
- 	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
-+	.mmap_file_open		= nvme_pci_mmap_file_open,
-+	.mmap_cmb		= nvme_pci_mmap_cmb,
- };
- 
- static int nvme_dev_map(struct nvme_dev *dev)
--- 
-2.30.2
+In any case, I think the argument that DOE capabilities are not
+CXL-specific still holds.
 
+> > What do these DOE capabilities look like in lspci?  I don't see any
+> > support in the current version (which looks like it's a year old).
+> 
+> I don't think anyone has added support yet, but it would be simple to do.
+> Given possibility of breaking things if we actually exercise the discovery
+> protocol, we'll be constrained to just reporting there is a DOE instances
+> which is of limited use.
+
+I think it's essential that lspci at least show the existence of DOE
+capabilities and the safe-to-read registers (Capabilities, Control,
+Status).
+
+There's a very long lead time between adding the support and getting
+updated versions of lspci into distros.
+
+> > > +	 * An implementation of a cxl type3 device may support an unknown
+> > > +	 * number of interrupts. Assume that number is not that large and
+> > > +	 * request them all.
+> > > +	 */
+> > > +	irqs = pci_msix_vec_count(pdev);
+> > > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
+> > > +	if (rc != irqs) {
+> > > +		/* No interrupt available - carry on */
+> > > +		dev_dbg(dev, "No interrupts available for DOE\n");
+> > > +	} else {
+> > > +		/*
+> > > +		 * Enabling bus mastering could be done within the DOE
+> > > +		 * initialization, but as it potentially has other impacts
+> > > +		 * keep it within the driver.
+> > > +		 */
+> > > +		pci_set_master(pdev);  
+> > 
+> > This enables the device to perform DMA, which doesn't seem to have
+> > anything to do with the rest of this code.  Can it go somewhere
+> > near something to do with DMA?
+> 
+> Needed for MSI/MSIx as well.  The driver doesn't do DMA for anything
+> else.  Hence it's here in the interrupt enable path.
+
+Oh, right, of course.  A hint here that MSI/MSI-X depends on bus
+mastering would save me the trouble.
+
+I wonder if the infrastructure, e.g., something inside
+pci_alloc_irq_vectors_affinity() should do this for us.  The
+connection is "obvious" but not mentioned in
+Documentation/PCI/msi-howto.rst and I'm not sure how callers that
+supply PCI_IRQ_ALL_TYPES would know whether they got a single MSI
+vector (which requires bus mastering) or an INTx vector (which does
+not).
+
+> > So we get an auxiliary device for every instance of a DOE
+> > capability?  I think the commit log should mention something about
+> > how many are created (e.g., "one per DOE capability"), how they
+> > are named, whether they appear in sysfs, how drivers bind to them,
+> > etc.
+> > 
+> > I assume there needs to be some coordination between possible
+> > multiple users of a DOE capability?  How does that work?
+> 
+> The DOE handling implementation makes everything synchronous - so if
+> multiple users each may have to wait on queueing their query /
+> responses exchanges.
+> 
+> The fun of non OS software accessing these is still an open
+> question.
+
+Sounds like something that potentially could be wrapped up in a safe
+but slow interface that could be usable by others, including lspci?
+
+Bjorn
