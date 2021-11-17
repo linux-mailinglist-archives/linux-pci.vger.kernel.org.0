@@ -2,186 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2FE454B3A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 17:43:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31784454C46
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 18:42:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238812AbhKQQqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 11:46:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:56871 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238807AbhKQQqK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 11:46:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637167391;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7Qc+7Yo2MTcFX369pYUB99wyCjSPEpzsyXkN1VXuBDc=;
-        b=iTxgTsaEijqxTn5721iazV5pbceAmQVXllqXimO0MDoonseIAwfykYmf0VJF0CX6QzqLOg
-        jma0d2NPIYAiJm4GUVdDceAz6zayJei258Tcw45d2Gx4cjMpJRxDND8Sc3Md5joNnSLkPT
-        gXX0QDEU8YbUoQtbZ/bOIH8RoQoF17M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-261-HlDeGTP6OFSYv-6Lh_VDSw-1; Wed, 17 Nov 2021 11:43:07 -0500
-X-MC-Unique: HlDeGTP6OFSYv-6Lh_VDSw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0F9080A5CA;
-        Wed, 17 Nov 2021 16:43:05 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5B175D9DE;
-        Wed, 17 Nov 2021 16:43:00 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
-Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
-        maorg@nvidia.com
-Subject: vfio migration discussions (was: [PATCH V2 mlx5-next 00/14] Add
- mlx5 live migration driver)
-In-Reply-To: <20211019105838.227569-1-yishaih@nvidia.com>
-Organization: Red Hat GmbH
-References: <20211019105838.227569-1-yishaih@nvidia.com>
-User-Agent: Notmuch/0.33.1 (https://notmuchmail.org)
-Date:   Wed, 17 Nov 2021 17:42:58 +0100
-Message-ID: <87mtm2loml.fsf@redhat.com>
+        id S238609AbhKQRot (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 12:44:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239506AbhKQRos (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 12:44:48 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102B4C061570;
+        Wed, 17 Nov 2021 09:41:49 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id p3-20020a05600c1d8300b003334fab53afso5447766wms.3;
+        Wed, 17 Nov 2021 09:41:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=BCfxE88dMmtTmPlUzg3IUvh5ugr7FFULc+8pak8LPb0=;
+        b=BCm14ce8Vs0eMVI2gdWtYiQECnj71bGwZWcZJpS9BGKFv5+AxNXFXsOR2bs/s2zdKe
+         tvuCl5X694tuo9H4oux1UvAseKDkQf0KcVDRROimIHDNAn/ycPxHLm2Vui7/487H4gWc
+         sHUdKDk6Lknnr6BENrDbJzTjllK1Swc0RtQW88FEji6BLfBad/9SbRDImkuO/yxjP5gh
+         8OEwDYstnbfQ5dX86MISHfO2bXi1ip4OuplO0DHS8AOQ+Rxr0qsbfXfTE5AjW0uh12jj
+         bB1Hp3h6jbYJ2G3ilFvHJohUBWmhDPEWy436si26Zx3W4pqjb4BQlR/j6fUb3Wp6fHM2
+         3toA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=BCfxE88dMmtTmPlUzg3IUvh5ugr7FFULc+8pak8LPb0=;
+        b=BZBgmbALGkJuXSHnvH2KmfDisdDJdklyBnrM71Vg1HAC0WnAQdSeIhdpPTimFlLHeY
+         ohd/4yIYYo5fqgWOm0OglKXxVm2EPsm4/yq24Sl3NkKBBhIz/qIt5cKXaP7djX0lswxw
+         PwlShrMF/tXYC1jn1oev5sdutq0cz2icNTC6mSxK0n0Q1/hMsU2ET07kGFo+92f5dNDo
+         h/sKkx7IePUMNZEYBVYAAeO1Lf7J/Mv950LsZZ6xQHz0O3hb2ErOlBc3HFE6xGRiUVmG
+         4srpYGMMRtO3L2Ivl98Spb96UyRuhPcm7HCSenosk7zTpnnrPCGu1D49M5HYN/p3/HXj
+         3CfQ==
+X-Gm-Message-State: AOAM532qzRs1v/yHmf7lnRuYPBxSLr6ZHl+1mZ7Bnmr/JqQ/tV/i7UuY
+        TqKB+FfT34KUZ/zykLs3S1Q=
+X-Google-Smtp-Source: ABdhPJyAsGQK5QkuZFkT7fxQC65+3O/kbaaiGA/+ggsHKzLUwmDhpHaIPb1hpBjY9lHUv2mU/mTPLw==
+X-Received: by 2002:a1c:5414:: with SMTP id i20mr1676633wmb.88.1637170907592;
+        Wed, 17 Nov 2021 09:41:47 -0800 (PST)
+Received: from [192.168.0.18] (static-160-219-86-188.ipcom.comunitel.net. [188.86.219.160])
+        by smtp.gmail.com with ESMTPSA id p12sm724836wrr.10.2021.11.17.09.41.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Nov 2021 09:41:47 -0800 (PST)
+Message-ID: <c3630f7f-fb3d-6018-c12a-535e891d535a@gmail.com>
+Date:   Wed, 17 Nov 2021 18:41:46 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v3] PCI: mediatek-gen3: Disable DVFSRC voltage request
+Content-Language: en-US
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        qizhong.cheng@mediatek.com, Ryan-JH.Yu@mediatek.com,
+        Tzung-Bi Shih <tzungbi@google.com>
+References: <20211015063602.29058-1-jianjun.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20211015063602.29058-1-jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ok, here's the contents (as of 2021-11-17 16:30 UTC) of the etherpad at
-https://etherpad.opendev.org/p/VFIOMigrationDiscussions -- in the hope
-of providing a better starting point for further discussion (I know that
-discussions are still ongoing in other parts of this thread; but
-frankly, I'm getting a headache trying to follow them, and I think it
-would be beneficial to concentrate on the fundamental questions
-first...)
 
-VFIO migration: current state and open questions
 
-Current status
-  * Linux
-    * uAPI has been merged with a8a24f3f6e38 ("vfio: UAPI for migration
-    interface for device state") in 5.8
-      * no kernel user of the uAPI merged
-      * Several out of tree drivers apparently
-    * support for mlx5 currently on the list (latest:
-    https://lore.kernel.org/all/20211027095658.144468-1-yishaih@nvidia.com/
-    with discussion still happening on older versions)
-    * support for HiSilicon ACC devices is on the list too. Adds support
-    for HiSilicon crypto accelerator VF device live migration. These are
-    simple DMA queue based PCIe integrated endpoint devices. No support
-    for P2P and doesn't use DMA for migration. <latest:
-    https://lore.kernel.org/lkml/20210915095037.1149-1-shameerali.kolothum.thodi@huawei.com/>
-  * QEMU
-    * basic support added in 5.2, some fixes later
-      * support for vfio-pci only so far, still experimental
-      ("x-enable-migration") as of 6.2
-      * Only tested with out of tree drivers
-  * other software?
+On 15/10/2021 08:36, Jianjun Wang wrote:
+> When the DVFSRC (dynamic voltage and frequency scaling resource collector)
+> feature is not implemented, the PCIe hardware will assert a voltage request
+> signal when exit from the L1 PM Substates to request a specific Vcore
+> voltage, but cannot receive the voltage ready signal, which will cause
+> the link to fail to exit the L1 PM Substates.
+> 
+> Disable DVFSRC voltage request by default, we need to find a common way to
+> enable it in the future.
+> 
+> Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+> Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
 
-Problems/open questions
-  * Are the status bits currently defined in the uAPI
-  (_RESUMING/_SAVING/_RUNNING) sufficient to express all states we need?
-  * What does clearing _RUNNING imply? In particular, does it mean that
-  the device is frozen, or are some operations still permitted?
-  * various points brought up: P2P, SET_IRQS, ... <please summarize :)>:
-    * P2P DMA support between devices requires an additional HW control
-    state where the device can receive but not transmit DMA
-    * No definition of what HW needs to preserve when RESUMING toggles
-    off - (eg today SET_IRQS must work, what else?).
-    * In general, how do IRQs work with future non-trapping IMS?
-    * Dealing with pending IOMMU PRI faults during migration
-  * Problems identified with the !RUNNING state:
-    * When there are multiple devices in a user context (VM), we can't
-    atomically move all devices to the !_RUNNING state concurently.
-      * Suggests the current uAPI has a usage restriction for
-      environments that do not make use of peer-to-peer DMA (ie. we
-      can't have a device generating DMA to a p2p target that cannot
-      accept it - especially if error response from target can generate
-      host fatal conditions)
-      * Possible userspace implications:
-        * VMs could be limited to a single device to guarantee that no
-        p2p exists - non-vfio devices generating physical p2p DMA in the
-        future is a concern
-        * Hypervisor may skip creating p2p DMA mappings, creating a
-        choice whether the VM supports migration or p2p
-      * Jason proposed a new NDMA (no-dma) state that seems to match the
-      mlx5 implementation of "quiesce" vs "freeze" states, where NDMA
-      would indicate the device cannot generate DMA or interrupts such
-      that once userspace places all devices into the (NDMA | RUNNING)
-      state the environment is fully quiesced.  A flag or capability on
-      the migration region could indicate support for this feature.
-      * Alex proposed that this could be equally resolved within the
-      current device states if !RUNNING becomes the quiescent point
-      where the device stops generating DMA and interrupts, with a
-      requirement that the user moves all devices to !RUNNING before
-      collecting device migration data (as indicated by reading
-      pending_bytes) or else risk corrupting the migration data, which
-      the device could indicate via an errno in the migration process.
-      A flag or capability would still be required to indicate this
-      support.
-        * Jason does not favor this approach, objecting that the mode
-        transition is implicit, and still needs qemu changes anyhow
-    * In general, what operations or accesses is the user restricted
-    from performing on the device while !RUNNING
-      * Jason has proposed very restricted access (essentially none
-      beyond the migration region itself), including no MMIO access
-      <20211028234750.GP2744544@nvidia.com>  This essentially imposes
-      device transmission to an intermediate state between SAVING and
-      RUNNING.
-        * Alex requested a formal uAPI update defining what accesses are
-        allowed, including which regions and ioctls.
-        * The existing uAPI does not require any such transition to a
-        "null" state or TBD new device state bit.  QEMU currently
-        expects access to config space and the ability to call SET_IRQS
-        and create  mmaps while in the RESUMING state, without the
-        RUNNING bit set.  Restoring MSI-X interrupt configuration
-        necessarily requires MMIO access to the device.
-        * Jason suggested a new device state bit and user protocol to
-        account for this, where the device is in a !RUNNING and
-        !RESTORING, but to some degree becomes manipulable via device
-        regions and ioctls.  No compatibility mechanism proposed.
-        * Alex suggested that this is potentially supportable via a spec
-        clarification that requires the device migration data to be
-        written to completion before userspace performs other region or
-        ioctl access to the device. (mlx5's driver is designed to not
-        inspect the migration blob itself, so it can't detect the
-        "end". The migration blob is finished when mlx5 sees RESUMING
-        clear.)
-    * PRI into the guest (guest user process SVA) has a sequencing
-    problem with RUNNING - can not migrate a vIOMMU in the middle of a
-    page fault, must stop and flush faults before stopping vCPUs
-  * The uAPI could benefit from some more detailed documentation
-  (e.g. how to use it, what to do in edge cases, ...) outside of the
-  header file.
-  * Trying to use the mlx5 support currently on the list has unearthed
-  some problems in QEMU <please summarize :)>
-  * Discussion regarding dirty tracking and how much it should be
-  controlled by user space still ongoing
-  * General questions:
-    * How much do we want to change the uAPI and/or the documentation to
-    accommodate what QEMU has implemented so far?
-    * How much do we want to change QEMU?
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Possible solutions
-  * uAPI
-    * fine as is, or
-    * needs some clarifications, or
-    * needs rework, which might mean a v2
-  * QEMU
-    * fine as is (modulo bugfixes), or
-    * needs some rework, but not impacting the uAPI, or
-    * needs some rework, which also needs some changes in the uAPI
-  * Suggested approach:
-    * Work on the documentation, and try to come up with some more
-    HW-centric docs
-    * Depending on that, decide how many changes we want/need to do in
-    QEMU
-
+> ---
+>   drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index f3aeb8d4eaca..79fb12fca6a9 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -79,6 +79,9 @@
+>   #define PCIE_ICMD_PM_REG		0x198
+>   #define PCIE_TURN_OFF_LINK		BIT(4)
+>   
+> +#define PCIE_MISC_CTRL_REG		0x348
+> +#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
+> +
+>   #define PCIE_TRANS_TABLE_BASE_REG	0x800
+>   #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
+>   #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
+> @@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+>   	val &= ~PCIE_INTX_ENABLE;
+>   	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
+>   
+> +	/* Disable DVFSRC voltage request */
+> +	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
+> +	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
+> +	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
+> +
+>   	/* Assert all reset signals */
+>   	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
+>   	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+> 
