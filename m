@@ -2,119 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FB634542AE
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 09:30:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F32DC454351
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 10:07:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbhKQIdq convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Nov 2021 03:33:46 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:34729 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbhKQIdp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 03:33:45 -0500
-Received: by mail-qt1-f169.google.com with SMTP id o17so1924109qtk.1;
-        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pLki4VXVNEgH7BpAr7thCy6liKqtc8dZxgXibG/LDtU=;
-        b=IUpfMS2Qsw+4vmn7I+udpusUuBdphjjcAJKehe7ijbqvhkYnwm6cTNdca+Cm0+0ma0
-         xHD7AGKnQOaEiCs6xqSWURkkNCEsyjFfW5BS+qXXbqRwqmicLNGkp26r99JMfFSCO/3k
-         0bWFazjujRDAHYFZe81Zf9uHbmyFG8cifydbv07Sd9hppAYW34M6QwmE5KICuNyBOc1b
-         uaRJUYDVmVWNYnHKQUaNc9sX2Jn2J5I6VMJVbOUUi0zfxBoozVHwbFXJ/iQhxxdP0nJI
-         UUZ2M0IUONMJ7yEaDyGm9GjG4M1JgiuAegMgBQl0bzAe7JH80skTE+4MB5PXQv0AtrMH
-         PE+w==
-X-Gm-Message-State: AOAM533Gmfbt9PLCNrSukClwWshSIsB1Zv0j1Rff2FGOwSGUU7Ob7m8A
-        uDSnap65Q1tmO3hQD/OtlyUl2r4Dhpxyxg==
-X-Google-Smtp-Source: ABdhPJwoFVUouk9QlvygqIYHdaUI5uPa2eT+UDuhCZpvADfGS5ohUE9j9fFTF1CGKB45SU6JCVVhbA==
-X-Received: by 2002:a05:622a:178c:: with SMTP id s12mr14701908qtk.156.1637137846345;
-        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id j20sm5550905qtj.43.2021.11.17.00.30.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
-Received: by mail-yb1-f170.google.com with SMTP id n2so746118yba.2;
-        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
-X-Received: by 2002:a9f:2431:: with SMTP id 46mr20823663uaq.114.1637137464301;
- Wed, 17 Nov 2021 00:24:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20211115155105.3797527-1-geert@linux-m68k.org>
- <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
- <fcdead1c-2e26-b8ca-9914-4b3718d8f6d4@gmx.de> <480CE37B-FE60-44EE-B9D2-59A88FDFE809@fb.com>
- <78b2d093-e06c-ba04-9890-69f948bfb937@infradead.org> <B57193D6-1FD4-45D3-8045-8D2DE691E24E@fb.com>
-In-Reply-To: <B57193D6-1FD4-45D3-8045-8D2DE691E24E@fb.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 17 Nov 2021 09:24:12 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWgGz5FSidaGpp8YRRSnJfwdP4-wOkXdVx+mydXnMAXHQ@mail.gmail.com>
-Message-ID: <CAMuHMdWgGz5FSidaGpp8YRRSnJfwdP4-wOkXdVx+mydXnMAXHQ@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.16-rc1
-To:     Nick Terrell <terrelln@fb.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Helge Deller <deller@gmx.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Stan Skowronek <stan@corellium.com>,
-        Hector Martin <marcan@marcan.st>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "linux-ntfs-dev@lists.sourceforge.net" 
-        <linux-ntfs-dev@lists.sourceforge.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S234814AbhKQJKy convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Nov 2021 04:10:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234800AbhKQJKy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 04:10:54 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ED0461BFB;
+        Wed, 17 Nov 2021 09:07:56 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mnGv3-00620J-SE; Wed, 17 Nov 2021 09:07:54 +0000
+Date:   Wed, 17 Nov 2021 09:07:53 +0000
+Message-ID: <8735nv880m.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Yuji Nakao <contact@yujinakao.com>
+Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        linux-kernel@vger.kernel.org,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        ". Bjorn Helgaas" <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: Re: Kernel 5.15 doesn't detect SATA drive on boot
+In-Reply-To: <YZQ+GhRR+CPbQ5dX@rocinante>
+References: <87h7ccw9qc.fsf@yujinakao.com>
+        <8951152e-12d7-0ebe-6f61-7d3de7ef28cb@opensource.wdc.com>
+        <YZQ+GhRR+CPbQ5dX@rocinante>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kw@linux.com, contact@yujinakao.com, damien.lemoal@opensource.wdc.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, arnd@arndb.de, sashal@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Nick,
+Hi Krzysztof, Yugi,
 
-On Wed, Nov 17, 2021 at 3:20 AM Nick Terrell <terrelln@fb.com> wrote:
-> > On Nov 16, 2021, at 6:05 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> > On 11/16/21 5:59 PM, Nick Terrell wrote:
-> >> I’ll send the PR to Linus tomorrow. I’ve been informed that it
-> >> isn't strictly necessary to send the patches to the mailing list
-> >> for bug fixes, but its already done, so I’ll wait and see if there
-> >> is any feedback.
-> >
-> > IMO several (or many more) people would disagree with that.
-> >
-> > "strictly?"  OK, it's probably possible that almost any patch
-> > could be merged without being on a mailing list, but it's not
-> > desirable (except in the case of "security" patches).
->
-> Good to know! Thanks for the advice, I wasn’t really sure what
-> the best practice is for sending patches to your own tree, as I
-> didn't see anything about it in the maintainer guide.
+On Tue, 16 Nov 2021 23:26:18 +0000,
+Krzysztof Wilczyński <kw@linux.com> wrote:
+> 
+> [+CC Arnd, Bjorn, Marc and Sasha for visibility]
+> 
+> Hello Damien and Yuji,
+> 
+> [...]
+> > > I'm using Arch Linux on MacBook Air 2010. I updated `linux` package[1]
+> > > from v5.14.16 to v5.15.2 the other day, and the boot process stalled
+> > > with the following message.
+> > > 
+> > > ```shell
+> > > :: running early hook [udev]
+> > > Starting version 249.6-3-arch
+> > > :: running hook [udev]
+> > > :: Triggering uevents...
+> > > Waiting 10 seconds for device /dev/sda3 ...
+> > > ERROR: device '/dev/sda3' not found. Skipping fsck.
+> > > :: mounting '/dev/sda' on real root
+> > > mount: /new_root: no filesystem type specified.
+> > > You are now being dropped into an emergency shell.
+> > > sh: can't access tty; job control turned off
+> > > [rootfs ]#
+> > > ```
+> > > 
+> > > In the emergency shell there's no `sda` devices when I type `$ ls
+> > > /dev/`. By downgrading the kernel, boot process works properly.
+> > > 
+> > > See also Arch Linux bug tracker[2]. There are similar reports on
+> > > Apple devices.
+> > > 
+> > > `dmesg` output in the emergency shell is attached. I guess this issue is
+> > > related to libata, so CCed to Damien Le Moal.
+> > 
+> > I think that this problem is due to recent PCI subsystem changes which broke Mac
+> > support. The problem show up as the interrupts not being delivered, which in
+> > turn result in the kernel assuming that the drive is not working (see the
+> > timeout error messages in your dmesg output). Hence your boot drive detection
+> > fails and no rootfs to mount.
+> > 
+> > Adding linux-pci list.
+> > 
+> > 
+> > 
+> > > 
+> > > Regards.
+> > > 
+> > > [1] https://archlinux.org/packages/core/x86_64/linux/
+> > > [2] https://bugs.archlinux.org/task/72734
+> 
+> The error in the dmesg output (see [2] where the log file is attached)
+> looks similar to the problem reported a week or so ago, as per:
+> 
+>   https://lore.kernel.org/linux-pci/ee3884db-da17-39e3-4010-bcc8f878e2f6@xenosoft.de/
+> 
+> The problematic commits where reverted by Bjorn and the Pull Request that
+> did it was accepted, as per:
+> 
+>   https://lore.kernel.org/linux-pci/20211111195040.GA1345641@bhelgaas/
+> 
+> Thus, this would made its way into 5.16-rc1, I suppose.  We might have to
+> back-port this to the stable and long-term kernels.
+> 
+> Yuji, could you, if you have some time to spare, try the 5.16-rc1 to see if
+> this have gotten better on your system?
 
-All patches must be sent to public mailing lists for review.
-You might get away with not doing that for a simple and trivial fix,
-but be prepared to end up on people's "special" lists if you did get
-it wrong.
+I'm afraid you have the wrong end of the stick on this one.
 
-We are Legion. We do not forgive. We do not forget ;-)
+The issue is reported on 5.15, and the issue you are pointing at was
+introduced during the 5.16 merge window. The problematic commit wasn't
+reverted, but instead fixed in 10a20b34d735 ("of/irq: Don't ignore
+interrupt-controller when interrupt-map failed").
 
-Gr{oetje,eeting}s,
+The issue is instead very close to the one reported at [1], for which
+we have a very conservative workaround in 5.16-rc1 (commits
+2226667a145d and f21082fb20db). Looking at the dmesg log provided by
+Yugi, you find the following nugget:
 
-                        Geert
+[    0.378564] pci 0000:00:0a.0: [10de:0d88] type 00 class 0x010601
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Oh look, a NVIDIA AHCI controller, probably similar enough to the one
+discussed in the issue reported by Rui.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yugi, could you please test the patch below on top of 5.16-rc1?
+
+Thanks,
+
+	M.
+
+[1] https://lore.kernel.org/r/CALjTZvbzYfBuLB+H=fj2J+9=DxjQ2Uqcy0if_PvmJ-nU-qEgkg@mail.gmail.com
+
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 003950c738d2..cd88eddf614d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5857,3 +5857,4 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+ 	pdev->dev_flags |= PCI_DEV_FLAGS_HAS_MSI_MASKING;
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0d88, nvidia_ion_ahci_fixup);
+
+-- 
+Without deviation from the norm, progress is not possible.
