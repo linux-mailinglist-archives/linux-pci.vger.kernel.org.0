@@ -2,111 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B6A4550A6
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ABF34550A8
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:41:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241381AbhKQWoM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 17:44:12 -0500
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:36835 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241317AbhKQWoK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 17:44:10 -0500
-Received: by mail-wr1-f46.google.com with SMTP id s13so7619000wrb.3;
-        Wed, 17 Nov 2021 14:41:11 -0800 (PST)
+        id S241405AbhKQWoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 17:44:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241317AbhKQWoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 17:44:22 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB5CC061570
+        for <linux-pci@vger.kernel.org>; Wed, 17 Nov 2021 14:41:22 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id a9so7588252wrr.8
+        for <linux-pci@vger.kernel.org>; Wed, 17 Nov 2021 14:41:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=3Xog6KRJSBNHCaE0UbI1LliJNRROeL4/g6wZV+C2IA8=;
+        b=ZtPRlNiybHAEBss4Nh0zPZnRxMvb9UQ1vmdR4X/Jr3SLbq4k/EW99Wa7R9hjjJoFBv
+         uuJY39kxp/s0Hs4gJ52hOWBjqfCSLgmVNB31fVNS7H6rUJh9NuVCX4JR28zhySyUxIOT
+         A4WIUv84L/om5jT/TXA3brfcqgqCNaAyWi2Mnqt57/649i0Nu8mBotjjaqXdj4esKfql
+         tJe4c9lXHK865lNLOjjsu1Pb2U023MMB07fzeTikqz3hNSFbN3JQyu5OCPvmmwSwhbUa
+         LvL/3LzSQufZ13Ghjy7+zVEb4ze7Q1PtMlgE1+kdpAPU9phx0J1aXZXPZoEHBz/GmMtT
+         0lHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pP5j1KPa+oLLZIqN3V90YggZzRPPFSASRy8/v4Hg2Xk=;
-        b=sBLEWH6kNkhwMIKF2333N44PWVlXw4p7dAMmednUGtLExYCScP/h2OsklBJOrzyJ5j
-         MBMHS9+k/c0W65uIp6qcQ3TmomY1ffA8pjJV+DJ3EVaaG6kW3Q/oVvxsTrQl37Pc+0ow
-         GXbL+64rR3taibNykG0pli3RKMncb+y+bmdMbNuq1D8gf/Fzf7/kFgwoIqC65DI5nllx
-         XPRAUYIguWR+UiG6Pgw7n9kGVMJYs0FZcb5PACR+a0K4grRq4HAsuYx0N/7/15e6RUND
-         fHzWAT7uLKXI5Fe629Hs3a3+GKX4pRgkz73ucphBMsndUr/ATTtav6MNDwoEgVMnKZq1
-         X8hA==
-X-Gm-Message-State: AOAM533WaHzYQk84Dj4q1NkpC6Rul/Geq7fHyIcMSSyH77ESVcH9hOt4
-        9XTXhhxE/oyxUNoickPEuzu9i6rjyGkKHflt
-X-Google-Smtp-Source: ABdhPJyT1T5Gg4V+cRYvQzUeFM1R+tPtJ1AW2UXpEHl/E/2ZzjyEm77ozQOIfFlLWtbqZ0Qs6reXiA==
-X-Received: by 2002:a5d:6d0b:: with SMTP id e11mr24961989wrq.16.1637188870422;
-        Wed, 17 Nov 2021 14:41:10 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id q4sm1151957wrs.56.2021.11.17.14.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 14:41:09 -0800 (PST)
-Date:   Wed, 17 Nov 2021 23:41:08 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxarm@huawei.com, zhangshaokun@hisilicon.com
-Subject: Re: [PATCH v11 2/2] drivers/perf: hisi: Add driver for HiSilicon
- PCIe PMU
-Message-ID: <CAC52Y8Zc5oRRBDiZq+zQNGw2CbURN2SRsfW9ek_gw96qDHB1zw@mail.gmail.com>
-References: <20211029093632.4350-1-liuqi115@huawei.com>
- <20211029093632.4350-3-liuqi115@huawei.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=3Xog6KRJSBNHCaE0UbI1LliJNRROeL4/g6wZV+C2IA8=;
+        b=GHH7B4hOwY/eL207afFI2pXDsqNQ6qU2iaDcJJIMA7T0EcCmOCrf+bYcmVIrM1k/Uy
+         jSvoX4w0xPyic4SaSvd62VpqYTg2tC8hC3lcYuLEBDY1bxJz+y7IHWb8ZpX0LsWRjXzk
+         C08pzZ9bVEmGx298LQPUdjLSYOmPJxSHCRErIunpQA+hYWnE5valm4yjHPN6gu29CxFp
+         I59XMbLcG41QAIHslUU2g+WvdTlHyoIw+k7rcn98Y6ThGavcZgsp91Tzd06jhjrpIWOW
+         SJWLmwBKEyw+F2DJExAhzr3z8BvjIcwcrsZehrZGOS/1qpE3Vv30NYnQT9fzI96XcEXG
+         KYhg==
+X-Gm-Message-State: AOAM533j/nhJPWMBK29b79HnGgGVeeLNtjGPLfIZvr01T1AivGZHaQ1o
+        KG4IEIk7ClaCEyuPj9+ZJkf9D0RUOnY=
+X-Google-Smtp-Source: ABdhPJyYnnvtImdCrFx8CHUkn9fvyCkEykZkUQ/3aAkS4MEDR260SqZwNYGTtmVyGMTNX1INiLmexA==
+X-Received: by 2002:a5d:64eb:: with SMTP id g11mr24983153wri.438.1637188881520;
+        Wed, 17 Nov 2021 14:41:21 -0800 (PST)
+Received: from ?IPV6:2003:ea:8f1a:f00:f0f5:b870:7292:e828? (p200300ea8f1a0f00f0f5b8707292e828.dip0.t-ipconnect.de. [2003:ea:8f1a:f00:f0f5:b870:7292:e828])
+        by smtp.googlemail.com with ESMTPSA id 38sm1157230wrc.1.2021.11.17.14.41.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Nov 2021 14:41:21 -0800 (PST)
+Message-ID: <4a71d004-e23b-37e8-3702-a059be248210@gmail.com>
+Date:   Wed, 17 Nov 2021 23:41:14 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+References: <20211117221955.GA1780304@bhelgaas>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2] PCI/VPD: Add simple sanity check to pci_vpd_size()
+In-Reply-To: <20211117221955.GA1780304@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211029093632.4350-3-liuqi115@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Qi,
+On 17.11.2021 23:19, Bjorn Helgaas wrote:
+> On Wed, Nov 17, 2021 at 10:31:51PM +0100, Heiner Kallweit wrote:
+>> On 13.10.2021 20:37, Heiner Kallweit wrote:
+>>> We have a problem with a device where each VPD read returns 0x33 [0].
+>>> This results in a valid VPD structure (except the tag id) and
+>>> therefore pci_vpd_size() scans the full VPD address range.
+>>> On an affected system this took ca. 80s.
+>>>
+>>> That's not acceptable, on the other hand we may not want to re-add
+>>> the old tag checks. In addition these tag check still wouldn't be able
+>>> to avoid the described scenario 100%.
+>>> Instead let's add a simple sanity check on the number of found tags.
+>>> A VPD image conforming to the PCI spec [1] can have max. 4 tags:
+>>> id string, ro section, rw section, end tag.
+>>>
+>>> [0] https://lore.kernel.org/lkml/20210915223218.GA1542966@bjorn-Precision-5520/
+>>> [1] PCI 3.0 I.3.1. VPD Large and Small Resource Data Tags
+>>>
+>>> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>> ---
+>>>  drivers/pci/vpd.c | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+>>> index a4fc4d069..921470611 100644
+>>> --- a/drivers/pci/vpd.c
+>>> +++ b/drivers/pci/vpd.c
+>>> @@ -56,6 +56,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+>>>  {
+>>>  	size_t off = 0, size;
+>>>  	unsigned char tag, header[1+2];	/* 1 byte tag, 2 bytes length */
+>>> +	int num_tags = 0;
+>>>  
+>>>  	while (pci_read_vpd_any(dev, off, 1, header) == 1) {
+>>>  		size = 0;
+>>> @@ -63,6 +64,10 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+>>>  		if (off == 0 && (header[0] == 0x00 || header[0] == 0xff))
+>>>  			goto error;
+>>>  
+>>> +		/* We can have max 4 tags: STRING_ID, RO, RW, END */
+>>> +		if (++num_tags > 4)
+>>> +			goto error;
+>>> +
+>>>  		if (header[0] & PCI_VPD_LRDT) {
+>>>  			/* Large Resource Data Type Tag */
+>>>  			if (pci_read_vpd_any(dev, off + 1, 2, &header[1]) != 2) {
+>>>
+>>
+>> Can this one be picked up for next?
+> 
+> I'm hesitating because we (or maybe just "I" :)) worked so hard to
+> avoid interpreting the VPD data, and now we're back to that.
+> 
+> There's nothing of value in this particular device's VPD.  Is there
+> any reason we shouldn't just use quirk_blacklist_vpd() for it?
+> 
+The bogus device we talk about has vendor/device id of an Intel card,
+we could blacklist just based on subvendor/device id. Seems the
+quirk mechanism doesn't support subvendor id level.
 
-Thank you for working on this!  Looks really good!
+In general: Once we blacklist this device, tomorrow another similarly
+broken one may come. Therefore I'd prefer the more general approach.
+But I see your point. If (theoretically) the next PCI spec would introduce
+a new VPD tag, then we most likely would get to know about this only
+once somebody complains about reading VPD from his shiny new card fails.
+So it's a tradeoff ..
 
-Below a few tiny nitpicks that you are more than welcome to ignore, of
-course, as these would have little weight on the final product, so to
-speak.
-
-> +struct hisi_pcie_pmu {
-> +     struct perf_event *hw_events[HISI_PCIE_MAX_COUNTERS];
-> +     struct hlist_node node;
-> +     struct pci_dev *pdev;
-> +     struct pmu pmu;
-> +     void __iomem *base;
-> +     int irq;
-> +     u32 identifier;
-> +     /* Minimum and maximum bdf of root ports monitored by PMU */
-> +     u16 bdf_min;
-> +     u16 bdf_max;
-> +     int on_cpu;
-> +};
-
-Would the above "bdf" be the PCI addressing schema?  If so, then we could
-capitalise the acronym to keep it consistent with how it's often referred
-to in the PCI world.
-
-[...]
-> +static int __init hisi_pcie_module_init(void)
-> +{
-> +     int ret;
-> +
-> +     ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
-> +                                   "AP_PERF_ARM_HISI_PCIE_PMU_ONLINE",
-> +                                   hisi_pcie_pmu_online_cpu,
-> +                                   hisi_pcie_pmu_offline_cpu);
-> +     if (ret) {
-> +             pr_err("Failed to setup PCIe PMU hotplug, ret = %d.\n", ret);
-> +             return ret;
-> +     }
-
-The above error message could be made to be a little more aligned in terms
-of format with the other messages, thus it would be as follows:
-
-  pr_err("Failed to setup PCIe PMU hotplug: %d.\n", ret);
-
-Interestingly, there would be then no need to add the final dot (period) at
-the end here, and that would be true everywhere else.
-
-Again, thank you so much for working on this, it's very much appreciated!
-
-Acked-by: Krzysztof Wilczyński <kw@linux.com>
-
-        Krzysztof
+> Bjorn
+> 
+Heiner
