@@ -2,125 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31784454C46
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 18:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A76E9454CF4
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 19:19:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238609AbhKQRot (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 12:44:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239506AbhKQRos (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 12:44:48 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102B4C061570;
-        Wed, 17 Nov 2021 09:41:49 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id p3-20020a05600c1d8300b003334fab53afso5447766wms.3;
-        Wed, 17 Nov 2021 09:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=BCfxE88dMmtTmPlUzg3IUvh5ugr7FFULc+8pak8LPb0=;
-        b=BCm14ce8Vs0eMVI2gdWtYiQECnj71bGwZWcZJpS9BGKFv5+AxNXFXsOR2bs/s2zdKe
-         tvuCl5X694tuo9H4oux1UvAseKDkQf0KcVDRROimIHDNAn/ycPxHLm2Vui7/487H4gWc
-         sHUdKDk6Lknnr6BENrDbJzTjllK1Swc0RtQW88FEji6BLfBad/9SbRDImkuO/yxjP5gh
-         8OEwDYstnbfQ5dX86MISHfO2bXi1ip4OuplO0DHS8AOQ+Rxr0qsbfXfTE5AjW0uh12jj
-         bB1Hp3h6jbYJ2G3ilFvHJohUBWmhDPEWy436si26Zx3W4pqjb4BQlR/j6fUb3Wp6fHM2
-         3toA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=BCfxE88dMmtTmPlUzg3IUvh5ugr7FFULc+8pak8LPb0=;
-        b=BZBgmbALGkJuXSHnvH2KmfDisdDJdklyBnrM71Vg1HAC0WnAQdSeIhdpPTimFlLHeY
-         ohd/4yIYYo5fqgWOm0OglKXxVm2EPsm4/yq24Sl3NkKBBhIz/qIt5cKXaP7djX0lswxw
-         PwlShrMF/tXYC1jn1oev5sdutq0cz2icNTC6mSxK0n0Q1/hMsU2ET07kGFo+92f5dNDo
-         h/sKkx7IePUMNZEYBVYAAeO1Lf7J/Mv950LsZZ6xQHz0O3hb2ErOlBc3HFE6xGRiUVmG
-         4srpYGMMRtO3L2Ivl98Spb96UyRuhPcm7HCSenosk7zTpnnrPCGu1D49M5HYN/p3/HXj
-         3CfQ==
-X-Gm-Message-State: AOAM532qzRs1v/yHmf7lnRuYPBxSLr6ZHl+1mZ7Bnmr/JqQ/tV/i7UuY
-        TqKB+FfT34KUZ/zykLs3S1Q=
-X-Google-Smtp-Source: ABdhPJyAsGQK5QkuZFkT7fxQC65+3O/kbaaiGA/+ggsHKzLUwmDhpHaIPb1hpBjY9lHUv2mU/mTPLw==
-X-Received: by 2002:a1c:5414:: with SMTP id i20mr1676633wmb.88.1637170907592;
-        Wed, 17 Nov 2021 09:41:47 -0800 (PST)
-Received: from [192.168.0.18] (static-160-219-86-188.ipcom.comunitel.net. [188.86.219.160])
-        by smtp.gmail.com with ESMTPSA id p12sm724836wrr.10.2021.11.17.09.41.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 09:41:47 -0800 (PST)
-Message-ID: <c3630f7f-fb3d-6018-c12a-535e891d535a@gmail.com>
-Date:   Wed, 17 Nov 2021 18:41:46 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v3] PCI: mediatek-gen3: Disable DVFSRC voltage request
-Content-Language: en-US
-To:     Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        qizhong.cheng@mediatek.com, Ryan-JH.Yu@mediatek.com,
-        Tzung-Bi Shih <tzungbi@google.com>
-References: <20211015063602.29058-1-jianjun.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20211015063602.29058-1-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        id S236789AbhKQSWh convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Nov 2021 13:22:37 -0500
+Received: from server.avery-design.com ([198.57.169.184]:45622 "EHLO
+        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230094AbhKQSWf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 13:22:35 -0500
+X-Greylist: delayed 1932 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Nov 2021 13:22:33 EST
+Received: from 50-201-210-206-static.hfc.comcastbusiness.net ([50.201.210.206]:52307 helo=smtpclient.apple)
+        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <cbrowy@avery-design.com>)
+        id 1mnP1X-0007Ra-HN; Wed, 17 Nov 2021 17:47:07 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [RFC PATCH 0/4] PCI/CMA and SPDM library
+From:   Chris Browy <cbrowy@avery-design.com>
+In-Reply-To: <20210831135517.0000716f@Huawei.com>
+Date:   Wed, 17 Nov 2021 12:46:48 -0500
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        keyrings@vger.kernel.org, dan.j.williams@intel.com,
+        linuxarm@huawei.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>
+Reply-To: 20210917172205.00000684@huawei.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6EE76F68-DF21-464E-93CA-47133B540897@avery-design.com>
+References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
+ <20210805174346.000047f1@huawei.com> <20210831135517.0000716f@Huawei.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.avery-design.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - avery-design.com
+X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
+X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 15/10/2021 08:36, Jianjun Wang wrote:
-> When the DVFSRC (dynamic voltage and frequency scaling resource collector)
-> feature is not implemented, the PCIe hardware will assert a voltage request
-> signal when exit from the L1 PM Substates to request a specific Vcore
-> voltage, but cannot receive the voltage ready signal, which will cause
-> the link to fail to exit the L1 PM Substates.
+> On Aug 31, 2021, at 8:55 AM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
 > 
-> Disable DVFSRC voltage request by default, we need to find a common way to
-> enable it in the future.
+> On Thu, 5 Aug 2021 17:43:46 +0100
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-> Tested-by: Qizhong Cheng <qizhong.cheng@mediatek.com>
+>> On Thu, 5 Aug 2021 00:18:35 +0800
+>> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+>> 
+>>> This is an RFC to start discussions about how we support the Component
+>>> Measurement and Authentication (CMA) ECN (pcisig.com)
+>>> 
+>>> CMA provides an adaptation of the data objects and underlying protocol
+>>> defined in the DMTF SPDM specification to be used to authenticate and
+>>> conduct run-time measurements of the state of PCI devices (kind of like
+>>> IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
+>>> protocol described in the ECN.
+>>> 
+>>> The CMA ECN is available from the PCI SIG and SPDM can be found at
+>>> https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
+>>> 
+>>> CMA/SPDM is focused on establishing trust of the device by:
+>>> 1) Negotiate algorithms supported.
+>>> 2) Retrieve and check the certificate chain from the device against
+>>>   a suitable signing certificate on the host.
+>>> 3) Issue a challenge to the device to verify it can sign with the private
+>>>   key associated with the leaf certificate.
+>>> 4) (Request a measurement of device state)
+>>> 5) (Establish a secure channel for further measurements or other uses)
+>>> 6) (Mutual authentication)
+>>> 
+>>> This RFC only does steps 1-3
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Could you describe the additional software beyond step 3 that is required to complete 
+the IDE Key Management protocol post SPDM secure session establishment (see PCIe 
+base 6.0r0.9.pdf, Figure 6-59 IDE_KM Example) to reach IDE establishment and run 
+regular applications using IDE streams.  The goal is to do more complete testing of 
+some real CXL devices to the point of running user applications over IDE streams to 
+access HDM memory.
 
-> ---
->   drivers/pci/controller/pcie-mediatek-gen3.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
+>>> 
+>>> Testing of this patch set has been conducted against QEMU emulation of
+>>> the device backed by openSPDM emulation of the SPDM protocol.  
+>> 
+>> Note testing also works with libspdm and libspdm-emu from
+>> https://github.com/DMTF/spdm-emu with no modifications.
+>> 
+>> The openSPDM modifications Chris and team made were all associated with the host
+>> end and are not needed for this code (the QEMU part is still needed to provide
+>> the DOE emulation and forward the traffic to spdm_responder_emu)
+>> 
+>> I should also have mentioned this series is on top of the recently posted
+>> DOE series rebased onto the linux-cxl next git tree.  I'm not really expecting
+>> anyone to test it at this stage, but if desired I can push a full tree out
+>> somewhere with this in place.
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index f3aeb8d4eaca..79fb12fca6a9 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -79,6 +79,9 @@
->   #define PCIE_ICMD_PM_REG		0x198
->   #define PCIE_TURN_OFF_LINK		BIT(4)
->   
-> +#define PCIE_MISC_CTRL_REG		0x348
-> +#define PCIE_DISABLE_DVFSRC_VLT_REQ	BIT(1)
-> +
->   #define PCIE_TRANS_TABLE_BASE_REG	0x800
->   #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
->   #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
-> @@ -297,6 +300,11 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
->   	val &= ~PCIE_INTX_ENABLE;
->   	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
->   
-> +	/* Disable DVFSRC voltage request */
-> +	val = readl_relaxed(port->base + PCIE_MISC_CTRL_REG);
-> +	val |= PCIE_DISABLE_DVFSRC_VLT_REQ;
-> +	writel_relaxed(val, port->base + PCIE_MISC_CTRL_REG);
-> +
->   	/* Assert all reset signals */
->   	val = readl_relaxed(port->base + PCIE_RST_CTRL_REG);
->   	val |= PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB;
+> A couple of updates:
 > 
+> 1. This topic is on the agenda for the linaro-open-discussions call tomorrow.
+> https://linaro.atlassian.net/wiki/spaces/LOD/overview
+> It's a public call and anyone interested is welcome to join in. Time is rather
+> unfriendly for US based people unfortunately. I'll throw together some sort of
+> overview / open questions slide deck which will be posted on that page. Note
+> related topics on plumbers microconf agenda later in the month - I'll share details
+> of that once known.
+> 
+> 2. Related to that I had a request for trees as the base of the various series are not
+> obvious (involved a bunch of rebases of various other patch sets)
+> 
+> https://github.com/hisilicon/kernel-dev/tree/doe-spdm-v1 rebased to 5.14-rc7
+> https://github.com/hisilicon/qemu/tree/cxl-hacks rebased to qemu/master as of Friday
+> 
+> For qemu side of things you need to be running spdm_responder_emu --trans PCI_DOE 
+> from https://github.com/DMTF/spdm-emu first (that will act as server to qemu acting
+> as a client). Various parameters allow you to change the algorithms advertised and the
+> kernel code should work for all the ones CMA mandates (but nothing beyond that for now).
+> 
+> For the cxl device the snippet of qemu commandline needed is:
+> -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-mem1, id=cxl-pmem0,size=2G,spdm=true
+> 
+> Otherwise much the same as https://people.kernel.org/jic23/ (instructions written to enable
+> testing of the DOE patches this built on).
+> 
+> Build at least the cxl_pci driver as a module as we need to poke the certificate into the keychain
+> before that (find the cert in spdm_emu tree).
+> Instructions to do that with keyctl and evmctl are in the cover letter of the patch series.
+> 
+> Hopefully I'll find some time soonish to update that blog post with instructions.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> 
+>> Jonathan
+>> 
+>>> 
+>>> https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
+>>> 
+>>> Open questions are called out in the individual patches but the big ones are
+>>> probably:
+>>> 
+>>> 1) Certificate management.
+>>>   Current code uses a _cma keyring created by the kernel, into which a
+>>>   suitable root certificate can be inserted from userspace.
+>>> 
+>>>   A=$(keyctl search %:_cma  keyring _cma)
+>>>   evmctl import ecdsaca.cert.der $A
+>>> 
+>>>   Is this an acceptable way to load the root certificates for this purpose?
+>>> 
+>>>   The root of the device provided certificate chain is then checked against
+>>>   certificates on this keychain, but is itself (with the other certificates
+>>>   in the chain) loaded into an SPDM instance specific keychain.  Currently
+>>>   there is no safe cleanup of this which will need to be fixed.
+>>> 
+>>>   Using the keychain mechanism provides a very convenient way to manage these
+>>>   certificates and to allow userspace to read them for debug purpose etc, but
+>>>   is this the right use model?
+>>> 
+>>>   Finally the leaf certificate of this chain is used to check signatures of
+>>>   the rest of the communications with the device.
+>>> 
+>>> 2) ASNL1 encoder for ECDSA signature
+>>>   It seems from the openSPDM implementation that for these signatures,
+>>>   the format is a simple pair of raw values.  The kernel implementation of
+>>>   ECDSA signature verification assumes ASN1 encoding as seems to be used
+>>>   in x509 certificates.  Currently I work around that by encoding the
+>>>   signatures so that the ECDSA code can un-encode them again and use them.
+>>>   This seems slightly silly, but it is minimum impact on current code.
+>>>   Other suggestions welcome.
+>>> 
+>>> 3) Interface to present to drivers. Currently I'm providing just one exposed
+>>>   function that wraps up all the exhanges until a challenge authentication
+>>>   response from the device. This is done using one possible sequence.
+>>>   I don't think it makes sense to expose the low level components due to the
+>>>   underlying spdm_state updates and there only being a fixed set of valid
+>>>   orderings.
+>>> 
+>>> Future patches will raise questions around management of the measurements, but
+>>> I'll leave those until I have some sort of implementation to shoot at.
+>>> The 'on probe' use in the CXL driver is only one likely time when authentication
+>>> would be needed.
+>>> 
+>>> Note I'm new to a bunch of the areas of the kernel this touches, so have
+>>> probably done things that are totally wrong.
+>>> 
+>>> CC list is best effort to identify those who 'might' care.  Please share
+>>> with anyone I've missed.
+>>> 
+>>> Thanks,
+>>> 
+>>> Jonathan
+>>> 
+>>> 
+>>> Jonathan Cameron (4):
+>>>  lib/asn1_encoder: Add a function to encode many byte integer values.
+>>>  spdm: Introduce a library for DMTF SPDM
+>>>  PCI/CMA: Initial support for Component Measurement and Authentication
+>>>    ECN
+>>>  cxl/pci: Add really basic CMA authentication support.
+>>> 
+>>> drivers/cxl/Kconfig          |    1 +
+>>> drivers/cxl/mem.h            |    2 +
+>>> drivers/cxl/pci.c            |   13 +-
+>>> drivers/pci/Kconfig          |    9 +
+>>> drivers/pci/Makefile         |    1 +
+>>> drivers/pci/doe.c            |    2 -
+>>> include/linux/asn1_encoder.h |    3 +
+>>> include/linux/pci-doe.h      |    2 +
+>>> lib/Kconfig                  |    3 +
+>>> lib/Makefile                 |    2 +
+>>> lib/asn1_encoder.c           |   54 ++
+>>> lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
+>>> 12 files changed, 1285 insertions(+), 3 deletions(-)
+>>> create mode 100644 lib/spdm.c
+>>> 
+>> 
+> 
+
