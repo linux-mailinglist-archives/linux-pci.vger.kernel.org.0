@@ -2,232 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A76E9454CF4
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 19:19:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A58D454C6E
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 18:47:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236789AbhKQSWh convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 Nov 2021 13:22:37 -0500
-Received: from server.avery-design.com ([198.57.169.184]:45622 "EHLO
-        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbhKQSWf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 13:22:35 -0500
-X-Greylist: delayed 1932 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Nov 2021 13:22:33 EST
-Received: from 50-201-210-206-static.hfc.comcastbusiness.net ([50.201.210.206]:52307 helo=smtpclient.apple)
-        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <cbrowy@avery-design.com>)
-        id 1mnP1X-0007Ra-HN; Wed, 17 Nov 2021 17:47:07 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [RFC PATCH 0/4] PCI/CMA and SPDM library
-From:   Chris Browy <cbrowy@avery-design.com>
-In-Reply-To: <20210831135517.0000716f@Huawei.com>
-Date:   Wed, 17 Nov 2021 12:46:48 -0500
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        keyrings@vger.kernel.org, dan.j.williams@intel.com,
-        linuxarm@huawei.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Reply-To: 20210917172205.00000684@huawei.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6EE76F68-DF21-464E-93CA-47133B540897@avery-design.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
- <20210805174346.000047f1@huawei.com> <20210831135517.0000716f@Huawei.com>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.avery-design.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - avery-design.com
-X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
-X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S239613AbhKQRuo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 12:50:44 -0500
+Received: from mail-sn1anam02on2086.outbound.protection.outlook.com ([40.107.96.86]:27973
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S239622AbhKQRul (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 12:50:41 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ILHoj/Kum0U1K8MneqCV6G5NatWdY/l4Bvm6vx0wen23tzrInDEse7NfYuXcARVEHElCwMbq2v/ulYyuxjcmH9zSPxVj8LWf0KqySu06NFx7oZjxh14sNNoQZmMqzn/cw/f7gD1HBSC6UxFMvJl7kS8FLZ1GCkwmdvq3AFm9VC9JCvy3Z9SS8X4n9YhRch5h3XgbLEENA3mGgsDbudWX8MVC/HG0F4fkT0Cq+iEHRB9N3ozPb+wrbKIzVITCHI+xKVe2SR5Gjg9r/LPit2W2cMLFh4FMveYoNLEl82HYInMC03GFpHGPZyl7RT+6f9kuT18eEPnPccqRp/WvEWzTmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vpAsVs1o9GKBM4YD8jiWLWx282UHCfyvkjV/vwWdup8=;
+ b=HczpS2kDVCsdMQZZn3/Jrt+HS6Fo+FsO6bzC0ByphVRwEs5Jn2bKtlxsh7oUuRHIyZpBaRUczu8y4KOr8Z0pIQQ+PRYwjNzeTI7hY7F9JPLG8PMlRQHz4ZZLY84Uom1aLis5/mUAWAqxoiScmE4808r43eMUToKht4Ndkwmxwk9mSkpwJDSE9rYvRwnnrdKyC+zA2/D4Z8TCosO9NP6roL+zheFgQcI5SM7NPkPxD8K2Tfbi49c1nbeTnHjSTVP3riAEtpXXtOB4sEYleJOTfV33iQXvekhAPIVG8Ps/7RGIkmeTo7suMFTO0dfcRG7MhSceOnEQ66V0lFZrtTJnZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vpAsVs1o9GKBM4YD8jiWLWx282UHCfyvkjV/vwWdup8=;
+ b=VAI+tVnd/4THm5Fq0+fvemmIhJ1heod/+GMX7mqrznQQQJ7F63ycWL8To/CQ5Ai0iEyfbzf1+gOBT5ZUz/F0SPncerlBaYz3DEgZxvvO8A59BBeTCI7NC/JJeWB5/avkzeQQPDIwHK392C4IF5yW8nWU3Bje/wfSPR6TPX4U0H7xbfGJOy8wZ3P+3SfRk6lhRQQe5Qn1m1myFJkXBnswZJrbdD33wK+4FSf7XgJEnax1PFqWfoVxe2Oeb3P1988hxPRY8Bv6eFRviK4qcRiD4nmHnEe1yjvJyZxsBaQw76uxtPU1a9+V35Rhx34PHZ0+zqLkzpAGiGMywVrARju/mA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5301.namprd12.prod.outlook.com (2603:10b6:208:31f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Wed, 17 Nov
+ 2021 17:47:40 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4713.021; Wed, 17 Nov 2021
+ 17:47:40 +0000
+Date:   Wed, 17 Nov 2021 13:47:38 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
+        maorg@nvidia.com
+Subject: Re: vfio migration discussions (was: [PATCH V2 mlx5-next 00/14] Add
+ mlx5 live migration driver)
+Message-ID: <20211117174738.GL2105516@nvidia.com>
+References: <20211019105838.227569-1-yishaih@nvidia.com>
+ <87mtm2loml.fsf@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mtm2loml.fsf@redhat.com>
+X-ClientProxiedBy: MN2PR08CA0023.namprd08.prod.outlook.com
+ (2603:10b6:208:239::28) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR08CA0023.namprd08.prod.outlook.com (2603:10b6:208:239::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend Transport; Wed, 17 Nov 2021 17:47:39 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mnP22-00BVMa-H3; Wed, 17 Nov 2021 13:47:38 -0400
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fe1fc7e5-0812-4ee5-f172-08d9a9f2596c
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5301:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB53010EEB95E357D5EFEE7AD8C29A9@BL1PR12MB5301.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JEvmjv9qDxQO2Kln6PaHC0IrY56fE8+62PNftLTtkZGERR4EB+Jr0hed6BLLiF5V/Yl29ZClMT47X3H/wLiPkXph1eCWvs9dtdklk1l7xCtyNCbJOQ8c8cIdVHOVp+TaNoiq4ynwSGxV7IH6YbZ7+kW/iDOBGyGEhIu5KTfMhlvs4+37iJJWF2kDeTrgr5MhtQbEc/kWtBERhqx8Yg4jpLh3VavS1wiIw4AH5G2lB/gC9to1v9M01V4na2tWYDXAf3gqW55TNtlOF4taHeNu/o/PSfFhh61gJEkCH2iSU6DtAqyPL2aLvlpWYq3639XxN1lZ91jc/Wdll0V86W/X2LpS3hDSnnpWifIcwVCyZcBSxLghcSlpptT2egQfnLcaAXaDMKLBz07Gj0uc2BTij/FS0MLIrzzcbCtoibHuRUneFbNpBzCilRwRqVdybnXPg8qLuuXvNHF+COqOsxHjcUiwmnctbwhsWk/s5zag2ZYr05QjjGBBnP8L2wqAJBF2Steip+5Pf7QwKKgCWn8k18QyH3tsRbJcei3IunsytLLiQDBGzZLABm6UzSLYflok0mMSV7d6ltMtN7VslA1Pa6u6ZlwAILUckc8y9E7fuabb4oGGMzh49EOF/bA411NNM/0mXGaGxTTr8pmwv8J9sYCamZulxy00XytuJL8IFCHfQt80dok4cStcTvJnf92Hiq2Tny4Z5MlS6VTyo9o9xeCa258rhUh3VBOWkoZFlp4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(36756003)(8676002)(5660300002)(508600001)(966005)(4001150100001)(1076003)(38100700002)(8936002)(26005)(66476007)(66556008)(83380400001)(316002)(4326008)(9786002)(86362001)(2906002)(9746002)(6916009)(186003)(426003)(2616005)(66946007)(33656002)(107886003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+dhixhhHQFA25cuZaEysw424rgSTeiHb7ypr7nynUxhv3e1n2M30X5vmAhwd?=
+ =?us-ascii?Q?AZKDMxHfbyP8Q4DXISTQSFTvBmumaK1W9ZgE5GR2ZinpO/ebZkfHmdqME+dS?=
+ =?us-ascii?Q?Nusq91AOvNbS64N/b5FFpHhGdAaHyc7FZcJ9Zo8mHjSgVL2h+B37xtPhfpf5?=
+ =?us-ascii?Q?PBaJAdBsCmWGVRVGscc5bMHWYDhCW3nmnKVfPmgaCUAkZfZ0BFGfnWx7eBz7?=
+ =?us-ascii?Q?S3I48jghNyb6rAIg0AOTj2UVcc2C0ALdddkuXvuX78Ep2v1xxGk+hCVpk3n4?=
+ =?us-ascii?Q?x1koyQ9FyG2X6+PZqdZNgG0ApkXO6BLSXmEM64rec24Fm2A0Os80bCACZzJT?=
+ =?us-ascii?Q?6dRIpyEbmtKxnMT7SrI0p0lLgymW/LFfIdEwhSB2H1luk5mlN0U+UDxjp2Lp?=
+ =?us-ascii?Q?TAwjvdESMW2sKzrf8DxaoVQA6vccXlfjrXlRbiKuz2QXT4+si/XDpjTgjwJq?=
+ =?us-ascii?Q?vHp4ENtIXGi520B3JaW8Yz44jmUAFySUrGRPWeTczfh/INBZcfI6ufVJtKve?=
+ =?us-ascii?Q?yLExRxj5AdLH0AVVLP9yPOvTmXpdm/BkpIf3QApZS2Oj7EIY0sCNlYqCKAcV?=
+ =?us-ascii?Q?yCxkigDzcwH0hc/Pf5dcqsfaAdVWDb1EomFyl8AIAo4ezq4TPgT33aN1+/h+?=
+ =?us-ascii?Q?MK+gEWga11znyQ+0+7vqRijeJPgdM62yRw74XnLVMUU31ccAtZ3ilv1IpmcH?=
+ =?us-ascii?Q?jNHwrMz2VV8NISaMKPopW7DcKJgBFu+NL2ZRZSu3/oFBncNbDpiq9EIPSzq8?=
+ =?us-ascii?Q?lnMIR1bar+bGn5CUGLDXLFTORiS9RxnrfoL4yhd6P+Iy/WDx3vjd02KSWt+A?=
+ =?us-ascii?Q?UzQlUykGdHS9PytmKRkGEmEj5JPgnhC+BFchyvC6DZ+G4Jh1cof9hRNLkBC+?=
+ =?us-ascii?Q?Kk5xOfX/UfdIIT+1RIAVUkEy2CCT4Yn8fns61tdpS0hEVQkKfRJgWbISBKly?=
+ =?us-ascii?Q?mONouY40yXy66NmxSYnHnosY6ZE2GH1xaSzjDb8mVFTgK+u5+kCUGUuYN7Lx?=
+ =?us-ascii?Q?jm59K8SvJw3DDtiSUOtbMFZGiOaa5cfBxhBTyrUY39hFlvr7Mt3heOisFVUi?=
+ =?us-ascii?Q?36GE2ybcmV0t5acp3vzKt0mtHoRvJIFC8X6jo/ZEs3n4HRZ/Oj6ZgPCECpNg?=
+ =?us-ascii?Q?X2hzliTLm/H+HOpMAHhTjS/AsLmrZ+hNjeNaiHiF63bMIlXvu5lQPy25rNTb?=
+ =?us-ascii?Q?7CRzOg2Et/rdVjtfXcc/8blLYiL0T5R7g6iqfoU66+JWIyd17GvBl5jkIhV/?=
+ =?us-ascii?Q?8OmqjgJNJKYJ/LHYVk5VZ2vZFUd1Eiw+pwxgWXI+rR8sQDAVqZ20Ez2hPBzV?=
+ =?us-ascii?Q?hjnslz/mkaxhCvviqUW0Q8cpXEguVPgD/ZgZGoWqW90NNnm1f05LGQ3lIcr/?=
+ =?us-ascii?Q?n3UUyFXF/UVUtDxE4GLTPortej8KQusfEUpzXqIOpGz7fCZ1fqgPy/eaFnpZ?=
+ =?us-ascii?Q?qonuddIcu60LeRl+krv3Xu2HN0IrMbzJGPjPTt/4OikS6Oyg9pTni6w4njdz?=
+ =?us-ascii?Q?0u5IhAF8/o2WLkqZ26Skin+HLLNkOG0x6VlV0ePFwVfqt60z4wy7AwXeYnUC?=
+ =?us-ascii?Q?606QGPz5XqJJ5hNU98E=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe1fc7e5-0812-4ee5-f172-08d9a9f2596c
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2021 17:47:39.8650
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KurL9kEW8R9RurC1kAqVdhUa+aWIGqufomYTLp/i7EGpEl7j4Rk1NwZyX+P7O4mH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5301
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Nov 17, 2021 at 05:42:58PM +0100, Cornelia Huck wrote:
+> Ok, here's the contents (as of 2021-11-17 16:30 UTC) of the etherpad at
+> https://etherpad.opendev.org/p/VFIOMigrationDiscussions -- in the hope
+> of providing a better starting point for further discussion (I know that
+> discussions are still ongoing in other parts of this thread; but
+> frankly, I'm getting a headache trying to follow them, and I think it
+> would be beneficial to concentrate on the fundamental questions
+> first...)
 
+In my mind several of these topics now have answers:
 
-> On Aug 31, 2021, at 8:55 AM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
-> 
-> On Thu, 5 Aug 2021 17:43:46 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> 
->> On Thu, 5 Aug 2021 00:18:35 +0800
->> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
->> 
->>> This is an RFC to start discussions about how we support the Component
->>> Measurement and Authentication (CMA) ECN (pcisig.com)
->>> 
->>> CMA provides an adaptation of the data objects and underlying protocol
->>> defined in the DMTF SPDM specification to be used to authenticate and
->>> conduct run-time measurements of the state of PCI devices (kind of like
->>> IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
->>> protocol described in the ECN.
->>> 
->>> The CMA ECN is available from the PCI SIG and SPDM can be found at
->>> https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
->>> 
->>> CMA/SPDM is focused on establishing trust of the device by:
->>> 1) Negotiate algorithms supported.
->>> 2) Retrieve and check the certificate chain from the device against
->>>   a suitable signing certificate on the host.
->>> 3) Issue a challenge to the device to verify it can sign with the private
->>>   key associated with the leaf certificate.
->>> 4) (Request a measurement of device state)
->>> 5) (Establish a secure channel for further measurements or other uses)
->>> 6) (Mutual authentication)
->>> 
->>> This RFC only does steps 1-3
+>       * Jason proposed a new NDMA (no-dma) state that seems to match the
 
-Could you describe the additional software beyond step 3 that is required to complete 
-the IDE Key Management protocol post SPDM secure session establishment (see PCIe 
-base 6.0r0.9.pdf, Figure 6-59 IDE_KM Example) to reach IDE establishment and run 
-regular applications using IDE streams.  The goal is to do more complete testing of 
-some real CXL devices to the point of running user applications over IDE streams to 
-access HDM memory.
+NDMA solves the PRI problem too, and allows dirty tracking to be
+iterative. So yes to adding to device_state vs implicit via !RUNNING
 
->>> 
->>> Testing of this patch set has been conducted against QEMU emulation of
->>> the device backed by openSPDM emulation of the SPDM protocol.  
->> 
->> Note testing also works with libspdm and libspdm-emu from
->> https://github.com/DMTF/spdm-emu with no modifications.
->> 
->> The openSPDM modifications Chris and team made were all associated with the host
->> end and are not needed for this code (the QEMU part is still needed to provide
->> the DOE emulation and forward the traffic to spdm_responder_emu)
->> 
->> I should also have mentioned this series is on top of the recently posted
->> DOE series rebased onto the linux-cxl next git tree.  I'm not really expecting
->> anyone to test it at this stage, but if desired I can push a full tree out
->> somewhere with this in place.
-> 
-> A couple of updates:
-> 
-> 1. This topic is on the agenda for the linaro-open-discussions call tomorrow.
-> https://linaro.atlassian.net/wiki/spaces/LOD/overview
-> It's a public call and anyone interested is welcome to join in. Time is rather
-> unfriendly for US based people unfortunately. I'll throw together some sort of
-> overview / open questions slide deck which will be posted on that page. Note
-> related topics on plumbers microconf agenda later in the month - I'll share details
-> of that once known.
-> 
-> 2. Related to that I had a request for trees as the base of the various series are not
-> obvious (involved a bunch of rebases of various other patch sets)
-> 
-> https://github.com/hisilicon/kernel-dev/tree/doe-spdm-v1 rebased to 5.14-rc7
-> https://github.com/hisilicon/qemu/tree/cxl-hacks rebased to qemu/master as of Friday
-> 
-> For qemu side of things you need to be running spdm_responder_emu --trans PCI_DOE 
-> from https://github.com/DMTF/spdm-emu first (that will act as server to qemu acting
-> as a client). Various parameters allow you to change the algorithms advertised and the
-> kernel code should work for all the ones CMA mandates (but nothing beyond that for now).
-> 
-> For the cxl device the snippet of qemu commandline needed is:
-> -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-mem1, id=cxl-pmem0,size=2G,spdm=true
-> 
-> Otherwise much the same as https://people.kernel.org/jic23/ (instructions written to enable
-> testing of the DOE patches this built on).
-> 
-> Build at least the cxl_pci driver as a module as we need to poke the certificate into the keychain
-> before that (find the cert in spdm_emu tree).
-> Instructions to do that with keyctl and evmctl are in the cover letter of the patch series.
-> 
-> Hopefully I'll find some time soonish to update that blog post with instructions.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
->> 
->> Jonathan
->> 
->>> 
->>> https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
->>> 
->>> Open questions are called out in the individual patches but the big ones are
->>> probably:
->>> 
->>> 1) Certificate management.
->>>   Current code uses a _cma keyring created by the kernel, into which a
->>>   suitable root certificate can be inserted from userspace.
->>> 
->>>   A=$(keyctl search %:_cma  keyring _cma)
->>>   evmctl import ecdsaca.cert.der $A
->>> 
->>>   Is this an acceptable way to load the root certificates for this purpose?
->>> 
->>>   The root of the device provided certificate chain is then checked against
->>>   certificates on this keychain, but is itself (with the other certificates
->>>   in the chain) loaded into an SPDM instance specific keychain.  Currently
->>>   there is no safe cleanup of this which will need to be fixed.
->>> 
->>>   Using the keychain mechanism provides a very convenient way to manage these
->>>   certificates and to allow userspace to read them for debug purpose etc, but
->>>   is this the right use model?
->>> 
->>>   Finally the leaf certificate of this chain is used to check signatures of
->>>   the rest of the communications with the device.
->>> 
->>> 2) ASNL1 encoder for ECDSA signature
->>>   It seems from the openSPDM implementation that for these signatures,
->>>   the format is a simple pair of raw values.  The kernel implementation of
->>>   ECDSA signature verification assumes ASN1 encoding as seems to be used
->>>   in x509 certificates.  Currently I work around that by encoding the
->>>   signatures so that the ECDSA code can un-encode them again and use them.
->>>   This seems slightly silly, but it is minimum impact on current code.
->>>   Other suggestions welcome.
->>> 
->>> 3) Interface to present to drivers. Currently I'm providing just one exposed
->>>   function that wraps up all the exhanges until a challenge authentication
->>>   response from the device. This is done using one possible sequence.
->>>   I don't think it makes sense to expose the low level components due to the
->>>   underlying spdm_state updates and there only being a fixed set of valid
->>>   orderings.
->>> 
->>> Future patches will raise questions around management of the measurements, but
->>> I'll leave those until I have some sort of implementation to shoot at.
->>> The 'on probe' use in the CXL driver is only one likely time when authentication
->>> would be needed.
->>> 
->>> Note I'm new to a bunch of the areas of the kernel this touches, so have
->>> probably done things that are totally wrong.
->>> 
->>> CC list is best effort to identify those who 'might' care.  Please share
->>> with anyone I've missed.
->>> 
->>> Thanks,
->>> 
->>> Jonathan
->>> 
->>> 
->>> Jonathan Cameron (4):
->>>  lib/asn1_encoder: Add a function to encode many byte integer values.
->>>  spdm: Introduce a library for DMTF SPDM
->>>  PCI/CMA: Initial support for Component Measurement and Authentication
->>>    ECN
->>>  cxl/pci: Add really basic CMA authentication support.
->>> 
->>> drivers/cxl/Kconfig          |    1 +
->>> drivers/cxl/mem.h            |    2 +
->>> drivers/cxl/pci.c            |   13 +-
->>> drivers/pci/Kconfig          |    9 +
->>> drivers/pci/Makefile         |    1 +
->>> drivers/pci/doe.c            |    2 -
->>> include/linux/asn1_encoder.h |    3 +
->>> include/linux/pci-doe.h      |    2 +
->>> lib/Kconfig                  |    3 +
->>> lib/Makefile                 |    2 +
->>> lib/asn1_encoder.c           |   54 ++
->>> lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
->>> 12 files changed, 1285 insertions(+), 3 deletions(-)
->>> create mode 100644 lib/spdm.c
->>> 
->> 
-> 
+>     * No definition of what HW needs to preserve when RESUMING toggles
+>     off - (eg today SET_IRQS must work, what else?).
 
+Everything in the device controlled by other kernel subystems (IRQs,
+MSI, PCI config space) must continue to work across !RUNNING and must
+not be disturbed by the migration driver during RESUME.
+
+So, clear yes that SET_IRQs during !RUNNING must be supported
+
+>     * In general, what operations or accesses is the user restricted
+>     from performing on the device while !RUNNING
+
+Still a need on this other than the carve out for above. HNS won't
+work without restrictions, for instance.
+
+>     * PRI into the guest (guest user process SVA) has a sequencing
+>     problem with RUNNING - can not migrate a vIOMMU in the middle of a
+>     page fault, must stop and flush faults before stopping vCPUs
+
+NDMA|RUNNING allows to suspend the vIOMMU
+
+> The uAPI could benefit from some more detailed documentation
+> (e.g. how to use it, what to do in edge cases, ...) outside of the
+> header file.
+
+We have an internal draft of this now
+
+> Trying to use the mlx5 support currently on the list has unearthed
+> some problems in QEMU <please summarize :)>
+
+If the kernel does anything odd qemu does abort()
+
+Performance is bad, Yishai sent a patch
+
+Jason
