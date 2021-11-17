@@ -2,226 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74B484550B2
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 23:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74A8945515E
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 00:58:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241411AbhKQWt4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 17:49:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49482 "EHLO mail.kernel.org"
+        id S241748AbhKRABW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 19:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241317AbhKQWty (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Nov 2021 17:49:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A7F0761BD4;
-        Wed, 17 Nov 2021 22:46:55 +0000 (UTC)
+        id S241730AbhKRABN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 19:01:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C8D5A61AD2;
+        Wed, 17 Nov 2021 23:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637189215;
-        bh=o873rE9e1QuD81xkSB+mD5gzqmQzgM1i0CnzNUpRM2U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nlO6j6YBhZmcLmKFf5lapNc/k+60YGYeRqi6z1Hv49QPhQxRax+vo/8za45kiHxUW
-         us5CEw9dqyWzkUFV/BcnCs9sJQUOV86Tq6uUP2jw2Lb4fUEuIfteLlQrV3XArvR0UM
-         HOtHv+138KzYzUVncprqiUWVYd6H6bMUG9r/Rh5MqVQRdp6Dg8AcD5nqVHVtj/Fuz5
-         JvO4BEEv6xO7Alh+aWhHaIVz95C7TShR/5EhHrrOlA1r1NFJ7e5Z7L7XAZOA4RBBB1
-         nUHVIWZcveIUbsjFHWiT6Dd/m7+QQUKA0UDWOVf//o0+rVsYJeoPTFpO8xrcp6uium
-         ZJx8e1/QWj+TQ==
-Received: by mail-qt1-f175.google.com with SMTP id l8so4241539qtk.6;
-        Wed, 17 Nov 2021 14:46:55 -0800 (PST)
-X-Gm-Message-State: AOAM532FtJNjAxiIZLenDcGT0ZaMWAE17NLXv+0NONdfbbl1h4xBy87z
-        b79rN8q1w+RWzDX10bFD9bW/kyqPNcjWYJa2kw==
-X-Google-Smtp-Source: ABdhPJz92a0xTUBFxafDyj3yeyzY2HyiybbHf4pcSglmICdS3ozN3VsNu0bM6dYbR37MoFyKKdtVhN0KHBEfMxAFIyE=
-X-Received: by 2002:a05:622a:44a:: with SMTP id o10mr20531125qtx.212.1637189214741;
- Wed, 17 Nov 2021 14:46:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
- <94d3f4e5-a698-134c-8264-55d31d3eafa6@arm.com> <CAHp75VeJ8ZiD=qQVfeahUjGZduFRJJ5683hn8f4810JYEzsCyw@mail.gmail.com>
- <YZJxG7JFAfIqr1/f@smile.fi.intel.com> <CAL_JsqJndi-gmenSpPtMVfsb3SrA=w+YBsSh3GigfgXC3rYDeQ@mail.gmail.com>
- <71a90592-99bb-13e1-a671-eb19c2dad3da@broadcom.com> <351fa3ec-52fa-58f5-cc57-e92498647d5c@gmail.com>
-In-Reply-To: <351fa3ec-52fa-58f5-cc57-e92498647d5c@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 17 Nov 2021 16:46:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJHBv9LrYH51iw_Quwub2qnZiv86ikd=ZMxGurxWrKHPw@mail.gmail.com>
-Message-ID: <CAL_JsqJHBv9LrYH51iw_Quwub2qnZiv86ikd=ZMxGurxWrKHPw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
- internal use only
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        s=k20201202; t=1637193494;
+        bh=jt1bptChpIJAfJm7hhcvnL0z6T39eDJjHsyLzG8zD1Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lyKjNjZh0qOCqIMVIpeRoNDwhdUJ/tL20BWpiwNwGttOe0RfGC7KJ4PhUovOify8k
+         CPIwK9uSUQMg7VMxx+ystTmi5eBYFIkTtVD4sE8ulLOvbgkfTXGOpyI5/5ntrQgvl0
+         CfZ1WfNlECodqxIGcyQGBzURqYPwL89BjB4irtfrZDGz99G0bGiOvyoqAHp04d3fBv
+         aBxC568xp2R7kzM9biPqbt5SZcYkGOgkMTsagR6oWZfjlJq8OfZ4tIYBwT1Dm+Bjb+
+         xfWKIqeKqVbpwaZ3tBQdETriNpArC0Ads/tlo1ukjZbgXjypi2+h68mtdIpt5Dhoxd
+         4UKc+KstDfPQQ==
+Date:   Wed, 17 Nov 2021 17:58:12 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Naveen Naidu <naveennaidu479@gmail.com>
+Cc:     bhelgaas@google.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-hyperv@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Russell Currey <ruscur@russell.cc>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Toan Le <toan@os.amperecomputing.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-rockchip@lists.infradead.org,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Robert Richter <rric@kernel.org>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v3 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related
+ definitions
+Message-ID: <20211117235812.GA1786428@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 2:56 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 11/16/21 12:41 PM, Florian Fainelli wrote:
-> > On 11/16/21 10:20 AM, Rob Herring wrote:
-> >> +Marc Z
-> >>
-> >> On Mon, Nov 15, 2021 at 8:39 AM Andy Shevchenko
-> >> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>
-> >>> On Mon, Nov 15, 2021 at 04:14:21PM +0200, Andy Shevchenko wrote:
-> >>>> On Mon, Nov 15, 2021 at 4:01 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>>>> On 2021-11-15 11:20, Andy Shevchenko wrote:
-> >>>>>> Use BIT() as __GENMASK() is for internal use only. The rationale
-> >>>>>> of switching to BIT() is to provide better generated code. The
-> >>>>>> GENMASK() against non-constant numbers may produce an ugly assembler
-> >>>>>> code. On contrary the BIT() is simply converted to corresponding shift
-> >>>>>> operation.
-> >>>>>
-> >>>>> FWIW, If you care about code quality and want the compiler to do the
-> >>>>> obvious thing, why not specify it as the obvious thing:
-> >>>>>
-> >>>>>         u32 val = ~0 << msi->legacy_shift;
-> >>>>
-> >>>> Obvious and buggy (from the C standard point of view)? :-)
-> >>>
-> >>> Forgot to mention that BIT() is also makes it easy to avoid such mistake.
-> >>>
-> >>>>> Personally I don't think that abusing BIT() in the context of setting
-> >>>>> multiple bits is any better than abusing __GENMASK()...
-> >>>>
-> >>>> No, BIT() is not abused here, but __GENMASK().
-> >>>>
-> >>>> After all it's up to you, folks, consider that as a bug report.
-> >>
-> >> Couldn't we get rid of legacy_shift entirely if the legacy case sets
-> >> up 'hwirq' as 24-31 rather than 0-7? Though the data for the MSI msg
-> >> uses the hwirq.
-> >
-> > I personally find it clearer and easier to reason about with the current
-> > code though I suppose that with an appropriate xlate method we could
-> > sort of set up the hwirq the way we want them to be to avoid any
-> > shifting in brcm_pcie_msi_isr().
->
-> Something like the following maybe? Completely untested as I don't
-> believe I have a device with that legacy controller available at the moment:
->
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 1fc7bd49a7ad..41404b268fa3 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -144,6 +144,8 @@
->  #define BRCM_INT_PCI_MSI_NR            32
->  #define BRCM_INT_PCI_MSI_LEGACY_NR     8
->  #define BRCM_INT_PCI_MSI_SHIFT         0
-> +#define BRCM_INT_PCI_MSI_MASK          GENMASK(BRCM_INT_PCI_MSI_NR - 1, 0)
-> +#define BRCM_INT_PCI_MSI_LEGACY_MASK   GENMASK(31, 32 -
-> BRCM_INT_PCI_MSI_LEGACY_NR)
->
->  /* MSI target addresses */
->  #define BRCM_MSI_TARGET_ADDR_LT_4GB    0x0fffffffcULL
-> @@ -269,8 +271,6 @@ struct brcm_msi {
->         /* used indicates which MSI interrupts have been alloc'd */
->         unsigned long           used;
->         bool                    legacy;
-> -       /* Some chips have MSIs in bits [31..24] of a shared register. */
-> -       int                     legacy_shift;
->         int                     nr; /* No. of MSI available, depends on chip */
+On Thu, Oct 21, 2021 at 08:37:26PM +0530, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the
+> CPU read, so most hardware fabricates ~0 data.
+> 
+> Add a PCI_ERROR_RESPONSE definition for that and use it where
+> appropriate to make these checks consistent and easier to find.
+> 
+> Also add helper definitions SET_PCI_ERROR_RESPONSE and
+> RESPONSE_IS_PCI_ERROR to make the code more readable.
+> 
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  include/linux/pci.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd8aa6fce204..689c8277c584 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
+>  /* The number of legacy PCI INTx interrupts */
+>  #define PCI_NUM_INTX	4
+>  
+> +/*
+> + * Reading from a device that doesn't respond typically returns ~0.  A
+> + * successful read from a device may also return ~0, so you need additional
+> + * information to reliably identify errors.
+> + */
+> +#define PCI_ERROR_RESPONSE     (~0ULL)
+> +#define SET_PCI_ERROR_RESPONSE(val)    (*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
+> +#define RESPONSE_IS_PCI_ERROR(val) ((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
 
-Can get rid of this too I think.
+Beautiful!  I really like this.
 
->         /* This is the base pointer for interrupt status/set/clr regs */
->         void __iomem            *intr_base;
-> @@ -486,7 +486,6 @@ static void brcm_pcie_msi_isr(struct irq_desc *desc)
->         dev = msi->dev;
->
->         status = readl(msi->intr_base + MSI_INT_STATUS);
-> -       status >>= msi->legacy_shift;
->
->         for_each_set_bit(bit, &status, msi->nr) {
+I would prefer the macros to start with "PCI_", e.g.,
+PCI_SET_ERROR_RESPONSE().
 
-'nr' needs to be 32 here.
+I think "RESPONSE_IS_PCI_ERROR()" is too strong because (as the
+comment says), ~0 *may* indicate an error.  Or it may be a successful
+read of a register that happens to contain ~0.
 
->                 int ret;
-> @@ -516,9 +515,8 @@ static int brcm_msi_set_affinity(struct irq_data
-> *irq_data,
->  static void brcm_msi_ack_irq(struct irq_data *data)
->  {
->         struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
-> -       const int shift_amt = data->hwirq + msi->legacy_shift;
->
-> -       writel(1 << shift_amt, msi->intr_base + MSI_INT_CLR);
-> +       writel(BIT(data->hwirq), msi->intr_base + MSI_INT_CLR);
->  }
->
->
-> @@ -573,9 +571,31 @@ static void brcm_irq_domain_free(struct irq_domain
-> *domain,
->         brcm_msi_free(msi, d->hwirq);
->  }
->
-> +static int brcm_irq_domain_xlate(struct irq_domain *d,
-> +                                struct device_node *node,
-> +                                const u32 *intspec, unsigned int intsize,
-> +                                unsigned long *out_hwirq,
-> +                                unsigned int *out_type)
-> +{
-> +       struct brcm_msi *msi = d->host_data;
+Possibilities to convey the idea that this isn't definitive:
+
+  PCI_POSSIBLE_ERROR_RESPONSE(val)  # a little long
+  PCI_LIKELY_ERROR(val)             # we really have no idea whether
+  PCI_PROBABLE_ERROR(val)           #   likely or probable
+  PCI_POSSIBLE_ERROR(val)           # promising?
+
+Can you rebase to my "main" branch (v5.16-rc1), tweak the above, and
+collect up the acks/reviews?
+
+We should also browse drivers outside drivers/pci for places we could
+use these.  Not necessarily as part of this series, although if
+authors there object, it would be good to learn that earlier than
+later.
+
+Drivers that implement pci_error_handlers might be a fruitful place to
+start.  But you've done a great job finding users of ~0 and 0xffff...
+in drivers/pci/, too.
+
 > +
-> +       if (WARN_ON(intsize < 1))
-> +               return -EINVAL;
-> +
-> +       if (msi->legacy) {
-> +               *out_hwirq = intspec[0] + BRCM_INT_PCI_MSI_SHIFT;
-> +               *out_type = IRQ_TYPE_NONE;
-> +               return 0;
-> +       }
-> +
-> +       return irq_domain_xlate_onecell(d, node, intspec, intsize,
-> +                                       out_hwirq, out_type);
-
-When would xlate get called? You don't have an intspec from DT.
-Wouldn't it be enough to set bits 0-23 in 'used' bitmap so that only
-24-31 can be allocated?
-
-I'm not really sure though with how all the MSI stuff works.
-
-> +}
-> +
->  static const struct irq_domain_ops msi_domain_ops = {
->         .alloc  = brcm_irq_domain_alloc,
->         .free   = brcm_irq_domain_free,
-> +       .xlate  = brcm_irq_domain_xlate,
->  };
->
->  static int brcm_allocate_domains(struct brcm_msi *msi)
-> @@ -619,7 +639,8 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
->
->  static void brcm_msi_set_regs(struct brcm_msi *msi)
->  {
-> -       u32 val = __GENMASK(31, msi->legacy_shift);
-> +       u32 val = msi->legacy ? BRCM_INT_PCI_MSI_MASK :
-> +                               BRCM_INT_PCI_MSI_LEGACY_MASK;
-
-Perhaps just change legacy to a mask.
-
->
->         writel(val, msi->intr_base + MSI_INT_MASK_CLR);
->         writel(val, msi->intr_base + MSI_INT_CLR);
-> @@ -664,11 +685,9 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
->         if (msi->legacy) {
->                 msi->intr_base = msi->base + PCIE_INTR2_CPU_BASE;
->                 msi->nr = BRCM_INT_PCI_MSI_LEGACY_NR;
-> -               msi->legacy_shift = 24;
->         } else {
->                 msi->intr_base = msi->base + PCIE_MSI_INTR2_BASE;
->                 msi->nr = BRCM_INT_PCI_MSI_NR;
-> -               msi->legacy_shift = 0;
->         }
->
->         ret = brcm_allocate_domains(msi);
->
-> --
-> Florian
+>  /*
+>   * pci_power_t values must match the bits in the Capabilities PME_Support
+>   * and Control/Status PowerState fields in the Power Management capability.
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
