@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 266EB454C9A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 18:56:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAC2A454C9C
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 18:56:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbhKQR7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 12:59:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49618 "EHLO mail.kernel.org"
+        id S232131AbhKQR7u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 12:59:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232267AbhKQR7N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Nov 2021 12:59:13 -0500
+        id S230367AbhKQR7r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 12:59:47 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B56C60FED;
-        Wed, 17 Nov 2021 17:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D984360FED;
+        Wed, 17 Nov 2021 17:56:48 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mnPAK-0068xd-Uw; Wed, 17 Nov 2021 17:56:13 +0000
-Date:   Wed, 17 Nov 2021 17:56:12 +0000
-Message-ID: <87v90q7jk3.wl-maz@kernel.org>
+        id 1mnPAs-0068xv-FC; Wed, 17 Nov 2021 17:56:46 +0000
+Date:   Wed, 17 Nov 2021 17:56:46 +0000
+Message-ID: <87tuga7jj5.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Hector Martin <marcan@marcan.st>
 Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
@@ -31,9 +31,9 @@ Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: apple: Fix REFCLK1 enable/poll logic
-In-Reply-To: <20211117140044.193865-1-marcan@marcan.st>
-References: <20211117140044.193865-1-marcan@marcan.st>
+Subject: Re: [PATCH] PCI: apple: Enable clock gating
+In-Reply-To: <20211117141916.197192-1-marcan@marcan.st>
+References: <20211117141916.197192-1-marcan@marcan.st>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,50 +47,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 17 Nov 2021 14:00:44 +0000,
+On Wed, 17 Nov 2021 14:19:16 +0000,
 Hector Martin <marcan@marcan.st> wrote:
 > 
-> REFCLK1 has req/ack bits just like REFCLK0
+> These pokes are not required to make the PCIe port work, but it sounds
+> like this should save some power at least.
 > 
 > Signed-off-by: Hector Martin <marcan@marcan.st>
 > ---
->  drivers/pci/controller/pcie-apple.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/pcie-apple.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index b665d29af77a..420c291a5c68 100644
+> index 420c291a5c68..03bfe977c579 100644
 > --- a/drivers/pci/controller/pcie-apple.c
 > +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -42,8 +42,9 @@
->  #define   CORE_FABRIC_STAT_MASK		0x001F001F
->  #define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
->  #define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
-> -#define   CORE_LANE_CFG_REFCLK1		BIT(1)
-> +#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
->  #define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
-> +#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
->  #define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
->  #define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
->  #define   CORE_LANE_CTL_CFGACC		BIT(15)
-> @@ -481,9 +482,9 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
->  	if (res < 0)
->  		return res;
+> @@ -553,6 +553,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  		return ret;
+>  	}
 >  
-> -	rmw_set(CORE_LANE_CFG_REFCLK1, pcie->base + CORE_LANE_CFG(port->idx));
-> +	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
->  	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
-> -					 stat, stat & CORE_LANE_CFG_REFCLK1,
-> +					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
->  					 100, 50000);
->  
->  	if (res < 0)
+> +	rmw_clear(PORT_REFCLK_CGDIS, port->base + PORT_REFCLK);
+> +	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
+> +
+>  	ret = apple_pcie_port_setup_irq(port);
+>  	if (ret)
+>  		return ret;
 > -- 
 > 2.33.0
 > 
 > 
 
-Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
 Acked-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
 
 	M.
 
