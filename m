@@ -2,70 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2609B454681
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 13:41:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 938A045468A
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 13:42:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234567AbhKQMo2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 07:44:28 -0500
-Received: from elvis.franken.de ([193.175.24.41]:54983 "EHLO elvis.franken.de"
+        id S236770AbhKQMpf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 07:45:35 -0500
+Received: from mga11.intel.com ([192.55.52.93]:53571 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230247AbhKQMo1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Nov 2021 07:44:27 -0500
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1mnKFj-0000oO-00; Wed, 17 Nov 2021 13:41:27 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id AF7F9C2DFA; Wed, 17 Nov 2021 13:41:20 +0100 (CET)
-Date:   Wed, 17 Nov 2021 13:41:20 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
-        john@phrozen.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] PCI: mt7621: remove specific MIPS code from driver
-Message-ID: <20211117124120.GA9336@alpha.franken.de>
-References: <20211115070809.15529-1-sergio.paracuellos@gmail.com>
+        id S233710AbhKQMpf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 07:45:35 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10170"; a="231414855"
+X-IronPort-AV: E=Sophos;i="5.87,241,1631602800"; 
+   d="scan'208";a="231414855"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 04:42:36 -0800
+X-IronPort-AV: E=Sophos;i="5.87,241,1631602800"; 
+   d="scan'208";a="593340140"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 04:42:33 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mnKGf-007n8z-Te;
+        Wed, 17 Nov 2021 14:42:25 +0200
+Date:   Wed, 17 Nov 2021 14:42:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
+ internal use only
+Message-ID: <YZT4sdwf25XV6pKu@smile.fi.intel.com>
+References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
+ <41b85802-6118-33a6-692a-043d74b82d8e@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211115070809.15529-1-sergio.paracuellos@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <41b85802-6118-33a6-692a-043d74b82d8e@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 08:08:04AM +0100, Sergio Paracuellos wrote:
-> Hi all,
+On Tue, Nov 16, 2021 at 12:38:39PM -0800, Florian Fainelli wrote:
+> On 11/15/21 3:20 AM, Andy Shevchenko wrote:
+> > Use BIT() as __GENMASK() is for internal use only. The rationale
+> > of switching to BIT() is to provide better generated code. The
+> > GENMASK() against non-constant numbers may produce an ugly assembler
+> > code. On contrary the BIT() is simply converted to corresponding shift
+> > operation.
 > 
-> MIPS specific code can be removed from driver and put into ralink mt7621
-> instead which is a more accurate place to do this. To make this possible
-> we need to have access to 'bridge->windows' in 'pcibios_root_bridge_prepare()'
-> which has been implemented for ralink mt7621 platform (there is no real 
-> need to implement this for any other platforms since those ones haven't got
-> I/O coherency units). This also allow us to properly enable this driver to
-> completely be enabled for COMPILE_TEST. This patchset appoarch:
-> - Move windows list splice in 'pci_register_host_bridge()' after function 
->   'pcibios_root_bridge_prepare()' is called.
-> - Implement 'pcibios_root_bridge_prepare()' for ralink mt7621.
-> - Avoid custom MIPs code in pcie-mt7621 driver.
-> - Add missing 'MODULE_LICENSE()' to pcie-mt7621 driver to avoid compile test 
->   module compilation to complain (already sent patch from Yanteng Si that
->   I have rewrite commit message and long description a bit.
-> - Remove MIPS conditional code from Kconfig.
+> The code is not necessarily any different on ARMv8 as far as I can tell,
+> before:
 > 
-> This patchset also fix some errors reported by Kernel Test Robot about
-> implicit mips functions used in driver code and fix errors in driver when
-> is compiled as a module [1] (mips:allmodconfig).
+> static void brcm_msi_set_regs(struct brcm_msi *msi)
+> {
+>         u32 val = __GENMASK(31, msi->legacy_shift);
+>       84:       b9406402        ldr     w2, [x0,#100]
+>       88:       d2800021        mov     x1, #0x1
+> // #1
+>       8c:       9ac22021        lsl     x1, x1, x2
+>       90:       4b0103e1        neg     w1, w1
 > 
-> There was an ongoing discussion about this here [0] but I preferred to send
-> my proposal for better review and understanding:
+> 
+> after:
+> 
+> static void brcm_msi_set_regs(struct brcm_msi *msi)
+> {
+>         u32 val = ~(BIT(msi->legacy_shift) - 1);
+>       84:       b9406402        ldr     w2, [x0,#100]
+>       88:       d2800021        mov     x1, #0x1
+> // #1
+>       8c:       9ac22021        lsl     x1, x1, x2
+>       90:       4b0103e1        neg     w1, w1
+> 
+> and the usage of BIT() does not make this any clearer.
 
-so what's the plan with this patchset ? Going in as fix, probably via
-pci tree ? Or is material for next release ? If the latter can we first
-fix the allmodconfig by making the Kconfig symbol bool ?
+While I disagree on the conclusion it's good that assembly isn't bad.
+Last time I have tried to compile just GENMASK() excerpts for arm32
+the non-constant variants were quite bad. And it was obvious win for
+BIT() over GENMASK().
 
-Thomas.
+Actually it maybe that I have tested something like
+
+  `GENMASK(C1 + var, C2 + var)` vs. `GENMASK(C1, C2) << var`
+
+that time.
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+With Best Regards,
+Andy Shevchenko
+
+
