@@ -2,111 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC55454E8A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 21:29:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 022C0454F24
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Nov 2021 22:14:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231573AbhKQUcD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 15:32:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230461AbhKQUcB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Nov 2021 15:32:01 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E12726101C;
-        Wed, 17 Nov 2021 20:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637180942;
-        bh=E7Xqx7+Vg8jNNUkoeKrmpbXyXZbGKa01vFND7BArLlM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IhSHNeA2YN0FvdEVHehRjIvHU6XVmRc5K0M8q4V1PtI1cNigkxf5CnzKPV8z66amU
-         zu9KjXxwSiWnJwvr9Zu/NCReh/eN/rovh4aymEMTopxBZp9H7/DZFtiUHjf191AjdB
-         aDbQiFZ43+Xyo/jyKc+gN8J71D/L/eCpjCBSXwW+7tjr9idecMfs0re61teRhMMlfD
-         eD29mMM6461M6c5Ox4XnMcflMMoONd0PjGaX44Q+q/e+yX+8zcAum977wTB8jKhDqK
-         C1iDw/Sg8Mynmh5KGv/Z9VpIG1FYl4n1ditx8dLjcsjxNokhZjXGcQs595u89KhLaw
-         MZWvHqQSP96+Q==
-Received: by pali.im (Postfix)
-        id 6DDC145C; Wed, 17 Nov 2021 21:28:59 +0100 (CET)
-Date:   Wed, 17 Nov 2021 21:28:59 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        kernel-team@android.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: apple: Reset the port for 100ms on probe
-Message-ID: <20211117202859.2m5sqwz6xsjgldji@pali>
-References: <20211117160053.232158-1-maz@kernel.org>
- <20211117201245.GA1768803@bhelgaas>
+        id S229740AbhKQVRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 16:17:38 -0500
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:36483 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229546AbhKQVRh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 16:17:37 -0500
+Received: by mail-pg1-f176.google.com with SMTP id g28so3375887pgg.3;
+        Wed, 17 Nov 2021 13:14:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ivVNQCej0tdSWk8Y3a2hZeTc5eVZRmL5qBXYay0Qssg=;
+        b=imFIXWtdmc+F0Kl1MB3RVhlz08wEwR3NrNdJ9bp/CtusPMPNFBtdgBAF/3xaygjMqz
+         SDh/y48cKvJO7X574IRUrb2DaovWW4dPjAh80yT//ahCE+D8YwDWCSn4putxPQtEiv3e
+         24hK1aXX0Ermn9Pywa0j94V8pMCi3kizFj3Et05gietSQoHKA30bYcE+VAjKACxcEIch
+         uSHlZKQfabQrWFLv6lUjhiw3cokboan+nJhVgsKsiXIizJuJXo7Cy999A2BYT6trEGaI
+         Gj1dHosO3A0I5QUJWNQYUSFhuIIlJWXsIJrnlPkVRoMTI9WCRH+z5sQdhfoCr9WxIuqH
+         nyng==
+X-Gm-Message-State: AOAM532UagMqjJpzBKxJMCTVUlA/xC22d4BSJ/7hurTWiOPvyc5O9ohI
+        qxWtXnAg01LnDnAM63E0nfA=
+X-Google-Smtp-Source: ABdhPJxMlX5f8zzcfeyooK64Vu0Y74aM8Av9BkAcFkqoDw1nI+Jakf0qJH7+I6F/Und5XtvKQn0NMQ==
+X-Received: by 2002:a05:6a00:234f:b0:3eb:3ffd:6da2 with SMTP id j15-20020a056a00234f00b003eb3ffd6da2mr50840272pfj.15.1637183678518;
+        Wed, 17 Nov 2021 13:14:38 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id m15sm6249374pjc.35.2021.11.17.13.14.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Nov 2021 13:14:38 -0800 (PST)
+Date:   Wed, 17 Nov 2021 22:14:29 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] PCI: mt7621: declare 'mt7621_pci_ops' static
+Message-ID: <YZVwtUO/j/ZYaL3q@rocinante>
+References: <20211117152952.12271-1-sergio.paracuellos@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211117201245.GA1768803@bhelgaas>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211117152952.12271-1-sergio.paracuellos@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+Hi,
 
-On Wednesday 17 November 2021 14:12:45 Bjorn Helgaas wrote:
-> [+cc Pali]
-> 
-> On Wed, Nov 17, 2021 at 04:00:53PM +0000, Marc Zyngier wrote:
-> > While the Apple PCIe driver works correctly when directly booted
-> > from the firmware, it fails to initialise when the kernel is booted
-> > from a bootloader using PCIe such as u-boot.
-> > 
-> > That's beacuse we're missing a proper reset of the port (we only
-> > clear the reset, but never assert it).
-> 
-> s/beacuse/because/
-> 
-> > Bring the port back to life by wiggling the #PERST pin for 100ms
-> > (as per the spec).
-> 
-> I cc'd Pali because I think he's interested in consolidating or
-> somehow rationalizing delays like this.
-> 
-> If we have a specific spec reference here, I think it would help that
-> effort.  I *think* it's PCIe r5.0, sec 6.6.1, which mentions the 100ms
-> along with some additional constraints, like waiting 100ms after Link
-> training completes for ports that support > 5.0 GT/s, whether
-> Readiness Notifications are used, and CRS Software Visiblity.
+> Sparse complains about 'mt7621_pci_ops' symbol is not declared and asks if
+> it should be declared as 'static' instead. Sparse is right. Hence declare
+> symbol as static.
 
-This is not 100ms timeout "after link training completes".
+Thank you for taking care of this!
 
-Timeout in this patch is between flipping PERST# signal, so timeout
-means how long needs to be endpoint card in reset state. And this
-timeout cannot be controller specific. In past I have tried to find this
-timeout in specifications, I was not able. Some summary is in my email:
-https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+[...]
+> -struct pci_ops mt7621_pci_ops = {
+> +static struct pci_ops mt7621_pci_ops = {
+>  	.map_bus	= mt7621_pcie_map_bus,
+>  	.read		= pci_generic_config_read,
+>  	.write		= pci_generic_config_write,
 
-So I would like to know, why was chosen 100ms for msleep() in this
-patch?
+Thank you!
 
-> > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/controller/pcie-apple.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> > index 1bf4d75b61be..bbea5f6e0a68 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -543,6 +543,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	/* Hold #PERST for 100ms as per the spec */
-> > +	gpiod_set_value(reset, 0);
-> > +	msleep(100);
-> >  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
-> >  	gpiod_set_value(reset, 1);
-> >  
-> > -- 
-> > 2.30.2
-> > 
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+
+	Krzysztof
