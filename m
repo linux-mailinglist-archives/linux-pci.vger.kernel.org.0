@@ -2,296 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F6F3455B06
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 12:56:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5284D455B85
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 13:29:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344278AbhKRL7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 06:59:11 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4104 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344477AbhKRL6E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 06:58:04 -0500
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HvyrS44R3z67LGD;
-        Thu, 18 Nov 2021 19:54:16 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 18 Nov 2021 12:55:01 +0100
-Received: from localhost (10.52.127.148) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 18 Nov
- 2021 11:55:00 +0000
-Date:   Thu, 18 Nov 2021 11:54:57 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Chris Browy <cbrowy@avery-design.com>
-CC:     <20210917172205.00000684@huawei.com>, <linux-cxl@vger.kernel.org>,
-        "Linux PCI" <linux-pci@vger.kernel.org>,
-        <keyrings@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Subject: Re: [RFC PATCH 0/4] PCI/CMA and SPDM library
-Message-ID: <20211118115457.00002f07@Huawei.com>
-In-Reply-To: <6EE76F68-DF21-464E-93CA-47133B540897@avery-design.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-        <20210805174346.000047f1@huawei.com>
-        <20210831135517.0000716f@Huawei.com>
-        <6EE76F68-DF21-464E-93CA-47133B540897@avery-design.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S1344690AbhKRMcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 07:32:46 -0500
+Received: from mail-db8eur05on2078.outbound.protection.outlook.com ([40.107.20.78]:1249
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1344698AbhKRMcb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Nov 2021 07:32:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YjTY2iTFoRK47rD7GDPfI4osmhTUXz75EwA8EjburO3zUJ+wJVEwZKHU4JDjnPO9NTVv6njR2spCt95kR93kCcAMsOrWPRU4yRB5QB2OLQaDbbmg0AwUdWGtYc2W6LglrhAueRjY86z1KsCTShgD/c5dJ5t6rCIBx4motsxqyI+/i+K4c2H1ggPWbEA8pwULxRUWdzbWcAomnCA41XiNVTWPFtRuqR6Xdm0PnfB+UPozmBOz9HTvMNe+/MLga+DzHrnthBfow7eAO3h+JvEz8mOxlw5inVfg1SrAxVdlexUm5unEA8IpiwDbtN19hwgcuNU0Qwm5+UXSdGJsCo3nOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=go0m2E0YKjdNX0i7EyKGW6P6vm572iZxhqsjwOBYt/Y=;
+ b=EUFC9lX5O8D8mLdIIySR2G1QQkjLFtvv23kN1o9k1wZIblzi49LrVtgWvuceZWz/Pm3H83oq7oYWy572pce/dUwr2zGgwlyeJYXyaMIlwVLK1l6mHPWKBHpU+2QWRzf+ONZnHv3lfhHgHWQMH9wDXgibrb8xjO1y9FZguGhPFsrpakUZeEWDv3UW/5imUET5hNiQL/31LRFfJ8b+LPPyrK4Sx/+CkHY/HWaYbFUHZqNEkWCKQ+HCBgKQTz7DJ2JiaanFADIboGye35pwH6HMG9fY1IXBj7WsOQMHwn6rvK+E+gUMMaQZM8KiBbcXMSjDKmMX0lCxCWlZYN1zm6QeYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=go0m2E0YKjdNX0i7EyKGW6P6vm572iZxhqsjwOBYt/Y=;
+ b=oLRIIxGZztJuNYq83hRLyfw7knhz8KifoOcwPozYzqt/DTXEeQMc2gqviuK3KHnjErdecTMlpAGUlQlNcDsLacn2LVkVTqlwZ5VTG+wrhW7/s217XcTqAu7ykM3j7YjjSfKoRIeMSJQLqEKw+6gS610wqQzAZ48nRXoybMnsUHI=
+Received: from HE1PR04MB2969.eurprd04.prod.outlook.com (2603:10a6:7:1c::23) by
+ HE1PR0401MB2587.eurprd04.prod.outlook.com (2603:10a6:3:83::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4713.19; Thu, 18 Nov 2021 12:29:24 +0000
+Received: from HE1PR04MB2969.eurprd04.prod.outlook.com
+ ([fe80::f4af:deba:35b8:138]) by HE1PR04MB2969.eurprd04.prod.outlook.com
+ ([fe80::f4af:deba:35b8:138%3]) with mapi id 15.20.4690.027; Thu, 18 Nov 2021
+ 12:29:24 +0000
+From:   "Z.Q. Hou" <zhiqiang.hou@nxp.com>
+To:     =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "M.H. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>
+Subject: RE: [PATCHv5 6/6] PCI: layerscape: Add power management support
+Thread-Topic: [PATCHv5 6/6] PCI: layerscape: Add power management support
+Thread-Index: AQHXK1qtMQPnxjmwREuf/Qk+PuBhzawAZB+AgAf8uuA=
+Date:   Thu, 18 Nov 2021 12:29:24 +0000
+Message-ID: <HE1PR04MB2969549F5A27A5DC1CAC4754849B9@HE1PR04MB2969.eurprd04.prod.outlook.com>
+References: <20210407030948.3845-1-Zhiqiang.Hou@nxp.com>
+ <20210407030948.3845-7-Zhiqiang.Hou@nxp.com> <YY23MeAa0U/r4lbO@rocinante>
+In-Reply-To: <YY23MeAa0U/r4lbO@rocinante>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ee1e700f-1024-4678-5c06-08d9aa8f0e27
+x-ms-traffictypediagnostic: HE1PR0401MB2587:
+x-microsoft-antispam-prvs: <HE1PR0401MB2587E56C4C0E1B2A2CD2ABC4849B9@HE1PR0401MB2587.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L+wtGak3QZQ4j2z9SH7MFPclKosNoQ0yMqgi1jGTHP24PNf078BEoZ/Ww+Znoyp+AZyGstHpaXBZ5+qA8jSFdWlRb9UFZ3eNyJ2E4gI5l+c438roR+hR5osTA7JHlQB0RjyIKCf4dZnJhYVdc7Cw3Qi7nUcOmU81fJVHrAM1iEn7wujhmvaaY6bD/Ajmq/E7MsnPQ/KCOgbUYiqbtw3Mvawgt+Q6Ivz3vgHlmnSGXlFTbJ57VhUZPI5Quw2QtKgz4egP4mBFxJ1tU9yMK3CbNARiYfqPfORQY5Vm6dT3zbKqjnv7Ko0whzQjAbVchphpgx1z+Wb0ZPvBbLVYkS8ZomP+98WWMe2xRRtObWL7SfdHWt+SwVhleNgnwoNucfdzlzfPhdDadwHa497GJrAs7wYMgTk4ASIk6rDUi2uSvIXjkFT0an8M6ppjvZO7AomG9HUb/zhqiwRHzRrcDti4Q5JeqWf+XAAkUAq9eYo9BQnvgjTJnoTimAh0XuUylEkPCZH1yTLS5cOA7u7+9CL1VL1l/mEz3X42P/GIWDr+YUeI4/mowndkJFyk3VMcPHir/UKpaE8p7/qPBLEHGzAEw/b5Tr/76HgfaAeVfbvgHfmPn88udb5TO5TqFLe2KUxIfoEsT3tju482MJgW35Z+Jai1RsJYdpmaMU/KMnqweYKMPPmqbCgCmGHml3kTm/nLb/z7T9+y6UlDg0TZIPHWvw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR04MB2969.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(52536014)(86362001)(5660300002)(66446008)(53546011)(9686003)(71200400001)(66946007)(4326008)(38100700002)(8936002)(6916009)(8676002)(54906003)(55016002)(26005)(508600001)(7416002)(66574015)(33656002)(316002)(7696005)(76116006)(122000001)(66476007)(38070700005)(83380400001)(66556008)(2906002)(186003)(64756008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q1YrTkw3bmV1RGNPQ2U5N0U0TlJuNUZ1bUlLNXpwUTZCQ0J1Y0JvZDdqUHdE?=
+ =?utf-8?B?NkJQQldpcWtCVCsybUxnOStBL1o3clVZb28yRGtteDFzK2ZwL2hYdkxTRGpp?=
+ =?utf-8?B?Nm9oQVBxQXgzcU16MU5BOG9GOEdTMUszTFlXbnBGT1BIYVZLQ1pQRjBRRURa?=
+ =?utf-8?B?czFRY1pCTFkvWFl4Y1MzWmpSMi8raHFaUWFENkVMcmNvYXA1NURmM3JDcjFu?=
+ =?utf-8?B?SmljaDVVQlZ2STFlUDB4ejZHQS9WM1VXb081Q1dYUXd6NGVXQkUrblhCWVVS?=
+ =?utf-8?B?ek4ybjV0RVIyVmRmQjV5V0hIdmNhL1RuU2FOZHJPaU15aDJKVVdJUGxhQ1FL?=
+ =?utf-8?B?M1lmak9jUFZpTk5zeG1ubklENElOSE5ZbFQ5bDlrZjNFZmx3b1ZDZzRBQ1R1?=
+ =?utf-8?B?OVpaMUdQeVBHZ251WkUrSnNVMGduaDFYT1VCUkhNNWNPSW5NcTVJelUrVmw1?=
+ =?utf-8?B?Q1RScW9qcm9HM2dGdGtDemhrYXo2K25xVkJnbVVFTnkvYkpZVzVrQll4b01U?=
+ =?utf-8?B?VUVUSVJ0dktwcHRZNExaYks5cHRlVUdwMEtVd3IxOUpXWldGM2I2RkprWnJI?=
+ =?utf-8?B?eml4OEhZSXBHRzk5K2x1TjZzZTRCMXIzYXRvQjhESDExRmYyUEdGNVJhNnMv?=
+ =?utf-8?B?bjZVb2lWbmE0aEpDcFFEU3pQYmpOOUhnVzMxSHFTZDZ2V0RsRmo4RUVoMmVK?=
+ =?utf-8?B?WnBvOVJIbm5nZ21VNDVrWGIwYTdXNXpLQ0s4RE1uYzlWaDd5cjVoQkRKZ2hT?=
+ =?utf-8?B?OVg5eGZyYXRWbXU2bnpIaHI5WFpGU2tIMDFZaUUwbjN4YnpPUWlZQklrSzVU?=
+ =?utf-8?B?Q2YybnJVays2YXJQeWZPOTg2aGh1NXVoTXFFRHR6c1ZpUmVrckFaNHFkbEVK?=
+ =?utf-8?B?NVFmVlNlemlPVk5iaDk1MmxIenFqMjUrN1gyTlV1cjhNWWtLUVl1ZmwzU1dh?=
+ =?utf-8?B?Y21uYVozbEF0elovRlNBKzJHZXFJdVZpTmtST3g4VEFQbHRRODYwc2xtOVdM?=
+ =?utf-8?B?Q1JMU0R4YlJ1T1liSWVyaGY0UllVWXhXWkpGSTRPSnZDWnFtQ0FUejJBSFZX?=
+ =?utf-8?B?QW5oVUJtZU1BVHZaSUt2L0VCUGhHNGZLcVBvWDNIdWU5Mm5Ya3pXaDNGZ2FX?=
+ =?utf-8?B?K0dzUGx6RWc5MjgwanczZTRMY0NyVS9OM2JSOGhVa3BMZ2R3UUhJQ2UzSU5o?=
+ =?utf-8?B?Vlh5OFovN2QwcGNmM1RvZUlUaFROYlBXWGFmVjBaRGdjR0RzTVpnUFY0Nkhu?=
+ =?utf-8?B?cDBWSFNaYVRZVGRKeE53ZklIdVQ2ZFhJWW50M21TYVhzRStjUlU4aEU3V3Fy?=
+ =?utf-8?B?aU9UUUNZaUprWk90MFFXQWIvTm96WmY2d09neUtCMFRBblp3bW9iTnpWWFRz?=
+ =?utf-8?B?WHE3SmttaXZnZWR4ZFFJT29LNVZlalgzQkVRb3crR2ozNFVUNVZ3QWo5Skhv?=
+ =?utf-8?B?Q2l5VEZpcDIzQmwrM3k5ZzdPbDR2cGhGejgxNE5ocGNLa1c5eU03M1lxazRK?=
+ =?utf-8?B?cDBRc1RhOUVaSEFBZXBpeGdFaW5QSGJZaTF6K25HNEkvd2c0S1J1bXMreFdT?=
+ =?utf-8?B?cllFdlFLRW1GL2JnTWgxVlVvS3Y1d0gxM1RzSHdBdWk5c2pWSzdpM0xEVmxK?=
+ =?utf-8?B?ZE9QWDJDcXgwdjV2Z0s3empMK2RxOWlFYS9LZ2F5aU03WlN5ZitPRmd0UUZ1?=
+ =?utf-8?B?R2VZN0Q2MTRNZERyOG8rYytHTGZOOVg1ZUFhTkZleWJRampaWlhKb2NDN2Fk?=
+ =?utf-8?B?dk91Vy9nWlp0OW1VdGJ2aFBJNjVPQk1QSXRiR0t2amJZTm1PNlNCQm9VWlNl?=
+ =?utf-8?B?alFha1BrRnNVMzBGa3kvd2psaXVRMGloa0Q3SEZHQWZxT1JMS3F4ZFhhbGxS?=
+ =?utf-8?B?cEIzZmJEaGU3MXZRRVZnMmNTWnN6YWN6c3JNZVEzNEhSVkRsekpGclRVTngz?=
+ =?utf-8?B?TnZSWm1mZGw5a2IvTjFKd240V0NjckpSUkxEcm9XOWFYRmIvWTloQlJrUzIx?=
+ =?utf-8?B?SXhacElYT3hwcGM2NmpYajBaQlBabUozSEhtZWprekcvOTBXUDNpaTkvaUFj?=
+ =?utf-8?B?bHhIajJrK2JOM05mZC92b0tqczdON2ozbUNiYXVRWGJWcTU5cDk0cE9OVjFa?=
+ =?utf-8?B?MEVWUlVPWkRIc2lqeUZkVTFhcHFZQUNrT3hCVWNqcUxGblozN09QWTJCSFhO?=
+ =?utf-8?Q?kAMJE6pxO0KWm+bv5jJIEMo=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.127.148]
-X-ClientProxiedBy: lhreml749-chm.china.huawei.com (10.201.108.199) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR04MB2969.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee1e700f-1024-4678-5c06-08d9aa8f0e27
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2021 12:29:24.1583
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4uWBsgnngb0dT5PIYyfo0L0ibmCvhoKX7DGwGcYQSXmukmgVQHeJ0hY/9ARoUDXToVIuApkvrskzMBEWOSuh1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2587
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 17 Nov 2021 12:46:48 -0500
-Chris Browy <cbrowy@avery-design.com> wrote:
-
-> > On Aug 31, 2021, at 8:55 AM, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
-> > 
-> > On Thu, 5 Aug 2021 17:43:46 +0100
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >   
-> >> On Thu, 5 Aug 2021 00:18:35 +0800
-> >> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >>   
-> >>> This is an RFC to start discussions about how we support the Component
-> >>> Measurement and Authentication (CMA) ECN (pcisig.com)
-> >>> 
-> >>> CMA provides an adaptation of the data objects and underlying protocol
-> >>> defined in the DMTF SPDM specification to be used to authenticate and
-> >>> conduct run-time measurements of the state of PCI devices (kind of like
-> >>> IMA for devices / firmware). This is done using a Data Object Exchange (DOE)
-> >>> protocol described in the ECN.
-> >>> 
-> >>> The CMA ECN is available from the PCI SIG and SPDM can be found at
-> >>> https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf
-> >>> 
-> >>> CMA/SPDM is focused on establishing trust of the device by:
-> >>> 1) Negotiate algorithms supported.
-> >>> 2) Retrieve and check the certificate chain from the device against
-> >>>   a suitable signing certificate on the host.
-> >>> 3) Issue a challenge to the device to verify it can sign with the private
-> >>>   key associated with the leaf certificate.
-> >>> 4) (Request a measurement of device state)
-> >>> 5) (Establish a secure channel for further measurements or other uses)
-> >>> 6) (Mutual authentication)
-> >>> 
-> >>> This RFC only does steps 1-3  
-> 
-> Could you describe the additional software beyond step 3 that is required to complete 
-> the IDE Key Management protocol post SPDM secure session establishment (see PCIe 
-> base 6.0r0.9.pdf, Figure 6-59 IDE_KM Example) to reach IDE establishment and run 
-
-Stick to the ECN in references as that is published at least to SIG members.
-We shouldn't be discussing draft specs on a public list (though in this case it's the
-same material as the published ECN).
-
-> regular applications using IDE streams.  The goal is to do more complete testing of 
-> some real CXL devices to the point of running user applications over IDE streams to 
-> access HDM memory.
-
-Hi Chris,
-
-This is off the top of my head rather than a considered answer as having a busy week.
-Firstly a small thing but IDE requires a different DOE protocol - it is CMA with 
-extra stuff but technically different protocol number.
-3 a) Add the kernel side messages to actually request a secure channel.
-  b) Hook into appropriate kernel subsystems to generate the keys.
-
-After that is up and running (can test by doing some measurements over the now encrypted channel),
-then we need to do the key setup as in the IDE spec.  So implement the IDE_KM protocol.
-That will cover EPs.  If you have a switch in the path then you'll need to add emulation
-support for a DOE on that as well.
-
-Now the host is interesting.  You are allowed but not required to support IDE_KM on a DOE
-in the root port (there are lots of other options) or in RCRB.  Also allowed impdef means
-which I suspect is going to be more common as a secure channel between components both within
-the SoC is a little odd.  That decision may depend on whether a given vendor sees
-IDE establishment and maintenance as a firmware / BMC job or an OS one.
-
-IDE_KM protocol has 6 messages and i think we would need to implement them all.
-
-There is also the extended capability to be handled which brings more complexity.
-So all the stuff in figure 7-16 IDE_KM Examples (might be the same as the one you refer to...)
-
-We've only gotten as far as mid way down the second block of exchanges.
-That diagram assumes host is using an impdef method, but I think we'd be better off
-first implementing the RP DOE approach (which will be the same as switch to EP)
-and that means negotiating a secure channel etc with the RP as well as the EP.
-Then you can program appropriate keys and jump through the various IDE_KM_KSET_GO
-as in the diagram.
-
-There is quite a lot of work to be done to bring up the full flow, but, interestingly I think
-there will be far fewer open questions in that part of enablement than we have for
-earlier steps of SPDM setup, simply because it doesn't really interact with the
-rest of Linux so sits almost entirely in the PCI subsystem.  A fun early question is
-how we decide it needs to be enabled at all.
-
-Whilst I'm planning to eventually get this all in place it may take a while.
-
-If we were making a plan...
-1) Finish of SPDM stuff - so secure channel setup and ideally flesh out measurements for which
-   I have a prototype.
-2) Qemu emulation RP with IDE support (building on your team's work on EP support).
-3) Bring up basic flow against that emulation.
-4) Figure out what to do about key refresh...
-5) Qemu emulation of switch.
-6) Bring flows up against switch etc.
-7) Selective IDE.
-8) P2P selective IDE...
-9) Retire and let the youngsters actually use it ;)
-
-Jonathan
-
-
-> 
-> >>> 
-> >>> Testing of this patch set has been conducted against QEMU emulation of
-> >>> the device backed by openSPDM emulation of the SPDM protocol.    
-> >> 
-> >> Note testing also works with libspdm and libspdm-emu from
-> >> https://github.com/DMTF/spdm-emu with no modifications.
-> >> 
-> >> The openSPDM modifications Chris and team made were all associated with the host
-> >> end and are not needed for this code (the QEMU part is still needed to provide
-> >> the DOE emulation and forward the traffic to spdm_responder_emu)
-> >> 
-> >> I should also have mentioned this series is on top of the recently posted
-> >> DOE series rebased onto the linux-cxl next git tree.  I'm not really expecting
-> >> anyone to test it at this stage, but if desired I can push a full tree out
-> >> somewhere with this in place.  
-> > 
-> > A couple of updates:
-> > 
-> > 1. This topic is on the agenda for the linaro-open-discussions call tomorrow.
-> > https://linaro.atlassian.net/wiki/spaces/LOD/overview
-> > It's a public call and anyone interested is welcome to join in. Time is rather
-> > unfriendly for US based people unfortunately. I'll throw together some sort of
-> > overview / open questions slide deck which will be posted on that page. Note
-> > related topics on plumbers microconf agenda later in the month - I'll share details
-> > of that once known.
-> > 
-> > 2. Related to that I had a request for trees as the base of the various series are not
-> > obvious (involved a bunch of rebases of various other patch sets)
-> > 
-> > https://github.com/hisilicon/kernel-dev/tree/doe-spdm-v1 rebased to 5.14-rc7
-> > https://github.com/hisilicon/qemu/tree/cxl-hacks rebased to qemu/master as of Friday
-> > 
-> > For qemu side of things you need to be running spdm_responder_emu --trans PCI_DOE 
-> > from https://github.com/DMTF/spdm-emu first (that will act as server to qemu acting
-> > as a client). Various parameters allow you to change the algorithms advertised and the
-> > kernel code should work for all the ones CMA mandates (but nothing beyond that for now).
-> > 
-> > For the cxl device the snippet of qemu commandline needed is:
-> > -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-mem1, id=cxl-pmem0,size=2G,spdm=true
-> > 
-> > Otherwise much the same as https://people.kernel.org/jic23/ (instructions written to enable
-> > testing of the DOE patches this built on).
-> > 
-> > Build at least the cxl_pci driver as a module as we need to poke the certificate into the keychain
-> > before that (find the cert in spdm_emu tree).
-> > Instructions to do that with keyctl and evmctl are in the cover letter of the patch series.
-> > 
-> > Hopefully I'll find some time soonish to update that blog post with instructions.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >> 
-> >> Jonathan
-> >>   
-> >>> 
-> >>> https://lore.kernel.org/qemu-devel/1624665723-5169-1-git-send-email-cbrowy@avery-design.com/
-> >>> 
-> >>> Open questions are called out in the individual patches but the big ones are
-> >>> probably:
-> >>> 
-> >>> 1) Certificate management.
-> >>>   Current code uses a _cma keyring created by the kernel, into which a
-> >>>   suitable root certificate can be inserted from userspace.
-> >>> 
-> >>>   A=$(keyctl search %:_cma  keyring _cma)
-> >>>   evmctl import ecdsaca.cert.der $A
-> >>> 
-> >>>   Is this an acceptable way to load the root certificates for this purpose?
-> >>> 
-> >>>   The root of the device provided certificate chain is then checked against
-> >>>   certificates on this keychain, but is itself (with the other certificates
-> >>>   in the chain) loaded into an SPDM instance specific keychain.  Currently
-> >>>   there is no safe cleanup of this which will need to be fixed.
-> >>> 
-> >>>   Using the keychain mechanism provides a very convenient way to manage these
-> >>>   certificates and to allow userspace to read them for debug purpose etc, but
-> >>>   is this the right use model?
-> >>> 
-> >>>   Finally the leaf certificate of this chain is used to check signatures of
-> >>>   the rest of the communications with the device.
-> >>> 
-> >>> 2) ASNL1 encoder for ECDSA signature
-> >>>   It seems from the openSPDM implementation that for these signatures,
-> >>>   the format is a simple pair of raw values.  The kernel implementation of
-> >>>   ECDSA signature verification assumes ASN1 encoding as seems to be used
-> >>>   in x509 certificates.  Currently I work around that by encoding the
-> >>>   signatures so that the ECDSA code can un-encode them again and use them.
-> >>>   This seems slightly silly, but it is minimum impact on current code.
-> >>>   Other suggestions welcome.
-> >>> 
-> >>> 3) Interface to present to drivers. Currently I'm providing just one exposed
-> >>>   function that wraps up all the exhanges until a challenge authentication
-> >>>   response from the device. This is done using one possible sequence.
-> >>>   I don't think it makes sense to expose the low level components due to the
-> >>>   underlying spdm_state updates and there only being a fixed set of valid
-> >>>   orderings.
-> >>> 
-> >>> Future patches will raise questions around management of the measurements, but
-> >>> I'll leave those until I have some sort of implementation to shoot at.
-> >>> The 'on probe' use in the CXL driver is only one likely time when authentication
-> >>> would be needed.
-> >>> 
-> >>> Note I'm new to a bunch of the areas of the kernel this touches, so have
-> >>> probably done things that are totally wrong.
-> >>> 
-> >>> CC list is best effort to identify those who 'might' care.  Please share
-> >>> with anyone I've missed.
-> >>> 
-> >>> Thanks,
-> >>> 
-> >>> Jonathan
-> >>> 
-> >>> 
-> >>> Jonathan Cameron (4):
-> >>>  lib/asn1_encoder: Add a function to encode many byte integer values.
-> >>>  spdm: Introduce a library for DMTF SPDM
-> >>>  PCI/CMA: Initial support for Component Measurement and Authentication
-> >>>    ECN
-> >>>  cxl/pci: Add really basic CMA authentication support.
-> >>> 
-> >>> drivers/cxl/Kconfig          |    1 +
-> >>> drivers/cxl/mem.h            |    2 +
-> >>> drivers/cxl/pci.c            |   13 +-
-> >>> drivers/pci/Kconfig          |    9 +
-> >>> drivers/pci/Makefile         |    1 +
-> >>> drivers/pci/doe.c            |    2 -
-> >>> include/linux/asn1_encoder.h |    3 +
-> >>> include/linux/pci-doe.h      |    2 +
-> >>> lib/Kconfig                  |    3 +
-> >>> lib/Makefile                 |    2 +
-> >>> lib/asn1_encoder.c           |   54 ++
-> >>> lib/spdm.c                   | 1196 ++++++++++++++++++++++++++++++++++
-> >>> 12 files changed, 1285 insertions(+), 3 deletions(-)
-> >>> create mode 100644 lib/spdm.c
-> >>>   
-> >>   
-> >   
-> 
-
+SGkgS3J6eXN6dG9mLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIFdpbGN6ecWEc2tpIFtt
+YWlsdG86a3dAbGludXguY29tXQ0KPiBTZW50OiAyMDIx5bm0MTHmnIgxMuaXpSA4OjM3DQo+IFRv
+OiBaLlEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5r
+ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBs
+b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IGJoZWxnYWFzQGdv
+b2dsZS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAu
+Y29tPjsNCj4gZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207IE0uSC4gTGlhbiA8bWluZ2h1
+YW4ubGlhbkBueHAuY29tPjsNCj4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95
+IFphbmcgPHJveS56YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSA2LzZdIFBD
+STogbGF5ZXJzY2FwZTogQWRkIHBvd2VyIG1hbmFnZW1lbnQgc3VwcG9ydA0KPiANCj4gSGksDQo+
+IA0KPiBbLi4uXQ0KPiA+ICsvKiBQRiBNZXNzYWdlIENvbW1hbmQgUmVnaXN0ZXIgKi8NCj4gPiAr
+I2RlZmluZSBMU19QQ0lFX1BGX01DUgkJMHgyYw0KPiA+ICsjZGVmaW5lIFBGX01DUl9QVE9NUgkJ
+QklUKDApDQo+ID4gKyNkZWZpbmUgUEZfTUNSX0VYTDJTCQlCSVQoMSkNCj4gPiArDQo+ID4gKy8q
+IExTMTAyMUEgUEVYbiBQTSBXcml0ZSBDb250cm9sIFJlZ2lzdGVyICovDQo+ID4gKyNkZWZpbmUg
+U0NGR19QRVhQTVdSQ1IoaWR4KQkoMHg1YyArIChpZHgpICogMHg2NCkNCj4gPiArI2RlZmluZSBQ
+TVhNVFRVUk5PRkYJCUJJVCgzMSkNCj4gPiArI2RlZmluZSBTQ0ZHX1BFWFNGVFJTVENSCTB4MTkw
+DQo+ID4gKyNkZWZpbmUgUEVYU1IoaWR4KQkJQklUKGlkeCkNCj4gPiArDQo+ID4gKy8qIExTMTA0
+M0EgUEVYIFBNRSBjb250cm9sIHJlZ2lzdGVyICovDQo+ID4gKyNkZWZpbmUgU0NGR19QRVhQTUVD
+UgkJMHgxNDQNCj4gPiArI2RlZmluZSBQRVhQTUUoaWR4KQkJQklUKDMxIC0gKGlkeCkgKiA0KQ0K
+PiA+ICsNCj4gPiArLyogTFMxMDQzQSBQRVggTFVUIGRlYnVnIHJlZ2lzdGVyICovDQo+ID4gKyNk
+ZWZpbmUgTFNfUENJRV9MREJHCTB4N2ZjDQo+ID4gKyNkZWZpbmUgTERCR19TUgkJQklUKDMwKQ0K
+PiA+ICsjZGVmaW5lIExEQkdfV0UJCUJJVCgzMSkNCj4gDQo+IEEgc21hbGwgbml0cGljazogYSBj
+b25zaXN0ZW50IGNhcGl0YWxpc2F0aW9uIG9mICJjb250cm9sIiBhbmQgImRlYnVnIiwgYW5kDQo+
+ICJyZWdpc3RlciIgaW4gdGhlIGNvbW1lbnRzIGFib3ZlLg0KDQpHb29kIHN1Z2dlc3Rpb24sIHdp
+bGwgbWFrZSB0aGVtIGNvbnNpc3RlbnQgbmV4dCB2ZXJzaW9uLg0KDQo+IA0KPiBbLi4uXQ0KPiA+
+ICtzdGF0aWMgdm9pZCBsc19wY2llX2x1dF93cml0ZWwoc3RydWN0IGxzX3BjaWUgKnBjaWUsIHUz
+MiBvZmYsIHUzMg0KPiA+ICt2YWwpIHsNCj4gPiArCWlmIChwY2llLT5iaWdfZW5kaWFuKQ0KPiA+
+ICsJCXJldHVybiBpb3dyaXRlMzJiZSh2YWwsIHBjaWUtPmx1dF9iYXNlICsgb2ZmKTsNCj4gPiAr
+DQo+ID4gKwlyZXR1cm4gaW93cml0ZTMyKHZhbCwgcGNpZS0+bHV0X2Jhc2UgKyBvZmYpOw0KPiA+
+ICsNCj4gPiArfQ0KPiANCj4gU3VycGx1cyBuZXdsaW5lIGFib3ZlIGFmdGVyIHRoZSByZXR1cm4g
+c3RhdGVtZW50Lg0KPiANCj4gWy4uLl0NCj4gPiArc3RhdGljIHZvaWQgbHNfcGNpZV9wZl93cml0
+ZWwoc3RydWN0IGxzX3BjaWUgKnBjaWUsIHUzMiBvZmYsIHUzMiB2YWwpDQo+ID4gK3sNCj4gPiAr
+CWlmIChwY2llLT5iaWdfZW5kaWFuKQ0KPiA+ICsJCXJldHVybiBpb3dyaXRlMzJiZSh2YWwsIHBj
+aWUtPnBmX2Jhc2UgKyBvZmYpOw0KPiA+ICsNCj4gPiArCXJldHVybiBpb3dyaXRlMzIodmFsLCBw
+Y2llLT5wZl9iYXNlICsgb2ZmKTsNCj4gPiArDQo+ID4gK30NCj4gDQo+IFN1cnBsdXMgbmV3bGlu
+ZSBhYm92ZSBhZnRlciB0aGUgcmV0dXJuIHN0YXRlbWVudC4NCj4gDQoNCldpbGwgcmVtb3ZlIHRo
+ZXNlIGxpbmVzIG5leHQgdmVyc2lvbi4NCg0KPiBbLi4uXQ0KPiA+ICtzdGF0aWMgdm9pZCBsc19w
+Y2llX3NlbmRfdHVybm9mZl9tc2coc3RydWN0IGxzX3BjaWUgKnBjaWUpIHsNCj4gPiArCXUzMiB2
+YWw7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCXZhbCA9IGxzX3BjaWVfcGZfcmVhZGwo
+cGNpZSwgTFNfUENJRV9QRl9NQ1IpOw0KPiA+ICsJdmFsIHw9IFBGX01DUl9QVE9NUjsNCj4gPiAr
+CWxzX3BjaWVfcGZfd3JpdGVsKHBjaWUsIExTX1BDSUVfUEZfTUNSLCB2YWwpOw0KPiA+ICsNCj4g
+PiArCXJldCA9IHJlYWR4X3BvbGxfdGltZW91dChsc19wY2llX3BmX3JlYWRsX2FkZHIsIExTX1BD
+SUVfUEZfTUNSLA0KPiA+ICsJCQkJIHZhbCwgISh2YWwgJiBQRl9NQ1JfUFRPTVIpLCAxMDAsIDEw
+MDAwKTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJZGV2X2luZm8ocGNpZS0+cGNpLT5kZXYsICJw
+b2xsIHR1cm4gb2ZmIG1lc3NhZ2UgdGltZW91dFxuIik7IH0NCj4gDQo+IFdvdWxkIHRoaXMgZGV2
+X2luZm8oKSBiZSBtb3JlIG9mIGEgd2FybmluZyBvciBhbiBlcnJvcj8gIEEgdGltZW91dCBpcw0K
+PiBwb3RlbnRpYWxseSBhIHByb2JsZW0sIGNvcnJlY3Q/DQo+DQoNCkFuIGVycm9yIG1lc3NhZ2Ug
+aXMgYmV0dGVyIGhlcmUsIHdpbGwgY2hhbmdlIG5leHQgdmVyc2lvbi4NCiANCj4gWy4uLl0NCj4g
+PiArc3RhdGljIHZvaWQgbHMxMDIxYV9wY2llX3NlbmRfdHVybm9mZl9tc2coc3RydWN0IGxzX3Bj
+aWUgKnBjaWUpIHsNCj4gPiArCXUzMiB2YWw7DQo+ID4gKw0KPiA+ICsJaWYgKCFwY2llLT5zY2Zn
+KSB7DQo+ID4gKwkJZGV2X2RiZyhwY2llLT5wY2ktPmRldiwgIlNZU0NGRyBpcyBOVUxMXG4iKTsN
+Cj4gPiArCQlyZXR1cm47DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJLyogU2VuZCBUdXJuX29mZiBt
+ZXNzYWdlICovDQo+ID4gKwlyZWdtYXBfcmVhZChwY2llLT5zY2ZnLCBTQ0ZHX1BFWFBNV1JDUihw
+Y2llLT5pbmRleCksICZ2YWwpOw0KPiA+ICsJdmFsIHw9IFBNWE1UVFVSTk9GRjsNCj4gPiArCXJl
+Z21hcF93cml0ZShwY2llLT5zY2ZnLCBTQ0ZHX1BFWFBNV1JDUihwY2llLT5pbmRleCksIHZhbCk7
+DQo+ID4gKw0KPiA+ICsJbWRlbGF5KDEwKTsNCj4gDQo+IFdlIG9mdGVuLCBjdXN0b21hcnksIGRv
+Y3VtZW50IHdoeSBhIHBhcnRpY3VsYXIgbWRlbGF5KCkgaXMgbmVlZGVkLiAgWW91IGFsc28NCj4g
+ZGlkIHRoaXMgaW4gb3RoZXIgcGFydCBvZiB0aGUgY29kZSwgc28gcGVyaGFwcyBhZGRpbmcgYSBu
+b3RlIGhlcmUgKGFuZA0KPiBldmVyeXdoZXJlIGVsc2UpIHdvdWxkIGJlIG5pY2UgZm9yIGtlZXBp
+bmcgdGhlIGNvbnNpc3RlbmN5Lg0KPiANCg0KV2lsbCBhZGQgbmV4dCB2ZXJzaW9uLg0KDQo+IFsu
+Li5dDQo+ID4gK3N0YXRpYyB2b2lkIGxzX3BjaWVfZXhpdF9mcm9tX2wyKHN0cnVjdCBsc19wY2ll
+ICpwY2llKSB7DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwl2
+YWwgPSBsc19wY2llX3BmX3JlYWRsKHBjaWUsIExTX1BDSUVfUEZfTUNSKTsNCj4gPiArCXZhbCB8
+PSBQRl9NQ1JfRVhMMlM7DQo+ID4gKwlsc19wY2llX3BmX3dyaXRlbChwY2llLCBMU19QQ0lFX1BG
+X01DUiwgdmFsKTsNCj4gPiArDQo+ID4gKwlyZXQgPSByZWFkeF9wb2xsX3RpbWVvdXQobHNfcGNp
+ZV9wZl9yZWFkbF9hZGRyLCBMU19QQ0lFX1BGX01DUiwNCj4gPiArCQkJCSB2YWwsICEodmFsICYg
+UEZfTUNSX0VYTDJTKSwgMTAwLCAxMDAwMCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCWRldl9p
+bmZvKHBjaWUtPnBjaS0+ZGV2LCAicG9sbCBleGl0IEwyIHN0YXRlIHRpbWVvdXRcbiIpOyB9DQo+
+IA0KPiBTaW1pbGFybHkgdG8gdGhlIHF1ZXN0aW9uIGFib3ZlOiBpcyB0aGlzIHRpbWVvdXQgc29t
+ZXRoaW5nIG1vcmUgc2V2ZXJlIGFuZA0KPiB3b3VsZCB3YXJyYW50IGEgd2FybmluZyBvciBhbiBl
+cnJvciBoZXJlIGluc3RlYWQ/DQo+IA0KDQpBZ3JlZS4NCg0KPiBbLi4uXQ0KPiA+ICtzdGF0aWMg
+dm9pZCBsczEwMjFhX3BjaWVfZXhpdF9mcm9tX2wyKHN0cnVjdCBsc19wY2llICpwY2llKSB7DQo+
+ID4gKwl1MzIgdmFsOw0KPiA+ICsNCj4gPiArCXJlZ21hcF9yZWFkKHBjaWUtPnNjZmcsIFNDRkdf
+UEVYU0ZUUlNUQ1IsICZ2YWwpOw0KPiA+ICsJdmFsIHw9IFBFWFNSKHBjaWUtPmluZGV4KTsNCj4g
+PiArCXJlZ21hcF93cml0ZShwY2llLT5zY2ZnLCBTQ0ZHX1BFWFNGVFJTVENSLCB2YWwpOw0KPiA+
+ICsNCj4gPiArCXJlZ21hcF9yZWFkKHBjaWUtPnNjZmcsIFNDRkdfUEVYU0ZUUlNUQ1IsICZ2YWwp
+Ow0KPiA+ICsJdmFsICY9IH5QRVhTUihwY2llLT5pbmRleCk7DQo+ID4gKwlyZWdtYXBfd3JpdGUo
+cGNpZS0+c2NmZywgU0NGR19QRVhTRlRSU1RDUiwgdmFsKTsNCj4gPiArDQo+ID4gKwltZGVsYXko
+MSk7DQo+IA0KPiBBc2lkZSBvZiBkb2N1bWVudGluZyB0aGlzIG1kZWxheSgpIGhlcmUsIGlmIHBv
+c3NpYmxlLCB3b3VsZCAxIGJlIGVub3VnaD8NCj4gRXZlcnl3aGVyZSBlbHNlIHlvdSBzZWVtIHRv
+IHVzZSAxMCBjb25zaXN0ZW50bHkuDQo+IA0KDQpJdCdzIGVub3VnaCBhbmQgZGlkbid0IGVuY291
+bnRlciBhIGZhaWwgaW4gdGhvdXNhbmRzIHJlZ3Jlc3Npb25zLg0KDQo+ID4gKw0KPiA+ICsJbHNf
+cGNpZV9yZXRyYWluX2xpbmsocGNpZSk7DQo+ID4gK30NCj4gPiArc3RhdGljIHZvaWQgbHMxMDQz
+YV9wY2llX2V4aXRfZnJvbV9sMihzdHJ1Y3QgbHNfcGNpZSAqcGNpZSkNCj4gDQo+IE1pc3Npbmcg
+bmV3bGluZSBhYm92ZSB0byBzZXBhcmF0ZSBjb2RlIGJsb2Nrcy4NCj4gDQoNCldpbGwgYWRkIG5l
+eHQgdmVyc2lvbi4NCg0KPiA+ICt7DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsNCj4gPiArCXZhbCA9
+IGxzX3BjaWVfbHV0X3JlYWRsKHBjaWUsIExTX1BDSUVfTERCRyk7DQo+ID4gKwl2YWwgfD0gTERC
+R19XRTsNCj4gPiArCWxzX3BjaWVfbHV0X3dyaXRlbChwY2llLCBMU19QQ0lFX0xEQkcsIHZhbCk7
+DQo+ID4gKw0KPiA+ICsJdmFsID0gbHNfcGNpZV9sdXRfcmVhZGwocGNpZSwgTFNfUENJRV9MREJH
+KTsNCj4gPiArCXZhbCB8PSBMREJHX1NSOw0KPiA+ICsJbHNfcGNpZV9sdXRfd3JpdGVsKHBjaWUs
+IExTX1BDSUVfTERCRywgdmFsKTsNCj4gPiArDQo+ID4gKwl2YWwgPSBsc19wY2llX2x1dF9yZWFk
+bChwY2llLCBMU19QQ0lFX0xEQkcpOw0KPiA+ICsJdmFsICY9IH5MREJHX1NSOw0KPiA+ICsJbHNf
+cGNpZV9sdXRfd3JpdGVsKHBjaWUsIExTX1BDSUVfTERCRywgdmFsKTsNCj4gPiArDQo+ID4gKwl2
+YWwgPSBsc19wY2llX2x1dF9yZWFkbChwY2llLCBMU19QQ0lFX0xEQkcpOw0KPiA+ICsJdmFsICY9
+IH5MREJHX1dFOw0KPiA+ICsJbHNfcGNpZV9sdXRfd3JpdGVsKHBjaWUsIExTX1BDSUVfTERCRywg
+dmFsKTsNCj4gPiArDQo+ID4gKwltZGVsYXkoMSk7DQo+IA0KPiBTZWUgY29tbWVudCBhYm92ZS4N
+Cj4gDQo+IFsuLi5dDQo+ID4gK3N0YXRpYyBpbnQgbHMxMDIxYV9wY2llX3BtX2luaXQoc3RydWN0
+IGxzX3BjaWUgKnBjaWUpIHsNCj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IHBjaWUtPnBjaS0+
+ZGV2Ow0KPiA+ICsJdTMyIGluZGV4WzJdOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlw
+Y2llLT5zY2ZnID0gc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfcGhhbmRsZShkZXYtPm9mX25vZGUs
+DQo+ID4gKwkJCQkJCSAgICAgImZzbCxwY2llLXNjZmciKTsNCj4gPiArCWlmIChJU19FUlIocGNp
+ZS0+c2NmZykpIHsNCj4gPiArCQlyZXQgPSBQVFJfRVJSKHBjaWUtPnNjZmcpOw0KPiA+ICsJCWRl
+dl9lcnIoZGV2LCAiTm8gc3lzY2ZnIHBoYW5kbGUgc3BlY2lmaWVkXG4iKTsNCj4gPiArCQlwY2ll
+LT5zY2ZnID0gTlVMTDsNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAr
+CXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KGRldi0+b2Zfbm9kZSwgImZzbCxwY2ll
+LXNjZmciLA0KPiA+ICsJCQkJCSBpbmRleCwgMik7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJ
+cGNpZS0+c2NmZyA9IE5VTEw7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+
+ID4gKwlwY2llLT5pbmRleCA9IGluZGV4WzFdOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+
+ICt9DQo+IA0KPiBKdXN0IGFuIGlkZWE6IHdoYXQgYWJvdXQgdXNpbmcgZ290byBmb3IgZXJyb3Ig
+aGFuZGxpbmc/DQo+IA0KPiAoLi4uKQ0KPiAJaWYgKElTX0VSUihwY2llLT5zY2ZnKSkgew0KPiAJ
+CXJldCA9IFBUUl9FUlIocGNpZS0+c2NmZyk7DQo+IAkJZGV2X2VycihkZXYsICJObyBzeXNjZmcg
+cGhhbmRsZSBzcGVjaWZpZWRcbiIpOw0KPiAJCWdvdG8gZXJyb3I7DQo+IAl9DQo+IA0KPiAJcmV0
+ID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoZGV2LT5vZl9ub2RlLCAiZnNsLHBjaWUtc2Nm
+ZyIsDQo+IAkJCQkJIGluZGV4LCAyKTsNCj4gCWlmIChyZXQpDQo+IAkJZ290byBlcnJvcjsNCj4g
+DQo+IAlwY2llLT5pbmRleCA9IGluZGV4WzFdOw0KPiANCj4gCXJldHVybiAwOw0KPiANCj4gZXJy
+b3I6DQo+IAlwY2llLT5zY2ZnID0gTlVMTDsNCj4gCXJldHVybiByZXQ7DQo+IH0NCj4gDQo+IE5v
+dCBuZWNlc3NhcmlseSBiZXR0ZXIgb3Igd29yc2UgY29tcGFyZWQgd2l0aCB5b3VyIHZlcnNpb24s
+IHNvIGl0IHdvdWxkIGJlDQo+IG1vcmUgb2YgYSBtYXR0ZXIgb2YgcGVyc29uYWwgcHJlZmVyZW5j
+ZSBoZXJlLg0KDQpUaGFua3MgZm9yIHRoZSBnb29kIHN1Z2dlc3Rpb24hDQoNCj4gDQo+ID4gK3N0
+YXRpYyBpbnQgbHNfcGNpZV9zdXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikgew0KPiA+
+ICsJc3RydWN0IGxzX3BjaWUgKnBjaWUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArCXN0
+cnVjdCBkd19wY2llICpwY2kgPSBwY2llLT5wY2k7DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsJaW50
+IHJldDsNCj4gPiArDQo+ID4gKwlpZiAoIWxzX3BjaWVfcG1fY2hlY2socGNpZSkpDQo+ID4gKwkJ
+cmV0dXJuIDA7DQo+ID4gKw0KPiA+ICsJcGNpZS0+ZHJ2ZGF0YS0+cG1fb3BzLT5zZW5kX3R1cm5f
+b2ZmX21lc3NhZ2UocGNpZSk7DQo+ID4gKw0KPiA+ICsJLyogMTBtcyB0aW1lb3V0IHRvIGNoZWNr
+IEwyIHJlYWR5ICovDQo+ID4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQocGNpLT5kYmlfYmFz
+ZSArIFBDSUVfUE9SVF9ERUJVRzAsDQo+ID4gKwkJCQkgdmFsLCBMU19QQ0lFX0lTX0wyKHZhbCks
+IDEwMCwgMTAwMDApOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiUENJ
+ZSBsaW5rIGVudGVyIEwyIHRpbWVvdXQhIGx0c3NtID0gMHgleFxuIiwgdmFsKTsNCj4gPiArCQly
+ZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiANCj4gVGhlIGVycm9yIG1lc3NhZ2UgYWJvdmUgY291bGQg
+YmUgaW1wcm92ZSB0byBiZSBtb3JlIGxpa2UgYW4gZXJyb3Igc3RhdGluZyB0aGF0DQo+IHNvbWV0
+aGluZyBmYWlsZWQgYW5kIHN1Y2gsIGFzIGN1cnJlbnRseSBpdCBsb29rcyBsaWtlIGEgZGVidWcg
+bWVzc2FnZSwgdW5sZXNzIGl0DQo+IHdhcyBpbnRlbmRlZCBhcyBzdWNoLg0KDQpFeGFjdGx5LCB3
+aWxsIGltcHJvdmUuDQoNCj4gDQo+IFsuLi5dDQo+ID4gK3N0YXRpYyBpbnQgbHNfcGNpZV9yZXN1
+bWVfbm9pcnEoc3RydWN0IGRldmljZSAqZGV2KSB7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZSAqcGNp
+ZSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBjaSA9IHBj
+aWUtPnBjaTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJaWYgKCFsc19wY2llX3BtX2No
+ZWNrKHBjaWUpKQ0KPiA+ICsJCXJldHVybiAwOw0KPiA+ICsNCj4gPiArCWxzX3BjaWVfc2V0X2Rz
+dGF0ZShwY2llLCAweDApOw0KPiA+ICsNCj4gPiArCXBjaWUtPmRydmRhdGEtPnBtX29wcy0+ZXhp
+dF9mcm9tX2wyKHBjaWUpOw0KPiA+ICsNCj4gPiArCWR3X3BjaWVfc2V0dXBfcmMoJnBjaS0+cHAp
+Ow0KPiA+ICsNCj4gPiArCS8qIGRlbGF5IDEwIG1zIHRvIGFjY2VzcyBFUCAqLw0KPiA+ICsJbWRl
+bGF5KDEwKTsNCj4gPiArDQo+ID4gKwlyZXQgPSBsc19wY2llX2hvc3RfaW5pdCgmcGNpLT5wcCk7
+DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycihkZXYsICJsc19wY2llX2hvc3RfaW5p
+dCBmYWlsZWQhIHJldCA9IDB4JXhcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiAr
+CX0NCj4gDQo+IEEgc21hbGwgbml0cGljazogZXJyb3IgbWVzc2FnZXMgdGhhdCBhcmUgZGlyZWN0
+ZWQgYXQgZW5kIHVzZXJzIHNob3VsZCBoYXZlIGEgbGl0dGxlDQo+IG1vcmUgY29udGV4dCB0aGFu
+IGp1c3QgdGhlIGZ1bmN0aW9uIG5hbWUuDQoNCldpbGwgcmVtb3ZlIHRoZSByZXR1cm4gdmFsdWUg
+Y2hlY2ssIGN1cnJlbnRseSB0aGlzIGZ1bmMgYWx3YXlzIHN1Y2NlZWQuDQoNClRoYW5rcywNClpo
+aXFpYW5nDQoNCj4gDQo+IAlLcnp5c3p0b2YNCg==
