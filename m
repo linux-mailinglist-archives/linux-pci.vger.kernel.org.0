@@ -2,122 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFAF745579C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 10:02:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 580B9455890
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 11:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244980AbhKRJE6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 04:04:58 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:15833 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244984AbhKRJEi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 04:04:38 -0500
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Hvv0n0zYxz917Z;
-        Thu, 18 Nov 2021 17:01:13 +0800 (CST)
-Received: from dggema772-chm.china.huawei.com (10.1.198.214) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.20; Thu, 18 Nov 2021 17:01:34 +0800
-Received: from [10.67.102.169] (10.67.102.169) by
- dggema772-chm.china.huawei.com (10.1.198.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Thu, 18 Nov 2021 17:01:34 +0800
-CC:     <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <liuqi115@huawei.com>
-Subject: Re: [PATCH v2 2/6] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     Robin Murphy <robin.murphy@arm.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <lorenzo.pieralisi@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <jonathan.cameron@huawei.com>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-References: <20211116090625.53702-1-yangyicong@hisilicon.com>
- <20211116090625.53702-3-yangyicong@hisilicon.com>
- <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
- <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <e7d4afb7-e4e4-e581-872b-2477850ad8da@hisilicon.com>
-Date:   Thu, 18 Nov 2021 17:01:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
-MIME-Version: 1.0
-In-Reply-To: <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggema772-chm.china.huawei.com (10.1.198.214)
-X-CFilter-Loop: Reflected
+        id S245500AbhKRKHW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 18 Nov 2021 05:07:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245645AbhKRKFe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Nov 2021 05:05:34 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EAA61B3A;
+        Thu, 18 Nov 2021 10:02:33 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mneEw-006HaY-Ss; Thu, 18 Nov 2021 10:02:31 +0000
+Date:   Thu, 18 Nov 2021 10:01:58 +0000
+Message-ID: <87o86h7pex.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        kernel-team@android.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: apple: Reset the port for 100ms on probe
+In-Reply-To: <20211117202859.2m5sqwz6xsjgldji@pali>
+References: <20211117160053.232158-1-maz@kernel.org>
+        <20211117201245.GA1768803@bhelgaas>
+        <20211117202859.2m5sqwz6xsjgldji@pali>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pali@kernel.org, helgaas@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kernel-team@android.com, alyssa@rosenzweig.io, lorenzo.pieralisi@arm.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Robin,
+On Wed, 17 Nov 2021 20:28:59 +0000,
+Pali Rohár <pali@kernel.org> wrote:
+> 
+> Hello!
+> 
+> On Wednesday 17 November 2021 14:12:45 Bjorn Helgaas wrote:
+> > [+cc Pali]
+> > 
+> > On Wed, Nov 17, 2021 at 04:00:53PM +0000, Marc Zyngier wrote:
+> > > While the Apple PCIe driver works correctly when directly booted
+> > > from the firmware, it fails to initialise when the kernel is booted
+> > > from a bootloader using PCIe such as u-boot.
+> > > 
+> > > That's beacuse we're missing a proper reset of the port (we only
+> > > clear the reset, but never assert it).
+> > 
+> > s/beacuse/because/
+> > 
+> > > Bring the port back to life by wiggling the #PERST pin for 100ms
+> > > (as per the spec).
+> > 
+> > I cc'd Pali because I think he's interested in consolidating or
+> > somehow rationalizing delays like this.
+> > 
+> > If we have a specific spec reference here, I think it would help that
+> > effort.  I *think* it's PCIe r5.0, sec 6.6.1, which mentions the 100ms
+> > along with some additional constraints, like waiting 100ms after Link
+> > training completes for ports that support > 5.0 GT/s, whether
+> > Readiness Notifications are used, and CRS Software Visiblity.
+> 
+> This is not 100ms timeout "after link training completes".
+> 
+> Timeout in this patch is between flipping PERST# signal, so timeout
+> means how long needs to be endpoint card in reset state. And this
+> timeout cannot be controller specific. In past I have tried to find this
+> timeout in specifications, I was not able. Some summary is in my email:
+> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> 
+> So I would like to know, why was chosen 100ms for msleep() in this
+> patch?
 
-On 2021/11/16 19:37, Yicong Yang wrote:
-> On 2021/11/16 18:56, Robin Murphy wrote:
->> On 2021-11-16 09:06, Yicong Yang via iommu wrote:
->> [...]
->>> +/*
->>> + * Get RMR address if provided by the firmware.
->>> + * Return 0 if the IOMMU doesn't present or the policy of the
->>> + * IOMMU domain is passthrough or we get a usable RMR region.
->>> + * Otherwise a negative value is returned.
->>> + */
->>> +static int hisi_ptt_get_rmr(struct hisi_ptt *hisi_ptt)
->>> +{
->>> +    struct pci_dev *pdev = hisi_ptt->pdev;
->>> +    struct iommu_domain *iommu_domain;
->>> +    struct iommu_resv_region *region;
->>> +    LIST_HEAD(list);
->>> +
->>> +    /*
->>> +     * Use direct DMA if IOMMU does not present or the policy of the
->>> +     * IOMMU domain is passthrough.
->>> +     */
->>> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
->>> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
->>> +        return 0;
->>> +
->>> +    iommu_get_resv_regions(&pdev->dev, &list);
->>> +    list_for_each_entry(region, &list, list)
->>> +        if (region->type == IOMMU_RESV_DIRECT &&
->>> +            region->length >= HISI_PTT_TRACE_BUFFER_SIZE) {
->>> +            hisi_ptt->trace_ctrl.has_rmr = true;
->>> +            hisi_ptt->trace_ctrl.rmr_addr = region->start;
->>> +            hisi_ptt->trace_ctrl.rmr_length = region->length;
->>> +            break;
->>> +        }
->>> +
->>> +    iommu_put_resv_regions(&pdev->dev, &list);
->>> +    return hisi_ptt->trace_ctrl.has_rmr ? 0 : -ENOMEM;
->>> +}
->>
->> No.
->>
->> The whole point of RMRs is for devices that are already configured to access the given address range in a manner beyond the kernel's control. If you can do this, it proves that you should not have an RMR in the first place.
->>
->> The notion of a kernel driver explicitly configuring its device to DMA into any random RMR that looks big enough is so egregiously wrong that I'm almost lost for words...
->>
-> 
-> our bios will reserve such a region and reported it through iort. the device will write to the region and in the driver we need to access the region
-> to get the traced data. the region is reserved exclusively and will not be accessed by kernel or other devices.
-> 
-> is it ok to let bios configure the address to the device and from CPU side we just read it?
-> 
+Excellent question. I went back to my notes (and the spec), and it
+looks like I have mistakenly conflated *two* delays here:
 
-Any suggestion?  Is this still an issue you concern if we move the configuration of the device address to BIOS and just read from the CPU side?
+- The post-#PERST delay, which is 100ms, and which is *not* what this
+  patch is doing while it really should be doing it. This is
+  documented in the base PCIe spec (in Rev 2.0, this is part of
+  6.6.1). The amusing part is that on this HW, it seems that only the
+  delay from the falling edge matters (which is why I didn't spot the
+  issue).
 
-> 
-> 
-> .
-> 
+- The duration of the power-on #PERST assertion (Tpvperl), which is
+  also 100ms, and documented in the PCIe Card Electromechanical
+  Specification (Rev 1.0a, 2.2 and 2.2.1).
+
+There is also a third delay (Tperst-clk) which represents the time
+required for the clock to ramp up before releasing #PERST. No, there
+is no value associated with this.
+
+Having come to my senses, and with these constraints in mind, this is
+what I currently have in my tree:
+
+	/* Engage #PERST */
+	gpiod_set_value(reset, 0);
+
+	ret = apple_pcie_setup_refclk(pcie, port);
+	if (ret < 0)
+		return ret;
+
+	/* Hold #PERST for 100ms as per the electromechanical spec */
+	msleep(100);
+	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+	gpiod_set_value(reset, 1);
+	/* Wait for 100ms after #PERST deassertion before anothing else */
+	msleep(100);
+
+Yes, this is totally overkill, as I assume that each port has gone
+through a complete power-off and is only slowly coming back from the
+dead.
+
+In practice, I can completely remove the initial Tpvperl delay (we
+have been powered-on for a long time already, and the clock is stable
+when we come back from setting it up), and cut the second one by half
+without observing any ill effect (though I feel safer keeping it to
+its nominal value).
+
+If nobody screams, I'll respin something shortly.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
