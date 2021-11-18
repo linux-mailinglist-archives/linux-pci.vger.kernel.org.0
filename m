@@ -2,68 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 467FD455D5F
+	by mail.lfdr.de (Postfix) with ESMTP id ED079455D61
 	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:06:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbhKROIw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 09:08:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
+        id S232345AbhKROJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 09:09:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232281AbhKROIw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:08:52 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78982C061570;
-        Thu, 18 Nov 2021 06:05:52 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id z6so6098263pfe.7;
-        Thu, 18 Nov 2021 06:05:52 -0800 (PST)
+        with ESMTP id S232358AbhKROJA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:09:00 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47CDCC061570;
+        Thu, 18 Nov 2021 06:06:00 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id k4so5310213plx.8;
+        Thu, 18 Nov 2021 06:06:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E2kMW7De0WUTFR8R6pbmw+v+DfoEFjJfFZEPmx6TpIo=;
-        b=jmYMhdUPtwXlk7YxNRrEY39ARKEZzJckayE37oIVTUa4nPyIslNcR6XMOv+FjMg22s
-         S/2TjPlBw5NarH79TxwrLYnoAVvWIZ0ppI9goUKtPGdcd0slD6cnqVcnAcmR2QXi6HrW
-         8+7CI+lO7fFXcHknuE0JmXhZ9a5KqyZcFnX4cBMhbOQxCVWJJNIZaMOHFOcmYvr6vB1w
-         pltr2d5RvAkg0R5l+YmyEilG8etz39ddfm+YhEh18pVpohNq8By50UkP5pvHXKBFDxd3
-         9HBmaDizaekYvA2ywKzrnX+8OKZJm2K/jRoIj7A8oOVDYNxiGAyi68IMrf7PY9dIX6YG
-         g3qQ==
+        bh=MJKYZ0DmEpP1c+Cyc4zstBHahVie6foEwa+j6qM9UhA=;
+        b=jR4j+uWajdUBW8ioVx4f5AGVPE7plrg5Zo34hJRLJitbZCha37QIAEH8v3C2MoJa7L
+         q5wQ/GZsXlkwhuooU5p0AbAlaFsADi6OUHnZsNN0WnvMrj6hC6uvKz8BX1vW1VuX64VR
+         VTrlRCt4jn5QRUohdQMSMtX1OifQ1IZnPX7w+5MyfhrI1JMAd4mjkd2C8nmmPK0L7UPF
+         f2YNQcjanKRL62xIjI+ejIjkPwS1WNldYOfy1AQukRqjRNKSndUpwb9Mb/9Ot4hEXnJH
+         Pp6a8QIVJs25PViapKLN86m1IC+q/kZSX+IZfMehrG1tO9WDiiLbBnlnELHSAgcCwOYU
+         TKag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E2kMW7De0WUTFR8R6pbmw+v+DfoEFjJfFZEPmx6TpIo=;
-        b=CbBmS0JFUZN442pT4Yrufare90DBND4H62r6GLW+M1Cgw71LBeJ+CwkkIUlEsQx/34
-         C8g5z1uWECsTEWhyXo0thRN6fU7j3PbXT3fE08lwbTONeMacL7oj9oiG7Ll8wOuCtftn
-         IZK/R0xcriFiXvtFJWkvN4nwOV3hHw753+x7FiYUV1R/iSbFqgMB942PQ1ec++cGAq2B
-         Hj8V0Jn2wXz4Md35PsVB9f9yGeKEYgleX6ALON7bPuaWkxATxxPzqnyO73Wvb6GGZ1h6
-         Oyc5aWY5pgUYWZHv7skekcMbVuUIM89Y0j2QsvtoapjNemGiUrpy/pqaZycBntMgEleo
-         XUNA==
-X-Gm-Message-State: AOAM531mYtsT4IIDIT8JWvPhSdFeEPDr8nXFZo4LpGAes6JV77pCqvD2
-        X7HOJMbk5MCJupofacZxJB8=
-X-Google-Smtp-Source: ABdhPJyV+0mLAR5xy7BosKaOERagEd3ZKVQwr7/RwK2rniXrlnNRhEmZz+hP+50EUyrGGs3nj1a7sw==
-X-Received: by 2002:a63:b0d:: with SMTP id 13mr11503398pgl.190.1637244351963;
-        Thu, 18 Nov 2021 06:05:51 -0800 (PST)
+        bh=MJKYZ0DmEpP1c+Cyc4zstBHahVie6foEwa+j6qM9UhA=;
+        b=OS5C6l6yfk2MlES0BGsARAi25JdYyI4LoQcjSK9Y2hjDM0TYu3SkLNYb0kI9HKAbv4
+         vT07oCexBLj9JD8PpjYTuCh1YFKX1KUntQ5lmp/3jXjEGzhBfsSIxR8wbP4eG05GZGHC
+         h6K517sPmVfVKPO8tkoumJN6xcvhAT9Ji9EZzU6PqqYnFeT0Im0QDbJUKYnj1VrxPmrg
+         WmN2smc59sKa1FXhrbmbRhW4ighdSteO4EyLe+ksaFsl2jQMeDOQxFHItuQj0khVWE8l
+         rnIEZFjJsiA/Ul5sX1fhD4oKh46MxQvmLniqp+lKlzElZEjrEK1tslcbDDiVZ/tLGklH
+         gyFA==
+X-Gm-Message-State: AOAM5313lfkPvRCcMvOlGN7mN395XMVP+NtwlwIkTAlion3an/HYyrl+
+        SewI9+5++0zEHvq5YbWt+VM=
+X-Google-Smtp-Source: ABdhPJzzq68/X527KYUYiq6BXWx7Pi6UkM26Xbb7lDccllJj01D67EBk5gsrY3Egw/rUWXJ/CLdhdA==
+X-Received: by 2002:a17:90a:1f45:: with SMTP id y5mr11000237pjy.138.1637244359702;
+        Thu, 18 Nov 2021 06:05:59 -0800 (PST)
 Received: from localhost.localdomain ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.05.46
+        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 06:05:51 -0800 (PST)
+        Thu, 18 Nov 2021 06:05:59 -0800 (PST)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
+        skhan@linuxfoundation.org, Jingoo Han <jingoohan1@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org (open list:PCIE DRIVER FOR MEDIATEK),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support)
-Subject: [PATCH v4 07/25] PCI: mediatek: Remove redundant error fabrication when device read fails
-Date:   Thu, 18 Nov 2021 19:33:17 +0530
-Message-Id: <666127469482f9ca177805ff52aeb7bccb26e4c9.1637243717.git.naveennaidu479@gmail.com>
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR
+        SAMSUNG EXYNOS),
+        linux-samsung-soc@vger.kernel.org (open list:PCI DRIVER FOR SAMSUNG
+        EXYNOS)
+Subject: [PATCH v4 08/25] PCI: exynos: Remove redundant error fabrication when device read fails
+Date:   Thu, 18 Nov 2021 19:33:18 +0530
+Message-Id: <765c2f27d85fcee4eb137023dc0a8f864eee9e36.1637243717.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
 References: <cover.1637243717.git.naveennaidu479@gmail.com>
@@ -90,35 +90,25 @@ consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 2f3f974977a3..a19f8ec5d392 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -365,19 +365,12 @@ static int mtk_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index c24dab383654..f9526d6de160 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -216,10 +216,8 @@ static int exynos_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
  {
- 	struct mtk_pcie_port *port;
- 	u32 bn = bus->number;
--	int ret;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
  
- 	port = mtk_pcie_find_port(bus, devfn);
--	if (!port) {
+-	if (PCI_SLOT(devfn)) {
 -		*val = ~0;
-+	if (!port)
++	if (PCI_SLOT(devfn))
  		return PCIBIOS_DEVICE_NOT_FOUND;
 -	}
--
--	ret = mtk_pcie_hw_rd_cfg(port, bn, devfn, where, size, val);
--	if (ret)
--		*val = ~0;
  
--	return ret;
-+	return mtk_pcie_hw_rd_cfg(port, bn, devfn, where, size, val);
- }
- 
- static int mtk_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+ 	*val = dw_pcie_read_dbi(pci, where, size);
+ 	return PCIBIOS_SUCCESSFUL;
 -- 
 2.25.1
 
