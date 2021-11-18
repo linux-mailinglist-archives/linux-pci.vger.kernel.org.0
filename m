@@ -2,96 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3647455413
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 06:08:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E954555AE
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 08:32:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243081AbhKRFLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 00:11:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242463AbhKRFLc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 00:11:32 -0500
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 505D7C061764;
-        Wed, 17 Nov 2021 21:08:33 -0800 (PST)
-Received: by mail-ua1-x930.google.com with SMTP id az37so10963881uab.13;
-        Wed, 17 Nov 2021 21:08:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sQDsPGVQd+1fNvhzjKelD6Q5lErAJ0u05RDXxKrw7ko=;
-        b=jmdU4K/BBfkz1zGIoMDv3bbhW951Y2fivg4UpcumIT4yqz5hFe+OtWSimJNNLV1v1/
-         U/l0lURZo39B/9oHh1uojGg3ecQxZi0wOlHz+b57Liq2An84iIQYbrKkyboV0uWsZ5RC
-         aYl7Cjy5S2kbcoJ6DQ/RQtBl7gewB5uAvmBJsK+9sIUSs3x/iRAefOqwWZ67c/Lxcqat
-         UI5dFDwBIoj2xYqOspA260GyqCbupcYzlcH0zzRoWOsdUCywzeTWa36B+wwhbEu8ZotG
-         CLw6zkqB5JLC9kKfrjGvOpdehT0tp1L87MgCxcpWKo1aq1MDVRRR2Be1MOnujBSuFlwj
-         82KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sQDsPGVQd+1fNvhzjKelD6Q5lErAJ0u05RDXxKrw7ko=;
-        b=dz7cAS82UM0SOdN0tQc041sfb+lvp4lek2NFmOT7H0JdFdoTHsJ+kW3BQB/EYOgjmr
-         hTtMSZnEURPd3qUdltQnSVkUDltGXuhaQDBmuhu3jjLZnspi8u9581hoa4/gV5SqVNNT
-         MLGupzVvR8xrn/bMO1xOY7mqDp9EqpvyVqUK43ez8oH7Y9inMH5bdQ3lLvjqdjpqwGAm
-         iE4J1rBKAnrEHDaWya17vTbiM2hZekSv42ntM9bR17BUWGYz+DcAFwTqIPc+jWVYmylp
-         1RoEKV/sSPyz6yj+90H54A64Hz8RnCGJL0pkGzeTYQUpMm9PG1H+z3pVBhFMAAykcVgW
-         SuYw==
-X-Gm-Message-State: AOAM531Gk5W2ff6tlHY11E/YCXkdhljIMOyye5qahf86ViFDNCth/QXp
-        GAtn7BAGubfqVU3MyxbPYTm601nYUP4yDjN9HBY=
-X-Google-Smtp-Source: ABdhPJyyK8OMJQXI0yDUrxVJ+9mF2J2fKcombqjddSyzUAijWjDIy87ErRmp3s6H94r9otGNCaJTtTd/6oUVoNxr+w4=
-X-Received: by 2002:a05:6102:3a11:: with SMTP id b17mr77755865vsu.28.1637212112529;
- Wed, 17 Nov 2021 21:08:32 -0800 (PST)
+        id S243934AbhKRHes (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 02:34:48 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:46414 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243872AbhKRHeb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 02:34:31 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 43B0F218D5;
+        Thu, 18 Nov 2021 07:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1637220690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ceeUZsEANBE1OI2itMTxNUsgiAvwJdrWPdj7FRW59Qk=;
+        b=YT7/5r0k5iNHAmyfkPyTEgW+QQYulHtCHUy8U9RMNqST9X7rWMEIdpH6jnr5vQCLPbI0FP
+        dpIIQZEJXyUJ4/9M5LIfapaXDuebxno6BJBHJ1cUielJJv+mbd5ETzJi/nToI9JJ3cSKpV
+        IAtEa4Cd/JwDaNuoftg8FdM/1pfBzCc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1637220690;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ceeUZsEANBE1OI2itMTxNUsgiAvwJdrWPdj7FRW59Qk=;
+        b=26YSBxG0ieL1E3D24jSfXaTZUDYoJ6uBd6hKTUUZ9Agt+4CxjI1E6T+varVjePjnAzG6hr
+        q675MvvlCmohdVDw==
+Received: from localhost.localdomain (unknown [10.100.208.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 10CFCA3B83;
+        Thu, 18 Nov 2021 07:31:30 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH 18/19] mxser: move ids from pci_ids.h here
+Date:   Thu, 18 Nov 2021 08:31:24 +0100
+Message-Id: <20211118073125.12283-19-jslaby@suse.cz>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211118073125.12283-1-jslaby@suse.cz>
+References: <20211118073125.12283-1-jslaby@suse.cz>
 MIME-Version: 1.0
-References: <20211117152952.12271-1-sergio.paracuellos@gmail.com> <YZVwtUO/j/ZYaL3q@rocinante>
-In-Reply-To: <YZVwtUO/j/ZYaL3q@rocinante>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 18 Nov 2021 06:08:21 +0100
-Message-ID: <CAMhs-H9KQbW=SQCyuR4008NPt8dWpGYspHTwJRRAeoi7Z1ygRg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mt7621: declare 'mt7621_pci_ops' static
-To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krzysztof,
+There is no point having MOXA PCI device IDs in include/linux/pci_ids.h.
+Move them to the driver and sort them all by the ID.
 
-On Wed, Nov 17, 2021 at 10:14 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> w=
-rote:
->
-> Hi,
->
-> > Sparse complains about 'mt7621_pci_ops' symbol is not declared and asks=
- if
-> > it should be declared as 'static' instead. Sparse is right. Hence decla=
-re
-> > symbol as static.
->
-> Thank you for taking care of this!
->
-> [...]
-> > -struct pci_ops mt7621_pci_ops =3D {
-> > +static struct pci_ops mt7621_pci_ops =3D {
-> >       .map_bus        =3D mt7621_pcie_map_bus,
-> >       .read           =3D pci_generic_config_read,
-> >       .write          =3D pci_generic_config_write,
->
-> Thank you!
->
-> Reviewed-by: Krzysztof Wilczy=C5=84ski <kw@linux.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+---
+ drivers/tty/mxser.c     | 20 +++++++++++++++++++-
+ include/linux/pci_ids.h | 18 ------------------
+ 2 files changed, 19 insertions(+), 19 deletions(-)
 
-Thanks!
+diff --git a/drivers/tty/mxser.c b/drivers/tty/mxser.c
+index f6842089459a..ba96ffed193a 100644
+--- a/drivers/tty/mxser.c
++++ b/drivers/tty/mxser.c
+@@ -159,14 +159,32 @@
+ #define MXSER_BAUD_BASE		921600
+ #define MXSER_CUSTOM_DIVISOR	(MXSER_BAUD_BASE * 16)
+ 
++#define PCI_DEVICE_ID_MOXA_RC7000	0x0001
++#define PCI_DEVICE_ID_MOXA_CP102	0x1020
++#define PCI_DEVICE_ID_MOXA_CP102UL	0x1021
++#define PCI_DEVICE_ID_MOXA_CP102U	0x1022
++#define PCI_DEVICE_ID_MOXA_CP102UF	0x1023
++#define PCI_DEVICE_ID_MOXA_C104		0x1040
++#define PCI_DEVICE_ID_MOXA_CP104U	0x1041
++#define PCI_DEVICE_ID_MOXA_CP104JU	0x1042
++#define PCI_DEVICE_ID_MOXA_CP104EL	0x1043
+ #define PCI_DEVICE_ID_MOXA_POS104UL	0x1044
+ #define PCI_DEVICE_ID_MOXA_CB108	0x1080
+-#define PCI_DEVICE_ID_MOXA_CP102UF	0x1023
+ #define PCI_DEVICE_ID_MOXA_CP112UL	0x1120
++#define PCI_DEVICE_ID_MOXA_CT114	0x1140
++#define PCI_DEVICE_ID_MOXA_CP114	0x1141
+ #define PCI_DEVICE_ID_MOXA_CB114	0x1142
+ #define PCI_DEVICE_ID_MOXA_CP114UL	0x1143
++#define PCI_DEVICE_ID_MOXA_CP118U	0x1180
++#define PCI_DEVICE_ID_MOXA_CP118EL	0x1181
++#define PCI_DEVICE_ID_MOXA_CP132	0x1320
++#define PCI_DEVICE_ID_MOXA_CP132U	0x1321
++#define PCI_DEVICE_ID_MOXA_CP134U	0x1340
+ #define PCI_DEVICE_ID_MOXA_CB134I	0x1341
+ #define PCI_DEVICE_ID_MOXA_CP138U	0x1380
++#define PCI_DEVICE_ID_MOXA_C168		0x1680
++#define PCI_DEVICE_ID_MOXA_CP168U	0x1681
++#define PCI_DEVICE_ID_MOXA_CP168EL	0x1682
+ 
+ #define MXSER_NPORTS(ddata)		((ddata) & 0xffU)
+ #define MXSER_HIGHBAUD			0x0100
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index b5248f27910e..86678588d191 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1965,24 +1965,6 @@
+ #define PCI_DEVICE_ID_APPLICOM_PCI2000PFB 0x0003
+ 
+ #define PCI_VENDOR_ID_MOXA		0x1393
+-#define PCI_DEVICE_ID_MOXA_RC7000	0x0001
+-#define PCI_DEVICE_ID_MOXA_CP102	0x1020
+-#define PCI_DEVICE_ID_MOXA_CP102UL	0x1021
+-#define PCI_DEVICE_ID_MOXA_CP102U	0x1022
+-#define PCI_DEVICE_ID_MOXA_C104		0x1040
+-#define PCI_DEVICE_ID_MOXA_CP104U	0x1041
+-#define PCI_DEVICE_ID_MOXA_CP104JU	0x1042
+-#define PCI_DEVICE_ID_MOXA_CP104EL	0x1043
+-#define PCI_DEVICE_ID_MOXA_CT114	0x1140
+-#define PCI_DEVICE_ID_MOXA_CP114	0x1141
+-#define PCI_DEVICE_ID_MOXA_CP118U	0x1180
+-#define PCI_DEVICE_ID_MOXA_CP118EL	0x1181
+-#define PCI_DEVICE_ID_MOXA_CP132	0x1320
+-#define PCI_DEVICE_ID_MOXA_CP132U	0x1321
+-#define PCI_DEVICE_ID_MOXA_CP134U	0x1340
+-#define PCI_DEVICE_ID_MOXA_C168		0x1680
+-#define PCI_DEVICE_ID_MOXA_CP168U	0x1681
+-#define PCI_DEVICE_ID_MOXA_CP168EL	0x1682
+ #define PCI_DEVICE_ID_MOXA_CP204J	0x2040
+ #define PCI_DEVICE_ID_MOXA_C218		0x2180
+ #define PCI_DEVICE_ID_MOXA_C320		0x3200
+-- 
+2.33.1
 
-Best regards,
-     Sergio Paracuellos
-
->
->         Krzysztof
