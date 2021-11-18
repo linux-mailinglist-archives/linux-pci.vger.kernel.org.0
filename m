@@ -2,63 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5153455D67
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:06:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA8C455D69
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:06:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232373AbhKROJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 09:09:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38048 "EHLO
+        id S232301AbhKROJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 09:09:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232408AbhKROJH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:09:07 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9290C061570;
-        Thu, 18 Nov 2021 06:06:06 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id h63so5382126pgc.12;
-        Thu, 18 Nov 2021 06:06:06 -0800 (PST)
+        with ESMTP id S232300AbhKROJf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:09:35 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA94C061570;
+        Thu, 18 Nov 2021 06:06:35 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id p18-20020a17090ad31200b001a78bb52876so8281070pju.3;
+        Thu, 18 Nov 2021 06:06:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FA4eEA0vKwb58YOkbLP9K2NVmJYtwGLqPjb+iaCxg5k=;
-        b=pvFZ0MRzAJrj8pt979HKbEHcM6RZZRo84yo77627EYv7H5wrgSzp+Tof5GsOgr6wmL
-         DPAA5oSOmTX+Fz9oXY1GFjV6XxP3Csvm+jcu9V+6t0GXEPIpTIPxC1geB6HIdWwuNY4+
-         sk5l4jsU1SifopQYlOtZLV/P7hdsHgV/2wh8F7PAJP6ZDNRNJ7N5pBGj3aK75YfFhZRZ
-         GCJiIHMbk96TSg8nM0qOcdoXp3pcX5B9K16CH3HC+YiYhAI2ZWtytvT0NZWV5uq2bCW3
-         zKdewD7ldn6cCDPa9jaZ4J++AeBybJbKcswV3mfPUtq+bCJ6Kj3bYaaYTlPv+vW4Ecze
-         rKGw==
+        bh=8lsW4hpjhviqEYY030z6kfRyw6NTRFOimRsTY0Dd4qI=;
+        b=R/sJSkzEx601ikKdcFXXcXBLPdX8M36alq3M409uEktIk9JmQzDH/88j+OTcY6m972
+         oOCg2sOWlarizgYgRP/kZETioJd/V8hfz34YvW1/jTu9SjD29YddWg+Rjijc9dU5aJeT
+         nIoQQcA4D7r5NWm345J0f5UH6Ha/yIQUXAQcraPv45NX8kDOzcgrTAv4+8ZfX73OnvXt
+         yhCSzkxyY9V2Pjt6Ndq+hqexPvSdtjWCw4iUQHopkkxDTwEm4Akcg5zKeDASUu7HJyOj
+         HoeWg7ASFeSEcY7OWnZCR5zkbtVroKZ8WpbFKbY6ppTefVKFBsHeF6wjUS4oLW/Oy5lU
+         b/aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FA4eEA0vKwb58YOkbLP9K2NVmJYtwGLqPjb+iaCxg5k=;
-        b=rbyJ/HfDcagt1dcCXRWx/an0sUjFh15SC+yggi4lSUnU9W+h8rFlBWATOvgGIJudWu
-         McqfeuYxNX2mJVeo3LCaU7cvjZPsjNS+El16Y+/2t5qEGXpi79m/D5giPz0avm2rJdxH
-         mTfzPjKh+RVlbEIF9f/E3mmD49tLOh/EyEhaodBKCv+tcFcF8e237VwKtyEQDE/9rTej
-         mffyO6WVcJ8aP51Hv3bfcXnxQNFLdH0c4m9DsvBj8OXiaokPA9EDjJ+Jc97YZViHLHxn
-         Ycu4830eZuTMioHfTS+eoFQO3dVfO6FfOyZZtXaKIHARa7PA4e5NRAixSVUMrgfWDoVc
-         GAGw==
-X-Gm-Message-State: AOAM532tfMUnMZ2n+fRF1vS/09DRxhOUVluypKTKDPfcJWn/NPkgs80z
-        O0BpxMZzqqxyMmAS39lvKrk=
-X-Google-Smtp-Source: ABdhPJyYmcR/6DtK9DVRdL5nij9z3SmJ2ySPLjdsrWeskedGCKj8rft+HErV7xfOCFlSXzH7EUe/EQ==
-X-Received: by 2002:a65:5589:: with SMTP id j9mr11358991pgs.291.1637244366422;
-        Thu, 18 Nov 2021 06:06:06 -0800 (PST)
+        bh=8lsW4hpjhviqEYY030z6kfRyw6NTRFOimRsTY0Dd4qI=;
+        b=Nb7sMzMD7SH/ousLdAQuV3QW9RWy3ZonXk8lv6pTXaDN92jqLrc7s+Te70mWEZDmEG
+         1uENVpgOA6ZLQXG8eENoQQnR4rU7m1ezyV3qjknI0oNGmHs9PnbdLtyry+Y0V6jpapMY
+         aBUjtR5ob8W9NdhjpMB7i676kHm02ZHhj/yvYf8x8Z91L/qqm9GDpHGsQRUe+yz8KdMD
+         Ij4IXHMt7eoaJ2K1lxkxeZ5mUjs4imDvjJGQboVBvJhBOHMCd/Nvxu0P+vrk9QqzNMJW
+         z8CjVOEDxAycFaxl51Klf63IVKHrMJyO9aBtVRcRgspEw0mwI89V6ao/QIcpSepZnrFl
+         CcwA==
+X-Gm-Message-State: AOAM53098WQS0wIl5fGo+8ANbWahy1q/kJRFkt4qctUFcgy2yOjIBdr5
+        Zx9x3s/tnWMLi7hhqbGG8L4=
+X-Google-Smtp-Source: ABdhPJzwsIz1FjnbkpaH+NZP6qwJ7t3ZNQ3Pl2HaHBCCx4yHGcbyTsopAFtMN1jFwxxEYO/VtU+oWQ==
+X-Received: by 2002:a17:90b:33d0:: with SMTP id lk16mr10713763pjb.66.1637244395195;
+        Thu, 18 Nov 2021 06:06:35 -0800 (PST)
 Received: from localhost.localdomain ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.06.03
+        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.06.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 06:06:06 -0800 (PST)
+        Thu, 18 Nov 2021 06:06:34 -0800 (PST)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, Shawn Guo <shawn.guo@linaro.org>,
+        skhan@linuxfoundation.org,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH v4 09/25] PCI: histb: Remove redundant error fabrication when device read fails
-Date:   Thu, 18 Nov 2021 19:33:19 +0530
-Message-Id: <7da7ea760abc5f85cad6e9b0d3e59eebd93f50d3.1637243717.git.naveennaidu479@gmail.com>
+Subject: [PATCH v4 10/25] PCI: kirin: Remove redundant error fabrication when device read fails
+Date:   Thu, 18 Nov 2021 19:33:20 +0530
+Message-Id: <f87e22bc09a471d2cf15ad05dfd6432f57739aed.1637243717.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
 References: <cover.1637243717.git.naveennaidu479@gmail.com>
@@ -85,14 +87,14 @@ consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-histb.c | 4 +---
+ drivers/pci/controller/dwc/pcie-kirin.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-index 86f9d16c50d7..410555dccb6d 100644
---- a/drivers/pci/controller/dwc/pcie-histb.c
-+++ b/drivers/pci/controller/dwc/pcie-histb.c
-@@ -127,10 +127,8 @@ static int histb_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index 095afbccf9c1..e6dcac79c02a 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -530,10 +530,8 @@ static int kirin_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
  {
  	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
  
