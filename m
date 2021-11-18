@@ -2,65 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21940455D73
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:07:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43910455D76
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:08:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232470AbhKROKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 09:10:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38468 "EHLO
+        id S232478AbhKROKu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 09:10:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232460AbhKROKm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:10:42 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E371C061570;
-        Thu, 18 Nov 2021 06:07:42 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id gb13-20020a17090b060d00b001a674e2c4a8so5792817pjb.4;
-        Thu, 18 Nov 2021 06:07:42 -0800 (PST)
+        with ESMTP id S232487AbhKROKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:10:48 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D814C061766;
+        Thu, 18 Nov 2021 06:07:48 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id x5so6175320pfr.0;
+        Thu, 18 Nov 2021 06:07:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j6PFmrQZfsZKbN43caoyPHUp+nOh1/rI/bPUZ2uC0hc=;
-        b=BvRkTG9QWh/nDql0vdChRnHccpwZ0VM4CIM6EBHq/1BgkYqp8nyvYg5knfbTMtAm9S
-         ONlfHuNPSw+chm+zhOREpoCqOzSkBHPKq75nMzMfYfiZlXJxO1UzO+C4gtA3QmzLKDht
-         5Bh9Bb28TGsINdTlHnoi5ncLJOJaSg/5E0PcUP9CNVvwPbL1vmYQSvju02y+it/aKDyo
-         bHC7GrlUfpx1NQeiTbAYZCf2+wSQkkFEQBQnTN0Oj1LnMZ4GV0qjtQiwT0flkCu+B/VH
-         bQ/E1ZigUq2WIZaIk1/PHMG9CyxkEykKLu6Udtb8QqjOAh1HqyDy+b9+qLN6PKFCLy2B
-         JMig==
+        bh=oxis35XdZSIgJr6mklaAXMEQHUEVDMfz+GZuoz2m4I8=;
+        b=CfdlCofkOkudUS2qd1NsvEsYuT7jk4wE1tunfAm4T9FgxQkNInv2u6Ao0B3dgzI+cp
+         MBMg06DQ2ISnqX1E8DL4tFvodGh3V26fGl4gI90ndgXwt0ILK6dyREzbrk/ntTcRfLsO
+         NQ1vJyHsPH6wdr2gr2WuWe0A4rPL7km89KeGF+8FimeuZLbRPpfQcn4+a9QU41Rmj/A4
+         xlqTGNv7PzYykiz1mzFRyJ9jBQm55fQwg/ZITxxqAhJ7/PoZSHQlVA8GGeCaejFzyMGZ
+         zraEelTYLMHHqHjeKMhYs8nVXwQaV4/5e09WsMghtAsMGemsv/R/ne8JoFLJB4WZCfrz
+         lx/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j6PFmrQZfsZKbN43caoyPHUp+nOh1/rI/bPUZ2uC0hc=;
-        b=7vZzS6Ej42orbFfZrrFKLd3ifYQsJ3HHzakG4x17HHQ7bhVyGk4k4MrNsJdbpTxri2
-         Yimtn2Xc9NWHraGlYmJHf4KXbt+DAATfACUzxGn/aBAnvvaF9YsVoyZTVrTGrJ7W9D89
-         9+9IngD4LskIfRNRzbvbnwlmMS0yAfIy1oO9fCDryMKDeEW5yeH5w0aMzRBbBbfOPdWJ
-         iRfEwrfD2hjpXbE8LcV965FeT1zYYp8nFlKGdHFMVjKdNUXR5TQYA7LVckH2WLU7CsND
-         bT8cYGqhi/v6MCKR6MxqMEk6+L9ByZdWRG+cwyX4KNqlCbb8Xa6u+D57p3fDMnm9NG4v
-         40GA==
-X-Gm-Message-State: AOAM533xUDHaRTM4o79zkTLEkMw6+4rhmCmJqRHxdv9WOfqSJZgdVz7F
-        aCzBmgcIClFkZC+j6KdoiS0=
-X-Google-Smtp-Source: ABdhPJyvJjeiaFKSgytjId5brKyWz+xbwXrqFdhy7A6dGUOrftB/u/RY89uvHrTE/ZR0106/YqLWVA==
-X-Received: by 2002:a17:90b:3b81:: with SMTP id pc1mr10785668pjb.67.1637244462074;
-        Thu, 18 Nov 2021 06:07:42 -0800 (PST)
+        bh=oxis35XdZSIgJr6mklaAXMEQHUEVDMfz+GZuoz2m4I8=;
+        b=xPF9xSy4udoyyvo38hGOn7wNTBgm/A1K1IkknocjJ8E9/euK6HQXWFEK1w1sNlHT4U
+         UkPthpEjsOyeJt1jYUgcyCJUAWfkumsRrtGXATNEUufZX7KhV5sMPUx/MuePIyQ2FmvF
+         6SxD47D+0U2/watpqtUnhnlcbetyh4gef7DggpPjjMgAGwXXLLZn0GtWsLP1uryKunm3
+         ye+WmuaD3KBS9XdCWfDVq5IIZVZi6XhILvDgNJ0P0uqR6QiEkmbpMKEZ8ngu4zzH1KEl
+         iGwHvRJriZpYHpon/agINfSeKf0SdmotgGCoWoNlH5VvAHnhvn+YSujFvkzZGyM0mFA0
+         V9ZA==
+X-Gm-Message-State: AOAM530etGU0dBA3mAVYHWPAeLJc5DRV96jQbw8AKcY7cCwiU8ai4kIQ
+        vg8VYT/xgQCEjNx28XI5l1qiVLxGRdRE9uiV
+X-Google-Smtp-Source: ABdhPJyKNAsM7vj4XKSIROaJKxPYIQuQZ53f9v5gQ+OOMhKVWBQJbsKOev6gGAPfsMdgsSBm2WrYFw==
+X-Received: by 2002:a05:6a00:248b:b0:49f:9d7f:84e2 with SMTP id c11-20020a056a00248b00b0049f9d7f84e2mr56766723pfv.40.1637244467554;
+        Thu, 18 Nov 2021 06:07:47 -0800 (PST)
 Received: from localhost.localdomain ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.07.38
+        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.07.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 06:07:41 -0800 (PST)
+        Thu, 18 Nov 2021 06:07:47 -0800 (PST)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        skhan@linuxfoundation.org, Joyce Ooi <joyce.ooi@intel.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 12/25] PCI: mvebu: Remove redundant error fabrication when device read fails
-Date:   Thu, 18 Nov 2021 19:33:22 +0530
-Message-Id: <f30264b137b1282ffda34d336e8060bb13d60b98.1637243717.git.naveennaidu479@gmail.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [PATCH v4 13/25] PCI: altera: Remove redundant error fabrication when device read fails
+Date:   Thu, 18 Nov 2021 19:33:23 +0530
+Message-Id: <ed5020e5b008b28c33a90c9c1670cef2393d3b7e.1637243717.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
 References: <cover.1637243717.git.naveennaidu479@gmail.com>
@@ -87,36 +85,25 @@ consistent and easier to find.
 
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- drivers/pci/controller/pci-mvebu.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-altera.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index ed13e81cd691..70a96af8cd2f 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -653,20 +653,16 @@ static int mvebu_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- 	int ret;
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 2513e9363236..a6bdf9aff833 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -510,10 +510,8 @@ static int altera_pcie_cfg_read(struct pci_bus *bus, unsigned int devfn,
+ 	if (altera_pcie_hide_rc_bar(bus, devfn, where))
+ 		return PCIBIOS_BAD_REGISTER_NUMBER;
  
- 	port = mvebu_pcie_find_port(pcie, bus, devfn);
--	if (!port) {
--		*val = 0xffffffff;
-+	if (!port)
+-	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn))) {
+-		*value = 0xffffffff;
++	if (!altera_pcie_valid_device(pcie, bus, PCI_SLOT(devfn)))
  		return PCIBIOS_DEVICE_NOT_FOUND;
 -	}
  
- 	/* Access the emulated PCI-to-PCI bridge */
- 	if (bus->number == 0)
- 		return pci_bridge_emul_conf_read(&port->bridge, where,
- 						 size, val);
- 
--	if (!mvebu_pcie_link_up(port)) {
--		*val = 0xffffffff;
-+	if (!mvebu_pcie_link_up(port))
- 		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
- 
- 	/* Access the real PCIe interface */
- 	ret = mvebu_pcie_hw_rd_conf(port, bus, devfn,
+ 	return _altera_pcie_cfg_read(pcie, bus->number, devfn, where, size,
+ 				     value);
 -- 
 2.25.1
 
