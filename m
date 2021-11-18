@@ -2,156 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A8945515E
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 00:58:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 083D4455215
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 02:17:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241748AbhKRABW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 19:01:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        id S242182AbhKRBUR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 20:20:17 -0500
+Received: from mga07.intel.com ([134.134.136.100]:42317 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241730AbhKRABN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Nov 2021 19:01:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C8D5A61AD2;
-        Wed, 17 Nov 2021 23:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637193494;
-        bh=jt1bptChpIJAfJm7hhcvnL0z6T39eDJjHsyLzG8zD1Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lyKjNjZh0qOCqIMVIpeRoNDwhdUJ/tL20BWpiwNwGttOe0RfGC7KJ4PhUovOify8k
-         CPIwK9uSUQMg7VMxx+ystTmi5eBYFIkTtVD4sE8ulLOvbgkfTXGOpyI5/5ntrQgvl0
-         CfZ1WfNlECodqxIGcyQGBzURqYPwL89BjB4irtfrZDGz99G0bGiOvyoqAHp04d3fBv
-         aBxC568xp2R7kzM9biPqbt5SZcYkGOgkMTsagR6oWZfjlJq8OfZ4tIYBwT1Dm+Bjb+
-         xfWKIqeKqVbpwaZ3tBQdETriNpArC0Ads/tlo1ukjZbgXjypi2+h68mtdIpt5Dhoxd
-         4UKc+KstDfPQQ==
-Date:   Wed, 17 Nov 2021 17:58:12 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-hyperv@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-rockchip@lists.infradead.org,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Robert Richter <rric@kernel.org>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v3 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related
- definitions
-Message-ID: <20211117235812.GA1786428@bhelgaas>
+        id S242174AbhKRBUP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 20:20:15 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="297510643"
+X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
+   d="scan'208";a="297510643"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2021 17:17:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,243,1631602800"; 
+   d="scan'208";a="495157953"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga007.jf.intel.com with ESMTP; 17 Nov 2021 17:17:09 -0800
+Cc:     baolu.lu@linux.intel.com, Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, linux-pci@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
+ interfaces
+To:     Jason Gunthorpe <jgg@nvidia.com>
+References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+ <20211115020552.2378167-2-baolu.lu@linux.intel.com>
+ <YZJdJH4AS+vm0j06@infradead.org>
+ <cc7ce6f4-b1ec-49ef-e245-ab6c330154c2@linux.intel.com>
+ <20211116134603.GA2105516@nvidia.com>
+ <d79acc01-eeaf-e6ac-0415-af498c355a00@linux.intel.com>
+ <20211117133517.GJ2105516@nvidia.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <5901c54b-a6eb-b060-aa52-15de7708d703@linux.intel.com>
+Date:   Thu, 18 Nov 2021 09:12:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
+In-Reply-To: <20211117133517.GJ2105516@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 08:37:26PM +0530, Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error.  There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
+On 11/17/21 9:35 PM, Jason Gunthorpe wrote:
+> On Wed, Nov 17, 2021 at 01:22:19PM +0800, Lu Baolu wrote:
+>> Hi Jason,
+>>
+>> On 11/16/21 9:46 PM, Jason Gunthorpe wrote:
+>>> On Tue, Nov 16, 2021 at 09:57:30AM +0800, Lu Baolu wrote:
+>>>> Hi Christoph,
+>>>>
+>>>> On 11/15/21 9:14 PM, Christoph Hellwig wrote:
+>>>>> On Mon, Nov 15, 2021 at 10:05:42AM +0800, Lu Baolu wrote:
+>>>>>> +enum iommu_dma_owner {
+>>>>>> +	DMA_OWNER_NONE,
+>>>>>> +	DMA_OWNER_KERNEL,
+>>>>>> +	DMA_OWNER_USER,
+>>>>>> +};
+>>>>>> +
+>>>>>
+>>>>>> +	enum iommu_dma_owner dma_owner;
+>>>>>> +	refcount_t owner_cnt;
+>>>>>> +	struct file *owner_user_file;
+>>>>>
+>>>>> I'd just overload the ownership into owner_user_file,
+>>>>>
+>>>>>     NULL			-> no owner
+>>>>>     (struct file *)1UL)	-> kernel
+>>>>>     real pointer		-> user
+>>>>>
+>>>>> Which could simplify a lot of the code dealing with the owner.
+>>>>>
+>>>>
+>>>> Yeah! Sounds reasonable. I will make this in the next version.
+>>>
+>>> It would be good to figure out how to make iommu_attach_device()
+>>> enforce no other driver binding as a kernel user without a file *, as
+>>> Robin pointed to, before optimizing this.
+>>>
+>>> This fixes an existing bug where iommu_attach_device() only checks the
+>>> group size and is vunerable to a hot plug increasing the group size
+>>> after it returns. That check should be replaced by this series's logic
+>>> instead.
+>>
+>> As my my understanding, the essence of this problem is that only the
+>> user owner of the iommu_group could attach an UNMANAGED domain to it.
+>> If I understand it right, how about introducing a new interface to
+>> allocate a user managed domain and storing the user file pointer in it.
 > 
-> Add a PCI_ERROR_RESPONSE definition for that and use it where
-> appropriate to make these checks consistent and easier to find.
+> For iommu_attach_device() the semantic is simple non-sharing, so there
+> is no need for the file * at all, it can just be NULL.
+
+The file * being NULL means the device is only owned by the kernel
+driver. Perhaps we can check this pointer in iommu_attach_device() to
+avoid using it for user domain attachment.
+
 > 
-> Also add helper definitions SET_PCI_ERROR_RESPONSE and
-> RESPONSE_IS_PCI_ERROR to make the code more readable.
+>> Does above help here?
 > 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> ---
->  include/linux/pci.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> No, iommu_attach_device() is kernel only and should not interact with
+> userspace.
+
+The existing iommu_attach_device() allows only for singleton group. As
+we have added group ownership attribute, we can enforce this interface
+only for kernel domain usage.
+
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..689c8277c584 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
->  /* The number of legacy PCI INTx interrupts */
->  #define PCI_NUM_INTX	4
->  
-> +/*
-> + * Reading from a device that doesn't respond typically returns ~0.  A
-> + * successful read from a device may also return ~0, so you need additional
-> + * information to reliably identify errors.
-> + */
-> +#define PCI_ERROR_RESPONSE     (~0ULL)
-> +#define SET_PCI_ERROR_RESPONSE(val)    (*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
-> +#define RESPONSE_IS_PCI_ERROR(val) ((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
+> I'm also going to see if I can learn what Tegra is doing with
+> iommu_attach_group()
 
-Beautiful!  I really like this.
+Okay! Thank you!
 
-I would prefer the macros to start with "PCI_", e.g.,
-PCI_SET_ERROR_RESPONSE().
-
-I think "RESPONSE_IS_PCI_ERROR()" is too strong because (as the
-comment says), ~0 *may* indicate an error.  Or it may be a successful
-read of a register that happens to contain ~0.
-
-Possibilities to convey the idea that this isn't definitive:
-
-  PCI_POSSIBLE_ERROR_RESPONSE(val)  # a little long
-  PCI_LIKELY_ERROR(val)             # we really have no idea whether
-  PCI_PROBABLE_ERROR(val)           #   likely or probable
-  PCI_POSSIBLE_ERROR(val)           # promising?
-
-Can you rebase to my "main" branch (v5.16-rc1), tweak the above, and
-collect up the acks/reviews?
-
-We should also browse drivers outside drivers/pci for places we could
-use these.  Not necessarily as part of this series, although if
-authors there object, it would be good to learn that earlier than
-later.
-
-Drivers that implement pci_error_handlers might be a fruitful place to
-start.  But you've done a great job finding users of ~0 and 0xffff...
-in drivers/pci/, too.
-
-> +
->  /*
->   * pci_power_t values must match the bits in the Capabilities PME_Support
->   * and Control/Status PowerState fields in the Power Management capability.
-> -- 
-> 2.25.1
 > 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+> Jason
+> 
+
+Best regards,
+baolu
