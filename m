@@ -2,136 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E954555AE
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 08:32:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E07CB455753
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 09:51:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243934AbhKRHes (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 02:34:48 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:46414 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243872AbhKRHeb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 02:34:31 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 43B0F218D5;
-        Thu, 18 Nov 2021 07:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1637220690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ceeUZsEANBE1OI2itMTxNUsgiAvwJdrWPdj7FRW59Qk=;
-        b=YT7/5r0k5iNHAmyfkPyTEgW+QQYulHtCHUy8U9RMNqST9X7rWMEIdpH6jnr5vQCLPbI0FP
-        dpIIQZEJXyUJ4/9M5LIfapaXDuebxno6BJBHJ1cUielJJv+mbd5ETzJi/nToI9JJ3cSKpV
-        IAtEa4Cd/JwDaNuoftg8FdM/1pfBzCc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1637220690;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ceeUZsEANBE1OI2itMTxNUsgiAvwJdrWPdj7FRW59Qk=;
-        b=26YSBxG0ieL1E3D24jSfXaTZUDYoJ6uBd6hKTUUZ9Agt+4CxjI1E6T+varVjePjnAzG6hr
-        q675MvvlCmohdVDw==
-Received: from localhost.localdomain (unknown [10.100.208.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 10CFCA3B83;
-        Thu, 18 Nov 2021 07:31:30 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 18/19] mxser: move ids from pci_ids.h here
-Date:   Thu, 18 Nov 2021 08:31:24 +0100
-Message-Id: <20211118073125.12283-19-jslaby@suse.cz>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211118073125.12283-1-jslaby@suse.cz>
-References: <20211118073125.12283-1-jslaby@suse.cz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S244774AbhKRIys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 03:54:48 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:59820 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243365AbhKRIyq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 03:54:46 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1109)
+        id 9B13C20C63DD; Thu, 18 Nov 2021 00:51:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B13C20C63DD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1637225506;
+        bh=J9rOJ6jfJ1HltNYB2odhwK1CJrGxLwIZp7w3haTv62Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ad8O9sGRH3y0zJH5so0jJH1CP3UjGR68+cYMifTEHV5tPN5vfBnbZb95P0xdWkseS
+         4R8v5P32lFz1+7+xvzy8km65zFGQTzzHxPt06LAVjzgjyxUV7MNNSAsgg9P3lZmaRO
+         Tnyr5hTPFZPH3EkThdBQQxkMaGED/TJ9hF4sVImw=
+From:   Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, maz@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: [PATCH v6 0/2] PCI: hv: Hyper-V vPCI for arm64
+Date:   Thu, 18 Nov 2021 00:51:28 -0800
+Message-Id: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no point having MOXA PCI device IDs in include/linux/pci_ids.h.
-Move them to the driver and sort them all by the ID.
+From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/tty/mxser.c     | 20 +++++++++++++++++++-
- include/linux/pci_ids.h | 18 ------------------
- 2 files changed, 19 insertions(+), 19 deletions(-)
+Current Hyper-V vPCI code only compiles and works for x86. There are some
+hardcoded assumptions about the architectural IRQ chip and other arch
+defines.
 
-diff --git a/drivers/tty/mxser.c b/drivers/tty/mxser.c
-index f6842089459a..ba96ffed193a 100644
---- a/drivers/tty/mxser.c
-+++ b/drivers/tty/mxser.c
-@@ -159,14 +159,32 @@
- #define MXSER_BAUD_BASE		921600
- #define MXSER_CUSTOM_DIVISOR	(MXSER_BAUD_BASE * 16)
- 
-+#define PCI_DEVICE_ID_MOXA_RC7000	0x0001
-+#define PCI_DEVICE_ID_MOXA_CP102	0x1020
-+#define PCI_DEVICE_ID_MOXA_CP102UL	0x1021
-+#define PCI_DEVICE_ID_MOXA_CP102U	0x1022
-+#define PCI_DEVICE_ID_MOXA_CP102UF	0x1023
-+#define PCI_DEVICE_ID_MOXA_C104		0x1040
-+#define PCI_DEVICE_ID_MOXA_CP104U	0x1041
-+#define PCI_DEVICE_ID_MOXA_CP104JU	0x1042
-+#define PCI_DEVICE_ID_MOXA_CP104EL	0x1043
- #define PCI_DEVICE_ID_MOXA_POS104UL	0x1044
- #define PCI_DEVICE_ID_MOXA_CB108	0x1080
--#define PCI_DEVICE_ID_MOXA_CP102UF	0x1023
- #define PCI_DEVICE_ID_MOXA_CP112UL	0x1120
-+#define PCI_DEVICE_ID_MOXA_CT114	0x1140
-+#define PCI_DEVICE_ID_MOXA_CP114	0x1141
- #define PCI_DEVICE_ID_MOXA_CB114	0x1142
- #define PCI_DEVICE_ID_MOXA_CP114UL	0x1143
-+#define PCI_DEVICE_ID_MOXA_CP118U	0x1180
-+#define PCI_DEVICE_ID_MOXA_CP118EL	0x1181
-+#define PCI_DEVICE_ID_MOXA_CP132	0x1320
-+#define PCI_DEVICE_ID_MOXA_CP132U	0x1321
-+#define PCI_DEVICE_ID_MOXA_CP134U	0x1340
- #define PCI_DEVICE_ID_MOXA_CB134I	0x1341
- #define PCI_DEVICE_ID_MOXA_CP138U	0x1380
-+#define PCI_DEVICE_ID_MOXA_C168		0x1680
-+#define PCI_DEVICE_ID_MOXA_CP168U	0x1681
-+#define PCI_DEVICE_ID_MOXA_CP168EL	0x1682
- 
- #define MXSER_NPORTS(ddata)		((ddata) & 0xffU)
- #define MXSER_HIGHBAUD			0x0100
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b5248f27910e..86678588d191 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1965,24 +1965,6 @@
- #define PCI_DEVICE_ID_APPLICOM_PCI2000PFB 0x0003
- 
- #define PCI_VENDOR_ID_MOXA		0x1393
--#define PCI_DEVICE_ID_MOXA_RC7000	0x0001
--#define PCI_DEVICE_ID_MOXA_CP102	0x1020
--#define PCI_DEVICE_ID_MOXA_CP102UL	0x1021
--#define PCI_DEVICE_ID_MOXA_CP102U	0x1022
--#define PCI_DEVICE_ID_MOXA_C104		0x1040
--#define PCI_DEVICE_ID_MOXA_CP104U	0x1041
--#define PCI_DEVICE_ID_MOXA_CP104JU	0x1042
--#define PCI_DEVICE_ID_MOXA_CP104EL	0x1043
--#define PCI_DEVICE_ID_MOXA_CT114	0x1140
--#define PCI_DEVICE_ID_MOXA_CP114	0x1141
--#define PCI_DEVICE_ID_MOXA_CP118U	0x1180
--#define PCI_DEVICE_ID_MOXA_CP118EL	0x1181
--#define PCI_DEVICE_ID_MOXA_CP132	0x1320
--#define PCI_DEVICE_ID_MOXA_CP132U	0x1321
--#define PCI_DEVICE_ID_MOXA_CP134U	0x1340
--#define PCI_DEVICE_ID_MOXA_C168		0x1680
--#define PCI_DEVICE_ID_MOXA_CP168U	0x1681
--#define PCI_DEVICE_ID_MOXA_CP168EL	0x1682
- #define PCI_DEVICE_ID_MOXA_CP204J	0x2040
- #define PCI_DEVICE_ID_MOXA_C218		0x2180
- #define PCI_DEVICE_ID_MOXA_C320		0x3200
+Add support for Hyper-V vPCI for arm64 by first breaking the current hard
+coded dependency using a set of new interfaces and implementing those for
+x86 first. That is in the first patch. The second patch adds support for
+Hyper-V vPCI for arm64 by implementing the above mentioned interfaces. That
+is done by introducing a Hyper-V vPCI specific MSI IRQ domain & chip for
+allocating SPI vectors.
+
+changes in v1 -> v2:
+ - Moved the irqchip implementation to drivers/pci as suggested
+   by Marc Zyngier
+ - Addressed Multi-MSI handling issues identified by Marc Zyngier
+ - Addressed lock/synchronization primitive as suggested by Marc
+   Zyngier
+ - Addressed other code feedback from Marc Zyngier
+
+changes in v2 -> v3:
+ - Addressed comments from Bjorn Helgaas about patch formatting and
+   verbiage
+ - Using 'git send-email' to ensure that the patch series is correctly
+   threaded. Feedback by Bjorn Helgaas
+ - Fixed Hyper-V vPCI build break for module build, reported by Boqun Feng
+
+changes in v3 -> v4:
+ - Removed the separate file for IRQ chip that was there in previous
+   iterations and moved the IRQ chip implementation to pci-hyperv.c.
+   Feedback by Michael Kelley and Marc Zyngier.
+ - Addressed various comments from Marc Zyngier about structuring and
+   layout.
+ - Addressed comment from Marc Zyngier about IRQ affinity and other
+   miscellaneous comments.
+
+changes in v4 -> v5:
+ - Fixed an issue with picking the right cpu for irq affinity, identified
+   by Marc Zyngier.
+
+changes in v5 -> v6:
+ - Minor comment updates suggested by Michael Kelley.
+
+Sunil Muthuswamy (2):
+  PCI: hv: Make the code arch neutral by adding arch specific interfaces
+  arm64: PCI: hv: Add support for Hyper-V vPCI
+
+ arch/arm64/include/asm/hyperv-tlfs.h |   9 +
+ arch/x86/include/asm/hyperv-tlfs.h   |  33 ++++
+ arch/x86/include/asm/mshyperv.h      |   7 -
+ drivers/pci/Kconfig                  |   2 +-
+ drivers/pci/controller/Kconfig       |   2 +-
+ drivers/pci/controller/pci-hyperv.c  | 281 ++++++++++++++++++++++++---
+ include/asm-generic/hyperv-tlfs.h    |  33 ----
+ 7 files changed, 300 insertions(+), 67 deletions(-)
+
+
+base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
 -- 
-2.33.1
+2.25.1
+
 
