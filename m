@@ -2,107 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3507B455241
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 02:34:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD9FA4552A0
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 03:21:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236932AbhKRBhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Nov 2021 20:37:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S242277AbhKRBhG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Nov 2021 20:37:06 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AI0DJIC026916;
-        Thu, 18 Nov 2021 01:33:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=xn+sOmi8ndC4mBR3hUQSaLyvI8uirMt19YnrsauyzFU=;
- b=gcuC3FyFsNJvBcNi99WvaRh3cJjwv1HftEgO/cGl47mQDUKKTuvkaOykUjMmio6ITxIh
- oGdMEH7suvteDwOHbjYkJGAtsB4z+kWvEmtX9ssaOjLn/HI+fxP/9rcGb9UUkgEa8NTs
- ZGlaL98OdV90TDENem/lg983qlbFzCI98QT8C5JNjljXpw7oMDSTvnPrLW/8c+FBLdNw
- ZPZFdzwPVhgZcz55gBejj1GGFGZhvKw1x8d1OMYxPViOQEQgayuRYF0OquLTle4k/RWh
- /huq/mLVcUR9VlNh88RWqRvHX/qeZAk3P8SypQOxJ0n7uscbgjGpy9THqkmLIekXujs7 1w== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cdc3bs585-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 01:33:54 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AI1XFx1006361;
-        Thu, 18 Nov 2021 01:33:53 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3ca4mk7vm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 01:33:53 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AI1QpdJ61080060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Nov 2021 01:26:51 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF380A405B;
-        Thu, 18 Nov 2021 01:33:50 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 593F0A4051;
-        Thu, 18 Nov 2021 01:33:50 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Nov 2021 01:33:50 +0000 (GMT)
-Received: from [9.102.52.144] (unknown [9.102.52.144])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B871860272;
-        Thu, 18 Nov 2021 12:33:44 +1100 (AEDT)
-Subject: Re: [helgaas-pci:pci/driver 17/24] drivers/misc/cxl/pci.c:1816:29:
- error: assignment discards 'const' qualifier from pointer target type
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, kbuild-all@lists.01.org,
-        linux-pci@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>
-References: <202111120955.M4Pkd0T4-lkp@intel.com> <YY3GbjLsnkUc/zhG@rocinante>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Message-ID: <180067dd-f640-d207-2ee7-6e84c54704f4@linux.ibm.com>
-Date:   Thu, 18 Nov 2021 12:33:36 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <YY3GbjLsnkUc/zhG@rocinante>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lf0WpNlGoZSTLtcCMFnnwBQFE6UyNdD_
-X-Proofpoint-ORIG-GUID: lf0WpNlGoZSTLtcCMFnnwBQFE6UyNdD_
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-17_09,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
- suspectscore=0 mlxlogscore=863 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 malwarescore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111180007
+        id S242493AbhKRCYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Nov 2021 21:24:42 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:46196 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241550AbhKRCYk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Nov 2021 21:24:40 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 925FC202317;
+        Thu, 18 Nov 2021 03:21:38 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D3102031B0;
+        Thu, 18 Nov 2021 03:21:38 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 011A1183AC96;
+        Thu, 18 Nov 2021 10:21:35 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
+        tharvey@gateworks.com, kishon@ti.com, vkoul@kernel.org,
+        robh@kernel.org, galak@kernel.crashing.org, shawnguo@kernel.org
+Cc:     hongxing.zhu@nxp.com, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: [PATCH v6 0/8] Add the imx8m pcie phy driver and imx8mm pcie support
+Date:   Thu, 18 Nov 2021 09:54:41 +0800
+Message-Id: <1637200489-11855-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/11/21 12:42 pm, Krzysztof Wilczyński wrote:
-> [+CC Adding Jonathan, Dan, Frederic and Andrew for visibility]
-> 
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/driver
->> head:   0508b6f72f055b88df518db4f3811bda9bb35da4
->> commit: 115c9d41e58388415f4956d0a988c90fb48663b9 [17/24] cxl: Factor out common dev->driver expressions
->> config: powerpc64-allnoconfig (attached as .config)
+Refer to the discussion [1] when try to enable i.MX8MM PCIe support,
+one standalone PCIe PHY driver should be seperated from i.MX PCIe
+driver when enable i.MX8MM PCIe support.
 
-I think this issue has already been fixed, but I'm curious how 
-CONFIG_CXL ended up being y in a supposed allnoconfig...
+This patch-set adds the standalone PCIe PHY driver suport[1-5], and i.MX8MM
+PCIe support[6-8] to have whole view to review this patch-set.
 
+The PCIe works on i.MX8MM EVK board based the the blkctrl power driver
+[2] and this patch-set. And tested by Tim and Marcel on the different
+reference clock modes boards.
 
-Andrew
+[1] https://patchwork.ozlabs.org/project/linux-pci/patch/20210510141509.929120-3-l.stach@pengutronix.de/
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/cover/20210910202640.980366-1-l.stach@pengutronix.de/
 
+Main changes v5 --> v6:
+- Add "Reviewed-by: Rob Herring <robh@kernel.org>" into #1 and #3 patches.
+- Merge Rob's review comments to the #2 patch.
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Main changes v4 --> v5:
+- Set the AUX_EN always 1b'1, thus it can fix the regression introduced in v4
+  series on Marcel's board.
+- Use the lower-case letter in the devicetreee refer to Marcel's comments.
+_ Since the default value of the deemphasis parameters are zero, only set
+  the deemphasis registers when the input paramters are none zero.
+
+Main changes v3 --> v4:
+- Update the yaml to fix syntax error, add maxitems and drop description of phy
+- Correct the clock name in PHY DT node.
+- Squash the EVK board relalted dts changes into one patch, and drop the
+  useless dummy clock and gpio suffix in DT nodes.
+- Add board specific de-emphasis parameters as DT properties. Thus each board
+  can specify its actual de-emphasis values.
+- Update the commit log of PHY driver.
+- Remove the useless codes from PCIe driver, since they are moved to PHY driver
+- After the discussion and verification of the CLKREQ# configurations with Tim,
+  agree to add an optional boolean property "fsl,clkreq-unsupported", indicates
+  the CLKREQ# signal is hooked or not in HW designs.
+- Add "Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>" tag, since
+  Marcel help to test the v3 patch-set.
+
+Main changes v2 --> v3:
+- Regarding Lucas' comments.
+ - to have a whole view to review the patches, send out the i.MX8MM PCIe support too.
+ - move the PHY related bits manipulations of the GPR/SRC to standalone PHY driver.
+ - split the dts changes to SOC and board DT, and use the enum instead of raw value.
+ - update the license of the dt-binding header file.
+
+Changes v1 --> v2:
+- Update the license of the dt-binding header file to make the license
+  compatible with dts files.
+- Fix the dt_binding_check errors.
+
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   6 +++
+Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  92 +++++++++++++++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi                |  55 +++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mm.dtsi                    |  46 +++++++++++++++-
+drivers/pci/controller/dwc/pci-imx6.c                        |  73 ++++++++++++++++++++++---
+drivers/phy/freescale/Kconfig                                |   9 ++++
+drivers/phy/freescale/Makefile                               |   1 +
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 237 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+include/dt-bindings/phy/phy-imx8-pcie.h                      |  14 +++++
+9 files changed, 525 insertions(+), 8 deletions(-)
+
+[PATCH v6 1/8] dt-bindings: phy: phy-imx8-pcie: Add binding for the
+[PATCH v6 2/8] dt-bindings: phy: Add imx8 pcie phy driver support
+[PATCH v6 3/8] dt-bindings: imx6q-pcie: Add PHY phandles and name
+[PATCH v6 4/8] arm64: dts: imx8mm: Add the pcie phy support
+[PATCH v6 5/8] phy: freescale: pcie: Initialize the imx8 pcie
+[PATCH v6 6/8] arm64: dts: imx8mm: Add the pcie support
+[PATCH v6 7/8] arm64: dts: imx8mm-evk: Add the pcie support on imx8mm
+[PATCH v6 8/8] PCI: imx: Add the imx8mm pcie support
