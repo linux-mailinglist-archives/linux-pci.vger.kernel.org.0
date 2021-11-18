@@ -2,137 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20A474564ED
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 22:10:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F08D74564FD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 22:21:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbhKRVN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 16:13:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234463AbhKRVN1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 16:13:27 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A15BC061574
-        for <linux-pci@vger.kernel.org>; Thu, 18 Nov 2021 13:10:26 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id 77-20020a1c0450000000b0033123de3425so8784746wme.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Nov 2021 13:10:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:from:subject:to
-         :content-language:cc:content-transfer-encoding;
-        bh=G3fZmKOo/J9cc206xBW7iBHSldwFZyhKfuaM71Z1/Po=;
-        b=EUI7Yjr6PJbdl9Z8xf4Xz1E/djlxVs2HuBooZkqP+CVefp01q9aV/aQhRYVQctlByM
-         DLRJ/9IEKF7RwtI+OvQBQb9NkPPXYSOdjbe/S3acS0rKZwJamZSo38TFRyXNvmEgmDkH
-         8ZMgq2+r4OxH6vRD6aHK34RRmUZzOZOSdi17hxoyoTOP9xoyyOBeQeksGWJT+ncuah7r
-         prAtY/bncBUoplU+PX0k8Ikoxkcp2mpgbzv/WKHCHTzJ3ihzKcxABW/5+DyV/JSsXXOR
-         vmXtnK50gtKUiOIq+Di35WX3Bl/78iV6iJa5ypWu59nloACdSs4VYMHP7g9d/obRKDLM
-         rNJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:content-language:cc:content-transfer-encoding;
-        bh=G3fZmKOo/J9cc206xBW7iBHSldwFZyhKfuaM71Z1/Po=;
-        b=Trg6PRIPMf9CcERV3YkEocQfcQa8kBIXbXl5Rfj+JkLyV+fMcE1vkaVG3LvsJLJ8u4
-         OiALS4iGtvyIc4862AWd7Q7CgwA6cBN5TVKzROI6lAjanJu9THqSrdx/z9oimWzxGC3o
-         5PgiCe8XSp8Cy3QJbfpF+NUpm8lVdWAG5VOwr452mGp5Qh/V2LLcYfPz5j/aJ3p6Ex+p
-         npjqL0OiFxmGDs+Ek+ugVfhtoRJ+kEhymBsg3LbUkrszwVif5hT5xmcKCKrccdu+Nxrc
-         jGMMyNdL94YtSq1Ap+ELFbu98lVGSWQyBu54uj55Vlcr7I9q08b1ZaZQTDBZDGTqkU5X
-         rGbg==
-X-Gm-Message-State: AOAM530SlgGo63984XPrAnRPgQXbZ9zJny4oplVR+yvLVD9oENAA/MvE
-        GJ9LiHdjjgLku4Z/K6wVY1SMySTwvPQ=
-X-Google-Smtp-Source: ABdhPJw84dfiy8hK+ubShRdBkCDJ0q07Ir1no6rwQWtv7C+6oTLappCVyAFqo2xmuRLLh+SbqbqVaw==
-X-Received: by 2002:a1c:2b04:: with SMTP id r4mr182858wmr.48.1637269824937;
-        Thu, 18 Nov 2021 13:10:24 -0800 (PST)
-Received: from ?IPV6:2003:ea:8f1a:f00:fc8d:4de8:c1d1:9213? (p200300ea8f1a0f00fc8d4de8c1d19213.dip0.t-ipconnect.de. [2003:ea:8f1a:f00:fc8d:4de8:c1d1:9213])
-        by smtp.googlemail.com with ESMTPSA id g5sm1569117wri.45.2021.11.18.13.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Nov 2021 13:10:24 -0800 (PST)
-Message-ID: <8dd245a0-c088-c5e1-a2be-913c96f44bc9@gmail.com>
-Date:   Thu, 18 Nov 2021 22:10:20 +0100
+        id S229954AbhKRVYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 16:24:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229633AbhKRVYJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Nov 2021 16:24:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7DF35611C4
+        for <linux-pci@vger.kernel.org>; Thu, 18 Nov 2021 21:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637270468;
+        bh=8+4QaSmgKHT5mc8WsQD+7ObwcrhjfhaDLN9egxbyGY0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jBp9WgLUMQs0OCDhpHvvkXGC2Lar8lR0FsixA3bAMSdx6USJjr8YiugfzfEeNNto4
+         Ycr4IuD5d4XaF8m/gwJUpGxJ9DwkqqNQ61lvG8JYnvoIVy+NSGrANIksKq3FklqBsI
+         14m8W5w1OtL9ED42RhulvOJiWva1p64piMPmTIg/0sgWGVsyym7YClZX/fpJlCUIiJ
+         v9YNrrCWZMAPnOxFaAHFeJK2PjrMTtR0/ICwvFsigYmrIMVUouBagqTqdKSh0TTdTa
+         IAMp1QR4XRFAUjiH/bAezflcOg90LoEsFblUptA23SbPbKye6QB9MJl07j7dXdJC5h
+         /vzOnPFtolBjQ==
+Received: by mail-ed1-f54.google.com with SMTP id y12so33039779eda.12
+        for <linux-pci@vger.kernel.org>; Thu, 18 Nov 2021 13:21:08 -0800 (PST)
+X-Gm-Message-State: AOAM533TY9jE/zxvUvOAz7E8xi2VMEQo13AG9X44i+Nez0CsykPCls9t
+        jYuZdeQyL5msm4Oq2T2mQnFwyg7p76ciEYS0zw==
+X-Google-Smtp-Source: ABdhPJwXjw9gbrBu5jOQxSYldcAMBsrfAx3gbrbawtQtIsRGycmlCb8B1wgc8fl8QEUpLb2IwHrenN7CLuNpffLoFS8=
+X-Received: by 2002:a17:907:a411:: with SMTP id sg17mr776101ejc.84.1637270466925;
+ Thu, 18 Nov 2021 13:21:06 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH RESEND] PCI/VPD: Add simple VPD read cache
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Content-Language: en-US
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com>
+In-Reply-To: <CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 18 Nov 2021 15:20:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL8ofiJv4gyP+rnDEKxjd5+ANL3XwhxaSF13aznvGpE9g@mail.gmail.com>
+Message-ID: <CAL_JsqL8ofiJv4gyP+rnDEKxjd5+ANL3XwhxaSF13aznvGpE9g@mail.gmail.com>
+Subject: Re: PCIe regression on APM Merlin (aarch64 dev platform) preventing
+ NVME initialization
+To:     =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-VPD reads can be time-consuming operations, and when reading bytes
-sequentially then worst-case we may read the same VPD dword four times.
-Typically it happens in pci_vpd_size() already that the same VPD dword
-is read more than once. Therefore let's add a simple read cache that
-caches the last read VPD dword.
+On Thu, Nov 18, 2021 at 12:10 PM St=C3=A9phane Graber <stgraber@ubuntu.com>=
+ wrote:
+>
+> Hello,
+>
+> I've recently been given access to a set of 4 APM X-Gene2 Merlin
+> boards (old-ish development platform).
+> Running them on Ubuntu 20.04's stock 5.4 kernel worked fine but trying
+> to run anything else would fail to boot due to a NVME initialization
+> timeout preventing the main drive from showing up at all.
+>
+> Tracking this issue, I first moved to clean mainline kernels and then
+> isolated the issue to be somewhere between 5.4.0 and 5.5.0-rc1, which
+> sadly meant the merge window (so much for a quick bisect...). I've
+> then bisected between those two points and came up with:
+>
+>   6dce5aa59e0bf2430733d7a8b11c205ec10f408e (refs/bisect/bad) PCI:
+> xgene: Use inbound resources for setup
+>
+> I finally switched to the latest 5.15.2 tree, reverted that one
+> commit, built a new kernel and confirmed that those boards now work
+> flawlessly.
+>
+> Unfortunately that's about the extent of my abilities with kernel
+> debugging and I won't pretend to understand what that commit does or
+> how it may be breaking PCIe initialization on those systems.
+>
+> I'm not technically blocked on this, I can manually build my own
+> kernels by reverting that one commit every time, but that's obviously
+> not ideal and I'd much rather have this fixed upstream :)
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pci/vpd.c   | 13 +++++++++++++
- include/linux/pci.h |  2 ++
- 2 files changed, 15 insertions(+)
+Doesn't this platform have ACPI f/w you can use? From the log, it
+looks like ACPI tables are passed to the kernel, but since a full DT
+is passed it is used by default. Does 'acpi=3Don' not work?
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 75e48df2e..2315e45f6 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -194,6 +194,11 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
- 			break;
- 		}
- 
-+		if (vpd->cached_offset == (pos & ~3)) {
-+			val = vpd->cached_val;
-+			goto process;
-+		}
+Given no one noticed the breakage for 2 years, I'd really like to
+remove these dts and binding files otherwise someone needs to convert
+bindings to schema and fix warnings. Current stats look like this:
+Processing apm:
+warnings: 240
+undocumented compat: 114
+
+For example, I noticed that dma-ranges declares the entries are 32-bit
+(0x42000000 is 32-bit prefetch), yet the PCI bus address and sizes are
+>32-bit. AFAICT, that isn't part of the problem here.
+
+> =3D=3D Good boot on 5.15.2 (commit reverted) =3D=3D
+> Full log at: https://gist.github.com/stgraber/e489b7e55dd7ffaac9f77dd8634=
+ca2ff
+>
+> root@entak:~# dmesg | grep -Ei "nvme|pci"
+> [    0.094146] PCI: CLS 0 bytes, default 64
+> [    0.130573] shpchp: Standard Hot Plug PCI Controller Driver version: 0=
+.4
+> [    0.131324] xgene-pcie 1f2b0000.pcie: host bridge /soc/pcie@1f2b0000 r=
+anges:
+> [    0.131344] xgene-pcie 1f2b0000.pcie:   No bus range found for
+> /soc/pcie@1f2b0000, using [bus 00-ff]
+> [    0.131365] xgene-pcie 1f2b0000.pcie:       IO
+> 0xc010000000..0xc01000ffff -> 0x0000000000
+> [    0.131388] xgene-pcie 1f2b0000.pcie:      MEM
+> 0xc120000000..0xc13fffffff -> 0x0020000000
+> [    0.131401] xgene-pcie 1f2b0000.pcie:      MEM
+> 0xe000000000..0xffffffffff -> 0xe000000000
+> [    0.131416] xgene-pcie 1f2b0000.pcie:   IB MEM
+> 0x8000000000..0x807fffffff -> 0x8000000000
+> [    0.131427] xgene-pcie 1f2b0000.pcie:   IB MEM
+> 0x0000000000..0x7fffffffff -> 0x0000000000
+
+My best guess is while the above is the parsed order of 'IB MEM'
+regions, we sort the entries by address now and that changes which
+inbound registers get used for each region. And one doesn't handle >
+32-bit addresses. Can you try out this change? It's not what I want
+for a final change because the code is just as fragile:
+
+diff --git a/drivers/pci/controller/pci-xgene.c
+b/drivers/pci/controller/pci-xgene.c
+index 56d0d50338c8..18f05b65439e 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -465,16 +465,16 @@ static int xgene_pcie_select_ib_reg(u8
+*ib_reg_mask, u64 size)
+                return 1;
+        }
+
+-       if ((size > SZ_1K) && (size < SZ_1T) && !(*ib_reg_mask & (1 << 0)))=
+ {
+-               *ib_reg_mask |=3D (1 << 0);
+-               return 0;
+-       }
+-
+        if ((size > SZ_1M) && (size < SZ_1T) && !(*ib_reg_mask & (1 << 2)))=
+ {
+                *ib_reg_mask |=3D (1 << 2);
+                return 2;
+        }
+
++       if ((size > SZ_1K) && (size < SZ_1T) && !(*ib_reg_mask & (1 << 0)))=
+ {
++               *ib_reg_mask |=3D (1 << 0);
++               return 0;
++       }
 +
- 		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
- 						 pos & ~3);
- 		if (ret < 0)
-@@ -206,6 +211,9 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
- 		if (ret < 0)
- 			break;
- 
-+		vpd->cached_val = val;
-+		vpd->cached_offset = pos & ~3;
-+process:
- 		skip = pos & 3;
- 		for (i = 0;  i < sizeof(u32); i++) {
- 			if (i >= skip) {
-@@ -242,6 +250,10 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 		return -EINTR;
- 
- 	while (pos < end) {
-+		/* invalidate read cache */
-+		if (vpd->cached_offset == pos)
-+			vpd->cached_offset = -1;
-+
- 		ret = pci_user_write_config_dword(dev, vpd->cap + PCI_VPD_DATA,
- 						  get_unaligned_le32(buf));
- 		if (ret < 0)
-@@ -270,6 +282,7 @@ void pci_vpd_init(struct pci_dev *dev)
- 
- 	dev->vpd.cap = pci_find_capability(dev, PCI_CAP_ID_VPD);
- 	mutex_init(&dev->vpd.lock);
-+	dev->vpd.cached_offset = -1;
+        return -EINVAL;
  }
- 
- static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cd8aa6fce..fb123c248 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -297,6 +297,8 @@ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
- struct pci_vpd {
- 	struct mutex	lock;
- 	unsigned int	len;
-+	u32		cached_val;
-+	int		cached_offset;
- 	u8		cap;
- };
- 
--- 
-2.33.0
-
