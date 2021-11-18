@@ -2,222 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CDFB455DB3
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:13:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D451455EE4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 16:03:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232825AbhKROQN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 09:16:13 -0500
-Received: from guitar.tcltek.co.il ([192.115.133.116]:56331 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232816AbhKROQN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Nov 2021 09:16:13 -0500
-Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 8D835440EEF;
-        Thu, 18 Nov 2021 16:13:08 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1637244788;
-        bh=MXoQLkWXa7ftWdOIPycTA65YKc/ITRPkclu5MNbQjgs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ts7sd0aizHJvHm4RThUZbV+d53gIeJ2/Fi3Irr7La7dqN2kRJVgCvedPd/9d0aka2
-         u2MV7P0/Xs/wuumjb8rjtgBOnNyWszhg6ad1QDiC4rWagzhH8ls0f03gLMrqJiSdKG
-         VqnKPP7U9JeYP2E+3IU7Saf1HxOvOSQX2SHHY7Iw8QWqwVw0BD1jEo5sxMCcR2tDhr
-         PEnfvL7vSTRFWl0esiOJg2i/h9v8yKO1mXDr44Xjj6zUb8fhjwjLgxl3PEf+EaNGn9
-         T96vUTIeiaCWCjOsqyoMlriUjXdt4GYG1XL8DYHH6j/tq5+Qhu0ogogCrFbS4Tvaps
-         jupyeuWD9ZSTA==
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH] PCI: Change PCIe capability registers offset to hex
-Date:   Thu, 18 Nov 2021 16:13:00 +0200
-Message-Id: <aa067278adacbb59a675366052714081f4980f26.1637244780.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.33.0
+        id S229887AbhKRPG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 10:06:26 -0500
+Received: from mail-dm6nam08on2044.outbound.protection.outlook.com ([40.107.102.44]:38152
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229607AbhKRPG0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Nov 2021 10:06:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WBGAbnO7LPJH2xnXa+m+Gu3ULg7fRSkQ9ee6xm+bJYyBJU1WGKQDoDzXt62hRLnvd2KqB8nB6dYjuh3ljMZR8vlMsyVb2RbvnTkSwh1G3qgvOaG576rKyCIfIrFS2f/6BSIPalhAWI3Nhi/rxmJBOQfb6eSS7eltrGsda+Ci9lAbhHfEilT2I7I66YpTDW55b+AHVVUhSHAhw0z7jSvIA6KIlcpuF8M1qB25e0eQOFmzWjVpKOMngr7TE3mgGtbFK9xTDBn9w8AG/i2S31kaUOuo/hjlJQv9Ldd6XhtGtqvRQgERbI2s9whrXhHFSF5/k5T/1DmhQcCMPTnBY23KCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D3qQ45fsmxvVxqL8wr5ZfHMpYpaPJ3Fm+RyvHmNuEoI=;
+ b=aXAcroWP1oI+Qo+WA37UtgtTLv+4sbTRggUsv+KJ9Ja60Qek/gd0JPjfVPtGjS6URE6MtRjotBcAAjH2l79u2AXUie9nWs21hRiFFQDI+dwXl2QeLMk8ByQMo9U9p4XbuRInuDN/TH/olYhqgp3TlSJuned+VA4utSFIvFcLCCBbgFya7mJtJJMf/tlMW+VWkPaCKem2T9OdnUL0tqc461bAUCk6eR2fn9MfGrKy2H9mqkR4RCh8sFX1hTQwzuLK4WBcN6vPGPNg+lYQmWlZNy3XkWdgXmJfzQNlZpFuYiKAJQYFqH/MjMMvvDKyyE9naP46IZoTolvJ513K5N83zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=lst.de smtp.mailfrom=nvidia.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D3qQ45fsmxvVxqL8wr5ZfHMpYpaPJ3Fm+RyvHmNuEoI=;
+ b=GZg5UyopTg/gXFYm2NKt6EWyqbvpsHluyEW6br+imK7SSs4p/gruabGIH1TrPnuhGUmUAzOqz8xJCEYgXugGag6babzkjsv8WnzBDsfoGXxcWTVIJnVH/XHvAgzH/Wh/lbe06xoGqrvpX1W/EWW7U70v1ttLI45GIYBsbMyxkPffnxl55pU1EK691mksJFzry9JpiCrqjYrfFcxbDnHGIw1ANNy/Fm+3IHqe7NJ2SIbkLMRk6w/NqM4IaMzF0h4fIvwdQvKj1mhO6qi4MVzIfRQ7OisyB0cFaxVhaAnHQuRT4x/l2Wd6ZHs2++OxnOUFnt6utKmPq8YoPnUvjUXxpA==
+Received: from DM3PR12CA0127.namprd12.prod.outlook.com (2603:10b6:0:51::23) by
+ DM8PR12MB5397.namprd12.prod.outlook.com (2603:10b6:8:38::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4690.26; Thu, 18 Nov 2021 15:03:24 +0000
+Received: from DM6NAM11FT061.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:51:cafe::72) by DM3PR12CA0127.outlook.office365.com
+ (2603:10b6:0:51::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.21 via Frontend
+ Transport; Thu, 18 Nov 2021 15:03:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT061.mail.protection.outlook.com (10.13.173.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4713.20 via Frontend Transport; Thu, 18 Nov 2021 15:03:23 +0000
+Received: from [10.25.99.100] (172.20.187.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 18 Nov
+ 2021 15:03:08 +0000
+Subject: Re: Query about secondary_bu_reset implementation
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>, <hch@lst.de>,
+        <okaya@kernel.org>
+CC:     Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>
+References: <40b03450-8f42-29d5-b65e-43644ec44940@nvidia.com>
+Message-ID: <0cc150cd-664f-05de-c8eb-81c81583cad7@nvidia.com>
+Date:   Thu, 18 Nov 2021 20:33:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <40b03450-8f42-29d5-b65e-43644ec44940@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.187.6]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2008cc7a-c986-40c9-b8bb-08d9aaa4915a
+X-MS-TrafficTypeDiagnostic: DM8PR12MB5397:
+X-Microsoft-Antispam-PRVS: <DM8PR12MB539738545AC9740DFCB3E942B89B9@DM8PR12MB5397.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1fZWNWvtFRQCbOkTQprwjIP4ATe4W80Mq/ekjI0y0ZWS3emAY9FAuwc869VL1HHRH4EysbF/GifvhgpPS12u9YFfETsaCtAgkUhlLBDdSBNG4BFaNL/+5ozBLWM3PwYIUWwenoDTrhKxK5NGC5oTowdUYomIvIPjckvQxHHPFwvDVyz2mAUDd0po5vZmDkFOMSDEFo/SdUCmYWCBaGlWXnF9r0zYHJoTj1y57Y3XebkwGtJ0JVk2+LGeKZi8UO9SLYsX3a+wyKrD9T4EJjKeKQxvOdvtPz4pdORjXVT94IRqP29pl1Q0cVbJ7AvtuCmm6aK5guT3X7aug2v4D4B47ij6+nGpvF9o99uafewENqMmtaGLkAeMySTXUBIulhLcn08nxTmlG2tG43ISQ5WlMpxcpgio3VOrRWOTzGyKPDPJS+Pp0sOo/kVLtap033dE1GRKvdOj91Hgolhd1IV9BQYBRmXetVRp+srOmtFrImE6VE7j8IP1+rHtA1Lf4fzKl043hSVXbJkle2sKtl8aDSQC/LlkpMYVHbn1cy7ylvPaVmMVWes4izrMUZmuxKmwD9KZdrPa8C+qgoBLztXOTwYKUNbBFdJc6CxPqpcc16xmrDXq4dy6tff9fbQG56iElLJS1B77RLacEFmbYuLJupH2+fK1xby+9foA/lqm8MEG95ctke960R5LuX9DSFGSsBCEfx+CsmwTFsARqx5jciiWeIQ5t0LR7nnM2oAfd9k=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(31686004)(36906005)(82310400003)(2906002)(5660300002)(31696002)(26005)(316002)(186003)(16526019)(2616005)(70206006)(16576012)(36860700001)(86362001)(508600001)(426003)(70586007)(8676002)(336012)(54906003)(4326008)(6666004)(47076005)(83380400001)(110136005)(53546011)(36756003)(7636003)(356005)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 15:03:23.8576
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2008cc7a-c986-40c9-b8bb-08d9aaa4915a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT061.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5397
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hex notation matches the spec documents, and is less error prone.
+Hi Folks,
+Could you please take time to help us understand this better?
 
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Link: https://lore.kernel.org/r/20210825160516.GA3576414@bjorn-Precision-5520/
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- include/uapi/linux/pci_regs.h | 44 +++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+Thanks,
+Vidya Sagar
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index ff6ccbc6efe9..81a972368f2a 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -470,7 +470,7 @@
- 
- /* PCI Express capability registers */
- 
--#define PCI_EXP_FLAGS		2	/* Capabilities register */
-+#define PCI_EXP_FLAGS		0x02	/* Capabilities register */
- #define  PCI_EXP_FLAGS_VERS	0x000f	/* Capability version */
- #define  PCI_EXP_FLAGS_TYPE	0x00f0	/* Device/Port type */
- #define   PCI_EXP_TYPE_ENDPOINT	   0x0	/* Express Endpoint */
-@@ -484,7 +484,7 @@
- #define   PCI_EXP_TYPE_RC_EC	   0xa	/* Root Complex Event Collector */
- #define  PCI_EXP_FLAGS_SLOT	0x0100	/* Slot implemented */
- #define  PCI_EXP_FLAGS_IRQ	0x3e00	/* Interrupt message number */
--#define PCI_EXP_DEVCAP		4	/* Device capabilities */
-+#define PCI_EXP_DEVCAP		0x04	/* Device capabilities */
- #define  PCI_EXP_DEVCAP_PAYLOAD	0x00000007 /* Max_Payload_Size */
- #define  PCI_EXP_DEVCAP_PHANTOM	0x00000018 /* Phantom functions */
- #define  PCI_EXP_DEVCAP_EXT_TAG	0x00000020 /* Extended tags */
-@@ -497,7 +497,7 @@
- #define  PCI_EXP_DEVCAP_PWR_VAL	0x03fc0000 /* Slot Power Limit Value */
- #define  PCI_EXP_DEVCAP_PWR_SCL	0x0c000000 /* Slot Power Limit Scale */
- #define  PCI_EXP_DEVCAP_FLR     0x10000000 /* Function Level Reset */
--#define PCI_EXP_DEVCTL		8	/* Device Control */
-+#define PCI_EXP_DEVCTL		0x08	/* Device Control */
- #define  PCI_EXP_DEVCTL_CERE	0x0001	/* Correctable Error Reporting En. */
- #define  PCI_EXP_DEVCTL_NFERE	0x0002	/* Non-Fatal Error Reporting Enable */
- #define  PCI_EXP_DEVCTL_FERE	0x0004	/* Fatal Error Reporting Enable */
-@@ -522,7 +522,7 @@
- #define  PCI_EXP_DEVCTL_READRQ_2048B 0x4000 /* 2048 Bytes */
- #define  PCI_EXP_DEVCTL_READRQ_4096B 0x5000 /* 4096 Bytes */
- #define  PCI_EXP_DEVCTL_BCR_FLR 0x8000  /* Bridge Configuration Retry / FLR */
--#define PCI_EXP_DEVSTA		10	/* Device Status */
-+#define PCI_EXP_DEVSTA		0x0a	/* Device Status */
- #define  PCI_EXP_DEVSTA_CED	0x0001	/* Correctable Error Detected */
- #define  PCI_EXP_DEVSTA_NFED	0x0002	/* Non-Fatal Error Detected */
- #define  PCI_EXP_DEVSTA_FED	0x0004	/* Fatal Error Detected */
-@@ -530,7 +530,7 @@
- #define  PCI_EXP_DEVSTA_AUXPD	0x0010	/* AUX Power Detected */
- #define  PCI_EXP_DEVSTA_TRPND	0x0020	/* Transactions Pending */
- #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1	12	/* v1 endpoints without link end here */
--#define PCI_EXP_LNKCAP		12	/* Link Capabilities */
-+#define PCI_EXP_LNKCAP		0x0c	/* Link Capabilities */
- #define  PCI_EXP_LNKCAP_SLS	0x0000000f /* Supported Link Speeds */
- #define  PCI_EXP_LNKCAP_SLS_2_5GB 0x00000001 /* LNKCAP2 SLS Vector bit 0 */
- #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
-@@ -549,7 +549,7 @@
- #define  PCI_EXP_LNKCAP_DLLLARC	0x00100000 /* Data Link Layer Link Active Reporting Capable */
- #define  PCI_EXP_LNKCAP_LBNC	0x00200000 /* Link Bandwidth Notification Capability */
- #define  PCI_EXP_LNKCAP_PN	0xff000000 /* Port Number */
--#define PCI_EXP_LNKCTL		16	/* Link Control */
-+#define PCI_EXP_LNKCTL		0x10	/* Link Control */
- #define  PCI_EXP_LNKCTL_ASPMC	0x0003	/* ASPM Control */
- #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001	/* L0s Enable */
- #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002	/* L1 Enable */
-@@ -562,7 +562,7 @@
- #define  PCI_EXP_LNKCTL_HAWD	0x0200	/* Hardware Autonomous Width Disable */
- #define  PCI_EXP_LNKCTL_LBMIE	0x0400	/* Link Bandwidth Management Interrupt Enable */
- #define  PCI_EXP_LNKCTL_LABIE	0x0800	/* Link Autonomous Bandwidth Interrupt Enable */
--#define PCI_EXP_LNKSTA		18	/* Link Status */
-+#define PCI_EXP_LNKSTA		0x12	/* Link Status */
- #define  PCI_EXP_LNKSTA_CLS	0x000f	/* Current Link Speed */
- #define  PCI_EXP_LNKSTA_CLS_2_5GB 0x0001 /* Current Link Speed 2.5GT/s */
- #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
-@@ -582,7 +582,7 @@
- #define  PCI_EXP_LNKSTA_LBMS	0x4000	/* Link Bandwidth Management Status */
- #define  PCI_EXP_LNKSTA_LABS	0x8000	/* Link Autonomous Bandwidth Status */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V1	20	/* v1 endpoints with link end here */
--#define PCI_EXP_SLTCAP		20	/* Slot Capabilities */
-+#define PCI_EXP_SLTCAP		0x14	/* Slot Capabilities */
- #define  PCI_EXP_SLTCAP_ABP	0x00000001 /* Attention Button Present */
- #define  PCI_EXP_SLTCAP_PCP	0x00000002 /* Power Controller Present */
- #define  PCI_EXP_SLTCAP_MRLSP	0x00000004 /* MRL Sensor Present */
-@@ -595,7 +595,7 @@
- #define  PCI_EXP_SLTCAP_EIP	0x00020000 /* Electromechanical Interlock Present */
- #define  PCI_EXP_SLTCAP_NCCS	0x00040000 /* No Command Completed Support */
- #define  PCI_EXP_SLTCAP_PSN	0xfff80000 /* Physical Slot Number */
--#define PCI_EXP_SLTCTL		24	/* Slot Control */
-+#define PCI_EXP_SLTCTL		0x18	/* Slot Control */
- #define  PCI_EXP_SLTCTL_ABPE	0x0001	/* Attention Button Pressed Enable */
- #define  PCI_EXP_SLTCTL_PFDE	0x0002	/* Power Fault Detected Enable */
- #define  PCI_EXP_SLTCTL_MRLSCE	0x0004	/* MRL Sensor Changed Enable */
-@@ -617,7 +617,7 @@
- #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
- #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
- #define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
--#define PCI_EXP_SLTSTA		26	/* Slot Status */
-+#define PCI_EXP_SLTSTA		0x1a	/* Slot Status */
- #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
- #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
- #define  PCI_EXP_SLTSTA_MRLSC	0x0004	/* MRL Sensor Changed */
-@@ -627,15 +627,15 @@
- #define  PCI_EXP_SLTSTA_PDS	0x0040	/* Presence Detect State */
- #define  PCI_EXP_SLTSTA_EIS	0x0080	/* Electromechanical Interlock Status */
- #define  PCI_EXP_SLTSTA_DLLSC	0x0100	/* Data Link Layer State Changed */
--#define PCI_EXP_RTCTL		28	/* Root Control */
-+#define PCI_EXP_RTCTL		0x1c	/* Root Control */
- #define  PCI_EXP_RTCTL_SECEE	0x0001	/* System Error on Correctable Error */
- #define  PCI_EXP_RTCTL_SENFEE	0x0002	/* System Error on Non-Fatal Error */
- #define  PCI_EXP_RTCTL_SEFEE	0x0004	/* System Error on Fatal Error */
- #define  PCI_EXP_RTCTL_PMEIE	0x0008	/* PME Interrupt Enable */
- #define  PCI_EXP_RTCTL_CRSSVE	0x0010	/* CRS Software Visibility Enable */
--#define PCI_EXP_RTCAP		30	/* Root Capabilities */
-+#define PCI_EXP_RTCAP		0x1e	/* Root Capabilities */
- #define  PCI_EXP_RTCAP_CRSVIS	0x0001	/* CRS Software Visibility capability */
--#define PCI_EXP_RTSTA		32	/* Root Status */
-+#define PCI_EXP_RTSTA		0x20	/* Root Status */
- #define  PCI_EXP_RTSTA_PME	0x00010000 /* PME status */
- #define  PCI_EXP_RTSTA_PENDING	0x00020000 /* PME pending */
- /*
-@@ -646,7 +646,7 @@
-  * Use pcie_capability_read_word() and similar interfaces to use them
-  * safely.
-  */
--#define PCI_EXP_DEVCAP2		36	/* Device Capabilities 2 */
-+#define PCI_EXP_DEVCAP2		0x24	/* Device Capabilities 2 */
- #define  PCI_EXP_DEVCAP2_COMP_TMOUT_DIS	0x00000010 /* Completion Timeout Disable supported */
- #define  PCI_EXP_DEVCAP2_ARI		0x00000020 /* Alternative Routing-ID */
- #define  PCI_EXP_DEVCAP2_ATOMIC_ROUTE	0x00000040 /* Atomic Op routing */
-@@ -658,7 +658,7 @@
- #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
- #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
- #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
--#define PCI_EXP_DEVCTL2		40	/* Device Control 2 */
-+#define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
- #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
- #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
- #define  PCI_EXP_DEVCTL2_ARI		0x0020	/* Alternative Routing-ID */
-@@ -670,9 +670,9 @@
- #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
- #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
- #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
--#define PCI_EXP_DEVSTA2		42	/* Device Status 2 */
-+#define PCI_EXP_DEVSTA2		0x2a	/* Device Status 2 */
- #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V2	44	/* v2 endpoints without link end here */
--#define PCI_EXP_LNKCAP2		44	/* Link Capabilities 2 */
-+#define PCI_EXP_LNKCAP2		0x2c	/* Link Capabilities 2 */
- #define  PCI_EXP_LNKCAP2_SLS_2_5GB	0x00000002 /* Supported Speed 2.5GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
-@@ -680,7 +680,7 @@
- #define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
- #define  PCI_EXP_LNKCAP2_SLS_64_0GB	0x00000040 /* Supported Speed 64GT/s */
- #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
--#define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
-+#define PCI_EXP_LNKCTL2		0x30	/* Link Control 2 */
- #define  PCI_EXP_LNKCTL2_TLS		0x000f
- #define  PCI_EXP_LNKCTL2_TLS_2_5GT	0x0001 /* Supported Speed 2.5GT/s */
- #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
-@@ -691,12 +691,12 @@
- #define  PCI_EXP_LNKCTL2_ENTER_COMP	0x0010 /* Enter Compliance */
- #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
- #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
--#define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
-+#define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
--#define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
-+#define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
- #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
--#define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
--#define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
-+#define PCI_EXP_SLTCTL2		0x38	/* Slot Control 2 */
-+#define PCI_EXP_SLTSTA2		0x3a	/* Slot Status 2 */
- 
- /* Extended Capabilities (PCI-X 2.0 and Express) */
- #define PCI_EXT_CAP_ID(header)		(header & 0x0000ffff)
--- 
-2.33.0
-
+On 11/15/2021 11:24 AM, Vidya Sagar wrote:
+> Hi folks,
+> Regarding the below commit that added pci_dev_wait() API to wait for the 
+> device (supposed to be a downstream device.. i.e. and endpoint) get 
+> ready, I'm wondering, given the 'dev' pointer here points to an upstream 
+> device (i.e. a root port) because the same is passed to 
+> pcibios_reset_secondary_bus() API, how is passing a root port's dev 
+> pointer to pci_dev_wait() is going to serve the purpose?
+> My understanding is that it would always get the response immediately as 
+> the reset is applied to the endpoint here (through secondary bus reset) 
+> and not to the root port, right? or am I missing something here?
+> 
+> 
+> commit 6b2f1351af567110cec80d7c067314c633a14f50
+> Author: Sinan Kaya <okaya@codeaurora.org>
+> Date:   Tue Feb 27 14:14:12 2018 -0600
+> 
+>      PCI: Wait for device to become ready after secondary bus reset
+> 
+>      Setting Secondary Bus Reset of a downstream port sends a hot reset. 
+>   PCIe
+>      r4.0, sec 2.3.1, Request Handling Rules, indicates that a device 
+> can return
+>      CRS Completion Status following such a reset.  Wait until the device
+>      becomes ready in that situation.
+> 
+>      Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>      Signed-off-by: Bjorn Helgaas <helgaas@kernel.org>
+>      Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index dde40506ffe5..0b8e8ee84bbc 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4233,7 +4233,7 @@ int pci_reset_bridge_secondary_bus(struct pci_dev 
+> *dev)
+>   {
+>          pcibios_reset_secondary_bus(dev);
+> 
+> -       return 0;
+> +       return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+>   }
+>   EXPORT_SYMBOL_GPL(pci_reset_bridge_secondary_bus);
+> 
+> 
+> Thanks,
+> Vidya Sagar
