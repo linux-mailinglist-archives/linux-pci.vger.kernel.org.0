@@ -2,214 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD179455CB1
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 14:30:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B43F455CBF
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 14:33:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231218AbhKRNd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 08:33:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230424AbhKRNd5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 08:33:57 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7ADC061570;
-        Thu, 18 Nov 2021 05:30:57 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id x7so5178191pjn.0;
-        Thu, 18 Nov 2021 05:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rri8CgMU3iUgw+czpevbWjMbr1UWm75xhAwXD02I6xU=;
-        b=FDEnvL+UtpoLRk6Q1zJ5TWKgN3pkejoc+c1lfiUwMmvGmldi6KxwZO1grB8bUwgggl
-         NxymJ9lCNeYeShRKPCEoAFb/qyeXIlHXW6H9LhjrDZVVUGNirPbyJuI24LirczSzl/Na
-         OK380QfTTMyJLsiytjnQRYSmo9aAci9N0vFC8VP0JB29tQt8eoW/ggKIxCPmK5+dxsXW
-         XwurEenZVOh5wEwUMaPPAASeHd9USOigFhhHFenuvMmC1EPdDlgUL2LZwm9an0CE8meS
-         Rv6YcVKeQnHd4N1kacEKQoyflUzVHPAi/1nTgQ8d8eBhHJHyNrVBYPckBm/kGT11HH/L
-         8L/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rri8CgMU3iUgw+czpevbWjMbr1UWm75xhAwXD02I6xU=;
-        b=a5WFdMRvp59jhSVUzUa3eYMxNzpW8Q7md3s6YaaeYv6B7nGagPp3xNDSe4S4qzCcDB
-         gBgod+Jv66g2t1uVbtTBcWfu56FEb2SvMdkW9UbcqDaaWZWmFtFOZ5Q7wCw0uL+Zw6Hm
-         IghIgj2G1L4KmyLCtUwbdzVkjgNZGZpSU3WDkUJLGykHb4eXCPONhs62AT+Uu1McOUip
-         f+kNo3TvJFpDzMAhz0fmhzqn+du/F08d8iXWR/w3Xju+3GIxnkfqBOn6W0OyoaVr/yg3
-         tKrjAsDs+UFzd9UndqdMEaPldoGAqp09Lm0u/P77JE0LHcd4FS8z1ORSjNkMMiNvNVzI
-         u3Rg==
-X-Gm-Message-State: AOAM532rTZkZbHnxzyYK6ahZXygsGr1UCOQsit2BEcvyF7POV9Q2O9CW
-        pOFUIE4dfDh9KMbfoOEtVqvNVkNSa113nkgB
-X-Google-Smtp-Source: ABdhPJw603nbU+O/fPHP8RoT4nn8P5boytORpwShOu3KLVJrVk3lFo3z0RQCNEqj18u5XFcu5Q1lpg==
-X-Received: by 2002:a17:90a:df14:: with SMTP id gp20mr10690696pjb.186.1637242256451;
-        Thu, 18 Nov 2021 05:30:56 -0800 (PST)
-Received: from theprophet ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id z19sm3624615pfe.181.2021.11.18.05.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 05:30:56 -0800 (PST)
-Date:   Thu, 18 Nov 2021 19:00:20 +0530
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-hyperv@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-rockchip@lists.infradead.org,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Robert Richter <rric@kernel.org>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH v3 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related
- definitions
-Message-ID: <20211118133020.nkr3xzbzonxtrqbw@theprophet>
-References: <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
- <20211117235812.GA1786428@bhelgaas>
-MIME-Version: 1.0
+        id S231377AbhKRNga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 08:36:30 -0500
+Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:11481
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229914AbhKRNg2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Nov 2021 08:36:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Clk03WFsvmsII2I0P/bHVIgaY4EsJRr3YnR1XlIjzeVgSAonsoYUPGHoFoEwOtom3ilbdGuxQGjIQe4EU7hsOgiuu2BdXieUBVPPxxttVXKY1AttoBBHYkPwlODwE3J2WAJd5Zaqq520fzc4J0XM1p+gvKBQC05U8ZaLEFvzwzScVNQsfex7JD0ejzh5z5lVqVn0VTyv32XiYnVwnyewKsQHcC0/uRKI6KXFFJn8XpYjwufs81oGgjKzb6dCjxbsNEAXvLTVdlLcfWVgNGItpZy9AYmQBal3wr9EWXQlF3Mvr7FMeAbABi/iy8JOR7RucXHn93m9GIHnHwulc0pa3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZCIx65l7p6KxMV4p5W8gTiyzw6KMgJGOLfUIqFrms+0=;
+ b=Hps3Z4gic6OTStPF1n3SFOI0Otv7ckoXXwFY7x0iMCRPXFAG9jCxwPpLRv0mMq9whCcym/5aHznhxGL7GSccAK4ss7JVapT9bZEDlxXlGU8UPSlRQg5WFdk3I41L60zEye+Fnj3w2TnshFYa6tBCcnGwNWE6nRehnNBRuA6zGrd8gGVEaKfTji5fFuC5ODcCv3N7e1AJ9PjbTKzuS5Xzk6o1bC1Xf7/az2I8SqCtnxGfb6KPBuQJYrW8ccY5pRTVLkHeTa6SVtDrhzp9ULrTjO4YpO651v8xeunp5Y2Cx8H6rJsIgl5UXAwlGiQEg7hoUVue6BJpXbpqKd/B9oI5+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZCIx65l7p6KxMV4p5W8gTiyzw6KMgJGOLfUIqFrms+0=;
+ b=f5wENjpd0zdGlhdcqx5z2e4eR0Ztk/MEGzPc5HBqL69j8dEW1NQMXKAank43uTYVC2yWK9IyvqIT26cB9c5t4INFvAMmfNlcb0J8HaXExFs7p/zcgoRjxaAIViWZtfOzJYpd1m6oikCPKYLhM2nhLMvxpBS7RXPxL9Trxl2fDUMUKQQ3PdtvjZO0iY91RaZyNNWLlYF1+8PAkXId9j8ocb0Aq6WQ4bmB7ewtBmoyMVZ0wWQ5lZUHqdGBYVypwXB8U8LgAMBBI3JvTDdct0KoIm1pXLu05arBphiDlvH5uDUOfyLydQBL/UNy9GpDJKE7WB0L59dumJQsoKauWz6EkA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5362.namprd12.prod.outlook.com (2603:10b6:208:31d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Thu, 18 Nov
+ 2021 13:33:26 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4713.022; Thu, 18 Nov 2021
+ 13:33:26 +0000
+Date:   Thu, 18 Nov 2021 09:33:25 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
+ interfaces
+Message-ID: <20211118133325.GO2105516@nvidia.com>
+References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+ <20211115020552.2378167-2-baolu.lu@linux.intel.com>
+ <YZJdJH4AS+vm0j06@infradead.org>
+ <cc7ce6f4-b1ec-49ef-e245-ab6c330154c2@linux.intel.com>
+ <20211116134603.GA2105516@nvidia.com>
+ <BN9PR11MB5433639E43C37C5D2462BD718C9B9@BN9PR11MB5433.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211117235812.GA1786428@bhelgaas>
+In-Reply-To: <BN9PR11MB5433639E43C37C5D2462BD718C9B9@BN9PR11MB5433.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BLAPR03CA0093.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::8) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.162.113.129) by BLAPR03CA0093.namprd03.prod.outlook.com (2603:10b6:208:32a::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.21 via Frontend Transport; Thu, 18 Nov 2021 13:33:25 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mnhXZ-00BmtB-0Z; Thu, 18 Nov 2021 09:33:25 -0400
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0c205d97-ee9d-4c96-abad-08d9aa97ffd8
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5362:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5362A920B7859BA1B7F61EA0C29B9@BL1PR12MB5362.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DFceW+opftToJIT8FHDWhi3l5YsUm/+BQiisO+J5j02nP3yDYv/Qdez51xoj8kYpP8dFte8ABkspZbs7BxHmPK78WMCuoFdK6NCGVpU9QFqTzoDa4u/QptwGAALNbcs0D/0ir3NhlFmYYcDpIznoF3R5KZMfstRkE1Arg2+nctxL1mP5oJia1De3hcufW2kJNL5dAZxvk7UCCk9mkj+fZLMvxTsMJFibK+R8WDBMiIGtDCM28jSyRqVnWNXMubtWS9ZfmYfZ8Ghr3xrCWUKKWFkVYRK5c8BPV7sREN0F5C96DqUA97aF0EvfUwUY4YVdlh6Y2Y2VZ5bLq4qQ/W0al/+Ir+99YEQadkbHuV7Z8JrsckAGupN9o2C1SZwCTNDE4yWELmMgIGtUkSBz+4m90SbcM9ZHiThPVXp7bcWJsrdfUEVdTp03aOwsxveX4ZQrNodBS7V63oPwvIRwopGl21X+OehRiaxqo6PoBq7QtVk2J3RwM+fx6pJ45f4rCR+WMUVKq4VrehzqouYrHnfQ0iakTrKhMBCSJfFRlXGwmcnasBWoUgbipDyf6Krl9qwQu1oWC9Lqmzy/y8cUeUiwvq874C0QraLYXBWFEhOiyY8n8imYZqTL5139H8YL1Og9Nuspa0UcJsO1Z9A2uJOW/g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(36756003)(86362001)(4326008)(8676002)(9786002)(9746002)(83380400001)(7416002)(2906002)(5660300002)(53546011)(66946007)(66476007)(1076003)(508600001)(8936002)(6916009)(316002)(426003)(2616005)(26005)(66556008)(186003)(33656002)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GFAyChHKmDj0XMSmzvPXIhSG3A08vV0zlGs69SHgwctJ7yNZkqotk6UuAFkN?=
+ =?us-ascii?Q?dNVgXDjcYvYLq02eEfAplXRIDw16Lsa2/3eyqep9Qk7KolthrPouEAsf3FhY?=
+ =?us-ascii?Q?SZ8UBs2+oDSCNijCNz+cxAzoPUZJmaoc0YBwsokYVeyLDzJ028HSeONM5XTE?=
+ =?us-ascii?Q?KTKkKXXgU1pacGbTUTlVlGHcCj4GW0LsAaRRwD+wjnChL1V9g9ZzhdFGkEOi?=
+ =?us-ascii?Q?LI6APbsRCFtsPtrF0hlRLzDVuuA+xTyViVvWalF8GDE3YKY9hbz0Vs7l4BFI?=
+ =?us-ascii?Q?OyQQ5V49VPFfX+9yduT8HMgbuinNNbZgXvF5HeVgMVbeX3W3Hv8GUjcefjjc?=
+ =?us-ascii?Q?Yo+s4vA+vbveLFv8C0CWeVl2S/kLHtYZ50bo1IpJMdGA2XgdAmcIgOyEc4Ti?=
+ =?us-ascii?Q?VPoxOH2XbJiiQ9YhP7j5mseb5o2jcKHblsA8/jHDR0lTzAMasSkazwgoiuIR?=
+ =?us-ascii?Q?64OW829xCmHwQmgogYyxEV5bmZafvoIKA7RaORFL5rtVUTSUofWMm3ZZXkR3?=
+ =?us-ascii?Q?UwwyDromTpBPnZ/NLFcGeddEz+fPoTmGXlkyNauKT0fgZuSJZgplVQ9eR3TC?=
+ =?us-ascii?Q?JEuzsA1l3Ae8dTs/g2bOwMDlH6/4y2xDGXMgapzuHry855lZe03RvQsUvU1s?=
+ =?us-ascii?Q?ogD2UdHAzwsjSRvWDbL92b5p6PxiiUclNXsyXo4Vv6Ml7A8B9Uh4QT84WZpL?=
+ =?us-ascii?Q?8ezhzAgcHvXsaVM493VFGiDXI47fs4Qpcbt//wKt+8bHnl+keVZn26AKjjKd?=
+ =?us-ascii?Q?q3zhacjACym95Ng/yn7oV6aowR5olmjmSKNOr32mBte8+0Ri0eLQCfe5fnBi?=
+ =?us-ascii?Q?5hAM8QuxJvRwNS9euH19APSg77Cz9TP1uRAzjNfHF/GDg9FHQ+gebEcmhp87?=
+ =?us-ascii?Q?vyBn2Xv7uBne33z3cMdwcM4rcvSBqKkw6btViI8zfHn84jLTrVXyAsfbIr0d?=
+ =?us-ascii?Q?24jtL3u3upi+jkuveEmE8WqwH/W7j1+v5ynLRfGKedJWeQEArq+M/czCLCl/?=
+ =?us-ascii?Q?1SdBc9RwHSBFmWVNK4PfRNB+LVGUYJ7JpRyp1hEjtZ9+9aKwACcLkrJ4WqhM?=
+ =?us-ascii?Q?lz+vOyy+Ij9pgGxCruJbQi3LgzpbHolCcFfdPojR0cvtqxtfLbF0oCf4is+Z?=
+ =?us-ascii?Q?Hl9ZOz0FM3PW8MKf/vmgFGTeg1VDRZZQniwhFuHBP9JJhm049DKYIiXHqdYd?=
+ =?us-ascii?Q?jiEc2mIsidD4cHpbmdRMzDAme3reSlsHoYpIIvUFGKveAuATR98FCM4Awan3?=
+ =?us-ascii?Q?aT396TQDM94/GVEnG2pFwki20UxP2yLZkO2t46+ISS8hsih1seYnr06jBAuN?=
+ =?us-ascii?Q?tvtgG+/TfNO3Ft5wdHDn7gzSnfAGD1L25Hzg1aet9YMY9vdFvrKaQ50UDqDI?=
+ =?us-ascii?Q?6y1Nw2Yd29jwrBMByyTsaMd/b0Yn2oKrxsN9rQtnbTXwlLKX3EhFoGu3SJsQ?=
+ =?us-ascii?Q?1zEKuVQIUd5zArvy6tw4gEFwM/E1//GgkzvbWLBqWsRYF26UO3WTVgzW+O7k?=
+ =?us-ascii?Q?FwyeOXa3rtCNU8GBGU/tSQB8ctJXV60F5CqmZllB0wOln0RtiyLu1zjzUlKq?=
+ =?us-ascii?Q?3KZ4P3fiVB06cVxuy+Q=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c205d97-ee9d-4c96-abad-08d9aa97ffd8
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2021 13:33:26.1716
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eYvLubJL/EmilPm/bregIgK8u6YBTCNgKV2+pFNDTDFAwDpDOyG25nXkLhRVvafN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5362
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17/11, Bjorn Helgaas wrote:
-> On Thu, Oct 21, 2021 at 08:37:26PM +0530, Naveen Naidu wrote:
-> > An MMIO read from a PCI device that doesn't exist or doesn't respond
-> > causes a PCI error.  There's no real data to return to satisfy the
-> > CPU read, so most hardware fabricates ~0 data.
+On Thu, Nov 18, 2021 at 02:39:45AM +0000, Tian, Kevin wrote:
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Tuesday, November 16, 2021 9:46 PM
 > > 
-> > Add a PCI_ERROR_RESPONSE definition for that and use it where
-> > appropriate to make these checks consistent and easier to find.
+> > On Tue, Nov 16, 2021 at 09:57:30AM +0800, Lu Baolu wrote:
+> > > Hi Christoph,
+> > >
+> > > On 11/15/21 9:14 PM, Christoph Hellwig wrote:
+> > > > On Mon, Nov 15, 2021 at 10:05:42AM +0800, Lu Baolu wrote:
+> > > > > +enum iommu_dma_owner {
+> > > > > +	DMA_OWNER_NONE,
+> > > > > +	DMA_OWNER_KERNEL,
+> > > > > +	DMA_OWNER_USER,
+> > > > > +};
+> > > > > +
+> > > >
+> > > > > +	enum iommu_dma_owner dma_owner;
+> > > > > +	refcount_t owner_cnt;
+> > > > > +	struct file *owner_user_file;
+> > > >
+> > > > I'd just overload the ownership into owner_user_file,
+> > > >
+> > > >   NULL			-> no owner
+> > > >   (struct file *)1UL)	-> kernel
+> > > >   real pointer		-> user
+> > > >
+> > > > Which could simplify a lot of the code dealing with the owner.
+> > > >
+> > >
+> > > Yeah! Sounds reasonable. I will make this in the next version.
 > > 
-> > Also add helper definitions SET_PCI_ERROR_RESPONSE and
-> > RESPONSE_IS_PCI_ERROR to make the code more readable.
+> > It would be good to figure out how to make iommu_attach_device()
+> > enforce no other driver binding as a kernel user without a file *, as
+> > Robin pointed to, before optimizing this.
 > > 
-> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> > ---
-> >  include/linux/pci.h | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
+> > This fixes an existing bug where iommu_attach_device() only checks the
+> > group size and is vunerable to a hot plug increasing the group size
+> > after it returns. That check should be replaced by this series's logic
+> > instead.
 > > 
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index cd8aa6fce204..689c8277c584 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
-> >  /* The number of legacy PCI INTx interrupts */
-> >  #define PCI_NUM_INTX	4
-> >  
-> > +/*
-> > + * Reading from a device that doesn't respond typically returns ~0.  A
-> > + * successful read from a device may also return ~0, so you need additional
-> > + * information to reliably identify errors.
-> > + */
-> > +#define PCI_ERROR_RESPONSE     (~0ULL)
-> > +#define SET_PCI_ERROR_RESPONSE(val)    (*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
-> > +#define RESPONSE_IS_PCI_ERROR(val) ((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
 > 
-> Beautiful!  I really like this.
->
+> I think this existing bug in iommu_attach_devce() is different from 
+> what this series is attempting to solve. To avoid breaking singleton
+> group assumption there the ideal band-aid is to fail device hotplug.
+> Otherwise some IOVA ranges which are supposed to go upstream 
+> to IOMMU may be considered as p2p and routed to the hotplugged
+> device instead.
 
-Thank you very much for the review ^^
+Yes, but the instability of the reserved regions during hotplug with
+!ACS seems like an entirely different problem. It affects everything,
+including VFIO, and multi-device groups. Certainly it is nothing to do
+with this series.
 
-> I would prefer the macros to start with "PCI_", e.g.,
-> PCI_SET_ERROR_RESPONSE().
-> 
+> In concept a singleton group is different from a
+> multi-devices group which has only one device bound to driver...
 
-ACK
+Really? Why? I don't see it that way..
 
-> I think "RESPONSE_IS_PCI_ERROR()" is too strong because (as the
-> comment says), ~0 *may* indicate an error.  Or it may be a successful
-> read of a register that happens to contain ~0.
-> 
-> Possibilities to convey the idea that this isn't definitive:
-> 
->   PCI_POSSIBLE_ERROR_RESPONSE(val)  # a little long
->   PCI_LIKELY_ERROR(val)             # we really have no idea whether
->   PCI_PROBABLE_ERROR(val)           #   likely or probable
->   PCI_POSSIBLE_ERROR(val)           # promising?
->
+A singleton group is just a multi-device group that hasn't been
+hotplugged yet.
 
-ACK. Will use PCI_POSSIBLE_ERROR()
+We don't seem to have the concept of a "true" singleton group which is
+permanently single due to HW features.
 
-> Can you rebase to my "main" branch (v5.16-rc1), tweak the above, and
-> collect up the acks/reviews?
-> 
+> This series aims to avoid conflict having both user and kernel drivers
+> mixed in a multi-devices group.
 
-ACK
+I see this series about bringing order to all the places that want to
+use a non-default domain - in-kernel or user doesn't really matter.
 
-> We should also browse drivers outside drivers/pci for places we could
-> use these.  Not necessarily as part of this series, although if
-> authors there object, it would be good to learn that earlier than
-> later.
-> 
-> Drivers that implement pci_error_handlers might be a fruitful place to
-> start.  But you've done a great job finding users of ~0 and 0xffff...
-> in drivers/pci/, too.
-> 
+ie why shouldn't iommu_attach_device() work in a group that has a PCI
+bridge, just like VFIO does?
 
-A quick grep showed that there are around 80 drivers which have
-pci_error_handlers. I was thinking that it would be better if we handle
-these drivers in another patch series since the current patch series is
-itself 25 patches long. And in my short tenure reading LKML, I gathered
-that folks generally are not so kind to a long list of patches in a
-single patch series ^^' (I might be wrong though, Apologies)
+The only thing that is special about VFIO vs a kernel driver is we
+want a little help to track userspace ownership and VFIO opens
+userspace to do the P2P attack.
 
-The consensus on the patch series does seem slightly positive so
-ideally, I was hoping that we would not have the case where a author
-does not like the way we are handling this patch. Then again, I'm
-pretty sure that I might be wrong ^^'
+The way I see it the num device == 1 test in iommu_attach_device() is
+an imperfect way of controlling driver binding, and we can do better
+by using the mechanism in this series.
 
-I hope it would be okay that I send in a new patch series with the
-suggested changes and handle the other changes in another patch series
-^^
-
-Thanks,
-Naveen
-> > +
-> >  /*
-> >   * pci_power_t values must match the bits in the Capabilities PME_Support
-> >   * and Control/Status PowerState fields in the Power Management capability.
-> > -- 
-> > 2.25.1
-> > 
-> > _______________________________________________
-> > Linux-kernel-mentees mailing list
-> > Linux-kernel-mentees@lists.linuxfoundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+Jason
