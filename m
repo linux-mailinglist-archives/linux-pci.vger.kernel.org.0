@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E812E455D4E
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EF81455D53
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Nov 2021 15:05:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232110AbhKROHn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Nov 2021 09:07:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37626 "EHLO
+        id S232107AbhKROH6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Nov 2021 09:07:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbhKROHh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:07:37 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BDCC061204;
-        Thu, 18 Nov 2021 06:04:36 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id g18so6104816pfk.5;
-        Thu, 18 Nov 2021 06:04:36 -0800 (PST)
+        with ESMTP id S232120AbhKROH6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Nov 2021 09:07:58 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EB2C061764;
+        Thu, 18 Nov 2021 06:04:58 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so5815568pjb.1;
+        Thu, 18 Nov 2021 06:04:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lRVr/MvmbDbYCYZVQvovIm632g48TSctaBpAr4pPMBs=;
-        b=ki3zJclRT5gZaLLE08IwbhWAxIbTzKFMLWGKODRFKxJMYkkPV57hmCyWQs7c+DPosB
-         5mGT3f3d4Xo32+oDwKv9/J9AYz0Y6ZUF4Ipfd/dezlJppudIle8DSVT2t52Axq6FE2ot
-         pk0I9ygiRZzF/58Mf0M0Iyyx4J1CAb84WkGwpfjx/lMlEYg2kQ6SLyCGodPMAHwZpthr
-         zUord0VXRyBh+6WBJIxc+wTFGBSTEJ4ll7/W3L4JjXvX//SDdLbzbAeJorDa2ip/qyCV
-         uafNAyEYulpT3XpNjH5DhcLk5X+YBwhuElAMWAST4BDJSDBuEF6VmBIm/tNDUMfCBcUf
-         knMA==
+        bh=wlP4fOTykbzU+g6/cyJ7zYPFE/ryfY0EbZlV8FvMVqc=;
+        b=QMZKVQdPimZWc3wObLr6wjuQGAwHXkdQDB35x1/7IsVYaRyQu4fqsUSWsoDVljOFp2
+         AlNYLrnHMAWyb3/pzbxu+DGmWyu+RVv0uKekuGFYlopisJ0EfzpVYA/tWjPfMNO5bg8s
+         mJ97HEoGIP6eIjyy1qAc0Km4T1VD/m7A/25keQriLTkppDl7WVBKrI55CEMOCGX2QvGr
+         rdrAlZwTBdJe81puVKg/rTmj5A/DVX7qJf28eVjZBjUCV3ifDJgTvTqzoAkWRV6pcYM2
+         IPbrH7LEBG8rT2Fw4QbL6ZHIwMlDNXFEjr2eK9hA1AgGZQggJ0MYUYBNS97vHkh3VFiK
+         x/ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lRVr/MvmbDbYCYZVQvovIm632g48TSctaBpAr4pPMBs=;
-        b=MLBRkBcPhAf9CL+jWEyj81/NmAEVogFqYq5/9EIkSZ5illiY2z0ahsVRS2PbL6/C3R
-         +m4hKXzpgJDvHjg8G+NDxUaLLjPfHVrQyoA9r+WUwS9tV/AsjqH/pqvKg5njkFE495Oh
-         9X4bs5KnUpbN6xpxhlHg05Cek3F9InOELWBOHN8MRaVQ8coE/yBiZ0vVBE72ITFvLjHN
-         fWPndNCNUdSQVEIAVikwktbnN1R1R/50kLpG3982ychldnvkYYwkmd+yJqmU9S12EgQM
-         StxOUcSbYplJCayJYv5j9t/k6ogVdQCFTamTleevlthqaXzooodr5/l26DWnkcsJOuYh
-         SZoA==
-X-Gm-Message-State: AOAM530iDX2llRN/hdZhZtA+dWSwJDIFMzsCzwtJaixq485uOXQU457s
-        U7N5Ey+k76Vep2VFVyabuDY=
-X-Google-Smtp-Source: ABdhPJwgSJAJzb9GnmZhNCiuC4sXvl/+OpI7uHAkOxqyhJ9kXcl1osCLvoOYPljMeoii6U1rnBhr8w==
-X-Received: by 2002:a05:6a00:24cd:b0:49f:bf3f:c42c with SMTP id d13-20020a056a0024cd00b0049fbf3fc42cmr15229341pfv.54.1637244276068;
-        Thu, 18 Nov 2021 06:04:36 -0800 (PST)
+        bh=wlP4fOTykbzU+g6/cyJ7zYPFE/ryfY0EbZlV8FvMVqc=;
+        b=47Xm12dgxa+XlIf8U0PnB6bJLPo6S70jes4DiYZxqixhlZeDmszuDClmR7vskb+k+H
+         6yE6qqRuS/vmscpdvvPbCGKo9xPF9xE0yezs1ja5Ffjbmj9yp5mMwCvNBF5FFkv9GXCC
+         u7YcnCXm15n3a7hT47u3nTVhZUHVfJ3K9O++I0a7QdJvSP/LcvIikPSOFKyZiYsvCjlx
+         QiY/GJdYYMa2hwKtrA5TJZQ4DOX/Br627e73DevRcxeXUK3l7udsqyOUM5K5deLGCCp0
+         C0tMVbo/jUf5ogRDPK+oii7RNvKXLpNP2gDgEKDE1W7njZwq2zO6DGVo1eK6dXIerSCe
+         mfAQ==
+X-Gm-Message-State: AOAM532MaM4clE8A9aPrmtySS3Wey8aQIBYyVapmWpqPuS49P+1qhgBl
+        Zybx5+23ZCUKX5Z6W9ErJOI=
+X-Google-Smtp-Source: ABdhPJyqiWgfNZtzNB6ARnHM9Du0xQAnLthgWfbNHaay3g2LSkWtotEgtBlLYBTm34GwuWKUyw8oaA==
+X-Received: by 2002:a17:903:32c2:b0:141:eed4:ec1c with SMTP id i2-20020a17090332c200b00141eed4ec1cmr67258899plr.33.1637244297661;
+        Thu, 18 Nov 2021 06:04:57 -0800 (PST)
 Received: from localhost.localdomain ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.04.33
+        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.04.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 06:04:35 -0800 (PST)
+        Thu, 18 Nov 2021 06:04:57 -0800 (PST)
 From:   Naveen Naidu <naveennaidu479@gmail.com>
 To:     bhelgaas@google.com
 Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
+        skhan@linuxfoundation.org, Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH v4 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related definitions
-Date:   Thu, 18 Nov 2021 19:33:11 +0530
-Message-Id: <55563bf4dfc5d3fdc96695373c659d099bf175b1.1637243717.git.naveennaidu479@gmail.com>
+Subject: [PATCH v4 02/25] PCI: Set error response in config access defines when ops->read() fails
+Date:   Thu, 18 Nov 2021 19:33:12 +0530
+Message-Id: <4188fc5465631ce0d472d1423de3d9fb2f09b8ff.1637243717.git.naveennaidu479@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
 References: <cover.1637243717.git.naveennaidu479@gmail.com>
@@ -67,43 +67,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-An MMIO read from a PCI device that doesn't exist or doesn't respond
-causes a PCI error. There's no real data to return to satisfy the
-CPU read, so most hardware fabricates ~0 data.
+Make PCI_OP_READ and PCI_USER_READ_CONFIG set the data value with error
+response (~0), when the PCI device read by a host controller fails.
 
-Add a PCI_ERROR_RESPONSE definition for that and use it where
-appropriate to make these checks consistent and easier to find.
+This ensures that the controller drivers no longer need to fabricate
+(~0) value when they detect error. It also  gurantees that the error
+response (~0) is always set when the controller drivers fails to read a
+config register from a device.
 
-Also add helper definitions PCI_SET_ERROR_RESPONSE and
-PCI_POSSIBLE_ERROR to make the code more readable.
+This makes error response fabrication consistent and helps in removal of
+a lot of repeated code.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
 ---
- include/linux/pci.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/pci/access.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 18a75c8e615c..0ce26850470e 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -154,6 +154,15 @@ enum pci_interrupt_pin {
- /* The number of legacy PCI INTx interrupts */
- #define PCI_NUM_INTX	4
- 
-+/*
-+ * Reading from a device that doesn't respond typically returns ~0.  A
-+ * successful read from a device may also return ~0, so you need additional
-+ * information to reliably identify errors.
-+ */
-+#define PCI_ERROR_RESPONSE		(~0ULL)
-+#define PCI_SET_ERROR_RESPONSE(val)	(*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
-+#define PCI_POSSIBLE_ERROR(val)		((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
-+
- /*
-  * pci_power_t values must match the bits in the Capabilities PME_Support
-  * and Control/Status PowerState fields in the Power Management capability.
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 46935695cfb9..eac0765d8bed 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -42,7 +42,10 @@ int noinline pci_bus_read_config_##size \
+ 	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
+ 	pci_lock_config(flags);						\
+ 	res = bus->ops->read(bus, devfn, pos, len, &data);		\
+-	*value = (type)data;						\
++	if (res)							\
++		PCI_SET_ERROR_RESPONSE(value);				\
++	else								\
++		*value = (type)data;					\
+ 	pci_unlock_config(flags);					\
+ 	return res;							\
+ }
+@@ -228,7 +231,10 @@ int pci_user_read_config_##size						\
+ 	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
+ 					pos, sizeof(type), &data);	\
+ 	raw_spin_unlock_irq(&pci_lock);				\
+-	*val = (type)data;						\
++	if (ret)							\
++		PCI_SET_ERROR_RESPONSE(val);				\
++	else								\
++		*val = (type)data;					\
+ 	return pcibios_err_to_errno(ret);				\
+ }									\
+ EXPORT_SYMBOL_GPL(pci_user_read_config_##size);
 -- 
 2.25.1
 
