@@ -2,79 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BC3E456E2F
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 12:28:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D909E456E92
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 13:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhKSLbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 06:31:38 -0500
-Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:46536 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230101AbhKSLbi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 06:31:38 -0500
-X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Nov 2021 06:31:38 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 4AC86184DB421
-        for <linux-pci@vger.kernel.org>; Fri, 19 Nov 2021 11:20:14 +0000 (UTC)
-Received: from omf03.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 88046886E7;
-        Fri, 19 Nov 2021 11:20:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id D17E79000271;
-        Fri, 19 Nov 2021 11:20:06 +0000 (UTC)
-Message-ID: <d2df9558ddbc06ac50b7a9aef46445fdf76e7d6b.camel@perches.com>
-Subject: Re: [PATCH v1 2/3] x86/quirks: Introduce
- hpet_dev_print_force_hpet_address() helper
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+        id S234535AbhKSMDZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 07:03:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234785AbhKSMDQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 07:03:16 -0500
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9DDC061574;
+        Fri, 19 Nov 2021 04:00:14 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id D0C8E28045D05;
+        Fri, 19 Nov 2021 13:00:12 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C2CCD4A8C0; Fri, 19 Nov 2021 13:00:12 +0100 (CET)
+Date:   Fri, 19 Nov 2021 13:00:12 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Liguang Zhang <zhangliguang@linux.alibaba.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Date:   Fri, 19 Nov 2021 03:20:09 -0800
-In-Reply-To: <20211119110017.48510-2-andriy.shevchenko@linux.intel.com>
-References: <20211119110017.48510-1-andriy.shevchenko@linux.intel.com>
-         <20211119110017.48510-2-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.4-1 
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: clear cmd_busy bit when Command Completed
+ in polling mode
+Message-ID: <20211119120012.GC9692@wunner.de>
+References: <20211111054258.7309-1-zhangliguang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D17E79000271
-X-Spam-Status: No, score=0.10
-X-Stat-Signature: 6jk84mbae8ntn175y5s8hws3m8gd345d
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/+W1yEjgVba1zQb7u7nT0SyFnowotqIMM=
-X-HE-Tag: 1637320806-965394
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211111054258.7309-1-zhangliguang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2021-11-19 at 13:00 +0200, Andy Shevchenko wrote:
-> Introduce hpet_dev_print_force_hpet_address() helper to unify printing
-> forced HPET address. No functional change intended.
+On Thu, Nov 11, 2021 at 01:42:58PM +0800, Liguang Zhang wrote:
+> Both the CCIE and HPIE bits are masked in pcie_disable_notification(),
+> when we issue a hotplug command, pcie_wait_cmd() will polling the
+> Command Completed bit instead of waiting for an interrupt. But cmd_busy
+> bit was not cleared when Command Completed which results in timeouts
+> like this in pciehp_power_off_slot() and pcie_init_notification():
+> 
+>   pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x01c0
+> (issued 2264 msec ago)
+>   pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x05c0
+> (issued 2288 msec ago)
 
-This probably reduces object code by a few bytes of text.
+The first timeout occurs with the following bits set in ctrl->slot_ctrl:
+  PCI_EXP_SLTCTL_PWR_IND_ON | PCI_EXP_SLTCTL_ATTN_IND_OFF
 
-> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-[]
-> @@ -68,6 +68,11 @@ static enum {
->  	ATI_FORCE_HPET_RESUME,
->  } force_hpet_resume_type;
->  
-> +static void hpet_dev_print_force_hpet_address(struct device *dev)
-> +{
-> +	dev_printk(KERN_DEBUG, dev, "Force enabled HPET at 0x%lx\n", force_hpet_address);
-> +}
-
-And this might be better placed up a few lines immediately after
-
-unsigned long force_hpet_address;
-
-and before
-
-enum {
-	...
-} force_hpet_resume_type;
+Those bits are set by:
+  board_added()
+    pciehp_set_indicators()
 
 
+The second timeout occurs with:
+  PCI_EXP_SLTCTL_PWR_IND_ON | PCI_EXP_SLTCTL_ATTN_IND_OFF |
+  PCI_EXP_SLTCTL_PWR_OFF
+
+This might be triggered by:
+  remove_board()
+    pciehp_power_off_slot()
+
+
+So it seems Command Completed is not signaled when changing the
+Power Indicator, Attention Indicator and Power Controller Control
+bits in the Slot Control register.  But apparently it works for
+the other bits.
+
+We know there are hotplug controllers out there which suffer from
+broken Command Completed support.  They support it for the bits
+mentioned above but not the others.  So the inverse behavior from
+your hotplug controller.  See this code comment in pcie_do_write_cmd():
+
+	/*
+	 * Controllers with the Intel CF118 and similar errata advertise
+	 * Command Completed support, but they only set Command Completed
+	 * if we change the "Control" bits for power, power indicator,
+	 * attention indicator, or interlock.  If we only change the
+	 * "Enable" bits, they never set the Command Completed bit.
+	 */
+
+
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -98,6 +98,8 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+>  		if (slot_status & PCI_EXP_SLTSTA_CC) {
+>  			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+>  						   PCI_EXP_SLTSTA_CC);
+> +			ctrl->cmd_busy = 0;
+> +			smp_mb();
+>  			return 1;
+>  		}
+>  		msleep(10);
+
+I suspect that this patch merely papers over the problem and that
+the real solution would be to either apply quirk_cmd_compl or a
+similar quirk to your hotplug controller.
+
+Please open a bug on bugzilla.kernel.org and attach full output
+of lspci -vv and dmesg.  Be sure to add the following to the
+command line:
+  pciehp.pciehp_debug=1 dyndbg="file pciehp* +p"
+
+Once you've done that, please report the bugzilla link here
+so that we can analyze the issue properly.
+
+Thanks,
+
+Lukas
