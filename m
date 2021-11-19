@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A7EC4570EC
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 15:40:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DB22457144
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 15:55:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235997AbhKSOnl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 09:43:41 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4112 "EHLO
+        id S233990AbhKSO6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 09:58:53 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4114 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232249AbhKSOnl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 09:43:41 -0500
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HwfT155wQz67tVr;
-        Fri, 19 Nov 2021 22:39:49 +0800 (CST)
+        with ESMTP id S235243AbhKSO6w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 09:58:52 -0500
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hwfq81THpz67vp2;
+        Fri, 19 Nov 2021 22:55:32 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 19 Nov 2021 15:40:37 +0100
-Received: from localhost (10.52.121.45) by lhreml710-chm.china.huawei.com
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.20; Fri, 19 Nov 2021 15:55:47 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 19 Nov
- 2021 14:40:36 +0000
-Date:   Fri, 19 Nov 2021 14:40:30 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+ 2021 14:55:47 +0000
+Date:   Fri, 19 Nov 2021 14:55:20 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
@@ -31,17 +31,17 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         "Ben Widawsky" <ben.widawsky@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 4/5] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20211119144030.00002f86@Huawei.com>
-In-Reply-To: <20211105235056.3711389-5-ira.weiny@intel.com>
+Subject: Re: [PATCH 5/5] cxl/cdat: Parse out DSMAS data from CDAT table
+Message-ID: <20211119145451.0000682f@huawei.com>
+In-Reply-To: <20211105235056.3711389-6-ira.weiny@intel.com>
 References: <20211105235056.3711389-1-ira.weiny@intel.com>
-        <20211105235056.3711389-5-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        <20211105235056.3711389-6-ira.weiny@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.45]
+X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
@@ -49,68 +49,107 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 5 Nov 2021 16:50:55 -0700
+On Fri, 5 Nov 2021 16:50:56 -0700
 <ira.weiny@intel.com> wrote:
 
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Read CDAT raw table data from the cxl_mem state object.  Currently this
-> is only supported by a PCI CXL object through a DOE mailbox which supports
-> CDAT.  But any cxl_mem type object can provide this data later if need
-> be.  For example for testing.
+> Parse and cache the DSMAS data from the CDAT table.  Store this data in
+> Unmarshaled data structures for use later.
 > 
-> Cache this data for later parsing.  Provide a sysfs binary attribute to
-> allow dumping of the CDAT.
-> 
-> Binary dumping is modeled on /sys/firmware/ACPI/tables/
-> 
-> The ability to dump this table will be very useful for emulation of real
-> devices once they become available as QEMU CXL type 3 device emulation will
-> be able to load this file in.
-> 
-> This does not support table updates at runtime. It will always provide
-> whatever was there when first cached. Handling of table updates can be
-> implemented later.
-> 
-> Once there are more users, this code can move out to driver/cxl/cdat.c
-> or similar.
-> 
-> Finally create a complete list of DOE defines within cdat.h for anyone
-> wishing to decode the CDAT table.
-> 
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 
->  
->  static struct attribute_group cxl_memdev_ram_attribute_group = {
-> @@ -293,6 +329,16 @@ devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->  	if (rc)
->  		goto err;
->  
-> +	/* Cache the data early to ensure is_visible() works */
-> +	if (!cxl_mem_cdat_get_length(cxlds, &cxlmd->cdat_length)) {
-> +		cxlmd->cdat_table = devm_kzalloc(dev, cxlmd->cdat_length, GFP_KERNEL);
+More fun from clashing patch sets below.
+I think this is wrong rather than the other patch, but I'm prepared to
+be persuaded otherwise!
 
-I think this devm_ call should be using the parent device, not this one.
-
-As it stands it breaks Ben's mem.c driver which probes for this device
-and fails because you can't call probe for a device that already has things
-in it's devres queue.
-
-Too many patches in flight at the same time makes for some entertaining
-rebases if you want them all at once..
+Ben, this is related to your mega RFC for regions etc.
 
 Jonathan
 
-> +		if (!cxlmd->cdat_table) {
-> +			rc = -ENOMEM;
-> +			goto err;
+
+> +static int parse_dsmas(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_dsmas *dsmas_ary = NULL;
+> +	u32 *data = cxlmd->cdat_table;
+> +	int bytes_left = cxlmd->cdat_length;
+> +	int nr_dsmas = 0;
+> +	size_t dsmas_byte_size;
+> +	int rc = 0;
+> +
+> +	if (!data || !cdat_hdr_valid(cxlmd))
+> +		return -ENXIO;
+> +
+> +	/* Skip header */
+> +	data += CDAT_HEADER_LENGTH_DW;
+> +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
+> +
+> +	while (bytes_left > 0) {
+> +		u32 *cur_rec = data;
+> +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
+> +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
+> +
+> +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
+> +			struct cxl_dsmas *new_ary;
+> +			u8 flags;
+> +
+> +			new_ary = krealloc(dsmas_ary,
+> +					   sizeof(*dsmas_ary) * (nr_dsmas+1),
+> +					   GFP_KERNEL);
+> +			if (!new_ary) {
+> +				dev_err(&cxlmd->dev,
+> +					"Failed to allocate memory for DSMAS data\n");
+> +				rc = -ENOMEM;
+> +				goto free_dsmas;
+> +			}
+> +			dsmas_ary = new_ary;
+> +
+> +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
+> +
+> +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
+> +			dsmas_ary[nr_dsmas].dpa_length = CDAT_DSMAS_DPA_LEN(cur_rec);
+> +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
+> +
+> +			dev_dbg(&cxlmd->dev, "DSMAS %d: %llx:%llx %s\n",
+> +				nr_dsmas,
+> +				dsmas_ary[nr_dsmas].dpa_base,
+> +				dsmas_ary[nr_dsmas].dpa_base +
+> +					dsmas_ary[nr_dsmas].dpa_length,
+> +				(dsmas_ary[nr_dsmas].non_volatile ?
+> +					"Persistent" : "Volatile")
+> +				);
+> +
+> +			nr_dsmas++;
 > +		}
-> +		cxl_mem_cdat_read_table(cxlds, cxlmd->cdat_table, cxlmd->cdat_length);
+> +
+> +		data += (length/sizeof(u32));
+> +		bytes_left -= length;
 > +	}
 > +
->  	/*
->  	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
->  	 * needed as this is ordered with cdev_add() publishing the device.
+> +	if (nr_dsmas == 0) {
+> +		rc = -ENXIO;
+> +		goto free_dsmas;
+> +	}
+> +
+> +	dev_dbg(&cxlmd->dev, "Found %d DSMAS entries\n", nr_dsmas);
+> +
+> +	dsmas_byte_size = sizeof(*dsmas_ary) * nr_dsmas;
+> +	cxlmd->dsmas_ary = devm_kzalloc(&cxlmd->dev, dsmas_byte_size, GFP_KERNEL);
+
+Here is another place where we need to hang this off cxlds->dev rather than this
+one to avoid breaking Ben's code.
+
+
+> +	if (!cxlmd->dsmas_ary) {
+> +		rc = -ENOMEM;
+> +		goto free_dsmas;
+> +	}
+> +
+> +	memcpy(cxlmd->dsmas_ary, dsmas_ary, dsmas_byte_size);
+> +	cxlmd->nr_dsmas = nr_dsmas;
+> +
+> +free_dsmas:
+> +	kfree(dsmas_ary);
+> +	return rc;
+> +}
+> +
