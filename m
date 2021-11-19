@@ -2,79 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 234A5456FB0
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 14:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3962945703A
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 15:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234845AbhKSNgE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 08:36:04 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53350 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbhKSNgE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 08:36:04 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDX0er059511;
-        Fri, 19 Nov 2021 07:33:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1637328780;
-        bh=KcnpzSHMFGvhp5wqxYN2regUPFS8n7rmXXbkFi4mxnI=;
-        h=From:To:CC:Subject:Date;
-        b=ULqTtYP2S3oY9MdMP9hWS2LKVx9BDFG+ZXPLf2B1iqRQOZBUlLiI8VPpiqiIdsru6
-         /0k213inM7fZju16zjmO4wq1IsioosnVSi89WuRlathjC/15gdGzR5q5OHq/3vGrDu
-         TMTaXl7mO9njEQK/tfOfdlgllq1k/O2UUJiXsawc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AJDX0aG042891
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Nov 2021 07:33:00 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 19
- Nov 2021 07:32:59 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 19 Nov 2021 07:32:59 -0600
-Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDWurq126918;
-        Fri, 19 Nov 2021 07:32:57 -0600
-From:   Aswath Govindraju <a-govindraju@ti.com>
-CC:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Aswath Govindraju <a-govindraju@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: PCI: ti,j721e: Add device id for J721S2
-Date:   Fri, 19 Nov 2021 19:02:53 +0530
-Message-ID: <20211119133253.18590-1-a-govindraju@ti.com>
-X-Mailer: git-send-email 2.17.1
+        id S235609AbhKSOJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 09:09:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235173AbhKSOJD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 09:09:03 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 39AF761AD0;
+        Fri, 19 Nov 2021 14:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1637330761;
+        bh=D288cLKxjK6+XYbGmY+v0D5nfZgCgFd4U6FCaexEwhk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=URAi5jSNWrhokiIrK4Hr+a9OJAWBIkF2SM3qFESN/E5eNsg9EaPXf2cAWz72RlsyC
+         hFeP3IBVqnkxTO/PWTzoxKd1wNMDXmeXr2LD9gvyZQWV08DNYbdkJcqH6tnDiJidfT
+         BxUf/S8JEfzdP+UT78IY1gn9J3X14S0mXUwAloB4=
+Date:   Fri, 19 Nov 2021 15:05:59 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: MSI: Deal with devices lying about their
+ masking capability
+Message-ID: <YZevR+LnK2Fbk4Jh@kroah.com>
+References: <20211104180130.3825416-1-maz@kernel.org>
+ <87ilx64ued.ffs@tglx>
+ <CALjTZvag6ex6bhAgJ_rJOfai8GgZQfWesdV=FiMrwEaXhVVVeQ@mail.gmail.com>
+ <YZOKV6z+6pDjjvcl@kroah.com>
+ <CALjTZvaeujHJw-EV1Y=+npjXzYFiiQ9sbu6tE6do63F9R4dRqg@mail.gmail.com>
+ <YZOOYN6x3NCaC3qH@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YZOOYN6x3NCaC3qH@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document the device id of J721S2 SoC.
+On Tue, Nov 16, 2021 at 11:56:32AM +0100, Greg KH wrote:
+> On Tue, Nov 16, 2021 at 10:47:23AM +0000, Rui Salvaterra wrote:
+> > Hi, Greg,
+> > 
+> > On Tue, 16 Nov 2021 at 10:39, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > What is the git commit ids of these changes in Linus's tree?
+> > 
+> > 2226667a145d ("PCI/MSI: Deal with devices lying about their MSI mask
+> > capability")
+> > f21082fb20db ("PCI: Add MSI masking quirk for Nvidia ION AHCI")
+> 
+> Thanks, I'll queue them up in the next round of releases after the
+> current ones are out.
 
-Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
----
- Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Now queued up.
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index cc900202df29..0411bf5a1700 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -71,6 +71,8 @@ properties:
-           - const: 0xb00f
-       - items:
-           - const: 0xb010
-+      - items:
-+          - const: 0xb013
- 
-   msi-map: true
- 
--- 
-2.17.1
-
+greg k-h
